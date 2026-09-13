@@ -437,7 +437,7 @@ The sequence is a real depiction of what happened and nothing false needs adding
 
 ## 20. Platform, stack, and distribution
 
-**Stack.** .NET 9 with Avalonia. One language for the Core and all three shells. Math.NET Numerics for statistics. Windows ships as a single self-contained executable with no runtime for the user to install, which matters because the audience is shooters rather than developers.
+**Stack.** .NET with Avalonia. **[r3]** The target is .NET 10, the long-term support release, rather than .NET 9, whose support ends in November 2026, two months after Phase 0a began. One language for the Core and all three shells. Math.NET Numerics for statistics. Windows ships as a single self-contained executable with no runtime for the user to install, which matters because the audience is shooters rather than developers.
 
 **Windows floor.** Windows 10 21H2. Avalonia renders through Skia rather than Windows 11 compositor APIs, so Windows 10 costs nothing in appearance or performance. This would not be true of WinUI 3.
 

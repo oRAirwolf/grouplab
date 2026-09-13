@@ -1,0 +1,5 @@
+# Canonical GLTD-J is LF-only by specification (TARGET-SCHEMA.md section 6),
+# and fixtures are compared byte for byte, so neither may be converted on checkout.
+targets/** text eol=lf
+tests/**/Fixtures/** text eol=lf
+src/**/*.json text eol=lf

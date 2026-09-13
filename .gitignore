@@ -1,1 +1,6 @@
 ﻿reference/
+bin/
+obj/
+*.user
+TestResults/
+out/

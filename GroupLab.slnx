@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GroupLab.Cli/GroupLab.Cli.csproj" />
+    <Project Path="src/GroupLab.Core/GroupLab.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GroupLab.Core.Tests/GroupLab.Core.Tests.csproj" />
+  </Folder>
+</Solution>
