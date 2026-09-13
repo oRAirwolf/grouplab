@@ -79,6 +79,29 @@ against a known tool.
 These are reference only. GroupLab implements no compatibility with OnTarget,
 copies none of its target designs, and reads none of its formats.
 
+**BLOCKER FOR MAKING THIS REPOSITORY PUBLIC.** `reference/` holds another
+company's product files: two of their blank target designs and three of their
+generated datasheets. They were committed in the first planning commit, before
+`.gitignore` gained a `reference/` line, and **`.gitignore` does not untrack a
+file that is already tracked**, so they are in the repository and in its history
+right now. That is fine while the repository is private and nobody outside has
+it. It is not fine the moment it is public, because publishing them is
+redistributing somebody else's copyrighted work, which is a stronger claim
+against this project than any compatibility question.
+
+Deleting them in a new commit is **not sufficient**, because GitHub serves
+history and the old commits still contain the files. They have to be removed
+from every commit, with `git filter-repo` or BFG, followed by a force push. That
+is a ten minute job today with 23 commits and one contributor. It gets worse
+with every commit, and it becomes impossible to do quietly once anyone has
+cloned the repository.
+
+Do it immediately before flipping the repository to public, not after, and not
+long before either, since the rewrite invalidates every existing clone including
+any working copy an agent session is holding. The measurements taken from these
+files live in `docs/ONTARGET-DIMENSIONS.md` and survive their removal, which was
+the point of measuring rather than copying.
+
 ## excluded/
 
 `Gemini_Generated_Image_*.png` is an AI-processed version of the Retumbo
