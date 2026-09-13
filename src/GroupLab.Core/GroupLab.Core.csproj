@@ -4,4 +4,8 @@
     <EmbeddedResource Include="Gltd\Schema\gltd-1.schema.json" LogicalName="GroupLab.Core.Gltd.Schema.gltd-1.schema.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="GroupLab.Core.Tests" />
+  </ItemGroup>
+
 </Project>

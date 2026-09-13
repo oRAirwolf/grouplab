@@ -1,0 +1,2569 @@
+{
+  "source": "tools/gltd/check.py sheet() and zero(), encoded by tools/gltd/encode.py frame() with tileIndex 0",
+  "definitions": [
+    {
+      "name": "GL-CF25-LTR",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 254,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 238,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 115,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 320,
+          "originY": 539,
+          "pitchX": 380,
+          "pitchY": 380,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 700,
+            "originY": 2515,
+            "pitchX": 380,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2544
+            },
+            {
+              "x": 1909,
+              "y": 2544
+            }
+          ]
+        }
+      },
+      "bodyHex": "010000010000000105fe0000ee000f7f000073000f190000050540011b027c017c0100000103bc02d3097c0100010728000a0004030400",
+      "frameHex": "4754010000000101003700d33562b7010000010000000105fe0000ee000f7f000073000f190000050540011b027c017c0100000103bc02d3097c0100010728000a0004030400",
+      "id": "GL-YCSK-DZZ1-R0VJ-4T5Y"
+    },
+    {
+      "name": "GL-CF25-LTR-D",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 254,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 238,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 115,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 320,
+          "originY": 612,
+          "pitchX": 380,
+          "pitchY": 380,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 2,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2364,
+          "width": 1919,
+          "height": 310
+        }
+      },
+      "bodyHex": "010000010000000105fe0000ee000f7f000073000f1900000505400164027c017c01000000010728000a000203040078003c097f0736010000180100",
+      "frameHex": "4754014000000101003c003a866285010000010000000105fe0000ee000f7f000073000f1900000505400164027c017c01000000010728000a000203040078003c097f0736010000180100",
+      "id": "GL-R0T0-384Z-HRBE-M0EW"
+    },
+    {
+      "name": "GL-CF25-A4",
+      "input": {
+        "page": {
+          "size": "a4",
+          "width": 2100,
+          "height": 2970
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 254,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 238,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 115,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 290,
+          "originY": 627,
+          "pitchX": 380,
+          "pitchY": 380,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 670,
+            "originY": 2603,
+            "pitchX": 380,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1850,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2720
+            },
+            {
+              "x": 1850,
+              "y": 2720
+            }
+          ]
+        }
+      },
+      "bodyHex": "050000010000000105fe0000ee000f7f000073000f1900000505220173027c017c01000001039e022b0a7c0100010728000a0004030400",
+      "frameHex": "475401000000010100370004235684050000010000000105fe0000ee000f7f000073000f1900000505220173027c017c01000001039e022b0a7c0100010728000a0004030400",
+      "id": "GL-51J7-ZA0B-69DF-CN1D"
+    },
+    {
+      "name": "GL-CF25-100M-A4",
+      "input": {
+        "page": {
+          "size": "a4",
+          "width": 2100,
+          "height": 2970
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 254,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 238,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 115,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 250,
+          "originY": 575,
+          "pitchX": 400,
+          "pitchY": 400,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 650,
+            "originY": 2655,
+            "pitchX": 400,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1850,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2720
+            },
+            {
+              "x": 1850,
+              "y": 2720
+            }
+          ]
+        }
+      },
+      "bodyHex": "050000010000000105fe0000ee000f7f000073000f1900000505fa003f0290019001000001038a025f0a900100010728000a0004030400",
+      "frameHex": "4754010000000101003700757cdf96050000010000000105fe0000ee000f7f000073000f1900000505fa003f0290019001000001038a025f0a900100010728000a0004030400",
+      "id": "GL-WQT1-F9Q8-RE92-TP9H"
+    },
+    {
+      "name": "GL-CF30-LTR",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 222,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 208,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 111,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 101,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 6,
+          "originX": 380,
+          "originY": 522,
+          "pitchX": 350,
+          "pitchY": 350,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2544
+            },
+            {
+              "x": 1909,
+              "y": 2544
+            }
+          ]
+        }
+      },
+      "bodyHex": "010000010000000105de0000d0000f6f000065000f19000005067c010a025e015e01000000010728000a0004030400",
+      "frameHex": "4754010000000101002f0011eb2cad010000010000000105de0000d0000f6f000065000f19000005067c010a025e015e01000000010728000a0004030400",
+      "id": "GL-8MVE-5ZV0-AEW3-BHJF"
+    },
+    {
+      "name": "GL-RF25-LTR",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 152,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 142,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 76,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 68,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 20,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 572,
+          "originY": 582,
+          "pitchX": 254,
+          "pitchY": 254,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 5,
+            "originX": 572,
+            "originY": 1902,
+            "pitchX": 254,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2204
+            },
+            {
+              "x": 1909,
+              "y": 2204
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2364,
+          "width": 1919,
+          "height": 310
+        }
+      },
+      "bodyHex": "0100000100000001059800008e000f4c000044000f14000005053c024602fe00fe00000001053c026e07fe0000010728000a000403040078003c097f0736010000180100",
+      "frameHex": "4754014000000101004400d410a6c80100000100000001059800008e000f4c000044000f14000005053c024602fe00fe00000001053c026e07fe0000010728000a000403040078003c097f0736010000180100",
+      "id": "GL-4E42-3VSD-JT75-D7DT"
+    },
+    {
+      "name": "GL-RF25-A4",
+      "input": {
+        "page": {
+          "size": "a4",
+          "width": 2100,
+          "height": 2970
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 152,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 142,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 76,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 68,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 20,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 542,
+          "originY": 670,
+          "pitchX": 254,
+          "pitchY": 254,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 5,
+            "originX": 542,
+            "originY": 1990,
+            "pitchX": 254,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1850,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2380
+            },
+            {
+              "x": 1850,
+              "y": 2380
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2540,
+          "width": 1860,
+          "height": 310
+        }
+      },
+      "bodyHex": "0500000100000001059800008e000f4c000044000f14000005051e029e02fe00fe00000001051e02c607fe0000010728000a00040304007800ec09440736010000180100",
+      "frameHex": "4754014000000101004400bbe195c20500000100000001059800008e000f4c000044000f14000005051e029e02fe00fe00000001051e02c607fe0000010728000a00040304007800ec09440736010000180100",
+      "id": "GL-PKNQ-6560-WESY-Z947"
+    },
+    {
+      "name": "GL-RF36-LTR",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 117,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 64,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 56,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 18,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 6,
+          "rows": 6,
+          "originX": 444,
+          "originY": 740,
+          "pitchX": 254,
+          "pitchY": 254,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 4,
+            "originX": 698,
+            "originY": 2314,
+            "pitchX": 254,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2544
+            },
+            {
+              "x": 1909,
+              "y": 2544
+            }
+          ]
+        }
+      },
+      "bodyHex": "0100000100000001057f000075000f40000038000f1200000606bc01e402fe00fe0000000104ba020a09fe0000010728000a0004030400",
+      "frameHex": "4754010000000101003700412450b30100000100000001057f000075000f40000038000f1200000606bc01e402fe00fe0000000104ba020a09fe0000010728000a0004030400",
+      "id": "GL-GBMZ-BN3R-MGPQ-QKVG"
+    },
+    {
+      "name": "GL-LR25-TAB",
+      "input": {
+        "page": {
+          "size": "tabloid",
+          "width": 2794,
+          "height": 4318
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 381,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 365,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 191,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 179,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 38,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 381,
+          "originY": 814,
+          "pitchX": 508,
+          "pitchY": 508,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 889,
+            "originY": 3455,
+            "pitchX": 508,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 2544,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 3728
+            },
+            {
+              "x": 2544,
+              "y": 3728
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 3888,
+          "width": 2554,
+          "height": 310
+        }
+      },
+      "bodyHex": "0300000100000001057d01006d010fbf0000b3000f26000005057d012e03fc01fc010000010379037f0dfc0100010728000a00040304007800300ffa0936010000180100",
+      "frameHex": "47540140000001010044005ff308dd0300000100000001057d01006d010fbf0000b3000f26000005057d012e03fc01fc010000010379037f0dfc0100010728000a00040304007800300ffa0936010000180100",
+      "id": "GL-025B-Y7FF-VX15-JKXE"
+    },
+    {
+      "name": "GL-LR25-A3",
+      "input": {
+        "page": {
+          "size": "a3",
+          "width": 2970,
+          "height": 4200
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 381,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 365,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 191,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 179,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 38,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 5,
+          "originX": 469,
+          "originY": 754,
+          "pitchX": 508,
+          "pitchY": 508,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 977,
+            "originY": 3395,
+            "pitchX": 508,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 2720,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 3610
+            },
+            {
+              "x": 2720,
+              "y": 3610
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 3770,
+          "width": 2730,
+          "height": 310
+        }
+      },
+      "bodyHex": "0400000100000001057d01006d010fbf0000b3000f2600000505d501f202fc01fc0100000103d103430dfc0100010728000a00040304007800ba0eaa0a36010000180100",
+      "frameHex": "4754014000000101004400d9fb777c0400000100000001057d01006d010fbf0000b3000f2600000505d501f202fc01fc0100000103d103430dfc0100010728000a00040304007800ba0eaa0a36010000180100",
+      "id": "GL-NG21-1WWR-55A5-T7Q0"
+    },
+    {
+      "name": "GL-LR30-TAB",
+      "input": {
+        "page": {
+          "size": "tabloid",
+          "width": 2794,
+          "height": 4318
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 356,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 342,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 178,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 166,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 36,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 5,
+          "rows": 6,
+          "originX": 381,
+          "originY": 714,
+          "pitchX": 508,
+          "pitchY": 508,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 889,
+            "originY": 3863,
+            "pitchX": 508,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 2544,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 4068
+            },
+            {
+              "x": 2544,
+              "y": 4068
+            }
+          ]
+        }
+      },
+      "bodyHex": "03000001000000010564010056010fb20000a6000f24000005067d01ca02fc01fc01000001037903170ffc0100010728000a0004030400",
+      "frameHex": "475401000000010100370064eff99c03000001000000010564010056010fb20000a6000f24000005067d01ca02fc01fc01000001037903170ffc0100010728000a0004030400",
+      "id": "GL-JNR9-FXK1-P17X-JQF1"
+    },
+    {
+      "name": "GL-LR300-T",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 320,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 312,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 160,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 154,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 32,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 2,
+          "rows": 3,
+          "originX": 572,
+          "originY": 381,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-half-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 2,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            }
+          ]
+        },
+        "tiling": {
+          "cols": 2,
+          "rows": 2,
+          "sheetWidth": 2159,
+          "sheetHeight": 2794,
+          "overlap": 0
+        }
+      },
+      "bodyHex": "01000001000000010540010038010fa000009a000f20000002033c027d01f803f803000000020728000a000203040002026f08ea0a000000",
+      "frameHex": "47540180000001010038005bee262201000001000000010540010038010fa000009a000f20000002033c027d01f803f803000000020728000a000203040002026f08ea0a000000",
+      "id": "GL-G8JP-FF4D-AE0T-GPMN"
+    },
+    {
+      "name": "GL-LR300-TA4",
+      "input": {
+        "page": {
+          "size": "a4",
+          "width": 2100,
+          "height": 2970
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 320,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 312,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 160,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 154,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 32,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 2,
+          "rows": 3,
+          "originX": 542,
+          "originY": 599,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-half-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 2,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1850,
+              "y": 250
+            }
+          ]
+        },
+        "tiling": {
+          "cols": 2,
+          "rows": 2,
+          "sheetWidth": 2100,
+          "sheetHeight": 2970,
+          "overlap": 0
+        }
+      },
+      "bodyHex": "05000001000000010540010038010fa000009a000f20000002031e025702f803f803000000020728000a0002030400020234089a0b000000",
+      "frameHex": "475401800000010100380045b9382605000001000000010540010038010fa000009a000f20000002031e025702f803f803000000020728000a0002030400020234089a0b000000",
+      "id": "GL-FSTT-D8VF-KS88-6TEF"
+    },
+    {
+      "name": "GL-LR300-R24",
+      "input": {
+        "page": {
+          "size": "roll-24",
+          "width": 6096,
+          "height": 7112
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 635,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 613,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 318,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 302,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 64,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 6,
+          "rows": 5,
+          "originX": 508,
+          "originY": 890,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 2032,
+            "originY": 6173,
+            "pitchX": 1016,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 5846,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 6522
+            },
+            {
+              "x": 5846,
+              "y": 6522
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 6682,
+          "width": 5856,
+          "height": 310
+        }
+      },
+      "bodyHex": "07c81b00000100000001057b020065020f3e01002e010f4000000605fc017a03f803f80300000103f0071d18f80300010728000a000403040078001a1ae01636010000180100",
+      "frameHex": "475401400000010100460090b71b8d07c81b00000100000001057b020065020f3e01002e010f4000000605fc017a03f803f80300000103f0071d18f80300010728000a000403040078001a1ae01636010000180100",
+      "id": "GL-DD3A-Y1MV-84CZ-VHMB"
+    },
+    {
+      "name": "GL-LR300-R36",
+      "input": {
+        "page": {
+          "size": "roll-36",
+          "width": 9144,
+          "height": 6096
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 635,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 613,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 318,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 302,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 64,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 9,
+          "rows": 4,
+          "originX": 508,
+          "originY": 890,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 3556,
+            "originY": 5157,
+            "pitchX": 1016,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 8894,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 5506
+            },
+            {
+              "x": 8894,
+              "y": 5506
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 5666,
+          "width": 8904,
+          "height": 310
+        }
+      },
+      "bodyHex": "08d01700000100000001057b020065020f3e01002e010f4000000904fc017a03f803f80300000103e40d2514f80300010728000a000403040078002216c82236010000180100",
+      "frameHex": "47540140000001010046001f32204c08d01700000100000001057b020065020f3e01002e010f4000000904fc017a03f803f80300000103e40d2514f80300010728000a000403040078002216c82236010000180100",
+      "id": "GL-PE1C-QAZE-5DE6-42GK"
+    },
+    {
+      "name": "GL-LR300-R42",
+      "input": {
+        "page": {
+          "size": "roll-42",
+          "width": 10668,
+          "height": 6096
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 635,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 613,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 318,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 302,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 64,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 10,
+          "rows": 4,
+          "originX": 762,
+          "originY": 760,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [
+          {
+            "count": 3,
+            "originX": 4318,
+            "originY": 5027,
+            "pitchX": 1016,
+            "ringSetIdx": 0
+          }
+        ],
+        "fiducials": {
+          "scheme": "grid-boundary-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 10418,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 5506
+            },
+            {
+              "x": 10418,
+              "y": 5506
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x3-1",
+          "fieldSet": "standard-9",
+          "reserve": 280,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 5666,
+          "width": 10428,
+          "height": 310
+        }
+      },
+      "bodyHex": "09d01700000100000001057b020065020f3e01002e010f4000000a04fa02f802f803f80300000103de10a313f80300010728000a000403040078002216bc2836010000180100",
+      "frameHex": "475401400000010100460018eb6b0509d01700000100000001057b020065020f3e01002e010f4000000a04fa02f802f803f80300000103de10a313f80300010728000a000403040078002216bc2836010000180100",
+      "id": "GL-KDJH-BC2B-264Y-Y3GV"
+    },
+    {
+      "name": "GL-ZERO-MOA-100Y",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 114,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 1,
+          "rows": 1,
+          "originX": 1079,
+          "originY": 1277,
+          "pitchX": 0,
+          "pitchY": 0,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "field-ring-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2304
+            },
+            {
+              "x": 1909,
+              "y": 2304
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x2-1",
+          "fieldSet": "standard-6",
+          "reserve": 210,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2464,
+          "width": 1919,
+          "height": 210
+        },
+        "grids": [
+          {
+            "centreX": 1079,
+            "centreY": 1277,
+            "half": 798,
+            "divisions": 6,
+            "majorEvery": 2,
+            "unit": "moa",
+            "distance": 100,
+            "distanceUnit": "yd",
+            "inkPair": 0,
+            "style": 1,
+            "labelStep": 2
+          }
+        ]
+      },
+      "bodyHex": "0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd041e03060201640000000102",
+      "frameHex": "4754014001000101004600ba6ceb0f0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd041e03060201640000000102",
+      "id": "GL-4ZY5-DBSH-MRJK-W4R3"
+    },
+    {
+      "name": "GL-ZERO-MIL-100Y",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 114,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 1,
+          "rows": 1,
+          "originX": 1079,
+          "originY": 1277,
+          "pitchX": 0,
+          "pitchY": 0,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "field-ring-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2304
+            },
+            {
+              "x": 1909,
+              "y": 2304
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x2-1",
+          "fieldSet": "standard-6",
+          "reserve": 210,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2464,
+          "width": 1919,
+          "height": 210
+        },
+        "grids": [
+          {
+            "centreX": 1079,
+            "centreY": 1277,
+            "half": 732,
+            "divisions": 8,
+            "majorEvery": 5,
+            "unit": "mil",
+            "distance": 100,
+            "distanceUnit": "yd",
+            "inkPair": 0,
+            "style": 1,
+            "labelStep": 5
+          }
+        ]
+      },
+      "bodyHex": "0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd04dc02080502640000000105",
+      "frameHex": "475401400100010100460080cf67740100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd04dc02080502640000000105",
+      "id": "GL-XD6D-R325-J52P-3NH7"
+    },
+    {
+      "name": "GL-ZERO-MOA-100M",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 114,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 1,
+          "rows": 1,
+          "originX": 1079,
+          "originY": 1277,
+          "pitchX": 0,
+          "pitchY": 0,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "field-ring-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2304
+            },
+            {
+              "x": 1909,
+              "y": 2304
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x2-1",
+          "fieldSet": "standard-6",
+          "reserve": 210,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2464,
+          "width": 1919,
+          "height": 210
+        },
+        "grids": [
+          {
+            "centreX": 1079,
+            "centreY": 1277,
+            "half": 727,
+            "divisions": 5,
+            "majorEvery": 2,
+            "unit": "moa",
+            "distance": 100,
+            "distanceUnit": "m",
+            "inkPair": 0,
+            "style": 1,
+            "labelStep": 2
+          }
+        ]
+      },
+      "bodyHex": "0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd04d702050201640001000102",
+      "frameHex": "4754014001000101004600d14efcbb0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd04d702050201640001000102",
+      "id": "GL-VFQD-KYZR-7BE2-ZH4K"
+    },
+    {
+      "name": "GL-ZERO-MIL-100M",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 127,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 114,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 25,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 1,
+          "rows": 1,
+          "originX": 1079,
+          "originY": 1277,
+          "pitchX": 0,
+          "pitchY": 0,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "field-ring-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 4,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            },
+            {
+              "x": 250,
+              "y": 2304
+            },
+            {
+              "x": 1909,
+              "y": 2304
+            }
+          ]
+        },
+        "dataBlock": {
+          "layout": "fields-3x2-1",
+          "fieldSet": "standard-6",
+          "reserve": 210,
+          "inkIdx": 0,
+          "x": 120,
+          "y": 2464,
+          "width": 1919,
+          "height": 210
+        },
+        "grids": [
+          {
+            "centreX": 1079,
+            "centreY": 1277,
+            "half": 800,
+            "divisions": 8,
+            "majorEvery": 5,
+            "unit": "mil",
+            "distance": 100,
+            "distanceUnit": "m",
+            "inkPair": 0,
+            "style": 1,
+            "labelStep": 5
+          }
+        ]
+      },
+      "bodyHex": "0100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd042003080502640001000105",
+      "frameHex": "47540140010001010046007036c0a00100000100000001037f000072000f19000001013704fd0400000000000000030728000a00040304007800a0097f07d2000101d20000013704fd042003080502640001000105",
+      "id": "GL-0DEQ-H5XA-X9TA-EJ6H"
+    },
+    {
+      "name": "GL-LR300-T (3x2)",
+      "input": {
+        "page": {
+          "size": "letter",
+          "width": 2159,
+          "height": 2794
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 320,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 312,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 160,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 154,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 32,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 2,
+          "rows": 3,
+          "originX": 572,
+          "originY": 381,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-half-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 2,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1909,
+              "y": 250
+            }
+          ]
+        },
+        "tiling": {
+          "cols": 3,
+          "rows": 2,
+          "sheetWidth": 2159,
+          "sheetHeight": 2794,
+          "overlap": 0
+        }
+      },
+      "bodyHex": "01000001000000010540010038010fa000009a000f20000002033c027d01f803f803000000020728000a000203040003026f08ea0a000000",
+      "frameHex": "475401800000010100380018fa5d3501000001000000010540010038010fa000009a000f20000002033c027d01f803f803000000020728000a000203040003026f08ea0a000000",
+      "id": "GL-T9EV-G2JF-EFSY-BN57"
+    },
+    {
+      "name": "GL-LR300-TA4 (3x2)",
+      "input": {
+        "page": {
+          "size": "a4",
+          "width": 2100,
+          "height": 2970
+        },
+        "inks": [
+          {
+            "srgb": "#000000",
+            "role": "artwork"
+          },
+          {
+            "srgb": "#FFFFFF",
+            "role": "paper"
+          },
+          {
+            "srgb": "#000000",
+            "role": "fiducial"
+          },
+          {
+            "srgb": "#000000",
+            "role": "code"
+          },
+          {
+            "srgb": "#000000",
+            "role": "text"
+          }
+        ],
+        "ringSets": [
+          {
+            "discs": [
+              {
+                "diameter": 320,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 312,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 160,
+                "inkIdx": 0
+              },
+              {
+                "diameter": 154,
+                "inkIdx": 15
+              },
+              {
+                "diameter": 32,
+                "inkIdx": 0
+              }
+            ]
+          }
+        ],
+        "grid": {
+          "cols": 2,
+          "rows": 3,
+          "originX": 542,
+          "originY": 599,
+          "pitchX": 1016,
+          "pitchY": 1016,
+          "ringSetIdx": 0,
+          "order": 0
+        },
+        "sighters": [],
+        "fiducials": {
+          "scheme": "grid-boundary-half-1",
+          "family": "apriltag-36h11",
+          "markerSize": 40,
+          "quietZone": 10,
+          "inkIdx": 0
+        },
+        "codes": {
+          "count": 2,
+          "version": 10,
+          "ecLevel": "H",
+          "moduleSize": 4,
+          "quietZone": 16,
+          "placement": "corners-1",
+          "humanReadableId": true,
+          "positions": [
+            {
+              "x": 250,
+              "y": 250
+            },
+            {
+              "x": 1850,
+              "y": 250
+            }
+          ]
+        },
+        "tiling": {
+          "cols": 3,
+          "rows": 2,
+          "sheetWidth": 2100,
+          "sheetHeight": 2970,
+          "overlap": 0
+        }
+      },
+      "bodyHex": "05000001000000010540010038010fa000009a000f20000002031e025702f803f803000000020728000a0002030400030234089a0b000000",
+      "frameHex": "475401800000010100380006ad433105000001000000010540010038010fa000009a000f20000002031e025702f803f803000000020728000a0002030400030234089a0b000000",
+      "id": "GL-ACH3-0C0K-ME6A-N3S5"
+    }
+  ]
+}

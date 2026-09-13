@@ -35,7 +35,7 @@ On decode, the projection writes:
 | measurement grid `style` other than 1 | frame rejected, naming the value |
 | page `quantum`, parametric mode | 0, meaning 0.1 mm |
 
-One choice goes beyond the reference encoder, which never emits explicit mode: **in explicit mode the encoder picks the smallest quantum in 0.1, 0.2, 0.5 and 1.0 mm that divides every bull coordinate exactly and keeps every coordinate within 4095 quanta**, and refuses the document if none does.
+One choice goes beyond the reference encoder, which never emits explicit mode: **in explicit mode the encoder picks the smallest quantum in 0.1, 0.2, 0.5 and 1.0 mm that divides every length the body stores in quanta** (bull coordinates, disc diameters, marker size and quiet zone, module size, the data block, tiling and measurement grid lengths, and a custom or roll page) **and keeps every bull within 4095 quanta and every one-byte field within 255**, and refuses the document if none does.
 
 ### Q12. Erasure shares
 
@@ -46,6 +46,7 @@ TARGET-SCHEMA.md section 11, question 12.
 - Shares 0 to 3 are D0, D1, D0 xor D1, and D0 xor 2*D1, where 2*D1 multiplies each byte by the field element 2.
 - Every frame carries `totalLen` and `crc32` of the whole unpadded body, so reconstruction is checked end to end.
 - Any two distinct shares reconstruct the body. One share alone is refused, never extrapolated.
+- Erasure-coded frames are never compressed, so each share's length follows from `totalLen`. A decoder rejects a share frame with the DEFLATE bit set.
 
 ### Q13. Explicit code placement has no byte layout
 
@@ -69,8 +70,11 @@ Section 5.1 says `totalLen` is the body length, and section 5.7 allows a DEFLATE
 
 Section 3.11 says the fields are "length-prefixed UTF-8" without giving the prefix width.
 
-- Each field is a 1-byte length followed by that many bytes of UTF-8, in field-set order.
-- A field longer than 255 bytes is refused at generation time, naming the field. The 152-byte budget of section 3.11 is enforced separately and also names the overflowing field.
+- Each field is a 1-byte length followed by that many bytes of UTF-8, in field-set order. An absent value is a zero-length field, and decodes as absent.
+- A field longer than 255 bytes is refused at generation time, naming the field. The 152-byte budget of section 3.11 counts the field bytes including their length prefixes, and also names the overflowing field.
+- The section 3.11 example measures 128 bytes of field data and 153 in total under this rule, exactly the figures the section quotes, which is the evidence for a 1-byte prefix.
+- `printed` is a little-endian 24-bit count of days from 2000-01-01, and `crc32` covers the uncompressed field bytes.
+- The standard nine keys are `date`, `distance`, `cartridge`, `bullet`, `powder`, `brass`, `primer`, `seating` and `notes`, as spelled in the section 3.11 example. `standard-6` drops `bullet`, `brass` and `seating`.
 
 ### C5. Conformance tests 26b and 26c on a stored definition
 
@@ -94,3 +98,51 @@ The specification states what is printed but not where. These are drawing conven
 - **Canonical key order** for top-level blocks section 3.1 does not place: `codes`, `print`, `dataBlock`, `instance`, `tiling`, `grids`, then unknown fields in the order read.
 - **Canonical key order inside blocks** follows the `properties` order of the section 9 schema, because the prose examples disagree with it in two places: section 3.8 writes `positions` before `humanReadableId` where the schema has it after, and the section 3.10 table lists `fields` before `reserve` where the schema lists it last. A test derives the expected order from the embedded schema, so a schema change moves the writer with it.
 - **`srgb` is written in upper case.** Colour values are case-insensitive, and a canonical form needs one spelling.
+
+### C7. What a decode synthesises
+
+Section 6 fixes ink keys and roles. The rest of what a decode must invent:
+
+- `name` is the definition identifier, since the schema requires a name and the body carries none. `revision` is 0.
+- Ring sets are keyed `set0`, `set1` and so on; measurement grids `grid0` and so on.
+- The `paper` ink, previewed as `#FFFFFF`, is emitted only when index 15 is referenced.
+- `fiducials.markers` is omitted until the derivations land in M3; `codes.positions` is always emitted, from `corners-1`.
+
+### C8. Cells
+
+The body carries the bull grid, not a cell layout.
+
+- A decode emits `cells` in mode `grid` when both pitches are positive and even and the cell origin, half a pitch before the first bull, is not negative. Otherwise it emits no `cells`, as for a single bull on a zero pitch.
+- The encoder accepts no `cells`, grid cells that describe the bull grid exactly, or mode `none` on a sheet with one bull. Anything else needs the cell block and is refused (question 10).
+
+### C9. Recognising a parametric layout
+
+- The scoring bulls come first and form a complete grid. The lowest order code that reproduces their array order is canonical, so a single row is always row-major.
+- A grid with one column takes `pitchX` from `cells.grid`, else from `pitchY`, else 0; likewise for one row.
+- Sighter rows split wherever `y` or the ring set changes. A row of one sighter stores the grid's `pitchX`, as `check.py` does.
+- Anything else is explicit mode.
+- An absent label is taken as the default label. A label that differs from the default, or any `labelOffset`, needs the label block and is refused (question 10).
+
+### C10. Explicit mode packing
+
+Section 5.5 gives the attribute run as 4 bits per bull without a bit order. The first bull of each byte is in the low nibble, and a padding nibble must be zero.
+
+### C11. A trimmed named page
+
+A named page whose dimensions differ from the standard, or a roll preset whose width differs from the roll's, is legitimate per section 3.2 but has no standard page code that carries its dimensions. It encodes as `custom` and decodes as `custom`.
+
+### C12. The decoder refuses non-canonical bodies
+
+Section 6 says a body has exactly one legal encoding. The decoder enforces it: a body whose decode would re-encode to different bytes is rejected, as is a body whose decode is not a valid GLTD-J document. This catches a repeated ink colour, an order code that is not the lowest that fits, and a code position the rule would place off the page.
+
+---
+
+## Gaps found while implementing, not yet listed as schema questions
+
+### G1. Explicit fiducial placement has no byte layout
+
+Section 3.7 requires `markers` when `scheme` is `explicit`, and section 5.2 assigns scheme byte 0 to `explicit`, but the fiducial block carries no marker list. This is the same gap as question 13 for codes. The encoder refuses `scheme: explicit` and the decoder rejects scheme byte 0.
+
+### G2. Explicit data block layouts have no complete byte layout
+
+Section 5.2 says explicit layouts "append 8 bytes of rect per field" and explicit field sets "append a length-prefixed key list", but gives neither the width of the length prefix nor anywhere to carry the field labels the schema requires. The encoder refuses `layout: explicit`, `fieldSet: explicit` and any `fields` list, and the decoder rejects byte 255 in either.
