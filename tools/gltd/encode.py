@@ -15,6 +15,8 @@ FAMILY   = {"none":0,"aruco-4x4-50":1,"aruco-4x4-100":2,"aruco-5x5-100":3,
 SCHEME   = {"explicit":0,"grid-boundary-1":1,"grid-boundary-half-1":2,"field-ring-1":3}
 ECLEVEL  = {"L":0,"M":1,"Q":2,"H":3}
 FIELDSET = {"standard-9":0,"standard-6":1,"explicit":255}
+DBLAYOUT = {"fields-3x3-1":0,"fields-3x2-1":1,"explicit":255}
+PLACE    = {"corners-1":0,"explicit":1}
 UNIT     = {"custom":0,"moa":1,"mil":2,"inch":3,"cm":4}
 
 u8  = lambda v: struct.pack("<B", v)
@@ -29,10 +31,16 @@ def body(d):
     elif pc >= 7: b += u16(d["page"]["height"])
     b += u8(0 if d["page"].get("orientation","portrait")=="portrait" else 1)
     b += u8(d.get("quantum",0))
-    # 2 inks (the paper knockout is index 15 and is never stored)
-    inks = [i for i in d["inks"] if i["role"] != "paper"]
-    b += u8(len(inks))
-    for i in inks: b += bytes(int(i["srgb"][k:k+2],16) for k in (1,3,5))
+    # 2 inks.  The paper knockout is index 15 and is never stored.  Each
+    # DISTINCT sRGB value of the remaining inks is stored once, in declaration
+    # order: the body carries colours, not keys or roles, so four inks that are
+    # all #000000 are one entry.  See the projection rule in TARGET-SCHEMA 6.
+    seen = []
+    for i in d["inks"]:
+        if i["role"] == "paper": continue
+        if i["srgb"].upper() not in seen: seen.append(i["srgb"].upper())
+    b += u8(len(seen))
+    for c in seen: b += bytes(int(c[k:k+2],16) for k in (1,3,5))
     # 3 ring sets, disc stacks
     b += u8(len(d["ringSets"]))
     for s in d["ringSets"]:
@@ -54,14 +62,15 @@ def body(d):
        + u8(f["quietZone"]) + u8(f["inkIdx"])
     # 7 codes
     c = d["codes"]
-    b += u8(c["count"]) + u8(ECLEVEL[c["ecLevel"]]) + u8(c["moduleSize"]) + u8(0)
+    b += u8(c["count"]) + u8(ECLEVEL[c["ecLevel"]]) + u8(c["moduleSize"]) \
+       + u8(PLACE[c["placement"]])
     flags = 0
     # 8 data block
     if "dataBlock" in d:
         flags |= 1 << 6
         x = d["dataBlock"]
         b += u16(x["x"]) + u16(x["y"]) + u16(x["width"]) + u16(x["height"]) \
-           + u8(0 if x["layout"]=="fields-3x3-1" else 1) \
+           + u8(DBLAYOUT[x["layout"]]) \
            + u8(FIELDSET[x["fieldSet"]]) + u16(x["reserve"]) + u8(x["inkIdx"])
     # 9 tiling
     if "tiling" in d:

@@ -41,9 +41,15 @@ class ZeroSheet:
         self.cx = self.W // 2
         # the grid field is wide enough to reach under both corner QR columns on
         # every sheet in the library, so both QR rows are reserved unconditionally
+        # the bottom codes sit above the data block with a clearance between
+        # them, exactly as the multi-bull solver places them
+        self.db = ((SAFE, self.H - SAFE - self.data_block,
+                    self.W - SAFE, self.H - SAFE) if self.data_block else None)
+        self.qr_bot_c = (self.H - SAFE - self.data_block
+                         - (CL if self.data_block else 0) - QR / 2)
         top = SAFE + QR + CL
-        bot = self.H - SAFE - self.data_block - QR - CL
-        self.cy = (top + bot) // 2
+        bot = self.qr_bot_c - QR / 2 - CL
+        self.cy = int(round((top + bot) / 2))
         self.v_top, self.v_bot = top, bot
         # minor line offsets from centre, integer, error spread across the field
         self.offsets = self._off
@@ -53,8 +59,8 @@ class ZeroSheet:
         self.cell    = self.unit_dmm * self.half_units / self.divisions
         # corner QR centres
         self.qr = [(SAFE + QR / 2, SAFE + QR / 2), (self.W - SAFE - QR / 2, SAFE + QR / 2),
-                   (SAFE + QR / 2, self.H - SAFE - self.data_block - QR / 2),
-                   (self.W - SAFE - QR / 2, self.H - SAFE - self.data_block - QR / 2)]
+                   (SAFE + QR / 2, self.qr_bot_c),
+                   (self.W - SAFE - QR / 2, self.qr_bot_c)]
         # fiducial ring: markers in the band around the field, on major lines
         f0, f1 = self.cx - self.half, self.cx + self.half
         g0, g1 = self.cy - self.half, self.cy + self.half
@@ -89,7 +95,11 @@ class ZeroSheet:
                 self.dropped += 1; continue
             if any(rects_overlap(b, q, 20) for q in qrb):
                 self.dropped += 1; continue
+            if self.db and rects_overlap(b, self.db, 10):
+                self.dropped += 1; continue
             self.marks.append(k)
+        # ids are assigned in raster order (y, then x), per TARGET-SCHEMA.md 3.7
+        self.marks.sort(key=lambda m: (m[1], m[0]))
         self.band_x = (self.W - 2 * SAFE - self.field) / 2
         self.band_y_top = (self.cy - self.half) - self.v_top
         self.band_y_bot = self.v_bot - (self.cy + self.half)
@@ -99,6 +109,7 @@ class ZeroSheet:
         items = [(box(self.cx, self.cy, AIM), "aim")]
         items += [(box(a, b, QR), f"qr{i}") for i, (a, b) in enumerate(self.qr)]
         items += [(box(x, y, MARK), f"mark({x},{y})") for x, y in self.marks]
+        if self.db: items.append((self.db, "dataBlock"))
         grid = (self.cx - self.half, self.cy - self.half,
                 self.cx + self.half, self.cy + self.half)
         for b, n in items:
@@ -108,6 +119,17 @@ class ZeroSheet:
                 errs.append(f"{n} intrudes on grid field")
         for (a, na), (b, nb) in itertools.combinations(items, 2):
             if rects_overlap(a, b): errs.append(f"overlap {na} x {nb}")
+        # clearance, scoped the way layout.py scopes it: majors against majors
+        # at the 3.0 mm clearance, markers against markers at 2.0 mm
+        major = [(b, n) for b, n in items if not n.startswith("mark")]
+        major.append((grid, "gridField"))
+        mkb   = [(b, n) for b, n in items if n.startswith("mark")]
+        for (a, na), (b, nb) in itertools.combinations(major, 2):
+            if not rects_overlap(a, b) and rects_overlap(a, b, CL):
+                warns.append(f"clearance under {CL} dmm: {na} x {nb}")
+        for (a, na), (b, nb) in itertools.combinations(mkb, 2):
+            if not rects_overlap(a, b) and rects_overlap(a, b, 20):
+                warns.append(f"markers under 20 dmm apart: {na} x {nb}")
         for b, n in items:
             if b[0] < 0 or b[1] < 0 or b[2] > self.W or b[3] > self.H:
                 errs.append(f"offpage {n}")
@@ -116,6 +138,12 @@ class ZeroSheet:
         if grid[1] < SAFE or grid[3] > self.H - SAFE - self.data_block:
             errs.append("grid field crosses the safe margin in y")
         if self.band_x < BAND: warns.append(f"side band {self.band_x:.0f} dmm below {BAND}")
+        # a full marker row needs the footprint plus a clearance each side; below
+        # that the row survives only where it misses the corner codes
+        ROW = MARK + 2 * CL
+        for v, n in ((self.band_y_top, "top"), (self.band_y_bot, "bottom")):
+            if v < ROW:
+                warns.append(f"{n} band {v:.0f} dmm below the {ROW} dmm a full marker row needs")
         if self.maxdev > 1.0: warns.append(f"line rounding {self.maxdev:.2f} dmm")
         if len(self.marks) < 8: warns.append(f"only {len(self.marks)} markers")
         return errs, warns
@@ -131,4 +159,6 @@ class ZeroSheet:
                     markers=len(self.marks), marks=self.marks,
                     band_x=round(self.band_x, 1),
                     band_y=(round(self.band_y_top, 1), round(self.band_y_bot, 1)),
-                    data_block=self.data_block, errors=e, warnings=w, note=self.note)
+                    data_block=self.data_block, data_block_rect=self.db,
+                    qr=[(round(a), round(b)) for a, b in self.qr],
+                    errors=e, warnings=w, note=self.note)

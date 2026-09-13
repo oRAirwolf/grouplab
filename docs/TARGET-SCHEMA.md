@@ -295,7 +295,7 @@ The QR codes, which carry the payload.
   "ecLevel": "H",
   "moduleSize": 4,
   "quietZone": 16,
-  "placement": "corners",
+  "placement": "corners-1",
   "positions": [
     { "x": 250, "y": 250 }, { "x": 1909, "y": 250 },
     { "x": 250, "y": 2544 }, { "x": 1909, "y": 2544 }
@@ -305,6 +305,24 @@ The QR codes, which carry the payload.
 ```
 
 `positions` are the centres of the code squares. `moduleSize` is the printed size of one QR module, and section 7 explains why it has a floor.
+
+**`corners-1` is a derivation rule, versioned in its name exactly as the fiducial schemes are**, and the rule is this:
+
+```
+footprint F = 65 * moduleSize      (57 modules of v10 plus 4 quiet each side)
+top    y = safeMargin + F/2
+bottom y = height - safeMargin - dataBlockHeight
+             - (dataBlockHeight ? clearance : 0) - F/2
+left   x = safeMargin + F/2
+right  x = width - safeMargin - F/2
+count 2 emits the top pair only; count 4 emits both pairs
+```
+
+with the safe margin at 120 dmm and the clearance at 30 dmm, per section 7. For the reference sheet that is a 260 dmm footprint and centres at 250 and 1909 in x, 250 and 2544 in y.
+
+**The footprint is fixed at 65 modules rather than read from `codes.version`**, which matters because the binary carries `moduleSize` and not the version. If the rule depended on the version, a decoder that assumed version 10 where the generator used version 8 would recompute every corner centre 20 dmm out, and the definition would be quietly wrong rather than loudly broken. Fixing the rule at the library's own version costs a generator emitting a smaller code nothing but the requirement to use `explicit` placement and say where the codes went. The earlier draft named the rule `corners` and stated no offsets at all, which left a decoder to invent the inset: the binary carries one byte of placement and nothing else, so without a versioned rule two implementations could read the same frame and print the codes in different places.
+
+**`positions` is required whenever `count` is greater than zero, including under `corners-1`.** The generator writes the computed centres into the document the way it writes the computed marker list, and a reader recomputes the rule and compares. A stored position that disagrees with the rule is an error, not a repair, which is the same treatment section 3.7 gives a stored marker list. `tools/gltd/check.py` implements `corners-1` and cross-checks it against every sheet the layout solver placed.
 
 **The library standardises on version 10 at error correction level H.** That is 57 modules square, 119 bytes of byte-mode capacity, verified against the `segno` library rather than read from a table. At the 4 dmm module it is a 22.8 mm symbol in a 26.0 mm footprint including the mandatory four-module quiet zone. Section 5.3 shows the largest sheet in the library at 85 bytes, so every built-in fits with at least 34 bytes spare, and one fixed footprint means one set of layout constants rather than a per-sheet reserve. A generator may emit a smaller version for a smaller payload; the built-in library does not, because the saving is 3.2 mm of margin and the cost is a layout that changes shape when a field is added.
 
@@ -350,7 +368,7 @@ A reserved band, normally along the bottom of the sheet, carrying the load data 
 | `layout` | string | yes | `fields-3x3-1`, `fields-3x2-1`, or `explicit` |
 | `fieldSet` | string | yes | `standard-9`, `standard-6`, or `explicit` |
 | `fields` | array | conditional | Required when either `layout` or `fieldSet` is `explicit` |
-| `reserve` | integer dmm | yes | Edge of the square reserved for the instance code, at the right end of the block |
+| `reserve` | integer dmm | yes | Edge of the square reserved at the right end of the block. 0 for none |
 | `ink` | string | yes | Ink for the rules and boxes |
 | `labelInk` | string | no | Ink for the printed field captions. Defaults to `ink` |
 | `border` | integer dmm | no | Rule weight. 0 for no border |
@@ -370,6 +388,10 @@ A reserved band, normally along the bottom of the sheet, carrying the load data 
 `blank` and `filled` produce **the same geometry and the same definition identifier**. The block, the field cells and the reserved square are laid out identically; only what is drawn inside them differs. This is deliberate: a user who prints a blank sheet, shoots it, and later types the load data into the application must get the same analysis as a user who typed it first, and the analyser must not have to care which happened. The `none` case is genuinely a different sheet with different bull positions, which is why the library ships GL-CF25-LTR and GL-CF25-LTR-D as separate definitions rather than as one definition with a flag.
 
 The reserved square is reserved in every mode. In `filled` mode it holds the instance code of section 3.11. In `blank` mode it holds the printed definition identifier and the sheet serial as text, which is the fallback the analyser uses to tie a scan to a session.
+
+**A square too small for the code carries the text instead.** The instance code is a version 11 level Q symbol with a 276 dmm footprint, so **an instance code is printed only where `reserve` is at least 280 dmm**. Below that the square is still reserved and still holds the identifier and the serial as text, in both modes, and the typed values live in the session rather than on the sheet. This is not a hypothetical case: the zeroing sheets have a 210 dmm block, because a taller one eats the clear band that `field-ring-1` needs for its markers, and 210 dmm of square cannot hold 276 dmm of code. The four zeroing sheets therefore use `fields-3x2-1`, `standard-6` and a 210 dmm reserve, and carry no instance code. Their content width is 1919 - 210 - 20 = 1689 dmm, split at 0, 563, 1126 and 1689, in two rows of 100 dmm inside the 210 dmm band.
+
+`reserve` may be 0, which means no square: the block is fields all the way across, there is no gap, and the content width is the full block width. No built-in uses it.
 
 ### 3.11 `instance`
 
@@ -413,7 +435,7 @@ GLTD-I frame
 +--------+--------------------------------------------------+
 ```
 
-Header 25 bytes. A realistic filled set of the standard nine fields measures **128 bytes** of field data, so 153 bytes in total. The instance code is specified at **version 11, error correction level Q**, which carries 177 bytes and is 61 modules square: at the 4 dmm module that is a 24.4 mm symbol in a 27.6 mm footprint, which fits the 280 dmm reserve with 4 dmm each side. Level Q rather than H because this code sits in the part of the sheet people write on with a pen and rest their hand against, and because losing it costs a convenience rather than the definition. The generator budgets 152 bytes for field data and refuses to print beyond it, naming the field that overflowed.
+Header 25 bytes. A realistic filled set of the standard nine fields measures **128 bytes** of field data, so 153 bytes in total. The instance code is specified at **version 11, error correction level Q**, which carries 177 bytes and is 61 modules square: at the 4 dmm module that is a 24.4 mm symbol in a 27.6 mm footprint, which fits the 280 dmm reserve with 2 dmm each side. Level Q rather than H because this code sits in the part of the sheet people write on with a pen and rest their hand against, and because losing it costs a convenience rather than the definition. The generator budgets 152 bytes for field data and refuses to print beyond it, naming the field that overflowed. Two dmm each side is the whole margin, so a definition whose reserve is under 280 dmm carries no instance code at all, per section 3.10.
 
 DEFLATE is available but rarely helps at this size: the sample field set compresses from 128 bytes to 124.
 
@@ -586,7 +608,11 @@ Full document for **GL-CF25-LTR**, the reference layout from TARGET-LIBRARY.md, 
 
   "codes": {
     "count": 4, "version": 10, "ecLevel": "H", "moduleSize": 4, "quietZone": 16,
-    "placement": "corners", "humanReadableId": true
+    "placement": "corners-1", "humanReadableId": true,
+    "positions": [
+      { "x": 250, "y": 250 }, { "x": 1909, "y": 250 },
+      { "x": 250, "y": 2544 }, { "x": 1909, "y": 2544 }
+    ]
   },
 
   "print": {
@@ -677,7 +703,11 @@ Ink block                                           1 + 3n bytes
   for each:
     rgb       3 bytes  R, G, B
     (role is implied by use; the paper knockout is the
-     reserved index 15 and is never written here)
+     reserved index 15 and is never written here.  Each
+     DISTINCT sRGB value is stored once, in declaration
+     order: the body carries colours, not keys or roles,
+     so four inks that are all #000000 are one entry.
+     See the projection rule in section 6.)
 
 Ring set block                          1 + sum(1 + 3d) bytes
   setCount    1 byte   1..15
@@ -721,7 +751,8 @@ Code block                                          4 bytes
   count       1 byte
   ecLevel     1 byte   0=L 1=M 2=Q 3=H
   moduleSize  1 byte   uint8 quanta
-  placement   1 byte   0 = corners, 1 = explicit
+  placement   1 byte   0 = corners-1, 1 = explicit
+                       positions are derived, never carried
 
 Data block, flag bit 6                             13 bytes
   x           2 bytes uint16 quanta
@@ -772,18 +803,22 @@ The numbers below come from a **working reference encoder** run against the defi
 
 | Target | What makes it big | Body | Frame | Fits v8-H (84) | Fits v10-H (119) |
 |---|---|---|---|---|---|
+| GL-CF30-LTR | six rows, no sighters, no block | 47 | 62 | yes | yes |
 | GL-CF25-LTR | reference 5x5 with sighters | 55 | 70 | yes | yes |
 | GL-RF36-LTR | densest, 36 scoring plus 4 sighters | 55 | 70 | yes | yes |
-| GL-CF25-LTR-D | data block, no sighters | 60 | 75 | yes | yes |
 | GL-LR300-T | tiling block, half-pitch fiducials | 56 | 71 | yes | yes |
-| GL-LR300-R24 | roll page, data block, sighters | 70 | 85 | **no** | yes |
+| GL-CF25-LTR-D | data block, no sighters | 60 | 75 | yes | yes |
+| GL-RF25-LTR | data block and sighters | 68 | 83 | yes | yes |
+| GL-LR300-R42 | roll page, data block, sighters | 70 | 85 | **no** | yes |
 | GL-ZERO-MOA-100Y | measurement grid and data block | 70 | 85 | **no** | yes |
 
 **Eighty-five bytes is the worst case in the library**, against DESIGN.md's estimate of 100 to 200 and a version 40 error-correction-level-H capacity of 1273 bytes. The payload uses **6.7 percent** of one maximum-size code.
 
 **The library standardises on version 10 at level H**, whose byte-mode capacity is **119 bytes**, verified against the `segno` library rather than taken from a table. Every built-in fits with at least 34 bytes spare. Version 8 would fit ten of the fourteen multi-bull layouts and none of the zeroing sheets, and the 3.2 mm of margin it saves is not worth a library where four sheets have a different code size from the rest.
 
-**A more useful property than the margin is that the margin does not depend on the number of bulls.** Parametric mode stores a grid, not a bull list, so the payload is the same size whether the grid holds 25 bulls or 36: GL-CF25-LTR and GL-RF36-LTR both encode to 55 bytes of body. Adding bulls costs nothing. What costs bytes is adding *kinds* of thing, which is why the two 85-byte sheets are the ones carrying a data block plus one more optional block.
+**A more useful property than the margin is that the margin does not depend on the number of bulls.** Parametric mode stores a grid, not a bull list, so the payload is the same size whether the grid holds 25 bulls or 36: GL-CF25-LTR and GL-RF36-LTR both encode to 55 bytes of body. Adding bulls costs nothing. What costs bytes is adding *kinds* of thing, which is why the 85-byte sheets are the ones carrying a data block plus one more optional block, and why the smallest is the one sheet with neither a sighter row nor a block.
+
+The figures come from `tools/gltd/check.py`, which builds every definition from `tools/layout/layouts.json` rather than from its own copy of the geometry, so it cannot report sizes for a target that no longer exists.
 
 ### 5.4 The quantum, and pages larger than 409.5 mm
 
@@ -870,6 +905,16 @@ Four properties fall out of hashing the binary body rather than the JSON.
 
 Eighty bits gives a fifty percent collision probability at roughly 2^40 distinct definitions, which is a trillion targets. Crockford base-32 was chosen over standard base-32 because it excludes I, L, O and U, so a user reading the identifier off a crumpled sheet cannot confuse one with zero.
 
+**The canonical form is the projection, not the source document.** This needs stating plainly, because the obvious reading of conformance test 1 is not satisfiable and an implementer will otherwise assume a bug.
+
+GLTD-J carries information GLTD-B does not: ink keys, ink roles, the name, description, author, licence and creation date, the cell `drawn` and `stroke` settings, label inks and border weights. None of that survives a trip through the binary body, and none of it should: the body exists to reconstruct a printable, analysable target from a QR code, not to be a serialisation of the document.
+
+So the format defines a **projection**: the subset of a GLTD-J document that GLTD-B can carry, written in canonical form with synthesised keys. Decoding produces the projection. Conformance test 1 compares the projection of the source against the decode of its own encoding, and requires `J to B to J to B` to give identical bytes.
+
+**One consequence is worth spelling out, because it decides an identifier.** The body's ink table stores each **distinct sRGB value** of the non-paper inks once, in declaration order, and every reference maps through the colour. The worked example in section 4 declares five inks: black, paper, fid, code and text. Four of those are `#000000`. Storing them literally would give a 64-byte body and a different identifier from the one printed in section 4. Deduplicating them gives 55 bytes and exactly `GL-YCSK-DZZ1-R0VJ-4T5Y`, which is what the reference encoder produces and what the section 4 document declares. The published identifier is only correct under the projection rule, which is the strongest argument for it.
+
+Roles are recoverable on decode rather than stored: an ink referenced by `fiducials.ink` is fiducial, one referenced by `codes` is code, one painting a disc is artwork, and index 15 is paper. Keys are not recoverable and are synthesised as `ink0`, `ink1` and `paper`.
+
 **It is invariant across tiles and across load data.** The body excludes the tile index and the whole `instance` block, so every sheet of a tiled assembly and every printing of a load-development sheet share one identifier. That is the correct behaviour in both cases: they are the same target.
 
 Canonicalisation rules for the JSON side, so that a stored file also round-trips predictably: object keys in the order given in this specification, two-space indentation, no trailing whitespace, LF line endings, UTF-8 without BOM, and arrays in the order specified. Two fields are excluded from the computation. The `id` field is excluded from its own computation, since it is computed from the binary body and not from the JSON at all. The `instance` block is excluded because it is not part of the definition, per section 3.11.
@@ -879,6 +924,8 @@ Canonicalisation rules for the JSON side, so that a stored file also round-trips
 ## 7. Printing constraints the format has to respect
 
 The format can express targets that cannot be printed usefully. The generator validates against these before it will emit a sheet.
+
+**Two constants are named here and used by rule everywhere else.** The **safe margin is 120 dmm**, which covers a 3 mm scanner crop plus the no-print border of a consumer inkjet with room to spare, and nothing that has to survive printing may cross it. The **clearance is 30 dmm**, the minimum ink-free gap between any two major elements: bulls, codes, the data block and the grid field. Both are properties of paper and printers rather than of a design, which is why they are fixed rather than declared per sheet, and why the derivation rules of sections 3.7 and 3.8 can refer to them by name.
 
 **QR module size has a floor.** A version 10 level H symbol is 57 modules across. At a 4 dmm module that is 22.8 mm, where one module is 4.7 device pixels at 300 DPI and 9.4 at 600. Below roughly 3 dmm per module on a consumer inkjet, dot gain begins to close the gaps between modules and level H's tolerance gets spent on the printer rather than on damage. The generator warns below 4 dmm and refuses below 3 dmm.
 
@@ -896,9 +943,15 @@ The format can express targets that cannot be printed usefully. The generator va
 
 **The data block is a detection exclusion zone.** Its rectangle is declared geometry, which means the detection pipeline knows before it looks at the scan that everything inside it is printed matter and handwriting rather than bullet holes. Nothing in the format enforces this; the pipeline reads the rectangle and excludes it, and DETECTION-PIPELINE.md says where.
 
+**Codes never overlap the data block, and there is 3 mm between them.** Where a sheet carries a load block, the bottom pair of codes sits above it rather than at the page corner. A generator that reserves room for the block and then draws the codes in the corners puts them inside it; that is not a hypothetical, it is what the first draft of the built-in library did on all eight sheets that carry a block.
+
+**A layout that does not fit is an error, not a squashed layout.** A solver that computes the vertical room it needs must compare it against what the page has and fail, rather than placing the grid at its top limit and letting the last row run into whatever is below.
+
+**Column-to-code clearance uses the clearance, not bare overlap.** A bull column that comes within 3 mm of a code band counts as clashing and forces the grid down. Testing for overlap alone allows a bull 0.15 mm from a code, which is what happened on the 300 yard Letter tile.
+
 **No bull may cross a tile boundary.** On a tiled definition, every bull's outermost disc, its cell, its labels and its fiducials must lie entirely within one sheet of the assembly. A bull split across a seam has no measurable centre. Tile alignment itself is unconstrained, for the reason given in section 3.12.
 
-**A measurement grid must leave a clear band.** The `field-ring-1` scheme needs somewhere to put markers, so the grid field plus a clearance must fit inside the safe margins with room for a marker row on each side. The built-in zeroing sheets leave between 114 and 232 dmm of band and carry 16 to 32 markers each.
+**A measurement grid must leave a clear band.** The `field-ring-1` scheme needs somewhere to put markers, so the grid field plus a clearance must fit inside the safe margins with room for a marker row on each side. A full row needs the 60 dmm marker footprint plus a clearance each side, so 120 dmm. The built-in zeroing sheets leave 160 to 233 dmm of side band measured to the safe margin, which is comfortable, and 67 to 140 dmm above and below measured to the corner code rows, which is not. They carry 12 to 24 markers each. Where that vertical band is under 120 dmm the top and bottom marker rows survive only away from the code columns, which is a warning rather than an error, and it is the reason the marker counts differ so much between four sheets that look alike.
 
 ---
 
@@ -1094,14 +1147,14 @@ Published at `https://grouplab.invalid/schema/gltd-1.schema.json`, versioned by 
 
     "codes": {
       "type": "object",
-      "required": ["count","ecLevel","moduleSize","placement"],
+      "required": ["count","ecLevel","moduleSize","placement","positions"],
       "properties": {
         "count":      { "type": "integer", "minimum": 0, "maximum": 8 },
         "version":    { "type": "integer", "minimum": 1, "maximum": 40 },
         "ecLevel":    { "enum": ["L","M","Q","H"] },
         "moduleSize": { "type": "integer", "minimum": 3, "maximum": 255 },
         "quietZone":  { "type": "integer", "minimum": 0, "maximum": 255 },
-        "placement":  { "enum": ["corners","explicit"] },
+        "placement":  { "enum": ["corners-1","explicit"] },
         "humanReadableId": { "type": "boolean" },
         "positions": {
           "type": "array", "maxItems": 8,
@@ -1234,7 +1287,7 @@ An implementation is conformant when it passes all of the following. These are w
 
 **Round trip.**
 
-1. GLTD-J to GLTD-B to GLTD-J returns a byte-identical canonical document, for every target in the built-in library.
+1. GLTD-J to GLTD-B to GLTD-J returns the byte-identical **canonical projection** of the source, for every target in the built-in library, and a further encode of that projection gives identical bytes. Section 6 defines the projection and explains why comparing against the source document itself is not a satisfiable test.
 2. GLTD-B to GLTD-J to GLTD-B returns a byte-identical body, for a corpus of generated random valid definitions.
 3. The definition identifier is stable across both round trips.
 4. A definition round-tripped by a writer that does not understand a later revision's block retains that block unchanged.
@@ -1265,7 +1318,12 @@ An implementation is conformant when it passes all of the following. These are w
 23. A sighter row whose gap differs from 1.2 times `pitchY` by more than 1 dmm, with no `cells.sighterGap` declared, is a warning.
 24. On a tiled definition, any bull, cell, marker or code crossing a tile boundary is an error.
 25. A `dataBlock` overlapping any bull, marker or code is an error, and its `reserve` square must fit within its `height`.
-26. A measurement grid whose field leaves less than a marker footprint plus clearance inside the safe margins is an error.
+26. A measurement grid whose field leaves less than a marker footprint plus clearance inside the safe margins is an error. Less than a full marker row, the footprint plus a clearance each side, between the field and the code rows is a warning.
+26a. A code overlapping a `dataBlock` rectangle is an error, and less than 30 dmm between them is a warning.
+26b. A parametric layout needing more vertical room than the page provides is an error, reported with the shortfall.
+26c. A bull column within 30 dmm of a code band must be treated as clashing when the rows are placed.
+26d. Under `corners-1`, a stored `positions` entry that differs from the derived centre is an error. A definition with `count` greater than zero and no `positions` is invalid.
+26e. A `dataBlock` whose `reserve` is greater than zero and less than 280 dmm carries no instance code, and a generator asked to print one on such a sheet refuses rather than shrinking the symbol.
 
 **Print mode and instance data.**
 
@@ -1320,3 +1378,11 @@ An implementation is conformant when it passes all of the following. These are w
 8. **Instance data is not covered by the definition hash, and it is also not signed.** Anyone can print a sheet whose instance code claims any load. That is fine for a personal tool and it would not be fine for a competition record. Out of scope for now, worth writing down.
 
 9. **The measurement grid block supports four grids per sheet** but every built-in zeroing sheet uses one. Two grids on a sheet, a coarse one for the first shot and a fine one for confirmation, is a design somebody will want. Leave the capacity, or spend the byte elsewhere?
+
+10. **Four flagged blocks have no byte layout.** Flag bits 2 to 5 name a Cell block, a Label block, a Print block and an Extension block, and section 5.2 lists them without specifying their contents. Nothing in the built-in library needs any of them, and a decoder that meets one cannot do anything sensible. Until they are specified, an encoder must refuse a document that would need one, and a decoder must reject a frame that sets the bit. Which of the four are actually wanted?
+
+11. **Values the body cannot carry have to be fixed somewhere.** A decoder has to produce something for `codes.version`, `codes.quietZone` and `codes.humanReadableId`, for the measurement grid `style` byte, and for the choice of quantum. The reference encoder assumes version 10, quiet zone 16, human-readable id true, style 1 meaning 2/3/4 dmm strokes with axis and label in the major ink, and quantum 0 in parametric mode. Those are defaults, not decisions; they should be written into section 5 as one or the other. One of them is now settled: `corners-1` fixes its footprint at 65 modules rather than deriving it from `codes.version`, so the code positions no longer depend on an invented value. The rest still do, and the same treatment probably suits them.
+
+13. **`explicit` code placement has no byte layout.** `corners-1` needs none because the rule derives the centres, but a definition that sets placement to `explicit` has positions the binary cannot carry, in exactly the way flag bits 2 to 5 have blocks the binary cannot carry. Either the code block grows a position list behind a flag, or `explicit` is refused by the encoder and the enumeration exists for GLTD-J only. Nothing in the built-in library uses it.
+
+12. **The erasure shares are named but not defined.** Section 5.6 specifies Reed-Solomon over GF(256) with k=2 and n=4 without saying which four shares. The reference implementation uses D0, D1, D0 xor D1, and D0 xor 2*D1 with polynomial 0x11D, which does let any two reconstruct the body. That should be in the specification rather than in one implementation.

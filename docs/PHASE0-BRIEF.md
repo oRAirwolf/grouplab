@@ -47,6 +47,7 @@ Command line only. No UI, no Avalonia, no Windows-specific code.
 **Things that will catch you out, listed because they caught the planning work out:**
 
 - **The canonical JSON form is specified** in TARGET-SCHEMA.md section 6: key order as given in the spec, two-space indent, LF, UTF-8 without BOM. The definition identifier is the SHA-256 of the binary body, not of the JSON, so it does not depend on any of that. Do not hash the JSON.
+- **Round-tripping compares against the projection, not the source document.** GLTD-J carries ink keys, roles, names and print settings that the binary cannot; TARGET-SCHEMA.md section 6 defines what survives. In particular the ink table stores each **distinct sRGB value** once, so the five inks of the section 4 example become one entry. That rule is what makes the published identifier `GL-YCSK-DZZ1-R0VJ-4T5Y` correct.
 - **`instance` and the tile index are excluded from the hash.** Two sheets with the same layout and different load data are the same definition. Two tiles of one assembly are the same definition. TARGET-SCHEMA.md section 3.11 and 3.12.
 - **The paper knockout is ink index 15 and is never written into the ink table.** A disc painted in it lays no ink, it reveals the substrate. In PDF that means not drawing, not drawing white.
 - **`grid-boundary-1` and its siblings are derivation rules with a versioned name.** The drop test is part of the rule. Recompute the marker list and compare against any stored list; a mismatch is an error, not a repair.
@@ -54,8 +55,30 @@ Command line only. No UI, no Avalonia, no Windows-specific code.
 
 **Reference implementations to check against, both in `tools/`:**
 
-- `tools/gltd/check.py` prints body size, frame size and definition identifier for six representative sheets. Your C# encoder must produce the same bytes and the same identifiers. If it does not, one of you is wrong and the Python one is not authoritative, so read both.
+- `tools/gltd/check.py` prints body size, frame size and definition identifier for **all twenty sheets plus the two extra tile-assembly presets**. It builds each one from `tools/layout/layouts.json`, so it cannot drift away from the validated geometry. Your C# encoder must produce the same bytes and the same identifiers. If it does not, one of you is wrong and the Python one is not authoritative, so read both.
 - `tools/layout/run.py` prints the validated geometry of all twenty sheets and `tools/layout/layouts.json` has it in full. Your built-in definitions must match it exactly. It ends with `16 multi-bull layouts, 4 zeroing sheets, 0 failing`.
+
+---
+
+## 2a. What the first planning-session review changed
+
+The first Claude Code session to read this brief produced a plan that found four real faults in the tooling before writing a line of code. They are fixed, and the fixes are in the repository, but they are recorded here so you do not rediscover them:
+
+- **The bottom pair of codes was being drawn inside the load block** on all eight sheets that carry one. `layout.py` reserved room for the block as though the codes sat above it, then drew them at the page corners; `check()` never included the block as an element. The codes now sit above the block with 3 mm of clearance.
+- **Three sheets did not fit and said nothing.** The solver's own `fits` flag was computed and never reported. GL-CF25-LTR-D was 11.0 mm short, GL-CF30-LTR 2.8 mm, GL-LR300-TA4 0.3 mm. A failed fit is now an error.
+- **The column-to-code test used bare overlap rather than the clearance**, which let a bull sit 0.15 mm from a code on the 300 yard Letter tile.
+- **`check.py` had drifted** from the geometry it was supposed to check. It now derives every definition from `layouts.json`.
+
+Consequently **three sheets changed shape**: GL-CF25-LTR-D carries two codes rather than four, GL-CF30-LTR moved to a 35.0 mm pitch, and both 300 yard tiles moved to a 32.0 mm ring. Marker counts moved on several others. Everything in TARGET-LIBRARY.md sections 4 and 5 is current; `layouts.json` is the authority.
+
+**The second review found three more, plus one specification gap.** Same method, same result, and all four are fixed:
+
+- **`check.py` derived the page size from a rounded inch string**, so A4 came out 2100.1 x 2969.6 and rounded to 2101 x 2969. That moved the data block and the tiling on GL-RF25-A4, GL-LR25-A3, GL-LR300-TA4 and the TA4 3 by 2 preset, and therefore changed four identifiers. It now reads `layout.PAGES`.
+- **The zeroing data block was declared wrong in two ways at once**: `fields-3x3-1` where it is two rows, and a 280 dmm instance-code reserve inside a 210 dmm block, which cannot hold the 276 dmm symbol. The zeroing sheets now use `fields-3x2-1`, `standard-6` and a 210 dmm reserve, and carry **no instance code**. TARGET-SCHEMA.md section 3.10 states the general rule: below a 280 dmm reserve the square holds the identifier and the serial as text instead.
+- **`zero.py` had not been given the 3 mm gap** between the bottom codes and the load block that `layout.py` was fixed to leave, so the two solvers disagreed about the same rule. Fixed, along with the missing clearance warnings. Two zeroing sheets now warn honestly about a narrow marker band, and marker counts moved: 24, 16, 24 and 12.
+- **`codes.placement` named no offsets**, which left a decoder to invent the inset from the page edge. It is now the versioned rule **`corners-1`**, spelled out in TARGET-SCHEMA.md section 3.8, `positions` is required in GLTD-J even under the rule, and `check.py` cross-checks the rule against every sheet the layout solver placed. Note that the rule fixes its footprint at 65 modules rather than reading `codes.version`, because the binary carries the module size and not the version.
+
+**Four specification gaps remain open** and are listed as questions 10, 11, 12 and 13 at the end of TARGET-SCHEMA.md: the four flagged blocks with no byte layout, the values a decoder must invent because the body cannot carry them, the definition of the four erasure shares, and the missing byte layout for `explicit` code placement. Do what the reference encoder does, note where you had to choose, and raise them rather than silently deciding.
 
 ---
 
