@@ -40,7 +40,8 @@ public class RoundTripTests
             source.RingSets.Single().Discs.Select(d => (d.Diameter, IsPaper(source, d.Ink))),
             projection.RingSets.Single().Discs.Select(d => (d.Diameter, IsPaper(projection, d.Ink))));
         Assert.Equal(source.Codes!.Positions, projection.Codes!.Positions);
-        Assert.Equal(source.Cells!.Grid, projection.Cells!.Grid);
+        Assert.NotNull(source.Cells!.Grid);
+        Assert.Null(projection.Cells);
         Assert.Equal(InkRole.Fiducial, projection.Inks.Single(i => i.Key == projection.Fiducials!.Ink).Role);
     }
 

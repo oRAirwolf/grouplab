@@ -1,0 +1,202 @@
+{
+  "gltd": 1,
+  "revision": 0,
+  "id": "GL-T9EV-G2JF-EFSY-BN57",
+  "name": "GroupLab 300 yd Tile, Letter, 3x2 Assembly",
+  "description": "One tile of a 3 by 2 assembly: 6 scoring bulls per sheet on a 101.6 mm grid, 36 across the assembly.",
+  "author": "GroupLab built-in library",
+  "licence": "CC0-1.0",
+  "created": "2026-09-13",
+  "units": "dmm",
+  "page": {
+    "size": "letter",
+    "width": 2159,
+    "height": 2794,
+    "orientation": "portrait"
+  },
+  "inks": [
+    {
+      "key": "black",
+      "srgb": "#000000",
+      "role": "artwork"
+    },
+    {
+      "key": "paper",
+      "srgb": "#FFFFFF",
+      "role": "paper"
+    },
+    {
+      "key": "fid",
+      "srgb": "#000000",
+      "role": "fiducial"
+    },
+    {
+      "key": "code",
+      "srgb": "#000000",
+      "role": "code"
+    },
+    {
+      "key": "text",
+      "srgb": "#000000",
+      "role": "text"
+    }
+  ],
+  "ringSets": [
+    {
+      "key": "std",
+      "discs": [
+        {
+          "diameter": 320,
+          "ink": "black"
+        },
+        {
+          "diameter": 312,
+          "ink": "paper"
+        },
+        {
+          "diameter": 160,
+          "ink": "black"
+        },
+        {
+          "diameter": 154,
+          "ink": "paper"
+        },
+        {
+          "diameter": 32,
+          "ink": "black"
+        }
+      ]
+    }
+  ],
+  "bulls": [
+    {
+      "x": 572,
+      "y": 381,
+      "ringSet": "std",
+      "label": "1",
+      "scoring": true
+    },
+    {
+      "x": 1588,
+      "y": 381,
+      "ringSet": "std",
+      "label": "2",
+      "scoring": true
+    },
+    {
+      "x": 572,
+      "y": 1397,
+      "ringSet": "std",
+      "label": "3",
+      "scoring": true
+    },
+    {
+      "x": 1588,
+      "y": 1397,
+      "ringSet": "std",
+      "label": "4",
+      "scoring": true
+    },
+    {
+      "x": 572,
+      "y": 2413,
+      "ringSet": "std",
+      "label": "5",
+      "scoring": true
+    },
+    {
+      "x": 1588,
+      "y": 2413,
+      "ringSet": "std",
+      "label": "6",
+      "scoring": true
+    }
+  ],
+  "fiducials": {
+    "scheme": "grid-boundary-half-1",
+    "family": "apriltag-36h11",
+    "markerSize": 40,
+    "quietZone": 10,
+    "ink": "fid",
+    "markers": [
+      {
+        "id": 0,
+        "x": 1080,
+        "y": 381
+      },
+      {
+        "id": 3,
+        "x": 572,
+        "y": 889
+      },
+      {
+        "id": 4,
+        "x": 1080,
+        "y": 889
+      },
+      {
+        "id": 5,
+        "x": 1588,
+        "y": 889
+      },
+      {
+        "id": 12,
+        "x": 1080,
+        "y": 1397
+      },
+      {
+        "id": 15,
+        "x": 572,
+        "y": 1905
+      },
+      {
+        "id": 16,
+        "x": 1080,
+        "y": 1905
+      },
+      {
+        "id": 17,
+        "x": 1588,
+        "y": 1905
+      },
+      {
+        "id": 24,
+        "x": 1080,
+        "y": 2413
+      }
+    ]
+  },
+  "codes": {
+    "count": 2,
+    "version": 10,
+    "ecLevel": "H",
+    "moduleSize": 4,
+    "quietZone": 16,
+    "placement": "corners-1",
+    "humanReadableId": true,
+    "positions": [
+      {
+        "x": 250,
+        "y": 250
+      },
+      {
+        "x": 1909,
+        "y": 250
+      }
+    ]
+  },
+  "print": {
+    "scaling": "none",
+    "minimumDpi": 300,
+    "colourMode": "mono",
+    "generator": "GroupLab 0.1.0",
+    "notes": "Print at 100 percent. Do not use fit to page."
+  },
+  "tiling": {
+    "cols": 3,
+    "rows": 2,
+    "sheetWidth": 2159,
+    "sheetHeight": 2794,
+    "overlap": 0
+  }
+}

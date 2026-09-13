@@ -55,8 +55,9 @@ public static class Projection
             .Select((set, i) => new RingSet(SetKey(i), set.Select(disc => new Disc(disc.Diameter * q, InkKey(disc.InkIndex))).ToList()))
             .ToList();
 
+        // No cells: on a parametric layout the lattice is derived from the bull grid and carries nothing the
+        // grid does not, so the projection omits the block, as the built-in library does (section 3.6).
         var bulls = new List<Bull>();
-        Cells? cells = null;
         if (body.ExplicitBulls is { } explicitBulls)
         {
             foreach (var b in explicitBulls)
@@ -69,7 +70,7 @@ public static class Projection
             var g = body.Grid!;
             for (int k = 0; k < g.Cols * g.Rows; k++)
             {
-                var (row, col) = GridCell(k, g.Order, g.Cols, g.Rows);
+                var (row, col) = BullLayout.GridCell(k, g.Order, g.Cols, g.Rows);
                 bulls.Add(new Bull((g.OriginX + (col * g.PitchX)) * q, (g.OriginY + (row * g.PitchY)) * q,
                     SetKey(g.RingSetIndex), null, true, null));
             }
@@ -81,8 +82,6 @@ public static class Projection
                     bulls.Add(new Bull((s.OriginX + (k * s.PitchX)) * q, s.OriginY * q, SetKey(s.RingSetIndex), null, false, null));
                 }
             }
-
-            cells = CellsFor(g, q);
         }
 
         bulls = WithDefaultLabels(bulls);
@@ -112,37 +111,14 @@ public static class Projection
                 InkKey(m.InkPair & 0xF), major, major, MinorStroke, MajorStroke, AxisStroke, m.LabelStep, major);
         }).ToList();
 
-        return new TargetDefinition(1, 0, definitionId, definitionId, null, null, null, null, "dmm", page, inks, ringSets,
-            bulls, cells, fiducials, codes, null, dataBlock, null, tiling, grids, []);
+        var definition = new TargetDefinition(1, 0, definitionId, definitionId, null, null, null, null, "dmm", page, inks, ringSets,
+            bulls, null, fiducials, codes, null, dataBlock, null, tiling, grids, []);
+        return FiducialDerivation.WithDerivedMarkers(definition);
     }
-
-    /// <summary>Row and column of the k-th grid bull under the grid order byte of section 5.2.</summary>
-    internal static (int Row, int Col) GridCell(int k, int order, int cols, int rows) => order switch
-    {
-        1 => (k % rows, k / rows),
-        2 => (k / cols, (k / cols) % 2 == 0 ? k % cols : cols - 1 - (k % cols)),
-        _ => (k / cols, k % cols),
-    };
 
     private static string InkKey(int index) => index == WireCodes.PaperInk ? "paper" : $"ink{index}";
 
     private static string SetKey(int index) => $"set{index}";
-
-    /// <summary>
-    /// Cells are emitted where the bull grid defines them as integers: both pitches positive and even, and
-    /// the cell origin half a pitch before the first bull not negative. Otherwise there are no cells.
-    /// </summary>
-    private static Cells? CellsFor(BodyGrid g, int q)
-    {
-        int pitchX = g.PitchX * q, pitchY = g.PitchY * q;
-        int originX = (g.OriginX * q) - (pitchX / 2), originY = (g.OriginY * q) - (pitchY / 2);
-        if (pitchX <= 0 || pitchY <= 0 || pitchX % 2 != 0 || pitchY % 2 != 0 || originX < 0 || originY < 0)
-        {
-            return null;
-        }
-
-        return new Cells(CellsMode.Grid, null, null, null, null, new CellGrid(originX, originY, pitchX, pitchY, g.Cols, g.Rows), null);
-    }
 
     /// <summary>Scoring bulls sequential from 1 and sighters S1 upward, both in array order (section 5.2).</summary>
     internal static List<Bull> WithDefaultLabels(IReadOnlyList<Bull> bulls)
@@ -156,7 +132,7 @@ public static class Projection
             ? (++scoringCount).ToString(CultureInfo.InvariantCulture)
             : "S" + (++sighterCount).ToString(CultureInfo.InvariantCulture);
 
-    private sealed record ParametricLayout(BodyGrid Grid, List<BodySighterRow> Sighters);
+    private sealed record BodyLayout(BodyGrid Grid, List<BodySighterRow> Sighters);
 
     private sealed class Encoder(TargetDefinition d)
     {
@@ -174,7 +150,7 @@ public static class Projection
                 return (null, _diagnostics);
             }
 
-            var layout = InferParametric();
+            var layout = ToBodyLayout(BullLayout.Recognise(d));
             CheckLabels();
             CheckCells(layout);
             if (layout is null)
@@ -336,120 +312,20 @@ public static class Projection
             return index;
         }
 
-        /// <summary>
-        /// Recognises a parametric layout: the scoring bulls first, forming a complete grid in one of the
-        /// three orders, then sighter rows. The lowest matching order code is canonical.
-        /// </summary>
-        private ParametricLayout? InferParametric()
+        private BodyLayout? ToBodyLayout(ParametricLayout? layout)
         {
-            var bulls = d.Bulls;
-            int n = 0;
-            while (n < bulls.Count && bulls[n].Scoring)
-            {
-                n++;
-            }
-
-            if (n == 0 || bulls.Skip(n).Any(b => b.Scoring) || bulls.Take(n).Any(b => b.RingSet != bulls[0].RingSet))
+            if (layout is null)
             {
                 return null;
             }
 
-            var xs = bulls.Take(n).Select(b => b.X).Distinct().Order().ToList();
-            var ys = bulls.Take(n).Select(b => b.Y).Distinct().Order().ToList();
-            int cols = xs.Count, rows = ys.Count;
-            if (cols * rows != n || cols > 255 || rows > 255 || Step(xs) is not { } pitchX || Step(ys) is not { } pitchY)
-            {
-                return null;
-            }
-
-            var declared = d.Cells?.Grid;
-            if (cols == 1)
-            {
-                pitchX = declared?.PitchX ?? (rows > 1 ? pitchY : 0);
-            }
-
-            if (rows == 1)
-            {
-                pitchY = declared?.PitchY ?? (cols > 1 ? pitchX : 0);
-            }
-
-            int order = -1;
-            for (int o = 0; o <= 2 && order < 0; o++)
-            {
-                bool matches = true;
-                for (int k = 0; k < n && matches; k++)
-                {
-                    var (row, col) = GridCell(k, o, cols, rows);
-                    matches = bulls[k].X == xs[0] + (col * pitchX) && bulls[k].Y == ys[0] + (row * pitchY);
-                }
-
-                if (matches)
-                {
-                    order = o;
-                }
-            }
-
-            if (order < 0)
-            {
-                return null;
-            }
-
-            var sighters = new List<BodySighterRow>();
-            for (int i = n; i < bulls.Count;)
-            {
-                int j = i;
-                while (j < bulls.Count && bulls[j].Y == bulls[i].Y && bulls[j].RingSet == bulls[i].RingSet)
-                {
-                    j++;
-                }
-
-                int count = j - i;
-                int pitch = count == 1 ? pitchX : bulls[i + 1].X - bulls[i].X;
-                if (count > 255 || pitch < 0 || pitch > ushort.MaxValue)
-                {
-                    return null;
-                }
-
-                for (int k = 0; k < count; k++)
-                {
-                    if (bulls[i + k].X != bulls[i].X + (k * pitch))
-                    {
-                        return null;
-                    }
-                }
-
-                sighters.Add(new BodySighterRow((byte)count, (ushort)bulls[i].X, (ushort)bulls[i].Y, (ushort)pitch, _ringIndex[bulls[i].RingSet]));
-                i = j;
-            }
-
-            if (sighters.Count > 4 || pitchX > ushort.MaxValue || pitchY > ushort.MaxValue)
-            {
-                return null;
-            }
-
-            var grid = new BodyGrid((byte)cols, (byte)rows, (ushort)xs[0], (ushort)ys[0], (ushort)pitchX, (ushort)pitchY,
-                _ringIndex[bulls[0].RingSet], (byte)order);
-            return new ParametricLayout(grid, sighters);
-        }
-
-        /// <summary>The common step of sorted distinct values: 0 for one value, null when uneven.</summary>
-        private static int? Step(List<int> values)
-        {
-            if (values.Count == 1)
-            {
-                return 0;
-            }
-
-            int step = values[1] - values[0];
-            for (int i = 2; i < values.Count; i++)
-            {
-                if (values[i] - values[i - 1] != step)
-                {
-                    return null;
-                }
-            }
-
-            return step;
+            var g = layout.Grid;
+            var grid = new BodyGrid((byte)g.Cols, (byte)g.Rows, (ushort)g.OriginX, (ushort)g.OriginY, (ushort)g.PitchX, (ushort)g.PitchY,
+                _ringIndex[g.RingSet], (byte)g.Order);
+            var sighters = layout.Sighters
+                .Select(s => new BodySighterRow((byte)s.Count, (ushort)s.OriginX, (ushort)s.OriginY, (ushort)s.PitchX, _ringIndex[s.RingSet]))
+                .ToList();
+            return new BodyLayout(grid, sighters);
         }
 
         private void CheckLabels()
@@ -473,7 +349,7 @@ public static class Projection
             }
         }
 
-        private void CheckCells(ParametricLayout? layout)
+        private void CheckCells(BodyLayout? layout)
         {
             if (d.Cells is not { } cells)
             {
@@ -502,13 +378,10 @@ public static class Projection
                 return;
             }
 
+            // cells.grid is optional: the lattice derives from the bull grid (section 3.6). A stored one must equal it.
             var g = layout.Grid;
-            if (cells.Grid is not { } cg)
-            {
-                Refuse("encode.cellBlock", "/cells", "Grid cells without cells.grid need the cell block (question 10).");
-            }
-            else if (cg.Cols != g.Cols || cg.Rows != g.Rows || cg.PitchX != g.PitchX || cg.PitchY != g.PitchY
-                || (2 * cg.OriginX) + cg.PitchX != 2 * g.OriginX || (2 * cg.OriginY) + cg.PitchY != 2 * g.OriginY)
+            if (cells.Grid is { } cg && (cg.Cols != g.Cols || cg.Rows != g.Rows || cg.PitchX != g.PitchX || cg.PitchY != g.PitchY
+                || (2 * cg.OriginX) + cg.PitchX != 2 * g.OriginX || (2 * cg.OriginY) + cg.PitchY != 2 * g.OriginY))
             {
                 Refuse("encode.cellsInconsistent", "/cells/grid",
                     $"cells.grid does not describe the bull grid, which is {g.Cols} by {g.Rows} at pitch {g.PitchX} by {g.PitchY} " +

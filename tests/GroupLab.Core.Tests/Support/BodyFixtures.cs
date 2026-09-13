@@ -143,10 +143,23 @@ internal static class RandomBodies
         List<BodyBull>? bulls = null;
         if (!isExplicit)
         {
+            // A pitch along an axis with one bull is unobservable in the decode, so the canonical body stores the
+            // other axis's pitch there, and zero for a single bull (docs/SPEC-ERRATA.md C9).
             byte cols = (byte)rng.Next(1, 9), rows = (byte)rng.Next(1, 9);
-            bool zeroPitch = cols == 1 && rows == 1 && rng.Next(2) == 0;
-            ushort pitchX = zeroPitch ? (ushort)0 : (ushort)(2 * rng.Next(1, 1001));
-            ushort pitchY = zeroPitch ? (ushort)0 : (ushort)(2 * rng.Next(1, 1001));
+            ushort pitchX = (ushort)(2 * rng.Next(1, 1001));
+            ushort pitchY = (ushort)(2 * rng.Next(1, 1001));
+            if (cols == 1 && rows == 1)
+            {
+                pitchX = pitchY = 0;
+            }
+            else if (cols == 1)
+            {
+                pitchX = pitchY;
+            }
+            else if (rows == 1)
+            {
+                pitchY = pitchX;
+            }
             byte order = (byte)(cols > 1 && rows > 1 ? rng.Next(3) : 0);
             grid = new BodyGrid(cols, rows, (ushort)((pitchX / 2) + rng.Next(3000)), (ushort)((pitchY / 2) + rng.Next(3000)),
                 pitchX, pitchY, (byte)rng.Next(setCount), order);

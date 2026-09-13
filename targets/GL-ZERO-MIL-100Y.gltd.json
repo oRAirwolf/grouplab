@@ -1,0 +1,227 @@
+{
+  "gltd": 1,
+  "revision": 0,
+  "id": "GL-XD6D-R325-J52P-3NH7",
+  "name": "GroupLab Zeroing Grid, mil at 100 yd",
+  "description": "One aiming mark on a 0.1 mil grid spanning plus or minus 0.8 mil at 100 yards, with a six-field load block.",
+  "author": "GroupLab built-in library",
+  "licence": "CC0-1.0",
+  "created": "2026-09-13",
+  "units": "dmm",
+  "page": {
+    "size": "letter",
+    "width": 2159,
+    "height": 2794,
+    "orientation": "portrait"
+  },
+  "inks": [
+    {
+      "key": "black",
+      "srgb": "#000000",
+      "role": "artwork"
+    },
+    {
+      "key": "paper",
+      "srgb": "#FFFFFF",
+      "role": "paper"
+    },
+    {
+      "key": "fid",
+      "srgb": "#000000",
+      "role": "fiducial"
+    },
+    {
+      "key": "code",
+      "srgb": "#000000",
+      "role": "code"
+    },
+    {
+      "key": "text",
+      "srgb": "#000000",
+      "role": "text"
+    }
+  ],
+  "ringSets": [
+    {
+      "key": "aim",
+      "discs": [
+        {
+          "diameter": 127,
+          "ink": "black"
+        },
+        {
+          "diameter": 114,
+          "ink": "paper"
+        },
+        {
+          "diameter": 25,
+          "ink": "black"
+        }
+      ]
+    }
+  ],
+  "bulls": [
+    {
+      "x": 1079,
+      "y": 1277,
+      "ringSet": "aim",
+      "scoring": true
+    }
+  ],
+  "fiducials": {
+    "scheme": "field-ring-1",
+    "family": "apriltag-36h11",
+    "markerSize": 40,
+    "quietZone": 10,
+    "ink": "fid",
+    "markers": [
+      {
+        "id": 0,
+        "x": 287,
+        "y": 485
+      },
+      {
+        "id": 1,
+        "x": 622,
+        "y": 485
+      },
+      {
+        "id": 2,
+        "x": 1079,
+        "y": 485
+      },
+      {
+        "id": 3,
+        "x": 1536,
+        "y": 485
+      },
+      {
+        "id": 4,
+        "x": 1871,
+        "y": 485
+      },
+      {
+        "id": 5,
+        "x": 287,
+        "y": 820
+      },
+      {
+        "id": 6,
+        "x": 1871,
+        "y": 820
+      },
+      {
+        "id": 7,
+        "x": 287,
+        "y": 1277
+      },
+      {
+        "id": 8,
+        "x": 1871,
+        "y": 1277
+      },
+      {
+        "id": 9,
+        "x": 287,
+        "y": 1734
+      },
+      {
+        "id": 10,
+        "x": 1871,
+        "y": 1734
+      },
+      {
+        "id": 11,
+        "x": 287,
+        "y": 2069
+      },
+      {
+        "id": 12,
+        "x": 622,
+        "y": 2069
+      },
+      {
+        "id": 13,
+        "x": 1079,
+        "y": 2069
+      },
+      {
+        "id": 14,
+        "x": 1536,
+        "y": 2069
+      },
+      {
+        "id": 15,
+        "x": 1871,
+        "y": 2069
+      }
+    ]
+  },
+  "codes": {
+    "count": 4,
+    "version": 10,
+    "ecLevel": "H",
+    "moduleSize": 4,
+    "quietZone": 16,
+    "placement": "corners-1",
+    "humanReadableId": true,
+    "positions": [
+      {
+        "x": 250,
+        "y": 250
+      },
+      {
+        "x": 1909,
+        "y": 250
+      },
+      {
+        "x": 250,
+        "y": 2304
+      },
+      {
+        "x": 1909,
+        "y": 2304
+      }
+    ]
+  },
+  "print": {
+    "scaling": "none",
+    "minimumDpi": 300,
+    "colourMode": "mono",
+    "generator": "GroupLab 0.1.0",
+    "notes": "Print at 100 percent. Do not use fit to page."
+  },
+  "dataBlock": {
+    "x": 120,
+    "y": 2464,
+    "width": 1919,
+    "height": 210,
+    "layout": "fields-3x2-1",
+    "fieldSet": "standard-6",
+    "reserve": 210,
+    "ink": "black",
+    "labelInk": "text",
+    "border": 2
+  },
+  "grids": [
+    {
+      "key": "zero",
+      "centreX": 1079,
+      "centreY": 1277,
+      "half": 732,
+      "divisions": 8,
+      "majorEvery": 5,
+      "unit": "mil",
+      "distance": 100,
+      "distanceUnit": "yd",
+      "minorInk": "black",
+      "majorInk": "black",
+      "axisInk": "black",
+      "minorStroke": 2,
+      "majorStroke": 3,
+      "axisStroke": 4,
+      "labelStep": 5,
+      "labelInk": "text"
+    }
+  ]
+}

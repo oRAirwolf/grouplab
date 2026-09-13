@@ -14,8 +14,8 @@ public static class Corners1
     public static bool Supports(int count) => count is 0 or 2 or 4;
 
     /// <summary>
-    /// Code centres: top pair for a count of 2, both pairs for 4. A half-dmm centre, which only an odd
-    /// module size produces, rounds half to even exactly as <c>tools/gltd/check.py</c> does.
+    /// Code centres: top pair for a count of 2, both pairs for 4. A half-dmm centre, which only an odd module
+    /// size produces, rounds under the tie rule of section 2.
     /// </summary>
     public static IReadOnlyList<PointDmm> Positions(int pageWidth, int pageHeight, int dataBlockHeight, int count, int moduleSize)
     {
@@ -29,21 +29,19 @@ public static class Corners1
             return [];
         }
 
-        double half = FootprintModules * moduleSize / 2.0;
-        double top = SafeMargin + half;
-        double bottom = pageHeight - SafeMargin - dataBlockHeight - (dataBlockHeight > 0 ? Clearance : 0) - half;
-        double left = SafeMargin + half;
-        double right = pageWidth - SafeMargin - half;
+        long footprint = FootprintModules * (long)moduleSize;
+        int near = DerivedRounding.Halve((2L * SafeMargin) + footprint);
+        int right = DerivedRounding.Halve((2L * (pageWidth - SafeMargin)) - footprint);
+        int bottom = DerivedRounding.Halve(
+            (2L * (pageHeight - SafeMargin - dataBlockHeight - (dataBlockHeight > 0 ? Clearance : 0))) - footprint);
 
-        var positions = new List<PointDmm>(count) { new(Round(left), Round(top)), new(Round(right), Round(top)) };
+        var positions = new List<PointDmm>(count) { new(near, near), new(right, near) };
         if (count == 4)
         {
-            positions.Add(new PointDmm(Round(left), Round(bottom)));
-            positions.Add(new PointDmm(Round(right), Round(bottom)));
+            positions.Add(new PointDmm(near, bottom));
+            positions.Add(new PointDmm(right, bottom));
         }
 
         return positions;
     }
-
-    private static int Round(double value) => (int)Math.Round(value, MidpointRounding.ToEven);
 }
