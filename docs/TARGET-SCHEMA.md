@@ -972,7 +972,11 @@ The format can express targets that cannot be printed usefully. The generator va
 
 **A derived fiducial scheme must leave enough markers.** The drop test can starve a coarse-pitch layout: `grid-boundary-1` on the 300 yard tile leaves two markers, which is not a registration. The validator errors below four surviving markers and warns below eight, and the fix is `grid-boundary-half-1`.
 
-**The sighter row sits at 1.2 times the grid pitch.** Measured across the shipped sheets that have one, this is the modal ratio, and the library follows it. A layout whose sighter gap differs by more than 1 dmm from 1.2 times `pitchY`, and which does not declare `cells.sighterGap`, raises a warning. Declaring the field is the override, and it is a warning rather than an error because a deliberate departure is a legitimate design choice.
+**The sighter row sits at 1.2 times the grid pitch.** Measured across the shipped sheets that have one, this is the modal ratio, and the library follows it. A layout whose sighter gap differs by more than 1 dmm from 1.2 times `pitchY`, and which does not declare `cells.sighterGap`, raises a warning. Declaring the field is the override, and it is a warning rather than an error because a deliberate departure is a legitimate design choice. A gap shortened only as far as brings the sighter row inside the fiducial lattice raises no warning, declared or not, because that is the one reason a generator shortens it; the gap itself is recoverable from a decoded body, so a sheet read from its codes needs no declaration.
+
+**The fiducial lattice must bracket every bull.** Every bull centre, sighters included, must lie on or inside the rectangle bounded by the outermost surviving marker centres. Where a derived scheme leaves the sighter row outside, a generator shortens the sighter gap from 1.2 times the pitch, one dmm at a time, until the lattice brackets, and declares `cells.sighterGap`.
+
+A bull outside the lattice is interpolated on a flat scan and extrapolated on anything that is not flat. The Phase 0 photographs measured the cost: the sighters of GL-CF25-LTR, 266 dmm outside the lattice because one marker row is dropped, were the worst bull on three photographs of four. A sweep of the library then found the same defect at the same scale on three sheets nobody had photographed, horizontally, where a sighter gap cannot reach it: the outermost bull columns lie 200 dmm outside on GL-CF25-100M-A4 and 508 dmm outside on GL-LR300-R24 and GL-LR300-R36 (docs/PHASE0-RESULTS.md section 4.4). Until those four sheets are fixed the validator warns, and the change that fixes them makes it an error.
 
 **The data block is a detection exclusion zone.** Its rectangle is declared geometry, which means the detection pipeline knows before it looks at the scan that everything inside it is printed matter and handwriting rather than bullet holes. Nothing in the format enforces this; the pipeline reads the rectangle and excludes it, and DETECTION-PIPELINE.md says where.
 
@@ -1348,7 +1352,7 @@ An implementation is conformant when it passes all of the following. These are w
 20. Disc diameters within a ring set that do not strictly decrease are an error.
 21. More than one ink carrying the `paper` role is an error.
 22. A derived fiducial scheme leaving fewer than four surviving markers is an error; fewer than eight is a warning.
-23. A sighter row whose gap differs from 1.2 times `pitchY` by more than 1 dmm, with no `cells.sighterGap` declared, is a warning.
+23. A sighter row whose gap differs from 1.2 times `pitchY` by more than 1 dmm, with no `cells.sighterGap` declared, is a warning **unless the shortened gap is what brings the sighter row inside the fiducial lattice, in which case it is not**.
 24. On a tiled definition, any bull, marker, code or **drawn** cell boundary crossing a tile boundary is an error. An undrawn cell region is not artwork and is clipped by the sheet instead, per section 3.6; a derived cell lattice extending past the sheet edge is neither an error nor a warning.
 24a. A stored `cells.grid` that does not equal the derivation from the bull grid is an error.
 25. A `dataBlock` overlapping any bull, marker or code is an error, and its `reserve` square must fit within its `height`.
@@ -1358,6 +1362,7 @@ An implementation is conformant when it passes all of the following. These are w
 26c. A bull column within 30 dmm of a code band must be treated as clashing when the rows are placed.
 26d. Under `corners-1`, a stored `positions` entry that differs from the derived centre is an error. A definition with `count` greater than zero and no `positions` is invalid.
 26e. A `dataBlock` whose `reserve` is greater than zero and less than 280 dmm carries no instance code, and a generator asked to print one on such a sheet refuses rather than shrinking the symbol.
+26f. A bull centre outside the rectangle bounded by the outermost surviving marker centres is an error; a centre on its edge conforms. Until the geometry change that fixes GL-CF25-LTR, GL-CF25-100M-A4, GL-LR300-R24 and GL-LR300-R36, it is a warning.
 
 **Print mode and instance data.**
 

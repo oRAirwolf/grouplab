@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-13, question 5: the wall photographs are not of a flat sheet
 
-**Status: open**
+**Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 8.
 
 Notes entry 6 describes the nine new photographs as sheet 3 "taped flat to a wall", and sets them three questions: lens, flatness, and sighter geometry. In every frame the sheet hangs from a single pin at the top centre and its edges are visibly curved (`ultrawide1.jpg` shows the fixing at the top edge, `telephoto2.jpg` an orange pin); nothing holds the lower half. The measurement agrees, and as a result the set cannot answer any of the three questions. `docs/PHASE0-RESULTS.md` section 3a has the full table; `scans/phase0/measurements/photos.json` has every corner and bull.
 
@@ -43,7 +43,7 @@ The misfit is largest at the free bottom edge: the two lowest marker rows sit 0.
 
 ## 2026-09-13, question 4: the bracketing rule, proposed, and three sheets a sighter gap cannot fix
 
-**Status: open**
+**Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 9.
 
 Notes entry 5 asks for the wording of a TARGET-SCHEMA.md section 7 rule and a conformance test, from the finding that the sighters of `GL-CF25-LTR` sit outside the marker lattice. The geometry change is deferred, as entry 5 now says, and nothing in `tools/layout`, `targets/` or the validator has been changed. Measuring the rule against the whole library before proposing it turned up two things it has to decide.
 

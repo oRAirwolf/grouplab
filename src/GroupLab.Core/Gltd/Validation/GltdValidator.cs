@@ -5,7 +5,7 @@ using GroupLab.Core.Rendering;
 namespace GroupLab.Core.Gltd.Validation;
 
 /// <summary>
-/// Cross-field validation of a structurally valid definition: TARGET-SCHEMA.md section 10 tests 12 to 26e, 34
+/// Cross-field validation of a structurally valid definition: TARGET-SCHEMA.md section 10 tests 12 to 26f, 34
 /// and 37, and the clearance warnings of <c>tools/layout</c> that docs/SPEC-ERRATA.md C5 carries over. Label
 /// boxes join the overlap test with the renderer, which is what fixes where a label sits.
 /// </summary>
@@ -58,6 +58,7 @@ public static class GltdValidator
             CheckSighterGap(layout);
             CheckCells(layout);
             var markers = CheckMarkers();
+            CheckBracketing(markers);
             var codes = CheckCodePositions();
             CheckDataBlock();
             CheckGrids(markers, codes);
@@ -221,12 +222,74 @@ public static class GltdValidator
 
             var g = layout.Grid;
             int gap = layout.Sighters[0].OriginY - (g.OriginY + ((g.Rows - 1) * g.PitchY));
-            if (Math.Abs((5L * gap) - (6L * g.PitchY)) > 5)
+            if (Math.Abs((5L * gap) - (6L * g.PitchY)) > 5 && !ShortenedToBracket(g, gap))
             {
                 Warn("validate.sighterGap", "/cells/sighterGap",
                     $"The sighter row is {gap} dmm below the last scoring row, not 1.2 times the {g.PitchY} dmm pitch, and no cells.sighterGap declares the departure (section 7).", "23");
             }
         }
+
+        /// <summary>
+        /// Test 23's exception: a gap shorter than the convention needs no declaration when the shortening is what brings
+        /// the sighter row inside the fiducial lattice, because that is the one reason a generator shortens it (section 7).
+        /// Both halves are checked, so a gap shortened where the lattice already brackets still warns.
+        /// </summary>
+        private bool ShortenedToBracket(GridLayout g, int gap)
+        {
+            int convention = (int)Math.Round(6.0 * g.PitchY / 5, MidpointRounding.AwayFromZero);
+            var sighters = d.Bulls.Where(b => !b.Scoring).ToList();
+            if (gap >= convention || sighters.Count == 0 || Lattice(d) is not { } now || !sighters.All(b => Inside(now, b.X, b.Y)))
+            {
+                return false;
+            }
+
+            int shift = convention - gap;
+            var atConvention = d with { Bulls = [.. d.Bulls.Select(b => b.Scoring ? b : b with { Y = b.Y + shift })] };
+            return Lattice(atConvention) is not { } before || !sighters.All(b => Inside(before, b.X, b.Y + shift));
+        }
+
+        /// <summary>
+        /// Section 7: every bull centre, sighters included, must lie on or inside the rectangle bounded by the outermost
+        /// marker centres (test 26f). It is a warning until the geometry change that fixes the four built-in sheets which
+        /// break it, and an error from that change (docs/NOTES-FROM-PLANNING.md entry 9).
+        /// </summary>
+        private void CheckBracketing(List<PointDmm> markers)
+        {
+            if (markers.Count == 0)
+            {
+                return;
+            }
+
+            var lattice = Bounds(markers);
+            for (int i = 0; i < d.Bulls.Count; i++)
+            {
+                var b = d.Bulls[i];
+                if (!Inside(lattice, b.X, b.Y))
+                {
+                    Warn("validate.bracket", $"/bulls/{i}",
+                        $"Bull {b.Label ?? i.ToString(System.Globalization.CultureInfo.InvariantCulture)} at ({b.X}, {b.Y}) lies outside the fiducial lattice, ({lattice.X0}, {lattice.Y0}) to ({lattice.X1}, {lattice.Y1}), and is extrapolated on any sheet that is not flat (section 7). " +
+                        "A warning until the geometry change that fixes GL-CF25-LTR, GL-CF25-100M-A4, GL-LR300-R24 and GL-LR300-R36, then an error.", "26f");
+                }
+            }
+        }
+
+        /// <summary>The marker centres a definition's fiducials place on a sheet: stored for an explicit scheme, derived otherwise.</summary>
+        private static (int X0, int Y0, int X1, int Y1)? Lattice(TargetDefinition definition)
+        {
+            IReadOnlyList<PointDmm>? markers = definition.Fiducials switch
+            {
+                null => null,
+                { Scheme: "explicit" } f => f.Markers?.Select(m => new PointDmm(m.X, m.Y)).ToList(),
+                _ => FiducialDerivation.Derive(definition).Markers?.Positions,
+            };
+            return markers is { Count: > 0 } ? Bounds(markers) : null;
+        }
+
+        private static (int X0, int Y0, int X1, int Y1) Bounds(IReadOnlyList<PointDmm> markers) =>
+            (markers.Min(p => p.X), markers.Min(p => p.Y), markers.Max(p => p.X), markers.Max(p => p.Y));
+
+        private static bool Inside((int X0, int Y0, int X1, int Y1) lattice, int x, int y) =>
+            x >= lattice.X0 && x <= lattice.X1 && y >= lattice.Y0 && y <= lattice.Y1;
 
         /// <summary>
         /// Section 3.6: on a parametric layout the cell lattice is derived, half a pitch off each bull centre, and

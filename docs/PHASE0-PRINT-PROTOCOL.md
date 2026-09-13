@@ -245,7 +245,7 @@ Take at least one, of `GL-CF25-LTR`, clean.
 - **Deliberately off-axis.** Stand to one side and above, so the sheet appears as a clear trapezoid rather than a rectangle. Something in the region of twenty to thirty degrees off perpendicular. If it looks square in the viewfinder, move.
 - **The whole sheet in frame**, with a little margin around it. All four corner codes must be visible.
 - **No flash.** Ordinary indoor or window light. Flash produces a specular hotspot on the paper that is its own separate problem and not the one being tested here.
-- **Pin or tape it to a wall.** Photographing a sheet lying on a table adds a fold or a curl that confuses the question.
+- **Restrain all four edges.** This is the instruction that went wrong the first time it was given, and it cost a whole photograph session. Masking tape along each of the four edges onto a wall or a door, or the sheet laid on a table under a pane of glass or clear acrylic. **A single pin at the top is not flat**: a sheet hanging from one point curls away under its own weight, and measured against a global homography that curl put the two lowest marker rows 0.026 to 0.138 inches out, six to sixteen times worse than the same sheet lying loose on a table. A clipboard is not flat either. If taping four edges is awkward, glass on a table is easier and better, and an off-axis frame of a sheet on a table tests perspective just as well as one on a wall.
 
 Take three or four and keep them all. They cost nothing and the failure modes of handheld photographs are not visible on a phone screen.
 

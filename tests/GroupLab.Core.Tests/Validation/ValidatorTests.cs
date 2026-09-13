@@ -164,6 +164,50 @@ public class ValidatorTests
     }
 
     [Fact]
+    public void Test23GapShortenedToBracketTheSightersDoesNotWarn()
+    {
+        // GL-CF25-LTR drops the marker row below its sighters by 1 dmm; a 454 dmm gap keeps it (PHASE0-RESULTS.md 4.4).
+        var doc = ShortenSighterGap(BuiltIn("GL-CF25-LTR"), 2);
+
+        Assert.DoesNotContain(Validate(doc), d => d.Test is "23" or "26f");
+    }
+
+    [Fact]
+    public void Test23GapShortenedWhereTheLatticeAlreadyBracketsWarns()
+    {
+        var doc = ShortenSighterGap(BuiltIn("GL-CF25-A4"), 2);
+
+        AssertFinding(Validate(doc), Severity.Warning, "23", "/cells/sighterGap");
+    }
+
+    [Fact]
+    public void Test26fBullOutsideTheFiducialLatticeWarns()
+    {
+        var doc = BuiltIn("GL-CF25-LTR");
+        var diagnostics = Validate(doc);
+        var bulls = doc["bulls"]!.AsArray();
+
+        for (int i = 0; i < bulls.Count; i++)
+        {
+            if ((bool)bulls[i]!["scoring"]!)
+            {
+                Assert.DoesNotContain(diagnostics, d => d.Test == "26f" && d.Path == $"/bulls/{i}");
+            }
+            else
+            {
+                AssertFinding(diagnostics, Severity.Warning, "26f", $"/bulls/{i}");
+            }
+        }
+    }
+
+    [Fact]
+    public void Test26fBullOnTheLatticeEdgeConforms()
+    {
+        // The 300 yard tile's outermost markers share coordinates with its outermost bulls.
+        Assert.DoesNotContain(Validate(BuiltIn("GL-LR300-T")), d => d.Test == "26f");
+    }
+
+    [Fact]
     public void Test24ElementsCrossingATileBoundaryAreErrors()
     {
         var doc = Spec.Section4Node();
@@ -265,6 +309,18 @@ public class ValidatorTests
 
     private static JsonObject BuiltIn(string name) =>
         JsonNode.Parse(CanonicalJsonWriter.Write(Library.Value.Single(t => t.Name == name).Definition))!.AsObject();
+
+    private static JsonObject ShortenSighterGap(JsonObject doc, int dmm)
+    {
+        doc["cells"]?.AsObject().Remove("sighterGap");
+        doc["fiducials"]!.AsObject().Remove("markers");
+        foreach (var bull in doc["bulls"]!.AsArray().Where(b => !(bool)b!["scoring"]!))
+        {
+            bull!["y"] = (int)bull["y"]! - dmm;
+        }
+
+        return doc;
+    }
 
     private static IReadOnlyList<Diagnostic> Validate(JsonObject doc)
     {

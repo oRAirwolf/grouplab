@@ -70,9 +70,14 @@ public class BuiltInLibraryTests
         var diagnostics = GltdValidator.Validate(read.Definition!);
 
         Assert.DoesNotContain(diagnostics, d => d.Severity == Severity.Error);
-        string[] expectedWarnings = name is "GL-ZERO-MOA-100Y" or "GL-ZERO-MIL-100M" ? ["/grids/0/bottom", "/grids/0/top"] : [];
-        Assert.Equal(expectedWarnings, diagnostics.Select(d => d.Path).Order());
-        Assert.All(diagnostics, d => Assert.Equal("validate.markerRowBand", d.Code));
+        string[] expectedRowBands = name is "GL-ZERO-MOA-100Y" or "GL-ZERO-MIL-100M" ? ["/grids/0/bottom", "/grids/0/top"] : [];
+        Assert.Equal(expectedRowBands, diagnostics.Where(d => d.Code == "validate.markerRowBand").Select(d => d.Path).Order());
+
+        // Test 26f warns on the four sheets whose lattice misses a bull until the deferred geometry change fixes them
+        // (TARGET-SCHEMA.md section 7, docs/NOTES-FROM-PLANNING.md entry 9).
+        bool unbracketed = name is "GL-CF25-LTR" or "GL-CF25-100M-A4" or "GL-LR300-R24" or "GL-LR300-R36";
+        Assert.Equal(unbracketed, diagnostics.Any(d => d.Test == "26f"));
+        Assert.All(diagnostics, d => Assert.Contains(d.Code, (string[])["validate.markerRowBand", "validate.bracket"]));
     }
 
     [Theory]

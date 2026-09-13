@@ -13,7 +13,7 @@
 |---|---|---|---|
 | Conformance test 43, unchanged | Synthetic raster of the PDF | 0.001 in worst bull | **Pass** on every page of every built-in sheet |
 | Paper gate | 600 DPI scan of each of the ten printed sheets | 0.005 in worst bull | **Pass, ten of ten.** Worst 0.00325 in, tile 3 |
-| Photograph gate | Each photograph that contains the whole sheet: four of sheet 1 on a table, seven of sheet 3 on a wall | 0.005 in worst bull | **Fail, eleven of eleven.** Table frames 0.00569 to 0.01083 in; wall frames 0.04841 to 0.11379 in. Sections 3 and 3a have the diagnosis, and section 4.4 the geometry fix, identified, costed and deferred. `telephoto1` and `telephoto3` overflow the frame and are excluded, per notes entry 6 |
+| Photograph gate | Each photograph that contains the whole sheet: four of sheet 1 on a table, seven of sheet 3 on a wall | 0.005 in worst bull | **Fail, eleven of eleven.** Table frames 0.00569 to 0.01083 in; wall frames 0.04841 to 0.11379 in. Sections 3 and 3a have the diagnosis, and section 4.4 the geometry fix, identified, costed and deferred. `telephoto1` and `telephoto3` overflow the frame and are excluded, per notes entry 6. **The one open item**: two frames of a sheet restrained on all four edges, requested in notes entry 8 |
 | Print-scale detection | `gl-cf25-ltr-96.2-*` against `gl-cf25-ltr-1-*` | Ratio 0.962 within 0.001 | **Pass** at both resolutions: 0.96197 at 600 DPI and 0.96201 at 300, by area |
 
 The registration residual over marker corners is reported, not gated, per DESIGN.md section 21.
@@ -106,7 +106,7 @@ The table frames of section 3 keep 135 or 136 corners of 136, with at most 0.003
 
 **Detection on these frames.** The pipeline matches 34, 26 and 27 markers on `main1-3`, 34, 34 and 32 on `ultrawide1-3`, and 16, 33 and 4 on `telephoto1-3`. Entry 6's scratch counts differ on seven of the nine. `main2` loses markers at the far edge of the sheet, which is visibly out of focus at f/1.7. The canonical-cell change of section 4.1 was measured on these frames and on all 21 scans before it shipped.
 
-`docs/QUESTIONS-FOR-PLANNING.md` question 5 asks for frames of a sheet held flat.
+Notes entry 8 answers question 5: the protocol said "pin or tape", which is not flat, and `docs/PHASE0-PRINT-PROTOCOL.md` section 7 now asks for all four edges restrained. Two frames of a flat sheet are the one open item of the spike. **The wall set stays committed as the baseline a Phase 1 registration of a curved sheet has to beat** (section 4.5): a realistic curvature, under the shipped global registration, worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate, and 0.014 to 0.060 in corner RMS over all corners, every row in `scans/phase0/measurements/photos.json`.
 
 ## 4. Findings
 
@@ -139,6 +139,23 @@ On `GL-CF25-LTR` the fiducial lattice would place a marker row at y = 2705, belo
 The other sheets with sighters bracket them already. **The change is identified, costed and deferred**, per entry 5: the sample set was printed from the current definitions, so every table in this document is measured against the geometry that was printed, and the change lands in its own commit after Phase 0 reports. It gives the three sheets new identifiers and moves the `GL-CF25-LTR` scoring rows by 1 dmm.
 
 **Measuring the general rule turned up more than the sighters.** On `GL-CF25-100M-A4`, `GL-LR300-R24` and `GL-LR300-R36` the outermost bull columns also sit outside the lattice, by 200, 508 and 508 dmm, through the same edge-margin drop applied to a column; a sighter gap cannot fix that. On the two tiles the outermost markers share coordinates with the outermost bulls. The proposed TARGET-SCHEMA.md section 7 wording, its conformance test, and the decisions these findings leave are `docs/QUESTIONS-FOR-PLANNING.md` question 4, together with a gap in GLTD-B, which does not carry `sighterGap`.
+
+**Those findings are the same defect at the same scale, not a technicality** (notes entry 9). The outermost bull columns lie 200 dmm outside the lattice on `GL-CF25-100M-A4` and 508 dmm outside on the two rolls, against the 266 dmm by which the `GL-CF25-LTR` sighters lie outside it. The defect was found once, by accident, through photographs of one sheet; the sweep found it on three more that nobody has photographed. That is the strongest argument for the rule.
+
+**What lands now and what waits.** TARGET-SCHEMA.md section 7 carries the rule and section 10 test 26f, inclusive, as a warning. The validator flags 3 bulls on `GL-CF25-LTR`, 10 on `GL-CF25-100M-A4`, 13 on `GL-LR300-R24` and 11 on `GL-LR300-R36`, and nothing on any other sheet; the tiles conform at a margin of zero. Test 23 no longer warns where the shortened gap is what brings the sighter row inside the lattice, so a definition decoded from a sheet's codes needs no `sighterGap` and GLTD-B is unchanged. **The four sheets change in one geometry commit after Phase 0 closes, and test 26f becomes an error in that commit.**
+
+### 4.5 Phase 1 requirement: registering a sheet that is not flat
+
+Notes entry 8. A sheet pinned up at a range is the normal case, so the photograph path must register a sheet that is not one plane, and local or piecewise registration from nearby markers is the requirement rather than a workaround. What it bought on the table photographs, registering each bull from its nearest 6 or 8 markers instead of the whole sheet, inches:
+
+| Photograph | Worst scoring bull, whole sheet | Worst scoring bull, nearest markers |
+|---|---|---|
+| `20260913_130543` | 0.0053 | 0.0035 |
+| `20260913_130550` | 0.0066 | 0.0029 |
+| `20260913_130554` | 0.0058 | 0.0057 |
+| `20260913_130559` | 0.0034 | 0.0021 |
+
+These were measured with a scratch diagnostic, before the detection changes of section 4.1, and Phase 1 re-measures them in the pipeline. **Its limit is the sighters**: they stayed at 0.008 to 0.013 in whichever markers were chosen, because no nearby marker brackets them. A local registration cannot help a bull outside the lattice, which is section 4.4 reached from a third direction. The baseline to beat is the wall set of section 3a.
 
 ## 5. The measurements of the brief, section 6
 
@@ -307,3 +324,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Field correlations over concatenated x and y components, over per-axis or magnitude correlations.** It is the form `docs/PHASE0-PRELIM.md` used, so the figures compare.
 - **Local registration from the nearest markers measured as a diagnostic, not shipped.** The brief stops detection at markers, homography and bull location, and local registration cannot help the sighters.
 - **Geometry change deferred, over applying it during the spike.** Notes entry 5: the sample set was printed from the current definitions.
+- **Bracketing inclusive and a warning first, over strict or an error on landing.** Strict fails both tiles at a margin of zero with no fix short of a denser scheme, and an error would fail four sheets before their geometry is designed (notes entry 9).
+- **Test 23 exempts a shortening that brackets, over carrying `sighterGap` in GLTD-B or scoping the test to documents not decoded.** The gap is recoverable from the body, and a shortening that brackets is self-evidently deliberate (notes entry 9).
+- **The exemption re-derives the lattice at the conventional gap, over checking only that the sighters are bracketed now.** A gap shortened where the lattice already brackets is not the case the rule describes, so it still warns.
