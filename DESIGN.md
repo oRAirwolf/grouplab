@@ -463,7 +463,22 @@ Each phase has a gate. A phase is not complete until its gate passes.
 
 **Phase 0a: Format and renderer.** No UI. GLTD-J parser and validator, GLTD-B encoder and decoder, and a PDF renderer, per `docs/TARGET-SCHEMA.md`. Gate: **conformance test 43**. Render a definition, analyse the rendered image as if it were a scan, and confirm every bull centre is recovered at its declared coordinate to within the Phase 0 residual gate. That closes the loop between the format, the renderer and the analyser with no printer and no scanner involved, and it is the test that catches a disagreement between the two halves of rule R5 before it reaches a user. Secondary gates: the round-trip and decoding-robustness tests of `docs/TARGET-SCHEMA.md` section 10, and the twenty built-in sheets all rendering without a validator error.
 
-**Phase 0: Registration spike.** No UI. Command line only. Print the Phase 0a output, scan it, and photograph it off-axis. Gate: registration residual under one thousandth of an inch across the entire page including corners, on both the scan and the photograph, and correct detection of a deliberately mis-scaled print.
+**Phase 0: Registration spike.** No UI. Command line only. Print the Phase 0a output, scan it, and photograph it off-axis.
+
+**[r4] Gate, restructured after measurement.** Two gates, measuring two different things, replacing the single one-thousandth-of-an-inch criterion this document carried from the start:
+
+| Gate | Measured on | Threshold |
+|---|---|---|
+| Conformance test 43 | A synthetic raster of the PDF | 0.001 in, worst bull-centre error |
+| **Phase 0 paper gate** | A 600 DPI scan of a printed sheet, and the off-axis photograph | **0.005 in, worst bull-centre error** |
+
+plus correct detection of a deliberately mis-scaled print, unchanged.
+
+**Why the paper figure is not one thousandth.** `docs/PHASE0-PRELIM.md` has the measurement. On three separately printed sheets the bull centres recover at 0.0021 in mean and 0.0042 worst, and the error is a displacement field that **travels with the paper**: rotating a sheet 180 degrees on the platen rotates the field with it, at a correlation of +0.769 against its own unrotated scan, while the scanner-fixed prediction scores +0.185. It is the printer laying ink about 0.05 mm from where it was asked to, of which roughly 0.0019 in is systematic and reproducible and 0.0010 in is random. Software cannot recover it, because the fiducials are printed by the same head on the same pass and carry their own share of the same error.
+
+This document has carried a clue to that since revision 1. Section 6 records 0.0026 to 0.0032 in rms on pristine sheets under a four-point homography, and nobody connected it to the gate.
+
+**Why five thousandths is the right number.** It is set by what the measurement is for rather than by what the hardware happens to manage. A bull printed 0.05 mm off contributes 0.05 mm to that shot's offset, and across a composite group the bull-to-bull variation adds in quadrature with the true dispersion: on a rifle holding a sigma of 2.5 mm at 100 yards it inflates the estimated sigma by **0.02 percent**. For proportion, the measured noise floor of hole centroids in the sample scans is **0.008 in**, per `docs/TARGET-SCHEMA.md` section 3.4, so the bull is not the dominant instrument error and the gate sits comfortably below the thing that is. Every human and environmental term is larger again: a 5 mph crosswind at 100 yards moves a match bullet about half an inch.
 
 **[r4] What the residual is measured on, because the first implementation had to ask.** The gate has two halves and only one of them is the pass criterion.
 

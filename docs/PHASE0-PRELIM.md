@@ -94,7 +94,7 @@ Sheet 2 was rotated 180 degrees on the platen and rescanned at 600 DPI. The homo
 
 ## 6. What this does not yet justify
 
-The diagnosis is now done, so restating the gate is earned rather than evasive. What follows is a proposal, not a decision.
+The diagnosis is now done, so restating the gate is earned rather than evasive. **The two-gate structure below was proposed on 13 September 2026 and accepted the same day**, and DESIGN.md section 21 now carries it.
 
 **One thousandth of an inch is below the placement accuracy of the machine that prints the target.** No registration scheme recovers a bull whose ink was laid 0.05 mm from where it was asked for, because there is nothing to recover it from: the fiducials are printed by the same head on the same pass and carry their own share of the same error. The gate as written asks the software to correct the paper.
 
@@ -108,6 +108,20 @@ The diagnosis is now done, so restating the gate is earned rather than evasive. 
 | Phase 0 paper gate | A 600 DPI scan of a printed sheet | **0.005 in worst bull** | That registration, detection and print together stay far enough inside what the statistics need |
 
 Five thousandths keeps the contribution to an estimated sigma below half a percent on the tightest group worth measuring, and the present measurement of 0.0042 inches worst sits just inside it with the printer, the scanner and a scratch centroid all working against it. The real pipeline should do better than a scratch script.
+
+**The proportion is worth stating explicitly, because it is the whole justification.** Ranked by size, the error terms in a measured group are:
+
+| Term | Magnitude at 100 yards |
+|---|---|
+| A 5 mph crosswind on a match bullet | about 12.7 mm |
+| A good shooter's hold off a bipod, 0.1 to 0.3 MOA | 2.5 to 7.5 mm |
+| The rifle's own dispersion, half a minute | sigma about 2.5 mm |
+| **Hole centroid noise floor, measured** | **0.2 mm**, per TARGET-SCHEMA.md 3.4 |
+| Proposed paper gate | 0.127 mm |
+| **Printer dot placement, measured here** | **0.05 mm** |
+| Conformance test 43 on a synthetic raster | 0.005 mm |
+
+The bull is not the dominant instrument error. The hole is, by a factor of four, and it was measured and written down long before this. Everything the shooter and the weather contribute is larger again by one to two orders of magnitude. A gate set below the hole noise floor is doing its job; a gate set below the printer's physical placement accuracy was asking the software to correct the paper.
 
 **The registration residual stays a reported diagnostic**, per DESIGN.md section 21, and Phase 0 should additionally record the systematic and random split, because a printer whose systematic component is known is a printer whose systematic component could one day be calibrated out. That is not a feature anyone should build now, but it is worth knowing it exists.
 
