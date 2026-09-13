@@ -91,13 +91,18 @@ Tests 26b and 26c constrain a solver placing rows. Phase 0a has no generator; th
 
 The specification states what is printed but not where. These are drawing conventions only: none of them is read back by the analyser, and none changes the definition identifier.
 
-- **Bull labels.** Left of the outermost disc, vertically centred on the bull, 15 dmm gap, 25 dmm cap height, Helvetica. Printed only on sheets with more than one bull.
+- **Bull labels.** Left of the outermost disc, vertically centred, 15 dmm gap, 25 dmm Helvetica (a capital about 18 dmm tall). Printed only on sheets with more than one bull. Test 14 includes label boxes, and the placement was measured across every built-in sheet: at 35 dmm a label to the left lands 2.5 dmm into the top-left code of GL-LR300-T and one to the right 3.5 dmm into the top-right code, and a label below the disc overlaps a bottom code on GL-CF30-LTR at any size. Left at 25 dmm is the only fixed rule that clears all twenty, with 3.1 dmm to spare on the tile.
 - **Human-readable identifier.** Centred horizontally, baseline 80 dmm above the bottom page edge.
 - **Measurement grid labels.** Inside the field, beside the axes.
 - **Data block rows.** Row boundaries are `5 + round((height - 10) * r / rows)` under the tie rule of section 2, which reproduces the 100 dmm rows section 3.10 gives for both built-in block heights. The reserved square sits at the right-hand end, its top at `round((height - reserve) / 2)`.
 - **Canonical key order** for top-level blocks section 3.1 does not place: `codes`, `print`, `dataBlock`, `instance`, `tiling`, `grids`, then unknown fields in the order read.
 - **Canonical key order inside blocks** follows the `properties` order of the section 9 schema, because the prose examples disagree with it in two places: section 3.8 writes `positions` before `humanReadableId` where the schema has it after, and the section 3.10 table lists `fields` before `reserve` where the schema lists it last. A test derives the expected order from the embedded schema, so a schema change moves the writer with it.
 - **`srgb` is written in upper case.** Colour values are case-insensitive, and a canonical form needs one spelling.
+- **Paint order.** Measurement grid, drawn cells, bulls, labels, markers, codes, data block, identifier. Section 3.4 says a paper disc reveals what is underneath, so a knockout in the zeroing aiming mark shows the grid lines painted before it rather than blank paper.
+- **Text.** Helvetica, one of the fourteen standard PDF fonts, in WinAnsiEncoding; a character outside Latin-1 prints as a question mark. Labels are 25 dmm, the identifier 25 dmm, data block captions 18 dmm and typed values at most 30 dmm, shrunk to fit their cell and refused below 12 dmm, naming the field. A tile's identifier line adds `tile n of N`.
+- **Measurement grid labels.** Printed for `moa` and `mil` only, at every `labelStep`-th line, as the line's offset divided by one unit at the stated distance, to 0.1. They are text for the eye and position nothing.
+- **Data block drawing.** Rules of `border` dmm, 2 when absent, laid inside the edge of the block, every cell and the reserved square. Captions sit 15 dmm in and 25 dmm down from each cell's top-left. The reserved square's text is the identifier split after its second group, then `Serial` and the sheet serial.
+- **Codes.** Modules are drawn as one rectangle per horizontal run; the quiet zone is left unprinted. Every code on a sheet carries the same replicated frame with share index 0 and the page's tile index.
 
 ### C7. What a decode synthesises
 

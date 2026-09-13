@@ -1,5 +1,6 @@
 using GroupLab.Core.Gltd.Derivation;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Rendering;
 
 namespace GroupLab.Core.Gltd.Validation;
 
@@ -33,6 +34,7 @@ public static class GltdValidator
         Code,
         DataBlock,
         GridField,
+        Label,
     }
 
     private sealed record Element(Kind Kind, string Name, string Path, Box2 Box);
@@ -466,6 +468,18 @@ public static class GltdValidator
                 elements.Add(new Element(Kind.DataBlock, "the data block", "/dataBlock", Box2.FromRect(block.X, block.Y, block.Width, block.Height)));
             }
 
+            // Test 14 includes labels, at the position the renderer prints them (docs/SPEC-ERRATA.md C6).
+            if (LabelLayout.Printed(d))
+            {
+                for (int i = 0; i < d.Bulls.Count; i++)
+                {
+                    if (outer.TryGetValue(d.Bulls[i].RingSet, out int diameter) && LabelLayout.Run(d.Bulls[i], diameter, default) is { } run)
+                    {
+                        elements.Add(new Element(Kind.Label, $"the label of bull {i}", $"/bulls/{i}/label", LabelLayout.Box(run)));
+                    }
+                }
+            }
+
             foreach (var e in elements)
             {
                 if (!e.Box.Within(d.Page.Width, d.Page.Height))
@@ -513,7 +527,7 @@ public static class GltdValidator
                             Warn("validate.clearance", b.Path, $"{Capitalise(a.Name)} is under {MarkerClearance} dmm from {b.Name}.", null);
                         }
                     }
-                    else if (a.Kind != Kind.Marker && b.Kind != Kind.Marker && a.Box.Overlaps(b.Box, MajorClearance))
+                    else if (a.Kind is not (Kind.Marker or Kind.Label) && b.Kind is not (Kind.Marker or Kind.Label) && a.Box.Overlaps(b.Box, MajorClearance))
                     {
                         bool codeAndBlock = (a.Kind, b.Kind) is (Kind.Code, Kind.DataBlock) or (Kind.DataBlock, Kind.Code);
                         Warn("validate.clearance", b.Path, $"{Capitalise(a.Name)} is under {MajorClearance} dmm from {b.Name}.", codeAndBlock ? "26a" : null);

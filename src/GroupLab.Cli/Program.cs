@@ -1,8 +1,10 @@
+using System.Globalization;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Gltd.Validation;
+using GroupLab.Core.Rendering;
 
 return args switch
 {
@@ -13,8 +15,58 @@ return args switch
     ["decode", .. var frames] when frames.Length > 0 => Decode(frames),
     ["library", "build", var layouts, var directory] => LibraryBuild(layouts, directory),
     ["library", "verify", var layouts, var directory] => LibraryVerify(layouts, directory),
+    ["render", var input, .. var rest] => Render(input, rest),
     _ => Usage(),
 };
+
+static int Render(string input, string[] rest)
+{
+    string? output = null;
+    var options = new RenderOptions();
+    for (int i = 0; i < rest.Length; i++)
+    {
+        switch (rest[i])
+        {
+            case "-o" when i + 1 < rest.Length:
+                output = rest[++i];
+                break;
+            case "--filled":
+                options = options with { Mode = DataBlockMode.Filled };
+                break;
+            case "--tile" when i + 1 < rest.Length:
+                options = options with { TileIndex = int.Parse(rest[++i], CultureInfo.InvariantCulture) };
+                break;
+            case "--scale" when i + 1 < rest.Length:
+                options = options with { Scale = double.Parse(rest[++i], CultureInfo.InvariantCulture) };
+                break;
+            case "--allow-invalid":
+                options = options with { AllowInvalid = true };
+                break;
+            default:
+                Console.Error.WriteLine($"render: unknown option {rest[i]}");
+                return 2;
+        }
+    }
+
+    var read = GltdJsonReader.ReadFile(input);
+    Report(input, read.Diagnostics, Console.Error);
+    if (read.Definition is null)
+    {
+        return 1;
+    }
+
+    var result = TargetRenderer.Render(read.Definition, options);
+    Report(input, result.Diagnostics, Console.Error);
+    if (result.Pdf is null)
+    {
+        return 1;
+    }
+
+    string path = output ?? Path.ChangeExtension(input, null).Replace(".gltd", "", StringComparison.Ordinal) + ".pdf";
+    File.WriteAllBytes(path, result.Pdf);
+    Console.WriteLine($"{result.DefinitionId}  {result.Pages.Count} page(s)  {path}");
+    return 0;
+}
 
 static int Validate(string[] files)
 {
@@ -175,6 +227,7 @@ static int Usage()
         grouplab decode <frame-hex>...
         grouplab library build <layouts.json> <targets-directory>
         grouplab library verify <layouts.json> <targets-directory>
+        grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--allow-invalid]
         """);
     return 2;
 }
