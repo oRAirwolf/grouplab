@@ -407,12 +407,26 @@ DESIGN.md's Phase 0 gate is registration residual under one thousandth of an inc
 
 1. **Residual against marker count.** Refit with random subsets from 4 markers up to all 34 and plot residual against count. This is the empirical answer to the question section 2 could only reason about, and it either justifies 34 markers or tells you 16 would do. Run it at nine markers in particular, which is what a 300 yard tile carries.
 2. **Residual against marker module size.** Print the same target at 0.3, 0.4, 0.5, 0.6 and 0.8 mm modules and measure. This finds the real dot-gain floor on the author's actual printer, which no literature can supply.
-3. **Corner refinement comparison.** `CORNER_REFINE_NONE`, `SUBPIX` and `CONTOUR`, same images, residual for each. Confirms that refinement is doing what section 3.4 assumes.
+3. **Corner refinement comparison.** `CORNER_REFINE_NONE`, `SUBPIX` and `CONTOUR`, same images, residual for each. Confirms that refinement is doing what section 3.4 assumes. **Partly done on synthetic renders, and it moved from a nicety to a priority.** On a 300 DPI render OpenCV's default subpixel window, 0.3 of a module, leaves corners 0.24 px RMS out; one module gives 0.16 px; two modules gives 2.0 px; `NONE` and `CONTOUR` give 0.7 to 0.8 px. Phase 0a therefore ships a one-module window. What survives that is a **0.10 px inward bias present on every marker**, which a homography cannot absorb precisely because it is common to all of them, and which accounts for much of the 0.00091 inch worst single corner in the Phase 0a table. Redo this on paper: the optimum on a clean synthetic raster is not necessarily the optimum on an inkjet print through a flatbed, and the bias may be the renderer, the detector, or both.
 4. **Adaptive threshold window on 600 DPI input.** Detection rate against `adaptiveThreshWinSizeMax`, and against downsampling factor, to settle whether scans should be downsampled before detection.
 5. ~~**False positives on a shot target.**~~ **Done. Zero at default parameters**, across sixteen files and nine dictionaries, with 665 quad candidates rejected per dictionary. Section 4.1 has the table and the permissive-detector variant that separates the strong dictionaries from the weak ones.
 6. ~~**Cross-decode check.**~~ **Done, and it destroyed the escape route**, which is why the family changed. Section 4 records the whole thing.
 7. **Print-scale detection.** Print at 96.2 percent and confirm the reported scale, which is DESIGN.md's own example and makes a good regression test.
-8. **Corner localisation against the AprilTag detector as well as OpenCV's.** New, and it exists because there are now two detectors that can read the sheet. They use different quad-fitting front ends, so they will not give identical corners. Measure both against the same printed target and record which is better, because that decides which is primary on mobile rather than merely which is available.
+8. **Corner localisation against the AprilTag detector as well as OpenCV's.** New, and it exists because there are now two detectors that can read the sheet. They use different quad-fitting front ends, so they will not give identical corners. Measure both against the same printed target and record which is better, because that decides which is primary on mobile rather than merely which is available. **Read section 11 before running this one**, because the two detectors do not agree about which corner is first.
+
+---
+
+## 11. OpenCV's tag36h11 is rotated 180 degrees, and the printed sheet is not
+
+Found by the Phase 0a implementation and verified against the published AprilRobotics marker images for ids 0 and 1.
+
+**OpenCV's `DICT_APRILTAG_36h11` holds every code turned 180 degrees** from libapriltag's own `apriltag_to_image` output and from the official images. Because the family is closed under rotation for detection purposes, ids still decode correctly and nothing looks wrong. What differs is **corner order**: OpenCV reports as its first corner the one that is printed bottom-right.
+
+**GroupLab prints the official orientation.** That is the right way round and it is not a close call. The printed sheet is the artefact that outlives every piece of software that reads it, so it matches the family as its authors define it, and the library quirk is corrected in the one place that can be changed later without reprinting anything. The imaging backend rotates OpenCV's corner list back, and a test checks the correction against all 587 codes.
+
+**This would have been invisible until it was expensive.** A uniform 180 degree corner-order error does not stop a marker decoding and does not obviously break a homography; it inflates the residual and shifts the fit in a way that looks like poor detection rather than like a bug. It would have surfaced at Phase 0 as a target that registers slightly badly on paper, which is exactly the symptom everyone would have blamed on the printer.
+
+**Consequence for `tools/fiducial/`.** That harness draws its markers with OpenCV, so its rendered markers are rotated relative to what GroupLab prints. The measurements already recorded in section 4.1 are unaffected, because false-positive counts and Hamming distances are rotation-invariant, and the Hamming figures were recomputed from rendered images rather than from `bytesList`. Anything that depends on corner order is affected, which means **measurement 8 above must render its test markers from the GroupLab renderer rather than from OpenCV**, or it will measure the rotation rather than the two detectors.
 
 Measurements 5 and 6 needed no printer and no scanner and have been done; `tools/fiducial/run_all.sh` reruns them. The rest still need paper.
 

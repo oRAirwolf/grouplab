@@ -437,7 +437,7 @@ The sequence is a real depiction of what happened and nothing false needs adding
 
 ## 20. Platform, stack, and distribution
 
-**Stack.** .NET with Avalonia. **[r3]** The target is .NET 10, the long-term support release, rather than .NET 9, whose support ends in November 2026, two months after Phase 0a began. One language for the Core and all three shells. Math.NET Numerics for statistics. Windows ships as a single self-contained executable with no runtime for the user to install, which matters because the audience is shooters rather than developers.
+**Stack.** .NET 9 with Avalonia. One language for the Core and all three shells. Math.NET Numerics for statistics. Windows ships as a single self-contained executable with no runtime for the user to install, which matters because the audience is shooters rather than developers.
 
 **Windows floor.** Windows 10 21H2. Avalonia renders through Skia rather than Windows 11 compositor APIs, so Windows 10 costs nothing in appearance or performance. This would not be true of WinUI 3.
 
@@ -463,7 +463,16 @@ Each phase has a gate. A phase is not complete until its gate passes.
 
 **Phase 0a: Format and renderer.** No UI. GLTD-J parser and validator, GLTD-B encoder and decoder, and a PDF renderer, per `docs/TARGET-SCHEMA.md`. Gate: **conformance test 43**. Render a definition, analyse the rendered image as if it were a scan, and confirm every bull centre is recovered at its declared coordinate to within the Phase 0 residual gate. That closes the loop between the format, the renderer and the analyser with no printer and no scanner involved, and it is the test that catches a disagreement between the two halves of rule R5 before it reaches a user. Secondary gates: the round-trip and decoding-robustness tests of `docs/TARGET-SCHEMA.md` section 10, and the twenty built-in sheets all rendering without a validator error.
 
-**Phase 0: Registration spike.** No UI. Command line only. Print the Phase 0a output, scan it, and photograph it off-axis. Gate: registration residual under one thousandth of an inch across the entire page including corners, on both the scan and the photograph, and correct detection of a deliberately mis-scaled print. **[r3]** Additional measurements that make the gate informative rather than merely pass or fail are listed in `docs/FIDUCIAL-DECISION.md` section 10; the two that needed no printer have already been done.
+**Phase 0: Registration spike.** No UI. Command line only. Print the Phase 0a output, scan it, and photograph it off-axis. Gate: registration residual under one thousandth of an inch across the entire page including corners, on both the scan and the photograph, and correct detection of a deliberately mis-scaled print.
+
+**[r4] What the residual is measured on, because the first implementation had to ask.** The gate has two halves and only one of them is the pass criterion.
+
+- **The measurement gate is bull-centre recovery**, worst case, every bull on the sheet: the distance between a bull's declared centre and the centre recovered from the image through the fitted homography. This is the quantity the application's accuracy actually rests on, it is what conformance test 43 measures, and one thousandth of an inch is the threshold.
+- **The registration residual over marker corners is a diagnostic**, quoted as RMS with the maximum reported alongside. RMS is the statistic because a maximum over a point set grows with the number of points for any noise distribution, and the sheets carry between nine and seventy-three markers: gating on the maximum would hold a dense sheet to a stricter standard than a sparse one for no physical reason.
+
+The distinction is not a convenience. On the Phase 0a synthetic renders the corner residual **halves when the render goes from 300 to 600 DPI**, from 0.00051 to 0.00026 inches RMS, which is the signature of an error measured in pixels rather than in millimetres: it is detector corner-localisation error, not geometry error. A geometry fault would not care about the raster. Gating a geometry pipeline on a detector-limited quantity at a fixed physical threshold would mean the gate could be passed by scanning at a higher resolution, which is not a property a correctness gate should have. Bull centres, found by a centroid over many pixels rather than by a corner fit over few, do not scale that way.
+
+Both halves are still reported, and the corner residual is worth watching for a different reason: on synthetic renders its worst single corner is 0.00091 inches against the 0.001 inch figure, so there is very little headroom before paper, print scale and scanner noise are added. Part of that is a measured 0.10 pixel inward bias on every marker corner, which a homography cannot absorb because it is common to all of them. Chasing that bias is measurement 3 of `docs/FIDUCIAL-DECISION.md` section 10 and it is now a priority rather than a nicety. **[r3]** Additional measurements that make the gate informative rather than merely pass or fail are listed in `docs/FIDUCIAL-DECISION.md` section 10; the two that needed no printer have already been done.
 
 **Phase 1: Detection spike.** Still no UI. Implement the eleven-stage pipeline of `docs/DETECTION-PIPELINE.md` against the Phase 0 images and the fifteen-file corpus.
 
