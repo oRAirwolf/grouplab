@@ -6,6 +6,7 @@ using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Cli.Library;
 
+/// <summary>One built-in definition of TARGET-LIBRARY.md sections 4 and 5, with the file it is committed as in <c>targets/</c>.</summary>
 public sealed record BuiltInTarget(string Name, string FileName, TargetDefinition Definition);
 
 /// <summary>

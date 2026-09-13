@@ -118,7 +118,7 @@ Section 3.6 settles the lattice: on a parametric layout it is derived from the b
 ### C9. Recognising a parametric layout
 
 - The scoring bulls come first and form a complete grid. The lowest order code that reproduces their array order is canonical, so a single row is always row-major.
-- A grid with one column takes `pitchX` from `cells.grid`, else from `pitchY`, else 0; likewise for one row. Because a decode emits no `cells` (C8), the pitch along an axis holding a single bull is unobservable, so the canonical body stores the other axis's pitch there and 0 for a single bull. A body storing anything else is refused as non-canonical (C12).
+- The pitch along an axis holding a single bull is TARGET-SCHEMA.md section 6: the other axis's pitch, or 0 for a single bull.
 - Sighter rows split wherever `y` or the ring set changes. A row of one sighter stores the grid's `pitchX`, as `check.py` does.
 - Anything else is explicit mode.
 - An absent label is taken as the default label. A label that differs from the default, or any `labelOffset`, needs the label block and is refused (question 10).
@@ -130,15 +130,6 @@ Section 5.5 gives the attribute run as 4 bits per bull without a bit order. The 
 ### C11. A trimmed named page
 
 A named page whose dimensions differ from the standard, or a roll preset whose width differs from the roll's, is legitimate per section 3.2 but has no standard page code that carries its dimensions. It encodes as `custom` and decodes as `custom`.
-
-### C13. The tie rule reaches two boundaries the reference tools round in Python
-
-Conformance test 37a applies section 2's ties toward zero to every derived boundary. Two derived values in the C# implementation can meet a tie that the reference tools break with Python's `round`, which ties to even:
-
-- a `corners-1` centre, which is a half-dmm only when `moduleSize` is odd (`tools/gltd/check.py` `corners1`)
-- a `field-ring-1` candidate position, which is a half-dmm only when the marker footprint is odd (`tools/layout/zero.py`)
-
-The implementation uses ties toward zero in both. No built-in sheet meets either tie, so the reference outputs are unaffected, but the tools and the C# would disagree on a sheet with a 3 dmm or 5 dmm code module, or an odd quiet zone.
 
 ### C12. The decoder refuses non-canonical bodies
 

@@ -24,6 +24,7 @@ public interface IImagingBackend
     GrayImage WarpPerspective(GrayImage image, Homography transform, int width, int height);
 }
 
+/// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>
 public readonly record struct PointD(double X, double Y);
 
 /// <summary>Values match the GLTD-B family byte of TARGET-SCHEMA.md section 5.5.</summary>
@@ -32,6 +33,10 @@ public enum MarkerFamily
     AprilTag36h11 = 7,
 }
 
+/// <summary>
+/// Corner refinement methods. DETECTION-PIPELINE.md stage S2 requires refinement to be on, because OpenCV's
+/// default leaves corners unrefined against a 0.6 pixel registration gate; FIDUCIAL-DECISION.md section 10 compares them.
+/// </summary>
 public enum CornerRefinement
 {
     None,
@@ -39,11 +44,17 @@ public enum CornerRefinement
     Contour,
 }
 
+/// <summary>
+/// Detector settings. <see cref="ExpectedMarkerSidePixels"/> sizes the adaptive threshold window and the shape gates of
+/// DETECTION-PIPELINE.md stage S2.
+/// </summary>
 public sealed record MarkerDetectionOptions(
     MarkerFamily Family,
     double ExpectedMarkerSidePixels,
     CornerRefinement Refinement = CornerRefinement.Subpixel);
 
+/// <summary>A decoded marker with its four corners in image pixels.</summary>
 public sealed record DetectedMarker(int Id, IReadOnlyList<PointD> Corners);
 
+/// <summary>A fitted transform and which correspondences RANSAC kept (DETECTION-PIPELINE.md stage S3).</summary>
 public sealed record HomographyFit(Homography Transform, IReadOnlyList<bool> Inliers);

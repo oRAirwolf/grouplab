@@ -7,6 +7,10 @@ using GroupLab.Core.Tests.Support;
 
 namespace GroupLab.Core.Tests.Gltd;
 
+/// <summary>
+/// Structural reading against the JSON Schema of TARGET-SCHEMA.md section 9, and rule R4: unknown majors are refused
+/// and unknown revisions proceed.
+/// </summary>
 public class GltdJsonReaderTests
 {
     [Fact]

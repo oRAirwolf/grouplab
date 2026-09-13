@@ -3,6 +3,7 @@ using GroupLab.Core.Gltd.Derivation;
 
 namespace GroupLab.Core.Gltd.Binary;
 
+/// <summary>A parsed body, or the reason it was rejected.</summary>
 public sealed record BodyReadResult(BodyModel? Body, string? Error);
 
 /// <summary>

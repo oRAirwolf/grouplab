@@ -1,5 +1,9 @@
 namespace GroupLab.Core.Gltd;
 
+/// <summary>
+/// TARGET-SCHEMA.md section 10 distinguishes errors, which make a definition invalid, from warnings, which flag a
+/// legitimate but unusual choice such as a trimmed page (test 17).
+/// </summary>
 public enum Severity
 {
     Warning,

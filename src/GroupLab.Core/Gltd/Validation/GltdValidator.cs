@@ -247,12 +247,13 @@ public static class GltdValidator
                 else
                 {
                     var g = layout.Grid;
+                    var (originX, originY) = BullLayout.CellOrigin(g);
                     if (cg.Cols != g.Cols || cg.Rows != g.Rows || cg.PitchX != g.PitchX || cg.PitchY != g.PitchY
-                        || (2 * cg.OriginX) + cg.PitchX != 2 * g.OriginX || (2 * cg.OriginY) + cg.PitchY != 2 * g.OriginY)
+                        || cg.OriginX != originX || cg.OriginY != originY)
                     {
                         Error("validate.cellGrid", "/cells/grid",
-                            $"cells.grid differs from the lattice the bull grid derives: {g.Cols} by {g.Rows} at pitch {g.PitchX} by {g.PitchY}, " +
-                            $"origin half a pitch before the bull at ({g.OriginX}, {g.OriginY}); a mismatch is an error, not a repair (section 3.6).", "24a");
+                            $"cells.grid differs from the derived lattice: {g.Cols} by {g.Rows} at pitch {g.PitchX} by {g.PitchY} " +
+                            $"from origin ({originX}, {originY}); a mismatch is an error, not a repair (section 3.6).", "24a");
                     }
                 }
             }

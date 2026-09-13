@@ -5,6 +5,7 @@ namespace GroupLab.Core.Gltd.Derivation;
 /// <summary>Marker centres a derivation rule produces for one sheet, in raster order (y, then x).</summary>
 public sealed record DerivedMarkers(IReadOnlyList<PointDmm> Positions, int Candidates, int Dropped);
 
+/// <summary>Derived markers, or why the rule cannot be applied to this definition (conformance test 16).</summary>
 public sealed record DerivationResult(DerivedMarkers? Markers, string? Error);
 
 /// <summary>

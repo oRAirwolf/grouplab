@@ -8,4 +8,8 @@
     <InternalsVisibleTo Include="GroupLab.Core.Tests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="3.2.1" />
+  </ItemGroup>
+
 </Project>

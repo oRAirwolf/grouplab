@@ -3,10 +3,16 @@ using System.IO.Compression;
 
 namespace GroupLab.Core.Gltd.Binary;
 
+/// <summary>
+/// The 15-byte frame header of TARGET-SCHEMA.md section 5.1. <see cref="TotalLength"/> and <see cref="Crc"/> describe
+/// the uncompressed, unsharded body, so the CRC checks reconstruction end to end.
+/// </summary>
 public sealed record FrameHeader(ushort Flags, byte ShareIndex, byte ShareCount, byte ShareK, byte TileIndex, ushort TotalLength, uint Crc);
 
+/// <summary>One parsed frame: a header and its payload, or the reason it was rejected.</summary>
 public sealed record FrameParseResult(FrameHeader? Header, byte[]? Payload, string? Error);
 
+/// <summary>A body rebuilt from one or more frames, or the reason none could be (conformance tests 5 to 11).</summary>
 public sealed record FrameAssemblyResult(byte[]? Body, FrameHeader? Header, string? Error);
 
 /// <summary>

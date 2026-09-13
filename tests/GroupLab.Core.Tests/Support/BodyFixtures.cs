@@ -143,8 +143,8 @@ internal static class RandomBodies
         List<BodyBull>? bulls = null;
         if (!isExplicit)
         {
-            // A pitch along an axis with one bull is unobservable in the decode, so the canonical body stores the
-            // other axis's pitch there, and zero for a single bull (docs/SPEC-ERRATA.md C9).
+            // A pitch along an axis with one bull is unobservable, so the canonical body stores the other axis's
+            // pitch there, and zero for a single bull (TARGET-SCHEMA.md section 6).
             byte cols = (byte)rng.Next(1, 9), rows = (byte)rng.Next(1, 9);
             ushort pitchX = (ushort)(2 * rng.Next(1, 1001));
             ushort pitchY = (ushort)(2 * rng.Next(1, 1001));

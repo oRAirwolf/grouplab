@@ -3,6 +3,7 @@ using GroupLab.Core.Tests.Support;
 
 namespace GroupLab.Core.Tests.Gltd;
 
+/// <summary>The shipped schema must be the one TARGET-SCHEMA.md section 9 publishes, so validation needs no network.</summary>
 public class GltdSchemaTests
 {
     [Fact]

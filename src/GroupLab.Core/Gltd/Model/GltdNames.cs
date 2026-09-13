@@ -39,6 +39,7 @@ public sealed class NameTable<T>
     }
 }
 
+/// <summary>The enumeration strings of the JSON Schema in TARGET-SCHEMA.md section 9, one table per enumeration.</summary>
 public static class GltdNames
 {
     public static NameTable<PageSize> PageSize { get; } = new(

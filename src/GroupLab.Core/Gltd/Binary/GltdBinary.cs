@@ -3,10 +3,19 @@ using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Gltd.Binary;
 
+/// <summary>
+/// A canonical body with the block flags of section 5.1 and its identifier, which section 6 computes from the body
+/// rather than the JSON.
+/// </summary>
 public sealed record BinaryEncoding(byte[] Body, ushort BlockFlags, string DefinitionId);
 
+/// <summary>The encoding, or the refusals naming each field the body could not carry.</summary>
 public sealed record EncodeResult(BinaryEncoding? Encoding, IReadOnlyList<Diagnostic> Diagnostics);
 
+/// <summary>
+/// The canonical projection decoded from frames (section 6), its identifier, and the tile index from the frame
+/// header, which section 3.12 keeps out of the body.
+/// </summary>
 public sealed record DecodeResult(TargetDefinition? Definition, string? DefinitionId, byte TileIndex, IReadOnlyList<Diagnostic> Diagnostics);
 
 /// <summary>GLTD-J to GLTD-B and back, TARGET-SCHEMA.md sections 5 and 6.</summary>

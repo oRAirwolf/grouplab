@@ -7,8 +7,13 @@ using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Gltd.Binary;
 
+/// <summary>A GLTD-I frame, or the refusals naming the field that could not be carried (conformance test 30).</summary>
 public sealed record InstanceEncodeResult(byte[]? Frame, IReadOnlyList<Diagnostic> Diagnostics);
 
+/// <summary>
+/// Decoded instance data. <see cref="Instance"/> is null when the frame belongs to another definition, which is
+/// reported and never merged (conformance test 29).
+/// </summary>
 public sealed record InstanceDecodeResult(Instance? Instance, string? DefinitionId, IReadOnlyList<Diagnostic> Diagnostics);
 
 /// <summary>

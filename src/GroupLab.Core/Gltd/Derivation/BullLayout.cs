@@ -5,8 +5,10 @@ namespace GroupLab.Core.Gltd.Derivation;
 /// <summary>A complete grid of scoring bulls. <see cref="OriginX"/> and <see cref="OriginY"/> are the first bull's centre.</summary>
 public sealed record GridLayout(int Cols, int Rows, int OriginX, int OriginY, int PitchX, int PitchY, string RingSet, int Order);
 
+/// <summary>A row of evenly spaced sighters, the sighter block of TARGET-SCHEMA.md section 5.2.</summary>
 public sealed record SighterRowLayout(int Count, int OriginX, int OriginY, int PitchX, string RingSet);
 
+/// <summary>A bull list recognised as the grid and sighter blocks of TARGET-SCHEMA.md section 5.2.</summary>
 public sealed record ParametricLayout(GridLayout Grid, IReadOnlyList<SighterRowLayout> Sighters);
 
 /// <summary>
@@ -41,6 +43,8 @@ public static class BullLayout
             return null;
         }
 
+        // Section 6: a pitch along an axis holding one bull is unobservable, so it mirrors the other axis, or is 0
+        // for a single bull. A stored cells.grid, which must equal the derivation (test 24a), may state it.
         var declared = d.Cells?.Grid;
         if (cols == 1)
         {
@@ -112,6 +116,16 @@ public static class BullLayout
         }
 
         return new ParametricLayout(new GridLayout(cols, rows, xs[0], ys[0], pitchX, pitchY, bulls[0].RingSet, order), sighters);
+    }
+
+    /// <summary>
+    /// The top-left of the derived cell lattice, TARGET-SCHEMA.md section 3.6: half a pitch before the first bull,
+    /// rounded under the tie rule of section 2 when the pitch is odd.
+    /// </summary>
+    public static (int X, int Y) CellOrigin(GridLayout grid)
+    {
+        ArgumentNullException.ThrowIfNull(grid);
+        return (DerivedRounding.Halve((2L * grid.OriginX) - grid.PitchX), DerivedRounding.Halve((2L * grid.OriginY) - grid.PitchY));
     }
 
     /// <summary>Row and column of the k-th grid bull under the grid order byte of section 5.2.</summary>

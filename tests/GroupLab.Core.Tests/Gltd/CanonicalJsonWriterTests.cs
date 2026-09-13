@@ -8,6 +8,10 @@ using GroupLab.Core.Tests.Support;
 
 namespace GroupLab.Core.Tests.Gltd;
 
+/// <summary>
+/// The canonical GLTD-J form of TARGET-SCHEMA.md section 6, and the JSON half of conformance test 4 (unknown top-level
+/// blocks survive a load and save).
+/// </summary>
 public class CanonicalJsonWriterTests
 {
     private static readonly string[] Section3Blocks =

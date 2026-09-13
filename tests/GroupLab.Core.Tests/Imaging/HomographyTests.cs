@@ -2,6 +2,7 @@ using GroupLab.Core.Imaging;
 
 namespace GroupLab.Core.Tests.Imaging;
 
+/// <summary>The imaging types Core owns independently of any backend (DESIGN.md section 7).</summary>
 public class HomographyTests
 {
     [Fact]

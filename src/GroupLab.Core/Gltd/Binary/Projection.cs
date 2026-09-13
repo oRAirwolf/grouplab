@@ -380,8 +380,9 @@ public static class Projection
 
             // cells.grid is optional: the lattice derives from the bull grid (section 3.6). A stored one must equal it.
             var g = layout.Grid;
+            var origin = BullLayout.CellOrigin(new GridLayout(g.Cols, g.Rows, g.OriginX, g.OriginY, g.PitchX, g.PitchY, "", g.Order));
             if (cells.Grid is { } cg && (cg.Cols != g.Cols || cg.Rows != g.Rows || cg.PitchX != g.PitchX || cg.PitchY != g.PitchY
-                || (2 * cg.OriginX) + cg.PitchX != 2 * g.OriginX || (2 * cg.OriginY) + cg.PitchY != 2 * g.OriginY))
+                || cg.OriginX != origin.X || cg.OriginY != origin.Y))
             {
                 Refuse("encode.cellsInconsistent", "/cells/grid",
                     $"cells.grid does not describe the bull grid, which is {g.Cols} by {g.Rows} at pitch {g.PitchX} by {g.PitchY} " +

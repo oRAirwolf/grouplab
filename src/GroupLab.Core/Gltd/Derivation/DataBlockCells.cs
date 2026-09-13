@@ -3,6 +3,7 @@ using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Gltd.Derivation;
 
+/// <summary>A field cell or the reserved square of a data block, in dmm from the page top-left (TARGET-SCHEMA.md section 3.10).</summary>
 public sealed record DataFieldCell(string Key, int X, int Y, int Width, int Height);
 
 /// <summary>Field cells in row-major field order, and the reserved square, which is absent when <c>reserve</c> is 0.</summary>

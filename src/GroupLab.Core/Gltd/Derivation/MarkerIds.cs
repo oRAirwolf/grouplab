@@ -2,6 +2,10 @@ using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Gltd.Derivation;
 
+/// <summary>
+/// One sheet's markers with identifiers, the marker count across the whole assembly, and whether identifiers had to
+/// repeat (conformance test 34).
+/// </summary>
 public sealed record MarkerAssignment(IReadOnlyList<Marker> Markers, int AssemblyCount, bool Wrapped);
 
 /// <summary>
