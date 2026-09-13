@@ -414,6 +414,8 @@ DESIGN.md's Phase 0 gate is registration residual under one thousandth of an inc
 7. **Print-scale detection.** Print at 96.2 percent and confirm the reported scale, which is DESIGN.md's own example and makes a good regression test.
 8. **Corner localisation against the AprilTag detector as well as OpenCV's.** New, and it exists because there are now two detectors that can read the sheet. They use different quad-fitting front ends, so they will not give identical corners. Measure both against the same printed target and record which is better, because that decides which is primary on mobile rather than merely which is available. **Read section 11 before running this one**, because the two detectors do not agree about which corner is first.
 
+Measurements 5 and 6 needed no printer and no scanner and have been done; `tools/fiducial/run_all.sh` reruns them. The rest still need paper.
+
 ---
 
 ## 11. OpenCV's tag36h11 is rotated 180 degrees, and the printed sheet is not
@@ -428,11 +430,9 @@ Found by the Phase 0a implementation and verified against the published AprilRob
 
 **Consequence for `tools/fiducial/`.** That harness draws its markers with OpenCV, so its rendered markers are rotated relative to what GroupLab prints. The measurements already recorded in section 4.1 are unaffected, because false-positive counts and Hamming distances are rotation-invariant, and the Hamming figures were recomputed from rendered images rather than from `bytesList`. Anything that depends on corner order is affected, which means **measurement 8 above must render its test markers from the GroupLab renderer rather than from OpenCV**, or it will measure the rotation rather than the two detectors.
 
-Measurements 5 and 6 needed no printer and no scanner and have been done; `tools/fiducial/run_all.sh` reruns them. The rest still need paper.
-
 ---
 
-## 11. Summary of changes this implies for DESIGN.md
+## 12. Summary of changes this implies for DESIGN.md
 
 | Section | Change |
 |---|---|

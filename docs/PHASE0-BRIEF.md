@@ -123,11 +123,11 @@ Gate unchanged from DESIGN.md: registration residual under one thousandth of an 
 
 1. **Residual against marker count.** Refit with random subsets from 4 markers up to all 34 and plot residual against count. Run it at **nine** in particular, because that is what a 300 yard tile carries and nobody knows yet whether nine is enough.
 2. **Residual against marker module size.** Print at 0.3, 0.4, 0.5, 0.6 and 0.8 mm and measure. This finds the real dot-gain floor on your printer, which no literature can supply.
-3. **Corner refinement comparison.** None, subpixel and contour, same images.
+3. **Corner refinement comparison.** None, subpixel and contour, same images. **Partly done on synthetic renders at Phase 0a, and now a priority**: a one-module window beat the 0.3-module default, 0.16 px against 0.24 px, and what survives is a 0.10 px inward bias on every marker that a homography cannot absorb. Redo it on paper and chase the bias.
 4. **Adaptive threshold window on 600 DPI input**, and whether scans should be downsampled before detection.
-5. **Corner localisation, OpenCV against the AprilTag reference implementation.** Two detectors can read the sheet and they use different quad-fitting front ends, so they will not give identical corners. Which is better decides which is primary on mobile.
+5. **Corner localisation, OpenCV against the AprilTag reference implementation.** Two detectors can read the sheet and they use different quad-fitting front ends, so they will not give identical corners. Which is better decides which is primary on mobile. **Read FIDUCIAL-DECISION.md section 11 first**: OpenCV holds `tag36h11` rotated 180 degrees from the printed orientation, so this measurement must render its test markers from the GroupLab renderer or it will measure the rotation rather than the detectors.
 
-Measurements 5 and 6 from that list are already done and are in FIDUCIAL-DECISION.md section 4.1. Do not redo them; `tools/fiducial/run_all.sh` reruns them if you want to.
+The list above is renumbered 1 to 5 for this brief. In **FIDUCIAL-DECISION.md section 10's own numbering** these are items 1, 2, 3, 4 and 8, and its items 5 and 6, the false-positive count and the cross-decode check, are already done and recorded in section 4.1. Do not redo those; `tools/fiducial/run_all.sh` reruns them if you want to. Its item 7, print-scale detection, is covered by the 96.2 percent sheet in section 4 above.
 
 ---
 
