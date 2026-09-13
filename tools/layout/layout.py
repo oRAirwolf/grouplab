@@ -111,6 +111,13 @@ class Layout:
                 if any(rects_overlap(b,r,10) for r in rings): self.dropped+=1; continue
                 if self.db and rects_overlap(b,self.db,10): self.dropped+=1; continue
                 self.marks.append((round(x),round(y)))
+        # ids are assigned in raster order (y, then x), per TARGET-SCHEMA.md 3.7.
+        # The lattice above is built column-major, so the list must be sorted or
+        # anything using its index as an id gets the wrong marker.  zero.py has
+        # always sorted; this one did not.  Confirmed against a 600 DPI scan of
+        # a printed GL-CF25-LTR: fitting the detected ids to the raster order
+        # gives 0.036 mm rms, and to the build order 50.3 mm.
+        self.marks.sort(key=lambda m: (m[1], m[0]))
 
     def check(self):
         errs=[]; warns=[]
