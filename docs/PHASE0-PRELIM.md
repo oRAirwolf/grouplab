@@ -74,10 +74,41 @@ The `dy` term varies by row in a way that is not monotone, which is the signatur
 - If the field **stays fixed in scanner coordinates**, the cause is the scanner.
 - If it is partly both, the split is directly measurable from the same pair.
 
+## 5a. The experiment was run, and the answer is the printer
+
+Sheet 2 was rotated 180 degrees on the platen and rescanned at 600 DPI. The homography absorbs the rotation, so the displacement field comes back in page coordinates either way and the two hypotheses make opposite predictions.
+
+| Test | Correlation |
+|---|---|
+| Rotated sheet 2 against **normal sheet 2** | **+0.769** |
+| Rotated sheet 2 against normal sheet 1 | +0.571 |
+| Rotated sheet 2 against normal sheet 3 | +0.675 |
+| Sheet-to-sheet baseline, all unrotated | +0.725 to +0.841 |
+| Rotated sheet 2 against the **negated, position-reflected** sheet 2, which is what a scanner-fixed field predicts | **+0.185** |
+
+**The field travels with the paper.** Turning the sheet upside down on the glass turns the error field with it, and the correlation against the unrotated scan of the same sheet is +0.769, indistinguishable from the sheet-to-sheet baseline. The scanner-fixed prediction scores +0.185 and is rejected.
+
+**The renderer is excluded independently.** Phase 0a's conformance test 43 recovers every bull to 0.0002 inches from a synthetic raster of the same PDF, using a comparable centroid method. The same measurement on a scan of that PDF printed gives 0.0021 inches. The twenty-fold difference is introduced between the PDF and the paper, and the rotation test puts it on the paper side.
+
+**So the ink is not where the definition says it is, by about 0.05 mm, and the pattern is a property of the printer.** Splitting the variance by the correlation, roughly 0.0019 inches of it is systematic and reproducible across sheets, and roughly 0.0010 inches is random from sheet to sheet.
+
 ## 6. What this does not yet justify
 
-**It does not justify relaxing the Phase 0 gate.** A gate that is missed is a finding, and the response to a finding is diagnosis rather than a redefinition that makes it pass. That is doubly true here because the same instinct has already been caught twice in this project, on the grid rounding rule and on the tile cells.
+The diagnosis is now done, so restating the gate is earned rather than evasive. What follows is a proposal, not a decision.
 
-**It does say the gate needs re-examining once the cause is known.** If the cause is printer dot placement, then one thousandth of an inch is below the physical placement accuracy of the machine producing the artwork, and no registration scheme can recover a bull that was printed 0.05 mm from where it was asked for. The question then becomes what accuracy the application actually needs, which is a different and much coarser number: a shot measured against a bull that is 0.05 mm from its declared position carries 0.05 mm of error into a group whose dimensions are measured in millimetres.
+**One thousandth of an inch is below the placement accuracy of the machine that prints the target.** No registration scheme recovers a bull whose ink was laid 0.05 mm from where it was asked for, because there is nothing to recover it from: the fiducials are printed by the same head on the same pass and carry their own share of the same error. The gate as written asks the software to correct the paper.
+
+**And the accuracy that matters is two orders of magnitude coarser.** A shot is measured against its own bull's declared centre, so a bull printed 0.05 mm off contributes 0.05 mm of error to that shot's offset. In a composite group the bull-to-bull variation adds in quadrature with the true dispersion. For a rifle holding a sigma of 2.5 mm at 100 yards, which is roughly half a minute, 0.05 mm of placement error inflates the estimated sigma by **0.02 percent**. For the smallest group anyone would try to measure it is still under a tenth of a percent.
+
+**Proposed structure: two gates, measuring two different things.**
+
+| Gate | Measured on | Threshold | What it protects |
+|---|---|---|---|
+| Conformance test 43 | A synthetic raster of the PDF | 0.001 in worst bull | That the renderer and the analyser agree. Catches rule R5 disagreements. Already passing at 0.0002 in |
+| Phase 0 paper gate | A 600 DPI scan of a printed sheet | **0.005 in worst bull** | That registration, detection and print together stay far enough inside what the statistics need |
+
+Five thousandths keeps the contribution to an estimated sigma below half a percent on the tightest group worth measuring, and the present measurement of 0.0042 inches worst sits just inside it with the printer, the scanner and a scratch centroid all working against it. The real pipeline should do better than a scratch script.
+
+**The registration residual stays a reported diagnostic**, per DESIGN.md section 21, and Phase 0 should additionally record the systematic and random split, because a printer whose systematic component is known is a printer whose systematic component could one day be calibrated out. That is not a feature anyone should build now, but it is worth knowing it exists.
 
 DESIGN.md section 6 already recorded that a four-point homography leaves 0.0026 to 0.0032 inches rms on pristine sheets from the existing corpus. The 34-marker homography measured here gives 0.0021, which is better but the same order. That figure has been in the design documents since the beginning and nobody connected it to the Phase 0 gate.
