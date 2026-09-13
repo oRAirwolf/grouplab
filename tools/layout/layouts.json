@@ -1,0 +1,1262 @@
+{
+ "layouts": [
+  {
+   "name": "GL-CF25-LTR",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 3,
+   "total": 28,
+   "pitch_in": 1.4961,
+   "ring_in": 1.0,
+   "x0": 320,
+   "y0": 539,
+   "xs": [
+    320,
+    700,
+    1080,
+    1460,
+    1840
+   ],
+   "ys": [
+    539,
+    919,
+    1299,
+    1679,
+    2059
+   ],
+   "sighter_y": [
+    2515
+   ],
+   "sighter_x": [
+    700,
+    1080,
+    1460
+   ],
+   "markers": 34,
+   "dropped": 8,
+   "marker_pct": 2.03,
+   "qr_pct": 4.48,
+   "overhead_pct": 6.51,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Centrefire, 100 yd, 38.0 mm grid, Letter. Sighter variant",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-CF25-LTR-D",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 0,
+   "total": 25,
+   "pitch_in": 1.4961,
+   "ring_in": 1.0,
+   "x0": 320,
+   "y0": 537,
+   "xs": [
+    320,
+    700,
+    1080,
+    1460,
+    1840
+   ],
+   "ys": [
+    537,
+    917,
+    1297,
+    1677,
+    2057
+   ],
+   "sighter_y": [],
+   "sighter_x": [],
+   "markers": 34,
+   "dropped": 2,
+   "marker_pct": 2.03,
+   "qr_pct": 4.48,
+   "overhead_pct": 6.51,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Centrefire, 100 yd, Letter. Load-block variant, no sighters",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-CF25-A4",
+   "page": "a4",
+   "page_in": "8.27x11.69",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 3,
+   "total": 28,
+   "pitch_in": 1.4961,
+   "ring_in": 1.0,
+   "x0": 290,
+   "y0": 627,
+   "xs": [
+    290,
+    670,
+    1050,
+    1430,
+    1810
+   ],
+   "ys": [
+    627,
+    1007,
+    1387,
+    1767,
+    2147
+   ],
+   "sighter_y": [
+    2603
+   ],
+   "sighter_x": [
+    670,
+    1050,
+    1430
+   ],
+   "markers": 40,
+   "dropped": 2,
+   "marker_pct": 2.31,
+   "qr_pct": 4.34,
+   "overhead_pct": 6.64,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Centrefire, 100 yd geometry on A4",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-CF25-100M-A4",
+   "page": "a4",
+   "page_in": "8.27x11.69",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 3,
+   "total": 28,
+   "pitch_in": 1.5748,
+   "ring_in": 1.0,
+   "x0": 250,
+   "y0": 575,
+   "xs": [
+    250,
+    650,
+    1050,
+    1450,
+    1850
+   ],
+   "ys": [
+    575,
+    975,
+    1375,
+    1775,
+    2175
+   ],
+   "sighter_y": [
+    2655
+   ],
+   "sighter_x": [
+    650,
+    1050,
+    1450
+   ],
+   "markers": 32,
+   "dropped": 16,
+   "marker_pct": 1.85,
+   "qr_pct": 4.34,
+   "overhead_pct": 6.18,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Centrefire, TRUE 100 m angular sizing, A4",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-CF30-LTR",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "5x6",
+   "scoring": 30,
+   "sighters": 0,
+   "total": 30,
+   "pitch_in": 1.4016,
+   "ring_in": 0.874,
+   "x0": 368,
+   "y0": 521,
+   "xs": [
+    368,
+    724,
+    1080,
+    1436,
+    1792
+   ],
+   "ys": [
+    521,
+    877,
+    1233,
+    1589,
+    1945,
+    2301
+   ],
+   "sighter_y": [],
+   "sighter_x": [],
+   "markers": 38,
+   "dropped": 4,
+   "marker_pct": 2.27,
+   "qr_pct": 4.48,
+   "overhead_pct": 6.75,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Centrefire dense, 30 scoring, Letter",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-RF25-LTR",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 5,
+   "total": 30,
+   "pitch_in": 1.0,
+   "ring_in": 0.5984,
+   "x0": 572,
+   "y0": 582,
+   "xs": [
+    572,
+    826,
+    1080,
+    1334,
+    1588
+   ],
+   "ys": [
+    582,
+    836,
+    1090,
+    1344,
+    1598
+   ],
+   "sighter_y": [
+    1902
+   ],
+   "sighter_x": [
+    572,
+    826,
+    1080,
+    1334,
+    1588
+   ],
+   "markers": 42,
+   "dropped": 0,
+   "marker_pct": 2.51,
+   "qr_pct": 4.48,
+   "overhead_pct": 6.99,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Rimfire 50 yd, Letter, with load block",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-RF25-A4",
+   "page": "a4",
+   "page_in": "8.27x11.69",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 5,
+   "total": 30,
+   "pitch_in": 1.0,
+   "ring_in": 0.5984,
+   "x0": 542,
+   "y0": 670,
+   "xs": [
+    542,
+    796,
+    1050,
+    1304,
+    1558
+   ],
+   "ys": [
+    670,
+    924,
+    1178,
+    1432,
+    1686
+   ],
+   "sighter_y": [
+    1990
+   ],
+   "sighter_x": [
+    542,
+    796,
+    1050,
+    1304,
+    1558
+   ],
+   "markers": 42,
+   "dropped": 0,
+   "marker_pct": 2.42,
+   "qr_pct": 4.34,
+   "overhead_pct": 6.76,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Rimfire 50 m, A4, with load block",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-RF36-LTR",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "6x6",
+   "scoring": 36,
+   "sighters": 4,
+   "total": 40,
+   "pitch_in": 1.0,
+   "ring_in": 0.5,
+   "x0": 444,
+   "y0": 610,
+   "xs": [
+    444,
+    698,
+    952,
+    1206,
+    1460,
+    1714
+   ],
+   "ys": [
+    610,
+    864,
+    1118,
+    1372,
+    1626,
+    1880
+   ],
+   "sighter_y": [
+    2184
+   ],
+   "sighter_x": [
+    698,
+    952,
+    1206,
+    1460
+   ],
+   "markers": 56,
+   "dropped": 0,
+   "marker_pct": 3.34,
+   "qr_pct": 4.48,
+   "overhead_pct": 7.82,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "Rimfire dense, 36 scoring, Letter",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR25-TAB",
+   "page": "tabloid",
+   "page_in": "11.00x17.00",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 3,
+   "total": 28,
+   "pitch_in": 2.0,
+   "ring_in": 1.5,
+   "x0": 381,
+   "y0": 814,
+   "xs": [
+    381,
+    889,
+    1397,
+    1905,
+    2413
+   ],
+   "ys": [
+    814,
+    1322,
+    1830,
+    2338,
+    2846
+   ],
+   "sighter_y": [
+    3455
+   ],
+   "sighter_x": [
+    889,
+    1397,
+    1905
+   ],
+   "markers": 48,
+   "dropped": 0,
+   "marker_pct": 1.43,
+   "qr_pct": 2.24,
+   "overhead_pct": 3.67,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "100 to 200 yd, Tabloid, with load block",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR25-A3",
+   "page": "a3",
+   "page_in": "11.69x16.54",
+   "grid": "5x5",
+   "scoring": 25,
+   "sighters": 3,
+   "total": 28,
+   "pitch_in": 2.0,
+   "ring_in": 1.5,
+   "x0": 469,
+   "y0": 754,
+   "xs": [
+    469,
+    977,
+    1485,
+    1993,
+    2501
+   ],
+   "ys": [
+    754,
+    1262,
+    1770,
+    2278,
+    2786
+   ],
+   "sighter_y": [
+    3395
+   ],
+   "sighter_x": [
+    977,
+    1485,
+    1993
+   ],
+   "markers": 48,
+   "dropped": 0,
+   "marker_pct": 1.39,
+   "qr_pct": 2.17,
+   "overhead_pct": 3.55,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "100 to 200 yd, A3, with load block",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR30-TAB",
+   "page": "tabloid",
+   "page_in": "11.00x17.00",
+   "grid": "5x6",
+   "scoring": 30,
+   "sighters": 3,
+   "total": 33,
+   "pitch_in": 2.0,
+   "ring_in": 1.4016,
+   "x0": 381,
+   "y0": 714,
+   "xs": [
+    381,
+    889,
+    1397,
+    1905,
+    2413
+   ],
+   "ys": [
+    714,
+    1222,
+    1730,
+    2238,
+    2746,
+    3254
+   ],
+   "sighter_y": [
+    3863
+   ],
+   "sighter_x": [
+    889,
+    1397,
+    1905
+   ],
+   "markers": 52,
+   "dropped": 2,
+   "marker_pct": 1.55,
+   "qr_pct": 2.24,
+   "overhead_pct": 3.79,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "100 to 200 yd dense, 30 scoring, Tabloid",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR300-T",
+   "page": "letter",
+   "page_in": "8.50x11.00",
+   "grid": "2x3",
+   "scoring": 6,
+   "sighters": 0,
+   "total": 6,
+   "pitch_in": 4.0,
+   "ring_in": 1.5,
+   "x0": 572,
+   "y0": 381,
+   "xs": [
+    572,
+    1588
+   ],
+   "ys": [
+    381,
+    1397,
+    2413
+   ],
+   "sighter_y": [],
+   "sighter_x": [],
+   "markers": 9,
+   "dropped": 26,
+   "marker_pct": 0.54,
+   "qr_pct": 2.24,
+   "overhead_pct": 2.78,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "300 yd tile, 4.0 in pitch. 2x2 default = 24 bulls, 3x2 = 36",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-half-1",
+   "tile": [
+    2,
+    2
+   ],
+   "qr_count": 2
+  },
+  {
+   "name": "GL-LR300-TA4",
+   "page": "a4",
+   "page_in": "8.27x11.69",
+   "grid": "2x3",
+   "scoring": 6,
+   "sighters": 0,
+   "total": 6,
+   "pitch_in": 4.0,
+   "ring_in": 1.5,
+   "x0": 542,
+   "y0": 600,
+   "xs": [
+    542,
+    1558
+   ],
+   "ys": [
+    600,
+    1616,
+    2632
+   ],
+   "sighter_y": [],
+   "sighter_x": [],
+   "markers": 12,
+   "dropped": 23,
+   "marker_pct": 0.69,
+   "qr_pct": 2.17,
+   "overhead_pct": 2.86,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "300 yd tile on A4. 2x2 default = 24 bulls, 3x2 = 36",
+   "data_block": 0,
+   "fid_scheme": "grid-boundary-half-1",
+   "tile": [
+    2,
+    2
+   ],
+   "qr_count": 2
+  },
+  {
+   "name": "GL-LR300-R24",
+   "page": "roll24",
+   "page_in": "24.00x28.00",
+   "grid": "6x5",
+   "scoring": 30,
+   "sighters": 3,
+   "total": 33,
+   "pitch_in": 4.0,
+   "ring_in": 2.5,
+   "x0": 508,
+   "y0": 890,
+   "xs": [
+    508,
+    1524,
+    2540,
+    3556,
+    4572,
+    5588
+   ],
+   "ys": [
+    890,
+    1906,
+    2922,
+    3938,
+    4954
+   ],
+   "sighter_y": [
+    6173
+   ],
+   "sighter_x": [
+    2032,
+    3048,
+    4064
+   ],
+   "markers": 40,
+   "dropped": 16,
+   "marker_pct": 0.33,
+   "qr_pct": 0.62,
+   "overhead_pct": 0.96,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "300 yd, 24 in roll, 30 scoring bulls at 4.0 in pitch, 2.5 in rings",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR300-R36",
+   "page": "roll36",
+   "page_in": "36.00x24.00",
+   "grid": "9x4",
+   "scoring": 36,
+   "sighters": 3,
+   "total": 39,
+   "pitch_in": 4.0,
+   "ring_in": 2.5,
+   "x0": 508,
+   "y0": 890,
+   "xs": [
+    508,
+    1524,
+    2540,
+    3556,
+    4572,
+    5588,
+    6604,
+    7620,
+    8636
+   ],
+   "ys": [
+    890,
+    1906,
+    2922,
+    3938
+   ],
+   "sighter_y": [
+    5157
+   ],
+   "sighter_x": [
+    3556,
+    4572,
+    5588
+   ],
+   "markers": 56,
+   "dropped": 14,
+   "marker_pct": 0.36,
+   "qr_pct": 0.49,
+   "overhead_pct": 0.85,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "300 yd, 36 in roll, 36 scoring bulls at 4.0 in pitch, 2.5 in rings",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  },
+  {
+   "name": "GL-LR300-R42",
+   "page": "roll42",
+   "page_in": "42.00x24.00",
+   "grid": "10x4",
+   "scoring": 40,
+   "sighters": 3,
+   "total": 43,
+   "pitch_in": 4.0,
+   "ring_in": 2.5,
+   "x0": 762,
+   "y0": 760,
+   "xs": [
+    762,
+    1778,
+    2794,
+    3810,
+    4826,
+    5842,
+    6858,
+    7874,
+    8890,
+    9906
+   ],
+   "ys": [
+    760,
+    1776,
+    2792,
+    3808
+   ],
+   "sighter_y": [
+    5027
+   ],
+   "sighter_x": [
+    4318,
+    5334,
+    6350
+   ],
+   "markers": 75,
+   "dropped": 2,
+   "marker_pct": 0.42,
+   "qr_pct": 0.42,
+   "overhead_pct": 0.83,
+   "errors": [],
+   "warnings": [],
+   "nwarn": 0,
+   "note": "300 yd, 42 in roll, 40 scoring bulls at 4.0 in pitch, 2.5 in rings",
+   "data_block": 310,
+   "fid_scheme": "grid-boundary-1",
+   "tile": null,
+   "qr_count": 4
+  }
+ ],
+ "zero": [
+  {
+   "name": "GL-ZERO-MOA-100Y",
+   "page": "letter",
+   "unit": "MOA at 100 yd",
+   "unit_dmm": 265.988,
+   "half_units": 3.0,
+   "half": 798,
+   "field": 1596,
+   "divisions": 6,
+   "major_every": 2,
+   "cell_dmm": 132.994,
+   "maxdev_dmm": 0.035,
+   "cx": 1079,
+   "cy": 1292,
+   "offsets": [
+    0,
+    133,
+    266,
+    399,
+    532,
+    665,
+    798
+   ],
+   "markers": 32,
+   "marks": [
+    [
+     221,
+     1292
+    ],
+    [
+     1937,
+     1292
+    ],
+    [
+     221,
+     1026
+    ],
+    [
+     1937,
+     1026
+    ],
+    [
+     221,
+     1558
+    ],
+    [
+     1937,
+     1558
+    ],
+    [
+     221,
+     760
+    ],
+    [
+     1937,
+     760
+    ],
+    [
+     221,
+     1824
+    ],
+    [
+     1937,
+     1824
+    ],
+    [
+     221,
+     494
+    ],
+    [
+     1937,
+     494
+    ],
+    [
+     221,
+     2090
+    ],
+    [
+     1937,
+     2090
+    ],
+    [
+     1079,
+     434
+    ],
+    [
+     1079,
+     2150
+    ],
+    [
+     813,
+     434
+    ],
+    [
+     813,
+     2150
+    ],
+    [
+     1345,
+     434
+    ],
+    [
+     1345,
+     2150
+    ],
+    [
+     547,
+     434
+    ],
+    [
+     547,
+     2150
+    ],
+    [
+     1611,
+     434
+    ],
+    [
+     1611,
+     2150
+    ],
+    [
+     281,
+     434
+    ],
+    [
+     281,
+     2150
+    ],
+    [
+     1877,
+     434
+    ],
+    [
+     1877,
+     2150
+    ],
+    [
+     221,
+     434
+    ],
+    [
+     1937,
+     434
+    ],
+    [
+     221,
+     2150
+    ],
+    [
+     1937,
+     2150
+    ]
+   ],
+   "band_x": 161.5,
+   "band_y": [
+    84,
+    84
+   ],
+   "data_block": 210,
+   "errors": [],
+   "warnings": [],
+   "note": "0.5 MOA minor, 1 MOA major, plus or minus 3.0 MOA"
+  },
+  {
+   "name": "GL-ZERO-MIL-100Y",
+   "page": "letter",
+   "unit": "mil at 100 yd",
+   "unit_dmm": 914.4,
+   "half_units": 0.8,
+   "half": 732,
+   "field": 1464,
+   "divisions": 8,
+   "major_every": 5,
+   "cell_dmm": 91.44,
+   "maxdev_dmm": 0.48,
+   "cx": 1079,
+   "cy": 1292,
+   "offsets": [
+    0,
+    91,
+    183,
+    274,
+    366,
+    457,
+    549,
+    640,
+    732
+   ],
+   "markers": 16,
+   "marks": [
+    [
+     287,
+     1292
+    ],
+    [
+     1871,
+     1292
+    ],
+    [
+     287,
+     835
+    ],
+    [
+     1871,
+     835
+    ],
+    [
+     287,
+     1749
+    ],
+    [
+     1871,
+     1749
+    ],
+    [
+     1079,
+     500
+    ],
+    [
+     1079,
+     2084
+    ],
+    [
+     622,
+     500
+    ],
+    [
+     622,
+     2084
+    ],
+    [
+     1536,
+     500
+    ],
+    [
+     1536,
+     2084
+    ],
+    [
+     287,
+     500
+    ],
+    [
+     1871,
+     500
+    ],
+    [
+     287,
+     2084
+    ],
+    [
+     1871,
+     2084
+    ]
+   ],
+   "band_x": 227.5,
+   "band_y": [
+    150,
+    150
+   ],
+   "data_block": 210,
+   "errors": [],
+   "warnings": [],
+   "note": "0.1 mil minor, 0.5 mil major, plus or minus 0.8 mil"
+  },
+  {
+   "name": "GL-ZERO-MOA-100M",
+   "page": "letter",
+   "unit": "MOA at 100 m",
+   "unit_dmm": 290.888,
+   "half_units": 2.5,
+   "half": 727,
+   "field": 1454,
+   "divisions": 5,
+   "major_every": 2,
+   "cell_dmm": 145.444,
+   "maxdev_dmm": 0.444,
+   "cx": 1079,
+   "cy": 1292,
+   "offsets": [
+    0,
+    145,
+    291,
+    436,
+    582,
+    727
+   ],
+   "markers": 24,
+   "marks": [
+    [
+     292,
+     1292
+    ],
+    [
+     1866,
+     1292
+    ],
+    [
+     292,
+     1001
+    ],
+    [
+     1866,
+     1001
+    ],
+    [
+     292,
+     1583
+    ],
+    [
+     1866,
+     1583
+    ],
+    [
+     292,
+     710
+    ],
+    [
+     1866,
+     710
+    ],
+    [
+     292,
+     1874
+    ],
+    [
+     1866,
+     1874
+    ],
+    [
+     1079,
+     505
+    ],
+    [
+     1079,
+     2079
+    ],
+    [
+     788,
+     505
+    ],
+    [
+     788,
+     2079
+    ],
+    [
+     1370,
+     505
+    ],
+    [
+     1370,
+     2079
+    ],
+    [
+     497,
+     505
+    ],
+    [
+     497,
+     2079
+    ],
+    [
+     1661,
+     505
+    ],
+    [
+     1661,
+     2079
+    ],
+    [
+     292,
+     505
+    ],
+    [
+     1866,
+     505
+    ],
+    [
+     292,
+     2079
+    ],
+    [
+     1866,
+     2079
+    ]
+   ],
+   "band_x": 232.5,
+   "band_y": [
+    155,
+    155
+   ],
+   "data_block": 210,
+   "errors": [],
+   "warnings": [],
+   "note": "0.5 MOA minor, 1 MOA major, plus or minus 2.5 MOA"
+  },
+  {
+   "name": "GL-ZERO-MIL-100M",
+   "page": "letter",
+   "unit": "mil at 100 m",
+   "unit_dmm": 1000.0,
+   "half_units": 0.8,
+   "half": 800,
+   "field": 1600,
+   "divisions": 8,
+   "major_every": 5,
+   "cell_dmm": 100.0,
+   "maxdev_dmm": 0.0,
+   "cx": 1079,
+   "cy": 1292,
+   "offsets": [
+    0,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800
+   ],
+   "markers": 16,
+   "marks": [
+    [
+     219,
+     1292
+    ],
+    [
+     1939,
+     1292
+    ],
+    [
+     219,
+     792
+    ],
+    [
+     1939,
+     792
+    ],
+    [
+     219,
+     1792
+    ],
+    [
+     1939,
+     1792
+    ],
+    [
+     1079,
+     432
+    ],
+    [
+     1079,
+     2152
+    ],
+    [
+     579,
+     432
+    ],
+    [
+     579,
+     2152
+    ],
+    [
+     1579,
+     432
+    ],
+    [
+     1579,
+     2152
+    ],
+    [
+     219,
+     432
+    ],
+    [
+     1939,
+     432
+    ],
+    [
+     219,
+     2152
+    ],
+    [
+     1939,
+     2152
+    ]
+   ],
+   "band_x": 159.5,
+   "band_y": [
+    82,
+    82
+   ],
+   "data_block": 210,
+   "errors": [],
+   "warnings": [],
+   "note": "0.1 mil minor, 0.5 mil major, plus or minus 0.8 mil"
+  }
+ ]
+}

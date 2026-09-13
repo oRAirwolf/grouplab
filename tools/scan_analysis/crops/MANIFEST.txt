@@ -1,0 +1,24 @@
+crop	source	centre_x_in	centre_y_in	width_in	caption
+hole_open_perforation.png	300_nm_hand_load.jpg	5.72	5.74	0.60	.308 hole on bare paper. Measured: core mean V 216.8, core peak V 231.0, local paper V 254.5, rim minimum V 34.1, hull dia 0.2668 in. The rim, not the core, is the signal
+hole_context_wide.png	300_nm_hand_load.jpg	5.65	5.65	1.10	the same hole in its bull, showing how far the printed ring is from the hole (ring radius 0.60 in, hole radius 0.13 in)
+hole_on_black_ring.png	300_nm_hand_load.jpg	4.42	3.95	0.84	hole overlapping the printed black ring
+hole_double_overlap.png	300_nm_hand_load.jpg	7.90	5.90	1.10	two overlapping perforations at bull 20 -- the one case where the one-shot-per-bull assumption is visibly violated
+hole_outside_ring.png	300_nm_hand_load.jpg	8.02	4.42	0.80	shot outside its printed ring
+hole_on_red_bull.png	338lmao.jpg	5.69	3.94	0.90	.338 hole on the solid red bullseye
+hole_on_blue_ring.png	n568.jpg	1.20	0.55	0.90	.338 hole on the thin blue ring
+hole_300dpi_crumpled.png	IMG_20250530_0001.jpg	1.10	1.25	1.10	hole in the 300 dpi crumpled scan
+hole_93dpi_messaging.png	1748713494260-cf6994ff-96c5-4eda-8647-424356f59979_1.jpg	1.10	1.25	1.10	the same hole after a messaging-app round trip (93 dpi effective)
+ink_X_over_hole.png	retumbo.png	1.20	5.10	1.24	hand-drawn X drawn straight over a bullet hole (cell 16)
+ink_arrow_1.png	retumbo.png	2.75	5.55	1.50	marker arrows pointing at holes (cells 17/22)
+ink_X_sighter.png	retumbo.png	1.22	8.60	1.24	X over a hole in the sighter row
+ink_arrow_blue.png	retumbo_0001.jpg	1.90	1.20	1.70	blue ballpoint arrows on the red target
+ink_arrow_over_grid.png	6_5retumbo.jpg	2.10	4.20	1.90	long marker strokes crossing cell boundaries
+ink_marker_text.png	300_nm_hand_load.jpg	4.00	8.85	3.20	thick marker caption; strokes are wider than the printed ring stroke
+ink_blue_caption.png	338lmao.jpg	2.50	8.85	3.20	ballpoint caption across the page; loops read as circles
+page_tear_topright.png	IMG_20250530_0001.jpg	7.90	0.80	1.90	torn top-right corner: the sheet edge and the scanner lid differ by about 3 grey levels
+page_tape_top.png	IMG_20250530_0001.jpg	4.20	0.12	2.40	black tape across the top edge
+page_crumple.png	IMG_20250530_0001.jpg	3.80	3.60	2.60	crumple ridges; the printed rule through them stays straight to 0.003 in
+bull_target51.png	300_nm_hand_load.jpg	1.15	1.15	1.70	OnTarget Target #51 bull: 1.199 in ring, 0.052 in stroke
+bull_target1_red.png	338lmao.jpg	7.18	7.09	1.20	OnTarget Target #1 bull: solid red, 0.489 in outer
+bull_target18_blue.png	n568.jpg	7.16	7.10	1.50	OnTarget Target #18 bull: thin blue ring, 0.949 in
+barcode_footer.png	300_nm_hand_load.jpg	6.60	10.05	2.20	footer barcode: the dominant false-positive source for every naive detector

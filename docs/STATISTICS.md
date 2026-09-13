@@ -1,0 +1,580 @@
+# GroupLab Statistics Reference
+
+**Version** 1.0 (draft)
+**Implements** DESIGN.md section 14
+**Validated against** shotGroups 0.8.4 (Daniel Wollschlaeger, CRAN, GPL >= 2), R 4.3.3
+**Status** Specification for review. No application code written.
+
+Every closed-form estimator in section 3 was implemented independently in R during the writing of this document and checked against shotGroups on its `DF300BLK` fixture. Agreement was **exact to machine precision**, delta 0.000e+00 on sigma, its confidence interval, mean radius, median radius, radial standard deviation, and CEP at the 50th, 90th and 95th percentiles. Every simulation figure quoted is from a run reported here, with the seed and the replication count stated.
+
+---
+
+## 1. Principles
+
+Four rules that decide every design question below.
+
+**R1. Never report a point estimate without an interval.** DESIGN.md section 2's governing principle is that the software should never help a shooter believe something the data does not support. A five-shot group gives a dispersion estimate whose 95 percent interval spans a factor of 2.8. Printing one number is not neutral; it is misleading, and the interval is the correction.
+
+**R2. Prefer the efficient estimator, but report the traditional one.** Rayleigh sigma uses every shot. Extreme spread uses two. Section 5 quantifies the gap. But extreme spread is the language the audience speaks, so it is reported, labelled, and placed next to something better.
+
+**R3. State the assumption alongside the number.** Almost every closed form below assumes a circular bivariate normal. Where the group is not circular, the number is wrong in a knowable direction, and the software should say which.
+
+**R4. Estimating the centre costs two degrees of freedom, and the code must never forget it.** This is the single most commonly botched detail in shooting statistics, and section 3.2 shows exactly where it enters.
+
+---
+
+## 2. Notation and the model
+
+`n` shots. Shot `i` has coordinates `(x_i, y_i)` in the composite group frame, which is the offset from that shot's own bull centre. Distances are linear at the target plane, in the canonical storage unit of DESIGN.md section 14.
+
+`c` is the group centre, `(x̄, ȳ)` unless a known point of aim is supplied. `r_i` is the radial distance from shot `i` to the centre.
+
+**The working model** is the bivariate normal with covariance `Σ`. The **circular** case is `Σ = σ²I`, under which `r` follows a Rayleigh distribution with scale `σ`. Most closed forms assume it. The **elliptical** case is general `Σ`, under which `r` follows a Hoyt distribution.
+
+Whether the circular assumption holds is not asserted, it is **tested**, in section 7, and the answer conditions which estimators are shown.
+
+---
+
+## 3. Rayleigh sigma, the preferred estimator
+
+### 3.1 Why it is preferred
+
+`σ` is the scale parameter of the whole radial distribution. Every other circular measure is a fixed multiple of it, so estimating `σ` well estimates all of them well. It uses all `n` shots. It has a closed-form confidence interval. And its sampling distribution is exactly known, which makes both significance testing and sample-size planning exact rather than simulated.
+
+### 3.2 The estimator, exactly
+
+Let `p = 2` (dimensions) and
+
+```
+rSqSum = Σᵢ ‖(xᵢ, yᵢ) − c‖²
+```
+
+**Centre estimated from the data**, which is the normal case:
+
+```
+varHat  = rSqSum / (p · (n − 1))          = rSqSum / (2(n − 1))
+corrFac = 1 / c4(p·n − (p − 1))           = 1 / c4(2n − 1)
+dfChi   = p · (n − 1)                     = 2(n − 1)
+```
+
+**Centre known**, when a true point of aim is supplied:
+
+```
+varHat  = rSqSum / (p · n)                = rSqSum / (2n)
+corrFac = 1 / c4(p·n + 1)                 = 1 / c4(2n + 1)
+dfChi   = p · n                           = 2n
+```
+
+In both cases
+
+```
+σ̂ = corrFac · √varHat
+```
+
+where `c4` is the standard bias-correction factor for the square root of a variance estimate,
+
+```
+c4(k) = √(2/(k−1)) · exp( lnΓ(k/2) − lnΓ((k−1)/2) )
+```
+
+clamped to 1 when it would exceed 1 or overflow. Compute it through the **log-gamma** function, never through a ratio of gamma functions, which overflows above about `k = 340` and is reachable with a large pooled group.
+
+**The two cases differ in three places at once**, and getting one right while getting another wrong produces an estimate that is close enough to look correct and wrong enough to matter. This is the first unit test to write.
+
+### 3.3 The confidence interval
+
+`rSqSum / σ²` is chi-square distributed on `dfChi` degrees of freedom, so
+
+```
+σ̂_lo = corrFac · √( rSqSum / χ²(1 − α/2, dfChi) )
+σ̂_up = corrFac · √( rSqSum / χ²(α/2, dfChi) )
+```
+
+Note that the bias-correction factor multiplies the endpoints as well as the point estimate. That is what shotGroups does, GroupLab matches it, and the choice should be documented rather than silently inherited: it keeps the interval centred on the corrected estimate at the cost of no longer having exactly nominal coverage for `σ` itself. The difference is small and it is a deliberate compatibility decision.
+
+**Verification.** Independent implementation against shotGroups 0.8.4 on `DF300BLK`, 20 shots at 100 yd:
+
+| Quantity | GroupLab formula | shotGroups `getRayParam` | Delta |
+|---|---|---|---|
+| σ̂ | 1.420090647279 | 1.420090647279 | 0.000e+00 |
+| lower 95 | 1.160563286589 | 1.160563286589 | 0.000e+00 |
+| upper 95 | 1.830181915497 | 1.830181915497 | 0.000e+00 |
+
+### 3.4 Everything else is a multiple of sigma
+
+Under the circular model:
+
+| Measure | Multiple | Value |
+|---|---|---|
+| Mean radius `MR` | `σ·√(π/2)` | 1.2533141373 σ |
+| Median radius `MEDR` | `σ·√(2 ln 2)` | 1.1774100226 σ |
+| Radial standard deviation `RSD` | `σ·√((4−π)/2)` | 0.6551363776 σ |
+| `CEP(q)` | `σ·√(−2 ln(1−q))` | see below |
+| `CEP(0.50)` | | 1.1774100226 σ |
+| `CEP(0.90)` | | 2.1459660263 σ |
+| `CEP(0.95)` | | 2.4477468307 σ |
+
+Their confidence intervals are the sigma interval rescaled by the same constant. This is what shotGroups does and it is correct under the model: the constants carry no sampling error.
+
+Verified exactly against `getRayParam` and `getCEP(type="Rayleigh")` at all three levels, delta 0.000e+00.
+
+**Two honesty requirements.** The mean radius **computed directly** as `(1/n)Σrᵢ` is not the same number as `σ̂·√(π/2)`; the first is an estimate that makes no distributional assumption, the second is model-based and more efficient. Report the model-based one as the headline and keep the direct one available, because a large discrepancy between them is itself diagnostic of a non-circular or contaminated group. And every one of these numbers **inherits the circular assumption**. When section 7 rejects circularity, they must be presented as approximations with the direction of error stated, or replaced by the elliptical forms in section 4.
+
+---
+
+## 4. CEP for the elliptical case
+
+When the group is not circular, `CEP` has no simple closed form and the literature offers a dozen estimators. shotGroups implements eleven. GroupLab should not.
+
+**Implement three, in this order.**
+
+| Estimator | Basis | Why |
+|---|---|---|
+| **`CorrNormal`** | Correlated bivariate normal in polar coordinates, that is the Hoyt distribution | The reference. Exact under the model at every probability level. This is the one to be right about |
+| **`Rayleigh`** | Circular closed form | Exact when the group is circular, which is the common case, and trivially cheap. Warn when the error-ellipse aspect ratio exceeds 2 |
+| **`GrubbsPatnaik`** | Patnaik two-moment central chi-square approximation | A fast, well-understood approximation, useful as an independent cross-check on the exact one |
+
+Deliberately not implemented in version one: `GrubbsPearson`, `GrubbsLiu` (identical to Pearson when accuracy is off), `Krempasky`, `Ignani`, `RMSE`, `Ethridge`, `RAND`, `Valstar`. Several are restricted to the 50 percent level, several do not generalise, and one, `RMSE`, is characterised by shotGroups' own documentation as becoming "seriously wrong" when bias is not small. Implementing eleven estimators for a user who cannot choose between them is not a feature. **Implementing the exact one properly is.**
+
+Reference values on `DF300BLK` at the 50 percent level, produced by shotGroups, which are the validation targets:
+
+```
+CorrNormal    1.50022083074366
+GrubbsPatnaik 1.49502636547150
+GrubbsPearson 1.45824737501618
+Rayleigh      1.67202896098667
+```
+
+The spread between them, 1.458 to 1.672 or about 15 percent, is itself worth showing a user once. It is a concrete demonstration that "the CEP" is not a single well-defined number when the group is not circular.
+
+**Hit probability** inverts the same machinery. Under the circular model,
+
+```
+P(hit within radius R) = 1 − exp( −R² / (2σ̂²) )
+```
+
+Verified against `getHitProb(type="Rayleigh")` at `r` = 0.5, 1 and 2: agreement to 1.1e-16. For the offset case, where the group centre is not the aim point, this becomes the Rice distribution, and shotGroups' `accuracy=TRUE` path is the reference.
+
+Per DESIGN.md section 14, hit probability **at distance** goes through the ballistic solver rather than by scaling the group linearly. Section 12 covers that.
+
+---
+
+## 5. Extreme spread, and why it is demoted rather than removed
+
+Extreme spread is the maximum pairwise distance. It uses two of `n` shots and discards the rest, it is the maximum of a set so it is biased upward by every outlier, and its distribution has no closed form.
+
+**The cost, measured.** From shotGroups' own Monte Carlo tables via `efficiency()`:
+
+| Goal | Via extreme spread | Via Rayleigh sigma |
+|---|---|---|
+| 95 percent CI of width 20 percent, 5-shot groups | 28 groups, **140 shots** | 25 groups, **124 shots** |
+| 95 percent CI of width 20 percent, 25-shot groups | 7.5 groups, **188 shots** | 4 groups, **101 shots** |
+
+At five shots per group the penalty is modest, about 13 percent more ammunition, because with five shots the extreme spread is not throwing away much. **At twenty-five shots per group the penalty is 86 percent more ammunition for the same confidence.** That is the number to show a shooter, and it is precisely the regime GroupLab's one-shot-per-bull design puts them in.
+
+Put differently, from a single group:
+
+| | 95 percent CI on sigma | Ratio of upper to lower |
+|---|---|---|
+| One 5-shot extreme spread | 0.207 to 0.622, from ES = 1.00 | **3.01** |
+| One 25-shot Rayleigh sigma | 0.834 to 1.249 times σ̂ | **1.50** |
+
+**What GroupLab does.** Report extreme spread, because it is the language of the audience and refusing to speak it is not honesty, it is rudeness. Report it with a confidence interval, from the Monte Carlo lookup table, so the user can see how wide it is. Place the Rayleigh figures next to it. And offer conversion in both directions, since a shooter arriving with a lifetime of extreme-spread numbers needs a bridge: `range2sigma` and `range2CEP` in shotGroups are exactly that bridge and their behaviour should be reproduced.
+
+The lookup tables come from Wollschlaeger's own ten-million-replication Monte Carlo simulation, shipped as `DFdistr`, not from the Taylor and Grubbs tables the documentation cites as background. **GroupLab must generate its own tables** rather than shipping a GPL data file, and must validate them against `DFdistr`. That is a specific Phase 2 task with a specific acceptance test, and it is in section 15.
+
+---
+
+## 6. Confidence intervals: closed form where possible, bootstrap where not
+
+| Quantity | Method | Notes |
+|---|---|---|
+| Rayleigh sigma, MR, MEDR, RSD, circular CEP | **Closed form, chi-square** | Section 3.3. Exact under the model |
+| Per-axis standard deviations | **Closed form, chi-square on `n−1` df** | Univariate, so `n−1`, not `2(n−1)`. Easy to get wrong by copying the sigma code |
+| Group centre | **Closed form, Hotelling T²** | Also gives the confidence ellipse |
+| Extreme spread, figure of merit, bounding-box diagonal | **Monte Carlo lookup** | No closed form exists |
+| Minimum enclosing circle radius, bounding box dimensions | **Bootstrap** | Order statistics of a geometric construction |
+| Elliptical CEP | **Bootstrap** | shotGroups has this on its own to-do list, unimplemented |
+| Difference or ratio between two groups | **Closed form where the F test applies**, bootstrap otherwise | Section 8 |
+
+**Bootstrap specification**, so that two implementations can agree:
+
+- **BCa** by default, which corrects for both bias and skewness and matters here because these statistics are skewed. Percentile as a fallback when BCa's acceleration cannot be computed.
+- **9999 resamples** for a 95 percent interval. Not 1000. The Monte Carlo error on a 2.5 percent quantile from 1000 resamples is large enough to be visible in the reported digits, which makes the software look non-deterministic.
+- **Seed recorded** in the analysis record, so a reported interval can be reproduced exactly. This is not optional in a measurement tool.
+- Resample **shots**, not residuals.
+- With fewer than about 10 shots, report that the bootstrap interval is unreliable rather than reporting it silently.
+
+---
+
+## 7. Shape: circularity and vertical stringing are two different questions
+
+DESIGN.md section 14 asks for a "bivariate normal fit with a test for circularity, which detects vertical stringing". Those are two different hypotheses and conflating them produces a test that fires on the wrong thing.
+
+**Question A, is the group circular?** `H0: Σ = σ²I`. This is rotation-invariant, so it also rejects a group elongated diagonally. The likelihood-ratio test statistic is
+
+```
+−2 ln Λ = −n · ln( det S / (tr S / 2)² ),   S the maximum-likelihood covariance
+```
+
+which is asymptotically chi-square on 2 degrees of freedom.
+
+**Question B, is the group stringing vertically?** `H0: σ_x = σ_y` in **target coordinates**, with the correlation left free. A group tilted 45 degrees is non-circular but is not stringing, and a shooter told "your group is not circular" when the elongation is diagonal has been told something true and useless.
+
+The right test for B is **Pitman-Morgan**. Under `H0`, `U = x + y` and `V = x − y` are uncorrelated, because `Cov(U,V) = Var(x) − Var(y)`. So
+
+```
+t = r_UV · √(n − 2) / √(1 − r_UV²),   on n − 2 degrees of freedom
+```
+
+and it is a **one-sided** test when the alternative is specifically vertical stringing.
+
+**Both were simulated.** 20,000 to 40,000 replications, seeds 7 and 11, reported here because the small-sample behaviour decides how they should be used.
+
+Size of the sphericity likelihood-ratio test on genuinely circular data, at nominal 5 percent:
+
+| n | Uncorrected | Bartlett-corrected |
+|---|---|---|
+| 5 | 0.165 | 0.103 |
+| 10 | 0.091 | 0.069 |
+| 15 | 0.075 | 0.061 |
+| 20 | 0.067 | 0.059 |
+| 25 | 0.063 | 0.057 |
+| 50 | 0.058 | 0.053 |
+| 100 | 0.054 | 0.050 |
+
+The Bartlett correction multiplies the statistic by `1 − 1/n` for the bivariate case. It helps and it is not enough at small `n`: at five shots the corrected test still rejects circular data 10 percent of the time at a nominal 5 percent.
+
+Pitman-Morgan, by contrast, held size at 0.049 to 0.051 at every combination tested, `n` of 10 and 25 crossed with correlation 0 and 0.5. It is exact.
+
+**Therefore.** Use the **Bartlett-corrected likelihood-ratio test for circularity at `n ≥ 20`**, and a parametric bootstrap calibration below that. Use **Pitman-Morgan for vertical stringing at any `n`**. Label them differently in the interface, because they answer different questions.
+
+**And be honest about power, which is the more useful number.** Shots needed for 80 percent power to detect vertical stringing at 5 percent, by simulation:
+
+| σ_y / σ_x | Shots needed |
+|---|---|
+| 1.25 | **155** |
+| 1.50 | **50** |
+| 2.00 | **19** |
+
+A 25-shot group has roughly 49 percent power against 1.5 times stringing. **Half the time, a group that really is stringing by fifty percent will not be flagged.** That belongs in the interface next to the result, not in a footnote, because "no significant stringing detected" from 25 shots means very little and users will read it as meaning a lot.
+
+Also report, always, and without a test attached: the **error-ellipse aspect ratio** and its orientation. It is descriptive, it needs no assumption, and for most users it is the more useful output.
+
+---
+
+## 8. Comparing two loads
+
+The question a handloader actually asks: does load A genuinely group better than load B, or is the difference noise?
+
+### 8.1 Dispersion, which is the question that matters
+
+Under the circular model this has an **exact closed form**, and it is worth using rather than reaching for a bootstrap.
+
+`rSqSum / σ²` is chi-square on `2(n−1)` degrees of freedom for each group independently, so under `H0: σ_A = σ_B`
+
+```
+F = ( rSqSumA / dfA ) / ( rSqSumB / dfB )  ~  F( dfA, dfB ),   df = 2(n − 1)
+```
+
+Note the estimator's `c4` bias correction **cancels** in the ratio when the two groups have the same `n`, and nearly cancels when they do not. The test statistic should be built from `rSqSum` directly, not from `σ̂`, to avoid reintroducing it.
+
+Report the **ratio with a confidence interval**, not just a p-value:
+
+```
+σ̂A/σ̂B  divided by  √F(1−α/2, dfA, dfB)   to   σ̂A/σ̂B  divided by  √F(α/2, dfA, dfB)
+```
+
+"Load A's dispersion is 0.87 times load B's, 95 percent CI 0.71 to 1.08" is a far better answer than "p = 0.21", and it is the same computation.
+
+### 8.2 Location
+
+Hotelling's T² for a difference in group centres, which is the standard two-sample multivariate test and is what shotGroups' MANOVA path reduces to for two groups.
+
+### 8.3 Non-parametric backstops
+
+When the circularity test in section 7 rejects, or when the group is visibly contaminated, the F test's assumption is broken. shotGroups' `compareGroups` runs Ansari-Bradley on each axis and Wilcoxon on the distance-to-centre for the two-group case, and Fligner-Killeen with Kruskal-Wallis for more than two. Reproduce those as the fallback path.
+
+One implementation warning that will otherwise cost a day: **shotGroups produces different p-values depending on whether the `coin` package is installed**, because it switches between exact permutation distributions and base R's asymptotic approximations. Any validation fixture must record which branch generated it.
+
+### 8.4 Multiple comparisons
+
+A user testing six powder charges against each other is running fifteen tests, and at 5 percent will find a "significant" difference by chance about half the time. GroupLab must **correct, and say that it corrected**. Holm-Bonferroni for the family of pairwise comparisons within one comparison view. This is not in DESIGN.md and it should be, because a tool built around not letting people fool themselves that ships an uncorrected pairwise comparison matrix has a hole in exactly its stated purpose.
+
+---
+
+## 9. Sample size planning
+
+The most useful and least welcome output in the whole application.
+
+### 9.1 How well is sigma known from n shots?
+
+`σ̂` has a coefficient of variation of approximately `1 / (2√(n−1))`. Simulated at `n = 25` over 40,000 replications: predicted 10.21 percent, observed 10.26 percent, with a bias of −0.03 percent, confirming both the correction factor and the approximation.
+
+| n | df | CV of σ̂ | 95 percent CI as a multiple of σ̂ | CI width |
+|---|---|---|---|---|
+| 3 | 4 | 35.4 % | 0.599 to 2.874 | 2.27 σ̂ |
+| **5** | 8 | **25.0 %** | **0.675 to 1.916** | 1.24 σ̂ |
+| 10 | 18 | 16.7 % | 0.756 to 1.479 | 0.72 σ̂ |
+| 15 | 28 | 13.4 % | 0.794 to 1.352 | 0.56 σ̂ |
+| 20 | 38 | 11.5 % | 0.817 to 1.289 | 0.47 σ̂ |
+| **25** | 48 | **10.2 %** | **0.834 to 1.249** | 0.42 σ̂ |
+| 30 | 58 | 9.3 % | 0.847 to 1.222 | 0.38 σ̂ |
+| 50 | 98 | 7.1 % | 0.877 to 1.163 | 0.29 σ̂ |
+| 100 | 198 | 5.0 % | 0.910 to 1.109 | 0.20 σ̂ |
+
+**The five-shot row is the one to put in front of a user.** A five-shot group locates the rifle's true dispersion somewhere between 0.675 and 1.916 times the measured value, a factor of 2.84. Two rifles whose five-shot groups differ by a factor of two are entirely consistent with being identical.
+
+### 9.2 How many shots to prove load A beats load B?
+
+Under the F test of section 8.1, the shots per load needed to detect a dispersion ratio `k` with 80 percent power at 5 percent two-sided:
+
+```
+n ≈ 1 + (z_{α/2} + z_β)² / (2 · (ln k)²)
+```
+
+The approximation was checked against an exact search over the F distribution and agrees to within one shot everywhere tested:
+
+| k | Improvement | Approximation | Exact | Shots per load |
+|---|---|---|---|---|
+| 1.05 | 4.8 % tighter | 1650 | 1651 | **1651** |
+| 1.10 | 9.1 % tighter | 434 | 434 | **434** |
+| 1.15 | 13.0 % tighter | 202 | 203 | **203** |
+| 1.25 | 20.0 % tighter | 80 | 81 | **81** |
+| 1.50 | 33.3 % tighter | 25 | 26 | **26** |
+| 2.00 | 50.0 % tighter | 10 | 10 | **10** |
+
+**This table is the single most valuable thing in the application.** The entire practice of load development by comparing three-shot groups is answered by it. Detecting a genuine ten percent improvement takes **434 shots per load**, which is more than most barrels last. Detecting a third takes 26, which is a morning.
+
+The correct interface behaviour is not to refuse the comparison. It is to run it, report the interval, and say what the data can and cannot support. "These 20 shots per load cannot resolve a difference smaller than about 45 percent. The observed difference is 12 percent, 95 percent CI −18 to 52 percent" is a complete, honest answer, and it is more useful than either a p-value or a refusal.
+
+**A design consequence worth stating.** These numbers make the pooled and virtual groups of section 11 the most important feature in the statistics layer, not a convenience. A shooter who fires 25 rounds of a load per session over eight sessions has 200 shots, which is a usable sample. The same shooter looking at eight separate 25-shot groups has nothing. Pooling is what makes the arithmetic survivable.
+
+---
+
+## 10. Flyer handling
+
+DESIGN.md section 14 requires that before permitting an exclusion, GroupLab states what the mathematics expects from a group that size. Here is the calculation.
+
+For `n` shots from a circular bivariate normal, the expected maximum radius is
+
+```
+E[R_max] = σ · √(π/2) · Σ_{k=1}^{n} C(n,k) · (−1)^{k+1} / √k
+```
+
+derived from `E[max] = ∫₀^∞ (1 − F(r)ⁿ) dr` with `F(r) = 1 − exp(−r²/2σ²)`. Verified by simulation over 200,000 replications: at `n = 5`, formula 2.0675 against simulated 2.0676; at `n = 25`, formula 2.7274 against simulated 2.7274.
+
+**Compute this with alternating-sign binomial care.** At `n = 25` the terms reach about 5.2 million and alternate in sign, so naive double-precision summation loses most of the significant digits. Sum in log space with sign tracking, or use the equivalent integral form. This is a real numerical trap and it belongs in the code comments.
+
+| n | E[worst] / σ | E[worst] / MR | P(worst > 2 × MR) | P(worst > 1.5 × MR) |
+|---|---|---|---|---|
+| 3 | 1.825 | 1.456 | 0.124 | 0.430 |
+| 5 | 2.068 | 1.650 | 0.198 | 0.608 |
+| 10 | 2.370 | 1.891 | 0.357 | 0.846 |
+| 15 | 2.534 | 2.021 | 0.485 | 0.940 |
+| 20 | 2.644 | 2.110 | 0.587 | 0.976 |
+| **25** | **2.727** | **2.176** | **0.669** | **0.991** |
+| 30 | 2.794 | 2.229 | 0.734 | 0.996 |
+
+**The dialog text writes itself from the 25-shot row.** In a 25-shot group, the worst shot is *expected* to sit at 2.18 times the mean radius. The probability that it exceeds twice the mean radius is **0.67**, and the probability that it exceeds 1.5 times is **0.99**. A shooter who calls anything beyond twice the mean radius a flyer will discard a perfectly ordinary shot **two times in three**.
+
+Per DESIGN.md, exclusion remains permitted, since the legitimate case exists: a called flyer, an obviously bad round, a shot the shooter knows they pulled. It is gated by this statement, it requires a reason from a short list, the reason is recorded, and every report prints the full and reduced figures side by side so an exclusion can never be hidden.
+
+**One addition worth making.** When a user excludes a shot, show the effect immediately and in both directions: the group statistics with and without, and the change in the confidence interval. Excluding the worst shot from a 25-shot group narrows the point estimate and biases it downward, and seeing the interval fail to narrow correspondingly is instructive.
+
+---
+
+## 11. Pooled and virtual groups
+
+Two different questions live here, they give different answers, and the software must not silently pick one.
+
+**Question A, how does this rifle and load disperse?** Pool after re-centring each target on its own centre. This removes zero drift, sight adjustment and load-to-load point-of-impact shift, and measures dispersion alone.
+
+```
+rSqSum_pooled = Σ over targets t of Σ over shots in t of ‖(xᵢ,yᵢ) − c_t‖²
+df            = 2 · (N − k)     for k targets, N total shots
+varHat        = rSqSum_pooled / (2 (N − k))
+corrFac       = 1 / c4(2N − 2k + 1)
+```
+
+**Each re-centring costs two degrees of freedom.** Eight 25-shot targets pooled this way give `2 × (200 − 8) = 384` degrees of freedom, not 398. Small, and wrong is wrong.
+
+**Question B, where does this rifle and load put shots, all in?** Pool raw offsets from the point of aim without re-centring. This includes zero drift between sessions, and it is the right question for a hunter or a competitor, because the rifle's behaviour across sessions is what they experience.
+
+Report both, label them clearly, and default to A for load development and B for anything expressed as hit probability.
+
+**Guard against pooling things that should not be pooled.** Different barrels, different lots, an intervening scope adjustment, or a large temperature difference all break the assumption that these are draws from one distribution. GroupLab knows most of this from its own records, so it can check and warn. A cheap and effective test: run the section 8.1 F test **between** the targets being pooled, and if they differ significantly, say so before pooling rather than after.
+
+---
+
+## 12. The solver-coupled analyses
+
+These are the four places where the ballistic solver of DESIGN.md section 16 enters the statistics layer.
+
+### 12.1 Velocity regressed against vertical dispersion
+
+Ordinary least squares of vertical position on muzzle velocity,
+
+```
+yᵢ = a + b·vᵢ + εᵢ
+```
+
+reported with the slope, its confidence interval, `R²`, and the residual standard deviation. `R²` is the interesting output: it is the fraction of vertical dispersion attributable to velocity variation.
+
+**The solver supplies an independent prediction of the slope**, `dy/dv` at the shot distance under the recorded conditions. Comparing the fitted slope against the predicted slope is a check on both. A fitted slope far from the prediction means either the chronograph, the shot-to-velocity mapping, or the solver inputs are wrong, and the software should say which it suspects.
+
+**This depends entirely on the reconciliation of DESIGN.md section 15 being correct.** If shot `i` is paired with the wrong velocity, this regression produces a confident, plausible, wrong slope. The regression must refuse to run on an unreconciled or low-confidence mapping, and the analysis record must carry the mapping's provenance.
+
+### 12.2 Predicted versus measured vertical
+
+The analysis DESIGN.md section 14 says is argued constantly and almost never answered numerically.
+
+```
+σ_y,predicted = |dy/dv| · SD(v)                     from the solver and the chronograph
+σ_y,measured                                        from the shots
+σ_y,other     = √( max(0, σ²_y,measured − σ²_y,predicted) )
+```
+
+Report all three, with intervals on the measured and residual components. The interpretation is the payoff:
+
+- **Measured much greater than predicted:** the limit is the rifle or the shooter. Tightening velocity extreme spread will not help, and the software should say so plainly.
+- **They agree:** the ammunition is the limit, and velocity consistency is where the gains are.
+
+**Two honesty requirements.** The subtraction of variances can go negative through sampling error alone, and clamping it to zero silently hides that. Report the raw difference and the clamped estimate, and where the interval on `σ_y,other` includes zero, say that the data cannot distinguish the two explanations. And `SD(v)` from a typical string of 10 to 25 rounds carries the same wide interval as any other small-sample standard deviation, roughly plus or minus 15 percent at `n = 25`, which propagates straight into `σ_y,predicted`. Propagate it rather than treating the chronograph number as exact.
+
+### 12.3 Distance normalisation
+
+Angular conversion, `MOA` and `mil`, handles the geometry. It does not handle the physics: dispersion does not scale linearly with distance, because wind, aerodynamic jump and the velocity-to-vertical mapping all grow non-linearly, and transonic transition can add dispersion abruptly.
+
+So: convert linearly for the angular columns, which is honest and is what the units mean, and use the **solver** for any statement of the form "this group at 100 yards implies this at 600 yards". Label the second as a prediction with its assumptions listed, never as a measurement. Warn on transonic range.
+
+### 12.4 Hit probability at distance
+
+Per DESIGN.md section 14, through the solver rather than by scaling the group. The dispersion at the target distance is the measured dispersion propagated by the solver, plus the wind and velocity contributions at that distance, and the hit probability follows from section 4 applied to that propagated dispersion.
+
+### 12.5 Angular conversion constants
+
+shotGroups uses the **half-angle form** throughout, `angle = k · atan(x / (2·dst))`, not the small-angle approximation. GroupLab should match, because the difference is real at short distances and matching removes an entire class of validation mismatch.
+
+| Unit | Constant | Value |
+|---|---|---|
+| degrees | 360/π | 114.59155902616464175 |
+| radians | 2 | |
+| MOA | 21600/π | 6875.4935415698785052 |
+| SMOA (IPHY) | 1/atan(1/7200) | 7200.0000462962960581 |
+| mrad | 2000 | |
+| mil (NATO, 6400) | 6400/π | 2037.1832715762602978 |
+
+`MOA2SMOA = 0.95492965241113508368`.
+
+DESIGN.md section 14 makes true MOA the default at 1.047 inches per 100 yards, with IPHY available. Both are here, and the sanity anchor is that 1 inch at 100 yards is exactly 1.000000 SMOA and 0.954930 MOA, which is confirmed by execution.
+
+---
+
+## 13. Units
+
+Everything is stored canonically as linear distance at the target plane, per DESIGN.md section 14.
+
+Output supports inches, centimetres, MOA and mil as independently toggleable columns displayed simultaneously. Angular columns require a known distance and are **not offered** when distance is unset. Not greyed out, not shown as zero: absent, with the reason available.
+
+`getDistance` inverts the conversion, which is what "what distance would make this group 1 MOA" needs.
+
+---
+
+## 14. What GroupLab adds beyond shotGroups
+
+shotGroups is substantially the statistics layer GroupLab needs, and DESIGN.md section 4 is right that porting it with attribution and validating against it is the correct approach. Six things it does not do, which are GroupLab's actual contribution.
+
+1. **Sample size planning.** shotGroups has `efficiency()` for CI width on range statistics. It has nothing for "how many shots to distinguish these two loads", which is section 9.2 and is the question users actually have.
+2. **The flyer gate.** Nothing in shotGroups tells a user what the worst shot is expected to be before they discard it.
+3. **Multiple-comparison correction** across a family of load comparisons. Section 8.4.
+4. **Solver coupling.** Predicted versus measured vertical, velocity regression against a predicted slope, hit probability propagated to distance. Sections 12.1 through 12.4. Nothing analogous exists.
+5. **Separating circularity from vertical stringing.** shotGroups reports an aspect ratio and runs normality tests; it has no direct test for either hypothesis in section 7.
+6. **Confidence intervals on everything, presented by default.** shotGroups computes many of them; making them non-optional and putting them next to every headline figure is a product decision, and it is the project's whole premise.
+
+Item 4 is the one that could not be built any other way, and it is the strongest reason for the project to exist.
+
+---
+
+## 15. Validation plan against shotGroups
+
+DESIGN.md section 21 sets the Phase 2 gate as statistical output matching shotGroups within numerical tolerance on shared test data. Here is how.
+
+### 15.1 The reference harness
+
+R 4.3.3 with shotGroups 0.8.4 was installed and run during the writing of this document, so this is a description of something that works rather than a proposal.
+
+A driver script dumps every numeric output to a tidy CSV and matching JSON, keyed `<function>.<component>.<row>.<col>`, which is order-independent and diffable. Runs on `DF300BLK`, `DFscar17` and `DFcciHV` produced 454, 444 and 474 rows respectively.
+
+**Where the reference lives.** shotGroups is **GPL >= 2**, and GroupLab is GPL-3.0, so linking is not the issue. But GroupLab must not ship shotGroups' data or its Monte Carlo tables as its own. The arrangement:
+
+- The R script and the generated fixture JSON live in the repository under `test/fixtures/shotgroups/`, with a README stating the provenance, the package version, the R version and the licence.
+- The fixtures are **generated output**, checked in for reproducibility so that contributors need no R installation to run the test suite.
+- Regenerating them is a documented, occasional maintenance task, pinned to a stated shotGroups version.
+- Attribution to Wollschlaeger appears in the repository, per DESIGN.md section 4.
+
+### 15.2 Fixtures
+
+| Dataset | Shots | Groups | Distance | Why |
+|---|---|---|---|---|
+| `DF300BLK` | 20 | 1 | 100 yd, inches | The canonical single-group case. Start here |
+| `DFscar17` | 10 | 1 | 100 yd, inches | Small `n`. Exercises `c4` at low degrees of freedom, where the correction is largest |
+| `DFcciHV` | 40 | 2 | 100 yd, inches | Two groups. The Ansari-Bradley and Wilcoxon branch of `compareGroups` |
+| `DF300BLKhl` | 60 | 3 | 100 yd, inches | Three groups. The Fligner-Killeen and Kruskal-Wallis branch |
+| `DFcm` and `DFinch` | 487 each | 3 | 25 m / 27.34 yd | **The same data in metric and imperial.** The unit-conversion regression test |
+| `DFsavage` | 180 | 9 series | 100, 200, 300 m | **Multiple distances in one frame.** Angular columns must drop out. A negative test |
+| `DFlandy04` | 175 | 6 | 50 yd | Unequal group sizes, 5 x 25 plus 1 x 50 |
+| `DFlandy01` | 530 | 53 | 50 m | Large. Range statistics with many groups |
+
+Plus GroupLab's own fixtures, which shotGroups cannot provide: synthetic groups drawn from a known `Σ` so that the estimator can be checked against **truth** rather than against another implementation, and the four solver-coupled analyses in section 12.
+
+### 15.3 Tolerances
+
+| Class | Tolerance | Rationale |
+|---|---|---|
+| Closed-form scalars: sigma, its CI, MR, MEDR, RSD, circular CEP, hit probability | **1e-12 relative** | These matched at 0.000e+00 during drafting. Anything worse is a bug, not a tolerance |
+| Angular conversions | **1e-12 relative** | Pure arithmetic with published constants |
+| Hoyt-based `CorrNormal` CEP | **1e-8 relative** | Numerical quadrature. Implementations may differ in the last digits |
+| Minimum enclosing circle, minimum-area bounding box | **1e-9 absolute** on radius and dimensions | Geometric constructions, exact up to floating point, but different hull orderings can shift the last digits |
+| Minimum-volume enclosing ellipse | **1e-4 relative** | Iterative with a default tolerance of 1e-3. Match the tolerance or expect disagreement |
+| Range statistics from lookup | **2e-3 relative** | GroupLab generates its own Monte Carlo tables. See below |
+| Bootstrap intervals | **Not compared numerically.** Compare coverage over 1000 simulated datasets | Stochastic. Bitwise agreement is meaningless and a coverage test is the real question |
+
+**The Monte Carlo tables need their own gate.** GroupLab must generate its own rather than ship `DFdistr`. Acceptance: at least 10 million replications per `(n, nGroups)` cell, matching shotGroups' own table to **within 0.2 percent on the mean and 0.5 percent on the 2.5 and 97.5 percent quantiles**, for `n` from 2 to 50 and `nGroups` from 1 to 10. Generating this is hours of compute and belongs in a separate tool, run once, with the output checked in.
+
+### 15.4 Known differences to encode as expected, not as failures
+
+Discovered by reading shotGroups 0.8.4's source and worth writing into the comparison harness so nobody chases them.
+
+1. **`getRayParam` returns `MEDRciUP` with a capital P**, where its siblings are `sigCIup`, `RSDciUp`, `MRciUp`. A field-name mapping will miss it.
+2. **`groupSpread` names the minimum-ellipse columns `semi_major` and `semi_minor` with underscores, but the confidence-ellipse columns `semi-major` and `semi-minor` with hyphens.**
+3. **CI column names embed a literal space and parenthesis**: `"sigma ("`, `"MR )"`, `"sdX ("`. Stable, but they will break a naive parser.
+4. **`getCEP`'s output column order differs from its argument's `choices` order.** Match by name, never by position.
+5. **`GrubbsLiu` is numerically identical to `GrubbsPearson`** when `accuracy=FALSE`, agreeing to 14 digits. Not a bug; do not treat the coincidence as a validation success.
+6. **`compareGroups` gives different p-values depending on whether `coin` is installed**, switching between exact permutation and asymptotic tests. Record which branch generated every fixture.
+7. **`analyzeGroup` has no `plots` argument** and always plots. Headless runs need `pdf(NULL)`.
+8. **In `DFsavage` and `DFtalon` the `group` column has one level while `series` has nine.** `compareGroups` and `combineData` key on `series`. A fixture loader that uses `group` gets nonsense.
+9. **The comment block in `compareGroups.R` lines 280 to 283 has the two-group and multi-group test labels inverted** relative to the code. The code is right. Do not port the comment.
+
+### 15.5 Phase 2 gate
+
+1. Every closed-form quantity in section 15.3 matches within tolerance on all eight fixtures.
+2. Both unit systems agree: `DFcm` and `DFinch` produce identical results after conversion.
+3. Multiple-distance data correctly suppresses angular output rather than producing a wrong number.
+4. Known-truth synthetic tests recover `σ` with the correct bias and the stated coverage: over 10,000 simulated 25-shot groups, the 95 percent interval covers the true `σ` between 94.0 and 96.0 percent of the time.
+5. The Monte Carlo tables meet section 15.3's tolerance against `DFdistr`.
+6. The estimator is checked in **both** the estimated-centre and known-centre configurations. Section 3.2 is where a silent error would live.
+
+---
+
+## 16. Open questions
+
+1. **Should the `c4` bias correction apply to the confidence-interval endpoints?** shotGroups does it, GroupLab matches for validation, but it means the interval no longer has exactly nominal coverage for `σ`. Match for compatibility, or diverge and document? My inclination is to match, and to add a note in the reference documentation, because divergence would make every validation comparison need a special case.
+
+2. **Which is the headline dispersion figure in the primary panel?** Sigma is the right estimator and means nothing to the audience. Mean radius is a fixed multiple of it and is intuitive. CEP is meaningful to some and unfamiliar to most. My suggestion is mean radius with its interval as the headline, sigma immediately beneath as the underlying estimate, and extreme spread present but visually subordinate. This is a product decision, not a statistical one.
+
+3. **Should pooling default to re-centred or raw?** Section 11 argues for re-centred in load development and raw in hit probability. That is a defensible default but it means the same button does different things in different views, which needs care in the interface.
+
+4. **Is the ballistics.js port going to give `dy/dv` directly**, or does it need numerical differentiation of the trajectory solution? If numerical, the step size and its error need specifying, because that derivative feeds section 12.2, which is the project's most distinctive analysis.
+
+5. **Do you want the Bayesian version?** For a shooter accumulating groups over a barrel's life, a prior from previous sessions with the same rifle and load is genuinely more informative than each session's independent interval, and the conjugate structure here is straightforward, since the inverse-gamma is conjugate for the Rayleigh scale. It is real work and it is arguably out of scope for version one, but it fits the project's premise better than almost anything else on the list.
