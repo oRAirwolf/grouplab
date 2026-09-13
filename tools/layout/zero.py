@@ -18,6 +18,20 @@ MOA_100M = 100.0 * 1000    * math.tan(math.radians(1/60.0)) * 10
 MIL_100M = 100.0 * 1000    * 0.001 * 10
 
 
+def half_to_zero(x):
+    """Round to nearest, ties toward zero.  TARGET-SCHEMA.md section 2."""
+    return -math.ceil(-x - 0.5) if x < 0 else math.ceil(x - 0.5)
+
+
+def line_offset(extent, i, n):
+    """round(extent * i / n), ties toward zero, in integer arithmetic only.
+
+    ceil(x - 1/2) with x = extent*i/n becomes (2*extent*i + n - 1) // (2*n)
+    for non-negative integers, so no float ever touches a stored coordinate.
+    """
+    return (2 * extent * i + n - 1) // (2 * n)
+
+
 class ZeroSheet:
     def __init__(self, name, page, unit_dmm, unit_name, half_units, divisions,
                  major_every, data_block=0, note=""):
@@ -32,11 +46,15 @@ class ZeroSheet:
         self.solve()
 
     def solve(self):
-        # every minor line is rounded from its own true angular offset, so the
-        # error is bounded at half a dmm everywhere and does not accumulate
-        self._off = [round(self.unit_dmm * self.half_units * i / self.divisions)
+        # The half-extent is rounded once from the true angular extent.  Every
+        # minor line is then derived from that STORED half, in integer
+        # arithmetic, ties toward zero, exactly as TARGET-SCHEMA.md 3.13
+        # specifies.  Deriving from the unrounded angle instead would be
+        # unimplementable from a decoded definition, which carries the rounded
+        # half and nothing else.  See the tie rule in section 2.
+        self.half = half_to_zero(self.unit_dmm * self.half_units)
+        self._off = [line_offset(self.half, i, self.divisions)
                      for i in range(self.divisions + 1)]
-        self.half = self._off[-1]
         self.field = 2 * self.half
         self.cx = self.W // 2
         # the grid field is wide enough to reach under both corner QR columns on

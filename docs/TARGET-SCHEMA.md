@@ -41,6 +41,19 @@ This looks fussy and it is load-bearing.
 
 This is worth stating in the specification itself, because the first reviewer to see integer tenths will assume it introduces error, and it is important that implementers understand it does the opposite. A format that stored 25.43 mm in JSON and 25.4 mm in the QR would introduce a real 0.3 mm error into every shot in that cell, and it would be invisible.
 
+**Every derived layout rounds to nearest, ties toward zero.** Several rules in section 3 divide an extent into n parts and round each boundary, written `round(extent * i / n)` throughout. Nearest is obvious; the tie is not, and it has to be stated because the two obvious host languages disagree by default. Python's `round` and C#'s `Math.Round` both break ties to even, other stacks break away from zero, and a definition whose line positions depend on which language read it is not a definition. So the rule is **ties toward zero**, and it is written in integer arithmetic so that no floating-point value ever touches a stored coordinate:
+
+```
+round(extent * i / n), ties toward zero, for extent >= 0 and n > 0
+  = (2 * extent * i + n - 1) / (2 * n), integer division
+```
+
+**The rule governs derivation, not layout.** It applies wherever a reader recomputes a value from what the definition stores: the cell lattice of section 3.6, the marker lattices of section 3.7 including `field-ring-1`, the code centres of `corners-1` in section 3.8, the data block cells of section 3.10, and the grid lines of section 3.13. It does **not** apply to a generator's own arithmetic, whose results are stored explicitly and recomputed by nobody. Centring a grid on a page is the example: `(2159 - 1520) / 2` is 319.5, the solver picks 320, and 320 is what the file carries. There is nothing for a decoder to get wrong, so there is nothing for the tie rule to govern. Applying it there would move every bull on the reference sheet to no purpose.
+
+The two derivations where a tie is currently unreachable are worth naming anyway, because they will not stay unreachable. `corners-1` halves a footprint of 65 modules, and `field-ring-1` halves a marker footprint. Both are even in every built-in, at a 4 dmm module and a 60 dmm footprint, so no tie arises and the reference tools in `tools/` agree with the rule by accident rather than by construction. An odd module size or an odd marker footprint would produce one, and then the rule decides.
+
+This is not an arbitrary pick between three equally good conventions. A derived lattice is anchored on an extent that was itself rounded from a real measurement, and where that extent was rounded up, which is the common case because a half-extent is chosen to reach a round angular figure, every derived boundary inherits the same upward bias. Breaking the tie downward cancels part of it. On GL-ZERO-MIL-100Y, the one built-in where ties occur at all, ties toward zero holds the worst line deviation at **0.48 dmm** where ties to even would give 0.80 and ties away from zero 0.92.
+
 **Consequence for implementers.** The renderer must render from the definition's integers. It must not accept a designer's unrounded value, render from that, and store the rounded value. The designer rounds on input, and what the user sees on screen is what is stored.
 
 ---
@@ -238,6 +251,12 @@ Bulls are stored in the order they are to be numbered and shot. A renderer draws
 
 `sighterGap` is optional and declares the intended centre-to-centre distance from the last scoring row to the sighter row. The geometry is already absolute in `bulls`, so this field changes nothing about rendering; it exists so that a deliberate departure from the library convention of **1.2 times the grid pitch** does not raise a validator warning on every load. Section 7 gives the rule and ONTARGET-DIMENSIONS.md gives the measurement it came from. Omit the field and the convention applies.
 
+**On a parametric layout the cell lattice is derived, not stored.** Its boundaries sit half a pitch from each bull centre, so the lattice is the bull grid of section 3.5 shifted by `pitchX/2` and `pitchY/2`, and it carries no information the grid does not already have. This matters for a reason beyond tidiness: the binary body has no cell block at all in version 1, so a definition whose cells could not be derived would be one the encoder has to refuse. `cells.grid` is therefore **optional, and the built-in library omits it**. Where a document does carry it, for readability or from a visual designer, it must equal the derivation, and a mismatch is an error rather than a repair, exactly as it is for a stored marker list or a stored code position.
+
+**A cell is a region, and a region is clipped by the paper.** The derived lattice of a small sheet can extend past the sheet edge, and on the 300 yard tiles it does: three rows at a 101.6 mm pitch make a 304.8 mm lattice on a 279.4 mm Letter sheet, so the outer boundaries fall 12.7 mm off each end. That is not an error and it does not need a geometry change. A cell is the set of points assigned to a bull, and the part of it that is not on the paper can never contain a hole, because the scan is of the paper. The cell region is the intersection of the lattice cell with the sheet. Only **drawn** cell boundaries are artwork, and those are clipped at the sheet edge like anything else. A negative derived origin is simply not written, which is also why the schema's `dmm` type can stay non-negative.
+
+**One consequence for assemblies, worth stating before somebody assumes otherwise.** A tiled assembly is not a uniform lattice across its seams. On GL-LR300-T the bulls sit at a 4.0 inch pitch within a sheet, and the last bull of one tile is 3.0 inches from the first bull of the tile below, because three 4.0 inch rows do not divide an 11.0 inch sheet. Nothing measures across a seam, per section 3.12, so this costs no accuracy. It does mean the cell lattice cannot be continuous across the assembly either, which is a second reason cells belong to a sheet rather than to an assembly.
+
 **A note the specification should carry rather than bury.** Cells define the *default* assignment of a hole to a bull. The sample data establishes, and the scan measurements confirm, that on some targets the nearest bull is frequently the wrong bull, because shots land outside their own cell and sometimes inside a neighbour's. No geometric rule recovers the correct answer. Cells are a starting guess for a human to correct, and any implementation that treats them as authoritative is wrong. DESIGN.md section 13 requires the explicit reassignment interface for exactly this reason.
 
 ### 3.7 `fiducials`
@@ -377,7 +396,7 @@ A reserved band, normally along the bottom of the sheet, carrying the load data 
 
 **The standard nine fields**, in order: date, distance, cartridge, bullet, powder and charge, brass, primer, seating depth, notes. `standard-6` drops bullet, brass and seating depth, and is what the zeroing sheets use because they have less vertical room and less to record.
 
-**The derived layouts are exact.** `fields-3x3-1` divides the block into three rows of equal height and, within each row, three cells across the content width, where the content width is `width - reserve - gap` and `gap` is fixed at 20 dmm by the rule. Boundaries are computed as `round(contentWidth * j / 3)` for j from 0 to 3, so every edge is an integer, the cells differ by at most one dmm, and the rule is reproducible from the four numbers in the file. For the reference block that is a content width of 1919 - 280 - 20 = 1619 dmm split at 0, 540, 1079 and 1619, giving cells of 540, 539 and 540 dmm, and three rows of 100 dmm inside a 310 dmm band with 5 dmm of padding at top and bottom. `fields-3x2-1` is the same rule with two rows.
+**The derived layouts are exact.** `fields-3x3-1` divides the block into three rows of equal height and, within each row, three cells across the content width, where the content width is `width - reserve - gap` and `gap` is fixed at 20 dmm by the rule. Boundaries are computed as `round(contentWidth * j / 3)` for j from 0 to 3, under the tie rule and the integer form of section 2, so every edge is an integer, the cells differ by at most one dmm, and the rule is reproducible from the four numbers in the file. For the reference block that is a content width of 1919 - 280 - 20 = 1619 dmm split at 0, 540, 1079 and 1619, giving cells of 540, 539 and 540 dmm, and three rows of 100 dmm inside a 310 dmm band with 5 dmm of padding at top and bottom. `fields-3x2-1` is the same rule with two rows.
 
 **Print mode is not in the definition.** The user chooses at print time between three modes:
 
@@ -471,7 +490,7 @@ The tile index itself is **not in the body**. It is a byte in the frame header, 
 
 Every shot is measured **relative to its own bull**, and every bull sits entirely on one tile, registered by that tile's own fiducials. The composite group is built by translating each shot by its own bull's declared centre. No step in that chain ever uses the position of one tile relative to another. So tile alignment contributes exactly zero error to any group statistic, and tape, staples and eyeballed alignment are all equally good.
 
-What follows from that is the constraint the validator enforces: **no bull, cell, marker or code may cross a tile boundary.** A bull cut in half by a seam is a bull whose centre is not measurable, which is a real error, whereas a seam that is 4 mm out of square is not an error at all.
+What follows from that is the constraint the validator enforces: **no bull, marker, code or drawn cell boundary may cross a tile boundary.** A bull cut in half by a seam is a bull whose centre is not measurable, which is a real error, whereas a seam that is 4 mm out of square is not an error at all. Undrawn cells are the exception and section 3.6 says why: a cell is an assignment region rather than artwork, it is clipped by the paper, and on these tiles the derived lattice does extend past the sheet.
 
 It also follows that tiles are **scanned separately and pooled**, which is what the detection pipeline does. Each sheet is a scan, each scan is registered on its own, and the shots from all sheets are pooled into one composite group at the end. Nobody has to fit a 25 by 22 inch assembled target onto a Letter scanner.
 
@@ -514,7 +533,13 @@ A printed measurement grid whose cell size is an exact angular unit at a stated 
 centre + sign(i) * round( half * |i| / divisions )
 ```
 
-This is the one place where the obvious approach fails rule R1. Storing a per-cell pitch and multiplying would need a non-integer pitch for three of the four zeroing sheets: 0.1 mil at 100 yards is 9.144 mm, and no integer number of tenths of a millimetre is that. Rounding the pitch to 91 dmm and stepping eight times accumulates to 3.5 dmm of error at the edge of the field. Rounding each line from its own true offset instead bounds the error at **half a dmm anywhere in the field**, and it does not accumulate. Measured across the four built-in zeroing sheets the worst line deviation is **0.48 dmm, which is 0.048 mm**; on the 100 metre mil sheet it is exactly zero, because 0.1 mil at 100 m is 10.0 mm on the nose.
+with the tie rule and the integer form of section 2.
+
+This is the one place where the obvious approach fails rule R1. Storing a per-cell pitch and multiplying would need a non-integer pitch for three of the four zeroing sheets: 0.1 mil at 100 yards is 9.144 mm, and no integer number of tenths of a millimetre is that. Rounding the pitch to 91 dmm and stepping eight times accumulates to 3.5 dmm of error at the edge of the field. Rounding each line from the stored half instead bounds the error at **half a dmm anywhere in the field**, and it does not accumulate. Measured across the four built-in zeroing sheets the worst line deviation is **0.48 dmm, which is 0.048 mm**; on the 100 metre mil sheet it is exactly zero, because 0.1 mil at 100 m is 10.0 mm on the nose.
+
+**The lines derive from the stored `half`, not from the true angular extent, and the difference is not cosmetic.** `half` is itself a rounded value: 0.8 mil at 100 yards is 731.52 dmm and the field stores 732. A generator that keeps the unrounded 731.52 and rounds each line from that gets a slightly better fit, and it produces a target no decoder can reproduce, because 731.52 is nowhere in the body and cannot be recovered from it. Everything the renderer and the analyser use has to be computable from what the QR code carries. That constraint, not the arithmetic, is what fixes the rule.
+
+On GL-ZERO-MIL-100Y, 732 over 8 divisions puts four of the eight lines exactly on a tie, which is what makes the tie rule of section 2 load-bearing rather than pedantic. Under ties toward zero the derived offsets are 0, 91, 183, 274, 366, 457, 549, 640 and 732, which match the unrounded angle to 0.48 dmm and are what the sheet has always been drawn with. Under ties to even the first line moves to 92 and the fifth to 458, the worst deviation becomes 0.80 dmm, and the `field-ring-1` markers on the 0.5 mil lines move with them.
 
 The grid is drawn from the definition and read back by the analyser from the same numbers, so rule R5 holds and the printed grid is never the thing being measured against. Its accuracy matters only to the human reading a correction off the sheet by eye.
 
@@ -916,6 +941,8 @@ So the format defines a **projection**: the subset of a GLTD-J document that GLT
 **One consequence is worth spelling out, because it decides an identifier.** The body's ink table stores each **distinct sRGB value** of the non-paper inks once, in declaration order, and every reference maps through the colour. The worked example in section 4 declares five inks: black, paper, fid, code and text. Four of those are `#000000`. Storing them literally would give a 64-byte body and a different identifier from the one printed in section 4. Deduplicating them gives 55 bytes and exactly `GL-YCSK-DZZ1-R0VJ-4T5Y`, which is what the reference encoder produces and what the section 4 document declares. The published identifier is only correct under the projection rule, which is the strongest argument for it.
 
 Roles are partly recoverable on decode rather than stored: an ink referenced by `fiducials.ink` is fiducial, one painting a disc is artwork, and index 15 is paper. Keys are not recoverable and are synthesised as `ink0`, `ink1` and `paper`.
+
+**A pitch along an axis holding one bull is unobservable, and the canonical body mirrors the other axis.** The grid block stores `cols`, `rows`, `pitchX` and `pitchY`. Where `cols` is 1 there is no second column to measure `pitchX` against, and since a decode emits no cells there is nothing else in the body that reveals it, so any value round-trips as well as any other and the identifier would depend on a number nobody can see. The canonical body therefore writes `pitchY` into `pitchX` when `cols` is 1, writes `pitchX` into `pitchY` when `rows` is 1, and writes zero into both when the grid holds a single bull, which is what the four zeroing sheets do. A body carrying anything else is not canonical and is rejected rather than normalised, on the same grounds as any other non-canonical body: silently rewriting it would give two identifiers for one target.
 
 **One decoded ink per stored index, and a shared index takes the fiducial role.** The body stores one entry per distinct colour, so an index referenced by both `fiducials` and a disc, which is every built-in, decodes to a single ink. That ink carries the `fiducial` role, because section 3.7 requires the fiducial ink to have it and nothing anywhere requires a disc's ink to be `artwork`. Synthesising two inks of the same colour to keep the roles apart would re-encode to the same body and the same identifier, so it would buy nothing and cost a key that was never in the file.
 
@@ -1322,7 +1349,8 @@ An implementation is conformant when it passes all of the following. These are w
 21. More than one ink carrying the `paper` role is an error.
 22. A derived fiducial scheme leaving fewer than four surviving markers is an error; fewer than eight is a warning.
 23. A sighter row whose gap differs from 1.2 times `pitchY` by more than 1 dmm, with no `cells.sighterGap` declared, is a warning.
-24. On a tiled definition, any bull, cell, marker or code crossing a tile boundary is an error.
+24. On a tiled definition, any bull, marker, code or **drawn** cell boundary crossing a tile boundary is an error. An undrawn cell region is not artwork and is clipped by the sheet instead, per section 3.6; a derived cell lattice extending past the sheet edge is neither an error nor a warning.
+24a. A stored `cells.grid` that does not equal the derivation from the bull grid is an error.
 25. A `dataBlock` overlapping any bull, marker or code is an error, and its `reserve` square must fit within its `height`.
 26. A measurement grid whose field leaves less than a marker footprint plus clearance inside the safe margins is an error. Less than a full marker row, the footprint plus a clearance each side, between the field and the code rows is a warning.
 26a. A code overlapping a `dataBlock` rectangle is an error, and less than 30 dmm between them is a warning.
@@ -1350,6 +1378,7 @@ An implementation is conformant when it passes all of the following. These are w
 
 36. Every minor line of a measurement grid falls within half a dmm of its true angular offset, checked for all four built-in zeroing sheets.
 37. Line positions are symmetric about the centre and monotone.
+37a. Every derived boundary uses ties toward zero, per section 2. GL-ZERO-MIL-100Y is the fixture: `half` 732 over 8 divisions puts lines 1, 3, 5 and 7 on exact ties, and the correct offsets are 91, 274, 457 and 640. An implementation producing 92 and 458 has inherited its host language's ties-to-even default and is wrong.
 
 **Rendering.**
 
