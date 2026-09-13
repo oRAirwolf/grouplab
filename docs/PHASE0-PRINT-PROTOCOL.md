@@ -111,7 +111,11 @@ Two reasons, and neither of them is quality control on your printer.
 
 **To catch a gross scale error.** Fit-to-page produces roughly 94 to 96 percent, which is a 4 to 6 percent error. On the measurement below that is 4.5 to 6.8 mm, which you cannot miss. This check exists to catch that, not to catch 0.3 percent.
 
-**To have a physical ground truth for the software's reported scale.** DESIGN.md section 9 has the application report the print scale it detected. Comparing that number against a caliper measurement of the same sheet is how you find out whether the reported scale is trustworthy. This is the more valuable of the two reasons and it is why the numbers get written down rather than merely checked.
+**To confirm that the deliberately mis-scaled sheet really is mis-scaled.** Sheet 04 is 96.2 percent of sheet 01, which is a 4.3 mm difference on the span below. That is a large, obvious, hand-measurable difference and confirming it is what makes the fixture worth having.
+
+**What calipers are not for here.** They are not the ground truth for the software's reported print scale, and an earlier draft of this document wrongly asked for one. A printed ink edge is soft at roughly the 0.05 mm level, locating it by hand with caliper jaws is not a hundredth-of-a-millimetre operation whatever the instrument resolves to, and the paper moves with humidity by more than the quantity being chased. Asking for 113.98 against 114.00 is asking for a number the method cannot produce, and a fabricated one would be worse than none because it would be trusted.
+
+**The precise work belongs to the scans, and to a ratio rather than an absolute.** A single absolute measurement cannot separate print scale from measurement error in any case. But the same definition is printed twice, at 100 percent and at 96.2 percent, on the same paper on the same day, and the ratio between those two sheets is exactly 0.962 by construction. Every systematic error common to both, whether edge-finding bias, operator technique, the scanner's own scale error, or overnight humidity, cancels in the ratio. So the real check is whether the software reports a scale for sheet 04 that is 3.8 percent below the one it reports for sheet 01, computed from 600 DPI scans where a pixel is 0.042 mm and the edge finding is subpixel. Hand measurement only has to be good to about half a millimetre for that to hold together, and it comfortably is.
 
 ### 5.2 The like-edge rule, which matters more than the caliper does
 
@@ -134,6 +138,8 @@ The way round it is to measure **like edge to like edge**: the left edge of one 
 
 Take the first printed sheet. Lay it flat on a hard surface. Measure each of these and write the result down.
 
+**Record each to the nearest half millimetre. Do not chase hundredths.** The thresholds below are what the check is for; anything inside them passes and the exact digits are not used for anything.
+
 | # | What | Nominal | Gross-error threshold |
 |---|---|---|---|
 | A | Top row, leftmost bull left edge to fourth bull left edge | **114.0 mm** | Anything outside 113.0 to 115.0 mm |
@@ -142,7 +148,7 @@ Take the first printed sheet. Lay it flat on a hard surface. Measure each of the
 | D | Two adjacent bulls, like edge to like edge | **38.0 mm** | Anything outside 37.7 to 38.3 mm |
 | E | Last scoring row to sighter row, like edge to like edge | **45.6 mm** | Anything outside 45.2 to 46.0 mm |
 
-Measurements A and B are the important pair. Measurement C is there to give you a dot-gain figure, which is genuinely useful later, and it is the one that will read high. Do not treat C reading 25.55 mm as a problem; record it as your printer's dot gain of 0.075 mm per edge and move on.
+Measurements A and B are the important pair. Measurement C reads high, because ink spreads, and that is expected rather than wrong. Do not try to extract a dot-gain figure from it by hand: dot gain is measured properly from the 600 DPI scans, where a pixel is 0.042 mm, by comparing the imaged ring diameter against the declared one. That is measurement 2 of `docs/FIDUCIAL-DECISION.md` section 10 and it needs the scan, not the caliper.
 
 **If A and B are both inside the thresholds, the print path is honest and you can print the rest of the set.**
 
@@ -168,20 +174,22 @@ Do not repeat the full set. One measurement each is enough, because you are conf
 
 ### 5.5 Recording
 
-Create `scans/phase0/MEASUREMENTS.md` and write the numbers into it as you go, one block per sheet, in this shape:
+Create `scans/phase0/MEASUREMENTS.md` and write the conditions and the outcome into it, one block per sheet, in this shape:
 
 ```
 ## GL-CF25-LTR, sheet 1 of 3
-Printed 2026-09-14, HP OfficeJet 8025, plain paper, normal quality, mono
-A  top row, 1st to 4th, left edge to left edge   113.92 mm
-B  left column, 1st to 4th, top edge to top edge 113.88 mm
-C  ring outside diameter                          25.53 mm
-D  adjacent bulls, like edge                      37.98 mm
-E  scoring to sighter, like edge                  45.57 mm
-Derived: x scale 0.99930, y scale 0.99895, dot gain about 0.065 mm per edge
+Printed 2026-09-14, Brother MFC-J430W, plain paper, Normal quality, colour
+Foxit print dialog: Scale None, preview reported 8.5 x 11.0 document on
+8.5 x 11.0 paper at 100 percent zoom. Driver reported Scaling Off.
+Calipers, Mitutoyo 500-197-30, to the nearest 0.5 mm:
+A  top row, 1st to 4th, left edge to left edge   114 mm, within tolerance
+B  left column, 1st to 4th, top edge to top edge 114 mm, within tolerance
+C  ring outside diameter                          reads slightly over 25.4, as expected
+D  adjacent bulls, like edge                      38 mm, within tolerance
+Conclusion: no gross scale error. Precise scale to come from the 600 DPI scans.
 ```
 
-Fill in your actual printer model. It matters, because the whole point of measurement 2 in `docs/FIDUCIAL-DECISION.md` section 10 is to find the dot-gain floor on your actual printer rather than on a printer in a paper.
+Record the printer make and model, the paper, the quality setting, and what the print dialog reported. Those matter and they are exact. The caliper numbers matter only as a pass or fail against the thresholds, so write them as such rather than inventing a precision the method does not have.
 
 ---
 
