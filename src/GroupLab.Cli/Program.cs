@@ -1,9 +1,11 @@
 using System.Globalization;
+using GroupLab.Cli.Imaging;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Gltd.Validation;
+using GroupLab.Core.Registration;
 using GroupLab.Core.Rendering;
 
 return args switch
@@ -16,6 +18,8 @@ return args switch
     ["library", "build", var layouts, var directory] => LibraryBuild(layouts, directory),
     ["library", "verify", var layouts, var directory] => LibraryVerify(layouts, directory),
     ["render", var input, .. var rest] => Render(input, rest),
+    ["selftest"] => SelfTest("targets"),
+    ["selftest", var directory] => SelfTest(directory),
     _ => Usage(),
 };
 
@@ -66,6 +70,44 @@ static int Render(string input, string[] rest)
     File.WriteAllBytes(path, result.Pdf);
     Console.WriteLine($"{result.DefinitionId}  {result.Pages.Count} page(s)  {path}");
     return 0;
+}
+
+// Conformance test 43 of TARGET-SCHEMA.md section 10 on every built-in sheet, rendered by SceneRasterizer rather than a
+// PDF engine (test 39 ties the two together): every page at 300 DPI, then the reference sheet at 600 DPI and at the 96.2
+// percent print scale of DESIGN.md, whose reported scale must match.
+static int SelfTest(string directory)
+{
+    var backend = new OpenCvSharpBackend();
+    string reference = Path.Combine(directory, "GL-CF25-LTR.gltd.json");
+    var runs = Directory.EnumerateFiles(directory, "*.gltd.json").Order(StringComparer.Ordinal).Select(f => (Path: f, Dpi: 300, Scale: 1.0))
+        .Append((reference, 600, 1.0))
+        .Append((reference, 300, 0.962));
+
+    Console.WriteLine($"Test 43 against {Perturbation.Phase0}");
+    int failed = 0;
+    foreach (var (path, dpi, scale) in runs)
+    {
+        var read = GltdJsonReader.ReadFile(path);
+        var scenes = read.Definition is null ? null : SceneBuilder.Build(read.Definition);
+        if (read.Definition is null || scenes is not { Pages.Count: > 0 })
+        {
+            Report(path, [.. read.Diagnostics, .. scenes?.Diagnostics ?? []], Console.Error);
+            failed++;
+            continue;
+        }
+
+        foreach (var page in scenes.Pages)
+        {
+            var report = SyntheticScanCheck.Run(SceneRasterizer.Rasterize(page, dpi, scale), read.Definition, page.TileIndex, dpi, Perturbation.Phase0, backend);
+            bool passed = report.Passed && Math.Abs(report.Registration.Scale - scale) <= 0.0005;
+            failed += passed ? 0 : 1;
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture,
+                $"{Path.GetFileName(path),-27} print {scale:0.000}  {report.Summary()}  {(passed ? "pass" : "FAIL")}"));
+        }
+    }
+
+    Console.WriteLine(failed == 0 ? "all pages pass" : $"{failed} page(s) failing");
+    return failed == 0 ? 0 : 1;
 }
 
 static int Validate(string[] files)
@@ -228,6 +270,7 @@ static int Usage()
         grouplab library build <layouts.json> <targets-directory>
         grouplab library verify <layouts.json> <targets-directory>
         grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--allow-invalid]
+        grouplab selftest [<targets-directory>]
         """);
     return 2;
 }

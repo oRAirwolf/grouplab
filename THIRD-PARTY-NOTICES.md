@@ -46,5 +46,6 @@ either expressed or implied, of the Regents of The University of Michigan.
 | Package | Licence | Used by | Purpose |
 |---|---|---|---|
 | Net.Codecrete.QrCodeGenerator | MIT | GroupLab.Core | QR symbols for the definition and instance codes |
-| PDFtoImage, with PDFium and SkiaSharp | MIT; PDFium BSD-3-Clause and Apache-2.0; SkiaSharp MIT | tests only | Rasterising rendered PDFs for conformance tests 41 and 42 |
+| OpenCvSharp4 and OpenCvSharp4.runtime.win, with OpenCV | Apache-2.0; OpenCV Apache-2.0 | GroupLab.Cli, and the tests through it | Marker detection, homography fitting and resampling behind `IImagingBackend` |
+| PDFtoImage, with PDFium and SkiaSharp | MIT; PDFium BSD-3-Clause and Apache-2.0; SkiaSharp MIT | tests only | Rasterising rendered PDFs for conformance tests 39, 41, 42 and 43 |
 | xunit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk | Apache-2.0, MIT | tests only | Test framework |

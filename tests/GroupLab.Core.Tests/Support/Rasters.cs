@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Imaging;
 using GroupLab.Core.Rendering;
 using GroupLab.Core.Rendering.Pdf;
 using PDFtoImage;
@@ -55,28 +56,34 @@ internal sealed class Raster
     public double PixelsPerDmm { get; }
 
     /// <summary>
-    /// Rasterises the square of about <paramref name="sideDmm"/> centred on (<paramref name="centreX"/>,
-    /// <paramref name="centreY"/>) dmm of <paramref name="page"/>, at <paramref name="dpi"/>, snapped outward to whole
-    /// device pixels.
+    /// Rasterises at least the square of side <paramref name="sideDmm"/> centred on (<paramref name="centreX"/>,
+    /// <paramref name="centreY"/>) dmm of <paramref name="page"/>, at <paramref name="dpi"/>, widened outward to whole inches.
     /// </summary>
     /// <remarks>
-    /// PDFtoImage's <c>Bounds</c> crop was measured placing the raster between 0 and 1.3 px off, varying with the crop
-    /// origin, while a whole-page render of the same bytes put every bull within 0.02 px. So the crop is made the PDF
-    /// way instead: the page's own content stream, exactly as <see cref="PdfWriter"/> writes it, under a MediaBox that is
-    /// the crop. A whole page at 600 DPI is not an option on the roll sheets, at over a gigabyte of bitmap.
+    /// Two PDFium behaviours were measured and are avoided. PDFtoImage's <c>Bounds</c> crop placed the raster between 0
+    /// and 1.3 px off, varying with the crop origin; and a MediaBox whose edges are not whole points renders up to half a
+    /// pixel off. A whole-page render of the same bytes put every bull within 0.02 px. So the crop is made the PDF way, the
+    /// page's own content stream exactly as <see cref="PdfWriter"/> writes it under a MediaBox that is the crop, with every
+    /// edge on a whole inch: a whole number of points, and of device pixels at any integer DPI. A whole page at 600 DPI is
+    /// not an option on the roll sheets, at over a gigabyte of bitmap.
     /// </remarks>
     public static Raster Render(Scene page, double centreX, double centreY, double sideDmm, int dpi, SKColor? background = null)
     {
         ArgumentNullException.ThrowIfNull(page);
-        double pixelsPerDmm = dpi / 254.0;
-        double left = Math.Floor((centreX - (sideDmm / 2)) * pixelsPerDmm) / pixelsPerDmm;
-        double top = Math.Floor((centreY - (sideDmm / 2)) * pixelsPerDmm) / pixelsPerDmm;
-        int sidePixels = (int)Math.Ceiling(sideDmm * pixelsPerDmm);
-        byte[] pdf = CroppedPdf(page, left, top, sidePixels / pixelsPerDmm);
+        const double dmmPerInch = 254.0;
+        double pageHeight = page.Height / 508.0;
+
+        // PDF space runs up from the bottom edge of the page, in inches here.
+        int left = (int)Math.Floor((centreX - (sideDmm / 2)) / dmmPerInch);
+        int bottom = (int)Math.Floor(pageHeight - ((centreY + (sideDmm / 2)) / dmmPerInch));
+        int side = (int)Math.Ceiling(Math.Max(
+            ((centreX + (sideDmm / 2)) / dmmPerInch) - left,
+            pageHeight - ((centreY - (sideDmm / 2)) / dmmPerInch) - bottom));
 
         var options = new PDFtoImage.RenderOptions { Dpi = dpi, BackgroundColor = background ?? SKColors.White };
-        using var bitmap = Conversion.ToImage(pdf, 0, options: options);
-        Assert.True(Math.Abs(bitmap.Width - sidePixels) <= 1, $"Raster is {bitmap.Width} px wide, expected {sidePixels}.");
+        using var bitmap = Conversion.ToImage(CroppedPdf(page, left, bottom, side), 0, options: options);
+        Assert.True(Math.Abs(bitmap.Width - (side * dpi)) <= 1 && Math.Abs(bitmap.Height - (side * dpi)) <= 1,
+            $"Raster is {bitmap.Width} by {bitmap.Height} px, expected {side * dpi} square.");
 
         var pixels = bitmap.Pixels;
         var luminance = new float[pixels.Length];
@@ -85,10 +92,33 @@ internal sealed class Raster
             luminance[i] = (0.299f * pixels[i].Red) + (0.587f * pixels[i].Green) + (0.114f * pixels[i].Blue);
         }
 
-        return new Raster(luminance, bitmap.Width, bitmap.Height, left, top, dpi / 254.0)
+        double originY = (pageHeight - bottom - side) * dmmPerInch;
+        return new Raster(luminance, bitmap.Width, bitmap.Height, left * dmmPerInch, originY, dpi / dmmPerInch)
         {
             Colours = pixels,
         };
+    }
+
+    /// <summary>Wraps a grey image whose pixel (0, 0) starts at (<paramref name="originX"/>, <paramref name="originY"/>) dmm.</summary>
+    public static Raster FromImage(GrayImage image, double originX, double originY, double pixelsPerDmm)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        return new Raster([.. image.Pixels.Select(p => (float)p)], image.Width, image.Height, originX, originY, pixelsPerDmm);
+    }
+
+    /// <summary>A whole page of a PDF rasterised by PDFium, as grey. Every built-in ink is black, so one channel carries it.</summary>
+    public static GrayImage WholePage(byte[] pdf, int page, int dpi)
+    {
+        using var bitmap = Conversion.ToImage(pdf, page, options: new PDFtoImage.RenderOptions { Dpi = dpi, BackgroundColor = SKColors.White });
+        var source = bitmap.GetPixelSpan();
+        int channels = bitmap.BytesPerPixel;
+        var grey = new byte[bitmap.Width * bitmap.Height];
+        for (int i = 0; i < grey.Length; i++)
+        {
+            grey[i] = source[(i * channels) + 1];
+        }
+
+        return new GrayImage(bitmap.Width, bitmap.Height, grey);
     }
 
     public SKColor[] Colours { get; private init; } = [];
@@ -109,14 +139,11 @@ internal sealed class Raster
         return Colours[(Math.Clamp(v, 0, Height - 1) * Width) + Math.Clamp(u, 0, Width - 1)];
     }
 
-    /// <summary>A one-page PDF of <paramref name="page"/>'s content stream whose MediaBox is the given square in dmm.</summary>
-    private static byte[] CroppedPdf(Scene page, double left, double top, double side)
+    /// <summary>A one-page PDF of <paramref name="page"/>'s content stream whose MediaBox is the given square, in whole inches of PDF space.</summary>
+    private static byte[] CroppedPdf(Scene page, int left, int bottom, int side)
     {
-        const double pointsPerDmm = 72.0 / 254.0;
         string content = PdfWriter.Content(page);
-        double heightPoints = page.Height * PdfWriter.PointsPerUnit;
-        string box = string.Join(' ', new[] { left * pointsPerDmm, heightPoints - ((top + side) * pointsPerDmm), (left + side) * pointsPerDmm, heightPoints - (top * pointsPerDmm) }
-            .Select(v => v.ToString("R", CultureInfo.InvariantCulture)));
+        string box = string.Create(CultureInfo.InvariantCulture, $"{left * 72} {bottom * 72} {(left + side) * 72} {(bottom + side) * 72}");
         string[] objects =
         [
             "<< /Type /Catalog /Pages 2 0 R >>",
