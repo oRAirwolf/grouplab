@@ -1,4 +1,4 @@
-# Phase 0a: GLTD format, built-in library, PDF renderer (revision 3)
+# Phase 0a: GLTD format, built-in library, PDF renderer (revision 4)
 
 ## Context
 
@@ -28,17 +28,15 @@ Two review rounds changed the documents and tools. Every finding from plan revis
 - `PDFtoImage` for test-only rasterising.
 - `OpenCvSharp4` with the full `runtime.win`, behind `IImagingBackend`.
 
-## One precondition: the solver fixes from review 1 are not committed
+## Preconditions
 
-`git status` shows `tools/layout/layout.py` and `tools/layout/run.py` still modified. Commit 5a5fad6 included the regenerated `layouts.json` but not those two files.
+- **Cleared.** d3e24b9 commits `layout.py` and `run.py`. `run.py` reports 0 failing and `layouts.json` matches a fresh run.
+- **Documentation gap, to raise at the M0 report.** The review 3 wording for sections 6 and 3.7 is not in the repository:
+  - Section 6 line 916 still says "one referenced by `codes` is code".
+  - Section 3.7 has no tile 0 rule.
+  - TARGET-SCHEMA.md was last committed in 5a5fad6, and `Claude outputs/` holds older copies.
 
-I ran HEAD's own solver in memory, with no files written. It prints "0 failing" but does **not** reproduce HEAD's `layouts.json` on any of the 16 multi-bull sheets:
-- the wrong CF30 pitch and tile ring
-- CF25-LTR-D rows
-- code positions
-- marker counts
-
-A fresh clone would therefore have an authority that disagrees with its own output. No geometry needs to change, only the commit. **Please commit those two files, or tell me to, before M0.** I will not touch `tools/` or the untracked `Claude outputs/` folder otherwise.
+  The implementation follows the rules as stated in review 3 and cites sections 6 and 3.7 for them. Nothing in `tools/`, `docs/` or `Claude outputs/` is edited by me.
 
 ## Open specification questions: the reference encoder's behaviour, with each choice flagged
 
@@ -57,21 +55,25 @@ Every one of these goes into `docs/SPEC-ERRATA.md`, quoting the schema question 
 - Share payload length is ceil(totalLen / 2).
 - `totalLen` and the CRC describe the whole body.
 
-**Q13: explicit code placement. This is a divergence, flagged.**
-- `encode.py` writes placement byte 1 and silently drops the positions, producing a body no decoder can place codes from, which breaks rule R3.
-- The C# encoder refuses `explicit` instead, and the decoder rejects placement 1.
+**Q13: explicit code placement. Remains open; the divergence is accepted.**
+- `encode.py` writes placement byte 1 and drops the positions.
+- The C# encoder refuses `explicit`, and the decoder rejects placement byte 1.
 - No built-in sheet is affected.
 
+**Specified, cited rather than listed as errata:**
+- **Section 6, projection roles.**
+  - The code and text roles do not survive the projection.
+  - A decode renders codes and text in ink index 0.
+  - A renderer working from GLTD-J uses the declared `code` and `text` inks.
+  - Decoded keys are one per stored index (`ink0`, `ink1`, …) plus `paper`.
+- **Section 3.7, marker ids and tiles.**
+  - Ids follow raster order over the **assembly** lattice, with the frame's tile index disambiguating a dictionary wrap.
+  - On a tiled definition the stored `markers` list is tile 0's, and a reader compares against it only for tile 0.
+
 **Choices no document settles:**
-- **C1. Roles on decode.**
-  - Decoding emits one synthesised ink per colour and role pair actually referenced: `ink0`, `ink1`, … in order of first use, then `paper`.
-  - A black ink used by both discs and fiducials therefore becomes one artwork ink and one fiducial ink. That satisfies the fiducial-role rule and deduplicates back to the same body.
-  - The code block has no ink index, so the "code" role cannot be recovered despite section 6. Codes and text render in the declared `code` or `text` ink, or `#000000` if none is declared.
+- **C1. Role of a shared index on decode.** When one stored index is referenced by both `fiducials.ink` and a disc, as index 0 is on every built-in, the synthesised ink takes the `fiducial` role. That satisfies section 3.7's fiducial-role rule, and no rule restricts which role a disc may use.
 - **C2. DEFLATE framing.** `totalLen` is the uncompressed length, the compressed payload is the rest of the frame, and inflation is capped at `totalLen`.
 - **C3. GLTD-I field lengths** use a 1-byte prefix. A field over 255 bytes is refused, naming the field.
-- **C4. Marker ids.**
-  - Ids number the surviving positions in raster order, in assembly coordinates, so tile ids are unique across the assembly.
-  - A tiled definition's stored `markers` list is tile 0's.
 - **C5. Tests 26b and 26c** constrain a generator, which Phase 0a doesn't have. The validator covers what a stored definition can show:
   - overlap and off-page are errors
   - warnings mirror the two solvers' `check()`: 30 dmm between major elements, 20 dmm between markers, 60 dmm tight edge, and the `field-ring-1` band below 120 dmm
@@ -105,15 +107,15 @@ tests/GroupLab.Core.Tests/ xUnit; PDFtoImage test-only
   Fixtures/gltd-check.json      body hex, frame hex, id for all 22 rows, dumped from check.py's sheet()/zero()
   Fixtures/layout-markers.json  multi-bull marker lists dumped from layout.py (not in layouts.json)
 targets/                   20 canonical GLTD-J files + 2 tile 3x2 preset files
-docs/SPEC-ERRATA.md        Q10 to Q13 as implemented, C1 to C6
+docs/SPEC-ERRATA.md        Q10 to Q13 as implemented, C1 to C3, C5, C6
 THIRD-PARTY-NOTICES.md
 ```
 
 Fixtures are dumped by `python -B` scripts kept in the scratchpad, at M2 time, from whatever `tools/` holds then. No identifier is copied from any document or earlier list.
 
-## Milestones, each a commit on branch `phase-0a`
+## Milestones, each a commit on branch `phase-0a`, each reported when it lands
 
-**M0. Toolchain and scaffold.** Precondition: the two solver files are committed.
+**M0. Toolchain and scaffold.**
 - Install the SDK.
 - Create the solution, the three projects and the props file.
 - Write the errata document and add the DESIGN.md section 20 note.
@@ -138,7 +140,12 @@ Fixtures are dumped by `python -B` scripts kept in the scratchpad, at M2 time, f
 
   Inflation is then capped, and the CRC is checked last.
 - **Parity with `check.py`:** all 22 rows must match byte for byte (body, frame, id).
-- **Tests 1 to 11.** Test 2 uses random valid definitions. Truncated and oversized frames are fuzzed. Test 31 checks that GLTD-I and GLTD-B frames are never accepted in each other's place.
+- **Tests 1 to 11.** Test 2 uses random valid definitions. Truncated and oversized frames are fuzzed.
+- **Tests 28 to 31, with the GLTD-I codec:**
+  - 28: `instance` never changes the id
+  - 29: a `defId` mismatch is reported, not merged
+  - 30: overflowing the 152-byte field budget is refused, naming the field
+  - 31: GLTD-I and GLTD-B frames are never accepted in each other's place
 
 **M3. Derivations, validator, library.**
 - **Port exactly:**
@@ -146,6 +153,8 @@ Fixtures are dumped by `python -B` scripts kept in the scratchpad, at M2 time, f
   - `zero.py` `field-ring-1`: candidates, drop test including the data block, raster sort
   - `corners-1` as written in section 3.8
   - data block cells, and grid lines
+- **Test 34, with the derivations.** Ids are unique across the assembly lattice (section 3.7). A synthetic assembly large enough to wrap the dictionary produces the warning.
+- **Tests 32 and 33.** Every tile of both presets of GL-LR300-T and GL-LR300-TA4 encodes to a byte-identical body and id. A frame written for each `tileIndex` decodes back to that tile. Test 35 needs shots and moves to Phase 2.
 - **LibraryBuilder** mirrors `check.py` `sheet()` and `zero()`:
   - pages from the page table
   - the `STACKS` disc table and the five inks
@@ -204,4 +213,4 @@ Fixtures are dumped by `python -B` scripts kept in the scratchpad, at M2 time, f
 3. `library verify`: all 22 ids equal `check.py`, no geometry mismatch against `layouts.json`, and exactly the two expected zeroing warnings.
 4. `render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf`, opened at 100 percent for inspection, and `validate` on every file in `targets/`.
 5. `selftest`: residual and worst bull error under 0.001 in on every sheet, printed.
-6. Report the errata (Q10 to Q13 as implemented, C1 to C6) and the brief section 4 print list, all of which validate clean.
+6. At each milestone, report what landed, the test counts, and any new finding. At the end, report the errata (Q10 to Q13 as implemented, C1 to C3, C5, C6) and the brief section 4 print list, all of which validate clean.
