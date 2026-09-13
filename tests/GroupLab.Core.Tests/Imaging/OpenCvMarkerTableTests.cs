@@ -37,7 +37,7 @@ public class OpenCvMarkerTableTests
             }
         }
 
-        var detected = new OpenCvSharpBackend().DetectMarkers(new GrayImage(width, height, pixels), new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, 8 * module));
+        var detected = new OpenCvSharpBackend().DetectMarkers(new GrayImage(width, height, pixels), new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, 8 * module)).Markers;
 
         Assert.Equal(Enumerable.Range(0, Tag36h11.CodeCount), detected.Select(m => m.Id).Order());
         foreach (var marker in detected)

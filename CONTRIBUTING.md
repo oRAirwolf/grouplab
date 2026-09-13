@@ -76,3 +76,27 @@ Where the specification is silent and a choice has to be made to go on, record t
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.
 - **Git.** Work on a branch, not `main`. Branch names follow the phase, so `phase-0`, `phase-1` and so on.
+
+## Talking to the planning session
+
+Design work on GroupLab happens in a separate long-running planning session that
+has read and write access to this repository but cannot see or type into the
+Claude Code panel. The repository is the channel between the two, and these two
+files are the mailbox. Both live in `docs/` and both are committed, so the
+exchange is part of the project history rather than lost in a chat transcript.
+
+**`docs/NOTES-FROM-PLANNING.md`** carries instructions, decisions and
+measurements coming **in**. Entries are dated sections, newest first, each with
+a `Status:` line. Act on every entry marked `open`, in order, then change its
+status to `actioned <date>` in the same commit as the work. Never delete an
+entry; the file is a log.
+
+**`docs/QUESTIONS-FOR-PLANNING.md`** carries questions going **out**. When a
+genuine decision blocks you, append a dated section with `Status: open`, state
+the question, the options with their real costs, and what you would choose and
+why. Commit it, push it, and stop. The answer comes back as an `open` entry in
+the notes file. Do not use it for anything you can settle by measurement, and do
+not use it to ask permission for work the brief already authorises.
+
+Neither file is polled. A human triggers the read. Write as though the reader
+has the repository but not the conversation, because that is exactly true.

@@ -60,7 +60,7 @@ public static class PageRegistration
         }
 
         double pixelsPerDmm = nominalDpi / 254.0;
-        var detected = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, f.MarkerSize * pixelsPerDmm));
+        var detected = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, f.MarkerSize * pixelsPerDmm)).Markers;
 
         // A marker's square is markerSize across (section 3.7), and its corners come back top-left first, clockwise.
         var unmatched = expected.GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());

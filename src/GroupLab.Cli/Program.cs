@@ -1,12 +1,17 @@
 using System.Globalization;
+using GroupLab.Cli;
 using GroupLab.Cli.Imaging;
 using GroupLab.Cli.Library;
+using GroupLab.Cli.Spike;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Gltd.Validation;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Measurement;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Rendering;
+using GroupLab.Core.Trace;
 
 return args switch
 {
@@ -20,6 +25,9 @@ return args switch
     ["render", var input, .. var rest] => Render(input, rest),
     ["selftest"] => SelfTest("targets"),
     ["selftest", var directory] => SelfTest(directory),
+    ["measure", var image, var definition, .. var rest] => Measure(image, definition, rest),
+    ["spike", "sheets"] => Phase0Spike.Sheets("scans/phase0", "targets", Console.Out),
+    ["spike", "sheets", var scans, var targets] => Phase0Spike.Sheets(scans, targets, Console.Out),
     _ => Usage(),
 };
 
@@ -108,6 +116,150 @@ static int SelfTest(string directory)
 
     Console.WriteLine(failed == 0 ? "all pages pass" : $"{failed} page(s) failing");
     return failed == 0 ? 0 : 1;
+}
+
+// PHASE0-SPIKE-BRIEF.md section 4: register an image against a definition and locate every bull. Prints the stage
+// records in the console form of DETECTION-PIPELINE.md section 6.3 and the per-bull error table; --json writes the same
+// as structured output.
+static int Measure(string imagePath, string definitionPath, string[] rest)
+{
+    var options = new MeasureOptions();
+    string? json = null;
+    int verbosity = 1;
+    try
+    {
+        for (int i = 0; i < rest.Length; i++)
+        {
+            string option = rest[i];
+            string Next() => i + 1 < rest.Length ? rest[++i] : throw new FormatException($"{option} needs a value");
+            switch (option)
+            {
+                case "--tile":
+                    options = options with { TileIndex = int.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--dpi":
+                    options = options with { Dpi = double.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--locator":
+                    options = options with
+                    {
+                        Locator = Next() switch
+                        {
+                            "centroid" => BullLocatorKind.Centroid,
+                            "edge" => BullLocatorKind.EdgeFit,
+                            var other => throw new FormatException($"unknown locator {other}"),
+                        },
+                    };
+                    break;
+                case "--model":
+                    options = options with
+                    {
+                        Model = Next() switch
+                        {
+                            "auto" => RegistrationModel.Auto,
+                            "homography" => RegistrationModel.Homography,
+                            "radial" => RegistrationModel.Radial,
+                            var other => throw new FormatException($"unknown model {other}"),
+                        },
+                    };
+                    break;
+                case "--mask":
+                    options = options with { MaskRadius = double.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--refine":
+                    options = options with
+                    {
+                        Refinement = Next() switch
+                        {
+                            "none" => CornerRefinement.None,
+                            "subpix" => CornerRefinement.Subpixel,
+                            "contour" => CornerRefinement.Contour,
+                            var other => throw new FormatException($"unknown refinement {other}"),
+                        },
+                    };
+                    break;
+                case "--refine-window":
+                    options = options with { RefinementWindowModules = double.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--threshold-window":
+                    options = options with { ThresholdWindowMaxPixels = int.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--downsample":
+                    options = options with { DownsampleFactor = int.Parse(Next(), CultureInfo.InvariantCulture) };
+                    break;
+                case "--json":
+                    json = Next();
+                    break;
+                case "-v":
+                    verbosity = int.Parse(Next(), CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    throw new FormatException($"unknown option {option}");
+            }
+        }
+    }
+    catch (FormatException ex)
+    {
+        Console.Error.WriteLine($"measure: {ex.Message}");
+        return 2;
+    }
+
+    var read = GltdJsonReader.ReadFile(definitionPath);
+    Report(definitionPath, read.Diagnostics, Console.Error);
+    if (read.Definition is null)
+    {
+        return 1;
+    }
+
+    var trace = new TraceRecorder();
+    GrayImage image;
+    ImageMetadata metadata;
+    using (var s0 = trace.Begin("S0.decode"))
+    {
+        try
+        {
+            (image, metadata) = ImageLoader.Load(imagePath);
+        }
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException)
+        {
+            s0.Done(StageStatus.Failed, ex.Message);
+            Console.Error.WriteLine($"measure: {ex.Message}");
+            return 1;
+        }
+
+        string camera = metadata.IsCamera ? $", {metadata.CameraMake} {metadata.CameraModel} at {metadata.FocalLengthMm:0.0} mm" : "";
+        string orientation = metadata.Orientation is { } turned and not 1 ? $", EXIF orientation {turned} not applied" : "";
+        s0.Done(StageStatus.Ok, $"{metadata.Format} {image.Width}x{image.Height}{camera}{orientation}");
+    }
+
+    var result = SheetMeasurer.Measure(image, metadata, read.Definition, options, new OpenCvSharpBackend(), trace);
+    foreach (var record in result.Trace)
+    {
+        Console.Write(TraceConsole.Format(record, verbosity));
+    }
+
+    if (json is not null)
+    {
+        File.WriteAllText(json, MeasurementJson.Serialize(imagePath, definitionPath, metadata, result));
+    }
+
+    if (result.Failure is not null)
+    {
+        Console.Error.WriteLine($"measure: {result.Failure}");
+        return 1;
+    }
+
+    Console.WriteLine();
+    Console.WriteLine("bull    declared x, y (in)    dx (in)     dy (in)   error (in)");
+    foreach (var b in result.Bulls)
+    {
+        Console.WriteLine(b.Recovered is null
+            ? $"{b.Name,-6}  {b.Declared.X / 254,7:0.000}, {b.Declared.Y / 254,7:0.000}   not located: {b.Failure}"
+            : $"{b.Name,-6}  {b.Declared.X / 254,7:0.000}, {b.Declared.Y / 254,7:0.000}   {b.Dx / 254,9:+0.00000;-0.00000}   {b.Dy / 254,9:+0.00000;-0.00000}   {b.Error / 254,8:0.00000}");
+    }
+
+    Console.WriteLine($"worst {result.WorstError / 254:0.00000} in at bull {result.WorstBull?.Name}, mean {result.MeanError / 254:0.00000} in");
+    return 0;
 }
 
 static int Validate(string[] files)
@@ -271,6 +423,10 @@ static int Usage()
         grouplab library verify <layouts.json> <targets-directory>
         grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--allow-invalid]
         grouplab selftest [<targets-directory>]
+        grouplab measure <image> <file.gltd.json> [--tile <n>] [--dpi <d>] [--locator centroid|edge] [--model auto|homography|radial]
+                         [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
+                         [--downsample <f>] [--json <out.json>] [-v 1|2|3]
+        grouplab spike sheets [<scans-directory> <targets-directory>]
         """);
     return 2;
 }

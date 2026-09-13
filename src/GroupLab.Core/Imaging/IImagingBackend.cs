@@ -9,9 +9,10 @@ public interface IImagingBackend
 {
     /// <summary>
     /// Detects fiducial markers. Corners are in image pixels, ordered top-left, top-right,
-    /// bottom-right, bottom-left as printed.
+    /// bottom-right, bottom-left as printed. Candidates refused by the shape gates of
+    /// DETECTION-PIPELINE.md stage S2 are returned as rejections, a separate reason from the code check.
     /// </summary>
-    IReadOnlyList<DetectedMarker> DetectMarkers(GrayImage image, MarkerDetectionOptions options);
+    MarkerDetection DetectMarkers(GrayImage image, MarkerDetectionOptions options);
 
     /// <summary>
     /// Fits a homography mapping <paramref name="source"/> onto <paramref name="destination"/>
@@ -46,15 +47,33 @@ public enum CornerRefinement
 
 /// <summary>
 /// Detector settings. <see cref="ExpectedMarkerSidePixels"/> sizes the adaptive threshold window and the shape gates of
-/// DETECTION-PIPELINE.md stage S2.
+/// DETECTION-PIPELINE.md stage S2. The remaining settings exist for FIDUCIAL-DECISION.md section 10's measurements 3 and 4
+/// and default to what the backend ships: <see cref="RefinementWindowModules"/> the subpixel window in marker modules,
+/// <see cref="ThresholdWindowMaxPixels"/> the largest adaptive threshold window in working pixels, and
+/// <see cref="DownsampleFactor"/> an area reduction applied before detection, with corners returned at full resolution.
 /// </summary>
 public sealed record MarkerDetectionOptions(
     MarkerFamily Family,
     double ExpectedMarkerSidePixels,
-    CornerRefinement Refinement = CornerRefinement.Subpixel);
+    CornerRefinement Refinement = CornerRefinement.Subpixel,
+    double? RefinementWindowModules = null,
+    int? ThresholdWindowMaxPixels = null,
+    int DownsampleFactor = 1);
 
 /// <summary>A decoded marker with its four corners in image pixels.</summary>
 public sealed record DetectedMarker(int Id, IReadOnlyList<PointD> Corners);
+
+/// <summary>A decoded candidate refused by a stage S2 shape gate, with the reason.</summary>
+public sealed record MarkerRejection(int Id, IReadOnlyList<PointD> Corners, string Reason);
+
+/// <summary>
+/// What detection kept, what the shape gates refused, and the candidate quads that never decoded, in the detector's own
+/// corner order. The last tell a missing marker's two failure modes apart: found as a quad but unreadable, or never found.
+/// </summary>
+public sealed record MarkerDetection(IReadOnlyList<DetectedMarker> Markers, IReadOnlyList<MarkerRejection> Rejected, IReadOnlyList<IReadOnlyList<PointD>> Undecoded)
+{
+    public int CandidatesNotDecoded => Undecoded.Count;
+}
 
 /// <summary>A fitted transform and which correspondences RANSAC kept (DETECTION-PIPELINE.md stage S3).</summary>
 public sealed record HomographyFit(Homography Transform, IReadOnlyList<bool> Inliers);
