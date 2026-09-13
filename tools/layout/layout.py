@@ -42,17 +42,26 @@ class Layout:
         span_x = (self.cols-1)*px
         self.x0 = round((self.W - span_x)/2)
         self.xs = [self.x0 + i*px for i in range(self.cols)]
+        DBH = self.data_block
+        self.db = (SAFE, self.H-SAFE-DBH, self.W-SAFE, self.H-SAFE) if DBH else None
+        # the bottom codes sit ABOVE the data block, never on top of it.  The row
+        # solver already reserves DB + QR at the foot of the page, so this uses
+        # space that was reserved for it rather than taking any from the grid.
+        qr_bot_c = self.H - SAFE - DBH - (30 if DBH else 0) - QR/2
         self.qr=[(SAFE+QR/2, SAFE+QR/2),(self.W-SAFE-QR/2, SAFE+QR/2)]
         if self.qr_count==4:
-            self.qr += [(SAFE+QR/2, self.H-SAFE-QR/2),(self.W-SAFE-QR/2, self.H-SAFE-QR/2)]
+            self.qr += [(SAFE+QR/2, qr_bot_c),(self.W-SAFE-QR/2, qr_bot_c)]
         qr_x0, qr_x1 = SAFE, SAFE+QR
         qr_x2, qr_x3 = self.W-SAFE-QR, self.W-SAFE
         CL = 30  # 3.0 mm clearance
         # does the outermost scoring column overlap a corner QR in x?
         def xclash(halfw, xs):
+            # a column "clashes" when it comes within the clearance of a code
+            # band, not merely when it overlaps one.  Without the clearance a
+            # bull can sit 0.15 mm from a code and the solver calls it clear.
             for x in xs:
-                if not (x+halfw <= qr_x0 or x-halfw >= qr_x1): return True
-                if not (x+halfw <= qr_x2 or x-halfw >= qr_x3): return True
+                if not (x+halfw+CL <= qr_x0 or x-halfw-CL >= qr_x1): return True
+                if not (x+halfw+CL <= qr_x2 or x-halfw-CL >= qr_x3): return True
             return False
         r2 = self.ring/2; rs2 = self.ring_s/2
         top_lim = (SAFE+QR+CL+r2) if xclash(r2,self.xs) else (SAFE+CL+r2)
@@ -63,7 +72,7 @@ class Layout:
             self.xs_s=[round((self.W-sx_span)/2)+i*px for i in range(self.sighter_cols)]
         else: self.xs_s=[]
         DB = self.data_block
-        BQ = QR if self.qr_count==4 else 0
+        BQ = (QR + (CL if DB else 0)) if self.qr_count==4 else 0
         bot_lim_s = (self.H-SAFE-DB-BQ-CL-rs2) if (BQ and xclash(rs2,self.xs_s)) else (self.H-SAFE-DB-CL-rs2)
         bot_lim_b = (self.H-SAFE-DB-BQ-CL-r2) if (BQ and xclash(r2,self.xs)) else (self.H-SAFE-DB-CL-r2)
         if self.sighter_cols:
@@ -100,6 +109,7 @@ class Layout:
                     self.dropped+=1; continue
                 if any(rects_overlap(b,q,20) for q in qrb): self.dropped+=1; continue
                 if any(rects_overlap(b,r,10) for r in rings): self.dropped+=1; continue
+                if self.db and rects_overlap(b,self.db,10): self.dropped+=1; continue
                 self.marks.append((round(x),round(y)))
 
     def check(self):
@@ -108,9 +118,20 @@ class Layout:
               [(box(x,y,self.ring_s),f"sighter({x},{y})") for x in self.xs_s for y in self.ys_s]
         qrb=[(box(cx,cy,QR),f"qr{i}") for i,(cx,cy) in enumerate(self.qr)]
         mkb=[(box(x,y,MARK),f"mark({x},{y})") for x,y in self.marks]
-        allb = rings+qrb+mkb
+        dbb=[(self.db,"dataBlock")] if self.db else []
+        allb = rings+qrb+mkb+dbb
+        if not self.fits:
+            errs.append(f"does not fit: {-self.free:.0f} dmm short of vertical room")
         for (a,na),(b,nb) in itertools.combinations(allb,2):
             if rects_overlap(a,b): errs.append(f"overlap {na} x {nb}")
+        CL = 30
+        major = rings+qrb+dbb
+        for (a,na),(b,nb) in itertools.combinations(major,2):
+            if not rects_overlap(a,b) and rects_overlap(a,b,CL):
+                warns.append(f"clearance under {CL} dmm: {na} x {nb}")
+        for (a,na),(b,nb) in itertools.combinations(mkb,2):
+            if not rects_overlap(a,b) and rects_overlap(a,b,20):
+                warns.append(f"markers under 20 dmm apart: {na} x {nb}")
         for b,n in allb:
             if b[0]<0 or b[1]<0 or b[2]>self.W or b[3]>self.H: errs.append(f"offpage {n}")
             elif b[0]<SAFE*0.5 or b[1]<SAFE*0.5 or b[2]>self.W-SAFE*0.5 or b[3]>self.H-SAFE*0.5:
@@ -129,6 +150,8 @@ class Layout:
             x0=self.xs[0], y0=self.ys[0], xs=self.xs, ys=self.ys,
             sighter_y=self.ys_s, sighter_x=self.xs_s,
             markers=len(self.marks), dropped=self.dropped,
+            fits=self.fits, free=round(self.free),
+            data_block_rect=self.db, qr=[(round(a),round(b)) for a,b in self.qr],
             marker_pct=round(100*mk_area/pg,2), qr_pct=round(100*qr_area/pg,2),
             overhead_pct=round(100*(mk_area+qr_area)/pg,2),
             errors=e, warnings=w[:4], nwarn=len(w))
