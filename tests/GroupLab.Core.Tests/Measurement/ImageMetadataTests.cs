@@ -29,6 +29,7 @@ public class ImageMetadataTests
         Assert.Equal(6, m.Orientation);
         Assert.Equal(2.2, m.FocalLengthMm!.Value, 3);
         Assert.Equal(23, m.FocalLength35mm);
+        Assert.Equal(2.2, m.FNumber!.Value, 3);
         Assert.True(m.IsCamera);
         Assert.Null(m.DpiX);
     }

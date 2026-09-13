@@ -18,9 +18,14 @@ public sealed record ImageMetadata(
     string? CameraModel,
     int? Orientation,
     double? FocalLengthMm,
-    int? FocalLength35mm)
+    int? FocalLength35mm,
+    double? FNumber = null)
 {
-    /// <summary>A photograph rather than a scan. A focal length is the one tag a scanner never writes.</summary>
+    /// <summary>
+    /// A photograph rather than a scan. A focal length is the one tag a scanner never writes. A lens is identified by
+    /// <see cref="FocalLengthMm"/> and <see cref="FNumber"/>, not by <see cref="FocalLength35mm"/>, which a camera app computes and
+    /// the Phase 0 phone writes inconsistently (NOTES-FROM-PLANNING.md entry 6).
+    /// </summary>
     public bool IsCamera => FocalLengthMm is not null;
 
     public static ImageMetadata ForScan(int width, int height, double dpi) =>
@@ -56,7 +61,7 @@ public static class ImageMetadataReader
         bool camera = m.Focal is not null;
         double? dpiX = camera ? null : m.PngDpiX ?? m.JfifX ?? ExifDpi(m.ExifX, m.ResolutionUnit);
         double? dpiY = camera ? null : m.PngDpiY ?? m.JfifY ?? ExifDpi(m.ExifY, m.ResolutionUnit);
-        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35);
+        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber);
     }
 
     private static double? ExifDpi(double? value, int? unit) => value is { } v && v > 0
@@ -200,6 +205,9 @@ public static class ImageMetadataReader
                 case 0x8769:
                     Ifd(t, U32(t, e + 8, little), little, m, depth + 1);
                     break;
+                case 0x829D:
+                    m.FNumber = Rational(t, e, little);
+                    break;
                 case 0x920A:
                     m.Focal = Rational(t, e, little);
                     break;
@@ -275,5 +283,7 @@ public static class ImageMetadataReader
         public double? Focal { get; set; }
 
         public int? Focal35 { get; set; }
+
+        public double? FNumber { get; set; }
     }
 }

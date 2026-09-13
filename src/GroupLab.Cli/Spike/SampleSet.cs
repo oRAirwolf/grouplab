@@ -3,7 +3,9 @@ namespace GroupLab.Cli.Spike;
 /// <summary>
 /// The committed Phase 0 sample set, PHASE0-SPIKE-BRIEF.md section 3, with the definition and tile each image shows.
 /// <see cref="Sample.Gated"/> marks the images a gate of section 2 applies to: the 600 DPI scan of each of the ten
-/// printed sheets, and each photograph. The 300 DPI scans and the rotated rescan are measured and reported, not gated.
+/// printed sheets, and each photograph that contains the whole sheet. The 300 DPI scans and the rotated rescan are
+/// measured and reported, not gated; <see cref="Sample.Excluded"/> names why a photograph is reported but not measured
+/// against the gate.
 /// </summary>
 public static class SampleSet
 {
@@ -36,10 +38,19 @@ public static class SampleSet
         new("gl-lr300-t-2-300-dpi.png", Tile, 1, 300, SampleKind.Scan, false, "tile 2"),
         new("gl-lr300-t-3-300-dpi.png", Tile, 2, 300, SampleKind.Scan, false, "tile 3"),
         new("gl-lr300-t-4-300-dpi.png", Tile, 3, 300, SampleKind.Scan, false, "tile 4"),
-        new("20260913_130543.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "photograph of sheet 1"),
-        new("20260913_130550.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "photograph of sheet 1"),
-        new("20260913_130554.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "photograph of sheet 1"),
-        new("20260913_130559.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "photograph of sheet 1"),
+        new("20260913_130543.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 1 on a table"),
+        new("20260913_130550.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 1 on a table"),
+        new("20260913_130554.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 1 on a table"),
+        new("20260913_130559.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 1 on a table"),
+        new("ultrawide1.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("ultrawide2.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("ultrawide3.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("main1.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("main2.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("main3.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("telephoto1.jpg", CentreFire, 0, null, SampleKind.Photograph, false, "sheet 3 on a wall", "the sheet overflows the frame (NOTES-FROM-PLANNING.md entry 6)"),
+        new("telephoto2.jpg", CentreFire, 0, null, SampleKind.Photograph, true, "sheet 3 on a wall"),
+        new("telephoto3.jpg", CentreFire, 0, null, SampleKind.Photograph, false, "sheet 3 on a wall", "the sheet overflows the frame (NOTES-FROM-PLANNING.md entry 6)"),
     ];
 
     public enum SampleKind
@@ -48,5 +59,5 @@ public static class SampleSet
         Photograph,
     }
 
-    public sealed record Sample(string File, string Definition, int Tile, int? Dpi, SampleKind Kind, bool Gated, string Description);
+    public sealed record Sample(string File, string Definition, int Tile, int? Dpi, SampleKind Kind, bool Gated, string Description, string? Excluded = null);
 }

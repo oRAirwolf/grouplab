@@ -29,11 +29,18 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     /// two modules 2.0 px, once the window reached the next module's edges. Contour and AprilTag refinement measured 0.7
     /// to 0.8 px. These figures, and the 0.10 px inward bias left at one module, are measurement 3 of FIDUCIAL-DECISION.md
     /// section 10. <see cref="MarkerDetectionOptions.RefinementWindowModules"/> overrides the window for that measurement.
-    /// Bits are read from a canonical image with about one pixel per module pixel, clamped to 4 to 16, rather than
-    /// OpenCV's fixed 4 per cell. On the Phase 0 inkjet scans at 600 DPI a 94 px marker resampled to 32 px aliases the
-    /// printed black's texture into wrong bits: 4 per cell read 6 and 5 of 9 markers on two tiles and 31 of 34 on a
-    /// reference sheet, every loss a candidate quad found at the right place but unread, while 8 and 12 per cell read 9, 9
-    /// and 34. Error-correction rate, border-bit tolerance, Otsu floor and threshold window changed nothing.
+    /// Bits are read from a canonical image of at least 8 pixels per cell, one per module pixel above that up to 16, with
+    /// 0.3 of each cell ignored at its edge, rather than OpenCV's fixed 4 and 0.13. On the Phase 0 inkjet scans at 600 DPI
+    /// a 94 px marker resampled to 32 px aliases the printed black's texture into wrong bits: 4 per cell read 6 and 5 of 9
+    /// markers on two tiles and 31 of 34 on a reference sheet, every loss a candidate quad found at the right place but
+    /// unread, while 8 and 12 per cell read 9, 9 and 34. A floor of 8 rather than one per module pixel matters for smaller
+    /// markers: on the photographs, whose markers are 36 to 46 px, one per module pixel read 21 to 33 of 34 and 8 per cell
+    /// with a 0.3 margin read 26 to 34, and over all 21 scans the floor took detection from 512 to 514 of 514. Error-
+    /// correction rate, border-bit tolerance, Otsu floor and threshold window changed nothing.
+    /// The largest adaptive threshold window is the marker's side. Over the 600 DPI scans of the ten Phase 0 sheets, 240
+    /// markers, a 7 px window found none, OpenCV's 23 px default 238, half the side 239, and the side 240, in the same
+    /// detection time. With the canonical cell above, downsampling by 2 or 3 before detection found 240 and 239 at the
+    /// same worst bull, and is not used (PHASE0-RESULTS.md, measurement 3 and section 7).
     /// </summary>
     public MarkerDetection DetectMarkers(GrayImage image, MarkerDetectionOptions options)
     {
@@ -58,7 +65,7 @@ public sealed class OpenCvSharpBackend : IImagingBackend
 
         double side = options.ExpectedMarkerSidePixels / scaleX;
         double module = side / 8;
-        int windowMax = options.ThresholdWindowMaxPixels is { } requested ? Odd(Math.Max(3, requested)) : Odd(Math.Max(23, (int)Math.Ceiling(side / 2)));
+        int windowMax = options.ThresholdWindowMaxPixels is { } requested ? Odd(Math.Max(3, requested)) : Odd(Math.Max(23, (int)Math.Ceiling(side)));
         (int refineWindow, float refineRelative) = options.RefinementWindowModules is { } modules
             ? (Math.Max(1, (int)Math.Round(module * modules)), (float)modules)
             : (5, 1f);
@@ -86,8 +93,8 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             CornerRefinementMaxIterations = 100,
             CornerRefinementMinAccuracy = 0.001,
             MarkerBorderBits = 1,
-            PerspectiveRemovePixelPerCell = Math.Clamp((int)Math.Round(module), 4, 16),
-            PerspectiveRemoveIgnoredMarginPerCell = 0.13,
+            PerspectiveRemovePixelPerCell = Math.Clamp((int)Math.Round(module), 8, 16),
+            PerspectiveRemoveIgnoredMarginPerCell = 0.3,
             MaxErroneousBitsInBorderRate = 0.35,
             MinOtsuStdDev = 5,
             ErrorCorrectionRate = 0.6,

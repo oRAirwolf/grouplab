@@ -412,9 +412,47 @@ DESIGN.md's Phase 0 gate is registration residual under one thousandth of an inc
 5. ~~**False positives on a shot target.**~~ **Done. Zero at default parameters**, across sixteen files and nine dictionaries, with 665 quad candidates rejected per dictionary. Section 4.1 has the table and the permissive-detector variant that separates the strong dictionaries from the weak ones.
 6. ~~**Cross-decode check.**~~ **Done, and it destroyed the escape route**, which is why the family changed. Section 4 records the whole thing.
 7. **Print-scale detection.** Print at 96.2 percent and confirm the reported scale, which is DESIGN.md's own example and makes a good regression test.
-8. **Corner localisation against the AprilTag detector as well as OpenCV's.** New, and it exists because there are now two detectors that can read the sheet. They use different quad-fitting front ends, so they will not give identical corners. Measure both against the same printed target and record which is better, because that decides which is primary on mobile rather than merely which is available. **Read section 11 before running this one**, because the two detectors do not agree about which corner is first.
+8. **Corner localisation against the AprilTag detector as well as OpenCV's.** New, and it exists because there are now two detectors that can read the sheet. They use different quad-fitting front ends, so they will not give identical corners. Measure both against the same printed target and record which is better, because that decides which is primary on mobile rather than merely which is available. **Read section 11 before running this one**, because the two detectors do not agree about which corner is first. **Done on the Phase 0 scans; the record follows this list.** `docs/PHASE0-SPIKE-BRIEF.md` numbers it measurement 4.
 
 Measurements 5 and 6 needed no printer and no scanner and have been done; `tools/fiducial/run_all.sh` reruns them. The rest still need paper.
+
+### Measurement 8, recorded 13 September 2026
+
+**Method, run outside this repository.** OpenCV `DICT_APRILTAG_36h11` with `CORNER_REFINE_SUBPIX` at a 12 px window, against libapriltag through `pupil-apriltags` 1.0.4 with `quad_decimate` 1.0 and `refine_edges` on. Same images, same declared model corners, a homography fitted per detector, and bull centres located by an ink-weighted centroid in a 100 dmm circular mask. Both detectors find 34 of 34 markers on every 600 DPI sheet.
+
+| Image | Residual, OpenCV | Residual, libapriltag | Bull mean / worst, OpenCV | Bull mean / worst, libapriltag |
+|---|---|---|---|---|
+| `gl-cf25-ltr-1-600` | 0.00212 | 0.00205 | 0.00224 / 0.00418 | 0.00236 / 0.00506 |
+| `gl-cf25-ltr-2-600` | 0.00203 | 0.00198 | 0.00214 / 0.00414 | 0.00213 / 0.00447 |
+| `gl-cf25-ltr-3-600` | 0.00201 | 0.00198 | 0.00206 / 0.00421 | 0.00226 / 0.00492 |
+| `gl-cf25-ltr-2-600-rot180` | 0.00198 | 0.00192 | 0.00333 / 0.00715 | 0.00412 / 0.00832 |
+| `gl-cf25-ltr-1-300` | 0.00209 | 0.00173 | 0.00305 / 0.00555 | 0.00375 / 0.00765 |
+
+All figures in inches. Mean worst bull over the four 600 DPI images: OpenCV 0.00492, libapriltag 0.00569.
+
+**The two rankings are inverted, five images out of five.** libapriltag always fits the better corner residual and always recovers the worse bull centre. The likely mechanism is that `refine_edges` fits lines to the quad edges, so its corners lie more exactly on a projective quadrilateral, which is what the residual measures, while placing the ink edge slightly differently; that becomes a small scale bias in the fitted homography and shows only out at the bulls. A 0.05 percent scale bias moves a bull 190 mm from the fit centre by 0.0037 in, which is the size of the gap.
+
+**On this evidence OpenCV is the better primary for the metric that matters, by a small margin.** The caveats are real: one estimator, one printer, one paper, and a scratch centroid rather than the Phase 0 bull locator.
+
+**A detector must not be chosen by corner residual.** This is independent evidence for the two-gate structure of DESIGN.md section 21, reached from the opposite direction to the argument that produced it.
+
+**Re-run through the Phase 0 pipeline, both halves.** OpenCV's corners detected with the shipped settings, and libapriltag's from `scans/phase0/apriltag-corners.json`, committed from the same external run; each through the same homography over every matched corner and both of the pipeline's bull locators. Bull mean / worst, inches:
+
+| Image | OpenCV, centroid | OpenCV, edge fit | libapriltag as returned, edge fit | libapriltag minus half a pixel, edge fit |
+|---|---|---|---|---|
+| `gl-cf25-ltr-1-600` | 0.00225 / 0.00397 | 0.00126 / 0.00254 | 0.00099 / 0.00196 | 0.00135 / 0.00259 |
+| `gl-cf25-ltr-2-600` | 0.00217 / 0.00431 | 0.00145 / 0.00316 | 0.00106 / 0.00245 | 0.00145 / 0.00331 |
+| `gl-cf25-ltr-3-600` | 0.00212 / 0.00425 | 0.00125 / 0.00290 | 0.00113 / 0.00245 | 0.00137 / 0.00290 |
+| `gl-cf25-ltr-2-600-rot180` | 0.00308 / 0.00658 | 0.00140 / 0.00268 | 0.00235 / 0.00350 | 0.00126 / 0.00247 |
+| `gl-cf25-ltr-1-300` | 0.00280 / 0.00495 | 0.00126 / 0.00250 | 0.00163 / 0.00277 | 0.00136 / 0.00256 |
+
+The pipeline's centroid reproduces the external OpenCV figures to within 0.00025 in mean, and the edge fit, which the pipeline ships, is 40 to 55 percent lower.
+
+**libapriltag's corners sit half a pixel from OpenCV's, and that decides the ranking.** For the same markers the mean offset, libapriltag minus OpenCV, is +0.34 to +0.59 px in x and +0.37 to +0.54 px in y, and it is the same number of pixels at 300 DPI as at 600, which makes it a pixel-convention difference rather than a difference in where the detectors put the ink edge. A constant image-space offset moves every bull by the same image vector, which points one way in page coordinates on an upright scan and the opposite way on the rotated rescan. That is exactly the pattern of the as-returned column: libapriltag better than OpenCV on the three upright 600 DPI sheets, worse on the rotated one. **With the half pixel removed the two detectors are tied**: OpenCV is ahead on three images, level on one and behind on the rotated rescan, and no mean differs by more than 0.00014 in. **Neither ranking, the external centroid one or this one, measures the detectors until that convention is corrected**, so the choice of primary detector for mobile is open again on this evidence, and it is not decided by corner residual either way.
+
+**Corner conventions, three of them traps.** Against a model ordered top-left, top-right, bottom-right, bottom-left: OpenCV needs its corner list rotated by two, which is the 180 degrees of section 11; libapriltag needs its winding reversed with no rotation; and libapriltag's coordinates sit about half a pixel from OpenCV's, the offset above, which a registration cannot see because it absorbs the translation, and which moves every bull by half a pixel.
+
+**The rotated rescan, revised by the Phase 0 field measurement.** With a centroid the rotated scan of sheet 2 is worse than the unrotated one, 0.00715 in worst against 0.00418 externally and 0.00658 against 0.00431 in the pipeline, which read as a smaller scanner-fixed component on top of the paper-fixed field. With the edge fit the two are 0.00268 and 0.00316. The field is still paper-fixed under both locators, correlating with the unrotated scan at +0.66 for the edge fit and +0.81 for the centroid against -0.05 and -0.27 for the scanner-fixed prediction, but the extra error on rotation belongs to the centroid rather than to where the ink is. That is consistent with a darkness-weighted estimator following the scanner's illumination, which is fixed to the scanner; it is not shown.
 
 ---
 

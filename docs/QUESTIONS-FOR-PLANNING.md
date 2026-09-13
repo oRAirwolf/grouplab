@@ -12,4 +12,157 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-*No open questions.*
+## 2026-09-13, question 5: the wall photographs are not of a flat sheet
+
+**Status: open**
+
+Notes entry 6 describes the nine new photographs as sheet 3 "taped flat to a wall", and sets them three questions: lens, flatness, and sighter geometry. In every frame the sheet hangs from a single pin at the top centre and its edges are visibly curved (`ultrawide1.jpg` shows the fixing at the top edge, `telephoto2.jpg` an orange pin); nothing holds the lower half. The measurement agrees, and as a result the set cannot answer any of the three questions. `docs/PHASE0-RESULTS.md` section 3a has the full table; `scans/phase0/measurements/photos.json` has every corner and bull.
+
+**The measurement, shipped pipeline, inches.**
+
+| Set | Frames | Corners the fit keeps within 0.01 in | Corner RMS over all corners | Worst bull | Scoring bulls over the gate |
+|---|---|---|---|---|---|
+| Sheet 1 on a table, ultrawide | 4 | 135 to 136 of 136 | 0.0025 to 0.0038 | 0.0057 to 0.0108 | 0 to 3 of 25 |
+| Sheet 3 on a wall, ultrawide | 3 | 42 to 66 of 128 to 136 | 0.023 to 0.060 | 0.070 to 0.091 | 13 to 21 of 25 |
+| Sheet 3 on a wall, main | 3 | 25 to 90 of 104 to 136 | 0.014 to 0.057 | 0.048 to 0.114 | 8 to 21 of 25 |
+| Sheet 3 on a wall, telephoto | 1 (two excluded) | 38 of 132 | 0.031 | 0.096 | 21 of 25 |
+
+The misfit is largest at the free bottom edge: the two lowest marker rows sit 0.026 to 0.138 in from the fit on every wall frame, against 0.0025 to 0.0033 in on the table frames. `telephoto2`, on the longest lens, needs 0.020 in RMS from a homography alone.
+
+**What that does to entry 6's three questions.** Lens: every lens fails by the size of the surface misfit, so a lens effect of 0.004 to 0.011 in cannot be seen; focal length does not rescue a curved sheet, which is all the set shows. Flatness: the table frames are the flatter set, 6 to 16 times better by worst bull with the same lens, so the paired comparison is inverted. Sighters: scoring bulls fail on every frame, so the sighters cannot be isolated.
+
+**Options, with their costs.**
+
+- **A. Reshoot sheet 3 held flat**, taped along all four edges or laid under a sheet of glass, main camera, one square-on and one about 20 degrees off-axis, whole sheet in frame. About two minutes, no new paper. It answers entry 6's questions as intended, and the pipeline, raw-row output and grouped table are already in place, so the report follows the same day.
+- **B. Close Phase 0 on the evidence as it stands.** The paper gate passes, the photograph gate fails, and what is known is that the table frames fail on the sighters and by a thousandth or two on the scoring bulls, and that a hanging sheet fails by a tenth. The photograph path moves to Phase 1 with the flatness and sighter questions open. Costs nothing now; Phase 1 then starts without knowing whether a flat photograph passes.
+- **C. Register a curved sheet**, by local or piecewise registration from nearby markers. It would make hanging sheets usable, which matters because users will pin targets up this way, but it goes beyond "markers, homography and bull location" in the brief, and it cannot help the sighters, which no nearby marker brackets.
+
+**What I would choose:** A, because it is the experiment entry 6 intended and costs two minutes. C is worth recording as a Phase 1 requirement whatever A shows, because a pinned sheet is the normal case at a range. The spike report carries the photograph gate as a failure on all eleven usable frames.
+
+---
+
+## 2026-09-13, question 4: the bracketing rule, proposed, and three sheets a sighter gap cannot fix
+
+**Status: open**
+
+Notes entry 5 asks for the wording of a TARGET-SCHEMA.md section 7 rule and a conformance test, from the finding that the sighters of `GL-CF25-LTR` sit outside the marker lattice. The geometry change is deferred, as entry 5 now says, and nothing in `tools/layout`, `targets/` or the validator has been changed. Measuring the rule against the whole library before proposing it turned up two things it has to decide.
+
+**Every sheet, measured on the geometry that was printed.** How far a marker centre lies beyond the outermost bull centre on each side, in dmm; negative means a bull lies outside the lattice on that side. The last column is entry 5's sighter-only criterion, reproduced by sweeping `sighterGap` down from 1.2 times the pitch in `tools/layout/layout.py`.
+
+| Sheet | Left | Right | Top | Bottom | Smallest gap with a marker row below the sighters |
+|---|---|---|---|---|---|
+| GL-CF25-LTR | +190 | +190 | +190 | **-190** | **454**, 38 markers |
+| GL-CF25-LTR-D | +190 | +190 | +190 | +190 | no sighters |
+| GL-CF25-A4 | +190 | +190 | +190 | +190 | 456, unchanged |
+| GL-CF25-100M-A4 | **-200** | **-200** | +200 | +200 | 480, unchanged |
+| GL-CF30-LTR | +175 | +175 | +175 | +175 | no sighters |
+| GL-RF25-LTR, GL-RF25-A4 | +127 | +127 | +127 | +127 | 304, unchanged |
+| GL-RF36-LTR | +127 | +127 | +127 | +127 | 304, unchanged |
+| GL-LR25-TAB, GL-LR25-A3 | +254 | +254 | +254 | +254 | 609, unchanged |
+| GL-LR30-TAB | +254 | +254 | +254 | +254 | 609, unchanged |
+| GL-LR300-T | **0** | **0** | **0** | **0** | no sighters |
+| GL-LR300-TA4 | **0** | **0** | +508 | **0** | no sighters |
+| GL-LR300-R24 | **-508** | **-508** | +508 | **-508** | **1142**, 40 markers |
+| GL-LR300-R36 | **-508** | **-508** | +508 | **-508** | **1142**, 56 markers |
+| GL-LR300-R42 | +508 | +508 | +508 | +508 | 1219, unchanged |
+
+The GL-CF25-LTR bottom figure is before the fix; at 454 it becomes +190. Entry 5's table is reproduced exactly.
+
+**Finding 1: a sighter gap cannot bracket three sheets.** On `GL-CF25-100M-A4`, `GL-LR300-R24` and `GL-LR300-R36` the outermost bull columns sit outside the lattice horizontally, and on R24 and R36 that stays true at a gap of 1142. The mechanism is the one entry 5 found for the row: the lattice column beyond the outermost bulls is dropped by the half-safe-margin edge test. On `GL-CF25-100M-A4` the columns would be at x = 50 and 2050, whose boxes reach 20 and 2080 against limits of 60 and 2040. A rule worded "the lattice must bracket every bull" makes these three sheets non-conforming, and the fix is not a declared sighter gap. It would move the bull grid or the page, which is a geometry decision.
+
+**Finding 2: the tiles sit exactly on the edge.** On `GL-LR300-T` and `GL-LR300-TA4` the outermost markers share coordinates with the outermost bulls, a margin of 0. They are bracketed if the rule is inclusive and not if it is strict.
+
+**Finding 3: GLTD-B does not carry `sighterGap`.** Section 5 has no field for it, so a definition decoded from a sheet's codes loses the declaration and raises test 23's warning on every decode of the three changed sheets, which section 3.6 says the field exists to prevent. Either the body gains the field, or test 23 is scoped to documents that were not decoded, or a decoded sighter gap that brackets is exempt.
+
+**Proposed wording, for section 7**, after the sighter-gap rule:
+
+> **The fiducial lattice must bracket every bull.** Every bull centre, sighters included, must lie on or inside the rectangle bounded by the outermost surviving marker centres. A bull outside it is interpolated on a flat scan and extrapolated on anything that is not flat, and the Phase 0 photographs measured the cost: the sighters of GL-CF25-LTR, one dropped marker row outside the lattice, were the worst bull on three photographs of four. Where a derived scheme leaves the sighter row outside, a generator shortens the sighter gap from 1.2 times the pitch, one dmm at a time, until the lattice brackets, and declares `cells.sighterGap`.
+
+**Proposed conformance test**, numbered to sit with the other layout tests:
+
+> 26f. A bull centre outside the rectangle bounded by the outermost surviving marker centres is an error.
+
+**Options for the two decisions.**
+
+- **Inclusive or strict.** Inclusive, as worded above, keeps the tiles conforming; a bull on the lattice's edge is interpolated along that edge. Strict would also fail both tiles, whose only fix is a denser scheme. **I would choose inclusive.**
+- **Error or warning, given finding 1.** As an error, three more sheets need a geometry change before the rule can land. As a warning first, it can land with the sighter fix and name the three. **I would choose a warning until the three sheets are fixed, then an error**, so the rule is not blocked on geometry nobody has designed yet.
+
+---
+
+## 2026-09-13, question 3: PHASE0-PRELIM's split of the paper error belongs to its centroid
+
+**Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 4.
+
+`docs/PHASE0-PRELIM.md` section 3: "**Not the measurement method.** The result is unchanged across three window radii, and a symmetric estimator applied to a symmetric object cannot manufacture a spatially structured field." Section 5a: "roughly 0.0019 inches of it is systematic and reproducible across sheets, and roughly 0.0010 inches is random from sheet to sheet." DESIGN.md section 21 repeats both figures.
+
+The spike reproduces the preliminary centroid and measures a second locator against it on the same registration. The document is yours, so this is raised rather than edited.
+
+**The measurement**, sheets 1 to 3 of `GL-CF25-LTR` at 600 DPI, the same homography for both locators, inches:
+
+| Locator | Single sheet mean / worst | Systematic mean / worst | Random RMS | Systematic after a quadratic over the page, mean / worst |
+|---|---|---|---|---|
+| Thresholded centroid, the preliminary method | 0.00217 / 0.00431 | 0.00201 / 0.00374 | 0.00103 | 0.00147 / 0.00314 |
+| Edge fit to the declared disc radii, shipped | 0.00132 / 0.00316 | 0.00128 / 0.00279 | 0.00047 | 0.00039 / 0.00071 |
+
+The edge fit was chosen on the synthetic raster before it saw paper, as `docs/PHASE0-SPIKE-BRIEF.md` section 5 requires: 0.00022 in worst at 300 DPI and 0.00013 at 600, against the centroid's 0.00069 and 0.00025.
+
+**What that does to the written account.**
+
+1. **The method was part of the limit.** Stability across mask radii of 90, 100 and 110 dmm could not show otherwise, because all three masks hold the same ink: the inner ring and the dot. The edge fit also uses the outer ring and locates edges at the midpoint of their own local ink and paper levels, so ink density does not move it.
+2. **The split is about 0.0013 in systematic and 0.0005 in random**, not 0.0019 and 0.0010.
+3. **Most of the systematic part is smooth.** A quadratic over the page leaves 0.0004 in mean and 0.0007 worst. The prize a printer calibration could claim, section 6 of the brief's last item, is most of the systematic field rather than a fraction of it.
+4. **The field is still paper-fixed.** The rotated rescan correlates with sheet 2 at +0.63 under the edge fit, against -0.11 for the scanner-fixed prediction, so section 5a's conclusion stands. The gate conclusion stands too: five thousandths holds with more margin.
+
+**Options.** A: amend `docs/PHASE0-PRELIM.md` and the DESIGN.md section 21 figures with a dated note citing the spike, leaving the original text. B: leave both as a record of what the scratch measurement showed, and let `docs/PHASE0-RESULTS.md` carry the corrected figures. **I would choose A**, because DESIGN.md is what the next phase reads, and it currently states a random component twice the measured one.
+
+---
+
+## 2026-09-13, question 2: libapriltag's corners, to re-rank the detectors with the Phase 0 locator
+
+**Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 3.
+
+Notes entry 2 asks for measurement 8 of `docs/FIDUCIAL-DECISION.md` section 10 to be re-run with the Phase 0 bull locator and the ranking reported. Only the OpenCV half can be re-run here: nothing was installed, as entry 2 instructs, so libapriltag does not run on this machine.
+
+**What would settle it.** For each of `gl-cf25-ltr-1-600-dpi.png`, `gl-cf25-ltr-2-600-dpi.png`, `gl-cf25-ltr-3-600-dpi.png`, `gl-cf25-ltr-2-600-dpi-rot180.png` and `gl-cf25-ltr-1-300-dpi.png`, the libapriltag detections from the same run as entry 2, committed as `scans/phase0/apriltag-corners.json`:
+
+```
+{ "<image file>": [ { "id": 0, "corners": [[x, y], [x, y], [x, y], [x, y]] }, ... ], ... }
+```
+
+Corners as `pupil-apriltags` returns them, in its own winding and pixel convention. The harness applies the conversion entry 2 records (winding reversed, no rotation) and fits each detector's corners through the same registration and the same shipped edge-fit locator. No decision is needed, only the file.
+
+---
+
+## 2026-09-13, question 1: the photograph gate fails on all four photographs, and the lens is not the main suspect
+
+**Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 5.
+
+`docs/PHASE0-SPIKE-BRIEF.md` section 7: "If the photograph gate fails, **the lens is the first suspect, not the code.** Two frames from the main camera settle it in about a minute". It fails, it was diagnosed before anything else, and the diagnosis points somewhere else, so the choice of what to do next is yours.
+
+**The result, shipped pipeline** (homography with radial distortion, edge-fit locator), inches:
+
+| Photograph | Markers | Corner residual RMS | Homography alone RMS | Distortion at the frame edge | Bull mean / worst | Worst bull |
+|---|---|---|---|---|---|---|
+| `20260913_130543.jpg` | 33/34 | 0.00319 | 0.00343 | 0.992 in | 0.00229 / 0.00530 | 15 |
+| `20260913_130550.jpg` | 32/34 | 0.00329 | 0.00390 | 0.344 in | 0.00262 / 0.00973 | S3 |
+| `20260913_130554.jpg` | 34/34 | 0.00370 | 0.00387 | 0.370 in | 0.00309 / 0.01083 | S3 |
+| `20260913_130559.jpg` | 34/34 | 0.00248 | 0.00297 | 0.171 in | 0.00198 / 0.00922 | S3 |
+
+**What it is not.**
+
+- **Not the printer.** The photographs' bull fields correlate with sheet 1's own 600 DPI scan field at -0.07 to +0.33, where scans of different sheets correlate at +0.85 to +0.94. The error is added by the photograph path.
+- **Not a lens term the model misses, nor any smooth global warp.** Refitting with three radial coefficients and a free distortion centre, or a quadratic or cubic warp on top of the homography, evaluated leave one marker out, improves the corner residual on no photograph consistently and brings no photograph inside the gate: the best worst bull, whichever model gives it, is 0.0050, 0.0062, 0.0063 and 0.0076 in.
+
+**What it is, as far as the data goes.**
+
+1. **The sighters are extrapolated.** In `targets/GL-CF25-LTR.gltd.json` the lowest marker row is at y = 8.854 in and the sighter row at y = 9.902 in. The three sighters are the only bulls on the sheet outside the marker lattice, by 1.05 in, and they are the worst bull on three of the four photographs. On a flat scan this costs little (S3 is also the worst bull on sheets 2 and 3, at 0.0032 and 0.0029 in); on a photograph it amplifies whatever the planar model gets wrong.
+2. **The sheet is not one plane.** Registering each bull from only its nearest 6 or 8 markers, instead of the whole sheet, brings the worst scoring bull from 0.0053 to 0.0035 in, 0.0066 to 0.0029, and 0.0034 to 0.0021 on three photographs, and leaves the fourth at 0.0057. The sighters stay at 0.008 to 0.013 in whatever the markers, because every choice still extrapolates to them. In all four frames the sheet lies on a table rather than pinned to a wall as `docs/PHASE0-PRINT-PROTOCOL.md` section 7 asks, and a free sheet of paper does not lie flat.
+3. **The lens reading is uncertain.** EXIF says f/2.2 and 2.2 mm, which reads as the ultra-wide, but also a 35 mm equivalent of 23 mm, which is normally the main camera. The fitted distortion at the outermost marker is 0.004 to 0.011 in, so the lens term is real but it is being fitted.
+
+**Options, with their costs.**
+
+- **A. Two frames with the main camera of sheet 3, the control, taped flat to a wall**, one square-on and one off-axis, per protocol section 7. About a minute, no new paper. It separates flatness and lens from the sighter geometry: if the scoring bulls then pass and only the sighters fail, the geometry is the finding.
+- **B. Put markers below the sighter row.** This is a change to the `grid-boundary-1` placement in `tools/layout`, which the brief says not to touch, and it changes the derived marker lattice of every sheet with a sighter band. Expensive, and it should wait for A.
+- **C. Gate photographs on scoring bulls only.** A redefinition of the gate. Not recommended without A; with A it may still be the wrong answer, since a sighter is still a bull a shooter fires at.
+
+**What I would choose:** A first, then B or C with its result. The spike report carries the photograph gate as a failure, not as a pass on a narrower definition.

@@ -3,3 +3,4 @@
 targets/** text eol=lf
 tests/**/Fixtures/** text eol=lf
 src/**/*.json text eol=lf
+scans/phase0/measurements/** text eol=lf

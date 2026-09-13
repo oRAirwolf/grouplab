@@ -34,6 +34,8 @@ Three separately printed copies of `GL-CF25-LTR`, scanned at 600 and 300 DPI on 
 
 **Not the measurement method.** The result is unchanged across three window radii, and a symmetric estimator applied to a symmetric object cannot manufacture a spatially structured field.
 
+**Amended 13 September 2026, from `docs/PHASE0-RESULTS.md`: this was wrong.** The three window radii all hold the same ink, the inner ring and the dot, so their agreement showed only that the estimator was insensitive to how much paper surrounded it, not that the estimator class was not the limit. An edge fit to the declared disc radii, validated on the synthetic raster before it saw paper, recovers the same bulls through the same registration at 0.0012 to 0.0015 in mean against the centroid's 0.0021 to 0.0022, and halves the random component. The method was part of the limit.
+
 **Not print scale.** The fitted scale is within six parts in ten thousand of nominal on both axes.
 
 ## 4. What the error is: systematic, and reproducible across sheets
@@ -92,6 +94,8 @@ Sheet 2 was rotated 180 degrees on the platen and rescanned at 600 DPI. The homo
 
 **So the ink is not where the definition says it is, by about 0.05 mm, and the pattern is a property of the printer.** Splitting the variance by the correlation, roughly 0.0019 inches of it is systematic and reproducible across sheets, and roughly 0.0010 inches is random from sheet to sheet.
 
+**Amended 13 September 2026.** Those figures belong to the preliminary centroid. With the edge-fit locator the Phase 0 spike ships, the split measured directly over the three sheets is **0.0013 in systematic and 0.0005 in random** (`docs/PHASE0-RESULTS.md`, measurement 6). The field is still fixed to the paper under either locator: with the edge fit the rotated rescan correlates with sheet 2 at +0.66, against -0.05 for the scanner-fixed prediction.
+
 ## 6. What this does not yet justify
 
 The diagnosis is now done, so restating the gate is earned rather than evasive. **The two-gate structure below was proposed on 13 September 2026 and accepted the same day**, and DESIGN.md section 21 now carries it.
@@ -124,5 +128,7 @@ Five thousandths keeps the contribution to an estimated sigma below half a perce
 The bull is not the dominant instrument error. The hole is, by a factor of four, and it was measured and written down long before this. Everything the shooter and the weather contribute is larger again by one to two orders of magnitude. A gate set below the hole noise floor is doing its job; a gate set below the printer's physical placement accuracy was asking the software to correct the paper.
 
 **The registration residual stays a reported diagnostic**, per DESIGN.md section 21, and Phase 0 should additionally record the systematic and random split, because a printer whose systematic component is known is a printer whose systematic component could one day be calibrated out. That is not a feature anyone should build now, but it is worth knowing it exists.
+
+**Amended 13 September 2026.** The spike measured it, and the prize is larger than this paragraph assumed. A quadratic over the page absorbs most of the systematic field, leaving 0.0004 in mean and 0.0007 in worst (`docs/PHASE0-RESULTS.md`, measurement 6), so a per-printer calibration would recover most of the systematic component rather than a fraction of it.
 
 DESIGN.md section 6 already recorded that a four-point homography leaves 0.0026 to 0.0032 inches rms on pristine sheets from the existing corpus. The 34-marker homography measured here gives 0.0021, which is better but the same order. That figure has been in the design documents since the beginning and nobody connected it to the Phase 0 gate.

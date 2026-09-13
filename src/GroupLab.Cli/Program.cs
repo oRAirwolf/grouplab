@@ -26,8 +26,8 @@ return args switch
     ["selftest"] => SelfTest("targets"),
     ["selftest", var directory] => SelfTest(directory),
     ["measure", var image, var definition, .. var rest] => Measure(image, definition, rest),
-    ["spike", "sheets"] => Phase0Spike.Sheets("scans/phase0", "targets", Console.Out),
-    ["spike", "sheets", var scans, var targets] => Phase0Spike.Sheets(scans, targets, Console.Out),
+    ["spike", var measurement] => Spike(measurement, "scans/phase0", "targets"),
+    ["spike", var measurement, var scans, var targets] => Spike(measurement, scans, targets),
     _ => Usage(),
 };
 
@@ -262,6 +262,20 @@ static int Measure(string imagePath, string definitionPath, string[] rest)
     return 0;
 }
 
+// PHASE0-SPIKE-BRIEF.md sections 2, 6 and 7 over the committed sample set, each as a Markdown table.
+static int Spike(string measurement, string scans, string targets) => measurement switch
+{
+    "sheets" => Phase0Spike.Sheets(scans, targets, Console.Out),
+    "photos" => Phase0Measurements.Photos(scans, targets, Console.Out),
+    "markers" => Phase0Measurements.MarkerCount(scans, targets, Console.Out),
+    "refinement" => Phase0Measurements.Refinement(scans, targets, Console.Out),
+    "threshold" => Phase0Measurements.Threshold(scans, targets, Console.Out),
+    "scale" => Phase0Measurements.Scale(scans, targets, Console.Out),
+    "field" => Phase0Measurements.Field(scans, targets, Console.Out),
+    "detectors" => DetectorComparison.Run(scans, targets, Console.Out),
+    _ => Usage(),
+};
+
 static int Validate(string[] files)
 {
     int failed = 0;
@@ -426,7 +440,7 @@ static int Usage()
         grouplab measure <image> <file.gltd.json> [--tile <n>] [--dpi <d>] [--locator centroid|edge] [--model auto|homography|radial]
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
-        grouplab spike sheets [<scans-directory> <targets-directory>]
+        grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors [<scans-directory> <targets-directory>]
         """);
     return 2;
 }

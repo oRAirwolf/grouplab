@@ -11,6 +11,7 @@ namespace GroupLab.Cli.Spike;
 /// <summary>One sample measured once, with both bull locators run against the same registration.</summary>
 public sealed record SampleResult(
     SampleSet.Sample Sample,
+    ImageMetadata Metadata,
     FiducialResult Fiducials,
     RegistrationFit? Fit,
     ScaleReport? Scale,
@@ -21,7 +22,7 @@ public sealed record SampleResult(
 
 /// <summary>
 /// The measurements of PHASE0-SPIKE-BRIEF.md sections 2 and 6 over the committed sample set, printed as Markdown tables
-/// for the report. Command line only, per section 4.
+/// for the report, with the rows behind each written by <see cref="RawMeasurements"/>. Command line only, per section 4.
 /// </summary>
 public static class Phase0Spike
 {
@@ -36,11 +37,15 @@ public static class Phase0Spike
         var backend = new OpenCvSharpBackend();
         output.WriteLine("| Image | DPI | Tile | Markers | Residual RMS / max (in) | Centroid mean / worst (in) | Edge fit mean / worst (in) | Ink spread (mm) | Scale x / y | Gate, centroid / edge |");
         output.WriteLine("|---|---|---|---|---|---|---|---|---|---|");
+        var raw = new List<object>();
         foreach (var sample in SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Scan))
         {
-            output.WriteLine(Row(Measure(scans, targets, sample, backend, new MeasureOptions())));
+            var result = Measure(scans, targets, sample, backend, new MeasureOptions());
+            output.WriteLine(Row(result));
+            raw.Add(RawMeasurements.Sample(result, Definition(targets, sample.Definition)));
         }
 
+        RawMeasurements.Write(scans, "sheets", raw);
         return 0;
     }
 
@@ -54,13 +59,13 @@ public static class Phase0Spike
         var fiducials = SheetMeasurer.DetectFiducials(image, metadata, definition, options, backend, trace);
         if (fiducials.Matches.Count < 4)
         {
-            return new SampleResult(sample, fiducials, null, null, null, [], [], "too few markers to register");
+            return new SampleResult(sample, metadata, fiducials, null, null, null, [], [], "too few markers to register");
         }
 
         var fit = SheetMeasurer.Register(image, metadata, fiducials, options, backend, trace);
         if (fit is null)
         {
-            return new SampleResult(sample, fiducials, null, null, null, [], [], "registration failed");
+            return new SampleResult(sample, metadata, fiducials, null, null, null, [], [], "registration failed");
         }
 
         var (scale, lens) = SheetMeasurer.VerifyScale(metadata, definition, options, fit, image, trace);
@@ -69,7 +74,7 @@ public static class Phase0Spike
         string? failure = fiducials.TileIndex == sample.Tile
             ? null
             : string.Create(CultureInfo.InvariantCulture, $"tile {fiducials.TileIndex + 1} inferred, tile {sample.Tile + 1} named");
-        return new SampleResult(sample, fiducials, fit, scale, lens, centroid, edge, failure);
+        return new SampleResult(sample, metadata, fiducials, fit, scale, lens, centroid, edge, failure);
     }
 
     public static TargetDefinition Definition(string targets, string file)

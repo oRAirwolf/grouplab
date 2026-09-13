@@ -93,8 +93,12 @@ public static class CentroidBullLocator
 {
     public const int MaximumIterations = 30;
 
-    /// <summary>Iteration stops when the estimate moves less than this, in dmm.</summary>
-    public const double Convergence = 0.0001;
+    /// <summary>
+    /// Iteration stops when the estimate moves less than this, in dmm: 0.1 micrometre, 254 times inside conformance test
+    /// 43's gate. A hundredth of that sat below the jitter of a photograph's numerical Jacobian and iterative inverse, so a
+    /// correct estimate under strong lens distortion never settled.
+    /// </summary>
+    public const double Convergence = 0.001;
 
     public static BullLocation Locate(GrayImage image, IPageMapping map, int index, Bull bull, double maskRadius)
     {
