@@ -140,16 +140,6 @@ A named page whose dimensions differ from the standard, or a roll preset whose w
 
 Section 6 says a body has exactly one legal encoding. The decoder enforces it: a body whose decode would re-encode to different bytes is rejected, as is a body whose decode is not a valid GLTD-J document. This catches a repeated ink colour, an order code that is not the lowest that fits, and a code position the rule would place off the page.
 
-### C14. Conformance test 43 as run
-
-Test 43 asks for every bull centre within "the Phase 0 residual gate" without saying how the centre or the residual is measured.
-
-- **Input.** The render is distorted before analysis: 0.7 degrees of rotation, 0.15 degrees of shear, axis scales of 0.999 and 1.001, an offset of 0.023 in and -0.017 in, and a 0.12 in crop.
-- **Registration.** Markers are detected, then a RANSAC homography is fitted from image pixels to page dmm over their corners.
-- **Bull centre.** An ink-weighted centroid over a window reaching 5 dmm past the outermost disc, predicted through the homography and iterated until it moves less than 0.001 dmm. It must lie within 0.254 dmm (0.001 in) of the declared coordinate.
-- **Residual.** Taken over the inlier corners and gated as a root mean square below 0.254 dmm, which is how DETECTION-PIPELINE.md stage S3 quotes residual. The largest single corner is reported alongside. On the built-in library at 300 DPI the largest is 0.00091 in, so a gate on the maximum would also pass today, with little margin.
-- **Print scale.** The area scale of the homography at the page centre against the nominal resolution. The two axes are reported separately, per stage S4.
-
 ---
 
 ## Gaps found while implementing, not yet listed as schema questions

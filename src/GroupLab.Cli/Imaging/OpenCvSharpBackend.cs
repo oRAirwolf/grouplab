@@ -22,11 +22,11 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     /// Stage S2 settings, set in full rather than trusting a struct's defaults. Two differ from OpenCV's defaults, as S2
     /// requires: corner refinement is on, and the adaptive threshold window grows with the expected marker. The area gate
     /// runs inside OpenCV before decoding, as a minimum perimeter (a square of half the area has 1/sqrt(2) the
-    /// perimeter). OpenCV has no side-ratio setting, so that gate runs on the decoded corners instead: still independent
-    /// of the code check, but after it.
+    /// perimeter). OpenCV has no side-ratio setting, so that gate runs on the decoded corners instead, as stage S2 records.
     /// The refinement window is capped at one module rather than OpenCV's 0.3. On a clean 300 DPI render of GL-CF25-LTR,
     /// where a module is 5.9 px, 0.3 of a module left corners 0.24 px RMS from truth, one module 0.16 px, and two modules
     /// 2.0 px, once the window reached the next module's edges. Contour and AprilTag refinement measured 0.7 to 0.8 px.
+    /// These figures, and the 0.10 px inward bias left at one module, are measurement 3 of FIDUCIAL-DECISION.md section 10.
     /// </summary>
     public IReadOnlyList<DetectedMarker> DetectMarkers(GrayImage image, MarkerDetectionOptions options)
     {
@@ -87,10 +87,9 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         using var detector = new ArucoDetector(dictionary, parameters, new RefineParameters());
         detector.DetectMarkers(mat, out Point2f[][] corners, out int[] ids, out _);
 
-        // OpenCV's DICT_APRILTAG_36h11 holds each code turned 180 degrees from libapriltag's apriltag_to_image and the
-        // official AprilRobotics images, which is what the renderer prints. Ids agree; OpenCV's first corner is the
-        // printed bottom-right. Measured over all 587 codes by OpenCvMarkerTableTests, so corners are turned back here
-        // to honour IImagingBackend's printed order.
+        // FIDUCIAL-DECISION.md section 11: OpenCV's DICT_APRILTAG_36h11 holds each code turned 180 degrees from the
+        // official orientation GroupLab prints, so its first corner is the printed bottom-right. The corners are turned
+        // back here, and OpenCvMarkerTableTests checks the correction against all 587 codes.
         var markers = new List<DetectedMarker>(ids.Length);
         for (int i = 0; i < ids.Length; i++)
         {

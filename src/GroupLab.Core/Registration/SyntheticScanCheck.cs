@@ -10,13 +10,12 @@ public sealed record SyntheticScanReport(int TileIndex, double Dpi, Registration
     public BullRecovery? WorstBull => Bulls.MaxBy(b => b.Error);
 
     /// <summary>
-    /// Registered, with the residual over the inlier corners within the gate, and every bull within the gate. The
-    /// residual is gated as a root mean square because that is how DETECTION-PIPELINE.md stage S3 measures and quotes
-    /// registration residual; the largest single corner is reported beside it.
+    /// Registered, and the worst bull-centre error within the gate: conformance test 43a of TARGET-SCHEMA.md section 10
+    /// and DESIGN.md section 21. The marker-corner residual is a diagnostic of the detector, reported as RMS with the
+    /// maximum alongside, and gates nothing.
     /// </summary>
     public bool Passed =>
         Registration.ImageToPage is not null
-        && Registration.RmsResidual < SyntheticScanCheck.Gate
         && WorstBull is { } worst && worst.Error < SyntheticScanCheck.Gate;
 
     public string Summary()
