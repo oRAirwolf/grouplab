@@ -92,3 +92,5 @@ The specification states what is printed but not where. These are drawing conven
 - **Measurement grid labels.** Inside the field, beside the axes.
 - **Data block rows.** Each row is `(height - 10) / rows` dmm tall, with 5 dmm above and below, which reproduces the 100 dmm rows section 3.10 gives for both built-in block heights. The reserved square is centred vertically at the right-hand end.
 - **Canonical key order** for top-level blocks section 3.1 does not place: `codes`, `print`, `dataBlock`, `instance`, `tiling`, `grids`, then unknown fields in the order read.
+- **Canonical key order inside blocks** follows the `properties` order of the section 9 schema, because the prose examples disagree with it in two places: section 3.8 writes `positions` before `humanReadableId` where the schema has it after, and the section 3.10 table lists `fields` before `reserve` where the schema lists it last. A test derives the expected order from the embedded schema, so a schema change moves the writer with it.
+- **`srgb` is written in upper case.** Colour values are case-insensitive, and a canonical form needs one spelling.

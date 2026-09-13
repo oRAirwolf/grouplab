@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grouplab.invalid/schema/gltd-1.schema.json",
+  "title": "GroupLab Target Definition, version 1",
+  "type": "object",
+  "required": ["gltd", "revision", "name", "units", "page",
+               "inks", "ringSets", "bulls"],
+  "additionalProperties": true,
+
+  "$defs": {
+    "dmm":      { "type": "integer", "minimum": 0, "maximum": 65535 },
+    "inkKey":   { "type": "string", "pattern": "^[a-zA-Z0-9_-]{1,16}$" },
+    "srgb":     { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+  },
+
+  "properties": {
+    "gltd":     { "const": 1 },
+    "revision": { "type": "integer", "minimum": 0 },
+    "id":       { "type": "string",
+                  "pattern": "^GL-[0-9A-HJKMNP-TV-Z]{4}(-[0-9A-HJKMNP-TV-Z]{4}){3}$" },
+    "name":        { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "author":      { "type": "string", "maxLength": 120 },
+    "licence":     { "type": "string", "maxLength": 64 },
+    "created":     { "type": "string", "format": "date" },
+    "units":       { "const": "dmm" },
+
+    "page": {
+      "type": "object",
+      "required": ["size", "width", "height"],
+      "properties": {
+        "size": { "enum": ["letter","legal","tabloid","a3","a4","a5",
+                           "roll-24","roll-36","roll-42","custom"] },
+        "width":  { "$ref": "#/$defs/dmm", "minimum": 500 },
+        "height": { "$ref": "#/$defs/dmm", "minimum": 500 },
+        "orientation": { "enum": ["portrait","landscape"] }
+      },
+      "additionalProperties": false
+    },
+
+    "inks": {
+      "type": "array", "minItems": 1, "maxItems": 16,
+      "items": {
+        "type": "object",
+        "required": ["key","srgb","role"],
+        "properties": {
+          "key":  { "$ref": "#/$defs/inkKey" },
+          "srgb": { "$ref": "#/$defs/srgb" },
+          "role": { "enum": ["artwork","fiducial","code","text","paper"] }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "ringSets": {
+      "type": "array", "minItems": 1, "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["key","discs"],
+        "properties": {
+          "key": { "$ref": "#/$defs/inkKey" },
+          "discs": {
+            "type": "array", "minItems": 1, "maxItems": 15,
+            "items": {
+              "type": "object",
+              "required": ["diameter","ink"],
+              "properties": {
+                "diameter": { "$ref": "#/$defs/dmm", "minimum": 1 },
+                "ink":      { "$ref": "#/$defs/inkKey" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "bulls": {
+      "type": "array", "minItems": 1, "maxItems": 4095,
+      "items": {
+        "type": "object",
+        "required": ["x","y","ringSet","scoring"],
+        "properties": {
+          "x": { "$ref": "#/$defs/dmm" },
+          "y": { "$ref": "#/$defs/dmm" },
+          "ringSet": { "$ref": "#/$defs/inkKey" },
+          "label":   { "type": "string", "maxLength": 8 },
+          "scoring": { "type": "boolean" },
+          "labelOffset": {
+            "type": "object",
+            "required": ["x","y"],
+            "properties": { "x": { "type": "integer" },
+                            "y": { "type": "integer" } },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "cells": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode":   { "enum": ["none","grid","voronoi","explicit"] },
+        "drawn":  { "type": "boolean" },
+        "sighterGap": { "$ref": "#/$defs/dmm" },
+        "ink":    { "$ref": "#/$defs/inkKey" },
+        "stroke": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "grid": {
+          "type": "object",
+          "required": ["originX","originY","pitchX","pitchY","cols","rows"],
+          "properties": {
+            "originX": { "$ref": "#/$defs/dmm" },
+            "originY": { "$ref": "#/$defs/dmm" },
+            "pitchX":  { "$ref": "#/$defs/dmm", "minimum": 1 },
+            "pitchY":  { "$ref": "#/$defs/dmm", "minimum": 1 },
+            "cols":    { "type": "integer", "minimum": 1, "maximum": 255 },
+            "rows":    { "type": "integer", "minimum": 1, "maximum": 255 }
+          },
+          "additionalProperties": false
+        },
+        "polygons": {
+          "type": "array",
+          "items": {
+            "type": "array", "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["x","y"],
+              "properties": { "x": { "$ref": "#/$defs/dmm" },
+                              "y": { "$ref": "#/$defs/dmm" } },
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "fiducials": {
+      "type": "object",
+      "required": ["scheme","family","markerSize","quietZone","ink"],
+      "properties": {
+        "scheme": { "type": "string",
+                    "pattern": "^(explicit|[a-z0-9-]+-[0-9]+)$" },
+        "family": { "enum": ["none",
+                             "aruco-4x4-50","aruco-4x4-100",
+                             "aruco-5x5-100","aruco-6x6-250",
+                             "apriltag-16h5","apriltag-25h9",
+                             "apriltag-36h11","apriltag-circle21h7"] },
+        "markerSize": { "$ref": "#/$defs/dmm", "minimum": 20 },
+        "quietZone":  { "type": "integer", "minimum": 0, "maximum": 255 },
+        "ink": { "$ref": "#/$defs/inkKey" },
+        "markers": {
+          "type": "array", "maxItems": 1024,
+          "items": {
+            "type": "object",
+            "required": ["id","x","y"],
+            "properties": {
+              "id": { "type": "integer", "minimum": 0, "maximum": 1023 },
+              "x":  { "$ref": "#/$defs/dmm" },
+              "y":  { "$ref": "#/$defs/dmm" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "codes": {
+      "type": "object",
+      "required": ["count","ecLevel","moduleSize","placement","positions"],
+      "properties": {
+        "count":      { "type": "integer", "minimum": 0, "maximum": 8 },
+        "version":    { "type": "integer", "minimum": 1, "maximum": 40 },
+        "ecLevel":    { "enum": ["L","M","Q","H"] },
+        "moduleSize": { "type": "integer", "minimum": 3, "maximum": 255 },
+        "quietZone":  { "type": "integer", "minimum": 0, "maximum": 255 },
+        "placement":  { "enum": ["corners-1","explicit"] },
+        "humanReadableId": { "type": "boolean" },
+        "positions": {
+          "type": "array", "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["x","y"],
+            "properties": { "x": { "$ref": "#/$defs/dmm" },
+                            "y": { "$ref": "#/$defs/dmm" } },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "print": {
+      "type": "object",
+      "properties": {
+        "scaling":    { "enum": ["none","fit"] },
+        "minimumDpi": { "type": "integer", "minimum": 72, "maximum": 4800 },
+        "colourMode": { "enum": ["mono","greyscale","colour"] },
+        "duplex":     { "type": "boolean" },
+        "generator":  { "type": "string", "maxLength": 64 },
+        "notes":      { "type": "string", "maxLength": 1000 }
+      },
+      "additionalProperties": false
+    },
+
+    "dataBlock": {
+      "type": "object",
+      "required": ["x","y","width","height","layout","fieldSet","reserve","ink"],
+      "properties": {
+        "x":         { "$ref": "#/$defs/dmm" },
+        "y":         { "$ref": "#/$defs/dmm" },
+        "width":     { "$ref": "#/$defs/dmm", "minimum": 200 },
+        "height":    { "$ref": "#/$defs/dmm", "minimum": 100 },
+        "layout":    { "enum": ["fields-3x3-1","fields-3x2-1","explicit"] },
+        "fieldSet":  { "enum": ["standard-9","standard-6","explicit"] },
+        "reserve":   { "$ref": "#/$defs/dmm" },
+        "ink":       { "$ref": "#/$defs/inkKey" },
+        "labelInk":  { "$ref": "#/$defs/inkKey" },
+        "border":    { "type": "integer", "minimum": 0, "maximum": 255 },
+        "fields": {
+          "type": "array", "maxItems": 32,
+          "items": {
+            "type": "object",
+            "required": ["key","label"],
+            "properties": {
+              "key":    { "$ref": "#/$defs/inkKey" },
+              "label":  { "type": "string", "maxLength": 32 },
+              "x":      { "$ref": "#/$defs/dmm" },
+              "y":      { "$ref": "#/$defs/dmm" },
+              "width":  { "$ref": "#/$defs/dmm" },
+              "height": { "$ref": "#/$defs/dmm" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "instance": {
+      "type": "object",
+      "properties": {
+        "serial":  { "type": "string", "pattern": "^[0-9A-HJKMNP-TV-Z]{4}$" },
+        "printed": { "type": "string", "format": "date" },
+        "values": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "maxLength": 64 }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "tiling": {
+      "type": "object",
+      "required": ["cols","rows","sheetWidth","sheetHeight","overlap"],
+      "properties": {
+        "cols":        { "type": "integer", "minimum": 1, "maximum": 16 },
+        "rows":        { "type": "integer", "minimum": 1, "maximum": 16 },
+        "sheetWidth":  { "$ref": "#/$defs/dmm", "minimum": 500 },
+        "sheetHeight": { "$ref": "#/$defs/dmm", "minimum": 500 },
+        "overlap":     { "$ref": "#/$defs/dmm" }
+      },
+      "additionalProperties": false
+    },
+
+    "grids": {
+      "type": "array", "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["key","centreX","centreY","half","divisions",
+                     "majorEvery","unit","distance","distanceUnit"],
+        "properties": {
+          "key":          { "$ref": "#/$defs/inkKey" },
+          "centreX":      { "$ref": "#/$defs/dmm" },
+          "centreY":      { "$ref": "#/$defs/dmm" },
+          "half":         { "$ref": "#/$defs/dmm", "minimum": 100 },
+          "divisions":    { "type": "integer", "minimum": 1, "maximum": 100 },
+          "majorEvery":   { "type": "integer", "minimum": 1, "maximum": 100 },
+          "unit":         { "enum": ["moa","mil","inch","cm","custom"] },
+          "distance":     { "type": "integer", "minimum": 1, "maximum": 5000 },
+          "distanceUnit": { "enum": ["yd","m"] },
+          "minorInk":     { "$ref": "#/$defs/inkKey" },
+          "majorInk":     { "$ref": "#/$defs/inkKey" },
+          "axisInk":      { "$ref": "#/$defs/inkKey" },
+          "minorStroke":  { "type": "integer", "minimum": 1, "maximum": 255 },
+          "majorStroke":  { "type": "integer", "minimum": 1, "maximum": 255 },
+          "axisStroke":   { "type": "integer", "minimum": 1, "maximum": 255 },
+          "labelStep":    { "type": "integer", "minimum": 0, "maximum": 100 },
+          "labelInk":     { "$ref": "#/$defs/inkKey" }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

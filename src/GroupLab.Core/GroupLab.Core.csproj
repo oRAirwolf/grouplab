@@ -1,3 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <EmbeddedResource Include="Gltd\Schema\gltd-1.schema.json" LogicalName="GroupLab.Core.Gltd.Schema.gltd-1.schema.json" />
+  </ItemGroup>
+
 </Project>
