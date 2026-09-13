@@ -75,4 +75,4 @@ Where the specification is silent and a choice has to be made to go on, record t
 - **No pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They must never appear in code, comments, documentation or interface text.
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.
-- **Git.** Work on a branch, not `master`.
+- **Git.** Work on a branch, not `main`. Branch names follow the phase, so `phase-0`, `phase-1` and so on.
