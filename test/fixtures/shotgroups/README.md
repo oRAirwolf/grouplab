@@ -12,7 +12,7 @@ statistics gate can run without an R installation. These are the numbers
 | R | 4.3.3 |
 | `coin` installed | **yes**, so `compareGroups` used the **exact permutation** branch |
 | `mvoutlier` installed | no; `groupShape` warns and its robust branch falls back |
-| Generated | 14 September 2026, by the planning session |
+| Generated | 14 September 2026, regenerated 15 September with the point of aim |
 | Author | Daniel Wollschlaeger |
 | Licence | GPL-2 or later |
 
@@ -27,15 +27,15 @@ repository per `DESIGN.md` section 4.
 
 | File | Rows | What |
 |---|---|---|
-| `shotGroups_DF300BLK.*` | 560 | 20 shots, 1 group, 100 yd, inches. The canonical single-group case |
-| `shotGroups_DFscar17.*` | 500 | 10 shots, 1 group. Small `n`, where the `c4` correction is largest |
-| `shotGroups_DFcciHV.*` | 1777 | 40 shots, 2 groups. The Ansari-Bradley and Wilcoxon branch |
-| `shotGroups_DF300BLKhl.*` | 2433 | 60 shots, 3 groups. The Fligner-Killeen and Kruskal-Wallis branch |
-| `shotGroups_DFcm.*` | 8490 | 487 shots, 9 series, 25 m, cm. Metric half of the unit-conversion test |
-| `shotGroups_DFinch.*` | 8490 | 487 shots, 9 series, 27.34 yd, inches. Imperial half. **Same data** |
-| `shotGroups_DFsavage.*` | 6203 | 180 shots, 9 series, three distances. The angular negative test |
-| `shotGroups_DFlandy04.*` | 4758 | 175 shots, 6 groups, unequal sizes |
-| `shotGroups_DFlandy01.*` | 31483 | 530 shots, 53 groups |
+| `shotGroups_DF300BLK.*` | 600 | 20 shots, 1 group, 100 yd, inches. The canonical single-group case |
+| `shotGroups_DFscar17.*` | 520 | 10 shots, 1 group. Small `n`, where the `c4` correction is largest |
+| `shotGroups_DFcciHV.*` | 1857 | 40 shots, 2 groups. The Ansari-Bradley and Wilcoxon branch |
+| `shotGroups_DF300BLKhl.*` | 2553 | 60 shots, 3 groups. The Fligner-Killeen and Kruskal-Wallis branch |
+| `shotGroups_DFcm.*` | 9464 | 487 shots, 9 series, 25 m, cm. Metric half of the unit-conversion test |
+| `shotGroups_DFinch.*` | 9464 | 487 shots, 9 series, 27.34 yd, inches. Imperial half. **Nearly the same data, see below** |
+| `shotGroups_DFsavage.*` | 6563 | 180 shots, 9 series, three distances. The angular negative test |
+| `shotGroups_DFlandy04.*` | 5108 | 175 shots, 6 groups, unequal sizes |
+| `shotGroups_DFlandy01.*` | 32543 | 530 shots, 53 groups |
 | `shotGroups_DFdistr.*` | 590 | shotGroups' Monte Carlo range-statistic table |
 
 Each dataset is emitted twice with identical content: `.json` is canonical and
@@ -59,9 +59,23 @@ records both labels against every shot, as `shots.seriesIndex` and
 
 ## What is in a fixture beyond the original dump
 
-- **`shots.x`, `shots.y`, `shots.distance`** for every shot. Without the input
-  coordinates a reimplementation has to obtain them from the very package it is
-  being validated against, which is not an independent test.
+- **`shots.x`, `shots.y`, `shots.xPOA`, `shots.yPOA`, `shots.distance`** for
+  every shot. Without the input coordinates a reimplementation has to obtain
+  them from the very package it is being validated against, which is not an
+  independent test.
+
+  **The point-of-aim pair was added on 15 September and it matters.**
+  `groupLocation`, `groupSpread` and `groupShape` take the data frame and use
+  each shot's aim; `getXYmat(..., relPOA = FALSE)` does not carry it. A fixture
+  built only from the matrix therefore cannot reproduce anything those three
+  computed, which cost a reimplementation 2,163 keys before this was found. It
+  shows as the frame-based centre disagreeing with the matrix-based one, in
+  every scope of `DFcm` and `DFinch` and in none of the other seven, because
+  only those two have a non-zero aim: **9 distinct aim points each**, up to
+  20.4 cm and 8.0 in from the origin. On `DFinch` the two centres sit 7.1 in
+  apart. Both coordinate forms are emitted rather than one, because
+  `xyTopLeft = TRUE` flips y and a reader deriving either from the other has a
+  sign convention to get wrong.
 - **Per-series results**, the whole battery, for every multi-group dataset.
   The pooled figures are kept but they describe a group that was never fired.
 - **`compareGroups`**, both branches, with the test names probed rather than
@@ -94,6 +108,13 @@ intervals past the table, but `range2sigma`, `range2CEP` and `getRangeStatEff`
 raise an error. On the pooled scope of `DFcm`, `DFinch`, `DFsavage`,
 `DFlandy04` and `DFlandy01` those three are recorded as `_error` keys. The
 per-series scopes are all well inside the table and complete.
+
+**`DFcm` and `DFinch` are not quite the same data**, which `STATISTICS.md`
+section 15.2 assumes they are. Every `DFcm` shot is a `DFinch` shot times 2.54
+to 1e-15, but one shot, number 242, sits in series 5 of one frame and series 4
+of the other, so those series hold different shots and different counts. The
+unit-conversion gate of section 15.5 point 2 can be met on the shots; it cannot
+be met on the series as shipped.
 
 **`DFlandy01` does not exercise what it was chosen for.** `STATISTICS.md`
 section 15.2 picked it for "range statistics with many groups", but

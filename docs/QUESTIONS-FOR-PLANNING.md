@@ -12,6 +12,35 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-15, question 14: shotGroups' Fligner-Killeen statistic on the two frames with a point of aim
+
+**Status: open.** Nothing waits on it. Four keys are pending with this question named, and every other key of the regenerated fixtures is compared.
+
+**Where it stands.** With `shots.xPOA` and `shots.yPOA`, question 11's 2,163 awaiting keys are compared, and all of them pass. The exceptions are `compareGroups.FlignerX.statistic` and `compareGroups.FlignerY.statistic` on `DFinch` and `DFcm`, the two frames with a point of aim. On every frame whose aim is the origin, `GroupComparison.FlignerKilleen` matches shotGroups to 1e-13, `DF300BLKhl` at 0.09095279082138376 against 0.09095279082139468.
+
+**What was tried**, on the aimed coordinates unless stated, with series as the groups, in a probe not committed:
+
+| Variant | `DFinch` X | `DFinch` Y | `DFcm` X | `DFcm` Y |
+|---|---|---|---|---|
+| **shotGroups** | **10.075167218103388** | **2.804615516292583** | **10.864287796660232** | **2.808136916489293** |
+| GroupLab: median by double (a + b) / 2, mid-ranks | 10.073187875409229 | 2.8032500664687734 | 10.860814627148528 | 2.8084659551083533 |
+| Average scores for ties instead of mid-ranks | 10.073188286646975 | 2.803252133360352 | 10.860810402714064 | 2.808471773103334 |
+| Median averaged in extended precision | 10.07066704956823 | 2.8051598279443146 | 10.865351991682529 | 2.811102334457731 |
+| Raw coordinates, `shots.x` and `shots.y` | 10.072777268231373 | 2.801201252282855 | 10.945938713945823 | 2.839215001709699 |
+| y negated, for `xyTopLeft` | | 2.8032500664687734 | | 2.8084659551083533 |
+
+- **Nothing reaches 1e-5.** The differences, 1.2e-4 to 4.9e-4 relative, are the size a handful of ties produce, and these frames have them: series of 46 to 92 shots with up to 9 exactly tied absolute deviations.
+- **The other compareGroups keys pass on the aimed coordinates,** the MANOVA intercept row included. That row is not shift-invariant, so compareGroups does read the aimed frame.
+- **So the input vector is the unknown.**
+
+**The ask: one R run.** In `sg_dump.R`, emit the vector compareGroups hands to its Fligner-Killeen test for each axis, as `compareGroups.FlignerX.input.<i>` and `compareGroups.FlignerY.input.<i>`, beside the statistic. That will say whether the values are centred or rounded differently, or tied differently.
+
+**What I would do with the answer.**
+- **If the input differs:** match it, and the four keys are compared like the rest.
+- **If the input is the same and the statistic still differs:** it is R's tie handling at the last bit, and it goes to `STATISTICS.md` section 15.4 as a thirteenth known difference.
+
+---
+
 ## 2026-09-15, question 12: the fewest shots a group size is quoted for, and entry 24's coverage premise
 
 **Status: open.** Nothing waits on it. The marking panel withholds every dispersion figure below 5 shots in the interim, which is one constant, `GroupAnalysis.MinimumShotsForDispersion` in `src/GroupLab.Core/Marking/GroupAnalysis.cs`.
@@ -55,7 +84,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-14, question 11: three differences the M3 harness found between shotGroups and its own fixtures
 
-**Status: open.** Nothing waits on it. The M3 build continues, and every affected key is reported as awaiting or disputed, never as passed.
+**Status: answered 2026-09-15**, by `docs/NOTES-FROM-PLANNING.md` entry 23 section 1: A, A and A.
 
 **Where it stands.** `tests/GroupLab.Core.Tests/Statistics/ShotGroupsFixtureTests.cs` accounts for every key of the nine fixtures:
 

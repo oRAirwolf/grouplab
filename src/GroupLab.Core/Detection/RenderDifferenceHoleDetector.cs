@@ -106,6 +106,12 @@ public static class RenderDifferenceHoleDetector
         int width = observed.Width, height = observed.Height;
         var expected = ExpectedImage.Render(pageRender, dpi, registration, width, height);
 
+        // Detection runs inside the registered sheet, NOTES-FROM-PLANNING.md entry 23 section 4 and docs/DETECTION-PIPELINE.md before S5.
+        // Beyond the page's edge the observed image is replaced by the sheet's own paper level before any stage reads it, so a dark mat
+        // around a photographed sheet can neither lower the local paper estimate nor become a residual, whatever image the caller passed.
+        var inside = SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height);
+        observed = WithinSheet(observed, expected, inside);
+
         // S5: local paper, from pixels the render calls paper, and the ink level against it.
         int block = Math.Max(4, (int)Math.Round(options.PaperBlockInches * dpi));
         var paper = PaperField(observed, expected, block);
@@ -131,6 +137,15 @@ public static class RenderDifferenceHoleDetector
                 residual[i] = (byte)Math.Clamp(Math.Round(255 * Math.Abs(e - n) / range), 0, 255);
             }
         });
+
+        // And nothing beyond the page's edge can become a candidate: on the N568 photograph the mat merged into one blob that swallowed every hole.
+        for (int i = 0; i < residual.Length; i++)
+        {
+            if (!inside[i])
+            {
+                residual[i] = 0;
+            }
+        }
 
         // S7: open, threshold, close, fill, hull.
         int open = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));
@@ -312,6 +327,103 @@ public static class RenderDifferenceHoleDetector
         var sorted = values.Order().ToArray();
         int n = sorted.Length;
         return n % 2 == 1 ? sorted[n / 2] : (sorted[(n / 2) - 1] + sorted[n / 2]) / 2;
+    }
+
+    /// <summary>
+    /// The image pixels inside the page, NOTES-FROM-PLANNING.md entry 23 section 4: the page's edge in dmm, 64 points a side, mapped into
+    /// the image through the registration, and filled row by row by the even-odd rule at pixel centres. The points along each side
+    /// follow a photograph's curved mapping as well as a scan's straight one.
+    /// </summary>
+    internal static bool[] SheetMask(int pageWidth, int pageHeight, IPageMapping registration, int width, int height)
+    {
+        const int PerSide = 64;
+        var edge = new List<PointD>(4 * PerSide);
+        for (int side = 0; side < 4; side++)
+        {
+            for (int k = 0; k < PerSide; k++)
+            {
+                double t = (double)k / PerSide;
+                var page = side switch
+                {
+                    0 => new PointD(t * pageWidth, 0),
+                    1 => new PointD(pageWidth, t * pageHeight),
+                    2 => new PointD((1 - t) * pageWidth, pageHeight),
+                    _ => new PointD(0, (1 - t) * pageHeight),
+                };
+                edge.Add(registration.ToImage(page));
+            }
+        }
+
+        var inside = new bool[width * height];
+        Parallel.For(0, height, y =>
+        {
+            var crossings = new List<double>();
+            for (int k = 0; k < edge.Count; k++)
+            {
+                PointD a = edge[k], b = edge[(k + 1) % edge.Count];
+                if ((a.Y <= y) != (b.Y <= y))
+                {
+                    crossings.Add(a.X + ((y - a.Y) * (b.X - a.X) / (b.Y - a.Y)));
+                }
+            }
+
+            crossings.Sort();
+            for (int c = 0; c + 1 < crossings.Count; c += 2)
+            {
+                int x0 = Math.Max(0, (int)Math.Ceiling(crossings[c])), x1 = Math.Min(width - 1, (int)Math.Floor(crossings[c + 1]));
+                for (int x = x0; x <= x1; x++)
+                {
+                    inside[(y * width) + x] = true;
+                }
+            }
+        });
+
+        return inside;
+    }
+
+    /// <summary>
+    /// The observed image with every pixel beyond the sheet set to the sheet's paper level: the 90th percentile of the pixels inside the
+    /// sheet that the render calls paper. The caller's image is not changed.
+    /// </summary>
+    private static GrayImage WithinSheet(GrayImage observed, GrayImage expected, bool[] inside)
+    {
+        if (Array.TrueForAll(inside, i => i))
+        {
+            return observed;
+        }
+
+        var histogram = new long[256];
+        long count = 0;
+        for (int i = 0; i < inside.Length; i++)
+        {
+            if (inside[i] && expected.Pixels[i] >= 250)
+            {
+                histogram[observed.Pixels[i]]++;
+                count++;
+            }
+        }
+
+        byte paper = 255;
+        for (int level = 0, seen = 0; level < 256 && count > 0; level++)
+        {
+            seen += (int)histogram[level];
+            if (seen >= 0.9 * count)
+            {
+                paper = (byte)level;
+                break;
+            }
+        }
+
+        var pixels = (byte[])observed.Pixels.Clone();
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            if (!inside[i])
+            {
+                pixels[i] = paper;
+            }
+        }
+
+        return new GrayImage(observed.Width, observed.Height, pixels);
     }
 
     /// <summary>The 95th percentile of the observed pixels the render calls paper, per block, with empty blocks filled from their neighbours and every block averaged with its eight.</summary>

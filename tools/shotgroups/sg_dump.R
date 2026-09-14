@@ -12,9 +12,11 @@
 ##   records both labels against every shot so a reader can see the difference.
 ##
 ## Sections, and which part of STATISTICS.md section 15 each one serves:
-##   shots          the input coordinates, so a fixture is self-contained and a
-##                  reimplementation is not asked to reconstruct them from the
-##                  package it is being validated against
+##   shots          the input coordinates AND each shot's point of aim, so a
+##                  fixture is self-contained and a reimplementation is not
+##                  asked to reconstruct them from the package it is being
+##                  validated against.  The aim is what the first version
+##                  missed; see the comment on that block
 ##   whole dataset  the original dump, unchanged
 ##   per series     15.5 point 1 across all eight fixtures, where a multi-group
 ##                  dataset previously produced one pooled figure
@@ -92,9 +94,24 @@ attempt <- function(label, expr) {
 ## package it is being checked against, which is not an independent test.
 grp <- if ("group"  %in% names(DF)) as.character(DF$group)  else rep("1", nrow(DF))
 ser <- if ("series" %in% names(DF)) as.character(DF$series) else grp
+## The point of aim, which the first version of this script omitted and which
+## cost a reimplementation 2,163 keys it could not reproduce.  groupLocation,
+## groupSpread and groupShape take the data frame and use each shot's aim;
+## getXYmat with relPOA = FALSE does not carry it, so a fixture built only from
+## the matrix cannot reproduce anything those three computed.  It shows up as
+## the frame-based centre disagreeing with the matrix-based one, in every scope
+## of DFcm and DFinch and in none of the other seven datasets, because only
+## those two have a non-zero aim: 20.4 cm and 8.0 in at the extreme.
+##
+## Both forms are emitted rather than one.  xyTopLeft = TRUE flips y, so a
+## reader deriving one from the other has a sign convention to get right, and
+## that is exactly the kind of thing that costs a day.
+xyPOA <- getXYmat(DF, xyTopLeft = TRUE, relPOA = TRUE, center = FALSE)
 for (i in seq_len(nrow(xy))) {
-  add("shots", "x",        xy[i, 1], col = as.character(i))
-  add("shots", "y",        xy[i, 2], col = as.character(i))
+  add("shots", "x",        xy[i, 1],    col = as.character(i))
+  add("shots", "y",        xy[i, 2],    col = as.character(i))
+  add("shots", "xPOA",     xyPOA[i, 1], col = as.character(i))
+  add("shots", "yPOA",     xyPOA[i, 2], col = as.character(i))
   add("shots", "distance", DF$distance[i], col = as.character(i))
 }
 ## Labels are not numeric, so they travel as a factor index plus a level table.

@@ -635,6 +635,21 @@ Calibration, fitted the same way:
    - **How the sheet is held second.** Three frames carry a structured part that a quarter to half inch of twist would produce.
 5. **Entry 17's clue is not settled by this.** Double the residual producing twenty times the bull error was expected to mean correlated error. One reading consistent with both is error coherent within a marker, all four corners moving together. That does not average out over 136 corners, since only about 34 markers are independent, and it reads as random between neighbours. It is not measured here.
 
+#### Amended 2026-09-15: a gently deformed sheet, measured (entry 23 section 3)
+
+M1.11 was right about what it measured: nine photographs of a sheet hanging from one pin, free to twist. The N568 photograph against its own scan, in "Entries 19 and 20" below, is the first measurement of a sheet lying on a mat with a gentle sag, and there the surface models do most of the work. Residual RMS over its 25 bulls:
+
+| Model | Residual RMS |
+|---|---|
+| Homography | 0.0206 in |
+| Lens | 0.0181 in |
+| Cylinder | 0.0078 in |
+| General developable surface | 0.0063 in |
+
+- **The statement is narrower than entry 17 left it.** No developable surface fits a sheet twisting on a pin, which is what the nine frames showed and what the synthetic sweep broke at a quarter inch of twist. On a gently deformed sheet the model takes most of the error away.
+- **It does not pass the gate even there:** 0.0063 in against 0.005 in, on 25 bull constraints, far coarser than 136 marker corners.
+- **The mounted requirement stays open.** That sheet lay on a mat, and no photograph in the collection is both a whole sheet and mounted. The mounted case deserves the measurement rather than being written off, and the next session's frames are the ones it needs.
+
 ## M2. Hole detection
 
 ### M2.1 The baseline: the neutral-darkness detector, ported and revalidated
@@ -996,6 +1011,35 @@ Assignment of render-and-difference's detections, held-out:
    - **The pattern:** the shortfall closes with n, and most misses lie below the truth. That is the bootstrap's known narrowness on a biased, skewed statistic at small n, not a failure of the BCa arithmetic, which fell back to percentile on none of the 3000 datasets.
    - **Why it matters:** section 6 flags only groups under 10 shots as unreliable, and at 25 shots the interval is still about a third too often wrong. Section 15.5 gates no bootstrap figure, so this is reported, not gated.
    - **For planning:** it bears on what the interface should say beside a bootstrap interval.
+   - **Amended 2026-09-15, entry 23 section 2: this table is the bootstrap's entry in the gate record.** It is measured the way section 15.5 point 4 measures the closed-form interval, and recorded rather than gated because no section sets a bound for it. The closed-form intervals the marking panel shows cover 92.5 to 94.9 percent from 2 to 20 shots and are labelled with it, M4.2. No screen shows a bootstrap interval, and `Bootstrap` says it must never carry a bare 95.
+
+**Amended 2026-09-15: question 11 answered, and the harness on the regenerated fixtures** (`docs/NOTES-FROM-PLANNING.md` entry 23 section 1).
+
+- **The point of aim is read.** The harness computes `groupLocation`, `groupSpread`, `groupShape` and `compareGroups` from `shots.xPOA` and `shots.yPOA`, the frame shotGroups gave them, and everything else from `shots.x` and `shots.y`. The awaiting class is gone.
+- **The CorrNormal CEP, answer A.**
+  - **shotGroups' CEP** is compared at 1e-4 relative, and every key is inside it, as question 11's measured misses of up to 2.3e-5 said it would be.
+  - **The distribution** stays gated through the hit probabilities at 1e-8.
+  - **GroupLab's own CEP** is checked as a root of that distribution in every scope and both coordinate forms: 600 checks, worst 8.8e-14.
+- **The SMOA inverse, answer A.** It is compared with shotGroups' constant, 1 + 6.21288e-10, encoded, at 1e-12.
+- **Recorded in `docs/STATISTICS.md`:** section 15.4 items 10 to 12 (the MANOVA intercept row, the SMOA inverse, the CorrNormal root finder), and section 15.2's `DFcm` and `DFinch` row.
+- **The count.**
+  - **Compared:** 41,058 keys, 0 outside tolerance, where M3.1 compared 38,899 with 2,163 awaiting and 998 disputed.
+  - **Disputed:** none.
+  - **Pending:** 4. These are the Fligner-Killeen statistics on `DFinch` and `DFcm`, which no centring or tie rule tried here reproduces on a frame with a point of aim. They are question 14.
+
+| Dataset | Compared | Excluded | Pending |
+|---|---|---|---|
+| `DF300BLK` | 318 | 282 | 0 |
+| `DFscar17` | 308 | 212 | 0 |
+| `DFcciHV` | 1,163 | 694 | 0 |
+| `DF300BLKhl` | 1,580 | 973 | 0 |
+| `DFcm` | 4,678 | 4,778 | 2 |
+| `DFinch` | 4,678 | 4,778 | 2 |
+| `DFsavage` | 3,943 | 2,614 | 0 |
+| `DFlandy04` | 2,916 | 2,186 | 0 |
+| `DFlandy01` | 21,474 | 11,063 | 0 |
+
+- **Point 2 of section 15.5 is met on the shots:** `UnitSystemTests`. The series cannot meet it, because shot 242 is grouped differently in the two frames.
 
 ---
 
@@ -1057,6 +1101,12 @@ Assignment of render-and-difference's detections, held-out:
    - **The two misses:** bull 4's round hole and the keyhole beside it, which in the photograph join into one blob and are refused as elongated or too large. That is the keyhole entry 20 section 4 predicted nothing would size correctly.
    - **The six strays:** three lie on the barcode at the foot of the sheet and three on the handwritten label, the survey's own false-positive population. The position prior of M2.2 would refuse all six.
 6. **The centres differ from the scan's by 0.023 in at the median, four times the model's 0.006 in residual.** A scanned hole's core is the scanner lid and a photographed one's is the mat, and a ragged rim reads differently against each. That is the survey's point that the bright core is the lid, measured for the first time on the same holes.
+
+**Amended 2026-09-15: detection now runs inside the registered sheet** (`docs/NOTES-FROM-PLANNING.md` entry 23 section 4).
+- **What changed.** `RenderDifferenceHoleDetector`, the detector the automatic marking path calls, masks itself to the sheet. Before any stage reads the image, every pixel beyond the page's edge, mapped through the registration, is replaced by the sheet's own paper level. The residual is zeroed there too, so nothing outside can become a candidate, whatever frame a caller passes.
+- **The first attempt failed its own test.** Masking only the residual was not enough: a synthetic sheet framed by 120 px of V 25 on every side gave 0 of 28 holes and one "too large" blob, because the dark border had already lowered the local paper estimate inside the sheet. With the border replaced by paper before S5, the same test finds 28 of 28 with no strays.
+- **What `grouplab mounted pair` still shows, and why.** Its "whole photograph" row is unchanged at 0 of 28. That row runs the M2.1 neutral-darkness baseline, which takes no registration and so cannot know where the sheet is; it is kept as the control that showed the problem. The sheet-cropped row, 26 of 28, is what the pipeline now does for itself.
+- **Not measured here:** render-and-difference on the N568 photograph itself, which needs that sheet's definition rather than the scan's grid.
 
 ---
 

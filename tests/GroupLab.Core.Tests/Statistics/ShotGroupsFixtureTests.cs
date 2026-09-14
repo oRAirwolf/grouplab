@@ -123,6 +123,14 @@ internal static class ShotGroupsComparison
     /// </summary>
     private static readonly ToleranceClass RankTestClass = new("rank test statistics, 1e-10 relative", 1e-10, 1e-15);
 
+    /// <summary>docs/STATISTICS.md section 15.4 item 12: shotGroups' CorrNormal CEP against its own root finder, which misses by up to 2.3e-5 relative.</summary>
+    private static readonly ToleranceClass CorrNormalCepClass = new("CorrNormal CEP against shotGroups' root finder, 1e-4 relative", 1e-4, 1e-15);
+
+    /// <summary>docs/STATISTICS.md section 15.4 item 11: shotGroups' SMOA inverse, with its constant encoded, at the angular tolerance.</summary>
+    private static readonly ToleranceClass SmoaInverseClass = new("SMOA inverse with shotGroups' constant, 1e-12 relative", 1e-12, 1e-15);
+
+    private const double SmoaInverseExcess = 6.21288e-10;
+
     private static readonly string[] LinearUnits = ["unit", "MOA", "SMOA", "mrad"];
 
     private static readonly (RangeStatistic Stat, string Name)[] RangeColumns =
@@ -144,17 +152,24 @@ internal static class ShotGroupsComparison
         string stochastic = root.GetProperty("stochastic").GetString()!;
 
         int n = root.GetProperty("nShots").GetInt32();
+        // Each shot twice: as getXYmat gives it, and relative to its point of aim, as shotGroups' data frame gives it to groupLocation,
+        // groupSpread, groupShape and compareGroups (test/fixtures/shotgroups/README.md, NOTES-FROM-PLANNING.md entry 23 section 1).
         var shots = new List<(PointD Point, double Distance, int Series)>();
+        var aimed = new List<(PointD Point, double Distance, int Series)>();
         for (int i = 1; i <= n; i++)
         {
             string at = i.ToString(CultureInfo.InvariantCulture);
-            shots.Add((new PointD(values["shots.x." + at]!.Value, values["shots.y." + at]!.Value), values["shots.distance." + at]!.Value, (int)values["shots.seriesIndex." + at]!.Value));
+            double distance = values["shots.distance." + at]!.Value;
+            int series = (int)values["shots.seriesIndex." + at]!.Value;
+            shots.Add((new PointD(values["shots.x." + at]!.Value, values["shots.y." + at]!.Value), distance, series));
+            aimed.Add((new PointD(values["shots.xPOA." + at]!.Value, values["shots.yPOA." + at]!.Value), distance, series));
         }
 
+        bool aimedFrame = shots.Zip(aimed).Any(p => p.First.Point != p.Second.Point);
         var expected = new Dictionary<string, (double Value, ToleranceClass Class)>();
         if (labels.Count > 1)
         {
-            CompareGroups(expected, labels, shots, unitFactor);
+            CompareGroups(expected, labels, aimed, unitFactor);
         }
 
         if (labels.Count > 1)
@@ -204,6 +219,25 @@ internal static class ShotGroupsComparison
             Compute(expected, prefix, [.. scoped.Select(s => s.Point)], distances.Count == 1 ? distances[0] : null, distances.Count, unitFactor);
         }
 
+        // The functions that take the frame are recomputed from the aimed shots, scope by scope, and replace the matrix's figures.
+        string[] framePrefixes = ["groupLocation.", "groupSpread.", "groupShape."];
+        var aimedScopes = new List<List<(PointD Point, double Distance, int Series)>> { aimed };
+        if (labels.Count > 1)
+        {
+            aimedScopes.AddRange(labels.Select((_, k) => aimed.Where(s => s.Series == k + 1).ToList()));
+        }
+
+        for (int s = 0; s < scopes.Count; s++)
+        {
+            var framed = new Dictionary<string, (double Value, ToleranceClass Class)>();
+            var distances = aimedScopes[s].Select(x => x.Distance).Distinct().ToList();
+            Compute(framed, scopes[s].Prefix, [.. aimedScopes[s].Select(x => x.Point)], distances.Count == 1 ? distances[0] : null, distances.Count, unitFactor);
+            foreach (var (key, value) in framed.Where(f => framePrefixes.Any(p => f.Key.StartsWith(scopes[s].Prefix + p, StringComparison.Ordinal))))
+            {
+                expected[key] = value;
+            }
+        }
+
         // The order a box's corners are listed in is a convention, not a measurement: each scope's corners are matched to
         // shotGroups' in whichever of the eight orders around the box fits best, and then compared at the geometry tolerance.
         foreach (var (prefix, _) in scopes)
@@ -244,36 +278,51 @@ internal static class ShotGroupsComparison
             }
         }
 
-        // Keys computed from shotGroups' data frame rather than its coordinate matrix: groupLocation, groupSpread and groupShape
-        // take the frame, which carries each shot's point of aim, and the fixture carries the shots but not the aim. Where the
-        // fixture's own frame-based centre differs from its matrix-based one, the frame was read relative to the point of aim,
-        // and those keys cannot be recomputed from the fixture; where its covariances differ as well, neither can the spread.
-        var awaiting = new List<(string Prefix, string Reason)>();
-        const string AimReason = "awaiting planning, question 11: the frame is relative to a point of aim the fixture does not record";
-        foreach (var (prefix, _) in scopes)
+        // Question 11, answered A, A and A in NOTES-FROM-PLANNING.md entry 23 section 1 and recorded in docs/STATISTICS.md section 15.4
+        // items 11 and 12. shotGroups' CorrNormal CEP is compared at 1e-4 relative, because its root finder misses its own distribution;
+        // the distribution is gated through the hit probabilities at 1e-8, and this engine's CEP is required to be a root of it below.
+        // shotGroups' fromMOA in SMOA is its getMOA inverse times 1 + 6.21288e-10, and is compared with that constant encoded.
+        foreach (string key in expected.Keys.ToList())
         {
-            bool Differs(string frameKey, string matrixKey) =>
-                values.TryGetValue(prefix + frameKey, out var f) && values.TryGetValue(prefix + matrixKey, out var m) && f is not null && m is not null
-                && Math.Abs(f.Value - m.Value) > 1e-9 * Math.Max(1, Math.Abs(m.Value));
-            if (Differs("groupLocation.ctr.x", "getConfEll.ctr.x") || Differs("groupLocation.ctr.y", "getConfEll.ctr.y"))
+            if (System.Text.RegularExpressions.Regex.IsMatch(key, @"^(?:.*getCEP\.accuracy_FALSE\.CEP\.CEP[0-9.]+\.unit\.CorrNormal|.*groupSpread\.CEP\.CEP0\.5\.(?:unit|MOA|SMOA|mrad)\.CorrNormal|compareGroups\.CEP\.(?:unit|MOA|SMOA|mrad)\..+)$"))
             {
-                awaiting.Add((prefix + "groupLocation.", AimReason));
-
-                // compareGroups takes the frame too, so one shifted scope puts every group comparison in doubt.
-                if (!awaiting.Any(w => w.Prefix == "compareGroups."))
-                {
-                    awaiting.Add(("compareGroups.", AimReason));
-                }
+                expected[key] = (expected[key].Value, CorrNormalCepClass);
             }
-
-            if (Differs("groupSpread.covXY.x.x", "getConfEll.cov.x.x") || Differs("groupSpread.covXY.x.y", "getConfEll.cov.x.y") || Differs("groupSpread.covXY.y.y", "getConfEll.cov.y.y"))
+            else if (key.EndsWith("fromMOA.SMOA", StringComparison.Ordinal))
             {
-                awaiting.Add((prefix + "groupSpread.", AimReason));
-                awaiting.Add((prefix + "groupShape.", AimReason));
+                expected[key] = (expected[key].Value * (1 + SmoaInverseExcess), SmoaInverseClass);
             }
         }
 
         var report = new ComparisonReport(dataset);
+
+        // This engine's CorrNormal CEP must be a root of its own distribution to 1e-12, in every scope and in both coordinate forms.
+        const string RootClass = "CorrNormal CEP is a root of its distribution, 1e-12 absolute";
+        int roots = 0;
+        double worstRoot = 0;
+        foreach (var scoped in scopes.Select(sc => sc.Shots).Concat(aimedScopes))
+        {
+            var points = scoped.Select(x => x.Point).ToList();
+            if (points.Count < 3)
+            {
+                continue;
+            }
+
+            var (xx, xy, yy) = GroupStatistics.Covariance(points);
+            var shape = GroupStatistics.Shape(xx, xy, yy);
+            foreach (double q in new[] { 0.5, 0.9, 0.95 })
+            {
+                double miss = Math.Abs(GroupStatistics.HoytCdf(GroupStatistics.CepCorrNormal(xx, xy, yy, q), shape.Major, shape.Minor) - q);
+                roots++;
+                worstRoot = Math.Max(worstRoot, miss);
+                if (!(miss <= 1e-12))
+                {
+                    report.Failures.Add(string.Create(CultureInfo.InvariantCulture, $"CorrNormal CEP at {q} misses its own distribution by {miss:0.0e+00}"));
+                }
+            }
+        }
+
+        report.Classes[RootClass] = (roots, worstRoot, "");
         foreach (var (key, fixtureValue) in values)
         {
             string local = StripScope(key, labels);
@@ -292,7 +341,16 @@ internal static class ShotGroupsComparison
                 continue;
             }
 
-            string? pending = Pending(local) ?? awaiting.FirstOrDefault(w => key.StartsWith(w.Prefix, StringComparison.Ordinal)).Reason;
+            // On the two frames with a point of aim, no centring or tie rule tried reproduces shotGroups' Fligner-Killeen statistic,
+            // which this engine matches to 1e-13 wherever the aim is the origin; question 14 asks planning to settle it in R.
+            if (aimedFrame && System.Text.RegularExpressions.Regex.IsMatch(key, @"^compareGroups\.Fligner[XY]\.statistic$"))
+            {
+                const string FlignerReason = "awaiting planning, question 14: shotGroups' Fligner-Killeen statistic on a frame with a point of aim is not reproduced";
+                report.Pending[FlignerReason] = report.Pending.GetValueOrDefault(FlignerReason) + 1;
+                continue;
+            }
+
+            string? pending = Pending(local);
             if (pending is not null)
             {
                 report.Pending[pending] = report.Pending.GetValueOrDefault(pending) + 1;
@@ -320,13 +378,6 @@ internal static class ShotGroupsComparison
             var c = mine.Class;
             var entry = report.Classes.TryGetValue(c.Name, out var found) ? found : (Compared: 0, WorstRelative: 0.0, WorstKey: "");
             report.Classes[c.Name] = (entry.Compared + 1, relative > entry.WorstRelative || double.IsNaN(relative) ? relative : entry.WorstRelative, relative > entry.WorstRelative || double.IsNaN(relative) ? key : entry.WorstKey);
-            string? disputed = difference <= Math.Max(c.Relative * Math.Abs(reference), c.Absolute) ? null : Disputed(key, reference, mine.Value, values, expected);
-            if (disputed is not null)
-            {
-                report.Disputed[disputed] = report.Disputed.GetValueOrDefault(disputed) + 1;
-                continue;
-            }
-
             if (!(difference <= Math.Max(c.Relative * Math.Abs(reference), c.Absolute)))
             {
                 report.Failures.Add(string.Create(CultureInfo.InvariantCulture, $"{key}: shotGroups {reference:R}, GroupLab {mine.Value:R}, relative {relative:0.0e+00} ({c.Name})"));
@@ -340,54 +391,6 @@ internal static class ShotGroupsComparison
         }
 
         return report;
-    }
-
-    /// <summary>
-    /// A difference that is shotGroups', shown by evidence computed here rather than asserted, and raised as question 11.
-    /// <list type="bullet">
-    /// <item><b>CorrNormal CEP.</b> shotGroups' CorrNormal hit probabilities match this Hoyt CDF to 1e-15, but its CorrNormal
-    /// CEPs miss their own probability under that CDF by about 1e-6, where this engine's CEP meets it to 1e-12: shotGroups'
-    /// quantile is looser than its distribution. A key is disputed only when that is true of it and the two agree to 1e-3.</item>
-    /// <item><b>fromMOA SMOA.</b> shotGroups' size of one SMOA is 1 + 6.21288e-10 times the exact inverse of its own getMOA, in
-    /// every dataset. A key is disputed only when the ratio is that constant to 1e-12.</item>
-    /// </list>
-    /// </summary>
-    private static string? Disputed(string key, double theirs, double mine, Dictionary<string, double?> values, Dictionary<string, (double Value, ToleranceClass Class)> expected)
-    {
-        if (key.EndsWith("fromMOA.SMOA", StringComparison.Ordinal))
-        {
-            return Math.Abs((theirs / mine) - (1 + 6.21288e-10)) < 1e-12 ? "disputed, question 11: shotGroups' fromMOA SMOA is 1 + 6.21288e-10 times its getMOA inverse" : null;
-        }
-
-        var grouped = System.Text.RegularExpressions.Regex.Match(key, @"^compareGroups\.CEP\.(?:unit|MOA|SMOA|mrad)\.(?<label>.+)$");
-        if (grouped.Success)
-        {
-            string label = grouped.Groups["label"].Value;
-            return Disputed($"series.{label}.getCEP.accuracy_FALSE.CEP.CEP0.5.unit.CorrNormal", values.GetValueOrDefault($"compareGroups.CEP.unit.{label}") ?? double.NaN,
-                expected.TryGetValue($"compareGroups.CEP.unit.{label}", out var unitMine) ? unitMine.Value : double.NaN, new Dictionary<string, double?> { [$"series.{label}.getCEP.accuracy_FALSE.CEP.CEP0.5.unit.CorrNormal"] = values.GetValueOrDefault($"compareGroups.CEP.unit.{label}") }, expected)
-                is { } reason && Math.Abs(theirs - mine) <= 1e-3 * Math.Abs(theirs) ? reason : null;
-        }
-
-        var match = System.Text.RegularExpressions.Regex.Match(key, @"^(?<scope>.*?)(?:getCEP\.accuracy_FALSE\.CEP\.CEP(?<q>[0-9.]+)\.unit|groupSpread\.CEP\.CEP(?<q>0\.5)\.(?:unit|MOA|SMOA|mrad))\.CorrNormal$");
-        if (!match.Success || Math.Abs(theirs - mine) > 1e-3 * Math.Abs(theirs))
-        {
-            return null;
-        }
-
-        string scope = match.Groups["scope"].Value;
-        double q = double.Parse(match.Groups["q"].Value, CultureInfo.InvariantCulture);
-        string unitKey = key.Contains("groupSpread.", StringComparison.Ordinal) ? scope + "groupSpread.CEP.CEP0.5.unit.CorrNormal" : key;
-        if (values.GetValueOrDefault(unitKey) is not { } theirsUnit)
-        {
-            return null;
-        }
-
-        double mineUnitValue = expected.TryGetValue(unitKey, out var mineUnit) ? mineUnit.Value : mine;
-
-        var shape = GroupStatistics.Shape(expected[scope + "getConfEll.cov.x.x"].Value, expected[scope + "getConfEll.cov.x.y"].Value, expected[scope + "getConfEll.cov.y.y"].Value);
-        double theirsMiss = Math.Abs(GroupStatistics.HoytCdf(theirsUnit, shape.Major, shape.Minor) - q);
-        double mineMiss = Math.Abs(GroupStatistics.HoytCdf(mineUnitValue, shape.Major, shape.Minor) - q);
-        return mineMiss < 1e-12 && theirsMiss > 1e-9 ? "disputed, question 11: shotGroups' CorrNormal CEP is not a root of its own distribution, this engine's is" : null;
     }
 
     /// <summary>

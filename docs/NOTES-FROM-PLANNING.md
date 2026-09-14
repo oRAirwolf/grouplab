@@ -8,6 +8,55 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-14, entry 27: the first donated submission, and a correction to how frames must be grouped for a joint lens fit
+
+**Status: open.** Amends entry 16. Section 2 is the one with code consequences; sections 1 and 3 are intake findings that belong on the record before the donated set grows.
+
+The public upload page at `pissinhot.com/targets` took its first submission from somebody outside this project on 2026-09-14. Three photographs, all Samsung, all camera originals. The pull script verified all three SHA-256 hashes against the `meta.json` written at upload, and every one matched, so the no-re-encoding requirement in the page specification is holding in practice and not merely on paper. That part worked.
+
+### 1. None of the three photographs is usable, and that is the finding
+
+One is a playing card held in a hand. One is a blank cardboard silhouette on stakes at distance, backlit against trees. One is a stack of silhouettes lying on grass, perforated by several hundred pellets.
+
+No reference grid, no known scale in frame, no flat sheet, and in one case no mounting at all. The submitter answered none of the six optional questions: backing, attachment, distance, calibre, notes and credit were all empty strings.
+
+**Do not treat this as a bad contributor.** Treat it as the measurement of what an open request produces. The uploaded set will contain a large fraction of material like this, and the consequence for the code is specific: **the intake path must assume most submissions are unusable and must say why, per file, before anything reaches the repository.** Entry 22 asked for intake to be a gate rather than a habit. This is the evidence for that, arriving on day one.
+
+The cheapest useful triage is the registration and scale check the application already performs. A frame with no decodable markers and no detectable rectangular sheet boundary is not a candidate, and the tool can say so without a human looking at it. A human then looks only at what survives.
+
+### 2. `FocalLengthIn35mmFilm` is not a sufficient grouping key, because digital zoom does not always update it
+
+This is a correction to entry 16, and it matters for any joint fit across frames.
+
+Entry 16 concluded that Alan's table frames were a cropped ultrawide, that both the physical focal length and the 35 mm equivalent tags were correct, and that frames must be grouped for a joint lens fit by physical focal length, f-number, 35 mm equivalent and image size. The first three of those held on the hardware in front of us. This submission breaks the assumption underneath them.
+
+| File | Device | Physical focal | f-number | 35 mm equivalent | `DigitalZoomRatio` | Stored size |
+|---|---|---|---|---|---|---|
+| 001 | SM-G965U | 4.3 mm | f/1.5 | 26 mm | absent | 4032 x 1960 |
+| 002 | Galaxy S24+ | 2.2 mm | f/2.2 | **13 mm** | **1.64** | 4000 x 1848 |
+| 003 | SM-G996U | 5.4 mm | f/1.8 | 26 mm | 1.0 | 4032 x 1816 |
+
+File 002 is the ultrawide lens with 1.64x digital zoom applied, and its 35 mm equivalent tag still reads 13 mm, which is the **unzoomed** figure. The effective field of view corresponds to roughly 21 mm. Alan's own frames reported a cropped equivalent of 23 mm on a 2.2 mm lens, meaning his device updates the tag and this one does not.
+
+**So the tag cannot be trusted to describe the frame, and two frames that agree on all four of entry 16's key fields can still have different effective geometry.**
+
+Two consequences:
+
+1. **Add `DigitalZoomRatio` to the grouping key**, and treat its absence as unknown rather than as 1.0. File 001 omits the tag entirely.
+2. **Treat a frame with `DigitalZoomRatio` greater than 1 as a separate group from an otherwise identical frame**, even when every other tag matches. Digital zoom crops and usually upscales, which changes both the effective focal length in pixels and the interpolation the pixels have been through.
+
+**A third consequence worth stating plainly: a joint fit keyed on metadata is only as good as the metadata, and this is the second time in this project that a tag has meant something other than what it says.** Where a fit can be validated from image content rather than from tags, prefer that. Where it cannot, record the key that was used alongside the result, so a wrong grouping can be found later rather than being baked invisibly into a calibration.
+
+### 3. The aspect ratios are a phone camera mode, not a crop by the user
+
+All three are far wider than a sensor's native 4:3, at 2.06:1, 2.16:1 and 2.22:1. Those match the Samsung full-screen capture modes at 18.5:9, 19.5:9 and 20:9 for the three handsets involved. The `Software` tag on each file is a camera firmware build string rather than an editor name, and the stored dimensions match the EXIF dimensions, so these are camera output and not gallery-app edits.
+
+That is good news for provenance and bad news for field of view: the mode crops the sensor top and bottom, so a whole mounted target is harder to get in frame and the submitter will tend to back further away. Expect donated phone photographs to be wider and lower resolution in the vertical axis than a specification written around 4:3 would assume. Nothing needs changing today; it is a fact to have when a detection threshold is tuned against donated frames.
+
+**None of the three carried GPS.** That does not retire `scrub_exif.py`, since one submission is not a sample, and the scrub must still run at publication regardless.
+
+---
+
 ## 2026-09-15, entry 26: the rotate control is a requirement, not a fallback, and it has one trap
 
 **Status: actioned 2026-09-15.** Amends entry 24 section 4. Rotation is a view property of the marking state in the stored pixel frame, undoable and recorded in `grouplab-marking-2`, with the section's test in `tests/GroupLab.App.Tests/MarkingScreenTests.cs`; reported in `docs/PHASE1-RESULTS.md` M4.2.
@@ -186,7 +235,7 @@ If it is fixed, make it an entry. If it is already an entry, the export should r
 
 ## 2026-09-15, entry 23: question 11 answered, the fixtures are regenerated, and the surface model is not as dead as entry 17 left it
 
-**Status: open.**
+**Status: actioned 2026-09-15**, except committing `scans/mounted/`, which section 5 holds until entry 22 section 1 is answered, `docs/QUESTIONS-FOR-PLANNING.md` question 13. Section 1: the fixtures and `sg_dump.R` committed, the harness reads the point of aim, question 11 marked answered and recorded in `docs/STATISTICS.md` sections 15.2 and 15.4, four Fligner-Killeen keys pending as question 14. Section 2: the M3.1 amendment and `Bootstrap`. Section 3: the M1.11 amendment. Section 4: the detector runs inside the registered sheet, `docs/DETECTION-PIPELINE.md` before S5. Section 5: both scripts committed.
 
 ### 1. Question 11: A, A and A, and the first one is already done
 

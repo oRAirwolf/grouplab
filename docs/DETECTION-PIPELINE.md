@@ -167,6 +167,11 @@ For a photograph: the fitted distortion coefficients, the maximum displacement a
 
 Print scale is reported, not silently corrected: "this target printed at 96.2 percent of intended size, measurements corrected accordingly."
 
+**Amended 2026-09-15, `docs/NOTES-FROM-PLANNING.md` entry 23 section 4: detection runs inside the registered sheet.**
+- **The rule.** From S5 on, only pixels inside the page boundary, mapped into the image through S3's registration, can become a candidate.
+- **A property of the detector, not a step a caller performs.** `RenderDifferenceHoleDetector` masks its residual to the sheet itself, so no path can hand S7 a full frame by accident.
+- **The measurement that forced it.** On the N568 photograph against its own scan, `docs/PHASE1-RESULTS.md` entries 19 and 20, 0 of 28 holes were found on the whole photograph, where the dark mat merged into one blob twelve inches across, and 26 of 28 on the same pixels cropped to the sheet, untuned.
+
 ### S5. Render the expected artwork
 
 Rasterise the known definition through the solved transform into image space, producing an expected image aligned to the observed one.

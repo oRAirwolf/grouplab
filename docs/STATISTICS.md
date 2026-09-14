@@ -523,7 +523,7 @@ A driver script dumps every numeric output to a tidy CSV and matching JSON, keye
 | `DFscar17` | 10 | 1 | 100 yd, inches | Small `n`. Exercises `c4` at low degrees of freedom, where the correction is largest |
 | `DFcciHV` | 40 | 2 | 100 yd, inches | Two groups. The Ansari-Bradley and Wilcoxon branch of `compareGroups` |
 | `DF300BLKhl` | 60 | 3 | 100 yd, inches | Three groups. The Fligner-Killeen and Kruskal-Wallis branch |
-| `DFcm` and `DFinch` | 487 each | 3 | 25 m / 27.34 yd | **The same data in metric and imperial.** The unit-conversion regression test |
+| `DFcm` and `DFinch` | 487 each | 3 | 25 m / 27.34 yd | The unit-conversion regression test. **Amended 2026-09-15, `NOTES-FROM-PLANNING.md` entry 23 section 1:** they are the same shots grouped differently, not the same data. Every `DFcm` shot is a `DFinch` shot times 2.54, but shot 242 is in series 5 of `DFcm` and series 4 of `DFinch`, so those two series hold different shots. The conversion test is met on the shots and cannot be met on the series as shipped |
 | `DFsavage` | 180 | 9 series | 100, 200, 300 m | **Multiple distances in one frame.** Angular columns must drop out. A negative test |
 | `DFlandy04` | 175 | 6 | 50 yd | Unequal group sizes, 5 x 25 plus 1 x 50. **Amended 2026-09-14, entry 18 section 2:** also the fixture that exercises the multi-group range path, `nGroups` = 6 in `range2sigma`, `range2CEP` and `getRangeStatEff`, emitted under `multiGroup.*` |
 | `DFlandy01` | 530 | 53 | 50 m | Large. Range statistics with many groups. **Amended 2026-09-14, entry 18 section 2:** it cannot reach that purpose. `getRangeStat` has no group argument and pools all 530 shots, and the multi-group range tables stop at 10 groups, so the fixture carries `multiGroup.beyondTable`. It remains the large per-series battery |
@@ -557,6 +557,12 @@ Discovered by reading shotGroups 0.8.4's source and worth writing into the compa
 7. **`analyzeGroup` has no `plots` argument** and always plots. Headless runs need `pdf(NULL)`.
 8. **In `DFsavage` and `DFtalon` the `group` column has one level while `series` has nine.** `compareGroups` and `combineData` key on `series`. A fixture loader that uses `group` gets nonsense.
 9. **The comment block in `compareGroups.R` lines 280 to 283 has the two-group and multi-group test labels inverted** relative to the code. The code is right. Do not port the comment.
+
+**Items 10 to 12 added 2026-09-15, `NOTES-FROM-PLANNING.md` entry 23 section 1, found by the M3 harness (`docs/QUESTIONS-FOR-PLANNING.md` question 11).**
+
+10. **The fixture's MANOVA row is R's intercept row.** `sg_dump.R` takes `MANOVA[1, ]`, which in `anova.mlm` tests whether the mean over all shots is the origin, not section 8.2's test of the group centres; row 2 would be the group test. The harness reproduces row 1 and GroupLab computes the group test separately. The next reader of the fixture will assume row 1 is the group test.
+11. **`fromMOA` in SMOA is not the exact inverse of `getMOA`.** In every scope of every fixture it is the inverse times 1 + 6.21288e-10, so section 12.5's anchor holds for `getMOA` and the round trip misses section 15.3's 1e-12. The harness encodes the constant rather than reproducing it in GroupLab.
+12. **shotGroups' CorrNormal CEP is not a root of its own distribution.** Its hit probabilities match GroupLab's Hoyt CDF to 1e-15, but under that CDF its CEPs miss their probability: on `DF300BLK` by +3.7e-6, +2.9e-6 and -5.8e-7 at 0.50, 0.90 and 0.95, and by 3e-6 to 2.3e-5 relative across 899 keys, which is a root finder with a coarse tolerance. For this key, section 15.3's 1e-8 is replaced by three checks. The distribution is gated through the hit probabilities at 1e-8. GroupLab's CEP must be a root of it to 1e-12. shotGroups' CEP is compared at 1e-4 relative.
 
 ### 15.5 Phase 2 gate
 

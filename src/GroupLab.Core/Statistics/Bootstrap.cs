@@ -14,6 +14,12 @@ public sealed record BootstrapInterval(double Estimate, double Lower, double Upp
 /// the percentile interval when the acceleration cannot be computed; 9999 resamples, because 1000 leave Monte Carlo error visible
 /// in the reported digits; shots resampled, never residuals; and fewer than 10 shots flagged as unreliable rather than reported
 /// silently.
+/// <para>
+/// Its coverage is below nominal at the counts people fire: 79.5, 89.1 and 92.7 percent at 10, 25 and 50 shots for a nominal 95
+/// (docs/PHASE1-RESULTS.md M3.1). So a closed form is preferred wherever one exists, and a bootstrap interval is never labelled with a
+/// bare nominal level: it carries its measured coverage or is called approximate and optimistic at small n (NOTES-FROM-PLANNING.md
+/// entry 23 section 2). No screen shows one yet.
+/// </para>
 /// </summary>
 public static class Bootstrap
 {
