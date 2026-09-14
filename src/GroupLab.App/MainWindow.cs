@@ -50,9 +50,25 @@ public sealed class MainWindow : Window
     private IReadOnlyList<HoleSizeFlag> holeFlags = [];
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.85 };
+    private readonly AppSettingsStore settingsStore;
+    private readonly ComboBox linearUnit = new() { ItemsSource = Enum.GetValues<LinearUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
+    private readonly ComboBox angularUnit = new() { ItemsSource = UnitSettings.AngularChoices.Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 90 };
+    private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
+    private readonly TextBox shotDistance = new() { Width = 90 };
+    private readonly TextBlock shotDistanceUnit = new() { VerticalAlignment = VerticalAlignment.Center };
+    private UnitSettings units;
+    private bool showingUnits;
 
     public MainWindow()
+        : this(AppSettingsStore.Default)
     {
+    }
+
+    /// <summary>The window with its settings kept in <paramref name="settings"/>, which the headless tests point at a file of their own.</summary>
+    internal MainWindow(AppSettingsStore settings)
+    {
+        settingsStore = settings;
+        units = settings.LoadUnits();
         Title = "GroupLab";
         Width = 1400;
         Height = 900;
@@ -86,6 +102,14 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
 
         var panel = new StackPanel { Margin = new Thickness(12), Spacing = 12, Width = 380 };
+        // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
+        panel.Children.Add(Heading("Units"));
+        panel.Children.Add(Row(linearUnit, angularUnit, distanceUnit));
+        foreach (var combo in new[] { linearUnit, angularUnit, distanceUnit })
+        {
+            combo.SelectionChanged += (_, _) => UnitsChosen();
+        }
+
         panel.Children.Add(Heading("Scale"));
         panel.Children.Add(scaleInputs);
         panel.Children.Add(Heading("Group"));
@@ -98,6 +122,12 @@ public sealed class MainWindow : Window
             session.SetCalibre(null);
         })));
         panel.Children.Add(calibreNote);
+        panel.Children.Add(new TextBlock { Text = "Shot distance", FontSize = 12 });
+        panel.Children.Add(Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Clear", () =>
+        {
+            shotDistance.Text = "";
+            session.SetShotDistance(null);
+        })));
         panel.Children.Add(problem);
         panel.Children.Add(statistics);
         panel.Children.Add(Heading("Selected shot"));
@@ -114,7 +144,68 @@ public sealed class MainWindow : Window
         dock.Children.Add(canvas);
         Content = dock;
         SetTool(MarkingTool.Pan);
+        ShowUnits();
         Refresh();
+    }
+
+    /// <summary>The unit setting in use, for the headless tests.</summary>
+    internal UnitSettings Units => units;
+
+    /// <summary>The scale inputs, for the headless tests.</summary>
+    internal StackPanel ScaleInputs => scaleInputs;
+
+    /// <summary>Chooses the units every figure is shown in, and remembers the choice. Nothing stored changes (entry 25 section 1).</summary>
+    internal void SetUnits(UnitSettings chosen)
+    {
+        units = chosen;
+        if (!settingsStore.SaveUnits(chosen))
+        {
+            status.Text = "The unit choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.";
+        }
+
+        ShowUnits();
+        Refresh();
+    }
+
+    private void ShowUnits()
+    {
+        showingUnits = true;
+        linearUnit.SelectedIndex = (int)units.Linear;
+        angularUnit.SelectedIndex = Math.Max(0, UnitSettings.AngularChoices.ToList().IndexOf(units.Angular));
+        distanceUnit.SelectedIndex = (int)units.Distance;
+        shotDistanceUnit.Text = UnitSettings.Symbol(units.Distance);
+        showingUnits = false;
+    }
+
+    private void UnitsChosen()
+    {
+        if (showingUnits || linearUnit.SelectedIndex < 0 || angularUnit.SelectedIndex < 0 || distanceUnit.SelectedIndex < 0)
+        {
+            return;
+        }
+
+        SetUnits(new UnitSettings((LinearUnit)linearUnit.SelectedIndex, UnitSettings.AngularChoices[angularUnit.SelectedIndex], (DistanceUnit)distanceUnit.SelectedIndex));
+    }
+
+    private void SetShotDistanceFromBox()
+    {
+        if (double.TryParse(shotDistance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
+        {
+            session.SetShotDistance(UnitSettings.DistanceToInches(d, units.Distance));
+        }
+        else
+        {
+            problem.Text = "Enter the shot distance as a number of " + UnitSettings.Symbol(units.Distance) + ".";
+        }
+    }
+
+    /// <summary>The centre's offset from the aim in the screen's units, with its angle when the shot distance is known.</summary>
+    private string CentreLine(PointD centre)
+    {
+        double? distance = session.State.ShotDistanceInches;
+        string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
+        string text = $"Centre from aim: {units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
+        return units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{text} ({x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down})" : text;
     }
 
     /// <summary>The canvas, for the headless tests.</summary>
@@ -295,7 +386,7 @@ public sealed class MainWindow : Window
         });
         if (file?.TryGetLocalPath() is { } path)
         {
-            await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, holeFlags));
+            await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, holeFlags, units));
             status.Text = "Exported to " + path;
         }
     }
@@ -323,13 +414,14 @@ public sealed class MainWindow : Window
     private void AskLength(IReadOnlyList<PointD> taps)
     {
         scaleInputs.Children.Clear();
-        var inches = new TextBox { Text = "1", Width = 80 };
-        scaleInputs.Children.Add(new TextBlock { Text = "Distance between the two taps, inches:", TextWrapping = TextWrapping.Wrap });
-        scaleInputs.Children.Add(Row(inches, Button("Use this length", () =>
+        var length = new TextBox { Text = "1", Width = 80 };
+        var unit = units.Linear;
+        scaleInputs.Children.Add(new TextBlock { Text = $"Distance between the two taps, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
+        scaleInputs.Children.Add(Row(length, Button("Use this length", () =>
         {
-            if (double.TryParse(inches.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
+            if (double.TryParse(length.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
             {
-                session.SetScale(new LengthReference(taps[0], taps[1], d));
+                session.SetScale(new LengthReference(taps[0], taps[1], UnitSettings.ToInches(d, unit)));
                 SetTool(MarkingTool.Aim);
             }
         })));
@@ -340,7 +432,8 @@ public sealed class MainWindow : Window
         scaleInputs.Children.Clear();
         var width = new TextBox { Text = "1", Width = 70 };
         var height = new TextBox { Text = "1", Width = 70 };
-        scaleInputs.Children.Add(new TextBlock { Text = "Rectangle width (first to second tap) and height, inches:", TextWrapping = TextWrapping.Wrap });
+        var unit = units.Linear;
+        scaleInputs.Children.Add(new TextBlock { Text = $"Rectangle width (first to second tap) and height, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
         scaleInputs.Children.Add(Row(width, height, Button("Use this rectangle", () =>
         {
             if (double.TryParse(width.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double w) && w > 0
@@ -348,7 +441,7 @@ public sealed class MainWindow : Window
             {
                 try
                 {
-                    session.SetScale(new RectangleReference(taps, w, h));
+                    session.SetScale(new RectangleReference(taps, UnitSettings.ToInches(w, unit), UnitSettings.ToInches(h, unit)));
                     SetTool(MarkingTool.Aim);
                 }
                 catch (ArgumentException ex)
@@ -373,8 +466,13 @@ public sealed class MainWindow : Window
         }
 
         calibreNote.Text = state.Calibre is { } calibre
-            ? string.Create(CultureInfo.InvariantCulture, $"Read as a {calibre.DiameterInches:0.000} in bullet diameter. Type the diameter itself if that is not right.")
+            ? $"Read as a {units.Length(calibre.DiameterInches)} bullet diameter. Type the diameter itself if that is not right."
             : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+        if (!shotDistance.IsKeyboardFocusWithin)
+        {
+            shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, units.Distance).ToString("0.###", CultureInfo.InvariantCulture) : "";
+        }
+
         holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage);
         canvas.FlaggedShots = holeFlags.Select(f => f.ShotId).ToHashSet();
 
@@ -383,7 +481,7 @@ public sealed class MainWindow : Window
             scaleInputs.Children.Clear();
             scaleInputs.Children.Add(new TextBlock
             {
-                Text = state.Scale is null ? "No scale yet. Choose Scale: length or Scale: rectangle, or detect on a GroupLab sheet." : "From " + report.Scale + ".",
+                Text = state.Scale is null ? "No scale yet. Choose Scale: length or Scale: rectangle, or detect on a GroupLab sheet." : "From " + state.Scale.Describe(units) + ".",
                 TextWrapping = TextWrapping.Wrap,
                 Foreground = report.ScaleAssumesSquareOn ? Brushes.DarkOrange : null,
             });
@@ -396,7 +494,7 @@ public sealed class MainWindow : Window
             bool excluded = report.Excluded > 0;
             statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"{all.Shots} shots{(excluded ? $", {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}")));
             statistics.Children.Add(Line(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
-                ?string.Create(CultureInfo.InvariantCulture, $"Centre from aim: {Math.Abs(centre.X):0.000} in {(centre.X >= 0 ? "right" : "left")}, {Math.Abs(centre.Y):0.000} in {(centre.Y >= 0 ? "low" : "high")}")
+                ? CentreLine(centre)
                 : $"Centre from aim: {all.CentreFromAimUnavailable}."));
 
             if (all.DispersionWithheld is { } withheld)
@@ -412,12 +510,17 @@ public sealed class MainWindow : Window
                 statistics.Children.Add(new TextBlock
                 {
                     Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
-                        ? string.Create(CultureInfo.InvariantCulture, $"Edge to edge, across the outsides of the holes: {edgeToEdge:0.000} in, which is centre to centre plus one {state.Calibre!.DiameterInches:0.000} in bullet.")
+                        ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
                         : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = 12,
                     Opacity = 0.7,
                 });
+                if (state.ShotDistanceInches is null)
+                {
+                    statistics.Children.Add(Line("Angular figures need the shot distance."));
+                }
+
                 if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
                 {
                     statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
@@ -436,10 +539,16 @@ public sealed class MainWindow : Window
 
             foreach (var flag in holeFlags)
             {
-                statistics.Children.Add(new TextBlock { Text = $"Shot {flag.ShotId} {flag.Problem}", TextWrapping = TextWrapping.Wrap, FontSize = 12, Foreground = Brushes.OrangeRed });
+                statistics.Children.Add(new TextBlock
+                {
+                    Text = $"Shot {flag.ShotId} reads {units.Length(flag.ApparentInches)} across, larger than a single {units.Length(state.Calibre!.DiameterInches)} hole should ({units.Length(flag.LargestExpectedInches)}): two holes marked as one?",
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 12,
+                    Foreground = Brushes.OrangeRed,
+                });
             }
 
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed:{report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
+            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed: {report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
         }
 
         BuildSelection();
@@ -565,19 +674,27 @@ public sealed class MainWindow : Window
     /// are any. Every line wraps, so the largest type cannot clip at the panel's edge (entry 24 section 2). Extreme spread is drawn
     /// smaller and dimmer: present, and visibly subordinate.
     /// </summary>
-    private static Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false)
+    private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false)
     {
-        static string Interval(ReportedEstimate e) => e is { Lower: { } lower, Upper: { } upper, Coverage: { } coverage }
-            ? string.Create(CultureInfo.InvariantCulture, $"{100 * coverage:0.0}% interval {lower:0.000} to {upper:0.000} in")
+        double? distance = session.State.ShotDistanceInches;
+        string Interval(ReportedEstimate e) => e is { Lower: { } lower, Upper: { } upper, Coverage: { } coverage }
+            ? string.Create(CultureInfo.InvariantCulture, $"{100 * coverage:0.0}% interval {units.Number(lower)} to {units.Length(upper)}")
             : $"no interval: {e.IntervalUnavailable}";
+        string? Angle(ReportedEstimate e) => units.AngleText(e.Value, distance) is { } value
+            ? value + (e is { Lower: { } lower, Upper: { } upper } ? $", interval {units.Angle(lower, distance)!.Value.ToString("0.00", CultureInfo.InvariantCulture)} to {units.AngleText(upper, distance)}" : "")
+            : null;
         var column = new StackPanel { Spacing = 0 };
         column.Children.Add(new TextBlock { Text = name, FontSize = 11, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
-        column.Children.Add(new TextBlock { Text = string.Create(CultureInfo.InvariantCulture, $"{all.Value:0.000} in"), FontFamily = Mono, FontSize = size, FontWeight = weight, Opacity = subordinate ? 0.7 : 1, TextWrapping = TextWrapping.Wrap });
+        column.Children.Add(new TextBlock { Text = units.Length(all.Value), FontFamily = Mono, FontSize = size, FontWeight = weight, Opacity = subordinate ? 0.7 : 1, TextWrapping = TextWrapping.Wrap });
         column.Children.Add(new TextBlock { Text = Interval(all), FontFamily = Mono, FontSize = 12, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+        if (Angle(all) is { } angle)
+        {
+            column.Children.Add(new TextBlock { Text = angle, FontFamily = Mono, FontSize = 12, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+        }
         if (reduced is not null)
         {
             string text = pick(reduced) is { } r
-                ? string.Create(CultureInfo.InvariantCulture, $"without exclusions: {r.Value:0.000} in, {Interval(r)}")
+                ? $"without exclusions: {units.Length(r.Value)}, {Interval(r)}"
                 : "without exclusions: " + reduced.DispersionWithheld;
             column.Children.Add(new TextBlock { Text = text, FontFamily = Mono, FontSize = 12, Opacity = 0.8, TextWrapping = TextWrapping.Wrap });
         }

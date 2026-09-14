@@ -7,6 +7,11 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>GroupLab.App</RootNamespace>
+    <!--
+      The shell reads the system's region to default the units on first run (NOTES-FROM-PLANNING.md entry 25 section 1), which
+      invariant globalization hides. Every number is still formatted and parsed with the invariant culture.
+    -->
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>

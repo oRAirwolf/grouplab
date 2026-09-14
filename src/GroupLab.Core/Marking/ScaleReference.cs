@@ -13,8 +13,11 @@ public abstract record ScaleReference
     /// <summary>The image point's position on the target plane, in inches, x right and y down as the image is.</summary>
     public abstract PointD ToTarget(PointD image);
 
-    /// <summary>A sentence for the report: what the scale came from and what it assumes.</summary>
+    /// <summary>A sentence for the report: what the scale came from and what it assumes, in inches, as the export records it.</summary>
     public abstract string Description { get; }
+
+    /// <summary>The same sentence with its lengths in the screen's units (NOTES-FROM-PLANNING.md entry 25 section 1).</summary>
+    public abstract string Describe(UnitSettings units);
 
     /// <summary>True when the scale cannot see perspective, so a result from it should say so beside its figures.</summary>
     public abstract bool AssumesSquareOn { get; }
@@ -38,6 +41,12 @@ public sealed record LengthReference(PointD A, PointD B, double Inches) : ScaleR
 
     public override string Description => string.Create(System.Globalization.CultureInfo.InvariantCulture,
         $"a single {Inches:0.###} in reference length, which assumes the photograph is square on and the sheet flat");
+
+    public override string Describe(UnitSettings units)
+    {
+        ArgumentNullException.ThrowIfNull(units);
+        return $"a single {units.Length(Inches)} reference length, which assumes the photograph is square on and the sheet flat";
+    }
 
     public override bool AssumesSquareOn => true;
 
@@ -79,6 +88,12 @@ public sealed record RectangleReference : ScaleReference
     public override string Description => string.Create(System.Globalization.CultureInfo.InvariantCulture,
         $"a {WidthInches:0.###} by {HeightInches:0.###} in reference rectangle, which removes perspective but assumes the sheet flat");
 
+    public override string Describe(UnitSettings units)
+    {
+        ArgumentNullException.ThrowIfNull(units);
+        return $"a {units.Number(WidthInches)} by {units.Length(HeightInches)} reference rectangle, which removes perspective but assumes the sheet flat";
+    }
+
     public override bool AssumesSquareOn => false;
 }
 
@@ -92,6 +107,8 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
     }
 
     public override string Description => "the sheet's own printed markers: " + Summary;
+
+    public override string Describe(UnitSettings units) => Description;
 
     public override bool AssumesSquareOn => false;
 }

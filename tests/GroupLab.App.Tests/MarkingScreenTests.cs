@@ -1,7 +1,11 @@
 using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using System.Globalization;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.Core.Imaging;
@@ -39,6 +43,85 @@ public class MarkingScreenTests
         return path;
     }
 
+    /// <summary>A window whose settings live in a file of the test's own, in the given units, so no test reads or writes the user's settings.</summary>
+    private static MainWindow NewWindow(UnitSettings? units = null)
+    {
+        var store = new AppSettingsStore(Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json"));
+        store.SaveUnits(units ?? UnitSettings.Imperial);
+        return new MainWindow(store) { Width = 1400, Height = 900 };
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 25 section 1: the unit setting changes what is shown and nothing that is stored. In centimetres the
+    /// scale is entered in centimetres and the headline is in centimetres; with a shot distance the angular figure appears, in mil; in
+    /// inches the same marking writes the same file; and the choice is remembered.
+    /// </summary>
+    [AvaloniaFact]
+    public void UnitsChangeWhatIsShownAndNothingThatIsStored()
+    {
+        (int X, int Y)[] holes = [(300, 300), (340, 280), (320, 340), (250, 340), (390, 310)];
+        string path = SyntheticTarget(holes);
+        string settings = Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json");
+        try
+        {
+            var store = new AppSettingsStore(settings);
+            store.SaveUnits(UnitSettings.Metric);
+            var window = new MainWindow(store) { Width = 1400, Height = 900 };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.OpenImage(path);
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+            var canvas = window.Canvas;
+            canvas.FitToView();
+            Assert.Equal(UnitSettings.Metric, window.Units);
+
+            void Tap(PointD image)
+            {
+                var at = canvas.TranslatePoint(canvas.ToControl(image), window)!.Value;
+                window.MouseDown(at, MouseButton.Left);
+                window.MouseUp(at, MouseButton.Left);
+            }
+
+            // Two taps 200 px apart entered as 5.08 cm: 2 in, stored in inches.
+            canvas.Tool = MarkingTool.Length;
+            Tap(new PointD(100, 100));
+            Tap(new PointD(300, 100));
+            Assert.Contains(window.ScaleInputs.GetLogicalDescendants().OfType<TextBlock>(), t => (t.Text ?? "").Contains("cm:", StringComparison.Ordinal));
+            window.ScaleInputs.GetLogicalDescendants().OfType<TextBox>().Single().Text = "5.08";
+            window.ScaleInputs.GetLogicalDescendants().OfType<Button>().Single().RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.Equal(2, Assert.IsType<LengthReference>(window.Session.State.Scale).Inches, 12);
+
+            canvas.Tool = MarkingTool.Impact;
+            foreach (var (x, y) in holes)
+            {
+                Tap(new PointD(x + 3, y - 2));
+            }
+
+            double meanRadius = GroupAnalysis.Analyse(window.Session.State).AllShots!.MeanRadius!.Value;
+            Assert.Contains(window.StatisticsText, t => t == (meanRadius * 2.54).ToString("F2", CultureInfo.InvariantCulture) + " cm");
+            Assert.Contains(window.StatisticsText, t => t == "Angular figures need the shot distance.");
+
+            window.Session.SetShotDistance(UnitSettings.DistanceToInches(100, DistanceUnit.Metre));
+            string mil = UnitSettings.Metric.AngleText(meanRadius, window.Session.State.ShotDistanceInches)!;
+            Assert.EndsWith(" mil", mil, StringComparison.Ordinal);
+            Assert.Contains(window.StatisticsText, t => t.StartsWith(mil + ", interval", StringComparison.Ordinal));
+            string written = MarkingFile.Write(window.Session.State);
+
+            window.SetUnits(UnitSettings.Imperial);
+            Assert.Contains(window.StatisticsText, t => t == meanRadius.ToString("F3", CultureInfo.InvariantCulture) + " in");
+            Assert.Equal(written, MarkingFile.Write(window.Session.State));
+            window.Close();
+            Assert.Equal(UnitSettings.Imperial, new AppSettingsStore(settings).LoadUnits());
+        }
+        finally
+        {
+            File.Delete(path);
+            File.Delete(settings);
+        }
+    }
+
     [AvaloniaFact]
     public void TapsSetAScaleAndMarkAGroupWhoseHeadlineIsTheEngineMeanRadius()
     {
@@ -46,7 +129,7 @@ public class MarkingScreenTests
         string path = SyntheticTarget(holes);
         try
         {
-            var window = new MainWindow { Width = 1400, Height = 900 };
+            var window = NewWindow();
             window.Show();
             Dispatcher.UIThread.RunJobs();
             window.OpenImage(path);
@@ -130,7 +213,7 @@ public class MarkingScreenTests
         string path = SyntheticTarget(holes);
         try
         {
-            var window = new MainWindow { Width = 1400, Height = 900 };
+            var window = NewWindow();
             window.Show();
             Dispatcher.UIThread.RunJobs();
             window.OpenImage(path);

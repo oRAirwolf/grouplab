@@ -66,7 +66,8 @@ public sealed record MarkingState(
     string? RegistrationSummary = null,
     int ViewQuarterTurns = 0,
     int? ExifOrientation = null,
-    Calibre? Calibre = null)
+    Calibre? Calibre = null,
+    double? ShotDistanceInches = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -167,6 +168,12 @@ public sealed class MarkingSession
 
     /// <summary>Sets the group's calibre, or clears it with null (NOTES-FROM-PLANNING.md entry 24 section 5).</summary>
     public void SetCalibre(Calibre? calibre) => Apply(State with { Calibre = calibre });
+
+    /// <summary>
+    /// Sets the distance the group was shot at, in inches whatever unit it was typed in, or clears it with null. Angular figures need it
+    /// and are absent without it (docs/STATISTICS.md section 13, NOTES-FROM-PLANNING.md entry 25 section 1).
+    /// </summary>
+    public void SetShotDistance(double? inches) => Apply(State with { ShotDistanceInches = inches });
 
     public void SetPointOfAim(PointD? image) => Apply(State with { PointOfAim = image });
 

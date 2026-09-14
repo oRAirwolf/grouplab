@@ -1203,9 +1203,42 @@ It reads its own files back, which is what "Open marking" does.
 **Tests:** Core 672, App 2, all passing.
 
 **Named gaps, from entry 25.**
-- **Units.** Every figure is in inches, and angular figures and shot distance have no input yet.
+- **Units.** Every figure is in inches, and angular figures and shot distance have no input yet. Closed in M4.3.
 - **Printing a target from the window.** There is no print screen; the command line renders the PDFs.
 - **Adjust to zero** waits for units, as entry 25 section 3 requires.
+
+### M4.3 Units: entry 25 section 1
+
+**One application-wide setting on three axes,** at the top of the panel:
+- **Linear:** in, cm or mm.
+- **Angular:** MOA, mil or SMOA.
+- **Distance:** yd or m.
+
+Every value the screen shows obeys it:
+- the scale entry, a length or a rectangle, typed in the chosen unit;
+- the headline and every figure with its interval;
+- the centre offset, edge to edge, the calibre, and the hole-size flags;
+- the shot distance, which is new, beside the calibre.
+
+**Display only.**
+- **Storage is canonical.** Every length is stored in inches at the target and the shot distance in inches too, `docs/STATISTICS.md` section 13, and converted at the edge in `UnitSettings`.
+- **The file.** `grouplab-marking-2` carries `shotDistanceInches` and, beside the canonical values, `displayUnits`, so a reader can reproduce the screen. Reading a file never changes the setting.
+- **The tests.** `UnitsTests` writes the same marking under both settings and asserts the files are identical once `displayUnits` is removed. The headless test switches from centimetres to inches and asserts the written marking does not change.
+
+**Mil is the milliradian.**
+- **Why:** a turret marked in mil is marked in milliradians. The 6400 NATO mil is 1.8 percent different, and entry 25 section 1 is explicit that the wrong angular unit sends a dialled correction elsewhere.
+- **In the code:** the choice maps to `AngularUnit.Mrad`, and the NATO mil is not offered.
+- **Where it matters most:** adjust to zero, when it is built, will read this setting.
+
+**Angular figures need the distance.** They follow section 12.5's half-angle form: section 12.5's anchor, 1 in at 100 yd as 1.000000 SMOA and 0.954930 MOA, holds through the setting. Without a distance they are absent, and the panel says "Angular figures need the shot distance", per section 13.
+
+**Default and memory.**
+- **First run:** the default comes from the system's region: inches, yards and MOA in the United States, Liberia and Myanmar, and centimetres, metres and mil elsewhere.
+- **After that:** the choice is remembered in `%APPDATA%\GroupLab\settings.json`.
+- **Globalization:** the shell turns invariant globalization off so it can read the region. Every number is still formatted and parsed with the invariant culture.
+- **The headless tests** keep their settings in files of their own and never touch the user's.
+
+**Tests:** Core 676, App 3, all passing. **Adjust to zero** remains unbuilt until entry 21 section 5 is specified; the units it needs are now in place.
 
 ---
 
@@ -1283,3 +1316,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 26: rotation as a view property of the marking state, over rotating the decoded pixels on load.** Rotating pixels changes the frame every saved position is in; a view property moves no mark, gives undo for free and reopens as it was left.
 - **Entry 26: the stored pixel frame as the canonical frame, over the upright displayed frame.** It is the frame M4.1 files were already written in, so version 1 migrates without moving a mark, and it can be checked against the file itself.
 - **Entry 24 section 5: the hole-size flag at nominal plus 0.132 in, over a ratio of the calibre.** Section 3.5 found the hole deficit roughly constant in absolute terms rather than proportional.
+- **Entry 25: one application-wide unit setting, over a unit dropdown beside each input.** Entry 25 section 1 asks for it, and a setting that every figure obeys cannot leave one figure behind in inches.
+- **Entry 25: "mil" as the milliradian, over the 6400 NATO mil of section 12.5's table.** Turrets are marked in milliradians; offering the NATO mil under the same name is the dialling error entry 25 warns about.
+- **Entry 25: lengths and distance stored in inches whatever the setting, over storing in the unit the user worked in.** A file then means the same on every machine, which the test asserts by writing one marking under both settings.
