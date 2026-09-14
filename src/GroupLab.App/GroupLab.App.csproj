@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The application shell of docs/PHASE1-BRIEF.md section 6, on Avalonia (GPL-compatible, MIT licensed). The OpenCV imaging
+    backend lives in GroupLab.Cli, so the shell references it rather than moving it in this milestone.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GroupLab.App</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GroupLab.Core\GroupLab.Core.csproj" />
+    <ProjectReference Include="..\GroupLab.Cli\GroupLab.Cli.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="GroupLab.App.Tests" />
+  </ItemGroup>
+
+</Project>

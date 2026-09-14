@@ -1060,6 +1060,78 @@ Assignment of render-and-difference's detections, held-out:
 
 ---
 
+## M4. The application shell
+
+### M4.1 The marking screen
+
+`docs/PHASE1-BRIEF.md` section 6: an Avalonia desktop shell that Alan can open and click on. `docs/NOTES-FROM-PLANNING.md` entry 21 decides its first screen: the manual marking path and the correction interface of `DESIGN.md` section 13 are the same screen, built once, and automatic detection pre-fills marks the user accepts, moves or deletes.
+
+**Reproduce:**
+- `dotnet run --project src/GroupLab.App` starts the application.
+- `dotnet test tests/GroupLab.App.Tests` drives the screen headlessly.
+- `dotnet test tests/GroupLab.Core.Tests --filter Marking` tests the model underneath it.
+
+**What is built.**
+
+| Where | What |
+|---|---|
+| `src/GroupLab.Core/Marking/MarkingSession.cs` | The marking as immutable states with undo and redo throughout; shots with provenance (automatic, corrected, manual), exclusion with a reason from section 10's short list, not-a-shot, and assignment to a bull |
+| `src/GroupLab.Core/Marking/ScaleReference.cs` | Entry 21 section 4's two manual scales, a reference length and a reference rectangle, and a registered GroupLab sheet. Each says what it assumes |
+| `src/GroupLab.Core/Marking/GroupAnalysis.cs` | The report from M3's engine: mean radius with its interval as the headline, sigma beneath, extreme spread subordinate, every figure with and without exclusions, the composite group about each shot's bull, section 10's expectation of the worst shot; and the JSON export |
+| `src/GroupLab.Core/Marking/AutomaticMarking.cs` | The automatic path for a GroupLab sheet: registration, render-and-difference, one-to-one assignment; and section 13's snap of a rough tap to the hole under it |
+| `src/GroupLab.App/` | The window and the canvas, in code rather than XAML |
+
+**The screen,** in the brief's order:
+
+1. **Open an image.** It is decoded once through OpenCV without applying EXIF orientation, the decode the pipeline measures, and shown from those pixels. A mark on the screen is therefore a mark on the pixels the statistics use, which the N568 photograph, stored a quarter turn from upright, showed is not a given.
+2. **Register a GroupLab sheet** from its definition. The markers it did not find are crossed in red, and a failure is a prominent message with the advice to mark by hand, not an entry in a trace.
+3. **Bulls and holes over the image.**
+   - **Shots:** coloured by provenance and dashed when excluded.
+   - **Assignment:** each assigned shot has a line to its bull.
+   - **Scale and aim:** the scale reference and the point of aim are drawn too.
+4. **Correct by hand:**
+   - tap a shot and drag it;
+   - tap a shot then a bull to reassign it;
+   - mark a detection as not a shot, exclude a shot with a reason, unassign, delete;
+   - undo and redo any of it.
+
+   A detected shot the user touches becomes corrected.
+5. **The statistics panel.**
+   - **Headline:** mean radius with its interval, in a monospace, with sigma beneath and extreme spread smaller and dimmer.
+   - **Exclusions:** with any shot excluded, every figure is shown without it as well.
+   - **Beside the figures:** the centre from the aim, the error ellipse, the worst shot against what a group of that size is expected to do, and how the shots were placed.
+   - **The scale:** the panel says how it was set, in orange when it assumes the photograph square on.
+6. **Export** the marking and its report as JSON, `grouplab-marking-1`: GroupLab's own record, not another application's format.
+
+**Not a mouse application.**
+- **Every action is a tap or a drag:** a finger does both as well as a pointer does.
+- **Every action has a button:** zoom has buttons as well as the wheel. Keyboard shortcuts duplicate the tools and undo for speed and are never the only way to do something.
+- **Why:** entry 21 section 6 asks for that, and leaves the phone decision for later.
+
+**Tests.**
+- **Core, the marking model:** nine tests.
+  - both manual scales, the rectangle recovering a point through a perspective to 1e-9;
+  - undo and redo, and provenance;
+  - exclusion reported both ways, with not-a-shot in neither;
+  - the composite group, the report without a scale, the export, and snapping.
+- **Core, the automatic path:** one test. On GL-CF25-LTR rendered at 300 DPI with a hole beside every bull, it registers with no marker missing and pre-fills one shot per bull, each assigned to the bull it was punched beside.
+- **App, headless:** one test drives the real window through the headless platform's pointer input.
+  - **The actions:** open an image, set a reference length by two taps, mark the point of aim, tap three impacts.
+  - **The checks:** each tap snaps onto its hole, the headline is the engine's mean radius, and undo removes the last shot.
+
+**Two faults the headless test found before a person did.**
+1. **The canvas sized the image from the bitmap.** A bitmap's size follows the file's DPI tag, so a PNG tagged at another DPI would have scaled every mark, and in the headless platform the zoom came out 783-fold. The canvas now sizes the image from the decoded pixel grid.
+2. **The selected-shot panel reused its exclusion-reason picker without detaching it.** The first tap on an impact would have thrown and closed the application.
+
+**Not built, and why.**
+- **Adjust to zero and calibre** (entry 21 section 5) are scope to be specified before they are built.
+- **The phone** (section 6) is a decision not yet taken.
+- **The pipeline trace timeline** of `DESIGN.md` section 19 is not in the brief's minimum scope.
+- **Themes:** the brief rules out a theme engine, so the screen follows the system's light or dark setting through Avalonia's Fluent theme.
+- **Where the imaging backend lives:** the shell references `GroupLab.Cli` for the OpenCV backend instead of moving it in this milestone.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1122,3 +1194,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 20: bull centres from ring fits confirmed by centre dots, over the survey's annulus matched filter.** Holes break the rings and the scan's rings carry light stripes, so neither survives as a clean blob, while the dots do; the dot centroids are kept beside the ring centres and agree to a median 0.0019 in.
 - **Entry 20: grid orientation found from the bulls, over trusting pixel order or reading EXIF orientation.** The photograph's pixels are stored a quarter turn from upright; lattice phase and the sighter line's 0.2-pitch offset place the grid whatever the storage, and an unmirrored layout picks the column direction.
 - **Entry 19: the hole detector run on the whole photograph and on the registered sheet, over the whole photograph only.** Untuned on the whole frame it finds nothing, which is the finding; the sheet-only run shows what registration would let the same primitive do, and is labelled as that.
+
+- **M4: the marking screen and the correction screen as one screen over one model, over a separate manual mode.** Entry 21 section 3 and DESIGN.md section 13 describe the same interactions; one immutable model gives both undo and a test surface that needs no window.
+- **M4: the image shown from the pipeline's own OpenCV decode, over Avalonia's decoder.** The two can disagree about EXIF orientation, and a mark must land on the pixels the statistics and the detector use.
+- **M4: the image sized by its decoded pixel grid, over the bitmap's size.** The bitmap's size follows the file's DPI tag; the headless test showed marks scaling with it.
+- **M4: the UI built in C#, over XAML.** Avalonia 12 compiles bindings by default and the screen is one window; code keeps every control's wiring in one place a reader can follow.
+- **M4: a headless test through the platform's pointer input, over calling the model directly.** It caught two faults that would have reached a person, which the model tests could not.

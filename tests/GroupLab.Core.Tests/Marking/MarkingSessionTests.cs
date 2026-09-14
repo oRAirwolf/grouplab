@@ -1,0 +1,179 @@
+using System.Text.Json;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
+using GroupLab.Core.Registration;
+using GroupLab.Core.Statistics;
+
+namespace GroupLab.Core.Tests.Marking;
+
+/// <summary>
+/// The marking screen's model, NOTES-FROM-PLANNING.md entry 21 section 3 and DESIGN.md section 13, without a screen: the two
+/// manual scales, undo and redo, provenance, exclusion reported both ways, the composite group, and the export.
+/// </summary>
+public class MarkingSessionTests
+{
+    [Fact]
+    public void AReferenceLengthIsAUniformScale()
+    {
+        var scale = new LengthReference(new PointD(100, 100), new PointD(100, 350), 1);
+        var p = scale.ToTarget(new PointD(500, 250));
+        Assert.Equal(2.0, p.X, 12);
+        Assert.Equal(1.0, p.Y, 12);
+        Assert.True(scale.AssumesSquareOn);
+    }
+
+    /// <summary>Entry 21 section 4: a rectangle photographed off axis maps back to the target without the perspective.</summary>
+    [Fact]
+    public void AReferenceRectangleRemovesPerspectiveExactly()
+    {
+        // A 4 by 3 in rectangle seen through a perspective that shrinks its far edge.
+        var camera = new Homography([180, 30, 400, 10, 150, 300, 0.02, 0.05, 1]);
+        PointD[] corners = [camera.Apply(new PointD(0, 0)), camera.Apply(new PointD(4, 0)), camera.Apply(new PointD(4, 3)), camera.Apply(new PointD(0, 3))];
+        var scale = new RectangleReference(corners, 4, 3);
+        var inside = scale.ToTarget(camera.Apply(new PointD(1.25, 2.5)));
+        Assert.Equal(1.25, inside.X, 9);
+        Assert.Equal(2.5, inside.Y, 9);
+        Assert.False(scale.AssumesSquareOn);
+    }
+
+    [Fact]
+    public void EveryChangeCanBeUndoneAndRedone()
+    {
+        var session = new MarkingSession();
+        session.Open("target.jpg");
+        int id = session.AddShot(new PointD(10, 10));
+        session.MoveShot(id, new PointD(20, 20));
+        Assert.Equal(new PointD(20, 20), session.State.Find(id)!.Image);
+        session.Undo();
+        Assert.Equal(new PointD(10, 10), session.State.Find(id)!.Image);
+        session.Undo();
+        Assert.Empty(session.State.Shots);
+        Assert.False(session.CanUndo);
+        session.Redo();
+        session.Redo();
+        Assert.Equal(new PointD(20, 20), session.State.Find(id)!.Image);
+        Assert.False(session.CanRedo);
+    }
+
+    /// <summary>DESIGN.md section 13: provenance per shot, automatic, automatic then corrected, or manual.</summary>
+    [Fact]
+    public void ADetectedShotTheUserTouchesBecomesCorrectedAndHandPlacedShotsSurviveANewDetection()
+    {
+        var session = new MarkingSession();
+        int manual = session.AddShot(new PointD(1, 1));
+        var scale = new LengthReference(new PointD(0, 0), new PointD(100, 0), 1);
+        session.LoadDetections(scale, [new BullAim(0, "1", new PointD(50, 50))], [(new PointD(40, 40), 0), (new PointD(60, 60), 0)], "test");
+        var detected = session.State.Shots.Where(s => s.Provenance == ShotProvenance.Automatic).ToList();
+        Assert.Equal(2, detected.Count);
+        Assert.NotNull(session.State.Find(manual));
+
+        session.AssignBull(detected[0].Id, null);
+        session.MoveShot(detected[1].Id, new PointD(61, 61));
+        session.MoveShot(manual, new PointD(2, 2));
+        Assert.All(detected, d => Assert.Equal(ShotProvenance.Corrected, session.State.Find(d.Id)!.Provenance));
+        Assert.Equal(ShotProvenance.Manual, session.State.Find(manual)!.Provenance);
+    }
+
+    /// <summary>
+    /// docs/STATISTICS.md section 10: an excluded shot needs a reason and every report prints the full and reduced figures side by
+    /// side; a detection marked as not a shot is in neither. The headline is mean radius from the engine of M3.
+    /// </summary>
+    [Fact]
+    public void ExclusionsAreReportedBothWaysAndNotAShotIsInNeither()
+    {
+        var session = new MarkingSession();
+        session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));
+        PointD[] image = [new(100, 100), new(130, 110), new(95, 140), new(120, 125), new(110, 90), new(300, 300)];
+        var ids = image.Select(p => session.AddShot(p)).ToList();
+        int handwriting = session.AddShot(new PointD(900, 900));
+        session.SetNotAShot(handwriting, true);
+        session.SetExclusion(ids[^1], ExclusionReason.CalledFlyer);
+
+        var report = GroupAnalysis.Analyse(session.State);
+        Assert.Equal(1, report.Excluded);
+        Assert.Equal(1, report.NotShots);
+        Assert.Equal(6, report.AllShots!.Shots);
+        Assert.Equal(5, report.WithoutExclusions!.Shots);
+
+        var inches = image.Select(p => new PointD(p.X / 100, p.Y / 100)).ToList();
+        var expected = GroupStatistics.Rayleigh(inches);
+        Assert.Equal(expected.MeanRadius.Value, report.AllShots.MeanRadius.Value, 12);
+        Assert.Equal(expected.MeanRadius.Lower, report.AllShots.MeanRadius.Lower, 12);
+        Assert.True(report.WithoutExclusions.MeanRadius.Value < report.AllShots.MeanRadius.Value);
+        Assert.Null(report.AllShots.CentreFromAim);
+    }
+
+    /// <summary>docs/STATISTICS.md section 2: the composite group is each shot's offset from its own bull.</summary>
+    [Fact]
+    public void ShotsAssignedToBullsFormTheCompositeGroup()
+    {
+        var session = new MarkingSession();
+        var scale = new LengthReference(new PointD(0, 0), new PointD(100, 0), 1);
+        PointD[] offsets = [new(5, 0), new(-3, 4), new(0, -6), new(2, 2)];
+        var bulls = new[] { new BullAim(0, "1", new PointD(200, 200)), new BullAim(1, "2", new PointD(500, 200)) };
+        var detections = bulls.SelectMany(b => offsets.Take(2).Select(o => (new PointD(b.Image.X + o.X, b.Image.Y + o.Y), (int?)b.Index)))
+            .Concat(offsets.Skip(2).Select(o => (new PointD(bulls[0].Image.X + o.X, bulls[0].Image.Y + o.Y), (int?)0)))
+            .ToList();
+        session.LoadDetections(scale, bulls, detections, "test");
+
+        var report = GroupAnalysis.Analyse(session.State);
+        var composite = detections.Select(d => new PointD((d.Item1.X - bulls[d.Item2!.Value].Image.X) / 100, (d.Item1.Y - bulls[d.Item2.Value].Image.Y) / 100)).ToList();
+        Assert.Equal(GroupGeometry.MaximumPairDistance(composite).Distance, report.AllShots!.ExtremeSpread.Value, 12);
+        Assert.NotNull(report.AllShots.CentreFromAim);
+        Assert.Equal(GroupStatistics.Centre(composite).X, report.AllShots.CentreFromAim!.Value.X, 12);
+    }
+
+    [Fact]
+    public void WithoutAScaleTheReportSaysWhatIsMissing()
+    {
+        var session = new MarkingSession();
+        session.AddShot(new PointD(1, 1));
+        session.AddShot(new PointD(2, 2));
+        var report = GroupAnalysis.Analyse(session.State);
+        Assert.Null(report.AllShots);
+        Assert.Contains("scale", report.Problem, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void TheExportRecordsEveryShotWithItsProvenanceAndTheScaleAssumption()
+    {
+        var session = new MarkingSession();
+        session.Open("group.jpg");
+        session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));
+        session.SetPointOfAim(new PointD(100, 100));
+        int a = session.AddShot(new PointD(110, 105));
+        session.AddShot(new PointD(90, 95));
+        session.AddShot(new PointD(104, 88));
+        session.SetExclusion(a, ExclusionReason.PulledShot);
+
+        using var json = JsonDocument.Parse(GroupAnalysis.Export(session.State));
+        var root = json.RootElement;
+        Assert.Equal("grouplab-marking-1", root.GetProperty("format").GetString());
+        Assert.True(root.GetProperty("scaleAssumesSquareOn").GetBoolean());
+        Assert.Equal(3, root.GetProperty("shots").GetArrayLength());
+        Assert.Equal("PulledShot", root.GetProperty("shots")[0].GetProperty("exclusion").GetString());
+        Assert.Equal("Manual", root.GetProperty("shots")[1].GetProperty("provenance").GetString());
+        Assert.Equal(3, root.GetProperty("report").GetProperty("allShots").GetProperty("shots").GetInt32());
+    }
+
+    [Fact]
+    public void ARoughClickSnapsToTheHoleItIsNear()
+    {
+        const int size = 100;
+        var pixels = Enumerable.Repeat((byte)230, size * size).ToArray();
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                if (((x - 60.0) * (x - 60.0)) + ((y - 45.0) * (y - 45.0)) <= 36)
+                {
+                    pixels[(y * size) + x] = 40;
+                }
+            }
+        }
+
+        var snapped = Snapping.ToDarkCentroid(new GrayImage(size, size, pixels), new PointD(55, 50), 15);
+        Assert.Equal(60, snapped.X, 1);
+        Assert.Equal(45, snapped.Y, 1);
+    }
+}

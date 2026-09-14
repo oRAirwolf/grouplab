@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-14, entry 21: a manual marking path, which is a second product and mostly already built
 
-**Status: open, not blocking M3. Read before starting M4**, because it changes what M4's first screen is for.
+**Status: actioned 2026-09-14.** M4's first screen is the marking screen of section 3, built as both the manual path and the correction interface, with section 4's rectangle offered beside the length; reported in `docs/PHASE1-RESULTS.md` M4.1. Sections 5 and 6 are left for specification, as section 8 says.
 
 ### 1. What Alan asked for
 
