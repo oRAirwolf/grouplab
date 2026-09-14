@@ -12,6 +12,47 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-15, question 12: the fewest shots a group size is quoted for, and entry 24's coverage premise
+
+**Status: open.** Nothing waits on it. The marking panel withholds every dispersion figure below 5 shots in the interim, which is one constant, `GroupAnalysis.MinimumShotsForDispersion` in `src/GroupLab.Core/Marking/GroupAnalysis.cs`.
+
+**What entry 24 section 1 asks.** "Pick the thresholds from `STATISTICS.md` section 9, which already models how well sigma is known from n shots, rather than from anybody's taste. If section 9 does not give a clean answer, raise it as a question rather than choosing a round number."
+
+**What section 9 gives.** Section 9.1's table is continuous in n and sets no threshold. It names one row: "**The five-shot row is the one to put in front of a user.** A five-shot group locates the rifle's true dispersion somewhere between 0.675 and 1.916 times the measured value, a factor of 2.84." Five is taken from that sentence. The same interval at the counts in question, from `SampleSize.SigmaIntervalMultiples`:
+
+| n | True sigma, as multiples of the measured | Factor |
+|---|---|---|
+| 2 | 0.521 to 6.285 | 12.1 |
+| 3 | 0.599 to 2.874 | 4.8 |
+| 5 | 0.675 to 1.916 | 2.84 |
+| 10 | 0.756 to 1.479 | 1.96 |
+| 20 | 0.817 to 1.289 | 1.58 |
+
+**The coverage premise is not the one entry 24 cites.** Entry 24 section 1 cites entry 23 section 2's 79.5 percent at ten shots. That figure is the bootstrap BCa interval for the Grubbs-Patnaik CEP, which the panel does not show. The panel's intervals are closed form or come from the simulated range-statistic table, and their coverage, measured over 40,000 circular normal groups at each n in `tests/GroupLab.Core.Tests/Statistics/SmallGroupCoverageTests.cs`, is:
+
+| n | Mean radius and sigma, exact | Simulated | Extreme spread, shotGroups' `getRangeStat` form | Extreme spread, the form the panel now uses |
+|---|---|---|---|---|
+| 2 | 92.51 % | 92.60 % | 84.66 % | 95.10 % |
+| 3 | 93.70 % | 93.50 % | 89.39 % | 94.96 % |
+| 5 | 94.34 % | 94.42 % | 92.31 % | 95.17 % |
+| 10 | 94.71 % | 94.78 % | 93.91 % | 94.93 % |
+| 20 | 94.86 % | 94.92 % | 94.68 % | 94.94 % |
+
+- **Mean radius and sigma** are under nominal only because the c4 correction multiplies both endpoints, which is how shotGroups does it and what brief section 5 has GroupLab match. The exact coverage is `P(q_lo / k² ≤ χ²(2(n − 1)) ≤ q_hi / k²)` with `k = 1 / c4(2n − 1)`, now `IntervalCoverage.RayleighSigma`, and the panel labels each interval with it, "94.3% interval" at five shots, never a bare 95.
+- **Extreme spread's shotGroups form** scales the observed spread by the table's quantiles over its mean, and so does not cover the expected spread at its stated level. The panel now uses `RangeStatistics.MeanInterval`, observed times mean over the quantiles, which does. The harness still compares shotGroups' form against shotGroups. This is handled and not a question; it goes to section 15.4 as a known difference with the next statistics amendment unless you say otherwise.
+
+**So Alan's two-shot interval was not overconfident about coverage.** 0.476 to 5.744 in covers the truth 92.5 percent of the time. What misled was a headline to three decimals over an interval spanning a factor of twelve, which is a width problem, and withholding the figure fixes it either way.
+
+**Options.**
+
+- **A. Five, as built.** Section 9.1's named row. Between 5 and 19 shots the panel also prints section 9.1's range in words: "From 5 shots the true group size could be anywhere from 0.68 to 1.92 times what they measure."
+- **B. Ten.** The factor falls to 1.96, and it matches your example sentence, "10 before the interval means much". It withholds every five-shot group, which is most of what people fire.
+- **C. Five for the figure and ten for the interval.** Print the figure from five and its interval only from ten. This hides the one thing that says how little five shots know, so I would not.
+
+**What I would choose: A.** It is the row section 9.1 already tells us to put in front of a user, and the range sentence up to twenty carries the rest of entry 24's "between that minimum and about twenty". If you pick B it is one constant and one test.
+
+---
+
 ## 2026-09-14, question 11: three differences the M3 harness found between shotGroups and its own fixtures
 
 **Status: open.** Nothing waits on it. The M3 build continues, and every affected key is reported as awaiting or disputed, never as passed.

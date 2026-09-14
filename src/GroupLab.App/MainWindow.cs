@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
@@ -285,22 +286,38 @@ public sealed class MainWindow : Window
         if (report.AllShots is { } all)
         {
             var reduced = report.WithoutExclusions!;
-            statistics.Children.Add(Figure("Mean radius", all.MeanRadius, reduced.MeanRadius, 26, FontWeight.Bold));
-            statistics.Children.Add(Figure("Sigma", all.Sigma, reduced.Sigma, 16, FontWeight.Normal));
-            statistics.Children.Add(Figure("Extreme spread", all.ExtremeSpread, reduced.ExtremeSpread, 12, FontWeight.Normal, subordinate: true));
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"{all.Shots} shots{(report.Excluded > 0 ? $", {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}")));
-            if (all.CentreFromAim is { } centre)
+            bool excluded = report.Excluded > 0;
+            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"{all.Shots} shots{(excluded ? $", {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}")));
+            statistics.Children.Add(Line(all.CentreFromAim is { } centre
+                ? string.Create(CultureInfo.InvariantCulture, $"Centre from aim: {Math.Abs(centre.X):0.000} in {(centre.X >= 0 ? "right" : "left")}, {Math.Abs(centre.Y):0.000} in {(centre.Y >= 0 ? "low" : "high")}")
+                : $"Centre from aim: {all.CentreFromAimUnavailable}."));
+
+            if (all.DispersionWithheld is { } withheld)
             {
-                statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Centre from aim: {Math.Abs(centre.X):0.000} in {(centre.X >= 0 ? "right" : "left")}, {Math.Abs(centre.Y):0.000} in {(centre.Y >= 0 ? "low" : "high")}")));
+                // Entry 24 section 1: below the minimum there is no headline figure to misread, only what is missing.
+                statistics.Children.Add(new TextBlock { Text = withheld, TextWrapping = TextWrapping.Wrap, FontSize = 16, FontWeight = FontWeight.SemiBold });
+            }
+            else
+            {
+                statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, 26, FontWeight.Bold));
+                statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, 16, FontWeight.Normal));
+                statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, 13, FontWeight.Normal, subordinate: true));
+                if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
+                {
+                    statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
+                        $"From {all.Shots} shots the true group size could be anywhere from {range.Lower:0.00} to {range.Upper:0.00} times what they measure (STATISTICS.md section 9.1).")));
+                }
+
+                statistics.Children.Add(Line(all.AspectRatio is { } aspect
+                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {all.AngleDegrees:0} degrees")
+                    : $"Error ellipse: {all.AspectRatioUnavailable}."));
+                if (all.WorstShotInMeanRadii is { } worst)
+                {
+                    statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
+                        $"Worst shot at {worst:0.00} mean radii; a group of {all.Shots} is expected to put its worst at {all.ExpectedWorstInMeanRadii:0.00}, so a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")));
+                }
             }
 
-            if (!double.IsNaN(all.AspectRatio))
-            {
-                statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {all.AspectRatio:0.00}, major axis at {all.AngleDegrees:0} degrees")));
-            }
-
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-                $"Worst shot at {all.WorstShotInMeanRadii:0.00} mean radii; a group of {all.Shots} is expected to put its worst at {all.ExpectedWorstInMeanRadii:0.00}, so a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")));
             statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed: {report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
         }
 
@@ -412,21 +429,30 @@ public sealed class MainWindow : Window
 
     private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, FontSize = 12 };
 
+    /// <summary>The text of the statistics panel, for the headless tests.</summary>
+    internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
     /// <summary>
-    /// One figure with its 95 percent interval, in the monospace with tabular figures DESIGN.md section 19 asks for, the value without
-    /// exclusions beside it when there are any. Extreme spread is drawn smaller and dimmer: present, and visibly subordinate.
+    /// One figure in the monospace with tabular figures DESIGN.md section 19 asks for, and beneath it, smaller, its interval labelled
+    /// with the coverage it actually has (NOTES-FROM-PLANNING.md entry 24 section 1), then the figure without exclusions when there
+    /// are any. Every line wraps, so the largest type cannot clip at the panel's edge (entry 24 section 2). Extreme spread is drawn
+    /// smaller and dimmer: present, and visibly subordinate.
     /// </summary>
-    private Control Figure(string name, Estimate all, Estimate reduced, double size, FontWeight weight, bool subordinate = false)
+    private static Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false)
     {
-        string Show(Estimate e) => double.IsNaN(e.Lower)
-            ? string.Create(CultureInfo.InvariantCulture, $"{e.Value:0.000} in")
-            : string.Create(CultureInfo.InvariantCulture, $"{e.Value:0.000} in  (95% {e.Lower:0.000} to {e.Upper:0.000})");
+        static string Interval(ReportedEstimate e) => e is { Lower: { } lower, Upper: { } upper, Coverage: { } coverage }
+            ? string.Create(CultureInfo.InvariantCulture, $"{100 * coverage:0.0}% interval {lower:0.000} to {upper:0.000} in")
+            : $"no interval: {e.IntervalUnavailable}";
         var column = new StackPanel { Spacing = 0 };
-        column.Children.Add(new TextBlock { Text = name, FontSize = 11, Opacity = subordinate ? 0.6 : 0.85 });
-        column.Children.Add(new TextBlock { Text = Show(all), FontFamily = Mono, FontSize = size, FontWeight = weight, Opacity = subordinate ? 0.7 : 1 });
-        if (session.State.Shots.Any(s => s.IsShot && s.Exclusion is not null))
+        column.Children.Add(new TextBlock { Text = name, FontSize = 11, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+        column.Children.Add(new TextBlock { Text = string.Create(CultureInfo.InvariantCulture, $"{all.Value:0.000} in"), FontFamily = Mono, FontSize = size, FontWeight = weight, Opacity = subordinate ? 0.7 : 1, TextWrapping = TextWrapping.Wrap });
+        column.Children.Add(new TextBlock { Text = Interval(all), FontFamily = Mono, FontSize = 12, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+        if (reduced is not null)
         {
-            column.Children.Add(new TextBlock { Text = "without exclusions: " + Show(reduced), FontFamily = Mono, FontSize = Math.Max(11, size * 0.55), Opacity = 0.8 });
+            string text = pick(reduced) is { } r
+                ? string.Create(CultureInfo.InvariantCulture, $"without exclusions: {r.Value:0.000} in, {Interval(r)}")
+                : "without exclusions: " + reduced.DispersionWithheld;
+            column.Children.Add(new TextBlock { Text = text, FontFamily = Mono, FontSize = 12, Opacity = 0.8, TextWrapping = TextWrapping.Wrap });
         }
 
         return column;

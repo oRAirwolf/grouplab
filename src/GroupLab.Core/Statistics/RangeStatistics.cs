@@ -168,6 +168,19 @@ public static class RangeStatistics
         return m is { } cell ? new Estimate(observed, observed * cell.Q025 / cell.Mean, observed * cell.Q975 / cell.Mean) : new Estimate(observed, double.NaN, double.NaN);
     }
 
+    /// <summary>
+    /// The observed statistic with a 95 percent interval for its expected value that has that coverage: the observed statistic
+    /// times the table's mean over its 97.5 and 2.5 percent quantiles, which is <see cref="Sigma"/>'s interval scaled by the mean.
+    /// <see cref="Interval"/>'s form, shotGroups', covers the expected extreme spread 84.7 percent of the time at two shots and 92.3
+    /// at five (SmallGroupCoverageTests), so the marking screen uses this one (NOTES-FROM-PLANNING.md entry 23 section 1: exact where
+    /// shotGroups is not).
+    /// </summary>
+    public static Estimate MeanInterval(RangeStatistic statistic, double observed, int n, int groups = 1, RangeStatisticsTable? table = null)
+    {
+        var m = (table ?? RangeStatisticsTable.Default).Lookup(statistic, n, groups);
+        return m is { } cell ? new Estimate(observed, observed * cell.Mean / cell.Q975, observed * cell.Mean / cell.Q025) : new Estimate(observed, double.NaN, double.NaN);
+    }
+
     /// <summary>Sigma from a range statistic: the statistic over the table's mean, with the interval from its quantiles, shotGroups' <c>range2sigma</c>.</summary>
     public static Estimate Sigma(RangeStatistic statistic, double observed, int n, int groups = 1, RangeStatisticsTable? table = null)
     {

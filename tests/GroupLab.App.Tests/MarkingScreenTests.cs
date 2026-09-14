@@ -42,7 +42,7 @@ public class MarkingScreenTests
     [AvaloniaFact]
     public void TapsSetAScaleAndMarkAGroupWhoseHeadlineIsTheEngineMeanRadius()
     {
-        (int X, int Y)[] holes = [(300, 300), (340, 280), (320, 340)];
+        (int X, int Y)[] holes = [(300, 300), (340, 280), (320, 340), (250, 340), (390, 310)];
         string path = SyntheticTarget(holes);
         try
         {
@@ -79,13 +79,21 @@ public class MarkingScreenTests
             Tap(new PointD(320, 310));
 
             canvas.Tool = MarkingTool.Impact;
-            foreach (var (x, y) in holes)
+            foreach (var (x, y) in holes.Take(4))
             {
                 Tap(new PointD(x + 3, y - 2));
             }
 
+            // Four shots: entry 24 section 1, the panel says what is missing and prints no mean radius.
+            Assert.Null(GroupAnalysis.Analyse(window.Session.State).AllShots!.MeanRadius);
+            Assert.Contains(window.StatisticsText, t => t.Contains("At least 5", StringComparison.Ordinal));
+            Assert.DoesNotContain(window.StatisticsText, t => t == "Mean radius");
+
+            Tap(new PointD(holes[4].X + 3, holes[4].Y - 2));
             var state = window.Session.State;
-            Assert.Equal(3, state.Shots.Count);
+            Assert.Equal(5, state.Shots.Count);
+            Assert.Contains(window.StatisticsText, t => t == "Mean radius");
+            Assert.DoesNotContain(window.StatisticsText, t => t.Contains("95%", StringComparison.Ordinal) && !t.Contains("95.0%", StringComparison.Ordinal));
             Assert.NotNull(state.PointOfAim);
             Assert.All(state.Shots, s => Assert.Equal(ShotProvenance.Manual, s.Provenance));
 
@@ -97,10 +105,11 @@ public class MarkingScreenTests
 
             var report = GroupAnalysis.Analyse(state);
             var expected = GroupLab.Core.Statistics.GroupStatistics.Rayleigh([.. holes.Select(h => new PointD(h.X / 100.0, h.Y / 100.0))]);
-            Assert.Equal(expected.MeanRadius.Value, report.AllShots!.MeanRadius.Value, 2);
+            Assert.Equal(expected.MeanRadius.Value, report.AllShots!.MeanRadius!.Value, 2);
 
             window.Session.Undo();
-            Assert.Equal(2, window.Session.State.Shots.Count);
+            Assert.Equal(4, window.Session.State.Shots.Count);
+            Assert.Contains(window.StatisticsText, t => t.Contains("At least 5", StringComparison.Ordinal));
             window.Close();
         }
         finally

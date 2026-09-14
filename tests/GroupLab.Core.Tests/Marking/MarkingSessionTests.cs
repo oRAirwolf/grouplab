@@ -97,9 +97,9 @@ public class MarkingSessionTests
 
         var inches = image.Select(p => new PointD(p.X / 100, p.Y / 100)).ToList();
         var expected = GroupStatistics.Rayleigh(inches);
-        Assert.Equal(expected.MeanRadius.Value, report.AllShots.MeanRadius.Value, 12);
-        Assert.Equal(expected.MeanRadius.Lower, report.AllShots.MeanRadius.Lower, 12);
-        Assert.True(report.WithoutExclusions.MeanRadius.Value < report.AllShots.MeanRadius.Value);
+        Assert.Equal(expected.MeanRadius.Value, report.AllShots.MeanRadius!.Value, 12);
+        Assert.Equal(expected.MeanRadius.Lower, report.AllShots.MeanRadius.Lower!.Value, 12);
+        Assert.True(report.WithoutExclusions.MeanRadius!.Value < report.AllShots.MeanRadius.Value);
         Assert.Null(report.AllShots.CentreFromAim);
     }
 
@@ -118,9 +118,81 @@ public class MarkingSessionTests
 
         var report = GroupAnalysis.Analyse(session.State);
         var composite = detections.Select(d => new PointD((d.Item1.X - bulls[d.Item2!.Value].Image.X) / 100, (d.Item1.Y - bulls[d.Item2.Value].Image.Y) / 100)).ToList();
-        Assert.Equal(GroupGeometry.MaximumPairDistance(composite).Distance, report.AllShots!.ExtremeSpread.Value, 12);
+        Assert.Equal(GroupGeometry.MaximumPairDistance(composite).Distance, report.AllShots!.ExtremeSpread!.Value, 12);
         Assert.NotNull(report.AllShots.CentreFromAim);
         Assert.Equal(GroupStatistics.Centre(composite).X, report.AllShots.CentreFromAim!.Value.X, 12);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 24 section 1: two shots print no dispersion figure, only what is missing, while the count and the
+    /// centre from the aim, which are exact at any count, are still reported. At the minimum the figures appear, each interval
+    /// labelled with its actual coverage rather than a bare 95 percent.
+    /// </summary>
+    [Fact]
+    public void BelowTheMinimumTheReportWithholdsDispersionButKeepsTheCentre()
+    {
+        var session = new MarkingSession();
+        session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));
+        session.SetPointOfAim(new PointD(100, 100));
+        session.AddShot(new PointD(150, 120));
+        session.AddShot(new PointD(190, 60));
+
+        var two = GroupAnalysis.Analyse(session.State).AllShots!;
+        Assert.Equal(2, two.Shots);
+        Assert.Null(two.MeanRadius);
+        Assert.Null(two.Sigma);
+        Assert.Null(two.ExtremeSpread);
+        Assert.NotNull(two.MeanRadiusUnavailable);
+        Assert.Contains("At least 5", two.DispersionWithheld, StringComparison.Ordinal);
+        Assert.Equal(0.7, two.CentreFromAim!.Value.X, 12);
+        Assert.Equal(-0.1, two.CentreFromAim.Value.Y, 12);
+
+        session.AddShot(new PointD(160, 90));
+        session.AddShot(new PointD(170, 110));
+        Assert.Null(GroupAnalysis.Analyse(session.State).AllShots!.MeanRadius);
+        session.AddShot(new PointD(140, 100));
+        var five = GroupAnalysis.Analyse(session.State).AllShots!;
+        Assert.Null(five.DispersionWithheld);
+        Assert.NotNull(five.MeanRadius);
+        Assert.Equal(IntervalCoverage.RayleighSigma(5), five.MeanRadius.Coverage!.Value, 15);
+        Assert.True(five.MeanRadius.Coverage < 0.95);
+        Assert.Equal(0.95, five.ExtremeSpread!.Coverage);
+        Assert.Equal(SampleSize.SigmaIntervalMultiples(5).Upper, five.TrueSizeRange!.Upper, 15);
+    }
+
+    /// <summary>
+    /// Entry 24 section 3: an undefined figure exports as null with a sibling saying why, never as the string "NaN", at two shots and
+    /// on a five-shot group in a straight line, whose error ellipse has no shape.
+    /// </summary>
+    [Fact]
+    public void TheExportCarriesNullWithAReasonAndNeverNaN()
+    {
+        var session = new MarkingSession();
+        session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));
+        session.AddShot(new PointD(100, 100));
+        session.AddShot(new PointD(130, 100));
+        string two = GroupAnalysis.Export(session.State);
+        Assert.DoesNotContain("NaN", two, StringComparison.Ordinal);
+        using (var json = JsonDocument.Parse(two))
+        {
+            var figures = json.RootElement.GetProperty("report").GetProperty("allShots");
+            Assert.Equal(JsonValueKind.Null, figures.GetProperty("aspectRatio").ValueKind);
+            Assert.Equal("needs at least 3 shots", figures.GetProperty("aspectRatioUnavailable").GetString());
+            Assert.Equal(JsonValueKind.Null, figures.GetProperty("meanRadius").ValueKind);
+            Assert.Equal(JsonValueKind.Null, figures.GetProperty("centreFromAim").ValueKind);
+            Assert.False(string.IsNullOrEmpty(figures.GetProperty("centreFromAimUnavailable").GetString()));
+        }
+
+        session.AddShot(new PointD(160, 100));
+        session.AddShot(new PointD(190, 100));
+        session.AddShot(new PointD(220, 100));
+        string line = GroupAnalysis.Export(session.State);
+        Assert.DoesNotContain("NaN", line, StringComparison.Ordinal);
+        using var lineJson = JsonDocument.Parse(line);
+        var lineFigures = lineJson.RootElement.GetProperty("report").GetProperty("allShots");
+        Assert.Equal(JsonValueKind.Number, lineFigures.GetProperty("meanRadius").GetProperty("value").ValueKind);
+        Assert.Equal(JsonValueKind.Null, lineFigures.GetProperty("aspectRatio").ValueKind);
+        Assert.Contains("line", lineFigures.GetProperty("aspectRatioUnavailable").GetString(), StringComparison.Ordinal);
     }
 
     [Fact]
