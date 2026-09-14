@@ -89,6 +89,13 @@ public static class RawMeasurements
             normalisedToPage = Matrix(r.NormalisedToPage),
             form = "page = normalisedToPage(u (1 + k1 r^2 + k2 r^4)), u = (image - centre) / scale",
         },
+        SurfaceMapping s => new
+        {
+            model = s.Model,
+            parameters = s.Parameters,
+            form = "sheet = along-ruling * (cos a, sin a, 0) + X(t) * (-sin a, cos a, 0) + Z(t) * (0, 0, 1), where (X, Z) integrates " +
+                "(cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet + T))",
+        },
         _ => null,
     };
 

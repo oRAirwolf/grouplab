@@ -26,6 +26,7 @@ internal static class MeasurementJson
         {
             HomographyMapping h => new { model = h.Model, imageToPage = Matrix(h.ImageToPage) },
             RadialHomographyMapping r => new { model = r.Model, r.CentreX, r.CentreY, r.Scale, r.K1, r.K2, normalisedToPage = Matrix(r.NormalisedToPage) },
+            SurfaceMapping surface => new { model = surface.Model, parameters = surface.Parameters },
             _ => null,
         };
         var document = new

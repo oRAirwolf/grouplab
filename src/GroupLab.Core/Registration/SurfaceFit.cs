@@ -1,0 +1,353 @@
+using GroupLab.Core.Imaging;
+
+namespace GroupLab.Core.Registration;
+
+/// <summary>
+/// One image's marker corners for a surface fit, with the starting model and the corners that may be used: for a
+/// photograph the first RANSAC's inliers, which reject misreads but not a bend, and for a scan the scan's inliers.
+/// <see cref="PageLeft"/> to <see cref="PageBottom"/> bound the page, for the mapping's starting homography and the
+/// deflection report.
+/// </summary>
+public sealed record SurfaceFrame(
+    string Name,
+    IReadOnlyList<PointD> Image,
+    IReadOnlyList<PointD> Page,
+    IReadOnlyList<bool> Usable,
+    SurfaceModel Start,
+    double PageLeft,
+    double PageTop,
+    double PageRight,
+    double PageBottom);
+
+/// <summary>A fitted frame: the model and mapping, each corner's page error in dmm, and which corners the fit kept.</summary>
+public sealed record SurfaceFrameResult(
+    SurfaceModel Model,
+    SurfaceMapping Mapping,
+    IReadOnlyList<double> PageErrors,
+    IReadOnlyList<bool> Kept,
+    double RmsKept,
+    double RmsAll,
+    double MaxKept,
+    double IndependentFocalPixels,
+    double DeflectionDmm,
+    IReadOnlyList<(double StartDegrees, double RmsPixels)> Starts);
+
+/// <summary>
+/// The developable surface fit of PHASE1-BRIEF.md M1. Each frame is fitted alone from several ruling angles, because a
+/// ruling angle is undefined until the sheet bends, and the best start is kept. Every corner is then reclassified, first at
+/// <see cref="MisreadThreshold"/> and then at the Phase 0 inlier distance, with a refit after each, so corners the planar
+/// RANSAC rejected because the sheet bends are taken back. Frames that share a lens, by <see cref="Fit"/>'s caller, are then fitted
+/// together with one focal length and one lens, per section 3.2, and reclassified and refitted once more. Residuals are
+/// in pixels, measured in undistorted normalised coordinates and scaled back by the normalisation, because a detector's
+/// corner error is a pixel quantity.
+/// </summary>
+public static class SurfaceFit
+{
+    /// <summary>Bend coefficients fitted: tangent angle to the cube of arc length, so curvature is a quadratic.</summary>
+    public const int BendTerms = 3;
+
+    /// <summary>Starting ruling angles, degrees.</summary>
+    public static IReadOnlyList<double> StartAngles { get; } = [0, 30, 60, 90, 120, 150];
+
+    private const int FrameParameters = 4 + 6;
+
+    /// <summary>
+    /// The first reclassification distance, page dmm: a photograph's first RANSAC distance, which rejects misreads only
+    /// (<c>SheetMeasurer.PhotographRansacThreshold</c>). Reclassifying straight to the Phase 0 inlier distance lost whole
+    /// marker columns on a rendered 1.00 in bow: the planar RANSAC had rejected them before the surface fit saw them, the
+    /// bend fitted to the remaining columns missed them by 4 to 5 dmm, and 96 of 136 corners were kept (PHASE1-RESULTS.md M1).
+    /// </summary>
+    public const double MisreadThreshold = 12.7;
+
+    /// <summary>
+    /// PHASE1-BRIEF.md section 3.2's starting focal length, pixels: the 35 mm equivalent over 36 mm, times the image's long
+    /// side. A starting value only; the fit refines it. Null when the image carries no such tag, and such an image cannot
+    /// use this model at all.
+    /// </summary>
+    public static double? FocalPixelsFromExif(ImageMetadata metadata, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(metadata);
+        return metadata.FocalLength35mm is { } equivalent ? equivalent / 36.0 * Math.Max(width, height) : null;
+    }
+
+    /// <summary>
+    /// A perspective starting model from a Phase 0 lens fit and a focal length: the plane pose that reproduces the lens
+    /// fit's homography through that focal length, flat, with the lens fit's distortion.
+    /// </summary>
+    public static SurfaceModel StartFromLens(RadialHomographyMapping lens, double focalPixels, double pageCentreX, double pageCentreY)
+    {
+        ArgumentNullException.ThrowIfNull(lens);
+        var toCentredPage = new Homography([1, 0, pageCentreX, 0, 1, pageCentreY, 0, 0, 1]);
+        var g = Homography.Compose(toCentredPage, lens.NormalisedToPage.Inverse());
+        double f = focalPixels / lens.Scale;
+        double[] m1 = [g[0, 0] / f, g[1, 0] / f, g[2, 0]];
+        double[] m2 = [g[0, 1] / f, g[1, 1] / f, g[2, 1]];
+        double[] m3 = [g[0, 2] / f, g[1, 2] / f, g[2, 2]];
+        double scale = 2 / (Norm(m1) + Norm(m2));
+        if (scale * m3[2] < 0)
+        {
+            scale = -scale;
+        }
+
+        double[] r1 = [.. m1.Select(v => v * scale)];
+        double[] r2 = [.. m2.Select(v => v * scale)];
+        double[] r3 = [(r1[1] * r2[2]) - (r1[2] * r2[1]), (r1[2] * r2[0]) - (r1[0] * r2[2]), (r1[0] * r2[1]) - (r1[1] * r2[0])];
+        var rotation = Orthonormalise(new double[,] { { r1[0], r2[0], r3[0] }, { r1[1], r2[1], r3[1] }, { r1[2], r2[2], r3[2] } });
+        var w = DevelopableSurface.RotationVector(rotation);
+        return new SurfaceModel(SurfaceProjection.Perspective, 0, new double[BendTerms + 1], w.X, w.Y, w.Z,
+            m3[0] * scale, m3[1] * scale, m3[2] * scale, f, lens.K1, lens.K2, lens.CentreX, lens.CentreY, lens.Scale, pageCentreX, pageCentreY);
+    }
+
+    /// <summary>An orthographic starting model from a scan's homography: its scale and in-plane rotation at the page centre.</summary>
+    public static SurfaceModel StartFromHomography(Homography imageToPage, int width, int height, double pageCentreX, double pageCentreY)
+    {
+        ArgumentNullException.ThrowIfNull(imageToPage);
+        double cx = (width - 1) / 2.0, cy = (height - 1) / 2.0, s = Math.Max(width, height) / 2.0;
+        var toImage = imageToPage.Inverse();
+        PointD N(PointD page)
+        {
+            var q = toImage.Apply(page);
+            return new PointD((q.X - cx) / s, (q.Y - cy) / s);
+        }
+
+        const double h = 10;
+        var o = N(new PointD(pageCentreX, pageCentreY));
+        var px = N(new PointD(pageCentreX + h, pageCentreY));
+        var py = N(new PointD(pageCentreX, pageCentreY + h));
+        double jxx = (px.X - o.X) / h, jyx = (px.Y - o.Y) / h, jxy = (py.X - o.X) / h, jyy = (py.Y - o.Y) / h;
+        double alpha = Math.Sqrt(Math.Abs((jxx * jyy) - (jxy * jyx)));
+        double gamma = Math.Atan2(jyx - jxy, jxx + jyy);
+        return new SurfaceModel(SurfaceProjection.Orthographic, 0, new double[BendTerms + 1], 0, 0, gamma, o.X, o.Y, 0, alpha, 0, 0, cx, cy, s, pageCentreX, pageCentreY);
+    }
+
+    /// <param name="frames">Frames to fit.</param>
+    /// <param name="shareCamera">Fit one focal length and lens across all the frames, which must be perspective and share a lens.</param>
+    public static IReadOnlyList<SurfaceFrameResult> Fit(IReadOnlyList<SurfaceFrame> frames, bool shareCamera)
+    {
+        ArgumentNullException.ThrowIfNull(frames);
+        var models = new SurfaceModel[frames.Count];
+        var kept = new bool[frames.Count][];
+        var independentFocal = new double[frames.Count];
+        var starts = new List<(double, double)>[frames.Count];
+        for (int f = 0; f < frames.Count; f++)
+        {
+            var frame = frames[f];
+            var usable = frame.Usable.ToArray();
+            starts[f] = [];
+            SurfaceModel? best = null;
+            double bestCost = double.PositiveInfinity;
+            foreach (double degrees in StartAngles)
+            {
+                var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1] };
+                var (model, cost) = FitAlone(frame, start, usable);
+                starts[f].Add((degrees, Math.Sqrt(cost / Math.Max(1, usable.Count(u => u)))));
+                if (cost < bestCost)
+                {
+                    bestCost = cost;
+                    best = model;
+                }
+            }
+
+            var refined = best!;
+            foreach (double threshold in (double[])[MisreadThreshold, PageRegistration.RansacThreshold])
+            {
+                kept[f] = Reclassify(frame, refined, threshold);
+                refined = FitAlone(frame, refined, kept[f]).Model;
+            }
+
+            models[f] = refined;
+            independentFocal[f] = refined.FocalPixels;
+        }
+
+        if (shareCamera && frames.Count > 1 && frames.All(x => x.Start.Projection == SurfaceProjection.Perspective))
+        {
+            models = FitJointly(frames, models, kept);
+            for (int f = 0; f < frames.Count; f++)
+            {
+                kept[f] = Reclassify(frames[f], models[f], PageRegistration.RansacThreshold);
+            }
+
+            models = FitJointly(frames, models, kept);
+        }
+
+        var results = new List<SurfaceFrameResult>(frames.Count);
+        for (int f = 0; f < frames.Count; f++)
+        {
+            var frame = frames[f];
+            var mapping = new SurfaceMapping(models[f], frame.PageLeft, frame.PageTop, frame.PageRight, frame.PageBottom);
+            var errors = frame.Image.Select((p, i) => Distance(mapping.ToPage(p), frame.Page[i])).ToList();
+            var k = errors.Select(e => e <= PageRegistration.RansacThreshold).ToList();
+            double rmsKept = Math.Sqrt(errors.Where((e, i) => k[i]).Select(e => e * e).DefaultIfEmpty(double.NaN).Average());
+            double rmsAll = Math.Sqrt(errors.Average(e => e * e));
+            double maxKept = errors.Where((e, i) => k[i]).DefaultIfEmpty(double.NaN).Max();
+            double deflection = DevelopableSurface.Deflection(models[f] with { PageCentreX = models[f].PageCentreX, PageCentreY = models[f].PageCentreY },
+                frame.PageRight - frame.PageLeft, frame.PageBottom - frame.PageTop);
+            results.Add(new SurfaceFrameResult(models[f], mapping, errors, k, rmsKept, rmsAll, maxKept, independentFocal[f], deflection, starts[f]));
+        }
+
+        return results;
+    }
+
+    private static bool[] Reclassify(SurfaceFrame frame, SurfaceModel model, double threshold)
+    {
+        var mapping = new SurfaceMapping(model, frame.PageLeft, frame.PageTop, frame.PageRight, frame.PageBottom);
+        return [.. frame.Image.Select((p, i) => Distance(mapping.ToPage(p), frame.Page[i]) <= threshold)];
+    }
+
+    private static (SurfaceModel Model, double Cost) FitAlone(SurfaceFrame frame, SurfaceModel start, bool[] use)
+    {
+        int[] indices = [.. Enumerable.Range(0, frame.Image.Count).Where(i => use[i])];
+        bool perspective = start.Projection == SurfaceProjection.Perspective;
+        var x0 = Pack(start).Concat(perspective ? PackCamera(start) : []).ToArray();
+        var steps = FrameSteps(perspective).Concat(perspective ? CameraSteps : []).ToArray();
+        double Residuals(double[] x, double[] r)
+        {
+            var model = Unpack(start, x.AsSpan(0, FrameParameters), perspective ? x.AsSpan(FrameParameters, 3) : default);
+            return FrameResiduals(frame, model, indices, r, 0);
+        }
+
+        var result = LevenbergMarquardt.Minimise(Residuals, x0, 2 * indices.Length, steps);
+        var fitted = Unpack(start, result.Parameters.AsSpan(0, FrameParameters), perspective ? result.Parameters.AsSpan(FrameParameters, 3) : default);
+        return (fitted, result.Cost);
+    }
+
+    private static SurfaceModel[] FitJointly(IReadOnlyList<SurfaceFrame> frames, SurfaceModel[] models, bool[][] kept)
+    {
+        var indices = frames.Select((frame, f) => Enumerable.Range(0, frame.Image.Count).Where(i => kept[f][i]).ToArray()).ToArray();
+        var camera = new[] { Median(models.Select(m => Math.Log(m.Focal))), Median(models.Select(m => m.K1)), Median(models.Select(m => m.K2)) };
+        var x0 = models.SelectMany(Pack).Concat(camera).ToArray();
+        var steps = frames.SelectMany(_ => FrameSteps(true)).Concat(CameraSteps).ToArray();
+        int cameraAt = FrameParameters * frames.Count;
+        double Residuals(double[] x, double[] r)
+        {
+            double cost = 0;
+            int offset = 0;
+            for (int f = 0; f < frames.Count; f++)
+            {
+                var model = Unpack(models[f], x.AsSpan(FrameParameters * f, FrameParameters), x.AsSpan(cameraAt, 3));
+                cost += FrameResiduals(frames[f], model, indices[f], r, offset);
+                offset += 2 * indices[f].Length;
+            }
+
+            return cost;
+        }
+
+        var result = LevenbergMarquardt.Minimise(Residuals, x0, indices.Sum(i => 2 * i.Length), steps);
+        return [.. frames.Select((_, f) => Unpack(models[f], result.Parameters.AsSpan(FrameParameters * f, FrameParameters), result.Parameters.AsSpan(cameraAt, 3)))];
+    }
+
+    private static double FrameResiduals(SurfaceFrame frame, SurfaceModel model, int[] indices, double[] r, int offset)
+    {
+        double cost = 0;
+        for (int n = 0; n < indices.Length; n++)
+        {
+            int i = indices[n];
+            var predicted = DevelopableSurface.Project(model, DevelopableSurface.Sheet(model, frame.Page[i]));
+            var observed = DevelopableSurface.Undistort(model, frame.Image[i]);
+            double rx = model.Scale * (predicted.X - observed.X), ry = model.Scale * (predicted.Y - observed.Y);
+            if (double.IsNaN(rx) || double.IsNaN(ry))
+            {
+                rx = ry = 1e6;
+            }
+
+            r[offset + (2 * n)] = rx;
+            r[offset + (2 * n) + 1] = ry;
+            cost += (rx * rx) + (ry * ry);
+        }
+
+        return cost;
+    }
+
+    private static double[] Pack(SurfaceModel m) => m.Projection == SurfaceProjection.Perspective
+        ? [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, m.TranslationX, m.TranslationY, m.TranslationZ]
+        : [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, Math.Log(m.Focal), m.TranslationX, m.TranslationY];
+
+    private static double[] PackCamera(SurfaceModel m) => [Math.Log(m.Focal), m.K1, m.K2];
+
+    private static double[] FrameSteps(bool perspective) => perspective
+        ? [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-4, 1e-4, 1e-4]
+        : [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7];
+
+    private static readonly double[] CameraSteps = [1e-7, 1e-7, 1e-7];
+
+    private static SurfaceModel Unpack(SurfaceModel template, ReadOnlySpan<double> x, ReadOnlySpan<double> camera)
+    {
+        double[] bend = [0, x[1], x[2], x[3]];
+        if (template.Projection == SurfaceProjection.Perspective)
+        {
+            return template with
+            {
+                RulingAngle = x[0], Bend = bend, RotationX = x[4], RotationY = x[5], RotationZ = x[6],
+                TranslationX = x[7], TranslationY = x[8], TranslationZ = x[9],
+                Focal = camera.Length == 3 ? Math.Exp(camera[0]) : template.Focal,
+                K1 = camera.Length == 3 ? camera[1] : template.K1,
+                K2 = camera.Length == 3 ? camera[2] : template.K2,
+            };
+        }
+
+        return template with
+        {
+            RulingAngle = x[0], Bend = bend, RotationX = x[4], RotationY = x[5], RotationZ = x[6],
+            Focal = Math.Exp(x[7]), TranslationX = x[8], TranslationY = x[9],
+        };
+    }
+
+    private static double[,] Orthonormalise(double[,] r)
+    {
+        var m = (double[,])r.Clone();
+        for (int iteration = 0; iteration < 50; iteration++)
+        {
+            var inverseTransposed = InverseTranspose(m);
+            if (inverseTransposed is null)
+            {
+                break;
+            }
+
+            double change = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    double next = (m[i, j] + inverseTransposed[i, j]) / 2;
+                    change += Math.Abs(next - m[i, j]);
+                    m[i, j] = next;
+                }
+            }
+
+            if (change < 1e-14)
+            {
+                break;
+            }
+        }
+
+        return m;
+    }
+
+    private static double[,]? InverseTranspose(double[,] m)
+    {
+        double a = m[0, 0], b = m[0, 1], c = m[0, 2], d = m[1, 0], e = m[1, 1], f = m[1, 2], g = m[2, 0], h = m[2, 1], i = m[2, 2];
+        double det = (a * ((e * i) - (f * h))) - (b * ((d * i) - (f * g))) + (c * ((d * h) - (e * g)));
+        if (Math.Abs(det) < 1e-300)
+        {
+            return null;
+        }
+
+        // The inverse transpose is the cofactor matrix divided by the determinant.
+        return new double[,]
+        {
+            { ((e * i) - (f * h)) / det, -((d * i) - (f * g)) / det, ((d * h) - (e * g)) / det },
+            { -((b * i) - (c * h)) / det, ((a * i) - (c * g)) / det, -((a * h) - (b * g)) / det },
+            { ((b * f) - (c * e)) / det, -((a * f) - (c * d)) / det, ((a * e) - (b * d)) / det },
+        };
+    }
+
+    private static double Median(IEnumerable<double> values)
+    {
+        var sorted = values.Order().ToList();
+        return sorted.Count % 2 == 1 ? sorted[sorted.Count / 2] : (sorted[(sorted.Count / 2) - 1] + sorted[sorted.Count / 2]) / 2;
+    }
+
+    private static double Norm(double[] v) => Math.Sqrt(v.Sum(x => x * x));
+
+    private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+}

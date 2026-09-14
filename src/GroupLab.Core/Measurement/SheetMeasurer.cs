@@ -12,6 +12,12 @@ public enum RegistrationModel
     Auto,
     Homography,
     Radial,
+
+    /// <summary>
+    /// The developable surface of PHASE1-BRIEF.md M1: a generalised cylinder, through a perspective camera with the Phase 0
+    /// lens for a photograph, or orthographically for a scan. Never chosen automatically until M1 reports.
+    /// </summary>
+    Surface,
 }
 
 /// <summary>
@@ -127,7 +133,7 @@ public static class SheetMeasurer
                 string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found; registration needs 4"));
         }
 
-        var fit = Register(image, metadata, fiducials, options, backend, trace);
+        var fit = Register(image, metadata, fiducials, options, backend, trace, definition: definition);
         if (fit is null)
         {
             return new SheetMeasurement(trace.Records, fiducials, null, null, null, [], "registration failed");
@@ -254,7 +260,7 @@ public static class SheetMeasurer
     /// a photograph, DESIGN.md section 11 step 3's lens model fitted to the homography's inliers, with every corner then
     /// reclassified against it. <paramref name="markerSubset"/> refits on some markers only, for measurement 1.
     /// </summary>
-    public static RegistrationFit? Register(GrayImage image, ImageMetadata metadata, FiducialResult fiducials, MeasureOptions options, IImagingBackend backend, TraceRecorder trace, IReadOnlyCollection<int>? markerSubset = null)
+    public static RegistrationFit? Register(GrayImage image, ImageMetadata metadata, FiducialResult fiducials, MeasureOptions options, IImagingBackend backend, TraceRecorder trace, IReadOnlyCollection<int>? markerSubset = null, TargetDefinition? definition = null)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(metadata);
@@ -267,11 +273,17 @@ public static class SheetMeasurer
         var matches = markerSubset is null ? fiducials.Matches : fiducials.Matches.Where(m => markerSubset.Contains(m.Id)).ToList();
         var model = options.Model != RegistrationModel.Auto ? options.Model
             : metadata.IsCamera ? RegistrationModel.Radial : RegistrationModel.Homography;
-        stage.Decide("model", model == RegistrationModel.Radial ? "homography with radial distortion" : "homography",
+        string modelName = model switch
+        {
+            RegistrationModel.Radial => "homography with radial distortion",
+            RegistrationModel.Surface => metadata.IsCamera ? "generalised cylinder through the camera" : "generalised cylinder, orthographic",
+            _ => "homography",
+        };
+        stage.Decide("model", modelName,
             options.Model != RegistrationModel.Auto ? "the command line names it"
             : metadata.IsCamera ? "a camera image, whose lens distorts radially (DESIGN.md section 11)"
             : "a flatbed scan (DETECTION-PIPELINE.md stage S3)",
-            model == RegistrationModel.Radial ? "homography" : "homography with radial distortion");
+            model == RegistrationModel.Homography ? "homography with radial distortion" : "homography");
         if (matches.Count < 4)
         {
             stage.Done(StageStatus.Failed, string.Create(inv, $"{matches.Count} markers; a homography needs 4"));
@@ -280,7 +292,8 @@ public static class SheetMeasurer
 
         var imagePoints = matches.SelectMany(m => m.ImageCorners).ToList();
         var pagePoints = matches.SelectMany(m => m.PageCorners).ToList();
-        double threshold = model == RegistrationModel.Radial ? PhotographRansacThreshold : PageRegistration.RansacThreshold;
+        bool photographPass = model == RegistrationModel.Radial || (model == RegistrationModel.Surface && metadata.IsCamera);
+        double threshold = photographPass ? PhotographRansacThreshold : PageRegistration.RansacThreshold;
         stage.Parameter("ransacThreshold", string.Create(inv, $"{threshold:0.00} dmm = {threshold * fiducials.PixelsPerDmm:0.0} px"));
 
         HomographyFit homography;
@@ -310,6 +323,59 @@ public static class SheetMeasurer
             {
                 stage.Done(StageStatus.Failed, ex.Message);
                 return null;
+            }
+        }
+        else if (model == RegistrationModel.Surface)
+        {
+            // PHASE1-BRIEF.md section 3.2: a plane maps to a plane without knowing the camera, and a bent sheet does not, so a
+            // photograph needs a focal length. The first RANSAC's inliers are kept for the fit, because they reject misreads
+            // without rejecting the bend the lens fit's tighter reclassification would.
+            homographyRms = Rms(mapping, imagePoints, pagePoints, inliers);
+            double left, top, right, bottom;
+            if (definition is not null)
+            {
+                (left, top, right, bottom) = (0, 0, definition.Page.Width, definition.Page.Height);
+            }
+            else
+            {
+                (left, top, right, bottom) = (pagePoints.Min(p => p.X), pagePoints.Min(p => p.Y), pagePoints.Max(p => p.X), pagePoints.Max(p => p.Y));
+            }
+
+            SurfaceModel start;
+            if (metadata.IsCamera)
+            {
+                if (SurfaceFit.FocalPixelsFromExif(metadata, image.Width, image.Height) is not { } focal)
+                {
+                    stage.Done(StageStatus.Failed, "a camera image with no 35 mm equivalent focal length tag cannot be fitted as a bent sheet (PHASE1-BRIEF.md section 3.2)");
+                    return null;
+                }
+
+                try
+                {
+                    var lens = LensFit.Fit(Select(imagePoints, inliers), Select(pagePoints, inliers), homography.Transform, image.Width, image.Height);
+                    start = SurfaceFit.StartFromLens(lens, focal, (left + right) / 2, (top + bottom) / 2);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    stage.Done(StageStatus.Failed, ex.Message);
+                    return null;
+                }
+
+                stage.Parameter("focalLengthStart", string.Create(inv, $"{focal:0} px, from a {metadata.FocalLength35mm} mm equivalent over 36 mm of a {Math.Max(image.Width, image.Height)} px side"));
+            }
+            else
+            {
+                start = SurfaceFit.StartFromHomography(homography.Transform, image.Width, image.Height, (left + right) / 2, (top + bottom) / 2);
+            }
+
+            var fitted = SurfaceFit.Fit([new SurfaceFrame("image", imagePoints, pagePoints, [.. inliers], start, left, top, right, bottom)], shareCamera: false)[0];
+            mapping = fitted.Mapping;
+            inliers = [.. fitted.Kept];
+            stage.Metric("rulingAngle", fitted.Model.RulingAngle * 180 / Math.PI, "degrees");
+            stage.Metric("deflection", fitted.DeflectionDmm / 254, "in");
+            if (metadata.IsCamera)
+            {
+                stage.Metric("focalLength", fitted.Model.FocalPixels, "px");
             }
         }
 
