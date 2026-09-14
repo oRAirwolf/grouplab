@@ -1,0 +1,4838 @@
+{
+  "measurement": "holes-baseline",
+  "command": "grouplab spike holes-baseline",
+  "units": "Page lengths are dmm, 0.1 mm, measured from the page top-left unless a name ends in Px or In. Image points are pixels, with pixel (u, v) at (u, v), the convention OpenCV reports marker corners in.",
+  "rows": [
+    {
+      "file": "28_6_5_cm_153_5_lrht_40_3_h4350_starline_srp_cci_450_magnus_s.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 16,
+      "holes": [
+        {
+          "xIn": 5.7324,
+          "yIn": 1.6675,
+          "diameterIn": 0.2043,
+          "solidity": 0.7593,
+          "paperV": 239.5352,
+          "coreMeanV": 222.2263,
+          "annulusMinimumV": 16.0925
+        },
+        {
+          "xIn": 3.9638,
+          "yIn": 2.9811,
+          "diameterIn": 0.1695,
+          "solidity": 0.9727,
+          "paperV": 210.383,
+          "coreMeanV": 151.3434,
+          "annulusMinimumV": 42.2406
+        },
+        {
+          "xIn": 2.5312,
+          "yIn": 3.1153,
+          "diameterIn": 0.1686,
+          "solidity": 0.9407,
+          "paperV": 234.4081,
+          "coreMeanV": 167.1135,
+          "annulusMinimumV": 18.3558
+        },
+        {
+          "xIn": 2.6017,
+          "yIn": 4.6928,
+          "diameterIn": 0.2372,
+          "solidity": 0.7751,
+          "paperV": 242.8477,
+          "coreMeanV": 223.1948,
+          "annulusMinimumV": 11.9614
+        },
+        {
+          "xIn": 3.9919,
+          "yIn": 4.6869,
+          "diameterIn": 0.2132,
+          "solidity": 0.8985,
+          "paperV": 241.957,
+          "coreMeanV": 207.5995,
+          "annulusMinimumV": 16.0083
+        },
+        {
+          "xIn": 5.5813,
+          "yIn": 4.688,
+          "diameterIn": 0.2057,
+          "solidity": 0.9479,
+          "paperV": 240.6234,
+          "coreMeanV": 145.1598,
+          "annulusMinimumV": 12.2737
+        },
+        {
+          "xIn": 7.2195,
+          "yIn": 4.6957,
+          "diameterIn": 0.1893,
+          "solidity": 0.8607,
+          "paperV": 239.7078,
+          "coreMeanV": 200.4791,
+          "annulusMinimumV": 22.6123
+        },
+        {
+          "xIn": 5.7676,
+          "yIn": 5.9438,
+          "diameterIn": 0.2269,
+          "solidity": 0.9436,
+          "paperV": 230.1113,
+          "coreMeanV": 176.3914,
+          "annulusMinimumV": 45.1797
+        },
+        {
+          "xIn": 2.7688,
+          "yIn": 6.1988,
+          "diameterIn": 0.2485,
+          "solidity": 0.9314,
+          "paperV": 243.2694,
+          "coreMeanV": 218.35,
+          "annulusMinimumV": 12.5286
+        },
+        {
+          "xIn": 4.4961,
+          "yIn": 6.227,
+          "diameterIn": 0.2443,
+          "solidity": 0.9669,
+          "paperV": 243.7396,
+          "coreMeanV": 201.4861,
+          "annulusMinimumV": 22.6324
+        },
+        {
+          "xIn": 1.2045,
+          "yIn": 6.2632,
+          "diameterIn": 0.2074,
+          "solidity": 0.9142,
+          "paperV": 241.2879,
+          "coreMeanV": 211.3648,
+          "annulusMinimumV": 24.0327
+        },
+        {
+          "xIn": 2.3901,
+          "yIn": 7.2781,
+          "diameterIn": 0.2152,
+          "solidity": 0.9091,
+          "paperV": 224.2512,
+          "coreMeanV": 190.6707,
+          "annulusMinimumV": 48.4326
+        },
+        {
+          "xIn": 7.0452,
+          "yIn": 7.4718,
+          "diameterIn": 0.1968,
+          "solidity": 0.9422,
+          "paperV": 223.2428,
+          "coreMeanV": 202.4104,
+          "annulusMinimumV": 46.0899
+        },
+        {
+          "xIn": 5.3951,
+          "yIn": 7.5627,
+          "diameterIn": 0.2735,
+          "solidity": 0.9346,
+          "paperV": 243.6764,
+          "coreMeanV": 172.994,
+          "annulusMinimumV": 11.1241
+        },
+        {
+          "xIn": 1.0139,
+          "yIn": 7.6914,
+          "diameterIn": 0.2576,
+          "solidity": 0.9769,
+          "paperV": 243.9637,
+          "coreMeanV": 228.056,
+          "annulusMinimumV": 18.3618
+        },
+        {
+          "xIn": 4.0394,
+          "yIn": 7.8316,
+          "diameterIn": 0.2632,
+          "solidity": 0.9678,
+          "paperV": 244.8003,
+          "coreMeanV": 207.9169,
+          "annulusMinimumV": 28.906
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 7.1992,
+          "yIn": 1.1488,
+          "diameterIn": 0.1008,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.6993,
+          "yIn": 1.1534,
+          "diameterIn": 0.1006,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.7106,
+          "yIn": 1.151,
+          "diameterIn": 0.0861,
+          "reason": "too small, 0.086 in"
+        },
+        {
+          "xIn": 4.2003,
+          "yIn": 1.1563,
+          "diameterIn": 0.1007,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.2033,
+          "yIn": 1.1605,
+          "diameterIn": 0.1001,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 6.9171,
+          "yIn": 1.2569,
+          "diameterIn": 0.1163,
+          "reason": "too small, 0.116 in"
+        },
+        {
+          "xIn": 2.565,
+          "yIn": 1.3291,
+          "diameterIn": 0.0659,
+          "reason": "too small, 0.066 in"
+        },
+        {
+          "xIn": 7.1976,
+          "yIn": 2.649,
+          "diameterIn": 0.102,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6982,
+          "yIn": 2.6529,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1991,
+          "yIn": 2.6557,
+          "diameterIn": 0.102,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 1.2021,
+          "yIn": 2.6591,
+          "diameterIn": 0.1009,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.7021,
+          "yIn": 2.6577,
+          "diameterIn": 0.1001,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 7.2054,
+          "yIn": 2.9058,
+          "diameterIn": 0.1091,
+          "reason": "too small, 0.109 in"
+        },
+        {
+          "xIn": 5.6976,
+          "yIn": 2.9227,
+          "diameterIn": 0.1133,
+          "reason": "too small, 0.113 in"
+        },
+        {
+          "xIn": 1.1521,
+          "yIn": 3.2481,
+          "diameterIn": 0.0948,
+          "reason": "too small, 0.095 in"
+        },
+        {
+          "xIn": 7.1961,
+          "yIn": 4.1505,
+          "diameterIn": 0.1029,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.6966,
+          "yIn": 4.1539,
+          "diameterIn": 0.1023,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1977,
+          "yIn": 4.1562,
+          "diameterIn": 0.1021,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 1.201,
+          "yIn": 4.1595,
+          "diameterIn": 0.1019,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.7007,
+          "yIn": 4.1579,
+          "diameterIn": 0.1004,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 0.9006,
+          "yIn": 4.574,
+          "diameterIn": 0.0653,
+          "reason": "too small, 0.065 in"
+        },
+        {
+          "xIn": 7.1944,
+          "yIn": 5.6494,
+          "diameterIn": 0.1031,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 4.1955,
+          "yIn": 5.6543,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6946,
+          "yIn": 5.6526,
+          "diameterIn": 0.1015,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 1.1995,
+          "yIn": 5.657,
+          "diameterIn": 0.0996,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 2.6982,
+          "yIn": 5.6562,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 7.1742,
+          "yIn": 6.0408,
+          "diameterIn": 0.1467,
+          "reason": "too small, 0.147 in"
+        },
+        {
+          "xIn": 7.1931,
+          "yIn": 7.1485,
+          "diameterIn": 0.1019,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6931,
+          "yIn": 7.1512,
+          "diameterIn": 0.1027,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 1.1969,
+          "yIn": 7.1552,
+          "diameterIn": 0.1016,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6965,
+          "yIn": 7.1541,
+          "diameterIn": 0.1019,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.194,
+          "yIn": 7.1531,
+          "diameterIn": 0.101,
+          "reason": "too small, 0.101 in"
+        }
+      ]
+    },
+    {
+      "file": "28_6_5_cm_153_5_lrht_40_3_h4350_starline_srp_gm205mar_magnus_s.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 25,
+      "holes": [
+        {
+          "xIn": 7.6422,
+          "yIn": 0.927,
+          "diameterIn": 0.2526,
+          "solidity": 0.6712,
+          "paperV": 243.4247,
+          "coreMeanV": 243.0054,
+          "annulusMinimumV": 20.1591
+        },
+        {
+          "xIn": 4.4407,
+          "yIn": 1.087,
+          "diameterIn": 0.2353,
+          "solidity": 0.9166,
+          "paperV": 242.0451,
+          "coreMeanV": 216.9246,
+          "annulusMinimumV": 34.1722
+        },
+        {
+          "xIn": 1.265,
+          "yIn": 1.0941,
+          "diameterIn": 0.2406,
+          "solidity": 0.8093,
+          "paperV": 254.9905,
+          "coreMeanV": 175.3181,
+          "annulusMinimumV": 26.5416
+        },
+        {
+          "xIn": 5.9083,
+          "yIn": 1.2024,
+          "diameterIn": 0.1921,
+          "solidity": 0.8481,
+          "paperV": 245.3512,
+          "coreMeanV": 187.5228,
+          "annulusMinimumV": 44.5347
+        },
+        {
+          "xIn": 2.7667,
+          "yIn": 1.2438,
+          "diameterIn": 0.2783,
+          "solidity": 0.815,
+          "paperV": 254.9733,
+          "coreMeanV": 117.4643,
+          "annulusMinimumV": 29.6918
+        },
+        {
+          "xIn": 1.3763,
+          "yIn": 2.4952,
+          "diameterIn": 0.1661,
+          "solidity": 0.9366,
+          "paperV": 253.3457,
+          "coreMeanV": 101.6844,
+          "annulusMinimumV": 58.7454
+        },
+        {
+          "xIn": 7.2218,
+          "yIn": 2.5962,
+          "diameterIn": 0.1979,
+          "solidity": 0.9369,
+          "paperV": 254.9958,
+          "coreMeanV": 139.3906,
+          "annulusMinimumV": 11.9545
+        },
+        {
+          "xIn": 3.0234,
+          "yIn": 2.6596,
+          "diameterIn": 0.2259,
+          "solidity": 0.873,
+          "paperV": 225.1304,
+          "coreMeanV": 202.069,
+          "annulusMinimumV": 34.9776
+        },
+        {
+          "xIn": 4.7098,
+          "yIn": 2.7428,
+          "diameterIn": 0.2653,
+          "solidity": 0.9609,
+          "paperV": 243.8881,
+          "coreMeanV": 215.5716,
+          "annulusMinimumV": 14.1033
+        },
+        {
+          "xIn": 5.8771,
+          "yIn": 2.8469,
+          "diameterIn": 0.1952,
+          "solidity": 0.9697,
+          "paperV": 254.9785,
+          "coreMeanV": 200.713,
+          "annulusMinimumV": 80.3323
+        },
+        {
+          "xIn": 5.4537,
+          "yIn": 3.683,
+          "diameterIn": 0.2633,
+          "solidity": 0.8788,
+          "paperV": 242.3641,
+          "coreMeanV": 208.4383,
+          "annulusMinimumV": 17.6665
+        },
+        {
+          "xIn": 1.0987,
+          "yIn": 3.8669,
+          "diameterIn": 0.1875,
+          "solidity": 0.8598,
+          "paperV": 248.1556,
+          "coreMeanV": 218.1952,
+          "annulusMinimumV": 48.1984
+        },
+        {
+          "xIn": 2.4143,
+          "yIn": 3.9887,
+          "diameterIn": 0.2052,
+          "solidity": 0.8821,
+          "paperV": 245.6913,
+          "coreMeanV": 215.0366,
+          "annulusMinimumV": 45.0037
+        },
+        {
+          "xIn": 4.0583,
+          "yIn": 4.031,
+          "diameterIn": 0.2684,
+          "solidity": 0.94,
+          "paperV": 254.9912,
+          "coreMeanV": 202.8253,
+          "annulusMinimumV": 16.9888
+        },
+        {
+          "xIn": 7.1828,
+          "yIn": 4.0378,
+          "diameterIn": 0.232,
+          "solidity": 0.9182,
+          "paperV": 254.9857,
+          "coreMeanV": 151.1655,
+          "annulusMinimumV": 11.2199
+        },
+        {
+          "xIn": 5.3213,
+          "yIn": 5.4865,
+          "diameterIn": 0.2487,
+          "solidity": 0.965,
+          "paperV": 229.4208,
+          "coreMeanV": 199.7212,
+          "annulusMinimumV": 32.5338
+        },
+        {
+          "xIn": 4.21,
+          "yIn": 5.5248,
+          "diameterIn": 0.269,
+          "solidity": 0.9719,
+          "paperV": 254.9864,
+          "coreMeanV": 190.7969,
+          "annulusMinimumV": 15.739
+        },
+        {
+          "xIn": 1.1888,
+          "yIn": 5.5837,
+          "diameterIn": 0.1956,
+          "solidity": 0.7716,
+          "paperV": 254.9843,
+          "coreMeanV": 220.0782,
+          "annulusMinimumV": 22.4627
+        },
+        {
+          "xIn": 2.517,
+          "yIn": 5.6009,
+          "diameterIn": 0.2598,
+          "solidity": 0.8061,
+          "paperV": 254.9835,
+          "coreMeanV": 219.3616,
+          "annulusMinimumV": 38.2704
+        },
+        {
+          "xIn": 6.9353,
+          "yIn": 5.7582,
+          "diameterIn": 0.2261,
+          "solidity": 0.8957,
+          "paperV": 244.6058,
+          "coreMeanV": 191.6953,
+          "annulusMinimumV": 24.8355
+        },
+        {
+          "xIn": 7.0679,
+          "yIn": 6.5968,
+          "diameterIn": 0.2595,
+          "solidity": 0.9635,
+          "paperV": 243.5142,
+          "coreMeanV": 218.4127,
+          "annulusMinimumV": 28.8895
+        },
+        {
+          "xIn": 3.7956,
+          "yIn": 6.8043,
+          "diameterIn": 0.2971,
+          "solidity": 0.9755,
+          "paperV": 240.8576,
+          "coreMeanV": 198.9488,
+          "annulusMinimumV": 29.0528
+        },
+        {
+          "xIn": 1.0551,
+          "yIn": 7.1274,
+          "diameterIn": 0.2591,
+          "solidity": 0.9818,
+          "paperV": 254.9908,
+          "coreMeanV": 214.004,
+          "annulusMinimumV": 15.9423
+        },
+        {
+          "xIn": 5.7448,
+          "yIn": 7.1913,
+          "diameterIn": 0.2784,
+          "solidity": 0.9096,
+          "paperV": 254.9877,
+          "coreMeanV": 204.713,
+          "annulusMinimumV": 42.773
+        },
+        {
+          "xIn": 2.7503,
+          "yIn": 7.2316,
+          "diameterIn": 0.2701,
+          "solidity": 0.9272,
+          "paperV": 254.9924,
+          "coreMeanV": 198.0203,
+          "annulusMinimumV": 43.0104
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 7.1567,
+          "yIn": 1.1194,
+          "diameterIn": 0.1029,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.6569,
+          "yIn": 1.1227,
+          "diameterIn": 0.1023,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1593,
+          "yIn": 1.1254,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.6557,
+          "yIn": 2.6226,
+          "diameterIn": 0.1011,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.158,
+          "yIn": 2.625,
+          "diameterIn": 0.1006,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6604,
+          "yIn": 2.6265,
+          "diameterIn": 0.1,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1715,
+          "yIn": 2.6392,
+          "diameterIn": 0.0791,
+          "reason": "too small, 0.079 in"
+        },
+        {
+          "xIn": 5.6536,
+          "yIn": 4.1227,
+          "diameterIn": 0.1026,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 2.6583,
+          "yIn": 4.1265,
+          "diameterIn": 0.101,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1601,
+          "yIn": 4.1293,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1509,
+          "yIn": 5.6196,
+          "diameterIn": 0.1011,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.6512,
+          "yIn": 5.6227,
+          "diameterIn": 0.1001,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 7.1491,
+          "yIn": 7.1194,
+          "diameterIn": 0.1022,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1518,
+          "yIn": 7.1238,
+          "diameterIn": 0.1006,
+          "reason": "too small, 0.101 in"
+        }
+      ]
+    },
+    {
+      "file": "28_6_5_cm_153_5_lrht_40_3_h4350_starline_srp_rem_7_5_br_magnus_s.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 24,
+      "holes": [
+        {
+          "xIn": 2.4508,
+          "yIn": 1.6746,
+          "diameterIn": 0.1864,
+          "solidity": 0.9091,
+          "paperV": 239.1435,
+          "coreMeanV": 100.8667,
+          "annulusMinimumV": 16.3039
+        },
+        {
+          "xIn": 1.0387,
+          "yIn": 1.649,
+          "diameterIn": 0.1517,
+          "solidity": 0.9704,
+          "paperV": 230.6743,
+          "coreMeanV": 138.2041,
+          "annulusMinimumV": 24.5673
+        },
+        {
+          "xIn": 5.6448,
+          "yIn": 1.8283,
+          "diameterIn": 0.2357,
+          "solidity": 0.9444,
+          "paperV": 226.612,
+          "coreMeanV": 182.1474,
+          "annulusMinimumV": 25.0127
+        },
+        {
+          "xIn": 3.873,
+          "yIn": 2.0299,
+          "diameterIn": 0.1861,
+          "solidity": 0.8992,
+          "paperV": 239.8025,
+          "coreMeanV": 135.0091,
+          "annulusMinimumV": 15.8816
+        },
+        {
+          "xIn": 7.2696,
+          "yIn": 3.182,
+          "diameterIn": 0.2257,
+          "solidity": 0.8046,
+          "paperV": 241.9256,
+          "coreMeanV": 210.9995,
+          "annulusMinimumV": 13.0932
+        },
+        {
+          "xIn": 5.6003,
+          "yIn": 3.2388,
+          "diameterIn": 0.2205,
+          "solidity": 0.9251,
+          "paperV": 242.2986,
+          "coreMeanV": 233.2924,
+          "annulusMinimumV": 28.827
+        },
+        {
+          "xIn": 2.4944,
+          "yIn": 3.2083,
+          "diameterIn": 0.1872,
+          "solidity": 0.9452,
+          "paperV": 240.0322,
+          "coreMeanV": 201.867,
+          "annulusMinimumV": 14.2879
+        },
+        {
+          "xIn": 4.1286,
+          "yIn": 3.4733,
+          "diameterIn": 0.2302,
+          "solidity": 0.8411,
+          "paperV": 227.1549,
+          "coreMeanV": 189.0306,
+          "annulusMinimumV": 15.7292
+        },
+        {
+          "xIn": 6.754,
+          "yIn": 4.4817,
+          "diameterIn": 0.2409,
+          "solidity": 0.902,
+          "paperV": 242.1546,
+          "coreMeanV": 124.4186,
+          "annulusMinimumV": 20.4743
+        },
+        {
+          "xIn": 0.7227,
+          "yIn": 4.54,
+          "diameterIn": 0.2231,
+          "solidity": 0.7866,
+          "paperV": 242.3929,
+          "coreMeanV": 249.5522,
+          "annulusMinimumV": 15.6509
+        },
+        {
+          "xIn": 3.7786,
+          "yIn": 4.6345,
+          "diameterIn": 0.2363,
+          "solidity": 0.8516,
+          "paperV": 243.4034,
+          "coreMeanV": 205.0777,
+          "annulusMinimumV": 32.6206
+        },
+        {
+          "xIn": 5.3226,
+          "yIn": 4.6584,
+          "diameterIn": 0.2197,
+          "solidity": 0.8635,
+          "paperV": 242.6396,
+          "coreMeanV": 185.9591,
+          "annulusMinimumV": 14.8525
+        },
+        {
+          "xIn": 0.8939,
+          "yIn": 5.5435,
+          "diameterIn": 0.1929,
+          "solidity": 0.913,
+          "paperV": 252.7031,
+          "coreMeanV": 131.5962,
+          "annulusMinimumV": 85.6888
+        },
+        {
+          "xIn": 4.0477,
+          "yIn": 5.7313,
+          "diameterIn": 0.2574,
+          "solidity": 0.7863,
+          "paperV": 254.9906,
+          "coreMeanV": 227.9478,
+          "annulusMinimumV": 38.9098
+        },
+        {
+          "xIn": 5.186,
+          "yIn": 5.9636,
+          "diameterIn": 0.2237,
+          "solidity": 0.8904,
+          "paperV": 242.0481,
+          "coreMeanV": 201.7029,
+          "annulusMinimumV": 13.5815
+        },
+        {
+          "xIn": 2.5673,
+          "yIn": 6.1829,
+          "diameterIn": 0.2272,
+          "solidity": 0.8922,
+          "paperV": 241.6602,
+          "coreMeanV": 211.7867,
+          "annulusMinimumV": 11.0722
+        },
+        {
+          "xIn": 6.9598,
+          "yIn": 6.3035,
+          "diameterIn": 0.2483,
+          "solidity": 0.942,
+          "paperV": 222.9357,
+          "coreMeanV": 224.4231,
+          "annulusMinimumV": 20.8202
+        },
+        {
+          "xIn": 0.8637,
+          "yIn": 7.272,
+          "diameterIn": 0.2197,
+          "solidity": 0.8613,
+          "paperV": 244.3259,
+          "coreMeanV": 197.2438,
+          "annulusMinimumV": 45.9868
+        },
+        {
+          "xIn": 2.6546,
+          "yIn": 7.448,
+          "diameterIn": 0.2414,
+          "solidity": 0.9294,
+          "paperV": 227.0592,
+          "coreMeanV": 218.7469,
+          "annulusMinimumV": 22.3917
+        },
+        {
+          "xIn": 6.8426,
+          "yIn": 7.4846,
+          "diameterIn": 0.2176,
+          "solidity": 0.8919,
+          "paperV": 237.8152,
+          "coreMeanV": 217.5614,
+          "annulusMinimumV": 27.6548
+        },
+        {
+          "xIn": 4.0135,
+          "yIn": 7.5174,
+          "diameterIn": 0.2195,
+          "solidity": 0.9317,
+          "paperV": 227.2075,
+          "coreMeanV": 179.9707,
+          "annulusMinimumV": 22.5066
+        },
+        {
+          "xIn": 5.3692,
+          "yIn": 7.8983,
+          "diameterIn": 0.2372,
+          "solidity": 0.9179,
+          "paperV": 241.8064,
+          "coreMeanV": 219.922,
+          "annulusMinimumV": 28.0843
+        },
+        {
+          "xIn": 2.9626,
+          "yIn": 8.5093,
+          "diameterIn": 0.2613,
+          "solidity": 0.7934,
+          "paperV": 249.6853,
+          "coreMeanV": 178.2328,
+          "annulusMinimumV": 154.9314
+        },
+        {
+          "xIn": 3.0544,
+          "yIn": 8.8103,
+          "diameterIn": 0.1616,
+          "solidity": 0.801,
+          "paperV": 247.3842,
+          "coreMeanV": 194.3189,
+          "annulusMinimumV": 163.2978
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 7.1474,
+          "yIn": 1.1495,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6473,
+          "yIn": 1.1542,
+          "diameterIn": 0.102,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1488,
+          "yIn": 1.1594,
+          "diameterIn": 0.1007,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6505,
+          "yIn": 1.1629,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.151,
+          "yIn": 1.167,
+          "diameterIn": 0.1007,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.0966,
+          "yIn": 1.5087,
+          "diameterIn": 0.0966,
+          "reason": "too small, 0.097 in"
+        },
+        {
+          "xIn": 7.1475,
+          "yIn": 2.648,
+          "diameterIn": 0.1033,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.6471,
+          "yIn": 2.6535,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.149,
+          "yIn": 2.6575,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6505,
+          "yIn": 2.6619,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1513,
+          "yIn": 2.6655,
+          "diameterIn": 0.101,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 0.882,
+          "yIn": 3.2534,
+          "diameterIn": 0.1419,
+          "reason": "too small, 0.142 in"
+        },
+        {
+          "xIn": 7.1476,
+          "yIn": 4.1492,
+          "diameterIn": 0.102,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6472,
+          "yIn": 4.1547,
+          "diameterIn": 0.1018,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1484,
+          "yIn": 4.1584,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 2.6503,
+          "yIn": 4.1623,
+          "diameterIn": 0.1003,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1509,
+          "yIn": 4.1658,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.2023,
+          "yIn": 4.5267,
+          "diameterIn": 0.1424,
+          "reason": "too small, 0.142 in"
+        },
+        {
+          "xIn": 7.147,
+          "yIn": 5.6492,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6473,
+          "yIn": 5.6544,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6497,
+          "yIn": 5.6623,
+          "diameterIn": 0.0999,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1507,
+          "yIn": 5.6653,
+          "diameterIn": 0.1009,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1474,
+          "yIn": 7.1488,
+          "diameterIn": 0.1034,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.6474,
+          "yIn": 7.1543,
+          "diameterIn": 0.1029,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 4.1488,
+          "yIn": 7.1579,
+          "diameterIn": 0.1011,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1506,
+          "yIn": 7.1641,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6496,
+          "yIn": 7.1614,
+          "diameterIn": 0.1018,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 3.6959,
+          "yIn": 8.7117,
+          "diameterIn": 0.6427,
+          "reason": "too large, 0.643 in"
+        },
+        {
+          "xIn": 2.3575,
+          "yIn": 8.5443,
+          "diameterIn": 0.0707,
+          "reason": "too small, 0.071 in"
+        },
+        {
+          "xIn": 2.527,
+          "yIn": 8.8331,
+          "diameterIn": 0.1904,
+          "reason": "elongated, aspect 2.45"
+        },
+        {
+          "xIn": 2.6792,
+          "yIn": 8.8878,
+          "diameterIn": 0.0732,
+          "reason": "too small, 0.073 in"
+        }
+      ]
+    },
+    {
+      "file": "28_6_5_cm_153_5_lrht_42_4_h4350_starline_srp_gm205mar_magnus_s.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 20,
+      "holes": [
+        {
+          "xIn": 1.0705,
+          "yIn": 0.609,
+          "diameterIn": 0.2456,
+          "solidity": 0.9164,
+          "paperV": 243.0386,
+          "coreMeanV": 211.0432,
+          "annulusMinimumV": 13.684
+        },
+        {
+          "xIn": 5.7191,
+          "yIn": 0.8026,
+          "diameterIn": 0.192,
+          "solidity": 0.7517,
+          "paperV": 218.9052,
+          "coreMeanV": 202.1235,
+          "annulusMinimumV": 24.6809
+        },
+        {
+          "xIn": 6.9375,
+          "yIn": 0.8504,
+          "diameterIn": 0.1865,
+          "solidity": 0.81,
+          "paperV": 220.3502,
+          "coreMeanV": 173.2295,
+          "annulusMinimumV": 32.9429
+        },
+        {
+          "xIn": 2.5742,
+          "yIn": 1.2158,
+          "diameterIn": 0.2082,
+          "solidity": 0.5714,
+          "paperV": 254.7864,
+          "coreMeanV": 226.5807,
+          "annulusMinimumV": 31.8566
+        },
+        {
+          "xIn": 4.2651,
+          "yIn": 2.6083,
+          "diameterIn": 0.2434,
+          "solidity": 0.7438,
+          "paperV": 254.7435,
+          "coreMeanV": 165.0958,
+          "annulusMinimumV": 40.6732
+        },
+        {
+          "xIn": 6.9054,
+          "yIn": 3.6773,
+          "diameterIn": 0.2059,
+          "solidity": 0.9204,
+          "paperV": 240.0087,
+          "coreMeanV": 184.9132,
+          "annulusMinimumV": 28.4587
+        },
+        {
+          "xIn": 5.3857,
+          "yIn": 3.8269,
+          "diameterIn": 0.1721,
+          "solidity": 0.9363,
+          "paperV": 214.4795,
+          "coreMeanV": 189.4382,
+          "annulusMinimumV": 35.7594
+        },
+        {
+          "xIn": 4.0222,
+          "yIn": 4.1065,
+          "diameterIn": 0.244,
+          "solidity": 0.7539,
+          "paperV": 254.6361,
+          "coreMeanV": 209.7924,
+          "annulusMinimumV": 42.1338
+        },
+        {
+          "xIn": 4.0682,
+          "yIn": 5.2482,
+          "diameterIn": 0.203,
+          "solidity": 0.9444,
+          "paperV": 229.9123,
+          "coreMeanV": 187.246,
+          "annulusMinimumV": 27.2376
+        },
+        {
+          "xIn": 5.2632,
+          "yIn": 5.3547,
+          "diameterIn": 0.2267,
+          "solidity": 0.8834,
+          "paperV": 239.7539,
+          "coreMeanV": 180.1994,
+          "annulusMinimumV": 28.1077
+        },
+        {
+          "xIn": 6.9298,
+          "yIn": 5.3499,
+          "diameterIn": 0.1739,
+          "solidity": 0.8187,
+          "paperV": 230.4272,
+          "coreMeanV": 216.1019,
+          "annulusMinimumV": 41.5396
+        },
+        {
+          "xIn": 2.5366,
+          "yIn": 5.6295,
+          "diameterIn": 0.2123,
+          "solidity": 0.8662,
+          "paperV": 254.7844,
+          "coreMeanV": 150.1952,
+          "annulusMinimumV": 31.2941
+        },
+        {
+          "xIn": 4.0687,
+          "yIn": 7.2671,
+          "diameterIn": 0.2731,
+          "solidity": 0.9459,
+          "paperV": 254.5176,
+          "coreMeanV": 214.9431,
+          "annulusMinimumV": 29.1045
+        },
+        {
+          "xIn": 2.5252,
+          "yIn": 7.369,
+          "diameterIn": 0.2356,
+          "solidity": 0.9,
+          "paperV": 250.2497,
+          "coreMeanV": 196.7296,
+          "annulusMinimumV": 18.3358
+        },
+        {
+          "xIn": 5.5026,
+          "yIn": 7.3859,
+          "diameterIn": 0.2177,
+          "solidity": 0.9381,
+          "paperV": 242.699,
+          "coreMeanV": 198.9922,
+          "annulusMinimumV": 40.3531
+        },
+        {
+          "xIn": 0.7342,
+          "yIn": 7.4052,
+          "diameterIn": 0.2004,
+          "solidity": 0.856,
+          "paperV": 237.9351,
+          "coreMeanV": 182.3474,
+          "annulusMinimumV": 20.8871
+        },
+        {
+          "xIn": 7.3098,
+          "yIn": 7.5518,
+          "diameterIn": 0.2117,
+          "solidity": 0.9169,
+          "paperV": 234.8146,
+          "coreMeanV": 191.3657,
+          "annulusMinimumV": 27.5618
+        },
+        {
+          "xIn": 2.6243,
+          "yIn": 8.4851,
+          "diameterIn": 0.4375,
+          "solidity": 0.5817,
+          "paperV": 254.2571,
+          "coreMeanV": 190.8053,
+          "annulusMinimumV": 150.5505
+        },
+        {
+          "xIn": 1.534,
+          "yIn": 8.5454,
+          "diameterIn": 0.4112,
+          "solidity": 0.6214,
+          "paperV": 248.0439,
+          "coreMeanV": 234.8063,
+          "annulusMinimumV": 143.6822
+        },
+        {
+          "xIn": 1.9708,
+          "yIn": 8.5547,
+          "diameterIn": 0.3185,
+          "solidity": 0.7308,
+          "paperV": 246.9305,
+          "coreMeanV": 189.9995,
+          "annulusMinimumV": 150.5162
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 3.7567,
+          "yIn": 0.8501,
+          "diameterIn": 0.1181,
+          "reason": "too small, 0.118 in"
+        },
+        {
+          "xIn": 7.147,
+          "yIn": 1.1508,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.6461,
+          "yIn": 1.1549,
+          "diameterIn": 0.1012,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1475,
+          "yIn": 1.1586,
+          "diameterIn": 0.1001,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1493,
+          "yIn": 1.1644,
+          "diameterIn": 0.0999,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 2.5895,
+          "yIn": 2.1107,
+          "diameterIn": 0.1184,
+          "reason": "too small, 0.118 in"
+        },
+        {
+          "xIn": 1.1378,
+          "yIn": 2.3241,
+          "diameterIn": 0.1203,
+          "reason": "too small, 0.120 in"
+        },
+        {
+          "xIn": 5.5742,
+          "yIn": 2.6151,
+          "diameterIn": 0.1362,
+          "reason": "too small, 0.136 in"
+        },
+        {
+          "xIn": 7.1458,
+          "yIn": 2.6506,
+          "diameterIn": 0.1019,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6482,
+          "yIn": 2.6613,
+          "diameterIn": 0.1003,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1487,
+          "yIn": 2.6638,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.468,
+          "yIn": 3.6479,
+          "diameterIn": 0.1458,
+          "reason": "too small, 0.146 in"
+        },
+        {
+          "xIn": 7.1454,
+          "yIn": 4.1516,
+          "diameterIn": 0.1031,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.6447,
+          "yIn": 4.156,
+          "diameterIn": 0.1031,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 2.6475,
+          "yIn": 4.1615,
+          "diameterIn": 0.1012,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1482,
+          "yIn": 4.164,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1443,
+          "yIn": 5.6514,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1447,
+          "yIn": 5.6584,
+          "diameterIn": 0.1003,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 5.6436,
+          "yIn": 5.6557,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.147,
+          "yIn": 5.6627,
+          "diameterIn": 0.1006,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1428,
+          "yIn": 7.1508,
+          "diameterIn": 0.1026,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 5.642,
+          "yIn": 7.155,
+          "diameterIn": 0.1021,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6445,
+          "yIn": 7.1594,
+          "diameterIn": 0.1016,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 1.1452,
+          "yIn": 7.1609,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.2284,
+          "yIn": 8.6516,
+          "diameterIn": 0.0768,
+          "reason": "too small, 0.077 in"
+        },
+        {
+          "xIn": 5.975,
+          "yIn": 10.0667,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        }
+      ]
+    },
+    {
+      "file": "300_nm_factory.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 17,
+      "holes": [
+        {
+          "xIn": 1.1056,
+          "yIn": 1.036,
+          "diameterIn": 0.2832,
+          "solidity": 0.9531,
+          "paperV": 254.985,
+          "coreMeanV": 225.5593,
+          "annulusMinimumV": 13.3383
+        },
+        {
+          "xIn": 4.0119,
+          "yIn": 1.2206,
+          "diameterIn": 0.2878,
+          "solidity": 0.6182,
+          "paperV": 254.9867,
+          "coreMeanV": 218.668,
+          "annulusMinimumV": 14.2061
+        },
+        {
+          "xIn": 7.7144,
+          "yIn": 1.4045,
+          "diameterIn": 0.2259,
+          "solidity": 0.8229,
+          "paperV": 243.685,
+          "coreMeanV": 199.3384,
+          "annulusMinimumV": 11.9519
+        },
+        {
+          "xIn": 2.9919,
+          "yIn": 1.4424,
+          "diameterIn": 0.3164,
+          "solidity": 0.976,
+          "paperV": 244.4238,
+          "coreMeanV": 216.8707,
+          "annulusMinimumV": 11.0889
+        },
+        {
+          "xIn": 5.7641,
+          "yIn": 1.7396,
+          "diameterIn": 0.2443,
+          "solidity": 0.9328,
+          "paperV": 220.8862,
+          "coreMeanV": 167.7414,
+          "annulusMinimumV": 14.0468
+        },
+        {
+          "xIn": 0.4546,
+          "yIn": 1.8081,
+          "diameterIn": 0.29,
+          "solidity": 0.9474,
+          "paperV": 245.7366,
+          "coreMeanV": 164.3591,
+          "annulusMinimumV": 13.5907
+        },
+        {
+          "xIn": 3.0204,
+          "yIn": 2.714,
+          "diameterIn": 0.2931,
+          "solidity": 0.9885,
+          "paperV": 235.8677,
+          "coreMeanV": 213.2886,
+          "annulusMinimumV": 13.3993
+        },
+        {
+          "xIn": 6.0584,
+          "yIn": 2.9278,
+          "diameterIn": 0.2977,
+          "solidity": 0.6881,
+          "paperV": 244.8161,
+          "coreMeanV": 229.0714,
+          "annulusMinimumV": 21.7762
+        },
+        {
+          "xIn": 4.6822,
+          "yIn": 3.0016,
+          "diameterIn": 0.2427,
+          "solidity": 0.8483,
+          "paperV": 244.4667,
+          "coreMeanV": 202.0177,
+          "annulusMinimumV": 12.4152
+        },
+        {
+          "xIn": 4.7748,
+          "yIn": 3.7901,
+          "diameterIn": 0.2931,
+          "solidity": 0.8398,
+          "paperV": 225.4668,
+          "coreMeanV": 157.923,
+          "annulusMinimumV": 12.6012
+        },
+        {
+          "xIn": 5.9368,
+          "yIn": 3.915,
+          "diameterIn": 0.2495,
+          "solidity": 0.8371,
+          "paperV": 233.8036,
+          "coreMeanV": 219.909,
+          "annulusMinimumV": 30.4586
+        },
+        {
+          "xIn": 7.9723,
+          "yIn": 3.953,
+          "diameterIn": 0.1609,
+          "solidity": 0.8987,
+          "paperV": 244.9631,
+          "coreMeanV": 207.4412,
+          "annulusMinimumV": 20.345
+        },
+        {
+          "xIn": 0.4154,
+          "yIn": 4.2687,
+          "diameterIn": 0.2907,
+          "solidity": 0.7923,
+          "paperV": 246.1922,
+          "coreMeanV": 213.1685,
+          "annulusMinimumV": 14.6868
+        },
+        {
+          "xIn": 3.1067,
+          "yIn": 4.3408,
+          "diameterIn": 0.2021,
+          "solidity": 0.8076,
+          "paperV": 240.3698,
+          "coreMeanV": 207.339,
+          "annulusMinimumV": 15.7362
+        },
+        {
+          "xIn": 6.2526,
+          "yIn": 5.6334,
+          "diameterIn": 0.2596,
+          "solidity": 0.8546,
+          "paperV": 227.2602,
+          "coreMeanV": 216.3037,
+          "annulusMinimumV": 21.5708
+        },
+        {
+          "xIn": 4.7065,
+          "yIn": 5.6354,
+          "diameterIn": 0.3059,
+          "solidity": 0.9926,
+          "paperV": 232.3142,
+          "coreMeanV": 206.5012,
+          "annulusMinimumV": 11.5328
+        },
+        {
+          "xIn": 2.6335,
+          "yIn": 5.7582,
+          "diameterIn": 0.2599,
+          "solidity": 0.7676,
+          "paperV": 254.9866,
+          "coreMeanV": 224.5403,
+          "annulusMinimumV": 26.7765
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 2.6425,
+          "yIn": 1.1226,
+          "diameterIn": 0.1009,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.64,
+          "yIn": 1.1243,
+          "diameterIn": 0.1011,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1402,
+          "yIn": 1.1237,
+          "diameterIn": 0.1015,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1379,
+          "yIn": 2.6201,
+          "diameterIn": 0.1006,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6376,
+          "yIn": 2.6215,
+          "diameterIn": 0.0998,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 4.1359,
+          "yIn": 2.6218,
+          "diameterIn": 0.0994,
+          "reason": "too small, 0.099 in"
+        },
+        {
+          "xIn": 7.1353,
+          "yIn": 2.622,
+          "diameterIn": 0.1012,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.635,
+          "yIn": 2.623,
+          "diameterIn": 0.1,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1331,
+          "yIn": 4.1219,
+          "diameterIn": 0.1018,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6333,
+          "yIn": 4.1231,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1315,
+          "yIn": 4.1231,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.6302,
+          "yIn": 4.1239,
+          "diameterIn": 0.103,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 7.1305,
+          "yIn": 4.1231,
+          "diameterIn": 0.104,
+          "reason": "too small, 0.104 in"
+        },
+        {
+          "xIn": 3.2261,
+          "yIn": 4.2081,
+          "diameterIn": 0.0778,
+          "reason": "too small, 0.078 in"
+        },
+        {
+          "xIn": 7.9174,
+          "yIn": 5.4451,
+          "diameterIn": 0.0895,
+          "reason": "too small, 0.089 in"
+        },
+        {
+          "xIn": 1.1278,
+          "yIn": 5.6214,
+          "diameterIn": 0.1009,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1264,
+          "yIn": 5.6228,
+          "diameterIn": 0.0999,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 7.1258,
+          "yIn": 5.6226,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6253,
+          "yIn": 5.6235,
+          "diameterIn": 0.1015,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.4658,
+          "yIn": 5.7332,
+          "diameterIn": 0.1492,
+          "reason": "too small, 0.149 in"
+        },
+        {
+          "xIn": 1.1228,
+          "yIn": 7.1203,
+          "diameterIn": 0.1019,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6237,
+          "yIn": 7.1215,
+          "diameterIn": 0.1016,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 4.1217,
+          "yIn": 7.1223,
+          "diameterIn": 0.1004,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 5.6206,
+          "yIn": 7.1231,
+          "diameterIn": 0.1023,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 7.1209,
+          "yIn": 7.1224,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 3.6248,
+          "yIn": 8.6923,
+          "diameterIn": 0.6099,
+          "reason": "too large, 0.610 in"
+        },
+        {
+          "xIn": 4.5686,
+          "yIn": 8.8059,
+          "diameterIn": 0.713,
+          "reason": "too large, 0.713 in"
+        }
+      ]
+    },
+    {
+      "file": "300_nm_hand_load.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 25,
+      "holes": [
+        {
+          "xIn": 2.353,
+          "yIn": 0.5555,
+          "diameterIn": 0.2993,
+          "solidity": 0.9884,
+          "paperV": 241.9661,
+          "coreMeanV": 215.7323,
+          "annulusMinimumV": 11.0017
+        },
+        {
+          "xIn": 0.8647,
+          "yIn": 1.1078,
+          "diameterIn": 0.2143,
+          "solidity": 0.8408,
+          "paperV": 247.2334,
+          "coreMeanV": 194.3678,
+          "annulusMinimumV": 14.0753
+        },
+        {
+          "xIn": 6.9666,
+          "yIn": 1.1528,
+          "diameterIn": 0.332,
+          "solidity": 0.8486,
+          "paperV": 220.3742,
+          "coreMeanV": 199.5968,
+          "annulusMinimumV": 22.406
+        },
+        {
+          "xIn": 4.3478,
+          "yIn": 1.1784,
+          "diameterIn": 0.3431,
+          "solidity": 0.8817,
+          "paperV": 213.0977,
+          "coreMeanV": 167.0888,
+          "annulusMinimumV": 19.1154
+        },
+        {
+          "xIn": 5.8442,
+          "yIn": 1.1679,
+          "diameterIn": 0.3288,
+          "solidity": 0.8905,
+          "paperV": 223.1059,
+          "coreMeanV": 144.4037,
+          "annulusMinimumV": 20.6525
+        },
+        {
+          "xIn": 1.3109,
+          "yIn": 2.6574,
+          "diameterIn": 0.3155,
+          "solidity": 0.8591,
+          "paperV": 254.6771,
+          "coreMeanV": 163.8481,
+          "annulusMinimumV": 11.6215
+        },
+        {
+          "xIn": 4.1132,
+          "yIn": 2.7773,
+          "diameterIn": 0.3008,
+          "solidity": 0.9559,
+          "paperV": 254.7011,
+          "coreMeanV": 195.8818,
+          "annulusMinimumV": 13.3676
+        },
+        {
+          "xIn": 7.4377,
+          "yIn": 2.9408,
+          "diameterIn": 0.1755,
+          "solidity": 0.9341,
+          "paperV": 224.8546,
+          "coreMeanV": 116.3153,
+          "annulusMinimumV": 27.4245
+        },
+        {
+          "xIn": 2.8398,
+          "yIn": 3.0281,
+          "diameterIn": 0.2952,
+          "solidity": 0.9572,
+          "paperV": 240.2846,
+          "coreMeanV": 212.7613,
+          "annulusMinimumV": 17.8344
+        },
+        {
+          "xIn": 6.1062,
+          "yIn": 3.0811,
+          "diameterIn": 0.293,
+          "solidity": 0.9265,
+          "paperV": 245.7511,
+          "coreMeanV": 222.2816,
+          "annulusMinimumV": 10.7797
+        },
+        {
+          "xIn": 4.4265,
+          "yIn": 3.9486,
+          "diameterIn": 0.3005,
+          "solidity": 0.9712,
+          "paperV": 230.2342,
+          "coreMeanV": 216.5996,
+          "annulusMinimumV": 20.7986
+        },
+        {
+          "xIn": 7.432,
+          "yIn": 4.1186,
+          "diameterIn": 0.2288,
+          "solidity": 0.8762,
+          "paperV": 244.2035,
+          "coreMeanV": 216.3547,
+          "annulusMinimumV": 50.9367
+        },
+        {
+          "xIn": 3.1537,
+          "yIn": 4.1674,
+          "diameterIn": 0.308,
+          "solidity": 0.9799,
+          "paperV": 239.1157,
+          "coreMeanV": 199.0933,
+          "annulusMinimumV": 11.2578
+        },
+        {
+          "xIn": 6.0385,
+          "yIn": 4.4633,
+          "diameterIn": 0.3137,
+          "solidity": 0.9801,
+          "paperV": 244.6056,
+          "coreMeanV": 204.8164,
+          "annulusMinimumV": 12.1211
+        },
+        {
+          "xIn": 1.0092,
+          "yIn": 4.6412,
+          "diameterIn": 0.2996,
+          "solidity": 0.8971,
+          "paperV": 244.326,
+          "coreMeanV": 217.5812,
+          "annulusMinimumV": 10.8619
+        },
+        {
+          "xIn": 4.6946,
+          "yIn": 5.6394,
+          "diameterIn": 0.3025,
+          "solidity": 0.962,
+          "paperV": 224.7571,
+          "coreMeanV": 202.05,
+          "annulusMinimumV": 10.5711
+        },
+        {
+          "xIn": 5.722,
+          "yIn": 5.7408,
+          "diameterIn": 0.2668,
+          "solidity": 0.8262,
+          "paperV": 254.5329,
+          "coreMeanV": 216.7756,
+          "annulusMinimumV": 34.1494
+        },
+        {
+          "xIn": 3.0545,
+          "yIn": 5.8163,
+          "diameterIn": 0.3078,
+          "solidity": 0.9313,
+          "paperV": 242.2004,
+          "coreMeanV": 220.2495,
+          "annulusMinimumV": 12.9924
+        },
+        {
+          "xIn": 7.8299,
+          "yIn": 5.9451,
+          "diameterIn": 0.3251,
+          "solidity": 0.6281,
+          "paperV": 246.9988,
+          "coreMeanV": 198.8251,
+          "annulusMinimumV": 34.1133
+        },
+        {
+          "xIn": 1.2447,
+          "yIn": 6.0995,
+          "diameterIn": 0.3051,
+          "solidity": 0.9582,
+          "paperV": 243.0618,
+          "coreMeanV": 173.0919,
+          "annulusMinimumV": 11.6616
+        },
+        {
+          "xIn": 5.7232,
+          "yIn": 7.0603,
+          "diameterIn": 0.3106,
+          "solidity": 0.8527,
+          "paperV": 254.8353,
+          "coreMeanV": 218.0478,
+          "annulusMinimumV": 15.7415
+        },
+        {
+          "xIn": 7.2865,
+          "yIn": 7.2464,
+          "diameterIn": 0.314,
+          "solidity": 0.6714,
+          "paperV": 254.7896,
+          "coreMeanV": 207.3978,
+          "annulusMinimumV": 44.6951
+        },
+        {
+          "xIn": 3.2209,
+          "yIn": 7.3863,
+          "diameterIn": 0.3011,
+          "solidity": 0.8921,
+          "paperV": 225.3582,
+          "coreMeanV": 211.9036,
+          "annulusMinimumV": 12.4803
+        },
+        {
+          "xIn": 1.4405,
+          "yIn": 7.5798,
+          "diameterIn": 0.3099,
+          "solidity": 0.9846,
+          "paperV": 244.5663,
+          "coreMeanV": 213.038,
+          "annulusMinimumV": 9.9768
+        },
+        {
+          "xIn": 4.6514,
+          "yIn": 7.6215,
+          "diameterIn": 0.3031,
+          "solidity": 0.9419,
+          "paperV": 246.2197,
+          "coreMeanV": 202.9866,
+          "annulusMinimumV": 11.7094
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 2.6563,
+          "yIn": 1.1596,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1571,
+          "yIn": 1.1626,
+          "diameterIn": 0.1012,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.1528,
+          "yIn": 2.6487,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6525,
+          "yIn": 2.6529,
+          "diameterIn": 0.1025,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 2.6549,
+          "yIn": 2.6587,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 7.4469,
+          "yIn": 3.1567,
+          "diameterIn": 0.0879,
+          "reason": "too small, 0.088 in"
+        },
+        {
+          "xIn": 7.1522,
+          "yIn": 4.1509,
+          "diameterIn": 0.1023,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 5.6512,
+          "yIn": 4.1546,
+          "diameterIn": 0.1017,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 2.6535,
+          "yIn": 4.16,
+          "diameterIn": 0.1005,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1524,
+          "yIn": 4.1577,
+          "diameterIn": 0.1003,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 1.1539,
+          "yIn": 4.1619,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 8.0147,
+          "yIn": 4.3108,
+          "diameterIn": 0.0757,
+          "reason": "too small, 0.076 in"
+        },
+        {
+          "xIn": 7.1505,
+          "yIn": 5.6511,
+          "diameterIn": 0.1009,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1507,
+          "yIn": 5.6579,
+          "diameterIn": 0.0992,
+          "reason": "too small, 0.099 in"
+        },
+        {
+          "xIn": 1.1521,
+          "yIn": 5.6615,
+          "diameterIn": 0.1013,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 2.6516,
+          "yIn": 5.6599,
+          "diameterIn": 0.0996,
+          "reason": "too small, 0.100 in"
+        },
+        {
+          "xIn": 7.8875,
+          "yIn": 5.7874,
+          "diameterIn": 0.0877,
+          "reason": "too small, 0.088 in"
+        },
+        {
+          "xIn": 2.6505,
+          "yIn": 7.1595,
+          "diameterIn": 0.1014,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 4.1494,
+          "yIn": 7.1576,
+          "diameterIn": 0.1012,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 1.1506,
+          "yIn": 7.1612,
+          "diameterIn": 0.1025,
+          "reason": "too small, 0.103 in"
+        },
+        {
+          "xIn": 2.8959,
+          "yIn": 8.7053,
+          "diameterIn": 0.9517,
+          "reason": "too large, 0.952 in"
+        },
+        {
+          "xIn": 4.5401,
+          "yIn": 8.7172,
+          "diameterIn": 0.9767,
+          "reason": "too large, 0.977 in"
+        }
+      ]
+    },
+    {
+      "file": "338lmao.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 28,
+      "holes": [
+        {
+          "xIn": 7.7344,
+          "yIn": 0.5526,
+          "diameterIn": 0.3136,
+          "solidity": 0.9174,
+          "paperV": 254.7253,
+          "coreMeanV": 217.5173,
+          "annulusMinimumV": 40.1964
+        },
+        {
+          "xIn": 2.7595,
+          "yIn": 0.7295,
+          "diameterIn": 0.2742,
+          "solidity": 0.9343,
+          "paperV": 254.3192,
+          "coreMeanV": 200.7445,
+          "annulusMinimumV": 56.9511
+        },
+        {
+          "xIn": 0.9179,
+          "yIn": 0.9419,
+          "diameterIn": 0.3066,
+          "solidity": 0.9153,
+          "paperV": 254.0777,
+          "coreMeanV": 197.2085,
+          "annulusMinimumV": 48.7374
+        },
+        {
+          "xIn": 5.3948,
+          "yIn": 1.0527,
+          "diameterIn": 0.3091,
+          "solidity": 0.9359,
+          "paperV": 254.1705,
+          "coreMeanV": 199.2135,
+          "annulusMinimumV": 60.1527
+        },
+        {
+          "xIn": 3.5187,
+          "yIn": 1.3111,
+          "diameterIn": 0.2905,
+          "solidity": 0.9438,
+          "paperV": 254.8151,
+          "coreMeanV": 206.693,
+          "annulusMinimumV": 101.978
+        },
+        {
+          "xIn": 6.0396,
+          "yIn": 1.6142,
+          "diameterIn": 0.3318,
+          "solidity": 0.9531,
+          "paperV": 253.8709,
+          "coreMeanV": 213.2382,
+          "annulusMinimumV": 74.7192
+        },
+        {
+          "xIn": 6.7181,
+          "yIn": 1.8824,
+          "diameterIn": 0.3174,
+          "solidity": 0.9892,
+          "paperV": 254.6944,
+          "coreMeanV": 206.4122,
+          "annulusMinimumV": 64.5891
+        },
+        {
+          "xIn": 4.1537,
+          "yIn": 1.9083,
+          "diameterIn": 0.3436,
+          "solidity": 0.9469,
+          "paperV": 254.6106,
+          "coreMeanV": 203.044,
+          "annulusMinimumV": 63.294
+        },
+        {
+          "xIn": 2.5228,
+          "yIn": 2.2146,
+          "diameterIn": 0.325,
+          "solidity": 0.9329,
+          "paperV": 254.0038,
+          "coreMeanV": 202.2959,
+          "annulusMinimumV": 68.8543
+        },
+        {
+          "xIn": 1.2924,
+          "yIn": 2.3595,
+          "diameterIn": 0.3177,
+          "solidity": 0.8549,
+          "paperV": 253.9472,
+          "coreMeanV": 205.8387,
+          "annulusMinimumV": 59.7204
+        },
+        {
+          "xIn": 0.9647,
+          "yIn": 3.476,
+          "diameterIn": 0.2829,
+          "solidity": 0.9595,
+          "paperV": 254.6513,
+          "coreMeanV": 212.3973,
+          "annulusMinimumV": 80.9771
+        },
+        {
+          "xIn": 2.8622,
+          "yIn": 3.5484,
+          "diameterIn": 0.3326,
+          "solidity": 0.9656,
+          "paperV": 254.1267,
+          "coreMeanV": 203.2553,
+          "annulusMinimumV": 69.9381
+        },
+        {
+          "xIn": 7.0486,
+          "yIn": 3.5537,
+          "diameterIn": 0.2944,
+          "solidity": 0.9879,
+          "paperV": 254.1572,
+          "coreMeanV": 208.067,
+          "annulusMinimumV": 87.6419
+        },
+        {
+          "xIn": 5.6881,
+          "yIn": 3.9429,
+          "diameterIn": 0.3406,
+          "solidity": 0.9569,
+          "paperV": 254.3463,
+          "coreMeanV": 197.4157,
+          "annulusMinimumV": 66.5702
+        },
+        {
+          "xIn": 4.0012,
+          "yIn": 4.0957,
+          "diameterIn": 0.3314,
+          "solidity": 0.9903,
+          "paperV": 253.8889,
+          "coreMeanV": 196.224,
+          "annulusMinimumV": 54.0802
+        },
+        {
+          "xIn": 1.1531,
+          "yIn": 5.0493,
+          "diameterIn": 0.2874,
+          "solidity": 0.8456,
+          "paperV": 254.1125,
+          "coreMeanV": 193.1349,
+          "annulusMinimumV": 65.3692
+        },
+        {
+          "xIn": 4.1928,
+          "yIn": 5.0872,
+          "diameterIn": 0.3363,
+          "solidity": 0.9849,
+          "paperV": 254.0162,
+          "coreMeanV": 200.1645,
+          "annulusMinimumV": 32.8643
+        },
+        {
+          "xIn": 2.9725,
+          "yIn": 5.165,
+          "diameterIn": 0.3455,
+          "solidity": 0.9791,
+          "paperV": 254.1719,
+          "coreMeanV": 202.7454,
+          "annulusMinimumV": 64.5503
+        },
+        {
+          "xIn": 3.0026,
+          "yIn": 8.2338,
+          "diameterIn": 0.4666,
+          "solidity": 0.7482,
+          "paperV": 243.6996,
+          "coreMeanV": 202.3637,
+          "annulusMinimumV": 123.0506
+        },
+        {
+          "xIn": 4.467,
+          "yIn": 8.2298,
+          "diameterIn": 0.3904,
+          "solidity": 0.8734,
+          "paperV": 243.2527,
+          "coreMeanV": 187.1062,
+          "annulusMinimumV": 128.3959
+        },
+        {
+          "xIn": 3.7549,
+          "yIn": 8.2396,
+          "diameterIn": 0.4617,
+          "solidity": 0.7122,
+          "paperV": 246.3843,
+          "coreMeanV": 172.8847,
+          "annulusMinimumV": 122.6431
+        },
+        {
+          "xIn": 6.8032,
+          "yIn": 8.275,
+          "diameterIn": 0.5387,
+          "solidity": 0.6272,
+          "paperV": 246.3679,
+          "coreMeanV": 134.3105,
+          "annulusMinimumV": 130.8852
+        },
+        {
+          "xIn": 7.003,
+          "yIn": 10.0028,
+          "diameterIn": 0.2573,
+          "solidity": 0.7957,
+          "paperV": 205.3993,
+          "coreMeanV": 136.0264,
+          "annulusMinimumV": 39.4896
+        },
+        {
+          "xIn": 7.4188,
+          "yIn": 10.0268,
+          "diameterIn": 0.3297,
+          "solidity": 0.6932,
+          "paperV": 242.8648,
+          "coreMeanV": 155.4785,
+          "annulusMinimumV": 41.4565
+        },
+        {
+          "xIn": 5.6333,
+          "yIn": 10.0354,
+          "diameterIn": 0.3582,
+          "solidity": 0.8917,
+          "paperV": 239.4904,
+          "coreMeanV": 150.904,
+          "annulusMinimumV": 43.487
+        },
+        {
+          "xIn": 6.052,
+          "yIn": 10.0122,
+          "diameterIn": 0.2027,
+          "solidity": 0.9445,
+          "paperV": 220.4174,
+          "coreMeanV": 153.9065,
+          "annulusMinimumV": 40.4933
+        },
+        {
+          "xIn": 6.6563,
+          "yIn": 10.0294,
+          "diameterIn": 0.2206,
+          "solidity": 0.9425,
+          "paperV": 199.8683,
+          "coreMeanV": 148.2094,
+          "annulusMinimumV": 34.9174
+        },
+        {
+          "xIn": 6.4013,
+          "yIn": 9.9825,
+          "diameterIn": 0.1547,
+          "solidity": 0.9503,
+          "paperV": 195.7557,
+          "coreMeanV": 151.9598,
+          "annulusMinimumV": 37.299
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 7.8404,
+          "yIn": 8.2144,
+          "diameterIn": 0.5525,
+          "reason": "elongated, aspect 2.64"
+        },
+        {
+          "xIn": 2.0853,
+          "yIn": 8.2157,
+          "diameterIn": 0.5928,
+          "reason": "elongated, aspect 2.77"
+        },
+        {
+          "xIn": 5.4803,
+          "yIn": 8.247,
+          "diameterIn": 0.7684,
+          "reason": "too large, 0.768 in"
+        }
+      ]
+    },
+    {
+      "file": "6_5retumbo.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 19,
+      "holes": [
+        {
+          "xIn": 2.5352,
+          "yIn": 0.0688,
+          "diameterIn": 0.1699,
+          "solidity": 0.9288,
+          "paperV": 237.7575,
+          "coreMeanV": 177.0217,
+          "annulusMinimumV": 141.896
+        },
+        {
+          "xIn": 5.1572,
+          "yIn": 0.138,
+          "diameterIn": 0.4216,
+          "solidity": 0.6095,
+          "paperV": 240.6829,
+          "coreMeanV": 204.9256,
+          "annulusMinimumV": 140.1485
+        },
+        {
+          "xIn": 3.1786,
+          "yIn": 0.1235,
+          "diameterIn": 0.1504,
+          "solidity": 0.9538,
+          "paperV": 249.6078,
+          "coreMeanV": 164.85,
+          "annulusMinimumV": 131.8727
+        },
+        {
+          "xIn": 1.4903,
+          "yIn": 1.2839,
+          "diameterIn": 0.2403,
+          "solidity": 0.8928,
+          "paperV": 245.2127,
+          "coreMeanV": 212.0112,
+          "annulusMinimumV": 13.1526
+        },
+        {
+          "xIn": 2.8808,
+          "yIn": 2.2046,
+          "diameterIn": 0.205,
+          "solidity": 0.8977,
+          "paperV": 252.1668,
+          "coreMeanV": 163.9388,
+          "annulusMinimumV": 32.136
+        },
+        {
+          "xIn": 6.0983,
+          "yIn": 2.346,
+          "diameterIn": 0.2324,
+          "solidity": 0.9184,
+          "paperV": 253.8614,
+          "coreMeanV": 182.6063,
+          "annulusMinimumV": 12.3678
+        },
+        {
+          "xIn": 4.4984,
+          "yIn": 2.5305,
+          "diameterIn": 0.193,
+          "solidity": 0.9653,
+          "paperV": 253.3245,
+          "coreMeanV": 168.4507,
+          "annulusMinimumV": 50.137
+        },
+        {
+          "xIn": 7.5853,
+          "yIn": 2.9047,
+          "diameterIn": 0.2019,
+          "solidity": 0.8586,
+          "paperV": 254.5901,
+          "coreMeanV": 205.666,
+          "annulusMinimumV": 44.6326
+        },
+        {
+          "xIn": 4.4196,
+          "yIn": 3.1414,
+          "diameterIn": 0.1568,
+          "solidity": 0.8007,
+          "paperV": 247.2053,
+          "coreMeanV": 190.1143,
+          "annulusMinimumV": 168.5817
+        },
+        {
+          "xIn": 7.5554,
+          "yIn": 3.6625,
+          "diameterIn": 0.2068,
+          "solidity": 0.8679,
+          "paperV": 254.9049,
+          "coreMeanV": 220.1262,
+          "annulusMinimumV": 73.71
+        },
+        {
+          "xIn": 4.6636,
+          "yIn": 3.7982,
+          "diameterIn": 0.25,
+          "solidity": 1.0025,
+          "paperV": 252.3107,
+          "coreMeanV": 203.3766,
+          "annulusMinimumV": 10.9521
+        },
+        {
+          "xIn": 2.8919,
+          "yIn": 4.1704,
+          "diameterIn": 0.2355,
+          "solidity": 0.9242,
+          "paperV": 253.8185,
+          "coreMeanV": 210.5001,
+          "annulusMinimumV": 30.1364
+        },
+        {
+          "xIn": 1.6772,
+          "yIn": 4.3622,
+          "diameterIn": 0.187,
+          "solidity": 0.9544,
+          "paperV": 254.6861,
+          "coreMeanV": 198.1603,
+          "annulusMinimumV": 31.0601
+        },
+        {
+          "xIn": 6.1357,
+          "yIn": 4.5105,
+          "diameterIn": 0.2461,
+          "solidity": 0.9585,
+          "paperV": 251.7917,
+          "coreMeanV": 203.3258,
+          "annulusMinimumV": 11.9084
+        },
+        {
+          "xIn": 6.075,
+          "yIn": 5.3922,
+          "diameterIn": 0.233,
+          "solidity": 0.9828,
+          "paperV": 251.1488,
+          "coreMeanV": 193.555,
+          "annulusMinimumV": 55.1553
+        },
+        {
+          "xIn": 4.5401,
+          "yIn": 5.7889,
+          "diameterIn": 0.2556,
+          "solidity": 0.9911,
+          "paperV": 253.6642,
+          "coreMeanV": 179.9256,
+          "annulusMinimumV": 15.8039
+        },
+        {
+          "xIn": 1.4613,
+          "yIn": 5.8744,
+          "diameterIn": 0.2155,
+          "solidity": 0.9056,
+          "paperV": 253.9125,
+          "coreMeanV": 190.9032,
+          "annulusMinimumV": 17.9773
+        },
+        {
+          "xIn": 2.835,
+          "yIn": 5.9301,
+          "diameterIn": 0.2443,
+          "solidity": 0.9882,
+          "paperV": 254.1611,
+          "coreMeanV": 201.7149,
+          "annulusMinimumV": 42.1249
+        },
+        {
+          "xIn": 7.2685,
+          "yIn": 5.9552,
+          "diameterIn": 0.2404,
+          "solidity": 0.9764,
+          "paperV": 251.6572,
+          "coreMeanV": 206.7547,
+          "annulusMinimumV": 14.4809
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 0.4212,
+          "yIn": 0.014,
+          "diameterIn": 0.0467,
+          "reason": "too small, 0.047 in"
+        },
+        {
+          "xIn": 2.8631,
+          "yIn": 0.0155,
+          "diameterIn": 0.0483,
+          "reason": "too small, 0.048 in"
+        },
+        {
+          "xIn": 3.7919,
+          "yIn": 0.1493,
+          "diameterIn": 0.3042,
+          "reason": "not compact, hull solidity 0.54"
+        },
+        {
+          "xIn": 4.4364,
+          "yIn": 0.0399,
+          "diameterIn": 0.1097,
+          "reason": "too small, 0.110 in"
+        },
+        {
+          "xIn": 4.1811,
+          "yIn": 0.1392,
+          "diameterIn": 0.148,
+          "reason": "too small, 0.148 in"
+        },
+        {
+          "xIn": 6.0194,
+          "yIn": 0.1908,
+          "diameterIn": 0.4425,
+          "reason": "elongated, aspect 3.54"
+        },
+        {
+          "xIn": 2.8135,
+          "yIn": 0.1505,
+          "diameterIn": 0.0855,
+          "reason": "too small, 0.085 in"
+        },
+        {
+          "xIn": 1.2996,
+          "yIn": 0.9596,
+          "diameterIn": 0.1289,
+          "reason": "too small, 0.129 in"
+        },
+        {
+          "xIn": 1.554,
+          "yIn": 0.9357,
+          "diameterIn": 0.118,
+          "reason": "too small, 0.118 in"
+        },
+        {
+          "xIn": 2.8517,
+          "yIn": 1.8642,
+          "diameterIn": 0.0645,
+          "reason": "too small, 0.065 in"
+        },
+        {
+          "xIn": 4.5237,
+          "yIn": 3.3582,
+          "diameterIn": 0.0796,
+          "reason": "too small, 0.080 in"
+        },
+        {
+          "xIn": 5.9183,
+          "yIn": 3.36,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        },
+        {
+          "xIn": 6.0967,
+          "yIn": 4.0108,
+          "diameterIn": 0.0645,
+          "reason": "too small, 0.065 in"
+        },
+        {
+          "xIn": 7.24,
+          "yIn": 4.3505,
+          "diameterIn": 0.0768,
+          "reason": "too small, 0.077 in"
+        },
+        {
+          "xIn": 2.8246,
+          "yIn": 5.4933,
+          "diameterIn": 0.1384,
+          "reason": "too small, 0.138 in"
+        },
+        {
+          "xIn": 5.6483,
+          "yIn": 9.9808,
+          "diameterIn": 0.0724,
+          "reason": "too small, 0.072 in"
+        }
+      ]
+    },
+    {
+      "file": "IMG_20250530_0001.jpg",
+      "dpi": 300,
+      "paperLevel": 253,
+      "surveyHoles": 7,
+      "holes": [
+        {
+          "xIn": 1.0461,
+          "yIn": 1.2437,
+          "diameterIn": 0.1597,
+          "solidity": 0.8796,
+          "paperV": 249.7727,
+          "coreMeanV": 208.9738,
+          "annulusMinimumV": 6.8536
+        },
+        {
+          "xIn": 6.5652,
+          "yIn": 1.4046,
+          "diameterIn": 0.1766,
+          "solidity": 0.8764,
+          "paperV": 246.9896,
+          "coreMeanV": 197.3709,
+          "annulusMinimumV": 67.1649
+        },
+        {
+          "xIn": 4.7073,
+          "yIn": 5.4886,
+          "diameterIn": 0.1611,
+          "solidity": 0.9648,
+          "paperV": 247.0323,
+          "coreMeanV": 158.6741,
+          "annulusMinimumV": 12.7481
+        },
+        {
+          "xIn": 6.5048,
+          "yIn": 5.533,
+          "diameterIn": 0.1851,
+          "solidity": 0.8867,
+          "paperV": 247.0138,
+          "coreMeanV": 216.0284,
+          "annulusMinimumV": 29.982
+        },
+        {
+          "xIn": 4.5459,
+          "yIn": 7.3218,
+          "diameterIn": 0.1504,
+          "solidity": 0.9628,
+          "paperV": 249.2437,
+          "coreMeanV": 93.7664,
+          "annulusMinimumV": 24.5726
+        },
+        {
+          "xIn": 6.6474,
+          "yIn": 9.1053,
+          "diameterIn": 0.1906,
+          "solidity": 0.8417,
+          "paperV": 246.9602,
+          "coreMeanV": 216.3614,
+          "annulusMinimumV": 7.9623
+        },
+        {
+          "xIn": 5.6652,
+          "yIn": 10.1653,
+          "diameterIn": 0.3683,
+          "solidity": 0.9609,
+          "paperV": 224.7415,
+          "coreMeanV": 96.7353,
+          "annulusMinimumV": 2.1175
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 0.0192,
+          "yIn": 0.4008,
+          "diameterIn": 0.2024,
+          "reason": "elongated, aspect 18.21"
+        },
+        {
+          "xIn": 4.8775,
+          "yIn": 0.1555,
+          "diameterIn": 0.8805,
+          "reason": "too large, 0.880 in"
+        },
+        {
+          "xIn": 7.7258,
+          "yIn": 0.1506,
+          "diameterIn": 0.1284,
+          "reason": "too small, 0.128 in"
+        },
+        {
+          "xIn": 4.6657,
+          "yIn": 1.6066,
+          "diameterIn": 0.1248,
+          "reason": "too small, 0.125 in"
+        },
+        {
+          "xIn": 2.2128,
+          "yIn": 1.616,
+          "diameterIn": 0.0991,
+          "reason": "too small, 0.099 in"
+        },
+        {
+          "xIn": 3.0929,
+          "yIn": 3.0791,
+          "diameterIn": 0.1499,
+          "reason": "too small, 0.150 in"
+        },
+        {
+          "xIn": 4.9036,
+          "yIn": 3.4673,
+          "diameterIn": 0.1022,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 1.1724,
+          "yIn": 3.5261,
+          "diameterIn": 0.1394,
+          "reason": "too small, 0.139 in"
+        },
+        {
+          "xIn": 6.7004,
+          "yIn": 3.6397,
+          "diameterIn": 0.1074,
+          "reason": "too small, 0.107 in"
+        },
+        {
+          "xIn": 2.8299,
+          "yIn": 5.039,
+          "diameterIn": 0.1024,
+          "reason": "too small, 0.102 in"
+        },
+        {
+          "xIn": 0.9636,
+          "yIn": 5.3639,
+          "diameterIn": 0.1266,
+          "reason": "too small, 0.127 in"
+        },
+        {
+          "xIn": 3.0689,
+          "yIn": 6.9969,
+          "diameterIn": 0.087,
+          "reason": "too small, 0.087 in"
+        },
+        {
+          "xIn": 6.4912,
+          "yIn": 7.3232,
+          "diameterIn": 0.1338,
+          "reason": "too small, 0.134 in"
+        },
+        {
+          "xIn": 1.0894,
+          "yIn": 7.3379,
+          "diameterIn": 0.1195,
+          "reason": "too small, 0.120 in"
+        },
+        {
+          "xIn": 4.7557,
+          "yIn": 8.5056,
+          "diameterIn": 0.1196,
+          "reason": "too small, 0.120 in"
+        },
+        {
+          "xIn": 2.8183,
+          "yIn": 8.858,
+          "diameterIn": 0.122,
+          "reason": "too small, 0.122 in"
+        },
+        {
+          "xIn": 1.0333,
+          "yIn": 9.105,
+          "diameterIn": 0.0687,
+          "reason": "too small, 0.069 in"
+        },
+        {
+          "xIn": 7.1134,
+          "yIn": 10.1536,
+          "diameterIn": 0.6148,
+          "reason": "too large, 0.615 in"
+        },
+        {
+          "xIn": 6.0533,
+          "yIn": 10.2183,
+          "diameterIn": 0.0901,
+          "reason": "too small, 0.090 in"
+        },
+        {
+          "xIn": 0.0163,
+          "yIn": 10.9101,
+          "diameterIn": 0.0788,
+          "reason": "too small, 0.079 in"
+        }
+      ]
+    },
+    {
+      "file": "n568-gm210m.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 28,
+      "holes": [
+        {
+          "xIn": 2.6469,
+          "yIn": 1.1857,
+          "diameterIn": 0.2276,
+          "solidity": 0.9153,
+          "paperV": 254.9983,
+          "coreMeanV": 223.5047,
+          "annulusMinimumV": 10.9532
+        },
+        {
+          "xIn": 5.5073,
+          "yIn": 1.2739,
+          "diameterIn": 0.2392,
+          "solidity": 0.9008,
+          "paperV": 238.2784,
+          "coreMeanV": 209.3968,
+          "annulusMinimumV": 18.0349
+        },
+        {
+          "xIn": 6.0094,
+          "yIn": 1.359,
+          "diameterIn": 0.2004,
+          "solidity": 0.9392,
+          "paperV": 246.2379,
+          "coreMeanV": 161.8977,
+          "annulusMinimumV": 115.8081
+        },
+        {
+          "xIn": 3.7928,
+          "yIn": 1.4306,
+          "diameterIn": 0.2413,
+          "solidity": 0.9242,
+          "paperV": 250.8568,
+          "coreMeanV": 205.9444,
+          "annulusMinimumV": 11.5489
+        },
+        {
+          "xIn": 0.7916,
+          "yIn": 1.4684,
+          "diameterIn": 0.2227,
+          "solidity": 0.9108,
+          "paperV": 250.7448,
+          "coreMeanV": 208.1698,
+          "annulusMinimumV": 13.2406
+        },
+        {
+          "xIn": 7.1226,
+          "yIn": 1.6642,
+          "diameterIn": 0.2469,
+          "solidity": 0.9666,
+          "paperV": 249.3989,
+          "coreMeanV": 210.755,
+          "annulusMinimumV": 14.334
+        },
+        {
+          "xIn": 2.5782,
+          "yIn": 2.4621,
+          "diameterIn": 0.2586,
+          "solidity": 0.9928,
+          "paperV": 236.6822,
+          "coreMeanV": 209.1175,
+          "annulusMinimumV": 10.1312
+        },
+        {
+          "xIn": 1.2558,
+          "yIn": 2.6378,
+          "diameterIn": 0.2385,
+          "solidity": 0.9803,
+          "paperV": 255,
+          "coreMeanV": 203.407,
+          "annulusMinimumV": 11.9878
+        },
+        {
+          "xIn": 5.4486,
+          "yIn": 2.9952,
+          "diameterIn": 0.2665,
+          "solidity": 0.9887,
+          "paperV": 250.7804,
+          "coreMeanV": 186.0878,
+          "annulusMinimumV": 12.3717
+        },
+        {
+          "xIn": 3.9518,
+          "yIn": 3.0315,
+          "diameterIn": 0.2587,
+          "solidity": 0.9881,
+          "paperV": 250.5584,
+          "coreMeanV": 208.4342,
+          "annulusMinimumV": 13.7902
+        },
+        {
+          "xIn": 6.7712,
+          "yIn": 3.0963,
+          "diameterIn": 0.2428,
+          "solidity": 0.9793,
+          "paperV": 248.0877,
+          "coreMeanV": 168.5311,
+          "annulusMinimumV": 12.9411
+        },
+        {
+          "xIn": 7.0718,
+          "yIn": 4.252,
+          "diameterIn": 0.2367,
+          "solidity": 0.9295,
+          "paperV": 243.4721,
+          "coreMeanV": 187.4963,
+          "annulusMinimumV": 19.0908
+        },
+        {
+          "xIn": 1.0454,
+          "yIn": 4.4401,
+          "diameterIn": 0.2479,
+          "solidity": 0.9443,
+          "paperV": 249.3929,
+          "coreMeanV": 179.6344,
+          "annulusMinimumV": 19.2316
+        },
+        {
+          "xIn": 4.0983,
+          "yIn": 4.6446,
+          "diameterIn": 0.1714,
+          "solidity": 0.9564,
+          "paperV": 240.3046,
+          "coreMeanV": 148.981,
+          "annulusMinimumV": 113.8156
+        },
+        {
+          "xIn": 2.3308,
+          "yIn": 4.7591,
+          "diameterIn": 0.2567,
+          "solidity": 0.9932,
+          "paperV": 246.9699,
+          "coreMeanV": 208.2529,
+          "annulusMinimumV": 11.3166
+        },
+        {
+          "xIn": 4.0449,
+          "yIn": 5.0355,
+          "diameterIn": 0.2804,
+          "solidity": 0.9912,
+          "paperV": 244.5116,
+          "coreMeanV": 198.9526,
+          "annulusMinimumV": 13.5364
+        },
+        {
+          "xIn": 5.4855,
+          "yIn": 5.4313,
+          "diameterIn": 0.2336,
+          "solidity": 0.99,
+          "paperV": 244.3871,
+          "coreMeanV": 201.3756,
+          "annulusMinimumV": 67.317
+        },
+        {
+          "xIn": 2.5892,
+          "yIn": 5.7148,
+          "diameterIn": 0.2406,
+          "solidity": 0.9897,
+          "paperV": 254.9913,
+          "coreMeanV": 204.0272,
+          "annulusMinimumV": 13.8934
+        },
+        {
+          "xIn": 6.7697,
+          "yIn": 5.794,
+          "diameterIn": 0.2307,
+          "solidity": 0.9686,
+          "paperV": 250.277,
+          "coreMeanV": 207.562,
+          "annulusMinimumV": 26.5511
+        },
+        {
+          "xIn": 0.9698,
+          "yIn": 5.8802,
+          "diameterIn": 0.2362,
+          "solidity": 0.9433,
+          "paperV": 251.2118,
+          "coreMeanV": 194.7588,
+          "annulusMinimumV": 11.0452
+        },
+        {
+          "xIn": 4.227,
+          "yIn": 6.1366,
+          "diameterIn": 0.2521,
+          "solidity": 0.9894,
+          "paperV": 249.1069,
+          "coreMeanV": 194.472,
+          "annulusMinimumV": 72.7827
+        },
+        {
+          "xIn": 4.2085,
+          "yIn": 7.3696,
+          "diameterIn": 0.2464,
+          "solidity": 0.9833,
+          "paperV": 251.2737,
+          "coreMeanV": 197.9815,
+          "annulusMinimumV": 52.739
+        },
+        {
+          "xIn": 0.8247,
+          "yIn": 7.4811,
+          "diameterIn": 0.2506,
+          "solidity": 0.9907,
+          "paperV": 254.3966,
+          "coreMeanV": 198.5775,
+          "annulusMinimumV": 12.6717
+        },
+        {
+          "xIn": 5.3777,
+          "yIn": 7.5317,
+          "diameterIn": 0.2512,
+          "solidity": 0.9915,
+          "paperV": 252.3317,
+          "coreMeanV": 203.165,
+          "annulusMinimumV": 91.6556
+        },
+        {
+          "xIn": 2.639,
+          "yIn": 7.689,
+          "diameterIn": 0.251,
+          "solidity": 0.9928,
+          "paperV": 253.1834,
+          "coreMeanV": 201.8926,
+          "annulusMinimumV": 15.2284
+        },
+        {
+          "xIn": 6.9247,
+          "yIn": 7.7753,
+          "diameterIn": 0.2402,
+          "solidity": 0.9694,
+          "paperV": 253.3024,
+          "coreMeanV": 208.2155,
+          "annulusMinimumV": 78.3922
+        },
+        {
+          "xIn": 6.555,
+          "yIn": 8.0478,
+          "diameterIn": 0.1835,
+          "solidity": 0.8568,
+          "paperV": 247.8988,
+          "coreMeanV": 217.6852,
+          "annulusMinimumV": 152.6154
+        },
+        {
+          "xIn": 5.7565,
+          "yIn": 8.0777,
+          "diameterIn": 0.1733,
+          "solidity": 0.8481,
+          "paperV": 239.2707,
+          "coreMeanV": 191.1602,
+          "annulusMinimumV": 150.7105
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 6.2007,
+          "yIn": 1.0773,
+          "diameterIn": 0.1099,
+          "reason": "too small, 0.110 in"
+        },
+        {
+          "xIn": 5.6929,
+          "yIn": 1.1603,
+          "diameterIn": 0.0953,
+          "reason": "too small, 0.095 in"
+        },
+        {
+          "xIn": 6.1692,
+          "yIn": 3.0625,
+          "diameterIn": 0.0894,
+          "reason": "too small, 0.089 in"
+        },
+        {
+          "xIn": 6.1025,
+          "yIn": 3.4074,
+          "diameterIn": 0.2113,
+          "reason": "elongated, aspect 2.58"
+        },
+        {
+          "xIn": 5.9177,
+          "yIn": 3.7111,
+          "diameterIn": 0.0944,
+          "reason": "too small, 0.094 in"
+        },
+        {
+          "xIn": 5.0216,
+          "yIn": 8.0981,
+          "diameterIn": 0.1464,
+          "reason": "too small, 0.146 in"
+        },
+        {
+          "xIn": 6.2246,
+          "yIn": 8.1023,
+          "diameterIn": 0.1332,
+          "reason": "too small, 0.133 in"
+        },
+        {
+          "xIn": 5.5694,
+          "yIn": 8.1363,
+          "diameterIn": 0.0815,
+          "reason": "too small, 0.081 in"
+        },
+        {
+          "xIn": 4.7902,
+          "yIn": 8.2789,
+          "diameterIn": 0.0955,
+          "reason": "too small, 0.096 in"
+        },
+        {
+          "xIn": 5.6333,
+          "yIn": 10.0352,
+          "diameterIn": 0.1531,
+          "reason": "elongated, aspect 3.28"
+        },
+        {
+          "xIn": 5.4643,
+          "yIn": 10.005,
+          "diameterIn": 0.0917,
+          "reason": "too small, 0.092 in"
+        }
+      ]
+    },
+    {
+      "file": "n568-ruag.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 28,
+      "holes": [
+        {
+          "xIn": 3.9869,
+          "yIn": 1.288,
+          "diameterIn": 0.2237,
+          "solidity": 0.9388,
+          "paperV": 253.8455,
+          "coreMeanV": 201.1196,
+          "annulusMinimumV": 56.2139
+        },
+        {
+          "xIn": 2.4625,
+          "yIn": 1.3077,
+          "diameterIn": 0.216,
+          "solidity": 0.9207,
+          "paperV": 253.8287,
+          "coreMeanV": 205.2642,
+          "annulusMinimumV": 73.3471
+        },
+        {
+          "xIn": 1.2238,
+          "yIn": 1.3264,
+          "diameterIn": 0.2136,
+          "solidity": 0.9258,
+          "paperV": 253.6554,
+          "coreMeanV": 200.993,
+          "annulusMinimumV": 12.2158
+        },
+        {
+          "xIn": 7.2218,
+          "yIn": 1.4777,
+          "diameterIn": 0.2529,
+          "solidity": 0.9728,
+          "paperV": 253.9139,
+          "coreMeanV": 215.5846,
+          "annulusMinimumV": 25.7346
+        },
+        {
+          "xIn": 5.6325,
+          "yIn": 1.5503,
+          "diameterIn": 0.2417,
+          "solidity": 0.9499,
+          "paperV": 252.5212,
+          "coreMeanV": 206.3412,
+          "annulusMinimumV": 38.1867
+        },
+        {
+          "xIn": 6.6019,
+          "yIn": 2.727,
+          "diameterIn": 0.2575,
+          "solidity": 0.9575,
+          "paperV": 254.1555,
+          "coreMeanV": 203.3359,
+          "annulusMinimumV": 82.4866
+        },
+        {
+          "xIn": 1.1654,
+          "yIn": 2.7362,
+          "diameterIn": 0.2282,
+          "solidity": 0.9219,
+          "paperV": 252.6406,
+          "coreMeanV": 203.5415,
+          "annulusMinimumV": 14.4875
+        },
+        {
+          "xIn": 2.4758,
+          "yIn": 2.7681,
+          "diameterIn": 0.2345,
+          "solidity": 0.9637,
+          "paperV": 254.1446,
+          "coreMeanV": 201.7483,
+          "annulusMinimumV": 14.1901
+        },
+        {
+          "xIn": 3.9723,
+          "yIn": 2.7951,
+          "diameterIn": 0.2552,
+          "solidity": 0.9891,
+          "paperV": 254.1933,
+          "coreMeanV": 193.4381,
+          "annulusMinimumV": 25.4856
+        },
+        {
+          "xIn": 5.3037,
+          "yIn": 2.9197,
+          "diameterIn": 0.2634,
+          "solidity": 0.9806,
+          "paperV": 253.6189,
+          "coreMeanV": 203.1375,
+          "annulusMinimumV": 48.0411
+        },
+        {
+          "xIn": 5.8393,
+          "yIn": 4.0453,
+          "diameterIn": 0.2711,
+          "solidity": 0.9858,
+          "paperV": 253.7125,
+          "coreMeanV": 190.591,
+          "annulusMinimumV": 64.756
+        },
+        {
+          "xIn": 7.0652,
+          "yIn": 4.3496,
+          "diameterIn": 0.2417,
+          "solidity": 0.9858,
+          "paperV": 254.1334,
+          "coreMeanV": 205.2391,
+          "annulusMinimumV": 54.0077
+        },
+        {
+          "xIn": 0.9848,
+          "yIn": 4.4699,
+          "diameterIn": 0.188,
+          "solidity": 0.8956,
+          "paperV": 254.1314,
+          "coreMeanV": 206.2731,
+          "annulusMinimumV": 16.531
+        },
+        {
+          "xIn": 2.7378,
+          "yIn": 4.5775,
+          "diameterIn": 0.2551,
+          "solidity": 0.9839,
+          "paperV": 253.8144,
+          "coreMeanV": 205.9205,
+          "annulusMinimumV": 16.5088
+        },
+        {
+          "xIn": 3.446,
+          "yIn": 4.6553,
+          "diameterIn": 0.2587,
+          "solidity": 0.9812,
+          "paperV": 254.4935,
+          "coreMeanV": 196.7285,
+          "annulusMinimumV": 34.4115
+        },
+        {
+          "xIn": 3.8788,
+          "yIn": 5.4153,
+          "diameterIn": 0.2556,
+          "solidity": 0.9932,
+          "paperV": 254.3175,
+          "coreMeanV": 190.0134,
+          "annulusMinimumV": 51.6728
+        },
+        {
+          "xIn": 2.7136,
+          "yIn": 5.5438,
+          "diameterIn": 0.2429,
+          "solidity": 0.9685,
+          "paperV": 253.5246,
+          "coreMeanV": 194.3061,
+          "annulusMinimumV": 26.2355
+        },
+        {
+          "xIn": 5.4212,
+          "yIn": 5.7854,
+          "diameterIn": 0.2401,
+          "solidity": 0.9829,
+          "paperV": 254.0277,
+          "coreMeanV": 178.4597,
+          "annulusMinimumV": 34.9931
+        },
+        {
+          "xIn": 1.1531,
+          "yIn": 5.981,
+          "diameterIn": 0.2297,
+          "solidity": 0.8818,
+          "paperV": 254.3319,
+          "coreMeanV": 210.7816,
+          "annulusMinimumV": 29.0422
+        },
+        {
+          "xIn": 6.8932,
+          "yIn": 6.0877,
+          "diameterIn": 0.258,
+          "solidity": 0.9656,
+          "paperV": 254.3199,
+          "coreMeanV": 210.3402,
+          "annulusMinimumV": 63.6281
+        },
+        {
+          "xIn": 2.4522,
+          "yIn": 7.2776,
+          "diameterIn": 0.2559,
+          "solidity": 0.9953,
+          "paperV": 254.286,
+          "coreMeanV": 197.279,
+          "annulusMinimumV": 37.9886
+        },
+        {
+          "xIn": 5.2175,
+          "yIn": 7.3444,
+          "diameterIn": 0.268,
+          "solidity": 0.9669,
+          "paperV": 254.112,
+          "coreMeanV": 197.5313,
+          "annulusMinimumV": 68.9524
+        },
+        {
+          "xIn": 0.9816,
+          "yIn": 7.5332,
+          "diameterIn": 0.241,
+          "solidity": 0.9775,
+          "paperV": 254.1684,
+          "coreMeanV": 198.7789,
+          "annulusMinimumV": 21.622
+        },
+        {
+          "xIn": 4.1271,
+          "yIn": 7.6447,
+          "diameterIn": 0.2558,
+          "solidity": 0.9743,
+          "paperV": 254.1807,
+          "coreMeanV": 198.4581,
+          "annulusMinimumV": 89.2079
+        },
+        {
+          "xIn": 6.8881,
+          "yIn": 7.7687,
+          "diameterIn": 0.2537,
+          "solidity": 0.9896,
+          "paperV": 254.8712,
+          "coreMeanV": 204.2888,
+          "annulusMinimumV": 25.3643
+        },
+        {
+          "xIn": 5.3721,
+          "yIn": 8.1255,
+          "diameterIn": 0.2157,
+          "solidity": 0.6621,
+          "paperV": 242.6724,
+          "coreMeanV": 245.3901,
+          "annulusMinimumV": 135.5415
+        },
+        {
+          "xIn": 3.5714,
+          "yIn": 8.2305,
+          "diameterIn": 0.1811,
+          "solidity": 0.7651,
+          "paperV": 243.2348,
+          "coreMeanV": 196.3401,
+          "annulusMinimumV": 140.3024
+        },
+        {
+          "xIn": 5.6384,
+          "yIn": 10.0376,
+          "diameterIn": 0.3188,
+          "solidity": 0.8568,
+          "paperV": 233.5059,
+          "coreMeanV": 118.3794,
+          "annulusMinimumV": 43.9443
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 4.4567,
+          "yIn": 8.0108,
+          "diameterIn": 0.0753,
+          "reason": "too small, 0.075 in"
+        },
+        {
+          "xIn": 4.9839,
+          "yIn": 8.086,
+          "diameterIn": 0.1167,
+          "reason": "too small, 0.117 in"
+        },
+        {
+          "xIn": 4.6407,
+          "yIn": 8.1714,
+          "diameterIn": 0.1321,
+          "reason": "too small, 0.132 in"
+        },
+        {
+          "xIn": 4.0183,
+          "yIn": 8.2308,
+          "diameterIn": 0.0746,
+          "reason": "too small, 0.075 in"
+        },
+        {
+          "xIn": 6.0372,
+          "yIn": 10.0155,
+          "diameterIn": 0.1388,
+          "reason": "too small, 0.139 in"
+        },
+        {
+          "xIn": 6.8933,
+          "yIn": 10.0167,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        },
+        {
+          "xIn": 6.6117,
+          "yIn": 10.025,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        }
+      ]
+    },
+    {
+      "file": "n568.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 29,
+      "holes": [
+        {
+          "xIn": 4.1874,
+          "yIn": 0.1894,
+          "diameterIn": 0.2726,
+          "solidity": 0.7494,
+          "paperV": 244.5518,
+          "coreMeanV": 177.0798,
+          "annulusMinimumV": 129.8099
+        },
+        {
+          "xIn": 4.61,
+          "yIn": 0.1873,
+          "diameterIn": 0.2809,
+          "solidity": 0.7884,
+          "paperV": 246.836,
+          "coreMeanV": 223.6319,
+          "annulusMinimumV": 133.4851
+        },
+        {
+          "xIn": 5.8032,
+          "yIn": 0.6459,
+          "diameterIn": 0.2909,
+          "solidity": 0.9617,
+          "paperV": 249.4069,
+          "coreMeanV": 209.5717,
+          "annulusMinimumV": 15.1206
+        },
+        {
+          "xIn": 4.0635,
+          "yIn": 0.7914,
+          "diameterIn": 0.2723,
+          "solidity": 0.9067,
+          "paperV": 248.1804,
+          "coreMeanV": 211.1194,
+          "annulusMinimumV": 45.0248
+        },
+        {
+          "xIn": 2.5056,
+          "yIn": 0.7853,
+          "diameterIn": 0.2634,
+          "solidity": 0.8965,
+          "paperV": 250.3425,
+          "coreMeanV": 216.9918,
+          "annulusMinimumV": 57.9825
+        },
+        {
+          "xIn": 0.6448,
+          "yIn": 0.8875,
+          "diameterIn": 0.2926,
+          "solidity": 0.9704,
+          "paperV": 250.1783,
+          "coreMeanV": 220.7649,
+          "annulusMinimumV": 12.0842
+        },
+        {
+          "xIn": 7.4796,
+          "yIn": 1.5812,
+          "diameterIn": 0.3046,
+          "solidity": 0.9627,
+          "paperV": 250.2414,
+          "coreMeanV": 215.3132,
+          "annulusMinimumV": 18.8029
+        },
+        {
+          "xIn": 1.3328,
+          "yIn": 2.2106,
+          "diameterIn": 0.267,
+          "solidity": 0.8603,
+          "paperV": 250.7663,
+          "coreMeanV": 210.316,
+          "annulusMinimumV": 35.5941
+        },
+        {
+          "xIn": 5.9165,
+          "yIn": 2.8879,
+          "diameterIn": 0.31,
+          "solidity": 0.969,
+          "paperV": 249.8481,
+          "coreMeanV": 194.985,
+          "annulusMinimumV": 20.4372
+        },
+        {
+          "xIn": 7.4416,
+          "yIn": 2.8834,
+          "diameterIn": 0.3119,
+          "solidity": 0.9789,
+          "paperV": 250.6004,
+          "coreMeanV": 212.6531,
+          "annulusMinimumV": 33.7778
+        },
+        {
+          "xIn": 4.3594,
+          "yIn": 3.1056,
+          "diameterIn": 0.3084,
+          "solidity": 0.984,
+          "paperV": 250.2234,
+          "coreMeanV": 197.6939,
+          "annulusMinimumV": 17.2144
+        },
+        {
+          "xIn": 2.9982,
+          "yIn": 3.1654,
+          "diameterIn": 0.3007,
+          "solidity": 0.98,
+          "paperV": 250.3471,
+          "coreMeanV": 201.9608,
+          "annulusMinimumV": 72.7871
+        },
+        {
+          "xIn": 2.9667,
+          "yIn": 3.7658,
+          "diameterIn": 0.3023,
+          "solidity": 0.969,
+          "paperV": 251.7956,
+          "coreMeanV": 196.1963,
+          "annulusMinimumV": 27.9205
+        },
+        {
+          "xIn": 1.1755,
+          "yIn": 4.0191,
+          "diameterIn": 0.253,
+          "solidity": 0.9659,
+          "paperV": 254.9933,
+          "coreMeanV": 202.6069,
+          "annulusMinimumV": 12.884
+        },
+        {
+          "xIn": 6.0724,
+          "yIn": 4.0301,
+          "diameterIn": 0.3028,
+          "solidity": 0.9765,
+          "paperV": 247.9413,
+          "coreMeanV": 178.7462,
+          "annulusMinimumV": 11.4397
+        },
+        {
+          "xIn": 4.438,
+          "yIn": 4.1422,
+          "diameterIn": 0.3051,
+          "solidity": 0.986,
+          "paperV": 249.6022,
+          "coreMeanV": 191.7713,
+          "annulusMinimumV": 67.3108
+        },
+        {
+          "xIn": 7.0149,
+          "yIn": 4.4407,
+          "diameterIn": 0.3203,
+          "solidity": 0.9702,
+          "paperV": 249.9067,
+          "coreMeanV": 190.3813,
+          "annulusMinimumV": 26.7214
+        },
+        {
+          "xIn": 1.4096,
+          "yIn": 5.5855,
+          "diameterIn": 0.2846,
+          "solidity": 0.9883,
+          "paperV": 247.89,
+          "coreMeanV": 205.8429,
+          "annulusMinimumV": 60.4159
+        },
+        {
+          "xIn": 2.8876,
+          "yIn": 5.8491,
+          "diameterIn": 0.3149,
+          "solidity": 0.984,
+          "paperV": 250.4487,
+          "coreMeanV": 182.5821,
+          "annulusMinimumV": 17.056
+        },
+        {
+          "xIn": 4.4327,
+          "yIn": 5.8679,
+          "diameterIn": 0.3079,
+          "solidity": 0.9847,
+          "paperV": 249.5508,
+          "coreMeanV": 171.7326,
+          "annulusMinimumV": 52.969
+        },
+        {
+          "xIn": 7.4575,
+          "yIn": 6.1619,
+          "diameterIn": 0.3431,
+          "solidity": 0.9582,
+          "paperV": 251.0345,
+          "coreMeanV": 192.2226,
+          "annulusMinimumV": 28.3994
+        },
+        {
+          "xIn": 5.5369,
+          "yIn": 6.1092,
+          "diameterIn": 0.2982,
+          "solidity": 0.9831,
+          "paperV": 243.1203,
+          "coreMeanV": 174.816,
+          "annulusMinimumV": 24.342
+        },
+        {
+          "xIn": 5.5458,
+          "yIn": 6.6099,
+          "diameterIn": 0.3103,
+          "solidity": 0.9811,
+          "paperV": 237.8992,
+          "coreMeanV": 171.9161,
+          "annulusMinimumV": 16.0954
+        },
+        {
+          "xIn": 4.9419,
+          "yIn": 6.8042,
+          "diameterIn": 0.3108,
+          "solidity": 0.9672,
+          "paperV": 235.2318,
+          "coreMeanV": 170.802,
+          "annulusMinimumV": 31.8469
+        },
+        {
+          "xIn": 2.5313,
+          "yIn": 6.95,
+          "diameterIn": 0.2959,
+          "solidity": 0.9882,
+          "paperV": 246.7226,
+          "coreMeanV": 185.8155,
+          "annulusMinimumV": 19.77
+        },
+        {
+          "xIn": 4.5246,
+          "yIn": 6.9999,
+          "diameterIn": 0.3319,
+          "solidity": 0.6656,
+          "paperV": 237.4417,
+          "coreMeanV": 195.2957,
+          "annulusMinimumV": 106.3446
+        },
+        {
+          "xIn": 8.0024,
+          "yIn": 7.4264,
+          "diameterIn": 0.2923,
+          "solidity": 0.961,
+          "paperV": 253.7882,
+          "coreMeanV": 194.4246,
+          "annulusMinimumV": 27.5379
+        },
+        {
+          "xIn": 1.3524,
+          "yIn": 7.528,
+          "diameterIn": 0.3103,
+          "solidity": 0.9752,
+          "paperV": 249.414,
+          "coreMeanV": 186.094,
+          "annulusMinimumV": 31.7592
+        },
+        {
+          "xIn": 7.4783,
+          "yIn": 10.0372,
+          "diameterIn": 0.2265,
+          "solidity": 0.9833,
+          "paperV": 228.3325,
+          "coreMeanV": 153.5332,
+          "annulusMinimumV": 41.3209
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 3.7291,
+          "yIn": 0.1232,
+          "diameterIn": 0.1344,
+          "reason": "too small, 0.134 in"
+        },
+        {
+          "xIn": 4.4164,
+          "yIn": 0.0802,
+          "diameterIn": 0.0775,
+          "reason": "too small, 0.078 in"
+        },
+        {
+          "xIn": 3.9521,
+          "yIn": 0.1919,
+          "diameterIn": 0.1757,
+          "reason": "elongated, aspect 2.35"
+        },
+        {
+          "xIn": 6.3345,
+          "yIn": 10.0416,
+          "diameterIn": 0.8497,
+          "reason": "too large, 0.850 in"
+        }
+      ]
+    },
+    {
+      "file": "retumbo.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 25,
+      "holes": [
+        {
+          "xIn": 3.1139,
+          "yIn": 0.789,
+          "diameterIn": 0.2965,
+          "solidity": 0.9954,
+          "paperV": 247.1222,
+          "coreMeanV": 208.0126,
+          "annulusMinimumV": 12.4744
+        },
+        {
+          "xIn": 7.3397,
+          "yIn": 1.0398,
+          "diameterIn": 0.2982,
+          "solidity": 0.9994,
+          "paperV": 252.1164,
+          "coreMeanV": 206.7365,
+          "annulusMinimumV": 12.1357
+        },
+        {
+          "xIn": 5.8375,
+          "yIn": 1.0633,
+          "diameterIn": 0.296,
+          "solidity": 0.9643,
+          "paperV": 252.6377,
+          "coreMeanV": 207.4428,
+          "annulusMinimumV": 12.5319
+        },
+        {
+          "xIn": 4.4513,
+          "yIn": 1.1474,
+          "diameterIn": 0.2994,
+          "solidity": 0.9994,
+          "paperV": 253.2431,
+          "coreMeanV": 209.7592,
+          "annulusMinimumV": 11.3726
+        },
+        {
+          "xIn": 0.971,
+          "yIn": 1.5228,
+          "diameterIn": 0.2967,
+          "solidity": 0.9963,
+          "paperV": 253.4966,
+          "coreMeanV": 189.4974,
+          "annulusMinimumV": 16.5735
+        },
+        {
+          "xIn": 4.2148,
+          "yIn": 1.8845,
+          "diameterIn": 0.2979,
+          "solidity": 1.0008,
+          "paperV": 249.2335,
+          "coreMeanV": 201.6033,
+          "annulusMinimumV": 11.0603
+        },
+        {
+          "xIn": 7.6081,
+          "yIn": 2.2669,
+          "diameterIn": 0.301,
+          "solidity": 0.9984,
+          "paperV": 249.1135,
+          "coreMeanV": 202.8553,
+          "annulusMinimumV": 12.3059
+        },
+        {
+          "xIn": 5.9793,
+          "yIn": 2.5638,
+          "diameterIn": 0.3044,
+          "solidity": 0.9902,
+          "paperV": 251.9757,
+          "coreMeanV": 195.4468,
+          "annulusMinimumV": 12.3827
+        },
+        {
+          "xIn": 2.7676,
+          "yIn": 2.6716,
+          "diameterIn": 0.2973,
+          "solidity": 0.984,
+          "paperV": 249.3884,
+          "coreMeanV": 202.5929,
+          "annulusMinimumV": 12.9926
+        },
+        {
+          "xIn": 1.4721,
+          "yIn": 2.8053,
+          "diameterIn": 0.2773,
+          "solidity": 0.9374,
+          "paperV": 252.1459,
+          "coreMeanV": 178.4448,
+          "annulusMinimumV": 15.9457
+        },
+        {
+          "xIn": 1.688,
+          "yIn": 4.0629,
+          "diameterIn": 0.3009,
+          "solidity": 0.9939,
+          "paperV": 253.598,
+          "coreMeanV": 151.658,
+          "annulusMinimumV": 14.5969
+        },
+        {
+          "xIn": 2.7034,
+          "yIn": 4.1314,
+          "diameterIn": 0.2988,
+          "solidity": 0.9985,
+          "paperV": 254.9945,
+          "coreMeanV": 198.2957,
+          "annulusMinimumV": 12.2265
+        },
+        {
+          "xIn": 4.5918,
+          "yIn": 4.2816,
+          "diameterIn": 0.3019,
+          "solidity": 0.9975,
+          "paperV": 251.41,
+          "coreMeanV": 187.5977,
+          "annulusMinimumV": 12.4964
+        },
+        {
+          "xIn": 7.3257,
+          "yIn": 4.2948,
+          "diameterIn": 0.2965,
+          "solidity": 0.9952,
+          "paperV": 250.2584,
+          "coreMeanV": 194.3401,
+          "annulusMinimumV": 23.0249
+        },
+        {
+          "xIn": 5.1865,
+          "yIn": 4.6356,
+          "diameterIn": 0.2997,
+          "solidity": 1.0004,
+          "paperV": 252.1639,
+          "coreMeanV": 186.2095,
+          "annulusMinimumV": 13.0453
+        },
+        {
+          "xIn": 7.539,
+          "yIn": 5.5624,
+          "diameterIn": 0.2948,
+          "solidity": 0.9875,
+          "paperV": 251.0088,
+          "coreMeanV": 209.2658,
+          "annulusMinimumV": 89.002
+        },
+        {
+          "xIn": 1.5123,
+          "yIn": 5.6761,
+          "diameterIn": 0.3249,
+          "solidity": 0.9517,
+          "paperV": 246.9855,
+          "coreMeanV": 172.8817,
+          "annulusMinimumV": 11.2128
+        },
+        {
+          "xIn": 5.9,
+          "yIn": 5.7144,
+          "diameterIn": 0.3039,
+          "solidity": 0.9848,
+          "paperV": 249.1423,
+          "coreMeanV": 192.1958,
+          "annulusMinimumV": 65.3444
+        },
+        {
+          "xIn": 2.3263,
+          "yIn": 5.9222,
+          "diameterIn": 0.3295,
+          "solidity": 0.932,
+          "paperV": 248.9335,
+          "coreMeanV": 201.2743,
+          "annulusMinimumV": 12.8542
+        },
+        {
+          "xIn": 4.3735,
+          "yIn": 6.2233,
+          "diameterIn": 0.3162,
+          "solidity": 0.9764,
+          "paperV": 252.3045,
+          "coreMeanV": 185.76,
+          "annulusMinimumV": 64.8389
+        },
+        {
+          "xIn": 2.8005,
+          "yIn": 6.404,
+          "diameterIn": 0.3264,
+          "solidity": 0.9418,
+          "paperV": 234.9061,
+          "coreMeanV": 165.6014,
+          "annulusMinimumV": 13.4364
+        },
+        {
+          "xIn": 2.7319,
+          "yIn": 6.8533,
+          "diameterIn": 0.357,
+          "solidity": 0.864,
+          "paperV": 233.244,
+          "coreMeanV": 100.2147,
+          "annulusMinimumV": 14.1604
+        },
+        {
+          "xIn": 1.2117,
+          "yIn": 7.3336,
+          "diameterIn": 0.3174,
+          "solidity": 0.9699,
+          "paperV": 246.0467,
+          "coreMeanV": 196.5687,
+          "annulusMinimumV": 12.892
+        },
+        {
+          "xIn": 1.2369,
+          "yIn": 9.3024,
+          "diameterIn": 0.3152,
+          "solidity": 0.9694,
+          "paperV": 250.77,
+          "coreMeanV": 175.6873,
+          "annulusMinimumV": 11.7062
+        },
+        {
+          "xIn": 7.474,
+          "yIn": 10.1066,
+          "diameterIn": 0.2343,
+          "solidity": 0.9603,
+          "paperV": 234.2064,
+          "coreMeanV": 146.2866,
+          "annulusMinimumV": 40.0332
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 3.1353,
+          "yIn": 0.2827,
+          "diameterIn": 0.3282,
+          "reason": "elongated, aspect 2.56"
+        },
+        {
+          "xIn": 3.9037,
+          "yIn": 0.3004,
+          "diameterIn": 0.2626,
+          "reason": "elongated, aspect 2.28"
+        },
+        {
+          "xIn": 6.3377,
+          "yIn": 10.1126,
+          "diameterIn": 0.8503,
+          "reason": "too large, 0.850 in"
+        }
+      ]
+    },
+    {
+      "file": "retumbo.png",
+      "dpi": 599.9988,
+      "paperLevel": 255,
+      "surveyHoles": 25,
+      "holes": [
+        {
+          "xIn": 4.3324,
+          "yIn": 0.3338,
+          "diameterIn": 0.1537,
+          "solidity": 0.9218,
+          "paperV": 236.4201,
+          "coreMeanV": 202.5793,
+          "annulusMinimumV": 46.9759
+        },
+        {
+          "xIn": 3.1095,
+          "yIn": 0.793,
+          "diameterIn": 0.3048,
+          "solidity": 0.9877,
+          "paperV": 234.9211,
+          "coreMeanV": 199.5464,
+          "annulusMinimumV": 9.1588
+        },
+        {
+          "xIn": 7.3395,
+          "yIn": 1.0398,
+          "diameterIn": 0.2989,
+          "solidity": 0.9999,
+          "paperV": 245.675,
+          "coreMeanV": 202.8404,
+          "annulusMinimumV": 9.6457
+        },
+        {
+          "xIn": 5.8373,
+          "yIn": 1.0633,
+          "diameterIn": 0.2964,
+          "solidity": 0.9644,
+          "paperV": 245.3193,
+          "coreMeanV": 203.6409,
+          "annulusMinimumV": 10.0155
+        },
+        {
+          "xIn": 4.4513,
+          "yIn": 1.1475,
+          "diameterIn": 0.3,
+          "solidity": 0.9996,
+          "paperV": 248.1117,
+          "coreMeanV": 205.9988,
+          "annulusMinimumV": 8.7301
+        },
+        {
+          "xIn": 0.9707,
+          "yIn": 1.5257,
+          "diameterIn": 0.3087,
+          "solidity": 0.9881,
+          "paperV": 249.3818,
+          "coreMeanV": 168.0022,
+          "annulusMinimumV": 12.5832
+        },
+        {
+          "xIn": 4.2147,
+          "yIn": 1.8848,
+          "diameterIn": 0.299,
+          "solidity": 0.9997,
+          "paperV": 240.6364,
+          "coreMeanV": 197.5235,
+          "annulusMinimumV": 8.6829
+        },
+        {
+          "xIn": 7.6017,
+          "yIn": 2.272,
+          "diameterIn": 0.3118,
+          "solidity": 0.9862,
+          "paperV": 244.207,
+          "coreMeanV": 191.1071,
+          "annulusMinimumV": 8.9078
+        },
+        {
+          "xIn": 5.9923,
+          "yIn": 2.5616,
+          "diameterIn": 0.3213,
+          "solidity": 0.9819,
+          "paperV": 248.1437,
+          "coreMeanV": 195.8876,
+          "annulusMinimumV": 9.6805
+        },
+        {
+          "xIn": 2.768,
+          "yIn": 2.6719,
+          "diameterIn": 0.2986,
+          "solidity": 0.9857,
+          "paperV": 238.0995,
+          "coreMeanV": 198.1743,
+          "annulusMinimumV": 9.9974
+        },
+        {
+          "xIn": 1.4802,
+          "yIn": 2.8156,
+          "diameterIn": 0.2917,
+          "solidity": 0.9103,
+          "paperV": 246.8341,
+          "coreMeanV": 171.247,
+          "annulusMinimumV": 13.2802
+        },
+        {
+          "xIn": 1.6872,
+          "yIn": 4.0635,
+          "diameterIn": 0.3047,
+          "solidity": 0.9902,
+          "paperV": 248.9779,
+          "coreMeanV": 144.0445,
+          "annulusMinimumV": 11.1154
+        },
+        {
+          "xIn": 2.7032,
+          "yIn": 4.1315,
+          "diameterIn": 0.2997,
+          "solidity": 0.9984,
+          "paperV": 254.9876,
+          "coreMeanV": 193.9929,
+          "annulusMinimumV": 9.0417
+        },
+        {
+          "xIn": 4.5911,
+          "yIn": 4.2856,
+          "diameterIn": 0.3067,
+          "solidity": 0.9923,
+          "paperV": 246.76,
+          "coreMeanV": 180.5333,
+          "annulusMinimumV": 9.8764
+        },
+        {
+          "xIn": 7.3255,
+          "yIn": 4.2957,
+          "diameterIn": 0.2978,
+          "solidity": 0.9953,
+          "paperV": 244.0109,
+          "coreMeanV": 189.7811,
+          "annulusMinimumV": 21.98
+        },
+        {
+          "xIn": 5.1863,
+          "yIn": 4.636,
+          "diameterIn": 0.301,
+          "solidity": 0.9997,
+          "paperV": 245.5124,
+          "coreMeanV": 181.9766,
+          "annulusMinimumV": 10.0559
+        },
+        {
+          "xIn": 7.5434,
+          "yIn": 5.5632,
+          "diameterIn": 0.3029,
+          "solidity": 0.9881,
+          "paperV": 242.7555,
+          "coreMeanV": 205.7997,
+          "annulusMinimumV": 85.7612
+        },
+        {
+          "xIn": 1.5269,
+          "yIn": 5.6901,
+          "diameterIn": 0.3804,
+          "solidity": 0.8549,
+          "paperV": 244.8347,
+          "coreMeanV": 123.1356,
+          "annulusMinimumV": 7.7268
+        },
+        {
+          "xIn": 5.8999,
+          "yIn": 5.7153,
+          "diameterIn": 0.3067,
+          "solidity": 0.9861,
+          "paperV": 244.2662,
+          "coreMeanV": 188.0113,
+          "annulusMinimumV": 60.7974
+        },
+        {
+          "xIn": 2.3341,
+          "yIn": 5.9137,
+          "diameterIn": 0.3452,
+          "solidity": 0.9007,
+          "paperV": 240.2808,
+          "coreMeanV": 193.568,
+          "annulusMinimumV": 8.8631
+        },
+        {
+          "xIn": 4.3705,
+          "yIn": 6.2221,
+          "diameterIn": 0.3239,
+          "solidity": 0.9705,
+          "paperV": 248.4491,
+          "coreMeanV": 181.0538,
+          "annulusMinimumV": 58.6757
+        },
+        {
+          "xIn": 2.7994,
+          "yIn": 6.4075,
+          "diameterIn": 0.3385,
+          "solidity": 0.9254,
+          "paperV": 227.798,
+          "coreMeanV": 151.1379,
+          "annulusMinimumV": 10.0092
+        },
+        {
+          "xIn": 2.7288,
+          "yIn": 6.8822,
+          "diameterIn": 0.3891,
+          "solidity": 0.8211,
+          "paperV": 226.5747,
+          "coreMeanV": 74.4729,
+          "annulusMinimumV": 13.5705
+        },
+        {
+          "xIn": 1.235,
+          "yIn": 7.3602,
+          "diameterIn": 0.3588,
+          "solidity": 0.8477,
+          "paperV": 245.3123,
+          "coreMeanV": 168.5084,
+          "annulusMinimumV": 9.3392
+        },
+        {
+          "xIn": 1.2244,
+          "yIn": 9.3093,
+          "diameterIn": 0.3354,
+          "solidity": 0.962,
+          "paperV": 244.7212,
+          "coreMeanV": 151.8363,
+          "annulusMinimumV": 8.6145
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 3.1388,
+          "yIn": 0.282,
+          "diameterIn": 0.3397,
+          "reason": "elongated, aspect 2.54"
+        },
+        {
+          "xIn": 3.8767,
+          "yIn": 0.3257,
+          "diameterIn": 0.3573,
+          "reason": "elongated, aspect 2.62"
+        },
+        {
+          "xIn": 1.7617,
+          "yIn": 5.3583,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        },
+        {
+          "xIn": 0.9578,
+          "yIn": 7.5892,
+          "diameterIn": 0.0715,
+          "reason": "too small, 0.071 in"
+        },
+        {
+          "xIn": 7.6317,
+          "yIn": 8.8984,
+          "diameterIn": 0.0635,
+          "reason": "too small, 0.063 in"
+        },
+        {
+          "xIn": 6.4758,
+          "yIn": 10.1117,
+          "diameterIn": 0.9162,
+          "reason": "too large, 0.916 in"
+        }
+      ]
+    },
+    {
+      "file": "retumbo_0001.jpg",
+      "dpi": 600,
+      "paperLevel": 255,
+      "surveyHoles": 27,
+      "holes": [
+        {
+          "xIn": 3.6784,
+          "yIn": 0.1319,
+          "diameterIn": 0.2876,
+          "solidity": 0.6545,
+          "paperV": 245.783,
+          "coreMeanV": 198.0928,
+          "annulusMinimumV": 140.2564
+        },
+        {
+          "xIn": 4.7042,
+          "yIn": 0.1066,
+          "diameterIn": 0.2842,
+          "solidity": 0.6542,
+          "paperV": 239.9104,
+          "coreMeanV": 206.5481,
+          "annulusMinimumV": 142.659
+        },
+        {
+          "xIn": 5.3115,
+          "yIn": 0.1951,
+          "diameterIn": 0.3459,
+          "solidity": 0.7286,
+          "paperV": 244.3869,
+          "coreMeanV": 198.9021,
+          "annulusMinimumV": 116.7811
+        },
+        {
+          "xIn": 7.2141,
+          "yIn": 0.6581,
+          "diameterIn": 0.252,
+          "solidity": 0.935,
+          "paperV": 253.241,
+          "coreMeanV": 197.2887,
+          "annulusMinimumV": 49.8802
+        },
+        {
+          "xIn": 2.8545,
+          "yIn": 0.8513,
+          "diameterIn": 0.2466,
+          "solidity": 0.7621,
+          "paperV": 253.1938,
+          "coreMeanV": 199.8786,
+          "annulusMinimumV": 75.3764
+        },
+        {
+          "xIn": 4.0024,
+          "yIn": 1.0606,
+          "diameterIn": 0.2601,
+          "solidity": 0.8729,
+          "paperV": 251.7867,
+          "coreMeanV": 135.5672,
+          "annulusMinimumV": 21.4301
+        },
+        {
+          "xIn": 2.8268,
+          "yIn": 1.3365,
+          "diameterIn": 0.2807,
+          "solidity": 0.9044,
+          "paperV": 246.6457,
+          "coreMeanV": 181.4416,
+          "annulusMinimumV": 17.3758
+        },
+        {
+          "xIn": 7.4291,
+          "yIn": 1.8061,
+          "diameterIn": 0.3074,
+          "solidity": 0.9535,
+          "paperV": 248.1143,
+          "coreMeanV": 197.441,
+          "annulusMinimumV": 23.0581
+        },
+        {
+          "xIn": 2.7692,
+          "yIn": 1.8009,
+          "diameterIn": 0.2511,
+          "solidity": 0.9207,
+          "paperV": 252.4457,
+          "coreMeanV": 173.345,
+          "annulusMinimumV": 85.6978
+        },
+        {
+          "xIn": 4.78,
+          "yIn": 2.1067,
+          "diameterIn": 0.2948,
+          "solidity": 0.8804,
+          "paperV": 248.7952,
+          "coreMeanV": 211.335,
+          "annulusMinimumV": 33.4507
+        },
+        {
+          "xIn": 6.2729,
+          "yIn": 2.1575,
+          "diameterIn": 0.3754,
+          "solidity": 0.8247,
+          "paperV": 250.8482,
+          "coreMeanV": 92.4681,
+          "annulusMinimumV": 29.4059
+        },
+        {
+          "xIn": 1.8475,
+          "yIn": 2.1757,
+          "diameterIn": 0.2991,
+          "solidity": 0.8298,
+          "paperV": 247.4481,
+          "coreMeanV": 185.6958,
+          "annulusMinimumV": 15.5999
+        },
+        {
+          "xIn": 7.2888,
+          "yIn": 2.1559,
+          "diameterIn": 0.1552,
+          "solidity": 0.9679,
+          "paperV": 246.9566,
+          "coreMeanV": 158.3346,
+          "annulusMinimumV": 122.4899
+        },
+        {
+          "xIn": 4.4229,
+          "yIn": 2.2192,
+          "diameterIn": 0.1824,
+          "solidity": 0.9175,
+          "paperV": 241.6979,
+          "coreMeanV": 244.1001,
+          "annulusMinimumV": 84.9228
+        },
+        {
+          "xIn": 1.5142,
+          "yIn": 2.2723,
+          "diameterIn": 0.1707,
+          "solidity": 0.9446,
+          "paperV": 245.7173,
+          "coreMeanV": 169.219,
+          "annulusMinimumV": 92.6945
+        },
+        {
+          "xIn": 5.6809,
+          "yIn": 3.5608,
+          "diameterIn": 0.2995,
+          "solidity": 0.9397,
+          "paperV": 253.2857,
+          "coreMeanV": 195.8211,
+          "annulusMinimumV": 37.5481
+        },
+        {
+          "xIn": 2.3697,
+          "yIn": 3.9082,
+          "diameterIn": 0.3202,
+          "solidity": 0.8627,
+          "paperV": 254.2258,
+          "coreMeanV": 204.8493,
+          "annulusMinimumV": 22.4357
+        },
+        {
+          "xIn": 3.9591,
+          "yIn": 3.9595,
+          "diameterIn": 0.3152,
+          "solidity": 0.9253,
+          "paperV": 253.0639,
+          "coreMeanV": 203.6301,
+          "annulusMinimumV": 37.017
+        },
+        {
+          "xIn": 7.831,
+          "yIn": 4.0195,
+          "diameterIn": 0.2164,
+          "solidity": 0.8532,
+          "paperV": 253.889,
+          "coreMeanV": 217.3128,
+          "annulusMinimumV": 78.8603
+        },
+        {
+          "xIn": 1.4344,
+          "yIn": 4.1339,
+          "diameterIn": 0.2949,
+          "solidity": 0.8229,
+          "paperV": 254.0506,
+          "coreMeanV": 213.2963,
+          "annulusMinimumV": 35.6042
+        },
+        {
+          "xIn": 5.3156,
+          "yIn": 4.7904,
+          "diameterIn": 0.2852,
+          "solidity": 0.969,
+          "paperV": 249.6883,
+          "coreMeanV": 182.7765,
+          "annulusMinimumV": 12.319
+        },
+        {
+          "xIn": 7.0699,
+          "yIn": 5.0745,
+          "diameterIn": 0.32,
+          "solidity": 0.9653,
+          "paperV": 253.5852,
+          "coreMeanV": 208.0628,
+          "annulusMinimumV": 14.822
+        },
+        {
+          "xIn": 4.4851,
+          "yIn": 5.3011,
+          "diameterIn": 0.3258,
+          "solidity": 0.9916,
+          "paperV": 254.0529,
+          "coreMeanV": 182.7502,
+          "annulusMinimumV": 13.4672
+        },
+        {
+          "xIn": 1.1761,
+          "yIn": 5.427,
+          "diameterIn": 0.3087,
+          "solidity": 0.9088,
+          "paperV": 253.9224,
+          "coreMeanV": 210.2352,
+          "annulusMinimumV": 70.9863
+        },
+        {
+          "xIn": 3.3399,
+          "yIn": 5.6902,
+          "diameterIn": 0.3115,
+          "solidity": 0.9799,
+          "paperV": 253.6275,
+          "coreMeanV": 198.5551,
+          "annulusMinimumV": 39.8355
+        },
+        {
+          "xIn": 0.8477,
+          "yIn": 6.3198,
+          "diameterIn": 0.3229,
+          "solidity": 0.8488,
+          "paperV": 248.5748,
+          "coreMeanV": 216.037,
+          "annulusMinimumV": 89.9894
+        },
+        {
+          "xIn": 0.9149,
+          "yIn": 6.66,
+          "diameterIn": 0.1728,
+          "solidity": 0.9356,
+          "paperV": 244.6046,
+          "coreMeanV": 172.8692,
+          "annulusMinimumV": 127.8313
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 6.0694,
+          "yIn": 0.3486,
+          "diameterIn": 0.6609,
+          "reason": "too large, 0.661 in"
+        },
+        {
+          "xIn": 4.0798,
+          "yIn": 0.2373,
+          "diameterIn": 0.133,
+          "reason": "too small, 0.133 in"
+        },
+        {
+          "xIn": 1.7356,
+          "yIn": 0.5467,
+          "diameterIn": 0.4324,
+          "reason": "not compact, hull solidity 0.54"
+        },
+        {
+          "xIn": 0.0201,
+          "yIn": 0.297,
+          "diameterIn": 0.0728,
+          "reason": "too small, 0.073 in"
+        },
+        {
+          "xIn": 5.9825,
+          "yIn": 0.7908,
+          "diameterIn": 0.065,
+          "reason": "too small, 0.065 in"
+        },
+        {
+          "xIn": 1.3463,
+          "yIn": 2.4315,
+          "diameterIn": 0.1011,
+          "reason": "too small, 0.101 in"
+        },
+        {
+          "xIn": 5.514,
+          "yIn": 5.1669,
+          "diameterIn": 0.1027,
+          "reason": "too small, 0.103 in"
+        }
+      ]
+    },
+    {
+      "file": "1748713494260-cf6994ff-96c5-4eda-8647-424356f59979_1.jpg",
+      "dpi": 93,
+      "paperLevel": 253,
+      "surveyHoles": 12,
+      "holes": [
+        {
+          "xIn": 7.7207,
+          "yIn": 0.1278,
+          "diameterIn": 0.1677,
+          "solidity": 1.0366,
+          "paperV": 247.1425,
+          "coreMeanV": 193.2862,
+          "annulusMinimumV": 180.5269
+        },
+        {
+          "xIn": 1.0447,
+          "yIn": 1.2333,
+          "diameterIn": 0.1852,
+          "solidity": 0.9442,
+          "paperV": 247.5343,
+          "coreMeanV": 228.4132,
+          "annulusMinimumV": 35.4448
+        },
+        {
+          "xIn": 6.573,
+          "yIn": 1.4258,
+          "diameterIn": 0.1655,
+          "solidity": 1.0161,
+          "paperV": 247.5531,
+          "coreMeanV": 196.9256,
+          "annulusMinimumV": 95.2295
+        },
+        {
+          "xIn": 3.0924,
+          "yIn": 3.0952,
+          "diameterIn": 0.1508,
+          "solidity": 0.9838,
+          "paperV": 248.4989,
+          "coreMeanV": 171.7792,
+          "annulusMinimumV": 55.2879
+        },
+        {
+          "xIn": 0.9859,
+          "yIn": 5.3777,
+          "diameterIn": 0.1668,
+          "solidity": 1.0053,
+          "paperV": 246.9082,
+          "coreMeanV": 183.319,
+          "annulusMinimumV": 80.1411
+        },
+        {
+          "xIn": 4.7084,
+          "yIn": 5.5023,
+          "diameterIn": 0.1655,
+          "solidity": 1.0215,
+          "paperV": 246.6719,
+          "coreMeanV": 159.5969,
+          "annulusMinimumV": 77.6514
+        },
+        {
+          "xIn": 6.5152,
+          "yIn": 5.5536,
+          "diameterIn": 0.1858,
+          "solidity": 0.9552,
+          "paperV": 247.4485,
+          "coreMeanV": 215.1999,
+          "annulusMinimumV": 78.8751
+        },
+        {
+          "xIn": 1.0555,
+          "yIn": 7.3206,
+          "diameterIn": 0.1808,
+          "solidity": 0.9054,
+          "paperV": 247.9003,
+          "coreMeanV": 209.6542,
+          "annulusMinimumV": 112.6872
+        },
+        {
+          "xIn": 4.5453,
+          "yIn": 7.3391,
+          "diameterIn": 0.1511,
+          "solidity": 1.0387,
+          "paperV": 249.4852,
+          "coreMeanV": 123.3049,
+          "annulusMinimumV": 44.25
+        },
+        {
+          "xIn": 6.6466,
+          "yIn": 9.1181,
+          "diameterIn": 0.1926,
+          "solidity": 0.9603,
+          "paperV": 246.7109,
+          "coreMeanV": 219.159,
+          "annulusMinimumV": 40.3737
+        },
+        {
+          "xIn": 1.0719,
+          "yIn": 9.113,
+          "diameterIn": 0.1551,
+          "solidity": 0.948,
+          "paperV": 248.6712,
+          "coreMeanV": 219.422,
+          "annulusMinimumV": 67.7793
+        },
+        {
+          "xIn": 5.808,
+          "yIn": 10.1761,
+          "diameterIn": 0.5183,
+          "solidity": 0.9882,
+          "paperV": 231.0412,
+          "coreMeanV": 46.6032,
+          "annulusMinimumV": 6.8715
+        }
+      ],
+      "rejected": [
+        {
+          "xIn": 0.0141,
+          "yIn": 0.0354,
+          "diameterIn": 0.05,
+          "reason": "too small, 0.050 in"
+        },
+        {
+          "xIn": 4.8733,
+          "yIn": 0.1582,
+          "diameterIn": 0.8875,
+          "reason": "too large, 0.887 in"
+        },
+        {
+          "xIn": 7.8823,
+          "yIn": 0.5266,
+          "diameterIn": 0.09,
+          "reason": "too small, 0.090 in"
+        },
+        {
+          "xIn": 8.1075,
+          "yIn": 0.8925,
+          "diameterIn": 0.0619,
+          "reason": "too small, 0.062 in"
+        },
+        {
+          "xIn": 6.6344,
+          "yIn": 1.086,
+          "diameterIn": 0.0619,
+          "reason": "too small, 0.062 in"
+        },
+        {
+          "xIn": 2.2581,
+          "yIn": 1.1935,
+          "diameterIn": 0.0619,
+          "reason": "too small, 0.062 in"
+        },
+        {
+          "xIn": 4.6804,
+          "yIn": 1.6205,
+          "diameterIn": 0.1389,
+          "reason": "too small, 0.139 in"
+        },
+        {
+          "xIn": 2.2042,
+          "yIn": 1.6261,
+          "diameterIn": 0.1075,
+          "reason": "too small, 0.107 in"
+        },
+        {
+          "xIn": 1.1698,
+          "yIn": 3.5448,
+          "diameterIn": 0.1458,
+          "reason": "too small, 0.146 in"
+        },
+        {
+          "xIn": 4.9071,
+          "yIn": 3.5124,
+          "diameterIn": 0.0733,
+          "reason": "too small, 0.073 in"
+        },
+        {
+          "xIn": 6.6494,
+          "yIn": 3.6176,
+          "diameterIn": 0.1261,
+          "reason": "too small, 0.126 in"
+        },
+        {
+          "xIn": 2.8029,
+          "yIn": 5.0476,
+          "diameterIn": 0.124,
+          "reason": "too small, 0.124 in"
+        },
+        {
+          "xIn": 3.0977,
+          "yIn": 7.0331,
+          "diameterIn": 0.1161,
+          "reason": "too small, 0.116 in"
+        },
+        {
+          "xIn": 6.488,
+          "yIn": 7.3335,
+          "diameterIn": 0.1243,
+          "reason": "too small, 0.124 in"
+        },
+        {
+          "xIn": 4.7864,
+          "yIn": 8.5321,
+          "diameterIn": 0.1275,
+          "reason": "too small, 0.128 in"
+        },
+        {
+          "xIn": 2.8204,
+          "yIn": 8.8765,
+          "diameterIn": 0.1189,
+          "reason": "too small, 0.119 in"
+        },
+        {
+          "xIn": 6.9718,
+          "yIn": 10.1748,
+          "diameterIn": 0.7174,
+          "reason": "too large, 0.717 in"
+        }
+      ]
+    }
+  ]
+}

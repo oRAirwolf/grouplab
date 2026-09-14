@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-14, entry 17: the gate does not move, the mounted case is an open requirement, and M2 starts now
 
-**Status: open.**
+**Status: actioned 2026-09-14.** Sections 2 to 4 are `docs/PHASE1-RESULTS.md` M1.11 and `DESIGN.md` section 21 [r6] (the gate record, the open requirement, frames fitted alone by default, the plane below eight corners); section 5's diagnostic is M1.11 (the leftover is mostly not structured, with a structured part on three mounted frames); section 6's baseline is M2.1 (the port reproduces all 343 holes exactly), and M2 continues.
 
 ### 1. The surface models are finished and the answer is no
 

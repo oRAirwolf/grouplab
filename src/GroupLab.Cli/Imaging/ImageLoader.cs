@@ -22,4 +22,35 @@ public static class ImageLoader
 
         return (OpenCvSharpBackend.Copy(mat), metadata);
     }
+
+    /// <summary>
+    /// The image decoded in colour and reduced to max(R, G, B) per pixel, the channel both neutral darkness and HSV Value are
+    /// built on (docs/SCAN-MEASUREMENTS.md section 3.1), with what the file says about itself.
+    /// </summary>
+    public static (GrayImage MaxChannel, ImageMetadata Metadata) LoadMaxChannel(string path)
+    {
+        byte[] bytes = File.ReadAllBytes(path);
+        var metadata = ImageMetadataReader.Read(bytes);
+        using var mat = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        if (mat.Empty())
+        {
+            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+        }
+
+        var channels = Cv2.Split(mat);
+        try
+        {
+            using var max = new Mat();
+            Cv2.Max(channels[0], channels[1], max);
+            Cv2.Max(max, channels[2], max);
+            return (OpenCvSharpBackend.Copy(max), metadata);
+        }
+        finally
+        {
+            foreach (var channel in channels)
+            {
+                channel.Dispose();
+            }
+        }
+    }
 }

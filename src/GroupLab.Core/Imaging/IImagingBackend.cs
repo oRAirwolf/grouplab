@@ -23,10 +23,33 @@ public interface IImagingBackend
 
     /// <summary>Resamples <paramref name="image"/> through <paramref name="transform"/>.</summary>
     GrayImage WarpPerspective(GrayImage image, Homography transform, int width, int height);
+
+    /// <summary>
+    /// A morphological opening or closing with an elliptical structuring element of radius <paramref name="radius"/>, a
+    /// square of side 2 r + 1 as OpenCV builds it: the operations of the hole-detection primitive of
+    /// docs/SCAN-MEASUREMENTS.md section 3.1.
+    /// </summary>
+    GrayImage Morphology(GrayImage image, MorphologyOperation operation, int radius);
+
+    /// <summary>
+    /// The blobs of a binary image, non-zero foreground: each external outline filled, then the 8-connected components of
+    /// the filled image, each with its pixel count, bounding box, and the convex hull of its outline in image pixels.
+    /// </summary>
+    IReadOnlyList<ImageBlob> FilledBlobs(GrayImage binary);
 }
 
 /// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>
 public readonly record struct PointD(double X, double Y);
+
+/// <summary>The two operations of <see cref="IImagingBackend.Morphology"/>.</summary>
+public enum MorphologyOperation
+{
+    Open,
+    Close,
+}
+
+/// <summary>A connected blob: its pixel count, bounding box, and the convex hull of its outline, image pixels.</summary>
+public sealed record ImageBlob(int Area, int Left, int Top, int Width, int Height, IReadOnlyList<PointD> Hull);
 
 /// <summary>Values match the GLTD-B family byte of TARGET-SCHEMA.md section 5.5.</summary>
 public enum MarkerFamily

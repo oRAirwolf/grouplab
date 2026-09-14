@@ -178,6 +178,45 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     }
 
     /// <summary>Copies a single-channel 8-bit OpenCV image into a <see cref="GrayImage"/>.</summary>
+    public GrayImage Morphology(GrayImage image, MorphologyOperation operation, int radius)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        using var source = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        using var kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size((2 * radius) + 1, (2 * radius) + 1));
+        using var result = new Mat();
+        Cv2.MorphologyEx(source, result, operation == MorphologyOperation.Open ? MorphTypes.Open : MorphTypes.Close, kernel);
+        return Copy(result);
+    }
+
+    public IReadOnlyList<ImageBlob> FilledBlobs(GrayImage binary)
+    {
+        ArgumentNullException.ThrowIfNull(binary);
+        using var wrapped = Mat.FromPixelData(binary.Height, binary.Width, MatType.CV_8UC1, binary.Pixels);
+        using var source = wrapped.Clone();
+        Cv2.FindContours(source, out Point[][] outlines, out _, RetrievalModes.External, ContourApproximationModes.ApproxSimple);
+        using var filled = new Mat(binary.Height, binary.Width, MatType.CV_8UC1, Scalar.All(0));
+        Cv2.DrawContours(filled, outlines, -1, Scalar.All(1), -1);
+        using var labels = new Mat();
+        using var stats = new Mat();
+        using var centroids = new Mat();
+        int count = Cv2.ConnectedComponentsWithStats(filled, labels, stats, centroids, PixelConnectivity.Connectivity8);
+        var blobs = new List<ImageBlob>(Math.Max(0, count - 1));
+        for (int i = 1; i < count; i++)
+        {
+            int left = stats.At<int>(i, (int)ConnectedComponentsTypes.Left), top = stats.At<int>(i, (int)ConnectedComponentsTypes.Top);
+            int width = stats.At<int>(i, (int)ConnectedComponentsTypes.Width), height = stats.At<int>(i, (int)ConnectedComponentsTypes.Height);
+            int area = stats.At<int>(i, (int)ConnectedComponentsTypes.Area);
+            using var region = new Mat(labels, new Rect(left, top, width, height));
+            using var mask = new Mat();
+            Cv2.InRange(region, new Scalar(i), new Scalar(i), mask);
+            Cv2.FindContours(mask, out Point[][] parts, out _, RetrievalModes.External, ContourApproximationModes.ApproxSimple);
+            var hull = Cv2.ConvexHull(parts.SelectMany(p => p));
+            blobs.Add(new ImageBlob(area, left, top, width, height, [.. hull.Select(p => new PointD(p.X + left, p.Y + top))]));
+        }
+
+        return blobs;
+    }
+
     public static GrayImage Copy(Mat mat)
     {
         ArgumentNullException.ThrowIfNull(mat);
