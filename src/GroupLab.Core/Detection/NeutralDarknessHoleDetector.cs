@@ -19,7 +19,7 @@ public sealed record HoleDetectionOptions(
 /// A detected hole, image pixels: the convex hull's centroid and equivalent diameter, the blob's pixel count over the
 /// hull's area, and the survey's appearance measures from the V channel, which is max(R, G, B).
 /// </summary>
-public sealed record DetectedHole(double X, double Y, double DiameterPixels, double DiameterInches, double Solidity, double PaperV, double CoreMeanV, double AnnulusMinimumV);
+public sealed record DetectedHole(double X, double Y, double DiameterPixels, double DiameterInches, double Solidity, double PaperV, double CoreMeanV, double AnnulusMinimumV, double RaggednessInches = double.NaN);
 
 /// <summary>A blob refused by a size, compactness or elongation filter, with the reason.</summary>
 public sealed record RejectedBlob(double X, double Y, double DiameterInches, string Reason);
@@ -103,8 +103,8 @@ public static class NeutralDarknessHoleDetector
                 continue;
             }
 
-            var (paperV, coreMean, annulusMinimum) = Characterise(maxChannel, cx, cy, diameter / 2, dpi);
-            holes.Add(new DetectedHole(cx, cy, diameter, diameter / dpi, solidity, paperV, coreMean, annulusMinimum));
+            var (paperV, coreMean, annulusMinimum, ragged) = Characterise(maxChannel, cx, cy, diameter / 2, dpi);
+            holes.Add(new DetectedHole(cx, cy, diameter, diameter / dpi, solidity, paperV, coreMean, annulusMinimum, ragged / dpi));
         }
 
         return new HoleDetection(dpi, paper, holes, rejected);
@@ -114,8 +114,9 @@ public static class NeutralDarknessHoleDetector
     /// The survey's per-hole measures: V sampled on 360 rays at half-pixel steps out to 2.6 hull radii; paper is the median of
     /// the angle-averaged profile's outer 12 percent; each ray's darkest sample beyond 0.3 radii gives the annulus, its 5th
     /// percentile the annulus minimum and its median radius the annulus radius; the core is everything inside 0.45 of that.
+    /// Raggedness is the standard deviation of the darkest radius over angle, pixels.
     /// </summary>
-    private static (double Paper, double CoreMean, double AnnulusMinimum) Characterise(GrayImage v, double cx, double cy, double radius, double dpi)
+    private static (double Paper, double CoreMean, double AnnulusMinimum, double Raggedness) Characterise(GrayImage v, double cx, double cy, double radius, double dpi)
     {
         const double step = 0.5;
         const int angles = 360;
@@ -162,7 +163,9 @@ public static class NeutralDarknessHoleDetector
             }
         }
 
-        return (paper, coreSum / (angles * Math.Min(core, samples)), PercentileOf([.. rayMinimum], 0.05));
+        double meanRadius = rayRadius.Average();
+        double ragged = Math.Sqrt(rayRadius.Average(r => (r - meanRadius) * (r - meanRadius)));
+        return (paper, coreSum / (angles * Math.Min(core, samples)), PercentileOf([.. rayMinimum], 0.05), ragged);
     }
 
     /// <summary>Bilinear sampling with the border replicated, as OpenCV's remap samples it.</summary>

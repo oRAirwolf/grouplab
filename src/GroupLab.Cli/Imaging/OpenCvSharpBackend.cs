@@ -217,6 +217,22 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         return blobs;
     }
 
+    public (PointD Shift, double Response) PhaseCorrelate(GrayImage reference, GrayImage moved)
+    {
+        ArgumentNullException.ThrowIfNull(reference);
+        ArgumentNullException.ThrowIfNull(moved);
+        using var a8 = Mat.FromPixelData(reference.Height, reference.Width, MatType.CV_8UC1, reference.Pixels);
+        using var b8 = Mat.FromPixelData(moved.Height, moved.Width, MatType.CV_8UC1, moved.Pixels);
+        using var a = new Mat();
+        using var b = new Mat();
+        a8.ConvertTo(a, MatType.CV_32FC1);
+        b8.ConvertTo(b, MatType.CV_32FC1);
+        using var window = new Mat();
+        Cv2.CreateHanningWindow(window, new Size(reference.Width, reference.Height), MatType.CV_32FC1);
+        var shift = Cv2.PhaseCorrelate(a, b, window, out double response);
+        return (new PointD(shift.X, shift.Y), response);
+    }
+
     public static GrayImage Copy(Mat mat)
     {
         ArgumentNullException.ThrowIfNull(mat);

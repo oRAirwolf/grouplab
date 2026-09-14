@@ -36,6 +36,13 @@ public interface IImagingBackend
     /// the filled image, each with its pixel count, bounding box, and the convex hull of its outline in image pixels.
     /// </summary>
     IReadOnlyList<ImageBlob> FilledBlobs(GrayImage binary);
+
+    /// <summary>
+    /// The translation, pixels, between two images of the same size, by phase correlation under a Hann window, with the
+    /// correlation peak's strength from 0 to 1: <paramref name="moved"/> at x is close to <paramref name="reference"/> at x
+    /// less the shift. Render-and-difference uses it to align the expected image to the observed one locally.
+    /// </summary>
+    (PointD Shift, double Response) PhaseCorrelate(GrayImage reference, GrayImage moved);
 }
 
 /// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>

@@ -16,7 +16,8 @@
           "solidity": 0.7593,
           "paperV": 239.5352,
           "coreMeanV": 222.2263,
-          "annulusMinimumV": 16.0925
+          "annulusMinimumV": 16.0925,
+          "raggednessIn": 0.0506
         },
         {
           "xIn": 3.9638,
@@ -25,7 +26,8 @@
           "solidity": 0.9727,
           "paperV": 210.383,
           "coreMeanV": 151.3434,
-          "annulusMinimumV": 42.2406
+          "annulusMinimumV": 42.2406,
+          "raggednessIn": 0.0721
         },
         {
           "xIn": 2.5312,
@@ -34,7 +36,8 @@
           "solidity": 0.9407,
           "paperV": 234.4081,
           "coreMeanV": 167.1135,
-          "annulusMinimumV": 18.3558
+          "annulusMinimumV": 18.3558,
+          "raggednessIn": 0.0528
         },
         {
           "xIn": 2.6017,
@@ -43,7 +46,8 @@
           "solidity": 0.7751,
           "paperV": 242.8477,
           "coreMeanV": 223.1948,
-          "annulusMinimumV": 11.9614
+          "annulusMinimumV": 11.9614,
+          "raggednessIn": 0.0518
         },
         {
           "xIn": 3.9919,
@@ -52,7 +56,8 @@
           "solidity": 0.8985,
           "paperV": 241.957,
           "coreMeanV": 207.5995,
-          "annulusMinimumV": 16.0083
+          "annulusMinimumV": 16.0083,
+          "raggednessIn": 0.0448
         },
         {
           "xIn": 5.5813,
@@ -61,7 +66,8 @@
           "solidity": 0.9479,
           "paperV": 240.6234,
           "coreMeanV": 145.1598,
-          "annulusMinimumV": 12.2737
+          "annulusMinimumV": 12.2737,
+          "raggednessIn": 0.0605
         },
         {
           "xIn": 7.2195,
@@ -70,7 +76,8 @@
           "solidity": 0.8607,
           "paperV": 239.7078,
           "coreMeanV": 200.4791,
-          "annulusMinimumV": 22.6123
+          "annulusMinimumV": 22.6123,
+          "raggednessIn": 0.058
         },
         {
           "xIn": 5.7676,
@@ -79,7 +86,8 @@
           "solidity": 0.9436,
           "paperV": 230.1113,
           "coreMeanV": 176.3914,
-          "annulusMinimumV": 45.1797
+          "annulusMinimumV": 45.1797,
+          "raggednessIn": 0.0838
         },
         {
           "xIn": 2.7688,
@@ -88,7 +96,8 @@
           "solidity": 0.9314,
           "paperV": 243.2694,
           "coreMeanV": 218.35,
-          "annulusMinimumV": 12.5286
+          "annulusMinimumV": 12.5286,
+          "raggednessIn": 0.0564
         },
         {
           "xIn": 4.4961,
@@ -97,7 +106,8 @@
           "solidity": 0.9669,
           "paperV": 243.7396,
           "coreMeanV": 201.4861,
-          "annulusMinimumV": 22.6324
+          "annulusMinimumV": 22.6324,
+          "raggednessIn": 0.0391
         },
         {
           "xIn": 1.2045,
@@ -106,7 +116,8 @@
           "solidity": 0.9142,
           "paperV": 241.2879,
           "coreMeanV": 211.3648,
-          "annulusMinimumV": 24.0327
+          "annulusMinimumV": 24.0327,
+          "raggednessIn": 0.0423
         },
         {
           "xIn": 2.3901,
@@ -115,7 +126,8 @@
           "solidity": 0.9091,
           "paperV": 224.2512,
           "coreMeanV": 190.6707,
-          "annulusMinimumV": 48.4326
+          "annulusMinimumV": 48.4326,
+          "raggednessIn": 0.0771
         },
         {
           "xIn": 7.0452,
@@ -124,7 +136,8 @@
           "solidity": 0.9422,
           "paperV": 223.2428,
           "coreMeanV": 202.4104,
-          "annulusMinimumV": 46.0899
+          "annulusMinimumV": 46.0899,
+          "raggednessIn": 0.0694
         },
         {
           "xIn": 5.3951,
@@ -133,7 +146,8 @@
           "solidity": 0.9346,
           "paperV": 243.6764,
           "coreMeanV": 172.994,
-          "annulusMinimumV": 11.1241
+          "annulusMinimumV": 11.1241,
+          "raggednessIn": 0.0628
         },
         {
           "xIn": 1.0139,
@@ -142,7 +156,8 @@
           "solidity": 0.9769,
           "paperV": 243.9637,
           "coreMeanV": 228.056,
-          "annulusMinimumV": 18.3618
+          "annulusMinimumV": 18.3618,
+          "raggednessIn": 0.0559
         },
         {
           "xIn": 4.0394,
@@ -151,7 +166,8 @@
           "solidity": 0.9678,
           "paperV": 244.8003,
           "coreMeanV": 207.9169,
-          "annulusMinimumV": 28.906
+          "annulusMinimumV": 28.906,
+          "raggednessIn": 0.0466
         }
       ],
       "rejected": [
@@ -362,7 +378,8 @@
           "solidity": 0.6712,
           "paperV": 243.4247,
           "coreMeanV": 243.0054,
-          "annulusMinimumV": 20.1591
+          "annulusMinimumV": 20.1591,
+          "raggednessIn": 0.0548
         },
         {
           "xIn": 4.4407,
@@ -371,7 +388,8 @@
           "solidity": 0.9166,
           "paperV": 242.0451,
           "coreMeanV": 216.9246,
-          "annulusMinimumV": 34.1722
+          "annulusMinimumV": 34.1722,
+          "raggednessIn": 0.0886
         },
         {
           "xIn": 1.265,
@@ -380,7 +398,8 @@
           "solidity": 0.8093,
           "paperV": 254.9905,
           "coreMeanV": 175.3181,
-          "annulusMinimumV": 26.5416
+          "annulusMinimumV": 26.5416,
+          "raggednessIn": 0.05
         },
         {
           "xIn": 5.9083,
@@ -389,7 +408,8 @@
           "solidity": 0.8481,
           "paperV": 245.3512,
           "coreMeanV": 187.5228,
-          "annulusMinimumV": 44.5347
+          "annulusMinimumV": 44.5347,
+          "raggednessIn": 0.0562
         },
         {
           "xIn": 2.7667,
@@ -398,7 +418,8 @@
           "solidity": 0.815,
           "paperV": 254.9733,
           "coreMeanV": 117.4643,
-          "annulusMinimumV": 29.6918
+          "annulusMinimumV": 29.6918,
+          "raggednessIn": 0.0459
         },
         {
           "xIn": 1.3763,
@@ -407,7 +428,8 @@
           "solidity": 0.9366,
           "paperV": 253.3457,
           "coreMeanV": 101.6844,
-          "annulusMinimumV": 58.7454
+          "annulusMinimumV": 58.7454,
+          "raggednessIn": 0.053
         },
         {
           "xIn": 7.2218,
@@ -416,7 +438,8 @@
           "solidity": 0.9369,
           "paperV": 254.9958,
           "coreMeanV": 139.3906,
-          "annulusMinimumV": 11.9545
+          "annulusMinimumV": 11.9545,
+          "raggednessIn": 0.0386
         },
         {
           "xIn": 3.0234,
@@ -425,7 +448,8 @@
           "solidity": 0.873,
           "paperV": 225.1304,
           "coreMeanV": 202.069,
-          "annulusMinimumV": 34.9776
+          "annulusMinimumV": 34.9776,
+          "raggednessIn": 0.0849
         },
         {
           "xIn": 4.7098,
@@ -434,7 +458,8 @@
           "solidity": 0.9609,
           "paperV": 243.8881,
           "coreMeanV": 215.5716,
-          "annulusMinimumV": 14.1033
+          "annulusMinimumV": 14.1033,
+          "raggednessIn": 0.0768
         },
         {
           "xIn": 5.8771,
@@ -443,7 +468,8 @@
           "solidity": 0.9697,
           "paperV": 254.9785,
           "coreMeanV": 200.713,
-          "annulusMinimumV": 80.3323
+          "annulusMinimumV": 80.3323,
+          "raggednessIn": 0.0456
         },
         {
           "xIn": 5.4537,
@@ -452,7 +478,8 @@
           "solidity": 0.8788,
           "paperV": 242.3641,
           "coreMeanV": 208.4383,
-          "annulusMinimumV": 17.6665
+          "annulusMinimumV": 17.6665,
+          "raggednessIn": 0.0671
         },
         {
           "xIn": 1.0987,
@@ -461,7 +488,8 @@
           "solidity": 0.8598,
           "paperV": 248.1556,
           "coreMeanV": 218.1952,
-          "annulusMinimumV": 48.1984
+          "annulusMinimumV": 48.1984,
+          "raggednessIn": 0.0351
         },
         {
           "xIn": 2.4143,
@@ -470,7 +498,8 @@
           "solidity": 0.8821,
           "paperV": 245.6913,
           "coreMeanV": 215.0366,
-          "annulusMinimumV": 45.0037
+          "annulusMinimumV": 45.0037,
+          "raggednessIn": 0.0479
         },
         {
           "xIn": 4.0583,
@@ -479,7 +508,8 @@
           "solidity": 0.94,
           "paperV": 254.9912,
           "coreMeanV": 202.8253,
-          "annulusMinimumV": 16.9888
+          "annulusMinimumV": 16.9888,
+          "raggednessIn": 0.0299
         },
         {
           "xIn": 7.1828,
@@ -488,7 +518,8 @@
           "solidity": 0.9182,
           "paperV": 254.9857,
           "coreMeanV": 151.1655,
-          "annulusMinimumV": 11.2199
+          "annulusMinimumV": 11.2199,
+          "raggednessIn": 0.038
         },
         {
           "xIn": 5.3213,
@@ -497,7 +528,8 @@
           "solidity": 0.965,
           "paperV": 229.4208,
           "coreMeanV": 199.7212,
-          "annulusMinimumV": 32.5338
+          "annulusMinimumV": 32.5338,
+          "raggednessIn": 0.0834
         },
         {
           "xIn": 4.21,
@@ -506,7 +538,8 @@
           "solidity": 0.9719,
           "paperV": 254.9864,
           "coreMeanV": 190.7969,
-          "annulusMinimumV": 15.739
+          "annulusMinimumV": 15.739,
+          "raggednessIn": 0.0255
         },
         {
           "xIn": 1.1888,
@@ -515,7 +548,8 @@
           "solidity": 0.7716,
           "paperV": 254.9843,
           "coreMeanV": 220.0782,
-          "annulusMinimumV": 22.4627
+          "annulusMinimumV": 22.4627,
+          "raggednessIn": 0.0273
         },
         {
           "xIn": 2.517,
@@ -524,7 +558,8 @@
           "solidity": 0.8061,
           "paperV": 254.9835,
           "coreMeanV": 219.3616,
-          "annulusMinimumV": 38.2704
+          "annulusMinimumV": 38.2704,
+          "raggednessIn": 0.034
         },
         {
           "xIn": 6.9353,
@@ -533,7 +568,8 @@
           "solidity": 0.8957,
           "paperV": 244.6058,
           "coreMeanV": 191.6953,
-          "annulusMinimumV": 24.8355
+          "annulusMinimumV": 24.8355,
+          "raggednessIn": 0.0487
         },
         {
           "xIn": 7.0679,
@@ -542,7 +578,8 @@
           "solidity": 0.9635,
           "paperV": 243.5142,
           "coreMeanV": 218.4127,
-          "annulusMinimumV": 28.8895
+          "annulusMinimumV": 28.8895,
+          "raggednessIn": 0.0629
         },
         {
           "xIn": 3.7956,
@@ -551,7 +588,8 @@
           "solidity": 0.9755,
           "paperV": 240.8576,
           "coreMeanV": 198.9488,
-          "annulusMinimumV": 29.0528
+          "annulusMinimumV": 29.0528,
+          "raggednessIn": 0.0738
         },
         {
           "xIn": 1.0551,
@@ -560,7 +598,8 @@
           "solidity": 0.9818,
           "paperV": 254.9908,
           "coreMeanV": 214.004,
-          "annulusMinimumV": 15.9423
+          "annulusMinimumV": 15.9423,
+          "raggednessIn": 0.0219
         },
         {
           "xIn": 5.7448,
@@ -569,7 +608,8 @@
           "solidity": 0.9096,
           "paperV": 254.9877,
           "coreMeanV": 204.713,
-          "annulusMinimumV": 42.773
+          "annulusMinimumV": 42.773,
+          "raggednessIn": 0.035
         },
         {
           "xIn": 2.7503,
@@ -578,7 +618,8 @@
           "solidity": 0.9272,
           "paperV": 254.9924,
           "coreMeanV": 198.0203,
-          "annulusMinimumV": 43.0104
+          "annulusMinimumV": 43.0104,
+          "raggednessIn": 0.037
         }
       ],
       "rejected": [
@@ -681,7 +722,8 @@
           "solidity": 0.9091,
           "paperV": 239.1435,
           "coreMeanV": 100.8667,
-          "annulusMinimumV": 16.3039
+          "annulusMinimumV": 16.3039,
+          "raggednessIn": 0.0554
         },
         {
           "xIn": 1.0387,
@@ -690,7 +732,8 @@
           "solidity": 0.9704,
           "paperV": 230.6743,
           "coreMeanV": 138.2041,
-          "annulusMinimumV": 24.5673
+          "annulusMinimumV": 24.5673,
+          "raggednessIn": 0.0453
         },
         {
           "xIn": 5.6448,
@@ -699,7 +742,8 @@
           "solidity": 0.9444,
           "paperV": 226.612,
           "coreMeanV": 182.1474,
-          "annulusMinimumV": 25.0127
+          "annulusMinimumV": 25.0127,
+          "raggednessIn": 0.0793
         },
         {
           "xIn": 3.873,
@@ -708,7 +752,8 @@
           "solidity": 0.8992,
           "paperV": 239.8025,
           "coreMeanV": 135.0091,
-          "annulusMinimumV": 15.8816
+          "annulusMinimumV": 15.8816,
+          "raggednessIn": 0.0529
         },
         {
           "xIn": 7.2696,
@@ -717,7 +762,8 @@
           "solidity": 0.8046,
           "paperV": 241.9256,
           "coreMeanV": 210.9995,
-          "annulusMinimumV": 13.0932
+          "annulusMinimumV": 13.0932,
+          "raggednessIn": 0.0544
         },
         {
           "xIn": 5.6003,
@@ -726,7 +772,8 @@
           "solidity": 0.9251,
           "paperV": 242.2986,
           "coreMeanV": 233.2924,
-          "annulusMinimumV": 28.827
+          "annulusMinimumV": 28.827,
+          "raggednessIn": 0.0486
         },
         {
           "xIn": 2.4944,
@@ -735,7 +782,8 @@
           "solidity": 0.9452,
           "paperV": 240.0322,
           "coreMeanV": 201.867,
-          "annulusMinimumV": 14.2879
+          "annulusMinimumV": 14.2879,
+          "raggednessIn": 0.0519
         },
         {
           "xIn": 4.1286,
@@ -744,7 +792,8 @@
           "solidity": 0.8411,
           "paperV": 227.1549,
           "coreMeanV": 189.0306,
-          "annulusMinimumV": 15.7292
+          "annulusMinimumV": 15.7292,
+          "raggednessIn": 0.0741
         },
         {
           "xIn": 6.754,
@@ -753,7 +802,8 @@
           "solidity": 0.902,
           "paperV": 242.1546,
           "coreMeanV": 124.4186,
-          "annulusMinimumV": 20.4743
+          "annulusMinimumV": 20.4743,
+          "raggednessIn": 0.0675
         },
         {
           "xIn": 0.7227,
@@ -762,7 +812,8 @@
           "solidity": 0.7866,
           "paperV": 242.3929,
           "coreMeanV": 249.5522,
-          "annulusMinimumV": 15.6509
+          "annulusMinimumV": 15.6509,
+          "raggednessIn": 0.0455
         },
         {
           "xIn": 3.7786,
@@ -771,7 +822,8 @@
           "solidity": 0.8516,
           "paperV": 243.4034,
           "coreMeanV": 205.0777,
-          "annulusMinimumV": 32.6206
+          "annulusMinimumV": 32.6206,
+          "raggednessIn": 0.0486
         },
         {
           "xIn": 5.3226,
@@ -780,7 +832,8 @@
           "solidity": 0.8635,
           "paperV": 242.6396,
           "coreMeanV": 185.9591,
-          "annulusMinimumV": 14.8525
+          "annulusMinimumV": 14.8525,
+          "raggednessIn": 0.0407
         },
         {
           "xIn": 0.8939,
@@ -789,7 +842,8 @@
           "solidity": 0.913,
           "paperV": 252.7031,
           "coreMeanV": 131.5962,
-          "annulusMinimumV": 85.6888
+          "annulusMinimumV": 85.6888,
+          "raggednessIn": 0.0468
         },
         {
           "xIn": 4.0477,
@@ -798,7 +852,8 @@
           "solidity": 0.7863,
           "paperV": 254.9906,
           "coreMeanV": 227.9478,
-          "annulusMinimumV": 38.9098
+          "annulusMinimumV": 38.9098,
+          "raggednessIn": 0.0213
         },
         {
           "xIn": 5.186,
@@ -807,7 +862,8 @@
           "solidity": 0.8904,
           "paperV": 242.0481,
           "coreMeanV": 201.7029,
-          "annulusMinimumV": 13.5815
+          "annulusMinimumV": 13.5815,
+          "raggednessIn": 0.0491
         },
         {
           "xIn": 2.5673,
@@ -816,7 +872,8 @@
           "solidity": 0.8922,
           "paperV": 241.6602,
           "coreMeanV": 211.7867,
-          "annulusMinimumV": 11.0722
+          "annulusMinimumV": 11.0722,
+          "raggednessIn": 0.0454
         },
         {
           "xIn": 6.9598,
@@ -825,7 +882,8 @@
           "solidity": 0.942,
           "paperV": 222.9357,
           "coreMeanV": 224.4231,
-          "annulusMinimumV": 20.8202
+          "annulusMinimumV": 20.8202,
+          "raggednessIn": 0.0762
         },
         {
           "xIn": 0.8637,
@@ -834,7 +892,8 @@
           "solidity": 0.8613,
           "paperV": 244.3259,
           "coreMeanV": 197.2438,
-          "annulusMinimumV": 45.9868
+          "annulusMinimumV": 45.9868,
+          "raggednessIn": 0.0797
         },
         {
           "xIn": 2.6546,
@@ -843,7 +902,8 @@
           "solidity": 0.9294,
           "paperV": 227.0592,
           "coreMeanV": 218.7469,
-          "annulusMinimumV": 22.3917
+          "annulusMinimumV": 22.3917,
+          "raggednessIn": 0.0739
         },
         {
           "xIn": 6.8426,
@@ -852,7 +912,8 @@
           "solidity": 0.8919,
           "paperV": 237.8152,
           "coreMeanV": 217.5614,
-          "annulusMinimumV": 27.6548
+          "annulusMinimumV": 27.6548,
+          "raggednessIn": 0.0558
         },
         {
           "xIn": 4.0135,
@@ -861,7 +922,8 @@
           "solidity": 0.9317,
           "paperV": 227.2075,
           "coreMeanV": 179.9707,
-          "annulusMinimumV": 22.5066
+          "annulusMinimumV": 22.5066,
+          "raggednessIn": 0.0739
         },
         {
           "xIn": 5.3692,
@@ -870,7 +932,8 @@
           "solidity": 0.9179,
           "paperV": 241.8064,
           "coreMeanV": 219.922,
-          "annulusMinimumV": 28.0843
+          "annulusMinimumV": 28.0843,
+          "raggednessIn": 0.0611
         },
         {
           "xIn": 2.9626,
@@ -879,7 +942,8 @@
           "solidity": 0.7934,
           "paperV": 249.6853,
           "coreMeanV": 178.2328,
-          "annulusMinimumV": 154.9314
+          "annulusMinimumV": 154.9314,
+          "raggednessIn": 0.0383
         },
         {
           "xIn": 3.0544,
@@ -888,7 +952,8 @@
           "solidity": 0.801,
           "paperV": 247.3842,
           "coreMeanV": 194.3189,
-          "annulusMinimumV": 163.2978
+          "annulusMinimumV": 163.2978,
+          "raggednessIn": 0.0608
         }
       ],
       "rejected": [
@@ -1093,7 +1158,8 @@
           "solidity": 0.9164,
           "paperV": 243.0386,
           "coreMeanV": 211.0432,
-          "annulusMinimumV": 13.684
+          "annulusMinimumV": 13.684,
+          "raggednessIn": 0.0534
         },
         {
           "xIn": 5.7191,
@@ -1102,7 +1168,8 @@
           "solidity": 0.7517,
           "paperV": 218.9052,
           "coreMeanV": 202.1235,
-          "annulusMinimumV": 24.6809
+          "annulusMinimumV": 24.6809,
+          "raggednessIn": 0.0727
         },
         {
           "xIn": 6.9375,
@@ -1111,7 +1178,8 @@
           "solidity": 0.81,
           "paperV": 220.3502,
           "coreMeanV": 173.2295,
-          "annulusMinimumV": 32.9429
+          "annulusMinimumV": 32.9429,
+          "raggednessIn": 0.0762
         },
         {
           "xIn": 2.5742,
@@ -1120,7 +1188,8 @@
           "solidity": 0.5714,
           "paperV": 254.7864,
           "coreMeanV": 226.5807,
-          "annulusMinimumV": 31.8566
+          "annulusMinimumV": 31.8566,
+          "raggednessIn": 0.0239
         },
         {
           "xIn": 4.2651,
@@ -1129,7 +1198,8 @@
           "solidity": 0.7438,
           "paperV": 254.7435,
           "coreMeanV": 165.0958,
-          "annulusMinimumV": 40.6732
+          "annulusMinimumV": 40.6732,
+          "raggednessIn": 0.0679
         },
         {
           "xIn": 6.9054,
@@ -1138,7 +1208,8 @@
           "solidity": 0.9204,
           "paperV": 240.0087,
           "coreMeanV": 184.9132,
-          "annulusMinimumV": 28.4587
+          "annulusMinimumV": 28.4587,
+          "raggednessIn": 0.0587
         },
         {
           "xIn": 5.3857,
@@ -1147,7 +1218,8 @@
           "solidity": 0.9363,
           "paperV": 214.4795,
           "coreMeanV": 189.4382,
-          "annulusMinimumV": 35.7594
+          "annulusMinimumV": 35.7594,
+          "raggednessIn": 0.0672
         },
         {
           "xIn": 4.0222,
@@ -1156,7 +1228,8 @@
           "solidity": 0.7539,
           "paperV": 254.6361,
           "coreMeanV": 209.7924,
-          "annulusMinimumV": 42.1338
+          "annulusMinimumV": 42.1338,
+          "raggednessIn": 0.0376
         },
         {
           "xIn": 4.0682,
@@ -1165,7 +1238,8 @@
           "solidity": 0.9444,
           "paperV": 229.9123,
           "coreMeanV": 187.246,
-          "annulusMinimumV": 27.2376
+          "annulusMinimumV": 27.2376,
+          "raggednessIn": 0.0739
         },
         {
           "xIn": 5.2632,
@@ -1174,7 +1248,8 @@
           "solidity": 0.8834,
           "paperV": 239.7539,
           "coreMeanV": 180.1994,
-          "annulusMinimumV": 28.1077
+          "annulusMinimumV": 28.1077,
+          "raggednessIn": 0.0593
         },
         {
           "xIn": 6.9298,
@@ -1183,7 +1258,8 @@
           "solidity": 0.8187,
           "paperV": 230.4272,
           "coreMeanV": 216.1019,
-          "annulusMinimumV": 41.5396
+          "annulusMinimumV": 41.5396,
+          "raggednessIn": 0.0575
         },
         {
           "xIn": 2.5366,
@@ -1192,7 +1268,8 @@
           "solidity": 0.8662,
           "paperV": 254.7844,
           "coreMeanV": 150.1952,
-          "annulusMinimumV": 31.2941
+          "annulusMinimumV": 31.2941,
+          "raggednessIn": 0.0482
         },
         {
           "xIn": 4.0687,
@@ -1201,7 +1278,8 @@
           "solidity": 0.9459,
           "paperV": 254.5176,
           "coreMeanV": 214.9431,
-          "annulusMinimumV": 29.1045
+          "annulusMinimumV": 29.1045,
+          "raggednessIn": 0.0217
         },
         {
           "xIn": 2.5252,
@@ -1210,7 +1288,8 @@
           "solidity": 0.9,
           "paperV": 250.2497,
           "coreMeanV": 196.7296,
-          "annulusMinimumV": 18.3358
+          "annulusMinimumV": 18.3358,
+          "raggednessIn": 0.0463
         },
         {
           "xIn": 5.5026,
@@ -1219,7 +1298,8 @@
           "solidity": 0.9381,
           "paperV": 242.699,
           "coreMeanV": 198.9922,
-          "annulusMinimumV": 40.3531
+          "annulusMinimumV": 40.3531,
+          "raggednessIn": 0.0539
         },
         {
           "xIn": 0.7342,
@@ -1228,7 +1308,8 @@
           "solidity": 0.856,
           "paperV": 237.9351,
           "coreMeanV": 182.3474,
-          "annulusMinimumV": 20.8871
+          "annulusMinimumV": 20.8871,
+          "raggednessIn": 0.0448
         },
         {
           "xIn": 7.3098,
@@ -1237,7 +1318,8 @@
           "solidity": 0.9169,
           "paperV": 234.8146,
           "coreMeanV": 191.3657,
-          "annulusMinimumV": 27.5618
+          "annulusMinimumV": 27.5618,
+          "raggednessIn": 0.0618
         },
         {
           "xIn": 2.6243,
@@ -1246,7 +1328,8 @@
           "solidity": 0.5817,
           "paperV": 254.2571,
           "coreMeanV": 190.8053,
-          "annulusMinimumV": 150.5505
+          "annulusMinimumV": 150.5505,
+          "raggednessIn": 0.1218
         },
         {
           "xIn": 1.534,
@@ -1255,7 +1338,8 @@
           "solidity": 0.6214,
           "paperV": 248.0439,
           "coreMeanV": 234.8063,
-          "annulusMinimumV": 143.6822
+          "annulusMinimumV": 143.6822,
+          "raggednessIn": 0.0831
         },
         {
           "xIn": 1.9708,
@@ -1264,7 +1348,8 @@
           "solidity": 0.7308,
           "paperV": 246.9305,
           "coreMeanV": 189.9995,
-          "annulusMinimumV": 150.5162
+          "annulusMinimumV": 150.5162,
+          "raggednessIn": 0.1012
         }
       ],
       "rejected": [
@@ -1439,7 +1524,8 @@
           "solidity": 0.9531,
           "paperV": 254.985,
           "coreMeanV": 225.5593,
-          "annulusMinimumV": 13.3383
+          "annulusMinimumV": 13.3383,
+          "raggednessIn": 0.0164
         },
         {
           "xIn": 4.0119,
@@ -1448,7 +1534,8 @@
           "solidity": 0.6182,
           "paperV": 254.9867,
           "coreMeanV": 218.668,
-          "annulusMinimumV": 14.2061
+          "annulusMinimumV": 14.2061,
+          "raggednessIn": 0.0345
         },
         {
           "xIn": 7.7144,
@@ -1457,7 +1544,8 @@
           "solidity": 0.8229,
           "paperV": 243.685,
           "coreMeanV": 199.3384,
-          "annulusMinimumV": 11.9519
+          "annulusMinimumV": 11.9519,
+          "raggednessIn": 0.0488
         },
         {
           "xIn": 2.9919,
@@ -1466,7 +1554,8 @@
           "solidity": 0.976,
           "paperV": 244.4238,
           "coreMeanV": 216.8707,
-          "annulusMinimumV": 11.0889
+          "annulusMinimumV": 11.0889,
+          "raggednessIn": 0.048
         },
         {
           "xIn": 5.7641,
@@ -1475,7 +1564,8 @@
           "solidity": 0.9328,
           "paperV": 220.8862,
           "coreMeanV": 167.7414,
-          "annulusMinimumV": 14.0468
+          "annulusMinimumV": 14.0468,
+          "raggednessIn": 0.0788
         },
         {
           "xIn": 0.4546,
@@ -1484,7 +1574,8 @@
           "solidity": 0.9474,
           "paperV": 245.7366,
           "coreMeanV": 164.3591,
-          "annulusMinimumV": 13.5907
+          "annulusMinimumV": 13.5907,
+          "raggednessIn": 0.0632
         },
         {
           "xIn": 3.0204,
@@ -1493,7 +1584,8 @@
           "solidity": 0.9885,
           "paperV": 235.8677,
           "coreMeanV": 213.2886,
-          "annulusMinimumV": 13.3993
+          "annulusMinimumV": 13.3993,
+          "raggednessIn": 0.0821
         },
         {
           "xIn": 6.0584,
@@ -1502,7 +1594,8 @@
           "solidity": 0.6881,
           "paperV": 244.8161,
           "coreMeanV": 229.0714,
-          "annulusMinimumV": 21.7762
+          "annulusMinimumV": 21.7762,
+          "raggednessIn": 0.0593
         },
         {
           "xIn": 4.6822,
@@ -1511,7 +1604,8 @@
           "solidity": 0.8483,
           "paperV": 244.4667,
           "coreMeanV": 202.0177,
-          "annulusMinimumV": 12.4152
+          "annulusMinimumV": 12.4152,
+          "raggednessIn": 0.0549
         },
         {
           "xIn": 4.7748,
@@ -1520,7 +1614,8 @@
           "solidity": 0.8398,
           "paperV": 225.4668,
           "coreMeanV": 157.923,
-          "annulusMinimumV": 12.6012
+          "annulusMinimumV": 12.6012,
+          "raggednessIn": 0.1119
         },
         {
           "xIn": 5.9368,
@@ -1529,7 +1624,8 @@
           "solidity": 0.8371,
           "paperV": 233.8036,
           "coreMeanV": 219.909,
-          "annulusMinimumV": 30.4586
+          "annulusMinimumV": 30.4586,
+          "raggednessIn": 0.0816
         },
         {
           "xIn": 7.9723,
@@ -1538,7 +1634,8 @@
           "solidity": 0.8987,
           "paperV": 244.9631,
           "coreMeanV": 207.4412,
-          "annulusMinimumV": 20.345
+          "annulusMinimumV": 20.345,
+          "raggednessIn": 0.0631
         },
         {
           "xIn": 0.4154,
@@ -1547,7 +1644,8 @@
           "solidity": 0.7923,
           "paperV": 246.1922,
           "coreMeanV": 213.1685,
-          "annulusMinimumV": 14.6868
+          "annulusMinimumV": 14.6868,
+          "raggednessIn": 0.0476
         },
         {
           "xIn": 3.1067,
@@ -1556,7 +1654,8 @@
           "solidity": 0.8076,
           "paperV": 240.3698,
           "coreMeanV": 207.339,
-          "annulusMinimumV": 15.7362
+          "annulusMinimumV": 15.7362,
+          "raggednessIn": 0.0565
         },
         {
           "xIn": 6.2526,
@@ -1565,7 +1664,8 @@
           "solidity": 0.8546,
           "paperV": 227.2602,
           "coreMeanV": 216.3037,
-          "annulusMinimumV": 21.5708
+          "annulusMinimumV": 21.5708,
+          "raggednessIn": 0.0739
         },
         {
           "xIn": 4.7065,
@@ -1574,7 +1674,8 @@
           "solidity": 0.9926,
           "paperV": 232.3142,
           "coreMeanV": 206.5012,
-          "annulusMinimumV": 11.5328
+          "annulusMinimumV": 11.5328,
+          "raggednessIn": 0.0997
         },
         {
           "xIn": 2.6335,
@@ -1583,7 +1684,8 @@
           "solidity": 0.7676,
           "paperV": 254.9866,
           "coreMeanV": 224.5403,
-          "annulusMinimumV": 26.7765
+          "annulusMinimumV": 26.7765,
+          "raggednessIn": 0.0319
         }
       ],
       "rejected": [
@@ -1764,7 +1866,8 @@
           "solidity": 0.9884,
           "paperV": 241.9661,
           "coreMeanV": 215.7323,
-          "annulusMinimumV": 11.0017
+          "annulusMinimumV": 11.0017,
+          "raggednessIn": 0.0544
         },
         {
           "xIn": 0.8647,
@@ -1773,7 +1876,8 @@
           "solidity": 0.8408,
           "paperV": 247.2334,
           "coreMeanV": 194.3678,
-          "annulusMinimumV": 14.0753
+          "annulusMinimumV": 14.0753,
+          "raggednessIn": 0.0587
         },
         {
           "xIn": 6.9666,
@@ -1782,7 +1886,8 @@
           "solidity": 0.8486,
           "paperV": 220.3742,
           "coreMeanV": 199.5968,
-          "annulusMinimumV": 22.406
+          "annulusMinimumV": 22.406,
+          "raggednessIn": 0.1076
         },
         {
           "xIn": 4.3478,
@@ -1791,7 +1896,8 @@
           "solidity": 0.8817,
           "paperV": 213.0977,
           "coreMeanV": 167.0888,
-          "annulusMinimumV": 19.1154
+          "annulusMinimumV": 19.1154,
+          "raggednessIn": 0.133
         },
         {
           "xIn": 5.8442,
@@ -1800,7 +1906,8 @@
           "solidity": 0.8905,
           "paperV": 223.1059,
           "coreMeanV": 144.4037,
-          "annulusMinimumV": 20.6525
+          "annulusMinimumV": 20.6525,
+          "raggednessIn": 0.1237
         },
         {
           "xIn": 1.3109,
@@ -1809,7 +1916,8 @@
           "solidity": 0.8591,
           "paperV": 254.6771,
           "coreMeanV": 163.8481,
-          "annulusMinimumV": 11.6215
+          "annulusMinimumV": 11.6215,
+          "raggednessIn": 0.0393
         },
         {
           "xIn": 4.1132,
@@ -1818,7 +1926,8 @@
           "solidity": 0.9559,
           "paperV": 254.7011,
           "coreMeanV": 195.8818,
-          "annulusMinimumV": 13.3676
+          "annulusMinimumV": 13.3676,
+          "raggednessIn": 0.0272
         },
         {
           "xIn": 7.4377,
@@ -1827,7 +1936,8 @@
           "solidity": 0.9341,
           "paperV": 224.8546,
           "coreMeanV": 116.3153,
-          "annulusMinimumV": 27.4245
+          "annulusMinimumV": 27.4245,
+          "raggednessIn": 0.0746
         },
         {
           "xIn": 2.8398,
@@ -1836,7 +1946,8 @@
           "solidity": 0.9572,
           "paperV": 240.2846,
           "coreMeanV": 212.7613,
-          "annulusMinimumV": 17.8344
+          "annulusMinimumV": 17.8344,
+          "raggednessIn": 0.084
         },
         {
           "xIn": 6.1062,
@@ -1845,7 +1956,8 @@
           "solidity": 0.9265,
           "paperV": 245.7511,
           "coreMeanV": 222.2816,
-          "annulusMinimumV": 10.7797
+          "annulusMinimumV": 10.7797,
+          "raggednessIn": 0.0275
         },
         {
           "xIn": 4.4265,
@@ -1854,7 +1966,8 @@
           "solidity": 0.9712,
           "paperV": 230.2342,
           "coreMeanV": 216.5996,
-          "annulusMinimumV": 20.7986
+          "annulusMinimumV": 20.7986,
+          "raggednessIn": 0.0999
         },
         {
           "xIn": 7.432,
@@ -1863,7 +1976,8 @@
           "solidity": 0.8762,
           "paperV": 244.2035,
           "coreMeanV": 216.3547,
-          "annulusMinimumV": 50.9367
+          "annulusMinimumV": 50.9367,
+          "raggednessIn": 0.0735
         },
         {
           "xIn": 3.1537,
@@ -1872,7 +1986,8 @@
           "solidity": 0.9799,
           "paperV": 239.1157,
           "coreMeanV": 199.0933,
-          "annulusMinimumV": 11.2578
+          "annulusMinimumV": 11.2578,
+          "raggednessIn": 0.0757
         },
         {
           "xIn": 6.0385,
@@ -1881,7 +1996,8 @@
           "solidity": 0.9801,
           "paperV": 244.6056,
           "coreMeanV": 204.8164,
-          "annulusMinimumV": 12.1211
+          "annulusMinimumV": 12.1211,
+          "raggednessIn": 0.0614
         },
         {
           "xIn": 1.0092,
@@ -1890,7 +2006,8 @@
           "solidity": 0.8971,
           "paperV": 244.326,
           "coreMeanV": 217.5812,
-          "annulusMinimumV": 10.8619
+          "annulusMinimumV": 10.8619,
+          "raggednessIn": 0.062
         },
         {
           "xIn": 4.6946,
@@ -1899,7 +2016,8 @@
           "solidity": 0.962,
           "paperV": 224.7571,
           "coreMeanV": 202.05,
-          "annulusMinimumV": 10.5711
+          "annulusMinimumV": 10.5711,
+          "raggednessIn": 0.1054
         },
         {
           "xIn": 5.722,
@@ -1908,7 +2026,8 @@
           "solidity": 0.8262,
           "paperV": 254.5329,
           "coreMeanV": 216.7756,
-          "annulusMinimumV": 34.1494
+          "annulusMinimumV": 34.1494,
+          "raggednessIn": 0.0425
         },
         {
           "xIn": 3.0545,
@@ -1917,7 +2036,8 @@
           "solidity": 0.9313,
           "paperV": 242.2004,
           "coreMeanV": 220.2495,
-          "annulusMinimumV": 12.9924
+          "annulusMinimumV": 12.9924,
+          "raggednessIn": 0.0751
         },
         {
           "xIn": 7.8299,
@@ -1926,7 +2046,8 @@
           "solidity": 0.6281,
           "paperV": 246.9988,
           "coreMeanV": 198.8251,
-          "annulusMinimumV": 34.1133
+          "annulusMinimumV": 34.1133,
+          "raggednessIn": 0.0895
         },
         {
           "xIn": 1.2447,
@@ -1935,7 +2056,8 @@
           "solidity": 0.9582,
           "paperV": 243.0618,
           "coreMeanV": 173.0919,
-          "annulusMinimumV": 11.6616
+          "annulusMinimumV": 11.6616,
+          "raggednessIn": 0.0676
         },
         {
           "xIn": 5.7232,
@@ -1944,7 +2066,8 @@
           "solidity": 0.8527,
           "paperV": 254.8353,
           "coreMeanV": 218.0478,
-          "annulusMinimumV": 15.7415
+          "annulusMinimumV": 15.7415,
+          "raggednessIn": 0.0177
         },
         {
           "xIn": 7.2865,
@@ -1953,7 +2076,8 @@
           "solidity": 0.6714,
           "paperV": 254.7896,
           "coreMeanV": 207.3978,
-          "annulusMinimumV": 44.6951
+          "annulusMinimumV": 44.6951,
+          "raggednessIn": 0.0753
         },
         {
           "xIn": 3.2209,
@@ -1962,7 +2086,8 @@
           "solidity": 0.8921,
           "paperV": 225.3582,
           "coreMeanV": 211.9036,
-          "annulusMinimumV": 12.4803
+          "annulusMinimumV": 12.4803,
+          "raggednessIn": 0.0979
         },
         {
           "xIn": 1.4405,
@@ -1971,7 +2096,8 @@
           "solidity": 0.9846,
           "paperV": 244.5663,
           "coreMeanV": 213.038,
-          "annulusMinimumV": 9.9768
+          "annulusMinimumV": 9.9768,
+          "raggednessIn": 0.0725
         },
         {
           "xIn": 4.6514,
@@ -1980,7 +2106,8 @@
           "solidity": 0.9419,
           "paperV": 246.2197,
           "coreMeanV": 202.9866,
-          "annulusMinimumV": 11.7094
+          "annulusMinimumV": 11.7094,
+          "raggednessIn": 0.0407
         }
       ],
       "rejected": [
@@ -2131,7 +2258,8 @@
           "solidity": 0.9174,
           "paperV": 254.7253,
           "coreMeanV": 217.5173,
-          "annulusMinimumV": 40.1964
+          "annulusMinimumV": 40.1964,
+          "raggednessIn": 0.0352
         },
         {
           "xIn": 2.7595,
@@ -2140,7 +2268,8 @@
           "solidity": 0.9343,
           "paperV": 254.3192,
           "coreMeanV": 200.7445,
-          "annulusMinimumV": 56.9511
+          "annulusMinimumV": 56.9511,
+          "raggednessIn": 0.0559
         },
         {
           "xIn": 0.9179,
@@ -2149,7 +2278,8 @@
           "solidity": 0.9153,
           "paperV": 254.0777,
           "coreMeanV": 197.2085,
-          "annulusMinimumV": 48.7374
+          "annulusMinimumV": 48.7374,
+          "raggednessIn": 0.0421
         },
         {
           "xIn": 5.3948,
@@ -2158,7 +2288,8 @@
           "solidity": 0.9359,
           "paperV": 254.1705,
           "coreMeanV": 199.2135,
-          "annulusMinimumV": 60.1527
+          "annulusMinimumV": 60.1527,
+          "raggednessIn": 0.0365
         },
         {
           "xIn": 3.5187,
@@ -2167,7 +2298,8 @@
           "solidity": 0.9438,
           "paperV": 254.8151,
           "coreMeanV": 206.693,
-          "annulusMinimumV": 101.978
+          "annulusMinimumV": 101.978,
+          "raggednessIn": 0.051
         },
         {
           "xIn": 6.0396,
@@ -2176,7 +2308,8 @@
           "solidity": 0.9531,
           "paperV": 253.8709,
           "coreMeanV": 213.2382,
-          "annulusMinimumV": 74.7192
+          "annulusMinimumV": 74.7192,
+          "raggednessIn": 0.0338
         },
         {
           "xIn": 6.7181,
@@ -2185,7 +2318,8 @@
           "solidity": 0.9892,
           "paperV": 254.6944,
           "coreMeanV": 206.4122,
-          "annulusMinimumV": 64.5891
+          "annulusMinimumV": 64.5891,
+          "raggednessIn": 0.0408
         },
         {
           "xIn": 4.1537,
@@ -2194,7 +2328,8 @@
           "solidity": 0.9469,
           "paperV": 254.6106,
           "coreMeanV": 203.044,
-          "annulusMinimumV": 63.294
+          "annulusMinimumV": 63.294,
+          "raggednessIn": 0.0283
         },
         {
           "xIn": 2.5228,
@@ -2203,7 +2338,8 @@
           "solidity": 0.9329,
           "paperV": 254.0038,
           "coreMeanV": 202.2959,
-          "annulusMinimumV": 68.8543
+          "annulusMinimumV": 68.8543,
+          "raggednessIn": 0.0368
         },
         {
           "xIn": 1.2924,
@@ -2212,7 +2348,8 @@
           "solidity": 0.8549,
           "paperV": 253.9472,
           "coreMeanV": 205.8387,
-          "annulusMinimumV": 59.7204
+          "annulusMinimumV": 59.7204,
+          "raggednessIn": 0.0385
         },
         {
           "xIn": 0.9647,
@@ -2221,7 +2358,8 @@
           "solidity": 0.9595,
           "paperV": 254.6513,
           "coreMeanV": 212.3973,
-          "annulusMinimumV": 80.9771
+          "annulusMinimumV": 80.9771,
+          "raggednessIn": 0.0308
         },
         {
           "xIn": 2.8622,
@@ -2230,7 +2368,8 @@
           "solidity": 0.9656,
           "paperV": 254.1267,
           "coreMeanV": 203.2553,
-          "annulusMinimumV": 69.9381
+          "annulusMinimumV": 69.9381,
+          "raggednessIn": 0.0336
         },
         {
           "xIn": 7.0486,
@@ -2239,7 +2378,8 @@
           "solidity": 0.9879,
           "paperV": 254.1572,
           "coreMeanV": 208.067,
-          "annulusMinimumV": 87.6419
+          "annulusMinimumV": 87.6419,
+          "raggednessIn": 0.0412
         },
         {
           "xIn": 5.6881,
@@ -2248,7 +2388,8 @@
           "solidity": 0.9569,
           "paperV": 254.3463,
           "coreMeanV": 197.4157,
-          "annulusMinimumV": 66.5702
+          "annulusMinimumV": 66.5702,
+          "raggednessIn": 0.0159
         },
         {
           "xIn": 4.0012,
@@ -2257,7 +2398,8 @@
           "solidity": 0.9903,
           "paperV": 253.8889,
           "coreMeanV": 196.224,
-          "annulusMinimumV": 54.0802
+          "annulusMinimumV": 54.0802,
+          "raggednessIn": 0.0307
         },
         {
           "xIn": 1.1531,
@@ -2266,7 +2408,8 @@
           "solidity": 0.8456,
           "paperV": 254.1125,
           "coreMeanV": 193.1349,
-          "annulusMinimumV": 65.3692
+          "annulusMinimumV": 65.3692,
+          "raggednessIn": 0.049
         },
         {
           "xIn": 4.1928,
@@ -2275,7 +2418,8 @@
           "solidity": 0.9849,
           "paperV": 254.0162,
           "coreMeanV": 200.1645,
-          "annulusMinimumV": 32.8643
+          "annulusMinimumV": 32.8643,
+          "raggednessIn": 0.0288
         },
         {
           "xIn": 2.9725,
@@ -2284,7 +2428,8 @@
           "solidity": 0.9791,
           "paperV": 254.1719,
           "coreMeanV": 202.7454,
-          "annulusMinimumV": 64.5503
+          "annulusMinimumV": 64.5503,
+          "raggednessIn": 0.0294
         },
         {
           "xIn": 3.0026,
@@ -2293,7 +2438,8 @@
           "solidity": 0.7482,
           "paperV": 243.6996,
           "coreMeanV": 202.3637,
-          "annulusMinimumV": 123.0506
+          "annulusMinimumV": 123.0506,
+          "raggednessIn": 0.0949
         },
         {
           "xIn": 4.467,
@@ -2302,7 +2448,8 @@
           "solidity": 0.8734,
           "paperV": 243.2527,
           "coreMeanV": 187.1062,
-          "annulusMinimumV": 128.3959
+          "annulusMinimumV": 128.3959,
+          "raggednessIn": 0.0656
         },
         {
           "xIn": 3.7549,
@@ -2311,7 +2458,8 @@
           "solidity": 0.7122,
           "paperV": 246.3843,
           "coreMeanV": 172.8847,
-          "annulusMinimumV": 122.6431
+          "annulusMinimumV": 122.6431,
+          "raggednessIn": 0.1231
         },
         {
           "xIn": 6.8032,
@@ -2320,7 +2468,8 @@
           "solidity": 0.6272,
           "paperV": 246.3679,
           "coreMeanV": 134.3105,
-          "annulusMinimumV": 130.8852
+          "annulusMinimumV": 130.8852,
+          "raggednessIn": 0.1099
         },
         {
           "xIn": 7.003,
@@ -2329,7 +2478,8 @@
           "solidity": 0.7957,
           "paperV": 205.3993,
           "coreMeanV": 136.0264,
-          "annulusMinimumV": 39.4896
+          "annulusMinimumV": 39.4896,
+          "raggednessIn": 0.0749
         },
         {
           "xIn": 7.4188,
@@ -2338,7 +2488,8 @@
           "solidity": 0.6932,
           "paperV": 242.8648,
           "coreMeanV": 155.4785,
-          "annulusMinimumV": 41.4565
+          "annulusMinimumV": 41.4565,
+          "raggednessIn": 0.0737
         },
         {
           "xIn": 5.6333,
@@ -2347,7 +2498,8 @@
           "solidity": 0.8917,
           "paperV": 239.4904,
           "coreMeanV": 150.904,
-          "annulusMinimumV": 43.487
+          "annulusMinimumV": 43.487,
+          "raggednessIn": 0.0762
         },
         {
           "xIn": 6.052,
@@ -2356,7 +2508,8 @@
           "solidity": 0.9445,
           "paperV": 220.4174,
           "coreMeanV": 153.9065,
-          "annulusMinimumV": 40.4933
+          "annulusMinimumV": 40.4933,
+          "raggednessIn": 0.0443
         },
         {
           "xIn": 6.6563,
@@ -2365,7 +2518,8 @@
           "solidity": 0.9425,
           "paperV": 199.8683,
           "coreMeanV": 148.2094,
-          "annulusMinimumV": 34.9174
+          "annulusMinimumV": 34.9174,
+          "raggednessIn": 0.0741
         },
         {
           "xIn": 6.4013,
@@ -2374,7 +2528,8 @@
           "solidity": 0.9503,
           "paperV": 195.7557,
           "coreMeanV": 151.9598,
-          "annulusMinimumV": 37.299
+          "annulusMinimumV": 37.299,
+          "raggednessIn": 0.0373
         }
       ],
       "rejected": [
@@ -2411,7 +2566,8 @@
           "solidity": 0.9288,
           "paperV": 237.7575,
           "coreMeanV": 177.0217,
-          "annulusMinimumV": 141.896
+          "annulusMinimumV": 141.896,
+          "raggednessIn": 0.0323
         },
         {
           "xIn": 5.1572,
@@ -2420,7 +2576,8 @@
           "solidity": 0.6095,
           "paperV": 240.6829,
           "coreMeanV": 204.9256,
-          "annulusMinimumV": 140.1485
+          "annulusMinimumV": 140.1485,
+          "raggednessIn": 0.1261
         },
         {
           "xIn": 3.1786,
@@ -2429,7 +2586,8 @@
           "solidity": 0.9538,
           "paperV": 249.6078,
           "coreMeanV": 164.85,
-          "annulusMinimumV": 131.8727
+          "annulusMinimumV": 131.8727,
+          "raggednessIn": 0.0214
         },
         {
           "xIn": 1.4903,
@@ -2438,7 +2596,8 @@
           "solidity": 0.8928,
           "paperV": 245.2127,
           "coreMeanV": 212.0112,
-          "annulusMinimumV": 13.1526
+          "annulusMinimumV": 13.1526,
+          "raggednessIn": 0.0272
         },
         {
           "xIn": 2.8808,
@@ -2447,7 +2606,8 @@
           "solidity": 0.8977,
           "paperV": 252.1668,
           "coreMeanV": 163.9388,
-          "annulusMinimumV": 32.136
+          "annulusMinimumV": 32.136,
+          "raggednessIn": 0.0421
         },
         {
           "xIn": 6.0983,
@@ -2456,7 +2616,8 @@
           "solidity": 0.9184,
           "paperV": 253.8614,
           "coreMeanV": 182.6063,
-          "annulusMinimumV": 12.3678
+          "annulusMinimumV": 12.3678,
+          "raggednessIn": 0.033
         },
         {
           "xIn": 4.4984,
@@ -2465,7 +2626,8 @@
           "solidity": 0.9653,
           "paperV": 253.3245,
           "coreMeanV": 168.4507,
-          "annulusMinimumV": 50.137
+          "annulusMinimumV": 50.137,
+          "raggednessIn": 0.0407
         },
         {
           "xIn": 7.5853,
@@ -2474,7 +2636,8 @@
           "solidity": 0.8586,
           "paperV": 254.5901,
           "coreMeanV": 205.666,
-          "annulusMinimumV": 44.6326
+          "annulusMinimumV": 44.6326,
+          "raggednessIn": 0.041
         },
         {
           "xIn": 4.4196,
@@ -2483,7 +2646,8 @@
           "solidity": 0.8007,
           "paperV": 247.2053,
           "coreMeanV": 190.1143,
-          "annulusMinimumV": 168.5817
+          "annulusMinimumV": 168.5817,
+          "raggednessIn": 0.0333
         },
         {
           "xIn": 7.5554,
@@ -2492,7 +2656,8 @@
           "solidity": 0.8679,
           "paperV": 254.9049,
           "coreMeanV": 220.1262,
-          "annulusMinimumV": 73.71
+          "annulusMinimumV": 73.71,
+          "raggednessIn": 0.027
         },
         {
           "xIn": 4.6636,
@@ -2501,7 +2666,8 @@
           "solidity": 1.0025,
           "paperV": 252.3107,
           "coreMeanV": 203.3766,
-          "annulusMinimumV": 10.9521
+          "annulusMinimumV": 10.9521,
+          "raggednessIn": 0.0105
         },
         {
           "xIn": 2.8919,
@@ -2510,7 +2676,8 @@
           "solidity": 0.9242,
           "paperV": 253.8185,
           "coreMeanV": 210.5001,
-          "annulusMinimumV": 30.1364
+          "annulusMinimumV": 30.1364,
+          "raggednessIn": 0.0257
         },
         {
           "xIn": 1.6772,
@@ -2519,7 +2686,8 @@
           "solidity": 0.9544,
           "paperV": 254.6861,
           "coreMeanV": 198.1603,
-          "annulusMinimumV": 31.0601
+          "annulusMinimumV": 31.0601,
+          "raggednessIn": 0.0423
         },
         {
           "xIn": 6.1357,
@@ -2528,7 +2696,8 @@
           "solidity": 0.9585,
           "paperV": 251.7917,
           "coreMeanV": 203.3258,
-          "annulusMinimumV": 11.9084
+          "annulusMinimumV": 11.9084,
+          "raggednessIn": 0.0267
         },
         {
           "xIn": 6.075,
@@ -2537,7 +2706,8 @@
           "solidity": 0.9828,
           "paperV": 251.1488,
           "coreMeanV": 193.555,
-          "annulusMinimumV": 55.1553
+          "annulusMinimumV": 55.1553,
+          "raggednessIn": 0.0156
         },
         {
           "xIn": 4.5401,
@@ -2546,7 +2716,8 @@
           "solidity": 0.9911,
           "paperV": 253.6642,
           "coreMeanV": 179.9256,
-          "annulusMinimumV": 15.8039
+          "annulusMinimumV": 15.8039,
+          "raggednessIn": 0.0183
         },
         {
           "xIn": 1.4613,
@@ -2555,7 +2726,8 @@
           "solidity": 0.9056,
           "paperV": 253.9125,
           "coreMeanV": 190.9032,
-          "annulusMinimumV": 17.9773
+          "annulusMinimumV": 17.9773,
+          "raggednessIn": 0.0325
         },
         {
           "xIn": 2.835,
@@ -2564,7 +2736,8 @@
           "solidity": 0.9882,
           "paperV": 254.1611,
           "coreMeanV": 201.7149,
-          "annulusMinimumV": 42.1249
+          "annulusMinimumV": 42.1249,
+          "raggednessIn": 0.0204
         },
         {
           "xIn": 7.2685,
@@ -2573,7 +2746,8 @@
           "solidity": 0.9764,
           "paperV": 251.6572,
           "coreMeanV": 206.7547,
-          "annulusMinimumV": 14.4809
+          "annulusMinimumV": 14.4809,
+          "raggednessIn": 0.0281
         }
       ],
       "rejected": [
@@ -2688,7 +2862,8 @@
           "solidity": 0.8796,
           "paperV": 249.7727,
           "coreMeanV": 208.9738,
-          "annulusMinimumV": 6.8536
+          "annulusMinimumV": 6.8536,
+          "raggednessIn": 0.0408
         },
         {
           "xIn": 6.5652,
@@ -2697,7 +2872,8 @@
           "solidity": 0.8764,
           "paperV": 246.9896,
           "coreMeanV": 197.3709,
-          "annulusMinimumV": 67.1649
+          "annulusMinimumV": 67.1649,
+          "raggednessIn": 0.0463
         },
         {
           "xIn": 4.7073,
@@ -2706,7 +2882,8 @@
           "solidity": 0.9648,
           "paperV": 247.0323,
           "coreMeanV": 158.6741,
-          "annulusMinimumV": 12.7481
+          "annulusMinimumV": 12.7481,
+          "raggednessIn": 0.0422
         },
         {
           "xIn": 6.5048,
@@ -2715,7 +2892,8 @@
           "solidity": 0.8867,
           "paperV": 247.0138,
           "coreMeanV": 216.0284,
-          "annulusMinimumV": 29.982
+          "annulusMinimumV": 29.982,
+          "raggednessIn": 0.0381
         },
         {
           "xIn": 4.5459,
@@ -2724,7 +2902,8 @@
           "solidity": 0.9628,
           "paperV": 249.2437,
           "coreMeanV": 93.7664,
-          "annulusMinimumV": 24.5726
+          "annulusMinimumV": 24.5726,
+          "raggednessIn": 0.0335
         },
         {
           "xIn": 6.6474,
@@ -2733,7 +2912,8 @@
           "solidity": 0.8417,
           "paperV": 246.9602,
           "coreMeanV": 216.3614,
-          "annulusMinimumV": 7.9623
+          "annulusMinimumV": 7.9623,
+          "raggednessIn": 0.0548
         },
         {
           "xIn": 5.6652,
@@ -2742,7 +2922,8 @@
           "solidity": 0.9609,
           "paperV": 224.7415,
           "coreMeanV": 96.7353,
-          "annulusMinimumV": 2.1175
+          "annulusMinimumV": 2.1175,
+          "raggednessIn": 0.0797
         }
       ],
       "rejected": [
@@ -2881,7 +3062,8 @@
           "solidity": 0.9153,
           "paperV": 254.9983,
           "coreMeanV": 223.5047,
-          "annulusMinimumV": 10.9532
+          "annulusMinimumV": 10.9532,
+          "raggednessIn": 0.0191
         },
         {
           "xIn": 5.5073,
@@ -2890,7 +3072,8 @@
           "solidity": 0.9008,
           "paperV": 238.2784,
           "coreMeanV": 209.3968,
-          "annulusMinimumV": 18.0349
+          "annulusMinimumV": 18.0349,
+          "raggednessIn": 0.045
         },
         {
           "xIn": 6.0094,
@@ -2899,7 +3082,8 @@
           "solidity": 0.9392,
           "paperV": 246.2379,
           "coreMeanV": 161.8977,
-          "annulusMinimumV": 115.8081
+          "annulusMinimumV": 115.8081,
+          "raggednessIn": 0.0324
         },
         {
           "xIn": 3.7928,
@@ -2908,7 +3092,8 @@
           "solidity": 0.9242,
           "paperV": 250.8568,
           "coreMeanV": 205.9444,
-          "annulusMinimumV": 11.5489
+          "annulusMinimumV": 11.5489,
+          "raggednessIn": 0.0233
         },
         {
           "xIn": 0.7916,
@@ -2917,7 +3102,8 @@
           "solidity": 0.9108,
           "paperV": 250.7448,
           "coreMeanV": 208.1698,
-          "annulusMinimumV": 13.2406
+          "annulusMinimumV": 13.2406,
+          "raggednessIn": 0.0214
         },
         {
           "xIn": 7.1226,
@@ -2926,7 +3112,8 @@
           "solidity": 0.9666,
           "paperV": 249.3989,
           "coreMeanV": 210.755,
-          "annulusMinimumV": 14.334
+          "annulusMinimumV": 14.334,
+          "raggednessIn": 0.0188
         },
         {
           "xIn": 2.5782,
@@ -2935,7 +3122,8 @@
           "solidity": 0.9928,
           "paperV": 236.6822,
           "coreMeanV": 209.1175,
-          "annulusMinimumV": 10.1312
+          "annulusMinimumV": 10.1312,
+          "raggednessIn": 0.0163
         },
         {
           "xIn": 1.2558,
@@ -2944,7 +3132,8 @@
           "solidity": 0.9803,
           "paperV": 255,
           "coreMeanV": 203.407,
-          "annulusMinimumV": 11.9878
+          "annulusMinimumV": 11.9878,
+          "raggednessIn": 0.0187
         },
         {
           "xIn": 5.4486,
@@ -2953,7 +3142,8 @@
           "solidity": 0.9887,
           "paperV": 250.7804,
           "coreMeanV": 186.0878,
-          "annulusMinimumV": 12.3717
+          "annulusMinimumV": 12.3717,
+          "raggednessIn": 0.0219
         },
         {
           "xIn": 3.9518,
@@ -2962,7 +3152,8 @@
           "solidity": 0.9881,
           "paperV": 250.5584,
           "coreMeanV": 208.4342,
-          "annulusMinimumV": 13.7902
+          "annulusMinimumV": 13.7902,
+          "raggednessIn": 0.012
         },
         {
           "xIn": 6.7712,
@@ -2971,7 +3162,8 @@
           "solidity": 0.9793,
           "paperV": 248.0877,
           "coreMeanV": 168.5311,
-          "annulusMinimumV": 12.9411
+          "annulusMinimumV": 12.9411,
+          "raggednessIn": 0.0216
         },
         {
           "xIn": 7.0718,
@@ -2980,7 +3172,8 @@
           "solidity": 0.9295,
           "paperV": 243.4721,
           "coreMeanV": 187.4963,
-          "annulusMinimumV": 19.0908
+          "annulusMinimumV": 19.0908,
+          "raggednessIn": 0.0268
         },
         {
           "xIn": 1.0454,
@@ -2989,7 +3182,8 @@
           "solidity": 0.9443,
           "paperV": 249.3929,
           "coreMeanV": 179.6344,
-          "annulusMinimumV": 19.2316
+          "annulusMinimumV": 19.2316,
+          "raggednessIn": 0.0236
         },
         {
           "xIn": 4.0983,
@@ -2998,7 +3192,8 @@
           "solidity": 0.9564,
           "paperV": 240.3046,
           "coreMeanV": 148.981,
-          "annulusMinimumV": 113.8156
+          "annulusMinimumV": 113.8156,
+          "raggednessIn": 0.0315
         },
         {
           "xIn": 2.3308,
@@ -3007,7 +3202,8 @@
           "solidity": 0.9932,
           "paperV": 246.9699,
           "coreMeanV": 208.2529,
-          "annulusMinimumV": 11.3166
+          "annulusMinimumV": 11.3166,
+          "raggednessIn": 0.0178
         },
         {
           "xIn": 4.0449,
@@ -3016,7 +3212,8 @@
           "solidity": 0.9912,
           "paperV": 244.5116,
           "coreMeanV": 198.9526,
-          "annulusMinimumV": 13.5364
+          "annulusMinimumV": 13.5364,
+          "raggednessIn": 0.0332
         },
         {
           "xIn": 5.4855,
@@ -3025,7 +3222,8 @@
           "solidity": 0.99,
           "paperV": 244.3871,
           "coreMeanV": 201.3756,
-          "annulusMinimumV": 67.317
+          "annulusMinimumV": 67.317,
+          "raggednessIn": 0.0538
         },
         {
           "xIn": 2.5892,
@@ -3034,7 +3232,8 @@
           "solidity": 0.9897,
           "paperV": 254.9913,
           "coreMeanV": 204.0272,
-          "annulusMinimumV": 13.8934
+          "annulusMinimumV": 13.8934,
+          "raggednessIn": 0.016
         },
         {
           "xIn": 6.7697,
@@ -3043,7 +3242,8 @@
           "solidity": 0.9686,
           "paperV": 250.277,
           "coreMeanV": 207.562,
-          "annulusMinimumV": 26.5511
+          "annulusMinimumV": 26.5511,
+          "raggednessIn": 0.0296
         },
         {
           "xIn": 0.9698,
@@ -3052,7 +3252,8 @@
           "solidity": 0.9433,
           "paperV": 251.2118,
           "coreMeanV": 194.7588,
-          "annulusMinimumV": 11.0452
+          "annulusMinimumV": 11.0452,
+          "raggednessIn": 0.0225
         },
         {
           "xIn": 4.227,
@@ -3061,7 +3262,8 @@
           "solidity": 0.9894,
           "paperV": 249.1069,
           "coreMeanV": 194.472,
-          "annulusMinimumV": 72.7827
+          "annulusMinimumV": 72.7827,
+          "raggednessIn": 0.0279
         },
         {
           "xIn": 4.2085,
@@ -3070,7 +3272,8 @@
           "solidity": 0.9833,
           "paperV": 251.2737,
           "coreMeanV": 197.9815,
-          "annulusMinimumV": 52.739
+          "annulusMinimumV": 52.739,
+          "raggednessIn": 0.0425
         },
         {
           "xIn": 0.8247,
@@ -3079,7 +3282,8 @@
           "solidity": 0.9907,
           "paperV": 254.3966,
           "coreMeanV": 198.5775,
-          "annulusMinimumV": 12.6717
+          "annulusMinimumV": 12.6717,
+          "raggednessIn": 0.0175
         },
         {
           "xIn": 5.3777,
@@ -3088,7 +3292,8 @@
           "solidity": 0.9915,
           "paperV": 252.3317,
           "coreMeanV": 203.165,
-          "annulusMinimumV": 91.6556
+          "annulusMinimumV": 91.6556,
+          "raggednessIn": 0.0219
         },
         {
           "xIn": 2.639,
@@ -3097,7 +3302,8 @@
           "solidity": 0.9928,
           "paperV": 253.1834,
           "coreMeanV": 201.8926,
-          "annulusMinimumV": 15.2284
+          "annulusMinimumV": 15.2284,
+          "raggednessIn": 0.0127
         },
         {
           "xIn": 6.9247,
@@ -3106,7 +3312,8 @@
           "solidity": 0.9694,
           "paperV": 253.3024,
           "coreMeanV": 208.2155,
-          "annulusMinimumV": 78.3922
+          "annulusMinimumV": 78.3922,
+          "raggednessIn": 0.0411
         },
         {
           "xIn": 6.555,
@@ -3115,7 +3322,8 @@
           "solidity": 0.8568,
           "paperV": 247.8988,
           "coreMeanV": 217.6852,
-          "annulusMinimumV": 152.6154
+          "annulusMinimumV": 152.6154,
+          "raggednessIn": 0.0563
         },
         {
           "xIn": 5.7565,
@@ -3124,7 +3332,8 @@
           "solidity": 0.8481,
           "paperV": 239.2707,
           "coreMeanV": 191.1602,
-          "annulusMinimumV": 150.7105
+          "annulusMinimumV": 150.7105,
+          "raggednessIn": 0.0653
         }
       ],
       "rejected": [
@@ -3209,7 +3418,8 @@
           "solidity": 0.9388,
           "paperV": 253.8455,
           "coreMeanV": 201.1196,
-          "annulusMinimumV": 56.2139
+          "annulusMinimumV": 56.2139,
+          "raggednessIn": 0.0351
         },
         {
           "xIn": 2.4625,
@@ -3218,7 +3428,8 @@
           "solidity": 0.9207,
           "paperV": 253.8287,
           "coreMeanV": 205.2642,
-          "annulusMinimumV": 73.3471
+          "annulusMinimumV": 73.3471,
+          "raggednessIn": 0.0354
         },
         {
           "xIn": 1.2238,
@@ -3227,7 +3438,8 @@
           "solidity": 0.9258,
           "paperV": 253.6554,
           "coreMeanV": 200.993,
-          "annulusMinimumV": 12.2158
+          "annulusMinimumV": 12.2158,
+          "raggednessIn": 0.036
         },
         {
           "xIn": 7.2218,
@@ -3236,7 +3448,8 @@
           "solidity": 0.9728,
           "paperV": 253.9139,
           "coreMeanV": 215.5846,
-          "annulusMinimumV": 25.7346
+          "annulusMinimumV": 25.7346,
+          "raggednessIn": 0.0254
         },
         {
           "xIn": 5.6325,
@@ -3245,7 +3458,8 @@
           "solidity": 0.9499,
           "paperV": 252.5212,
           "coreMeanV": 206.3412,
-          "annulusMinimumV": 38.1867
+          "annulusMinimumV": 38.1867,
+          "raggednessIn": 0.0587
         },
         {
           "xIn": 6.6019,
@@ -3254,7 +3468,8 @@
           "solidity": 0.9575,
           "paperV": 254.1555,
           "coreMeanV": 203.3359,
-          "annulusMinimumV": 82.4866
+          "annulusMinimumV": 82.4866,
+          "raggednessIn": 0.0338
         },
         {
           "xIn": 1.1654,
@@ -3263,7 +3478,8 @@
           "solidity": 0.9219,
           "paperV": 252.6406,
           "coreMeanV": 203.5415,
-          "annulusMinimumV": 14.4875
+          "annulusMinimumV": 14.4875,
+          "raggednessIn": 0.0342
         },
         {
           "xIn": 2.4758,
@@ -3272,7 +3488,8 @@
           "solidity": 0.9637,
           "paperV": 254.1446,
           "coreMeanV": 201.7483,
-          "annulusMinimumV": 14.1901
+          "annulusMinimumV": 14.1901,
+          "raggednessIn": 0.0279
         },
         {
           "xIn": 3.9723,
@@ -3281,7 +3498,8 @@
           "solidity": 0.9891,
           "paperV": 254.1933,
           "coreMeanV": 193.4381,
-          "annulusMinimumV": 25.4856
+          "annulusMinimumV": 25.4856,
+          "raggednessIn": 0.019
         },
         {
           "xIn": 5.3037,
@@ -3290,7 +3508,8 @@
           "solidity": 0.9806,
           "paperV": 253.6189,
           "coreMeanV": 203.1375,
-          "annulusMinimumV": 48.0411
+          "annulusMinimumV": 48.0411,
+          "raggednessIn": 0.0455
         },
         {
           "xIn": 5.8393,
@@ -3299,7 +3518,8 @@
           "solidity": 0.9858,
           "paperV": 253.7125,
           "coreMeanV": 190.591,
-          "annulusMinimumV": 64.756
+          "annulusMinimumV": 64.756,
+          "raggednessIn": 0.0288
         },
         {
           "xIn": 7.0652,
@@ -3308,7 +3528,8 @@
           "solidity": 0.9858,
           "paperV": 254.1334,
           "coreMeanV": 205.2391,
-          "annulusMinimumV": 54.0077
+          "annulusMinimumV": 54.0077,
+          "raggednessIn": 0.0296
         },
         {
           "xIn": 0.9848,
@@ -3317,7 +3538,8 @@
           "solidity": 0.8956,
           "paperV": 254.1314,
           "coreMeanV": 206.2731,
-          "annulusMinimumV": 16.531
+          "annulusMinimumV": 16.531,
+          "raggednessIn": 0.0439
         },
         {
           "xIn": 2.7378,
@@ -3326,7 +3548,8 @@
           "solidity": 0.9839,
           "paperV": 253.8144,
           "coreMeanV": 205.9205,
-          "annulusMinimumV": 16.5088
+          "annulusMinimumV": 16.5088,
+          "raggednessIn": 0.0183
         },
         {
           "xIn": 3.446,
@@ -3335,7 +3558,8 @@
           "solidity": 0.9812,
           "paperV": 254.4935,
           "coreMeanV": 196.7285,
-          "annulusMinimumV": 34.4115
+          "annulusMinimumV": 34.4115,
+          "raggednessIn": 0.0269
         },
         {
           "xIn": 3.8788,
@@ -3344,7 +3568,8 @@
           "solidity": 0.9932,
           "paperV": 254.3175,
           "coreMeanV": 190.0134,
-          "annulusMinimumV": 51.6728
+          "annulusMinimumV": 51.6728,
+          "raggednessIn": 0.0234
         },
         {
           "xIn": 2.7136,
@@ -3353,7 +3578,8 @@
           "solidity": 0.9685,
           "paperV": 253.5246,
           "coreMeanV": 194.3061,
-          "annulusMinimumV": 26.2355
+          "annulusMinimumV": 26.2355,
+          "raggednessIn": 0.0235
         },
         {
           "xIn": 5.4212,
@@ -3362,7 +3588,8 @@
           "solidity": 0.9829,
           "paperV": 254.0277,
           "coreMeanV": 178.4597,
-          "annulusMinimumV": 34.9931
+          "annulusMinimumV": 34.9931,
+          "raggednessIn": 0.0271
         },
         {
           "xIn": 1.1531,
@@ -3371,7 +3598,8 @@
           "solidity": 0.8818,
           "paperV": 254.3319,
           "coreMeanV": 210.7816,
-          "annulusMinimumV": 29.0422
+          "annulusMinimumV": 29.0422,
+          "raggednessIn": 0.0248
         },
         {
           "xIn": 6.8932,
@@ -3380,7 +3608,8 @@
           "solidity": 0.9656,
           "paperV": 254.3199,
           "coreMeanV": 210.3402,
-          "annulusMinimumV": 63.6281
+          "annulusMinimumV": 63.6281,
+          "raggednessIn": 0.0238
         },
         {
           "xIn": 2.4522,
@@ -3389,7 +3618,8 @@
           "solidity": 0.9953,
           "paperV": 254.286,
           "coreMeanV": 197.279,
-          "annulusMinimumV": 37.9886
+          "annulusMinimumV": 37.9886,
+          "raggednessIn": 0.011
         },
         {
           "xIn": 5.2175,
@@ -3398,7 +3628,8 @@
           "solidity": 0.9669,
           "paperV": 254.112,
           "coreMeanV": 197.5313,
-          "annulusMinimumV": 68.9524
+          "annulusMinimumV": 68.9524,
+          "raggednessIn": 0.0247
         },
         {
           "xIn": 0.9816,
@@ -3407,7 +3638,8 @@
           "solidity": 0.9775,
           "paperV": 254.1684,
           "coreMeanV": 198.7789,
-          "annulusMinimumV": 21.622
+          "annulusMinimumV": 21.622,
+          "raggednessIn": 0.0227
         },
         {
           "xIn": 4.1271,
@@ -3416,7 +3648,8 @@
           "solidity": 0.9743,
           "paperV": 254.1807,
           "coreMeanV": 198.4581,
-          "annulusMinimumV": 89.2079
+          "annulusMinimumV": 89.2079,
+          "raggednessIn": 0.0299
         },
         {
           "xIn": 6.8881,
@@ -3425,7 +3658,8 @@
           "solidity": 0.9896,
           "paperV": 254.8712,
           "coreMeanV": 204.2888,
-          "annulusMinimumV": 25.3643
+          "annulusMinimumV": 25.3643,
+          "raggednessIn": 0.0167
         },
         {
           "xIn": 5.3721,
@@ -3434,7 +3668,8 @@
           "solidity": 0.6621,
           "paperV": 242.6724,
           "coreMeanV": 245.3901,
-          "annulusMinimumV": 135.5415
+          "annulusMinimumV": 135.5415,
+          "raggednessIn": 0.0576
         },
         {
           "xIn": 3.5714,
@@ -3443,7 +3678,8 @@
           "solidity": 0.7651,
           "paperV": 243.2348,
           "coreMeanV": 196.3401,
-          "annulusMinimumV": 140.3024
+          "annulusMinimumV": 140.3024,
+          "raggednessIn": 0.0605
         },
         {
           "xIn": 5.6384,
@@ -3452,7 +3688,8 @@
           "solidity": 0.8568,
           "paperV": 233.5059,
           "coreMeanV": 118.3794,
-          "annulusMinimumV": 43.9443
+          "annulusMinimumV": 43.9443,
+          "raggednessIn": 0.0695
         }
       ],
       "rejected": [
@@ -3513,7 +3750,8 @@
           "solidity": 0.7494,
           "paperV": 244.5518,
           "coreMeanV": 177.0798,
-          "annulusMinimumV": 129.8099
+          "annulusMinimumV": 129.8099,
+          "raggednessIn": 0.0789
         },
         {
           "xIn": 4.61,
@@ -3522,7 +3760,8 @@
           "solidity": 0.7884,
           "paperV": 246.836,
           "coreMeanV": 223.6319,
-          "annulusMinimumV": 133.4851
+          "annulusMinimumV": 133.4851,
+          "raggednessIn": 0.0764
         },
         {
           "xIn": 5.8032,
@@ -3531,7 +3770,8 @@
           "solidity": 0.9617,
           "paperV": 249.4069,
           "coreMeanV": 209.5717,
-          "annulusMinimumV": 15.1206
+          "annulusMinimumV": 15.1206,
+          "raggednessIn": 0.0227
         },
         {
           "xIn": 4.0635,
@@ -3540,7 +3780,8 @@
           "solidity": 0.9067,
           "paperV": 248.1804,
           "coreMeanV": 211.1194,
-          "annulusMinimumV": 45.0248
+          "annulusMinimumV": 45.0248,
+          "raggednessIn": 0.0381
         },
         {
           "xIn": 2.5056,
@@ -3549,7 +3790,8 @@
           "solidity": 0.8965,
           "paperV": 250.3425,
           "coreMeanV": 216.9918,
-          "annulusMinimumV": 57.9825
+          "annulusMinimumV": 57.9825,
+          "raggednessIn": 0.0197
         },
         {
           "xIn": 0.6448,
@@ -3558,7 +3800,8 @@
           "solidity": 0.9704,
           "paperV": 250.1783,
           "coreMeanV": 220.7649,
-          "annulusMinimumV": 12.0842
+          "annulusMinimumV": 12.0842,
+          "raggednessIn": 0.0284
         },
         {
           "xIn": 7.4796,
@@ -3567,7 +3810,8 @@
           "solidity": 0.9627,
           "paperV": 250.2414,
           "coreMeanV": 215.3132,
-          "annulusMinimumV": 18.8029
+          "annulusMinimumV": 18.8029,
+          "raggednessIn": 0.0244
         },
         {
           "xIn": 1.3328,
@@ -3576,7 +3820,8 @@
           "solidity": 0.8603,
           "paperV": 250.7663,
           "coreMeanV": 210.316,
-          "annulusMinimumV": 35.5941
+          "annulusMinimumV": 35.5941,
+          "raggednessIn": 0.0322
         },
         {
           "xIn": 5.9165,
@@ -3585,7 +3830,8 @@
           "solidity": 0.969,
           "paperV": 249.8481,
           "coreMeanV": 194.985,
-          "annulusMinimumV": 20.4372
+          "annulusMinimumV": 20.4372,
+          "raggednessIn": 0.0176
         },
         {
           "xIn": 7.4416,
@@ -3594,7 +3840,8 @@
           "solidity": 0.9789,
           "paperV": 250.6004,
           "coreMeanV": 212.6531,
-          "annulusMinimumV": 33.7778
+          "annulusMinimumV": 33.7778,
+          "raggednessIn": 0.0227
         },
         {
           "xIn": 4.3594,
@@ -3603,7 +3850,8 @@
           "solidity": 0.984,
           "paperV": 250.2234,
           "coreMeanV": 197.6939,
-          "annulusMinimumV": 17.2144
+          "annulusMinimumV": 17.2144,
+          "raggednessIn": 0.0181
         },
         {
           "xIn": 2.9982,
@@ -3612,7 +3860,8 @@
           "solidity": 0.98,
           "paperV": 250.3471,
           "coreMeanV": 201.9608,
-          "annulusMinimumV": 72.7871
+          "annulusMinimumV": 72.7871,
+          "raggednessIn": 0.0214
         },
         {
           "xIn": 2.9667,
@@ -3621,7 +3870,8 @@
           "solidity": 0.969,
           "paperV": 251.7956,
           "coreMeanV": 196.1963,
-          "annulusMinimumV": 27.9205
+          "annulusMinimumV": 27.9205,
+          "raggednessIn": 0.0245
         },
         {
           "xIn": 1.1755,
@@ -3630,7 +3880,8 @@
           "solidity": 0.9659,
           "paperV": 254.9933,
           "coreMeanV": 202.6069,
-          "annulusMinimumV": 12.884
+          "annulusMinimumV": 12.884,
+          "raggednessIn": 0.0364
         },
         {
           "xIn": 6.0724,
@@ -3639,7 +3890,8 @@
           "solidity": 0.9765,
           "paperV": 247.9413,
           "coreMeanV": 178.7462,
-          "annulusMinimumV": 11.4397
+          "annulusMinimumV": 11.4397,
+          "raggednessIn": 0.0216
         },
         {
           "xIn": 4.438,
@@ -3648,7 +3900,8 @@
           "solidity": 0.986,
           "paperV": 249.6022,
           "coreMeanV": 191.7713,
-          "annulusMinimumV": 67.3108
+          "annulusMinimumV": 67.3108,
+          "raggednessIn": 0.043
         },
         {
           "xIn": 7.0149,
@@ -3657,7 +3910,8 @@
           "solidity": 0.9702,
           "paperV": 249.9067,
           "coreMeanV": 190.3813,
-          "annulusMinimumV": 26.7214
+          "annulusMinimumV": 26.7214,
+          "raggednessIn": 0.0522
         },
         {
           "xIn": 1.4096,
@@ -3666,7 +3920,8 @@
           "solidity": 0.9883,
           "paperV": 247.89,
           "coreMeanV": 205.8429,
-          "annulusMinimumV": 60.4159
+          "annulusMinimumV": 60.4159,
+          "raggednessIn": 0.0608
         },
         {
           "xIn": 2.8876,
@@ -3675,7 +3930,8 @@
           "solidity": 0.984,
           "paperV": 250.4487,
           "coreMeanV": 182.5821,
-          "annulusMinimumV": 17.056
+          "annulusMinimumV": 17.056,
+          "raggednessIn": 0.028
         },
         {
           "xIn": 4.4327,
@@ -3684,7 +3940,8 @@
           "solidity": 0.9847,
           "paperV": 249.5508,
           "coreMeanV": 171.7326,
-          "annulusMinimumV": 52.969
+          "annulusMinimumV": 52.969,
+          "raggednessIn": 0.0182
         },
         {
           "xIn": 7.4575,
@@ -3693,7 +3950,8 @@
           "solidity": 0.9582,
           "paperV": 251.0345,
           "coreMeanV": 192.2226,
-          "annulusMinimumV": 28.3994
+          "annulusMinimumV": 28.3994,
+          "raggednessIn": 0.0412
         },
         {
           "xIn": 5.5369,
@@ -3702,7 +3960,8 @@
           "solidity": 0.9831,
           "paperV": 243.1203,
           "coreMeanV": 174.816,
-          "annulusMinimumV": 24.342
+          "annulusMinimumV": 24.342,
+          "raggednessIn": 0.0209
         },
         {
           "xIn": 5.5458,
@@ -3711,7 +3970,8 @@
           "solidity": 0.9811,
           "paperV": 237.8992,
           "coreMeanV": 171.9161,
-          "annulusMinimumV": 16.0954
+          "annulusMinimumV": 16.0954,
+          "raggednessIn": 0.0757
         },
         {
           "xIn": 4.9419,
@@ -3720,7 +3980,8 @@
           "solidity": 0.9672,
           "paperV": 235.2318,
           "coreMeanV": 170.802,
-          "annulusMinimumV": 31.8469
+          "annulusMinimumV": 31.8469,
+          "raggednessIn": 0.041
         },
         {
           "xIn": 2.5313,
@@ -3729,7 +3990,8 @@
           "solidity": 0.9882,
           "paperV": 246.7226,
           "coreMeanV": 185.8155,
-          "annulusMinimumV": 19.77
+          "annulusMinimumV": 19.77,
+          "raggednessIn": 0.0487
         },
         {
           "xIn": 4.5246,
@@ -3738,7 +4000,8 @@
           "solidity": 0.6656,
           "paperV": 237.4417,
           "coreMeanV": 195.2957,
-          "annulusMinimumV": 106.3446
+          "annulusMinimumV": 106.3446,
+          "raggednessIn": 0.1056
         },
         {
           "xIn": 8.0024,
@@ -3747,7 +4010,8 @@
           "solidity": 0.961,
           "paperV": 253.7882,
           "coreMeanV": 194.4246,
-          "annulusMinimumV": 27.5379
+          "annulusMinimumV": 27.5379,
+          "raggednessIn": 0.0195
         },
         {
           "xIn": 1.3524,
@@ -3756,7 +4020,8 @@
           "solidity": 0.9752,
           "paperV": 249.414,
           "coreMeanV": 186.094,
-          "annulusMinimumV": 31.7592
+          "annulusMinimumV": 31.7592,
+          "raggednessIn": 0.0147
         },
         {
           "xIn": 7.4783,
@@ -3765,7 +4030,8 @@
           "solidity": 0.9833,
           "paperV": 228.3325,
           "coreMeanV": 153.5332,
-          "annulusMinimumV": 41.3209
+          "annulusMinimumV": 41.3209,
+          "raggednessIn": 0.0634
         }
       ],
       "rejected": [
@@ -3808,7 +4074,8 @@
           "solidity": 0.9954,
           "paperV": 247.1222,
           "coreMeanV": 208.0126,
-          "annulusMinimumV": 12.4744
+          "annulusMinimumV": 12.4744,
+          "raggednessIn": 0.016
         },
         {
           "xIn": 7.3397,
@@ -3817,7 +4084,8 @@
           "solidity": 0.9994,
           "paperV": 252.1164,
           "coreMeanV": 206.7365,
-          "annulusMinimumV": 12.1357
+          "annulusMinimumV": 12.1357,
+          "raggednessIn": 0.0155
         },
         {
           "xIn": 5.8375,
@@ -3826,7 +4094,8 @@
           "solidity": 0.9643,
           "paperV": 252.6377,
           "coreMeanV": 207.4428,
-          "annulusMinimumV": 12.5319
+          "annulusMinimumV": 12.5319,
+          "raggednessIn": 0.0607
         },
         {
           "xIn": 4.4513,
@@ -3835,7 +4104,8 @@
           "solidity": 0.9994,
           "paperV": 253.2431,
           "coreMeanV": 209.7592,
-          "annulusMinimumV": 11.3726
+          "annulusMinimumV": 11.3726,
+          "raggednessIn": 0.0183
         },
         {
           "xIn": 0.971,
@@ -3844,7 +4114,8 @@
           "solidity": 0.9963,
           "paperV": 253.4966,
           "coreMeanV": 189.4974,
-          "annulusMinimumV": 16.5735
+          "annulusMinimumV": 16.5735,
+          "raggednessIn": 0.0247
         },
         {
           "xIn": 4.2148,
@@ -3853,7 +4124,8 @@
           "solidity": 1.0008,
           "paperV": 249.2335,
           "coreMeanV": 201.6033,
-          "annulusMinimumV": 11.0603
+          "annulusMinimumV": 11.0603,
+          "raggednessIn": 0.0164
         },
         {
           "xIn": 7.6081,
@@ -3862,7 +4134,8 @@
           "solidity": 0.9984,
           "paperV": 249.1135,
           "coreMeanV": 202.8553,
-          "annulusMinimumV": 12.3059
+          "annulusMinimumV": 12.3059,
+          "raggednessIn": 0.0251
         },
         {
           "xIn": 5.9793,
@@ -3871,7 +4144,8 @@
           "solidity": 0.9902,
           "paperV": 251.9757,
           "coreMeanV": 195.4468,
-          "annulusMinimumV": 12.3827
+          "annulusMinimumV": 12.3827,
+          "raggednessIn": 0.0113
         },
         {
           "xIn": 2.7676,
@@ -3880,7 +4154,8 @@
           "solidity": 0.984,
           "paperV": 249.3884,
           "coreMeanV": 202.5929,
-          "annulusMinimumV": 12.9926
+          "annulusMinimumV": 12.9926,
+          "raggednessIn": 0.0241
         },
         {
           "xIn": 1.4721,
@@ -3889,7 +4164,8 @@
           "solidity": 0.9374,
           "paperV": 252.1459,
           "coreMeanV": 178.4448,
-          "annulusMinimumV": 15.9457
+          "annulusMinimumV": 15.9457,
+          "raggednessIn": 0.0331
         },
         {
           "xIn": 1.688,
@@ -3898,7 +4174,8 @@
           "solidity": 0.9939,
           "paperV": 253.598,
           "coreMeanV": 151.658,
-          "annulusMinimumV": 14.5969
+          "annulusMinimumV": 14.5969,
+          "raggednessIn": 0.0218
         },
         {
           "xIn": 2.7034,
@@ -3907,7 +4184,8 @@
           "solidity": 0.9985,
           "paperV": 254.9945,
           "coreMeanV": 198.2957,
-          "annulusMinimumV": 12.2265
+          "annulusMinimumV": 12.2265,
+          "raggednessIn": 0.0206
         },
         {
           "xIn": 4.5918,
@@ -3916,7 +4194,8 @@
           "solidity": 0.9975,
           "paperV": 251.41,
           "coreMeanV": 187.5977,
-          "annulusMinimumV": 12.4964
+          "annulusMinimumV": 12.4964,
+          "raggednessIn": 0.0121
         },
         {
           "xIn": 7.3257,
@@ -3925,7 +4204,8 @@
           "solidity": 0.9952,
           "paperV": 250.2584,
           "coreMeanV": 194.3401,
-          "annulusMinimumV": 23.0249
+          "annulusMinimumV": 23.0249,
+          "raggednessIn": 0.0285
         },
         {
           "xIn": 5.1865,
@@ -3934,7 +4214,8 @@
           "solidity": 1.0004,
           "paperV": 252.1639,
           "coreMeanV": 186.2095,
-          "annulusMinimumV": 13.0453
+          "annulusMinimumV": 13.0453,
+          "raggednessIn": 0.0116
         },
         {
           "xIn": 7.539,
@@ -3943,7 +4224,8 @@
           "solidity": 0.9875,
           "paperV": 251.0088,
           "coreMeanV": 209.2658,
-          "annulusMinimumV": 89.002
+          "annulusMinimumV": 89.002,
+          "raggednessIn": 0.021
         },
         {
           "xIn": 1.5123,
@@ -3952,7 +4234,8 @@
           "solidity": 0.9517,
           "paperV": 246.9855,
           "coreMeanV": 172.8817,
-          "annulusMinimumV": 11.2128
+          "annulusMinimumV": 11.2128,
+          "raggednessIn": 0.0175
         },
         {
           "xIn": 5.9,
@@ -3961,7 +4244,8 @@
           "solidity": 0.9848,
           "paperV": 249.1423,
           "coreMeanV": 192.1958,
-          "annulusMinimumV": 65.3444
+          "annulusMinimumV": 65.3444,
+          "raggednessIn": 0.0337
         },
         {
           "xIn": 2.3263,
@@ -3970,7 +4254,8 @@
           "solidity": 0.932,
           "paperV": 248.9335,
           "coreMeanV": 201.2743,
-          "annulusMinimumV": 12.8542
+          "annulusMinimumV": 12.8542,
+          "raggednessIn": 0.0192
         },
         {
           "xIn": 4.3735,
@@ -3979,7 +4264,8 @@
           "solidity": 0.9764,
           "paperV": 252.3045,
           "coreMeanV": 185.76,
-          "annulusMinimumV": 64.8389
+          "annulusMinimumV": 64.8389,
+          "raggednessIn": 0.0348
         },
         {
           "xIn": 2.8005,
@@ -3988,7 +4274,8 @@
           "solidity": 0.9418,
           "paperV": 234.9061,
           "coreMeanV": 165.6014,
-          "annulusMinimumV": 13.4364
+          "annulusMinimumV": 13.4364,
+          "raggednessIn": 0.041
         },
         {
           "xIn": 2.7319,
@@ -3997,7 +4284,8 @@
           "solidity": 0.864,
           "paperV": 233.244,
           "coreMeanV": 100.2147,
-          "annulusMinimumV": 14.1604
+          "annulusMinimumV": 14.1604,
+          "raggednessIn": 0.0957
         },
         {
           "xIn": 1.2117,
@@ -4006,7 +4294,8 @@
           "solidity": 0.9699,
           "paperV": 246.0467,
           "coreMeanV": 196.5687,
-          "annulusMinimumV": 12.892
+          "annulusMinimumV": 12.892,
+          "raggednessIn": 0.0335
         },
         {
           "xIn": 1.2369,
@@ -4015,7 +4304,8 @@
           "solidity": 0.9694,
           "paperV": 250.77,
           "coreMeanV": 175.6873,
-          "annulusMinimumV": 11.7062
+          "annulusMinimumV": 11.7062,
+          "raggednessIn": 0.0661
         },
         {
           "xIn": 7.474,
@@ -4024,7 +4314,8 @@
           "solidity": 0.9603,
           "paperV": 234.2064,
           "coreMeanV": 146.2866,
-          "annulusMinimumV": 40.0332
+          "annulusMinimumV": 40.0332,
+          "raggednessIn": 0.0615
         }
       ],
       "rejected": [
@@ -4061,7 +4352,8 @@
           "solidity": 0.9218,
           "paperV": 236.4201,
           "coreMeanV": 202.5793,
-          "annulusMinimumV": 46.9759
+          "annulusMinimumV": 46.9759,
+          "raggednessIn": 0.0125
         },
         {
           "xIn": 3.1095,
@@ -4070,7 +4362,8 @@
           "solidity": 0.9877,
           "paperV": 234.9211,
           "coreMeanV": 199.5464,
-          "annulusMinimumV": 9.1588
+          "annulusMinimumV": 9.1588,
+          "raggednessIn": 0.0383
         },
         {
           "xIn": 7.3395,
@@ -4079,7 +4372,8 @@
           "solidity": 0.9999,
           "paperV": 245.675,
           "coreMeanV": 202.8404,
-          "annulusMinimumV": 9.6457
+          "annulusMinimumV": 9.6457,
+          "raggednessIn": 0.0154
         },
         {
           "xIn": 5.8373,
@@ -4088,7 +4382,8 @@
           "solidity": 0.9644,
           "paperV": 245.3193,
           "coreMeanV": 203.6409,
-          "annulusMinimumV": 10.0155
+          "annulusMinimumV": 10.0155,
+          "raggednessIn": 0.0646
         },
         {
           "xIn": 4.4513,
@@ -4097,7 +4392,8 @@
           "solidity": 0.9996,
           "paperV": 248.1117,
           "coreMeanV": 205.9988,
-          "annulusMinimumV": 8.7301
+          "annulusMinimumV": 8.7301,
+          "raggednessIn": 0.0205
         },
         {
           "xIn": 0.9707,
@@ -4106,7 +4402,8 @@
           "solidity": 0.9881,
           "paperV": 249.3818,
           "coreMeanV": 168.0022,
-          "annulusMinimumV": 12.5832
+          "annulusMinimumV": 12.5832,
+          "raggednessIn": 0.0247
         },
         {
           "xIn": 4.2147,
@@ -4115,7 +4412,8 @@
           "solidity": 0.9997,
           "paperV": 240.6364,
           "coreMeanV": 197.5235,
-          "annulusMinimumV": 8.6829
+          "annulusMinimumV": 8.6829,
+          "raggednessIn": 0.0176
         },
         {
           "xIn": 7.6017,
@@ -4124,7 +4422,8 @@
           "solidity": 0.9862,
           "paperV": 244.207,
           "coreMeanV": 191.1071,
-          "annulusMinimumV": 8.9078
+          "annulusMinimumV": 8.9078,
+          "raggednessIn": 0.0275
         },
         {
           "xIn": 5.9923,
@@ -4133,7 +4432,8 @@
           "solidity": 0.9819,
           "paperV": 248.1437,
           "coreMeanV": 195.8876,
-          "annulusMinimumV": 9.6805
+          "annulusMinimumV": 9.6805,
+          "raggednessIn": 0.0152
         },
         {
           "xIn": 2.768,
@@ -4142,7 +4442,8 @@
           "solidity": 0.9857,
           "paperV": 238.0995,
           "coreMeanV": 198.1743,
-          "annulusMinimumV": 9.9974
+          "annulusMinimumV": 9.9974,
+          "raggednessIn": 0.0689
         },
         {
           "xIn": 1.4802,
@@ -4151,7 +4452,8 @@
           "solidity": 0.9103,
           "paperV": 246.8341,
           "coreMeanV": 171.247,
-          "annulusMinimumV": 13.2802
+          "annulusMinimumV": 13.2802,
+          "raggednessIn": 0.0464
         },
         {
           "xIn": 1.6872,
@@ -4160,7 +4462,8 @@
           "solidity": 0.9902,
           "paperV": 248.9779,
           "coreMeanV": 144.0445,
-          "annulusMinimumV": 11.1154
+          "annulusMinimumV": 11.1154,
+          "raggednessIn": 0.0226
         },
         {
           "xIn": 2.7032,
@@ -4169,7 +4472,8 @@
           "solidity": 0.9984,
           "paperV": 254.9876,
           "coreMeanV": 193.9929,
-          "annulusMinimumV": 9.0417
+          "annulusMinimumV": 9.0417,
+          "raggednessIn": 0.0199
         },
         {
           "xIn": 4.5911,
@@ -4178,7 +4482,8 @@
           "solidity": 0.9923,
           "paperV": 246.76,
           "coreMeanV": 180.5333,
-          "annulusMinimumV": 9.8764
+          "annulusMinimumV": 9.8764,
+          "raggednessIn": 0.0182
         },
         {
           "xIn": 7.3255,
@@ -4187,7 +4492,8 @@
           "solidity": 0.9953,
           "paperV": 244.0109,
           "coreMeanV": 189.7811,
-          "annulusMinimumV": 21.98
+          "annulusMinimumV": 21.98,
+          "raggednessIn": 0.0703
         },
         {
           "xIn": 5.1863,
@@ -4196,7 +4502,8 @@
           "solidity": 0.9997,
           "paperV": 245.5124,
           "coreMeanV": 181.9766,
-          "annulusMinimumV": 10.0559
+          "annulusMinimumV": 10.0559,
+          "raggednessIn": 0.0204
         },
         {
           "xIn": 7.5434,
@@ -4205,7 +4512,8 @@
           "solidity": 0.9881,
           "paperV": 242.7555,
           "coreMeanV": 205.7997,
-          "annulusMinimumV": 85.7612
+          "annulusMinimumV": 85.7612,
+          "raggednessIn": 0.0762
         },
         {
           "xIn": 1.5269,
@@ -4214,7 +4522,8 @@
           "solidity": 0.8549,
           "paperV": 244.8347,
           "coreMeanV": 123.1356,
-          "annulusMinimumV": 7.7268
+          "annulusMinimumV": 7.7268,
+          "raggednessIn": 0.06
         },
         {
           "xIn": 5.8999,
@@ -4223,7 +4532,8 @@
           "solidity": 0.9861,
           "paperV": 244.2662,
           "coreMeanV": 188.0113,
-          "annulusMinimumV": 60.7974
+          "annulusMinimumV": 60.7974,
+          "raggednessIn": 0.0691
         },
         {
           "xIn": 2.3341,
@@ -4232,7 +4542,8 @@
           "solidity": 0.9007,
           "paperV": 240.2808,
           "coreMeanV": 193.568,
-          "annulusMinimumV": 8.8631
+          "annulusMinimumV": 8.8631,
+          "raggednessIn": 0.0593
         },
         {
           "xIn": 4.3705,
@@ -4241,7 +4552,8 @@
           "solidity": 0.9705,
           "paperV": 248.4491,
           "coreMeanV": 181.0538,
-          "annulusMinimumV": 58.6757
+          "annulusMinimumV": 58.6757,
+          "raggednessIn": 0.0675
         },
         {
           "xIn": 2.7994,
@@ -4250,7 +4562,8 @@
           "solidity": 0.9254,
           "paperV": 227.798,
           "coreMeanV": 151.1379,
-          "annulusMinimumV": 10.0092
+          "annulusMinimumV": 10.0092,
+          "raggednessIn": 0.0798
         },
         {
           "xIn": 2.7288,
@@ -4259,7 +4572,8 @@
           "solidity": 0.8211,
           "paperV": 226.5747,
           "coreMeanV": 74.4729,
-          "annulusMinimumV": 13.5705
+          "annulusMinimumV": 13.5705,
+          "raggednessIn": 0.1427
         },
         {
           "xIn": 1.235,
@@ -4268,7 +4582,8 @@
           "solidity": 0.8477,
           "paperV": 245.3123,
           "coreMeanV": 168.5084,
-          "annulusMinimumV": 9.3392
+          "annulusMinimumV": 9.3392,
+          "raggednessIn": 0.104
         },
         {
           "xIn": 1.2244,
@@ -4277,7 +4592,8 @@
           "solidity": 0.962,
           "paperV": 244.7212,
           "coreMeanV": 151.8363,
-          "annulusMinimumV": 8.6145
+          "annulusMinimumV": 8.6145,
+          "raggednessIn": 0.083
         }
       ],
       "rejected": [
@@ -4332,7 +4648,8 @@
           "solidity": 0.6545,
           "paperV": 245.783,
           "coreMeanV": 198.0928,
-          "annulusMinimumV": 140.2564
+          "annulusMinimumV": 140.2564,
+          "raggednessIn": 0.0875
         },
         {
           "xIn": 4.7042,
@@ -4341,7 +4658,8 @@
           "solidity": 0.6542,
           "paperV": 239.9104,
           "coreMeanV": 206.5481,
-          "annulusMinimumV": 142.659
+          "annulusMinimumV": 142.659,
+          "raggednessIn": 0.0661
         },
         {
           "xIn": 5.3115,
@@ -4350,7 +4668,8 @@
           "solidity": 0.7286,
           "paperV": 244.3869,
           "coreMeanV": 198.9021,
-          "annulusMinimumV": 116.7811
+          "annulusMinimumV": 116.7811,
+          "raggednessIn": 0.0865
         },
         {
           "xIn": 7.2141,
@@ -4359,7 +4678,8 @@
           "solidity": 0.935,
           "paperV": 253.241,
           "coreMeanV": 197.2887,
-          "annulusMinimumV": 49.8802
+          "annulusMinimumV": 49.8802,
+          "raggednessIn": 0.0467
         },
         {
           "xIn": 2.8545,
@@ -4368,7 +4688,8 @@
           "solidity": 0.7621,
           "paperV": 253.1938,
           "coreMeanV": 199.8786,
-          "annulusMinimumV": 75.3764
+          "annulusMinimumV": 75.3764,
+          "raggednessIn": 0.0467
         },
         {
           "xIn": 4.0024,
@@ -4377,7 +4698,8 @@
           "solidity": 0.8729,
           "paperV": 251.7867,
           "coreMeanV": 135.5672,
-          "annulusMinimumV": 21.4301
+          "annulusMinimumV": 21.4301,
+          "raggednessIn": 0.0601
         },
         {
           "xIn": 2.8268,
@@ -4386,7 +4708,8 @@
           "solidity": 0.9044,
           "paperV": 246.6457,
           "coreMeanV": 181.4416,
-          "annulusMinimumV": 17.3758
+          "annulusMinimumV": 17.3758,
+          "raggednessIn": 0.039
         },
         {
           "xIn": 7.4291,
@@ -4395,7 +4718,8 @@
           "solidity": 0.9535,
           "paperV": 248.1143,
           "coreMeanV": 197.441,
-          "annulusMinimumV": 23.0581
+          "annulusMinimumV": 23.0581,
+          "raggednessIn": 0.0357
         },
         {
           "xIn": 2.7692,
@@ -4404,7 +4728,8 @@
           "solidity": 0.9207,
           "paperV": 252.4457,
           "coreMeanV": 173.345,
-          "annulusMinimumV": 85.6978
+          "annulusMinimumV": 85.6978,
+          "raggednessIn": 0.0507
         },
         {
           "xIn": 4.78,
@@ -4413,7 +4738,8 @@
           "solidity": 0.8804,
           "paperV": 248.7952,
           "coreMeanV": 211.335,
-          "annulusMinimumV": 33.4507
+          "annulusMinimumV": 33.4507,
+          "raggednessIn": 0.035
         },
         {
           "xIn": 6.2729,
@@ -4422,7 +4748,8 @@
           "solidity": 0.8247,
           "paperV": 250.8482,
           "coreMeanV": 92.4681,
-          "annulusMinimumV": 29.4059
+          "annulusMinimumV": 29.4059,
+          "raggednessIn": 0.062
         },
         {
           "xIn": 1.8475,
@@ -4431,7 +4758,8 @@
           "solidity": 0.8298,
           "paperV": 247.4481,
           "coreMeanV": 185.6958,
-          "annulusMinimumV": 15.5999
+          "annulusMinimumV": 15.5999,
+          "raggednessIn": 0.0442
         },
         {
           "xIn": 7.2888,
@@ -4440,7 +4768,8 @@
           "solidity": 0.9679,
           "paperV": 246.9566,
           "coreMeanV": 158.3346,
-          "annulusMinimumV": 122.4899
+          "annulusMinimumV": 122.4899,
+          "raggednessIn": 0.0394
         },
         {
           "xIn": 4.4229,
@@ -4449,7 +4778,8 @@
           "solidity": 0.9175,
           "paperV": 241.6979,
           "coreMeanV": 244.1001,
-          "annulusMinimumV": 84.9228
+          "annulusMinimumV": 84.9228,
+          "raggednessIn": 0.0472
         },
         {
           "xIn": 1.5142,
@@ -4458,7 +4788,8 @@
           "solidity": 0.9446,
           "paperV": 245.7173,
           "coreMeanV": 169.219,
-          "annulusMinimumV": 92.6945
+          "annulusMinimumV": 92.6945,
+          "raggednessIn": 0.0459
         },
         {
           "xIn": 5.6809,
@@ -4467,7 +4798,8 @@
           "solidity": 0.9397,
           "paperV": 253.2857,
           "coreMeanV": 195.8211,
-          "annulusMinimumV": 37.5481
+          "annulusMinimumV": 37.5481,
+          "raggednessIn": 0.0309
         },
         {
           "xIn": 2.3697,
@@ -4476,7 +4808,8 @@
           "solidity": 0.8627,
           "paperV": 254.2258,
           "coreMeanV": 204.8493,
-          "annulusMinimumV": 22.4357
+          "annulusMinimumV": 22.4357,
+          "raggednessIn": 0.0359
         },
         {
           "xIn": 3.9591,
@@ -4485,7 +4818,8 @@
           "solidity": 0.9253,
           "paperV": 253.0639,
           "coreMeanV": 203.6301,
-          "annulusMinimumV": 37.017
+          "annulusMinimumV": 37.017,
+          "raggednessIn": 0.0341
         },
         {
           "xIn": 7.831,
@@ -4494,7 +4828,8 @@
           "solidity": 0.8532,
           "paperV": 253.889,
           "coreMeanV": 217.3128,
-          "annulusMinimumV": 78.8603
+          "annulusMinimumV": 78.8603,
+          "raggednessIn": 0.0609
         },
         {
           "xIn": 1.4344,
@@ -4503,7 +4838,8 @@
           "solidity": 0.8229,
           "paperV": 254.0506,
           "coreMeanV": 213.2963,
-          "annulusMinimumV": 35.6042
+          "annulusMinimumV": 35.6042,
+          "raggednessIn": 0.0438
         },
         {
           "xIn": 5.3156,
@@ -4512,7 +4848,8 @@
           "solidity": 0.969,
           "paperV": 249.6883,
           "coreMeanV": 182.7765,
-          "annulusMinimumV": 12.319
+          "annulusMinimumV": 12.319,
+          "raggednessIn": 0.0511
         },
         {
           "xIn": 7.0699,
@@ -4521,7 +4858,8 @@
           "solidity": 0.9653,
           "paperV": 253.5852,
           "coreMeanV": 208.0628,
-          "annulusMinimumV": 14.822
+          "annulusMinimumV": 14.822,
+          "raggednessIn": 0.0456
         },
         {
           "xIn": 4.4851,
@@ -4530,7 +4868,8 @@
           "solidity": 0.9916,
           "paperV": 254.0529,
           "coreMeanV": 182.7502,
-          "annulusMinimumV": 13.4672
+          "annulusMinimumV": 13.4672,
+          "raggednessIn": 0.0249
         },
         {
           "xIn": 1.1761,
@@ -4539,7 +4878,8 @@
           "solidity": 0.9088,
           "paperV": 253.9224,
           "coreMeanV": 210.2352,
-          "annulusMinimumV": 70.9863
+          "annulusMinimumV": 70.9863,
+          "raggednessIn": 0.0421
         },
         {
           "xIn": 3.3399,
@@ -4548,7 +4888,8 @@
           "solidity": 0.9799,
           "paperV": 253.6275,
           "coreMeanV": 198.5551,
-          "annulusMinimumV": 39.8355
+          "annulusMinimumV": 39.8355,
+          "raggednessIn": 0.0152
         },
         {
           "xIn": 0.8477,
@@ -4557,7 +4898,8 @@
           "solidity": 0.8488,
           "paperV": 248.5748,
           "coreMeanV": 216.037,
-          "annulusMinimumV": 89.9894
+          "annulusMinimumV": 89.9894,
+          "raggednessIn": 0.0518
         },
         {
           "xIn": 0.9149,
@@ -4566,7 +4908,8 @@
           "solidity": 0.9356,
           "paperV": 244.6046,
           "coreMeanV": 172.8692,
-          "annulusMinimumV": 127.8313
+          "annulusMinimumV": 127.8313,
+          "raggednessIn": 0.0352
         }
       ],
       "rejected": [
@@ -4627,7 +4970,8 @@
           "solidity": 1.0366,
           "paperV": 247.1425,
           "coreMeanV": 193.2862,
-          "annulusMinimumV": 180.5269
+          "annulusMinimumV": 180.5269,
+          "raggednessIn": 0.0321
         },
         {
           "xIn": 1.0447,
@@ -4636,7 +4980,8 @@
           "solidity": 0.9442,
           "paperV": 247.5343,
           "coreMeanV": 228.4132,
-          "annulusMinimumV": 35.4448
+          "annulusMinimumV": 35.4448,
+          "raggednessIn": 0.0302
         },
         {
           "xIn": 6.573,
@@ -4645,7 +4990,8 @@
           "solidity": 1.0161,
           "paperV": 247.5531,
           "coreMeanV": 196.9256,
-          "annulusMinimumV": 95.2295
+          "annulusMinimumV": 95.2295,
+          "raggednessIn": 0.0459
         },
         {
           "xIn": 3.0924,
@@ -4654,7 +5000,8 @@
           "solidity": 0.9838,
           "paperV": 248.4989,
           "coreMeanV": 171.7792,
-          "annulusMinimumV": 55.2879
+          "annulusMinimumV": 55.2879,
+          "raggednessIn": 0.0447
         },
         {
           "xIn": 0.9859,
@@ -4663,7 +5010,8 @@
           "solidity": 1.0053,
           "paperV": 246.9082,
           "coreMeanV": 183.319,
-          "annulusMinimumV": 80.1411
+          "annulusMinimumV": 80.1411,
+          "raggednessIn": 0.042
         },
         {
           "xIn": 4.7084,
@@ -4672,7 +5020,8 @@
           "solidity": 1.0215,
           "paperV": 246.6719,
           "coreMeanV": 159.5969,
-          "annulusMinimumV": 77.6514
+          "annulusMinimumV": 77.6514,
+          "raggednessIn": 0.0395
         },
         {
           "xIn": 6.5152,
@@ -4681,7 +5030,8 @@
           "solidity": 0.9552,
           "paperV": 247.4485,
           "coreMeanV": 215.1999,
-          "annulusMinimumV": 78.8751
+          "annulusMinimumV": 78.8751,
+          "raggednessIn": 0.039
         },
         {
           "xIn": 1.0555,
@@ -4690,7 +5040,8 @@
           "solidity": 0.9054,
           "paperV": 247.9003,
           "coreMeanV": 209.6542,
-          "annulusMinimumV": 112.6872
+          "annulusMinimumV": 112.6872,
+          "raggednessIn": 0.0358
         },
         {
           "xIn": 4.5453,
@@ -4699,7 +5050,8 @@
           "solidity": 1.0387,
           "paperV": 249.4852,
           "coreMeanV": 123.3049,
-          "annulusMinimumV": 44.25
+          "annulusMinimumV": 44.25,
+          "raggednessIn": 0.0337
         },
         {
           "xIn": 6.6466,
@@ -4708,7 +5060,8 @@
           "solidity": 0.9603,
           "paperV": 246.7109,
           "coreMeanV": 219.159,
-          "annulusMinimumV": 40.3737
+          "annulusMinimumV": 40.3737,
+          "raggednessIn": 0.0511
         },
         {
           "xIn": 1.0719,
@@ -4717,7 +5070,8 @@
           "solidity": 0.948,
           "paperV": 248.6712,
           "coreMeanV": 219.422,
-          "annulusMinimumV": 67.7793
+          "annulusMinimumV": 67.7793,
+          "raggednessIn": 0.0455
         },
         {
           "xIn": 5.808,
@@ -4726,7 +5080,8 @@
           "solidity": 0.9882,
           "paperV": 231.0412,
           "coreMeanV": 46.6032,
-          "annulusMinimumV": 6.8715
+          "annulusMinimumV": 6.8715,
+          "raggednessIn": 0.128
         }
       ],
       "rejected": [

@@ -109,7 +109,7 @@ public static class HolesBaseline
                 dpi,
                 paperLevel = detection.PaperLevel,
                 surveyHoles = survey?.Holes ?? 12,
-                holes = holes.Select(h => new { xIn = RawMeasurements.R(h.X / dpi), yIn = RawMeasurements.R(h.Y / dpi), diameterIn = RawMeasurements.R(h.DiameterInches), solidity = RawMeasurements.R(h.Solidity), paperV = RawMeasurements.R(h.PaperV), coreMeanV = RawMeasurements.R(h.CoreMeanV), annulusMinimumV = RawMeasurements.R(h.AnnulusMinimumV) }).ToArray(),
+                holes = holes.Select(h => new { xIn = RawMeasurements.R(h.X / dpi), yIn = RawMeasurements.R(h.Y / dpi), diameterIn = RawMeasurements.R(h.DiameterInches), solidity = RawMeasurements.R(h.Solidity), paperV = RawMeasurements.R(h.PaperV), coreMeanV = RawMeasurements.R(h.CoreMeanV), annulusMinimumV = RawMeasurements.R(h.AnnulusMinimumV), raggednessIn = RawMeasurements.R(h.RaggednessInches) }).ToArray(),
                 rejected = detection.Rejected.Select(r => new { xIn = RawMeasurements.R(r.X / dpi), yIn = RawMeasurements.R(r.Y / dpi), diameterIn = RawMeasurements.R(r.DiameterInches), reason = r.Reason }).ToArray(),
             });
         }
@@ -124,6 +124,7 @@ public static class HolesBaseline
         output.WriteLine(string.Create(Inv, $"| paper V | 245.65 ± 9.93 | {pooled.Average(h => h.PaperV):0.00} ± {Sd(pooled.Select(h => h.PaperV)):0.00} |"));
         output.WriteLine(string.Create(Inv, $"| core mean V | 192.55 ± 26.70 | {pooled.Average(h => h.CoreMeanV):0.00} ± {Sd(pooled.Select(h => h.CoreMeanV)):0.00} |"));
         output.WriteLine(string.Create(Inv, $"| annulus minimum V | 38.53 ± 35.59 | {pooled.Average(h => h.AnnulusMinimumV):0.00} ± {Sd(pooled.Select(h => h.AnnulusMinimumV)):0.00} |"));
+        output.WriteLine(string.Create(Inv, $"| raggedness, sd of rim radius (in) | 0.0470 ± 0.0250 | {pooled.Average(h => h.RaggednessInches):0.0000} ± {Sd(pooled.Select(h => h.RaggednessInches)):0.0000} |"));
 
         int reference = jobs.FindIndex(j => j.File == "300_nm_hand_load.jpg");
         var (referenceDetection, referenceDpi) = results[reference];
