@@ -1335,6 +1335,62 @@ Every value the screen shows obeys it:
 
 ---
 
+## Entries 22 and 27. Intake of donated photographs
+
+`docs/NOTES-FROM-PLANNING.md` entry 22 asks for a single intake gate and a test that fails on a location, an opt-out or missing provenance. Entry 27, the first real submission, adds that most submissions will be unusable and must be triaged with a reason per file, and that digital zoom belongs in the lens grouping key.
+
+**Reproduce:**
+- `dotnet test tests/GroupLab.Core.Tests --filter "Publication|ImageMetadataTests"`
+- `grouplab intake <submission> <public directory> [--accept <file>]...`
+
+**Where the images go is question 13 and blocks every image commit.** The tool writes to whatever directory it is given, and the test guards `testdata/donated/` in this repository, which is empty.
+
+**What is built.**
+
+| Where | What |
+|---|---|
+| `src/GroupLab.Core/Publication/ImageScrubber.cs` | Rebuilds a JPEG's EXIF keeping only Make, Model, Orientation, exposure, f-number, ISO, focal length, the 35 mm equivalent, pixel dimensions and digital zoom. It drops XMP, IPTC, every application segment but JFIF and ICC, comments and everything after the end marker, and copies the compressed image data byte for byte. On a PNG it drops every ancillary chunk but colour and resolution |
+| `src/GroupLab.Core/Publication/PublicationCheck.cs` | Every place a location can hide: an EXIF GPS block, GPS in XMP or PNG text, and data after the end marker |
+| `src/GroupLab.Core/Publication/Intake.cs` | Entry 22 section 2 in order: refuse `DO-NOT-PUBLISH` (file first, then flag), refuse incomplete provenance or a file that does not match its upload hash, triage, scrub, check, then write the files and `provenance.json` with both hashes into a new directory, never over an existing one |
+| `src/GroupLab.Cli/IntakeVerb.cs` | The verb, with entry 27's triage: a file on which fewer than four GroupLab markers decode is held with that reason until a person accepts it by name. The stored size, the aspect and the lens group key are recorded beside the verdict |
+
+**Why the scrubber is C# and not `scrub_exif.py`.** The script needs `piexif`, which is not installed here, and nothing may be installed. The C# scrubber follows the script's policy with two differences:
+- **It keeps the digital zoom ratio**, for entry 27.
+- **It also removes XMP and trailing data.** The script leaves both, and either can carry a location or a date.
+
+**Tests.**
+- **Scrubbing:** a synthetic phone JPEG with a GPS block, GPS in XMP, a capture date, a comment and a motion-photo trailer scrubs to nothing a location can hide in. It keeps Make, Model, Orientation, focal length and zoom, and its scan data is identical. A PNG with a GPS eXIf chunk and a location in text scrubs clean.
+- **A real committed phone photograph,** `scans/phase0/main1.jpg`, loses its coordinates, keeps every metadata field GroupLab reads, and decodes to identical pixels.
+- **Intake:**
+  - **Published:** a good submission is published scrubbed with its received and published hashes side by side, and the file triage could not use is held with the reason.
+  - **Accepted:** a person can accept a held file by name.
+  - **Refused, with nothing written:** an opt-out by file or by flag, missing provenance, an altered file, an unhashed file and an unsafe identifier.
+- **The repository guard:**
+  - **Public test data:** it fails if any image under `testdata/donated/` carries a location, sits in an opted-out submission, or is not in its provenance record with its published hash.
+  - **Everything committed:** it reads every committed image, and fails if one carries GPS other than the 16 question 13 is about. It also fails if one of those is scrubbed and left on the list.
+
+**On real files,** in the scratchpad and not committed:
+- **The demo submission:** `grouplab intake` on the GroupLab photograph `main1.jpg` beside the commercial target `300_nm_hand_load.jpg`.
+- **The sheet:** 34 markers decoded, so it was published. The tool removed its GPS block, 31 other EXIF fields, the thumbnail, XMP, Samsung's application segments, the multi-picture index and 39,273 bytes after the end marker.
+- **The commercial target:** 0 markers decoded, so it was held with that reason.
+- **An independent check:** a separate Python EXIF parser read the published file as Make, Model, Orientation and the EXIF pointer, with no GPS block, no XMP and nothing after the end marker.
+
+**A finding, question 13.** 16 of the 78 committed images carry an EXIF GPS block, all Phase 0 phone photographs, 13 of them with a non-zero position. Removing them from history is a rewrite and a force push, which is not mine to run.
+
+**Entry 27 section 2: digital zoom in the lens key.**
+- **Where it is read:** `ImageMetadata` now reads `DigitalZoomRatio`. `LensGroupKey` names it, with a missing tag as unknown, never 1.
+- **Where it is used:** the joint fit in `SurfaceFrames` groups by it, and the raw measurement files record the key used.
+- **The test:** three otherwise identical frames, zoomed 1.64, stating 1 and stating nothing, get three keys.
+- **What the first run showed:** the N568 photograph of entries 19 and 20 states a digital zoom of 1.66 beside a 23 mm equivalent on its 2.2 mm lens. So Alan's phone updates the equivalent when it zooms, where entry 27's contributor's S24+ did not. The key now carries both, so neither behaviour can merge two geometries.
+
+**Entry 27 section 1, what triage does not do yet.**
+- **The sheet boundary:** it does not look for a rectangular sheet boundary, so a commercial target that is usable for the manual path is held until a person accepts it.
+- **Section 3's aspect ratios:** they are recorded per file and change nothing.
+
+**Tests:** Core 708, App 4, all passing.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1415,3 +1471,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 25: printing through the system's PDF print command, over drawing pages to a printer from the application.** Avalonia has no printing API and nothing may be installed; the PDF is the path that already works, and what it cannot control is said on the screen and on the sheet.
 - **Entry 25: the actual-size note as a render option, on in the print screen and off by default, over adding it to every render.** Phase 0's pages and the gates measured on them stay item for item as they were.
 - **Entry 25: `/PrintScaling /None` in every PDF GroupLab writes, over only the print screen's.** A sheet printed from the command line is measured the same way and deserves the same request.
+- **Entries 22 and 27: the scrubber in C#, over running `scrub_exif.py`.** Its library is not installed and nothing may be installed; the C# version follows the script's policy, keeps digital zoom for entry 27, and also removes XMP and trailing data, which the script leaves.
+- **Entry 27: triage by decoded markers, holding rather than refusing what fails it.** Markers are the check the application already has; a held file costs a person one look and an `--accept`, where a refused one would need resubmitting.
+- **Entry 22: the committed-image guard names the 16 photographs with GPS, over failing the suite until history is rewritten.** The rewrite is a decision for question 13; a named list keeps the suite green without letting a seventeenth image in or letting the list go stale.

@@ -114,7 +114,7 @@ public static class RawMeasurements
             gated = r.Sample.Gated,
             tileNamed = r.Sample.Tile,
             tileInferred = r.Fiducials.TileIndex,
-            camera = r.Metadata.IsCamera ? new { r.Metadata.CameraModel, r.Metadata.FocalLengthMm, r.Metadata.FNumber, r.Metadata.FocalLength35mm } : null,
+            camera = r.Metadata.IsCamera ? new { r.Metadata.CameraModel, r.Metadata.FocalLengthMm, r.Metadata.FNumber, r.Metadata.FocalLength35mm, r.Metadata.DigitalZoomRatio, lensGroupKey = r.Metadata.LensGroupKey } : null,
             markersExpected = r.Fiducials.Expected,
             markersMatched = r.Fiducials.Matches.Select(m => m.Id).Order().ToArray(),
             markersMissing = r.Fiducials.Missing.Select(m => m.Id).ToArray(),

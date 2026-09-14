@@ -19,8 +19,18 @@ public sealed record ImageMetadata(
     int? Orientation,
     double? FocalLengthMm,
     int? FocalLength35mm,
-    double? FNumber = null)
+    double? FNumber = null,
+    double? DigitalZoomRatio = null)
 {
+    /// <summary>
+    /// The key frames must share before one joint lens fit covers them: physical focal length, f-number, 35 mm equivalent, stored size
+    /// and digital zoom (NOTES-FROM-PLANNING.md entry 16 section 2, amended by entry 27 section 2). Digital zoom is in it because a phone
+    /// can crop and upscale while leaving the 35 mm equivalent at its unzoomed figure, and a missing tag is kept as unknown, never read
+    /// as 1, so a frame without it never joins a frame that states 1.
+    /// </summary>
+    public string LensGroupKey => string.Create(System.Globalization.CultureInfo.InvariantCulture,
+        $"{FocalLengthMm:0.00} mm f/{FNumber:0.0}, {FocalLength35mm?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "unknown"} mm equivalent, digital zoom {(DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : "unknown")}, {Width} by {Height}");
+
     /// <summary>
     /// A photograph rather than a scan. A focal length is the one tag a scanner never writes. A lens is identified by
     /// <see cref="FocalLengthMm"/> and <see cref="FNumber"/>, not by <see cref="FocalLength35mm"/>, which a camera app computes and
@@ -61,7 +71,7 @@ public static class ImageMetadataReader
         bool camera = m.Focal is not null;
         double? dpiX = camera ? null : m.PngDpiX ?? m.JfifX ?? ExifDpi(m.ExifX, m.ResolutionUnit);
         double? dpiY = camera ? null : m.PngDpiY ?? m.JfifY ?? ExifDpi(m.ExifY, m.ResolutionUnit);
-        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber);
+        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber, m.DigitalZoom);
     }
 
     private static double? ExifDpi(double? value, int? unit) => value is { } v && v > 0
@@ -214,6 +224,9 @@ public static class ImageMetadataReader
                 case 0xA405:
                     m.Focal35 = type == 4 ? (int)U32(t, e + 8, little) : U16(t, e + 8, little);
                     break;
+                case 0xA404:
+                    m.DigitalZoom = Rational(t, e, little);
+                    break;
             }
         }
     }
@@ -285,5 +298,7 @@ public static class ImageMetadataReader
         public int? Focal35 { get; set; }
 
         public double? FNumber { get; set; }
+
+        public double? DigitalZoom { get; set; }
     }
 }

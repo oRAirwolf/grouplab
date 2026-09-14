@@ -12,6 +12,74 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-15, question 13: where donated images live, and coordinates that are already in the repository's history
+
+**Status: open. Blocks committing any image**: `scans/mounted/`, held by entry 23 section 5, and every donated submission. Nothing else waits. The intake tool, its tests and the publication test are built and committed, and they work against whatever directory the answer names.
+
+### 1. Entry 22 section 1: where the images live
+
+**What the repository is.**
+- **History:** one pack of 157.5 MiB, after one rewrite already.
+- **Tracked images:** 78, which with the PDFs come to 163 MB on disk, most of it the Phase 0 scans the gates and tests read.
+- **What is arriving:** the mounted set held back is 28 files and 80 MB, and entry 22 estimates half a gigabyte to a gigabyte of donations.
+
+**The options, with what each costs here.**
+
+- **A. A separate data repository, `grouplab-testdata`.**
+  - **For it:** the code repository stays near its present size and keeps its history. The data carries its own licence, provenance and lifecycle.
+  - **How the code finds it:** a pinned commit and URL recorded in this repository, and a checkout beside it. The publication test already runs against a directory and does nothing when the directory is absent.
+  - **Cost:** two repositories to keep in step, and tests that need donated images say they did not run on a machine without the checkout.
+- **B. Git LFS here.**
+  - **For it:** one repository.
+  - **Cost:** every contributor needs LFS. A hosted LFS quota of the usual size is smaller than the corpus entry 22 expects, so it becomes a billing question as well. Adding LFS after images land means rewriting history again.
+- **C. A curated subset here, the rest elsewhere.**
+  - **For it:** cheapest to set up.
+  - **Cost:** a person curates every submission, and the breadth that makes a donated corpus worth having stays outside.
+
+**What I would choose: A,** for the reason entry 22 gives: the two have different lifecycles. `scans/mounted/` would go there too, scrubbed, as the first contents. The Phase 0 and Phase 1 scans stay here, because committed tests and gate records read them by path.
+
+### 2. A finding: coordinates are already committed
+
+`PublicationTests` reads every committed image. **16 of the 78 carry an EXIF GPS block, all of them Phase 0 phone photographs, and 13 of those hold a non-zero latitude and longitude:**
+- `scans/phase0/20260913_130543.jpg`, `_130550`, `_130554` and `_130559`;
+- `main1` to `main3`;
+- `telephoto1` to `telephoto3`;
+- `ultrawide1` to `ultrawide3`.
+
+The other three, `main_flat1` to `main_flat3`, carry an empty position. The coordinates were not printed anywhere in this session.
+
+They are Alan's photographs, so there is no consent question, but they are his coordinates in a repository that is going public. Entry 23 section 5 gave the same reason for scrubbing `scans/mounted/`.
+
+**The options.**
+
+- **(a) Rewrite history before the repository goes public.** Replace the 16 files in every commit with scrubbed copies.
+  - **What stays the same:** `ImageScrubber` changes no pixel, and a test shows `main1.jpg` decodes identically scrubbed. So every measurement stands.
+  - **What changes:** the file bytes, and so any recorded hash of them.
+  - **The cost:** a second `git filter-repo` and a force push, which rewrites every clone.
+- **(b) Scrub at the tip only.** One ordinary commit. The coordinates stay in history for anyone who looks.
+- **(c) Leave them.**
+
+**What I would choose: (a), before the repository is public,** because after that no rewrite takes them back. The rewrite and the force push are not mine to do. They are irreversible and they change what everyone has cloned, so I have not run either.
+
+**Meanwhile the test holds the line.** It names these 16 files and fails if any other committed image carries GPS. It also fails if one of the 16 is scrubbed and left on the list, so the list cannot go stale.
+
+### 3. What the intake tool assumed about the upload page, to confirm or correct
+
+`grouplab intake <submission> <public directory> [--accept <file>]...` implements entry 22 section 2 with entry 27 section 1's triage. It reads these fields of `meta.json`, which no document specifies:
+- **Provenance:** `submissionId`, `consentVersion` and `submittedAt`, all required.
+- **Answers:** `answers`, copied into the provenance record as they are.
+- **Opt-out:** `doNotPublish` or `optOut`, as true, beside the `DO-NOT-PUBLISH` file, which it checks first.
+- **Hashes:** `files`, either an object of name to SHA-256 or an array of `{ "name", "sha256" }`.
+
+If the page writes other names, it is a small change. A submission missing any of these is refused with the reason, never published.
+
+**Triage, entry 27 section 1.**
+- **The rule:** a file is a candidate when at least four GroupLab markers decode, which is what registration needs.
+- **Everything else is held, not published,** with the reason written per file into the provenance record, until a person accepts it by name with `--accept`.
+- **Not built:** the rectangular sheet boundary check entry 27 mentions. A commercial target a person judges usable for the manual path is exactly what `--accept` is for.
+
+---
+
 ## 2026-09-15, question 14: shotGroups' Fligner-Killeen statistic on the two frames with a point of aim
 
 **Status: open.** Nothing waits on it. Four keys are pending with this question named, and every other key of the regenerated fixtures is compared.

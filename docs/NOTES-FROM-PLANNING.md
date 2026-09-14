@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-14, entry 27: the first donated submission, and a correction to how frames must be grouped for a joint lens fit
 
-**Status: open.** Amends entry 16. Section 2 is the one with code consequences; sections 1 and 3 are intake findings that belong on the record before the donated set grows.
+**Status: actioned 2026-09-15.** Amends entry 16. Section 1: intake triages every file by decoded markers and holds what it cannot use with the reason. Section 2: `DigitalZoomRatio` is read, is in the lens grouping key as unknown when absent, and the key is recorded with the fits. Section 3 is recorded per file. Reported in `docs/PHASE1-RESULTS.md` "Entries 22 and 27". Section 2 is the one with code consequences; sections 1 and 3 are intake findings that belong on the record before the donated set grows.
 
 The public upload page at `pissinhot.com/targets` took its first submission from somebody outside this project on 2026-09-14. Three photographs, all Samsung, all camera originals. The pull script verified all three SHA-256 hashes against the `meta.json` written at upload, and every one matched, so the no-re-encoding requirement in the page specification is holding in practice and not merely on paper. That part worked.
 
@@ -315,7 +315,7 @@ Nobody has opened the window. That is Alan's next step and it is the first time 
 
 ## 2026-09-15, entry 22: donated photographs are arriving, and the repository is not ready to receive them
 
-**Status: open. Not blocking M3 or M4.** Act on section 1 before the first donated image is committed, which could be within days.
+**Status: actioned 2026-09-15.** Section 1 raised as `docs/QUESTIONS-FOR-PLANNING.md` question 13, recommending a separate data repository, and no image is committed until it is answered. Section 2 is `grouplab intake`, section 3 is `PublicationTests`, reported in `docs/PHASE1-RESULTS.md` "Entries 22 and 27". The committed-image check found GPS in 16 Phase 0 photographs, also question 13.
 
 ### 1. The size problem, which has to be decided before anything lands, not after
 

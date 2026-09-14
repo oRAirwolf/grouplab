@@ -125,13 +125,14 @@ public static class SurfaceFrames
     /// focal length <see cref="SurfaceFit.SeedFocal"/> chooses. NOTES-FROM-PLANNING.md entry 16 section 2: a phone that crops
     /// or zooms keeps the physical focal length and changes the 35 mm equivalent, so frames share a joint fit only when both
     /// agree, with the image size. The equivalent and size alone would not do: the Phase 0 table frames, a cropped ultrawide,
-    /// share the main camera's 23 mm equivalent but not its distortion.
+    /// share the main camera's 23 mm equivalent but not its distortion. Entry 27 section 2 adds digital zoom to the key, unknown when
+    /// the tag is absent, because a phone can zoom without updating the equivalent; the key used is printed with every fit.
     /// </summary>
     internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress, SurfaceFamily family = SurfaceFamily.Cylinder, bool joint = true)
     {
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
         var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
-        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm, p.Image.Width, p.Image.Height)))
+        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm, p.Metadata.DigitalZoomRatio, p.Image.Width, p.Image.Height)))
         {
             var members = lens.ToList();
             string name = LensName(members[0]);
@@ -162,7 +163,7 @@ public static class SurfaceFrames
     }
 
     private static string LensName(Prepared p) =>
-        string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm equivalent, {p.Image.Width} by {p.Image.Height}");
+        string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm equivalent, digital zoom {(p.Metadata.DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}, {p.Image.Width} by {p.Image.Height}");
 
     /// <summary>The frame started from <paramref name="focalPixels"/>: its Phase 0 lens fit's plane pose through that focal length.</summary>
     internal static SurfaceFrame AtFocal(Prepared p, double focalPixels) =>
@@ -171,7 +172,7 @@ public static class SurfaceFrames
     private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Dictionary<string, FocalSeed> seeds, Action<string> progress)
     {
         string gate = p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => "mounted", SampleSet.PhotographGate.Flat => "flat", _ => "not gated" };
-        string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm eq.");
+        string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm eq., zoom {(p.Metadata.DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}");
         if (p.Failure is not null || !fits.TryGetValue(p.Sample.File, out var fit))
         {
             progress($"{p.Sample.File}: {p.Failure ?? "no fit"}");

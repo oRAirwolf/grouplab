@@ -81,7 +81,7 @@ public static class MountedPair
         {
             ["scan"] = ScanFile,
             ["photograph"] = PhotoFile,
-            ["camera"] = new { photoMetadata.CameraModel, photoMetadata.FocalLengthMm, photoMetadata.FNumber, photoMetadata.FocalLength35mm, width = photoMax.Width, height = photoMax.Height },
+            ["camera"] = new { photoMetadata.CameraModel, photoMetadata.FocalLengthMm, photoMetadata.FNumber, photoMetadata.FocalLength35mm, photoMetadata.DigitalZoomRatio, width = photoMax.Width, height = photoMax.Height, lensGroupKey = photoMetadata.LensGroupKey },
             ["bulls"] = pairs.Select(x => new
             {
                 row = x.Scan.Row,

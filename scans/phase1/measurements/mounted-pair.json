@@ -11,8 +11,10 @@
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
         "focalLength35mm": 23,
+        "digitalZoomRatio": 1.66,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "lensGroupKey": "2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66, 4000 by 3000"
       },
       "bulls": [
         {
