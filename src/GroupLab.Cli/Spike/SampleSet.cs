@@ -10,11 +10,20 @@ namespace GroupLab.Cli.Spike;
 /// </summary>
 public static class SampleSet
 {
-    public const string CentreFire = "GL-CF25-LTR.gltd.json";
+    /// <summary>
+    /// The definitions the sample set was printed from, frozen and named by their printed identifiers, so the Phase 0
+    /// tables reproduce after the live library's geometry moves (NOTES-FROM-PLANNING.md entry 11).
+    /// </summary>
+    public const string FrozenDirectory = "targets/frozen/phase0";
 
-    public const string LoadBlock = "GL-CF25-LTR-D.gltd.json";
+    /// <summary>GL-CF25-LTR as printed.</summary>
+    public const string CentreFire = "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json";
 
-    public const string Tile = "GL-LR300-T.gltd.json";
+    /// <summary>GL-CF25-LTR-D as printed.</summary>
+    public const string LoadBlock = "GL-R0T0-384Z-HRBE-M0EW.gltd.json";
+
+    /// <summary>GL-LR300-T, 2 by 2 assembly, as printed.</summary>
+    public const string Tile = "GL-G8JP-FF4D-AE0T-GPMN.gltd.json";
 
     public static IReadOnlyList<Sample> All { get; } =
     [

@@ -12,6 +12,54 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-14, question 6: a sighter gap cannot make three of the four sheets conform, so test 26f cannot become an error in the geometry commit as written
+
+**Status: open**
+
+Notes entry 11 asks for one commit that sets `GL-CF25-LTR` to a sighter gap of 454, `GL-LR300-R24` and `GL-LR300-R36` to 1142, `GL-CF25-100M-A4` "per the sweep", declares `cells.sighterGap` on each, and promotes test 26f to an error. Before changing anything I ran those changes through `tools/layout/layout.py`, unmodified. **Only `GL-CF25-LTR` conforms afterwards.** The other three keep bull columns outside the lattice horizontally, which is question 4's finding 1, and no sighter gap reaches a column. Promoting 26f to an error in that commit fails three built-in sheets.
+
+**The measurement.** Margins are how far the outermost marker centre lies beyond the outermost bull centre on each side, in dmm; negative is outside, and zero conforms under the inclusive rule. Every row places with zero layout errors and zero warnings.
+
+| Sheet | Change | Scoring bulls | Markers | Left / right / top / bottom | 26f |
+|---|---|---|---|---|---|
+| `GL-CF25-LTR` | as printed, gap 456 | 25 | 34 | +190 / +190 / +190 / **-266** | fails |
+| `GL-CF25-LTR` | **gap 454, entry 11** | 25 | 38 | +190 / +190 / +190 / +190 | **conforms** |
+| `GL-CF25-100M-A4` | as printed, gap 480 | 25 | 32 | **-200 / -200** / +200 / +200 | fails |
+| `GL-CF25-100M-A4` | any gap from 480 down to 301 | 25 | | columns unchanged | **fails** |
+| `GL-LR300-R24` | as printed, gap 1219 | 30 | 35 | **-508 / -508** / +508 / **-508** | fails |
+| `GL-LR300-R24` | **gap 1142, entry 11** | 30 | 40 | **-508 / -508** / +508 / +508 | **fails** |
+| `GL-LR300-R36` | as printed, gap 1219 | 36 | 48 | **-508 / -508** / +508 / **-508** | fails |
+| `GL-LR300-R36` | **gap 1142, entry 11** | 36 | 56 | **-508 / -508** / +508 / +508 | **fails** |
+
+**Why no gap reaches the columns.** `layout.py` places the lattice columns half a pitch outside the outermost bull columns and drops any marker whose box crosses half the safe margin. On `GL-CF25-100M-A4`, five columns at a 400 dmm pitch on a 2100 dmm page put the outer marker columns at x = 50 and 2050, boxes 20 to 80 against a limit of 60, so both columns go. The rolls are the same at a 1016 dmm pitch.
+
+**Two changes do make them conform**, measured the same way:
+
+| Sheet | Change | Scoring bulls | Markers | Left / right / top / bottom |
+|---|---|---|---|---|
+| `GL-CF25-100M-A4` | `grid-boundary-half-1`, gap 480 | 25 | 88 | 0 / 0 / +200 / +200 |
+| `GL-LR300-R24` | `grid-boundary-half-1`, gap 1142 | 30 | 113 | 0 / 0 / +508 / +508 |
+| `GL-LR300-R36` | `grid-boundary-half-1`, gap 1142 | 36 | 151 | 0 / 0 / +508 / +508 |
+| `GL-CF25-100M-A4` | 4 columns | **20** | 36 | +200 all round |
+| `GL-LR300-R24` | 5 columns | **25** | 48 | +508 all round |
+| `GL-LR300-R36` | 8 columns | **32** | 63 | +508 all round |
+
+**Options, with their costs.**
+
+- **A. The half lattice on the three sheets, in the one geometry commit.** Every bull brackets, no scoring bull is lost, and the scheme already ships on the 300 yard tiles, which conform at the same margin of zero. It takes the marker count to 2.75, 3.2 and 3.1 times what it was, which is more ink near the bulls and more identifiers, though R36's 151 is well inside the 587 the family holds. The outer columns become interpolated along the lattice edge rather than surrounded, which is the tiles' condition.
+- **B. Drop a column.** Every bull brackets with margin to spare, but `GL-CF25-100M-A4` falls to 20 scoring bulls, below the library's 25, and the rolls lose 5 and 4 bulls. `TARGET-LIBRARY.md` section 1 would need a third documented exception.
+- **C. Land `GL-CF25-LTR` now, keep 26f a warning, and design the columns separately.** Cheapest today, but it is two geometry commits where entry 9 and entry 11 ask for one, and the rolls' identifiers would change twice if their fix changes the scheme.
+
+**What I would choose:** A, because it is the only option that makes every sheet conform without losing a bull or a library requirement, and it uses a scheme the library already ships.
+
+**A second, smaller conflict with "does not change the schema".** The worked example of TARGET-SCHEMA.md section 4 is `GL-CF25-LTR` as printed: identifier `GL-YCSK-DZZ1-R0VJ-4T5Y`, `sighterGap` 456, and a paragraph explaining the 456. `ReferenceEncoderParityTests.Section4DocumentEncodesToTheReferenceSheetBytes` asserts that it encodes to `tools/gltd/check.py`'s bytes for the live `GL-CF25-LTR`, and four test files pin the identifier. Once the live sheet moves to 454 that test fails. Either section 4 changes, with a new identifier, or it stays as the as-printed reference and the test compares it with the frozen definition, `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json`, which is byte-identical to it. **I would keep section 4 as it is** and re-point the one test, so the schema text is untouched, as entry 11 intends.
+
+**Two small corrections to entry 11, for the record.** `cells.sighterGap` is specified in TARGET-SCHEMA.md sections 3.6 and 7, not 3.10. `docs/TARGET-LIBRARY.md` lists no identifiers; what the commit changes there is the marker counts in its sheet table, 34 to 38 for `GL-CF25-LTR` and the counts of whichever option is chosen for the other three.
+
+**What landed while this is open.** The frozen-fixture part of entry 11 does not depend on the answer, so it is committed: the three definitions the sample set was printed from are in `targets/frozen/phase0/` with a README, `grouplab spike` and the paper gate test resolve against them, a test loads, identifies and validates each, and rerunning every spike command against them reproduces every measured value in `scans/phase0/measurements/`; only the detection times in `threshold.json` differ, as they do between any two runs. Nothing in `tools/layout`, `targets/*.gltd.json` or the validator's severities has changed. Entry 11 stays open until this is answered.
+
+---
+
 ## 2026-09-13, question 5: the wall photographs are not of a flat sheet
 
 **Status: answered 2026-09-13**, by `docs/NOTES-FROM-PLANNING.md` entry 8.

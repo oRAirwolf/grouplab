@@ -382,6 +382,8 @@ Notes entry 10 closes Phase 0 on the flat photographs. Against DESIGN.md section
 
 **The flat gate fails, and every failure has a named cause that the spike did not change.** On the one frame that decoded every marker, the scoring bulls pass and the only failure is a sighter outside the marker lattice. The others add bulls made extrapolated by far-edge markers lost to defocus, and four bulls inside the lattice over the gate by at most 0.0007 in. Whether the flat gate passes on a sheet whose lattice brackets its sighters is **not measured**: that needs the geometry commit of section 4.4 and a print of it, and no paper is being used.
 
+**Reproducing these tables.** Every table in this document is measured against the definitions the sample set was printed from, frozen at `targets/frozen/phase0/`: `GL-YCSK-DZZ1-R0VJ-4T5Y` (`GL-CF25-LTR` as printed), `GL-R0T0-384Z-HRBE-M0EW` (`GL-CF25-LTR-D`) and `GL-G8JP-FF4D-AE0T-GPMN` (`GL-LR300-T`, 2 by 2). `grouplab spike` resolves against that directory, not the live library. None is superseded yet: the geometry change of section 4.4 will supersede `GL-YCSK-DZZ1-R0VJ-4T5Y`, and the commit that lands it records the superseding identifier here and in the directory's README. Rerunning every spike command against the frozen definitions reproduces every measured value in `scans/phase0/measurements/`; only the detection times in `threshold.json` differ, as they do between any two runs.
+
 **What Phase 1 inherits, in the order it bears on the gates.**
 
 1. The geometry commit: `GL-CF25-LTR`, `GL-CF25-100M-A4`, `GL-LR300-R24` and `GL-LR300-R36`, with test 26f promoted to an error (section 4.4).

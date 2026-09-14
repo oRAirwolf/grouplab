@@ -31,7 +31,7 @@ public class PaperGateTests(ITestOutputHelper output)
         var sample = SampleSet.All.Single(s => s.File == file);
         var shipped = new MeasureOptions();
 
-        var result = Phase0Spike.Measure(Repo.PathTo("scans", "phase0"), Repo.PathTo("targets"), sample, new OpenCvSharpBackend(), shipped);
+        var result = Phase0Spike.Measure(Repo.PathTo("scans", "phase0"), Repo.PathTo("targets", "frozen", "phase0"), sample, new OpenCvSharpBackend(), shipped);
         var bulls = shipped.Locator == BullLocatorKind.Centroid ? result.Centroid : result.EdgeFit;
         var (mean, worst, missing) = Phase0Spike.Stats(bulls);
         output.WriteLine($"{file}: {result.Fiducials.Matches.Count}/{result.Fiducials.Expected} markers, mean {mean / 254:0.00000} in, worst {worst / 254:0.00000} in");
