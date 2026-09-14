@@ -34,7 +34,8 @@ public enum MarkingTool
 
 /// <summary>
 /// The image with everything marked on it, and the taps that mark it. It holds a view (a zoom and an offset) and the taps of a
-/// scale reference not yet complete; every mark itself lives in the <see cref="MarkingSession"/>, so undo covers it.
+/// scale reference not yet complete; every mark itself lives in the <see cref="MarkingSession"/>, so undo covers it, and so does the
+/// view's rotation, which the canvas follows. Every position it hands the session is in stored pixels, whatever the rotation.
 /// <para>
 /// Nothing here needs a mouse. Every action is a single tap or a drag, which a finger does as well as a pointer, and zoom has
 /// buttons as well as the wheel: entry 21 section 6 asks that the marking screen not be gratuitously desktop-only.
@@ -53,6 +54,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private double imageWidth, imageHeight;
     private double zoom = 1;
     private Vector offset;
+    private int turns;
     private Point? panFrom;
     private int? dragging;
     private PointD dragAt;
@@ -83,6 +85,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Printed markers the registration expected and did not find, image pixels, drawn so the user sees what is missing.</summary>
     public IReadOnlyList<PointD> MissingMarkers { get; set; } = [];
 
+    /// <summary>Shots whose hole reads too large for the group's calibre, ringed in red (entry 24 section 5 point 3).</summary>
+    public IReadOnlySet<int> FlaggedShots { get; set; } = new HashSet<int>();
+
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
 
@@ -110,38 +115,68 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
     public void FitToView()
     {
-        if (bitmap is null || imageWidth <= 0 || Bounds.Width <= 0 || Bounds.Height <= 0)
+        Fit();
+        InvalidateVisual();
+    }
+
+    /// <summary>Fits the turned image to the control without asking for a redraw, which may not be asked for during one.</summary>
+    private void Fit()
+    {
+        turns = Session?.State.ViewQuarterTurns ?? 0;
+        var (width, height) = ViewRotation.DisplaySize(turns, imageWidth, imageHeight);
+        if (bitmap is null || width <= 0 || Bounds.Width <= 0 || Bounds.Height <= 0)
         {
             zoom = 1;
             offset = default;
         }
         else
         {
-            zoom = Math.Min(Bounds.Width / imageWidth, Bounds.Height / imageHeight);
-            offset = new Vector((Bounds.Width - (imageWidth * zoom)) / 2, (Bounds.Height - (imageHeight * zoom)) / 2);
+            zoom = Math.Min(Bounds.Width / width, Bounds.Height / height);
+            offset = new Vector((Bounds.Width - (width * zoom)) / 2, (Bounds.Height - (height * zoom)) / 2);
         }
-
-        InvalidateVisual();
     }
 
     /// <summary>Zooms by a factor about a point of the control, the centre when none is given.</summary>
     public void ZoomBy(double factor, Point? about = null)
     {
+        EnsureView();
         var at = about ?? new Point(Bounds.Width / 2, Bounds.Height / 2);
-        var image = ToImage(at);
+        double x = (at.X - offset.X) / zoom, y = (at.Y - offset.Y) / zoom;
         zoom = Math.Clamp(zoom * factor, 0.02, 40);
-        offset = new Vector(at.X - (image.X * zoom), at.Y - (image.Y * zoom));
+        offset = new Vector(at.X - (x * zoom), at.Y - (y * zoom));
         InvalidateVisual();
     }
 
     /// <summary>The whole canvas takes taps, including where nothing is drawn yet, so a first tap on an empty area still marks.</summary>
     public bool HitTest(Point point) => true;
 
-    /// <summary>A control point as image pixels.</summary>
-    public PointD ToImage(Point control) => new((control.X - offset.X) / zoom, (control.Y - offset.Y) / zoom);
+    /// <summary>A control point as stored image pixels, through the view's zoom, offset and rotation.</summary>
+    public PointD ToImage(Point control)
+    {
+        EnsureView();
+        return ViewRotation.ToImage(new PointD((control.X - offset.X) / zoom, (control.Y - offset.Y) / zoom), turns, imageWidth, imageHeight);
+    }
 
-    /// <summary>An image point as a control point.</summary>
-    public Point ToControl(PointD image) => new((image.X * zoom) + offset.X, (image.Y * zoom) + offset.Y);
+    /// <summary>A stored image point as a control point, through the view's rotation, zoom and offset.</summary>
+    public Point ToControl(PointD image)
+    {
+        EnsureView();
+        var display = ViewRotation.ToDisplay(image, turns, imageWidth, imageHeight);
+        return new Point((display.X * zoom) + offset.X, (display.Y * zoom) + offset.Y);
+    }
+
+    /// <summary>
+    /// Refits the view when the session's rotation has changed, by a button, a key or an undo, before anything is drawn or tapped.
+    /// The rotation lives in the session so undo covers it (NOTES-FROM-PLANNING.md entry 26 point 5); the canvas only follows it.
+    /// </summary>
+    private void EnsureView()
+    {
+        // Every session change already redraws the canvas through the window, so this only refits.
+        if ((Session?.State.ViewQuarterTurns ?? 0) != turns)
+        {
+            Fit();
+        }
+    }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
@@ -162,7 +197,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             return;
         }
 
-        context.DrawImage(bitmap, new Rect(offset.X, offset.Y, imageWidth * zoom, imageHeight * zoom));
+        // The image is drawn through the same map as every mark, stored pixels to the turned frame, then zoom and offset. The pixels
+        // themselves are never turned or re-encoded (entry 26 point 1), and the marks' labels stay upright.
+        EnsureView();
+        var (xFromX, xFromY, x0, yFromX, yFromY, y0) = ViewRotation.Affine(turns, imageWidth, imageHeight);
+        using (context.PushTransform(new Matrix(xFromX * zoom, yFromX * zoom, xFromY * zoom, yFromY * zoom, (x0 * zoom) + offset.X, (y0 * zoom) + offset.Y)))
+        {
+            context.DrawImage(bitmap, new Rect(0, 0, imageWidth, imageHeight));
+        }
+
         if (Session is not { } session)
         {
             return;
@@ -248,6 +291,10 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             context.DrawEllipse(null, pen, c, MarkRadius, MarkRadius);
+            if (FlaggedShots.Contains(shot.Id))
+            {
+                context.DrawEllipse(null, new Pen(Brushes.Red, 2, new DashStyle([3, 2], 0)), c, MarkRadius + 9, MarkRadius + 9);
+            }
             context.DrawEllipse(colour, null, c, 1.5, 1.5);
             context.DrawText(Label(number.ToString(CultureInfo.InvariantCulture) + (shot.Exclusion is null ? "" : " excluded"), colour, 12), c + new Vector(MarkRadius + 2, -MarkRadius - 4));
             if (shot.Bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } bull)
@@ -305,7 +352,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 break;
 
             case MarkingTool.Impact:
-                var snapped = value is null ? image : Snapping.ToDarkCentroid(value, image, 2 * HitRadius / zoom);
+                // With a calibre and a scale the snap reaches one bullet diameter (entry 24 section 5 point 2); otherwise a finger's width on screen.
+                var snapped = value is null ? image : Snapping.ToDarkCentroid(value, image, HoleSize.SnapRadiusPixels(session.State, image) ?? (2 * HitRadius / zoom));
                 int? nearestBull = session.State.Bulls.Count == 0 ? null : session.State.Bulls.MinBy(b => Distance(b.Image, snapped))!.Index;
                 Selected = session.AddShot(snapped, nearestBull);
                 SelectionChanged?.Invoke(this, EventArgs.Empty);

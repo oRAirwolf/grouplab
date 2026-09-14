@@ -8,6 +8,303 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 26: the rotate control is a requirement, not a fallback, and it has one trap
+
+**Status: actioned 2026-09-15.** Amends entry 24 section 4. Rotation is a view property of the marking state in the stored pixel frame, undoable and recorded in `grouplab-marking-2`, with the section's test in `tests/GroupLab.App.Tests/MarkingScreenTests.cs`; reported in `docs/PHASE1-RESULTS.md` M4.2.
+
+Entry 24 identified the cause of Alan's sideways image correctly, an ignored EXIF Orientation tag, and then drew the wrong conclusion from it: that honouring the tag was the fix and a manual control was a secondary convenience. **Alan pushed back and he is right.** Build both, and treat the control as a first-class feature rather than a safety net.
+
+### Why the control is required on its own terms
+
+**A flatbed scan carries no orientation tag.** Scans are half this project's input path, a letter sheet goes into a scanner the wrong way round constantly, and there is no metadata to consult. On that input the tag is not merely unreliable, it does not exist.
+
+Three more, any one of which would be enough:
+
+- **A wrong tag is worse than a missing one**, because it rotates confidently in the wrong direction. Editors that rewrite pixels while leaving the tag, or the reverse, produce exactly this.
+- **Images that have been through a chat app or a screenshot** usually arrive stripped, which the mounted collection already demonstrates.
+- **A correct tag is not always what the user wants.** Someone may simply prefer the sheet a different way up, and that is a preference rather than a correction. Alan's point stands as he made it: people will be annoyed, and being annoyed by software that is technically right is still being annoyed.
+
+So: honour the tag on load, because it makes the common case correct with no interaction, and provide rotate left and rotate right controls that work at any time, on any image, whether or not a tag was present and whether or not it was obeyed.
+
+### The trap, which is the part that matters
+
+**Rotating must never move a mark that is already placed.**
+
+Somebody will load a scan, mark twelve impacts, notice it is sideways, and rotate. If rotation is implemented as anything other than a view transform, those twelve marks land in the wrong places and the user has to start again, which is worse than never offering the control.
+
+So:
+
+1. **Rotation is a property of the view, not of the image.** Never re-encode the pixels and never rewrite the file. The image on disk is the contributor's original and is not ours to modify.
+2. **Shot and scale coordinates live in one canonical frame**, independent of what the view is doing. Rotating changes where a mark is drawn and not what it is.
+3. **The canonical frame is the stored pixel frame**, which is the simplest thing that can be checked later against the file itself. Entry 24 section 4 already asks for the convention to be recorded in the export; this makes that a hard requirement rather than a nicety, because there are now two ways the displayed frame can differ from the stored one.
+4. **Record the display rotation in the export** as well, so reopening a marking file shows the sheet the way the person left it.
+5. **Undo covers rotation**, like every other action on that screen.
+
+**A test worth having:** mark several shots, rotate, and assert every shot's page coordinates are unchanged and every drawn position has moved as expected. That is the regression that protects the feature from being quietly broken later.
+
+### Not asking for
+
+A free-angle rotation, and a mirror flip. Ninety degree steps in both directions cover every real case, and a sheet photographed in a mirror is not a case anybody has met. If one turns up, it is one line.
+
+---
+
+## 2026-09-15, entry 25: units, and the fact that the application cannot print a target
+
+**Status: open.** Two findings from Alan's second pass. The first is a small fix with a larger shape behind it. The second is a missing pillar rather than a missing button.
+
+**Entry 24 section 7 is answered and needs nothing.** The scale entry does take a value, "Distance between the two taps, inches", and he used 1.5 against his grid. Good. The detection message is also doing its job: "Detection failed: 0 of 38 markers found; registration needs 4. Mark this image by hand with a reference length or rectangle" is the right thing to say to someone who loaded a commercial target, and the 38 confirms the corrected `GL-CF25-LTR` geometry is in the library.
+
+### 1. Units, which is larger than the one input he noticed
+
+He asked for a dropdown beside the scale length for centimetres or inches. He is right, and the same gap runs through everything the application prints: the panel reads `0.914 in` and `Centre from aim: 0.140 in right`, with no way to ask for anything else.
+
+**Do not add a dropdown to one box. Give the application a unit setting and make every value obey it.**
+
+Three axes, because they vary independently:
+
+| Axis | Choices | Where it shows |
+|---|---|---|
+| **Linear** | inches, cm, mm | Scale entry, group size, mean radius, sigma, centre offset, export |
+| **Angular** | MOA, mil, SMOA | Anywhere a figure is quoted at distance |
+| **Distance** | yards, metres | The shot distance input, and it drives the angular conversion |
+
+`docs/STATISTICS.md` section 13 is Units and section 12.5 holds the angular constants, so the arithmetic exists. This is exposing it, not building it.
+
+**The rule that keeps this from becoming a bug farm: the unit setting changes display only, never storage.** Keep one canonical representation internally and convert at the edge. A marking file must mean the same thing whoever opens it, and the classic failure here is a saved file that reads differently depending on a setting on the machine that opens it.
+
+**The export carries both.** Canonical values, plus the unit the user was working in, so a reader can reproduce what was on screen without guessing.
+
+**Default from the system locale on first run, then remember the choice.** Alan is in the United States and wants inches, yards and MOA. A metric shooter wants cm, metres and mil, and this project already takes that seriously enough that two of its nine statistical fixtures exist solely to prove the conversion is right. It would be odd to prove it in the test suite and not offer it in the window.
+
+**One detail worth getting right:** mil and MOA are not interchangeable and a turret is marked in one or the other. When adjust-to-zero is built, per entry 21 section 5, it must use the angular unit the user picked rather than a default, because a shooter dialling MOA clicks from a mil number puts the next group in the wrong place.
+
+### 2. The application cannot print a target, and that is where a new user starts
+
+This is the one worth stopping on. GroupLab's whole premise is that you print its target, shoot it, and photograph it. The library holds twenty-two definitions. A person who installs the application and wants to use it properly has to start by printing a sheet, and **there is no way to do that from the window.** Today the answer is a command line, or asking me to have you generate a PDF pack, which is fine for the two of us and absurd for anybody else.
+
+The machinery all exists: `Rendering/`, `PdfWriter.cs`, and the CLI already produces the PDFs. **This is a screen that calls code that works, not new capability.**
+
+**What the screen needs.**
+
+1. **Pick a sheet.** The twenty-two built-ins listed by something a shooter recognises, not by identifier: what it is for, how many bulls, the sheet size, the distance it was designed around. `docs/TARGET-LIBRARY.md` has all of it.
+2. **A preview**, so nobody prints eight pages to find out what they chose.
+3. **The load block choice**, blank to write on later or filled in before shooting, which Alan asked for during the design and which `docs/TARGET-SCHEMA.md` makes a print-time decision. If it is filled in, the fields come from this screen.
+4. **Print, or save a PDF.** Both, because some people want to print elsewhere.
+5. **Scale, handled rather than warned about.** This is the part that matters most and the part a warning will not save. Every measurement in this project depends on the sheet being printed at exactly 100 percent, and a printer driver will silently shrink a page to its own margins given the chance. **Drive the print with scaling disabled rather than telling the user to check a box.** Where the platform will not allow that, say so in the dialog in plain words, and put it in the PDF's own margin as printed text so a sheet that came out wrong carries the evidence.
+6. **A multi-page set**, since the roll and tiled targets are several pages that assemble, and printing them one at a time by hand is how they end up in the wrong order.
+
+**It is also the natural home for the volunteer kit.** Entry 21 and the paper protocol both want a set of sheets plus a short instruction sheet in other people's hands. A print screen that can emit a pack is that, without a second mechanism.
+
+**Where it sits in the plan.** Not urgent this week: Alan prints from the command line for the weekend and that is already arranged. But **it belongs before anyone outside this project is asked to use the application**, because it is the first thing they would do and the first thing they would fail at. Put it in `docs/PHASE1-RESULTS.md` or wherever the M4 scope lives as a named gap rather than leaving it implied by its absence.
+
+### 3. Order
+
+Entry 24 section 1, the statistics reported for two shots, still comes first. It is the one that can mislead somebody. Then the rest of entry 24. Then units, then printing.
+
+**Do not build entry 21's adjust-to-zero until units land**, because it is the one feature where getting the unit wrong sends a shooter's next group somewhere else rather than merely displaying an odd number.
+
+---
+
+## 2026-09-15, entry 24: first human use of M4, and the app printed confident statistics for two shots
+
+**Status: actioned 2026-09-15.** Sections 1 to 3 in b9b117b, with question 12 for the threshold; sections 4 and 7 with entry 26, and section 5; reported in `docs/PHASE1-RESULTS.md` M4.2.
+
+Alan opened the marking screen, loaded `scans/mounted/20260329_183028.jpg`, set a scale, marked a point of aim and two impacts, and exported. His own notes were rotation, no calibre input, and that it needs refinement. The export and the screenshots carry four more findings he did not flag, and the first one is the serious one.
+
+### 1. Two shots, and the panel reported a mean radius to three decimals
+
+From his export:
+
+```
+shots: 2
+meanRadius 0.914 in   (95% 0.476 to 5.744)
+sigma      0.729 in   (95% 0.380 to 4.583)
+```
+
+**The interval spans a factor of twelve and the headline is printed as 0.914.** Nothing on screen says the number is meaningless. He read the panel, saw a figure with a confidence interval beside it, and reported that the app seemed to be working.
+
+That is the failure this project exists to prevent, appearing on first contact. `docs/STATISTICS.md` section 6 already flags groups under ten shots as unreliable and the interface does not honour it. Entry 23 section 2 has the measured coverage: 79.5 percent at ten shots against a nominal 95, which means even ten is optimistic, and two is not a sample at all.
+
+**What the panel must do.**
+
+- **Below the useful minimum, do not print a headline figure.** Say what is missing, in the shooter's terms: something like "2 shots. At least 5 are needed for a group size worth quoting, and 10 before the interval means much." Show the shot positions and the centre offset, which are exact and useful at any count, and withhold the dispersion statistics rather than dressing them up.
+- **Between that minimum and about twenty, print the figure with its coverage stated**, not a bare 95 percent. An interval whose real coverage is 80 percent must not be labelled 95.
+- **Pick the thresholds from `STATISTICS.md` section 9**, which already models how well sigma is known from n shots, rather than from anybody's taste. If section 9 does not give a clean answer, raise it as a question rather than choosing a round number.
+
+**This is the same finding as entry 23 section 2 arriving from the other direction.** That one was a coverage table in a report nobody runs. This one is a number on the screen that a user believed. Fix them together, and treat the interface as where it matters.
+
+### 2. The statistics panel is clipping its own text
+
+The screenshot shows `0.914 in  (95% 0.476 to 5` with the rest cut off at the panel edge. The headline is the one line guaranteed to overflow because it is the largest type. Let it wrap, or size the panel to its content.
+
+### 3. `NaN` is being exported, as a quoted string
+
+```
+"aspectRatio": "NaN",
+"angleDegrees": "NaN",
+```
+
+Those are degenerate at two shots, which is correct, but `"NaN"` is not a value. A consumer reading this file gets a string where it expects a number, and the quoting only exists because bare `NaN` is not legal JSON, which is the language telling you the same thing.
+
+Emit `null` and add a sibling field saying why, for instance `"aspectRatioUnavailable": "needs at least 3 shots"`. Apply it to every statistic that can be undefined, and check the schema for others with the same problem before Alan meets one.
+
+### 4. The rotation is an ignored EXIF tag, not a missing button
+
+`20260329_183028.jpg` stores 4000 by 3000 pixels and carries **EXIF Orientation 6**, which means the pixels are landscape and a viewer is expected to rotate them 90 degrees clockwise. Every normal viewer does. The app does not, which is why it looked turned on its side.
+
+**Honour the orientation tag on load.** That fixes it for nearly every phone photograph at once, rather than asking the user to correct each one by hand. Then add a manual rotate control as well, because some images carry no tag and a few carry a wrong one.
+
+**One thing to get right while doing it.** The export records shot positions as `image.x` and `image.y` in the stored pixel frame. Once the app rotates on load, that frame changes, and every marking file saved before the change silently points at the wrong place. **Record the convention in the file**, and either migrate old files or refuse to load one whose convention is unknown. There are only a handful in existence today, which makes this the cheapest moment it will ever be to fix.
+
+### 5. Calibre: what it is for, since Alan has now asked twice
+
+It is entry 21 section 5 and I said I would specify it once he had used the screen. He has.
+
+**Make it an optional property of the group**, entered once beside the shot distance, not per shot. Free text with a short pick list of common ones, because somebody will want a wildcat.
+
+**Three things it does, in order of value.**
+
+1. **Report extreme spread both ways.** GroupLab measures centre to centre, and shooters at a range measure outside edge to outside edge and subtract one bullet diameter to get the same thing. With the calibre known, print both and label them, so the number matches whatever the person is used to quoting. Without it, print centre to centre and say so. This is the whole reason Ballistic X asks for it.
+2. **Size the tap snap radius.** Marking a hole is a tap that snaps to the hole under it. How far it should look is a function of hole size, and hole size tracks bullet diameter, which `docs/SCAN-MEASUREMENTS.md` section 3.5 measured across 343 holes. A .22 and a .338 should not use the same search radius.
+3. **Flag a marked hole whose apparent size is wrong for the calibre**, once a scale is set. Two overlapping holes marked as one read as far too large, which is exactly the failure `PHASE1-RESULTS.md` M2.2 found reported silently 50 times out of 52. This is the cheapest available detector for it and it needs no new measurement.
+
+**Do not gate anything on it.** No calibre means no edge-to-edge figure and a default snap radius, never a refusal to work.
+
+### 6. What Alan saw that was right
+
+Worth recording, because it is the part not to change. The scale honesty line appears and reads well: "From a single 1 in reference length, which assumes the photograph is square on and the sheet flat", in orange, above the numbers it qualifies. That is entry 21 section 4 working exactly as intended, and it is the difference between a number and a number you can trust.
+
+The flyer line is also good and correctly reasoned, though at two shots it is noise like everything else in that panel.
+
+### 7. One question I could not answer from the screenshots
+
+**Can the reference length be anything other than one inch?** The export says "a single 1 in reference length" and the toolbar button shows no value. Most targets have no convenient one inch feature, and his has a 1.5 inch grid, so if the length is fixed at one inch then anybody measuring across a grid square is out by fifty percent and nothing tells them.
+
+If it is fixed, make it an entry. If it is already an entry, the export should record the value used rather than the phrase, so a reader can check it.
+
+---
+
+## 2026-09-15, entry 23: question 11 answered, the fixtures are regenerated, and the surface model is not as dead as entry 17 left it
+
+**Status: open.**
+
+### 1. Question 11: A, A and A, and the first one is already done
+
+Your reasoning is right in all three cases, and the common thread is the one that matters: **keep GroupLab exact where shotGroups is not, and keep the gate checking something true.** A gate that reproduces another implementation's root-finder tolerance is not measuring correctness, it is measuring agreement with a defect.
+
+**1, the point of aim. Done rather than decided.** The fixtures are regenerated and committed, and `sg_dump.R` now emits `shots.xPOA` and `shots.yPOA` beside `shots.x` and `shots.y`. That was my error in the first version: `getXYmat(..., relPOA = FALSE)` does not carry the aim, so a fixture built from the matrix alone cannot reproduce anything `groupLocation`, `groupSpread` or `groupShape` computed from the frame. Your diagnosis was exactly right and the arithmetic confirms it:
+
+| Dataset | Distinct aim points | Frame-based centre x | Matrix-based centre x |
+|---|---|---|---|
+| `DFinch` | **9** | -0.9195 | 6.1847 |
+| `DFcm` | **9** | -2.3356 | 15.7091 |
+| `DF300BLK` | 1, at the origin | -0.0004 | -0.0004 |
+
+The 7.1 in gap on `DFinch` sits inside its aim range of 5.518 to 7.806, and `DF300BLK` agrees to four decimals because its aim is zero. That is the disagreement you cited, with the missing datum now supplied.
+
+**Both coordinate forms are emitted rather than one**, because `xyTopLeft = TRUE` flips y and anyone deriving either from the other has a sign convention to get wrong, which is the kind of thing that costs a day. Row counts grew: 600, 520, 1857, 2553, 9464, 9464, 6563, 5108, 32543. Section 15.5 point 2 is now reachable.
+
+**2, the CorrNormal CEP. Option A.** Gate the distribution through the hit probabilities, which already match to 1e-15, require GroupLab's own CEP to satisfy that distribution at 1e-12, and compare shotGroups' CEP at 1e-4 relative. Replicating its root finder would mean shipping its tolerance, and a CEP that misses its own probability by 3e-6 is a defect rather than a convention. Record it in section 15.4 with the measured misses so nobody re-derives it.
+
+**3, the SMOA round trip. Option A.** Section 15.4, with the constant. The anchor holds for `getMOA` and fails only on the inverse, which is the definition of a one-directional bug.
+
+**Your four handled findings are handled correctly**, and the MANOVA one is the sharpest. `sg_dump.R` taking `MANOVA[1, ]` gives R's intercept row, which tests whether the mean over all shots is the origin rather than section 8.2's test of the group centres. Reproducing that row for the gate and computing the real group test separately is right. **Note it in `STATISTICS.md` section 15.4 as a tenth known difference**, because the next person to read the fixture will assume row 1 is the group test, exactly as I did when I wrote the script.
+
+**`DFcm` and `DFinch` are not the same data**, and that is a finding about the package rather than about us. The README now says so. Section 15.2 should stop calling them the same data and say what they are: the same shots, differently grouped, with one shot in a different series.
+
+### 2. The bootstrap coverage is the most important thing in question 11, and it is filed as an aside
+
+79.5, 89.1 and 92.7 percent actual coverage at 10, 25 and 50 shots, against a nominal 95. **At ten shots a "95 percent interval" is a 79.5 percent interval.**
+
+That is not a footnote. It is the exact error this project exists to prevent. A shooter comparing two loads on ten-shot groups, shown an interval that claims 95 and delivers 80, will conclude one load beats the other when the data does not support it. `STATISTICS.md` section 6 flags groups under ten shots as unreliable, which does not cover this: the problem is at ten, twenty-five and fifty.
+
+**Three things follow, and none is a research project.**
+
+1. **Prefer a closed form wherever one exists.** Section 3.3 has a closed-form interval for sigma, and section 15.3 already gates it at 1e-12. The bootstrap should be the fallback for quantities with no closed form, not the default.
+2. **Where the bootstrap is used, the interface must not print a bare "95 percent".** Either state the measured coverage at that sample size, or label the interval as approximate and optimistic at small n. A number that is wrong and confident is worse than one that is wide and honest.
+3. **Add coverage to the gate.** Section 15.5 point 4 already requires 94.0 to 96.0 percent coverage for the known-truth synthetic test on 25-shot groups. Measure the bootstrap the same way and record the number rather than leaving it in a command nobody runs.
+
+Put the table in `PHASE1-RESULTS.md` where it is, and raise a question if any of that changes what you have already built.
+
+### 3. The photograph against its own scan: the surface model is not dead
+
+This is the entry 19 and 20 measurement, and it changes the picture that entry 17 left.
+
+**A flat-plane fit leaves 0.021 in RMS and the general developable surface brings it to 0.006 in.** On the nine pinned frames the same model took up almost nothing, which is what stopped the surface work. The difference between the two cases is the mounting: those frames were a sheet hanging from a single pin, free to twist, and this one was lying on a mat with a gentle sag. **A developable surface handles the gentle case and fails the twisted one**, which is exactly what your own synthetic sweep said when it broke at a quarter inch of twist.
+
+So entry 17's conclusion stands as measured and its scope was wider than the evidence. The right statement now is that no developable surface fits a sheet twisting on a pin, and that the model does most of the work on a sheet deformed gently. **It does not pass the gate even here**, at 0.006 against 0.005, on a 25-bull constraint far coarser than 136 marker corners. But it is close on a case nobody had measured, where it was nowhere on the case that stopped it.
+
+**This still does not settle the mounted question**, because that sheet was lying on a mat and no photograph in the collection is both a whole sheet and mounted. It does mean the mounted case deserves the measurement rather than being written off, and next weekend's session produces exactly the frames it needs.
+
+Record this in `PHASE1-RESULTS.md` beside M1.11 as an amendment with its date, not as a replacement. M1.11 was right about what it measured.
+
+### 4. Detection must run inside the sheet, and that is a cheap large win
+
+**0 of 28 holes on the whole photograph, 26 of 28 cropped to the sheet, untuned.** The dark mat merges into one twelve inch blob that swallows everything.
+
+The fix is architectural rather than a tuning parameter: **the detector runs inside the registered sheet boundary, never on the whole image.** Registration already knows where the sheet is, so the crop is free. Make it a property of the pipeline rather than a step a caller can forget, so that no future path can hand the detector a full frame by accident. `docs/DETECTION-PIPELINE.md` should say so in the stage that precedes S5.
+
+**The 0.023 in median centre difference is the backer material, measured for the first time.** The photograph sees the dark mat through each hole where the scan sees the white scanner lid, and 0.023 in is nearly three times the 0.008 in noise floor. That is a real limit on the photograph path and it is not a defect: it is what a hole looks like against something dark. It also says the backer question in the planning record is not a preference, it is a term in the error budget. Next weekend's sheets are shot against your normal backer, so that number gets a second measurement on a GroupLab sheet.
+
+### 5. The uncommitted files: commit them, with one exception
+
+`scans/mounted/` and my two scripts in `tools/scan_analysis/` are mine to call.
+
+**Commit both scripts.** `scrub_exif.py` is about to become load-bearing, per entry 22, and `straightness.py` is a measurement that failed its own control and is worth keeping as a record of an attempt rather than being silently dropped.
+
+**Commit `scans/mounted/`**, but run every file through `scrub_exif.py` first and commit the scrubbed copies, not the originals. 22 of those 23 carry GPS. They are Alan's own photographs so there is no consent question, but the repository is going public and there is no reason for his range coordinates to be in it. Keep the originals outside the repository.
+
+**That is 28 files and roughly 80 MB**, which is the size question of entry 22 arriving early. If your answer to entry 22 section 1 is a separate data repository, these belong in it and should wait. If it is Git LFS, configure it first. **Answer entry 22 section 1 before committing the images**, and commit the two scripts either way.
+
+### 6. M4, and the thing to do next
+
+Nobody has opened the window. That is Alan's next step and it is the first time the project has been something he can use rather than read about. Everything else waits on what he finds.
+
+**Entry 21's remaining scope is mine**, and I will specify adjust-to-zero, the calibre input and the phone question once he has actually used what exists. Specifying a second round of interface before anyone has touched the first round is how you get features nobody wanted.
+
+---
+
+## 2026-09-15, entry 22: donated photographs are arriving, and the repository is not ready to receive them
+
+**Status: open. Not blocking M3 or M4.** Act on section 1 before the first donated image is committed, which could be within days.
+
+### 1. The size problem, which has to be decided before anything lands, not after
+
+A public upload page at `pissinhot.com/targets` is built and about to be announced to roughly 400 people across two Discord servers. If even fifty of them submit three photographs each, that is on the order of **half a gigabyte to a gigabyte of binary files**.
+
+**Git handles that badly and the repository cannot absorb it.** Every clone pulls every byte of every version forever, binaries do not delta-compress, and a photograph that is later scrubbed of GPS is a second full copy in history rather than a small diff. The current repository is a few tens of megabytes; this would make it one to two orders of magnitude larger and make a fresh clone a chore.
+
+**Decide now, because the cost of deciding later is a second history rewrite.** This project has already done one, with `git filter-repo`, to purge another company's files. Doing it again over donated photographs would be worse, because by then the images will be other people's contributions rather than Alan's own files.
+
+Three options, and I have not chosen for you because this is an infrastructure decision and you can see the repository:
+
+- **A separate data repository**, say `grouplab-testdata`, referenced from the main one by URL and commit. The code repository stays small and clonable, and the data carries its own licence and provenance. My inclination, because the two have genuinely different lifecycles and the test data will keep growing while the code churns.
+- **Git LFS on the main repository.** One repository, but it needs LFS configured before the first image lands, and it puts a dependency on every future contributor.
+- **Keep a small curated subset in the repository** and the full set outside it. Cheapest, but somebody has to curate, and the whole value of a donated corpus is its breadth.
+
+Raise this as a question with your recommendation once you have looked at what the repository actually is. It is genuinely yours to call.
+
+### 2. The intake pipeline, which must be a gate and not a habit
+
+Submissions arrive as a directory per submission holding the original files and a `meta.json` carrying the answers, the consent record, and a SHA-256 per file. Nothing may enter public test data except through a single tool that does all of this:
+
+1. **Refuse any directory containing a `DO-NOT-PUBLISH` file.** The page writes that file when a contributor ticks the opt-out box, alongside a flag in `meta.json`. Honour the file, not just the flag, because a file is harder to miss.
+2. **Scrub GPS.** `tools/scan_analysis/scrub_exif.py` already does it: it keeps `Make`, `Model`, `Orientation`, focal length, the 35 mm equivalent, f-number, exposure and ISO, and drops everything else including every GPS field, maker notes, serial numbers and dates. It is what found that 22 of Alan's own 23 photographs carried coordinates, so treat the unscrubbed state as the normal one.
+3. **Record both checksums.** Scrubbing changes the bytes, so the SHA-256 in `meta.json` will not match the published file by design. Carry the received hash and the published hash side by side. That is what makes it provable later that the image in the repository is the image that was consented to, rather than something that drifted.
+4. **Carry the provenance with the image.** Submission ID, the consent text version, the submission timestamp, and the answers. If anyone ever asks under what terms a photograph is published, the answer has to be in the repository and not in a server directory nobody kept.
+
+### 3. Make it a test, because a step someone remembers is a step someone forgets
+
+**A test must fail if any file under the public test data path carries a GPS tag**, or sits in a directory marked `DO-NOT-PUBLISH`, or lacks a provenance record. Not a documented procedure. A failing test.
+
+The reasoning is the same one that made the `reference/` files a blocker: publishing is irreversible in a way that local mistakes are not, and this time the material belongs to other people who were given a specific promise about it. The consent text says GPS is removed before publication. A test is how that promise stops depending on anybody's memory.
+
+### 4. What this does not change
+
+M3 and M4 continue. None of this is urgent enough to interrupt them, and no image can arrive until the page is live and announced. But section 1 wants an answer before the first commit rather than after, and section 3 wants to exist before the first image, not before the first release.
+
+---
+
 ## 2026-09-14, entry 21: a manual marking path, which is a second product and mostly already built
 
 **Status: actioned 2026-09-14.** M4's first screen is the marking screen of section 3, built as both the manual path and the correction interface, with section 4's rectangle offered beside the length; reported in `docs/PHASE1-RESULTS.md` M4.1. Sections 5 and 6 are left for specification, as section 8 says.

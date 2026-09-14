@@ -220,7 +220,9 @@ public class MarkingSessionTests
 
         using var json = JsonDocument.Parse(GroupAnalysis.Export(session.State));
         var root = json.RootElement;
-        Assert.Equal("grouplab-marking-1", root.GetProperty("format").GetString());
+        Assert.Equal(MarkingFile.Format, root.GetProperty("format").GetString());
+        Assert.Equal("length", root.GetProperty("scale").GetProperty("kind").GetString());
+        Assert.Equal(1, root.GetProperty("scale").GetProperty("inches").GetDouble());
         Assert.True(root.GetProperty("scaleAssumesSquareOn").GetBoolean());
         Assert.Equal(3, root.GetProperty("shots").GetArrayLength());
         Assert.Equal("PulledShot", root.GetProperty("shots")[0].GetProperty("exclusion").GetString());

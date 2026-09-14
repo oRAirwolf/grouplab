@@ -1130,6 +1130,83 @@ Assignment of render-and-difference's detections, held-out:
 - **Themes:** the brief rules out a theme engine, so the screen follows the system's light or dark setting through Avalonia's Fluent theme.
 - **Where the imaging backend lives:** the shell references `GroupLab.Cli` for the OpenCV backend instead of moving it in this milestone.
 
+### M4.2 First human use: entries 24 and 26
+
+Alan's first session with the marking screen, `docs/NOTES-FROM-PLANNING.md` entry 24, and entry 26's amendment to its rotation finding.
+
+**Reproduce:**
+- `dotnet test tests/GroupLab.Core.Tests --filter "Marking|SmallGroupCoverage"`
+- `dotnet test tests/GroupLab.App.Tests`
+
+**1. No group size below five shots.** Two shots had printed `meanRadius 0.914 in (95% 0.476 to 5.744)`.
+- **Withheld below the minimum.** Below 5 shots the panel prints no mean radius, sigma, extreme spread, ellipse or flyer line. It says "2 shots. At least 5 are needed before a group size is worth quoting, so none is shown", with section 9.1's range at that count. The count and the centre from the aim are always shown.
+- **Where five comes from.** It is section 9.1's "the five-shot row is the one to put in front of a user". Section 9 gives no sharper threshold, so it is interim and question 12.
+- **Below twenty shots,** the panel also prints section 9.1's range in words: "From 5 shots the true group size could be anywhere from 0.68 to 1.92 times what they measure".
+
+**What the panel's intervals actually cover**, from `tests/GroupLab.Core.Tests/Statistics/SmallGroupCoverageTests.cs`, 40,000 circular normal groups at each n:
+
+| n | Mean radius and sigma, exact | Simulated | Extreme spread, shotGroups' form | Extreme spread, the panel's form |
+|---|---|---|---|---|
+| 2 | 92.51 % | 92.60 % | 84.66 % | 95.10 % |
+| 3 | 93.70 % | 93.50 % | 89.39 % | 94.96 % |
+| 5 | 94.34 % | 94.42 % | 92.31 % | 95.17 % |
+| 10 | 94.71 % | 94.78 % | 93.91 % | 94.93 % |
+| 20 | 94.86 % | 94.92 % | 94.68 % | 94.94 % |
+
+- **Mean radius and sigma** fall short of 95 percent only because the c4 correction multiplies both endpoints, as shotGroups does. The exact coverage is `IntervalCoverage.RayleighSigma`, and the panel prints it, "94.3% interval" at five shots, never a bare 95.
+- **Extreme spread in shotGroups' `getRangeStat` form** scales the observation by the quantiles over the mean, which does not cover the expected spread at its stated level. The panel uses `RangeStatistics.MeanInterval`, the observation times the mean over the quantiles, which does. The M3.1 harness still compares shotGroups' form against shotGroups.
+- **Entry 24 cites the bootstrap's 79.5 percent at ten shots.** That is the BCa interval for the Grubbs-Patnaik CEP, which the panel does not show. The two-shot interval covered 92.5 percent; what misled was a three-decimal headline over a factor of twelve. Question 12 records this.
+
+**2. The headline wraps.** Each figure is its value on one line, its labelled interval beneath in smaller type, and every line wraps, so the largest type cannot clip at the panel's edge.
+
+**3. No NaN in the export.**
+- **Null with a reason.** Every figure that can be undefined is null beside a sibling, for instance `"aspectRatio": null, "aspectRatioUnavailable": "needs at least 3 shots"`.
+- **The same treatment elsewhere:** the centre from the aim without an aim, the dispersion figures below five shots, the ellipse of five shots in a line, the worst shot of coincident shots, and extreme spread beyond the table.
+- **The serializer now refuses NaN,** so an undefined figure that escaped would fail the export rather than reach a file.
+
+**4, with entry 26. Rotation is a view transform.**
+- **The frame does not change.** Every position stays in the stored pixel frame, the frame M4.1 already decoded in.
+- **The tag and the controls.** The view starts turned as the EXIF Orientation tag asks: 3, 6 and 8, with the mirrored values not applied. Rotate left and Rotate right, as buttons and as `[` and `]`, turn it further on any image, tag or no tag.
+- **Where the rotation lives.** It is part of the marking state, so undo covers it and a saved marking reopens as it was left. The canvas draws the image and every mark through one map, and nothing is re-encoded or rewritten.
+- **One consequence found while building it.** With a single reference length, the target axes are the stored image's, so "right" and "low" in the centre offset and the ellipse angle turn with the view. With a rectangle or a sheet the axes are the sheet's own and do not turn.
+- **Entry 26's test**, `RotatingTheViewMovesNoMarkAndTurnsWhereEveryMarkIsDrawn`, runs through the real window. It marks four shots and turns the view, then asserts:
+  - every stored and target position is unchanged;
+  - the image's corners are drawn where a clockwise quarter turn puts them;
+  - every drawn displacement (dx, dy) between marks is now (-dy, dx) at the refitted zoom;
+  - a tap on a fifth hole after the turn snaps onto that hole in stored pixels;
+  - undo returns every mark to exactly where it was drawn before.
+- **A second test** in `ViewRotationTests` marks twelve shots and turns three times: the shot list is the same object and every figure is unchanged.
+- **A fault the test found:** the canvas refitted the view from inside its render pass, which Avalonia refuses. It now refits without asking for a redraw.
+
+**The marking file is now `grouplab-marking-2`**, `MarkingFile`. It records:
+- `imageFrame` as `stored-pixels` with its definition, `exifOrientation`, and `displayRotationDegrees`;
+- the scale's values, section 7: the two tapped points and the length, or the four corners and the rectangle's size, beside the sentence;
+- the calibre, and any hole-size flags.
+
+It reads its own files back, which is what "Open marking" does.
+- **A file whose frame is not `stored-pixels`** is refused with the reason, and so is a rotation that is not a quarter turn or an unknown format.
+- **A version 1 file is migrated.** Version 1 was written from the same stored-pixel decode, so every mark stands. It kept its scale only as a sentence, so the scale must be set again, and the migration says so.
+- **A sheet registration is not stored**, and reopening one says to detect again.
+
+**5. Calibre,** an optional group property: the pick list, or typed.
+- **What typing reads.** Text is read as a diameter in inches or millimetres, or in hundredths or thousandths of an inch when it is a bare name number such as "22" or "308". The panel says what it read, since .300 Win Mag fires a .308 bullet.
+- **Edge to edge beside centre to centre.** With a calibre, extreme spread is printed both ways, edge to edge as centre to centre plus one bullet diameter. Without one it says it needs the calibre.
+- **The snap reaches one bullet diameter** once a calibre and a scale are set; otherwise it keeps its on-screen reach.
+- **A hole too large for the calibre is ringed in red and listed.**
+  - **The test:** its dark region's largest extent is compared against nominal plus 0.132 in. That is three standard deviations above the mean of `docs/SCAN-MEASUREMENTS.md` section 3.5's 260 holes, and nothing it is gated on was used to set it.
+  - **What is not measured:** a region that reaches the edge of the search circle is ink or a dark backer, and is not measured.
+  - **On synthetic holes:** a single hole at 0.92 of calibre is not flagged, a touching pair marked as one is, at 0.54 in, and a mark on a large printed disc is not.
+- **Nothing is gated on it.**
+
+**6 needs nothing. 7 is answered** by entry 25, and the file now records the values.
+
+**Tests:** Core 672, App 2, all passing.
+
+**Named gaps, from entry 25.**
+- **Units.** Every figure is in inches, and angular figures and shot distance have no input yet.
+- **Printing a target from the window.** There is no print screen; the command line renders the PDFs.
+- **Adjust to zero** waits for units, as entry 25 section 3 requires.
+
 ---
 
 ## Decision log
@@ -1200,3 +1277,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **M4: the image sized by its decoded pixel grid, over the bitmap's size.** The bitmap's size follows the file's DPI tag; the headless test showed marks scaling with it.
 - **M4: the UI built in C#, over XAML.** Avalonia 12 compiles bindings by default and the screen is one window; code keeps every control's wiring in one place a reader can follow.
 - **M4: a headless test through the platform's pointer input, over calling the model directly.** It caught two faults that would have reached a person, which the model tests could not.
+- **Entry 24: a dispersion figure withheld below five shots, over printing it with a warning.** A warning beside a three-decimal headline is what Alan read past; the count and the centre offset stay, because they are exact at any count.
+- **Entry 24: each interval labelled with its exact coverage, over removing the c4 correction from the endpoints to make them 95 percent.** Brief section 5 has GroupLab match shotGroups' intervals; stating their coverage keeps that and stops the label from lying.
+- **Entry 24: extreme spread's interval in the form that covers the expected spread, over shotGroups' `getRangeStat` form.** The latter covers 84.7 percent at two shots; entry 23 section 1 says to stay exact where shotGroups is not, and the harness still checks its form.
+- **Entry 26: rotation as a view property of the marking state, over rotating the decoded pixels on load.** Rotating pixels changes the frame every saved position is in; a view property moves no mark, gives undo for free and reopens as it was left.
+- **Entry 26: the stored pixel frame as the canonical frame, over the upright displayed frame.** It is the frame M4.1 files were already written in, so version 1 migrates without moving a mark, and it can be checked against the file itself.
+- **Entry 24 section 5: the hole-size flag at nominal plus 0.132 in, over a ratio of the calibre.** Section 3.5 found the hole deficit roughly constant in absolute terms rather than proportional.

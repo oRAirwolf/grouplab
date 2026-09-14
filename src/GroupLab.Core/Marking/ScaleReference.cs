@@ -18,6 +18,12 @@ public abstract record ScaleReference
 
     /// <summary>True when the scale cannot see perspective, so a result from it should say so beside its figures.</summary>
     public abstract bool AssumesSquareOn { get; }
+
+    /// <summary>
+    /// True when the target axes are the stored image's axes, so "right" and "low" mean the image's as stored and the screen must turn
+    /// them with the view (NOTES-FROM-PLANNING.md entry 26). A rectangle's axes are its own tapped sides, and a sheet's its page.
+    /// </summary>
+    public virtual bool AxesFollowImage => false;
 }
 
 /// <summary>
@@ -34,6 +40,8 @@ public sealed record LengthReference(PointD A, PointD B, double Inches) : ScaleR
         $"a single {Inches:0.###} in reference length, which assumes the photograph is square on and the sheet flat");
 
     public override bool AssumesSquareOn => true;
+
+    public override bool AxesFollowImage => true;
 }
 
 /// <summary>

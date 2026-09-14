@@ -117,4 +117,87 @@ public class MarkingScreenTests
             File.Delete(path);
         }
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 26's test: mark shots, turn the view, and every shot's stored and target position is unchanged while
+    /// every drawn position has turned with the image. A tap on a hole after the turn still lands on that hole, and undo turns the view
+    /// back to where every mark is drawn exactly as before.
+    /// </summary>
+    [AvaloniaFact]
+    public void RotatingTheViewMovesNoMarkAndTurnsWhereEveryMarkIsDrawn()
+    {
+        (int X, int Y)[] holes = [(300, 300), (340, 280), (320, 340), (250, 340), (390, 310)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var window = new MainWindow { Width = 1400, Height = 900 };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.OpenImage(path);
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+            var canvas = window.Canvas;
+            canvas.FitToView();
+
+            void Tap(PointD image)
+            {
+                var at = canvas.TranslatePoint(canvas.ToControl(image), window)!.Value;
+                window.MouseDown(at, MouseButton.Left);
+                window.MouseUp(at, MouseButton.Left);
+            }
+
+            window.Session.SetScale(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2));
+            canvas.Tool = MarkingTool.Impact;
+            foreach (var (x, y) in holes.Take(4))
+            {
+                Tap(new PointD(x + 3, y - 2));
+            }
+
+            var before = window.Session.State;
+            var targets = before.Shots.Select(s => before.Scale!.ToTarget(s.Image)).ToList();
+            var drawn = before.Shots.Select(s => canvas.ToControl(s.Image)).ToList();
+
+            window.Session.Rotate(1);
+            Dispatcher.UIThread.RunJobs();
+            var after = window.Session.State;
+            Assert.Equal(1, after.ViewQuarterTurns);
+            Assert.Equal(before.Shots, after.Shots);
+            Assert.Equal(targets, after.Shots.Select(s => after.Scale!.ToTarget(s.Image)));
+
+            // The drawn image is turned a quarter clockwise: its top left corner is now drawn at the top right, its bottom left at the top left.
+            var topLeft = canvas.ToControl(new PointD(0, 0));
+            var bottomLeft = canvas.ToControl(new PointD(0, 600));
+            var topRight = canvas.ToControl(new PointD(800, 0));
+            Assert.Equal(topLeft.Y, bottomLeft.Y, 6);
+            Assert.True(topLeft.X > bottomLeft.X);
+            Assert.Equal(topLeft.X, topRight.X, 6);
+            Assert.True(topRight.Y > topLeft.Y);
+
+            // Every drawn displacement (dx, dy) between marks is now (-dy, dx), scaled by the zoom that refits the turned image.
+            var turned = after.Shots.Select(s => canvas.ToControl(s.Image)).ToList();
+            static double Length(Vector v) => Math.Sqrt((v.X * v.X) + (v.Y * v.Y));
+            double scale = Length(turned[1] - turned[0]) / Length(drawn[1] - drawn[0]);
+            for (int i = 1; i < drawn.Count; i++)
+            {
+                Vector was = drawn[i] - drawn[0], now = turned[i] - turned[0];
+                Assert.Equal(-was.Y * scale, now.X, 6);
+                Assert.Equal(was.X * scale, now.Y, 6);
+            }
+
+            Tap(new PointD(holes[4].X + 3, holes[4].Y - 2));
+            var fifth = window.Session.State.Shots[^1];
+            Assert.True(Math.Abs(fifth.Image.X - holes[4].X) < 1.5 && Math.Abs(fifth.Image.Y - holes[4].Y) < 1.5, $"shot at ({fifth.Image.X:0.0}, {fifth.Image.Y:0.0}) for the hole at {holes[4]}");
+
+            window.Session.Undo();
+            window.Session.Undo();
+            Assert.Equal(0, window.Session.State.ViewQuarterTurns);
+            Assert.Equal(drawn, window.Session.State.Shots.Select(s => canvas.ToControl(s.Image)));
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }

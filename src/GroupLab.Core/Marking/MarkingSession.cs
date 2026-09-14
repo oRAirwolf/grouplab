@@ -49,6 +49,12 @@ public sealed record BullAim(int Index, string Label, PointD Image);
 /// <summary>
 /// Everything a marking holds at one moment. It is immutable, so undo is keeping the previous one and every screen reads a
 /// state that cannot change under it.
+/// <para>
+/// Every position is in the stored pixel frame, <see cref="ViewRotation.StoredPixelFrame"/>. <see cref="ViewQuarterTurns"/> is how the
+/// screen turns the image for display, clockwise, and is part of the state only so that undo covers it and a saved marking reopens
+/// the way it was left (NOTES-FROM-PLANNING.md entry 26); it never changes a position. <see cref="ExifOrientation"/> is the image's
+/// tag as read, or null when it has none, as a flatbed scan does not.
+/// </para>
 /// </summary>
 public sealed record MarkingState(
     string? ImagePath,
@@ -57,7 +63,10 @@ public sealed record MarkingState(
     ImmutableList<BullAim> Bulls,
     ImmutableList<MarkedShot> Shots,
     int NextId,
-    string? RegistrationSummary = null)
+    string? RegistrationSummary = null,
+    int ViewQuarterTurns = 0,
+    int? ExifOrientation = null,
+    Calibre? Calibre = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -130,16 +139,34 @@ public sealed class MarkingSession
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Starts a new marking on an image, forgetting the previous one and its history.</summary>
-    public void Open(string imagePath)
+    /// <summary>
+    /// Starts a new marking on an image, forgetting the previous one and its history. The view starts turned as the image's EXIF
+    /// Orientation tag asks, NOTES-FROM-PLANNING.md entry 24 section 4, so the common phone photograph needs no interaction; that is
+    /// where the marking starts, not an undo step.
+    /// </summary>
+    public void Open(string imagePath, int? exifOrientation = null) =>
+        Load(MarkingState.Empty with { ImagePath = imagePath, ExifOrientation = exifOrientation, ViewQuarterTurns = ViewRotation.FromExifOrientation(exifOrientation) });
+
+    /// <summary>Replaces the marking with a whole state, a saved marking reopened, forgetting the history.</summary>
+    public void Load(MarkingState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
         undo.Clear();
         redo.Clear();
-        State = MarkingState.Empty with { ImagePath = imagePath };
+        State = state;
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Turns the view by quarter turns, positive clockwise, on any image at any time, whether or not it had a tag and whether or not
+    /// the tag was obeyed (entry 26). It is an undo step like every other action, and nothing but the view changes: no mark moves.
+    /// </summary>
+    public void Rotate(int quarterTurns) => Apply(State with { ViewQuarterTurns = ViewRotation.Normalise(State.ViewQuarterTurns + quarterTurns) });
+
     public void SetScale(ScaleReference? scale) => Apply(State with { Scale = scale });
+
+    /// <summary>Sets the group's calibre, or clears it with null (NOTES-FROM-PLANNING.md entry 24 section 5).</summary>
+    public void SetCalibre(Calibre? calibre) => Apply(State with { Calibre = calibre });
 
     public void SetPointOfAim(PointD? image) => Apply(State with { PointOfAim = image });
 

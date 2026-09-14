@@ -47,6 +47,9 @@ public sealed class MainWindow : Window
     private GrayImage? grey;
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
+    private IReadOnlyList<HoleSizeFlag> holeFlags = [];
+    private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
+    private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.85 };
 
     public MainWindow()
     {
@@ -61,6 +64,7 @@ public sealed class MainWindow : Window
 
         var toolbar = new WrapPanel { Margin = new Thickness(6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
+        toolbar.Children.Add(Button("Open marking", async () => await OpenMarkingDialog()));
         toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await DetectDialog()));
         toolbar.Children.Add(new Separator { Width = 12 });
         foreach (var (tool, label) in new[] { (MarkingTool.Pan, "Pan (P)"), (MarkingTool.Length, "Scale: length (L)"), (MarkingTool.Rectangle, "Scale: rectangle (R)"), (MarkingTool.Aim, "Point of aim (A)"), (MarkingTool.Impact, "Impact (I)"), (MarkingTool.Select, "Select (V)") })
@@ -77,12 +81,23 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Zoom in", () => canvas.ZoomBy(1.25)));
         toolbar.Children.Add(Button("Zoom out", () => canvas.ZoomBy(0.8)));
         toolbar.Children.Add(Button("Fit", canvas.FitToView));
+        toolbar.Children.Add(Button("Rotate left ([)", () => session.Rotate(-1)));
+        toolbar.Children.Add(Button("Rotate right (])", () => session.Rotate(1)));
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
 
         var panel = new StackPanel { Margin = new Thickness(12), Spacing = 12, Width = 380 };
         panel.Children.Add(Heading("Scale"));
         panel.Children.Add(scaleInputs);
         panel.Children.Add(Heading("Group"));
+
+        // Entry 24 section 5: the calibre is a property of the group, entered once, from the list or typed.
+        panel.Children.Add(new TextBlock { Text = "Calibre", FontSize = 12 });
+        panel.Children.Add(Row(calibreBox, Button("Set", SetCalibreFromBox), Button("Clear", () =>
+        {
+            calibreBox.Text = "";
+            session.SetCalibre(null);
+        })));
+        panel.Children.Add(calibreNote);
         panel.Children.Add(problem);
         panel.Children.Add(statistics);
         panel.Children.Add(Heading("Selected shot"));
@@ -110,7 +125,9 @@ public sealed class MainWindow : Window
 
     /// <summary>
     /// Opens an image. It is decoded once through OpenCV without applying EXIF orientation, the same decode the pipeline measures, and
-    /// shown from those same pixels, so a mark on the screen is a mark on the pixels the statistics and the detector use.
+    /// shown from those same pixels, so a mark on the screen is a mark on the pixels the statistics and the detector use. The view then
+    /// turns as the image's orientation tag asks (NOTES-FROM-PLANNING.md entry 24 section 4), which moves no pixel and no position;
+    /// Rotate left and Rotate right turn it further on any image, tagged or not (entry 26).
     /// </summary>
     public void OpenImage(string path)
     {
@@ -122,10 +139,89 @@ public sealed class MainWindow : Window
         grey = image;
         valueImage = max;
         metadata = meta;
-        session.Open(path);
+        session.Open(path, meta.Orientation);
         canvas.SetImage(new Bitmap(stream), max);
-        status.Text = string.Create(CultureInfo.InvariantCulture, $"{Path.GetFileName(path)}, {image.Width} by {image.Height} px{(meta.IsCamera ? $", {meta.CameraModel}" : "")}. Set a scale, mark the point of aim, then tap each impact.");
+        int turns = session.State.ViewQuarterTurns;
+        string orientation = ViewRotation.ExifMirrors(meta.Orientation)
+            ? " Its orientation tag asks for a mirror image, which is not applied; rotate it if it needs turning."
+            : turns != 0 ? string.Create(CultureInfo.InvariantCulture, $" Turned {90 * turns} degrees as its orientation tag asks.") : "";
+        status.Text = string.Create(CultureInfo.InvariantCulture, $"{Path.GetFileName(path)}, {image.Width} by {image.Height} px{(meta.IsCamera ? $", {meta.CameraModel}" : "")}.{orientation} Set a scale, mark the point of aim, then tap each impact.");
         Refresh();
+    }
+
+    /// <summary>
+    /// Reopens a saved marking: its image, its marks, and the view turned the way it was left (NOTES-FROM-PLANNING.md entry 26 point 4).
+    /// A file whose frame convention is unknown is refused with the reason, and a version 1 file is migrated with a note.
+    /// </summary>
+    public void OpenMarking(string path)
+    {
+        MarkingState state;
+        IReadOnlyList<string> notes;
+        try
+        {
+            (state, notes) = MarkingFile.Read(File.ReadAllText(path));
+        }
+        catch (MarkingFileException ex)
+        {
+            problem.Text = ex.Message;
+            return;
+        }
+
+        if (state.ImagePath is not { } image || !File.Exists(image))
+        {
+            problem.Text = $"The marking's image, {state.ImagePath ?? "(none recorded)"}, is not there. Put it back at that path to reopen the marking.";
+            return;
+        }
+
+        OpenImage(image);
+        if (metadata?.Orientation != state.ExifOrientation)
+        {
+            notes = [.. notes, "The image's orientation tag is not the one recorded in the marking. The marks are in stored pixels, so they stand, but check it is the same image."];
+        }
+
+        session.Load(state);
+        status.Text = "Reopened " + Path.GetFileName(path) + "." + (notes.Count > 0 ? " " + string.Join(" ", notes) : "");
+    }
+
+    private void SetCalibreFromBox()
+    {
+        var calibre = Calibre.Parse(calibreBox.Text, out string? why);
+        if (why is not null)
+        {
+            calibreNote.Text = why;
+            return;
+        }
+
+        session.SetCalibre(calibre);
+    }
+
+    private async Task OpenMarkingDialog()
+    {
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Open a saved marking",
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("GroupLab markings") { Patterns = ["*.json"] }],
+        });
+        if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
+        {
+            OpenMarking(path);
+        }
+    }
+
+    /// <summary>
+    /// A direction in target axes as the screen shows it. A single reference length's axes are the stored image's, so "right" and
+    /// "low" turn with the view; a rectangle's axes are its own tapped sides and a sheet's are its page, so they do not (entry 26).
+    /// </summary>
+    private PointD AsDisplayed(PointD vector) =>
+        session.State.Scale?.AxesFollowImage == true ? ViewRotation.VectorToDisplay(vector, session.State.ViewQuarterTurns) : vector;
+
+    /// <summary>An axis angle, degrees from x toward y, as the screen shows it, in [0, 180).</summary>
+    private double DisplayedAngle(double degrees)
+    {
+        var v = AsDisplayed(new PointD(Math.Cos(degrees * Math.PI / 180), Math.Sin(degrees * Math.PI / 180)));
+        double angle = Math.Atan2(v.Y, v.X) * 180 / Math.PI;
+        return ((angle % 180) + 180) % 180;
     }
 
     private async Task OpenImageDialog()
@@ -199,7 +295,7 @@ public sealed class MainWindow : Window
         });
         if (file?.TryGetLocalPath() is { } path)
         {
-            await File.WriteAllTextAsync(path, GroupAnalysis.Export(session.State));
+            await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, holeFlags));
             status.Text = "Exported to " + path;
         }
     }
@@ -271,6 +367,17 @@ public sealed class MainWindow : Window
         var report = GroupAnalysis.Analyse(state);
         problem.Text = report.Problem ?? "";
 
+        if (!calibreBox.IsKeyboardFocusWithin && (calibreBox.Text ?? "") != (state.Calibre?.Name ?? ""))
+        {
+            calibreBox.Text = state.Calibre?.Name ?? "";
+        }
+
+        calibreNote.Text = state.Calibre is { } calibre
+            ? string.Create(CultureInfo.InvariantCulture, $"Read as a {calibre.DiameterInches:0.000} in bullet diameter. Type the diameter itself if that is not right.")
+            : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+        holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage);
+        canvas.FlaggedShots = holeFlags.Select(f => f.ShotId).ToHashSet();
+
         if (scaleInputs.Children.Count == 0 || state.Scale is not null)
         {
             scaleInputs.Children.Clear();
@@ -288,8 +395,8 @@ public sealed class MainWindow : Window
             var reduced = report.WithoutExclusions!;
             bool excluded = report.Excluded > 0;
             statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"{all.Shots} shots{(excluded ? $", {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}")));
-            statistics.Children.Add(Line(all.CentreFromAim is { } centre
-                ? string.Create(CultureInfo.InvariantCulture, $"Centre from aim: {Math.Abs(centre.X):0.000} in {(centre.X >= 0 ? "right" : "left")}, {Math.Abs(centre.Y):0.000} in {(centre.Y >= 0 ? "low" : "high")}")
+            statistics.Children.Add(Line(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
+                ?string.Create(CultureInfo.InvariantCulture, $"Centre from aim: {Math.Abs(centre.X):0.000} in {(centre.X >= 0 ? "right" : "left")}, {Math.Abs(centre.Y):0.000} in {(centre.Y >= 0 ? "low" : "high")}")
                 : $"Centre from aim: {all.CentreFromAimUnavailable}."));
 
             if (all.DispersionWithheld is { } withheld)
@@ -302,6 +409,15 @@ public sealed class MainWindow : Window
                 statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, 26, FontWeight.Bold));
                 statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, 16, FontWeight.Normal));
                 statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, 13, FontWeight.Normal, subordinate: true));
+                statistics.Children.Add(new TextBlock
+                {
+                    Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
+                        ? string.Create(CultureInfo.InvariantCulture, $"Edge to edge, across the outsides of the holes: {edgeToEdge:0.000} in, which is centre to centre plus one {state.Calibre!.DiameterInches:0.000} in bullet.")
+                        : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 12,
+                    Opacity = 0.7,
+                });
                 if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
                 {
                     statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
@@ -309,7 +425,7 @@ public sealed class MainWindow : Window
                 }
 
                 statistics.Children.Add(Line(all.AspectRatio is { } aspect
-                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {all.AngleDegrees:0} degrees")
+                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees")
                     : $"Error ellipse: {all.AspectRatioUnavailable}."));
                 if (all.WorstShotInMeanRadii is { } worst)
                 {
@@ -318,7 +434,12 @@ public sealed class MainWindow : Window
                 }
             }
 
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed: {report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
+            foreach (var flag in holeFlags)
+            {
+                statistics.Children.Add(new TextBlock { Text = $"Shot {flag.ShotId} {flag.Problem}", TextWrapping = TextWrapping.Wrap, FontSize = 12, Foreground = Brushes.OrangeRed });
+            }
+
+            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed:{report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
         }
 
         BuildSelection();
@@ -388,6 +509,12 @@ public sealed class MainWindow : Window
                 break;
             case Key.V:
                 SetTool(MarkingTool.Select);
+                break;
+            case Key.OemOpenBrackets:
+                session.Rotate(-1);
+                break;
+            case Key.OemCloseBrackets:
+                session.Rotate(1);
                 break;
             case Key.Delete when canvas.Selected is { } id:
                 session.DeleteShot(id);

@@ -39,6 +39,8 @@ public sealed record GroupFigures(
     string? SigmaUnavailable,
     ReportedEstimate? ExtremeSpread,
     string? ExtremeSpreadUnavailable,
+    double? ExtremeSpreadEdgeToEdge,
+    string? ExtremeSpreadEdgeToEdgeUnavailable,
     TrueSizeRange? TrueSizeRange,
     string? TrueSizeRangeUnavailable,
     double? AspectRatio,
@@ -163,6 +165,8 @@ public static class GroupAnalysis
                 SigmaUnavailable: withheld,
                 ExtremeSpread: null,
                 ExtremeSpreadUnavailable: withheld,
+                ExtremeSpreadEdgeToEdge: null,
+                ExtremeSpreadEdgeToEdgeUnavailable: withheld,
                 TrueSizeRange: null,
                 TrueSizeRangeUnavailable: withheld,
                 AspectRatio: null,
@@ -196,6 +200,8 @@ public static class GroupAnalysis
             SigmaUnavailable: null,
             ExtremeSpread: Reported(spreadInterval, 0.95, RangeBasis, "beyond the range-statistic table's 100 shots"),
             ExtremeSpreadUnavailable: null,
+            ExtremeSpreadEdgeToEdge: state.Calibre is { } calibre ? spread + calibre.DiameterInches : null,
+            ExtremeSpreadEdgeToEdgeUnavailable: state.Calibre is null ? "needs the group's calibre" : null,
             TrueSizeRange: new TrueSizeRange(lower, upper),
             TrueSizeRangeUnavailable: null,
             AspectRatio: shapeDefined ? ellipse.AspectRatio : null,
@@ -215,43 +221,8 @@ public static class GroupAnalysis
             : new ReportedEstimate(e.Value, null, null, null, null, whyNoInterval ?? "not available");
 
     /// <summary>
-    /// The export a user saves, docs/PHASE1-BRIEF.md section 6 item 6: the image, how it was scaled, every shot with its image and
-    /// target position, provenance, exclusion and assignment, and the report. JSON, because it is GroupLab's own record and not any
-    /// other application's format. The serializer refuses NaN rather than quoting it, so an undefined figure that escaped
-    /// <see cref="GroupFigures"/>'s nulls fails here instead of reaching a file.
+    /// The export a user saves, <see cref="MarkingFile.Write"/>. Its serializer refuses NaN rather than quoting it, so an undefined
+    /// figure that escaped <see cref="GroupFigures"/>'s nulls fails here instead of reaching a file.
     /// </summary>
-    public static string Export(MarkingState state)
-    {
-        ArgumentNullException.ThrowIfNull(state);
-        var report = Analyse(state);
-        var document = new
-        {
-            format = "grouplab-marking-1",
-            image = state.ImagePath,
-            scale = report.Scale,
-            scaleAssumesSquareOn = report.ScaleAssumesSquareOn,
-            registration = state.RegistrationSummary,
-            pointOfAim = state.PointOfAim,
-            bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image }),
-            shots = state.Shots.Select(s => new
-            {
-                s.Id,
-                image = s.Image,
-                targetInches = state.Scale?.ToTarget(s.Image),
-                provenance = s.Provenance.ToString(),
-                exclusion = s.Exclusion?.ToString(),
-                s.NotAShot,
-                s.Bull,
-            }),
-            report,
-        };
-        return JsonSerializer.Serialize(document, Options);
-    }
-
-    private static readonly JsonSerializerOptions Options = new()
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-    };
+    public static string Export(MarkingState state) => MarkingFile.Write(state);
 }
