@@ -1240,6 +1240,49 @@ Every value the screen shows obeys it:
 
 **Tests:** Core 676, App 3, all passing. **Adjust to zero** remains unbuilt until entry 21 section 5 is specified; the units it needs are now in place.
 
+### M4.4 Printing a target: entry 25 section 2
+
+**The pillar that was missing.** GroupLab's premise is that you print its target, shoot it and photograph it, and until now the window could not print one. "Print a target" opens `src/GroupLab.App/PrintWindow.cs`, a screen over the renderer Phase 0 built. The built-in library ships beside the application.
+
+**Reproduce:**
+- `dotnet test tests/GroupLab.Core.Tests --filter PrintNote`
+- `dotnet test tests/GroupLab.App.Tests --filter PrintScreen`
+
+**The screen, in entry 25's order.**
+1. **Pick a sheet.** All 22 built-ins are listed by what a shooter recognises: the family, the name, the description with its bulls, the distance it was designed around, the paper in millimetres and inches, and how many sheets assemble into it.
+   - **Where it comes from:** `TargetLibrary` takes the families from `docs/TARGET-LIBRARY.md` section 1 and the distances from section 2.
+   - **The guard:** a test fails if a built-in is not catalogued.
+2. **A preview** of the artwork, sheet by sheet for a tiled set, rasterised by `SceneRasterizer`. It draws no text, and the screen says so.
+3. **The load block, blank or filled.**
+   - **Filled:** the fields come from the definition's field set under their printed captions, with the date prefilled and an optional serial.
+   - **Refusals:** what the renderer refuses, a value too wide for its field or an instance code over budget, is shown in its words.
+4. **Save a PDF, or print.** Print writes the PDF to a temporary file and hands it to the print command of whatever opens PDFs; where there is none, it opens the PDF instead.
+5. **Scale, handled as far as the platform allows.**
+   - **The PDF asks for no scaling.** Every PDF GroupLab writes, the command line's included, now carries `/ViewerPreferences << /PrintScaling /None >>` in its catalog.
+   - **What cannot be driven is said in plain words.** GroupLab cannot reach the printer driver's own scaling through the system's print command. The screen says so beside the buttons: "choose Actual size or 100%, never Fit...; a sheet printed at 97 percent measures 3 percent small".
+   - **The sheet carries the instruction.** "Print at actual size, 100 percent. Never fit to page: a sheet printed at any other scale measures wrong." It runs along the bottom edge, so a sheet that came out wrong carries the evidence. It is on by default and can be turned off.
+6. **A multi-page set** is one PDF of every tile in order, each numbered beside its identifier as Phase 0 already printed.
+
+**Where the note goes, measured before it was placed.** Every page of all 22 definitions was scanned for free margin:
+- **The identifier** sits 74 to 99 dmm above the bottom edge.
+- **Nothing else** comes below 70 dmm across the middle of any page. The lowest are the sighter-row markers of `GL-CF25-LTR`, at 70 dmm.
+- **The note** therefore sits on a 45 dmm baseline at 18 dmm, 41 to 58 dmm above the edge.
+- **`PrintNoteTests` checks it on every page of every built-in:**
+  - at least 8 dmm from every other item;
+  - at least 36 dmm above the edge;
+  - clear of the side margins;
+  - without the note, the page is unchanged item for item.
+- **Phase 0's renders** change only in the catalog line.
+
+**Limits, stated.**
+- **Clipping:** a printer whose unprintable bottom margin is wider than about 4 mm may clip the note.
+- **Viewers:** a viewer may ignore the viewer preference.
+- **Nothing measured:** the note is an instruction, not a measurement.
+
+**Tests:** Core 699, App 4, all passing.
+
+**Not built.** The volunteer kit's instruction sheet, which entry 25 names as a natural later use of this screen, and adjust to zero, per entry 25 section 3.
+
 ---
 
 ## Decision log
@@ -1319,3 +1362,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 25: one application-wide unit setting, over a unit dropdown beside each input.** Entry 25 section 1 asks for it, and a setting that every figure obeys cannot leave one figure behind in inches.
 - **Entry 25: "mil" as the milliradian, over the 6400 NATO mil of section 12.5's table.** Turrets are marked in milliradians; offering the NATO mil under the same name is the dialling error entry 25 warns about.
 - **Entry 25: lengths and distance stored in inches whatever the setting, over storing in the unit the user worked in.** A file then means the same on every machine, which the test asserts by writing one marking under both settings.
+- **Entry 25: printing through the system's PDF print command, over drawing pages to a printer from the application.** Avalonia has no printing API and nothing may be installed; the PDF is the path that already works, and what it cannot control is said on the screen and on the sheet.
+- **Entry 25: the actual-size note as a render option, on in the print screen and off by default, over adding it to every render.** Phase 0's pages and the gates measured on them stay item for item as they were.
+- **Entry 25: `/PrintScaling /None` in every PDF GroupLab writes, over only the print screen's.** A sheet printed from the command line is measured the same way and deserves the same request.

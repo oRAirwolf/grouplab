@@ -31,7 +31,9 @@ public static class PdfWriter
 
         var objects = new List<string>
         {
-            "<< /Type /Catalog /Pages 2 0 R >>",
+            // NOTES-FROM-PLANNING.md entry 25 section 2: ask the viewer to print with no scaling. A viewer may ignore it and a driver
+            // can still shrink the page, which is why the print screen also says so and the sheet can carry a printed note.
+            "<< /Type /Catalog /Pages 2 0 R /ViewerPreferences << /PrintScaling /None >> >>",
             $"<< /Type /Pages /Kids [{string.Join(" ", pages.Select((_, i) => $"{4 + (2 * i)} 0 R"))}] /Count {pages.Count} >>",
             "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
         };

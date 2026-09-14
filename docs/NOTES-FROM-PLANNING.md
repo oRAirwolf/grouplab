@@ -50,7 +50,7 @@ A free-angle rotation, and a mirror flip. Ninety degree steps in both directions
 
 ## 2026-09-15, entry 25: units, and the fact that the application cannot print a target
 
-**Status: open.** Two findings from Alan's second pass. The first is a small fix with a larger shape behind it. The second is a missing pillar rather than a missing button.
+**Status: actioned 2026-09-15.** Section 1 in f4f5263, reported in `docs/PHASE1-RESULTS.md` M4.3; section 2 as the print screen, M4.4; adjust to zero still waits, per section 3. Two findings from Alan's second pass. The first is a small fix with a larger shape behind it. The second is a missing pillar rather than a missing button.
 
 **Entry 24 section 7 is answered and needs nothing.** The scale entry does take a value, "Distance between the two taps, inches", and he used 1.5 against his grid. Good. The detection message is also doing its job: "Detection failed: 0 of 38 markers found; registration needs 4. Mark this image by hand with a reference length or rectangle" is the right thing to say to someone who loaded a commercial target, and the 38 confirms the corrected `GL-CF25-LTR` geometry is in the library.
 

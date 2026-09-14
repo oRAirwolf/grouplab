@@ -82,6 +82,7 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
         toolbar.Children.Add(Button("Open marking", async () => await OpenMarkingDialog()));
         toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await DetectDialog()));
+        toolbar.Children.Add(Button("Print a target", () => new PrintWindow().Show()));
         toolbar.Children.Add(new Separator { Width = 12 });
         foreach (var (tool, label) in new[] { (MarkingTool.Pan, "Pan (P)"), (MarkingTool.Length, "Scale: length (L)"), (MarkingTool.Rectangle, "Scale: rectangle (R)"), (MarkingTool.Aim, "Point of aim (A)"), (MarkingTool.Impact, "Impact (I)"), (MarkingTool.Select, "Select (V)") })
         {

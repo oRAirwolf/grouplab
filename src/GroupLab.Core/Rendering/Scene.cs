@@ -17,6 +17,9 @@ public enum SceneLayer
     DataBlockFrame,
     DataBlockContent,
     Identifier,
+
+    /// <summary>The print instruction along the bottom edge, drawn only when a print asks for it (NOTES-FROM-PLANNING.md entry 25 section 2).</summary>
+    PrintNote,
 }
 
 public enum TextAnchor

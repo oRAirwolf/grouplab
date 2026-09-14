@@ -28,4 +28,9 @@
     <InternalsVisibleTo Include="GroupLab.App.Tests" />
   </ItemGroup>
 
+  <!-- The built-in library ships beside the application, for the print screen (NOTES-FROM-PLANNING.md entry 25 section 2). -->
+  <ItemGroup>
+    <None Include="..\..\targets\*.gltd.json" Link="targets\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

@@ -19,14 +19,17 @@ public enum DataBlockMode
 
 /// <summary>
 /// Print-time choices, none of which is part of the definition. <see cref="Scale"/> exists to produce the deliberately
-/// mis-scaled print of DESIGN.md section 21's Phase 0 gate, and is 1 for every real print.
+/// mis-scaled print of DESIGN.md section 21's Phase 0 gate, and is 1 for every real print. <see cref="PrintNote"/> is a line of
+/// text along the bottom edge, NOTES-FROM-PLANNING.md entry 25 section 2, so that a sheet printed at the wrong scale carries the
+/// instruction it ignored; without it a page is exactly what Phase 0 drew.
 /// </summary>
 public sealed record RenderOptions(
     DataBlockMode Mode = DataBlockMode.Blank,
     Instance? Instance = null,
     int? TileIndex = null,
     bool AllowInvalid = false,
-    double Scale = 1.0);
+    double Scale = 1.0,
+    string? PrintNote = null);
 
 public sealed record SceneResult(IReadOnlyList<Scene> Pages, string? DefinitionId, IReadOnlyList<Diagnostic> Diagnostics);
 
@@ -41,6 +44,20 @@ public static class SceneBuilder
     public const int InstanceCodeVersion = 11;
 
     public const int InstanceModuleSize = 4;
+
+    /// <summary>The print instruction the print screen puts on every sheet, in plain words.</summary>
+    public const string ActualSizeNote = "Print at actual size, 100 percent. Never fit to page: a sheet printed at any other scale measures wrong.";
+
+    /// <summary>
+    /// The print note's baseline, 45 dmm above the bottom edge, and its largest size, 18 dmm, both in half-dmm. On every built-in sheet
+    /// the band from 41 to 58 dmm is clear: the identifier sits at 74 to 99 dmm and nothing else comes below 70 (PrintNoteTests).
+    /// </summary>
+    public const long PrintNoteBaselineFromBottom = 90;
+
+    public const long PrintNoteFontSize = 36;
+
+    /// <summary>The printed caption of a load-block field, for a screen that asks for its value.</summary>
+    public static string FieldCaption(string key) => Builder.CaptionFor(key);
 
     public static SceneResult Build(TargetDefinition definition, RenderOptions? options = null)
     {
@@ -64,6 +81,8 @@ public static class SceneBuilder
             ["seating"] = "Seating depth",
             ["notes"] = "Notes",
         };
+
+        internal static string CaptionFor(string key) => Captions.GetValueOrDefault(key, key);
 
         private readonly List<Diagnostic> _diagnostics = [];
         private readonly Dictionary<string, Ink> _inks = new(StringComparer.Ordinal);
@@ -122,7 +141,26 @@ public static class SceneBuilder
             AddCodes(items, tile);
             AddDataBlock(items);
             AddIdentifier(items, tile);
+            AddPrintNote(items);
             return new Scene(2L * d.Page.Width, 2L * d.Page.Height, tile, items);
+        }
+
+        /// <summary>The print instruction centred along the bottom edge, when the print asks for one, shrunk to fit inside 300 dmm of each side.</summary>
+        private void AddPrintNote(List<SceneItem> items)
+        {
+            if (string.IsNullOrWhiteSpace(options.PrintNote))
+            {
+                return;
+            }
+
+            long size = HelveticaMetrics.FitFontSize(options.PrintNote, (2L * d.Page.Width) - 1200, PrintNoteFontSize);
+            if (size < 24)
+            {
+                Error("render.printNoteTooWide", "", "The print note does not fit along the bottom of the page at a legible size.");
+                return;
+            }
+
+            items.Add(new TextRun(SceneLayer.PrintNote, RoleColour(InkRole.Text), d.Page.Width, (2L * d.Page.Height) - PrintNoteBaselineFromBottom, size, options.PrintNote, TextAnchor.Centre));
         }
 
         /// <summary>The colour an ink key lays, or null for the paper knockout, which lays none (section 3.3).</summary>
