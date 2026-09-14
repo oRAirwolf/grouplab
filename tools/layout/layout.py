@@ -26,6 +26,9 @@ class Layout:
         self.ring=ring; self.pitch=pitch; self.cols=cols; self.rows=rows
         self.sighter_cols=sighter_cols
         self.sighter_gap = sighter_gap if sighter_gap else int(pitch*1.2)  # 1.2 x pitch, measured convention
+        # a gap set here is a deliberate departure from the convention, so the definition declares it as
+        # cells.sighterGap (TARGET-SCHEMA.md sections 3.6 and 7); None means the convention applies
+        self.declared_gap = sighter_gap if (sighter_gap and sighter_cols) else None
         self.ring_s = ring_sighter or ring
         self.note=note
         self.data_block=data_block   # dmm of bottom band reserved for the load block
@@ -156,7 +159,7 @@ class Layout:
             grid=f"{self.cols}x{self.rows}", scoring=nb, sighters=ns, total=nb+ns,
             pitch_in=round(self.pitch/254,4), ring_in=round(self.ring/254,4),
             x0=self.xs[0], y0=self.ys[0], xs=self.xs, ys=self.ys,
-            sighter_y=self.ys_s, sighter_x=self.xs_s,
+            sighter_y=self.ys_s, sighter_x=self.xs_s, sighter_gap=self.declared_gap,
             markers=len(self.marks), dropped=self.dropped,
             fits=self.fits, free=round(self.free),
             data_block_rect=self.db, qr=[(round(a),round(b)) for a,b in self.qr],

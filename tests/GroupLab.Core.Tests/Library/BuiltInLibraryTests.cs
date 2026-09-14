@@ -73,11 +73,9 @@ public class BuiltInLibraryTests
         string[] expectedRowBands = name is "GL-ZERO-MOA-100Y" or "GL-ZERO-MIL-100M" ? ["/grids/0/bottom", "/grids/0/top"] : [];
         Assert.Equal(expectedRowBands, diagnostics.Where(d => d.Code == "validate.markerRowBand").Select(d => d.Path).Order());
 
-        // Test 26f warns on the four sheets whose lattice misses a bull until the deferred geometry change fixes them
-        // (TARGET-SCHEMA.md section 7, docs/NOTES-FROM-PLANNING.md entry 9).
-        bool unbracketed = name is "GL-CF25-LTR" or "GL-CF25-100M-A4" or "GL-LR300-R24" or "GL-LR300-R36";
-        Assert.Equal(unbracketed, diagnostics.Any(d => d.Test == "26f"));
-        Assert.All(diagnostics, d => Assert.Contains(d.Code, (string[])["validate.markerRowBand", "validate.bracket"]));
+        // Every built-in brackets every bull since the geometry change of docs/NOTES-FROM-PLANNING.md entry 13, so test
+        // 26f is an error and the narrow marker bands are the library's only findings (TARGET-SCHEMA.md section 7).
+        Assert.All(diagnostics, d => Assert.Equal("validate.markerRowBand", d.Code));
     }
 
     [Theory]
@@ -109,6 +107,11 @@ public class BuiltInLibraryTests
             Assert.Equal(layout.GetProperty("ys").EnumerateArray().Select(v => v.GetInt32()), scoring.Select(b => b.Y).Distinct());
             Assert.Equal(layout.GetProperty("sighter_x").EnumerateArray().Select(v => v.GetInt32()), d.Bulls.Where(b => !b.Scoring).Select(b => b.X));
             Assert.Equal(layout.GetProperty("markers").GetInt32(), d.Fiducials!.Markers!.Count);
+            Assert.Equal(layout.GetProperty("fid_scheme").GetString(), d.Fiducials.Scheme);
+
+            // cells.sighterGap is declared exactly where layout.py sets a gap other than the convention (sections 3.6 and 7).
+            var gap = layout.GetProperty("sighter_gap");
+            Assert.Equal(gap.ValueKind == JsonValueKind.Number ? gap.GetInt32() : null, d.Cells?.SighterGap);
         }
         else
         {

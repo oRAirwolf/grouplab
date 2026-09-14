@@ -1,6 +1,6 @@
 # Marker module sweep
 
-The sheets for `docs/FIDUCIAL-DECISION.md` section 10, measurement 2: residual and bull error against the printed module size of the fiducial markers. `GL-CF25-LTR` at five modules, with everything but the fiducials block identical to the built-in sheet. These are measurement sheets, not built-in library targets (`docs/PHASE1-BRIEF.md` M0).
+The sheets for `docs/FIDUCIAL-DECISION.md` section 10, measurement 2: residual and bull error against the printed module size of the fiducial markers. `GL-CF25-LTR` at five modules, with everything but the fiducials block identical to the sheet as the Phase 0 sample set was printed, the frozen `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json`. These are measurement sheets, not built-in library targets (`docs/PHASE1-BRIEF.md` M0).
 
 | Module | `markerSize` | `quietZone` | Markers | Identifier | Definition | PDF |
 |---|---|---|---|---|---|---|
@@ -12,13 +12,13 @@ The sheets for `docs/FIDUCIAL-DECISION.md` section 10, measurement 2: residual a
 
 **Five Letter pages in total, one per PDF.** Print each at 100 percent, not fit to page, on the printer and paper of the Phase 0 sample set.
 
-`tag36h11` prints as 8 modules across its black square, and `markerSize` is that square's edge (TARGET-SCHEMA.md section 3.7), so a module of m is a marker of 8m. The quiet zone is two modules, the 1.0 mm at 0.5 mm that FIDUCIAL-DECISION.md settles. The 0.5 mm sheet has the identifier of the built-in `GL-CF25-LTR`, the sheet the Phase 0 sample set was printed from, because an identifier hashes the geometry and not the name.
+`tag36h11` prints as 8 modules across its black square, and `markerSize` is that square's edge (TARGET-SCHEMA.md section 3.7), so a module of m is a marker of 8m. The quiet zone is two modules, the 1.0 mm at 0.5 mm that FIDUCIAL-DECISION.md settles. The 0.5 mm sheet has the identifier of `GL-CF25-LTR` as the Phase 0 sample set was printed, because an identifier hashes the geometry and not the name. The live `GL-CF25-LTR` has since moved its sighter row (`docs/NOTES-FROM-PLANNING.md` entry 13) and is a different definition; test 26f, now an error, reports the as-printed sighters on the 0.5, 0.6 and 0.8 mm sheets, and the sweep renders them regardless.
 
 **Regenerate** with, from the repository root:
 
 ```
 python -B tools/layout/module_sweep.py
-grouplab sweep module tools/layout/layouts.json scans/phase1/module-sweep/layouts.json scans/phase1/module-sweep
+grouplab sweep module targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json scans/phase1/module-sweep/layouts.json scans/phase1/module-sweep
 ```
 
 The first writes `layouts.json`, the lattice `tools/layout/layout.py` derives at each marker footprint. The second builds each definition, checks its derived lattice against that file marker for marker, validates it, runs conformance test 43 at 300 and 600 DPI, and writes the definition and its PDF. `ModuleSweepTests` fails if the committed definitions stop matching.

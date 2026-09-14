@@ -121,7 +121,9 @@ public static class SurfaceSweep
         ArgumentNullException.ThrowIfNull(output);
         var definition = Phase0Spike.Definition(frozenDirectory, SampleSet.CentreFire);
         double w = definition.Page.Width, h = definition.Page.Height;
-        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], 300);
+        // The frozen as-printed sheet raises test 26f on its sighters, an error since NOTES-FROM-PLANNING.md entry 13; it is
+        // a measurement input, which is rendered as printed rather than refused (entry 11 item 4).
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition, new RenderOptions(AllowInvalid: true)).Pages[0], 300);
         var backend = new OpenCvSharpBackend();
         var metadata = new ImageMetadata("synthetic", Width, Height, null, null, "synthetic", "main camera", 1, 6.25, 23, 1.7);
         (string Name, SurfaceModel Truth, double Twist)[] cases =

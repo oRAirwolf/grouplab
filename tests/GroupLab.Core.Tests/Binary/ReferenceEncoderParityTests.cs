@@ -63,15 +63,18 @@ public class ReferenceEncoderParityTests
     [Fact]
     public void Section4DocumentEncodesToTheReferenceSheetBytes()
     {
+        // Section 4 is GL-CF25-LTR as the Phase 0 sample set was printed. The live sheet's sighter row has since moved
+        // (NOTES-FROM-PLANNING.md entry 13), so the reference sheet is the definition frozen from that print.
         var definition = GltdJsonReader.Read(Encoding.UTF8.GetBytes(Spec.Section4Example)).Definition!;
-        var fixture = ReferenceFixtures.Named("GL-CF25-LTR");
+        var frozen = GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "frozen", "phase0", "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json"))).Definition!;
 
         var result = GltdBinary.Encode(definition);
 
         Assert.Empty(result.Diagnostics);
-        Assert.Equal(fixture.GetProperty("bodyHex").GetString(), Convert.ToHexStringLower(result.Encoding!.Body));
+        Assert.Equal(GltdBinary.Encode(frozen).Encoding!.Body, result.Encoding!.Body);
         Assert.Equal("GL-YCSK-DZZ1-R0VJ-4T5Y", result.Encoding.DefinitionId);
         Assert.Equal(definition.Id, result.Encoding.DefinitionId);
+        Assert.Equal(frozen.Id, result.Encoding.DefinitionId);
     }
 
     [Fact]

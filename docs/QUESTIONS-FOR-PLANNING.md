@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-14, question 6: a sighter gap cannot make three of the four sheets conform, so test 26f cannot become an error in the geometry commit as written
 
-**Status: open**
+**Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 13.
 
 Notes entry 11 asks for one commit that sets `GL-CF25-LTR` to a sighter gap of 454, `GL-LR300-R24` and `GL-LR300-R36` to 1142, `GL-CF25-100M-A4` "per the sweep", declares `cells.sighterGap` on each, and promotes test 26f to an error. Before changing anything I ran those changes through `tools/layout/layout.py`, unmodified. **Only `GL-CF25-LTR` conforms afterwards.** The other three keep bull columns outside the lattice horizontally, which is question 4's finding 1, and no sighter gap reaches a column. Promoting 26f to an error in that commit fails three built-in sheets.
 

@@ -77,6 +77,10 @@ Where the specification is silent and a choice has to be made to go on, record t
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.
 - **Git.** Work on a branch, not `main`. Branch names follow the phase, so `phase-0`, `phase-1` and so on.
 
+## Long-running steps
+
+**Do not end a turn waiting to be notified that something finished.** If a step is long, run it in the foreground and wait for it in that turn, printing progress as it goes. If the tooling offers a real background mechanism with a handle you can poll, poll it in the same turn until it completes. A turn that ends while work is outstanding does not pause the work, it abandons it, and the session then reports progress that is not happening. The only correct reason to end a turn with work outstanding is a blocking question in `docs/QUESTIONS-FOR-PLANNING.md`, and that is a stop, not a wait. Print progress not because it is tidy, but because without it nobody, including you, can tell a slow run from a stopped one.
+
 ## Talking to the planning session
 
 Design work on GroupLab happens in a separate long-running planning session that

@@ -85,7 +85,7 @@ Every layout's outer ring subtends between 0.66 and 1.14 MOA at its intended dis
 
 Shared by every sheet, so sections 4 and 5 do not repeat them.
 
-**Fiducials.** AprilTag `tag36h11`, 0.5 mm module, 4.0 mm marker, 1.0 mm quiet zone, 6.0 mm footprint, pure black, no anti-aliasing, no halftone screening. 8 by 8 modules including the mandatory border, 587 identifiers, minimum Hamming distance 11. Placement rule `grid-boundary-1` on every sheet from 25.4 to 50.8 mm pitch, `grid-boundary-half-1` on the 300 yard tiles, `field-ring-1` on the zeroing sheets. TARGET-SCHEMA.md section 3.7 defines all three.
+**Fiducials.** AprilTag `tag36h11`, 0.5 mm module, 4.0 mm marker, 1.0 mm quiet zone, 6.0 mm footprint, pure black, no anti-aliasing, no halftone screening. 8 by 8 modules including the mandatory border, 587 identifiers, minimum Hamming distance 11. Placement rule `grid-boundary-1` on the sheets from 25.4 to 50.8 mm pitch, `grid-boundary-half-1` on the 300 yard tiles, the 24 and 36 inch rolls and GL-CF25-100M-A4, `field-ring-1` on the zeroing sheets. TARGET-SCHEMA.md section 3.7 defines all three.
 
 **QR codes.** Version 10 at error correction level H, 0.4 mm module, 22.8 mm symbol, 1.6 mm quiet zone, **26.0 mm footprint**. Four, one per page corner, except on the 300 yard tiles, which carry two in the top corners because the sheet is small and the assembly already holds twelve copies. All codes on a sheet carry the same complete payload, so any one survivor is sufficient.
 
@@ -99,7 +99,7 @@ The library standardises on one code size rather than fitting each sheet its own
 
 **Why a dot rather than a cross or an open centre.** The measurements settle this. A filled dot is a compact, high-contrast feature that the bull-finding matched filter locates reliably, and, critically, the naive detector baselines correctly rejected every printed centre dot on size at every threshold setting: measured at 0.101 to 0.107 inches against a hole size gate of 0.15 inches and up. A dot is easy to find and impossible to confuse with a hole. A fine cross would be neither.
 
-**Sighter rows sit at 1.2 times the grid pitch** below the last scoring row. The ratio is the modal value measured across the shipped sheets that have a sighter row, and it is a good number for an independent reason: at 0.2 pitch beyond a normal step it is unambiguously distinguishable from a scoring row by geometry alone, with no OCR and no label parsing, which makes a sighter row identifiable even from a partial scan. Adopting a measured constant for a functional reason is not copying a design. TARGET-SCHEMA.md section 7 makes it a validator warning with `cells.sighterGap` as the override.
+**Sighter rows sit at 1.2 times the grid pitch** below the last scoring row. The ratio is the modal value measured across the shipped sheets that have a sighter row, and it is a good number for an independent reason: at 0.2 pitch beyond a normal step it is unambiguously distinguishable from a scoring row by geometry alone, with no OCR and no label parsing, which makes a sighter row identifiable even from a partial scan. Adopting a measured constant for a functional reason is not copying a design. TARGET-SCHEMA.md section 7 makes it a validator warning with `cells.sighterGap` as the override. Three sheets depart from it, GL-CF25-LTR at 454 dmm and GL-LR300-R24 and GL-LR300-R36 at 1142 dmm, each shortened only as far as brings the sighter row inside the fiducial lattice, and each declares `cells.sighterGap`.
 
 **Load-data block, where present**, is a 31.0 mm band across the bottom of the sheet holding nine fields in three rows plus a 28.0 mm square reserved for the instance code. Section 6 covers it.
 
@@ -115,10 +115,10 @@ Geometry as placed and validated. All coordinates in dmm, tenths of a millimetre
 
 | Layout | Page | Grid | Scoring | Sighters | Pitch | Ring OD | Codes | Markers | Block | Overhead |
 |---|---|---|---|---|---|---|---|---|---|---|
-| **GL-CF25-LTR** | Letter | 5 x 5 | 25 | 3 | 38.0 mm | 25.4 mm | 4 | 34 | no | 6.51 % |
+| **GL-CF25-LTR** | Letter | 5 x 5 | 25 | 3 | 38.0 mm | 25.4 mm | 4 | 38 | no | 6.75 % |
 | **GL-CF25-LTR-D** | Letter | 5 x 5 | 25 | 0 | 38.0 mm | 25.4 mm | 2 | 34 | yes | 4.27 % |
 | **GL-CF25-A4** | A4 | 5 x 5 | 25 | 3 | 38.0 mm | 25.4 mm | 4 | 40 | no | 6.64 % |
-| **GL-CF25-100M-A4** | A4 | 5 x 5 | 25 | 3 | 40.0 mm | 25.4 mm | 4 | 32 | no | 6.18 % |
+| **GL-CF25-100M-A4** | A4 | 5 x 5 | 25 | 3 | 40.0 mm | 25.4 mm | 4 | 88 | no | 9.41 % |
 | **GL-CF30-LTR** | Letter | 5 x 6 | 30 | 0 | 35.0 mm | 22.2 mm | 4 | 38 | no | 6.75 % |
 | **GL-RF25-LTR** | Letter | 5 x 5 | 25 | 5 | 25.4 mm | 15.2 mm | 4 | 42 | yes | 6.99 % |
 | **GL-RF25-A4** | A4 | 5 x 5 | 25 | 5 | 25.4 mm | 15.2 mm | 4 | 42 | yes | 6.76 % |
@@ -128,8 +128,8 @@ Geometry as placed and validated. All coordinates in dmm, tenths of a millimetre
 | **GL-LR30-TAB** | Tabloid | 5 x 6 | 30 | 3 | 50.8 mm | 35.6 mm | 4 | 52 | no | 3.79 % |
 | **GL-LR300-T** | Letter tile | 2 x 3 | 6 per tile | 0 | 101.6 mm | 32.0 mm | 2 | 9 | no | 2.78 % |
 | **GL-LR300-TA4** | A4 tile | 2 x 3 | 6 per tile | 0 | 101.6 mm | 32.0 mm | 2 | 12 | no | 2.86 % |
-| **GL-LR300-R24** | 24 in roll | 6 x 5 | 30 | 3 | 101.6 mm | 63.5 mm | 4 | 35 | yes | 0.91 % |
-| **GL-LR300-R36** | 36 in roll | 9 x 4 | 36 | 3 | 101.6 mm | 63.5 mm | 4 | 48 | yes | 0.80 % |
+| **GL-LR300-R24** | 24 in roll | 6 x 5 | 30 | 3 | 101.6 mm | 63.5 mm | 4 | 113 | yes | 1.56 % |
+| **GL-LR300-R36** | 36 in roll | 9 x 4 | 36 | 3 | 101.6 mm | 63.5 mm | 4 | 151 | yes | 1.46 % |
 | **GL-LR300-R42** | 42 in roll | 10 x 4 | 40 | 3 | 101.6 mm | 63.5 mm | 4 | 73 | yes | 0.82 % |
 
 "Overhead" is the fraction of page area taken by fiducials and codes together.
@@ -141,12 +141,12 @@ Geometry as placed and validated. All coordinates in dmm, tenths of a millimetre
 ```
 page      letter, 2159 x 2794 dmm
 columns x 320, 700, 1080, 1460, 1840          pitch 380 dmm = 38.0 mm = 1.496 in
-rows    y 539, 919, 1299, 1679, 2059          pitch 380 dmm
-sighters  y 2515, x 700, 1080, 1460           gap 456 dmm = 1.2 x pitch
+rows    y 540, 920, 1300, 1680, 2060          pitch 380 dmm
+sighters  y 2514, x 700, 1080, 1460           gap 454 dmm, shortened to bracket
 discs     254 / 238 / 127 / 115 / 25 dmm
 lattice x 130, 510, 890, 1270, 1650, 2030     all integer, see the even-pitch rule below
-lattice y 349, 729, 1109, 1489, 1869, 2249
-fiducials 34 markers, 8 candidates dropped for code and ring clearance
+lattice y 350, 730, 1110, 1490, 1870, 2250, 2704
+fiducials 38 markers, 4 candidates dropped for code and ring clearance
 ```
 
 **GL-CF25-LTR-D**, the same design with the load block instead of the sighter row.
@@ -169,7 +169,7 @@ fiducials 34 markers, 2 candidates dropped
 
 The cost is 0.1 mm of design freedom and the loss of the round 1.500 inch figure. Neither matters. 38.0 mm is 1.4961 inches, which is in fact **closer to the 1.49845 inch pitch actually measured on the sample scans** than a nominal 1.500 would be, and since the definition is the truth and the renderer prints from it, the printed grid is exactly 38.0 mm whatever it is called.
 
-**GL-CF25-A4** is the same design on A4. Note that it carries **40 markers against Letter's 34**. A4 is 2.3 mm narrower, which drops fewer lattice points at the corner codes than the taller page adds along its length. Both counts are far above the fifteen or so a radial distortion model wants, so the photograph path is unaffected either way.
+**GL-CF25-A4** is the same design on A4. Note that it carries **40 markers against Letter's 38**. A4 is 2.3 mm narrower, which drops fewer lattice points at the corner codes than the taller page adds along its length. Both counts are far above the fifteen or so a radial distortion model wants, so the photograph path is unaffected either way.
 
 ```
 page      a4, 2100 x 2970 dmm
@@ -185,8 +185,10 @@ page      a4
 columns x 250, 650, 1050, 1450, 1850          pitch 400 dmm = 40.0 mm = 1.575 in
 rows    y 575, 975, 1375, 1775, 2175
 sighters  y 2655, x 650, 1050, 1450
-fiducials 32 markers, 16 candidates dropped
+fiducials 88 markers, grid-boundary-half-1, 55 candidates dropped
 ```
+
+**Why this sheet takes the half lattice.** Under `grid-boundary-1` the marker columns half a pitch outside the outer bull columns fall at x = 50 and 2050, inside half the safe margin, and both are dropped, which leaves the outer bull columns 20.0 mm outside the lattice. No sighter gap reaches a column. `grid-boundary-half-1` brackets them at a margin of zero, as on the 300 yard tiles, and the sighters already sit inside it at the conventional gap.
 
 One hundred metres is 9.36 percent further than 100 yards, so everything subtends 9.36 percent less and the pitch should grow by the same factor: 38.0 mm becomes 41.6 mm. **A4 cannot hold it.** Five columns at 41.6 mm pitch plus a 25.4 mm ring span 191.8 mm against 186.0 mm of usable width. Forty millimetres is the largest even pitch that fits, and it gives a half-pitch of **0.69 MOA at 100 m** against the Letter sheet's 0.71 MOA at 100 yd. Three percent short of parity, and the page cannot do better without dropping a column or shrinking the ring. This is written down rather than rounded away because it is the kind of detail that later looks like a bug.
 
@@ -321,18 +323,19 @@ Three sheets, one per plotter roll width. The width is fixed by the media and th
 ```
 GL-LR300-R24   roll-24, 6096 x 7112 dmm            24.00 x 28.00 in
 columns x 508, 1524, 2540, 3556, 4572, 5588        pitch 1016 dmm = 101.6 mm = 4.000 in
-rows    y 890, 1906, 2922, 3938, 4954
-sighters  y 6173, x 2032, 3048, 4064               gap 1219 dmm = 1.2 x pitch
+rows    y 928, 1944, 2960, 3976, 4992
+sighters  y 6134, x 2032, 3048, 4064               gap 1142 dmm, shortened to bracket
 discs     635 / 613 / 318 / 302 / 64 dmm           2.500 in outer ring
 data block  x 120, y 6682, 5856 x 310 dmm
-fiducials 35 markers, 21 candidates dropped        30 scoring, overhead 0.91 percent
+fiducials 113 markers, grid-boundary-half-1, 56 candidates dropped
+                                                   30 scoring, overhead 1.56 percent
 
 GL-LR300-R36   roll-36, 9144 x 6096 dmm            36.00 x 24.00 in
 columns x 508 to 8636 in nine steps of 1016
-rows    y 890, 1906, 2922, 3938
-sighters  y 5157, x 3556, 4572, 5588
+rows    y 928, 1944, 2960, 3976
+sighters  y 5118, x 3556, 4572, 5588               gap 1142 dmm, shortened to bracket
 data block  x 120, y 5666, 8904 x 310 dmm
-fiducials 48 markers                               36 scoring, overhead 0.80 percent
+fiducials 151 markers, grid-boundary-half-1        36 scoring, overhead 1.46 percent
 
 GL-LR300-R42   roll-42, 10668 x 6096 dmm           42.00 x 24.00 in
 columns x 762 to 9906 in ten steps of 1016
@@ -344,7 +347,9 @@ fiducials 73 markers                               40 scoring, overhead 0.82 per
 
 **Each sheet uses every column its roll width allows.** That is the rule, and it is why the three differ in shape rather than being scaled copies: 24 inches holds six columns at a 4.0 inch pitch, 36 holds nine, 42 holds ten. Rows are then chosen so the total lands in a plausible session: 30, 36 and 40 scoring bulls plus three sighters. Nobody shoots 70 rounds at 300 yards in one sitting, so filling the roll lengthwise would waste media rather than gather data.
 
-**Overhead falls to under one percent on all three**, against 4.3 to 7.7 percent on Letter, because the fiducial and code footprints are absolute while the page grows. Thirty-five markers on the 24 inch sheet and 73 on the 42 inch one are far more than any registration needs; the surplus is what makes a torn or shot-out corner a non-event.
+**Overhead stays under two percent on all three**, against 4.3 to 7.7 percent on Letter, because the fiducial and code footprints are absolute while the page grows. 113 markers on the 24 inch sheet and 73 on the 42 inch one are far more than any registration needs; the surplus is what makes a torn or shot-out corner a non-event.
+
+**Why the 24 and 36 inch sheets take the half lattice and a shorter sighter gap.** Under `grid-boundary-1` the marker columns outside their outer bull columns are dropped at the page edge, which leaves those bulls 50.8 mm outside the lattice, and no sighter gap reaches a column. `grid-boundary-half-1` brackets the columns at a margin of zero. At the conventional 1219 dmm gap the sighters still sit 50.8 mm below the half lattice, measured, so the gap is shortened to 1142 dmm, which brings them inside it. The 42 inch sheet brackets every bull under `grid-boundary-1` and is unchanged.
 
 The `roll-24`, `roll-36` and `roll-42` page presets fix the width and leave the length to the design. TARGET-SCHEMA.md section 3.2 explains why a roll preset is not the same as a custom page: the width is a media constraint the user cannot change, which is what the generator needs to know before it offers to make a sheet longer.
 
@@ -480,7 +485,7 @@ ONTARGET-DIMENSIONS.md measures all 47 target PDFs shipped with OnTarget TDS. It
 
 **No shipped bull uses a stroked annulus.** Every one is built from filled discs. This was arrived at here from the ambiguity argument in TARGET-SCHEMA.md section 3.4 and adopted before the survey was read; finding that the incumbent does the same, presumably for the same reason, raised confidence enough to make it a format rule rather than a convention.
 
-**The sighter gap is 1.2 times the pitch.** Of the shipped sheets that carry a sighter row, the modal gap is 1.2 pitches. The earlier draft of this library used a measured absolute figure of 45.6 mm, which happened to be the right number for a 38.0 mm pitch and the wrong number for every other pitch in the library. The survey turned an accident into a rule, and all fourteen multi-bull sheets now use it.
+**The sighter gap is 1.2 times the pitch.** Of the shipped sheets that carry a sighter row, the modal gap is 1.2 pitches. The earlier draft of this library used a measured absolute figure of 45.6 mm, which happened to be the right number for a 38.0 mm pitch and the wrong number for every other pitch in the library. The survey turned an accident into a rule, and all fourteen multi-bull sheets now use it, three of them shortened only as far as brings the sighter row inside the fiducial lattice (section 3).
 
 Nothing else from the survey was adopted. Ring counts, numbering schemes, page furniture, colour and naming are all different here, and deliberately so.
 

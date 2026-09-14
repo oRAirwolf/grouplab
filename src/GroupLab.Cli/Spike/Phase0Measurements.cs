@@ -224,7 +224,9 @@ public static class Phase0Measurements
         output.WriteLine("| DPI | Refinement | Markers matched | Corner error against truth, RMS (px) | Mean radial bias (px, + outward) | Residual RMS (in) | Worst bull (in) |");
         output.WriteLine("|---|---|---|---|---|---|---|");
         var definition = Phase0Spike.Definition(targets, SampleSet.CentreFire);
-        var page = SceneBuilder.Build(definition).Pages[0];
+        // The frozen as-printed sheet raises test 26f on its sighters, an error since NOTES-FROM-PLANNING.md entry 13; it is
+        // a measurement input, which is rendered as printed rather than refused (entry 11 item 4).
+        var page = SceneBuilder.Build(definition, new RenderOptions(AllowInvalid: true)).Pages[0];
         foreach (int dpi in (int[])[600, 300])
         {
             var render = SceneRasterizer.Rasterize(page, dpi);

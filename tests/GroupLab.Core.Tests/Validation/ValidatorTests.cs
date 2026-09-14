@@ -14,9 +14,15 @@ public class ValidatorTests
     private static readonly Lazy<IReadOnlyList<BuiltInTarget>> Library = new(() => LibraryBuilder.Build(Repo.PathTo("tools", "layout", "layouts.json")));
 
     [Fact]
-    public void Section4ExampleHasNoErrors()
+    public void Section4ExampleHasNoErrorsButItsSightersOutsideTheLattice()
     {
-        Assert.DoesNotContain(Validate(Spec.Section4Node()), d => d.Severity == Severity.Error);
+        // Section 4 is GL-CF25-LTR as printed for Phase 0, frozen as GL-YCSK-DZZ1-R0VJ-4T5Y. Its three sighters sit outside
+        // the marker lattice, which test 26f made an error in the geometry change that superseded it (NOTES-FROM-PLANNING.md
+        // entry 13); the example is kept as printed, so that is the one finding it carries.
+        var errors = Validate(Spec.Section4Node()).Where(d => d.Severity == Severity.Error).ToList();
+
+        Assert.Equal(["/bulls/25", "/bulls/26", "/bulls/27"], errors.Select(d => d.Path));
+        Assert.All(errors, d => Assert.Equal("26f", d.Test));
     }
 
     [Fact]
@@ -166,8 +172,8 @@ public class ValidatorTests
     [Fact]
     public void Test23GapShortenedToBracketTheSightersDoesNotWarn()
     {
-        // GL-CF25-LTR drops the marker row below its sighters by 1 dmm; a 454 dmm gap keeps it (PHASE0-RESULTS.md 4.4).
-        var doc = ShortenSighterGap(BuiltIn("GL-CF25-LTR"), 2);
+        // GL-CF25-LTR as printed drops the marker row below its sighters by 1 dmm; a 454 dmm gap keeps it (PHASE0-RESULTS.md 4.4).
+        var doc = ShortenSighterGap(Frozen("GL-YCSK-DZZ1-R0VJ-4T5Y"), 2);
 
         Assert.DoesNotContain(Validate(doc), d => d.Test is "23" or "26f");
     }
@@ -181,9 +187,10 @@ public class ValidatorTests
     }
 
     [Fact]
-    public void Test26fBullOutsideTheFiducialLatticeWarns()
+    public void Test26fBullOutsideTheFiducialLatticeIsAnError()
     {
-        var doc = BuiltIn("GL-CF25-LTR");
+        // GL-CF25-LTR as printed for Phase 0: its sighters are 266 dmm below the lattice (PHASE0-RESULTS.md 4.4).
+        var doc = Frozen("GL-YCSK-DZZ1-R0VJ-4T5Y");
         var diagnostics = Validate(doc);
         var bulls = doc["bulls"]!.AsArray();
 
@@ -195,7 +202,7 @@ public class ValidatorTests
             }
             else
             {
-                AssertFinding(diagnostics, Severity.Warning, "26f", $"/bulls/{i}");
+                AssertFinding(diagnostics, Severity.Error, "26f", $"/bulls/{i}");
             }
         }
     }
@@ -309,6 +316,10 @@ public class ValidatorTests
 
     private static JsonObject BuiltIn(string name) =>
         JsonNode.Parse(CanonicalJsonWriter.Write(Library.Value.Single(t => t.Name == name).Definition))!.AsObject();
+
+    /// <summary>A definition a sample set was printed from, under <c>targets/frozen/phase0/</c> (NOTES-FROM-PLANNING.md entry 11).</summary>
+    private static JsonObject Frozen(string id) =>
+        JsonNode.Parse(File.ReadAllBytes(Repo.PathTo("targets", "frozen", "phase0", $"{id}.gltd.json")))!.AsObject();
 
     private static JsonObject ShortenSighterGap(JsonObject doc, int dmm)
     {

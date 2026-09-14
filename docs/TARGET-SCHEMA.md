@@ -291,8 +291,8 @@ When `scheme` names a derivation rule, the marker list is **computed from the gr
 | `scheme` | Lattice | Used by |
 |---|---|---|
 | `explicit` | none, `markers` is authoritative | hand-placed designs |
-| `grid-boundary-1` | cell boundaries: the bull lattice offset by half a pitch in both axes | every sheet at 25.4 to 50.8 mm pitch |
-| `grid-boundary-half-1` | as above, subdivided to half-pitch steps in both axes | coarse-pitch sheets, 101.6 mm and above |
+| `grid-boundary-1` | cell boundaries: the bull lattice offset by half a pitch in both axes | the sheets at 25.4 to 50.8 mm pitch, except GL-CF25-100M-A4; and GL-LR300-R42 |
+| `grid-boundary-half-1` | as above, subdivided to half-pitch steps in both axes | coarse-pitch sheets, 101.6 mm and above, except GL-LR300-R42; and GL-CF25-100M-A4, whose outer bull columns `grid-boundary-1` leaves outside the lattice |
 | `field-ring-1` | a ring of positions in the clear band around a declared measurement grid, on its major lines | the zeroing sheets |
 
 In every derived rule, a candidate position is **dropped** if it would fall outside the safe margin, or within a clearance of a bull's outermost disc, a code, or another marker. The drop test is part of the rule and is therefore versioned with it, which is what makes recomputation deterministic.
@@ -548,6 +548,8 @@ The grid is drawn from the definition and read back by the analyser from the sam
 ## 4. Worked example: the reference 5x5 target
 
 Full document for **GL-CF25-LTR**, the reference layout from TARGET-LIBRARY.md, whose geometry has been placed and overlap-checked by the layout validator.
+
+This is the definition the Phase 0 sample set was printed from, frozen at `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json` and superseded in the live library by `GL-20J3-Y141-0BN3-EYME`, and it is kept here as printed because an identifier hashes geometry, so a worked example that tracked the library would change with every geometry commit.
 
 ```json
 {
@@ -976,7 +978,7 @@ The format can express targets that cannot be printed usefully. The generator va
 
 **The fiducial lattice must bracket every bull.** Every bull centre, sighters included, must lie on or inside the rectangle bounded by the outermost surviving marker centres. Where a derived scheme leaves the sighter row outside, a generator shortens the sighter gap from 1.2 times the pitch, one dmm at a time, until the lattice brackets, and declares `cells.sighterGap`.
 
-A bull outside the lattice is interpolated on a flat scan and extrapolated on anything that is not flat. The Phase 0 photographs measured the cost: the sighters of GL-CF25-LTR, 266 dmm outside the lattice because one marker row is dropped, were the worst bull on three photographs of four. A sweep of the library then found the same defect at the same scale on three sheets nobody had photographed, horizontally, where a sighter gap cannot reach it: the outermost bull columns lie 200 dmm outside on GL-CF25-100M-A4 and 508 dmm outside on GL-LR300-R24 and GL-LR300-R36 (docs/PHASE0-RESULTS.md section 4.4). Until those four sheets are fixed the validator warns, and the change that fixes them makes it an error.
+A bull outside the lattice is interpolated on a flat scan and extrapolated on anything that is not flat. The Phase 0 photographs measured the cost: the sighters of GL-CF25-LTR, 266 dmm outside the lattice because one marker row is dropped, were the worst bull on three photographs of four. A sweep of the library then found the same defect at the same scale on three sheets nobody had photographed, horizontally, where a sighter gap cannot reach it: the outermost bull columns lie 200 dmm outside on GL-CF25-100M-A4 and 508 dmm outside on GL-LR300-R24 and GL-LR300-R36 (docs/PHASE0-RESULTS.md section 4.4). The validator warned until those four sheets were fixed, and the change that fixed them made it an error: GL-CF25-LTR by a sighter gap of 454, GL-CF25-100M-A4 by `grid-boundary-half-1`, and GL-LR300-R24 and GL-LR300-R36 by `grid-boundary-half-1` with a sighter gap of 1142 (docs/NOTES-FROM-PLANNING.md entry 13).
 
 **The data block is a detection exclusion zone.** Its rectangle is declared geometry, which means the detection pipeline knows before it looks at the scan that everything inside it is printed matter and handwriting rather than bullet holes. Nothing in the format enforces this; the pipeline reads the rectangle and excludes it, and DETECTION-PIPELINE.md says where.
 
@@ -1362,7 +1364,7 @@ An implementation is conformant when it passes all of the following. These are w
 26c. A bull column within 30 dmm of a code band must be treated as clashing when the rows are placed.
 26d. Under `corners-1`, a stored `positions` entry that differs from the derived centre is an error. A definition with `count` greater than zero and no `positions` is invalid.
 26e. A `dataBlock` whose `reserve` is greater than zero and less than 280 dmm carries no instance code, and a generator asked to print one on such a sheet refuses rather than shrinking the symbol.
-26f. A bull centre outside the rectangle bounded by the outermost surviving marker centres is an error; a centre on its edge conforms. Until the geometry change that fixes GL-CF25-LTR, GL-CF25-100M-A4, GL-LR300-R24 and GL-LR300-R36, it is a warning.
+26f. A bull centre outside the rectangle bounded by the outermost surviving marker centres is an error; a centre on its edge conforms.
 
 **Print mode and instance data.**
 

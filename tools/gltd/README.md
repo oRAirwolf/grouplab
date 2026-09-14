@@ -20,13 +20,13 @@ python3 check.py
 
 ```
 target              body  frame  v8-H  v10-H   id
-GL-CF25-LTR           55     70    ok     ok   GL-YCSK-DZZ1-R0VJ-4T5Y
-GL-CF25-LTR-D         60     75    ok     ok   GL-KVJD-1XE6-7N39-H19S
-GL-RF36-LTR           55     70    ok     ok   GL-5HMN-72K2-ZMT8-YGX4
-GL-LR300-T            56     71    ok     ok   GL-BFXE-6QHA-DBQS-5R8R
-GL-LR300-T (3x2)      56     71    ok     ok   GL-P0HX-V0PH-FGGP-2597
-GL-LR300-R24          70     85    NO     ok   GL-BYNS-FWB4-P57Z-8T4C
-GL-ZERO-MOA-100Y      70     85    NO     ok   GL-D2WG-NMY1-47JP-J4BW
+GL-CF25-LTR           55     70    ok     ok   GL-20J3-Y141-0BN3-EYME
+GL-CF25-LTR-D         60     75    ok     ok   GL-R0T0-384Z-HRBE-M0EW
+GL-RF36-LTR           55     70    ok     ok   GL-GBMZ-BN3R-MGPQ-QKVG
+GL-LR300-T            56     71    ok     ok   GL-G8JP-FF4D-AE0T-GPMN
+GL-LR300-T (3x2)      56     71    ok     ok   GL-T9EV-G2JF-EFSY-BN57
+GL-LR300-R24          70     85    NO     ok   GL-NBD7-6CY9-Q93C-27TK
+GL-ZERO-MOA-100Y      70     85    NO     ok   GL-4ZY5-DBSH-MRJK-W4R3
 ```
 
 Three results worth keeping in mind:

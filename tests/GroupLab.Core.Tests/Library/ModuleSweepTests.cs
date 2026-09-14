@@ -9,8 +9,12 @@ namespace GroupLab.Core.Tests.Library;
 /// <summary>The marker module sweep of FIDUCIAL-DECISION.md section 10, measurement 2, built by <see cref="ModuleSweep"/>.</summary>
 public class ModuleSweepTests
 {
+    // The sweep's base is GL-CF25-LTR as printed for Phase 0, not the live sheet, whose sighter row moved in the geometry
+    // change of NOTES-FROM-PLANNING.md entry 13.
     private static readonly Lazy<IReadOnlyList<SweepSheet>> Sheets = new(() => ModuleSweep.Build(
-        Repo.PathTo("tools", "layout", "layouts.json"), Repo.PathTo("scans", "phase1", "module-sweep", "layouts.json")));
+        FrozenBase, Repo.PathTo("scans", "phase1", "module-sweep", "layouts.json")));
+
+    private static string FrozenBase => Repo.PathTo("targets", "frozen", "phase0", "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json");
 
     [Fact]
     public void TheSweepPrintsTheFiveModulesMeasurementTwoNames()
@@ -31,7 +35,7 @@ public class ModuleSweepTests
     [Fact]
     public void OnlyTheFiducialsDifferFromTheReferenceSheet()
     {
-        var reference = GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "GL-CF25-LTR.gltd.json"))).Definition!;
+        var reference = GltdJsonReader.Read(File.ReadAllBytes(FrozenBase)).Definition!;
         Assert.All(Sheets.Value, s =>
         {
             Assert.Equal(reference.Bulls, s.Definition.Bulls);
@@ -46,7 +50,7 @@ public class ModuleSweepTests
     public void TheHalfMillimetreSheetIsTheReferenceGeometry()
     {
         // Identifiers hash the body, which carries no name, so the 0.5 mm sheet is the Phase 0 sheet by identifier.
-        var reference = GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "GL-CF25-LTR.gltd.json"))).Definition!;
+        var reference = GltdJsonReader.Read(File.ReadAllBytes(FrozenBase)).Definition!;
         Assert.Equal(reference.Id, Sheets.Value.Single(s => s.ModuleDmm == 5).Definition.Id);
         Assert.Equal(5, Sheets.Value.Select(s => s.Definition.Id).Distinct().Count());
     }

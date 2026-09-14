@@ -11,7 +11,7 @@
    "pitch_in": 1.4961,
    "ring_in": 1.0,
    "x0": 320,
-   "y0": 539,
+   "y0": 540,
    "xs": [
     320,
     700,
@@ -20,24 +20,25 @@
     1840
    ],
    "ys": [
-    539,
-    919,
-    1299,
-    1679,
-    2059
+    540,
+    920,
+    1300,
+    1680,
+    2060
    ],
    "sighter_y": [
-    2515
+    2514
    ],
    "sighter_x": [
     700,
     1080,
     1460
    ],
-   "markers": 34,
-   "dropped": 8,
+   "sighter_gap": 454,
+   "markers": 38,
+   "dropped": 4,
    "fits": true,
-   "free": 4,
+   "free": 6,
    "data_block_rect": null,
    "qr": [
     [
@@ -57,9 +58,9 @@
      2544
     ]
    ],
-   "marker_pct": 2.03,
+   "marker_pct": 2.27,
    "qr_pct": 4.48,
-   "overhead_pct": 6.51,
+   "overhead_pct": 6.75,
    "errors": [],
    "warnings": [],
    "nwarn": 0,
@@ -97,6 +98,7 @@
    ],
    "sighter_y": [],
    "sighter_x": [],
+   "sighter_gap": null,
    "markers": 34,
    "dropped": 2,
    "fits": true,
@@ -163,6 +165,7 @@
     1050,
     1430
    ],
+   "sighter_gap": null,
    "markers": 40,
    "dropped": 2,
    "fits": true,
@@ -232,8 +235,9 @@
     1050,
     1450
    ],
-   "markers": 32,
-   "dropped": 16,
+   "sighter_gap": null,
+   "markers": 88,
+   "dropped": 55,
    "fits": true,
    "free": 76,
    "data_block_rect": null,
@@ -255,15 +259,15 @@
      2720
     ]
    ],
-   "marker_pct": 1.85,
+   "marker_pct": 5.08,
    "qr_pct": 4.34,
-   "overhead_pct": 6.18,
+   "overhead_pct": 9.41,
    "errors": [],
    "warnings": [],
    "nwarn": 0,
    "note": "Centrefire, TRUE 100 m angular sizing, A4",
    "data_block": 0,
-   "fid_scheme": "grid-boundary-1",
+   "fid_scheme": "grid-boundary-half-1",
    "tile": null,
    "qr_count": 4
   },
@@ -296,6 +300,7 @@
    ],
    "sighter_y": [],
    "sighter_x": [],
+   "sighter_gap": null,
    "markers": 38,
    "dropped": 4,
    "fits": true,
@@ -367,6 +372,7 @@
     1334,
     1588
    ],
+   "sighter_gap": null,
    "markers": 42,
    "dropped": 0,
    "fits": true,
@@ -443,6 +449,7 @@
     1304,
     1558
    ],
+   "sighter_gap": null,
    "markers": 42,
    "dropped": 0,
    "fits": true,
@@ -520,6 +527,7 @@
     1206,
     1460
    ],
+   "sighter_gap": null,
    "markers": 54,
    "dropped": 2,
    "fits": true,
@@ -589,6 +597,7 @@
     1397,
     1905
    ],
+   "sighter_gap": null,
    "markers": 46,
    "dropped": 2,
    "fits": true,
@@ -663,6 +672,7 @@
     1485,
     1993
    ],
+   "sighter_gap": null,
    "markers": 46,
    "dropped": 2,
    "fits": true,
@@ -738,6 +748,7 @@
     1397,
     1905
    ],
+   "sighter_gap": null,
    "markers": 52,
    "dropped": 2,
    "fits": true,
@@ -796,6 +807,7 @@
    ],
    "sighter_y": [],
    "sighter_x": [],
+   "sighter_gap": null,
    "markers": 9,
    "dropped": 26,
    "fits": true,
@@ -849,6 +861,7 @@
    ],
    "sighter_y": [],
    "sighter_x": [],
+   "sighter_gap": null,
    "markers": 12,
    "dropped": 23,
    "fits": true,
@@ -890,7 +903,7 @@
    "pitch_in": 4.0,
    "ring_in": 2.5,
    "x0": 508,
-   "y0": 890,
+   "y0": 928,
    "xs": [
     508,
     1524,
@@ -900,24 +913,25 @@
     5588
    ],
    "ys": [
-    890,
-    1906,
-    2922,
-    3938,
-    4954
+    928,
+    1944,
+    2960,
+    3976,
+    4992
    ],
    "sighter_y": [
-    6173
+    6134
    ],
    "sighter_x": [
     2032,
     3048,
     4064
    ],
-   "markers": 35,
-   "dropped": 21,
+   "sighter_gap": 1142,
+   "markers": 113,
+   "dropped": 56,
    "fits": true,
-   "free": 324,
+   "free": 401,
    "data_block_rect": [
     120,
     6682,
@@ -942,15 +956,15 @@
      6522
     ]
    ],
-   "marker_pct": 0.29,
+   "marker_pct": 0.94,
    "qr_pct": 0.62,
-   "overhead_pct": 0.91,
+   "overhead_pct": 1.56,
    "errors": [],
    "warnings": [],
    "nwarn": 0,
    "note": "300 yd, 24 in roll, 30 scoring bulls at 4.0 in pitch, 2.5 in rings",
    "data_block": 310,
-   "fid_scheme": "grid-boundary-1",
+   "fid_scheme": "grid-boundary-half-1",
    "tile": null,
    "qr_count": 4
   },
@@ -965,7 +979,7 @@
    "pitch_in": 4.0,
    "ring_in": 2.5,
    "x0": 508,
-   "y0": 890,
+   "y0": 928,
    "xs": [
     508,
     1524,
@@ -978,23 +992,24 @@
     8636
    ],
    "ys": [
-    890,
-    1906,
-    2922,
-    3938
+    928,
+    1944,
+    2960,
+    3976
    ],
    "sighter_y": [
-    5157
+    5118
    ],
    "sighter_x": [
     3556,
     4572,
     5588
    ],
-   "markers": 48,
-   "dropped": 22,
+   "sighter_gap": 1142,
+   "markers": 151,
+   "dropped": 58,
    "fits": true,
-   "free": 324,
+   "free": 401,
    "data_block_rect": [
     120,
     5666,
@@ -1019,15 +1034,15 @@
      5506
     ]
    ],
-   "marker_pct": 0.31,
+   "marker_pct": 0.98,
    "qr_pct": 0.49,
-   "overhead_pct": 0.8,
+   "overhead_pct": 1.46,
    "errors": [],
    "warnings": [],
    "nwarn": 0,
    "note": "300 yd, 36 in roll, 36 scoring bulls at 4.0 in pitch, 2.5 in rings",
    "data_block": 310,
-   "fid_scheme": "grid-boundary-1",
+   "fid_scheme": "grid-boundary-half-1",
    "tile": null,
    "qr_count": 4
   },
@@ -1069,6 +1084,7 @@
     5334,
     6350
    ],
+   "sighter_gap": null,
    "markers": 73,
    "dropped": 4,
    "fits": true,

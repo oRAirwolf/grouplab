@@ -9,14 +9,19 @@ HALF    = "grid-boundary-half-1"
 
 L = [
  # --- centrefire load development ---
- Layout("GL-CF25-LTR", "letter", ring=254, pitch=380, cols=5, rows=5, sighter_cols=3,
+ # Every bull must lie on or inside the fiducial lattice (TARGET-SCHEMA.md section 7, test 26f). Four sheets did not
+ # as printed for Phase 0; docs/NOTES-FROM-PLANNING.md entry 13 fixes them. At the conventional 456 the marker row
+ # below GL-CF25-LTR's sighters is dropped by 1 dmm, so its gap is 454.
+ Layout("GL-CF25-LTR", "letter", ring=254, pitch=380, cols=5, rows=5, sighter_cols=3, sighter_gap=454,
         note="Centrefire, 100 yd, 38.0 mm grid, Letter. Sighter variant"),
  Layout("GL-CF25-LTR-D", "letter", ring=254, pitch=380, cols=5, rows=5, sighter_cols=0,
         data_block=DB_FULL, qr_count=2,
         note="Centrefire, 100 yd, Letter. Load-block variant, no sighters, 2 codes"),
  Layout("GL-CF25-A4", "a4", ring=254, pitch=380, cols=5, rows=5, sighter_cols=3,
         note="Centrefire, 100 yd geometry on A4"),
- Layout("GL-CF25-100M-A4", "a4", ring=254, pitch=400, cols=5, rows=5, sighter_cols=3,
+ # grid-boundary-1 drops both outer marker columns on this page, leaving the outer bull columns 200 dmm outside the
+ # lattice, and no sighter gap reaches a column: the half lattice brackets them at a margin of zero (entry 13)
+ Layout("GL-CF25-100M-A4", "a4", ring=254, pitch=400, cols=5, rows=5, sighter_cols=3, fid_scheme=HALF,
         note="Centrefire, TRUE 100 m angular sizing, A4"),
  Layout("GL-CF30-LTR", "letter", ring=222, pitch=350, cols=5, rows=6, sighter_cols=0,
         note="Centrefire dense, 30 scoring, Letter"),
@@ -42,10 +47,13 @@ L = [
         fid_scheme=HALF, tile=(2, 2), qr_count=2,
         note="300 yd tile on A4. 2x2 default = 24 bulls, 3x2 = 36"),
  # --- long range on roll media ---
- Layout("GL-LR300-R24", "roll24", ring=635, pitch=1016, cols=6, rows=5, sighter_cols=3,
-        data_block=DB_FULL, note="300 yd, 24 in roll, 30 scoring bulls at 4.0 in pitch, 2.5 in rings"),
- Layout("GL-LR300-R36", "roll36", ring=635, pitch=1016, cols=9, rows=4, sighter_cols=3,
-        data_block=DB_FULL, note="300 yd, 36 in roll, 36 scoring bulls at 4.0 in pitch, 2.5 in rings"),
+ # R24 and R36 have the outer bull columns 508 dmm outside a grid-boundary-1 lattice, so they take the half lattice
+ # (entry 13). The half lattice alone still leaves the sighters 508 dmm below it at the conventional 1219, measured;
+ # at 1142 it brackets every bull.
+ Layout("GL-LR300-R24", "roll24", ring=635, pitch=1016, cols=6, rows=5, sighter_cols=3, sighter_gap=1142,
+        fid_scheme=HALF, data_block=DB_FULL, note="300 yd, 24 in roll, 30 scoring bulls at 4.0 in pitch, 2.5 in rings"),
+ Layout("GL-LR300-R36", "roll36", ring=635, pitch=1016, cols=9, rows=4, sighter_cols=3, sighter_gap=1142,
+        fid_scheme=HALF, data_block=DB_FULL, note="300 yd, 36 in roll, 36 scoring bulls at 4.0 in pitch, 2.5 in rings"),
  Layout("GL-LR300-R42", "roll42", ring=635, pitch=1016, cols=10, rows=4, sighter_cols=3,
         data_block=DB_FULL, note="300 yd, 42 in roll, 40 scoring bulls at 4.0 in pitch, 2.5 in rings"),
 ]

@@ -1,7 +1,7 @@
 {
   "gltd": 1,
   "revision": 0,
-  "id": "GL-YCSK-DZZ1-R0VJ-4T5Y",
+  "id": "GL-20J3-Y141-0BN3-EYME",
   "name": "GroupLab 5x5 Load Development, Letter",
   "description": "25 scoring bulls on a 38.0 mm grid with a 3-bull sighter row.",
   "author": "GroupLab built-in library",
@@ -71,201 +71,206 @@
   "bulls": [
     {
       "x": 320,
-      "y": 539,
+      "y": 540,
       "ringSet": "std",
       "label": "1",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 539,
+      "y": 540,
       "ringSet": "std",
       "label": "2",
       "scoring": true
     },
     {
       "x": 1080,
-      "y": 539,
+      "y": 540,
       "ringSet": "std",
       "label": "3",
       "scoring": true
     },
     {
       "x": 1460,
-      "y": 539,
+      "y": 540,
       "ringSet": "std",
       "label": "4",
       "scoring": true
     },
     {
       "x": 1840,
-      "y": 539,
+      "y": 540,
       "ringSet": "std",
       "label": "5",
       "scoring": true
     },
     {
       "x": 320,
-      "y": 919,
+      "y": 920,
       "ringSet": "std",
       "label": "6",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 919,
+      "y": 920,
       "ringSet": "std",
       "label": "7",
       "scoring": true
     },
     {
       "x": 1080,
-      "y": 919,
+      "y": 920,
       "ringSet": "std",
       "label": "8",
       "scoring": true
     },
     {
       "x": 1460,
-      "y": 919,
+      "y": 920,
       "ringSet": "std",
       "label": "9",
       "scoring": true
     },
     {
       "x": 1840,
-      "y": 919,
+      "y": 920,
       "ringSet": "std",
       "label": "10",
       "scoring": true
     },
     {
       "x": 320,
-      "y": 1299,
+      "y": 1300,
       "ringSet": "std",
       "label": "11",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 1299,
+      "y": 1300,
       "ringSet": "std",
       "label": "12",
       "scoring": true
     },
     {
       "x": 1080,
-      "y": 1299,
+      "y": 1300,
       "ringSet": "std",
       "label": "13",
       "scoring": true
     },
     {
       "x": 1460,
-      "y": 1299,
+      "y": 1300,
       "ringSet": "std",
       "label": "14",
       "scoring": true
     },
     {
       "x": 1840,
-      "y": 1299,
+      "y": 1300,
       "ringSet": "std",
       "label": "15",
       "scoring": true
     },
     {
       "x": 320,
-      "y": 1679,
+      "y": 1680,
       "ringSet": "std",
       "label": "16",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 1679,
+      "y": 1680,
       "ringSet": "std",
       "label": "17",
       "scoring": true
     },
     {
       "x": 1080,
-      "y": 1679,
+      "y": 1680,
       "ringSet": "std",
       "label": "18",
       "scoring": true
     },
     {
       "x": 1460,
-      "y": 1679,
+      "y": 1680,
       "ringSet": "std",
       "label": "19",
       "scoring": true
     },
     {
       "x": 1840,
-      "y": 1679,
+      "y": 1680,
       "ringSet": "std",
       "label": "20",
       "scoring": true
     },
     {
       "x": 320,
-      "y": 2059,
+      "y": 2060,
       "ringSet": "std",
       "label": "21",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 2059,
+      "y": 2060,
       "ringSet": "std",
       "label": "22",
       "scoring": true
     },
     {
       "x": 1080,
-      "y": 2059,
+      "y": 2060,
       "ringSet": "std",
       "label": "23",
       "scoring": true
     },
     {
       "x": 1460,
-      "y": 2059,
+      "y": 2060,
       "ringSet": "std",
       "label": "24",
       "scoring": true
     },
     {
       "x": 1840,
-      "y": 2059,
+      "y": 2060,
       "ringSet": "std",
       "label": "25",
       "scoring": true
     },
     {
       "x": 700,
-      "y": 2515,
+      "y": 2514,
       "ringSet": "std",
       "label": "S1",
       "scoring": false
     },
     {
       "x": 1080,
-      "y": 2515,
+      "y": 2514,
       "ringSet": "std",
       "label": "S2",
       "scoring": false
     },
     {
       "x": 1460,
-      "y": 2515,
+      "y": 2514,
       "ringSet": "std",
       "label": "S3",
       "scoring": false
     }
   ],
+  "cells": {
+    "mode": "grid",
+    "drawn": false,
+    "sighterGap": 454
+  },
   "fiducials": {
     "scheme": "grid-boundary-1",
     "family": "apriltag-36h11",
@@ -276,172 +281,192 @@
       {
         "id": 0,
         "x": 510,
-        "y": 349
+        "y": 350
       },
       {
         "id": 1,
         "x": 890,
-        "y": 349
+        "y": 350
       },
       {
         "id": 2,
         "x": 1270,
-        "y": 349
+        "y": 350
       },
       {
         "id": 3,
         "x": 1650,
-        "y": 349
+        "y": 350
       },
       {
         "id": 4,
         "x": 130,
-        "y": 729
+        "y": 730
       },
       {
         "id": 5,
         "x": 510,
-        "y": 729
+        "y": 730
       },
       {
         "id": 6,
         "x": 890,
-        "y": 729
+        "y": 730
       },
       {
         "id": 7,
         "x": 1270,
-        "y": 729
+        "y": 730
       },
       {
         "id": 8,
         "x": 1650,
-        "y": 729
+        "y": 730
       },
       {
         "id": 9,
         "x": 2030,
-        "y": 729
+        "y": 730
       },
       {
         "id": 10,
         "x": 130,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 11,
         "x": 510,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 12,
         "x": 890,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 13,
         "x": 1270,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 14,
         "x": 1650,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 15,
         "x": 2030,
-        "y": 1109
+        "y": 1110
       },
       {
         "id": 16,
         "x": 130,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 17,
         "x": 510,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 18,
         "x": 890,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 19,
         "x": 1270,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 20,
         "x": 1650,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 21,
         "x": 2030,
-        "y": 1489
+        "y": 1490
       },
       {
         "id": 22,
         "x": 130,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 23,
         "x": 510,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 24,
         "x": 890,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 25,
         "x": 1270,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 26,
         "x": 1650,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 27,
         "x": 2030,
-        "y": 1869
+        "y": 1870
       },
       {
         "id": 28,
         "x": 130,
-        "y": 2249
+        "y": 2250
       },
       {
         "id": 29,
         "x": 510,
-        "y": 2249
+        "y": 2250
       },
       {
         "id": 30,
         "x": 890,
-        "y": 2249
+        "y": 2250
       },
       {
         "id": 31,
         "x": 1270,
-        "y": 2249
+        "y": 2250
       },
       {
         "id": 32,
         "x": 1650,
-        "y": 2249
+        "y": 2250
       },
       {
         "id": 33,
         "x": 2030,
-        "y": 2249
+        "y": 2250
+      },
+      {
+        "id": 34,
+        "x": 510,
+        "y": 2704
+      },
+      {
+        "id": 35,
+        "x": 890,
+        "y": 2704
+      },
+      {
+        "id": 36,
+        "x": 1270,
+        "y": 2704
+      },
+      {
+        "id": 37,
+        "x": 1650,
+        "y": 2704
       }
     ]
   },

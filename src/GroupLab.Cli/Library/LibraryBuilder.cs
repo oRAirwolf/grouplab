@@ -137,6 +137,11 @@ public static class LibraryBuilder
                 dataBlockHeight, DataBlockLayout.Fields3x3, FieldSet.Standard9, 280, "black", "text", 2, null)
             : null;
 
+        // TARGET-SCHEMA.md sections 3.6 and 7: a sheet whose sighter gap departs from 1.2 times the pitch declares it.
+        // layout.py reports the gap only where a sheet sets its own; cells.grid derives, so the library omits it.
+        var gap = r.GetProperty("sighter_gap");
+        Cells? cells = gap.ValueKind == JsonValueKind.Number ? new Cells(CellsMode.Grid, false, gap.GetInt32(), null, null, null, null) : null;
+
         var definition = new TargetDefinition(
             1, 0, null, Names[name], SheetDescription(xs.Count * ys.Count, pitch, sighterXs.Count * sighterYs.Count, dataBlockHeight > 0, tiling),
             "GroupLab built-in library", "CC0-1.0", Created, "dmm",
@@ -144,7 +149,7 @@ public static class LibraryBuilder
             Inks,
             [new RingSet("std", Discs(ring))],
             bulls,
-            null,
+            cells,
             new Fiducials(r.GetProperty("fid_scheme").GetString()!, FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
             Codes(width, height, dataBlockHeight, codeCount),
             Print,

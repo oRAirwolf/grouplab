@@ -28,7 +28,7 @@ return args switch
     ["measure", var image, var definition, .. var rest] => Measure(image, definition, rest),
     ["spike", var measurement] => Spike(measurement, "scans/phase0", SampleSet.FrozenDirectory),
     ["spike", var measurement, var scans, var targets] => Spike(measurement, scans, targets),
-    ["sweep", "module", var layouts, var sweep, var directory] => ModuleSweep.Run(layouts, sweep, directory, Console.Out),
+    ["sweep", "module", var baseDefinition, var sweep, var directory] => ModuleSweep.Run(baseDefinition, sweep, directory, Console.Out),
     ["surface", "synthetic"] => SurfaceSweep.Synthetic(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
     ["surface", "rendered"] => SurfaceSweep.Rendered(SampleSet.FrozenDirectory, "scans/phase1", Console.Out),
     ["surface", "frames"] => SurfaceFrames.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
@@ -448,7 +448,7 @@ static int Usage()
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
         grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors [<scans-directory> <definitions-directory>]
-        grouplab sweep module <layouts.json> <module-sweep-layouts.json> <output-directory>
+        grouplab sweep module <base.gltd.json> <module-sweep-layouts.json> <output-directory>
         grouplab surface synthetic|rendered|frames|lens-sweep|lens
         """);
     return 2;

@@ -250,8 +250,8 @@ public static class GltdValidator
 
         /// <summary>
         /// Section 7: every bull centre, sighters included, must lie on or inside the rectangle bounded by the outermost
-        /// marker centres (test 26f). It is a warning until the geometry change that fixes the four built-in sheets which
-        /// break it, and an error from that change (docs/NOTES-FROM-PLANNING.md entry 9).
+        /// marker centres (test 26f), inclusively, so a centre on the lattice edge conforms. An error since the geometry
+        /// change that fixed the four built-in sheets which broke it (docs/NOTES-FROM-PLANNING.md entries 9 and 13).
         /// </summary>
         private void CheckBracketing(List<PointDmm> markers)
         {
@@ -266,9 +266,8 @@ public static class GltdValidator
                 var b = d.Bulls[i];
                 if (!Inside(lattice, b.X, b.Y))
                 {
-                    Warn("validate.bracket", $"/bulls/{i}",
-                        $"Bull {b.Label ?? i.ToString(System.Globalization.CultureInfo.InvariantCulture)} at ({b.X}, {b.Y}) lies outside the fiducial lattice, ({lattice.X0}, {lattice.Y0}) to ({lattice.X1}, {lattice.Y1}), and is extrapolated on any sheet that is not flat (section 7). " +
-                        "A warning until the geometry change that fixes GL-CF25-LTR, GL-CF25-100M-A4, GL-LR300-R24 and GL-LR300-R36, then an error.", "26f");
+                    Error("validate.bracket", $"/bulls/{i}",
+                        $"Bull {b.Label ?? i.ToString(System.Globalization.CultureInfo.InvariantCulture)} at ({b.X}, {b.Y}) lies outside the fiducial lattice, ({lattice.X0}, {lattice.Y0}) to ({lattice.X1}, {lattice.Y1}), and is extrapolated on any sheet that is not flat (section 7).", "26f");
                 }
             }
         }

@@ -44,8 +44,10 @@ public class FrozenDefinitionTests
     }
 
     /// <summary>
-    /// Test 26f is exempt: GL-YCSK-DZZ1-R0VJ-4T5Y, GL-CF25-LTR as printed, has its sighters outside the marker lattice by
-    /// construction, which is the defect the geometry change of PHASE0-RESULTS.md section 4.4 fixes.
+    /// Test 26f is exempt, and only on the bulls it was printed with. GL-YCSK-DZZ1-R0VJ-4T5Y, GL-CF25-LTR as printed, has
+    /// its three sighters outside the marker lattice by construction, the defect of PHASE0-RESULTS.md section 4.4. Since the
+    /// geometry change of NOTES-FROM-PLANNING.md entry 13 made 26f an error it no longer validates clean: that is the finding
+    /// entry 11 item 4 anticipates, recorded here exactly, and the fixture stays as printed.
     /// </summary>
     [Theory]
     [MemberData(nameof(Phase0))]
@@ -53,8 +55,13 @@ public class FrozenDefinitionTests
     {
         var definition = GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "frozen", "phase0", file))).Definition!;
 
-        var errors = GltdValidator.Validate(definition).Where(d => d.Severity == Severity.Error && d.Test != "26f");
+        var diagnostics = GltdValidator.Validate(definition);
 
-        Assert.Empty(errors);
+        Assert.DoesNotContain(diagnostics, d => d.Severity == Severity.Error && d.Test != "26f");
+        string[] sighters = file == "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json"
+            ? [.. definition.Bulls.Select((b, i) => (b, i)).Where(x => !x.b.Scoring).Select(x => $"/bulls/{x.i}")]
+            : [];
+        Assert.Equal(sighters, diagnostics.Where(d => d.Test == "26f").Select(d => d.Path));
+        Assert.All(diagnostics.Where(d => d.Test == "26f"), d => Assert.Equal(Severity.Error, d.Severity));
     }
 }
