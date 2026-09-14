@@ -12,6 +12,91 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-14, question 10: the shotGroups fixtures M3 is gated on are not in the repository, and R cannot run here
+
+**Status: open.** It blocks reading M3's gate, so I have stopped here, per CONTRIBUTING.md. M2 is finished and reported in `docs/PHASE1-RESULTS.md` M2.2.
+
+**What the documents say exists.**
+
+- `DESIGN.md` line 520, Phase 2: "The shotGroups fixtures are already generated, by `tools/shotgroups/sg_dump.R`."
+- `docs/PHASE1-BRIEF.md` section 5: "Generated fixtures under `test/fixtures/shotgroups/` with a README stating provenance, package version, R version and licence".
+- `docs/STATISTICS.md` section 15.1: "The fixtures are **generated output**, checked in for reproducibility so that contributors need no R installation to run the test suite."
+
+**What the repository has.**
+
+- **Only the driver:** `tools/shotgroups/sg_dump.R`, added in `b53c606`.
+- **No output:** no `shotGroups_*.json` or `.csv` anywhere in the tree, and no `test/fixtures/`.
+- **No R:** `where Rscript` finds nothing.
+- **Why I don't install it:** entry 2 says "Nothing needs installing on this machine".
+
+**What the gate needs that `sg_dump.R` does not write, even once run.** This is for `docs/STATISTICS.md` section 15.5, items 1, 2, 3 and 5.
+
+1. **The inputs.**
+   - **What the dump holds:** shotGroups' outputs keyed `<function>.<component>.<row>.<col>`, and no coordinates.
+   - **What GroupLab needs:** each dataset's shots, to compute its own side. That is `point.x`, `point.y`, `distance`, the units, and both `group` and `series`, since section 15.4 item 8 says the savage frames key on `series`.
+   - **Licence:** these are shotGroups' data. Section 15.1's arrangement, generated fixtures with provenance in the test tree, is the one I would apply to them, but that is yours to confirm.
+2. **Groups.** The script passes the whole data frame to `getXYmat` and to every function. So `DFcciHV`, `DF300BLKhl`, `DFlandy04`, `DFlandy01` and `DFsavage` each give one pooled result, not per-group results.
+3. **`compareGroups`.** It is never called. The two-group and multi-group branches of section 15.2 have no reference, and the `coin` branch, section 15.4 item 6, is unrecorded.
+4. **The Monte Carlo reference.** Item 5 checks GroupLab's tables against `DFdistr` "to **within 0.2 percent on the mean and 0.5 percent on the 2.5 and 97.5 percent quantiles**, for `n` from 2 to 50 and `nGroups` from 1 to 10". Nothing exports those cells.
+5. **The eight datasets of section 15.2.** Each is one invocation.
+
+**Options.**
+
+- **A. The planning session extends the dump, runs it with R 4.3.3 and shotGroups 0.8.4, and commits the output.** This is how question 2's libapriltag corners came back.
+  - **What it holds:** the inputs, per-group outputs, `compareGroups` with the `coin` branch recorded, and the `DFdistr` cells, with section 15.1's README.
+  - **Where it lands:** the test project is `tests/GroupLab.Core.Tests/`, so I'd put it in `tests/GroupLab.Core.Tests/Fixtures/shotgroups/`, unless you want the brief's `test/fixtures/shotgroups/`.
+  - **Cost:** one R session.
+- **B. Allow R and shotGroups to be installed on this machine.**
+  - **Cost:** it reverses entry 2 for a toolchain that is not part of the build.
+  - **A second cost:** I would then write the fixture extension against an R API I cannot check against its documentation here.
+- **C. Build M3 without the comparisons, and read them in Phase 2.**
+  - **What needs nothing:**
+    - sections 3.4, 9.1, 9.2, 10 and 12.5 publish exact values that depend only on `n` and constants;
+    - items 4 and 6 are synthetic truth;
+    - the Monte Carlo tables can be generated.
+  - **Cost:** gate items 1, 2, 3 and 5 go unread. `DF300BLK`'s values quoted in sections 3.3 and 4 cannot be reproduced without its 20 shots.
+
+**What I would choose: A, with C's build going ahead while A is run.** The brief and the specification authorise the build; only the gate reading needs the files. If you agree, say so in the answer and I will start the build without waiting for them.
+
+---
+
+## 2026-09-14, question 9: gate 2's 0.01 in hole-centre tolerance sits at the noise floor measured on real paper
+
+**Status: open.** Nothing waits on it. M2 is reported against the gate as written, and fails it.
+
+`docs/PHASE1-BRIEF.md` section 4.4:
+- **Item 2:** "render-and-difference recovers at least 99 percent of holes with no false positives at a hole-centre tolerance of 0.01 in".
+- **Item 3:** "The 0.008 in centroid noise floor measured on real paper is the number it will eventually be judged against, and a synthetic figure far below it means the synthesis is too clean."
+
+**The measurement.** From `docs/PHASE1-RESULTS.md` M2.2, held-out seeds 1001 to 1003, run once, three sheets per row:
+
+| DPI | Holes per bull | Holes | Within 0.15 in | Within 0.01 in | Strays | Centre error median / 95th pct (in) |
+|---|---|---|---|---|---|---|
+| 600 | 1 | 84 | 100.0% | 76.2% | 1 | 0.0063 / 0.0192 |
+| 600 | 2 | 168 | 94.0% | 61.9% | 2 | 0.0074 / 0.0375 |
+| 300 | 1 | 84 | 100.0% | 82.1% | 0 | 0.0067 / 0.0148 |
+| 300 | 2 | 168 | 96.4% | 56.5% | 0 | 0.0082 / 0.0328 |
+
+**Why the tolerance decides it, not the detector.**
+
+- **Where 0.01 in falls:** the median centre error is the paper floor item 3 names, which puts 0.01 in near the 75th percentile of the error.
+- **What 99 percent would take:** the 99th percentile of the error under 0.01 in. That is a centre error well below the floor, which item 3 says means a synthesis too clean.
+- **Why a better detector can't fix it:** the synthetic truth centre is the point a lobed rim was drawn around. A centroid of a lobed star reaches that point only as closely as the lobes allow.
+
+**Options.**
+
+- **A. Keep 0.01 in.** The gate then fails on any synthesis that passes item 3's realism test.
+- **B. Gate recall and false positives at a match tolerance, and keep centre accuracy under item 3.**
+  - **The tolerance:** 0.15 in, the survey's hit tolerance. Centre accuracy is judged against paper.
+  - **How the held-out run reads under B:**
+    - one hole per bull meets 99 percent recall at both resolutions, but has 1 stray over three sheets at 600 DPI;
+    - two per bull does not meet it, at 94.0 and 96.4 percent.
+- **C. Set the tolerance from the floor, for example 0.02 in.** One hole per bull's 95th percentile is 0.019 and 0.015 in, so it would also sit near the line.
+
+**What I would choose: B.** It separates finding a hole from locating it. Locating is then judged against paper, which no synthesis can stand in for.
+
+---
+
 ## 2026-09-14, question 8: the sheet contradicts entry 15's reading of the table frames' EXIF, and the joint-fit lens key mixes two pixel geometries
 
 **Status: open.** Nothing here waits on it. M1 is reported with the key entry 6 set, and the answer bears on the paper protocol.

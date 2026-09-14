@@ -869,7 +869,7 @@ Assignment of render-and-difference's detections, held-out:
      - a registration error that varies across the page other than by rotation.
    - **The sample size:** 84 holes per main case, where one miss is 1.2 percent. So "at least 99 percent" can only be read here as none missed.
 
-**For planning, and not blocking M3.**
+**For planning, and not blocking M3.** The first is raised as question 9 in `docs/QUESTIONS-FOR-PLANNING.md`, because brief section 7 sends evidence that a gate is wrong there.
 
 1. **Gate 2's 0.01 in tolerance sits at the real noise floor.** The options:
    - keep it, and the gate fails by construction on any honest synthesis;
