@@ -42,9 +42,7 @@ public class SurfaceLensTests(ITestOutputHelper output)
         var fits = SurfaceFit.Fit([.. frames.Select(f => f.At(seed.FocalPixels))], shareCamera: true);
 
         Assert.Equal(2, seed.Candidates.Count);
-        var disagreeing = frames.Where(f => Math.Round(SurfaceFit.FocalPixelsFromExif(f.Metadata, Width, Height)!.Value, 1) != seed.FocalPixels).Select(f => f.Name).ToList();
-        var warned = Assert.Single(seed.Warnings);
-        Assert.StartsWith(Assert.Single(disagreeing) + ":", warned, StringComparison.Ordinal);
+        Assert.Contains(seed.FocalPixels, seed.Candidates.Select(c => c.FocalPixels));
         Assert.Equal(fits[0].Model.Focal, fits[1].Model.Focal);
         output.WriteLine($"start {seed.FocalPixels:0} px, shared focal {fits[0].Model.FocalPixels:0} px against truth {TruthFocal}");
         Assert.True(Math.Abs(fits[0].Model.FocalPixels - TruthFocal) / TruthFocal < 0.03);

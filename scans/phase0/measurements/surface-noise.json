@@ -852,19 +852,19 @@
         "markers": 34,
         "statistics": {
           "corners": 136,
-          "kept": 78,
+          "kept": 85,
           "pixelsPerDmm": 1.0993652934438398,
-          "rmsKeptPx": 1.2313986220351099,
-          "rmsAllPx": 5.148639357715068,
-          "robustPx": 2.1282163948231645,
-          "robustDmm": 1.935859179396482
+          "rmsKeptPx": 1.098865933460957,
+          "rmsAllPx": 2.6326538688434127,
+          "robustPx": 1.7882822865621242,
+          "robustDmm": 1.6266497562063316
         },
-        "robustDmm": 1.935859179396482,
+        "robustDmm": 1.6266497562063316,
         "equivalentNoisePx": {
-          "byPixels": 2.178770004963917,
-          "byDmm": 1.9824963452771003
+          "byPixels": 1.8847317283623006,
+          "byDmm": 1.7196302441858948
         },
-        "worstScoringBullIn": 0.029131889763779527
+        "worstScoringBullIn": 0.014346456692913387
       },
       {
         "file": "ultrawide2.jpg",
@@ -872,19 +872,19 @@
         "markers": 34,
         "statistics": {
           "corners": 136,
-          "kept": 97,
+          "kept": 96,
           "pixelsPerDmm": 0.9959150823311905,
-          "rmsKeptPx": 0.8778468850128017,
-          "rmsAllPx": 5.03189476389562,
-          "robustPx": 1.162347633390657,
-          "robustDmm": 1.167115202904538
+          "rmsKeptPx": 0.9078029016640129,
+          "rmsAllPx": 8.408355235362205,
+          "robustPx": 1.0650745921522233,
+          "robustDmm": 1.0694431794919177
         },
-        "robustDmm": 1.167115202904538,
+        "robustDmm": 1.0694431794919177,
         "equivalentNoisePx": {
-          "byPixels": 1.269582859934466,
-          "byDmm": 1.2491240492107967
+          "byPixels": 1.146073638828791,
+          "byDmm": 1.127326958522945
         },
-        "worstScoringBullIn": 0.09182755905511812
+        "worstScoringBullIn": 0.03409015748031496
       },
       {
         "file": "ultrawide3.jpg",
@@ -892,19 +892,19 @@
         "markers": 32,
         "statistics": {
           "corners": 128,
-          "kept": 72,
+          "kept": 85,
           "pixelsPerDmm": 0.8964243725035634,
-          "rmsKeptPx": 0.9425228065431419,
-          "rmsAllPx": 3.7714294211416672,
-          "robustPx": 1.7090768291583363,
-          "robustDmm": 1.9065488194895575
+          "rmsKeptPx": 0.8953310014530296,
+          "rmsAllPx": 3.688850186147893,
+          "robustPx": 1.126108760775171,
+          "robustDmm": 1.2562228285138404
         },
-        "robustDmm": 1.9065488194895575,
+        "robustDmm": 1.2562228285138404,
         "equivalentNoisePx": {
-          "byPixels": 1.81617073077146,
-          "byDmm": 1.9575789286252305
+          "byPixels": 1.2235697521555555,
+          "byDmm": 1.3602413290429767
         },
-        "worstScoringBullIn": 0.05179566929133858
+        "worstScoringBullIn": 0.04055826771653543
       },
       {
         "file": "main1.jpg",

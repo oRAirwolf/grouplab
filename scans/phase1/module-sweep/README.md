@@ -2,6 +2,8 @@
 
 The sheets for `docs/FIDUCIAL-DECISION.md` section 10, measurement 2: residual and bull error against the printed module size of the fiducial markers. `GL-CF25-LTR` at five modules, with everything but the fiducials block identical to the sheet as the Phase 0 sample set was printed, the frozen `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json`. These are measurement sheets, not built-in library targets (`docs/PHASE1-BRIEF.md` M0).
 
+**Three of these sheets fail conformance test 26f, and that is expected.** The 0.5, 0.6 and 0.8 mm sheets keep the as-printed Phase 0 sighter row, outside the marker lattice, so that the 0.5 mm sheet stays the Phase 0 sheet by identifier and the sweep carries its own control. They are inputs to a measurement of dot gain against module size, which the sighters do not bear on, and they are not to be brought into conformance: that would give all five new identifiers and lose the control (`docs/NOTES-FROM-PLANNING.md` entry 16 section 3). The geometry they are built on is superseded in the live library by `GL-CF25-LTR` `GL-20J3-Y141-0BN3-EYME`.
+
 | Module | `markerSize` | `quietZone` | Markers | Identifier | Definition | PDF |
 |---|---|---|---|---|---|---|
 | 0.3 mm | 24 dmm | 6 dmm | 44 | `GL-DFA3-H72S-8KKS-A00S` | `module-0.3mm.gltd.json` | `module-0.3mm.pdf` |

@@ -4,6 +4,8 @@ These are the definitions the Phase 0 sample set in `scans/phase0/` was printed 
 
 **They are inputs to a measurement, and they are never edited.** Every table in `docs/PHASE0-RESULTS.md` and every file in `scans/phase0/measurements/` was measured against them, and `grouplab spike` resolves its definitions here rather than in the live library in `targets/`. A definition's identifier changes whenever its geometry does, so a measurement against paper stays reproducible only while the geometry it was printed from stays in the tree (`docs/NOTES-FROM-PLANNING.md` entry 11).
 
+**`GL-YCSK-DZZ1-R0VJ-4T5Y` fails conformance test 26f, and that is expected.** It is the geometry the paper was printed from, it is not to be brought into conformance, and the live sheet that supersedes it is in the table below (`docs/NOTES-FROM-PLANNING.md` entry 16 section 3).
+
 **If a future schema or validator change stops one of these loading or validating, that is a finding to report, not a fixture to repair.** `FrozenDefinitionTests` loads each file, checks that its identifier matches its file name, and validates it. It exempts test 26f alone, and only on the three sighters of `GL-YCSK-DZZ1-R0VJ-4T5Y`, which sit outside its marker lattice by construction. That is the defect of `docs/PHASE0-RESULTS.md` section 4.4, fixed in the live library by the geometry change of `docs/NOTES-FROM-PLANNING.md` entry 13, which also made test 26f an error. So this definition no longer validates clean: that is recorded as the finding, and the file stays as printed. Code that renders it as a measurement input sets `AllowInvalid`, because the paper was printed from it regardless.
 
 | File | Live definition when printed | Printed as | Superseded by |
