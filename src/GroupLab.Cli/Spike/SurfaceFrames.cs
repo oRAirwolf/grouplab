@@ -44,7 +44,12 @@ public static class SurfaceFrames
 
     private sealed record Row(int Order, string? FitLine, string? CompareLine, string? ScanLine, object Raw);
 
-    public static int Run(string scans, string frozenDirectory, TextWriter output)
+    /// <param name="joint">
+    /// Fit the frames of one pixel geometry together with one focal length and lens. Off by default: NOTES-FROM-PLANNING.md
+    /// entry 17 section 4 makes one frame at a time the default, because a user photographs one target at a time and sharing
+    /// a camera cost <c>main1</c> a factor of two (PHASE1-RESULTS.md M1.10). The joint fit stays for a set known to share a camera.
+    /// </param>
+    public static int Run(string scans, string frozenDirectory, TextWriter output, bool joint = false)
     {
         ArgumentNullException.ThrowIfNull(output);
         var clock = Stopwatch.StartNew();
@@ -69,7 +74,7 @@ public static class SurfaceFrames
             Progress(string.Create(Inv, $"prepared {p.Sample.File}: {p.Fiducials?.Matches.Count}/{p.Fiducials?.Expected} markers, EXIF focal {p.ExifFocal:0} px{(p.Failure is null ? "" : ", " + p.Failure)}"));
         });
 
-        var (fits, seeds) = FitByLens(photos, Progress);
+        var (fits, seeds) = FitByLens(photos, Progress, SurfaceFamily.Cylinder, joint);
 
         var photoRows = new Row[photos.Length];
         Parallel.For(0, photos.Length, parallel, i => photoRows[i] = PhotoRow(i, photos[i], fits, seeds, Progress));
@@ -122,7 +127,7 @@ public static class SurfaceFrames
     /// agree, with the image size. The equivalent and size alone would not do: the Phase 0 table frames, a cropped ultrawide,
     /// share the main camera's 23 mm equivalent but not its distortion.
     /// </summary>
-    internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress, SurfaceFamily family = SurfaceFamily.Cylinder)
+    internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress, SurfaceFamily family = SurfaceFamily.Cylinder, bool joint = true)
     {
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
         var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
@@ -133,8 +138,19 @@ public static class SurfaceFrames
             progress(string.Create(Inv, $"seeding the {name} camera: {string.Join(", ", members.Select(m => m.Sample.File))}"));
             var seed = SurfaceFit.SeedFocal([.. members.Select(m => (m.Sample.File, m.Metadata, m.Image.Width, m.Image.Height, (Func<double, SurfaceFrame>)(f => AtFocal(m, f))))])!;
             progress(string.Create(Inv, $"  start {seed.FocalPixels:0} px; candidates {string.Join("; ", seed.Candidates.Select(c => $"{c.FocalPixels:0} px from {c.Frames.Count} frame(s), cost {c.Cost:0.###E+0} px^2"))}"));
-            progress(string.Create(Inv, $"fitting the {name} camera jointly from {seed.FocalPixels:0} px{(family == SurfaceFamily.General ? ", general developable surface" : "")}"));
-            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true, SurfaceHold.None, family);
+            string surfaceName = family == SurfaceFamily.General ? ", general developable surface" : "";
+            IReadOnlyList<SurfaceFrameResult> fitted;
+            if (joint)
+            {
+                progress(string.Create(Inv, $"fitting the {name} camera jointly from {seed.FocalPixels:0} px{surfaceName}"));
+                fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true, SurfaceHold.None, family);
+            }
+            else
+            {
+                progress(string.Create(Inv, $"fitting the {name} camera's frames one at a time from {seed.FocalPixels:0} px{surfaceName}"));
+                fitted = [.. members.AsParallel().AsOrdered().Select(m => SurfaceFit.Fit([AtFocal(m, seed.FocalPixels)], shareCamera: false, SurfaceHold.None, family)[0])];
+            }
+
             for (int i = 0; i < members.Count; i++)
             {
                 fits[members[i].Sample.File] = fitted[i];

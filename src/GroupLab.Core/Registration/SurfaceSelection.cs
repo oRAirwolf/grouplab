@@ -25,6 +25,12 @@ public sealed record SurfaceChoice(IPageMapping? Planar, double PlanarSumSquares
 /// A general developable surface (<see cref="SurfaceFamily.General"/>) adds its turn coefficients to the bend's extra
 /// parameters, six for a photograph, and the critical value follows the degrees of freedom.
 /// </para>
+/// <para>
+/// With fewer than eight kept corners there is too little evidence for the test, and the default is the model with fewer
+/// parameters, the plane (NOTES-FROM-PLANNING.md entry 17 section 4; it had defaulted to the bend). The plane is fitted to the
+/// kept corners when there are at least four, with the lens when there are at least six; below four no model is supported,
+/// and <see cref="SurfaceChoice.Planar"/> is null with the bend still not preferred.
+/// </para>
 /// </summary>
 public static class SurfaceSelection
 {
@@ -42,9 +48,18 @@ public static class SurfaceSelection
 
         // The chi-square quantile at p = 0.001 over the degrees of freedom the bend adds.
         double critical = extra switch { 2 => 13.816 / 2, 4 => 18.467 / 4, 6 => 22.458 / 6, _ => 26.124 / 8 };
-        if (keptImage.Count < 8 || HomographyEstimate.Fit(keptImage, keptPage) is not { } homography)
+        if (keptImage.Count < 8)
         {
-            return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, true);
+            IPageMapping? fallback = keptImage.Count < 4 || HomographyEstimate.Fit(keptImage, keptPage) is not { } few ? null
+                : perspective && keptImage.Count >= 6 && !heldLens ? LensFit.Fit(keptImage, keptPage, few, width, height)
+                : perspective && heldLens ? HeldLensPlane(fit.Model, keptImage, keptPage)
+                : new HomographyMapping(few);
+            return new SurfaceChoice(fallback, double.NaN, double.NaN, double.NaN, critical, false);
+        }
+
+        if (HomographyEstimate.Fit(keptImage, keptPage) is not { } homography)
+        {
+            return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, false);
         }
 
         IPageMapping? planar = !perspective ? new HomographyMapping(homography)
@@ -52,8 +67,9 @@ public static class SurfaceSelection
             : LensFit.Fit(keptImage, keptPage, homography, width, height);
         if (planar is null)
         {
-            return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, true);
+            return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, false);
         }
+
         double planarSum = keptImage.Select((p, i) => Squared(planar.ToPage(p), keptPage[i])).Sum();
         double surfaceSum = fit.PageErrors.Where((_, i) => fit.Kept[i]).Sum(e => e * e);
         int residuals = 2 * keptImage.Count;

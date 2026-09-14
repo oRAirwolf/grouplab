@@ -1409,7 +1409,7 @@
         "surfaceSumSquares": "NaN",
         "f": "NaN",
         "criticalF": 3.743,
-        "preferSurface": true
+        "preferSurface": false
       },
       "robustSigmaPx": {
         "cylinder": 0.5808846779197034,
@@ -9033,7 +9033,7 @@
         "surfaceSumSquares": "NaN",
         "f": "NaN",
         "criticalF": 3.743,
-        "preferSurface": true
+        "preferSurface": false
       },
       "robustSigmaPx": {
         "cylinder": 0.7990254559087132,
@@ -13245,7 +13245,7 @@
         "surfaceSumSquares": "NaN",
         "f": "NaN",
         "criticalF": 3.743,
-        "preferSurface": true
+        "preferSurface": false
       },
       "robustSigmaPx": {
         "cylinder": 0.9108333661672184,
@@ -17137,7 +17137,7 @@
         "surfaceSumSquares": "NaN",
         "f": "NaN",
         "criticalF": 3.743,
-        "preferSurface": true
+        "preferSurface": false
       },
       "robustSigmaPx": {
         "cylinder": 1.534536111782073,
@@ -29453,7 +29453,7 @@
         "surfaceSumSquares": "NaN",
         "f": "NaN",
         "criticalF": 3.743,
-        "preferSurface": true
+        "preferSurface": false
       },
       "robustSigmaPx": {
         "cylinder": 1.78827434159391,

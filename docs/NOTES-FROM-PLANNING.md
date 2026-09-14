@@ -8,6 +8,62 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-14, entry 17: the gate does not move, the mounted case is an open requirement, and M2 starts now
+
+**Status: open.**
+
+### 1. The surface models are finished and the answer is no
+
+Recorded as the result it is. A cylinder fails all seven mounted frames. A general developable surface, which covers the cone and the twist your own shape test could not separate, also fails all seven, and it moves the corner residual by at most 0.16 px. That last figure is the informative one: **a model with strictly more freedom took up almost none of the leftover error, so the leftover is not a shape paper can bend into.** Paper bends without stretching, the fit now allows any such bend, and the error stayed. Whatever is left is not developable.
+
+You built it, swept it, ran it once, and reported a negative. That is the outcome the brief was written to allow and it is worth more than a model that passed because it was tuned.
+
+### 2. I proposed loosening the gate and I am withdrawing it
+
+Alan was asked whether to argue a separate, looser gate for mounted photographs, on the grounds that the 0.005 in figure was inherited from the paper gate and never argued on its own. He declined to decide and asked me to. So I worked the error budget properly, and **it does not support loosening.**
+
+The finest quantity this system measures is a hole centre, whose noise floor on real paper is 0.008 in. Standard practice is that a subsystem should contribute no more than about a third of the dominant term, so that it adds under five percent in quadrature. A third of 0.008 is 0.0027 in. Half is 0.004 in. **A principled budget argues for 0.003 to 0.005 in, which is where the gate already sits, at the loose end.** From the statistics the constraint is looser still, since registration error of even 0.02 in inflates an estimated sigma by under one percent on a typical group, and assignment is safe at a 1.5 in cell, but neither of those is the right anchor: the gate exists so that the instrument is not the limiting factor in what it reports.
+
+There is a real argument I could keep pulling on, that "worst bull of 28" is a bound where the budget above is about typical error, and a worst-of-28 on a distribution with a 0.004 in typical value would plausibly run to 0.008 or 0.010. **I am not making that argument, because I am making it after seeing the results, and the best mounted frame came in at 0.00604 in.** A gate that lands within a thousandth of the number that makes one frame pass is not a gate. The Phase 0 gate is trustworthy precisely because `docs/PHASE0-PRELIM.md` set it before the results existed.
+
+**So the gate stays at 0.005 in.** If it should move, the time to argue it is when there are more mounted frames, the argument gets written down and the number fixed **before** the new frames are measured, and it is then tested on frames that were not used to set it. Record this entry in the results document as the reason the number did not change, because a reader in six months should be able to see that loosening was considered and refused, and why.
+
+### 3. The mounted photograph gate becomes an open, unmet requirement
+
+Not a failure to fix now, and not a promise to withdraw. What is true today:
+
+- **The scan path passes**, ten of ten at 0.00325 in worst.
+- **The flat photograph path nearly passes.** Every scoring bull on the one frame that decoded all its markers is inside, and the failures are named.
+- **The mounted photograph path does not pass**, by any developable surface, and the residual is not a bendable shape.
+
+`DESIGN.md` section 21 already carries the mounted gate as Phase 1's and expects it to fail until a surface model exists. Amend it to say that a surface model now exists, that it is a general developable fit, that it does not meet the gate, and that the requirement is open with piecewise registration as the recorded fallback. Do not attempt piecewise now. It costs days budgeted for hole detection, it cannot help a bull outside the lattice, and the sensible time to try it is when real shot targets exist.
+
+### 4. Two changes to make before M2, both cheap and both yours
+
+1. **Fit each frame alone by default.** Your own finding: `main1` gives 0.00604 in alone and 0.01177 in the joint fit, a factor of two for sharing a camera across frames. A user photographs one target at a time, so alone is also the real usage. Joint fitting was only ever a way to constrain the lens, and entry 16's measurement showed the lens barely matters, moving the worst bull by at most three percent. Keep joint fitting available for a set known to be identical; make alone the default.
+2. **Fix the selection defect.** Model selection defaulting to "bend kept" below eight corners is backwards: fewer corners means less evidence, so the default must be the model with fewer parameters. Default to the plane. Nothing triggers it today, which is the cheapest possible moment to fix it.
+
+### 5. One bounded diagnostic, alongside M2, because it changes what we ask Alan to photograph
+
+**Is the leftover residual on the mounted frames structured or random?** One command, using machinery this project already has: measurement 6 of Phase 0 computed spatial correlation on a displacement field to prove the printer error was paper-fixed, and `field.json` is its output. Run the same correlation over each mounted frame's post-fit corner residual.
+
+- **Structured**, meaning neighbouring corners deviate together: there is real unmodelled geometry, it is not developable, and the advice to a user is about how the sheet is held.
+- **Random**, meaning white across the sheet: the limit is corner quality on a foreshortened, defocused frame, and the advice is about light, aperture and distance.
+
+Those are different sentences in the paper protocol, which is why it is worth one command now. It is a measurement and not a model; it does not reopen section 1 and it does not authorise a fourth surface. Report it in `PHASE1-RESULTS.md` and continue to M2 whatever it says.
+
+There is a clue already. The flat controls sit at 0.60 to 0.84 px of corner residual and pass. The mounted frames sit at 0.96 to 1.88 px and miss by six to twenty times. **Roughly double the residual producing twenty times the bull error is the signature of correlated error rather than noise**, because independent noise averages out over a hundred-odd corners and structure does not. I expect structured. Measure it rather than taking it.
+
+### 6. M2 starts now
+
+`docs/PHASE1-BRIEF.md` section 4, unchanged. Port the neutral-darkness primitive of `SCAN-MEASUREMENTS.md` section 3.1, revalidate on all 343 holes, commit that as the baseline, then build the synthetic GroupLab sheets with holes drawn from the survey's own measured distributions so render-and-difference can be tested against truth before real shot targets exist.
+
+### 7. On the three runs and the minimiser change
+
+Running the frames three times so that the committed code reproduces the committed rows, and discarding the first run's raw rows because the committed code no longer produces them, is correct and is the rule from entry 11 applied to your own output rather than to a definition. Reporting that the minimiser change altered fourteen of a hundred and sixty synthetic trials and turned a marginal pass into a fail, rather than quietly keeping the better table, is the same discipline. Both are worth more to this project than a passing gate would have been.
+
+---
+
 ## 2026-09-14, entry 16: two corrections to entry 15, both mine, and the cone goes before M2
 
 **Status: actioned 2026-09-14.** Section 5's table is `docs/PHASE1-RESULTS.md` M1.8 (mounted frames at 0.96 to 1.88 px, so shape); section 2 is M1.9 (joint fits keyed on pixel geometry, no warning, the product finding); section 3 is in the module sweep and frozen READMEs; section 4's note is in M1.2; the general developable surface is M1.10, which recovers a synthetic cone and passes no mounted frame, so the surface models stop and M2 is next. Originally: answers questions 7 and 8, and decides the order.

@@ -1,0 +1,2468 @@
+{
+  "measurement": "surface-correlation",
+  "command": "grouplab spike surface-correlation",
+  "units": "Page lengths are dmm, 0.1 mm, measured from the page top-left unless a name ends in Px or In. Image points are pixels, with pixel (u, v) at (u, v), the convention OpenCV reports marker corners in.",
+  "rows": [
+    {
+      "file": "ultrawide1.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 34,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 104,
+        "neighbour": 0.18062511090705033,
+        "neighbourP": 0.0009995002498750624,
+        "farPairs": 219,
+        "far": 0.014181111876774948,
+        "rmsResidualDmm": 1.9607476495712544
+      },
+      "markers": [
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": 1.1954,
+          "dy": 0.7234
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": -1.5512,
+          "dy": 0.6869
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 0.1542,
+          "dy": 0.8073
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": -0.6143,
+          "dy": -0.6627
+        },
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": 2.1941,
+          "dy": 0.7105
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -1.8695,
+          "dy": 2.1055
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": 0.3945,
+          "dy": 1.2894
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -3.2327,
+          "dy": -1.729
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": 0.8907,
+          "dy": 0.7412
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": 0.4791,
+          "dy": -0.8115
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": -1.2155,
+          "dy": -2.6509
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": 2.0587,
+          "dy": 2.1509
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -4.5486,
+          "dy": 3.2509
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -1.7844,
+          "dy": -0.4111
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": -0.237,
+          "dy": 0.3405
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -1.0343,
+          "dy": 1.2543
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 0.422,
+          "dy": -1.0226
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": -0.5904,
+          "dy": 0.1395
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": -0.7157,
+          "dy": -1.4909
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": 0.5713,
+          "dy": -0.0584
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": 0.0833,
+          "dy": 0.1404
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 4.7885,
+          "dy": 0.822
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": -0.394,
+          "dy": -0.4766
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": 1.0556,
+          "dy": -0.0534
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": 0.4718,
+          "dy": -1.1114
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": 0.9761,
+          "dy": -0.7648
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 0.0893,
+          "dy": -0.6493
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": 0.6604,
+          "dy": -1.2472
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": 0.1682,
+          "dy": -0.5418
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": 0.0282,
+          "dy": -0.0816
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.1541,
+          "dy": -0.6856
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": 0.9463,
+          "dy": 0.5719
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": 0.1295,
+          "dy": -1.2557
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -0.1238,
+          "dy": -0.0302
+        }
+      ]
+    },
+    {
+      "file": "ultrawide2.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 32,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 97,
+        "neighbour": 0.15338402936400486,
+        "neighbourP": 0.0034982508745627187,
+        "farPairs": 183,
+        "far": -0.09234088528718447,
+        "rmsResidualDmm": 2.408736161801606
+      },
+      "markers": [
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -0.7196,
+          "dy": -6.3918
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -1.165,
+          "dy": 0.082
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": -0.0925,
+          "dy": 0.8886
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": -0.8073,
+          "dy": 0.9265
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 0.1391,
+          "dy": 1.4219
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": 2.9386,
+          "dy": -3.1633
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": 1.4964,
+          "dy": -0.2803
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.0596,
+          "dy": 0.7716
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -1.7496,
+          "dy": 0.9864
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": -1.1263,
+          "dy": 0.9142
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -1.2651,
+          "dy": 0.9583
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 0.8809,
+          "dy": 2.7179
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 0.2148,
+          "dy": 1.5868
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": -0.2861,
+          "dy": 0.3627
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": -0.5289,
+          "dy": 0.4458
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": -0.9394,
+          "dy": 1.2512
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.9879,
+          "dy": 0.9307
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 0.5396,
+          "dy": 1.2395
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": -1.3033,
+          "dy": 1.2253
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": -1.3744,
+          "dy": 0.2292
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": -0.6696,
+          "dy": -0.3625
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": -1.2813,
+          "dy": 0.4494
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": -0.6594,
+          "dy": 0.0951
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": 2.5328,
+          "dy": -1.3306
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": -1.2175,
+          "dy": -0.6002
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": -1.5589,
+          "dy": -0.774
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": -0.2408,
+          "dy": 0.4812
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.5689,
+          "dy": 0.0197
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": 7.6978,
+          "dy": -2.3517
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": 0.7878,
+          "dy": -1.4257
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": 0.7503,
+          "dy": -0.7713
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -0.5146,
+          "dy": -0.5327
+        }
+      ]
+    },
+    {
+      "file": "ultrawide3.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 30,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 88,
+        "neighbour": 0.203755493551654,
+        "neighbourP": 0.0004997501249375312,
+        "farPairs": 152,
+        "far": -0.1828821985747141,
+        "rmsResidualDmm": 3.2526987042639215
+      },
+      "markers": [
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": -1.9241,
+          "dy": -1.1921
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": -0.7992,
+          "dy": 1.5142
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": 0.5638,
+          "dy": 1.8444
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": 0.9585,
+          "dy": 1.0489
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": 1.3458,
+          "dy": 1.3084
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": -1.0877,
+          "dy": 1.3296
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": -1.2717,
+          "dy": 1.2898
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": 0.5811,
+          "dy": 0.4607
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": 1.6789,
+          "dy": 1.2757
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": 0.5389,
+          "dy": 1.065
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.6564,
+          "dy": 1.1757
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 1.3252,
+          "dy": 4.3609
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": -0.0681,
+          "dy": 1.5589
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 0.191,
+          "dy": -0.0698
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": -0.5359,
+          "dy": 0.1633
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": 0.3017,
+          "dy": 0.2087
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": 0.2133,
+          "dy": 0.4626
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": -0.3541,
+          "dy": 1.7386
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": -0.6296,
+          "dy": 0.9022
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 0.6074,
+          "dy": -0.2499
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": -1.4609,
+          "dy": -0.1206
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 0.8453,
+          "dy": -0.607
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.4537,
+          "dy": -0.4738
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -6.6289,
+          "dy": -1.6224
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.5443,
+          "dy": -0.844
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": 1.4565,
+          "dy": -1.6355
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": 1.9835,
+          "dy": -3.4077
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.6256,
+          "dy": -1.9875
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": 9.159,
+          "dy": -7.5491
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": -6.0226,
+          "dy": -1.948
+        }
+      ]
+    },
+    {
+      "file": "main1.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 34,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 104,
+        "neighbour": 0.05630878367449807,
+        "neighbourP": 0.053973013493253376,
+        "farPairs": 219,
+        "far": 0.00805838654727567,
+        "rmsResidualDmm": 1.3174897214722714
+      },
+      "markers": [
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 0.0632,
+          "dy": 2.312
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": 0.2654,
+          "dy": -1.0569
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -3.2983,
+          "dy": -1.4813
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": -0.1784,
+          "dy": 0.5962
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": -1.3217,
+          "dy": 1.7025
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -0.0384,
+          "dy": -0.5926
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": -0.023,
+          "dy": -0.4404
+        },
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": 2.6044,
+          "dy": -0.4601
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": 0.1535,
+          "dy": -0.7454
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": -0.4348,
+          "dy": -0.3426
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 0.0414,
+          "dy": -0.2931
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -0.1812,
+          "dy": -0.7822
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": -0.7681,
+          "dy": -0.0115
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 0.7188,
+          "dy": -0.6036
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": 0.874,
+          "dy": 0.5456
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": -0.5922,
+          "dy": 0.0214
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": -0.4519,
+          "dy": -0.0915
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 0.9457,
+          "dy": -0.0334
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": 0.2368,
+          "dy": -0.3985
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": 0.1659,
+          "dy": -0.0559
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": -0.59,
+          "dy": 0.4275
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.3644,
+          "dy": 0.8044
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": -0.2131,
+          "dy": 0.7239
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": -0.1104,
+          "dy": 0.1506
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": 0.5385,
+          "dy": 0.9587
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 1.8087,
+          "dy": -0.622
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 1.1202,
+          "dy": 1.0026
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": -0.234,
+          "dy": -0.8404
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": -0.6934,
+          "dy": 0.4612
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": 0.6552,
+          "dy": 0.2522
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": 0.1658,
+          "dy": -0.2852
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": 0.7522,
+          "dy": 0.5146
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": 0.8135,
+          "dy": 0.223
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -2.4298,
+          "dy": -1.5597
+        }
+      ]
+    },
+    {
+      "file": "main2.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 24,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 68,
+        "neighbour": 0.2932454153453664,
+        "neighbourP": 0.0004997501249375312,
+        "farPairs": 118,
+        "far": -0.17523978474308577,
+        "rmsResidualDmm": 2.1792923404146305
+      },
+      "markers": [
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": 3.4205,
+          "dy": 0.2013
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": 0.4116,
+          "dy": 0.7846
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -4.0407,
+          "dy": 3.5966
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": -1.3127,
+          "dy": -0.0327
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": 1.7882,
+          "dy": 0.0659
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": -1.2558,
+          "dy": 1.2056
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": 1.0009,
+          "dy": 1.6852
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.234,
+          "dy": 0.2216
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": -0.4437,
+          "dy": -1.2114
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.7772,
+          "dy": 0.4945
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -1.6964,
+          "dy": 0.9783
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": -0.8876,
+          "dy": 2.9632
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": -0.4606,
+          "dy": 1.2443
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": -0.7459,
+          "dy": -0.4318
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": -0.5825,
+          "dy": -2.1394
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": -0.1006,
+          "dy": 0.4019
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": -0.2787,
+          "dy": 0.011
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": 0.5259,
+          "dy": -0.3343
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": -0.6452,
+          "dy": -0.0386
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 0.1902,
+          "dy": -1.9761
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": 1.0741,
+          "dy": -2.4977
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": 1.8671,
+          "dy": -1.2535
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": -0.1162,
+          "dy": -1.3149
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": 3.2992,
+          "dy": -2.6238
+        }
+      ]
+    },
+    {
+      "file": "main3.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 27,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 76,
+        "neighbour": 0.07656630444962789,
+        "neighbourP": 0.0769615192403798,
+        "farPairs": 113,
+        "far": -0.04178481253970819,
+        "rmsResidualDmm": 1.801769279517968
+      },
+      "markers": [
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": -1.0231,
+          "dy": -1.0794
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": 0.0775,
+          "dy": 0.2958
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": -0.7337,
+          "dy": -0.0787
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": 0.6816,
+          "dy": 0.5937
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": 0.3479,
+          "dy": 0.2494
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": 0.7604,
+          "dy": 0.3113
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": 0.3769,
+          "dy": -0.424
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": 0.4346,
+          "dy": 0.2543
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": 0.5086,
+          "dy": 0.0201
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 1.6752,
+          "dy": 2.0837
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.6964,
+          "dy": 0.888
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": 0.2526,
+          "dy": -0.0451
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": 0.8047,
+          "dy": 0.0495
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 0.7418,
+          "dy": 0.9536
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 1.7211,
+          "dy": 1.8096
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": -0.3198,
+          "dy": -0.1243
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": 0.6609,
+          "dy": -1.2671
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": 0.366,
+          "dy": 0.0514
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 0.1299,
+          "dy": -0.1385
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 1.3124,
+          "dy": 0.2434
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 1.8943,
+          "dy": -0.6997
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": -6.1495,
+          "dy": -1.7485
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.0261,
+          "dy": 0.0124
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -3.6328,
+          "dy": -0.3627
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.5476,
+          "dy": -0.0249
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.51,
+          "dy": -0.3685
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -0.5002,
+          "dy": -1.455
+        }
+      ]
+    },
+    {
+      "file": "telephoto2.jpg",
+      "gate": "mounted",
+      "field": {
+        "markers": 33,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 96,
+        "neighbour": 0.15306392854644452,
+        "neighbourP": 0.01199400299850075,
+        "farPairs": 210,
+        "far": 0.04580546496114317,
+        "rmsResidualDmm": 2.652801811374184
+      },
+      "markers": [
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": -5.0868,
+          "dy": -0.6303
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": -2.4258,
+          "dy": 0.3308
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": -1.6319,
+          "dy": -0.2476
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -0.4377,
+          "dy": -0.4094
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": -0.0244,
+          "dy": 1.1514
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": -0.179,
+          "dy": 0.3767
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": 0.3109,
+          "dy": -0.8421
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": 0.6061,
+          "dy": -0.7445
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": 0.4176,
+          "dy": -0.2376
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": -0.1501,
+          "dy": 0.9995
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 3.5374,
+          "dy": -1.1817
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": 1.0457,
+          "dy": 0.2491
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 1.1359,
+          "dy": -0.3268
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 3.8548,
+          "dy": -0.6039
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": -0.105,
+          "dy": 0.3735
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": 0.5421,
+          "dy": -0.5732
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": 1.87,
+          "dy": -0.1583
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": 1.0305,
+          "dy": -0.3516
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 1.195,
+          "dy": -0.1601
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": -2.6791,
+          "dy": -0.0474
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 0.9533,
+          "dy": -0.3821
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": 0.1575,
+          "dy": -0.2648
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 1.9989,
+          "dy": 0.7875
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.1819,
+          "dy": 0.1877
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -0.513,
+          "dy": 0.8433
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": 1.3825,
+          "dy": -0.1085
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -10.8577,
+          "dy": 1.2268
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": 0.197,
+          "dy": 0.047
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": 0.4668,
+          "dy": -0.7029
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": -0.1832,
+          "dy": 1.3993
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": -0.0305,
+          "dy": 0.0288
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 3.9511,
+          "dy": 0.1987
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -0.1671,
+          "dy": -0.2272
+        }
+      ]
+    },
+    {
+      "file": "main_flat1.jpg",
+      "gate": "flat",
+      "field": {
+        "markers": 34,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 104,
+        "neighbour": 0.08861846405921191,
+        "neighbourP": 0.03248375812093953,
+        "farPairs": 219,
+        "far": -0.1047547923788804,
+        "rmsResidualDmm": 0.5970393053719112
+      },
+      "markers": [
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": -0.5766,
+          "dy": -0.3232
+        },
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -0.4651,
+          "dy": -0.1369
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": -0.6821,
+          "dy": 0.6376
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -0.3758,
+          "dy": -0.2186
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -0.063,
+          "dy": -0.1178
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": -0.5427,
+          "dy": 0.1931
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": 0.1447,
+          "dy": -0.5867
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 0.2866,
+          "dy": 0.5663
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.1869,
+          "dy": -0.0996
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": 0.4727,
+          "dy": 0.1169
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.0175,
+          "dy": 0.4197
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": -0.0263,
+          "dy": -0.626
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.105,
+          "dy": 0.1177
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": 0.0243,
+          "dy": 0.4978
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": -0.3695,
+          "dy": -0.191
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": 0.3211,
+          "dy": 0.6889
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.3662,
+          "dy": 0.276
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": -0.0875,
+          "dy": -0.1634
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1109,
+          "dx": 0.0663,
+          "dy": -0.5951
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -0.7575,
+          "dy": -0.2176
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": -0.9452,
+          "dy": -0.4521
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 0.8945,
+          "dy": -0.1669
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": 0.0077,
+          "dy": 0.2979
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1109,
+          "dx": 0.3881,
+          "dy": -0.3071
+        },
+        {
+          "centreX": 1650,
+          "centreY": 729,
+          "dx": 0.4984,
+          "dy": -0.2399
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 0.5413,
+          "dy": 0.3507
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": -0.1881,
+          "dy": 0.5552
+        },
+        {
+          "centreX": 2030,
+          "centreY": 729,
+          "dx": -0.2248,
+          "dy": 0.0753
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 0.5544,
+          "dy": -0.3159
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 0.2268,
+          "dy": -0.6173
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": 0.5064,
+          "dy": -0.7699
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": 0.3057,
+          "dy": 0.4487
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": 0.0723,
+          "dy": 0.0611
+        },
+        {
+          "centreX": 1270,
+          "centreY": 349,
+          "dx": 0.2948,
+          "dy": 0.8421
+        }
+      ]
+    },
+    {
+      "file": "main_flat2.jpg",
+      "gate": "flat",
+      "field": {
+        "markers": 25,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 70,
+        "neighbour": 0.21891391049169584,
+        "neighbourP": 0.001999000499750125,
+        "farPairs": 86,
+        "far": -0.17170866409145596,
+        "rmsResidualDmm": 0.6959833940832773
+      },
+      "markers": [
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": 0.5458,
+          "dy": -0.7512
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": 0.2258,
+          "dy": -0.5474
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": -0.6711,
+          "dy": -0.5514
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": -0.5843,
+          "dy": -0.1048
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": 0.8599,
+          "dy": -0.3811
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -1.0109,
+          "dy": 0.2045
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.2203,
+          "dy": 0.0208
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": -0.1854,
+          "dy": -0.0824
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.7309,
+          "dy": -0.5143
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": 1.2864,
+          "dy": 0.1545
+        },
+        {
+          "centreX": 510,
+          "centreY": 729,
+          "dx": -0.3536,
+          "dy": 0.0071
+        },
+        {
+          "centreX": 510,
+          "centreY": 349,
+          "dx": -0.4608,
+          "dy": -0.3226
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": -0.0316,
+          "dy": -0.318
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 0.1756,
+          "dy": 0.6223
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": 0.3303,
+          "dy": -0.1344
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 0.0296,
+          "dy": 0.5179
+        },
+        {
+          "centreX": 890,
+          "centreY": 349,
+          "dx": 0.6607,
+          "dy": 0.1664
+        },
+        {
+          "centreX": 890,
+          "centreY": 729,
+          "dx": 0.3289,
+          "dy": -0.4337
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": -0.1048,
+          "dy": 0.2333
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": -0.2876,
+          "dy": 0.6258
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": -0.94,
+          "dy": 0.4725
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": -0.2388,
+          "dy": 0.1139
+        },
+        {
+          "centreX": 1270,
+          "centreY": 729,
+          "dx": 0.0941,
+          "dy": 0.0114
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": 0.4468,
+          "dy": 0.3526
+        },
+        {
+          "centreX": 1650,
+          "centreY": 349,
+          "dx": 0.836,
+          "dy": 0.6381
+        }
+      ]
+    },
+    {
+      "file": "main_flat3.jpg",
+      "gate": "flat",
+      "field": {
+        "markers": 23,
+        "neighbourDistanceDmm": 570,
+        "neighbourPairs": 63,
+        "neighbour": -0.0086178449380491,
+        "neighbourP": 0.2933533233383308,
+        "farPairs": 69,
+        "far": 0.02078503584302709,
+        "rmsResidualDmm": 0.7508209794768778
+      },
+      "markers": [
+        {
+          "centreX": 130,
+          "centreY": 2249,
+          "dx": -0.5727,
+          "dy": 0.2165
+        },
+        {
+          "centreX": 2030,
+          "centreY": 2249,
+          "dx": -0.688,
+          "dy": 0.1815
+        },
+        {
+          "centreX": 510,
+          "centreY": 2249,
+          "dx": -0.6222,
+          "dy": -0.3195
+        },
+        {
+          "centreX": 1650,
+          "centreY": 2249,
+          "dx": -0.2171,
+          "dy": 0.0527
+        },
+        {
+          "centreX": 890,
+          "centreY": 2249,
+          "dx": -0.2255,
+          "dy": -0.2588
+        },
+        {
+          "centreX": 1270,
+          "centreY": 2249,
+          "dx": 0.3608,
+          "dy": 0.1081
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1869,
+          "dx": -0.0534,
+          "dy": -1.029
+        },
+        {
+          "centreX": 130,
+          "centreY": 1869,
+          "dx": 0.2621,
+          "dy": 0.2841
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1869,
+          "dx": 0.6846,
+          "dy": 0.0523
+        },
+        {
+          "centreX": 510,
+          "centreY": 1869,
+          "dx": -0.241,
+          "dy": 0.8752
+        },
+        {
+          "centreX": 890,
+          "centreY": 1869,
+          "dx": 0.4346,
+          "dy": -0.1334
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1869,
+          "dx": -0.1742,
+          "dy": -0.4545
+        },
+        {
+          "centreX": 2030,
+          "centreY": 1489,
+          "dx": -0.4183,
+          "dy": -0.085
+        },
+        {
+          "centreX": 130,
+          "centreY": 1489,
+          "dx": 0.025,
+          "dy": 0.5229
+        },
+        {
+          "centreX": 510,
+          "centreY": 1489,
+          "dx": -0.0698,
+          "dy": 0.4232
+        },
+        {
+          "centreX": 1650,
+          "centreY": 1489,
+          "dx": 0.5099,
+          "dy": 0.1316
+        },
+        {
+          "centreX": 890,
+          "centreY": 1489,
+          "dx": 1.0624,
+          "dy": 0.6302
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1489,
+          "dx": -0.2345,
+          "dy": 0.3473
+        },
+        {
+          "centreX": 130,
+          "centreY": 1109,
+          "dx": 0.2991,
+          "dy": 0.5691
+        },
+        {
+          "centreX": 510,
+          "centreY": 1109,
+          "dx": -0.1368,
+          "dy": -0.139
+        },
+        {
+          "centreX": 890,
+          "centreY": 1109,
+          "dx": 0.4156,
+          "dy": -0.443
+        },
+        {
+          "centreX": 1270,
+          "centreY": 1109,
+          "dx": 0.3544,
+          "dy": 0.4637
+        },
+        {
+          "centreX": 130,
+          "centreY": 729,
+          "dx": -0.7549,
+          "dy": -1.9964
+        }
+      ]
+    },
+    {
+      "synthetic": "white corner noise 0.52 px",
+      "fields": [
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.10370657765846854,
+          "neighbourP": 0.887056471764118,
+          "farPairs": 219,
+          "far": -0.006558366281867975,
+          "rmsResidualDmm": 0.39336502191455885
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.1400797070119259,
+          "neighbourP": 0.9765117441279361,
+          "farPairs": 219,
+          "far": -0.039222516532032875,
+          "rmsResidualDmm": 0.3675827852813806
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.19038638194180071,
+          "neighbourP": 0.9980009995002499,
+          "farPairs": 219,
+          "far": -0.012062757023211352,
+          "rmsResidualDmm": 0.29350383350593373
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.11809566830391817,
+          "neighbourP": 0.9385307346326837,
+          "farPairs": 219,
+          "far": -0.00192894808292566,
+          "rmsResidualDmm": 0.35040473676754214
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.12744858188502045,
+          "neighbourP": 0.9555222388805598,
+          "farPairs": 219,
+          "far": 0.0017080340550667465,
+          "rmsResidualDmm": 0.33896838475185853
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.10588252523467177,
+          "neighbourP": 0.8710644677661169,
+          "farPairs": 219,
+          "far": 0.008326185329701747,
+          "rmsResidualDmm": 0.3573402566065035
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.06244077067070153,
+          "neighbourP": 0.6821589205397302,
+          "farPairs": 219,
+          "far": 0.0008094609106953016,
+          "rmsResidualDmm": 0.3784712323666219
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.11619913339189114,
+          "neighbourP": 0.9270364817591205,
+          "farPairs": 219,
+          "far": 0.001785157044959528,
+          "rmsResidualDmm": 0.300292017679726
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.09711699288828851,
+          "neighbourP": 0.8725637181409296,
+          "farPairs": 219,
+          "far": 0.0294315195730555,
+          "rmsResidualDmm": 0.3365350947006343
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.21288541301861458,
+          "neighbourP": 0.9995002498750625,
+          "farPairs": 219,
+          "far": 0.024957890310236864,
+          "rmsResidualDmm": 0.3636417990074389
+        }
+      ]
+    },
+    {
+      "synthetic": "white corner noise 1.0 px",
+      "fields": [
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.1202152139282701,
+          "neighbourP": 0.9290354822588706,
+          "farPairs": 219,
+          "far": 0.013587415308668188,
+          "rmsResidualDmm": 0.5913641407975024
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.07800714812584444,
+          "neighbourP": 0.7841079460269865,
+          "farPairs": 219,
+          "far": -0.01584212041605575,
+          "rmsResidualDmm": 0.6139787356685501
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.07572486099362959,
+          "neighbourP": 0.7631184407796102,
+          "farPairs": 219,
+          "far": 0.003650782584555054,
+          "rmsResidualDmm": 0.5108565802977298
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.0009444548532756751,
+          "neighbourP": 0.30684657671164417,
+          "farPairs": 219,
+          "far": -0.013613041200121747,
+          "rmsResidualDmm": 0.6784620301449316
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.11209773622433969,
+          "neighbourP": 0.9075462268865567,
+          "farPairs": 219,
+          "far": 0.03623883688475243,
+          "rmsResidualDmm": 0.6270193439745985
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.09396153084996896,
+          "neighbourP": 0.8405797101449275,
+          "farPairs": 219,
+          "far": 0.010785295161932551,
+          "rmsResidualDmm": 0.6736808915409536
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.057520699302640525,
+          "neighbourP": 0.6456771614192903,
+          "farPairs": 219,
+          "far": -0.0021650664311438656,
+          "rmsResidualDmm": 0.6596139506586747
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.17025159392220046,
+          "neighbourP": 0.9975012493753124,
+          "farPairs": 219,
+          "far": -0.0018920427151376314,
+          "rmsResidualDmm": 0.6130392387335414
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.016098127331663877,
+          "neighbourP": 0.20539730134932535,
+          "farPairs": 219,
+          "far": 0.01457893818907025,
+          "rmsResidualDmm": 0.5883938956785668
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.11912706354835757,
+          "neighbourP": 0.9280359820089955,
+          "farPairs": 219,
+          "far": -0.00729291556988286,
+          "rmsResidualDmm": 0.7073650956120735
+        }
+      ]
+    },
+    {
+      "synthetic": "white corner noise 2.0 px",
+      "fields": [
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.03429719075598596,
+          "neighbourP": 0.5072463768115942,
+          "farPairs": 219,
+          "far": -0.004327818890373826,
+          "rmsResidualDmm": 1.5545666211747518
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.059842509794783685,
+          "neighbourP": 0.6811594202898551,
+          "farPairs": 219,
+          "far": -0.002797298739722936,
+          "rmsResidualDmm": 1.3638623423821978
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.11651372193909858,
+          "neighbourP": 0.9045477261369316,
+          "farPairs": 219,
+          "far": -0.0037020680269015944,
+          "rmsResidualDmm": 1.3244827195581859
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.12270355143530755,
+          "neighbourP": 0.9440279860069966,
+          "farPairs": 219,
+          "far": -0.018381139688889662,
+          "rmsResidualDmm": 1.2127603507257583
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.15748010402010162,
+          "neighbourP": 0.9865067466266867,
+          "farPairs": 219,
+          "far": -0.006464729593767674,
+          "rmsResidualDmm": 1.4114479603785617
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.012862273622773635,
+          "neighbourP": 0.2288855572213893,
+          "farPairs": 219,
+          "far": -0.030277895662281305,
+          "rmsResidualDmm": 1.3591894661700323
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.006785832939353573,
+          "neighbourP": 0.3313343328335832,
+          "farPairs": 219,
+          "far": -0.022326379219433985,
+          "rmsResidualDmm": 1.2567203194612633
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.09848747650208538,
+          "neighbourP": 0.8715642178910544,
+          "farPairs": 219,
+          "far": -0.006682589881488821,
+          "rmsResidualDmm": 1.0654600758586277
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.07598597029445948,
+          "neighbourP": 0.7721139430284858,
+          "farPairs": 219,
+          "far": -0.004550961971686066,
+          "rmsResidualDmm": 1.2381805285818146
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": -0.04026159014111904,
+          "neighbourP": 0.5322338830584707,
+          "farPairs": 219,
+          "far": -0.011839686526809506,
+          "rmsResidualDmm": 1.1745095901176659
+        }
+      ]
+    },
+    {
+      "synthetic": "0.25 in twist, 0.52 px",
+      "fields": [
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2138926536091775,
+          "neighbourP": 0.0024987506246876563,
+          "farPairs": 219,
+          "far": 0.004424180517922695,
+          "rmsResidualDmm": 0.7520884153112434
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2447625184177661,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.026598168310943433,
+          "rmsResidualDmm": 0.6950081260549261
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.12782641641219655,
+          "neighbourP": 0.018490754622688656,
+          "farPairs": 219,
+          "far": -0.012648755273631752,
+          "rmsResidualDmm": 0.709751631443142
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.21191816055446064,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.009168818440162887,
+          "rmsResidualDmm": 0.7634655438508184
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.23174783503088472,
+          "neighbourP": 0.001999000499750125,
+          "farPairs": 219,
+          "far": -0.01859317519662151,
+          "rmsResidualDmm": 0.6662047188635337
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.22704926856920168,
+          "neighbourP": 0.0009995002498750624,
+          "farPairs": 219,
+          "far": -0.031570041846229496,
+          "rmsResidualDmm": 0.7517803955201632
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2513116126171505,
+          "neighbourP": 0.0014992503748125937,
+          "farPairs": 219,
+          "far": -0.03341874457860188,
+          "rmsResidualDmm": 0.7296191684617869
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.10902226489250413,
+          "neighbourP": 0.02148925537231384,
+          "farPairs": 219,
+          "far": -0.0349557338639828,
+          "rmsResidualDmm": 0.7352251460279879
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.08587979088828857,
+          "neighbourP": 0.04597701149425287,
+          "farPairs": 219,
+          "far": 0.009259633646599224,
+          "rmsResidualDmm": 0.7044545785240793
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.17694248860091719,
+          "neighbourP": 0.00399800099950025,
+          "farPairs": 219,
+          "far": 0.037643878321157356,
+          "rmsResidualDmm": 0.7390817560184341
+        }
+      ]
+    },
+    {
+      "synthetic": "0.50 in twist, 0.52 px",
+      "fields": [
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2782321018360909,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.00624631893927817,
+          "rmsResidualDmm": 1.5732037054096473
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.3080952619345177,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.02102644967243989,
+          "rmsResidualDmm": 1.4435414165037062
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2970823166015693,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.06545049987655058,
+          "rmsResidualDmm": 1.5021132501607213
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.27805143934918186,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": 0.002898717033375194,
+          "rmsResidualDmm": 1.4912501998335201
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2771157411515625,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.013598816771355651,
+          "rmsResidualDmm": 1.5313202092385962
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2436691037611809,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.013796928701102386,
+          "rmsResidualDmm": 1.5365376999164755
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.26312337130017194,
+          "neighbourP": 0.0009995002498750624,
+          "farPairs": 219,
+          "far": 0.00975797900439827,
+          "rmsResidualDmm": 1.5788728969006511
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.27849755320003333,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -1.7822277227181413E-05,
+          "rmsResidualDmm": 1.4337129511309068
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2414903261388777,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.015846534349588555,
+          "rmsResidualDmm": 1.5128778306518922
+        },
+        {
+          "markers": 34,
+          "neighbourDistanceDmm": 570,
+          "neighbourPairs": 104,
+          "neighbour": 0.2566679003997969,
+          "neighbourP": 0.0004997501249375312,
+          "farPairs": 219,
+          "far": -0.015402661623640738,
+          "rmsResidualDmm": 1.5183384211375661
+        }
+      ]
+    }
+  ]
+}

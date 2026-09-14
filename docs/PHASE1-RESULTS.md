@@ -36,7 +36,7 @@
 
 ## M1. The developable surface fit
 
-**Reproduce:** `grouplab surface synthetic` and `grouplab surface rendered` for the synthetic truth, then `grouplab surface frames` for the real frames. Raw rows: `scans/phase1/measurements/surface-synthetic.json` and `surface-rendered.json`, and `scans/phase0/measurements/surface.json`.
+**Reproduce:** `grouplab surface synthetic` and `grouplab surface rendered` for the synthetic truth, then `grouplab surface frames --joint` for the real frames as M1.5 to M1.9 fitted them; since M1.11, `grouplab surface frames` fits one frame at a time. Raw rows: `scans/phase1/measurements/surface-synthetic.json` and `surface-rendered.json`, and `scans/phase0/measurements/surface.json`.
 
 ### M1.1 The model
 
@@ -542,6 +542,99 @@ What the changes did:
 - **The finding:** the mounted gate needs more than a developable fit of the whole sheet, which is a finding about the product.
 - **The protocol:** M1.6 stands unchanged.
 
+### M1.11 The gate stays at 0.005 in, the mounted requirement stays open, and what the fit leaves is mostly not structured
+
+`docs/NOTES-FROM-PLANNING.md` entry 17 closes the surface models and records four things here.
+
+#### Why the gate did not move
+
+A separate, looser gate for mounted photographs was proposed, on the grounds that 0.005 in was inherited from the paper gate and never argued on its own. Alan asked the planning session to decide, and it worked the error budget and withdrew the proposal (entry 17 section 2).
+
+- **The budget.** The finest quantity measured is a hole centre, with a noise floor of 0.008 in on real paper. A subsystem that contributes a third of the dominant term adds under five percent in quadrature: 0.0027 in, and half is 0.004 in. So the budget argues for 0.003 to 0.005 in, and the gate already sits at its loose end. The statistics would tolerate more, but the gate exists so that the instrument is not the limit, and that is the anchor.
+- **The argument not made.** A worst bull of 28 is a bound, not a typical error, and could plausibly run to twice the typical figure. That argument was not made, because it would be made after seeing the results, and the best mounted frame came in at 0.00604 in. A gate that moves to within a thousandth of the number that makes one frame pass is not a gate.
+- **So the gate is 0.005 in.** If it is to move, the argument is written down and the number fixed before more mounted frames are measured, and it is tested on frames not used to set it.
+
+#### The mounted photograph gate is an open requirement
+
+- **Scans:** the paper gate passes, ten of ten.
+- **Flat photographs:** they nearly pass. The frame that decoded every marker is inside on every scoring bull, and the failures are named.
+- **Mounted photographs:** they do not pass, by any developable surface, and the residual is not a bendable shape.
+
+`DESIGN.md` section 21 is amended `[r6]` to say so. The recorded fallback is piecewise registration (`docs/PHASE0-RESULTS.md` section 4.5), and it is not attempted in Phase 1: it costs days budgeted for hole detection, it cannot help a bull outside the lattice, and the time to try it is when real shot targets exist.
+
+#### Two changes (entry 17 section 4)
+
+1. **One frame at a time by default.**
+   - **The change.** `grouplab surface frames` fits each frame alone, and `grouplab surface frames --joint` keeps the joint fit for a set known to share a camera. A user photographs one target at a time, and sharing a camera cost `main1` a factor of two (M1.10).
+   - **What still reproduces.** `surface lens` and `surface general` keep their joint fits, so M1.7 and M1.10 reproduce. `surface noise` and `surface correlation` read whatever `surface.json` holds, now the alone fit, so M1.8 and M1.9 reproduce after `surface frames --joint`.
+2. **Selection defaults to the plane below eight corners.** Fewer corners is less evidence, so the default is the model with fewer parameters. The plane is fitted to the kept corners from four, with the lens from six, and below four no model is supported (`SurfaceSelectionTests`). No gated figure moves. In M1.10's raw rows, "bend kept" now reads no on the five joint general fits that kept no corners.
+
+Every gated photograph fitted alone (`grouplab surface frames`, then `surface noise` for the last two columns). Worst scoring bull / worst sighter, inches:
+
+| Gate | Photograph | Corners kept | Deflection (in) | F (critical) | Bend kept | Surface | Selected | Robust corner sigma (px per axis) | Equivalent sweep noise (px) |
+|---|---|---|---|---|---|---|---|---|---|
+| mounted | `ultrawide1` | 113 of 136 | 0.219 | 420.6 (4.62) | yes | 0.01249 / 0.02129 | 0.01249 / 0.02129 | 1.15 | 1.26 |
+| mounted | `ultrawide2` | 110 of 136 | 0.302 | 502.0 (4.62) | yes | 0.05809 / 0.00758 | 0.05809 / 0.00758 | 0.99 | 1.05 |
+| mounted | `ultrawide3` | 87 of 128 | 0.574 | 620.1 (4.62) | yes | 0.06660 / 0.03095 | 0.06660 / 0.03095 | 1.23 | 1.36 |
+| mounted | `main1` | 125 of 136 | 0.417 | 267.5 (4.62) | yes | 0.00604 / 0.01820 | 0.00604 / 0.01820 | 0.74 | 0.77 |
+| mounted | `main2` | 70 of 104 | 0.417 | 210.1 (4.62) | yes | 0.05149 / 0.01694 | 0.05149 / 0.01694 | 1.46 | 1.60 |
+| mounted | `main3` | 96 of 108 | 0.440 | 587.9 (4.62) | yes | 0.03353 / 0.00968 | 0.03353 / 0.00968 | 0.88 | 0.93 |
+| mounted | `telephoto2` | 105 of 132 | 0.397 | 920.8 (4.62) | yes | 0.02241 / 0.01371 | 0.02241 / 0.01371 | 0.97 | 1.02 |
+| flat | `main_flat1` | 136 of 136 | 0.041 | -5.1 (4.62) | no | 0.00305 / 0.00830 | 0.00343 / 0.00661 | 0.55 | 0.57 |
+| flat | `main_flat2` | 100 of 100 | 0.172 | -4.9 (4.62) | no | 0.02314 / 0.01054 | 0.00566 / 0.01016 | 0.74 | 0.78 |
+| flat | `main_flat3` | 91 of 92 | 0.020 | 22.7 (4.62) | yes | 0.00814 / 0.00465 | 0.00814 / 0.00465 | 0.58 | 0.60 |
+
+- **Mounted: still 0 of 7.** Worst scoring bull 0.00604 to 0.06660 in, corner sigma 0.74 to 1.46 px.
+- **Better alone on six of seven.** Against M1.9's joint fits, the worst scoring bull is better on `ultrawide1`, `main1`, `main2`, `main3` and `telephoto2`, the same on `telephoto2`'s lens group of one, and worse on `ultrawide2` and `ultrawide3`.
+- **A false bend on a flat frame.** Fitted alone, `main_flat3` keeps a bend it does not have, F 22.7 against 4.62. Its selected worst bull, 0.00814 in, is nonetheless better than the joint fit's plane, 0.01108. It is the F test's second false positive on a flat sheet, after M1.5's filled scan.
+
+#### Is what the fit leaves structured or random? (entry 17 section 5)
+
+**Reproduce:** `grouplab surface correlation`, raw rows `scans/phase0/measurements/surface-correlation.json`. It reads the fit above.
+
+**Method.** The same question Phase 0 measurement 6 asked of the printer's displacement field, asked of each frame's post-fit residual.
+
+- **Per marker.** Each usable corner's signed page residual is averaged over its marker, and the frame's mean is removed. Corners of one marker are 40 dmm apart and share their detection, so pairing them would read as structure that is not the sheet.
+- **The statistic.** The mean dot product of neighbouring markers' residuals, those within 1.5 times the median nearest-marker distance, over the mean squared residual. It is near 0 for independent error and near 1 for a field that varies slowly across the sheet.
+- **Significance.** The markers' residuals are shuffled among their positions 2000 times. Structured means p below 0.001 with a positive correlation.
+
+| Gate | Photograph | Markers | RMS marker residual (dmm) | Neighbour distance (dmm) | Neighbour pairs | Neighbour correlation | p | Far correlation | Reading |
+|---|---|---|---|---|---|---|---|---|---|
+| mounted | `ultrawide1.jpg` | 34 | 1.96 | 570 | 104 | +0.18 | < 0.001 | +0.01 | structured |
+| mounted | `ultrawide2.jpg` | 32 | 2.41 | 570 | 97 | +0.15 | 0.003 | -0.09 | not distinguishable from random |
+| mounted | `ultrawide3.jpg` | 30 | 3.25 | 570 | 88 | +0.20 | < 0.001 | -0.18 | structured |
+| mounted | `main1.jpg` | 34 | 1.32 | 570 | 104 | +0.06 | 0.054 | +0.01 | not distinguishable from random |
+| mounted | `main2.jpg` | 24 | 2.18 | 570 | 68 | +0.29 | < 0.001 | -0.18 | structured |
+| mounted | `main3.jpg` | 27 | 1.80 | 570 | 76 | +0.08 | 0.077 | -0.04 | not distinguishable from random |
+| mounted | `telephoto2.jpg` | 33 | 2.65 | 570 | 96 | +0.15 | 0.012 | +0.05 | not distinguishable from random |
+| flat | `main_flat1.jpg` | 34 | 0.60 | 570 | 104 | +0.09 | 0.032 | -0.10 | not distinguishable from random |
+| flat | `main_flat2.jpg` | 25 | 0.70 | 570 | 70 | +0.22 | 0.002 | -0.17 | not distinguishable from random |
+| flat | `main_flat3.jpg` | 23 | 0.75 | 570 | 63 | -0.01 | 0.293 | +0.02 | not distinguishable from random |
+
+Calibration, fitted the same way:
+
+| Case | RMS marker residual (dmm), median | Neighbour correlation, median | Seeds structured at p below 0.001 | Far correlation, median |
+|---|---|---|---|---|
+| white corner noise 0.52 px | 0.36 | -0.12 | 0 of 10 | +0.00 |
+| white corner noise 1.0 px | 0.63 | -0.08 | 0 of 10 | +0.00 |
+| white corner noise 2.0 px | 1.32 | -0.06 | 0 of 10 | -0.01 |
+| 0.25 in twist, 0.52 px | 0.74 | +0.21 | 3 of 10 | -0.01 |
+| 0.50 in twist, 0.52 px | 1.52 | +0.28 | 10 of 10 | -0.01 |
+
+**What it says.**
+
+1. **It is mostly not structured, and partly structured on some frames.**
+   - **Significant:** three of seven mounted frames, `ultrawide1` +0.18, `ultrawide3` +0.20 and `main2` +0.29.
+   - **Borderline:** `ultrawide2` (p 0.003) and `telephoto2` (p 0.012), both at +0.15.
+   - **Not correlated:** `main1` and `main3`, +0.06 and +0.08.
+   - **The ceiling:** on no frame do neighbouring markers share more than about 29 percent of the residual variance.
+2. **The calibration places it.** White corner noise after the fit reads -0.06 to -0.12, never significant. A synthetic twist of 0.25 in reads +0.21, significant on 3 of 10 seeds, and 0.50 in reads +0.28, on 10 of 10. The three structured mounted frames sit where a quarter to half inch of twist puts them.
+3. **The flat controls are not clean.** `main_flat2` reads +0.22 at p 0.002 and `main_flat1` +0.09, with no bend at all. That bounds how much of any frame's structure can be put down to how the sheet is held.
+4. **For the paper protocol, both sentences apply, in this order.**
+   - **Corner quality first:** light, aperture and distance. On the mounted frames the per-marker residual is 1.3 to 3.3 dmm, against 0.6 to 0.75 dmm on the flat ones, and most of that excess is not shared by neighbouring markers.
+   - **How the sheet is held second.** Three frames carry a structured part that a quarter to half inch of twist would produce.
+5. **Entry 17's clue is not settled by this.** Double the residual producing twenty times the bull error was expected to mean correlated error. One reading consistent with both is error coherent within a marker, all four corners moving together. That does not average out over 136 corners, since only about 34 markers are independent, and it reads as random between neighbours. It is not measured here.
+
 ---
 
 ## Decision log
@@ -576,3 +669,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **M1: a general surface whose rulings cross inside the page is undefined, over letting it fold through itself.** No sheet of paper takes that shape, and a fit that could reach it would report a shape that cannot exist.
 - **M1: the minimiser takes a backward difference, and holds a parameter, at an undefined boundary, over a smooth barrier penalty.** The change leaves every fit that never meets the boundary unchanged, which the cylinder's raw rows confirm; a barrier would change every general fit's cost.
 - **M1: stopped at the general surface with its joint fit unconverged and its alone fits as the measurement, over constraining its turn on weakly bent frames.** Entry 16 section 5 stops at the general developable surface, and a constraint would be a further model decision.
+- **M1: one frame at a time by default, over the joint fit.** A user photographs one target at a time, the lens barely matters (M1.7), and sharing a camera cost `main1` a factor of two; the joint fit stays behind `--joint`.
+- **M1: fewer than eight kept corners select the plane, over the bend.** Less evidence has to mean fewer parameters; the old default preferred the model with more.
+- **M1: the correlation diagnostic on per-marker mean residuals between neighbouring markers, with a permutation null, over corner pairs or a variogram.** Corners of one marker share their detection and would read as structure that is not the sheet, and a permutation test needs no model of the noise.
+- **M1: the mounted gate left at 0.005 in and recorded as open, over a separate looser gate.** Entry 17 section 2: the error budget argues for 0.003 to 0.005 in, and a number chosen after seeing the results is not a gate.
