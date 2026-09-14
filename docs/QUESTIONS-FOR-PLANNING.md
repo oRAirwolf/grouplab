@@ -12,6 +12,58 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-14, question 8: the sheet contradicts entry 15's reading of the table frames' EXIF, and the joint-fit lens key mixes two pixel geometries
+
+**Status: open.** Nothing here waits on it. M1 is reported with the key entry 6 set, and the answer bears on the paper protocol.
+
+Entry 15 section 1: "Two of the three tags say ultrawide and one says main, so the odd one out is the 35 mm equivalent and it is wrong."
+
+**`docs/PHASE1-RESULTS.md` M1.5 measured the opposite on three of the four table frames.**
+
+- **Fitted alone:** `20260913_130543`, `130550` and `130554` recover 2366, 2353 and 2771 px. That is near the 2556 px their 23 mm tag gives, and far from the 1621 to 1940 px that `ultrawide1-3` recover.
+- **Fitted jointly:** forced into the ultrawide's shared 1659 px, they degenerate, keeping 8, 4 and 0 of 136 corners.
+- **The fourth frame:** `130559` recovers 906 px on a nearly frontal flat sheet, which constrains its focal length least.
+- **Not the start:** `ultrawide1-3` give the same figures to five digits whether they start at 1444 or 2556 px.
+
+**One explanation fits all three tags being true.** The phone took the close-up table frames on the ultrawide sensor and cropped them to the main camera's field of view. The physical focal length and f-number then describe the lens, and the 35 mm equivalent describes the pixels. A joint fit keyed on focal length and f-number (entry 6) then puts two pixel geometries into one fit, and their normalised distortion differs too. That explanation is not established. The mixing is: the shared 2.2 mm lens, k1 -0.031 and k2 +0.022, includes the four ungated table frames.
+
+**Options.**
+
+- **A. Key joint fits on focal length, f-number and 35 mm equivalent together.**
+  - The table frames become their own group, and `ultrawide1-3` get a lens of their own.
+  - It is one grouping key in `SurfaceFrames.FitByLens`.
+  - It changes the M1.5 ultrawide figures through the shared lens, and they would be re-run and reported.
+- **B. Keep entry 6's key, and leave out of joint fits any frame whose tags disagree with the rest of its group.** The effect on these frames is the same, but a frame with a wrong tag is lost instead of grouped.
+- **C. Keep the key as it is.** The ultrawide's shared lens stays contaminated by four ungated frames.
+
+**What I would choose: A.** A joint fit shares pixel geometry, and the 35 mm equivalent is the tag that describes it. Separately, for the protocol: record which camera took each frame, and shoot from far enough that the phone keeps that camera.
+
+---
+
+## 2026-09-14, question 7: three of the five marker module sweep sheets for next weekend now fail test 26f as an error
+
+**Status: open.** Nothing in this session waits on it. Printing the sweep as it stands does.
+
+**How the sweep came to fail.**
+
+1. **Built on the Phase 0 sheet.** `docs/PHASE1-RESULTS.md` M0 built the sweep on `GL-CF25-LTR` as printed for Phase 0, gap 456. So its 0.5 mm sheet is the Phase 0 sheet by identifier, `GL-YCSK-DZZ1-R0VJ-4T5Y`, and the sweep carries its own control.
+2. **The geometry commit moved the live sheet.** Entry 13's geometry commit, `d73b9a4`, made test 26f an error and moved the live sheet to gap 454.
+3. **Rebased on the frozen definition.** The sweep's base is now `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json`, the first argument of `grouplab sweep module`. It reproduces all five definitions and PDFs byte for byte.
+4. **Three sheets fail.** The validator now reports 26f errors on the 0.5, 0.6 and 0.8 mm sheets: `GL-YCSK-DZZ1-R0VJ-4T5Y`, `GL-683J-3ZR8-60D5-0FGG` and `GL-SEBE-5F06-GVTF-3CZK`. Their sighters sit outside the marker lattice, and the sweep renders them only by accepting an invalid definition. The 0.3 and 0.4 mm sheets carry an extra marker row and conform.
+
+**Options.**
+
+- **A. Print the five as they are.**
+  - The sweep measures the module floor, which the sighters do not bear on, and the 0.5 mm sheet stays the Phase 0 sheet.
+  - Cost: three printed sheets the validator rejects, which the sweep README and the M0 section would have to call measurement sheets, not library sheets.
+- **B. Rebase the sweep on the live `GL-CF25-LTR`, gap 454.**
+  - Five sheets that conform, with five new identifiers, and the M0 table and PDFs regenerated. It is a few minutes of work.
+  - The 0.5 mm sheet is no longer the Phase 0 sheet, so the control sits one 2 dmm sighter change away from what Phase 0 printed.
+
+**What I would choose: A.** For a module-floor measurement, a control identical by identifier is worth more than sighters that conform when the measurement never uses them. B is right if nothing printed should fail the validator.
+
+---
+
 ## 2026-09-14, question 6: a sighter gap cannot make three of the four sheets conform, so test 26f cannot become an error in the geometry commit as written
 
 **Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 13.
