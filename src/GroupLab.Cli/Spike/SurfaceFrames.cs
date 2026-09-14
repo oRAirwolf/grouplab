@@ -122,7 +122,7 @@ public static class SurfaceFrames
     /// agree, with the image size. The equivalent and size alone would not do: the Phase 0 table frames, a cropped ultrawide,
     /// share the main camera's 23 mm equivalent but not its distortion.
     /// </summary>
-    internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress)
+    internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress, SurfaceFamily family = SurfaceFamily.Cylinder)
     {
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
         var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
@@ -133,8 +133,8 @@ public static class SurfaceFrames
             progress(string.Create(Inv, $"seeding the {name} camera: {string.Join(", ", members.Select(m => m.Sample.File))}"));
             var seed = SurfaceFit.SeedFocal([.. members.Select(m => (m.Sample.File, m.Metadata, m.Image.Width, m.Image.Height, (Func<double, SurfaceFrame>)(f => AtFocal(m, f))))])!;
             progress(string.Create(Inv, $"  start {seed.FocalPixels:0} px; candidates {string.Join("; ", seed.Candidates.Select(c => $"{c.FocalPixels:0} px from {c.Frames.Count} frame(s), cost {c.Cost:0.###E+0} px^2"))}"));
-            progress(string.Create(Inv, $"fitting the {name} camera jointly from {seed.FocalPixels:0} px"));
-            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true);
+            progress(string.Create(Inv, $"fitting the {name} camera jointly from {seed.FocalPixels:0} px{(family == SurfaceFamily.General ? ", general developable surface" : "")}"));
+            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true, SurfaceHold.None, family);
             for (int i = 0; i < members.Count; i++)
             {
                 fits[members[i].Sample.File] = fitted[i];

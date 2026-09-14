@@ -35,6 +35,8 @@ return args switch
     ["surface", "lens-sweep"] => SurfaceLens.Sweep(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
     ["surface", "lens"] => SurfaceLens.Frames("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     ["surface", "noise"] => SurfaceNoise.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
+    ["surface", "general-sweep"] => SurfaceGeneral.Sweep(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
+    ["surface", "general"] => SurfaceGeneral.Frames("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     _ => Usage(),
 };
 
@@ -450,7 +452,7 @@ static int Usage()
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
         grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors [<scans-directory> <definitions-directory>]
         grouplab sweep module <base.gltd.json> <module-sweep-layouts.json> <output-directory>
-        grouplab surface synthetic|rendered|frames|lens-sweep|lens|noise
+        grouplab surface synthetic|rendered|frames|lens-sweep|lens|noise|general-sweep|general
         """);
     return 2;
 }

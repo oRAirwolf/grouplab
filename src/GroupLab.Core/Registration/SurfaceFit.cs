@@ -78,6 +78,9 @@ public static class SurfaceFit
 
     private const int FrameParameters = 4 + 6;
 
+    /// <summary>Ruling-turn coefficients a general developable fit carries (<see cref="FoldedSheet"/>): a linear and a quadratic turn.</summary>
+    public const int TurnTerms = 2;
+
     /// <summary>
     /// The first reclassification distance, page dmm: a photograph's first RANSAC distance, which rejects misreads only
     /// (<c>SheetMeasurer.PhotographRansacThreshold</c>). Reclassifying straight to the Phase 0 inlier distance lost whole
@@ -150,7 +153,11 @@ public static class SurfaceFit
     /// <param name="frames">Frames to fit.</param>
     /// <param name="shareCamera">Fit one focal length and lens across all the frames, which must be perspective and share a lens.</param>
     /// <param name="hold">Parameters held at each frame's starting values (<see cref="SurfaceHold"/>).</param>
-    public static IReadOnlyList<SurfaceFrameResult> Fit(IReadOnlyList<SurfaceFrame> frames, bool shareCamera, SurfaceHold hold = SurfaceHold.None)
+    /// <param name="family">
+    /// The surface to fit. A general developable surface (NOTES-FROM-PLANNING.md entry 16 section 5) starts from the best
+    /// cylinder with its rulings not yet turning, and every later stage, reclassification and joint fit, is the general one.
+    /// </param>
+    public static IReadOnlyList<SurfaceFrameResult> Fit(IReadOnlyList<SurfaceFrame> frames, bool shareCamera, SurfaceHold hold = SurfaceHold.None, SurfaceFamily family = SurfaceFamily.Cylinder)
     {
         ArgumentNullException.ThrowIfNull(frames);
         var models = new SurfaceModel[frames.Count];
@@ -163,6 +170,10 @@ public static class SurfaceFit
             var usable = frame.Usable.ToArray();
             starts[f] = [];
             var (refined, _) = BestStart(frame, usable, starts[f], hold);
+            if (family == SurfaceFamily.General)
+            {
+                refined = refined with { Family = SurfaceFamily.General, Turn = new double[TurnTerms] };
+            }
             foreach (double threshold in (double[])[MisreadThreshold, PageRegistration.RansacThreshold])
             {
                 kept[f] = Reclassify(frame, refined, threshold);
@@ -253,7 +264,7 @@ public static class SurfaceFit
         double bestCost = double.PositiveInfinity;
         foreach (double degrees in hold.HasFlag(SurfaceHold.Flat) ? [0] : StartAngles)
         {
-            var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1] };
+            var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1], Family = SurfaceFamily.Cylinder, Turn = null };
             var (model, cost) = FitAlone(frame, start, use, hold);
             starts?.Add((degrees, Math.Sqrt(cost / Math.Max(1, use.Count(u => u)))));
             if (cost < bestCost)
@@ -276,13 +287,14 @@ public static class SurfaceFit
     {
         int[] indices = [.. Enumerable.Range(0, frame.Image.Count).Where(i => use[i])];
         bool perspective = start.Projection == SurfaceProjection.Perspective;
+        int frameCount = Pack(start).Length;
         var full = Pack(start).Concat(perspective ? PackCamera(start) : []).ToArray();
-        var free = FrameFree(hold).Concat(perspective ? CameraFree(hold) : []).ToArray();
-        var steps = FrameSteps(perspective).Concat(perspective ? CameraSteps : []).Where((_, i) => free[i]).ToArray();
+        var free = FrameFree(hold, start).Concat(perspective ? CameraFree(hold) : []).ToArray();
+        var steps = FrameSteps(perspective, start).Concat(perspective ? CameraSteps : []).Where((_, i) => free[i]).ToArray();
         SurfaceModel Model(double[] x)
         {
             var all = Merge(full, free, x, 0);
-            return Unpack(start, all.AsSpan(0, FrameParameters), perspective ? all.AsSpan(FrameParameters, 3) : default);
+            return Unpack(start, all.AsSpan(0, frameCount), perspective ? all.AsSpan(frameCount, 3) : default);
         }
 
         var result = LevenbergMarquardt.Minimise((x, r) => FrameResiduals(frame, Model(x), indices, r, 0), [.. full.Where((_, i) => free[i])], 2 * indices.Length, steps);
@@ -292,13 +304,13 @@ public static class SurfaceFit
     private static SurfaceModel[] FitJointly(IReadOnlyList<SurfaceFrame> frames, SurfaceModel[] models, bool[][] kept, SurfaceHold hold)
     {
         var indices = frames.Select((frame, f) => Enumerable.Range(0, frame.Image.Count).Where(i => kept[f][i]).ToArray()).ToArray();
-        bool[] frameFree = FrameFree(hold), cameraFree = CameraFree(hold);
+        bool[] frameFree = FrameFree(hold, models[0]), cameraFree = CameraFree(hold);
         int perFrame = frameFree.Count(b => b);
         var packs = models.Select(Pack).ToArray();
         var cameras = models.Select(PackCamera).ToArray();
         var camera = new[] { Median(models.Select(m => Math.Log(m.Focal))), Median(models.Select(m => m.K1)), Median(models.Select(m => m.K2)) };
         var x0 = packs.SelectMany(p => p.Where((_, i) => frameFree[i])).Concat(camera.Where((_, i) => cameraFree[i])).ToArray();
-        var steps = frames.SelectMany(_ => FrameSteps(true).Where((_, i) => frameFree[i])).Concat(CameraSteps.Where((_, i) => cameraFree[i])).ToArray();
+        var steps = frames.SelectMany(_ => FrameSteps(true, models[0]).Where((_, i) => frameFree[i])).Concat(CameraSteps.Where((_, i) => cameraFree[i])).ToArray();
         int cameraAt = perFrame * frames.Count;
 
         // A held camera parameter keeps each frame's own starting value; a free one is shared.
@@ -320,12 +332,14 @@ public static class SurfaceFit
         return [.. frames.Select((_, f) => Model(result.Parameters, f))];
     }
 
-    /// <summary>Which of a frame's packed parameters are fitted: the ruling angle and three bend coefficients, then the pose.</summary>
-    private static bool[] FrameFree(SurfaceHold hold)
+    /// <summary>Which of a frame's packed parameters are fitted: the ruling angle and three bend coefficients, the pose, then any turn.</summary>
+    private static bool[] FrameFree(SurfaceHold hold, SurfaceModel model)
     {
         bool bend = !hold.HasFlag(SurfaceHold.Flat);
-        return [bend, bend, bend, bend, true, true, true, true, true, true];
+        return [bend, bend, bend, bend, true, true, true, true, true, true, .. Enumerable.Repeat(bend, TurnCount(model))];
     }
+
+    private static int TurnCount(SurfaceModel model) => model.Family == SurfaceFamily.General ? model.Turn?.Count ?? TurnTerms : 0;
 
     /// <summary>Which of the packed camera parameters are fitted: log focal length, k1, k2.</summary>
     private static bool[] CameraFree(SurfaceHold hold) =>
@@ -368,15 +382,23 @@ public static class SurfaceFit
         return cost;
     }
 
-    private static double[] Pack(SurfaceModel m) => m.Projection == SurfaceProjection.Perspective
-        ? [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, m.TranslationX, m.TranslationY, m.TranslationZ]
-        : [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, Math.Log(m.Focal), m.TranslationX, m.TranslationY];
+    private static double[] Pack(SurfaceModel m)
+    {
+        double[] frame = m.Projection == SurfaceProjection.Perspective
+            ? [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, m.TranslationX, m.TranslationY, m.TranslationZ]
+            : [m.RulingAngle, m.Bend[1], m.Bend[2], m.Bend[3], m.RotationX, m.RotationY, m.RotationZ, Math.Log(m.Focal), m.TranslationX, m.TranslationY];
+        return m.Family == SurfaceFamily.General ? [.. frame, .. m.Turn ?? new double[TurnTerms]] : frame;
+    }
 
     private static double[] PackCamera(SurfaceModel m) => [Math.Log(m.Focal), m.K1, m.K2];
 
-    private static double[] FrameSteps(bool perspective) => perspective
-        ? [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-4, 1e-4, 1e-4]
-        : [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7];
+    private static double[] FrameSteps(bool perspective, SurfaceModel model)
+    {
+        double[] frame = perspective
+            ? [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-4, 1e-4, 1e-4]
+            : [1e-6, 1e-6, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7, 1e-7];
+        return [.. frame, .. Enumerable.Repeat(1e-6, TurnCount(model))];
+    }
 
     private static readonly double[] CameraSteps = [1e-7, 1e-7, 1e-7];
 
@@ -389,6 +411,7 @@ public static class SurfaceFit
             {
                 RulingAngle = x[0], Bend = bend, RotationX = x[4], RotationY = x[5], RotationZ = x[6],
                 TranslationX = x[7], TranslationY = x[8], TranslationZ = x[9],
+                Turn = x.Length > FrameParameters ? x[FrameParameters..].ToArray() : template.Turn,
                 Focal = camera.Length == 3 ? Math.Exp(camera[0]) : template.Focal,
                 K1 = camera.Length == 3 ? camera[1] : template.K1,
                 K2 = camera.Length == 3 ? camera[2] : template.K2,
@@ -399,6 +422,7 @@ public static class SurfaceFit
         {
             RulingAngle = x[0], Bend = bend, RotationX = x[4], RotationY = x[5], RotationZ = x[6],
             Focal = Math.Exp(x[7]), TranslationX = x[8], TranslationY = x[9],
+            Turn = x.Length > FrameParameters ? x[FrameParameters..].ToArray() : template.Turn,
         };
     }
 

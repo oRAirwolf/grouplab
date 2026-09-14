@@ -21,6 +21,10 @@ public sealed record SurfaceChoice(IPageMapping? Planar, double PlanarSumSquares
 /// refined on the page residual as the Phase 0 lens fit is; and the surface loses its two lens parameters, and its focal
 /// length when that is held too. The bend is still four extra parameters.
 /// </para>
+/// <para>
+/// A general developable surface (<see cref="SurfaceFamily.General"/>) adds its turn coefficients to the bend's extra
+/// parameters, six for a photograph, and the critical value follows the degrees of freedom.
+/// </para>
 /// </summary>
 public static class SurfaceSelection
 {
@@ -33,8 +37,11 @@ public static class SurfaceSelection
         var keptPage = page.Where((_, i) => fit.Kept[i]).ToList();
         bool perspective = fit.Model.Projection == SurfaceProjection.Perspective;
         bool heldLens = perspective && hold.HasFlag(SurfaceHold.Distortion);
-        int surfaceParameters = (perspective ? 14 : 10) - (heldLens ? 2 : 0) - (perspective && hold.HasFlag(SurfaceHold.Focal) ? 1 : 0), extra = perspective ? 4 : 2;
-        double critical = perspective ? 18.467 / 4 : 13.816 / 2;
+        int turn = fit.Model.Family == SurfaceFamily.General ? fit.Model.Turn?.Count ?? 0 : 0;
+        int surfaceParameters = (perspective ? 14 : 10) + turn - (heldLens ? 2 : 0) - (perspective && hold.HasFlag(SurfaceHold.Focal) ? 1 : 0), extra = (perspective ? 4 : 2) + turn;
+
+        // The chi-square quantile at p = 0.001 over the degrees of freedom the bend adds.
+        double critical = extra switch { 2 => 13.816 / 2, 4 => 18.467 / 4, 6 => 22.458 / 6, _ => 26.124 / 8 };
         if (keptImage.Count < 8 || HomographyEstimate.Fit(keptImage, keptPage) is not { } homography)
         {
             return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, true);

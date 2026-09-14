@@ -24,6 +24,10 @@ public enum SurfaceProjection
 /// <see cref="RadialHomographyMapping"/>. An orthographic model, for a scan, has no depth or lens: <see cref="Focal"/> is
 /// normalised units per dmm and the translation is in normalised units.
 /// </para>
+/// <para>
+/// <see cref="Family"/> is the cylinder unless it says <see cref="SurfaceFamily.General"/>, whose rulings turn across the
+/// page by <see cref="Turn"/>, coefficient k multiplying <c>(t / BendLength)^(k+1)</c> in radians (<see cref="FoldedSheet"/>).
+/// </para>
 /// </summary>
 public sealed record SurfaceModel(
     SurfaceProjection Projection,
@@ -42,7 +46,9 @@ public sealed record SurfaceModel(
     double CentreY,
     double Scale,
     double PageCentreX,
-    double PageCentreY)
+    double PageCentreY,
+    SurfaceFamily Family = SurfaceFamily.Cylinder,
+    IReadOnlyList<double>? Turn = null)
 {
     /// <summary>The arc length, in dmm, that the bend polynomial's variable is divided by, so its coefficients are of order one.</summary>
     public const double BendLength = 1000;
@@ -102,6 +108,12 @@ public static class DevelopableSurface
     /// <summary>The page point on the bent sheet, dmm, in a frame whose x and y are the flat page's about its centre.</summary>
     public static (double X, double Y, double Z) Sheet(SurfaceModel model, PointD page)
     {
+        ArgumentNullException.ThrowIfNull(model);
+        if (model.Family == SurfaceFamily.General)
+        {
+            return FoldedSheet.For(model).Sheet(page);
+        }
+
         var (along, across) = RulingCoordinates(model, page);
         var (x, z) = Profile(model.Bend, across);
         double c = Math.Cos(model.RulingAngle), s = Math.Sin(model.RulingAngle);
@@ -196,6 +208,26 @@ public static class DevelopableSurface
         var across = new[] { new PointD(0, 0), new PointD(pageWidth, 0), new PointD(pageWidth, pageHeight), new PointD(0, pageHeight) }
             .Select(p => RulingCoordinates(model, p).Across).ToList();
         double t0 = across.Min(), t1 = across.Max();
+        if (model.Family == SurfaceFamily.General)
+        {
+            // The same ruler, laid along the spine: the largest distance of the sheet under it from the chord between its ends.
+            double nx = -Math.Sin(model.RulingAngle), ny = Math.Cos(model.RulingAngle);
+            (double X, double Y, double Z) At(double t) => Sheet(model, new PointD(model.PageCentreX + (t * nx), model.PageCentreY + (t * ny)));
+            var start = At(t0);
+            var end = At(t1);
+            double cx = end.X - start.X, cy = end.Y - start.Y, cz = end.Z - start.Z, chord = Math.Sqrt((cx * cx) + (cy * cy) + (cz * cz));
+            double far = 0;
+            for (int i = 1; i < 200; i++)
+            {
+                var q = At(t0 + ((t1 - t0) * i / 200));
+                double px = q.X - start.X, py = q.Y - start.Y, pz = q.Z - start.Z;
+                double ox = (py * cz) - (pz * cy), oy = (pz * cx) - (px * cz), oz = (px * cy) - (py * cx);
+                far = Math.Max(far, Math.Sqrt((ox * ox) + (oy * oy) + (oz * oz)) / chord);
+            }
+
+            return far;
+        }
+
         var a = Profile(model.Bend, t0);
         var b = Profile(model.Bend, t1);
         double lx = b.X - a.X, lz = b.Z - a.Z, length = Math.Sqrt((lx * lx) + (lz * lz));
@@ -285,12 +317,14 @@ public sealed class SurfaceMapping : IPageMapping
     private readonly double[,] _rotation;
     private readonly double _rulingCos, _rulingSin, _tableStart;
     private readonly double[] _x, _z, _slopeX, _slopeZ;
+    private readonly FoldedSheet? _folded;
 
     public SurfaceMapping(SurfaceModel parameters, double pageLeft, double pageTop, double pageRight, double pageBottom)
     {
         ArgumentNullException.ThrowIfNull(parameters);
         Parameters = parameters;
         _rotation = DevelopableSurface.Rotation(parameters.RotationX, parameters.RotationY, parameters.RotationZ);
+        _folded = parameters.Family == SurfaceFamily.General ? new FoldedSheet(parameters) : null;
         _rulingCos = Math.Cos(parameters.RulingAngle);
         _rulingSin = Math.Sin(parameters.RulingAngle);
         double pad = 0.5 * Math.Max(pageRight - pageLeft, pageBottom - pageTop);
@@ -332,12 +366,16 @@ public sealed class SurfaceMapping : IPageMapping
 
     public SurfaceModel Parameters { get; }
 
-    public string Model => Parameters.Projection == SurfaceProjection.Perspective
-        ? "generalised cylinder through a camera with radial distortion"
-        : "generalised cylinder, orthographic";
+    public string Model => (Parameters.Family == SurfaceFamily.General ? "general developable surface" : "generalised cylinder")
+        + (Parameters.Projection == SurfaceProjection.Perspective ? " through a camera with radial distortion" : ", orthographic");
 
     public PointD ToImage(PointD page)
     {
+        if (_folded is not null)
+        {
+            return DevelopableSurface.Distort(Parameters, DevelopableSurface.Project(Parameters, _rotation, _folded.Sheet(page)));
+        }
+
         double dx = page.X - Parameters.PageCentreX, dy = page.Y - Parameters.PageCentreY;
         double along = (dx * _rulingCos) + (dy * _rulingSin), across = (-dx * _rulingSin) + (dy * _rulingCos);
         double x, z;

@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-14, entry 16: two corrections to entry 15, both mine, and the cone goes before M2
 
-**Status: open.** Answers questions 7 and 8, and decides the order.
+**Status: actioned 2026-09-14.** Section 5's table is `docs/PHASE1-RESULTS.md` M1.8 (mounted frames at 0.96 to 1.88 px, so shape); section 2 is M1.9 (joint fits keyed on pixel geometry, no warning, the product finding); section 3 is in the module sweep and frozen READMEs; section 4's note is in M1.2; the general developable surface is M1.10, which recovers a synthetic cone and passes no mounted frame, so the surface models stop and M2 is next. Originally: answers questions 7 and 8, and decides the order.
 
 ### 1. Entry 15 section 4 was wrong, and it was wrong for an instructive reason
 

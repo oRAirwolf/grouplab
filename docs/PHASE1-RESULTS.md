@@ -420,6 +420,128 @@ The gated photographs:
 3. **Every mounted frame now sits at or below 1.88 px** by pixels, and 1.72 by page dmm. `ultrawide1` moves from 2.18. Section 5's answer is unchanged and clearer: the shape is the limit.
 4. **The leftover shape stays significant on five of seven mounted frames.** `ultrawide3` drops to F 4.0 and `ultrawide2` rises to 21.4, against the flat controls' 0.8 to 2.9.
 
+### M1.10 The general developable surface: it recovers a cone, and it does not pass the mounted frames
+
+`docs/NOTES-FROM-PLANNING.md` entry 16 section 5: M1.8 put the shape, not the corners, as the limit, so a general developable surface comes next, on the cylinder's discipline, and nothing after it.
+
+**Reproduce:** `grouplab surface general-sweep` (raw rows `scans/phase1/measurements/surface-general-synthetic.json`), then `grouplab surface general` (`scans/phase0/measurements/surface-general.json`).
+
+**The model.** `FoldedSheet`, in `src/GroupLab.Core/Registration/`.
+
+- **Rulings.** They cross the flat page in straight lines whose direction turns with arc length along a spine through the page centre: a linear turn makes a cone, a quadratic one a fan that returns.
+- **Folds.** The sheet is folded along rulings 10 dmm apart, each by the change in the bend's tangent angle across it. Every strip is a rigid piece of the page, so the map from page to sheet is an isometry by construction, as the cylinder's is.
+- **Two parameters.** It adds a linear and a quadratic turn to the cylinder. Selection counts them, six extra parameters against the plane, critical F 3.74.
+- **Validity.** Rulings that cross inside the page would fold the sheet through itself, so such a model maps nothing.
+- **Tests.** `GeneralDevelopableTests` checks five things:
+  - with no turn the folded sheet is the cylinder, within 0.018 dmm on a strongly bent sheet;
+  - a straight page line keeps its length on a turned sheet;
+  - its mapping inverts to 1e-6 dmm;
+  - rulings that cross are refused;
+  - a cone's bulls are recovered, to 0.00193 in where the cylinder gives 0.01000.
+
+#### On synthetic truth
+
+Both surfaces on the same corners, M1.7's truth camera, ten seeds per cell.
+
+| Axis | Level | Noise (px) | Markers | Truth deflection (in) | Cylinder: worst bull median / 90th pct | Cylinder gate | General: worst bull median / 90th pct | General gate | General: corners kept, robust sigma (px) | General: fitted turn across the page (deg), median | General bend kept | Selected: worst bull median / 90th pct | Selected gate |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cone, linear turn | 0.0: rulings turn 0.0 degrees across the page | 0.52 | 34 | 0.400 | 0.00155 / 0.00221 | pass | 0.00183 / 0.00227 | pass | 136 of 136, 0.50 | 0.6 of 0.0 | 10 of 10 | 0.00183 / 0.00227 | pass |
+| cone, linear turn | 0.1: rulings turn 12.4 degrees across the page | 0.52 | 34 | 0.400 | 0.01010 / 0.01088 | fail | 0.00151 / 0.00181 | pass | 136 of 136, 0.51 | 12.5 of 12.4 | 10 of 10 | 0.00151 / 0.00181 | pass |
+| cone, linear turn | 0.2: rulings turn 24.7 degrees across the page | 0.52 | 34 | 0.398 | 0.01761 / 0.01949 | fail | 0.00152 / 0.00254 | pass | 136 of 136, 0.50 | 24.6 of 24.7 | 10 of 10 | 0.00152 / 0.00254 | pass |
+| cone, linear turn | 0.3: rulings turn 37.1 degrees across the page | 0.52 | 34 | 0.397 | 0.02919 / 0.03220 | fail | 0.00135 / 0.00187 | pass | 136 of 136, 0.52 | 37.3 of 37.1 | 10 of 10 | 0.00135 / 0.00187 | pass |
+| quadratic turn | 0.05: rulings turn 3.3 degrees across the page | 0.52 | 34 | 0.400 | 0.00243 / 0.00260 | pass | 0.00155 / 0.00196 | pass | 136 of 136, 0.51 | 3.8 of 3.3 | 10 of 10 | 0.00155 / 0.00196 | pass |
+| quadratic turn | 0.10: rulings turn 6.7 degrees across the page | 0.52 | 34 | 0.400 | 0.00445 / 0.00497 | pass | 0.00150 / 0.00211 | pass | 136 of 136, 0.51 | 6.8 of 6.7 | 10 of 10 | 0.00150 / 0.00211 | pass |
+| twist, not developable | 0.10 in over the bow | 0.52 | 34 | 0.400 | 0.00220 / 0.00240 | pass | 0.00242 / 0.00259 | pass | 136 of 136, 0.54 | 4.2 of 0.0 | 10 of 10 | 0.00242 / 0.00259 | pass |
+| twist, not developable | 0.25 in over the bow | 0.52 | 34 | 0.400 | 0.00536 / 0.00601 | fail | 0.00424 / 0.00476 | pass | 136 of 136, 0.66 | 10.2 of 0.0 | 10 of 10 | 0.00424 / 0.00476 | pass |
+| twist, not developable | 0.50 in over the bow | 0.52 | 34 | 0.400 | 0.01405 / 0.01462 | fail | 0.00927 / 0.01116 | fail | 120 of 136, 0.89 | 22.1 of 0.0 | 10 of 10 | 0.00927 / 0.01116 | fail |
+| noise, cone 0.2 | 1.0 px | 1.00 | 34 | 0.398 | 0.01916 / 0.02059 | fail | 0.00293 / 0.00433 | pass | 131 of 136, 1.01 | 25.2 of 24.7 | 10 of 10 | 0.00293 / 0.00433 | pass |
+| noise, cone 0.2 | 1.5 px | 1.50 | 34 | 0.398 | 0.02256 / 0.02604 | fail | 0.00502 / 0.00621 | fail | 104 of 136, 1.38 | 24.5 of 24.7 | 10 of 10 | 0.00502 / 0.00621 | fail |
+| noise, cone 0.2 | 2.0 px | 2.00 | 34 | 0.398 | 0.01996 / 0.02550 | fail | 0.00725 / 0.00917 | fail | 80 of 136, 1.90 | 24.6 of 24.7 | 10 of 10 | 0.00725 / 0.00917 | fail |
+| markers, cone 0.2 | main2's 26 | 0.52 | 26 | 0.398 | 0.04385 / 0.04778 | fail | 0.00561 / 0.00687 | fail | 104 of 104, 0.52 | 26.2 of 24.7 | 10 of 10 | 0.00561 / 0.00687 | fail |
+| markers, cone 0.2 | main3's 27 | 0.52 | 27 | 0.398 | 0.02604 / 0.02752 | fail | 0.00365 / 0.00459 | pass | 108 of 108, 0.48 | 25.3 of 24.7 | 10 of 10 | 0.00365 / 0.00459 | pass |
+| markers, cone 0.2 | 25 at random | 0.52 | 25 | 0.398 | 0.01876 / 0.02992 | fail | 0.00197 / 0.00351 | pass | 100 of 100, 0.49 | 25.5 of 24.7 | 10 of 10 | 0.00197 / 0.00351 | pass |
+| bow, cone 0.2 | 1.00 in, rulings turn 24.7 degrees across the page | 0.52 | 34 | 0.996 | 0.04041 / 0.04140 | fail | 0.00127 / 0.00218 | pass | 136 of 136, 0.50 | 24.7 of 24.7 | 10 of 10 | 0.00127 / 0.00218 | pass |
+
+**What the sweep settles.**
+
+1. **The general surface takes a cone the cylinder cannot.** A linear turn of 12 degrees across the page fails the cylinder, 0.01010 in, and a turn of 37 degrees passes the general surface at 0.00135 in, the fitted turn within 0.2 degrees of truth. With a 1.00 in bow on top it still passes, 0.00127 in.
+2. **It breaks in four places.**
+   - **The family's own limit.** A linear turn of 0.4 (49.5 degrees) or a quadratic turn of 0.2 crosses rulings inside the page, which no sheet of paper does. Those cells were not run.
+   - **Corner noise.** Its break sits between 1.0 and 1.5 px.
+   - **Coverage.** `main2`'s 26 markers fail it, 0.00561 in.
+   - **Twist.** A non-developable twist of 0.50 in over the bow fails it, 0.00927 in. It passes 0.25 in, which the cylinder does not.
+3. **With no turn to find it costs a little.** It gives 0.00183 in on a plain bow, against the cylinder's 0.00155.
+
+#### On the real frames
+
+**The first run's joint fit stalled.** `grouplab surface general`, run with the code before the minimiser changes below, kept 0 corners on `main_flat1`, `main_flat3`, `main1` and `ultrawide1`, with worst bulls up to 3.0 in. Every frame's turn and ruling angle came out exactly as fitted alone, and only the shared focal length and lens had moved, to the medians of the frames' own fits. Those rows are not kept, because the committed code does not reproduce them.
+
+**The cause, found on the frames' corners with nothing adjusted to their bulls.**
+
+1. **The fit ends on the boundary.** On a flat or barely bent frame the ruling turn is unconstrained, so a frame's own fit runs to where its rulings begin to cross. `main_flat1` fitted a turn of 52 degrees on an unbent sheet.
+2. **One step leaves the valid region.** A ruling-angle step of 1e-6 there makes all 136 corners undefined.
+3. **The penalty floods the solve.** The minimiser's forward-difference Jacobian took that step. The penalty's column, of order 1e12, set the damping floor of every other parameter in the joint solve, and no step was taken.
+
+**Two changes to the minimiser, general and tested.** `LevenbergMarquardt` now does two things at an undefined boundary:
+
+- **A backward difference.** A difference step whose cost is not finite, or jumps by 1e9 plus a thousand times the cost, takes the backward difference, and a parameter undefined both ways is left out of the iteration.
+- **A held parameter.** A parameter whose solved step would carry it across the boundary is held for that step.
+
+What the changes did:
+
+- **Tests.** `LevenbergMarquardtTests` has two cases.
+- **The cylinder.** `surface frames` gives the same numbers as M1.9.
+- **The synthetic sweep.** 14 of its 160 general trials changed, all in the noisy and lost-marker cells, because those fits had met the boundary too. The 1.5 px row went from "median passes, 90th fails" to a fail, and the table above is after the change.
+
+**The joint fit still does not converge.** The flat frames press against the boundary along a combination of parameters, not one. Fitting the turn only where the bend is supported would be a further modelling decision, and entry 16 section 5 says to stop here, so it was not made. The joint fit, as the final run gives it:
+
+| Gate | Photograph | Whole sheet | Cylinder | General | Selected | Scoring bulls over the gate | Gate |
+|---|---|---|---|---|---|---|---|
+| flat | `main_flat1.jpg` | 0.00343 / 0.00661 | 0.00443 / 0.00654 | 0.09489 / 0.00507 | 0.09489 / 0.00507 | 0 / 0 / 16 / 16 | fail / fail / fail / fail |
+| flat | `main_flat2.jpg` | 0.00566 / 0.01016 | 0.01780 / 0.01134 | 0.04167 / 0.02254 | 0.07760 / 0.05044 | 2 / 5 / 25 / 8 | fail / fail / fail / fail |
+| flat | `main_flat3.jpg` | 0.01183 / 0.00496 | 0.02581 / 0.00648 | 0.06219 / 0.05635 | 0.06219 / 0.05635 | 6 / 9 / 21 / 21 | fail / fail / fail / fail |
+| mounted | `main1.jpg` | 0.01532 / 0.04841 | 0.01177 / 0.00620 | 0.03131 / 0.04765 | 0.03131 / 0.04765 | 8 / 8 / 9 / 9 | fail / fail / fail / fail |
+| mounted | `main2.jpg` | 0.04350 / 0.06231 | 0.05971 / 0.01856 | 0.04921 / 0.06129 | 0.04921 / 0.06129 | 21 / 19 / 24 / 24 | fail / fail / fail / fail |
+| mounted | `main3.jpg` | 0.06540 / 0.11379 | 0.04522 / 0.00508 | 0.05439 / 0.01669 | 0.07518 / NaN | 20 / 7 / 23 / 15 | fail / fail / fail / fail |
+| mounted | `telephoto2.jpg` | 0.04584 / 0.09626 | 0.02241 / 0.01371 | 0.02330 / 0.01102 | 0.02330 / 0.01102 | 21 / 8 / 8 / 8 | fail / fail / fail / fail |
+| mounted | `ultrawide1.jpg` | 0.03301 / 0.06983 | 0.01435 / 0.04783 | 0.03226 / 0.00461 | 0.03226 / 0.00461 | 13 / 18 / 11 / 11 | fail / fail / fail / fail |
+| mounted | `ultrawide2.jpg` | 0.06983 / 0.08732 | 0.03409 / 0.01686 | 0.02549 / 0.02181 | 0.02549 / 0.02181 | 20 / 10 / 17 / 17 | fail / fail / fail / fail |
+| mounted | `ultrawide3.jpg` | 0.09123 / 0.07995 | 0.04056 / 0.05194 | 0.03211 / 0.07210 | 0.03211 / 0.07210 | 21 / 14 / 14 / 14 | fail / fail / fail / fail |
+
+**The frames fitted alone do not depend on the joint fit, and they are the measurement.** Each frame has its own focal length and lens, as cylinder and as general surface:
+
+| Gate | Photograph | Forward residual median (px) | Corners kept | Robust sigma (px per axis) | Rulings turn (deg) | Cylinder alone | General alone | Selected | Scoring bulls over the gate | Gate |
+|---|---|---|---|---|---|---|---|---|---|---|
+| flat | `main_flat1.jpg` | 0.65 / 0.64 | 136 / 136 of 136 | 0.55 / 0.55 | 52.4 | 0.00305 / 0.00830 | 0.00292 / 0.00728 | 0.00343 / 0.00661 | 0 / 0 / 0 | fail / fail / fail |
+| flat | `main_flat2.jpg` | 0.86 / 0.80 | 100 / 100 of 100 | 0.74 / 0.70 | 29.4 | 0.02314 / 0.01054 | 0.01804 / 0.01002 | 0.00566 / 0.01016 | 6 / 8 / 2 | fail / fail / fail |
+| flat | `main_flat3.jpg` | 0.66 / 0.63 | 91 / 91 of 92 | 0.58 / 0.55 | 25.1 | 0.00814 / 0.00465 | 0.00777 / 0.00416 | 0.00777 / 0.00416 | 3 / 4 / 4 | fail / fail / fail |
+| mounted | `main1.jpg` | 0.87 / 1.03 | 125 / 130 of 136 | 0.74 / 0.87 | 26.3 | 0.00604 / 0.01820 | 0.00764 / 0.02498 | 0.00764 / 0.02498 | 4 / 5 / 5 | fail / fail / fail |
+| mounted | `main2.jpg` | 1.74 / 1.85 | 70 / 67 of 104 | 1.46 / 1.57 | 32.5 | 0.05149 / 0.01694 | 0.05060 / 0.01110 | 0.05060 / 0.01110 | 19 / 19 / 19 | fail / fail / fail |
+| mounted | `main3.jpg` | 0.94 / 0.94 | 96 / 98 of 108 | 0.88 / 0.83 | 37.0 | 0.03353 / 0.00968 | 0.03440 / 0.02806 | 0.03440 / 0.02806 | 5 / 7 / 7 | fail / fail / fail |
+| mounted | `telephoto2.jpg` | 1.12 / 1.09 | 105 / 104 of 132 | 0.97 / 0.96 | 27.3 | 0.02241 / 0.01371 | 0.02330 / 0.01102 | 0.02330 / 0.01102 | 8 / 8 / 8 | fail / fail / fail |
+| mounted | `ultrawide1.jpg` | 1.25 / 1.25 | 113 / 113 of 136 | 1.15 / 1.18 | 12.8 | 0.01249 / 0.02129 | 0.01165 / 0.02064 | 0.01165 / 0.02064 | 9 / 11 / 11 | fail / fail / fail |
+| mounted | `ultrawide2.jpg` | 1.08 / 1.08 | 110 / 109 of 136 | 0.99 / 0.99 | 33.8 | 0.05809 / 0.00758 | 0.05645 / 0.01645 | 0.05645 / 0.01645 | 9 / 9 / 9 | fail / fail / fail |
+| mounted | `ultrawide3.jpg` | 1.36 / 1.33 | 87 / 95 of 128 | 1.23 / 1.26 | 46.7 | 0.06660 / 0.03095 | 0.05749 / 0.05103 | 0.05749 / 0.05103 | 12 / 15 / 15 | fail / fail / fail |
+
+**What the real frames say.**
+
+1. **No mounted frame comes inside 0.005 in, as either surface.**
+   - General surface alone: worst scoring bull 0.00764 to 0.05749 in.
+   - Cylinder alone: 0.00604 to 0.06660 in.
+2. **The general surface changes almost nothing on these frames.**
+   - **Worst scoring bull:** it moves by -14 to +26 percent, better on four mounted frames and worse on three.
+   - **Corners:** the median forward residual moves by at most 0.16 px, and the corners kept by at most eight.
+   - **Contrast with synthetic truth:** on a synthetic cone it removes the whole of the cylinder's error. The shape M1.7 found on these corners is not one this family takes up either.
+3. **Its fitted turns carry no information.** They are 25 to 52 degrees on the three flat frames, where there is no bend for a turn to act on, and 13 to 47 degrees on the mounted ones.
+4. **Fitted alone, `main1` is the best mounted frame, and its cylinder beats its joint fit.** Its cylinder alone gives 0.00604 in, against 0.01177 in its joint fit (M1.5), with 125 corners kept against 120. The shared camera costs `main1` a factor of two, and it is still outside the gate.
+
+**So, per entry 16 section 5, this is where the surface models stop, and M2 is next.**
+
+- **Not tried:** a third surface model, or constraining the general surface's turn.
+- **The recorded fallback:** the piecewise registration of `docs/PHASE0-RESULTS.md` section 4.5.
+- **The finding:** the mounted gate needs more than a developable fit of the whole sheet, which is a finding about the product.
+- **The protocol:** M1.6 stands unchanged.
+
 ---
 
 ## Decision log
@@ -450,3 +572,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **M1: M1.2's "at random" marker rows relabelled as the first markers in raster order, over re-running them at random.** The label was wrong and the numbers right, and they are cited in entry 13; M1.7's sweep carries a random coverage of its own.
 - **M1: corner quality placed on the sweep by a robust sigma over all corners, over the RMS of the kept corners.** The kept corners are truncated at 2.54 dmm, and their RMS stays between 0.9 and 1.2 px from 1 px of noise to 5.
 - **M1: joint fits keyed on physical focal length, f-number, 35 mm equivalent and image size, over the equivalent and image size alone.** Entry 16 section 2 asks for the pixel geometry; the equivalent alone would join the cropped table frames to the main camera, which shares their 23 mm and their image size but not their distortion.
+- **M1: the general developable surface as folds along turning rulings 10 dmm apart, over a smooth parametrisation of a tangent developable.** Rigid strips keep the isometry exact for any turn and reduce to the cylinder, within 0.018 dmm, when the rulings do not turn.
+- **M1: a general surface whose rulings cross inside the page is undefined, over letting it fold through itself.** No sheet of paper takes that shape, and a fit that could reach it would report a shape that cannot exist.
+- **M1: the minimiser takes a backward difference, and holds a parameter, at an undefined boundary, over a smooth barrier penalty.** The change leaves every fit that never meets the boundary unchanged, which the cylinder's raw rows confirm; a barrier would change every general fit's cost.
+- **M1: stopped at the general surface with its joint fit unconverged and its alone fits as the measurement, over constraining its turn on weakly bent frames.** Entry 16 section 5 stops at the general developable surface, and a constraint would be a further model decision.
