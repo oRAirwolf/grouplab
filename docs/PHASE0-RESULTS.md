@@ -13,7 +13,8 @@
 |---|---|---|---|
 | Conformance test 43, unchanged | Synthetic raster of the PDF | 0.001 in worst bull | **Pass** on every page of every built-in sheet |
 | Paper gate | 600 DPI scan of each of the ten printed sheets | 0.005 in worst bull | **Pass, ten of ten.** Worst 0.00325 in, tile 3 |
-| Photograph gate | Each photograph that contains the whole sheet: four of sheet 1 on a table, seven of sheet 3 on a wall | 0.005 in worst bull | **Fail, eleven of eleven.** Table frames 0.00569 to 0.01083 in; wall frames 0.04841 to 0.11379 in. Sections 3 and 3a have the diagnosis, and section 4.4 the geometry fix, identified, costed and deferred. `telephoto1` and `telephoto3` overflow the frame and are excluded, per notes entry 6. **The one open item**: two frames of a sheet restrained on all four edges, requested in notes entry 8 |
+| Photograph gate, flat, Phase 0 | `main_flat1-3`: sheet 3 lying flat, main camera | 0.005 in worst bull | **Fail, three of three.** Worst 0.00661, 0.01016 and 0.01183 in. With every marker decoded, every scoring bull passes and only the sighter S1 fails, on the geometry section 4.4 fixes; the other two frames lose far-edge markers to defocus. Section 3b |
+| Photograph gate, mounted, Phase 1 | The seven usable frames of sheet 3 hanging from a pin | 0.005 in worst bull | **Fail, seven of seven, as DESIGN.md section 21 [r5] expects** until a surface model exists. Worst 0.048 to 0.114 in. Section 3a; `telephoto1` and `telephoto3` overflow the frame and are excluded |
 | Print-scale detection | `gl-cf25-ltr-96.2-*` against `gl-cf25-ltr-1-*` | Ratio 0.962 within 0.001 | **Pass** at both resolutions: 0.96197 at 600 DPI and 0.96201 at 300, by area |
 
 The registration residual over marker corners is reported, not gated, per DESIGN.md section 21.
@@ -50,7 +51,7 @@ Every tile is identified from its markers alone, and each matches its file name.
 
 ## 3. Every photograph, and why the gate fails
 
-All four frames are the ultrawide lens, 2.20 mm at f/2.2 (notes entry 6). Scoring bulls and sighters are given separately.
+All four frames are the ultrawide lens, 2.20 mm at f/2.2 (notes entry 6). The sheet lies loose rather than held flat, so under DESIGN.md section 21 [r5] these frames are reported and not gated. Scoring bulls and sighters are given separately.
 
 | Photograph | Markers | Residual RMS / max | Homography alone, RMS | Lens k1 / k2 | Distortion at the frame edge | Bull mean, edge fit | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Photograph gate |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -78,7 +79,7 @@ The lens is real but modelled: the fitted distortion at the outermost marker is 
 
 ## 3a. The wall photographs of sheet 3, by lens
 
-Notes entry 6: nine frames of sheet 3, three per lens, to separate the lens, flatness and the sighter geometry. Shipped pipeline, edge fit, inches. "Corners kept" is how many corners the fit keeps within 0.01 in; the residual is given over those and over every matched corner.
+Notes entry 6: nine frames of sheet 3, three per lens, to separate the lens, flatness and the sighter geometry. Under DESIGN.md section 21 [r5] they are measured against the mounted gate, which belongs to Phase 1 and is expected to fail until a surface model exists. Shipped pipeline, edge fit, inches. "Corners kept" is how many corners the fit keeps within 0.01 in; the residual is given over those and over every matched corner.
 
 | Lens | Photograph | Markers | Corners kept | Residual RMS, kept / all corners | Homography alone, RMS | Bull mean | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Photograph gate |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -107,6 +108,36 @@ The table frames of section 3 keep 135 or 136 corners of 136, with at most 0.003
 **Detection on these frames.** The pipeline matches 34, 26 and 27 markers on `main1-3`, 34, 34 and 32 on `ultrawide1-3`, and 16, 33 and 4 on `telephoto1-3`. Entry 6's scratch counts differ on seven of the nine. `main2` loses markers at the far edge of the sheet, which is visibly out of focus at f/1.7. The canonical-cell change of section 4.1 was measured on these frames and on all 21 scans before it shipped.
 
 Notes entry 8 answers question 5: the protocol said "pin or tape", which is not flat, and `docs/PHASE0-PRINT-PROTOCOL.md` section 7 now asks for all four edges restrained. Two frames of a flat sheet are the one open item of the spike. **The wall set stays committed as the baseline a Phase 1 registration of a curved sheet has to beat** (section 4.5): a realistic curvature, under the shipped global registration, worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate, and 0.014 to 0.060 in corner RMS over all corners, every row in `scans/phase0/measurements/photos.json`.
+
+## 3b. The flat photographs of sheet 3: Phase 0's photograph gate
+
+Notes entry 10: `main_flat1-3`, sheet 3 lying flat, the main camera at 6.25 mm f/1.7, camera originals. No glass was available, so the sheet is flat by lying on a table rather than restrained. Shipped pipeline, edge fit, inches. Every row is in `scans/phase0/measurements/photos.json`.
+
+| Photograph | Keystone (notes entry 10) | Markers | Corners kept | Residual RMS, kept / all corners | Homography alone, RMS | Lens k1 / k2 | Bull mean | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Flat gate |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `main_flat1` | 0.997, square on | 34/34 | 136 of 136 | 0.00270 / 0.00270 | 0.00729 | -0.0512 / +0.0659 | 0.00187 | 0.00343 at 21 | **0 of 25** | 0.00661 at S1 | 1 of 3 | fail |
+| `main_flat2` | 0.926 | 25/34 | 100 of 100 | 0.00315 / 0.00315 | 0.00587 | -0.0436 / +0.0531 | 0.00270 | 0.00566 at 13 | 2 of 25 | 0.01016 at S1 | 2 of 3 | fail |
+| `main_flat3` | 0.802 | 23/34 | 91 of 92 | 0.00395 / 0.00424 | 0.01107 | -0.0721 / +0.1058 | 0.00392 | 0.01183 at 1 | 6 of 25 | 0.00496 at S1 | 0 of 3 | fail |
+
+**These frames are flat.** The fit keeps every corner, or all but one, and the residual over all corners equals the residual over those kept, where the pinned frames keep 25 to 90 of 104 to 136.
+
+**With every marker decoded, the scoring bulls pass and only a sighter fails.** On `main_flat1` all 25 scoring bulls are inside the gate, worst 0.00343 in, and S1, at 0.00661 in, is the only bull over it. S1 lies outside the marker lattice, on the geometry that section 4.4 identifies and the deferred commit fixes. This is the case entry 6's third question asked for: a flat sheet, a well-behaved lens, and only a sighter failing.
+
+**Every other failure is a bull outside the markers that were decoded, or within a thousandth of the gate.**
+
+| Photograph | Bull | Error | Where it lies |
+|---|---|---|---|
+| `main_flat1` | S1 | 0.00661 | outside the lattice: the sighter row |
+| `main_flat2` | S1, S2 | 0.01016, 0.00759 | outside the lattice: the sighter row |
+| `main_flat2` | 13, 18 | 0.00566, 0.00509 | inside |
+| `main_flat3` | 1, 2, 4, 5 | 0.01183, 0.00573, 0.00939, 0.01047 | outside the decoded markers: the top marker row was lost |
+| `main_flat3` | 6, 13 | 0.00529, 0.00526 | inside |
+
+**The lost markers are at the far edge, and out of focus.** `main_flat2` loses 9 markers along the far right side and `main_flat3` 11 across the far top rows; every one but one had a candidate quad at its position that did not decode. At f/1.7 the depth of field does not cover a sheet this far off-axis, and the far rows of `main_flat3` are visibly soft. Entry 10's own counts are 34, 29 and 23. The loss matters because it moves the lattice: the top row of `main_flat3` goes, and the five top scoring bulls become extrapolated, four of them past the gate. Decoding a defocused, foreshortened marker is a detection requirement for Phase 1, beside the surface model; it was not tuned against these three frames, which would fit the detector to the gate.
+
+**The lens is modelled and is not the limit.** The main camera's fitted distortion is consistent across frames, k1 -0.044 to -0.073 and k2 +0.053 to +0.106 on the flat frames and `main1`, and it is real: a homography alone leaves 0.0059 to 0.0111 in RMS, and the lens term brings it to 0.0027 to 0.0042 over all corners. `main_flat3`'s 4.9 in of distortion at the frame edge is the polynomial extrapolated past the markers into an empty half of the frame, not a measurement.
+
+**Entry 6's three questions, answered.** Lens: not the limit on a flat sheet, since the frame with every marker passes every scoring bull. Flatness: the dominant cause, an order of magnitude, 0.048 to 0.114 in pinned against 0.0066 to 0.0118 in flat with the same sheet and lens. Sighter geometry: confirmed on a flat sheet rather than inferred.
 
 ## 4. Findings
 
@@ -146,7 +177,11 @@ The other sheets with sighters bracket them already. **The change is identified,
 
 ### 4.5 Phase 1 requirement: registering a sheet that is not flat
 
-Notes entry 8. A sheet pinned up at a range is the normal case, so the photograph path must register a sheet that is not one plane, and local or piecewise registration from nearby markers is the requirement rather than a workaround. What it bought on the table photographs, registering each bull from its nearest 6 or 8 markers instead of the whole sheet, inches:
+Notes entries 8 and 10, and DESIGN.md section 21 [r5]. A target stapled to a board is the application's actual input: it bows between its fixings, curls at a free edge and moves in wind. The mounted photograph gate is the product requirement, and the flat gate is the control.
+
+**The model is a developable surface fit**, as DESIGN.md section 6 already states: paper bends without stretching, so distance along the sheet is preserved where the projection is not planar. That is a stronger constraint than a generic warp, and the spike's evidence points at a constraint rather than more freedom: three radial coefficients with a free centre, and quadratic and cubic warps evaluated leaving one marker out, brought no frame inside the gate.
+
+**Local or piecewise registration from nearby markers is the fallback** if the constrained fit proves impractical. What it bought on the table photographs, registering each bull from its nearest 6 or 8 markers instead of the whole sheet, inches:
 
 | Photograph | Worst scoring bull, whole sheet | Worst scoring bull, nearest markers |
 |---|---|---|
@@ -155,7 +190,9 @@ Notes entry 8. A sheet pinned up at a range is the normal case, so the photograp
 | `20260913_130554` | 0.0058 | 0.0057 |
 | `20260913_130559` | 0.0034 | 0.0021 |
 
-These were measured with a scratch diagnostic, before the detection changes of section 4.1, and Phase 1 re-measures them in the pipeline. **Its limit is the sighters**: they stayed at 0.008 to 0.013 in whichever markers were chosen, because no nearby marker brackets them. A local registration cannot help a bull outside the lattice, which is section 4.4 reached from a third direction. The baseline to beat is the wall set of section 3a.
+These were measured with a scratch diagnostic, before the detection changes of section 4.1, and Phase 1 re-measures them in the pipeline. **Its limit is the sighters**: they stayed at 0.008 to 0.013 in whichever markers were chosen, because no nearby marker brackets them. A local registration cannot help a bull outside the lattice, which is section 4.4 reached from a third direction; a developable fit constrains the surface beyond the markers, but a sighter outside the lattice is still extrapolated.
+
+**The benchmark is the nine pinned frames**, seven measured and two excluded as overflowing the frame, and the figures to beat are section 3a's: worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate, 0.014 to 0.060 in corner RMS over all corners. The flat frames of section 3b are the control a surface fit must not make worse.
 
 ## 5. The measurements of the brief, section 6
 
@@ -327,3 +364,28 @@ One line per method choice where there was a real alternative: what was rejected
 - **Bracketing inclusive and a warning first, over strict or an error on landing.** Strict fails both tiles at a margin of zero with no fix short of a denser scheme, and an error would fail four sheets before their geometry is designed (notes entry 9).
 - **Test 23 exempts a shortening that brackets, over carrying `sighterGap` in GLTD-B or scoping the test to documents not decoded.** The gap is recoverable from the body, and a shortening that brackets is self-evidently deliberate (notes entry 9).
 - **The exemption re-derives the lattice at the conventional gap, over checking only that the sighters are bracketed now.** A gap shortened where the lattice already brackets is not the case the rule describes, so it still warns.
+- **The flat gate measured on `main_flat1-3` only, over counting the table frames as flat.** Entry 10 names these as the control; the table frames are a different sheet and lens lying loose, and are reported, not gated.
+- **Far-edge marker loss reported, not tuned against.** Adjusting detection until three frames pass would fit the detector to the gate it is measured on.
+- **A developable surface fit as the Phase 1 model, over piecewise registration.** Notes entry 10: the spike's failed models had more freedom, not the right constraint; piecewise registration is the fallback.
+
+## 8. Phase 0 verdict
+
+Notes entry 10 closes Phase 0 on the flat photographs. Against DESIGN.md section 21 [r5]:
+
+| Gate | Result |
+|---|---|
+| Conformance test 43 | **Pass** |
+| Paper gate | **Pass**, ten of ten, worst 0.00325 in |
+| Print-scale detection | **Pass**, 0.96197 and 0.96201 |
+| Photograph gate, flat | **Fail**, three of three, worst 0.00661, 0.01016 and 0.01183 in |
+| Photograph gate, mounted | Phase 1's; fails seven of seven, 0.048 to 0.114 in, as expected |
+
+**The flat gate fails, and every failure has a named cause that the spike did not change.** On the one frame that decoded every marker, the scoring bulls pass and the only failure is a sighter outside the marker lattice. The others add bulls made extrapolated by far-edge markers lost to defocus, and four bulls inside the lattice over the gate by at most 0.0007 in. Whether the flat gate passes on a sheet whose lattice brackets its sighters is **not measured**: that needs the geometry commit of section 4.4 and a print of it, and no paper is being used.
+
+**What Phase 1 inherits, in the order it bears on the gates.**
+
+1. The geometry commit: `GL-CF25-LTR`, `GL-CF25-100M-A4`, `GL-LR300-R24` and `GL-LR300-R36`, with test 26f promoted to an error (section 4.4).
+2. Decoding defocused, foreshortened markers at the far edge of an off-axis frame (section 3b).
+3. A developable surface fit for the mounted gate, piecewise registration as its fallback, benchmarked on the nine pinned frames (section 4.5).
+4. The rest of this document's findings: the edge-fit locator, the canonical cell and threshold window, the corner residual reported rather than gated, and the half-pixel detector convention.
+

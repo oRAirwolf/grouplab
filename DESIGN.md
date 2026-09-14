@@ -470,7 +470,15 @@ Each phase has a gate. A phase is not complete until its gate passes.
 | Gate | Measured on | Threshold |
 |---|---|---|
 | Conformance test 43 | A synthetic raster of the PDF | 0.001 in, worst bull-centre error |
-| **Phase 0 paper gate** | A 600 DPI scan of a printed sheet, and the off-axis photograph | **0.005 in, worst bull-centre error** |
+| **Phase 0 paper gate** | A 600 DPI scan of a printed sheet | **0.005 in, worst bull-centre error** |
+| **Phase 0 photograph gate, flat** | An off-axis photograph of a sheet held flat | **0.005 in, worst bull-centre error** |
+| **Photograph gate, mounted** | An off-axis photograph of a sheet mounted as a shooter mounts it | **0.005 in, worst bull-centre error. Phase 1, and it needs a surface model** |
+
+**[r5] The photograph gate has two halves, and only the first belongs to Phase 0.** A sheet held flat isolates the lens and the estimator. A sheet stapled to a target board is what the application will actually be given, and it is not flat: it bows between its fixings, it curls at a free edge, and it moves in wind. The nine Phase 0 photographs of a sheet hanging from a single pin measured the cost of pretending otherwise, and it is an order of magnitude: worst bull 0.048 to 0.114 in with the main camera, against 0.0066 to 0.0118 in for the same sheet and the same lens lying flat.
+
+**A global homography cannot represent that surface and no amount of lens modelling rescues it**, which the spike established by refitting with three radial coefficients and a free distortion centre, and with quadratic and cubic warps evaluated leave-one-marker-out, without bringing any frame inside the gate. The mounted case therefore needs a surface model, and section 6 of this document already names the right one without having connected it: **paper is a developable surface**. It bends without stretching, so distance along the sheet is preserved even where the projection is not planar. That is a far stronger constraint than a generic warp or a patchwork of local homographies, and it is the basis Phase 1 should build on.
+
+Until that exists the mounted gate is expected to fail, and it is recorded as a gate rather than as a future nicety because it is the product requirement. A tool that measures groups from photographs of targets that must first be flattened is not a tool anyone will use at a range.
 
 plus correct detection of a deliberately mis-scaled print, unchanged.
 

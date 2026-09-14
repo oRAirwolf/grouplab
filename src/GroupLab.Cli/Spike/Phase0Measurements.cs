@@ -24,31 +24,39 @@ public static class Phase0Measurements
     private sealed record Run(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition, FiducialResult Fiducials, RegistrationFit? Fit, IReadOnlyList<BullLocation> Bulls, long DetectMs);
 
     /// <summary>
-    /// Section 7 and NOTES-FROM-PLANNING.md entry 6: every photograph through the shipped pipeline, grouped by lens, the lens
-    /// named by its focal length and f-number, with the worst scoring bull and the worst sighter called out separately.
-    /// A photograph whose sheet overflows the frame is listed as excluded rather than measured against the gate.
+    /// Section 7 and NOTES-FROM-PLANNING.md entries 6 and 10: every photograph through the shipped pipeline, grouped by gate
+    /// and then by lens, the lens named by its focal length and f-number, with the worst scoring bull and the worst sighter
+    /// called out separately. A photograph whose sheet overflows the frame is listed as excluded rather than measured.
     /// </summary>
     public static int Photos(string scans, string targets, TextWriter output)
     {
         ArgumentNullException.ThrowIfNull(output);
-        output.WriteLine("| Lens | Photograph | Markers | Residual RMS / max (in) | Homography alone, RMS (in) | Lens k1 / k2 | Distortion at the frame edge | Bull mean (in) | Worst scoring bull (in) | Worst sighter (in) | Photograph gate |");
-        output.WriteLine("|---|---|---|---|---|---|---|---|---|---|---|");
+        output.WriteLine("| Gate | Lens | Photograph | Markers | Corners kept | Residual RMS, kept / all corners (in) | Homography alone, RMS (in) | Lens k1 / k2 | Distortion at the frame edge | Bull mean (in) | Worst scoring bull (in) | Scoring bulls over the gate | Worst sighter (in) | Sighters over the gate | Verdict |");
+        output.WriteLine("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
         var definition = Phase0Spike.Definition(targets, SampleSet.CentreFire);
         var results = SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Photograph)
             .Select(s => Phase0Spike.Measure(scans, targets, s, Backend, new MeasureOptions())).ToList();
-        foreach (var r in results.OrderBy(r => r.Metadata.FocalLengthMm).ThenBy(r => r.Metadata.FNumber).ThenBy(r => r.Sample.File, StringComparer.Ordinal))
+        var order = results.OrderBy(r => r.Sample.Gate switch { SampleSet.PhotographGate.Flat => 0, SampleSet.PhotographGate.None => 1, _ => 2 })
+            .ThenBy(r => r.Metadata.FocalLengthMm).ThenBy(r => r.Metadata.FNumber).ThenBy(r => r.Sample.File, StringComparer.Ordinal);
+        foreach (var r in order)
         {
+            string gate = r.Sample.Gate switch
+            {
+                SampleSet.PhotographGate.Flat => "flat, Phase 0",
+                SampleSet.PhotographGate.Mounted => "mounted, Phase 1",
+                _ => "not gated",
+            };
             string lens = r.Metadata.FocalLengthMm is { } f ? string.Create(Inv, $"{f:0.00} mm f/{r.Metadata.FNumber:0.0}") : "unknown";
             string markers = $"{r.Fiducials.Matches.Count}/{r.Fiducials.Expected}";
             if (r.Sample.Excluded is { } why)
             {
-                output.WriteLine($"| {lens} | `{r.Sample.File}` | {markers} | excluded: {why} | | | | | | | excluded |");
+                output.WriteLine($"| {gate} | {lens} | `{r.Sample.File}` | {markers} | excluded: {why} | | | | | | | | | | excluded |");
                 continue;
             }
 
             if (r.Fit is null)
             {
-                output.WriteLine($"| {lens} | `{r.Sample.File}` | {markers} | {r.Failure} | | | | | | | fail |");
+                output.WriteLine($"| {gate} | {lens} | `{r.Sample.File}` | {markers} | {r.Failure} | | | | | | | | | | fail |");
                 continue;
             }
 
@@ -58,8 +66,15 @@ public static class Phase0Measurements
             var e = Phase0Spike.Stats(r.EdgeFit);
             string terms = r.Lens is { } l ? string.Create(Inv, $"{l.K1:+0.0000;-0.0000} / {l.K2:+0.0000;-0.0000}") : "";
             string edge = r.Lens is { } d ? string.Create(Inv, $"{d.FrameEdgePixels:0} px = {d.FrameEdgeInches:0.000} in") : "";
+            int kept = r.Fit.Corners.Count(c => c.Inlier);
+            double all = Math.Sqrt(r.Fit.Corners.Average(c => c.Error * c.Error));
+            int scoringOver = located.Count(b => definition.Bulls[b.Index].Scoring && b.Error >= Phase0Spike.PaperGate);
+            int sighterOver = located.Count(b => !definition.Bulls[b.Index].Scoring && b.Error >= Phase0Spike.PaperGate);
+            int scoringCount = definition.Bulls.Count(b => b.Scoring);
+            int sighterCount = definition.Bulls.Count - scoringCount;
+            string verdict = r.Sample.Gate == SampleSet.PhotographGate.None ? $"{Verdict(e)}, not gated" : Verdict(e);
             output.WriteLine(string.Create(Inv,
-                $"| {lens} | `{r.Sample.File}` | {markers} | {In(r.Fit.RmsResidual)} / {In(r.Fit.MaxResidual)} | {In(r.Fit.HomographyRmsResidual ?? double.NaN)} | {terms} | {edge} | {In(e.Mean)} | {In(scoring?.Error ?? double.NaN)} at {scoring?.Name} | {In(sighter?.Error ?? double.NaN)} at {sighter?.Name} | {Verdict(e)} |"));
+                $"| {gate} | {lens} | `{r.Sample.File}` | {markers} | {kept} of {r.Fit.Corners.Count} | {In(r.Fit.RmsResidual)} / {In(all)} | {In(r.Fit.HomographyRmsResidual ?? double.NaN)} | {terms} | {edge} | {In(e.Mean)} | {In(scoring?.Error ?? double.NaN)} at {scoring?.Name} | {scoringOver} of {scoringCount} | {In(sighter?.Error ?? double.NaN)} at {sighter?.Name} | {sighterOver} of {sighterCount} | {verdict} |"));
         }
 
         RawMeasurements.Write(scans, "photos", results.Select(r => RawMeasurements.Sample(r, definition)).ToList());

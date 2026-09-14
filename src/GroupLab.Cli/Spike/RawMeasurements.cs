@@ -103,6 +103,7 @@ public static class RawMeasurements
             dpi = r.Sample.Dpi,
             description = r.Sample.Description,
             excluded = r.Sample.Excluded,
+            photographGate = r.Sample.Kind == SampleSet.SampleKind.Photograph ? r.Sample.Gate : (SampleSet.PhotographGate?)null,
             gated = r.Sample.Gated,
             tileNamed = r.Sample.Tile,
             tileInferred = r.Fiducials.TileIndex,
