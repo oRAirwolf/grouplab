@@ -21,7 +21,7 @@ def box(cx,cy,w,h=None):
 class Layout:
     def __init__(self, name, page, ring, pitch, cols, rows,
                  sighter_cols=0, sighter_gap=None, ring_sighter=None, note="",
-                 data_block=0, fid_scheme="grid-boundary-1", tile=None, qr_count=4):
+                 data_block=0, fid_scheme="grid-boundary-1", tile=None, qr_count=4, mark=MARK):
         self.name=name; self.page=page; self.W,self.H = PAGES[page]
         self.ring=ring; self.pitch=pitch; self.cols=cols; self.rows=rows
         self.sighter_cols=sighter_cols
@@ -32,6 +32,7 @@ class Layout:
         self.fid_scheme=fid_scheme   # grid-boundary-1 or grid-boundary-half-1
         self.tile=tile               # (cols, rows) of an assembly this sheet is one tile of
         self.qr_count=qr_count       # 4 = all corners, 2 = top corners only
+        self.mark=mark               # marker plus its quiet zone both sides: MARK, unless a module sweep sets it
         assert pitch % 2 == 0, f'{name}: pitch {pitch} dmm must be even so the derived cell-boundary lattice lands on integer dmm'
         if fid_scheme == "grid-boundary-half-1":
             assert pitch % 4 == 0, f'{name}: pitch {pitch} dmm must be divisible by 4 for the half lattice'
@@ -96,7 +97,7 @@ class Layout:
             self.fy.append(self.ys_s[0]-hy); self.fy.append(self.ys_s[0]+hy)
         fy=[]
         for v in sorted(set(self.fy)):
-            if not fy or v-fy[-1] >= MARK+20: fy.append(v)
+            if not fy or v-fy[-1] >= self.mark+20: fy.append(v)
         self.fy = fy
         self.marks=[]; self.dropped=0
         rings=[box(x,y,self.ring) for x in self.xs for y in self.ys] + \
@@ -104,7 +105,7 @@ class Layout:
         qrb=[box(cx,cy,QR) for cx,cy in self.qr]
         for x in self.fx:
             for y in self.fy:
-                b=box(x,y,MARK)
+                b=box(x,y,self.mark)
                 if b[0]<SAFE*0.5 or b[1]<SAFE*0.5 or b[2]>self.W-SAFE*0.5 or b[3]>self.H-SAFE*0.5:
                     self.dropped+=1; continue
                 if any(rects_overlap(b,q,20) for q in qrb): self.dropped+=1; continue
@@ -124,7 +125,7 @@ class Layout:
         rings=[(box(x,y,self.ring),f"bull({x},{y})") for x in self.xs for y in self.ys] + \
               [(box(x,y,self.ring_s),f"sighter({x},{y})") for x in self.xs_s for y in self.ys_s]
         qrb=[(box(cx,cy,QR),f"qr{i}") for i,(cx,cy) in enumerate(self.qr)]
-        mkb=[(box(x,y,MARK),f"mark({x},{y})") for x,y in self.marks]
+        mkb=[(box(x,y,self.mark),f"mark({x},{y})") for x,y in self.marks]
         dbb=[(self.db,"dataBlock")] if self.db else []
         allb = rings+qrb+mkb+dbb
         if not self.fits:
@@ -149,7 +150,7 @@ class Layout:
         e,w=self.check()
         nb=self.cols*self.rows; ns=len(self.xs_s)
         used=(nb*math.pi*(self.ring/2)**2 + ns*math.pi*(self.ring_s/2)**2)
-        mk_area=len(self.marks)*MARK*MARK; qr_area=self.qr_count*QR*QR
+        mk_area=len(self.marks)*self.mark*self.mark; qr_area=self.qr_count*QR*QR
         pg=self.W*self.H
         return dict(name=self.name, page=self.page, page_in=f"{self.W/254:.2f}x{self.H/254:.2f}",
             grid=f"{self.cols}x{self.rows}", scoring=nb, sighters=ns, total=nb+ns,

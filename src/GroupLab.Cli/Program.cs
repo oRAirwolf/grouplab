@@ -28,6 +28,7 @@ return args switch
     ["measure", var image, var definition, .. var rest] => Measure(image, definition, rest),
     ["spike", var measurement] => Spike(measurement, "scans/phase0", SampleSet.FrozenDirectory),
     ["spike", var measurement, var scans, var targets] => Spike(measurement, scans, targets),
+    ["sweep", "module", var layouts, var sweep, var directory] => ModuleSweep.Run(layouts, sweep, directory, Console.Out),
     _ => Usage(),
 };
 
@@ -441,6 +442,7 @@ static int Usage()
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
         grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors [<scans-directory> <definitions-directory>]
+        grouplab sweep module <layouts.json> <module-sweep-layouts.json> <output-directory>
         """);
     return 2;
 }
