@@ -32,6 +32,12 @@ public sealed record SurfaceFrameResult(
     double DeflectionDmm,
     IReadOnlyList<(double StartDegrees, double RmsPixels)> Starts);
 
+/// <summary>A starting focal length, pixels, that some frames' EXIF gives; those frames; and the summed squared residual, pixels squared, of every frame fitted alone from it, NaN when it was the only start.</summary>
+public sealed record FocalCandidate(double FocalPixels, IReadOnlyList<string> Frames, double Cost);
+
+/// <summary>A joint fit's one starting focal length, the candidates weighed, and a warning per frame whose EXIF disagrees with it (<see cref="SurfaceFit.SeedFocal"/>).</summary>
+public sealed record FocalSeed(double FocalPixels, IReadOnlyList<FocalCandidate> Candidates, IReadOnlyList<string> Warnings);
+
 /// <summary>
 /// The developable surface fit of PHASE1-BRIEF.md M1. Each frame is fitted alone from several ruling angles, because a
 /// ruling angle is undefined until the sheet bends, and the best start is kept. Every corner is then reclassified, first at
@@ -134,21 +140,7 @@ public static class SurfaceFit
             var frame = frames[f];
             var usable = frame.Usable.ToArray();
             starts[f] = [];
-            SurfaceModel? best = null;
-            double bestCost = double.PositiveInfinity;
-            foreach (double degrees in StartAngles)
-            {
-                var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1] };
-                var (model, cost) = FitAlone(frame, start, usable);
-                starts[f].Add((degrees, Math.Sqrt(cost / Math.Max(1, usable.Count(u => u)))));
-                if (cost < bestCost)
-                {
-                    bestCost = cost;
-                    best = model;
-                }
-            }
-
-            var refined = best!;
+            var (refined, _) = BestStart(frame, usable, starts[f]);
             foreach (double threshold in (double[])[MisreadThreshold, PageRegistration.RansacThreshold])
             {
                 kept[f] = Reclassify(frame, refined, threshold);
@@ -186,6 +178,80 @@ public static class SurfaceFit
         }
 
         return results;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 15 section 1: frames fitted jointly share one lens, so they share one starting focal
+    /// length and never take one each. The EXIF offers a start per frame from the 35 mm equivalent, and frames with the same
+    /// physical focal length and f-number can carry different 35 mm equivalents: four of the Phase 0 2.2 mm frames say
+    /// 23 mm and three say 13 mm. An even split has no median and a vote can pick either, so each distinct start is tried on
+    /// every frame, fitted alone from every starting ruling angle over the frame's usable corners, which do not depend on the
+    /// start, and the start with the least total squared residual is the group's. On those seven frames the two costs differ
+    /// by 0.1 percent and the fitted results do not depend on the start (PHASE1-RESULTS.md M1.4), so the choice is not
+    /// evidence about which tag is right; each frame's focal length fitted alone is. A frame whose tag gives any other start is
+    /// named in a warning. Null when no frame carries a 35 mm equivalent.
+    /// </summary>
+    /// <param name="frames">Each frame's name and metadata, image size, and the frame built at a given starting focal length.</param>
+    public static FocalSeed? SeedFocal(IReadOnlyList<(string Name, ImageMetadata Metadata, int Width, int Height, Func<double, SurfaceFrame> FrameAt)> frames)
+    {
+        ArgumentNullException.ThrowIfNull(frames);
+        var exif = frames.Select(f => FocalPixelsFromExif(f.Metadata, f.Width, f.Height)).ToList();
+        var candidates = exif.Where(e => e is not null).Select(e => Math.Round(e!.Value, 1)).Distinct().Order().ToList();
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        var costs = new double[candidates.Count];
+        if (candidates.Count > 1)
+        {
+            var each = new double[candidates.Count * frames.Count];
+            Parallel.For(0, each.Length, k =>
+            {
+                var frame = frames[k % frames.Count].FrameAt(candidates[k / frames.Count]);
+                each[k] = BestStart(frame, [.. frame.Usable], null).Cost;
+            });
+            for (int c = 0; c < candidates.Count; c++)
+            {
+                costs[c] = Enumerable.Range(0, frames.Count).Sum(f => each[(c * frames.Count) + f]);
+            }
+        }
+
+        int chosen = Array.IndexOf(costs, costs.Min());
+        double focal = candidates[chosen];
+        var warnings = new List<string>();
+        string costs2 = string.Join(" against ", candidates.Select((c, i) => string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{costs[i]:0.###E+0} px^2 from {c:0} px")));
+        for (int f = 0; f < frames.Count; f++)
+        {
+            if (exif[f] is { } own && Math.Round(own, 1) != focal)
+            {
+                var m = frames[f].Metadata;
+                warnings.Add(string.Create(System.Globalization.CultureInfo.InvariantCulture,
+                    $"{frames[f].Name}: its EXIF 35 mm equivalent of {m.FocalLength35mm} mm gives a {own:0} px start where other frames at the same {m.FocalLengthMm:0.00} mm f/{m.FNumber:0.0} give {focal:0} px; the focal length tags disagree, and the group was started from {focal:0} px, the lower alone-fit residual ({costs2})"));
+            }
+        }
+
+        return new FocalSeed(focal, [.. candidates.Select((c, i) => new FocalCandidate(c, [.. frames.Where((_, f) => exif[f] is { } e && Math.Round(e, 1) == c).Select(x => x.Name)], candidates.Count > 1 ? costs[i] : double.NaN))], warnings);
+    }
+
+    /// <summary>The frame fitted alone from every starting ruling angle, flat, over <paramref name="use"/>: the best model and its cost.</summary>
+    private static (SurfaceModel Model, double Cost) BestStart(SurfaceFrame frame, bool[] use, List<(double, double)>? starts)
+    {
+        SurfaceModel? best = null;
+        double bestCost = double.PositiveInfinity;
+        foreach (double degrees in StartAngles)
+        {
+            var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1] };
+            var (model, cost) = FitAlone(frame, start, use);
+            starts?.Add((degrees, Math.Sqrt(cost / Math.Max(1, use.Count(u => u)))));
+            if (cost < bestCost)
+            {
+                bestCost = cost;
+                best = model;
+            }
+        }
+
+        return (best!, bestCost);
     }
 
     private static bool[] Reclassify(SurfaceFrame frame, SurfaceModel model, double threshold)

@@ -15,7 +15,8 @@ namespace GroupLab.Cli.Spike;
 /// distortion is what Phase 0 shipped. The nearest-marker diagnostic is PHASE0-RESULTS.md section 4.5's, ported: each bull's
 /// centre as the whole-sheet fit located it, mapped by a homography fitted to the lens-undistorted corners of its nearest
 /// k markers. The surface is the generalised cylinder, one focal length and lens shared by the frames the EXIF says share a
-/// lens. The selected model is the surface where <see cref="SurfaceSelection"/> says the bend is supported and the planar
+/// lens, all started from the one focal length <see cref="SurfaceFit.SeedFocal"/> chooses for that lens, with a warning
+/// naming any frame whose EXIF disagrees (NOTES-FROM-PLANNING.md entry 15 section 1). The selected model is the surface where <see cref="SurfaceSelection"/> says the bend is supported and the planar
 /// model otherwise. The ten gated scans go through the orthographic surface for the paper gate. Frames are prepared and
 /// evaluated in parallel, each thread with its own detector, and a progress line is printed as each frame finishes
 /// (NOTES-FROM-PLANNING.md entry 14).
@@ -26,7 +27,8 @@ public static class SurfaceFrames
     private static readonly object ProgressLock = new();
 
     private sealed record Prepared(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition,
-        FiducialResult? Fiducials, RegistrationFit? Baseline, IReadOnlyList<BullLocation> BaselineBulls, SurfaceFrame? Frame, double? ExifFocal, string? Failure);
+        FiducialResult? Fiducials, RegistrationFit? Baseline, IReadOnlyList<BullLocation> BaselineBulls, SurfaceFrame? Frame, double? ExifFocal, string? Failure,
+        RadialHomographyMapping? Lens = null);
 
     private sealed record Errors(string Name, IReadOnlyList<(string Label, bool Scoring, double Error)> Bulls, int Expected)
     {
@@ -69,19 +71,29 @@ public static class SurfaceFrames
         });
 
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
+        var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
         foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber)))
         {
             var members = lens.ToList();
-            Progress(string.Create(Inv, $"fitting the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens jointly: {string.Join(", ", members.Select(m => m.Sample.File))}"));
-            var fitted = SurfaceFit.Fit([.. members.Select(p => p.Frame!)], shareCamera: true);
+            Progress(string.Create(Inv, $"seeding the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens: {string.Join(", ", members.Select(m => m.Sample.File))}"));
+            var seed = SurfaceFit.SeedFocal([.. members.Select(m => (m.Sample.File, m.Metadata, m.Image.Width, m.Image.Height, (Func<double, SurfaceFrame>)(f => AtFocal(m, f))))])!;
+            Progress(string.Create(Inv, $"  start {seed.FocalPixels:0} px; candidates {string.Join("; ", seed.Candidates.Select(c => $"{c.FocalPixels:0} px from {c.Frames.Count} frame(s), cost {c.Cost:0.###E+0} px^2"))}"));
+            foreach (var warning in seed.Warnings)
+            {
+                Progress("  warning: " + warning);
+            }
+
+            Progress(string.Create(Inv, $"fitting the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens jointly from {seed.FocalPixels:0} px"));
+            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true);
             for (int i = 0; i < members.Count; i++)
             {
                 fits[members[i].Sample.File] = fitted[i];
+                seeds[members[i].Sample.File] = seed;
             }
         }
 
         var photoRows = new Row[photos.Length];
-        Parallel.For(0, photos.Length, parallel, i => photoRows[i] = PhotoRow(i, photos[i], fits, Progress));
+        Parallel.For(0, photos.Length, parallel, i => photoRows[i] = PhotoRow(i, photos[i], fits, seeds, Progress));
 
         var scanSamples = SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Scan && s.Gated).ToList();
         Progress($"the paper gate: {scanSamples.Count} scans through the orthographic surface");
@@ -124,7 +136,11 @@ public static class SurfaceFrames
         return 0;
     }
 
-    private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Action<string> progress)
+    /// <summary>The frame started from <paramref name="focalPixels"/>: its Phase 0 lens fit's plane pose through that focal length.</summary>
+    private static SurfaceFrame AtFocal(Prepared p, double focalPixels) =>
+        p.Frame! with { Start = SurfaceFit.StartFromLens(p.Lens!, focalPixels, p.Definition.Page.Width / 2.0, p.Definition.Page.Height / 2.0) };
+
+    private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Dictionary<string, FocalSeed> seeds, Action<string> progress)
     {
         string gate = p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => "mounted", SampleSet.PhotographGate.Flat => "flat", _ => "not gated" };
         string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}");
@@ -135,6 +151,8 @@ public static class SurfaceFrames
                 new { file = p.Sample.File, gate, failure = p.Failure ?? "no fit" });
         }
 
+        var seed = seeds[p.Sample.File];
+        string? exifWarning = seed.Warnings.FirstOrDefault(w => w.StartsWith(p.Sample.File + ":", StringComparison.Ordinal));
         var evaluated = Evaluate(p, fit);
         var (surface, selected, choice) = (evaluated.Surface, evaluated.Selected, evaluated.Choice);
         var wholeSheet = FromBulls("whole sheet", p.BaselineBulls, p.Definition);
@@ -144,7 +162,7 @@ public static class SurfaceFrames
             $"{p.Sample.File}: {p.Fiducials!.Matches.Count}/{p.Fiducials.Expected} markers, {fit.Kept.Count(k => k)} of {fit.Kept.Count} corners kept, deflection {fit.DeflectionDmm / 254:0.000} in, worst scoring bull {(surface.WorstScoring?.Error ?? double.NaN) / 254:0.00000} in surface / {(selected.WorstScoring?.Error ?? double.NaN) / 254:0.00000} in selected, F {choice.F:0.0} bend {(choice.PreferSurface ? "kept" : "not kept")}"));
 
         string fitLine = string.Create(Inv,
-            $"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials.Matches.Count}/{p.Fiducials.Expected} | {p.ExifFocal:0} | {fit.IndependentFocalPixels:0} / {fit.Model.FocalPixels:0} | {Degrees(fit.Model.RulingAngle):0.0} | {fit.DeflectionDmm / 254:0.000} | {fit.Kept.Count(k => k)} of {fit.Kept.Count} | {fit.RmsKept / 254:0.00000} / {fit.RmsAll / 254:0.00000} | {choice.F:0.0} ({choice.CriticalF:0.00}) | {(choice.PreferSurface ? "yes" : "no")} |");
+            $"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials.Matches.Count}/{p.Fiducials.Expected} | {p.ExifFocal:0}{(exifWarning is null ? "" : $", start {seed.FocalPixels:0}")} | {fit.IndependentFocalPixels:0} / {fit.Model.FocalPixels:0} | {Degrees(fit.Model.RulingAngle):0.0} | {fit.DeflectionDmm / 254:0.000} | {fit.Kept.Count(k => k)} of {fit.Kept.Count} | {fit.RmsKept / 254:0.00000} / {fit.RmsAll / 254:0.00000} | {choice.F:0.0} ({choice.CriticalF:0.00}) | {(choice.PreferSurface ? "yes" : "no")} |");
         string compareLine = string.Create(Inv,
             $"| {gate} | `{p.Sample.File}` | {Cell(wholeSheet)} | {Cell(near6)} | {Cell(near8)} | {Cell(surface)} | {Cell(selected)} | {wholeSheet.ScoringOver} / {near6.ScoringOver} / {near8.ScoringOver} / {surface.ScoringOver} / {selected.ScoringOver} | {Verdict(wholeSheet)} / {Verdict(surface)} / {Verdict(selected)} |");
         var raw = new
@@ -153,6 +171,9 @@ public static class SurfaceFrames
             gate,
             camera = new { p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm },
             exifFocalPixels = p.ExifFocal,
+            startFocalPixels = seed.FocalPixels,
+            focalCandidates = seed.Candidates.Select(c => new { focalPixels = c.FocalPixels, frames = c.Frames, costPixelsSquared = double.IsNaN(c.Cost) ? (double?)null : c.Cost }).ToArray(),
+            exifWarning,
             independentFocalPixels = fit.IndependentFocalPixels,
             sharedFocalPixels = fit.Model.FocalPixels,
             rulingAngleDegrees = Degrees(fit.Model.RulingAngle),
@@ -227,6 +248,7 @@ public static class SurfaceFrames
         double cx = definition.Page.Width / 2.0, cy = definition.Page.Height / 2.0;
         SurfaceModel start;
         double? exif = null;
+        RadialHomographyMapping? lensFit = null;
         if (metadata.IsCamera)
         {
             exif = SurfaceFit.FocalPixelsFromExif(metadata, image.Width, image.Height);
@@ -238,6 +260,7 @@ public static class SurfaceFrames
             var usable = homography.Inliers.ToArray();
             var lens = LensFit.Fit(imagePoints.Where((_, i) => usable[i]).ToList(), pagePoints.Where((_, i) => usable[i]).ToList(), homography.Transform, image.Width, image.Height);
             start = SurfaceFit.StartFromLens(lens, exif.Value, cx, cy);
+            lensFit = lens;
         }
         else
         {
@@ -245,7 +268,7 @@ public static class SurfaceFrames
         }
 
         var frame = new SurfaceFrame(sample.File, imagePoints, pagePoints, [.. homography.Inliers], start, 0, 0, definition.Page.Width, definition.Page.Height);
-        return new Prepared(sample, image, metadata, definition, fiducials, baseline, baselineBulls, frame, exif, null);
+        return new Prepared(sample, image, metadata, definition, fiducials, baseline, baselineBulls, frame, exif, null, lensFit);
     }
 
     private static Evaluation Evaluate(Prepared p, SurfaceFrameResult fit)

@@ -190,6 +190,19 @@ public static class EdgeFitBullLocator
     /// <summary>How far each side of a declared edge a ray samples, in dmm, before the gap to the next edge shortens it.</summary>
     public const double MaximumHalfWidth = 3.0;
 
+    /// <summary>
+    /// The fewest samples an edge profile may have: <see cref="Crossing"/> averages three at each end for the ink and paper
+    /// levels. NOTES-FROM-PLANNING.md entry 15 section 3: a mapping that gives fewer, as a degenerate registration does, fails
+    /// that bull with a reason and the sheet carries on.
+    /// </summary>
+    public const int MinimumSamples = 3;
+
+    /// <summary>
+    /// The most samples an edge profile may have: 4096 across at most 6 dmm is 680 px per dmm, a thousand times a 600 DPI
+    /// scan. More means the mapping has no usable scale at the bull, and sampling it would only exhaust memory.
+    /// </summary>
+    public const int MaximumSamples = 4096;
+
     /// <summary>Samples per image pixel along a ray.</summary>
     private const double SamplesPerPixel = 4;
 
@@ -226,10 +239,22 @@ public static class EdgeFitBullLocator
 
             var j = map.Jacobian(map.ToImage(centre));
             double step = Math.Sqrt(Math.Abs((j.XX * j.YY) - (j.XY * j.YX))) / SamplesPerPixel;
+            if (!double.IsFinite(step) || step <= 0)
+            {
+                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "the mapping has no finite scale at the bull");
+            }
+
             var observations = new List<Observation>(edges.Count * Rays);
             foreach (var edge in edges)
             {
-                int n = (int)Math.Ceiling(2 * edge.HalfWidth / step) + 1;
+                double across = Math.Ceiling(2 * edge.HalfWidth / step) + 1;
+                if (!(across >= MinimumSamples && across <= MaximumSamples))
+                {
+                    return new BullLocation(index, bull.Label, declared, null, pass, Failure: string.Create(CultureInfo.InvariantCulture,
+                        $"the mapping gives the {edge.Radius:0.#} dmm edge a profile of {across:0} samples at {step * SamplesPerPixel:0.###} dmm per pixel, outside {MinimumSamples} to {MaximumSamples}"));
+                }
+
+                int n = (int)across;
                 var samples = new double[n];
                 for (int k = 0; k < Rays; k++)
                 {
@@ -257,6 +282,11 @@ public static class EdgeFitBullLocator
             }
 
             var (fitted, fittedSpread, count) = Fit(observations, centre, spread);
+            if (!double.IsFinite(fitted.X) || !double.IsFinite(fitted.Y) || !double.IsFinite(fittedSpread))
+            {
+                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "the centre fit diverged");
+            }
+
             double shift = Math.Sqrt(Math.Pow(fitted.X - centre.X, 2) + Math.Pow(fitted.Y - centre.Y, 2));
             centre = fitted;
             spread = fittedSpread;
@@ -305,6 +335,11 @@ public static class EdgeFitBullLocator
     private static double? Crossing(double[] v, int sign, double contrast)
     {
         int n = v.Length, end = Math.Max(3, n / 8);
+        if (n < MinimumSamples)
+        {
+            return null;
+        }
+
         double inner = 0, outer = 0;
         for (int i = 0; i < end; i++)
         {
@@ -399,6 +434,11 @@ public static class EdgeFitBullLocator
             }
 
             var absolute = residuals.Where((_, i) => active[i]).Select(Math.Abs).Order().ToArray();
+            if (absolute.Length == 0)
+            {
+                break;
+            }
+
             double limit = Math.Max(4 * 1.4826 * absolute[absolute.Length / 2], 0.01);
             for (int i = 0; i < observations.Count; i++)
             {
