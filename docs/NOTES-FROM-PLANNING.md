@@ -8,9 +8,184 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-14, entry 21: a manual marking path, which is a second product and mostly already built
+
+**Status: open, not blocking M3. Read before starting M4**, because it changes what M4's first screen is for.
+
+### 1. What Alan asked for
+
+A workflow like Ballistic X, on mobile in particular: photograph the group, establish a one inch reference, give the calibre, mark the aiming point, mark each impact by hand, get the statistics. He supplied his own exports from that application. They show numbered reticles on each impact, a separate marker on the point of aim, a group-centre dot and a mean-radius circle, and a statistics panel carrying group extreme spread in inches and MOA, bounding width and height, adjust-to-zero in MOA with its direction, elevation and windage offsets, mean radius, CEP, radial, vertical and horizontal standard deviations, and windage and elevation extremes.
+
+### 2. This resolves entry 20's problem rather than adding to the pile
+
+Entry 20 found that twelve of twenty-four of Alan's own photographs are close-ups of a single group with no sheet edge in frame, and that GroupLab as specified can use none of them, because registration needs a fiducial lattice that is not in the picture. It also found a whole target family, the fluorescent splatter targets, where a hole is a bright saturated halo and the neutral-darkness detector will find nothing.
+
+**A manual marking path uses every one of those photographs.** It needs no fiducials, no registration, no surface model and no hole detection. It works on a close-up, on a splatter target, on a commercial bullseye, on a heavily compressed picture forwarded through a chat app, and on a sheet bowed on a board. The photographs Alan actually takes are exactly the input this path is for, and that is not a coincidence: it is what he has been using such an application for.
+
+### 3. So GroupLab has two paths, and they meet in the middle
+
+| | **Manual marking** | **Automatic** |
+|---|---|---|
+| Input | Any photograph of any target | A GroupLab sheet, whole, in frame |
+| Scale from | The user, against something of known size | The printed fiducials |
+| Impacts from | The user, tapping each one | Detection |
+| Accuracy | The user's tap and the scale reference | Measured: 0.0033 in on a scan |
+| Works today on | Everything in `scans/mounted/` | Nothing in `scans/mounted/` |
+| Needs | M3, and a marking screen | M1, M2, M3, and the printed sheet |
+
+The middle is the useful part and it already has a requirement: `DESIGN.md` section 13 mandates a manual assignment interface because real targets carry hand-drawn arrows no geometric rule recovers. **The marking screen and the correction screen are the same screen.** Build it once. Automatic detection then becomes a way of pre-filling marks the user can accept, move or delete, rather than a separate mode.
+
+**The manual path is close to free.** It needs the statistics engine, which is M3 and being built now, plus a screen with a scale tool, a point-of-aim tool and an impact tool. It needs nothing from M1 or M2. It could therefore be usable before the automatic path is, which inverts the current plan's order of value.
+
+### 4. Where GroupLab can be honestly better, for two extra taps
+
+**A single one inch reference assumes the photograph is square on and the sheet is flat.** It is a uniform scale applied to the whole image. Off-axis, that is wrong and wrong by a varying amount across the frame, which is the same perspective problem this project has spent Phase 0 and half of Phase 1 on. A group measured near the far edge of an off-axis frame comes out smaller than one measured near the camera, and nothing in the output tells the user that happened.
+
+**If the user marks a known rectangle instead of a known length, the perspective goes away exactly.** Four taps rather than two, and it yields a homography rather than a scale factor: the same mapping the automatic path fits from fiducials, from four user-supplied points instead. Most targets make this easy, because most carry a printed grid, so the rectangle is a grid square or a block of them with a known size. The splatter targets in Alan's collection have a one inch grid. The orange sight-in sheets have a finer one. The OnTarget sheet has a ruled box per bull.
+
+The machinery exists. `Registration/PageMapping.cs` and the homography fitting already take four correspondences and produce exactly this. **Offer both: a length for speed, a rectangle for accuracy, and say which one a given result used.** A result that knows it came from a single scale on an off-axis frame can say so, which is more honest than a number that quietly absorbed the error.
+
+**What a rectangle still cannot fix is a bowed sheet**, because a homography is planar. That is the open problem of entry 17 and it does not go away here. But it is strictly better than a single scale, and it costs two taps.
+
+### 5. Two things this adds that `STATISTICS.md` does not cover
+
+1. **Adjust to zero.** Converting the group centre's offset from the point of aim into scope adjustment. It needs the click value of the user's turret, a quarter MOA, a tenth of a mil and so on, and it needs a direction convention stated once and never got wrong. `STATISTICS.md` section 12 has the angular conversion constants and section 8.2 has group location; the missing pieces are the turret click value, the up-or-down convention, and the arithmetic between them. Small, useful, and the single most-used number in the exports Alan supplied.
+2. **Calibre as an input.** Ballistic X asks for it, and it is what turns a marked impact centre into an edge-to-edge group measurement, because the conventional group size is measured outside edge to outside edge minus one bullet diameter. `docs/SCAN-MEASUREMENTS.md` section 3.5 already measured hole diameter against nominal calibre on 343 real holes, so the relationship is characterised. Decide and document which convention GroupLab reports, because centre-to-centre and edge-to-edge differ by exactly one calibre and shooters argue about it.
+
+### 6. The mobile question, flagged and not decided
+
+Alan said "especially the android and ios versions". The current plan is Avalonia, which does target both, but mobile is the less-travelled path for that toolkit and none of it has been tried. **The manual path is the natural thing to put on a phone**, because the input is a photograph the phone just took and the compute is trivial, where the automatic path wants a scanner or a careful full-sheet capture and real processing.
+
+That is a scope decision with real cost and it is not being taken here. **M4 stays as the brief has it: a desktop shell.** Build the marking screen so that it is not gratuitously desktop-only, which mostly means not assuming a mouse, and leave the decision until there is something worth putting on a phone.
+
+### 7. The intellectual property line, which is the same line as OnTarget
+
+Implementing a similar workflow is fine. A manual marking interface with a scale reference is a generic interaction pattern, and the statistics are published mathematics that `docs/STATISTICS.md` already derives from the literature and validates against shotGroups. **What is not fine is copying their branding, their icons, their export layout, their wording or any file format they read or write.** Same rule as OnTarget, same reason.
+
+Two specific cautions:
+
+- **Alan's Ballistic X exports must not go into the repository.** They carry that product's logo and export layout. This is the `reference/` problem exactly, which already cost a git history rewrite, and it would be worse in a public repository because the files are a competitor's branded output. Keep them out, or under the already-ignored `excluded/`. They are reference for the planning session and nothing more.
+- **Worth an attorney question alongside the existing one.** `docs/PATENT-SEARCH.md` already carries US7769236B2 for attorney review. Add a second: whether any live patent covers photograph-based group measurement with a user-supplied scale reference. I have not searched it and am not asserting it is clear.
+
+### 8. What to do
+
+Nothing yet. Finish M3. When M4 starts, its first screen is the marking screen of section 3, built as both the manual path and the correction interface `DESIGN.md` section 13 requires, with section 4's rectangle option offered beside the length. Sections 5 and 6 are scope to be specified before they are built, not now.
+
+---
+
+## 2026-09-14, entry 20: what the mounted photographs actually contain, which is not what entry 19 asked for and is more useful
+
+**Status: open, not blocking M3.** Act on section 5 when M3 reports.
+
+`scans/mounted/` now holds 28 photographs. I have looked at all of them, which is the one thing this session can do that yours cannot, and the looking is worth more than the measuring. Four of the 28 have a `~` in the filename and could not be staged here; they are on disk and you can reach them.
+
+### 1. My own measurement failed its control, and is not reported as a result
+
+I tried to bound the deformation without fiducials. A flat sheet through a rectilinear lens maps printed straight lines to straight lines, so the bend in a line that was printed straight is lens plus paper and nothing else. Both target families here carry a printed rectangular grid, so the grid supplies the straight lines.
+
+**The control kills it.** Run against `scans/n568-gm210m.jpg`, a flatbed scan with no lens and no perspective and therefore physically flat, the method reports a median worst-deviation of **0.16 percent of frame** and a worst line at 0.38 percent. The photographs run 0.26 to 0.57 percent at the median and 0.52 to 0.77 at the worst. The photographs are above the floor, so real bend is there, but the floor is over half the signal and the per-image spread is narrower than the floor's own variation. It cannot rank images and it cannot give a figure in inches.
+
+This is the `PHASE0-PRELIM.md` lesson again: a scratch measurement next to a validated pipeline is worth reporting only when it has a control it passes. It did not, so the numbers stay here as a record of the attempt and go nowhere near a results document. **Section 5 hands the real measurement to you.**
+
+### 2. The collection is mostly close-ups of one group, and that is the finding
+
+Of the 24 I could examine, **twelve are close photographs of a single shot group**, filling the frame, with no sheet edge and often no second bullseye in view. Two of those have fingers holding the paper in shot. This is how Alan actually photographs a target, and it is nothing like the nine pinned full-sheet frames the mounted gate is measured on, or like anything in the brief.
+
+**GroupLab as specified cannot use any of them.** Registration needs the fiducial lattice, the lattice is spread across the sheet, and the sheet is not in frame. That is not an argument that the design is wrong: he shoots commercial targets, and there is no reason to photograph a commercial target any other way. But "the user photographs one group up close" is a real habit, it was not in any requirement, and a full-sheet requirement cuts directly against it.
+
+**One thing makes this less bleak, and it comes from a decision already taken.** Entry 13 chose option A, the half lattice, which roughly triples marker density on the large sheets. A close photograph of one bull on a dense lattice may still contain three or four markers, which is enough to register that neighbourhood even when the sheet is not in frame. That was chosen for bracketing and for the surface fit. It may turn out to matter more for this. **Do not build anything for it now.** Record it as a possibility against the day someone asks whether a partial-sheet photograph can work.
+
+### 3. Four target families, and one of them breaks the hole detector outright
+
+| Family | Frames | Hole appearance |
+|---|---|---|
+| Orange sight-in sheets, fine orange grid on white | 12, all close-ups | Ragged tear, **bright yellow-green** where the layer behind shows through |
+| Black splatter targets, yellow-green grid, red aiming squares | 7, full or part sheet | **Bright yellow-green halo**, the opposite of dark |
+| NRA A-26 bullseye, buff card, hanging indoors with open air behind | 1 | Dark, with bright specks of metal on the rim |
+| OnTarget 25-bull grid sheet on a mat | 1 | Dark, brown mat behind |
+
+**`NeutralDarknessHoleDetector` is built on the survey's finding that a hole is a neutral dark region, and on seven of these frames a hole is a bright saturated one.** On a splatter target the paper's coating flakes away to reveal a fluorescent layer, so the hole is the brightest and most saturated thing in the cell. Neutral darkness is near zero there and the opening step will erase what is left. Expect it to find nothing, and treat that as the correct answer from a detector that was never asked to handle this.
+
+That is not a defect to fix now. It is a target family nobody specified, and the honest reading is that GroupLab's detection is specified for ink-on-paper targets and this collection contains a second class of target it does not cover.
+
+### 4. Five things in these frames that exist nowhere else in the corpus
+
+1. **A photograph and a scan of the same physical sheet.** `scans/mounted/20260329_183028.jpg` is the `N568 GM210M` sheet, handwritten label and all, and `scans/n568-gm210m.jpg` is a 600 DPI flatbed scan of it. **This is the first ground truth for a photograph that the project has ever had.** The scan gives hole positions on a flat reference; the photograph is the same holes through a lens at an angle. Section 5 is built on it.
+2. **Hand-drawn assignment arrows, in a photograph.** That same frame carries a blue arrow from bull 14 to a shot in bull 4, and a second arrow into bull 18. `SAMPLE-NOTES.md` records these on scans and `DESIGN.md` section 13 requires the manual assignment interface because of them. Here they are on a photograph, in ink, over the printed grid.
+3. **A keyhole.** Bull 4 of the same frame holds an elongated gash, a tumbling bullet through the paper sideways, several times longer than it is wide. Every hole model in this project assumes a roughly round perforation with a lobed rim. Nothing would size or centre that correctly, and `getMaxPairDist` style measures would be badly wrong if it were taken as one round hole.
+4. **Backer material, answered with real examples and not one answer.** The open question in the planning record asks which backer Alan shoots against. These show at least four: a fluorescent splatter layer, a second target stapled underneath, a brown mat, and open air at an indoor range. It changes the hole's appearance completely and there is no single answer to design to.
+5. **Google Photos did not strip the EXIF.** Full resolution, 4000 by 3000 and 3072 by 4080, with model, focal length, f-number and 35 mm equivalent intact. **And the 2.2 mm at f/2.2 tagged as a 23 mm equivalent appears again on most of the Samsung frames**, which is the cropped-ultrawide signature entry 16 identified from three table photographs. It is his habitual capture mode, not an accident on one session, so the joint-fit grouping fix of entry 16 section 2 is load-bearing rather than an edge case.
+
+### 5. The measurement to run, when M3 is reported
+
+**Use the photograph and scan pair.** This needs no fiducials and no assumption about the target's geometry, because the scan is the reference.
+
+1. Locate the bull centres in `scans/n568-gm210m.jpg` with the connected-component approach `docs/SCAN-MEASUREMENTS.md` section 2.1 already measured at 24 of 25, and in `scans/mounted/20260329_183028.jpg` the same way.
+2. Match them by grid position, 25 correspondences on a 5 by 5 grid.
+3. Fit the Phase 0 photograph model, homography with the two-term radial lens, scan to photograph, using the EXIF grouping rule as amended.
+4. **Report the residual**, in scan inches, with its spatial correlation, exactly as M1.11 did for the pinned frames.
+5. Then fit the generalised cylinder and the general developable surface from M1.10 to the same correspondences and report whether either takes the residual up.
+
+That is entry 19's question asked properly, on one frame, against real ground truth: **how far from flat is a sheet Alan actually photographed, and is that deviation a shape paper can bend into?** Twenty-five bulls is a coarser constraint than 136 marker corners and the answer will be correspondingly rougher, but it is measured rather than eyeballed, and it is the only frame in the collection that can be measured at all.
+
+One caution to carry into it. That sheet is **lying on a mat, not mounted**. Its corners show four staple tears, so it was on a board and came off. So it answers "how flat is a sheet Alan laid down and photographed", which is the flat control case, not the mounted one. Say so in the report rather than letting it stand as the mounted answer. **No frame in this collection is both a full sheet and mounted**, which is the frame entry 19 was asking for and did not get, and that is worth stating plainly rather than working around.
+
+---
+
+## 2026-09-14, entry 19: the mounted benchmark is nine photographs of a sheet hanging from one pin, and that may be the worst case rather than the normal one
+
+**Status: open, and not blocking.** Do not interrupt M3. Act on this when the photographs named in section 3 land in the repository.
+
+### 1. What Alan said, and why it matters more than it sounds
+
+He has a large existing collection of photographs of shot targets **stapled to target boards**, taken the way he actually photographs targets. They are not GroupLab sheets, so they carry no fiducials and cannot be registered by the pipeline at all.
+
+**The obvious reading is that they are useless to the mounted gate. That reading is wrong, and the reason is a sampling problem I introduced.**
+
+Every frame in `scans/phase0/` that the mounted gate is measured on is the same sheet **hanging from a single pin**. I asked for that, in the Phase 0 print protocol, and entry 8 records that the original wall photographs were my fault for the same reason. Nine frames, one sheet, one mounting, and that mounting is the most deformation-prone arrangement a sheet of paper can be put in: unsupported, free at three edges, and free to twist about the pin. A sheet stapled flat against a rigid backer board is a different object. It is held against something solid, it bulges slightly between fixings, and it has very little freedom to twist.
+
+**So `PHASE1-RESULTS.md` section M1.11 may be a true statement about the wrong population.** The finding stands exactly as measured: on those nine frames a general developable surface takes up almost none of the residual, so what is left is not a bendable shape. What is not established, and what I have been writing as though it were, is that a **stapled** target deforms the same way. A sheet twisting on a pin is precisely the case a developable surface handles worst, and it is the only case anyone has measured.
+
+Alan did say, in entry 10, that the pin-hung photographs were a realistic scenario, and he is right that it happens. The error is not that the case is unreal. It is that it is the **only** case in the corpus, and it was chosen by me rather than sampled from what people do.
+
+### 2. Two measurements those photographs support, neither of which needs a fiducial
+
+**Measurement A: how much does a real mounted target actually deviate from flat?**
+
+A commercial target sheet carries a **regular grid of bullseyes at a known nominal spacing**, which `docs/SCAN-MEASUREMENTS.md` section 2 already measured across this corpus: 1.5 in pitch on the 300 yard sheets, with the rings at 1.257 in, and a detector that finds 24 of 25 bulls by connected components on a scan. That grid is a known-geometry object. It is coarser than the fiducial lattice and it does not give a scale, but it is enough to fit a plane-to-plane mapping and look at what is left over.
+
+For each photograph: detect bull centres, fit a homography over them, and report the residual, its spatial correlation, and whether a developable surface takes any of it up. That is the same machinery M1 already built, pointed at a coarser set of points.
+
+What it answers:
+- **How far from flat is a stapled target**, against the 0.048 to 0.114 in the pinned frames showed.
+- **Is the residual developable on a stapled target?** If a cylinder or a cone takes it up where nothing took up the pinned frames' residual, then the surface work was sound and was benchmarked on an outlier.
+- **What do real photographs look like** as inputs: angle, distance, framing, lens, lighting.
+
+Report it against the pinned frames in the same table. Do not fit anything new; use what M1 has.
+
+**Measurement B: holes in photographs, which the corpus does not contain at all.**
+
+Every one of the 343 holes in `docs/SCAN-MEASUREMENTS.md` is from a flatbed scan. The survey's own section 3.1 says why that matters: the bright core of a scanned hole **is the scanner lid seen through the perforation**, and `SAMPLE-NOTES.md` says the same, that berm backer material does not affect scanned appearance at all and affects photographs only. **So the one measured fact the hole detector rests on does not hold in a photograph.** A hole photographed against a target board is dark, not bright, and its appearance depends on what is behind it.
+
+`NeutralDarknessHoleDetector` has never met that case. Run it over these photographs and report recall and what it confuses, with no tuning. Whatever it does is the baseline for photographed holes, and it is a gap the synthetic work in M2.2 explicitly could not cover: M2.2 section 6 lists the dark backing as the one case where render-and-difference lost to the baseline, and this is the real version of it.
+
+### 3. What is being asked for
+
+A sample, not the collection. Roughly twenty photographs in `scans/mounted/`, camera originals with EXIF intact, chosen for variety rather than quality: different boards and mountings, different angles including deliberately off-axis, different distances, different light, and a couple that are frankly bad. A README naming, as far as he remembers, how each was mounted.
+
+**Do not ask for more paper work on the back of this.** It is a file copy, it is bounded at twenty, and the range session next weekend is unchanged.
+
+### 4. What this does not do
+
+It does not reopen the gate, which entry 17 section 2 settled and which stays at 0.005 in. It does not resume the surface models, which entry 16 section 5 stopped. It is a measurement of the input distribution, and its purpose is to establish whether the mounted requirement is as far out of reach as nine frames of one pinned sheet suggest, or whether the benchmark was unrepresentative and the requirement is closer than it looks.
+
+If measurement A shows stapled targets are near flat and their residual is developable, that is a finding that changes the roadmap and it should come back here as a question before anyone acts on it.
+
+---
+
 ## 2026-09-14, entry 18: the shotGroups fixtures are generated and committed, M3 is unblocked, and question 9 is accepted
 
-**Status: open.** Answers questions 9 and 10. Questions 7 and 8 are already answered, see section 4.
+**Status: actioned 2026-09-14.** Fixtures and scripts committed in `20f562e` with the brief's section 4.4 amendment and questions 7 to 10 marked answered; M3 built against the fixtures and reported in `docs/PHASE1-RESULTS.md` M3.1, with the differences found raised as question 11.
 
 ### 1. Question 10: done, not delegated back
 

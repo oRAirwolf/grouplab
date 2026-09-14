@@ -41,6 +41,7 @@ return args switch
     ["holes", "synthetic"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out),
     ["holes", "synthetic", "--realism"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, realismOnly: true),
     ["holes", "synthetic", "--held-out"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, heldOut: true),
+    ["stats", "coverage"] => StatsCoverage.Run(Console.Out),
     ["stats", "range-table"] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, 2, 100, 10_000_000, Console.Out),
     ["stats", "range-table", var from, var to] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, int.Parse(from, CultureInfo.InvariantCulture), int.Parse(to, CultureInfo.InvariantCulture), 10_000_000, Console.Out),
     ["stats", "range-table", var from, var to, var replications] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, int.Parse(from, CultureInfo.InvariantCulture), int.Parse(to, CultureInfo.InvariantCulture), long.Parse(replications, CultureInfo.InvariantCulture), Console.Out),
@@ -464,7 +465,7 @@ static int Usage()
         grouplab sweep module <base.gltd.json> <module-sweep-layouts.json> <output-directory>
         grouplab surface synthetic|rendered|frames [--joint]|lens-sweep|lens|noise|correlation|general-sweep|general
         grouplab holes baseline|synthetic [--realism|--held-out]
-        grouplab stats range-table [from to [replications]]
+        grouplab stats range-table [from to [replications]]|coverage
         """);
     return 2;
 }

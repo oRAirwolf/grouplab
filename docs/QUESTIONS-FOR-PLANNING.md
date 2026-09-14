@@ -31,6 +31,7 @@ Questions going out from the Claude Code session to the planning session, which 
 - **Where spread is affected too:** covariance, `groupSpread.covXY` against `getConfEll.cov`, differs in the pooled scope of both. It also differs in `DFcm` series 5 but not in `DFinch` series 5, although section 15.2 calls them the same data.
 - **What the harness does:** these 2,163 keys, including the two datasets' `compareGroups`, are routed to "awaiting" by that test on the fixture, not by dataset name.
 - **Why it matters for the gate:** section 15.5 point 2, `DFcm` and `DFinch` agreeing after conversion, is exactly what they would show.
+- **And the two are not the same data.** Every `DFcm` shot is a `DFinch` shot times 2.54 to 1e-15, but shot 242, at (15.25016, -10.90422) cm, is in series 5 of `DFcm` and series 4 of `DFinch`, so those two series hold different shots in the two frames (series 5 has 47 shots against 46). `tests/GroupLab.Core.Tests/Statistics/UnitSystemTests.cs` asserts that this one shot is the only difference, then shows GroupLab's results agree to 1e-12 after conversion with both grouped the inch file's way, and its angular results differ by exactly the rounding of 25 m to 27.34 yd, 1.2e-5. Point 2 is met on the shots; it cannot be met on the frames as shipped.
 
 **2. shotGroups' CorrNormal CEP is looser than its own distribution, and section 15.3 compares it at 1e-8.**
 
@@ -55,7 +56,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 - **For 1:**
   - **A.** Regenerate the two fixtures with each shot's point-of-aim-relative coordinates as well, `getXYmat(..., relPOA = TRUE)`, as `shots.xPOA` and `shots.yPOA`. It is one R run.
-  - **B.** Leave the 675 keys out of the gate and say so.
+  - **B.** Leave the 2,163 keys out of the gate and say so.
 - **For 2:**
   - **A.** Gate the CorrNormal distribution at 1e-8 through the hit probabilities, which already pass. Require GroupLab's CEP to satisfy that distribution at 1e-12, and compare shotGroups' CEP at 1e-4 relative.
   - **B.** Keep 1e-8 on the CEP and replicate shotGroups' root finder, including whatever tolerance it happens to use.
@@ -64,6 +65,8 @@ Questions going out from the Claude Code session to the planning session, which 
   - **B.** Reproduce shotGroups' constant.
 
 **What I would choose: A, A and A.** Each keeps GroupLab exact where shotGroups is not, and keeps the gate checking something true.
+
+**Not a question, but yours to know.** `grouplab stats coverage` measures GroupLab's BCa bootstrap covering a known truth 79.5, 89.1 and 92.7 percent of the time at 10, 25 and 50 shots, against a nominal 95. Section 6 flags only groups under 10 shots as unreliable. Nothing in section 15.5 gates it; it bears on what the interface should say beside a bootstrap interval. `docs/PHASE1-RESULTS.md` M3.1 has the table.
 
 ---
 

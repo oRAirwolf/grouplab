@@ -888,6 +888,117 @@ Assignment of render-and-difference's detections, held-out:
 
 ---
 
+## M3. The statistics engine
+
+### M3.1 The engine, against shotGroups and against its own specification
+
+`docs/PHASE1-BRIEF.md` section 5: implement `docs/STATISTICS.md` as written, with section 15 as the build plan and section 15.5 as the gate, against the shotGroups 0.8.4 fixtures that `docs/NOTES-FROM-PLANNING.md` entry 18 committed.
+
+**Reproduce:**
+- `dotnet test --filter ShotGroupsFixtureTests` compares every key of the nine fixtures and prints each dataset's accounting.
+- `dotnet test --filter "SpecificationTableTests|UnitSystemTests|DistributionTests"` checks the document's own tables and section 15.5 points 2, 4 and 6.
+- `grouplab stats range-table [from to [replications]]` regenerates GroupLab's Monte Carlo table.
+- `grouplab stats coverage` measures bootstrap coverage.
+
+**What is built,** in `src/GroupLab.Core/Statistics/`, each file citing its section:
+
+| File | Sections | What |
+|---|---|---|
+| `SpecialFunctions.cs`, `Distributions.cs` | 3.2, 15.3 | Log-gamma, incomplete gamma and beta in R's precision-preserving forms, `c4`; normal, chi-square, t and F in both tails with quantiles |
+| `GroupStatistics.cs` | 3, 4, 6, 7 | Rayleigh sigma with estimated or known centre and its multiples; axis spreads; centre intervals; Hotelling; error and confidence ellipses; CorrNormal, Grubbs-Patnaik and Rayleigh CEP and hit probability |
+| `GroupGeometry.cs` | 5, 6 | Extreme spread, bounding and minimum-area boxes, minimum enclosing circle, minimum-volume ellipse |
+| `RangeStatistics.cs`, `RangeStatisticsSimulation.cs`, `RangeStatistics.csv` | 5, 15.3 | GroupLab's own range-statistic table and what a range statistic implies |
+| `GroupComparison.cs` | 8 | Dispersion F test and ratio interval, MANOVA, exact Ansari-Bradley and Wilcoxon, Kruskal-Wallis, Fligner-Killeen, Holm |
+| `ShapeTests.cs` | 7 | Circularity by the Bartlett-corrected likelihood ratio, simulated below 20 shots; vertical stringing by Pitman-Morgan |
+| `Planning.cs` | 9, 10, 11 | Sample size and power, flyer expectations, pooled and all-in groups with the pre-pooling guard |
+| `Bootstrap.cs`, `StatisticsRandom.cs` | 6 | BCa with percentile fallback, 9999 resamples, recorded seed, unreliable below 10 shots |
+| `Angular.cs` | 12.5, 13 | Half-angle conversions, suppressed without exactly one distance |
+
+**Not built, and why.** Section 12's solver-coupled analyses need the ballistic solver of `DESIGN.md` section 16, which no phase has built yet. The Rice offset hit probability and the elliptical CEP about the point of aim have no estimator specified in section 4. The Bayesian version is section 16 question 5, which is still open. Presentation, such as mean radius as the headline, is M4's.
+
+**The gate, section 15.5.**
+
+| Point | Gate | Reading |
+|---|---|---|
+| 1 | Every closed-form quantity within tolerance on all eight fixtures | **Met on what the fixtures can show.** All nine fixtures: 38,899 keys compared, 0 outside tolerance. Three classes are held back, each with evidence: 899 CorrNormal CEPs and 99 SMOA conversions disputed, and 2,163 frame-based keys of `DFcm` and `DFinch` awaiting a point of aim. All three are question 11 |
+| 2 | `DFcm` and `DFinch` identical after conversion | **Met on the shots, not on the frames.** Linear results agree to 4.9e-14. Angular results differ by 1.21600e-5, exactly the rounding of 25 m to 27.34 yd (1.21601e-5). Shot 242 is in series 5 of one and series 4 of the other |
+| 3 | Multiple distances suppress angular output | **Met.** `DFsavage`'s pooled scope has no angular keys and GroupLab produces none; the harness fails any angular value shotGroups suppressed |
+| 4 | Sigma unbiased, 95 percent interval covering 94.0 to 96.0 percent over 10,000 simulated 25-shot groups | **Met.** Coverage 94.73 percent, bias +0.0008 |
+| 5 | Monte Carlo table within 0.2 percent on means and 0.5 percent on quantiles, n 2 to 50, 1 to 10 groups | **Met.** All 490 cells; worst mean 4.7e-4, worst quantile 2.03e-3 |
+| 6 | Estimated-centre and known-centre configurations both checked | **Met.** Known centre: coverage 94.51 percent, bias +0.0009, on 50 degrees of freedom against 48 |
+
+**The fixture harness.** Every key is compared, excluded with a reason, awaiting, or disputed with checked evidence. A key that is none of these fails the test, so no section can pass by being skipped.
+
+| Tolerance class (section 15.3) | Keys compared | Worst relative error |
+|---|---|---|
+| Closed form, 1e-12 relative | 22,742 | 9.8e-13 |
+| Geometry, 1e-9 absolute | 8,909 | 6.3e-14 |
+| Range lookup, 2e-3 relative | 3,290 | 1.4e-3 |
+| Minimum-volume ellipse, 1e-4 relative | 1,770 | 3.0e-13 |
+| Angular, 1e-12 relative | 1,188 | 6.2e-10, the 99 disputed SMOA keys; the rest pass |
+| CorrNormal, 1e-8 relative | 977 | 2.3e-5, the 899 disputed CEPs; the hit probabilities pass |
+| MANOVA intercept row, 1e-8 relative | 15 | 2.3e-10 |
+| Rank test statistics, 1e-10 relative | 8 | 2.4e-12 |
+
+| Excluded | Keys | Reason |
+|---|---|---|
+| Fixture inputs and provenance | 9,999 | Not outputs |
+| Robust (MCD) estimates | 5,685 | No section specifies them |
+| Eight further CEP estimators | 5,400 | Section 4 deliberately does not implement them |
+| CEP about the point of aim | 1,300 | Section 4 names the case, specifies no estimator |
+| Rice parameters | 600 | Section 4 uses the Rice distribution only for offset hit probability |
+| Normality tests | 500 | Section 7 replaces them with the circularity and stringing tests |
+| `groupShape.multNorm.p.value` | 100 | Stochastic, listed by the fixture |
+| Fligner-Killeen and Kruskal-Wallis p-values | 18 | Monte Carlo: each is an integer over 9999, checked per key |
+
+**GroupLab's Monte Carlo table.**
+- **The grid:** 59 values of n (2 to 50, then every fifth to 100) by 1 to 10 groups, 10 million replications per cell, seed 20260914.
+- **The run:** about 36 minutes on this machine, in six foreground runs.
+- **The method:** each replication draws ten groups, and the running means over the first k groups give every group count its own full set of independent replications.
+- **Between rows:** the table is read by R's `splinefun` (method fmm), as shotGroups reads `DFdistr`. At n = 92, the only fixture scope off the grid, a spline on shotGroups' own table reproduces its interval endpoint exactly, where linear interpolation is 4.8e-5 off.
+- **Efficiency:** `getRangeStatEff` is M^2 / (n groups SD^2), which needs the standard deviation `DFdistr`'s export omitted, so GroupLab's table carries it. The worst range key, 1.4e-3 on a diagonal efficiency, is inside 2e-3.
+
+**The specification's own tables,** reproduced to the digits printed:
+
+- **Section 9.1:** all nine rows.
+- **Section 9.2:** all six rows, the exact search matching the exact column in every row, 1651, 434, 203, 81, 26 and 10.
+- **Section 10:** all seven rows, and the simulated 2.0675 and 2.7274 to four decimals.
+- **Section 11:** eight 25-shot targets pool to 384 degrees of freedom.
+- **Section 7's simulated sizes:** Pitman-Morgan 0.0502 at n = 10 with correlation 0.5, and the Bartlett-corrected likelihood ratio 0.0590 at n = 20, against the document's 0.059.
+
+**What it shows.**
+
+1. **The engine is exact where shotGroups is, and in two places more exact than shotGroups.**
+   - **The quantile:** shotGroups' CorrNormal hit probabilities match GroupLab's Hoyt CDF to 1e-15, but its CEPs miss their own probability under that CDF by up to 7e-6, where GroupLab's meet it to 1e-12.
+   - **The SMOA constant:** shotGroups' `fromMOA` for SMOA is 1 + 6.21288e-10 times the inverse of its own `getMOA`.
+   - **What the harness does:** both are held as disputed only after it checks exactly that evidence, key by key. Question 11 asks how the gate should treat them.
+2. **The fixtures cannot show everything the gate asks of them.**
+   - **The point of aim:** `DFcm` and `DFinch` were read by shotGroups relative to a point of aim the fixture does not carry, so their frame-based results cannot be recomputed. The fixture's own frame-based and matrix-based centres disagree in all 20 of their scopes.
+   - **The two frames:** they differ by one shot's series.
+   - **The MANOVA:** the fixture's MANOVA row is `anova.mlm`'s intercept test, not section 8.2's test of group centres. GroupLab reproduces it and computes the group test separately.
+3. **Conventions matched rather than argued.**
+   - **`getMinBBox`'s angle:** the direction of the longer side.
+   - **Extreme spread's pair:** any tied pair is the pair.
+   - **`compareGroups`' box figures:** the minimum-area box's.
+   - **Past the table:** the figure of merit's interval is named `FOM`.
+4. **Two slips in `docs/STATISTICS.md`,** found by computing rather than copying:
+   - **Section 3.4:** it prints sqrt(2 ln 2) as 1.1774100226, where the value 1.17741002251547 rounds to 1.1774100225.
+   - **Section 10's table:** it prints 2.534 at 15 shots, where the alternating sum at 60 significant digits gives 2.533450.
+   - **What the tests do:** they check the exact values and name both slips.
+5. **The bootstrap under-covers, and more than section 6 warns.** `grouplab stats coverage`, BCa intervals for the Grubbs-Patnaik CEP(0.5) of an elliptical normal (standard deviations 1 and 2, correlation 0.3), 1000 datasets of 9999 resamples each:
+
+   | Shots | Coverage | Binomial 95 percent band at nominal | Intervals below truth / above |
+   |---|---|---|---|
+   | 10 | 79.5 percent | 93.6 to 96.4 | 158 / 47 |
+   | 25 | 89.1 percent | 93.6 to 96.4 | 69 / 40 |
+   | 50 | 92.7 percent | 93.6 to 96.4 | 46 / 27 |
+
+   - **The pattern:** the shortfall closes with n, and most misses lie below the truth. That is the bootstrap's known narrowness on a biased, skewed statistic at small n, not a failure of the BCa arithmetic, which fell back to percentile on none of the 3000 datasets.
+   - **Why it matters:** section 6 flags only groups under 10 shots as unreliable, and at 25 shots the interval is still about a third too often wrong. Section 15.5 gates no bootstrap figure, so this is reported, not gated.
+   - **For planning:** it bears on what the interface should say beside a bootstrap interval.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -934,3 +1045,15 @@ One line per method choice where there was a real alternative: what was rejected
 - **M2: the synthesis calibration stopped at four iterations with its gaps reported, over iterating until it matched.** Each iteration moved one quantity at the cost of another, and the gaps' direction says which way the recall errs.
 - **M2: thresholds set on seeds 1 to 3 and the gate read on seeds 1001 to 1003, over one seed set.** A threshold read off the seeds it is gated on is fitted to them.
 - **M2: truth matched nearest pairs first within 0.15 in, over an optimal one-to-one matching.** Scoring should not share the rule of the assignment it is used to evaluate.
+
+- **M3: special functions written for the engine, over a numerics package.** Nothing may be installed, and section 15.3's 1e-12 needs control of every step: the incomplete gamma prefactor through R's deviance form, and every upper tail computed as a tail.
+- **M3: CorrNormal CEP through a trapezoid rule over angle on the Hoyt CDF, over Imhof's integral or a series.** The integrand is smooth and periodic, so the rule converges geometrically and matches shotGroups' hit probabilities to 1e-15.
+- **M3: the minimum-volume ellipse by Khachiyan's algorithm at shotGroups' 0.001 tolerance, over an exact solver.** Section 15.3 says to match the tolerance or expect disagreement; at the package's tolerance it agrees to 3e-13.
+- **M3: range statistics from ten groups per replication with running means, over simulating each group count separately.** Every cell keeps its full 10 million independent replications at a fifth of the cost of fifty-five groups.
+- **M3: quantiles from 8,192-bin histograms, over storing ten million values per cell.** One bin is 7.3e-4 of the mean against a 5e-3 tolerance, and 65,536 bins ran three times slower for no measurable gain.
+- **M3: the table read between rows by R's fmm spline on shotGroups' own grid, over simulating every n or interpolating linearly.** At n = 92 the spline reproduces shotGroups, and linear interpolation is 4.8e-5 off.
+- **M3: a key held back only on evidence checked key by key, over excluding by dataset or loosening a tolerance.** The point of aim is detected from the fixture's own two centres, a Monte Carlo p-value by being an integer over 9999, and a disputed CEP by not being a root of its own distribution.
+- **M3: the Fligner-Killeen statistic at 1e-10 relative, over 1e-12.** It subtracts n mean^2 from a sum of squares of up to 530 normal-quantile scores, which costs about three digits; the worst difference is 2.4e-12.
+- **M3: the flyer expectation as an integral, over section 10's alternating binomial sum.** At 25 shots the sum's terms reach 5.2 million with alternating signs; the integral has no cancellation.
+- **M3: the pre-pooling guard as pairwise F tests with Holm's adjustment, over Bartlett's test of homogeneity.** Section 11 names section 8.1's F test, and section 8.4 names Holm for its family.
+- **M3: the engine's own xoshiro256** generator for resampling, over the runtime's Random.** Section 6 requires a recorded seed to reproduce an interval exactly, and the runtime does not promise its stream across versions.
