@@ -1,0 +1,1051 @@
+{
+  "measurement": "surface-noise",
+  "command": "grouplab spike surface-noise",
+  "units": "Page lengths are dmm, 0.1 mm, measured from the page top-left unless a name ends in Px or In. Image points are pixels, with pixel (u, v) at (u, v), the convention OpenCV reports marker corners in.",
+  "rows": {
+    "calibration": [
+      {
+        "noisePx": 0.5,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9718244088285399,
+          "rmsKeptPx": 0.48746131415087224,
+          "rmsAllPx": 0.48746131415087224,
+          "robustPx": 0.5192360013527865,
+          "robustDmm": 0.5342899361610868
+        },
+        "worstBullIn": 0.0009471941652941061
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9661697443619317,
+          "rmsKeptPx": 0.5053082117921949,
+          "rmsAllPx": 0.5053082117921949,
+          "robustPx": 0.4881188403367685,
+          "robustDmm": 0.5052102316235613
+        },
+        "worstBullIn": 0.0015095842963659578
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9699619191576729,
+          "rmsKeptPx": 0.4916430879416955,
+          "rmsAllPx": 0.4916430879416955,
+          "robustPx": 0.47548344738067355,
+          "robustDmm": 0.4902083659053227
+        },
+        "worstBullIn": 0.0008938110430612033
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9779029238167312,
+          "rmsKeptPx": 0.4795539026291665,
+          "rmsAllPx": 0.4795539026291665,
+          "robustPx": 0.4589109889486121,
+          "robustDmm": 0.46928072078718586
+        },
+        "worstBullIn": 0.0022256203147714526
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.977804289015811,
+          "rmsKeptPx": 0.4775720368510632,
+          "rmsAllPx": 0.4775720368510632,
+          "robustPx": 0.489497504179837,
+          "robustDmm": 0.5006088740646973
+        },
+        "worstBullIn": 0.0021244413558902655
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9783242614870316,
+          "rmsKeptPx": 0.4984954429685734,
+          "rmsAllPx": 0.4984954429685734,
+          "robustPx": 0.49929561160997166,
+          "robustDmm": 0.5103579981253386
+        },
+        "worstBullIn": 0.0013512561835342558
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9881039110081623,
+          "rmsKeptPx": 0.5106027961795803,
+          "rmsAllPx": 0.5106027961795803,
+          "robustPx": 0.5007521439541698,
+          "robustDmm": 0.5067808540938294
+        },
+        "worstBullIn": 0.0019465288633215643
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9746070584883567,
+          "rmsKeptPx": 0.4696970962006023,
+          "rmsAllPx": 0.4696970962006023,
+          "robustPx": 0.46411278557201197,
+          "robustDmm": 0.4762050320996691
+        },
+        "worstBullIn": 0.0014710339468192706
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9746987568478094,
+          "rmsKeptPx": 0.48310126481506654,
+          "rmsAllPx": 0.48310126481506654,
+          "robustPx": 0.46547508910463264,
+          "robustDmm": 0.4775578975908271
+        },
+        "worstBullIn": 0.0010542207347204167
+      },
+      {
+        "noisePx": 0.5,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 0.9765291710006544,
+          "rmsKeptPx": 0.4722857799100897,
+          "rmsAllPx": 0.4722857799100897,
+          "robustPx": 0.46989257595617456,
+          "robustDmm": 0.4811864201400899
+        },
+        "worstBullIn": 0.001489076714438709
+      },
+      {
+        "noisePx": 1,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 128,
+          "pixelsPerDmm": 0.9769074512247918,
+          "rmsKeptPx": 0.8342457086783805,
+          "rmsAllPx": 0.932838382482988,
+          "robustPx": 0.9039394680640032,
+          "robustDmm": 0.9253071689960953
+        },
+        "worstBullIn": 0.0022242079743522766
+      },
+      {
+        "noisePx": 1,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 134,
+          "pixelsPerDmm": 0.979864746518565,
+          "rmsKeptPx": 0.9133039431884477,
+          "rmsAllPx": 0.9393833729582107,
+          "robustPx": 0.9317905976020849,
+          "robustDmm": 0.9509379747691848
+        },
+        "worstBullIn": 0.002024038636408331
+      },
+      {
+        "noisePx": 1,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 133,
+          "pixelsPerDmm": 0.9801471297426962,
+          "rmsKeptPx": 0.9341168471471025,
+          "rmsAllPx": 0.9711308954782205,
+          "robustPx": 1.0086369698893396,
+          "robustDmm": 1.0290669015723408
+        },
+        "worstBullIn": 0.002068631073759552
+      },
+      {
+        "noisePx": 1,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 130,
+          "pixelsPerDmm": 0.9759383117983524,
+          "rmsKeptPx": 0.9220356260706823,
+          "rmsAllPx": 1.001402548242794,
+          "robustPx": 0.9990798527582876,
+          "robustDmm": 1.0237120939716902
+        },
+        "worstBullIn": 0.0014991052374349362
+      },
+      {
+        "noisePx": 1,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 131,
+          "pixelsPerDmm": 0.9821093398063546,
+          "rmsKeptPx": 0.822442666408477,
+          "rmsAllPx": 0.9144469601837961,
+          "robustPx": 0.862490357671796,
+          "robustDmm": 0.8782019707111794
+        },
+        "worstBullIn": 0.00311837472197747
+      },
+      {
+        "noisePx": 1,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 133,
+          "pixelsPerDmm": 0.9770400302342738,
+          "rmsKeptPx": 0.9023506261558488,
+          "rmsAllPx": 0.9501287401274932,
+          "robustPx": 0.9500303309509986,
+          "robustDmm": 0.9723555858025604
+        },
+        "worstBullIn": 0.003606766948772931
+      },
+      {
+        "noisePx": 1,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 132,
+          "pixelsPerDmm": 0.9731397106319296,
+          "rmsKeptPx": 0.9339461036979149,
+          "rmsAllPx": 0.9904258763297552,
+          "robustPx": 1.0363716232404765,
+          "robustDmm": 1.064977219527385
+        },
+        "worstBullIn": 0.0016621872669611401
+      },
+      {
+        "noisePx": 1,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 130,
+          "pixelsPerDmm": 0.9766047345494314,
+          "rmsKeptPx": 0.88870717216919,
+          "rmsAllPx": 0.9650032048865116,
+          "robustPx": 0.944982966337146,
+          "robustDmm": 0.9676207096959503
+        },
+        "worstBullIn": 0.0034691946194550798
+      },
+      {
+        "noisePx": 1,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 129,
+          "pixelsPerDmm": 0.9900569897837908,
+          "rmsKeptPx": 0.8534460059202368,
+          "rmsAllPx": 0.948602456752957,
+          "robustPx": 0.9225081475711568,
+          "robustDmm": 0.9317727737800374
+        },
+        "worstBullIn": 0.0019529632434918843
+      },
+      {
+        "noisePx": 1,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 130,
+          "pixelsPerDmm": 0.9668757915005566,
+          "rmsKeptPx": 0.9128108049654857,
+          "rmsAllPx": 0.9897071816344564,
+          "robustPx": 1.033924191980772,
+          "robustDmm": 1.0693454123783146
+        },
+        "worstBullIn": 0.001970138666501007
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 103,
+          "pixelsPerDmm": 0.9816003966621156,
+          "rmsKeptPx": 1.0009635172402565,
+          "rmsAllPx": 1.4803462628996324,
+          "robustPx": 1.3438189095187747,
+          "robustDmm": 1.369008115816136
+        },
+        "worstBullIn": 0.008591379085847789
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 103,
+          "pixelsPerDmm": 1.0050301106679747,
+          "rmsKeptPx": 1.102900139239308,
+          "rmsAllPx": 1.524650368338566,
+          "robustPx": 1.5333272217923208,
+          "robustDmm": 1.5256530182694956
+        },
+        "worstBullIn": 0.0029442280877110087
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 105,
+          "pixelsPerDmm": 0.9853473147986189,
+          "rmsKeptPx": 1.0348410619190849,
+          "rmsAllPx": 1.4009923234491277,
+          "robustPx": 1.3215256308259502,
+          "robustDmm": 1.3411774822728755
+        },
+        "worstBullIn": 0.003608253557311382
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 108,
+          "pixelsPerDmm": 0.9685498414979623,
+          "rmsKeptPx": 1.0622818854258742,
+          "rmsAllPx": 1.436170480934455,
+          "robustPx": 1.4217084499053472,
+          "robustDmm": 1.4678732977814837
+        },
+        "worstBullIn": 0.005725010432550486
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 99,
+          "pixelsPerDmm": 0.9881095523907479,
+          "rmsKeptPx": 1.1049861683001359,
+          "rmsAllPx": 1.5590687014813844,
+          "robustPx": 1.555393980927558,
+          "robustDmm": 1.5741108636833394
+        },
+        "worstBullIn": 0.0029559789665361213
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 100,
+          "pixelsPerDmm": 0.9935456648733251,
+          "rmsKeptPx": 1.1402128556065267,
+          "rmsAllPx": 1.5171754372856547,
+          "robustPx": 1.5442214010804407,
+          "robustDmm": 1.5542530712741076
+        },
+        "worstBullIn": 0.00520858056068923
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 109,
+          "pixelsPerDmm": 0.9877607554465146,
+          "rmsKeptPx": 1.0327647754638891,
+          "rmsAllPx": 1.431751317800835,
+          "robustPx": 1.3098029370972297,
+          "robustDmm": 1.3260325740570011
+        },
+        "worstBullIn": 0.006399355541620742
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 116,
+          "pixelsPerDmm": 0.9756107741110391,
+          "rmsKeptPx": 1.0807101570287174,
+          "rmsAllPx": 1.326200180092656,
+          "robustPx": 1.316930841812173,
+          "robustDmm": 1.3498527043350246
+        },
+        "worstBullIn": 0.0038096023384575333
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 110,
+          "pixelsPerDmm": 0.9737928814903908,
+          "rmsKeptPx": 1.064200249094642,
+          "rmsAllPx": 1.4192914546175173,
+          "robustPx": 1.343522369518961,
+          "robustDmm": 1.3796798015843976
+        },
+        "worstBullIn": 0.0029761971247478348
+      },
+      {
+        "noisePx": 1.5,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 113,
+          "pixelsPerDmm": 0.996145581290403,
+          "rmsKeptPx": 1.0788120937564183,
+          "rmsAllPx": 1.3809274346197662,
+          "robustPx": 1.2984030240488724,
+          "robustDmm": 1.3034269773770681
+        },
+        "worstBullIn": 0.00520520074135836
+      },
+      {
+        "noisePx": 2,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 79,
+          "pixelsPerDmm": 0.9726868972361211,
+          "rmsKeptPx": 1.0361275976552538,
+          "rmsAllPx": 1.8884214843085254,
+          "robustPx": 1.7611004822049252,
+          "robustDmm": 1.810552282763418
+        },
+        "worstBullIn": 0.0029088393475497254
+      },
+      {
+        "noisePx": 2,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 78,
+          "pixelsPerDmm": 0.9854070856494687,
+          "rmsKeptPx": 1.142299321783007,
+          "rmsAllPx": 1.9292361486854994,
+          "robustPx": 1.8381671795039156,
+          "robustDmm": 1.865388636100992
+        },
+        "worstBullIn": 0.006529801647124977
+      },
+      {
+        "noisePx": 2,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 78,
+          "pixelsPerDmm": 0.9784374548460887,
+          "rmsKeptPx": 1.1526156501748537,
+          "rmsAllPx": 2.0176505729404464,
+          "robustPx": 1.8729794499812669,
+          "robustDmm": 1.914255674396574
+        },
+        "worstBullIn": 0.004149129390300905
+      },
+      {
+        "noisePx": 2,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 80,
+          "pixelsPerDmm": 0.9676785156742124,
+          "rmsKeptPx": 1.147706436200562,
+          "rmsAllPx": 1.9140273464375397,
+          "robustPx": 1.7788639613140467,
+          "robustDmm": 1.8382798961643327
+        },
+        "worstBullIn": 0.006209263194346716
+      },
+      {
+        "noisePx": 2,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 70,
+          "pixelsPerDmm": 0.9829205791031942,
+          "rmsKeptPx": 1.1995370782404768,
+          "rmsAllPx": 1.9506266268272836,
+          "robustPx": 2.0701983343559234,
+          "robustDmm": 2.1061705069241192
+        },
+        "worstBullIn": 0.006062781963943625
+      },
+      {
+        "noisePx": 2,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 81,
+          "pixelsPerDmm": 0.9688794091770951,
+          "rmsKeptPx": 1.1538020619708516,
+          "rmsAllPx": 1.8527842186760657,
+          "robustPx": 1.7301132335933127,
+          "robustDmm": 1.7856847995797138
+        },
+        "worstBullIn": 0.005843214381039579
+      },
+      {
+        "noisePx": 2,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 77,
+          "pixelsPerDmm": 0.9834101369244422,
+          "rmsKeptPx": 1.155156868713566,
+          "rmsAllPx": 2.003354565046927,
+          "robustPx": 1.9214465709223592,
+          "robustDmm": 1.953860854975088
+        },
+        "worstBullIn": 0.0047616068428153
+      },
+      {
+        "noisePx": 2,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 76,
+          "pixelsPerDmm": 0.9673638253752695,
+          "rmsKeptPx": 1.1307382374952075,
+          "rmsAllPx": 2.1352237631238866,
+          "robustPx": 1.9309311957427602,
+          "robustDmm": 1.9960754631213276
+        },
+        "worstBullIn": 0.00843578038065365
+      },
+      {
+        "noisePx": 2,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 71,
+          "pixelsPerDmm": 0.9777290746892036,
+          "rmsKeptPx": 1.1113601902729358,
+          "rmsAllPx": 2.16933492210801,
+          "robustPx": 1.9934907526834234,
+          "robustDmm": 2.0388989182070767
+        },
+        "worstBullIn": 0.007099172261200769
+      },
+      {
+        "noisePx": 2,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 77,
+          "pixelsPerDmm": 0.9784347782365469,
+          "rmsKeptPx": 1.2212190066056337,
+          "rmsAllPx": 2.025372705440717,
+          "robustPx": 2.0059131667443264,
+          "robustDmm": 2.0501245574688434
+        },
+        "worstBullIn": 0.0076995785543373845
+      },
+      {
+        "noisePx": 3,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 43,
+          "pixelsPerDmm": 0.9926195093189796,
+          "rmsKeptPx": 1.085526999244535,
+          "rmsAllPx": 3.12183546972664,
+          "robustPx": 3.1357686603007413,
+          "robustDmm": 3.159084252184548
+        },
+        "worstBullIn": 0.006324115033577318
+      },
+      {
+        "noisePx": 3,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 52,
+          "pixelsPerDmm": 1.0047505460440167,
+          "rmsKeptPx": 1.0894869090876336,
+          "rmsAllPx": 2.8235655657289627,
+          "robustPx": 2.7913844243797463,
+          "robustDmm": 2.7781865213910115
+        },
+        "worstBullIn": 0.008572369623872422
+      },
+      {
+        "noisePx": 3,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 40,
+          "pixelsPerDmm": 0.9848373738568157,
+          "rmsKeptPx": 1.1689789819797158,
+          "rmsAllPx": 3.0671931274324864,
+          "robustPx": 2.984753237447769,
+          "robustDmm": 3.0307067102448517
+        },
+        "worstBullIn": 0.00775364752812516
+      },
+      {
+        "noisePx": 3,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 42,
+          "pixelsPerDmm": 0.9822265629974651,
+          "rmsKeptPx": 1.194225028696363,
+          "rmsAllPx": 3.1128844096663886,
+          "robustPx": 2.906617900508857,
+          "robustDmm": 2.9592132915228015
+        },
+        "worstBullIn": 0.006168195897852612
+      },
+      {
+        "noisePx": 3,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 43,
+          "pixelsPerDmm": 0.9440719286764727,
+          "rmsKeptPx": 1.182227658593962,
+          "rmsAllPx": 3.099175703617673,
+          "robustPx": 3.3076476352298854,
+          "robustDmm": 3.503597061578763
+        },
+        "worstBullIn": 0.010668493135483957
+      },
+      {
+        "noisePx": 3,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 46,
+          "pixelsPerDmm": 0.9955296561206264,
+          "rmsKeptPx": 1.2153959813623525,
+          "rmsAllPx": 3.123321640290668,
+          "robustPx": 3.1459756942195005,
+          "robustDmm": 3.160102438815051
+        },
+        "worstBullIn": 0.009520182798841764
+      },
+      {
+        "noisePx": 3,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 42,
+          "pixelsPerDmm": 0.984861953182571,
+          "rmsKeptPx": 1.2016185549950826,
+          "rmsAllPx": 2.9731759694815785,
+          "robustPx": 2.978429609529215,
+          "robustDmm": 3.024210245816128
+        },
+        "worstBullIn": 0.008731998296983014
+      },
+      {
+        "noisePx": 3,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 50,
+          "pixelsPerDmm": 0.989138803673487,
+          "rmsKeptPx": 1.104581221774385,
+          "rmsAllPx": 2.875993518235115,
+          "robustPx": 3.078071385820922,
+          "robustDmm": 3.1118700170183473
+        },
+        "worstBullIn": 0.0068440077538367864
+      },
+      {
+        "noisePx": 3,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 47,
+          "pixelsPerDmm": 1.004944958297885,
+          "rmsKeptPx": 1.1362746799961543,
+          "rmsAllPx": 3.041761450585426,
+          "robustPx": 3.1035155043966585,
+          "robustDmm": 3.0882442652911113
+        },
+        "worstBullIn": 0.01757459148954598
+      },
+      {
+        "noisePx": 3,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 44,
+          "pixelsPerDmm": 0.9919522782391142,
+          "rmsKeptPx": 1.2276868028438888,
+          "rmsAllPx": 3.1471792315818665,
+          "robustPx": 2.942460431527888,
+          "robustDmm": 2.966332651356234
+        },
+        "worstBullIn": 0.009184998698535918
+      },
+      {
+        "noisePx": 5,
+        "seed": 1,
+        "statistics": {
+          "corners": 136,
+          "kept": 19,
+          "pixelsPerDmm": 0.990005502585323,
+          "rmsKeptPx": 1.0135563805013281,
+          "rmsAllPx": 4.828255976755615,
+          "robustPx": 4.832547785979086,
+          "robustDmm": 4.881334268707861
+        },
+        "worstBullIn": 0.018998102780855067
+      },
+      {
+        "noisePx": 5,
+        "seed": 2,
+        "statistics": {
+          "corners": 136,
+          "kept": 18,
+          "pixelsPerDmm": 1.016921962833047,
+          "rmsKeptPx": 1.0613813036736968,
+          "rmsAllPx": 6.572040380136097,
+          "robustPx": 5.548305380040651,
+          "robustDmm": 5.455979497761662
+        },
+        "worstBullIn": 0.03076708958817945
+      },
+      {
+        "noisePx": 5,
+        "seed": 3,
+        "statistics": {
+          "corners": 136,
+          "kept": 24,
+          "pixelsPerDmm": 0.9898516539615795,
+          "rmsKeptPx": 1.0368237462944272,
+          "rmsAllPx": 5.265172901237033,
+          "robustPx": 4.850615210416056,
+          "robustDmm": 4.900345613408784
+        },
+        "worstBullIn": 0.016082469685649657
+      },
+      {
+        "noisePx": 5,
+        "seed": 4,
+        "statistics": {
+          "corners": 136,
+          "kept": 27,
+          "pixelsPerDmm": 0.9782824422966339,
+          "rmsKeptPx": 1.180126507600952,
+          "rmsAllPx": 4.819847452639329,
+          "robustPx": 4.720998142973383,
+          "robustDmm": 4.825802793608644
+        },
+        "worstBullIn": 0.01824102389436772
+      },
+      {
+        "noisePx": 5,
+        "seed": 5,
+        "statistics": {
+          "corners": 136,
+          "kept": 20,
+          "pixelsPerDmm": 1.0066780350203715,
+          "rmsKeptPx": 1.030844970159555,
+          "rmsAllPx": 4.4252950052201045,
+          "robustPx": 4.545775823002445,
+          "robustDmm": 4.515620352152071
+        },
+        "worstBullIn": 0.013379282640760309
+      },
+      {
+        "noisePx": 5,
+        "seed": 6,
+        "statistics": {
+          "corners": 136,
+          "kept": 21,
+          "pixelsPerDmm": 0.9907130469682635,
+          "rmsKeptPx": 1.1059676786831316,
+          "rmsAllPx": 4.854604621663149,
+          "robustPx": 4.863694823368332,
+          "robustDmm": 4.909287142479851
+        },
+        "worstBullIn": 0.02440467310607394
+      },
+      {
+        "noisePx": 5,
+        "seed": 7,
+        "statistics": {
+          "corners": 136,
+          "kept": 13,
+          "pixelsPerDmm": 0.9882806817657958,
+          "rmsKeptPx": 0.696714889834981,
+          "rmsAllPx": 7.618680275975223,
+          "robustPx": 6.769647680768703,
+          "robustDmm": 6.849924121427867
+        },
+        "worstBullIn": 0.06309719378539483
+      },
+      {
+        "noisePx": 5,
+        "seed": 8,
+        "statistics": {
+          "corners": 136,
+          "kept": 24,
+          "pixelsPerDmm": 1.0014913256341362,
+          "rmsKeptPx": 0.9826940340082937,
+          "rmsAllPx": 5.304142261578176,
+          "robustPx": 4.656695877943558,
+          "robustDmm": 4.649761569322606
+        },
+        "worstBullIn": 0.04151246255012705
+      },
+      {
+        "noisePx": 5,
+        "seed": 9,
+        "statistics": {
+          "corners": 136,
+          "kept": 22,
+          "pixelsPerDmm": 0.9864977046518074,
+          "rmsKeptPx": 1.101977628145603,
+          "rmsAllPx": 5.4467564377140185,
+          "robustPx": 5.39055734052063,
+          "robustDmm": 5.464338452184511
+        },
+        "worstBullIn": 0.04717125145858305
+      },
+      {
+        "noisePx": 5,
+        "seed": 10,
+        "statistics": {
+          "corners": 136,
+          "kept": 16,
+          "pixelsPerDmm": 1.0075509854909699,
+          "rmsKeptPx": 0.9859798648389576,
+          "rmsAllPx": 5.588459597601449,
+          "robustPx": 5.562987950831725,
+          "robustDmm": 5.5212967194121045
+        },
+        "worstBullIn": 0.02471502241486948
+      }
+    ],
+    "frames": [
+      {
+        "file": "ultrawide1.jpg",
+        "gate": "mounted",
+        "markers": 34,
+        "statistics": {
+          "corners": 136,
+          "kept": 78,
+          "pixelsPerDmm": 1.0993652934438398,
+          "rmsKeptPx": 1.2313986220351099,
+          "rmsAllPx": 5.148639357715068,
+          "robustPx": 2.1282163948231645,
+          "robustDmm": 1.935859179396482
+        },
+        "robustDmm": 1.935859179396482,
+        "equivalentNoisePx": {
+          "byPixels": 2.178770004963917,
+          "byDmm": 1.9824963452771003
+        },
+        "worstScoringBullIn": 0.029131889763779527
+      },
+      {
+        "file": "ultrawide2.jpg",
+        "gate": "mounted",
+        "markers": 34,
+        "statistics": {
+          "corners": 136,
+          "kept": 97,
+          "pixelsPerDmm": 0.9959150823311905,
+          "rmsKeptPx": 0.8778468850128017,
+          "rmsAllPx": 5.03189476389562,
+          "robustPx": 1.162347633390657,
+          "robustDmm": 1.167115202904538
+        },
+        "robustDmm": 1.167115202904538,
+        "equivalentNoisePx": {
+          "byPixels": 1.269582859934466,
+          "byDmm": 1.2491240492107967
+        },
+        "worstScoringBullIn": 0.09182755905511812
+      },
+      {
+        "file": "ultrawide3.jpg",
+        "gate": "mounted",
+        "markers": 32,
+        "statistics": {
+          "corners": 128,
+          "kept": 72,
+          "pixelsPerDmm": 0.8964243725035634,
+          "rmsKeptPx": 0.9425228065431419,
+          "rmsAllPx": 3.7714294211416672,
+          "robustPx": 1.7090768291583363,
+          "robustDmm": 1.9065488194895575
+        },
+        "robustDmm": 1.9065488194895575,
+        "equivalentNoisePx": {
+          "byPixels": 1.81617073077146,
+          "byDmm": 1.9575789286252305
+        },
+        "worstScoringBullIn": 0.05179566929133858
+      },
+      {
+        "file": "main1.jpg",
+        "gate": "mounted",
+        "markers": 34,
+        "statistics": {
+          "corners": 136,
+          "kept": 120,
+          "pixelsPerDmm": 1.0304566324157123,
+          "rmsKeptPx": 0.8297933652149178,
+          "rmsAllPx": 1.4742878408729267,
+          "robustPx": 0.9108358939526315,
+          "robustDmm": 0.8839148250396017
+        },
+        "robustDmm": 0.8839148250396017,
+        "equivalentNoisePx": {
+          "byPixels": 0.9575736501529243,
+          "byDmm": 0.9113149084282794
+        },
+        "worstScoringBullIn": 0.011766929133858267
+      },
+      {
+        "file": "main2.jpg",
+        "gate": "mounted",
+        "markers": 26,
+        "statistics": {
+          "corners": 104,
+          "kept": 66,
+          "pixelsPerDmm": 1.0423626172521323,
+          "rmsKeptPx": 0.996271254241983,
+          "rmsAllPx": 3.6469427615097336,
+          "robustPx": 1.5345208523993732,
+          "robustDmm": 1.472156452084462
+        },
+        "robustDmm": 1.472156452084462,
+        "equivalentNoisePx": {
+          "byPixels": 1.6650734163398697,
+          "byDmm": 1.588291903716757
+        },
+        "worstScoringBullIn": 0.05971141732283465
+      },
+      {
+        "file": "main3.jpg",
+        "gate": "mounted",
+        "markers": 27,
+        "statistics": {
+          "corners": 108,
+          "kept": 98,
+          "pixelsPerDmm": 1.075396748085874,
+          "rmsKeptPx": 0.9172448149710037,
+          "rmsAllPx": 1.857083046840991,
+          "robustPx": 0.9311470948000174,
+          "robustDmm": 0.8658637813973213
+        },
+        "robustDmm": 0.8658637813973213,
+        "equivalentNoisePx": {
+          "byPixels": 0.9795596813083487,
+          "byDmm": 0.892124978198614
+        },
+        "worstScoringBullIn": 0.045223622047244096
+      },
+      {
+        "file": "telephoto2.jpg",
+        "gate": "mounted",
+        "markers": 33,
+        "statistics": {
+          "corners": 132,
+          "kept": 105,
+          "pixelsPerDmm": 1.0375529186868482,
+          "rmsKeptPx": 0.8133146415701544,
+          "rmsAllPx": 2.0352053835925714,
+          "robustPx": 0.9682831943812232,
+          "robustDmm": 0.9332374059596937
+        },
+        "robustDmm": 0.9332374059596937,
+        "equivalentNoisePx": {
+          "byPixels": 1.0231759685573043,
+          "byDmm": 0.9637493773354756
+        },
+        "worstScoringBullIn": 0.022411811023622046
+      },
+      {
+        "file": "main_flat1.jpg",
+        "gate": "flat",
+        "markers": 34,
+        "statistics": {
+          "corners": 136,
+          "kept": 136,
+          "pixelsPerDmm": 1.0309506071701109,
+          "rmsKeptPx": 0.5469659107386653,
+          "rmsAllPx": 0.5469659107386653,
+          "robustPx": 0.5808542008579102,
+          "robustDmm": 0.5634161295586365
+        },
+        "robustDmm": 0.5634161295586365,
+        "equivalentNoisePx": {
+          "byPixels": 0.6003821753793418,
+          "byDmm": 0.5705951291811254
+        },
+        "worstScoringBullIn": 0.0044334645669291345
+      },
+      {
+        "file": "main_flat2.jpg",
+        "gate": "flat",
+        "markers": 25,
+        "statistics": {
+          "corners": 100,
+          "kept": 100,
+          "pixelsPerDmm": 1.1593390960159569,
+          "rmsKeptPx": 0.7444374531845229,
+          "rmsAllPx": 0.7444374531845229,
+          "robustPx": 0.7458172702222559,
+          "robustDmm": 0.643312446535479
+        },
+        "robustDmm": 0.643312446535479,
+        "equivalentNoisePx": {
+          "byPixels": 0.7789478451194307,
+          "byDmm": 0.6555323094780955
+        },
+        "worstScoringBullIn": 0.017799212598425197
+      },
+      {
+        "file": "main_flat3.jpg",
+        "gate": "flat",
+        "markers": 23,
+        "statistics": {
+          "corners": 92,
+          "kept": 89,
+          "pixelsPerDmm": 1.067206626326719,
+          "rmsKeptPx": 0.8004931953796786,
+          "rmsAllPx": 0.8494985545479662,
+          "robustPx": 0.7990361617459989,
+          "robustDmm": 0.748717391772808
+        },
+        "robustDmm": 0.748717391772808,
+        "equivalentNoisePx": {
+          "byPixels": 0.8365550843905029,
+          "byDmm": 0.7675875227416827
+        },
+        "worstScoringBullIn": 0.025811023622047246
+      }
+    ]
+  }
+}

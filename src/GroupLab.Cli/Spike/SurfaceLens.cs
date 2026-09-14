@@ -342,7 +342,7 @@ public static class SurfaceLens
     }
 
     /// <summary>A bow of <paramref name="inches"/> between vertical rulings, constant curvature, through the truth camera.</summary>
-    private static SurfaceModel Bow(double inches, double w, double h)
+    internal static SurfaceModel Bow(double inches, double w, double h)
     {
         SurfaceModel Family(double c) => SyntheticSurface.Camera(Width, Height, TruthFocal, TruthK1, TruthK2, Distance, Tilt, w, h, Math.PI / 2, [0, c, 0, 0]);
         double target = inches * 254, lo = 0, hi = 0.01;
