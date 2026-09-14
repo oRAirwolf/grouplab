@@ -4,3 +4,7 @@ targets/** text eol=lf
 tests/**/Fixtures/** text eol=lf
 src/**/*.json text eol=lf
 scans/phase0/measurements/** text eol=lf
+
+# Generated measurement sheets are compared byte for byte, and a PDF is binary whatever its bytes look like.
+scans/phase1/** text eol=lf
+*.pdf binary
