@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Gltd.Model;
@@ -15,11 +16,14 @@ namespace GroupLab.Cli.Spike;
 /// centre as the whole-sheet fit located it, mapped by a homography fitted to the lens-undistorted corners of its nearest
 /// k markers. The surface is the generalised cylinder, one focal length and lens shared by the frames the EXIF says share a
 /// lens. The selected model is the surface where <see cref="SurfaceSelection"/> says the bend is supported and the planar
-/// model otherwise. The ten gated scans go through the orthographic surface for the paper gate.
+/// model otherwise. The ten gated scans go through the orthographic surface for the paper gate. Frames are prepared and
+/// evaluated in parallel, each thread with its own detector, and a progress line is printed as each frame finishes
+/// (NOTES-FROM-PLANNING.md entry 14).
 /// </summary>
 public static class SurfaceFrames
 {
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
+    private static readonly object ProgressLock = new();
 
     private sealed record Prepared(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition,
         FiducialResult? Fiducials, RegistrationFit? Baseline, IReadOnlyList<BullLocation> BaselineBulls, SurfaceFrame? Frame, double? ExifFocal, string? Failure);
@@ -32,22 +36,43 @@ public static class SurfaceFrames
 
         public int ScoringOver => Bulls.Count(b => b.Scoring && b.Error >= Phase0Spike.PaperGate);
 
-        public int SightersOver => Bulls.Count(b => !b.Scoring && b.Error >= Phase0Spike.PaperGate);
-
-        public double Mean => Bulls.Count == 0 ? double.NaN : Bulls.Average(b => b.Error);
-
         public bool Passes => Bulls.Count == Expected && Bulls.All(b => b.Error < Phase0Spike.PaperGate);
     }
+
+    private sealed record Evaluation(Errors Surface, Errors Selected, SurfaceChoice Choice, IReadOnlyList<BullLocation> SurfaceBulls, IReadOnlyList<BullLocation> SelectedBulls);
+
+    private sealed record Row(int Order, string? FitLine, string? CompareLine, string? ScanLine, object Raw);
 
     public static int Run(string scans, string frozenDirectory, TextWriter output)
     {
         ArgumentNullException.ThrowIfNull(output);
-        var backend = new OpenCvSharpBackend();
-        var photos = SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Photograph && s.Excluded is null).Select(s => Prepare(scans, frozenDirectory, s, backend)).ToList();
+        var clock = Stopwatch.StartNew();
+        var parallel = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+        void Progress(string line)
+        {
+            lock (ProgressLock)
+            {
+                output.WriteLine(string.Create(Inv, $"[{clock.Elapsed.TotalSeconds,6:0}s] {line}"));
+                output.Flush();
+            }
+        }
+
+        var samples = SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Photograph && s.Excluded is null)
+            .OrderBy(s => s.Gate switch { SampleSet.PhotographGate.Mounted => 0, SampleSet.PhotographGate.Flat => 1, _ => 2 }).ToList();
+        Progress($"preparing {samples.Count} photographs: detection, the Phase 0 whole-sheet registration and its bulls");
+        var photos = new Prepared[samples.Count];
+        Parallel.For(0, samples.Count, parallel, i =>
+        {
+            photos[i] = Prepare(scans, frozenDirectory, samples[i], new OpenCvSharpBackend());
+            var p = photos[i];
+            Progress(string.Create(Inv, $"prepared {p.Sample.File}: {p.Fiducials?.Matches.Count}/{p.Fiducials?.Expected} markers, EXIF focal {p.ExifFocal:0} px{(p.Failure is null ? "" : ", " + p.Failure)}"));
+        });
+
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
         foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber)))
         {
             var members = lens.ToList();
+            Progress(string.Create(Inv, $"fitting the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens jointly: {string.Join(", ", members.Select(m => m.Sample.File))}"));
             var fitted = SurfaceFit.Fit([.. members.Select(p => p.Frame!)], shareCamera: true);
             for (int i = 0; i < members.Count; i++)
             {
@@ -55,108 +80,131 @@ public static class SurfaceFrames
             }
         }
 
-        var rows = new List<object>();
-        var fitTable = new List<string>();
-        var compareTable = new List<string>();
-        foreach (var p in photos.OrderBy(p => p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => 0, SampleSet.PhotographGate.Flat => 1, _ => 2 })
-                     .ThenBy(p => p.Metadata.FocalLengthMm).ThenBy(p => p.Sample.File, StringComparer.Ordinal))
-        {
-            string gate = p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => "mounted", SampleSet.PhotographGate.Flat => "flat", _ => "not gated" };
-            string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}");
-            if (p.Failure is not null || !fits.TryGetValue(p.Sample.File, out var fit))
-            {
-                fitTable.Add($"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials?.Matches.Count}/{p.Fiducials?.Expected} | {p.Failure ?? "no fit"} | | | | | | | |");
-                rows.Add(new { file = p.Sample.File, gate, failure = p.Failure ?? "no fit" });
-                continue;
-            }
+        var photoRows = new Row[photos.Length];
+        Parallel.For(0, photos.Length, parallel, i => photoRows[i] = PhotoRow(i, photos[i], fits, Progress));
 
-            var evaluated = Evaluate(p, fit, backend);
-            var (surface, selected, choice) = (evaluated.Surface, evaluated.Selected, evaluated.Choice);
-            var wholeSheet = FromBulls("whole sheet", p.BaselineBulls, p.Definition);
-            var near6 = Nearest(p, 6);
-            var near8 = Nearest(p, 8);
+        var scanSamples = SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Scan && s.Gated).ToList();
+        Progress($"the paper gate: {scanSamples.Count} scans through the orthographic surface");
+        var scanRows = new Row[scanSamples.Count];
+        Parallel.For(0, scanSamples.Count, parallel, i => scanRows[i] = ScanRow(i, Prepare(scans, frozenDirectory, scanSamples[i], new OpenCvSharpBackend()), Progress));
 
-            fitTable.Add(string.Create(Inv,
-                $"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials!.Matches.Count}/{p.Fiducials.Expected} | {p.ExifFocal:0} | {fit.IndependentFocalPixels:0} / {fit.Model.FocalPixels:0} | {Degrees(fit.Model.RulingAngle):0.0} | {fit.DeflectionDmm / 254:0.000} | {fit.Kept.Count(k => k)} of {fit.Kept.Count} | {fit.RmsKept / 254:0.00000} / {fit.RmsAll / 254:0.00000} | {choice.F:0.0} ({choice.CriticalF:0.00}) | {(choice.PreferSurface ? "yes" : "no")} |"));
-            compareTable.Add(string.Create(Inv,
-                $"| {gate} | `{p.Sample.File}` | {Cell(wholeSheet)} | {Cell(near6)} | {Cell(near8)} | {Cell(surface)} | {Cell(selected)} | {wholeSheet.ScoringOver} / {near6.ScoringOver} / {near8.ScoringOver} / {surface.ScoringOver} / {selected.ScoringOver} | {Verdict(wholeSheet)} / {Verdict(surface)} / {Verdict(selected)} |"));
-
-            rows.Add(new
-            {
-                file = p.Sample.File,
-                gate,
-                camera = new { p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm },
-                exifFocalPixels = p.ExifFocal,
-                independentFocalPixels = fit.IndependentFocalPixels,
-                sharedFocalPixels = fit.Model.FocalPixels,
-                rulingAngleDegrees = Degrees(fit.Model.RulingAngle),
-                deflectionIn = fit.DeflectionDmm / 254,
-                starts = fit.Starts.Select(s => new { startDegrees = s.StartDegrees, rmsPixels = s.RmsPixels }).ToArray(),
-                mapping = RawMeasurements.Mapping(fit.Mapping),
-                corners = CornerRows(p.Frame!, p.Fiducials, fit),
-                choice = new { choice.PlanarSumSquares, choice.SurfaceSumSquares, choice.F, choice.CriticalF, choice.PreferSurface },
-                wholeSheetMapping = RawMeasurements.Mapping(p.Baseline?.Mapping),
-                bulls = new
-                {
-                    wholeSheet = RawMeasurements.Bulls(p.BaselineBulls, p.Definition),
-                    surface = RawMeasurements.Bulls(evaluated.SurfaceBulls, p.Definition),
-                    selected = RawMeasurements.Bulls(evaluated.SelectedBulls, p.Definition),
-                    nearest6 = near6.Bulls.Select(b => new { label = b.Label, b.Scoring, error = RawMeasurements.R(b.Error) }).ToArray(),
-                    nearest8 = near8.Bulls.Select(b => new { label = b.Label, b.Scoring, error = RawMeasurements.R(b.Error) }).ToArray(),
-                },
-            });
-        }
-
+        output.WriteLine();
         output.WriteLine("Surface fit per photograph. Focal lengths in pixels: the EXIF starting estimate, the frame fitted alone, and shared across the frames of its lens. Inches.");
         output.WriteLine();
         output.WriteLine("| Gate | Lens | Photograph | Markers | EXIF focal | Focal alone / shared | Ruling angle (deg) | Deflection | Corners kept | Residual kept / all | F (critical) | Bend kept |");
         output.WriteLine("|---|---|---|---|---|---|---|---|---|---|---|---|");
-        fitTable.ForEach(output.WriteLine);
+        foreach (var r in photoRows.OrderBy(r => r.Order))
+        {
+            output.WriteLine(r.FitLine);
+        }
+
         output.WriteLine();
         output.WriteLine("Worst scoring bull / worst sighter per approach, inches; scoring bulls over the gate and the gate verdict in the order the columns give.");
         output.WriteLine();
         output.WriteLine("| Gate | Photograph | Whole sheet | Nearest 6 | Nearest 8 | Surface | Selected | Scoring bulls over the gate: whole / near 6 / near 8 / surface / selected | Gate: whole / surface / selected |");
         output.WriteLine("|---|---|---|---|---|---|---|---|---|");
-        compareTable.ForEach(output.WriteLine);
+        foreach (var r in photoRows.OrderBy(r => r.Order).Where(r => r.CompareLine is not null))
+        {
+            output.WriteLine(r.CompareLine);
+        }
 
         output.WriteLine();
         output.WriteLine("The paper gate on the ten gated scans. Worst bull, inches.");
         output.WriteLine();
         output.WriteLine("| Scan | Markers | Homography | Surface | Deflection (in) | F (critical) | Bend kept | Selected | Paper gate: homography / surface / selected |");
         output.WriteLine("|---|---|---|---|---|---|---|---|---|");
-        foreach (var sample in SampleSet.All.Where(s => s.Kind == SampleSet.SampleKind.Scan && s.Gated))
+        foreach (var r in scanRows.OrderBy(r => r.Order))
         {
-            var p = Prepare(scans, frozenDirectory, sample, backend);
-            if (p.Failure is not null || p.Frame is null)
-            {
-                output.WriteLine($"| `{sample.File}` | | {p.Failure} | | | | | | |");
-                continue;
-            }
-
-            var fit = SurfaceFit.Fit([p.Frame], shareCamera: false)[0];
-            var evaluated = Evaluate(p, fit, backend);
-            var homography = FromBulls("homography", p.BaselineBulls, p.Definition);
-            output.WriteLine(string.Create(Inv,
-                $"| `{sample.File}` | {p.Fiducials!.Matches.Count}/{p.Fiducials.Expected} | {Worst(homography)} | {Worst(evaluated.Surface)} | {fit.DeflectionDmm / 254:0.000} | {evaluated.Choice.F:0.0} ({evaluated.Choice.CriticalF:0.00}) | {(evaluated.Choice.PreferSurface ? "yes" : "no")} | {Worst(evaluated.Selected)} | {Verdict(homography)} / {Verdict(evaluated.Surface)} / {Verdict(evaluated.Selected)} |"));
-            rows.Add(new
-            {
-                file = sample.File,
-                gate = "paper",
-                deflectionIn = fit.DeflectionDmm / 254,
-                mapping = RawMeasurements.Mapping(fit.Mapping),
-                corners = CornerRows(p.Frame, p.Fiducials, fit),
-                choice = new { evaluated.Choice.PlanarSumSquares, evaluated.Choice.SurfaceSumSquares, evaluated.Choice.F, evaluated.Choice.CriticalF, evaluated.Choice.PreferSurface },
-                bulls = new
-                {
-                    homography = RawMeasurements.Bulls(p.BaselineBulls, p.Definition),
-                    surface = RawMeasurements.Bulls(evaluated.SurfaceBulls, p.Definition),
-                    selected = RawMeasurements.Bulls(evaluated.SelectedBulls, p.Definition),
-                },
-            });
+            output.WriteLine(r.ScanLine);
         }
 
-        RawMeasurements.Write(scans, "surface", rows);
+        RawMeasurements.Write(scans, "surface", photoRows.OrderBy(r => r.Order).Select(r => r.Raw).Concat(scanRows.OrderBy(r => r.Order).Select(r => r.Raw)).ToList());
+        output.WriteLine();
+        output.WriteLine(string.Create(Inv, $"done in {clock.Elapsed.TotalMinutes:0.0} minutes"));
         return 0;
+    }
+
+    private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Action<string> progress)
+    {
+        string gate = p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => "mounted", SampleSet.PhotographGate.Flat => "flat", _ => "not gated" };
+        string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}");
+        if (p.Failure is not null || !fits.TryGetValue(p.Sample.File, out var fit))
+        {
+            progress($"{p.Sample.File}: {p.Failure ?? "no fit"}");
+            return new Row(order, $"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials?.Matches.Count}/{p.Fiducials?.Expected} | {p.Failure ?? "no fit"} | | | | | | | |", null, null,
+                new { file = p.Sample.File, gate, failure = p.Failure ?? "no fit" });
+        }
+
+        var evaluated = Evaluate(p, fit);
+        var (surface, selected, choice) = (evaluated.Surface, evaluated.Selected, evaluated.Choice);
+        var wholeSheet = FromBulls("whole sheet", p.BaselineBulls, p.Definition);
+        var near6 = Nearest(p, 6);
+        var near8 = Nearest(p, 8);
+        progress(string.Create(Inv,
+            $"{p.Sample.File}: {p.Fiducials!.Matches.Count}/{p.Fiducials.Expected} markers, {fit.Kept.Count(k => k)} of {fit.Kept.Count} corners kept, deflection {fit.DeflectionDmm / 254:0.000} in, worst scoring bull {(surface.WorstScoring?.Error ?? double.NaN) / 254:0.00000} in surface / {(selected.WorstScoring?.Error ?? double.NaN) / 254:0.00000} in selected, F {choice.F:0.0} bend {(choice.PreferSurface ? "kept" : "not kept")}"));
+
+        string fitLine = string.Create(Inv,
+            $"| {gate} | {lensName} | `{p.Sample.File}` | {p.Fiducials.Matches.Count}/{p.Fiducials.Expected} | {p.ExifFocal:0} | {fit.IndependentFocalPixels:0} / {fit.Model.FocalPixels:0} | {Degrees(fit.Model.RulingAngle):0.0} | {fit.DeflectionDmm / 254:0.000} | {fit.Kept.Count(k => k)} of {fit.Kept.Count} | {fit.RmsKept / 254:0.00000} / {fit.RmsAll / 254:0.00000} | {choice.F:0.0} ({choice.CriticalF:0.00}) | {(choice.PreferSurface ? "yes" : "no")} |");
+        string compareLine = string.Create(Inv,
+            $"| {gate} | `{p.Sample.File}` | {Cell(wholeSheet)} | {Cell(near6)} | {Cell(near8)} | {Cell(surface)} | {Cell(selected)} | {wholeSheet.ScoringOver} / {near6.ScoringOver} / {near8.ScoringOver} / {surface.ScoringOver} / {selected.ScoringOver} | {Verdict(wholeSheet)} / {Verdict(surface)} / {Verdict(selected)} |");
+        var raw = new
+        {
+            file = p.Sample.File,
+            gate,
+            camera = new { p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm },
+            exifFocalPixels = p.ExifFocal,
+            independentFocalPixels = fit.IndependentFocalPixels,
+            sharedFocalPixels = fit.Model.FocalPixels,
+            rulingAngleDegrees = Degrees(fit.Model.RulingAngle),
+            deflectionIn = fit.DeflectionDmm / 254,
+            starts = fit.Starts.Select(s => new { startDegrees = s.StartDegrees, rmsPixels = s.RmsPixels }).ToArray(),
+            mapping = RawMeasurements.Mapping(fit.Mapping),
+            corners = CornerRows(p.Frame!, p.Fiducials, fit),
+            choice = new { choice.PlanarSumSquares, choice.SurfaceSumSquares, choice.F, choice.CriticalF, choice.PreferSurface },
+            wholeSheetMapping = RawMeasurements.Mapping(p.Baseline?.Mapping),
+            bulls = new
+            {
+                wholeSheet = RawMeasurements.Bulls(p.BaselineBulls, p.Definition),
+                surface = RawMeasurements.Bulls(evaluated.SurfaceBulls, p.Definition),
+                selected = RawMeasurements.Bulls(evaluated.SelectedBulls, p.Definition),
+                nearest6 = near6.Bulls.Select(b => new { label = b.Label, b.Scoring, error = RawMeasurements.R(b.Error) }).ToArray(),
+                nearest8 = near8.Bulls.Select(b => new { label = b.Label, b.Scoring, error = RawMeasurements.R(b.Error) }).ToArray(),
+            },
+        };
+        return new Row(order, fitLine, compareLine, null, raw);
+    }
+
+    private static Row ScanRow(int order, Prepared p, Action<string> progress)
+    {
+        if (p.Failure is not null || p.Frame is null)
+        {
+            progress($"{p.Sample.File}: {p.Failure}");
+            return new Row(order, null, null, $"| `{p.Sample.File}` | | {p.Failure} | | | | | | |", new { file = p.Sample.File, gate = "paper", failure = p.Failure });
+        }
+
+        var fit = SurfaceFit.Fit([p.Frame], shareCamera: false)[0];
+        var evaluated = Evaluate(p, fit);
+        var homography = FromBulls("homography", p.BaselineBulls, p.Definition);
+        progress(string.Create(Inv,
+            $"{p.Sample.File}: {p.Fiducials!.Matches.Count}/{p.Fiducials.Expected} markers, {fit.Kept.Count(k => k)} of {fit.Kept.Count} corners kept, deflection {fit.DeflectionDmm / 254:0.000} in, worst bull {Worst(homography)} in homography / {Worst(evaluated.Surface)} in surface / {Worst(evaluated.Selected)} in selected, F {evaluated.Choice.F:0.0} bend {(evaluated.Choice.PreferSurface ? "kept" : "not kept")}"));
+        string line = string.Create(Inv,
+            $"| `{p.Sample.File}` | {p.Fiducials.Matches.Count}/{p.Fiducials.Expected} | {Worst(homography)} | {Worst(evaluated.Surface)} | {fit.DeflectionDmm / 254:0.000} | {evaluated.Choice.F:0.0} ({evaluated.Choice.CriticalF:0.00}) | {(evaluated.Choice.PreferSurface ? "yes" : "no")} | {Worst(evaluated.Selected)} | {Verdict(homography)} / {Verdict(evaluated.Surface)} / {Verdict(evaluated.Selected)} |");
+        var raw = new
+        {
+            file = p.Sample.File,
+            gate = "paper",
+            deflectionIn = fit.DeflectionDmm / 254,
+            mapping = RawMeasurements.Mapping(fit.Mapping),
+            corners = CornerRows(p.Frame, p.Fiducials, fit),
+            choice = new { evaluated.Choice.PlanarSumSquares, evaluated.Choice.SurfaceSumSquares, evaluated.Choice.F, evaluated.Choice.CriticalF, evaluated.Choice.PreferSurface },
+            bulls = new
+            {
+                homography = RawMeasurements.Bulls(p.BaselineBulls, p.Definition),
+                surface = RawMeasurements.Bulls(evaluated.SurfaceBulls, p.Definition),
+                selected = RawMeasurements.Bulls(evaluated.SelectedBulls, p.Definition),
+            },
+        };
+        return new Row(order, null, null, line, raw);
     }
 
     private static Prepared Prepare(string scans, string frozenDirectory, SampleSet.Sample sample, IImagingBackend backend)
@@ -200,9 +248,7 @@ public static class SurfaceFrames
         return new Prepared(sample, image, metadata, definition, fiducials, baseline, baselineBulls, frame, exif, null);
     }
 
-    private sealed record Evaluation(Errors Surface, Errors Selected, SurfaceChoice Choice, IReadOnlyList<BullLocation> SurfaceBulls, IReadOnlyList<BullLocation> SelectedBulls);
-
-    private static Evaluation Evaluate(Prepared p, SurfaceFrameResult fit, IImagingBackend backend)
+    private static Evaluation Evaluate(Prepared p, SurfaceFrameResult fit)
     {
         var options = new MeasureOptions();
         var trace = new TraceRecorder();

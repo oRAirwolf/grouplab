@@ -112,7 +112,14 @@ public static class DevelopableSurface
     public static PointD Project(SurfaceModel model, (double X, double Y, double Z) sheet)
     {
         ArgumentNullException.ThrowIfNull(model);
-        var r = Rotation(model.RotationX, model.RotationY, model.RotationZ);
+        return Project(model, Rotation(model.RotationX, model.RotationY, model.RotationZ), sheet);
+    }
+
+    /// <summary>As the overload without a matrix, with the model's rotation matrix already computed.</summary>
+    public static PointD Project(SurfaceModel model, double[,] r, (double X, double Y, double Z) sheet)
+    {
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(r);
         double qx = (r[0, 0] * sheet.X) + (r[0, 1] * sheet.Y) + (r[0, 2] * sheet.Z);
         double qy = (r[1, 0] * sheet.X) + (r[1, 1] * sheet.Y) + (r[1, 2] * sheet.Z);
         if (model.Projection == SurfaceProjection.Orthographic)
@@ -263,15 +270,47 @@ public static class DevelopableSurface
 /// The registration of a bent sheet, <see cref="SurfaceModel"/>, as the page mapping every measurement already uses. The
 /// model runs from page to image, the direction a camera does, so <see cref="ToPage"/> is the iterative one: Newton from a
 /// homography fitted to the model over the page.
+/// <para>
+/// A bull locator calls the mapping for every pixel of a bull's box, millions of times on a 600 DPI scan, so the mapping
+/// computes the rotation matrix once and tabulates the cross-section at 1 dmm, with its exact slope, the cosine and sine of
+/// the tangent angle, at every node, read back by cubic Hermite interpolation. The fit itself integrates directly.
+/// <c>DevelopableSurfaceTests</c> holds the two within a millionth of a pixel on a strongly bent sheet.
+/// </para>
 /// </summary>
 public sealed class SurfaceMapping : IPageMapping
 {
+    private const double TableStep = 1;
+
     private readonly Homography _approximateToPage;
+    private readonly double[,] _rotation;
+    private readonly double _rulingCos, _rulingSin, _tableStart;
+    private readonly double[] _x, _z, _slopeX, _slopeZ;
 
     public SurfaceMapping(SurfaceModel parameters, double pageLeft, double pageTop, double pageRight, double pageBottom)
     {
         ArgumentNullException.ThrowIfNull(parameters);
         Parameters = parameters;
+        _rotation = DevelopableSurface.Rotation(parameters.RotationX, parameters.RotationY, parameters.RotationZ);
+        _rulingCos = Math.Cos(parameters.RulingAngle);
+        _rulingSin = Math.Sin(parameters.RulingAngle);
+        double pad = 0.5 * Math.Max(pageRight - pageLeft, pageBottom - pageTop);
+        var across = new[] { new PointD(pageLeft - pad, pageTop - pad), new PointD(pageRight + pad, pageTop - pad), new PointD(pageRight + pad, pageBottom + pad), new PointD(pageLeft - pad, pageBottom + pad) }
+            .Select(q => DevelopableSurface.RulingCoordinates(parameters, q).Across).ToList();
+        _tableStart = Math.Floor(across.Min());
+        int nodes = (int)Math.Ceiling((across.Max() - _tableStart) / TableStep) + 2;
+        _x = new double[nodes];
+        _z = new double[nodes];
+        _slopeX = new double[nodes];
+        _slopeZ = new double[nodes];
+        for (int i = 0; i < nodes; i++)
+        {
+            double t = _tableStart + (i * TableStep);
+            (_x[i], _z[i]) = DevelopableSurface.Profile(parameters.Bend, t);
+            double angle = DevelopableSurface.TangentAngle(parameters.Bend, t);
+            _slopeX[i] = Math.Cos(angle);
+            _slopeZ[i] = Math.Sin(angle);
+        }
+
         var page = new List<PointD>();
         var image = new List<PointD>();
         for (int i = 0; i <= 4; i++)
@@ -297,7 +336,28 @@ public sealed class SurfaceMapping : IPageMapping
         ? "generalised cylinder through a camera with radial distortion"
         : "generalised cylinder, orthographic";
 
-    public PointD ToImage(PointD page) => DevelopableSurface.ToImage(Parameters, page);
+    public PointD ToImage(PointD page)
+    {
+        double dx = page.X - Parameters.PageCentreX, dy = page.Y - Parameters.PageCentreY;
+        double along = (dx * _rulingCos) + (dy * _rulingSin), across = (-dx * _rulingSin) + (dy * _rulingCos);
+        double x, z;
+        double u = (across - _tableStart) / TableStep;
+        int i = (int)Math.Floor(u);
+        if (i >= 0 && i + 1 < _x.Length)
+        {
+            double s = u - i, s2 = s * s, s3 = s2 * s;
+            double h00 = (2 * s3) - (3 * s2) + 1, h10 = s3 - (2 * s2) + s, h01 = (-2 * s3) + (3 * s2), h11 = s3 - s2;
+            x = (h00 * _x[i]) + (h10 * TableStep * _slopeX[i]) + (h01 * _x[i + 1]) + (h11 * TableStep * _slopeX[i + 1]);
+            z = (h00 * _z[i]) + (h10 * TableStep * _slopeZ[i]) + (h01 * _z[i + 1]) + (h11 * TableStep * _slopeZ[i + 1]);
+        }
+        else
+        {
+            (x, z) = DevelopableSurface.Profile(Parameters.Bend, across);
+        }
+
+        var sheet = ((along * _rulingCos) - (x * _rulingSin), (along * _rulingSin) + (x * _rulingCos), z);
+        return DevelopableSurface.Distort(Parameters, DevelopableSurface.Project(Parameters, _rotation, sheet));
+    }
 
     public PointD ToPage(PointD image)
     {

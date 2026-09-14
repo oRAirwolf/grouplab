@@ -50,11 +50,22 @@ public class DevelopableSurfaceTests(ITestOutputHelper output)
         }
     }
 
-    /// <summary>
-    /// At the true focal length the starting pose is the lens fit's plane exactly. At the EXIF estimate it cannot be: a tilted
-    /// plane's homography carries the focal length, and the wrong one leaves the pose's two in-plane axes not quite
-    /// perpendicular, which is why the fit refines focal length rather than taking the estimate.
-    /// </summary>
+    [Fact]
+    public void TheMappingsTabulatedProfileMatchesTheDirectGeometry()
+    {
+        var model = Truth(0.7, [0.1, 0.5, -0.3, 0.2]);
+        var mapping = new SurfaceMapping(model, 0, 0, PageWidth, PageHeight);
+        for (double x = -200; x <= PageWidth + 200; x += 37.3)
+        {
+            for (double y = -200; y <= PageHeight + 200; y += 41.7)
+            {
+                var page = new PointD(x, y);
+                double gap = Distance(mapping.ToImage(page), DevelopableSurface.ToImage(model, page));
+                Assert.True(gap < 1e-6, $"({x}, {y}): {gap} px");
+            }
+        }
+    }
+
     [Fact]
     public void TheStartingPoseReproducesThePhase0LensFit()
     {
