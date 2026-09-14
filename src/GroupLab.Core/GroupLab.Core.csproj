@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Gltd\Schema\gltd-1.schema.json" LogicalName="GroupLab.Core.Gltd.Schema.gltd-1.schema.json" />
+    <EmbeddedResource Include="Statistics\RangeStatistics.csv" LogicalName="GroupLab.Core.Statistics.RangeStatistics.csv" />
   </ItemGroup>
 
   <ItemGroup>

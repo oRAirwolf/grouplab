@@ -41,6 +41,9 @@ return args switch
     ["holes", "synthetic"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out),
     ["holes", "synthetic", "--realism"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, realismOnly: true),
     ["holes", "synthetic", "--held-out"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, heldOut: true),
+    ["stats", "range-table"] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, 2, 100, 10_000_000, Console.Out),
+    ["stats", "range-table", var from, var to] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, int.Parse(from, CultureInfo.InvariantCulture), int.Parse(to, CultureInfo.InvariantCulture), 10_000_000, Console.Out),
+    ["stats", "range-table", var from, var to, var replications] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, int.Parse(from, CultureInfo.InvariantCulture), int.Parse(to, CultureInfo.InvariantCulture), long.Parse(replications, CultureInfo.InvariantCulture), Console.Out),
     ["surface", "general-sweep"] => SurfaceGeneral.Sweep(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
     ["surface", "general"] => SurfaceGeneral.Frames("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     _ => Usage(),
@@ -442,6 +445,7 @@ static void Emit(byte[] bytes, string? output)
     }
 }
 
+
 static int Usage()
 {
     Console.Error.WriteLine("""
@@ -460,6 +464,7 @@ static int Usage()
         grouplab sweep module <base.gltd.json> <module-sweep-layouts.json> <output-directory>
         grouplab surface synthetic|rendered|frames [--joint]|lens-sweep|lens|noise|correlation|general-sweep|general
         grouplab holes baseline|synthetic [--realism|--held-out]
+        grouplab stats range-table [from to [replications]]
         """);
     return 2;
 }

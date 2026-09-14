@@ -12,6 +12,61 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-14, question 11: three differences the M3 harness found between shotGroups and its own fixtures
+
+**Status: open.** Nothing waits on it. The M3 build continues, and every affected key is reported as awaiting or disputed, never as passed.
+
+**Where it stands.** `tests/GroupLab.Core.Tests/Statistics/ShotGroupsFixtureTests.cs` accounts for every key of the nine fixtures:
+
+- **Compared:** 38,899 keys, including the range statistics through GroupLab's own Monte Carlo table and `compareGroups`, 0 outside section 15.3's tolerances.
+- **Excluded, with the specification's or the fixture's reason:** 23,602.
+- **Pending, not yet built:** none.
+- **Awaiting or disputed:** 2,163 and 998 keys, for the three reasons below. The counts grew from this question's first version because `compareGroups` also takes the frame and also reports a CorrNormal CEP.
+
+**1. The fixture cannot reproduce anything shotGroups computed from the data frame for `DFcm` and `DFinch`.**
+
+- **The mechanism:** `groupLocation`, `groupSpread` and `groupShape` take the frame, which carries each shot's point of aim. The fixture carries `shots.x` and `shots.y` from `getXYmat(..., relPOA = FALSE)` and no aim.
+- **The fixture's own evidence:** its frame-based centre disagrees with its matrix-based centre (`groupLocation.ctr` against `getConfEll.ctr`) in 10 of 10 scopes of `DFcm` and 10 of 10 of `DFinch`. For example, `DFinch` series 8 gives x = 0.3607 against 7.7067.
+- **The other seven datasets:** agree in every scope.
+- **Where spread is affected too:** covariance, `groupSpread.covXY` against `getConfEll.cov`, differs in the pooled scope of both. It also differs in `DFcm` series 5 but not in `DFinch` series 5, although section 15.2 calls them the same data.
+- **What the harness does:** these 2,163 keys, including the two datasets' `compareGroups`, are routed to "awaiting" by that test on the fixture, not by dataset name.
+- **Why it matters for the gate:** section 15.5 point 2, `DFcm` and `DFinch` agreeing after conversion, is exactly what they would show.
+
+**2. shotGroups' CorrNormal CEP is looser than its own distribution, and section 15.3 compares it at 1e-8.**
+
+- **The distribution agrees:** its CorrNormal hit probabilities, `getHitProb`, match GroupLab's Hoyt CDF to 1e-15 on every fixture.
+- **The quantile does not:** under that same CDF, shotGroups' own CEPs miss their probability. On `DF300BLK` the misses are +3.7e-6, +2.9e-6 and -5.8e-7 at 0.50, 0.90 and 0.95. GroupLab's CEP meets it to 1e-12.
+- **The size of the difference:** 3e-6 to 2.3e-5 relative, across 899 keys, each checked by the harness for exactly that evidence.
+- **The likely cause:** a root finder with a coarse default tolerance.
+
+**3. shotGroups' `fromMOA` for SMOA is 1 + 6.21288e-10 times the exact inverse of its own `getMOA`.**
+
+- **Where:** in every scope of every fixture, 99 keys.
+- **The tolerance it misses:** section 12.5's anchor, "1 inch at 100 yards is exactly 1.000000 SMOA", holds for `getMOA`, but the round trip misses section 15.3's 1e-12 for angular conversions.
+
+**Four findings, handled and not questions.**
+
+- **`getMinBBox`:** its angle is the direction of the longer side, while its width is always the first side.
+- **`getMaxPairDist`:** it reports whichever tied pair R met first, which on `DFlandy04` differs from GroupLab's, at the same 0.442108583947428.
+- **The fixture's MANOVA is the intercept row.** `sg_dump.R` takes `MANOVA[1, ]`, which in R's `anova.mlm` tests whether the mean over all shots is the origin, not section 8.2's test of the group centres. GroupLab reproduces that row for the gate, to 1e-13 on the five datasets whose frames are not shifted, and computes the group test separately. Row 2 would be the group test.
+- **The multi-group p-values are Monte Carlo.** Every Fligner-Killeen and Kruskal-Wallis p-value is an exact multiple of 1/9999 (`DF300BLKhl`: 9554, 2385 and 6623 over 9999), so `coin` resampled for them, and like `groupShape.multNorm.p.value` no other generator can reproduce them. Their statistics match, and the harness excludes each p-value only after checking that it is such a multiple. The two-group Ansari-Bradley and Wilcoxon p-values are exact and match to 1e-15.
+
+**Options.**
+
+- **For 1:**
+  - **A.** Regenerate the two fixtures with each shot's point-of-aim-relative coordinates as well, `getXYmat(..., relPOA = TRUE)`, as `shots.xPOA` and `shots.yPOA`. It is one R run.
+  - **B.** Leave the 675 keys out of the gate and say so.
+- **For 2:**
+  - **A.** Gate the CorrNormal distribution at 1e-8 through the hit probabilities, which already pass. Require GroupLab's CEP to satisfy that distribution at 1e-12, and compare shotGroups' CEP at 1e-4 relative.
+  - **B.** Keep 1e-8 on the CEP and replicate shotGroups' root finder, including whatever tolerance it happens to use.
+- **For 3:**
+  - **A.** Add it to section 15.4's known differences.
+  - **B.** Reproduce shotGroups' constant.
+
+**What I would choose: A, A and A.** Each keeps GroupLab exact where shotGroups is not, and keeps the gate checking something true.
+
+---
+
 ## 2026-09-14, question 10: the shotGroups fixtures M3 is gated on are not in the repository, and R cannot run here
 
 **Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 18 section 1.
