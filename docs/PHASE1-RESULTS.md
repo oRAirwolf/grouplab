@@ -869,6 +869,13 @@ Assignment of render-and-difference's detections, held-out:
      - a registration error that varies across the page other than by rotation.
    - **The sample size:** 84 holes per main case, where one miss is 1.2 percent. So "at least 99 percent" can only be read here as none missed.
 
+**Re-read under the amended gate.** Entry 18 section 3 accepted question 9, and brief section 4.4 point 2 now matches at 0.15 in, with centre accuracy reported under point 3. Read against the tables above, unchanged, gate 2 is still not met:
+
+- **One hole per bull:** 100 percent recalled at both resolutions, with 1 stray on three sheets at 600 DPI against the gate's none.
+- **Two holes per bull:** 94.0 and 96.4 percent, against 99, with 2 and 0 strays.
+- **Registration:** it breaks at a cliff, and at 0.24 in into 48 false holes, which is catastrophic, not graceful.
+- **Centre accuracy, reported:** median 0.0063 to 0.0082 in, at the 0.008 in paper floor.
+
 **For planning, and not blocking M3.** The first is raised as question 9 in `docs/QUESTIONS-FOR-PLANNING.md`, because brief section 7 sends evidence that a gate is wrong there.
 
 1. **Gate 2's 0.01 in tolerance sits at the real noise floor.** The options:

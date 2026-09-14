@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-14, question 10: the shotGroups fixtures M3 is gated on are not in the repository, and R cannot run here
 
-**Status: open.** It blocks reading M3's gate, so I have stopped here, per CONTRIBUTING.md. M2 is finished and reported in `docs/PHASE1-RESULTS.md` M2.2.
+**Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 18 section 1.
 
 **What the documents say exists.**
 
@@ -62,7 +62,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-14, question 9: gate 2's 0.01 in hole-centre tolerance sits at the noise floor measured on real paper
 
-**Status: open.** Nothing waits on it. M2 is reported against the gate as written, and fails it.
+**Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 18 section 3.
 
 `docs/PHASE1-BRIEF.md` section 4.4:
 - **Item 2:** "render-and-difference recovers at least 99 percent of holes with no false positives at a hole-centre tolerance of 0.01 in".
@@ -99,7 +99,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-14, question 8: the sheet contradicts entry 15's reading of the table frames' EXIF, and the joint-fit lens key mixes two pixel geometries
 
-**Status: open.** Nothing here waits on it. M1 is reported with the key entry 6 set, and the answer bears on the paper protocol.
+**Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 16 section 2.
 
 Entry 15 section 1: "Two of the three tags say ultrawide and one says main, so the odd one out is the 35 mm equivalent and it is wrong."
 
@@ -127,7 +127,7 @@ Entry 15 section 1: "Two of the three tags say ultrawide and one says main, so t
 
 ## 2026-09-14, question 7: three of the five marker module sweep sheets for next weekend now fail test 26f as an error
 
-**Status: open.** Nothing in this session waits on it. Printing the sweep as it stands does.
+**Status: answered 2026-09-14**, by `docs/NOTES-FROM-PLANNING.md` entry 16 section 3.
 
 **How the sweep came to fail.**
 

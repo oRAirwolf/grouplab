@@ -513,6 +513,8 @@ A driver script dumps every numeric output to a tidy CSV and matching JSON, keye
 - Regenerating them is a documented, occasional maintenance task, pinned to a stated shotGroups version.
 - Attribution to Wollschlaeger appears in the repository, per DESIGN.md section 4.
 
+**Amended 2026-09-14, by `docs/NOTES-FROM-PLANNING.md` entry 18 and `test/fixtures/shotgroups/README.md`.** The generated fixtures are in `test/fixtures/shotgroups/`, as the first point says, but the R scripts that write them, `sg_dump.R` and `sg_distr.R`, are in `tools/shotgroups/`, where the dump already was. The first point is left as written, as a record of the plan.
+
 ### 15.2 Fixtures
 
 | Dataset | Shots | Groups | Distance | Why |
@@ -523,8 +525,8 @@ A driver script dumps every numeric output to a tidy CSV and matching JSON, keye
 | `DF300BLKhl` | 60 | 3 | 100 yd, inches | Three groups. The Fligner-Killeen and Kruskal-Wallis branch |
 | `DFcm` and `DFinch` | 487 each | 3 | 25 m / 27.34 yd | **The same data in metric and imperial.** The unit-conversion regression test |
 | `DFsavage` | 180 | 9 series | 100, 200, 300 m | **Multiple distances in one frame.** Angular columns must drop out. A negative test |
-| `DFlandy04` | 175 | 6 | 50 yd | Unequal group sizes, 5 x 25 plus 1 x 50 |
-| `DFlandy01` | 530 | 53 | 50 m | Large. Range statistics with many groups |
+| `DFlandy04` | 175 | 6 | 50 yd | Unequal group sizes, 5 x 25 plus 1 x 50. **Amended 2026-09-14, entry 18 section 2:** also the fixture that exercises the multi-group range path, `nGroups` = 6 in `range2sigma`, `range2CEP` and `getRangeStatEff`, emitted under `multiGroup.*` |
+| `DFlandy01` | 530 | 53 | 50 m | Large. Range statistics with many groups. **Amended 2026-09-14, entry 18 section 2:** it cannot reach that purpose. `getRangeStat` has no group argument and pools all 530 shots, and the multi-group range tables stop at 10 groups, so the fixture carries `multiGroup.beyondTable`. It remains the large per-series battery |
 
 Plus GroupLab's own fixtures, which shotGroups cannot provide: synthetic groups drawn from a known `Σ` so that the estimator can be checked against **truth** rather than against another implementation, and the four solver-coupled analyses in section 12.
 

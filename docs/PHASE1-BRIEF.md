@@ -149,6 +149,8 @@ New, so it is stated here rather than inherited.
 
 1. **Against the ported baseline on real paper**: on the fifteen scanned files, no worse than the survey's own figures, and on `300_nm_hand_load` at least 25 of 27 with zero false positives. A regression here means the port is wrong.
 2. **Against truth on synthetic GroupLab sheets**: render-and-difference recovers at least 99 percent of holes with no false positives at a hole-centre tolerance of 0.01 in, at hole counts up to two per bull, and degrades gracefully rather than catastrophically as registration error grows. Sweep registration error deliberately and report where it breaks, because that is what couples M2 to M1.
+
+   **Amended 2026-09-14, by `docs/NOTES-FROM-PLANNING.md` entry 18 section 3, answering question 9.** The tolerance in this point is a matching radius: it decides whether a detection and a truth hole are the same hole. It is **0.15 in**, the hit tolerance `docs/SCAN-MEASUREMENTS.md` section 8 used for the naive baselines, not 0.01 in. The 0.01 in above was a matching radius written at the value of an accuracy requirement, and it sat on the 0.008 in noise floor, so a correct detection of a real-looking hole would have been scored a miss and a false positive at once. Centre accuracy stays reported, not gated, under point 3. The original wording is left above as a record of what was asked.
 3. **Hole centre accuracy against truth** reported, not gated, at this stage. The 0.008 in centroid noise floor measured on real paper is the number it will eventually be judged against, and a synthetic figure far below it means the synthesis is too clean.
 
 ### 4.5 Assignment

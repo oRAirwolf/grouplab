@@ -8,6 +8,64 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-14, entry 18: the shotGroups fixtures are generated and committed, M3 is unblocked, and question 9 is accepted
+
+**Status: open.** Answers questions 9 and 10. Questions 7 and 8 are already answered, see section 4.
+
+### 1. Question 10: done, not delegated back
+
+You were right that this belonged here, for the reason question 2 belonged here: the planning session has a Linux container and your machine does not have R. It turned out this container already had **R 4.3.3 and shotGroups 0.8.4**, the exact versions `STATISTICS.md` section 15.1 names, and `coin` besides.
+
+**`test/fixtures/shotgroups/` now holds 64,694 rows across nine datasets plus the Monte Carlo table**, with a README carrying provenance, versions, licence and regeneration instructions. `tools/shotgroups/sg_dump.R` is extended and `tools/shotgroups/sg_distr.R` is new. Both are committed with the fixtures.
+
+Every gap you listed is filled:
+
+| Gap | Now |
+|---|---|
+| Input shot coordinates | `shots.x`, `shots.y`, `shots.distance` per shot, plus series and group indices |
+| Per-group results for multi-group datasets | The whole battery per series, on all seven multi-group fixtures |
+| Group-comparison tests | `compareGroups`, both branches, with the test names probed rather than assumed |
+| Monte Carlo reference tables | `shotGroups_DFdistr`, 590 cells, 490 of them inside section 15.3's gate range, with complete coverage of n 2 to 50 and nGroups 1 to 10 |
+
+**The old keys are unchanged.** Scope is empty for whole-dataset results, so every key the earlier script produced is still there with the same value. Verified on `DF300BLK`: all 454 original keys present, all 454 values matching, excepting the one stochastic key below. Build the comparison harness against the documented scheme and nothing you have already reasoned about has moved.
+
+### 2. Four things the generation turned up, each of which would have cost you a day
+
+**One value is not reproducible and must be excluded by name.**
+`groupShape.multNorm.p.value` is a Monte Carlo energy test. Two identical runs gave 0.5424 and 0.5590 on `DF300BLK`, and 0.8346 and 0.8379 on `DFcciHV`. The script now seeds the generator so regeneration reproduces, but **a seed does not make it comparable**, because your implementation draws from a different generator. Each JSON lists the key under `stochastic`. Exclude it there rather than meeting it as a 1e-12 failure. Every other value in every fixture is deterministic, which I checked by running each dataset twice and diffing rather than by assuming.
+
+**`DFsavage` produces no angular keys at all, and that absence is the test passing.** Section 15.5 point 3 wants multiple distances in one frame to suppress angular output rather than produce a wrong number. `angular.nDistances` is 3 and there is no `getMOA` or `fromMOA`. The count is emitted either way, so your harness can assert on positive evidence instead of on a missing key, which is the difference between a passing test and an untested path.
+
+**Range statistics stop at n = 100**, the largest cell shotGroups tabulates. `getRangeStat` runs at any size, warning and returning NA intervals past the table, but `range2sigma`, `range2CEP` and `getRangeStatEff` raise an error. The pooled scope of the five large datasets carries `_error` keys for those three. Every per-series scope is well inside the table. Expect the errors; they are the package's limit, not a generation failure.
+
+**`DFlandy01` does not exercise what section 15.2 chose it for**, and this one is a defect in the plan rather than in the data. It was picked for "range statistics with many groups", but `getRangeStat` takes a coordinate matrix and has no group argument: handed a 53-group frame it pools all 530 shots into one. The package's real multi-group path is the `nGroups` argument of `range2sigma`, `range2CEP` and `getRangeStatEff`, now emitted under `multiGroup.*`. **Those tabulate only to 10 groups**, so `DFlandy01` at 53 is past the table and carries `multiGroup.beyondTable` rather than values. **`DFlandy04`, at 6 groups, is the fixture that actually exercises the multi-group range path.** Amend section 15.2's stated purpose for both rather than leaving a fixture described as testing something it cannot reach.
+
+I also found and fixed a bug of my own while generating these, which is worth one line because it is the same class of error the project keeps meeting: a single out-of-range call inside one error handler was discarding three working results alongside it. Split handlers, and a section that could not run records an `_error` key instead of vanishing, because a fixture that silently omits a section looks identical to one whose section produced nothing.
+
+### 3. Question 9: accepted, and my brief was internally inconsistent
+
+Change gate 2's matching tolerance to **0.15 in**, and keep centre accuracy reported rather than gated, judged against real paper.
+
+You are right and the brief was contradicting itself. `docs/PHASE1-BRIEF.md` section 4.4 point 2 set a "hole-centre tolerance of 0.01 in" for counting a detection as a true positive, and point 3 said centre accuracy is "reported, not gated". The first is a matching radius, deciding whether a detection and a truth hole are the same hole, and the second is an accuracy requirement. I wrote a matching radius at the value of an accuracy requirement, and at 0.01 in it sits on the 0.008 in noise floor, so a correct detection of a real-looking hole would be scored a miss and a false positive at once.
+
+**0.15 in is the right number for a better reason than being looser**: it is the hit tolerance `SCAN-MEASUREMENTS.md` section 8 used for the naive baselines. Adopting it makes your figures directly comparable with the 1 of 27 and the 7 of 20 already on record, which is worth more than any number I would pick now. It is also unambiguous at this geometry, being about half a hole diameter and a tenth of the 1.5 in bull spacing, so it can pair a detection with the right truth hole and cannot pair it with a neighbour.
+
+Amend section 4.4 in the brief itself, marked as an amendment with this entry as the reason, rather than silently. A brief is a record of what was asked.
+
+### 4. Questions 7 and 8 are already answered
+
+Entry 16 answered both, section 3 for question 7 and section 2 for question 8, and your last report confirmed you did the work: the joint-fit key now includes the 35 mm equivalent and the image size, the disagreement warning is gone, and the sweep and frozen READMEs state that their sheets fail test 26f by design. Only the `Status:` lines in `docs/QUESTIONS-FOR-PLANNING.md` were not flipped. Mark both answered, pointing at entry 16.
+
+**Nothing about next weekend's printing is waiting on anybody.** Question 7's answer has been standing since entry 16: print the five marker-size sheets as they are.
+
+### 5. Carry on
+
+M3 is unblocked. Build the engine against `docs/STATISTICS.md` section 15 with these fixtures. The two open questions of section 16 were answered in `docs/PHASE1-BRIEF.md` section 5 and still stand: apply `c4` to the interval endpoints and match shotGroups, and make mean radius the headline with sigma beneath and extreme spread subordinate.
+
+Then M4. The rest of the brief is unchanged.
+
+---
+
 ## 2026-09-14, entry 17: the gate does not move, the mounted case is an open requirement, and M2 starts now
 
 **Status: actioned 2026-09-14.** Sections 2 to 4 are `docs/PHASE1-RESULTS.md` M1.11 and `DESIGN.md` section 21 [r6] (the gate record, the open requirement, frames fitted alone by default, the plane below eight corners); section 5's diagnostic is M1.11 (the leftover is mostly not structured, with a structured part on three mounted frames); section 6's baseline is M2.1 (the port reproduces all 343 holes exactly), and M2 continues.
