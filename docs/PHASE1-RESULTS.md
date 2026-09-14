@@ -999,6 +999,67 @@ Assignment of render-and-difference's detections, held-out:
 
 ---
 
+## Entries 19 and 20. A photograph against its own scan
+
+`docs/NOTES-FROM-PLANNING.md` entry 20 section 5, asked for once M3 reported: the `N568 GM210M` sheet exists as a 600 DPI flatbed scan and as a phone photograph, so the scan, flat by construction, is ground truth for the photograph. It also carries entry 19's two measurements as far as one frame can.
+
+**Reproduce:** `grouplab mounted pair`. Raw rows go to `scans/phase1/measurements/mounted-pair.json`.
+- **The inputs:** `scans/n568-gm210m.jpg`, and `scans/mounted/20260329_183028.jpg`, a Galaxy Z Fold7 at 2.2 mm f/2.2 tagged as a 23 mm equivalent, 4000 by 3000 pixels.
+- **What it is:** the sheet is lying on a mat, not mounted, with a fold across its bottom edge, so this is the flat control entry 20 section 5 names, not the mounted case.
+
+**Bulls.** The OnTarget #18 sheet prints thirty coloured rings, each with a centre dot.
+- **Why dots:** printed ink has chroma and a hole has none, but holes break the rings and the scan's rings carry light stripes, so rings do not survive as clean blobs. Dots do.
+- **The method:**
+  - each compact coloured blob of dot size is a candidate;
+  - it is confirmed by 72 rays meeting a ring at a consistent radius;
+  - its centre is a circle fitted to the ray crossings, trimmed at 2.5 robust standard deviations over three passes, as the survey trimmed its ring fits.
+- **Orientation:** the photograph's pixels are stored a quarter turn from upright, with the turn only in EXIF. So the grid is placed by lattice phase on both image axes, the sighter line found by its 0.2-pitch offset, and the column direction chosen so the layout is not mirrored.
+- **Bulls the dots missed:** they are predicted from the layout and found from their rings alone.
+- **The count:**
+  - scan: 27 bulls from their dots and 3 from the layout;
+  - photograph: 23 from their dots and 7 from the layout, including two of the sighter row.
+- **Ring fits:** 0.54 px RMS on the scan and 1.45 px on the photograph, over 65 and 68 of 72 rays. On the scan the dot centroids agree with the ring centres to a median 0.0019 in, worst 0.0054 in.
+
+**The sheet's shape.** Each bull's photograph centre is mapped to the scan through the model, less its scan centre, in scan inches, with M1.11's neighbour correlation and its permutation p:
+
+| Model | RMS residual (in) | Worst (in) | RMS (dmm) | Neighbour correlation | p | Detail |
+|---|---|---|---|---|---|---|
+| Homography | 0.02060 | 0.06000 | 5.23 | +0.18 | 0.009 | |
+| Homography and radial lens | 0.01805 | 0.04492 | 4.58 | +0.17 | 0.004 | k1 +0.041, k2 -0.028 |
+| Generalised cylinder | 0.00776 | 0.02774 | 1.97 | +0.15 | 0.001 | deflection 0.332 in, 26 of 30 kept |
+| General developable surface | 0.00629 | 0.01721 | 1.60 | +0.09 | 0.050 | deflection 0.694 in, 27 of 30 kept |
+
+**What it shows.**
+
+1. **A sheet laid flat and photographed is not flat to this project's tolerance, and the departure is a bend.**
+   - **The planar models:** they leave 0.018 to 0.021 in RMS and 0.045 to 0.060 in at worst, and a lens term takes up little of it.
+   - **The surfaces:** a generalised cylinder takes the RMS to 0.0078 in, and the general developable surface to 0.0063 in with its worst bull at 0.017 in. What is left is not distinguishable from random.
+   - **The fold:** the sheet has one across its bottom edge, visible in the photograph, and the general surface's deflection, 0.694 in, is twice the cylinder's 0.332.
+2. **It sits between M1.11's flat and mounted frames.** Per point after the fit, M1.11's pinned mounted frames left 1.3 to 3.3 dmm and its flat frames 0.6 to 0.75 dmm, against 1.60 dmm here.
+   - **The caveat:** those were marker corners on a GroupLab sheet, and these are ring centres on a commercial one, so the figures are the same kind of number, not the same measurement.
+   - **Where it leaves the question:** a real sheet that Alan laid down and photographed needs the surface model as much as a pinned one. That strengthens M1.11's reading that the mounted requirement is about shape and corner quality, not about a pin.
+3. **No frame in the collection is both a full sheet and mounted.** Entry 20 said so and this confirms it: the one frame measurable at all is a sheet on a mat. Entry 19's measurement A, bull-grid residuals on stapled targets, has no stapled full sheet to run on.
+
+**Holes on a photograph.** This is entry 19's measurement B, on the one frame where it has truth.
+- **The truth:** the neutral-darkness detector's 28 holes on the scan, where the survey verified it, mapped through the lens model.
+- **The detector:** run untuned at the model's 320 px per inch.
+
+| Run | Detections | Recall within 0.15 in | Strays | Centre difference median / worst (in) |
+|---|---|---|---|---|
+| Whole photograph | 0 | 0 of 28 | 0 | |
+| The sheet alone, cropped to where the lens model maps the scan's page | 32 | 26 of 28 (93%) | 6 | 0.0231 / 0.0558 |
+
+4. **On the whole photograph the detector finds nothing, and the reason is the frame, not the holes.**
+   - **What happened:** the dark mat around the sheet passes the neutral-darkness threshold everywhere. Filling its outline makes one blob 12.2 in across that swallows every hole, refused as too large.
+   - **The assumption it breaks:** the primitive assumes paper fills the frame, which a scan guarantees and a photograph does not.
+   - **What fixes it:** registration, which is what the sheet-only run stands in for.
+5. **On the sheet alone it recovers 26 of 28.**
+   - **The two misses:** bull 4's round hole and the keyhole beside it, which in the photograph join into one blob and are refused as elongated or too large. That is the keyhole entry 20 section 4 predicted nothing would size correctly.
+   - **The six strays:** three lie on the barcode at the foot of the sheet and three on the handwritten label, the survey's own false-positive population. The position prior of M2.2 would refuse all six.
+6. **The centres differ from the scan's by 0.023 in at the median, four times the model's 0.006 in residual.** A scanned hole's core is the scanner lid and a photographed one's is the mat, and a ragged rim reads differently against each. That is the survey's point that the bright core is the lid, measured for the first time on the same holes.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1057,3 +1118,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **M3: the flyer expectation as an integral, over section 10's alternating binomial sum.** At 25 shots the sum's terms reach 5.2 million with alternating signs; the integral has no cancellation.
 - **M3: the pre-pooling guard as pairwise F tests with Holm's adjustment, over Bartlett's test of homogeneity.** Section 11 names section 8.1's F test, and section 8.4 names Holm for its family.
 - **M3: the engine's own xoshiro256** generator for resampling, over the runtime's Random.** Section 6 requires a recorded seed to reproduce an interval exactly, and the runtime does not promise its stream across versions.
+
+- **Entry 20: bull centres from ring fits confirmed by centre dots, over the survey's annulus matched filter.** Holes break the rings and the scan's rings carry light stripes, so neither survives as a clean blob, while the dots do; the dot centroids are kept beside the ring centres and agree to a median 0.0019 in.
+- **Entry 20: grid orientation found from the bulls, over trusting pixel order or reading EXIF orientation.** The photograph's pixels are stored a quarter turn from upright; lattice phase and the sighter line's 0.2-pitch offset place the grid whatever the storage, and an unmirrored layout picks the column direction.
+- **Entry 19: the hole detector run on the whole photograph and on the registered sheet, over the whole photograph only.** Untuned on the whole frame it finds nothing, which is the finding; the sheet-only run shows what registration would let the same primitive do, and is labelled as that.

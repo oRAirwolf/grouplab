@@ -75,7 +75,7 @@ Nothing yet. Finish M3. When M4 starts, its first screen is the marking screen o
 
 ## 2026-09-14, entry 20: what the mounted photographs actually contain, which is not what entry 19 asked for and is more useful
 
-**Status: open, not blocking M3.** Act on section 5 when M3 reports.
+**Status: actioned 2026-09-14.** Section 5 measured by `grouplab mounted pair`, reported in `docs/PHASE1-RESULTS.md` "Entries 19 and 20": the flat-control frame needs a surface model, 0.0206 in RMS planar against 0.0063 in developable, and the scan's holes give the photograph's detector 0 of 28 whole-frame and 26 of 28 on the registered sheet.
 
 `scans/mounted/` now holds 28 photographs. I have looked at all of them, which is the one thing this session can do that yours cannot, and the looking is worth more than the measuring. Four of the 28 have a `~` in the filename and could not be staged here; they are on disk and you can reach them.
 
@@ -134,7 +134,7 @@ One caution to carry into it. That sheet is **lying on a mat, not mounted**. Its
 
 ## 2026-09-14, entry 19: the mounted benchmark is nine photographs of a sheet hanging from one pin, and that may be the worst case rather than the normal one
 
-**Status: open, and not blocking.** Do not interrupt M3. Act on this when the photographs named in section 3 land in the repository.
+**Status: actioned 2026-09-14.** Both measurements run on the one frame that supports them, the N568 GM210M photograph and scan pair, and reported in `docs/PHASE1-RESULTS.md` "Entries 19 and 20". Measurement A has no stapled full sheet in the collection to run on, as entry 20 section 5 also found; measurement B has truth on that frame only.
 
 ### 1. What Alan said, and why it matters more than it sounds
 

@@ -1,0 +1,1455 @@
+{
+  "measurement": "mounted-pair",
+  "command": "grouplab spike mounted-pair",
+  "units": "Page lengths are dmm, 0.1 mm, measured from the page top-left unless a name ends in Px or In. Image points are pixels, with pixel (u, v) at (u, v), the convention OpenCV reports marker corners in.",
+  "rows": [
+    {
+      "scan": "n568-gm210m.jpg",
+      "photograph": "20260329_183028.jpg",
+      "camera": {
+        "cameraModel": "Galaxy Z Fold7",
+        "focalLengthMm": 2.2,
+        "fNumber": 2.2,
+        "focalLength35mm": 23,
+        "width": 4000,
+        "height": 3000
+      },
+      "bulls": [
+        {
+          "row": 0,
+          "column": 0,
+          "scanX": 691.8056,
+          "scanY": 671.5539,
+          "scanDotX": 692.0126,
+          "scanDotY": 673.3316,
+          "photoX": 617.8364,
+          "photoY": 2400.0224,
+          "photoDotX": 618.8107,
+          "photoDotY": 2400.5487,
+          "scanRmsPx": 0.4869,
+          "photoRmsPx": 0.9312
+        },
+        {
+          "row": 0,
+          "column": 1,
+          "scanX": 1590.4457,
+          "scanY": 669.1603,
+          "scanDotX": null,
+          "scanDotY": null,
+          "photoX": 617.3837,
+          "photoY": 1924.4586,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.4045,
+          "photoRmsPx": 1.1341
+        },
+        {
+          "row": 0,
+          "column": 2,
+          "scanX": 2488.3969,
+          "scanY": 666.1398,
+          "scanDotX": 2487.7982,
+          "scanDotY": 667.965,
+          "photoX": 628.9225,
+          "photoY": 1451.601,
+          "photoDotX": 628.3661,
+          "photoDotY": 1450.8705,
+          "scanRmsPx": 0.4476,
+          "photoRmsPx": 2.2198
+        },
+        {
+          "row": 0,
+          "column": 3,
+          "scanX": 3386.6388,
+          "scanY": 663.5064,
+          "scanDotX": 3383.507,
+          "scanDotY": 662.6092,
+          "photoX": 638.3434,
+          "photoY": 987.3914,
+          "photoDotX": 637.4273,
+          "photoDotY": 988.7521,
+          "scanRmsPx": 0.4633,
+          "photoRmsPx": 1.8758
+        },
+        {
+          "row": 0,
+          "column": 4,
+          "scanX": 4285.6535,
+          "scanY": 659.5376,
+          "scanDotX": 4285.0702,
+          "scanDotY": 661.4566,
+          "photoX": 645.0383,
+          "photoY": 528.3068,
+          "photoDotX": 645.046,
+          "photoDotY": 527.6615,
+          "scanRmsPx": 0.7568,
+          "photoRmsPx": 2.707
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "scanX": 692.1979,
+          "scanY": 1570.5596,
+          "scanDotX": null,
+          "scanDotY": null,
+          "photoX": 1090.311,
+          "photoY": 2400.2959,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.4158,
+          "photoRmsPx": 1.2011
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "scanX": 1591.0296,
+          "scanY": 1568.021,
+          "scanDotX": 1591.1138,
+          "scanDotY": 1566.5956,
+          "photoX": 1085.9497,
+          "photoY": 1924.6506,
+          "photoDotX": 1085.3929,
+          "photoDotY": 1924.917,
+          "scanRmsPx": 0.5362,
+          "photoRmsPx": 0.8647
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "scanX": 2489.2896,
+          "scanY": 1565.4825,
+          "scanDotX": 2488.345,
+          "scanDotY": 1564.1915,
+          "photoX": 1089.8998,
+          "photoY": 1447.756,
+          "photoDotX": 1088.2548,
+          "photoDotY": 1446.8407,
+          "scanRmsPx": 0.566,
+          "photoRmsPx": 1.2802
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "scanX": 3387.3474,
+          "scanY": 1562.9789,
+          "scanDotX": 3386.6599,
+          "scanDotY": 1561.362,
+          "photoX": 1095.0396,
+          "photoY": 978.2007,
+          "photoDotX": 1093.457,
+          "photoDotY": 977.0902,
+          "scanRmsPx": 0.5084,
+          "photoRmsPx": 1.484
+        },
+        {
+          "row": 1,
+          "column": 4,
+          "scanX": 4286.3676,
+          "scanY": 1559.2055,
+          "scanDotX": 4285.261,
+          "scanDotY": 1557.9422,
+          "photoX": 1100.8045,
+          "photoY": 517.7323,
+          "photoDotX": 1097.6627,
+          "photoDotY": 515.0811,
+          "scanRmsPx": 0.7396,
+          "photoRmsPx": 1.26
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "scanX": 692.9303,
+          "scanY": 2468.7802,
+          "scanDotX": 693.3104,
+          "scanDotY": 2469.7355,
+          "photoX": 1565.9766,
+          "photoY": 2399.5839,
+          "photoDotX": 1566.0179,
+          "photoDotY": 2400.5471,
+          "scanRmsPx": 0.4589,
+          "photoRmsPx": 1.3708
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "scanX": 1591.6257,
+          "scanY": 2466.5023,
+          "scanDotX": 1591.7585,
+          "scanDotY": 2467.3146,
+          "photoX": 1561.1905,
+          "photoY": 1924.7752,
+          "photoDotX": 1560.9639,
+          "photoDotY": 1925.2741,
+          "scanRmsPx": 0.4447,
+          "photoRmsPx": 0.5049
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "scanX": 2489.8579,
+          "scanY": 2463.8608,
+          "scanDotX": 2489.3185,
+          "scanDotY": 2464.8449,
+          "photoX": 1560.1473,
+          "photoY": 1444.0598,
+          "photoDotX": 1559.6222,
+          "photoDotY": 1443.2776,
+          "scanRmsPx": 0.348,
+          "photoRmsPx": 0.5596
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "scanX": 3387.8428,
+          "scanY": 2461.4062,
+          "scanDotX": 3387.3034,
+          "scanDotY": 2462.4019,
+          "photoX": 1560.6121,
+          "photoY": 969.2804,
+          "photoDotX": 1560.3268,
+          "photoDotY": 968.7869,
+          "scanRmsPx": 0.3816,
+          "photoRmsPx": 1.0654
+        },
+        {
+          "row": 2,
+          "column": 4,
+          "scanX": 4286.9934,
+          "scanY": 2457.8836,
+          "scanDotX": 4286.8604,
+          "scanDotY": 2458.7983,
+          "photoX": 1561.2915,
+          "photoY": 502.7004,
+          "photoDotX": 1560.0004,
+          "photoDotY": 501.7465,
+          "scanRmsPx": 0.4849,
+          "photoRmsPx": 1.5491
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "scanX": 693.1168,
+          "scanY": 3368.0587,
+          "scanDotX": 693.878,
+          "scanDotY": 3368.1717,
+          "photoX": 2044.5557,
+          "photoY": 2398.7871,
+          "photoDotX": 2044.3207,
+          "photoDotY": 2399.9777,
+          "scanRmsPx": 0.4776,
+          "photoRmsPx": 1.9696
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "scanX": 1591.9017,
+          "scanY": 3365.6486,
+          "scanDotX": null,
+          "scanDotY": null,
+          "photoX": 2043.5104,
+          "photoY": 1924.5843,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.43,
+          "photoRmsPx": 0.4903
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "scanX": 2489.9022,
+          "scanY": 3362.9605,
+          "scanDotX": 2489.3225,
+          "scanDotY": 3363.5491,
+          "photoX": 2041.0086,
+          "photoY": 1440.9124,
+          "photoDotX": 2040.8959,
+          "photoDotY": 1441.124,
+          "scanRmsPx": 0.2959,
+          "photoRmsPx": 0.4325
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "scanX": 3387.9353,
+          "scanY": 3360.5848,
+          "scanDotX": 3387.6786,
+          "scanDotY": 3360.8548,
+          "photoX": 2037.2191,
+          "photoY": 961.8047,
+          "photoDotX": 2036.727,
+          "photoDotY": 961.2517,
+          "scanRmsPx": 0.4175,
+          "photoRmsPx": 0.9346
+        },
+        {
+          "row": 3,
+          "column": 4,
+          "scanX": 4287.0523,
+          "scanY": 3357.1258,
+          "scanDotX": 4286.8835,
+          "scanDotY": 3357.5499,
+          "photoX": 2033.9793,
+          "photoY": 490.6121,
+          "photoDotX": 2033.3447,
+          "photoDotY": 489.9169,
+          "scanRmsPx": 0.5744,
+          "photoRmsPx": 1.3275
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "scanX": 694.2099,
+          "scanY": 4267.379,
+          "scanDotX": 694.8977,
+          "scanDotY": 4266.2268,
+          "photoX": 2524.6132,
+          "photoY": 2396.5716,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.5592,
+          "photoRmsPx": 2.4957
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "scanX": 1592.949,
+          "scanY": 4264.9787,
+          "scanDotX": 1593.1387,
+          "scanDotY": 4263.2793,
+          "photoX": 2530.1843,
+          "photoY": 1922.8703,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.5225,
+          "photoRmsPx": 1.0814
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "scanX": 2490.9923,
+          "scanY": 4262.3169,
+          "scanDotX": 2490.745,
+          "scanDotY": 4261.1523,
+          "photoX": 2527.6198,
+          "photoY": 1436.8289,
+          "photoDotX": 2528.0872,
+          "photoDotY": 1436.68,
+          "scanRmsPx": 0.6673,
+          "photoRmsPx": 0.8365
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "scanX": 3389.1082,
+          "scanY": 4260.0006,
+          "scanDotX": 3388.6844,
+          "scanDotY": 4258.7554,
+          "photoX": 2520.5896,
+          "photoY": 953.2453,
+          "photoDotX": 2521.8903,
+          "photoDotY": 952.6162,
+          "scanRmsPx": 0.6372,
+          "photoRmsPx": 0.9892
+        },
+        {
+          "row": 4,
+          "column": 4,
+          "scanX": 4288.421,
+          "scanY": 4256.6551,
+          "scanDotX": 4288.2425,
+          "scanDotY": 4255.429,
+          "photoX": 2514.835,
+          "photoY": 477.0662,
+          "photoDotX": 2515.1113,
+          "photoDotY": 476.0027,
+          "scanRmsPx": 0.6556,
+          "photoRmsPx": 1.7626
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "scanX": 695.2217,
+          "scanY": 5346.9064,
+          "scanDotX": 695.7584,
+          "scanDotY": 5347.6201,
+          "photoX": 3101.1136,
+          "photoY": 2392.0125,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.7266,
+          "photoRmsPx": 3.8831
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "scanX": 1593.8309,
+          "scanY": 5344.0166,
+          "scanDotX": 1594.1739,
+          "scanDotY": 5344.8407,
+          "photoX": 3118.9814,
+          "photoY": 1920.0821,
+          "photoDotX": null,
+          "photoDotY": null,
+          "scanRmsPx": 0.4503,
+          "photoRmsPx": 2.7331
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "scanX": 2491.9642,
+          "scanY": 5341.5959,
+          "scanDotX": 2491.2462,
+          "scanDotY": 5342.3152,
+          "photoX": 3122.4866,
+          "photoY": 1433.9632,
+          "photoDotX": 3124.1504,
+          "photoDotY": 1433.108,
+          "scanRmsPx": 0.8182,
+          "photoRmsPx": 1.8275
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "scanX": 3389.6909,
+          "scanY": 5339.5045,
+          "scanDotX": 3389.4286,
+          "scanDotY": 5339.8013,
+          "photoX": 3105.8649,
+          "photoY": 949.356,
+          "photoDotX": 3105.8058,
+          "photoDotY": 949.4755,
+          "scanRmsPx": 0.714,
+          "photoRmsPx": 1.1525
+        },
+        {
+          "row": 5,
+          "column": 4,
+          "scanX": 4288.9379,
+          "scanY": 5336.1412,
+          "scanDotX": 4288.7778,
+          "scanDotY": 5336.2739,
+          "photoX": 3099.7127,
+          "photoY": 467.6294,
+          "photoDotX": 3099.8952,
+          "photoDotY": 466.4874,
+          "scanRmsPx": 0.8802,
+          "photoRmsPx": 1.4442
+        }
+      ],
+      "models": [
+        {
+          "model": "homography",
+          "detail": "8 parameters",
+          "rmsInches": 0.0206,
+          "worstInches": 0.06,
+          "field": {
+            "markers": 30,
+            "neighbourDistanceDmm": 570.3702411923144,
+            "neighbourPairs": 81,
+            "neighbour": 0.18032917099199267,
+            "neighbourP": 0.009495252373813094,
+            "farPairs": 159,
+            "far": 0.11524546263588767,
+            "rmsResidualDmm": 5.232988737247571
+          },
+          "residualsInches": [
+            {
+              "dx": -0.0064,
+              "dy": -0.0058
+            },
+            {
+              "dx": 0.0015,
+              "dy": -0.0221
+            },
+            {
+              "dx": 0.0117,
+              "dy": 0.0015
+            },
+            {
+              "dx": 0.0035,
+              "dy": 0.018
+            },
+            {
+              "dx": -0.0129,
+              "dy": 0.0282
+            },
+            {
+              "dx": -0.0039,
+              "dy": 0.0094
+            },
+            {
+              "dx": -0.0056,
+              "dy": -0.0139
+            },
+            {
+              "dx": 0.0077,
+              "dy": -0.0108
+            },
+            {
+              "dx": 0.0079,
+              "dy": -0.0037
+            },
+            {
+              "dx": -0.0129,
+              "dy": 0.0078
+            },
+            {
+              "dx": 0.0011,
+              "dy": 0.017
+            },
+            {
+              "dx": -0.0124,
+              "dy": -0.0027
+            },
+            {
+              "dx": 0.0036,
+              "dy": -0.0103
+            },
+            {
+              "dx": 0.0114,
+              "dy": -0.0134
+            },
+            {
+              "dx": 0.0011,
+              "dy": -0.0139
+            },
+            {
+              "dx": 0.0072,
+              "dy": 0.0131
+            },
+            {
+              "dx": -0.0177,
+              "dy": 0.0105
+            },
+            {
+              "dx": -0.0017,
+              "dy": 0.0036
+            },
+            {
+              "dx": 0.0103,
+              "dy": -0.0079
+            },
+            {
+              "dx": 0.0057,
+              "dy": -0.0159
+            },
+            {
+              "dx": 0.0161,
+              "dy": -0.005
+            },
+            {
+              "dx": -0.0196,
+              "dy": 0.0176
+            },
+            {
+              "dx": -0.0059,
+              "dy": 0.0157
+            },
+            {
+              "dx": 0.0105,
+              "dy": -0.0007
+            },
+            {
+              "dx": 0.012,
+              "dy": -0.0115
+            },
+            {
+              "dx": 0.0328,
+              "dy": -0.0502
+            },
+            {
+              "dx": -0.019,
+              "dy": 0.0159
+            },
+            {
+              "dx": -0.0171,
+              "dy": 0.0381
+            },
+            {
+              "dx": -0.0081,
+              "dy": -0.0014
+            },
+            {
+              "dx": -0.0006,
+              "dy": -0.0071
+            }
+          ]
+        },
+        {
+          "model": "homography and radial lens",
+          "detail": "k1 \u002B0.0406, k2 -0.0280",
+          "rmsInches": 0.018,
+          "worstInches": 0.0449,
+          "field": {
+            "markers": 30,
+            "neighbourDistanceDmm": 570.3702411923144,
+            "neighbourPairs": 81,
+            "neighbour": 0.1733008777950889,
+            "neighbourP": 0.00399800099950025,
+            "farPairs": 159,
+            "far": 0.11642941613859813,
+            "rmsResidualDmm": 4.584329043673251
+          },
+          "residualsInches": [
+            {
+              "dx": -0.0148,
+              "dy": -0.0158
+            },
+            {
+              "dx": -0.0007,
+              "dy": -0.0271
+            },
+            {
+              "dx": 0.0123,
+              "dy": -0.0002
+            },
+            {
+              "dx": 0.0068,
+              "dy": 0.0135
+            },
+            {
+              "dx": -0.004,
+              "dy": 0.0194
+            },
+            {
+              "dx": -0.0063,
+              "dy": 0.0087
+            },
+            {
+              "dx": -0.0019,
+              "dy": -0.0046
+            },
+            {
+              "dx": 0.0072,
+              "dy": 0.0024
+            },
+            {
+              "dx": 0.0041,
+              "dy": 0.0046
+            },
+            {
+              "dx": -0.0095,
+              "dy": 0.0062
+            },
+            {
+              "dx": 0.0069,
+              "dy": 0.0201
+            },
+            {
+              "dx": -0.0031,
+              "dy": 0.007
+            },
+            {
+              "dx": 0.002,
+              "dy": 0.0017
+            },
+            {
+              "dx": 0.0006,
+              "dy": -0.0047
+            },
+            {
+              "dx": -0.0033,
+              "dy": -0.0123
+            },
+            {
+              "dx": 0.0149,
+              "dy": 0.0114
+            },
+            {
+              "dx": -0.007,
+              "dy": 0.0078
+            },
+            {
+              "dx": -0.0036,
+              "dy": 0.0006
+            },
+            {
+              "dx": -0.0024,
+              "dy": -0.0106
+            },
+            {
+              "dx": -0.0005,
+              "dy": -0.0181
+            },
+            {
+              "dx": 0.0171,
+              "dy": -0.0087
+            },
+            {
+              "dx": -0.013,
+              "dy": 0.0061
+            },
+            {
+              "dx": -0.0074,
+              "dy": 0.0012
+            },
+            {
+              "dx": 0.0027,
+              "dy": -0.0115
+            },
+            {
+              "dx": 0.013,
+              "dy": -0.0146
+            },
+            {
+              "dx": 0.0202,
+              "dy": -0.0401
+            },
+            {
+              "dx": -0.0221,
+              "dy": 0.0176
+            },
+            {
+              "dx": -0.0173,
+              "dy": 0.0363
+            },
+            {
+              "dx": -0.0047,
+              "dy": 0.0007
+            },
+            {
+              "dx": 0.0138,
+              "dy": 0.0031
+            }
+          ]
+        },
+        {
+          "model": "generalised cylinder",
+          "detail": "deflection 0.332 in, focal 1856 px from EXIF 2556, kept 26 of 30",
+          "rmsInches": 0.0078,
+          "worstInches": 0.0277,
+          "field": {
+            "markers": 30,
+            "neighbourDistanceDmm": 570.3702411923144,
+            "neighbourPairs": 81,
+            "neighbour": 0.14975222665089002,
+            "neighbourP": 0.0014992503748125937,
+            "farPairs": 159,
+            "far": -0.034626929980093965,
+            "rmsResidualDmm": 1.966822108539771
+          },
+          "residualsInches": [
+            {
+              "dx": -0.0014,
+              "dy": -0.0044
+            },
+            {
+              "dx": -0.0038,
+              "dy": -0.0035
+            },
+            {
+              "dx": -0.0063,
+              "dy": 0.0079
+            },
+            {
+              "dx": -0.0082,
+              "dy": 0.0017
+            },
+            {
+              "dx": -0.0043,
+              "dy": -0.0005
+            },
+            {
+              "dx": 0.002,
+              "dy": -0.0025
+            },
+            {
+              "dx": -0.002,
+              "dy": -0.0004
+            },
+            {
+              "dx": -0.0043,
+              "dy": 0.0035
+            },
+            {
+              "dx": -0.0029,
+              "dy": -0.0009
+            },
+            {
+              "dx": -0.0034,
+              "dy": 0.001
+            },
+            {
+              "dx": 0.0051,
+              "dy": -0.0032
+            },
+            {
+              "dx": -0.0009,
+              "dy": 0.0004
+            },
+            {
+              "dx": -0.0023,
+              "dy": 0.0019
+            },
+            {
+              "dx": 0.0009,
+              "dy": -0.0009
+            },
+            {
+              "dx": 0.0086,
+              "dy": -0.0028
+            },
+            {
+              "dx": 0.0046,
+              "dy": -0.0061
+            },
+            {
+              "dx": 0.0002,
+              "dy": 0.001
+            },
+            {
+              "dx": -0.0011,
+              "dy": 0.0045
+            },
+            {
+              "dx": 0.0005,
+              "dy": 0.0032
+            },
+            {
+              "dx": 0.0095,
+              "dy": 0.005
+            },
+            {
+              "dx": 0.0013,
+              "dy": -0.0068
+            },
+            {
+              "dx": 0.0026,
+              "dy": -0.0006
+            },
+            {
+              "dx": 0.0013,
+              "dy": 0.0003
+            },
+            {
+              "dx": 0.0023,
+              "dy": -0.0006
+            },
+            {
+              "dx": 0.0117,
+              "dy": 0.0093
+            },
+            {
+              "dx": -0.0041,
+              "dy": 0.0018
+            },
+            {
+              "dx": 0.0056,
+              "dy": 0.0011
+            },
+            {
+              "dx": -0.0013,
+              "dy": 0.0028
+            },
+            {
+              "dx": -0.0131,
+              "dy": -0.0245
+            },
+            {
+              "dx": -0.0068,
+              "dy": -0.0009
+            }
+          ]
+        },
+        {
+          "model": "general developable surface",
+          "detail": "deflection 0.694 in, focal 2790 px, kept 27 of 30",
+          "rmsInches": 0.0063,
+          "worstInches": 0.0172,
+          "field": {
+            "markers": 30,
+            "neighbourDistanceDmm": 570.3702411923144,
+            "neighbourPairs": 81,
+            "neighbour": 0.08617069975688259,
+            "neighbourP": 0.050474762618690654,
+            "farPairs": 159,
+            "far": -0.05557288066414715,
+            "rmsResidualDmm": 1.5973611149104063
+          },
+          "residualsInches": [
+            {
+              "dx": 0.0022,
+              "dy": -0.0006
+            },
+            {
+              "dx": -0.0031,
+              "dy": -0.0067
+            },
+            {
+              "dx": -0.0039,
+              "dy": 0.0029
+            },
+            {
+              "dx": -0.0071,
+              "dy": 0.0029
+            },
+            {
+              "dx": -0.0011,
+              "dy": -0.0045
+            },
+            {
+              "dx": 0.002,
+              "dy": -0.0033
+            },
+            {
+              "dx": -0.0005,
+              "dy": 0.0007
+            },
+            {
+              "dx": -0.0026,
+              "dy": 0.0026
+            },
+            {
+              "dx": -0.0026,
+              "dy": 0.0004
+            },
+            {
+              "dx": -0.0049,
+              "dy": 0.0014
+            },
+            {
+              "dx": 0.003,
+              "dy": -0.0043
+            },
+            {
+              "dx": 0.0017,
+              "dy": 0.0027
+            },
+            {
+              "dx": -0.0012,
+              "dy": 0.003
+            },
+            {
+              "dx": -0.0001,
+              "dy": -0.0001
+            },
+            {
+              "dx": 0.0043,
+              "dy": -0.0026
+            },
+            {
+              "dx": 0.0009,
+              "dy": -0.0062
+            },
+            {
+              "dx": 0.0027,
+              "dy": 0.0017
+            },
+            {
+              "dx": -0.0004,
+              "dy": 0.0048
+            },
+            {
+              "dx": -0.0004,
+              "dy": 0.0024
+            },
+            {
+              "dx": 0.0051,
+              "dy": 0.0029
+            },
+            {
+              "dx": -0.0029,
+              "dy": -0.006
+            },
+            {
+              "dx": 0.0039,
+              "dy": -0.0003
+            },
+            {
+              "dx": 0.0022,
+              "dy": 0.0016
+            },
+            {
+              "dx": 0.0034,
+              "dy": -0.0005
+            },
+            {
+              "dx": 0.01,
+              "dy": 0.0068
+            },
+            {
+              "dx": -0.0031,
+              "dy": -0.0033
+            },
+            {
+              "dx": 0.0053,
+              "dy": 0.0048
+            },
+            {
+              "dx": -0.0001,
+              "dy": 0.0129
+            },
+            {
+              "dx": -0.0082,
+              "dy": -0.0151
+            },
+            {
+              "dx": -0.004,
+              "dy": 0.0013
+            }
+          ]
+        }
+      ],
+      "holes": {
+        "truthHoles": 28,
+        "photoPixelsPerInch": 320.4647,
+        "sheetCrop": {
+          "cropLeft": 263,
+          "cropTop": 94,
+          "cropRight": 3741,
+          "cropBottom": 2787
+        },
+        "runs": [
+          {
+            "run": "whole photograph",
+            "detections": 0,
+            "matched": 0,
+            "strays": 0,
+            "centreDifferencesInches": [],
+            "photoDetections": [],
+            "missedScanHoles": [
+              {
+                "scanXIn": 2.6469,
+                "scanYIn": 1.1857
+              },
+              {
+                "scanXIn": 5.5073,
+                "scanYIn": 1.2739
+              },
+              {
+                "scanXIn": 6.0094,
+                "scanYIn": 1.359
+              },
+              {
+                "scanXIn": 3.7928,
+                "scanYIn": 1.4306
+              },
+              {
+                "scanXIn": 0.7916,
+                "scanYIn": 1.4684
+              },
+              {
+                "scanXIn": 7.1226,
+                "scanYIn": 1.6642
+              },
+              {
+                "scanXIn": 2.5782,
+                "scanYIn": 2.4621
+              },
+              {
+                "scanXIn": 1.2558,
+                "scanYIn": 2.6378
+              },
+              {
+                "scanXIn": 5.4486,
+                "scanYIn": 2.9952
+              },
+              {
+                "scanXIn": 3.9518,
+                "scanYIn": 3.0315
+              },
+              {
+                "scanXIn": 6.7712,
+                "scanYIn": 3.0963
+              },
+              {
+                "scanXIn": 7.0718,
+                "scanYIn": 4.252
+              },
+              {
+                "scanXIn": 1.0454,
+                "scanYIn": 4.4401
+              },
+              {
+                "scanXIn": 4.0983,
+                "scanYIn": 4.6446
+              },
+              {
+                "scanXIn": 2.3308,
+                "scanYIn": 4.7591
+              },
+              {
+                "scanXIn": 4.0449,
+                "scanYIn": 5.0355
+              },
+              {
+                "scanXIn": 5.4855,
+                "scanYIn": 5.4313
+              },
+              {
+                "scanXIn": 2.5892,
+                "scanYIn": 5.7148
+              },
+              {
+                "scanXIn": 6.7697,
+                "scanYIn": 5.794
+              },
+              {
+                "scanXIn": 0.9698,
+                "scanYIn": 5.8802
+              },
+              {
+                "scanXIn": 4.227,
+                "scanYIn": 6.1366
+              },
+              {
+                "scanXIn": 4.2085,
+                "scanYIn": 7.3696
+              },
+              {
+                "scanXIn": 0.8247,
+                "scanYIn": 7.4811
+              },
+              {
+                "scanXIn": 5.3777,
+                "scanYIn": 7.5317
+              },
+              {
+                "scanXIn": 2.639,
+                "scanYIn": 7.689
+              },
+              {
+                "scanXIn": 6.9247,
+                "scanYIn": 7.7753
+              },
+              {
+                "scanXIn": 6.555,
+                "scanYIn": 8.0478
+              },
+              {
+                "scanXIn": 5.7565,
+                "scanYIn": 8.0777
+              }
+            ],
+            "refused": [
+              {
+                "hullIn": 12.1938,
+                "reason": "too large, 12.194 in"
+              }
+            ]
+          },
+          {
+            "run": "sheet only",
+            "detections": 32,
+            "matched": 26,
+            "strays": 6,
+            "centreDifferencesInches": [
+              0.0056,
+              0.0085,
+              0.0091,
+              0.0105,
+              0.0113,
+              0.0128,
+              0.0133,
+              0.016,
+              0.016,
+              0.0164,
+              0.0205,
+              0.0211,
+              0.0228,
+              0.0231,
+              0.0238,
+              0.0269,
+              0.0277,
+              0.0291,
+              0.031,
+              0.0338,
+              0.0365,
+              0.0375,
+              0.0404,
+              0.0499,
+              0.05,
+              0.0558
+            ],
+            "photoDetections": [
+              {
+                "scanXIn": 7.0861,
+                "scanYIn": 4.2214,
+                "hullIn": 0.2504,
+                "coreV": 31.1985,
+                "matched": true
+              },
+              {
+                "scanXIn": 7.1307,
+                "scanYIn": 1.6536,
+                "hullIn": 0.2558,
+                "coreV": 27.561,
+                "matched": true
+              },
+              {
+                "scanXIn": 6.9574,
+                "scanYIn": 7.7516,
+                "hullIn": 0.2602,
+                "coreV": 28.8327,
+                "matched": true
+              },
+              {
+                "scanXIn": 6.7948,
+                "scanYIn": 5.7441,
+                "hullIn": 0.2575,
+                "coreV": 34.9821,
+                "matched": true
+              },
+              {
+                "scanXIn": 6.54,
+                "scanYIn": 10.0698,
+                "hullIn": 0.4298,
+                "coreV": 167.1664,
+                "matched": false
+              },
+              {
+                "scanXIn": 6.7804,
+                "scanYIn": 3.0711,
+                "hullIn": 0.2756,
+                "coreV": 25.1484,
+                "matched": true
+              },
+              {
+                "scanXIn": 6.5605,
+                "scanYIn": 8.0483,
+                "hullIn": 0.2102,
+                "coreV": 176.1408,
+                "matched": true
+              },
+              {
+                "scanXIn": 6.2011,
+                "scanYIn": 8.087,
+                "hullIn": 0.2091,
+                "coreV": 121.6085,
+                "matched": false
+              },
+              {
+                "scanXIn": 6.0202,
+                "scanYIn": 10.0639,
+                "hullIn": 0.2385,
+                "coreV": 129.7585,
+                "matched": false
+              },
+              {
+                "scanXIn": 5.7583,
+                "scanYIn": 8.0904,
+                "hullIn": 0.1947,
+                "coreV": 119.3844,
+                "matched": true
+              },
+              {
+                "scanXIn": 5.5907,
+                "scanYIn": 10.066,
+                "hullIn": 0.3756,
+                "coreV": 123.5004,
+                "matched": false
+              },
+              {
+                "scanXIn": 5.5028,
+                "scanYIn": 5.3992,
+                "hullIn": 0.2567,
+                "coreV": 30.9268,
+                "matched": true
+              },
+              {
+                "scanXIn": 5.4643,
+                "scanYIn": 2.981,
+                "hullIn": 0.2656,
+                "coreV": 23.0088,
+                "matched": true
+              },
+              {
+                "scanXIn": 5.3863,
+                "scanYIn": 7.5244,
+                "hullIn": 0.2637,
+                "coreV": 26.093,
+                "matched": true
+              },
+              {
+                "scanXIn": 5.031,
+                "scanYIn": 8.1098,
+                "hullIn": 0.1716,
+                "coreV": 133.094,
+                "matched": false
+              },
+              {
+                "scanXIn": 4.8014,
+                "scanYIn": 8.2239,
+                "hullIn": 0.2012,
+                "coreV": 117.8317,
+                "matched": false
+              },
+              {
+                "scanXIn": 4.231,
+                "scanYIn": 6.1269,
+                "hullIn": 0.2602,
+                "coreV": 28.3999,
+                "matched": true
+              },
+              {
+                "scanXIn": 4.2123,
+                "scanYIn": 7.3421,
+                "hullIn": 0.2887,
+                "coreV": 25.13,
+                "matched": true
+              },
+              {
+                "scanXIn": 4.0581,
+                "scanYIn": 5.0165,
+                "hullIn": 0.2668,
+                "coreV": 25.7726,
+                "matched": true
+              },
+              {
+                "scanXIn": 4.0727,
+                "scanYIn": 4.6271,
+                "hullIn": 0.2122,
+                "coreV": 156.8086,
+                "matched": true
+              },
+              {
+                "scanXIn": 3.9651,
+                "scanYIn": 3.0219,
+                "hullIn": 0.2566,
+                "coreV": 24.3601,
+                "matched": true
+              },
+              {
+                "scanXIn": 3.8188,
+                "scanYIn": 1.4035,
+                "hullIn": 0.2508,
+                "coreV": 23.8952,
+                "matched": true
+              },
+              {
+                "scanXIn": 2.6639,
+                "scanYIn": 1.1388,
+                "hullIn": 0.2587,
+                "coreV": 26.5778,
+                "matched": true
+              },
+              {
+                "scanXIn": 2.6187,
+                "scanYIn": 7.6865,
+                "hullIn": 0.2708,
+                "coreV": 21.6034,
+                "matched": true
+              },
+              {
+                "scanXIn": 2.5898,
+                "scanYIn": 5.7063,
+                "hullIn": 0.2487,
+                "coreV": 21.0154,
+                "matched": true
+              },
+              {
+                "scanXIn": 2.5766,
+                "scanYIn": 2.4462,
+                "hullIn": 0.2594,
+                "coreV": 20.9361,
+                "matched": true
+              },
+              {
+                "scanXIn": 2.3219,
+                "scanYIn": 4.7609,
+                "hullIn": 0.2647,
+                "coreV": 22.3615,
+                "matched": true
+              },
+              {
+                "scanXIn": 1.2434,
+                "scanYIn": 2.6276,
+                "hullIn": 0.2617,
+                "coreV": 25.5519,
+                "matched": true
+              },
+              {
+                "scanXIn": 1.0598,
+                "scanYIn": 4.4211,
+                "hullIn": 0.2542,
+                "coreV": 29.7788,
+                "matched": true
+              },
+              {
+                "scanXIn": 0.9911,
+                "scanYIn": 5.8722,
+                "hullIn": 0.2525,
+                "coreV": 18.4619,
+                "matched": true
+              },
+              {
+                "scanXIn": 0.8063,
+                "scanYIn": 7.5276,
+                "hullIn": 0.3392,
+                "coreV": 88.2511,
+                "matched": true
+              },
+              {
+                "scanXIn": 0.7782,
+                "scanYIn": 1.4426,
+                "hullIn": 0.2529,
+                "coreV": 27.98,
+                "matched": true
+              }
+            ],
+            "missedScanHoles": [
+              {
+                "scanXIn": 5.5073,
+                "scanYIn": 1.2739
+              },
+              {
+                "scanXIn": 6.0094,
+                "scanYIn": 1.359
+              }
+            ],
+            "refused": [
+              {
+                "hullIn": 3.049,
+                "reason": "too large, 3.049 in"
+              },
+              {
+                "hullIn": 0.2077,
+                "reason": "elongated, aspect 2.22"
+              },
+              {
+                "hullIn": 0.1505,
+                "reason": "elongated, aspect 4.32"
+              },
+              {
+                "hullIn": 0.2332,
+                "reason": "elongated, aspect 2.33"
+              },
+              {
+                "hullIn": 0.6211,
+                "reason": "too large, 0.621 in"
+              },
+              {
+                "hullIn": 0.1424,
+                "reason": "too small, 0.142 in"
+              },
+              {
+                "hullIn": 0.439,
+                "reason": "not compact, hull solidity 0.49"
+              },
+              {
+                "hullIn": 0.0698,
+                "reason": "too small, 0.070 in"
+              },
+              {
+                "hullIn": 0.3781,
+                "reason": "elongated, aspect 2.88"
+              },
+              {
+                "hullIn": 0.1141,
+                "reason": "too small, 0.114 in"
+              },
+              {
+                "hullIn": 0.0677,
+                "reason": "too small, 0.068 in"
+              },
+              {
+                "hullIn": 0.9119,
+                "reason": "too large, 0.912 in"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

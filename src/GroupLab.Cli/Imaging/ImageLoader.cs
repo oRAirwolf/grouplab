@@ -53,4 +53,45 @@ public static class ImageLoader
             }
         }
     }
+
+    /// <summary>
+    /// The image in colour reduced two ways, max(R, G, B) and the chroma max(R, G, B) - min(R, G, B), with its metadata. Chroma
+    /// separates coloured printed ink from a hole, which is neutral whatever its darkness (docs/DETECTION-PIPELINE.md stage S6).
+    /// </summary>
+    public static (GrayImage MaxChannel, GrayImage Chroma, ImageMetadata Metadata) LoadMaxAndChroma(string path)
+    {
+        byte[] bytes = File.ReadAllBytes(path);
+        var metadata = ImageMetadataReader.Read(bytes);
+        using var mat = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        if (mat.Empty())
+        {
+            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+        }
+
+        var channels = Cv2.Split(mat);
+        try
+        {
+            using var max = new Mat();
+            using var min = new Mat();
+            using var chroma = new Mat();
+            Cv2.Max(channels[0], channels[1], max);
+            Cv2.Max(max, channels[2], max);
+            Cv2.Min(channels[0], channels[1], min);
+            Cv2.Min(min, channels[2], min);
+            Cv2.Subtract(max, min, chroma);
+
+            // Only cool ink: where blue is the smallest channel the colour is a brown, orange or yellow, such as a mat or a board.
+            using var warm = new Mat();
+            Cv2.Compare(channels[0], min, warm, CmpTypes.EQ);
+            chroma.SetTo(new Scalar(0), warm);
+            return (OpenCvSharpBackend.Copy(max), OpenCvSharpBackend.Copy(chroma), metadata);
+        }
+        finally
+        {
+            foreach (var channel in channels)
+            {
+                channel.Dispose();
+            }
+        }
+    }
 }
