@@ -15,10 +15,16 @@ public sealed record SurfaceChoice(IPageMapping? Planar, double PlanarSumSquares
 /// homography with radial distortion, ten parameters against the surface's fourteen; a scan's is a homography, eight
 /// against the orthographic surface's ten. The critical value is the chi-square quantile over its degrees of freedom,
 /// which is the F quantile for the hundreds of residuals a sheet provides.
+/// <para>
+/// With the lens held (<see cref="SurfaceHold.Distortion"/>, NOTES-FROM-PLANNING.md entry 15 section 4) the planar model
+/// holds the same lens: a homography from the surface's undistorted normalised coordinates to the page, eight parameters,
+/// refined on the page residual as the Phase 0 lens fit is; and the surface loses its two lens parameters, and its focal
+/// length when that is held too. The bend is still four extra parameters.
+/// </para>
 /// </summary>
 public static class SurfaceSelection
 {
-    public static SurfaceChoice Choose(SurfaceFrameResult fit, IReadOnlyList<PointD> image, IReadOnlyList<PointD> page, int width, int height)
+    public static SurfaceChoice Choose(SurfaceFrameResult fit, IReadOnlyList<PointD> image, IReadOnlyList<PointD> page, int width, int height, SurfaceHold hold = SurfaceHold.None)
     {
         ArgumentNullException.ThrowIfNull(fit);
         ArgumentNullException.ThrowIfNull(image);
@@ -26,19 +32,56 @@ public static class SurfaceSelection
         var keptImage = image.Where((_, i) => fit.Kept[i]).ToList();
         var keptPage = page.Where((_, i) => fit.Kept[i]).ToList();
         bool perspective = fit.Model.Projection == SurfaceProjection.Perspective;
-        int surfaceParameters = perspective ? 14 : 10, extra = perspective ? 4 : 2;
+        bool heldLens = perspective && hold.HasFlag(SurfaceHold.Distortion);
+        int surfaceParameters = (perspective ? 14 : 10) - (heldLens ? 2 : 0) - (perspective && hold.HasFlag(SurfaceHold.Focal) ? 1 : 0), extra = perspective ? 4 : 2;
         double critical = perspective ? 18.467 / 4 : 13.816 / 2;
         if (keptImage.Count < 8 || HomographyEstimate.Fit(keptImage, keptPage) is not { } homography)
         {
             return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, true);
         }
 
-        IPageMapping planar = perspective ? LensFit.Fit(keptImage, keptPage, homography, width, height) : new HomographyMapping(homography);
+        IPageMapping? planar = !perspective ? new HomographyMapping(homography)
+            : heldLens ? HeldLensPlane(fit.Model, keptImage, keptPage)
+            : LensFit.Fit(keptImage, keptPage, homography, width, height);
+        if (planar is null)
+        {
+            return new SurfaceChoice(null, double.NaN, double.NaN, double.NaN, critical, true);
+        }
         double planarSum = keptImage.Select((p, i) => Squared(planar.ToPage(p), keptPage[i])).Sum();
         double surfaceSum = fit.PageErrors.Where((_, i) => fit.Kept[i]).Sum(e => e * e);
         int residuals = 2 * keptImage.Count;
         double f = (planarSum - surfaceSum) / extra / (surfaceSum / Math.Max(1, residuals - surfaceParameters));
         return new SurfaceChoice(planar, planarSum, surfaceSum, f, critical, f > critical);
+    }
+
+    /// <summary>The Phase 0 photograph model with the surface's lens held: a homography from undistorted normalised coordinates to the page.</summary>
+    private static RadialHomographyMapping? HeldLensPlane(SurfaceModel model, List<PointD> image, List<PointD> page)
+    {
+        var u = image.Select(q => DevelopableSurface.Undistort(model, q)).ToList();
+        if (HomographyEstimate.Fit(u, page) is not { } start)
+        {
+            return null;
+        }
+
+        static Homography H(double[] x) => new([x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], 1]);
+        double[] x0 = [.. Enumerable.Range(0, 8).Select(k => start[k / 3, k % 3] / start[2, 2])];
+        double Residuals(double[] x, double[] r)
+        {
+            var h = H(x);
+            double cost = 0;
+            for (int i = 0; i < u.Count; i++)
+            {
+                var p = h.Apply(u[i]);
+                r[2 * i] = p.X - page[i].X;
+                r[(2 * i) + 1] = p.Y - page[i].Y;
+                cost += (r[2 * i] * r[2 * i]) + (r[(2 * i) + 1] * r[(2 * i) + 1]);
+            }
+
+            return cost;
+        }
+
+        var result = LevenbergMarquardt.Minimise(Residuals, x0, 2 * u.Count, [.. x0.Select(v => Math.Max(1e-9, Math.Abs(v) * 1e-7))]);
+        return new RadialHomographyMapping(model.CentreX, model.CentreY, model.Scale, model.K1, model.K2, H(result.Parameters));
     }
 
     private static double Squared(PointD a, PointD b) => Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2);

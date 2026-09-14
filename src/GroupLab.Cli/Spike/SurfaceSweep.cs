@@ -79,9 +79,12 @@ public static class SurfaceSweep
         var ids = PageRegistration.ExpectedMarkers(definition, 0).Select(m => m.Id).ToArray();
         Cell("markers", "all 34", 34, baseline, 0, _ => null, ExifFocal, noiseFree: false);
         Cell("markers", "the 23 main_flat3 decoded", 23, baseline, 0, _ => flat3, ExifFocal, noiseFree: false);
+        // The first markers in raster order, the same set on every seed: the top of the sheet. Until PHASE1-RESULTS.md M1.7
+        // these rows read "at random", from a shuffle that drew a fresh generator with the same seed for every marker, so every
+        // key was equal and the order never changed.
         foreach (int count in (int[])[23, 16, 12, 9])
         {
-            Cell("markers", $"{count} at random", count, baseline, 0, seed => ids.OrderBy(_ => new Random((count * 1000) + seed).Next()).Take(count).ToArray(), ExifFocal, noiseFree: false);
+            Cell("markers", $"the first {count} in raster order", count, baseline, 0, _ => ids.Take(count).ToArray(), ExifFocal, noiseFree: false);
         }
 
         foreach (double k in (double[])[1.0, 0.95, 0.9, 0.85, 0.802, 0.75, 0.7])
@@ -246,7 +249,7 @@ public static class SurfaceSweep
         return sign * (lo + hi) / 2;
     }
 
-    private static int[] MarkersDecoded(string measurements, string file)
+    internal static int[] MarkersDecoded(string measurements, string file)
     {
         using var document = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(measurements, "photos.json")));
         return [.. document.RootElement.GetProperty("rows").EnumerateArray().Single(r => r.GetProperty("file").GetString() == file)

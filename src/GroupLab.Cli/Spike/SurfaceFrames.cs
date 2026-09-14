@@ -26,11 +26,11 @@ public static class SurfaceFrames
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
     private static readonly object ProgressLock = new();
 
-    private sealed record Prepared(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition,
+    internal sealed record Prepared(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition,
         FiducialResult? Fiducials, RegistrationFit? Baseline, IReadOnlyList<BullLocation> BaselineBulls, SurfaceFrame? Frame, double? ExifFocal, string? Failure,
         RadialHomographyMapping? Lens = null);
 
-    private sealed record Errors(string Name, IReadOnlyList<(string Label, bool Scoring, double Error)> Bulls, int Expected)
+    internal sealed record Errors(string Name, IReadOnlyList<(string Label, bool Scoring, double Error)> Bulls, int Expected)
     {
         public (string Label, double Error)? WorstScoring => Bulls.Where(b => b.Scoring).OrderByDescending(b => b.Error).Select(b => ((string, double)?)(b.Label, b.Error)).FirstOrDefault();
 
@@ -41,7 +41,7 @@ public static class SurfaceFrames
         public bool Passes => Bulls.Count == Expected && Bulls.All(b => b.Error < Phase0Spike.PaperGate);
     }
 
-    private sealed record Evaluation(Errors Surface, Errors Selected, SurfaceChoice Choice, IReadOnlyList<BullLocation> SurfaceBulls, IReadOnlyList<BullLocation> SelectedBulls);
+    internal sealed record Evaluation(Errors Surface, Errors Selected, SurfaceChoice Choice, IReadOnlyList<BullLocation> SurfaceBulls, IReadOnlyList<BullLocation> SelectedBulls);
 
     private sealed record Row(int Order, string? FitLine, string? CompareLine, string? ScanLine, object Raw);
 
@@ -70,27 +70,7 @@ public static class SurfaceFrames
             Progress(string.Create(Inv, $"prepared {p.Sample.File}: {p.Fiducials?.Matches.Count}/{p.Fiducials?.Expected} markers, EXIF focal {p.ExifFocal:0} px{(p.Failure is null ? "" : ", " + p.Failure)}"));
         });
 
-        var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
-        var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
-        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber)))
-        {
-            var members = lens.ToList();
-            Progress(string.Create(Inv, $"seeding the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens: {string.Join(", ", members.Select(m => m.Sample.File))}"));
-            var seed = SurfaceFit.SeedFocal([.. members.Select(m => (m.Sample.File, m.Metadata, m.Image.Width, m.Image.Height, (Func<double, SurfaceFrame>)(f => AtFocal(m, f))))])!;
-            Progress(string.Create(Inv, $"  start {seed.FocalPixels:0} px; candidates {string.Join("; ", seed.Candidates.Select(c => $"{c.FocalPixels:0} px from {c.Frames.Count} frame(s), cost {c.Cost:0.###E+0} px^2"))}"));
-            foreach (var warning in seed.Warnings)
-            {
-                Progress("  warning: " + warning);
-            }
-
-            Progress(string.Create(Inv, $"fitting the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens jointly from {seed.FocalPixels:0} px"));
-            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true);
-            for (int i = 0; i < members.Count; i++)
-            {
-                fits[members[i].Sample.File] = fitted[i];
-                seeds[members[i].Sample.File] = seed;
-            }
-        }
+        var (fits, seeds) = FitByLens(photos, Progress);
 
         var photoRows = new Row[photos.Length];
         Parallel.For(0, photos.Length, parallel, i => photoRows[i] = PhotoRow(i, photos[i], fits, seeds, Progress));
@@ -136,8 +116,39 @@ public static class SurfaceFrames
         return 0;
     }
 
+    /// <summary>
+    /// Every prepared photograph with a frame, fitted jointly with the others of its lens, by focal length and f-number
+    /// (NOTES-FROM-PLANNING.md entry 6), from the one starting focal length <see cref="SurfaceFit.SeedFocal"/> chooses.
+    /// </summary>
+    internal static (Dictionary<string, SurfaceFrameResult> Fits, Dictionary<string, FocalSeed> Seeds) FitByLens(IEnumerable<Prepared> photos, Action<string> progress)
+    {
+        var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
+        var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
+        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber)))
+        {
+            var members = lens.ToList();
+            progress(string.Create(Inv, $"seeding the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens: {string.Join(", ", members.Select(m => m.Sample.File))}"));
+            var seed = SurfaceFit.SeedFocal([.. members.Select(m => (m.Sample.File, m.Metadata, m.Image.Width, m.Image.Height, (Func<double, SurfaceFrame>)(f => AtFocal(m, f))))])!;
+            progress(string.Create(Inv, $"  start {seed.FocalPixels:0} px; candidates {string.Join("; ", seed.Candidates.Select(c => $"{c.FocalPixels:0} px from {c.Frames.Count} frame(s), cost {c.Cost:0.###E+0} px^2"))}"));
+            foreach (var warning in seed.Warnings)
+            {
+                progress("  warning: " + warning);
+            }
+
+            progress(string.Create(Inv, $"fitting the {lens.Key.FocalLengthMm:0.00} mm f/{lens.Key.FNumber:0.0} lens jointly from {seed.FocalPixels:0} px"));
+            var fitted = SurfaceFit.Fit([.. members.Select(m => AtFocal(m, seed.FocalPixels))], shareCamera: true);
+            for (int i = 0; i < members.Count; i++)
+            {
+                fits[members[i].Sample.File] = fitted[i];
+                seeds[members[i].Sample.File] = seed;
+            }
+        }
+
+        return (fits, seeds);
+    }
+
     /// <summary>The frame started from <paramref name="focalPixels"/>: its Phase 0 lens fit's plane pose through that focal length.</summary>
-    private static SurfaceFrame AtFocal(Prepared p, double focalPixels) =>
+    internal static SurfaceFrame AtFocal(Prepared p, double focalPixels) =>
         p.Frame! with { Start = SurfaceFit.StartFromLens(p.Lens!, focalPixels, p.Definition.Page.Width / 2.0, p.Definition.Page.Height / 2.0) };
 
     private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Dictionary<string, FocalSeed> seeds, Action<string> progress)
@@ -228,7 +239,7 @@ public static class SurfaceFrames
         return new Row(order, null, null, line, raw);
     }
 
-    private static Prepared Prepare(string scans, string frozenDirectory, SampleSet.Sample sample, IImagingBackend backend)
+    internal static Prepared Prepare(string scans, string frozenDirectory, SampleSet.Sample sample, IImagingBackend backend)
     {
         var (image, metadata) = ImageLoader.Load(Path.Combine(scans, sample.File));
         var definition = Phase0Spike.Definition(frozenDirectory, sample.Definition);
@@ -271,12 +282,12 @@ public static class SurfaceFrames
         return new Prepared(sample, image, metadata, definition, fiducials, baseline, baselineBulls, frame, exif, null, lensFit);
     }
 
-    private static Evaluation Evaluate(Prepared p, SurfaceFrameResult fit)
+    internal static Evaluation Evaluate(Prepared p, SurfaceFrameResult fit, SurfaceHold hold = SurfaceHold.None)
     {
         var options = new MeasureOptions();
         var trace = new TraceRecorder();
         var surfaceBulls = SheetMeasurer.LocateBulls(p.Image, p.Definition, fit.Mapping, options, trace);
-        var choice = SurfaceSelection.Choose(fit, p.Frame!.Image, p.Frame.Page, p.Image.Width, p.Image.Height);
+        var choice = SurfaceSelection.Choose(fit, p.Frame!.Image, p.Frame.Page, p.Image.Width, p.Image.Height, hold);
         var selectedBulls = choice.PreferSurface || choice.Planar is null ? surfaceBulls : SheetMeasurer.LocateBulls(p.Image, p.Definition, choice.Planar, options, trace);
         return new Evaluation(FromBulls("surface", surfaceBulls, p.Definition), FromBulls("selected", selectedBulls, p.Definition), choice, surfaceBulls, selectedBulls);
     }
@@ -309,10 +320,10 @@ public static class SurfaceFrames
         return new Errors($"nearest {k}", errors, p.Definition.Bulls.Count);
     }
 
-    private static Errors FromBulls(string name, IReadOnlyList<BullLocation> bulls, TargetDefinition definition) =>
+    internal static Errors FromBulls(string name, IReadOnlyList<BullLocation> bulls, TargetDefinition definition) =>
         new(name, [.. bulls.Where(b => b.Recovered is not null).Select(b => (b.Name, definition.Bulls[b.Index].Scoring, b.Error))], definition.Bulls.Count);
 
-    private static object[] CornerRows(SurfaceFrame frame, FiducialResult fiducials, SurfaceFrameResult fit) =>
+    internal static object[] CornerRows(SurfaceFrame frame, FiducialResult fiducials, SurfaceFrameResult fit) =>
         [.. frame.Image.Select((q, i) => (object)new
         {
             markerId = fiducials.Matches[i / 4].Id,
@@ -325,12 +336,12 @@ public static class SurfaceFrames
             kept = fit.Kept[i],
         })];
 
-    private static string Cell(Errors e) => string.Create(Inv,
+    internal static string Cell(Errors e) => string.Create(Inv,
         $"{(e.WorstScoring?.Error ?? double.NaN) / 254:0.00000} / {(e.WorstSighter?.Error ?? double.NaN) / 254:0.00000}");
 
     private static string Worst(Errors e) => string.Create(Inv, $"{e.Bulls.Select(b => b.Error).DefaultIfEmpty(double.NaN).Max() / 254:0.00000}");
 
-    private static string Verdict(Errors e) => e.Passes ? "pass" : "fail";
+    internal static string Verdict(Errors e) => e.Passes ? "pass" : "fail";
 
     private static double Degrees(double radians) => ((radians * 180 / Math.PI % 180) + 180) % 180;
 

@@ -32,6 +32,27 @@ public sealed record SurfaceFrameResult(
     double DeflectionDmm,
     IReadOnlyList<(double StartDegrees, double RmsPixels)> Starts);
 
+/// <summary>
+/// Parameters a surface fit holds at its starting model's values instead of fitting. NOTES-FROM-PLANNING.md entry 15
+/// section 4: on a bent sheet the radial lens term can absorb the bend, so the lens is a property of the camera, fitted
+/// where it is well determined and held while the bend is fitted. <see cref="Flat"/> holds the ruling angle and bend at
+/// zero, a flat sheet through the same camera model, which is how that lens is fitted on flat frames.
+/// </summary>
+[Flags]
+public enum SurfaceHold
+{
+    None = 0,
+
+    /// <summary>k1 and k2.</summary>
+    Distortion = 1,
+
+    /// <summary>The focal length of a perspective model.</summary>
+    Focal = 2,
+
+    /// <summary>The ruling angle and every bend coefficient, at zero.</summary>
+    Flat = 4,
+}
+
 /// <summary>A starting focal length, pixels, that some frames' EXIF gives; those frames; and the summed squared residual, pixels squared, of every frame fitted alone from it, NaN when it was the only start.</summary>
 public sealed record FocalCandidate(double FocalPixels, IReadOnlyList<string> Frames, double Cost);
 
@@ -128,7 +149,8 @@ public static class SurfaceFit
 
     /// <param name="frames">Frames to fit.</param>
     /// <param name="shareCamera">Fit one focal length and lens across all the frames, which must be perspective and share a lens.</param>
-    public static IReadOnlyList<SurfaceFrameResult> Fit(IReadOnlyList<SurfaceFrame> frames, bool shareCamera)
+    /// <param name="hold">Parameters held at each frame's starting values (<see cref="SurfaceHold"/>).</param>
+    public static IReadOnlyList<SurfaceFrameResult> Fit(IReadOnlyList<SurfaceFrame> frames, bool shareCamera, SurfaceHold hold = SurfaceHold.None)
     {
         ArgumentNullException.ThrowIfNull(frames);
         var models = new SurfaceModel[frames.Count];
@@ -140,11 +162,11 @@ public static class SurfaceFit
             var frame = frames[f];
             var usable = frame.Usable.ToArray();
             starts[f] = [];
-            var (refined, _) = BestStart(frame, usable, starts[f]);
+            var (refined, _) = BestStart(frame, usable, starts[f], hold);
             foreach (double threshold in (double[])[MisreadThreshold, PageRegistration.RansacThreshold])
             {
                 kept[f] = Reclassify(frame, refined, threshold);
-                refined = FitAlone(frame, refined, kept[f]).Model;
+                refined = FitAlone(frame, refined, kept[f], hold).Model;
             }
 
             models[f] = refined;
@@ -153,13 +175,13 @@ public static class SurfaceFit
 
         if (shareCamera && frames.Count > 1 && frames.All(x => x.Start.Projection == SurfaceProjection.Perspective))
         {
-            models = FitJointly(frames, models, kept);
+            models = FitJointly(frames, models, kept, hold);
             for (int f = 0; f < frames.Count; f++)
             {
                 kept[f] = Reclassify(frames[f], models[f], PageRegistration.RansacThreshold);
             }
 
-            models = FitJointly(frames, models, kept);
+            models = FitJointly(frames, models, kept, hold);
         }
 
         var results = new List<SurfaceFrameResult>(frames.Count);
@@ -209,7 +231,7 @@ public static class SurfaceFit
             Parallel.For(0, each.Length, k =>
             {
                 var frame = frames[k % frames.Count].FrameAt(candidates[k / frames.Count]);
-                each[k] = BestStart(frame, [.. frame.Usable], null).Cost;
+                each[k] = BestStart(frame, [.. frame.Usable], null, SurfaceHold.None).Cost;
             });
             for (int c = 0; c < candidates.Count; c++)
             {
@@ -234,15 +256,18 @@ public static class SurfaceFit
         return new FocalSeed(focal, [.. candidates.Select((c, i) => new FocalCandidate(c, [.. frames.Where((_, f) => exif[f] is { } e && Math.Round(e, 1) == c).Select(x => x.Name)], candidates.Count > 1 ? costs[i] : double.NaN))], warnings);
     }
 
-    /// <summary>The frame fitted alone from every starting ruling angle, flat, over <paramref name="use"/>: the best model and its cost.</summary>
-    private static (SurfaceModel Model, double Cost) BestStart(SurfaceFrame frame, bool[] use, List<(double, double)>? starts)
+    /// <summary>
+    /// The frame fitted alone from every starting ruling angle, flat, over <paramref name="use"/>: the best model and its
+    /// cost. A flat hold has no ruling angle to search, so it starts once.
+    /// </summary>
+    private static (SurfaceModel Model, double Cost) BestStart(SurfaceFrame frame, bool[] use, List<(double, double)>? starts, SurfaceHold hold)
     {
         SurfaceModel? best = null;
         double bestCost = double.PositiveInfinity;
-        foreach (double degrees in StartAngles)
+        foreach (double degrees in hold.HasFlag(SurfaceHold.Flat) ? [0] : StartAngles)
         {
             var start = frame.Start with { RulingAngle = degrees * Math.PI / 180, Bend = new double[BendTerms + 1] };
-            var (model, cost) = FitAlone(frame, start, use);
+            var (model, cost) = FitAlone(frame, start, use, hold);
             starts?.Add((degrees, Math.Sqrt(cost / Math.Max(1, use.Count(u => u)))));
             if (cost < bestCost)
             {
@@ -260,38 +285,44 @@ public static class SurfaceFit
         return [.. frame.Image.Select((p, i) => Distance(mapping.ToPage(p), frame.Page[i]) <= threshold)];
     }
 
-    private static (SurfaceModel Model, double Cost) FitAlone(SurfaceFrame frame, SurfaceModel start, bool[] use)
+    private static (SurfaceModel Model, double Cost) FitAlone(SurfaceFrame frame, SurfaceModel start, bool[] use, SurfaceHold hold)
     {
         int[] indices = [.. Enumerable.Range(0, frame.Image.Count).Where(i => use[i])];
         bool perspective = start.Projection == SurfaceProjection.Perspective;
-        var x0 = Pack(start).Concat(perspective ? PackCamera(start) : []).ToArray();
-        var steps = FrameSteps(perspective).Concat(perspective ? CameraSteps : []).ToArray();
-        double Residuals(double[] x, double[] r)
+        var full = Pack(start).Concat(perspective ? PackCamera(start) : []).ToArray();
+        var free = FrameFree(hold).Concat(perspective ? CameraFree(hold) : []).ToArray();
+        var steps = FrameSteps(perspective).Concat(perspective ? CameraSteps : []).Where((_, i) => free[i]).ToArray();
+        SurfaceModel Model(double[] x)
         {
-            var model = Unpack(start, x.AsSpan(0, FrameParameters), perspective ? x.AsSpan(FrameParameters, 3) : default);
-            return FrameResiduals(frame, model, indices, r, 0);
+            var all = Merge(full, free, x, 0);
+            return Unpack(start, all.AsSpan(0, FrameParameters), perspective ? all.AsSpan(FrameParameters, 3) : default);
         }
 
-        var result = LevenbergMarquardt.Minimise(Residuals, x0, 2 * indices.Length, steps);
-        var fitted = Unpack(start, result.Parameters.AsSpan(0, FrameParameters), perspective ? result.Parameters.AsSpan(FrameParameters, 3) : default);
-        return (fitted, result.Cost);
+        var result = LevenbergMarquardt.Minimise((x, r) => FrameResiduals(frame, Model(x), indices, r, 0), [.. full.Where((_, i) => free[i])], 2 * indices.Length, steps);
+        return (Model(result.Parameters), result.Cost);
     }
 
-    private static SurfaceModel[] FitJointly(IReadOnlyList<SurfaceFrame> frames, SurfaceModel[] models, bool[][] kept)
+    private static SurfaceModel[] FitJointly(IReadOnlyList<SurfaceFrame> frames, SurfaceModel[] models, bool[][] kept, SurfaceHold hold)
     {
         var indices = frames.Select((frame, f) => Enumerable.Range(0, frame.Image.Count).Where(i => kept[f][i]).ToArray()).ToArray();
+        bool[] frameFree = FrameFree(hold), cameraFree = CameraFree(hold);
+        int perFrame = frameFree.Count(b => b);
+        var packs = models.Select(Pack).ToArray();
+        var cameras = models.Select(PackCamera).ToArray();
         var camera = new[] { Median(models.Select(m => Math.Log(m.Focal))), Median(models.Select(m => m.K1)), Median(models.Select(m => m.K2)) };
-        var x0 = models.SelectMany(Pack).Concat(camera).ToArray();
-        var steps = frames.SelectMany(_ => FrameSteps(true)).Concat(CameraSteps).ToArray();
-        int cameraAt = FrameParameters * frames.Count;
+        var x0 = packs.SelectMany(p => p.Where((_, i) => frameFree[i])).Concat(camera.Where((_, i) => cameraFree[i])).ToArray();
+        var steps = frames.SelectMany(_ => FrameSteps(true).Where((_, i) => frameFree[i])).Concat(CameraSteps.Where((_, i) => cameraFree[i])).ToArray();
+        int cameraAt = perFrame * frames.Count;
+
+        // A held camera parameter keeps each frame's own starting value; a free one is shared.
+        SurfaceModel Model(double[] x, int f) => Unpack(models[f], Merge(packs[f], frameFree, x, perFrame * f), Merge(cameras[f], cameraFree, x, cameraAt));
         double Residuals(double[] x, double[] r)
         {
             double cost = 0;
             int offset = 0;
             for (int f = 0; f < frames.Count; f++)
             {
-                var model = Unpack(models[f], x.AsSpan(FrameParameters * f, FrameParameters), x.AsSpan(cameraAt, 3));
-                cost += FrameResiduals(frames[f], model, indices[f], r, offset);
+                cost += FrameResiduals(frames[f], Model(x, f), indices[f], r, offset);
                 offset += 2 * indices[f].Length;
             }
 
@@ -299,7 +330,33 @@ public static class SurfaceFit
         }
 
         var result = LevenbergMarquardt.Minimise(Residuals, x0, indices.Sum(i => 2 * i.Length), steps);
-        return [.. frames.Select((_, f) => Unpack(models[f], result.Parameters.AsSpan(FrameParameters * f, FrameParameters), result.Parameters.AsSpan(cameraAt, 3)))];
+        return [.. frames.Select((_, f) => Model(result.Parameters, f))];
+    }
+
+    /// <summary>Which of a frame's packed parameters are fitted: the ruling angle and three bend coefficients, then the pose.</summary>
+    private static bool[] FrameFree(SurfaceHold hold)
+    {
+        bool bend = !hold.HasFlag(SurfaceHold.Flat);
+        return [bend, bend, bend, bend, true, true, true, true, true, true];
+    }
+
+    /// <summary>Which of the packed camera parameters are fitted: log focal length, k1, k2.</summary>
+    private static bool[] CameraFree(SurfaceHold hold) =>
+        [!hold.HasFlag(SurfaceHold.Focal), !hold.HasFlag(SurfaceHold.Distortion), !hold.HasFlag(SurfaceHold.Distortion)];
+
+    /// <summary><paramref name="full"/> with its free entries replaced, in order, by <paramref name="x"/> from <paramref name="offset"/>.</summary>
+    private static double[] Merge(double[] full, bool[] free, double[] x, int offset)
+    {
+        var merged = (double[])full.Clone();
+        for (int i = 0, k = offset; i < full.Length; i++)
+        {
+            if (free[i])
+            {
+                merged[i] = x[k++];
+            }
+        }
+
+        return merged;
     }
 
     private static double FrameResiduals(SurfaceFrame frame, SurfaceModel model, int[] indices, double[] r, int offset)

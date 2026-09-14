@@ -32,6 +32,8 @@ return args switch
     ["surface", "synthetic"] => SurfaceSweep.Synthetic(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
     ["surface", "rendered"] => SurfaceSweep.Rendered(SampleSet.FrozenDirectory, "scans/phase1", Console.Out),
     ["surface", "frames"] => SurfaceFrames.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
+    ["surface", "lens-sweep"] => SurfaceLens.Sweep(SampleSet.FrozenDirectory, "scans/phase0/measurements", "scans/phase1", Console.Out),
+    ["surface", "lens"] => SurfaceLens.Frames("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     _ => Usage(),
 };
 
@@ -447,7 +449,7 @@ static int Usage()
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
         grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors [<scans-directory> <definitions-directory>]
         grouplab sweep module <layouts.json> <module-sweep-layouts.json> <output-directory>
-        grouplab surface synthetic|rendered|frames
+        grouplab surface synthetic|rendered|frames|lens-sweep|lens
         """);
     return 2;
 }

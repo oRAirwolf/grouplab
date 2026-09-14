@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-14, entry 15: the crash is on ungated frames, the gate is already measured, and the lens is eating the bend
 
-**Status: open.** Answers the M1.4 crash and the question at the end of it. Do this after entry 14's rule and alongside entry 13.
+**Status: actioned 2026-09-14.** Section 3 is in `docs/PHASE1-RESULTS.md` M1.5, where the run shows the seeding was not the cause and the lens key puts two pixel geometries in one fit; section 4 is M1.7: the flat-fitted lens changes the mounted frames by 3 percent at most, and six of seven carry a shape no generalised cylinder takes. Originally: answers the M1.4 crash and the question at the end of it. Do this after entry 14's rule and alongside entry 13.
 
 ### 1. Your EXIF hypothesis is right, and here is the evidence from `photos.json`
 
