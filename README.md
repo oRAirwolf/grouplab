@@ -23,14 +23,16 @@ You print a target sheet that GroupLab generates. It carries a grid of small bul
 You shoot it, then scan or photograph the sheet, still stapled to the board if you like.
 
 ```mermaid
-flowchart LR
-    A["Print<br/>a GroupLab sheet"] --> B["Shoot it<br/>one shot per bull"]
-    B --> C["Scan or<br/>photograph"]
-    C --> D["Register<br/>find the markers,<br/>undo perspective,<br/>lens and paper bend"]
-    D --> E["Detect<br/>find every hole,<br/>subtract the artwork"]
-    E --> F["Assign<br/>each hole to<br/>its own bull"]
-    F --> G["Combine<br/>25 bulls into<br/>one group"]
-    G --> H["Report<br/>with intervals<br/>that mean what<br/>they say"]
+flowchart TB
+    A["1. Print a GroupLab sheet"]
+    B["2. Shoot it, one shot per bull"]
+    C["3. Scan it, or photograph it still on the board"]
+    D["4. Register: find the markers, undo perspective, lens distortion and paper bend"]
+    E["5. Detect: find every hole, by subtracting the artwork the sheet declares"]
+    F["6. Assign each hole to the bull it belongs to"]
+    G["7. Combine twenty-five bulls into one group"]
+    H["8. Report, with intervals that mean what they say"]
+    A --> B --> C --> D --> E --> F --> G --> H
 ```
 
 The one-shot-per-bull design is what makes the accuracy possible. Holes never overlap, so each one is measured cleanly against its own aiming point, and the twenty-five offsets are then pooled into a single group far larger than anything you could shoot into one bullseye.
@@ -74,38 +76,36 @@ These are design mockups, not screenshots of the current build. Every figure on 
 ```mermaid
 flowchart TB
     subgraph shells["Platform shells"]
-        APP["GroupLab.App<br/>(Avalonia desktop)"]
-        CLI["GroupLab.Cli<br/>(grouplab command line)"]
-        AND["Android shell<br/>(planned)"]
-        IOS["iOS shell<br/>(planned)"]
-    end
-
-    subgraph core["GroupLab.Core: no UI, no OpenCV, no platform"]
-        FMT["GLTD format<br/>parse, validate, derive"]
-        REN["Renderer<br/>PDF and raster"]
-        REG["Registration<br/>homography, lens,<br/>developable surface"]
-        STAT["Statistics<br/>estimators, intervals,<br/>significance, sample size"]
+        direction LR
+        APP["Desktop<br/>Avalonia"]
+        CLI["Command line<br/>grouplab"]
+        AND["Android<br/>planned"]
+        IOS["iOS<br/>planned"]
     end
 
     subgraph img["Imaging backend"]
-        CV["OpenCvSharp<br/>(desktop)"]
-        AT["libapriltag<br/>(mobile, planned)"]
+        direction LR
+        CV["OpenCvSharp<br/>desktop"]
+        AT["libapriltag<br/>mobile, planned"]
     end
 
-    subgraph ref["Reference tooling: build time only"]
-        R["R + shotGroups<br/>statistics fixtures"]
-        PY["Python<br/>geometry and measurement"]
+    subgraph core["GroupLab.Core: no UI, no OpenCV, no platform code"]
+        direction LR
+        FMT["GLTD format"]
+        REN["Renderer"]
+        REG["Registration"]
+        STAT["Statistics"]
     end
 
-    APP --> core
-    CLI --> core
-    AND -.-> core
-    IOS -.-> core
-    CLI --> CV
-    AND -.-> AT
-    IOS -.-> AT
-    R -.->|"45,476 validated keys"| STAT
-    PY -.->|"golden geometry"| FMT
+    subgraph ref["Reference tooling, build time only"]
+        direction LR
+        RR["R and shotGroups"]
+        PY["Python geometry"]
+    end
+
+    shells --> core
+    shells --> img
+    ref -.->|"golden fixtures"| core
 ```
 
 `GroupLab.Core` deliberately has no user-interface types and no OpenCV dependency. That is what lets the Android shell be swapped for a different toolkit later without touching a line of measurement code, and it is why the reference fixtures can validate the core without a window ever opening.
