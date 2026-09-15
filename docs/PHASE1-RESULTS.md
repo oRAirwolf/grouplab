@@ -1449,6 +1449,52 @@ Every value the screen shows obeys it:
 
 ---
 
+## Entries 29 and 30. The coordinates scrubbed out of history, locally
+
+`docs/NOTES-FROM-PLANNING.md` entry 29 approves replacing the sixteen Phase 0 photographs that carried GPS with scrubbed copies in every commit, before the repository is published. It allows five steps here and reserves the push and the repository deletion for Alan. Entry 30 adds that the commit id map must be tracked, and sets the order in which step 5 finishes.
+
+**Step 1: no recorded digest.**
+- **The search:** every tracked text file, for the SHA-256, SHA-1, MD5, CRC32 and git blob id of each of the sixteen files, and for 12-character prefixes of each.
+- **The result:** none found.
+- **Entry 30's point:** commit ids are the same kind of record, and they are handled in step 5 below.
+
+**Step 2: the bundle.** `../grouplab-prerewrite-2026-09-14.bundle`, outside the working tree, 167 MB. `git bundle verify` reports it okay, with all 11 refs and a complete history.
+
+**Step 3: the scrubbed copies.**
+- **Which scrubber:** `grouplab scrub`, through `ImageScrubber`, which entry 29 makes the definition. `scrub_exif.py` now keeps `DigitalZoomRatio` and says the C# version is authoritative.
+- **Pixels:** `PublicationTests.EveryCommittedPhotographScrubsToIdenticalPixels` decodes all 31 committed JPEGs, including the sixteen, before and after scrubbing. Every one decodes to identical colour pixels.
+- **Planning's check** (entry 30 section 3), with a different EXIF library: no GPS, maker note, date, unique id or software string on any of the sixteen, and `DigitalZoomRatio` present on all of them.
+- **Nothing lost before this:** `scans/mounted/` was never put through the Python script, so no zoom tag was lost.
+
+**Step 4: the rewrite.**
+- **The tool:** `git filter-branch --index-filter` over the local branches only, since `git filter-repo` is not installed. The index filter replaced each photograph's blob with its scrubbed blob in every commit that held it.
+- **Scope:** 59 commits, in 49 seconds.
+- **The result:** no branch or tag reaches any of the sixteen original blobs, and all sixteen scrubbed blobs are reachable.
+- **Pack size,** each measured on a freshly compacted bare clone: 158.45 MiB before and 156.97 MiB after. The difference is thumbnails, maker notes and phone trailers.
+- **Left in place:** `refs/original/*` still points at the unscrubbed history, as `filter-branch` leaves it.
+
+**Step 5: verification, in entry 30's order.**
+1. **The commit id map.** 42 commits changed id and 17 did not. They were matched by author time and subject, and every one of the 42 was checked to map onto its mapped parents.
+   - **The first map in this session was wrong:** it paired commits by position and counted 40. The corrected map is `docs/REWRITE-HASH-MAP.md`.
+   - **Citations:** nine citations of old ids in `NOTES-FROM-PLANNING.md`, this file and `QUESTIONS-FOR-PLANNING.md` now read as the new id with the old one beside it.
+   - **The rule:** `CONTRIBUTING.md` now says not to cite a bare commit id.
+2. **The Phase 0 photograph gate record.** **Before and after agree exactly.** `grouplab spike photos` was run on the photographs before the rewrite and again on the scrubbed files after it, and `scans/phase0/measurements/photos.json` came out byte-identical, with the console table byte-identical too. The post-rewrite run also matches the record committed before any scrub, apart from the two camera fields this phase added. For example `main_flat1` keeps 136 of 136 corners, residual RMS 0.00270 in and worst scoring bull 0.00343 in; `main1` keeps 90 of 136, 0.00474 / 0.01421 in and 0.01532 in; `ultrawide3` keeps 42 of 128, 0.00610 / 0.06022 in and 0.09123 in; every verdict is unchanged. Scrubbing the metadata moved no measurement, which planning confirmed independently (entry 31 section 1).
+3. **The suite:** Core 709 of 709 and App 4 of 4, with the allowlist removed from `PublicationTests`.
+4. **`PublicationTests`:** All five pass. `NoCommittedImageCarriesGps` has no allowlist and finds no committed image with a GPS block of any kind; `EveryCommittedPhotographScrubsToIdenticalPixels` scrubs all 31 committed JPEGs to identical decoded pixels; and `PublicTestDataCarriesNoLocationNoOptOutAndFullProvenance` does nothing and says so, because there is no `grouplab-testdata` checkout. One test failed after the rewrite and was rebuilt rather than weakened (entry 31 section 2): it had asserted that the committed `main1.jpg` still carried GPS. `ARealPhonePhotographWithALocationWrittenIntoItScrubsToIdenticalPixels` now copies that real photograph, writes a GPS block with its own coordinates, GPS in XMP, a comment and a trailer into the copy, and requires the scrubber to remove all four, leave every camera field including the digital zoom unchanged, and leave the decoded pixels identical. It records what it can no longer cover: the maker notes and thumbnails the rewrite removed from the repository.
+
+**A pull nearly undid it.** After the rewrite, a `git pull --rebase` was started in this clone against the stale remote, and paused on conflicts in four of the photographs. Continuing it would have rebuilt the scrubbed history on top of the unscrubbed one. It was stopped and aborted, and no original blob became reachable. Until the fresh repository exists, nobody pulls, pushes or fetches in this clone (entry 30 section 1).
+
+**Not done here, and why.**
+- **Alan's steps:** the push of the rewritten history and the deletion of the old GitHub repository are Alan's (entry 29 section 4 and entry 31 section 4). The leftover `worktree-agent-a5825dfa6aad44e1d` branch has been deleted here, per entry 31; its history is in the bundle.
+- **The backups:** `refs/original/*` must not be pushed. An ordinary `git push origin main phase-1` will not carry it.
+
+**Commands the permission classifier refused,** for Alan to allow if he wants them (entry 30 section 7):
+- `git ls-remote origin`
+- `git rev-list --count <branch>` with `git diff --name-only <old> <new>`, in a loop over the branches, refused twice
+- `rm -rf <scratchpad>/before.git && git clone --bare <bundle> <scratchpad>/before.git`, refused once. The same clone without the `rm -rf` was allowed.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

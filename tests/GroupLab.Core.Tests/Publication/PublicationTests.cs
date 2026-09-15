@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -39,6 +40,125 @@ internal static class PhoneImages
         Segment(0xC0, [8, 0, 16, 0, 16, 1, 1, 0x11, 0]);
         Segment(0xDA, [1, 1, 0, 0, 63, 0]);
         file.AddRange([0x12, 0x34, 0xFF, 0x00, 0x56, 0xFF, 0xD9]);
+        file.AddRange(Encoding.ASCII.GetBytes("MotionPhoto_Data trailer"));
+        return [.. file];
+    }
+
+    /// <summary>
+    /// A copy of a real JPEG with a location written into it, NOTES-FROM-PLANNING.md entry 31 section 2: a GPS block holding the given
+    /// latitude and longitude, an XMP segment naming GPS, a comment, and a trailer after the end marker. The GPS block hangs off a copy
+    /// of the primary IFD appended to the file's own EXIF block, with the header pointed at it; the original primary IFD stays in place,
+    /// unreferenced, so every value offset the file already has stays valid and the camera fields read exactly as before.
+    /// </summary>
+    public static byte[] WithLocation(byte[] jpeg, (uint Degrees, uint Minutes, uint CentiSeconds) latitude, (uint Degrees, uint Minutes, uint CentiSeconds) longitude)
+    {
+        int pos = 2, app1 = -1, app1Length = 0;
+        while (pos + 4 <= jpeg.Length && jpeg[pos] == 0xFF && jpeg[pos + 1] != 0xDA)
+        {
+            int length = (jpeg[pos + 2] << 8) | jpeg[pos + 3];
+            if (jpeg[pos + 1] == 0xE1 && jpeg.AsSpan(pos + 4, 6).SequenceEqual("Exif\0\0"u8))
+            {
+                app1 = pos;
+                app1Length = length;
+                break;
+            }
+
+            pos += 2 + length;
+        }
+
+        if (app1 < 0)
+        {
+            throw new InvalidDataException("the photograph has no EXIF block to write a location into");
+        }
+
+        byte[] tiff = jpeg.AsSpan(app1 + 10, app1Length - 8).ToArray();
+        bool little = tiff[0] == (byte)'I';
+        ushort U16(int at) => little ? BinaryPrimitives.ReadUInt16LittleEndian(tiff.AsSpan(at)) : BinaryPrimitives.ReadUInt16BigEndian(tiff.AsSpan(at));
+        uint U32(int at) => little ? BinaryPrimitives.ReadUInt32LittleEndian(tiff.AsSpan(at)) : BinaryPrimitives.ReadUInt32BigEndian(tiff.AsSpan(at));
+        ushort Tag(byte[] entry) => little ? BinaryPrimitives.ReadUInt16LittleEndian(entry) : BinaryPrimitives.ReadUInt16BigEndian(entry);
+        byte[] W16(int v)
+        {
+            var b = new byte[2];
+            if (little)
+            {
+                BinaryPrimitives.WriteUInt16LittleEndian(b, (ushort)v);
+            }
+            else
+            {
+                BinaryPrimitives.WriteUInt16BigEndian(b, (ushort)v);
+            }
+
+            return b;
+        }
+
+        byte[] W32(uint v)
+        {
+            var b = new byte[4];
+            if (little)
+            {
+                BinaryPrimitives.WriteUInt32LittleEndian(b, v);
+            }
+            else
+            {
+                BinaryPrimitives.WriteUInt32BigEndian(b, v);
+            }
+
+            return b;
+        }
+
+        int ifd0 = (int)U32(4), count = U16(ifd0);
+        uint next = U32(ifd0 + 2 + (12 * count));
+        var entries = Enumerable.Range(0, count).Select(k => tiff.AsSpan(ifd0 + 2 + (12 * k), 12).ToArray()).ToList();
+        entries.RemoveAll(e => Tag(e) == 0x8825);
+
+        var output = new List<byte>(tiff);
+        if (output.Count % 2 != 0)
+        {
+            output.Add(0);
+        }
+
+        int newIfd0 = output.Count;
+        int gpsIfd = newIfd0 + 2 + (12 * (entries.Count + 1)) + 4;
+        int gpsValues = gpsIfd + 2 + (12 * 4) + 4;
+        entries.Add([.. W16(0x8825), .. W16(4), .. W32(1), .. W32((uint)gpsIfd)]);
+        entries.Sort((a, b) => Tag(a).CompareTo(Tag(b)));
+        output.AddRange(W16(entries.Count));
+        entries.ForEach(output.AddRange);
+        output.AddRange(W32(next));
+        output.AddRange(W16(4));
+        output.AddRange([.. W16(0x0001), .. W16(2), .. W32(2), (byte)'N', 0, 0, 0]);
+        output.AddRange([.. W16(0x0002), .. W16(5), .. W32(3), .. W32((uint)gpsValues)]);
+        output.AddRange([.. W16(0x0003), .. W16(2), .. W32(2), (byte)'W', 0, 0, 0]);
+        output.AddRange([.. W16(0x0004), .. W16(5), .. W32(3), .. W32((uint)gpsValues + 24)]);
+        output.AddRange(W32(0));
+        foreach (var (degrees, minutes, centiSeconds) in new[] { latitude, longitude })
+        {
+            output.AddRange([.. W32(degrees), .. W32(1), .. W32(minutes), .. W32(1), .. W32(centiSeconds), .. W32(100)]);
+        }
+
+        byte[] header = W32((uint)newIfd0);
+        for (int i = 0; i < 4; i++)
+        {
+            output[4 + i] = header[i];
+        }
+
+        if (output.Count + 8 > 0xFFFF)
+        {
+            throw new InvalidDataException("the EXIF block with a location added no longer fits one segment");
+        }
+
+        var file = new List<byte>(jpeg.Length + 512);
+        void Segment(byte marker, byte[] body)
+        {
+            file.AddRange([0xFF, marker, (byte)((body.Length + 2) >> 8), (byte)(body.Length + 2)]);
+            file.AddRange(body);
+        }
+
+        file.AddRange(jpeg.AsSpan(0, app1));
+        Segment(0xE1, [.. "Exif\0\0"u8.ToArray(), .. output]);
+        Segment(0xE1, Encoding.ASCII.GetBytes("http://ns.adobe.com/xap/1.0/\0<x:xmpmeta><exif:GPSLatitude>33,12.5N</exif:GPSLatitude></x:xmpmeta>"));
+        Segment(0xFE, Encoding.ASCII.GetBytes("owner: somebody"));
+        file.AddRange(jpeg.AsSpan(app1 + 2 + app1Length));
         file.AddRange(Encoding.ASCII.GetBytes("MotionPhoto_Data trailer"));
         return [.. file];
     }
@@ -129,25 +249,11 @@ internal static class PhoneImages
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 22 sections 2 and 3: scrubbing removes every place a location can hide and changes no pixel, and the
-/// repository fails its tests when an image under public test data carries a location, sits in an opted-out submission, or lacks
-/// provenance, or when any committed image carries GPS other than the ones question 13 is about.
+/// repository fails its tests when an image under public test data carries a location, is not cleared for publication, or lacks
+/// provenance, or when any committed image carries GPS at all.
 /// </summary>
 public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
 {
-    /// <summary>
-    /// The committed Phase 0 phone photographs that carry an EXIF GPS block, 13 of them with a non-zero position. They are in history,
-    /// and what to do about that is `docs/QUESTIONS-FOR-PLANNING.md` question 13. They are named so that no other image can join them
-    /// unnoticed, and so that scrubbing one fails this test until it is taken off the list.
-    /// </summary>
-    private static readonly string[] AwaitingQuestion13 =
-    [
-        "scans/phase0/20260913_130543.jpg", "scans/phase0/20260913_130550.jpg", "scans/phase0/20260913_130554.jpg", "scans/phase0/20260913_130559.jpg",
-        "scans/phase0/main1.jpg", "scans/phase0/main2.jpg", "scans/phase0/main3.jpg",
-        "scans/phase0/main_flat1.jpg", "scans/phase0/main_flat2.jpg", "scans/phase0/main_flat3.jpg",
-        "scans/phase0/telephoto1.jpg", "scans/phase0/telephoto2.jpg", "scans/phase0/telephoto3.jpg",
-        "scans/phase0/ultrawide1.jpg", "scans/phase0/ultrawide2.jpg", "scans/phase0/ultrawide3.jpg",
-    ];
-
     [Fact]
     public void ScrubbingRemovesEveryLocationAndKeepsTheCameraFactsAndThePixels()
     {
@@ -178,31 +284,47 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
         Assert.Equal(["eXIf chunk", "tEXt chunk"], png.Removed);
     }
 
-    /// <summary>On a real committed phone photograph with coordinates: none survive, the lens facts do, and the decoded pixels are identical.</summary>
+    /// <summary>
+    /// A real camera JPEG with a location the test writes into it, NOTES-FROM-PLANNING.md entry 31 section 2. No committed image carries
+    /// a location any more, so a copy of <c>main1.jpg</c> is given a GPS block with the test's own coordinates, GPS in XMP, a comment and
+    /// a motion-photo trailer. The scrubber must remove all four, keep every camera field GroupLab reads including the digital zoom, and
+    /// leave the decoded pixels identical to the committed file's.
+    /// <para>
+    /// What this no longer covers, and why: the committed photographs were scrubbed in the 2026-09-14 rewrite, so the maker notes,
+    /// thumbnails, application segments and multi-picture indexes a phone writes are no longer in the repository for this test to
+    /// remove. Their removal was shown on the original files before the rewrite (docs/PHASE1-RESULTS.md "Entries 22 and 27"), and the
+    /// synthetic phone image keeps the segment handling covered.
+    /// </para>
+    /// </summary>
     [Fact]
-    public void ARealPhonePhotographScrubsToIdenticalPixels()
+    public void ARealPhonePhotographWithALocationWrittenIntoItScrubsToIdenticalPixels()
     {
-        string path = Repo.PathTo("scans", "phase0", "main1.jpg");
-        byte[] original = File.ReadAllBytes(path);
-        Assert.Contains("an EXIF GPS block", PublicationCheck.LocationProblems(original));
+        byte[] committed = File.ReadAllBytes(Repo.PathTo("scans", "phase0", "main1.jpg"));
+        byte[] located = PhoneImages.WithLocation(committed, latitude: (33, 12, 3456), longitude: (96, 36, 1234));
+        var problems = PublicationCheck.LocationProblems(located);
+        Assert.Contains("an EXIF GPS block", problems);
+        Assert.Contains("GPS fields in XMP", problems);
+        Assert.Contains(problems, p => p.Contains("after the image's end marker", StringComparison.Ordinal));
 
-        var scrubbed = ImageScrubber.Scrub(original);
-        Assert.DoesNotContain(PublicationCheck.LocationProblems(scrubbed.Bytes), p => p.Contains("GPS", StringComparison.Ordinal));
+        var scrubbed = ImageScrubber.Scrub(located);
+        Assert.Empty(PublicationCheck.LocationProblems(scrubbed.Bytes));
+        Assert.Contains("GPS", scrubbed.Removed);
+        Assert.Contains("XMP", scrubbed.Removed);
+        Assert.Contains("comment", scrubbed.Removed);
+        Assert.Contains(scrubbed.Removed, r => r.Contains("after the image's end marker", StringComparison.Ordinal));
 
-        var before = ImageMetadataReader.Read(original);
-        var after = ImageMetadataReader.Read(scrubbed.Bytes);
-        Assert.Equal(before with { }, after with { DpiX = before.DpiX, DpiY = before.DpiY });
+        var before = ImageMetadataReader.Read(committed);
+        Assert.Equal(before, ImageMetadataReader.Read(located));
+        Assert.Equal(before, ImageMetadataReader.Read(scrubbed.Bytes));
+        Assert.NotNull(before.DigitalZoomRatio);
+        Assert.NotNull(before.FocalLengthMm);
 
-        string copy = Path.Combine(Path.GetTempPath(), $"grouplab-scrubbed-{Guid.NewGuid():N}.jpg");
-        try
-        {
-            File.WriteAllBytes(copy, scrubbed.Bytes);
-            Assert.True(ImageLoader.Load(path).Image.Pixels.AsSpan().SequenceEqual(ImageLoader.Load(copy).Image.Pixels));
-        }
-        finally
-        {
-            File.Delete(copy);
-        }
+        using var original = OpenCvSharp.Cv2.ImDecode(committed, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+        using var withLocation = OpenCvSharp.Cv2.ImDecode(located, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+        using var clean = OpenCvSharp.Cv2.ImDecode(scrubbed.Bytes, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+        Assert.False(original.Empty());
+        Assert.Equal(0, OpenCvSharp.Cv2.Norm(original, withLocation, OpenCvSharp.NormTypes.INF));
+        Assert.Equal(0, OpenCvSharp.Cv2.Norm(original, clean, OpenCvSharp.NormTypes.INF));
     }
 
     /// <summary>
@@ -297,9 +419,13 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
         Assert.True(failures.Count == 0, string.Join("\n", failures));
     }
 
-    /// <summary>No committed image anywhere in the repository carries GPS, except the ones question 13 is about, which still must.</summary>
+    /// <summary>
+    /// No committed image anywhere in the repository carries a GPS block of any kind, and there is no allowlist: NOTES-FROM-PLANNING.md
+    /// entry 29 section 3, after the sixteen Phase 0 photographs were replaced in history with scrubbed copies. A rule with no
+    /// exceptions cannot go stale.
+    /// </summary>
     [Fact]
-    public void NoCommittedImageCarriesGpsBeyondTheOnesQuestion13IsAbout()
+    public void NoCommittedImageCarriesGps()
     {
         var git = Process.Start(new ProcessStartInfo("git", "ls-files") { WorkingDirectory = Repo.PathTo(), RedirectStandardOutput = true, UseShellExecute = false })!;
         var tracked = git.StandardOutput.ReadToEnd().Split('\n', StringSplitOptions.RemoveEmptyEntries).Where(f => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(f).ToLowerInvariant())).ToList();
@@ -307,6 +433,6 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
         Assert.True(tracked.Count > 50, $"git ls-files listed {tracked.Count} images");
 
         var carrying = tracked.Where(f => PublicationCheck.LocationProblems(File.ReadAllBytes(Repo.PathTo(f))).Any(p => p.Contains("GPS", StringComparison.Ordinal))).Order(StringComparer.Ordinal).ToList();
-        Assert.Equal(AwaitingQuestion13.Order(StringComparer.Ordinal), carrying);
+        Assert.True(carrying.Count == 0, "committed images carrying GPS: " + string.Join(", ", carrying));
     }
 }

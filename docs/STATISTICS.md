@@ -586,7 +586,7 @@ Discovered by reading shotGroups 0.8.4's source and worth writing into the compa
 
 **Item 15 added 2026-09-15, found answering `docs/QUESTIONS-FOR-PLANNING.md` question 14.**
 
-15. **The fixtures do not carry R's doubles exactly, and on a frame with a point of aim that moves a rank statistic.**
+15. **The fixtures do not carry R's doubles exactly, and on a frame with a point of aim that moves a rank statistic.** This is a property of the fixtures, not a difference between implementations (`NOTES-FROM-PLANNING.md` entry 30 section 4). The values are stored at 15 digits, which is enough for every comparison at 1e-12 and not enough to reproduce a rank-based statistic with near-ties. The four Fligner-Killeen keys are the worked example, and every future tie-sensitive key will meet the same limit until planning regenerates the fixtures at 17 significant digits, after the history rewrite is behind the project.
     - **The cause.** `sg_dump.R` writes its JSON with `jsonlite::toJSON(digits = 15)` and its CSV with `write.csv`'s 15 significant digits, and neither round-trips every double: 5,957 keys of `DFinch` differ between its two files.
     - **Which values it spares and which it does not.** Shot coordinates with three decimals survive. The point-of-aim-relative coordinates do not, because R computes them as `point.x - aim.x` and the subtraction's noise sits in exactly the bits that are lost.
     - **Why it matters for one statistic.** Closed forms are unaffected at 1e-12. The Fligner-Killeen statistic is affected, because it ranks absolute deviations from the group median, and a last-bit difference makes or breaks a tie. Read back from the JSON, `DFinch`'s x statistic comes out 10.073187875409229 against R's 10.075167218103388.

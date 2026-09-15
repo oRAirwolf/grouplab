@@ -8,9 +8,70 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 31: the gate is clear, the failing test deserves a better fix than deletion, and the README needs a guard
+
+**Status: actioned 2026-09-15, except section 3, which waits for the fresh repository as the entry says.** Section 2: the real-photograph test now writes its own location into a copy of `main1.jpg` and passes. Section 4: the hash map and citations were already done, the allowlist removal, the section 15.4 wording and the results figures are in, and the worktree branch is deleted. Reported in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Nothing pushed. Section 1 unblocks the push. Section 3 is new work and waits until the fresh repository exists.
+
+### 1. The gate, and the go-ahead
+
+**Byte-identical `photos.json`, byte-identical console table, zero lines differing, and the post-rewrite run also matches the record committed before the scrub.** That is the claim entry 29 section 5 existed to test, tested properly, and it passes. Scrubbing the metadata moved no measurement. Thank you for running it as a comparison rather than a spot check.
+
+I verified the sixteen photographs independently, from fresh copies, with a different EXIF library: zero GPS blocks, zero maker notes, dates, unique ids or software strings, and `DigitalZoomRatio` present on all sixteen. Two methods, same answer.
+
+**So the rewrite is accepted.** What remains before Alan deletes and recreates the repository is the failing test, the hash map, and the three pending edits you listed.
+
+### 2. `ARealPhonePhotographScrubsToIdenticalPixels`: do not delete the assertion, move it
+
+Your diagnosis is right: line 173 asserts `main1.jpg` still carries an EXIF GPS block, and after the rewrite it does not. Your proposed fix is to drop that assumption. **I would not, because of what the test is for.**
+
+That test exists to prove the scrubber removes a location from a **real camera JPEG**, with a real maker note, a real thumbnail and whatever else a phone writes, and leaves the pixels untouched. The synthetic phone image does not exercise that: a file we constructed contains only what we thought to put in it, which is exactly the assumption a real file is there to challenge. Deleting the assertion leaves the test running on a file with no location, where it can no longer fail for the reason it was written.
+
+**Make the test build its own input instead.**
+
+1. Copy a committed photograph to a temporary path.
+2. **Write a GPS block into the copy**, with coordinates the test chooses, plus whatever else is worth proving gets removed.
+3. Run the scrubber on it.
+4. Assert the location is gone, the camera fields including `DigitalZoomRatio` survive, and the decoded pixels are identical to the original.
+
+That keeps the real-file coverage, removes the dependency on a committed file carrying something we have just spent a day removing, and cannot rot the same way again. It also means the test still passes in the `grouplab-testdata` world, where no committed image will ever carry a location by policy.
+
+**If writing a GPS block from C# is awkward with the library you have, say so and take your version**, with a comment saying what coverage was traded away and why. A worse test that is honest about being worse beats a silently weaker one.
+
+### 3. Keep the README honest automatically, because it has already gone stale twice
+
+Alan has asked for the GitHub front page to stay current without anybody remembering to update it. The README is now the project's public face, and it has already been wrong twice in two days: it claimed twenty built-in sheets when there are twenty-two, and it claimed the application and statistics were not built after both existed. Both were caught by a human reading it, which is the mechanism we are trying to replace.
+
+**Do not try to generate the README.** Most of it is argument and judgement, and generated prose reads like it. Guard the parts that are facts.
+
+**Add `ReadmeTests`, in the Core test project, asserting:**
+
+1. **Every relative link resolves.** Each `[...](path)` pointing inside the repository names a file that exists. This would have caught nothing so far, which is luck rather than design.
+2. **Every referenced image exists.** Each `![...](path)`. This one has already bitten: the README was committed referencing six screens that were not in the repository yet, and the page rendered with six broken images on `phase-1` for several hours.
+3. **Stated counts match reality.** The number of built-in sheets the README states equals the count of `targets/*.gltd.json`. Put the number between marker comments so the test can find it without parsing prose, for example `<!--count:sheets-->22<!--/count-->`.
+4. **The stated target framework matches `Directory.Build.props`.** The README says .NET 10; the build is the authority.
+5. **No em dash appears anywhere in the file**, which is a project rule and is cheaper to enforce than to remember.
+
+Failures should name the line and say what to change. A test that says "the README claims 20 sheets, `targets/` holds 22" is worth ten that say "assertion failed".
+
+**Then add the CI workflow, once the fresh repository exists.** A GitHub Actions job on push and pull request, running `dotnet build` and `dotnet test` on Windows. That gives the README guard somewhere to run without anybody choosing to run it, and it gives the repository the badge a visitor looks for. **Do not add it before the push**, because a workflow file in a repository that is about to be deleted and recreated is a workflow that runs against a history that will not exist.
+
+**One rule for the text the tests cannot check.** When a commit changes something the README states in prose, change the README in the same commit. The status section is the one that rots fastest, because it is the one a visitor reads first and the one nobody editing code thinks about.
+
+### 4. Order, so nothing waits on the wrong thing
+
+1. Fix the failing test per section 2, re-run Core, confirm 709 of 709.
+2. Write `docs/REWRITE-HASH-MAP.md` and correct the eight citations, per entry 30 section 2. **This is still the most fragile item in the project**, because the map lives only in your scratchpad.
+3. The three pending edits: the allowlist removal, the `STATISTICS.md` section 15.4 wording on fixture precision, and the results section figures.
+4. Delete the `worktree-agent-a5825dfa6aad44e1d` branch.
+5. Mark entries 29, 30 and 31 actioned. Commit locally. Report.
+6. **Stop. Do not push.** Alan deletes and recreates the repository, and pushes.
+7. After the push: `ReadmeTests`, then the CI workflow.
+
+---
+
 ## 2026-09-15, entry 30: the rebase is aborted, the scrub is independently verified, and one map must leave your scratchpad before it is lost
 
-**Status: open.** Answers your entry 29 step 5 report. Section 2 is the urgent one and should be done before anything else, including finishing step 5.
+**Status: actioned 2026-09-15.** Section 2: `docs/REWRITE-HASH-MAP.md` with all 42 changed ids, nine citations corrected, and the rule in `CONTRIBUTING.md`. Section 4: `docs/STATISTICS.md` section 15.4 item 15 states the fixtures' precision as a property of the fixtures, and the harness says how the aimed values are rebuilt. Section 5: the gate record is byte-identical before and after, and the suite passes with the allowlist removed. Section 6: the worktree branch is deleted, and `refs/original` is left for Alan not to push. Section 7: the refused commands are listed in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Answers your entry 29 step 5 report. Section 2 is the urgent one and should be done before anything else, including finishing step 5.
 
 ### 1. The rebase you found is gone, and you were right to stop
 
@@ -78,7 +139,7 @@ You said the classifier refused `git ls-remote` and two other read-only checks. 
 
 ## 2026-09-14, entry 29: Alan has approved scrubbing the coordinates out of history, and one scrubber is already out of date
 
-**Status: open.** Answers question 13 section 2. **Read section 4 before running anything: this entry stops short of the irreversible steps on purpose.**
+**Status: actioned 2026-09-15, steps 1 to 5.** No recorded digest; the bundle verified; all sixteen photographs scrubbed to identical pixels; the local history rewritten; the gate record, the suite and `PublicationTests` verified. Steps 6 onward, the push and the repository deletion, are Alan's and have not been run. Reported in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Answers question 13 section 2. **Read section 4 before running anything: this entry stops short of the irreversible steps on purpose.**
 
 ### 1. The decision
 
