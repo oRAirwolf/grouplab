@@ -1,10 +1,10 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
+using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
@@ -45,19 +45,14 @@ public enum MarkingTool
 /// buttons as well as the wheel: entry 21 section 6 asks that the marking screen not be gratuitously desktop-only.
 /// </para>
 /// <para>
-/// Every mark is legible on a photograph of a target, NOTES-FROM-PLANNING.md entry 39 section 5. A photograph is mostly white paper with
-/// black printing and coloured rings, sometimes over a dark backer, so no mark is drawn in white, and every stroke and label is drawn over
-/// a dark outline: the outline reads on paper, and the colour reads on ink and on a dark backer. That is a stronger constraint than
-/// looking right against the application's own dark chrome.
+/// Every mark is legible on a photograph of a target, NOTES-FROM-PLANNING.md entry 39 section 5, drawn as <see cref="Marks"/> draws it
+/// (entry 42 section 5): a two tone stroke in the mark's own colour. An impact is a ring at the true hole diameter once the calibre and
+/// the scale are known, because it is a measurement and an oversized mark hides the thing it marks.
 /// </para>
 /// </summary>
 public sealed class MarkingCanvas : Control, ICustomHitTest
 {
-    private const double MarkRadius = 11, HitRadius = 18, HandleRadius = 6;
-    private static readonly FontFamily Mono = new("Cascadia Mono, Consolas, Menlo, monospace");
-    private static readonly IBrush Outline = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0));
-    private static readonly IBrush ScaleBrush = Brushes.LimeGreen;
-    private static readonly IBrush SelectedBrush = Brushes.HotPink;
+    private const double MarkRadius = 11, HitRadius = 18, EndRadius = 4, MinimumImpactRadius = 3;
 
     private Bitmap? bitmap;
     private GrayImage? value;
@@ -90,6 +85,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     {
         ClipToBounds = true;
         Focusable = true;
+        ActualThemeVariantChanged += (_, _) => InvalidateVisual();
     }
 
     public MarkingSession? Session { get; set; }
@@ -113,7 +109,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Printed markers the registration expected and did not find, image pixels, drawn so the user sees what is missing.</summary>
     public IReadOnlyList<PointD> MissingMarkers { get; set; } = [];
 
-    /// <summary>Shots whose hole reads too large for the group's calibre, ringed in red (entry 24 section 5 point 3).</summary>
+    /// <summary>Shots whose hole reads too large for the group's calibre, ringed in alert (entry 24 section 5 point 3).</summary>
     public IReadOnlySet<int> FlaggedShots { get; set; } = new HashSet<int>();
 
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
@@ -190,6 +186,16 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         InvalidateVisual();
     }
 
+    /// <summary>Shows an image point at the centre of the control at a zoom of screen pixels per image pixel, for the screenshots of entry 42 section 7.</summary>
+    internal void ShowAt(PointD image, double screenPerImagePixel)
+    {
+        EnsureView();
+        zoom = screenPerImagePixel;
+        var display = ViewRotation.ToDisplay(image, turns, imageWidth, imageHeight);
+        offset = new Vector((Bounds.Width / 2) - (display.X * zoom), (Bounds.Height / 2) - (display.Y * zoom));
+        InvalidateVisual();
+    }
+
     /// <summary>Fits the turned image to the control without asking for a redraw, which may not be asked for during one.</summary>
     private void Fit()
     {
@@ -260,10 +266,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
     public override void Render(DrawingContext context)
     {
-        context.FillRectangle(new SolidColorBrush(Color.FromRgb(38, 38, 42)), new Rect(Bounds.Size));
+        var palette = Tokens.For(ActualThemeVariant);
+        context.FillRectangle(new SolidColorBrush(palette.Sunk), new Rect(Bounds.Size));
         if (bitmap is null)
         {
-            var hint = new FormattedText("Open a photograph or scan of a target to start marking.", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Typeface.Default, 16, Brushes.Gainsboro);
+            var hint = new FormattedText("Open a photograph or scan of a target to start marking.", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.BodySize, new SolidColorBrush(palette.Dim));
             context.DrawText(hint, new Point(24, 24));
             return;
         }
@@ -285,21 +292,18 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         var state = session.State;
         foreach (var marker in MissingMarkers)
         {
-            var c = ToControl(marker);
-            Line(context, Brushes.OrangeRed, 2.5, c + new Vector(-9, -9), c + new Vector(9, 9));
-            Line(context, Brushes.OrangeRed, 2.5, c + new Vector(-9, 9), c + new Vector(9, -9));
+            Marks.Saltire(context, Marks.Alert, ToControl(marker), 9, 2);
         }
 
         foreach (var bull in state.Bulls)
         {
             var c = ToControl(bull.Image);
-            Line(context, Brushes.DeepSkyBlue, 2, c + new Vector(-12, 0), c + new Vector(12, 0));
-            Line(context, Brushes.DeepSkyBlue, 2, c + new Vector(0, -12), c + new Vector(0, 12));
-            DrawLabel(context, bull.Label, Brushes.DeepSkyBlue, 12, c + new Vector(8, 6));
+            Marks.Cross(context, Marks.Faint, c, 8);
+            Marks.Label(context, bull.Label, Marks.Faint, c + new Vector(8, 6));
         }
 
-        // The scale: the reference in use, one complete and waiting for its size, and one being made, each with a circle at every end, and
-        // the one being made drawn out to the pointer (entry 39 section 3).
+        // The scale: the reference in use, one complete and waiting for its size, and one being made, each a teal line with a filled circle at
+        // every end, and the one being made drawn out to the pointer (entry 39 section 3, entry 42 section 5).
         var committed = ScalePoints(state.Scale);
         DrawReference(context, [.. committed.Select((p, i) => Shown(Handle.Committed, i, p))], closed: committed.Count == 4);
         DrawReference(context, [.. awaiting.Select((p, i) => Shown(Handle.Awaiting, i, p))], closed: awaiting.Count == 4);
@@ -307,16 +311,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         DrawReference(context, making, closed: false);
         if (making.Count > 0 && hover is { } towards && handle is null && Tool is MarkingTool.Length or MarkingTool.Rectangle)
         {
-            Line(context, ScaleBrush, 2, ToControl(making[^1]), ToControl(towards), new DashStyle([4, 3], 0));
-            Ring(context, ScaleBrush, 2, ToControl(towards), HandleRadius);
+            Marks.Line(context, Marks.Teal, ToControl(making[^1]), ToControl(towards), dash: Marks.Dashed);
+            Marks.Dot(context, Marks.Teal, ToControl(towards), EndRadius);
         }
 
+        // The point of aim is a cross, never a circle, so it never reads as a shot (entry 42 section 5).
         if (state.PointOfAim is { } aim)
         {
-            var c = ToControl(aim);
-            Ring(context, Brushes.Magenta, 2, c, 14);
-            Line(context, Brushes.Magenta, 2, c + new Vector(-20, 0), c + new Vector(20, 0));
-            Line(context, Brushes.Magenta, 2, c + new Vector(0, -20), c + new Vector(0, 20));
+            Marks.Cross(context, Marks.Teal, ToControl(aim), 14, 2);
         }
 
         var numbers = ShotNumbers(state);
@@ -326,91 +328,68 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             var c = ToControl(at);
             if (shot.NotAShot)
             {
-                Line(context, Brushes.Gray, 2, c + new Vector(-8, -8), c + new Vector(8, 8));
-                Line(context, Brushes.Gray, 2, c + new Vector(-8, 8), c + new Vector(8, -8));
+                Marks.Saltire(context, Marks.Faint, c, 6);
                 continue;
             }
 
-            IBrush colour = shot.Provenance switch
-            {
-                ShotProvenance.Automatic => Brushes.Gold,
-                ShotProvenance.Corrected => Brushes.Orange,
-                _ => Brushes.LawnGreen,
-            };
+            bool selected = shot.Id == Selected;
+            IBrush colour = selected ? Marks.Selected : shot.Exclusion is null ? Marks.Impact : Marks.Excluded;
+            double radius = ImpactRadius(state, at);
             if (shot.Bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } bull)
             {
-                Line(context, colour, 1, c, ToControl(bull.Image), new DashStyle([4, 4], 0));
+                Marks.Line(context, Marks.Faint, c, ToControl(bull.Image), 1, new DashStyle([4, 4], 0));
             }
 
-            if (shot.Id == Selected)
-            {
-                Ring(context, SelectedBrush, 3, c, MarkRadius + 5);
-            }
-
-            Ring(context, colour, 2.5, c, MarkRadius, shot.Exclusion is null ? null : new DashStyle([2, 2], 0));
+            Marks.Ring(context, colour, c, radius, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, shot.Exclusion is null ? null : Marks.Dashed);
             if (FlaggedShots.Contains(shot.Id))
             {
-                Ring(context, Brushes.Red, 2, c, MarkRadius + 9, new DashStyle([3, 2], 0));
+                Marks.Ring(context, Marks.Alert, c, radius + 6, dash: Marks.Dashed);
             }
 
-            context.DrawEllipse(colour, new Pen(Outline, 1), c, 2, 2);
-            DrawLabel(context, numbers[shot.Id].ToString(CultureInfo.InvariantCulture) + (shot.Exclusion is null ? "" : " excluded"), colour, 12, c + new Vector(MarkRadius + 3, -MarkRadius - 6));
+            Marks.Dot(context, colour, c, 1);
+            Marks.Label(context, numbers[shot.Id].ToString(System.Globalization.CultureInfo.InvariantCulture) + (shot.Exclusion is null ? "" : " excluded"), colour, c + new Vector(radius + 4, -radius - 8));
         }
 
-        // An impact being placed: a cross where the pointer is, and a ring where it will snap when let go (entry 39 section 4).
+        // An impact being placed is "this one", in amber: a cross where the pointer is, and a ring where it will snap when let go (entry 39 section 4).
         if (placing is { } placed)
         {
             var c = ToControl(placed);
-            var snapped = ToControl(Snap(session, placed).At);
-            Line(context, Brushes.LawnGreen, 1.5, c + new Vector(-10, 0), c + new Vector(10, 0));
-            Line(context, Brushes.LawnGreen, 1.5, c + new Vector(0, -10), c + new Vector(0, 10));
+            var snap = Snap(session, placed).At;
+            var snapped = ToControl(snap);
+            Marks.Cross(context, Marks.Selected, c, 10);
             if (Distance(c, snapped) > 1)
             {
-                Line(context, Brushes.LawnGreen, 1, c, snapped, new DashStyle([2, 2], 0));
+                Marks.Line(context, Marks.Selected, c, snapped, 1, Marks.Dashed);
             }
 
-            Ring(context, Brushes.LawnGreen, 2.5, snapped, MarkRadius, new DashStyle([3, 2], 0));
+            Marks.Ring(context, Marks.Selected, snapped, ImpactRadius(state, snap), dash: Marks.Dashed);
         }
     }
 
-    /// <summary>A line in a colour over a dark outline, so it reads on paper, on ink and on a dark backer.</summary>
-    private static void Line(DrawingContext context, IBrush brush, double thickness, Point a, Point b, IDashStyle? dash = null)
-    {
-        context.DrawLine(new Pen(Outline, thickness + 2, dash), a, b);
-        context.DrawLine(new Pen(brush, thickness, dash), a, b);
-    }
+    /// <summary>
+    /// An impact's ring radius on screen: half the bullet's diameter at the image's local scale once the calibre and the scale are known
+    /// (entry 42 section 5), never so small it cannot be seen, and a fixed ring before then.
+    /// </summary>
+    private double ImpactRadius(MarkingState state, PointD image) => state.Calibre is { } calibre && state.Scale is { } scale
+        ? Math.Max(MinimumImpactRadius, calibre.DiameterInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
+        : MarkRadius;
 
-    /// <summary>A circle in a colour over a dark outline.</summary>
-    private static void Ring(DrawingContext context, IBrush brush, double thickness, Point centre, double radius, IDashStyle? dash = null)
-    {
-        context.DrawEllipse(null, new Pen(Outline, thickness + 2, dash), centre, radius, radius);
-        context.DrawEllipse(null, new Pen(brush, thickness, dash), centre, radius, radius);
-    }
-
-    /// <summary>A label in a colour on a dark plate.</summary>
-    private static void DrawLabel(DrawingContext context, string text, IBrush brush, double size, Point at)
-    {
-        var formatted = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Mono), size, brush);
-        context.FillRectangle(Outline, new Rect(at.X - 2, at.Y - 1, formatted.Width + 4, formatted.Height + 2));
-        context.DrawText(formatted, at);
-    }
-
-    /// <summary>A scale reference's segments and a circle at every end.</summary>
+    /// <summary>A scale reference's segments and a filled circle at every end.</summary>
     private void DrawReference(DrawingContext context, IReadOnlyList<PointD> points, bool closed)
     {
         for (int i = 1; i < points.Count; i++)
         {
-            Line(context, ScaleBrush, 2, ToControl(points[i - 1]), ToControl(points[i]));
+            Marks.Line(context, Marks.Teal, ToControl(points[i - 1]), ToControl(points[i]));
         }
 
         if (closed)
         {
-            Line(context, ScaleBrush, 2, ToControl(points[^1]), ToControl(points[0]));
+            Marks.Line(context, Marks.Teal, ToControl(points[^1]), ToControl(points[0]));
         }
 
         foreach (var point in points)
         {
-            Ring(context, ScaleBrush, 2, ToControl(point), HandleRadius);
+            Marks.Dot(context, Marks.Teal, ToControl(point), EndRadius);
         }
     }
 

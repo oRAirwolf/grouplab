@@ -52,10 +52,53 @@ public sealed class AppSettingsStore(string path)
     public bool SaveUnits(UnitSettings units)
     {
         ArgumentNullException.ThrowIfNull(units);
+        return Save(file =>
+        {
+            file["linear"] = units.Linear.ToString();
+            file["angular"] = units.Angular.ToString();
+            file["distance"] = units.Distance.ToString();
+        });
+    }
+
+    /// <summary>The remembered theme, NOTES-FROM-PLANNING.md entry 42 section 2: dark, light, or following the system, which is the default.</summary>
+    public ThemeChoice LoadTheme()
+    {
         try
         {
+            if (File.Exists(Path) && JsonNode.Parse(File.ReadAllText(Path)) is JsonObject file
+                && Enum.TryParse((string?)file["theme"], out ThemeChoice theme) && Enum.IsDefined(theme))
+            {
+                return theme;
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            // An unreadable settings file is the same as none: follow the system.
+        }
+
+        return ThemeChoice.System;
+    }
+
+    /// <summary>Remembers the theme. Returns false if the file could not be written, in which case the choice lasts until the application closes.</summary>
+    public bool SaveTheme(ThemeChoice theme) => Save(file => file["theme"] = theme.ToString());
+
+    /// <summary>Writes one setting into the file, keeping every other setting already in it.</summary>
+    private bool Save(Action<JsonObject> set)
+    {
+        try
+        {
+            JsonObject file;
+            try
+            {
+                file = File.Exists(Path) && JsonNode.Parse(File.ReadAllText(Path)) is JsonObject existing ? existing : new JsonObject();
+            }
+            catch (JsonException)
+            {
+                file = new JsonObject();
+            }
+
+            set(file);
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path)!);
-            var file = new JsonObject { ["linear"] = units.Linear.ToString(), ["angular"] = units.Angular.ToString(), ["distance"] = units.Distance.ToString() };
             File.WriteAllText(Path, file.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
             return true;
         }
@@ -64,4 +107,15 @@ public sealed class AppSettingsStore(string path)
             return false;
         }
     }
+}
+
+/// <summary>The theme the window uses, NOTES-FROM-PLANNING.md entry 42 section 2. High contrast is DESIGN.md section 19's fourth theme, and later work.</summary>
+public enum ThemeChoice
+{
+    /// <summary>Dark or light as the operating system is set.</summary>
+    System,
+
+    Dark,
+
+    Light,
 }

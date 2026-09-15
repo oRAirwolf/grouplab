@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
+using GroupLab.App.Theme;
 
 namespace GroupLab.App;
 
@@ -15,12 +16,17 @@ internal static class Program
 }
 
 /// <summary>
-/// The application. Its look is Avalonia's Fluent theme following the system's light or dark setting; the brief rules out a theme
-/// engine, and DESIGN.md section 19's four themes are later work.
+/// The application. Its look is Avalonia's Fluent theme with GroupLab's own palette, type and control styles over it,
+/// <see cref="AppStyles"/> (NOTES-FROM-PLANNING.md entry 42). It follows the system's light or dark setting unless the user chooses one;
+/// high contrast, DESIGN.md section 19's fourth theme, is later work.
 /// </summary>
 public sealed class App : Application
 {
-    public override void Initialize() => Styles.Add(new FluentTheme());
+    public override void Initialize()
+    {
+        Styles.Add(new FluentTheme());
+        AppStyles.Apply(this);
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {

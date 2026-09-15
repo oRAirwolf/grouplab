@@ -41,6 +41,22 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 ```
 
+
+### IBM Plex
+
+`src/GroupLab.App/Assets/Fonts/` contains these faces, embedded in `GroupLab.App` for the interface and for every numeric readout (NOTES-FROM-PLANNING.md entry 42 section 3):
+- IBM Plex Sans, Regular, Medium, SemiBold and Bold, from https://github.com/IBM/plex;
+- IBM Plex Sans Condensed, Bold, from https://github.com/google/fonts;
+- IBM Plex Mono, Regular and Medium, also from https://github.com/google/fonts.
+
+The fonts are unmodified.
+
+```
+Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+```
+
+They are licensed under the SIL Open Font License, Version 1.1. The full text is `src/GroupLab.App/Assets/Fonts/LICENSE.txt`, and it ships beside the application as `IBM-Plex-LICENSE.txt`.
+
 ## Package dependencies
 
 | Package | Licence | Used by | Purpose |

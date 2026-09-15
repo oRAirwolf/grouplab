@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using GroupLab.App.Theme;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
@@ -48,7 +49,7 @@ public sealed class PrintWindow : Window
     private readonly Dictionary<string, TextBox> fieldBoxes = new(StringComparer.Ordinal);
     private readonly TextBox serial = new() { Width = 120, PlaceholderText = "optional" };
     private readonly CheckBox note = new() { Content = "Print the actual-size instruction along the bottom of each sheet", IsChecked = true };
-    private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Foreground = Brushes.OrangeRed };
+    private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly TextBlock pageCaption = new() { VerticalAlignment = VerticalAlignment.Center };
     private readonly Image preview = new() { Stretch = Stretch.Uniform, Height = 520, HorizontalAlignment = HorizontalAlignment.Left };
     private LibrarySheet? selected;

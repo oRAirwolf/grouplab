@@ -187,7 +187,16 @@ And one thing worth saying plainly: **the README currently carries six concept s
 
 ## 2026-09-15, entry 42: the styling pass, with the concept screens' actual values
 
-**Status: open.** Alan asked whether the window will come to look like the concept screens on its own, and the honest answer is no, it will not, because nobody ever wrote the screens down as a specification. This entry is the cheap half of fixing that. Entry 43 is the expensive half.
+**Status: actioned 2026-09-15, with three departures named in the report.**
+- **What was built:** the palette, type scale, spacing, control styles and marks, in `src/GroupLab.App/Theme` (`Tokens.cs`, `AppStyles.cs` and `Marks.cs`). IBM Plex is embedded with its licence, and dark, light and follow-system themes are remembered.
+- **Contrast:** six text colours fell below 4.5:1, and each was adjusted along its own hue.
+- **Tests:** every earlier test passes unchanged. New tests cover contrast, colour literals, the theme choice, and screenshots written to `out/screens` for you.
+- **The three departures:**
+  - units are not yet set smaller than their figures, because the existing tests read the figure text;
+  - the image no longer colour codes provenance, because section 5 gives one impact colour;
+  - mark labels are light text on a dark plate, because the mark's colour as text could not be read.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 42". Alan asked whether the window will come to look like the concept screens on its own, and the honest answer is no, it will not, because nobody ever wrote the screens down as a specification. This entry is the cheap half of fixing that. Entry 43 is the expensive half.
 
 **This ranks behind entry 39.** Do the crash, the bull assignment and the editor first. This is chrome, it changes no number and no behaviour, and it must not be allowed to delay the editor. **It is its own commit.**
 

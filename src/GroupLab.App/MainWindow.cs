@@ -8,6 +8,8 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Styling;
+using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
@@ -33,13 +35,13 @@ namespace GroupLab.App;
 /// </summary>
 public sealed class MainWindow : Window
 {
-    private static readonly FontFamily Mono = new("Cascadia Mono, Consolas, Menlo, monospace");
+    private static readonly FontFamily Mono = Tokens.Mono;
 
     private readonly MarkingSession session = new();
     private readonly MarkingCanvas canvas = new();
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
-    private readonly TextBlock status = new() { Margin = new Thickness(8, 4), TextWrapping = TextWrapping.Wrap };
-    private readonly TextBlock problem = new() { Foreground = Brushes.OrangeRed, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
+    private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+    private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
     private readonly StackPanel selection = new() { Spacing = 6 };
     private readonly StackPanel shotList = new() { Spacing = 2 };
@@ -61,6 +63,8 @@ public sealed class MainWindow : Window
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly TextBox shotDistance = new() { Width = 90 };
     private readonly TextBlock shotDistanceUnit = new() { VerticalAlignment = VerticalAlignment.Center };
+    private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light" }, MinWidth = 140 };
+    private bool showingTheme;
     private UnitSettings units;
     private bool showingUnits;
 
@@ -74,6 +78,7 @@ public sealed class MainWindow : Window
     {
         settingsStore = settings;
         units = settings.LoadUnits();
+        ApplyTheme(settings.LoadTheme());
         Title = "GroupLab";
         Width = 1400;
         Height = 900;
@@ -84,7 +89,7 @@ public sealed class MainWindow : Window
         canvas.RectangleTapped += (_, _) => AskRectangle();
         canvas.Notice += (_, note) => status.Text = note;
 
-        var toolbar = new WrapPanel { Margin = new Thickness(6), Orientation = Orientation.Horizontal };
+        var toolbar = new WrapPanel { Margin = new Thickness(Tokens.Space8, Tokens.Space6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
         toolbar.Children.Add(Button("Open marking", async () => await OpenMarkingDialog()));
         toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await DetectDialog()));
@@ -108,7 +113,7 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Rotate right (])", () => session.Rotate(1)));
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
 
-        var panel = new StackPanel { Margin = new Thickness(12), Spacing = 12, Width = 380 };
+        var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
         // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
         panel.Children.Add(Heading("Units"));
         panel.Children.Add(Row(linearUnit, angularUnit, distanceUnit));
@@ -116,6 +121,17 @@ public sealed class MainWindow : Window
         {
             combo.SelectionChanged += (_, _) => UnitsChosen();
         }
+
+        // Entry 42 section 2: dark, light, or following the system, remembered like the units.
+        panel.Children.Add(Heading("Theme"));
+        panel.Children.Add(themeChoice);
+        themeChoice.SelectionChanged += (_, _) =>
+        {
+            if (!showingTheme && themeChoice.SelectedIndex >= 0)
+            {
+                SetTheme((ThemeChoice)themeChoice.SelectedIndex);
+            }
+        };
 
         panel.Children.Add(Heading("Scale"));
         panel.Children.Add(scaleInputs);
@@ -142,13 +158,16 @@ public sealed class MainWindow : Window
         panel.Children.Add(Heading("Selected shot"));
         panel.Children.Add(selection);
 
-        var side = new ScrollViewer { Content = panel };
+        // Entry 42 section 4: the bar across the top, a right column 372 wide, and a status line, each separated by one pixel of line.
+        var bar = new Border { Child = toolbar, Classes = { AppStyles.Bar } };
+        var side = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = panel }, Classes = { AppStyles.Side } };
+        var statusBar = new Border { Child = status, Classes = { AppStyles.StatusBar } };
         var dock = new DockPanel();
-        DockPanel.SetDock(toolbar, Dock.Top);
-        DockPanel.SetDock(status, Dock.Bottom);
+        DockPanel.SetDock(bar, Dock.Top);
+        DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(side, Dock.Right);
-        dock.Children.Add(toolbar);
-        dock.Children.Add(status);
+        dock.Children.Add(bar);
+        dock.Children.Add(statusBar);
         dock.Children.Add(side);
         dock.Children.Add(canvas);
         Content = dock;
@@ -184,6 +203,33 @@ public sealed class MainWindow : Window
         distanceUnit.SelectedIndex = (int)units.Distance;
         shotDistanceUnit.Text = UnitSettings.Symbol(units.Distance);
         showingUnits = false;
+    }
+
+    /// <summary>Chooses the theme, dark, light or following the system, and remembers the choice (NOTES-FROM-PLANNING.md entry 42 section 2).</summary>
+    internal void SetTheme(ThemeChoice theme)
+    {
+        ApplyTheme(theme);
+        if (!settingsStore.SaveTheme(theme))
+        {
+            status.Text = "The theme choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.";
+        }
+    }
+
+    private void ApplyTheme(ThemeChoice theme)
+    {
+        if (Application.Current is { } app)
+        {
+            app.RequestedThemeVariant = theme switch
+            {
+                ThemeChoice.Dark => ThemeVariant.Dark,
+                ThemeChoice.Light => ThemeVariant.Light,
+                _ => ThemeVariant.Default,
+            };
+        }
+
+        showingTheme = true;
+        themeChoice.SelectedIndex = (int)theme;
+        showingTheme = false;
     }
 
     private void UnitsChosen()
@@ -384,6 +430,16 @@ public sealed class MainWindow : Window
         status.Text = "Registering and detecting…";
         var (g, v, m) = (grey, valueImage, metadata);
         var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend()));
+        ApplyDetection(result);
+    }
+
+    /// <summary>
+    /// Loads what the automatic path found on this image as ordinary marks the user can correct, with the sheet's printed artwork for the snap
+    /// and the size check, or shows the failure prominently. The Detect button and the screenshot test both come through here.
+    /// </summary>
+    internal void ApplyDetection(AutomaticResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
         if (result.Failure is not null || result.Scale is null)
         {
             problem.Text = "Detection failed: " + (result.Failure ?? "no registration") + ". Mark this image by hand with a reference length or rectangle.";
@@ -395,7 +451,7 @@ public sealed class MainWindow : Window
         canvas.Artwork = artwork = result.ExpectedArtwork;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Summary);
         SetTool(MarkingTool.Select);
-        status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed in red") : "");
+        status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed out") : "");
     }
 
     private async Task ExportDialog()
@@ -510,12 +566,24 @@ public sealed class MainWindow : Window
         if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
         {
             scaleInputs.Children.Clear();
-            scaleInputs.Children.Add(new TextBlock
+
+            // Entry 42 section 4's status pill: every figure depends on the scale, so it says where the scale came from, in teal when the sheet
+            // registered, in amber when it is a reference drawn by hand, and plainly when there is none.
+            var pillText = new TextBlock
             {
                 Text = state.Scale is null ? "No scale yet. Choose Scale: length or Scale: rectangle, or detect on a GroupLab sheet." : "From " + state.Scale.Describe(units) + ".",
                 TextWrapping = TextWrapping.Wrap,
-                Foreground = report.ScaleAssumesSquareOn ? Brushes.DarkOrange : null,
-            });
+                Classes = { AppStyles.PillText },
+            };
+            var pill = new Border { Child = pillText, Classes = { AppStyles.Pill } };
+            if (state.Scale is not null)
+            {
+                string standing = state.Scale is SheetReference ? AppStyles.Good : AppStyles.Warn;
+                pill.Classes.Add(standing);
+                pillText.Classes.Add(standing);
+            }
+
+            scaleInputs.Children.Add(pill);
         }
 
         statistics.Children.Clear();
@@ -531,21 +599,20 @@ public sealed class MainWindow : Window
             if (all.DispersionWithheld is { } withheld)
             {
                 // Entry 24 section 1: below the minimum there is no headline figure to misread, only what is missing.
-                statistics.Children.Add(new TextBlock { Text = withheld, TextWrapping = TextWrapping.Wrap, FontSize = 16, FontWeight = FontWeight.SemiBold });
+                statistics.Children.Add(new TextBlock { Text = withheld, TextWrapping = TextWrapping.Wrap, FontSize = Tokens.BodySize, FontWeight = FontWeight.SemiBold });
             }
             else
             {
-                statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, 26, FontWeight.Bold));
-                statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, 16, FontWeight.Normal));
-                statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, 13, FontWeight.Normal, subordinate: true));
+                statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadFigureSize, FontWeight.Medium));
+                statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.FigureSize, FontWeight.Medium));
+                statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.BodySize, FontWeight.Normal, subordinate: true));
                 statistics.Children.Add(new TextBlock
                 {
                     Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
                         ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
                         : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
                     TextWrapping = TextWrapping.Wrap,
-                    FontSize = 12,
-                    Opacity = 0.7,
+                    Classes = { AppStyles.Secondary },
                 });
                 if (state.ShotDistanceInches is null)
                 {
@@ -574,8 +641,8 @@ public sealed class MainWindow : Window
                 {
                     Text = $"Shot {ShotLabel(flag.ShotId)} {HoleSize.Describe(flag, state.Calibre!.DiameterInches, units.Length)}",
                     TextWrapping = TextWrapping.Wrap,
-                    FontSize = 12,
-                    Foreground = Brushes.OrangeRed,
+                    FontSize = Tokens.SecondarySize,
+                    Classes = { AppStyles.Alert },
                 });
             }
 
@@ -613,6 +680,7 @@ public sealed class MainWindow : Window
             {
                 Content = text,
                 Tag = id,
+                FontFamily = Mono,
                 MinWidth = 230,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 FontWeight = id == canvas.Selected ? FontWeight.Bold : FontWeight.Normal,
@@ -741,9 +809,10 @@ public sealed class MainWindow : Window
         return row;
     }
 
-    private static TextBlock Heading(string text) => new() { Text = text, FontSize = 14, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
+    /// <summary>A section label, entry 42 section 3: uppercase, 10 point semibold, spaced, in faint.</summary>
+    private static TextBlock Heading(string text) => new() { Text = text.ToUpperInvariant(), Margin = new Thickness(0, Tokens.Space8, 0, 0), Classes = { AppStyles.Section } };
 
-    private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, FontSize = 12 };
+    private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
     internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
@@ -763,20 +832,28 @@ public sealed class MainWindow : Window
         string? Angle(ReportedEstimate e) => units.AngleText(e.Value, distance) is { } value
             ? value + (e is { Lower: { } lower, Upper: { } upper } ? $", interval {units.Angle(lower, distance)!.Value.ToString("0.00", CultureInfo.InvariantCulture)} to {units.AngleText(upper, distance)}" : "")
             : null;
+        // Entry 42 section 3: the name in dim, the value in mono at the figure size, and every interval line in mono at 11.5 in dim.
+        TextBlock Detail(string text) => new() { Text = text, FontFamily = Mono, FontSize = Tokens.SecondarySize, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Dim } };
         var column = new StackPanel { Spacing = 0 };
-        column.Children.Add(new TextBlock { Text = name, FontSize = 11, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
-        column.Children.Add(new TextBlock { Text = units.Length(all.Value), FontFamily = Mono, FontSize = size, FontWeight = weight, Opacity = subordinate ? 0.7 : 1, TextWrapping = TextWrapping.Wrap });
-        column.Children.Add(new TextBlock { Text = Interval(all), FontFamily = Mono, FontSize = 12, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+        column.Children.Add(new TextBlock { Text = name, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        var value = new TextBlock { Text = units.Length(all.Value), FontFamily = Mono, FontSize = size, FontWeight = weight, LetterSpacing = subordinate ? 0 : Tokens.FigureSpacing, TextWrapping = TextWrapping.Wrap };
+        if (subordinate)
+        {
+            value.Classes.Add(AppStyles.Dim);
+        }
+
+        column.Children.Add(value);
+        column.Children.Add(Detail(Interval(all)));
         if (Angle(all) is { } angle)
         {
-            column.Children.Add(new TextBlock { Text = angle, FontFamily = Mono, FontSize = 12, Opacity = subordinate ? 0.6 : 0.85, TextWrapping = TextWrapping.Wrap });
+            column.Children.Add(Detail(angle));
         }
+
         if (reduced is not null)
         {
-            string text = pick(reduced) is { } r
+            column.Children.Add(Detail(pick(reduced) is { } r
                 ? $"without exclusions: {units.Length(r.Value)}, {Interval(r)}"
-                : "without exclusions: " + reduced.DispersionWithheld;
-            column.Children.Add(new TextBlock { Text = text, FontFamily = Mono, FontSize = 12, Opacity = 0.8, TextWrapping = TextWrapping.Wrap });
+                : "without exclusions: " + reduced.DispersionWithheld));
         }
 
         return column;

@@ -1,0 +1,145 @@
+using Avalonia;
+using Avalonia.Media;
+using Avalonia.Styling;
+
+namespace GroupLab.App.Theme;
+
+/// <summary>One theme's colours by role, NOTES-FROM-PLANNING.md entry 42 section 2.</summary>
+public sealed record Palette(
+    Color Bg,
+    Color Panel,
+    Color Panel2,
+    Color Sunk,
+    Color Line,
+    Color Line2,
+    Color Text,
+    Color Dim,
+    Color Faint,
+    Color Amber,
+    Color Teal,
+    Color Alert,
+    Color OnAmber,
+    Color AmberTint,
+    Color AmberTintBorder,
+    Color TealTint,
+    Color TealTintBorder)
+{
+    /// <summary>The colours text is set in.</summary>
+    public IReadOnlyList<(string Role, Color Colour)> TextColours => [("text", Text), ("dim", Dim), ("faint", Faint), ("amber", Amber), ("teal", Teal), ("alert", Alert)];
+
+    /// <summary>The surfaces text is set on: the window, the panels, and raised surfaces such as buttons. The sunk image area carries marks, not text.</summary>
+    public IReadOnlyList<(string Role, Color Colour)> TextSurfaces => [("bg", Bg), ("panel", Panel), ("panel2", Panel2)];
+}
+
+/// <summary>
+/// Every colour, size and face the application uses, NOTES-FROM-PLANNING.md entry 42 sections 2 to 5: the concept screens' values in code,
+/// two palettes resolved by theme variant. No colour literal appears anywhere else in the application, which is what makes the light theme
+/// possible, and <c>ThemeTests</c> fails if one does.
+/// <para>
+/// Entry 42 section 2 asks that every text colour reach 4.5:1 against the surfaces it sits on, adjusting a value rather than a role where
+/// one falls short. The concept screens' values fall short for dark <c>faint</c> #697079 and <c>alert</c> #e0604a, and for light
+/// <c>faint</c> #868c94, <c>amber</c> #b46f16, <c>teal</c> #3f8873 and <c>alert</c> #bf4531. Each is moved along its own hue, toward
+/// white in the dark theme and toward black in the light, by the smallest step that reaches 4.5:1 on bg, panel and panel2. The light
+/// primary button's text is white, because #17120a on the adjusted amber is 3.4:1. The light selection and good-state tints are amber and
+/// teal nine tenths of the way to white, which entry 42 leaves unstated.
+/// </para>
+/// </summary>
+public static class Tokens
+{
+    public static Palette Dark { get; } = new(
+        Bg: Hex(0x131417),
+        Panel: Hex(0x1a1c20),
+        Panel2: Hex(0x212429),
+        Sunk: Hex(0x0f1013),
+        Line: Hex(0x2c3037),
+        Line2: Hex(0x3a3f47),
+        Text: Hex(0xe6e8ea),
+        Dim: Hex(0x9aa1a9),
+        Faint: Hex(0x858b92),
+        Amber: Hex(0xe0912f),
+        Teal: Hex(0x6fbfa8),
+        Alert: Hex(0xe1634d),
+        OnAmber: Hex(0x17120a),
+        AmberTint: Hex(0x221c12),
+        AmberTintBorder: Hex(0x3a2d18),
+        TealTint: Hex(0x141f1c),
+        TealTintBorder: Hex(0x2c463f));
+
+    public static Palette Light { get; } = new(
+        Bg: Hex(0xf4f3f0),
+        Panel: Hex(0xffffff),
+        Panel2: Hex(0xeceae4),
+        Sunk: Hex(0xe4e2dd),
+        Line: Hex(0xd3d0c9),
+        Line2: Hex(0xbdb9b0),
+        Text: Hex(0x1a1c20),
+        Dim: Hex(0x5a6068),
+        Faint: Hex(0x666a70),
+        Amber: Hex(0x965d12),
+        Teal: Hex(0x367462),
+        Alert: Hex(0xb8422f),
+        OnAmber: Hex(0xffffff),
+        AmberTint: Hex(0xf4efe7),
+        AmberTintBorder: Hex(0xd0b694),
+        TealTint: Hex(0xebf1ef),
+        TealTintBorder: Hex(0xa5c0b8));
+
+    /// <summary>The palette for a resolved theme variant. Follow-system resolves to one of the two before it reaches here.</summary>
+    public static Palette For(ThemeVariant? variant) => variant == ThemeVariant.Light ? Light : Dark;
+
+    // Typography, entry 42 section 3. The faces are embedded (Assets/Fonts), each with the fallback stack section 3 names.
+    public static FontFamily Sans { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Sans, $Default");
+
+    public static FontFamily Condensed { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Sans Condensed, avares://GroupLab.App/Assets/Fonts#IBM Plex Sans, $Default");
+
+    public static FontFamily Mono { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Mono, Cascadia Mono, Consolas, Menlo, monospace");
+
+    public const double SectionLabelSize = 10;
+    public const double SectionLabelSpacing = 0.9;
+    public const double ListHeaderSpacing = 0.6;
+    public const double TableRowSize = 11.5;
+    public const double SecondarySize = 11.5;
+    public const double ButtonSize = 12;
+    public const double BodySize = 13;
+    public const double WordmarkSize = 13;
+    public const double WordmarkSpacing = 1.3;
+    public const double FigureSize = 21;
+    public const double FigureSpacing = -0.21;
+    public const double LeadFigureSize = 29;
+
+    // Layout and spacing, entry 42 section 4: the scale is 4, 6, 8, 12, 14 and 20.
+    public const double Space4 = 4;
+    public const double Space6 = 6;
+    public const double Space8 = 8;
+    public const double Space12 = 12;
+    public const double Space14 = 14;
+    public const double Space20 = 20;
+    public const double ControlMargin = 2;
+    public const double RightColumnWidth = 372;
+    public static Thickness SectionPadding { get; } = new(Space14, Space12);
+    public static Thickness RowPadding { get; } = new(Space14, 3);
+    public static Thickness ButtonPadding { get; } = new(Space12, Space6);
+    public static Thickness PillPadding { get; } = new(9, Space4);
+    public static CornerRadius SurfaceRadius { get; } = new(3);
+    public static CornerRadius ButtonRadius { get; } = new(4);
+
+    // The marks drawn on the image, entry 42 section 5. They are drawn on a photograph, whose colours do not change with the theme, so they
+    // take the design values in both themes, unadjusted: a mark is not text on a surface.
+    public static Color MarkHalo { get; } = Color.FromArgb(140, 0x0b, 0x0c, 0x0e);
+    public const double MarkHaloWidth = 3;
+    public const double MarkCoreWidth = 1.6;
+    public const double MarkSelectedCoreWidth = 2;
+    public static Color MarkImpact { get; } = Hex(0xc8442f);
+    public static Color MarkSelected { get; } = Hex(0xe0912f);
+    public static Color MarkExcluded { get; } = Hex(0x9aa1a9);
+    public static Color MarkTeal { get; } = Hex(0x6fbfa8);
+    public static Color MarkFaint { get; } = Hex(0x697079);
+    public static Color MarkAlert { get; } = Hex(0xe0604a);
+
+    /// <summary>A mark label's plate and text: near black at about 80 percent, and the dark theme's text colour, so a label reads on any photograph.</summary>
+    public static Color MarkPlate { get; } = Color.FromArgb(200, 0x0b, 0x0c, 0x0e);
+
+    public static Color MarkLabelText { get; } = Hex(0xe6e8ea);
+
+    private static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
+}

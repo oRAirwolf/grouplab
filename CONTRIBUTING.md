@@ -95,7 +95,10 @@ Where the specification is silent and a choice has to be made to go on, record t
 - **A report never prints a number it cannot mean.** Whenever the figures cannot measure what a reader takes them to measure, `GroupAnalysis` withholds them and says what is missing where they would be, rather than printing a confident figure with an interval beside it.
   - **The cases so far:** too few shots (NOTES-FROM-PLANNING.md entry 24), and shots on a sheet of several bulls that are not all assigned to one (entry 39).
 - **Every mark the application draws is legible on a photograph of a target.** A photograph is mostly white paper with black printing and coloured rings, sometimes over a dark backer.
-  - **What that means:** no mark is drawn in white, and every stroke and label is drawn over a dark outline (entry 39 section 5).
+  - **What that means:** no mark is drawn in white, and every stroke and label is drawn over a dark outline (entry 39 section 5). `src/GroupLab.App/Theme/Marks.cs` draws every mark that way.
+- **No colour literal outside `src/GroupLab.App/Theme/Tokens.cs`.**
+  - **How a colour is used instead:** every colour is a named token in two palettes, dark and light. A control takes its role from a class in `AppStyles`.
+  - **The check:** `ThemeTests` fails on a colour literal anywhere else in the application (entry 42).
 - **No pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They must never appear in code, comments, documentation or interface text.
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.

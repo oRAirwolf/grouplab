@@ -16,10 +16,13 @@ using OpenCvSharp;
 
 namespace GroupLab.App.Tests;
 
-/// <summary>The application headless, with the same App and theme as the desktop build.</summary>
+/// <summary>
+/// The application headless, with the same App and theme as the desktop build, drawn through Skia rather than the headless null renderer
+/// so that a frame can be captured as a screenshot (NOTES-FROM-PLANNING.md entry 42 section 7).
+/// </summary>
 public static class TestApplication
 {
-    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<GroupLab.App.App>().UseHeadless(new AvaloniaHeadlessPlatformOptions());
+    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<GroupLab.App.App>().UseSkia().UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false });
 }
 
 /// <summary>

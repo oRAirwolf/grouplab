@@ -1843,6 +1843,74 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 42. The styling pass
+
+`docs/NOTES-FROM-PLANNING.md` entry 42: the concept screens' palette, type, density and marks, written into code. It changes no number and no behaviour. Every test that existed before it passes unchanged.
+
+**Where it lives,** as section 6 asks:
+- **`src/GroupLab.App/Theme/Tokens.cs`:** both palettes, the type scale, the spacing scale and the mark colours. No colour literal appears anywhere else in the application, and `ThemeTests.NoColourLiteralAppearsOutsideTheTokens` fails if one does.
+- **`src/GroupLab.App/Theme/AppStyles.cs`:** the control styles, and the Fluent theme's own state colours, pointer over, pressed, checked and focused, set from the palette so hovering a button cannot bring back a Fluent grey. The styles are rebuilt whenever the resolved theme changes.
+- **`src/GroupLab.App/Theme/Marks.cs`:** how every mark on the image is drawn. The composite plot of entry 43 will use the same code.
+
+**Themes.** Dark, light and follow system, chosen under Theme and remembered with the units. High contrast is `DESIGN.md` section 19's fourth theme, and later work.
+
+**Contrast.** Six text colours from the concept screens fall below 4.5:1 on the surfaces text sits on: `bg`, `panel` and `panel2`. Section 2 says to adjust the value rather than the role, so each is moved along its own hue, toward white in the dark theme and toward black in the light, by the smallest step that reaches 4.5:1:
+
+| Theme | Role | Concept screen | Now | Worst ratio now |
+|---|---|---|---|---|
+| dark | `faint` | #697079 | #858b92 | 4.53 |
+| dark | `alert` | #e0604a | #e1634d | 4.52 |
+| light | `faint` | #868c94 | #666a70 | 4.52 |
+| light | `amber` | #b46f16 | #965d12 | 4.51 |
+| light | `teal` | #3f8873 | #367462 | 4.56 |
+| light | `alert` | #bf4531 | #b8422f | 4.52 |
+
+**Two light values were left unstated by entry 42, and are chosen here.**
+- **Primary button text:** white on the adjusted amber (5.4:1), because #17120a on it is 3.4:1.
+- **Selected and good tints:** amber and teal nine tenths of the way to white, on which amber and teal text reach 4.7:1 and 4.8:1.
+
+`ThemeTests` checks every pair.
+
+**Type.** IBM Plex Sans, Sans Condensed and Mono are embedded as resources, with the SIL Open Font License shipped beside the application and listed in `THIRD-PARTY-NOTICES.md`.
+- **Section labels:** uppercase at 10 point semibold, spaced, in `faint`.
+- **Figures:** mean radius leads at 29 point mono and sigma follows at 21. Every interval line is mono at 11.5 in `dim`.
+- **Shot rows:** mono.
+
+**Layout.**
+- **Structure:** the toolbar sits on a bar with a one pixel separator; the right column is 372 wide; a status line runs along the bottom.
+- **Spacing:** section padding is 12 by 14, and every spacing value is from the scale.
+- **Buttons:** radius 4, padding 6 by 12, 12 point at weight 500. The current tool is amber on its tint.
+- **The scale's pill:** teal when the sheet registered, amber for a reference drawn by hand. The navigation rail is not built, as section 4 says.
+
+**The marks,** section 5:
+- **The stroke:** every mark is a two tone stroke, 3 pixels of near black at 55 percent under its colour at 1.6 pixels, in screen pixels at any zoom.
+- **An impact:** a ring at the true hole diameter once the calibre and the scale are known, with a one pixel pip, in `impact`. Selected is amber at 2 pixels; excluded is `dim` and dashed.
+- **Other marks:**
+  - the scale reference is a teal line with a filled circle at each end;
+  - the point of aim is a teal cross, not a circle;
+  - a bull centre is a small `faint` cross;
+  - a missing marker keeps its cross, in `alert`.
+
+**Checked by eye, on screenshots the test writes to `out/screens`,** section 7 points 2 and 3:
+- **`marking-dark.png` and `marking-light.png`** show the whole window in each theme.
+- **`marks-closeup-dark.png` and `marks-closeup-light.png`** show bull 13 of `gl-cf25-ltr-1-600-dpi.png`, detected, with a .308 calibre and three impacts: on bare paper, on the inner printed ring, and on the printed "13".
+  - **Readability:** all three rings read, as does the point of aim over the bull.
+  - **The warning:** the size check on the ring's impact now says it sits on the printed target, because the window holds the detected artwork.
+- **`photo-marks-dark.png`** is marks on the donated `001_IMG_1696.jpg`, in hard sunlight, on paper, printed rings and the dark backer. That photograph has no shadow across it, so the shadow case section 7 names is not yet looked at.
+
+**The screenshots are for planning to set beside `docs/figures/screens`.** The content differs, and entry 43 is that difference. They are in the working tree's `out/screens`, which git ignores.
+
+**Where this departs from entry 42,** and why:
+1. **Units are not yet set smaller than their figures.** "0.1046 in" is still one run of text at the figure size. Setting the unit at 13 point means splitting the text into runs, and the figure text is what the existing tests read, which section 1 says must pass unchanged. The figure stack of entry 43 is the place to do it.
+2. **The image no longer colour codes a shot's provenance.** Section 5 gives one impact colour, where automatic, corrected and manual shots were gold, orange and green. Provenance is still in the selected shot's panel and the report, but not on the image or in the shot list's rows. Whether it should come back is a design question.
+3. **Mark labels are light text on a dark plate, with a bar in the mark's colour.** The first screenshots drew a label in the mark's own colour on the halo, and red on near black at 11.5 point could not be read.
+
+**How the frames are captured.** The headless tests now draw through Skia rather than the null renderer, so every app test renders for real. CI on Linux and macOS is the check that Skia's native libraries load there.
+
+**Tests:** App 14 passing, none skipped. The 10 that existed are unchanged, and the new ones are contrast, colour literals, the theme choice, and the screenshots. Core is unchanged at 729.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1945,3 +2013,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 40: a tap on printed ink placed where it was tapped, with a note, over snapping onto the ink and naming it.** The centre of a printed stroke is never the answer, and a tap placed where the user put it is at worst as wrong as the user.
 - **Entry 39: a moved shot follows its nearest bull unless the user assigned it elsewhere, over keeping whatever bull it had.** A shot dragged across to the next bull is almost always a correction of position, and a deliberate reassignment is recognisable because it differs from the nearest.
 - **Entry 39: an impact placed by press, drag and release, over click, drag, click.** It is one gesture with a finger or a pointer, and a plain tap still places a shot.
+- **Entry 42: a text colour below 4.5:1 moved along its own hue, over changing which role the text takes.** Section 2 says so. The contrast is measured on the three surfaces text sits on, not on the sunk image area, which carries marks. Counting the image area too would have pushed light `faint` almost onto `dim`, erasing the difference between the two.
+- **Entry 42: styles rebuilt when the theme changes, over binding each control to a theme resource.** The shell is built in code, and rebuilding one style set keeps every colour decision in `AppStyles` and `Tokens` rather than spread across every control.
+- **Entry 42: a unit left at its figure's size for now, over splitting the figure text.** The existing tests read that text, and section 1 requires them to pass unchanged.
+- **Entry 42: mark labels in light text on a dark plate, over text in the mark's colour.** The mark's colour as text could not be read on the first screenshots, and the colour survives as a bar beside the number.

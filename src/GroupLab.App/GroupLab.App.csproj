@@ -28,6 +28,16 @@
     <InternalsVisibleTo Include="GroupLab.App.Tests" />
   </ItemGroup>
 
+  <!--
+    IBM Plex Sans, Sans Condensed and Mono, embedded so the type the concept screens were drawn in is the type every user sees, and a
+    missing face cannot silently change a measurement column (NOTES-FROM-PLANNING.md entry 42 section 3). The SIL Open Font License asks
+    that every copy carry the licence, so it ships beside the application too.
+  -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <None Include="Assets\Fonts\LICENSE.txt" Link="IBM-Plex-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!-- The built-in library ships beside the application, for the print screen (NOTES-FROM-PLANNING.md entry 25 section 2). -->
   <ItemGroup>
     <None Include="..\..\targets\*.gltd.json" Link="targets\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
