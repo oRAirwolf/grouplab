@@ -27,7 +27,7 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **Windows** reproduces it byte for byte.
 - **Linux** reproduces every table, and its records differ only below the precision any table reports.
 - **macOS** reproduces the paper and photograph gate tables, and differs in measurements 1 and 2.
-- **Not met,** because the records are not byte-identical. Whether the difference counts as explained is planning's decision ("Entry 35 section 6" below).
+- **Linux: explained,** on entry 48 section 2's three terms. **macOS: not yet explained,** and localised to S2 ("Entry 48" below).
 
 ---
 
@@ -2234,6 +2234,79 @@ A resolution that would make the image longer than 8000 px, a 4000 px photograph
 
 ---
 
+## Entry 48. The gate record difference localised, and the lens model kept
+
+`docs/NOTES-FROM-PLANNING.md` entry 48. **How the difference was localised:** every gate record run uploads each platform's records, and the records hold each stage's quantities. Matching them marker by marker and corner by corner, rather than by position in a list, gives the first stage whose output differs from Windows. The comparison is of the records from `826bd15`.
+
+### Section 2, Linux: explained
+
+- **a. Every gate verdict is identical.** Every console table is identical to Windows, line for line, so every verdict on every frame is too.
+- **b. The stage is S3, the homography.**
+  - **Identical to Windows in every record:** the S2 corner positions, to the last recorded digit, and the corner sets and inlier flags.
+  - **The first quantity that differs:** the homography `Cv2.FindHomography` returns over those corners. For a scan it is the only computation between the corners and the mapping.
+  - **Downstream of it:** everything else that differs is computed from that mapping: the scale, a photograph's lens coefficients, and the bull and corner errors.
+- **c. The mechanism, and its bound.**
+  - **The mechanism:** `findHomography` ends its RANSAC with an iterative Levenberg-Marquardt refinement over the inliers. The inputs and the inliers are identical on both platforms, so what differs is the arithmetic of the iterations in a different native build, not which minimum is found.
+  - **On the scans:** the homographies differ by at most 3.4e-7 dmm anywhere within the markers' extent.
+  - **Bull figures:** a bull figure differs only where its value sits on a rounding boundary of the 0.0001 dmm the records keep.
+  - **Where it is amplified:** the largest effect is 0.0071 dmm, on one bull in one random subset of four to six markers in measurement 1, where a poorly conditioned fit magnifies it. On a photograph it is 0.0006 dmm.
+  - **Why it cannot grow into a verdict:** a difference that starts at 3.4e-7 dmm stays under a hundredth of a micrometre unless the fit is ill-conditioned, and the gated frames have 9 to 34 markers.
+
+### Section 2, macOS: localised, not yet explained, nothing changed
+
+- **a holds.** The paper gate and photograph gate tables are identical to Windows.
+- **b: the first stage that differs is S2, corner refinement.** Planning's guess was an iterative fit; the corners already differ before any fit runs.
+
+**What differs at S2, measured against Windows' corners matched by marker and corner:**
+
+| Images | Refinement | Corners that move | Largest move | Largest bull difference |
+|---|---|---|---|---|
+| Scans and photographs | subpixel, the shipped window | 0 to 2 of 104 to 136 per image | 0.0005 px | 0.0003 dmm |
+| Letter scans | contour | every corner | 0.098 px at 600 DPI, 0.044 px at 300 | 0.0003 dmm |
+| Letter scans, 300 DPI | subpixel, quarter module | 1 to 5 per image | 1.4 px | 0.28 dmm |
+| Synthetic raster | subpixel, the shipped window | every corner | 0.024 px | 0.0026 dmm |
+| Synthetic raster | subpixel, 2 modules | every corner | 0.43 px | 2.68 dmm |
+
+**On the synthetic raster the markers also come back in a different order:** 52 of the 136 corners at 600 DPI and 80 at 300 DPI sit at a different position in the list, with the same set of corners. The order is the order RANSAC samples from, so it can change which subsets the homography fit draws.
+
+**S3 differs as on Linux, more.** On the scans the homographies differ by up to 1.1e-5 dmm within the markers' extent.
+
+**One amplification, and it is the one that matters.**
+- **The frame:** `telephoto3.jpg`, excluded from the gate because the sheet overflows the frame, has four markers.
+- **What is identical on macOS:** all 16 of its corners, and its inlier flags.
+- **What moved:** its scoring bull 24, by 0.30 dmm, because the edge fit kept 29 edge points instead of 30.
+- **Why that matters:** a difference of the S3 size tipped the edge fit's acceptance of one edge point. That is how a marginal frame could change a verdict. The step is a threshold in the bull locator, not an iterative fit.
+
+**c: the mechanism is not yet named.**
+- **The candidates in S2:** OpenCV's `cornerSubPix` and the ArUco contour refinement in the arm64 build, which is the only native code there, and the order in which the ArUco detector returns its candidates.
+- **What would separate them:** feeding macOS Windows' corners in Windows' order, from the records, and rerunning S3 onward. If the bulls then agree as closely as Linux's do, S2 is the cause apart from the edge fit's threshold.
+- **The obvious deterministic step:** sort the detected markers by identifier before anything uses them. That removes the ordering effect whatever the detector does.
+
+None of this is changed, as section 2 asks.
+
+### Section 3: the lens model kept
+
+- **The rule, now in `ImageScrubber`:** keep what describes the camera and the exposure, and drop everything that describes where, when, who, or anything a person typed. `LensModel` is kept.
+- **The two whitelists agree.**
+  - **What the log records now:** the metadata reader now reads the lens model, ISO and exposure time, so `ImageFacts` records the same camera and exposure facts the scrubber keeps.
+  - **What holds them together:** `WhitelistTests` requires every camera fact logged to be a kept field and every kept field to be logged. `CameraFieldsTests` checks that scrubbing keeps the lens model, ISO and exposure, and still drops the capture date and the location.
+- **Republished.** The owner's photographs were run through `grouplab publish-owner` again from the originals, with the same two photographs held and their published wording kept. Now at `grouplab-testdata` commit `d35ef99`:
+  - **Changed:** 13 of the 26 published photographs, all Pixel frames, each only in keeping `LensModel`.
+  - **Unchanged:** the other 13 come out byte-identical.
+  - **The provenance record:** it carries the new published hashes and kept lists, the new intake time, and the `optedOutIn` field the record format gained under entry 37.
+  - **No donated photographs:** none are published, so none needed republishing.
+  - **Its README:** it states the rule.
+- **Not edited: `tools/scan_analysis/scrub_exif.py`.** It says to keep its whitelist identical to the scrubber's, and it does not keep `LensModel`. It is planning's file.
+- **Not done: `LensModel` in the lens grouping key,** as section 3 asks.
+
+### Section 4
+
+`docs/DETECTION-PIPELINE.md` now says the number that must stay at zero is the wrong names, and that every refusal is kept by anyone raising the hit rate.
+
+**Tests:** Core 757 passing, App 35 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2357,3 +2430,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 47: double resolution tried second, over a capability fallback.** The WeChat module is present in the runtime packages for all three platforms. The failures were detection on code modules under five pixels, which only a larger working image can help.
 - **Entry 47: resolutions past 8000 px skipped, over trying every one.** Doubling a 600 DPI scan cost 52.7 s and gave nothing the scan did not, and the bound lost no image on the sweep.
 - **Entry 47: identification counted per platform in the gate record workflow, over a per-platform expectation in the unit tests.** No count is known yet for Linux or macOS, and an expectation written before measuring would be a guess.
+- **Entry 48: Linux's gate record difference explained and left red in the workflow, over a Linux reference record or a rule that passes it.** Making the job green needs either Linux's own records committed as its reference, or a rule about which differences pass. The first adds about 12 MB and the second is a gate written after the results, so the choice is planning's.
+- **Entry 48: the owner corpus republished from the originals through `publish-owner`, over editing the published files.** Every published file still comes from the one scrubber, and the 13 files without a lens model reproduce byte for byte, which shows nothing else changed.

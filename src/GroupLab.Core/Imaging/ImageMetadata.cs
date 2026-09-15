@@ -20,7 +20,10 @@ public sealed record ImageMetadata(
     double? FocalLengthMm,
     int? FocalLength35mm,
     double? FNumber = null,
-    double? DigitalZoomRatio = null)
+    double? DigitalZoomRatio = null,
+    string? LensModel = null,
+    int? IsoSpeed = null,
+    double? ExposureTimeSeconds = null)
 {
     /// <summary>
     /// The key frames must share before one joint lens fit covers them: physical focal length, f-number, 35 mm equivalent, stored size
@@ -78,7 +81,7 @@ public static class ImageMetadataReader
         bool camera = m.Focal is not null;
         double? dpiX = camera ? null : m.PngDpiX ?? m.JfifX ?? ExifDpi(m.ExifX, m.ResolutionUnit);
         double? dpiY = camera ? null : m.PngDpiY ?? m.JfifY ?? ExifDpi(m.ExifY, m.ResolutionUnit);
-        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber, m.DigitalZoom);
+        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber, m.DigitalZoom, m.LensModel, m.Iso, m.Exposure);
     }
 
     private static double? ExifDpi(double? value, int? unit) => value is { } v && v > 0
@@ -234,6 +237,15 @@ public static class ImageMetadataReader
                 case 0xA404:
                     m.DigitalZoom = Rational(t, e, little);
                     break;
+                case 0xA434:
+                    m.LensModel = Ascii(t, e, n, little);
+                    break;
+                case 0x8827:
+                    m.Iso = type == 4 ? (int)U32(t, e + 8, little) : U16(t, e + 8, little);
+                    break;
+                case 0x829A:
+                    m.Exposure = Rational(t, e, little);
+                    break;
             }
         }
     }
@@ -307,5 +319,11 @@ public static class ImageMetadataReader
         public double? FNumber { get; set; }
 
         public double? DigitalZoom { get; set; }
+
+        public string? LensModel { get; set; }
+
+        public int? Iso { get; set; }
+
+        public double? Exposure { get; set; }
     }
 }

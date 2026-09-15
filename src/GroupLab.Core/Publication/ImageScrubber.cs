@@ -9,10 +9,16 @@ public sealed record ScrubResult(byte[] Bytes, IReadOnlyList<string> Removed, IR
 /// <summary>
 /// Strips location and identifying metadata from a JPEG or PNG before it is published, NOTES-FROM-PLANNING.md entry 22 section 2
 /// point 2, without touching a pixel: the compressed image data is copied byte for byte and only the metadata around it is rebuilt.
-/// It follows <c>tools/scan_analysis/scrub_exif.py</c>'s policy, which nothing here can run because its library is not installed.
+/// <para>
+/// <b>The rule, NOTES-FROM-PLANNING.md entry 48 section 3:</b> keep what describes the camera and the exposure; drop everything that
+/// describes where, when, who, or anything a person typed. The next field anybody asks about is decided by that rule rather than
+/// negotiated, and the diagnostic log's whitelist, <c>ImageFacts</c> in the application, follows the same rule for the same data.
+/// </para>
 /// <list type="bullet">
 /// <item><b>Kept, in a fresh EXIF block:</b> Make, Model and Orientation; exposure time, f-number, ISO, focal length, the 35 mm
-/// equivalent and the pixel dimensions; and the digital zoom ratio, which entry 27 section 2 makes part of the lens grouping key.</item>
+/// equivalent and the pixel dimensions; the digital zoom ratio, which entry 27 section 2 makes part of the lens grouping key; and the
+/// lens model, which on a phone with several cameras is the field that says which one took the frame (entry 48 section 3). The lens
+/// model was added after <c>tools/scan_analysis/scrub_exif.py</c>, whose keep list this one otherwise matches, was written.</item>
 /// <item><b>Removed:</b> every other EXIF field, which is every GPS field, maker note, serial number, date and thumbnail; XMP, which
 /// can carry GPS and dates of its own; IPTC and every other application segment but the JFIF header and an ICC profile; comments;
 /// and anything after the image's end marker, where phones append motion-photo video and trailers.</item>
@@ -22,7 +28,7 @@ public sealed record ScrubResult(byte[] Bytes, IReadOnlyList<string> Removed, IR
 public static class ImageScrubber
 {
     private static readonly ushort[] KeptPrimary = [0x010F, 0x0110, 0x0112];
-    private static readonly ushort[] KeptExif = [0x829A, 0x829D, 0x8827, 0x920A, 0xA002, 0xA003, 0xA404, 0xA405];
+    private static readonly ushort[] KeptExif = [0x829A, 0x829D, 0x8827, 0x920A, 0xA002, 0xA003, 0xA404, 0xA405, 0xA434];
 
     private static readonly Dictionary<ushort, string> Names = new()
     {
@@ -37,7 +43,11 @@ public static class ImageScrubber
         [0xA003] = "PixelYDimension",
         [0xA404] = "DigitalZoomRatio",
         [0xA405] = "FocalLengthIn35mmFilm",
+        [0xA434] = "LensModel",
     };
+
+    /// <summary>The name of every EXIF field a scrubbed file keeps, for the test that holds the diagnostic log's whitelist to the same list.</summary>
+    public static IReadOnlyList<string> KeptFieldNames => [.. KeptPrimary.Concat(KeptExif).Select(t => Names[t])];
 
     private static readonly string[] KeptPngChunks = ["IHDR", "PLTE", "IDAT", "IEND", "tRNS", "cHRM", "gAMA", "iCCP", "sBIT", "sRGB", "pHYs", "bKGD"];
 

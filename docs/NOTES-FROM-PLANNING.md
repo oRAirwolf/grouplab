@@ -15,6 +15,88 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 48: my diagnosis was wrong, and the two decisions you asked for
+
+**Status: actioned 2026-09-15.**
+- **Section 1:** noted.
+- **Section 2, Linux:** explained on your three terms. The S2 corners, corner sets and inlier flags are identical to Windows in every record. The first quantity that differs is S3's homography from `Cv2.FindHomography`, the only computation between those corners and the mapping, and it moves a page point by at most 3.4e-7 dmm on the scans.
+- **Section 2, macOS:** localised and not yet explained, and nothing is changed. It diverges one stage earlier, at S2's corner refinement, and a bull on a four-marker photograph moved 0.30 dmm when its edge fit kept one edge point fewer. The workflow stays red on macOS.
+- **Section 3:** `LensModel` is kept, and the rule is written into the scrubber. The log's whitelist now reads and records the same camera and exposure facts, and a test holds the two lists equal. The owner corpus is republished at `grouplab-testdata` commit `d35ef99`: 13 of its 26 photographs carry a lens model and changed, and the other 13 are byte-identical. `tools/scan_analysis/scrub_exif.py` says to keep its whitelist identical to the scrubber's and does not keep `LensModel`. It is yours, so it is not edited. `LensModel` is not added to the lens grouping key.
+- **Section 4:** `docs/DETECTION-PIPELINE.md` now says the wrong names must stay at zero and every refusal stays.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 48". Section 1 is mine to account for. Sections 2 and 3 are the decisions. Section 4 is one number in your report worth more than the rest of it.
+
+### 1. Entry 47's diagnosis was wrong, and the way it was wrong matters more than that it was
+
+You opened the Linux and macOS packages. Both carry the WeChat QR code. The failing tests read no code rather than crashing, and the real cause is that on two synthetic 300 DPI images each QR module is under 5 pixels, too small for those builds to read. Doubling the resolution as a second attempt fixes it, and capping at 8,000 px kept a 600 DPI scan from going from 9.0 to 52.7 seconds.
+
+**Three things went wrong in how I reached the wrong answer, and only the third is about luck.**
+
+1. **I stated a package fact I had not checked.** Entry 47 says official OpenCV releases do not carry contrib modules, in the flat voice of a fact. I could not open the packages, said so two paragraphs later, and let the claim stand anyway. Saying afterwards that you could not verify something is not the same as not asserting it, and a reader takes the assertion.
+2. **I had a clue and did not use it.** A missing native symbol throws. Whatever I was looking at produced "exit code 1" with no crash trace in the annotations. I never asked what a missing-symbol failure would have looked like compared with what I was seeing, which is the question that would have killed the hypothesis before I wrote it down. Instead I reasoned from the platform split alone, and the platform split is equally consistent with any behavioural difference between builds, which is what this turned out to be.
+3. **I built one mechanism instead of a list.** With a platform split and one suspect commit, the honest output is "the log will name it; here are the two or three mechanisms worth looking at first". I produced one mechanism with supporting detail, which reads as a conclusion no matter how it is labelled.
+
+The instruction to discard it if the log said otherwise did its job, and you did exactly the right thing. **That does not make the entry cost nothing**, because a confident wrong direction is worth negative time even when it is correctly ignored, and if you had been less careful it would have cost you an afternoon removing a detector you needed.
+
+**What I take from it for the rest of this project:** where I cannot reach the evidence, the entry says what would settle it and stops, rather than filling the gap with a mechanism that fits.
+
+The fix you built is better than what I would have specified. Trying double resolution second, rather than switching detectors, keeps the coverage and costs nothing on images that already work, and the 8,000 px cap is the kind of limit that only shows up when somebody actually measures the run time.
+
+### 2. Decision: the gate record. Linux is explained. macOS is not yet
+
+Entry 32 section 3 asks for a byte-identical comparison **or an explained difference**. It never said what explained means, which is my omission, so here is the standard.
+
+**A difference is explained when all three of these hold:**
+
+- **a. Every gate verdict is identical on all three platforms.** Pass is pass and fail is fail, on every frame.
+- **b. The computation that diverges is named, down to a stage.** Not "floating point", which is the name of a category rather than a cause. Which stage, which quantity.
+- **c. The mechanism is named and bounds the difference**, so that we can say why it cannot grow into a.
+
+**Linux meets this, or is one sentence away from it.** Every printed table is identical and the raw records differ only below printed precision. Name the stage and the mechanism in a sentence and it is explained. **Mark Linux explained and move on.**
+
+**macOS does not meet it, and the gap is real rather than pedantic.** Two measurement studies differing in the third or fourth significant figure is roughly a part in a thousand. That is far above last-bit noise, so something is taking a different path, not just rounding differently. The gate tables being identical is reassuring and it is one sample: if an iterative fit is converging to a slightly different point, then on a marginal frame the same mechanism moves a verdict, and a marginal frame is precisely what the weekend is about to produce.
+
+**So: keep that workflow red on macOS, and do not loosen the gate to make it green.** Entry 17 section 2 already settled the general form of this: a number chosen after seeing the results is not a gate.
+
+**The work, and it should be small.** The stage records exist for exactly this. Run the two diverging studies on all three platforms with the trace on, and find the first stage whose metrics diverge. That localises it to a computation, and the computation will suggest the mechanism. My guess, offered as a guess: an iterative fit, `LevenbergMarquardt` or the surface fit, where a different order of operations changes the convergence path. If that is what it is, **the better answer is to make the iteration deterministic rather than to accept the difference**, with a fixed iteration count, a fixed ordering and a fixed termination test, because a measurement tool that gives the same answer twice is worth having for its own sake, quite apart from this gate.
+
+Report what you find before changing anything. If it turns out to be genuinely below the precision anybody could act on, that is an explanation too, and then macOS is explained on the same terms as Linux.
+
+### 3. Decision: yes, add `LensModel` to the keep list
+
+**Add it.** Four reasons, in order of weight.
+
+1. **It is the same class of information as `Make` and `Model`, which are already kept.** It names a piece of glass, not a person, not a place and not a time. There is no privacy argument against it that does not also argue against the two fields already published.
+2. **On a multi-camera phone it is the field that says which camera took the shot.** Entry 27's lesson was that the lens grouping key was missing a dimension, `DigitalZoomRatio`, and that one missing dimension made a submission unusable. The same 35 mm equivalent focal length can come from different physical lenses in different modes, and `LensModel` disambiguates that where focal length alone cannot. **This is the strongest reason and it is a measurement reason, not a completeness reason.**
+3. **The corpus is published for work nobody has designed yet.** A lens model string is the first thing an outside researcher would want and the cheapest thing for us to have kept.
+4. **Consent is not a barrier.** The contributors agreed to publication with location removed. A camera-technical field is inside what a reasonable person expects when `Make` and `Model` are already there.
+
+**Republish the corpus that is already out, rather than leaving two generations of scrubbing in it.** It is 26 images, the originals are retained in `C:\Dev\grouplab-originals` and `C:\Dev\grouplab-submissions`, and a corpus where some files carry a field and others do not for no reason a reader can see is worse than either choice applied consistently. Doing it now costs an hour. Doing it at two hundred images costs a day and an explanation.
+
+**And write down the principle, so the next field is decided rather than negotiated.** A whitelist that grows one request at a time becomes a blacklist with extra steps. The rule I would state:
+
+> **Keep what describes the camera and the exposure. Drop everything that describes where, when, who, or anything a person typed.**
+
+That keeps make, model, lens, focal length, 35 mm equivalent, f-number, digital zoom, ISO, exposure time and orientation. It drops the GPS block, every timestamp, maker notes, and every free-text field. It gives a straight answer to the next field somebody asks about, and it matches the whitelist in entry 41 section 2 for the diagnostic log, which is the same judgement made about the same data for a different purpose. **Two whitelists that disagree would be a defect; make them agree.**
+
+**One open question rather than a decision:** whether `LensModel` should join the lens grouping key alongside `DigitalZoomRatio`. That is a measurement question, not a judgement, and the corpus can answer it once the field is being kept. Do not add it to the key on my say-so.
+
+### 4. The number in your report that deserves more attention than it got
+
+| Platform | Identified correctly | Wrong |
+|---|---|---|
+| Windows | 33 of 37 | **0** |
+| macOS | 33 of 37 | **0** |
+| Linux | 32 of 37 | **0** |
+
+**Zero wrong, on every platform.** The identification either reads the sheet's own codes and names the definition it was printed from, or it declines and asks. It never confidently names the wrong one.
+
+That is the difference between a feature and a hazard. A sheet identified as the wrong definition would scale every measurement on it by a wrong number and produce a page of confident figures that are all wrong, with nothing anywhere saying so, which is the failure mode of entries 24, 39 and 40 arriving by a fourth route. **Four of thirty-seven declining is a small inconvenience. One of thirty-seven being wrong would have been a defect worth stopping for.** Whatever you did to make refusal the default on a damaged frame, two definitions, two tiles or an unknown identifier: that is the part to protect in every future change to it.
+
+Worth a line in `docs/DETECTION-PIPELINE.md` saying so, so that a later contributor tuning the identifier for a better hit rate knows which number is allowed to move.
+
+---
+
 ## 2026-09-15, entry 47: build and test is red on Linux and macOS, and I think I know why
 
 **Status: actioned 2026-09-15.**

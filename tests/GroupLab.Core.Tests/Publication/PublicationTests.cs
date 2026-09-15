@@ -23,7 +23,7 @@ internal static class PhoneImages
         byte[] Rational(params (uint N, uint D)[] values) => [.. values.SelectMany(v => BitConverter.GetBytes(v.N).Concat(BitConverter.GetBytes(v.D)))];
         var tiff = Tiff(
             [(0x010F, 2, Ascii("samsung")), (0x0110, 2, Ascii("SM-G965U")), (0x0112, 3, BitConverter.GetBytes((ushort)6))],
-            [(0x9003, 2, Ascii("2026:09:14 10:00:00")), (0x920A, 5, Rational((43, 10))), (0xA404, 5, Rational((164, 100)))],
+            [(0x829A, 5, Rational((1, 120))), (0x8827, 3, BitConverter.GetBytes((ushort)400)), (0x9003, 2, Ascii("2026:09:14 10:00:00")), (0x920A, 5, Rational((43, 10))), (0xA404, 5, Rational((164, 100))), (0xA434, 2, Ascii("Galaxy S9+ Rear Camera"))],
             [(0x0001, 2, Ascii("N")), (0x0002, 5, Rational((33, 1), (12, 1), (3456, 100)))]);
         var file = new List<byte> { 0xFF, 0xD8 };
         void Segment(byte marker, byte[] body)
