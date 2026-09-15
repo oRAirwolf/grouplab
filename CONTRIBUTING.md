@@ -72,6 +72,10 @@ Where the specification is silent and a choice has to be made to go on, record t
   - Explain which paragraph the code is obeying, and why. Do not narrate what clear code already says.
 - **Determinism.** Rendering the same definition twice must give identical bytes (conformance test 38): no timestamps and no unordered iteration.
 - **Documents.** Markdown for files in the repository, and no em dashes.
+- **Commit ids in documents.** Do not cite a bare commit id unless it is worth maintaining through a history rewrite. Prefer a document reference, a test name or a milestone label.
+  - **Why:** the 2026-09-14 rewrite changed 42 ids and left nine citations pointing at commits that no longer exist.
+  - **Where the map is:** [docs/REWRITE-HASH-MAP.md](docs/REWRITE-HASH-MAP.md).
+  - **If you must cite one:** keep the old id visible after a rewrite, as "`new` (was `old` before the 2026-09-14 rewrite)".
 - **No pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They must never appear in code, comments, documentation or interface text.
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.

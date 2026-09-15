@@ -80,7 +80,7 @@ A generalised cylinder, brief section 3.1, in `src/GroupLab.Core/Registration/`.
 
 ### M1.4 The first real-frame run crashed, and was not retried
 
-`grouplab surface frames` was first run once in the foreground on 14 September 2026 per `docs/NOTES-FROM-PLANNING.md` entry 14, with the surface fit of `d78c17c` plus two changes that do not alter what is computed: a tabulated profile and cached rotation in `SurfaceMapping`, held to 1e-6 px of the direct geometry by `DevelopableSurfaceTests`, and the frames prepared and evaluated in parallel. **It crashed after 60 seconds and wrote no raw rows.** Per entry 14 it was not retried and the frame set was not reduced.
+`grouplab surface frames` was first run once in the foreground on 14 September 2026 per `docs/NOTES-FROM-PLANNING.md` entry 14, with the surface fit of `88dc0f9` (was `d78c17c` before the 2026-09-14 rewrite) plus two changes that do not alter what is computed: a tabulated profile and cached rotation in `SurfaceMapping`, held to 1e-6 px of the direct geometry by `DevelopableSurfaceTests`, and the frames prepared and evaluated in parallel. **It crashed after 60 seconds and wrote no raw rows.** Per entry 14 it was not retried and the frame set was not reduced.
 
 ```
 System.IndexOutOfRangeException: Index was outside the bounds of the array.
@@ -394,7 +394,7 @@ The gated photographs:
 - **A cropping phone rewrites one tag.** It keeps the physical focal length and changes the 35 mm equivalent. Anything in this pipeline that reasons about a camera has to reason about the equivalent and the image size together, never about the physical focal length alone.
 - **Neither tag gives the distortion.** A cropped frame has the distortion of the part of the image circle it kept, so the physical lens does not identify it either.
 
-**Re-run.** All three commands were re-run, and their raw rows now hold these figures. The earlier rows are at `fa36186`.
+**Re-run.** All three commands were re-run, and their raw rows now hold these figures. The earlier rows are at `adbc0cc` (was `fa36186` before the 2026-09-14 rewrite).
 
 - **Unchanged to the digit:** every figure for the main camera, the telephoto and the scans.
 - **What moves:**

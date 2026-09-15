@@ -8,6 +8,74 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 30: the rebase is aborted, the scrub is independently verified, and one map must leave your scratchpad before it is lost
+
+**Status: open.** Answers your entry 29 step 5 report. Section 2 is the urgent one and should be done before anything else, including finishing step 5.
+
+### 1. The rebase you found is gone, and you were right to stop
+
+Alan ran `git rebase --abort`. `phase-1` is back at `4b5c9a4`, which is the rewritten history with the README diagram commit on top. `main` is at `95fe9b0`, also rewritten, carrying both README commits and the six concept screens. Nothing has been pushed or force pushed. `git status` reports the two branches diverged from their remotes by 42 and 41 commits, which is the expected shape of a rewritten local history against a stale remote.
+
+**The pull was mine.** I told Alan to run it without first checking for `refs/original`, which is the thing that would have told me a rewrite had happened in that clone. Your read of the consequence was exactly right: continuing it would have replayed the scrubbed history onto the unscrubbed one and brought the coordinates back. Recording it here so the next person understands why the rule below exists.
+
+**The standing rule until the fresh repository exists: no `git pull`, no `git push`, no `git fetch` that could fast-forward a local branch, from anybody, in that clone.** The remote is stale by design.
+
+**One thing to check rather than assume.** Your uncommitted edit to `PublicationTests.cs` removing the sixteen-file allowlist did not survive into the post-abort working tree; Alan's `git status` afterwards showed no modified tracked files at all. Redo it rather than looking for it.
+
+### 2. Get the hash map out of your scratchpad, now, into a tracked file
+
+This is the most fragile thing in the project at this moment.
+
+**The rewrite changed 40 commit hashes and 8 of them are cited in the documentation**, 6 in `NOTES-FROM-PLANNING.md` and 2 in `PHASE1-RESULTS.md`. That is an excellent catch and it is the half of entry 29 step 1 I did not think to ask for: I asked you to look for recorded file digests and you found none, correctly, but a cited commit id is the same failure wearing different clothes and the record is already wrong in eight places.
+
+**The map lives in your scratchpad, which does not survive you.** If this session ends before it is written down, the correspondence between the old and new ids is unrecoverable, and eight citations in the permanent record become unresolvable references to commits that no longer exist in any repository.
+
+**Do this first, before finishing step 5.**
+
+1. **Write the full 40-entry map to `docs/REWRITE-HASH-MAP.md`** and commit it. Old id, new id, subject line, one row each. Include the date, the tool (`git filter-branch`), and one sentence on why the rewrite happened, so the file explains itself to somebody reading it in a year.
+2. **Correct the 8 citations in place**, in the same commit or the next one, leaving the old id visible where the sentence needs it: `5f8dafd` (was `b9b117b` before the 2026-09-14 rewrite) reads better than a silent substitution, because a reader with an old clone or an old bundle needs to be able to find it.
+3. **Then add a rule to `CONTRIBUTING.md`**: do not cite a bare commit id in a document unless it is worth maintaining through a rewrite. Prefer a document reference, a test name or a milestone label.
+
+### 3. The scrub, verified independently
+
+I checked all sixteen photographs in the working tree myself, from a fresh copy, reading the EXIF with a different library than yours.
+
+**Zero GPS blocks. Zero maker notes, dates, unique ids or software strings.** What survives on every one of the sixteen is exactly: `Make`, `Model`, `Orientation`, `FocalLength`, `FocalLengthIn35mmFilm`, `FNumber`, `ExposureTime`, `ISOSpeedRatings`, `DigitalZoomRatio`, and the pixel dimensions. `DigitalZoomRatio` is present on all sixteen, which is what entry 29 section 2 required and what my Python whitelist would have destroyed.
+
+That corroborates your step 3 from a second direction. **It does not replace the rest of step 5**, which is the part that proves the measurement did not move.
+
+### 4. The Fligner-Killeen answer is a finding about my tooling, not about R
+
+Your diagnosis is right and it is worse than the four keys it surfaced in. `sg_dump.R` writes its values through R's default 15 significant digits, in both the CSV and the JSON. For a comparison at 1e-12 that is invisible. For a statistic whose value depends on the ordering of nearly-equal numbers, the dropped bits change which values tie, and the statistic moves in the fourth decimal place. That is exactly the 1.2e-4 to 4.9e-4 relative gap question 14 recorded.
+
+**So the fixtures are lossy, and every future tie-sensitive key will hit the same wall.** Three things follow:
+
+1. **Record it in `STATISTICS.md` section 15.4** as a property of the fixtures rather than a difference between implementations: values are stored at 15 significant digits, which is insufficient to reproduce rank-based statistics with near-ties, and the four Fligner keys are the worked example.
+2. **I will regenerate the fixtures at 17 significant digits**, which is the round-trip precision of a double, so the stored value is the value. That is my file to fix.
+3. **Not yet.** A 14 MB fixture change in the middle of a history rewrite is the worst possible timing. It waits until the fresh repository exists and the rewrite is behind us.
+
+Your rebuilt values and the 45,476 keys matching with nothing pending is the right outcome in the meantime. Note in the harness how those values were reconstructed, so the next regeneration can be checked against it.
+
+### 5. Finish step 5, in this order
+
+1. The hash map, per section 2.
+2. The post-rewrite Phase 0 gate record. **This is the one that matters most**, because it is the claim that scrubbing changed no measurement. Before and after must agree exactly, not approximately.
+3. The full suite, with the allowlist removed from `PublicationTests`, and the counts.
+4. A short report: gate before and after, Core and App counts, and the `PublicationTests` result.
+
+**Then stop again.** The deletion of the GitHub repository and the push of the rewritten history remain Alan's, and he has not done either.
+
+### 6. Two things for the fresh push, so they are not discovered afterwards
+
+- **`worktree-agent-a5825dfa6aad44e1d` is a live local branch.** It is a leftover from one of your worktrees and it appears in the bundle alongside the real branches. Delete it before the push rather than publishing it.
+- **`refs/original/*` must not be pushed.** They are `git filter-branch`'s backups and they point at the unscrubbed history. An ordinary `git push origin main phase-1` will not carry them; `git push --mirror` or `git push --all` with a stale refspec could. They are kept locally, and in Alan's bundle, until the fresh repository is verified.
+
+### 7. The permission refusals
+
+You said the classifier refused `git ls-remote` and two other read-only checks. Tell Alan exactly which commands, in one line each, and he can allow them. Read-only git queries are worth having available, and right now the inability to inspect the remote is a real handicap on the one task where the remote's state matters.
+
+---
+
 ## 2026-09-14, entry 29: Alan has approved scrubbing the coordinates out of history, and one scrubber is already out of date
 
 **Status: open.** Answers question 13 section 2. **Read section 4 before running anything: this entry stops short of the irreversible steps on purpose.**
@@ -280,7 +348,7 @@ A free-angle rotation, and a mirror flip. Ninety degree steps in both directions
 
 ## 2026-09-15, entry 25: units, and the fact that the application cannot print a target
 
-**Status: actioned 2026-09-15.** Section 1 in f4f5263, reported in `docs/PHASE1-RESULTS.md` M4.3; section 2 as the print screen, M4.4; adjust to zero still waits, per section 3. Two findings from Alan's second pass. The first is a small fix with a larger shape behind it. The second is a missing pillar rather than a missing button.
+**Status: actioned 2026-09-15.** Section 1 in `2665c05` (was `f4f5263` before the 2026-09-14 rewrite), reported in `docs/PHASE1-RESULTS.md` M4.3; section 2 as the print screen, M4.4; adjust to zero still waits, per section 3. Two findings from Alan's second pass. The first is a small fix with a larger shape behind it. The second is a missing pillar rather than a missing button.
 
 **Entry 24 section 7 is answered and needs nothing.** The scale entry does take a value, "Distance between the two taps, inches", and he used 1.5 against his grid. Good. The detection message is also doing its job: "Detection failed: 0 of 38 markers found; registration needs 4. Mark this image by hand with a reference length or rectangle" is the right thing to say to someone who loaded a commercial target, and the 38 confirms the corrected `GL-CF25-LTR` geometry is in the library.
 
@@ -337,7 +405,7 @@ Entry 24 section 1, the statistics reported for two shots, still comes first. It
 
 ## 2026-09-15, entry 24: first human use of M4, and the app printed confident statistics for two shots
 
-**Status: actioned 2026-09-15.** Sections 1 to 3 in b9b117b, with question 12 for the threshold; sections 4 and 7 with entry 26, and section 5; reported in `docs/PHASE1-RESULTS.md` M4.2.
+**Status: actioned 2026-09-15.** Sections 1 to 3 in `5f8dafd` (was `b9b117b` before the 2026-09-14 rewrite), with question 12 for the threshold; sections 4 and 7 with entry 26, and section 5; reported in `docs/PHASE1-RESULTS.md` M4.2.
 
 Alan opened the marking screen, loaded `scans/mounted/20260329_183028.jpg`, set a scale, marked a point of aim and two impacts, and exported. His own notes were rotation, no calibre input, and that it needs refinement. The export and the screenshots carry four more findings he did not flag, and the first one is the serious one.
 
@@ -712,7 +780,7 @@ If measurement A shows stapled targets are near flat and their residual is devel
 
 ## 2026-09-14, entry 18: the shotGroups fixtures are generated and committed, M3 is unblocked, and question 9 is accepted
 
-**Status: actioned 2026-09-14.** Fixtures and scripts committed in `20f562e` with the brief's section 4.4 amendment and questions 7 to 10 marked answered; M3 built against the fixtures and reported in `docs/PHASE1-RESULTS.md` M3.1, with the differences found raised as question 11.
+**Status: actioned 2026-09-14.** Fixtures and scripts committed in `dbea97b` (was `20f562e` before the 2026-09-14 rewrite) with the brief's section 4.4 amendment and questions 7 to 10 marked answered; M3 built against the fixtures and reported in `docs/PHASE1-RESULTS.md` M3.1, with the differences found raised as question 11.
 
 ### 1. Question 10: done, not delegated back
 
@@ -960,7 +1028,7 @@ Caching the mapping's rotation and bend profile, holding it to 1e-6 px with a te
 
 ## 2026-09-14, entry 14: the real-frame run is not running, and the turn that started it is the reason
 
-**Status: actioned 2026-09-14.** `grouplab surface frames` ran in the foreground with a progress line per frame, its crash recorded at `ab42e33` and the completed run and M1 report at `d574a7e`, and the standing rule is in `CONTRIBUTING.md` under "Long-running steps" with entry 15 section 6's sentence appended.
+**Status: actioned 2026-09-14.** `grouplab surface frames` ran in the foreground with a progress line per frame, its crash recorded at `430081b` (was `ab42e33` before the 2026-09-14 rewrite) and the completed run and M1 report at `e30fbeb` (was `d574a7e` before the 2026-09-14 rewrite), and the standing rule is in `CONTRIBUTING.md` under "Long-running steps" with entry 15 section 6's sentence appended.
 
 **What the repository shows.** `scans/phase1/measurements/surface-synthetic.json` and `surface-rendered.json` are written. `scans/phase0/measurements/surface.json`, which `grouplab surface frames` produces, **does not exist**, and nothing under `scans/` or `docs/` has changed since `docs/PHASE1-RESULTS.md` was last written. Alan reports the session is idle. So the run that was described as "still going" is not going: it was started in a turn that then ended, and it went with the turn.
 
@@ -979,7 +1047,7 @@ Caching the mapping's rotation and bend profile, holding it to 1e-6 px with a te
 
 > **Do not end a turn waiting to be notified that something finished.** If a step is long, run it in the foreground and wait for it in that turn, printing progress as it goes. If the tooling offers a real background mechanism with a handle you can poll, poll it in the same turn until it completes. A turn that ends while work is outstanding does not pause the work, it abandons it, and the session then reports progress that is not happening. The only correct reason to end a turn with work outstanding is a blocking question in `docs/QUESTIONS-FOR-PLANNING.md`, and that is a stop, not a wait.
 
-**Everything else about how you are working is right**, and this is a mechanical fault rather than a judgement one. Measuring entry 11's change before making it, parking the blocked instruction and carrying on with the independent one, committing the surface fit at `d78c17c` before any real frame was run, and making both M1.3 changes on synthetic evidence with the reasons recorded, are all exactly right.
+**Everything else about how you are working is right**, and this is a mechanical fault rather than a judgement one. Measuring entry 11's change before making it, parking the blocked instruction and carrying on with the independent one, committing the surface fit at `88dc0f9` (was `d78c17c` before the 2026-09-14 rewrite) before any real frame was run, and making both M1.3 changes on synthetic evidence with the reasons recorded, are all exactly right.
 
 ---
 

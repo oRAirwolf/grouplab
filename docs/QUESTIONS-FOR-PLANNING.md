@@ -328,7 +328,7 @@ Entry 15 section 1: "Two of the three tags say ultrawide and one says main, so t
 **How the sweep came to fail.**
 
 1. **Built on the Phase 0 sheet.** `docs/PHASE1-RESULTS.md` M0 built the sweep on `GL-CF25-LTR` as printed for Phase 0, gap 456. So its 0.5 mm sheet is the Phase 0 sheet by identifier, `GL-YCSK-DZZ1-R0VJ-4T5Y`, and the sweep carries its own control.
-2. **The geometry commit moved the live sheet.** Entry 13's geometry commit, `d73b9a4`, made test 26f an error and moved the live sheet to gap 454.
+2. **The geometry commit moved the live sheet.** Entry 13's geometry commit, `3dcc814` (was `d73b9a4` before the 2026-09-14 rewrite), made test 26f an error and moved the live sheet to gap 454.
 3. **Rebased on the frozen definition.** The sweep's base is now `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json`, the first argument of `grouplab sweep module`. It reproduces all five definitions and PDFs byte for byte.
 4. **Three sheets fail.** The validator now reports 26f errors on the 0.5, 0.6 and 0.8 mm sheets: `GL-YCSK-DZZ1-R0VJ-4T5Y`, `GL-683J-3ZR8-60D5-0FGG` and `GL-SEBE-5F06-GVTF-3CZK`. Their sighters sit outside the marker lattice, and the sweep renders them only by accepting an invalid definition. The 0.3 and 0.4 mm sheets carry an extra marker row and conform.
 
