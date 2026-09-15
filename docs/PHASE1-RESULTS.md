@@ -2217,7 +2217,16 @@ A resolution that would make the image longer than 8000 px, a 4000 px photograph
 - **Not named:** the 600 DPI scan turned 180 degrees, and the three telephoto frames.
 - **Time for a readable sheet:** 0.2 to 9.0 s, except `ultrawide2` at 16.5 s.
 - **Time where no code is read:** 8.5 s for the rotated scan and 15.5 to 17.9 s for the telephoto frames, which a 4000 px photograph spends at double resolution.
-- **Linux and macOS:** their counts are in the gate record run summary of the commit that carries this section, and follow here once read.
+- **Measured on the three CI runners at `826bd15`, none naming a wrong definition:**
+
+  | Platform | Named correctly | Not named |
+  |---|---|---|
+  | `windows-latest` | 33 of 37 | the rotated 600 DPI scan, `telephoto1-3` |
+  | `macos-latest`, arm64 | 33 of 37 | the same four |
+  | `ubuntu-latest`, x64 | **32 of 37** | the same four, and `gl-cf25-ltr-1-600-dpi.png` |
+
+- **The one platform difference:** Linux does not name `gl-cf25-ltr-1-600-dpi.png`, which Windows and macOS read only at quarter resolution. Named with `--target`, that scan registers on Linux as it does on Windows: the sheets table of the gate record is identical there. So identification works on all three platforms, and is one sheet short on Linux; it is not the same on all three.
+- **The runners are about twice as slow as this machine:** an image that gives no code took 17.7 to 45.4 s there.
 
 **The rule of entry 47 section 4 is taken.** When a required check goes red, the next commit makes it green or deliberately reverts, and an expected red, such as the gate record's, is named in the commit message. `fd05dac` and `eddee00` went up in the same push as the fix, before its CI result was known. Under the rule, the fix would have gone alone.
 
