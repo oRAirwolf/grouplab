@@ -33,6 +33,13 @@ Four rules that decide every design question below.
 
 Whether the circular assumption holds is not asserted, it is **tested**, in section 7, and the answer conditions which estimators are shown.
 
+**The coordinates are taken as exact, and they are not.** Added 15 September 2026, `docs/NOTES-FROM-PLANNING.md` entry 52 section 4. Every interval in this document describes shot-to-shot dispersion, the scatter of the rifle and the shooter about their centre. None describes how far a coordinate would move if the same photograph were measured again, and the pipeline has at least two places where it would. Both were measured on the Phase 0 photographs (`docs/PHASE1-RESULTS.md` "Entry 52 sections 3 and 4"):
+
+- **Registration of a sheet that is not flat.** The same corners were handed to the homography fit in 200 orders, on each of seven mounted photographs. They gave 15 to 70 distinct results per frame, and a worst bull spanning up to threefold, 0.030 to 0.096 in on one frame. On two of the three flat photographs the result was identical all 200 times, and on the third it took two values.
+- **The edge fit on a bull seen by few edge points.** Leaving any one point out moves a bull by at most 0.0002 in where it has 106 to 900 points. On the one photograph whose sheet overflows the frame, a bull with 14 points moves by up to 0.0032 in.
+
+**An interval computed from coordinates that can move is narrower than the truth by however much they move.** On the flat photographs the registration's share was nothing on two and 0.0035 in on the third. On a mounted sheet it reaches hundredths, and nothing the application prints includes it yet. It is recorded here as a known source of uncertainty, measured on these frames and not yet carried into any figure a user sees.
+
 ---
 
 ## 3. Rayleigh sigma, the preferred estimator

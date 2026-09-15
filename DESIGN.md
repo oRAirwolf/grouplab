@@ -361,6 +361,10 @@ Exclusion is permitted, because the legitimate case exists. It is gated.
 
 When a user marks a shot for exclusion, GroupLab first states what the mathematics expects. In a group of a given size drawn from a given dispersion, the worst shot has a known expected distance from centre, and it is farther out than most shooters believe. The dialog says so plainly. Exclusion then requires a reason selected from a short list, which is recorded. Every report prints both the full and reduced figures side by side, so an exclusion can never be hidden.
 
+### What the intervals do not include
+
+Every interval describes shot-to-shot dispersion and takes the measured coordinates as exact. The measurement's own instability is not in them yet: a sheet that is not flat registers differently when nothing but the order of its markers changes, and a bull seen by few edge points moves when one point is left out. Both are measured, and recorded as a known source of uncertainty, in `docs/STATISTICS.md` section 2 (`docs/NOTES-FROM-PLANNING.md` entry 52 section 4).
+
 ## 15. Data model
 
 Entities: Rifle, Barrel with round count, Load, Session, Target, Shot, Group, Chronograph String.

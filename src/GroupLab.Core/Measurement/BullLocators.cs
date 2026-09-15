@@ -206,7 +206,49 @@ public static class EdgeFitBullLocator
     /// <summary>Samples per image pixel along a ray.</summary>
     private const double SamplesPerPixel = 4;
 
-    public static BullLocation Locate(GrayImage image, IPageMapping map, int index, Bull bull, IReadOnlyList<InkBand> bands)
+    public static BullLocation Locate(GrayImage image, IPageMapping map, int index, Bull bull, IReadOnlyList<InkBand> bands) =>
+        Converge(image, map, index, bull, bands).Location;
+
+    /// <summary>
+    /// How far a located bull's centre moves when any one of its edge points is left out, NOTES-FROM-PLANNING.md entry 52 section 3 and entry
+    /// 49 section 5. The last pass's points are refitted from the same start with each point removed in turn. It also counts the points whose
+    /// residual lies within a tenth of the fit's rejection limit, where a small change in the image flips a point in or out of the fit. A
+    /// diagnostic: the locator's result is <see cref="Locate"/>'s, unchanged.
+    /// </summary>
+    public static EdgeFitSensitivity LeaveOneOut(GrayImage image, IPageMapping map, int index, Bull bull, IReadOnlyList<InkBand> bands)
+    {
+        var run = Converge(image, map, index, bull, bands);
+        if (run.Location.Recovered is null || run.Observations is not { Count: > 12 } observations)
+        {
+            return new EdgeFitSensitivity(run.Location, run.Observations?.Count ?? 0, 0, null, null, 0);
+        }
+
+        var full = Fit(observations, run.Start, run.Spread);
+        int near = full.Residuals.Count(r => Math.Abs(Math.Abs(r) - full.Limit) <= 0.1 * full.Limit);
+        var shifts = new double[observations.Count];
+        var without = new List<Observation>(observations.Count - 1);
+        for (int i = 0; i < observations.Count; i++)
+        {
+            without.Clear();
+            for (int k = 0; k < observations.Count; k++)
+            {
+                if (k != i)
+                {
+                    without.Add(observations[k]);
+                }
+            }
+
+            var refit = Fit(without, run.Start, run.Spread);
+            shifts[i] = Math.Sqrt(Math.Pow(refit.Centre.X - full.Centre.X, 2) + Math.Pow(refit.Centre.Y - full.Centre.Y, 2));
+        }
+
+        Array.Sort(shifts);
+        return new EdgeFitSensitivity(run.Location, observations.Count, full.Used, shifts[^1], shifts[shifts.Length / 2], near);
+    }
+
+    private sealed record Converged(BullLocation Location, List<Observation>? Observations, PointD Start, double Spread);
+
+    private static Converged Converge(GrayImage image, IPageMapping map, int index, Bull bull, IReadOnlyList<InkBand> bands)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(map);
@@ -215,7 +257,7 @@ public static class EdgeFitBullLocator
         var declared = new PointD(bull.X, bull.Y);
         if (bands.Count == 0)
         {
-            return new BullLocation(index, bull.Label, declared, null, 0, Failure: "the ring set lays no ink");
+            return new Converged(new BullLocation(index, bull.Label, declared, null, 0, Failure: "the ring set lays no ink"), null, declared, 0);
         }
 
         var edges = Edges(bands);
@@ -223,25 +265,26 @@ public static class EdgeFitBullLocator
         double spread = 0, reach = bands[0].Outer + MaximumHalfWidth + 1;
         int used = 0;
         var histogram = new int[256];
+        (List<Observation>? Observations, PointD Start, double Spread) last = (null, declared, 0);
         for (int pass = 1; pass <= MaximumPasses; pass++)
         {
             if (Window.Bounds(image, map, centre, reach) is not { } box)
             {
-                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "the outer edge leaves the image");
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "the outer edge leaves the image"), null, declared, 0);
             }
 
             var (low, high) = Window.Levels(image, map, box, centre, reach, histogram);
             double contrast = high - low;
             if (contrast < 1)
             {
-                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "no ink contrast at the bull");
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "no ink contrast at the bull"), null, declared, 0);
             }
 
             var j = map.Jacobian(map.ToImage(centre));
             double step = Math.Sqrt(Math.Abs((j.XX * j.YY) - (j.XY * j.YX))) / SamplesPerPixel;
             if (!double.IsFinite(step) || step <= 0)
             {
-                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "the mapping has no finite scale at the bull");
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "the mapping has no finite scale at the bull"), null, declared, 0);
             }
 
             var observations = new List<Observation>(edges.Count * Rays);
@@ -250,8 +293,8 @@ public static class EdgeFitBullLocator
                 double across = Math.Ceiling(2 * edge.HalfWidth / step) + 1;
                 if (!(across >= MinimumSamples && across <= MaximumSamples))
                 {
-                    return new BullLocation(index, bull.Label, declared, null, pass, Failure: string.Create(CultureInfo.InvariantCulture,
-                        $"the mapping gives the {edge.Radius:0.#} dmm edge a profile of {across:0} samples at {step * SamplesPerPixel:0.###} dmm per pixel, outside {MinimumSamples} to {MaximumSamples}"));
+                    return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: string.Create(CultureInfo.InvariantCulture,
+                        $"the mapping gives the {edge.Radius:0.#} dmm edge a profile of {across:0} samples at {step * SamplesPerPixel:0.###} dmm per pixel, outside {MinimumSamples} to {MaximumSamples}")), null, declared, 0);
                 }
 
                 int n = (int)across;
@@ -278,26 +321,29 @@ public static class EdgeFitBullLocator
 
             if (observations.Count < 12)
             {
-                return new BullLocation(index, bull.Label, declared, null, pass, Failure: $"{observations.Count} edge points found");
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: $"{observations.Count} edge points found"), null, declared, 0);
             }
 
-            var (fitted, fittedSpread, count) = Fit(observations, centre, spread);
+            var start = centre;
+            double startSpread = spread;
+            var (fitted, fittedSpread, count, _, _) = Fit(observations, centre, spread);
             if (!double.IsFinite(fitted.X) || !double.IsFinite(fitted.Y) || !double.IsFinite(fittedSpread))
             {
-                return new BullLocation(index, bull.Label, declared, null, pass, Failure: "the centre fit diverged");
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "the centre fit diverged"), null, declared, 0);
             }
 
             double shift = Math.Sqrt(Math.Pow(fitted.X - centre.X, 2) + Math.Pow(fitted.Y - centre.Y, 2));
             centre = fitted;
             spread = fittedSpread;
             used = count;
+            last = (observations, start, startSpread);
             if (shift < CentroidBullLocator.Convergence)
             {
-                return new BullLocation(index, bull.Label, declared, centre, pass, null, spread, used);
+                return new Converged(new BullLocation(index, bull.Label, declared, centre, pass, null, spread, used), observations, start, startSpread);
             }
         }
 
-        return new BullLocation(index, bull.Label, declared, centre, MaximumPasses, null, spread, used, "did not converge");
+        return new Converged(new BullLocation(index, bull.Label, declared, centre, MaximumPasses, null, spread, used, "did not converge"), last.Observations, last.Start, last.Spread);
     }
 
     private readonly record struct Edge(double Radius, int Sign, double HalfWidth);
@@ -375,12 +421,13 @@ public static class EdgeFitBullLocator
         return best;
     }
 
-    private static (PointD Centre, double Spread, int Used) Fit(List<Observation> observations, PointD start, double spread)
+    private static (PointD Centre, double Spread, int Used, double[] Residuals, double Limit) Fit(List<Observation> observations, PointD start, double spread)
     {
         double cx = start.X, cy = start.Y, g = spread;
         var active = new bool[observations.Count];
         Array.Fill(active, true);
         var residuals = new double[observations.Count];
+        double lastLimit = double.NaN;
         for (int round = 0; round < 3; round++)
         {
             for (int iteration = 0; iteration < 20; iteration++)
@@ -440,15 +487,23 @@ public static class EdgeFitBullLocator
             }
 
             double limit = Math.Max(4 * 1.4826 * absolute[absolute.Length / 2], 0.01);
+            lastLimit = limit;
             for (int i = 0; i < observations.Count; i++)
             {
                 active[i] = Math.Abs(residuals[i]) <= limit;
             }
         }
 
-        return (new PointD(cx, cy), g, active.Count(a => a));
+        return (new PointD(cx, cy), g, active.Count(a => a), residuals, lastLimit);
     }
 }
+
+/// <summary>
+/// The edge fit's sensitivity to its own points, NOTES-FROM-PLANNING.md entry 52 section 3: the location, how many edge points the last pass
+/// found and how many the fit used, the largest and median movement of the centre in dmm when one point is left out, and how many points lie
+/// within a tenth of the rejection limit. The shifts are null when the bull was not located.
+/// </summary>
+public sealed record EdgeFitSensitivity(BullLocation Location, int Observations, int Used, double? LargestShift, double? MedianShift, int NearLimit);
 
 internal readonly record struct PixelBox(int Left, int Top, int Right, int Bottom);
 

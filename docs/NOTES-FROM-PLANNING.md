@@ -289,10 +289,16 @@ The 24-shots figure in section 4 is the clearest case the target design has ever
 
 ## 2026-09-15, entry 52: question 15 answered, and the thing underneath it
 
-**Status: actioned 2026-09-15 for sections 1 and 2; sections 3 and 4 are next, then the macOS rerun.**
+**Status: actioned 2026-09-15.** The macOS rerun from Windows' corners is next, as section 5 orders.
 - **Sections 1 and 2:** the sort is committed with every record regenerated, and no verdict changed. `docs/PHASE1-RESULTS.md` "Entry 52" has the before-and-after tables, headed by your sentence.
 - **Two further instabilities show in them,** beyond RANSAC's consensus. `ultrawide1`'s surface fit converges to a focal length of 2053 px instead of 1940 from a slightly different start. Two correlation readings change, `ultrawide1` from structured to not distinguishable from random and `main_flat2` the other way.
 - **Records already stale:** regenerating under unchanged code first found five, reported separately there so they are not read as the sort's effect.
+- **Section 3, the hypothesis holds.** The same correspondences handed to the homography fit in 200 orders gave one result on `main_flat1` and `main_flat2`, and two on `main_flat3`. The mounted frames gave 15 to 70, with the worst scoring bull spanning up to threefold. The instability is the planar model's mismatch with a curved sheet, not the sampler.
+- **Section 3's consequence, as you stated it beforehand.** The mounted gate's 0 of 7 never had an error bar. It is robust: no ordering lets a mounted frame pass, and the lowest worst scoring bull across all 1,400 mounted registrations is 0.013 in. Its corner counts, bulls over the gate and worst bulls are not: they vary by more than several of the M1 comparisons were drawn from.
+- **The edge fit, entry 49 section 5.** Leaving one point out moves a bull by at most 0.0002 in on bulls of 106 to 900 points. `telephoto3`'s bull 24 has 29 points and did not converge, and one point moves it by up to 0.53 dmm, 0.0021 in, more than the 0.30 dmm move seen on the macOS runner. No point was rejected at convergence on any bull, so the step is in whether a ray yields an edge point at all. The stage record names the failure to converge, and nothing says a bull rests on few points.
+- **Section 4:** `docs/STATISTICS.md` section 2 records the measurement's own instability as a known source of uncertainty the intervals do not include, with these numbers, and `DESIGN.md` section 14 points at it.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 52" and "Entry 52 sections 3 and 4".
 
 Section 1 is the decision you asked for. Section 2 is how to land it without wrecking the benchmark. Section 3 answers your deeper question, which is the better question. Section 4 is what sections 1 to 3 add up to, and it is the most important paragraph I have written in this log.
 

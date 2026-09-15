@@ -2363,7 +2363,7 @@ None of this is changed, as section 2 asks.
 
 ## Entry 52. The markers sorted before use, every record regenerated, and what the movement measures
 
-`docs/NOTES-FROM-PLANNING.md` entry 52 sections 1 and 2. Sections 3 and 4 are next: how far registration and the edge fit move under reordering and under one point left out, and the paragraph on the measurement uncertainty the intervals do not include.
+`docs/NOTES-FROM-PLANNING.md` entry 52 sections 1 and 2. Sections 3 and 4, how far registration and the edge fit move under reordering and under one point left out, are reported in "Entry 52 sections 3 and 4".
 
 **These figures moved because the markers are now sorted before use. The sheet, the markers and the corners are identical; only their order changed. The movement measures how unstable the registration is on these frames, not an improvement in it.**
 
@@ -2417,6 +2417,61 @@ The surface fit starts from the whole-sheet homography, so it inherits the reord
 - **The module sweep's five PDFs:** they gained `/ViewerPreferences << /PrintScaling /None >>`, which entry 25 added to the renderer.
 
 **Tests:** Core 758 passing with the records as committed, none skipped.
+
+---
+
+## Entry 52 sections 3 and 4. How far registration and the edge fit move when nothing that matters changes
+
+`docs/NOTES-FROM-PLANNING.md` entry 52 sections 3 and 4, and entry 49 section 5.
+
+**Reproduce:** `grouplab spike stability`, raw rows `scans/phase1/measurements/stability.json`, every order's result and every bull's leave-one-out figures.
+
+**The method, one for both experiments.**
+- **Registration against the order of its inputs.** Each flat and gated mounted photograph is detected once, then registered 200 times. Each time, the same corner correspondences reach the homography fit in a different seeded order, and the inlier flags are put back in the caller's order. The sheet, the markers and the corners are identical in every run.
+- **The edge fit against each of its points.** On each photograph's own registration, every located scoring bull is refitted from the same start with each edge point left out in turn. The table gives the largest movement of any bull, and how many bulls have a point within a tenth of the fit's rejection limit.
+
+**What was stated before running it.** Planning's hypothesis: on a flat sheet a homography is nearly the right model, so the consensus is stable. On a mounted sheet no plane fits, so RANSAC returns whichever subset looked best on its draws. And if the mounted frames spread, the mounted gate's 0 of 7 has never had an error bar.
+
+| Frame | Gate | Orders | Distinct outcomes | Corners kept, min / median / max | Scoring bulls over the gate, min / median / max | Worst scoring bull (in), min / median / max | Largest leave-one-out shift of a bull (in) | Bulls with a point near the rejection limit |
+|---|---|---|---|---|---|---|---|---|
+| `ultrawide1.jpg` | mounted | 200 | 70 | 60 / 69 / 76 of 136 | 10 / 13 / 15 of 25 | 0.02785 / 0.03590 / 0.05062 | 0.00004 at 21, 651 of 651 points used | 4 of 25 |
+| `ultrawide2.jpg` | mounted | 200 | 67 | 36 / 50 / 61 of 136 | 14 / 20 / 23 of 25 | 0.03020 / 0.06819 / 0.09631 | 0.00006 at 5, 313 of 313 points used | 8 of 25 |
+| `ultrawide3.jpg` | mounted | 200 | 67 | 34 / 48 / 57 of 128 | 18 / 21 / 23 of 25 | 0.05938 / 0.10299 / 0.11680 | 0.00008 at 21, 214 of 214 points used | 3 of 25 |
+| `main1.jpg` | mounted | 200 | 25 | 85 / 88 / 95 of 136 | 7 / 11 / 14 of 25 | 0.01342 / 0.01463 / 0.02373 | 0.00003 at 21, 749 of 749 points used | 3 of 25 |
+| `main2.jpg` | mounted | 200 | 51 | 22 / 32 / 57 of 104 | 16 / 21 / 23 of 25 | 0.03651 / 0.05826 / 0.09253 | 0.00021 at 5, 106 of 106 points used | 6 of 25 |
+| `main3.jpg` | mounted | 200 | 15 | 34 / 58 / 67 of 108 | 12 / 20 / 23 of 25 | 0.03616 / 0.06540 / 0.08938 | 0.00010 at 21, 374 of 374 points used | 2 of 25 |
+| `telephoto2.jpg` | mounted | 200 | 46 | 16 / 38 / 45 of 132 | 20 / 22 / 25 of 25 | 0.03122 / 0.04012 / 0.05376 | 0.00004 at 21, 670 of 670 points used | 1 of 25 |
+| `main_flat1.jpg` | flat | 200 | 1 | 136 / 136 / 136 of 136 | 0 / 0 / 0 of 25 | 0.00343 / 0.00343 / 0.00343 | 0.00002 at 11, 900 of 900 points used | 10 of 25 |
+| `main_flat2.jpg` | flat | 200 | 1 | 100 / 100 / 100 of 100 | 2 / 2 / 2 of 25 | 0.00566 / 0.00566 / 0.00566 | 0.00002 at 4, 777 of 777 points used | 7 of 25 |
+| `main_flat3.jpg` | flat | 200 | 2 | 89 / 91 / 91 of 92 | 3 / 6 / 6 of 25 | 0.00832 / 0.01183 / 0.01183 | 0.00003 at 4, 596 of 596 points used | 3 of 25 |
+| `telephoto3.jpg` | excluded | not reordered | | | | | 0.00322 at 25, 14 of 14 points used | 0 of 20 |
+
+**The hypothesis holds.**
+- **Flat frames:** `main_flat1` and `main_flat2` give one result in 200 orders. `main_flat3` gives two: 89 or 91 corners kept, and a worst scoring bull of 0.00832 or 0.01183 in. Lost markers do not explain the difference, since `main_flat2` decoded 25 of 34 and `main_flat3` 23, and `main_flat2` gives one.
+- **Mounted frames:** every one gives 15 to 70 distinct results. The worst scoring bull spans 0.030 to 0.096 in on `ultrawide2`, 0.037 to 0.093 on `main2` and 0.059 to 0.117 on `ultrawide3`. Scoring bulls over the gate span 12 to 23 on `main3`, and corners kept span 16 to 45 of 132 on `telephoto2`.
+- **What it means:** the instability comes with the model's mismatch to a curved sheet. It is not a tuning problem in the sampler, and sorting the markers made it repeatable without making it smaller.
+
+**The consequence for the mounted gate, as stated beforehand.**
+- **The verdict is robust.** No ordering lets a mounted frame pass. The lowest worst scoring bull in all 1,400 mounted registrations is 0.01342 in, on `main1`.
+- **The figures behind it are not.** The corners kept, the bulls over the gate and the worst bull each vary across orderings by more than the differences several M1 comparisons were read from.
+  - **M1.5:** "worse on two frames" set `ultrawide2`'s 0.06983 against a surface fit's 0.09183, and that frame's whole-sheet figure alone ranges from 0.030 to 0.096.
+  - **The benchmark itself:** its figures, whether 0.015 to 0.091 in before the sort or 0.018 to 0.113 after, are single draws from these ranges.
+- **So a conclusion drawn from a change smaller than a frame's spread here was not supported by that frame.** The spreads are the first error bars those figures have had.
+
+**The edge fit, entry 49 section 5's three questions.**
+1. **Why one point of thirty was worth 0.30 dmm.** The bull had too few points, and the fit had not converged.
+   - **The dense bulls:** on the ten frames above, every bull has 106 to 900 edge points, and leaving any one out moves a bull by at most 0.053 dmm (0.0002 in, on `main2`'s bull 5).
+   - **`telephoto3`, where the sheet overflows the frame:** bull 24 has 29 points and its fit reports that it did not converge. Leaving one out moves it by up to 0.53 dmm, more than the 0.30 dmm move seen on the macOS runner. Bull 25 has 14 points and moves by up to 0.82 dmm, 0.0032 in.
+2. **Whether a hard include or exclude sits where a weight belongs.** Not in the fit's rejection: at convergence it excluded no point on any bull measured here. The step is earlier. Whether a ray yields an edge point at all turns on a threshold, a profile whose ends differ by less than half the bull's contrast gives none, and on a sparse bull one ray more or less is a large share of the evidence.
+3. **Whether the stage record says a fit is near its threshold.** Partly. A bull that did not converge is recorded as a rejection with that reason. Nothing records that a located bull rests on a few dozen points, or that its points sit near the crossing threshold. Nothing was changed, as entry 49 section 5 asks.
+
+**Section 4: the uncertainty the intervals do not include.** `docs/STATISTICS.md` section 2 now records, with these numbers, that every interval takes the coordinates as exact and that they are not. On the flat photographs the registration's instability was nothing on two and 0.0035 in on the third; on a mounted sheet it reaches hundredths, and no figure a user sees includes it. `DESIGN.md` section 14 points at it.
+
+**The code.** `grouplab spike stability` is new.
+- **The edge fit's convergence loop** is extracted so its last pass's points can be read. `EdgeFitBullLocator.Locate` performs the same operations in the same order: the `sheets` table reprints identically.
+- **`EdgeFitBullLocator.LeaveOneOut`** is a diagnostic beside `Locate`, used only by the spike.
+
+**Tests:** Core 758 passing, App 35 passing, none skipped.
 
 ---
 
@@ -2550,3 +2605,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 49 section 2: the marker sort held for question 15, over committing it with regenerated records.** It changes committed evidence and a benchmark the Phase 1 surface work is measured against, which entry 49 did not foresee, and the question file exists for a measurement that contradicts what was written down.
 - **Entry 52: every record regenerated twice under identical code, without the sort and with it, over comparing the sorted run with the committed records.** Five records were already stale, and comparing against them would have credited their changes to the sort.
 - **Entry 52: tables from fits no command reproduces left as measured and marked, over updating the columns that can be regenerated.** Half a row regenerated disagrees with its other half and with the conclusions written beneath the table.
+- **Entry 52 section 3: reordering applied at the homography fit, over shuffling the detector's output.** The sort puts any shuffled detection back in order, so only a shuffle after it measures the registration's sensitivity to order.
+- **Entry 52 section 3: the edge fit's leave-one-out run from the converged pass's start, over rerunning the whole locator per point.** It isolates one point's weight in the fit; rerunning the locator would also move the rays and confound the two.
