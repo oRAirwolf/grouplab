@@ -2065,7 +2065,37 @@ No picker opened.
 - **`photos.json`** lacked the two camera fields the code has written since the lens work, and is regenerated. No measured value in it changed.
 - **The newline:** the records were written with the platform's newline, CRLF on Windows and LF elsewhere. They are now written with LF everywhere, so the bytes on disk are comparable.
 
-**The first run: Windows reproduces the record exactly; Linux and macOS do not.** The step that should have said how they differ stopped at the first difference, because the runner's shell ends a step on a failing pipeline. It now reports how many values differ, the largest difference under each field name, and anything that is not a number. The comparison follows when that run lands.
+**The first run: Windows reproduces the record exactly; Linux and macOS do not.** The step that should have said how they differ stopped at the first difference, because the runner's shell ends a step on a failing pipeline. It now reports how many values differ, the largest difference under each field name, and anything that is not a number. The second run is the comparison below. Every run now also uploads each platform's records and console tables, so the comparison can be checked.
+
+**Windows, `windows-latest`:** all eight records byte for byte, as locally.
+
+**Linux, `ubuntu-latest`, x64: every console table is identical to Windows, line for line.** The records differ in every file, all below what any table reports:
+
+| Record | Values that differ | Largest difference |
+|---|---|---|
+| `sheets.json` | 254 | 0.0001 dmm in a bull error; scales below 1e-10 |
+| `photos.json` | 285 | 0.0006 dmm in a bull position; the lens model's frame edge 0.0018 px |
+| `markers.json` | 289 | 0.0071 dmm, one bull in one random marker subset |
+| `refinement.json` | 1 | 0.0001 dmm |
+| `threshold.json` | 3 | 0.0001 dmm |
+| `scale.json` | 62 | below 1e-10 |
+| `field.json` | 85 | 0.0001 dmm; a correlation by 4e-13 |
+| `detectors.json` | 100 | 0.0001 dmm |
+
+**macOS, `macos-latest`, arm64: the paper gate and photograph gate tables, `sheets` and `photos`, are identical to Windows.** 20 console lines differ, all in two studies:
+- **Measurement 1, marker count:** one figure, 0.00412 against 0.00411 in, for 12 markers on sheet 3.
+- **Measurement 2, corner refinement, on paper:** three rows change in the fourth or fifth decimal place of an inch. The largest change is the 300 DPI quarter-module window, 0.00836 against 0.00887 in.
+- **Measurement 2, on the synthetic raster:** all 16 rows change. The windows of 1.5 and 2 modules, which the study shows are broken, change most, up to 0.01195 against 0.00845 in. The shipped window changes least: corner RMS 0.159 against 0.158 px at 600 DPI. At 300 DPI its bias is -0.120 against -0.119 px and one bull figure 0.00028 against 0.00029 in.
+
+**In the records, macOS differs in more values than Linux.**
+- **Counts:** 330 in `sheets.json`, 541 in `photos.json`, 710 in `markers.json` and 15,813 in `refinement.json`.
+- **Most of the last:** the synthetic raster's corners listed in a different order, which is the marker detector returning the markers in another order.
+- **The largest move of a bull anywhere:** `telephoto3.jpg`'s scoring bull 24, 6.7277 against 6.4236 dmm (0.0265 against 0.0253 in), where one ray lost its edge point, 30 to 29. That frame is excluded from the gate because the sheet overflows it, which is why no table shows it.
+
+**What this establishes, and what it does not.**
+- **Every figure the Phase 0 gates report reproduces to its printed precision on all three platforms.**
+- **The records are not byte-identical off Windows,** so entry 32 section 3's first condition is not met. Whether the differences count as explained is planning's decision. Until then the workflow fails on Linux and macOS, which is the truthful state.
+- **Two sources, not separated here.** The differences can come from the native OpenCV in each platform's runtime package, which is a different build on each, or from each platform's maths library, which .NET's `Math` functions call. This comparison cannot tell them apart. The reordered markers on macOS can only have come from OpenCV.
 
 **Tests:** Core 740 passing, App 31 passing, none skipped.
 
@@ -2257,3 +2287,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 37 section 5: the stated size offered in the rectangle prompt, over setting the scale from it.** The size is the sheet's, and only a person can say which corners are the sheet's and which side was tapped first.
 - **Entry 37 section 4: the scrubber's keep list left as entry 29 set it, with `LensModel` reported rather than added.** Adding a field to what is published is a publication decision, and the lens grouping does not need it.
 - **Entry 46 section 3: the count line replaces the "Placed:" line, over keeping both.** They carried the same three numbers, and the one planning asked for sits above the figures where it is read first.
+- **Entry 35 section 6 item 2: the gate record workflow left failing on Linux and macOS, over passing within a tolerance.** Entry 32 section 3 asks for byte identity or an explained difference, and choosing a tolerance that makes the difference pass would be choosing the gate.

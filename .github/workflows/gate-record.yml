@@ -115,3 +115,17 @@ jobs:
           PY
         env:
           MATRIX_OS: ${{ matrix.os }}
+
+      # The records and console tables as this platform wrote them, so a difference can be checked rather than taken on trust.
+      - name: Keep the records
+        if: always()
+        run: cp -r scans/phase0/measurements "$RUNNER_TEMP/records"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: gate-record-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/records
+            ${{ runner.temp }}/console
+          retention-days: 30
