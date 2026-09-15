@@ -49,7 +49,32 @@ rownames(out) <- NULL
 inGate <- out$n >= 2 & out$n <= 50 & out$nGroups >= 1 & out$nGroups <= 10
 out$inSection15_3Gate <- as.integer(inGate)
 
-write.csv(out, paste0(outStem, ".csv"), row.names = FALSE)
+## Full double precision, for the reason recorded at the write block of
+## sg_dump.R: 15 significant digits is lossy, and a fixture that cannot
+## reproduce the value it was generated from tests the fixture rather than the
+## implementation.  17 significant digits round-trips an IEEE 754 double exactly.
+##
+## The CSV needs the values as formatted TEXT and the JSON needs them as
+## NUMBERS.  The first version of this block converted the columns in place and
+## left the JSON writer reading the converted frame, so every one of the 8,850
+## table values was serialised as a quoted string.  Keep the numeric frame.
+outNumeric <- out
+
+fmt17 <- function(v) {
+  if (is.na(v))            "NA"
+  else if (is.nan(v))      "NaN"
+  else if (is.infinite(v)) if (v > 0) "Inf" else "-Inf"
+  ## Normalise negative zero.  sprintf writes "-0", jsonlite writes 0, and the
+  ## two then disagree over a value that is equal to zero by every comparison
+  ## anyone will make of it.  A spurious difference between the two formats is
+  ## worse than losing a sign nothing reads.
+  else if (v == 0)         "0"
+  else sprintf("%.17g", v)
+}
+for (nm in names(out)) if (is.double(out[[nm]]))
+  out[[nm]] <- vapply(out[[nm]], fmt17, character(1))
+
+write.csv(out, paste0(outStem, ".csv"), row.names = FALSE, quote = FALSE)
 
 if (requireNamespace("jsonlite", quietly = TRUE)) {
   writeLines(jsonlite::toJSON(
@@ -70,8 +95,8 @@ if (requireNamespace("jsonlite", quietly = TRUE)) {
                             nGroupsRange      = c(1, 10),
                             cells             = sum(inGate)),
          statistics  = stats,
-         rows        = out),
-    auto_unbox = TRUE, digits = 15, na = "null", pretty = TRUE),
+         rows        = outNumeric),
+    auto_unbox = TRUE, digits = I(17), na = "null", pretty = TRUE),
     paste0(outStem, ".json"))
 }
 

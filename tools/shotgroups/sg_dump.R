@@ -469,6 +469,12 @@ out$value <- vapply(out$value, function(v) {
   if (is.na(v))       "NA"
   else if (is.nan(v)) "NaN"
   else if (is.infinite(v)) if (v > 0) "Inf" else "-Inf"
+  ## Normalise negative zero: sprintf writes "-0" and jsonlite writes 0, so the
+  ## CSV and the JSON would otherwise disagree over a value that is equal to
+  ## zero by every comparison anyone will make of it.  Three such values exist
+  ## in DFlandy01.  A spurious format difference is worse than a lost sign that
+  ## nothing reads.
+  else if (v == 0)    "0"
   else sprintf("%.17g", v)
 }, character(1))
 

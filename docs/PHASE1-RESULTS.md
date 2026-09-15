@@ -1762,6 +1762,24 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 38. `DFdistr` numeric, and no negative zeros
+
+`docs/NOTES-FROM-PLANNING.md` entry 38, which closes entry 36's one exception. Planning corrected `sg_distr.R` and regenerated `DFdistr` and `DFlandy01`. This session verified the files independently and committed them.
+
+**`shotGroups_DFdistr`:**
+- **Types:** 590 rows and 9,440 table values, 2,360 integers and 7,080 doubles, with no strings.
+- **Agreement:** the CSV and the JSON agree bit for bit on every one of the 9,440 values.
+- **Against the committed 15-digit file:** 1,947 values gained digits, and the largest relative change is 4.44e-16. No other field changed.
+
+**`shotGroups_DFlandy01`:**
+- **CSV:** exactly three keys changed, each from `-0` to `0`: `shots.y.303`, `shots.yPOA.303` and `flignerProbe.FlignerY.input.243`.
+- **JSON:** no value changed, because jsonlite had already written those three as `0`. Only the generation time moved.
+- **Agreement:** the CSV and the JSON now agree bit for bit on every numeric value.
+
+**No fixture CSV holds a `-0`.** All 67 statistics tests pass on the regenerated files, and nothing else in the suite reads them. `docs/STATISTICS.md` section 15.4 item 15 now describes both corrections.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

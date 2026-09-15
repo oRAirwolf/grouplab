@@ -595,10 +595,13 @@ Discovered by reading shotGroups 0.8.4's source and worth writing into the compa
     - **Checked on the nine regenerated datasets:**
       - no key added or removed;
       - no stored number moved by more than 5.6e-16 relative;
-      - CSV and JSON agree bit for bit on 71,056 numeric values, except three negative zeros in `DFlandy01` that the JSON writes as 0.
+      - CSV and JSON agree bit for bit on 71,056 numeric values. Three negative zeros in `DFlandy01`, written `-0` in the CSV and `0` in the JSON, are now written `0` by both scripts (entry 38).
     - **The reconstruction is removed.** The harness reads `shots.xPOA` directly, and the four Fligner-Killeen keys pass from the fixture alone. Against the true stored values, the reconstruction was exact on 3,775 of 3,978 coordinates. The other 203 are all `DFcm`, off by at most 3.6e-15, because its aims in centimetres are not six-decimal numbers.
     - **Its only known casualty** was question 14's four Fligner-Killeen keys, and the day spent on them.
-    - **Still at 15 digits: `shotGroups_DFdistr`.** Its regenerated JSON stores every table value as a string, because `sg_distr.R` formats the columns as text for the CSV before building the JSON from the same frame. It stays at the committed version until the script writes numbers.
+    - **`shotGroups_DFdistr`, entry 38.** Its first regenerated JSON stored every table value as a string, because `sg_distr.R` formatted the columns as text for the CSV before building the JSON from the same frame. The script now keeps a numeric copy for the JSON. Regenerated:
+      - its 9,440 table values are 2,360 integers and 7,080 doubles;
+      - they agree with the CSV bit for bit;
+      - none moved from the 15-digit version by more than 4.4e-16 relative.
 
 ### 15.5 Phase 2 gate
 

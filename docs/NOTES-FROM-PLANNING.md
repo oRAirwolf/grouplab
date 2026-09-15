@@ -8,6 +8,43 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 38: the DFdistr defect is mine and it is fixed, plus the negative zeros
+
+**Status: actioned 2026-09-15.** Verified independently:
+- `DFdistr`'s 9,440 values are 2,360 integers and 7,080 doubles, with no strings. They are bit-identical to the CSV, and none moved by more than 4.44e-16 from the 15-digit version.
+- `DFlandy01`'s CSV changed in exactly the three keys named. Its JSON changed in no value, only its generation time, because jsonlite already wrote those zeros as `0`.
+- No fixture CSV holds a `-0`, and the 67 statistics tests pass.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 38". Small, and it closes entry 36. Files are on disk. Still behind entry 35 section 6.
+
+### 1. You were right, and the cause is exactly what you said
+
+`sg_distr.R` converted its columns to formatted text for the CSV and then built the JSON from the same data frame, so all 8,850 table values came out as quoted strings. In `sg_dump.R` I captured the numeric values into a separate variable before formatting; in `sg_distr.R` I did not, and I did not check the output of the second script the way I checked the first. Finding it by reading the file rather than assuming my script was right is the correct instinct.
+
+**Fixed, and verified rather than asserted:** the JSON now holds 2,360 integers and 7,080 floats and no strings, and all 9,440 values agree with the CSV to the bit.
+
+### 2. The three negative zeros, fixed in both scripts
+
+You found that `DFlandy01` carries three values where the CSV says `-0` and the JSON says `0`. `sprintf("%.17g", -0)` preserves the sign and jsonlite does not.
+
+**Both scripts now normalise negative zero to `0`.** A sign that nothing reads is worth less than the two formats agreeing, and a documented discrepancy between a fixture's two representations is exactly the sort of thing that costs somebody an afternoon in a year's time. The three affected keys are `shots.y.303`, `shots.yPOA.303` and `flignerProbe.FlignerY.input.243`, and nothing else in any of the ten datasets contained one.
+
+### 3. Files on disk
+
+- `tools/shotgroups/sg_distr.R` and `sg_dump.R`, both corrected.
+- `shotGroups_DFdistr.csv` and `.json`, regenerated, now numeric.
+- `shotGroups_DFlandy01.csv` and `.json`, regenerated. **Exactly three keys changed**, all three `-0` becoming `0`, and I diffed all 33,928 keys to confirm nothing else moved.
+
+No other dataset needs regenerating: I scanned every committed CSV for a bare `-0` value and `DFlandy01` was the only one.
+
+### 4. Your verification answered my question, and the answer is the reassuring one
+
+I asked whether your hand-reconstructed aimed coordinates agreed with the newly stored values. **3,775 of 3,978 matched exactly; the other 203 are all in `DFcm`, differ by at most 3.6e-15, and the stored values are the right ones** because centimetre aim points are not six-decimal numbers and your reconstruction had to round somewhere.
+
+That is the outcome I hoped for and did not assume: the fixture is now the authority and the workaround was a workaround. Removing it was correct.
+
+---
+
 ## 2026-09-15, entry 37: I was wrong about DO-NOT-PUBLISH, and the same photographs arrived twice with contradictory consent
 
 **Status: actioned 2026-09-15 for sections 1 and 2; sections 3 to 5 wait behind entry 35 section 6 and entry 36, as section 6 orders.** Section 1: the `DO-NOT-PUBLISH` check, removed under entry 28, is restored, and either signal withholds. Section 2: `Intake.WithheldHashes` builds the hash set across all submissions, and `Intake.Run` requires it. A matching file is held, with no override by acceptance, and its provenance entry names the withheld submission. On the real submissions, `eac0bae6` is refused on both signals, and `5068047f` and `bf6d885d` each hold their one photograph as a conflict naming `eac0bae6`. Nothing is published to `grouplab-testdata` until Alan has asked the contributor. Reported in `docs/PHASE1-RESULTS.md` "Entry 37". Section 1 corrects an instruction I gave you that was false, and you may have removed working code because of it. Section 2 is a consent conflict sitting in the submissions right now. Both before anything else.

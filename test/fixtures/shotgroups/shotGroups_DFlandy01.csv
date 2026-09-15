@@ -1510,9 +1510,9 @@ shots.xPOA.302,,shots,xPOA,NA,302,-12.76
 shots.yPOA.302,,shots,yPOA,NA,302,2.5299999999999998
 shots.distance.302,,shots,distance,NA,302,50
 shots.x.303,,shots,x,NA,303,-12.83
-shots.y.303,,shots,y,NA,303,-0
+shots.y.303,,shots,y,NA,303,0
 shots.xPOA.303,,shots,xPOA,NA,303,-12.83
-shots.yPOA.303,,shots,yPOA,NA,303,-0
+shots.yPOA.303,,shots,yPOA,NA,303,0
 shots.distance.303,,shots,distance,NA,303,50
 shots.x.304,,shots,x,NA,304,-11.93
 shots.y.304,,shots,y,NA,304,0.90000000000000002
@@ -33477,7 +33477,7 @@ flignerProbe.FlignerY.input.239,,flignerProbe,FlignerY.input,239,NA,2.1400000000
 flignerProbe.FlignerY.input.240,,flignerProbe,FlignerY.input,240,NA,-0.51000000000000001
 flignerProbe.FlignerY.input.241,,flignerProbe,FlignerY.input,241,NA,1.75
 flignerProbe.FlignerY.input.242,,flignerProbe,FlignerY.input,242,NA,2.5299999999999998
-flignerProbe.FlignerY.input.243,,flignerProbe,FlignerY.input,243,NA,-0
+flignerProbe.FlignerY.input.243,,flignerProbe,FlignerY.input,243,NA,0
 flignerProbe.FlignerY.input.244,,flignerProbe,FlignerY.input,244,NA,0.90000000000000002
 flignerProbe.FlignerY.input.245,,flignerProbe,FlignerY.input,245,NA,-0.55000000000000004
 flignerProbe.FlignerY.input.246,,flignerProbe,FlignerY.input,246,NA,-0.35999999999999999
