@@ -154,3 +154,63 @@ jobs:
             ${{ runner.temp }}/records
             ${{ runner.temp }}/console
           retention-days: 30
+
+  # NOTES-FROM-PLANNING.md entry 49 section 2, ordered by entry 52 section 5 item 4: whether corner refinement is the only place the
+  # platforms diverge, or the first of two. Windows records what its detector returned for every image the markers and refinement
+  # measurements ask it for, and macOS reruns those two measurements from those corners, in Windows' order, with everything below
+  # detection still its own. The journal's image hashes separate a difference in the image from a difference in the corners. Reported,
+  # never gated: the record job above is what fails.
+  corners:
+    name: windows corners
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build src/GroupLab.Cli --configuration Release
+
+      - name: Record what the detector returned
+        run: dotnet src/GroupLab.Cli/bin/Release/net10.0/grouplab.dll spike corners --export "$RUNNER_TEMP/corners.json"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-corners
+          path: ${{ runner.temp }}/corners.json
+          retention-days: 30
+
+  replay:
+    name: macos-latest, from windows corners
+    needs: corners
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build src/GroupLab.Cli --configuration Release
+
+      - uses: actions/download-artifact@v6
+        with:
+          name: windows-corners
+          path: ${{ runner.temp }}
+
+      - name: Rerun the two measurements from Windows' corners
+        run: |
+          set -o pipefail
+          dotnet src/GroupLab.Cli/bin/Release/net10.0/grouplab.dll spike corners --replay "$RUNNER_TEMP/corners.json" | tee "$RUNNER_TEMP/replay.txt"
+          { echo "### macos-latest, the markers and refinement measurements rerun from Windows' corners"; echo; cat "$RUNNER_TEMP/replay.txt"; } >> "$GITHUB_STEP_SUMMARY"

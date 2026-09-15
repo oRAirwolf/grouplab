@@ -27,6 +27,8 @@ return args switch
     ["selftest", var directory] => SelfTest(directory),
     ["measure", var image, var definition, .. var rest] => Measure(image, definition, rest),
     ["spike", "stability"] => StabilitySpike.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", StabilitySpike.DefaultOrders, Console.Out),
+    ["spike", "corners", "--export", var file] => CornerJournal.Export("scans/phase0", SampleSet.FrozenDirectory, file, Console.Out),
+    ["spike", "corners", "--replay", var file] => CornerJournal.Replay("scans/phase0", SampleSet.FrozenDirectory, file, Console.Out),
     ["spike", var measurement] => Spike(measurement, "scans/phase0", SampleSet.FrozenDirectory),
     ["spike", var measurement, var scans, var targets] => Spike(measurement, scans, targets),
     ["sweep", "module", var baseDefinition, var sweep, var directory] => ModuleSweep.Run(baseDefinition, sweep, directory, Console.Out),
@@ -472,6 +474,7 @@ static int Usage()
         grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [-v 1|2|3] [--json <marking.json>]
         grouplab identify sweep
         grouplab spike stability
+        grouplab spike corners --export <file.json> | --replay <file.json>
         grouplab measure <image> <file.gltd.json> [--tile <n>] [--dpi <d>] [--locator centroid|edge] [--model auto|homography|radial|surface]
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]

@@ -19,7 +19,12 @@ public static class Phase0Measurements
 {
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
-    private static readonly OpenCvSharpBackend Backend = new();
+    /// <summary>
+    /// The backend these measurements detect, fit and warp through. It is the real one in every run that measures; it is settable so that
+    /// NOTES-FROM-PLANNING.md entry 49 section 2's rerun from another platform's corners can hand detection back from a journal and leave
+    /// everything below it to this platform (<see cref="CornerJournal"/>).
+    /// </summary>
+    internal static IImagingBackend Backend { get; set; } = new OpenCvSharpBackend();
 
     private sealed record Run(SampleSet.Sample Sample, GrayImage Image, ImageMetadata Metadata, TargetDefinition Definition, FiducialResult Fiducials, RegistrationFit? Fit, IReadOnlyList<BullLocation> Bulls, long DetectMs);
 
