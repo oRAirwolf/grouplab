@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
@@ -157,6 +158,7 @@ public sealed class PrintWindow : Window
         if (result.Pdf is null)
         {
             status.Text = "This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));
+            DiagnosticLog.Warn("print.render", ("sheet", selected.File), ("filled", fill), ("errors", result.Diagnostics.Count(d => d.Severity == Severity.Error)));
             return null;
         }
 
@@ -180,8 +182,11 @@ public sealed class PrintWindow : Window
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             status.Text = "The PDF could not be written: " + ex.Message;
+            DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(path), ("kind", "pdf")]);
             return false;
         }
+
+        DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "pdf"), ("sheet", selected!.File), ("pages", result.Pages.Count)]);
 
         status.Text = result.Pages.Count > 1
             ? string.Create(CultureInfo.InvariantCulture, $"Saved {result.Pages.Count} sheets to {path}. Print every page; each is numbered beside its identifier.")
@@ -191,6 +196,7 @@ public sealed class PrintWindow : Window
 
     private void Show(LibrarySheet sheet)
     {
+        DiagnosticLog.Info("print.select", ("sheet", sheet.File));
         selected = sheet;
         page = 0;
         title.Text = sheet.Definition.Name;
@@ -288,12 +294,14 @@ public sealed class PrintWindow : Window
             return;
         }
 
+        DiagnosticLog.Info("dialog.open", ("dialog", "save-pdf"));
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Save the target as a PDF",
             SuggestedFileName = Path.GetFileName(selected.File).Replace(".gltd.json", ".pdf", StringComparison.Ordinal),
             DefaultExtension = "pdf",
         });
+        DiagnosticLog.Info("dialog.result", ("dialog", "save-pdf"), ("chosen", file is not null));
         if (file?.TryGetLocalPath() is { } path)
         {
             SavePdf(path);
@@ -323,8 +331,9 @@ public sealed class PrintWindow : Window
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" })?.Dispose();
             status.Text = "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.";
         }
-        catch (Win32Exception)
+        catch (Win32Exception printing)
         {
+            DiagnosticLog.Exception(LogLevel.Warn, "print.command", printing, ("fallback", "open the PDF"));
             try
             {
                 Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
@@ -333,6 +342,7 @@ public sealed class PrintWindow : Window
             catch (Win32Exception ex)
             {
                 status.Text = "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
+                DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
             }
         }
     }

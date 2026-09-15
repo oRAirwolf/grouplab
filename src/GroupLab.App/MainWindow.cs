@@ -9,8 +9,10 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
+using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
+using GroupLab.Core.Trace;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
@@ -88,6 +90,7 @@ public sealed class MainWindow : Window
         canvas.LengthTapped += (_, _) => AskLength();
         canvas.RectangleTapped += (_, _) => AskRectangle();
         canvas.Notice += (_, note) => status.Text = note;
+        Opened += (_, _) => DiagnosticLog.Info("app.window", ("scale", RenderScaling), ("width", Width), ("height", Height));
 
         var toolbar = new WrapPanel { Margin = new Thickness(Tokens.Space8, Tokens.Space6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
@@ -132,6 +135,19 @@ public sealed class MainWindow : Window
                 SetTheme((ThemeChoice)themeChoice.SelectedIndex);
             }
         };
+
+        // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
+        panel.Children.Add(Heading("Diagnostics"));
+        var detailedLogging = new CheckBox { Content = "Detailed logging", IsChecked = DiagnosticLog.Current.Verbose || settings.LoadVerbose() };
+        detailedLogging.IsCheckedChanged += (_, _) =>
+        {
+            DiagnosticLog.Current.Verbose = detailedLogging.IsChecked == true;
+            settingsStore.SaveVerbose(detailedLogging.IsChecked == true);
+        };
+        panel.Children.Add(detailedLogging);
+        panel.Children.Add(Line(DiagnosticLog.Current.IsEnabled
+            ? "The log is in " + DiagnosticLog.Current.DescribedDirectory + "."
+            : "Logging is off: " + DiagnosticLog.Current.DisabledReason + "."));
 
         panel.Children.Add(Heading("Scale"));
         panel.Children.Add(scaleInputs);
@@ -298,6 +314,8 @@ public sealed class MainWindow : Window
         metadata = meta;
         artwork = null;
         session.Open(path, meta.Orientation);
+        // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
+        DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
         canvas.SetImage(new Bitmap(stream), max);
         int turns = session.State.ViewQuarterTurns;
         string orientation = ViewRotation.ExifMirrors(meta.Orientation)
@@ -322,14 +340,25 @@ public sealed class MainWindow : Window
         catch (MarkingFileException ex)
         {
             problem.Text = ex.Message;
+            DiagnosticLog.Exception(LogLevel.Warn, "file.open", ex, [.. DiagnosticLog.File(path), ("kind", "marking")]);
+            return;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // A marking moved or deleted since it was chosen: say so rather than let the read tear the window down.
+            problem.Text = "The marking could not be read: " + ex.Message;
+            DiagnosticLog.Exception(LogLevel.Warn, "file.open", ex, [.. DiagnosticLog.File(path), ("kind", "marking")]);
             return;
         }
 
         if (state.ImagePath is not { } image || !File.Exists(image))
         {
             problem.Text = $"The marking's image, {state.ImagePath ?? "(none recorded)"}, is not there. Put it back at that path to reopen the marking.";
+            DiagnosticLog.Warn("file.open", [.. DiagnosticLog.File(path), ("kind", "marking"), ("reason", "its image is missing")]);
             return;
         }
+
+        DiagnosticLog.Info("file.open", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", state.Shots.Count)]);
 
         OpenImage(image);
         if (metadata?.Orientation != state.ExifOrientation)
@@ -355,12 +384,14 @@ public sealed class MainWindow : Window
 
     private async Task OpenMarkingDialog()
     {
+        DiagnosticLog.Info("dialog.open", ("dialog", "open-marking"));
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Open a saved marking",
             AllowMultiple = false,
             FileTypeFilter = [new FilePickerFileType("GroupLab markings") { Patterns = ["*.json"] }],
         });
+        DiagnosticLog.Info("dialog.result", ("dialog", "open-marking"), ("chosen", files.Count > 0));
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
             OpenMarking(path);
@@ -384,12 +415,14 @@ public sealed class MainWindow : Window
 
     private async Task OpenImageDialog()
     {
+        DiagnosticLog.Info("dialog.open", ("dialog", "open-image"));
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Open a photograph or scan of a target",
             AllowMultiple = false,
             FileTypeFilter = [new FilePickerFileType("Images") { Patterns = ["*.jpg", "*.jpeg", "*.png"] }],
         });
+        DiagnosticLog.Info("dialog.result", ("dialog", "open-image"), ("chosen", files.Count > 0));
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
             OpenImage(path);
@@ -409,12 +442,14 @@ public sealed class MainWindow : Window
             return;
         }
 
+        DiagnosticLog.Info("dialog.open", ("dialog", "definition"));
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Choose the sheet's definition",
             AllowMultiple = false,
             FileTypeFilter = [new FilePickerFileType("GroupLab definitions") { Patterns = ["*.gltd.json"] }],
         });
+        DiagnosticLog.Info("dialog.result", ("dialog", "definition"), ("chosen", files.Count > 0));
         if (files.Count == 0 || files[0].TryGetLocalPath() is not { } path)
         {
             return;
@@ -429,8 +464,24 @@ public sealed class MainWindow : Window
 
         status.Text = "Registering and detecting…";
         var (g, v, m) = (grey, valueImage, metadata);
-        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend()));
+        var trace = new TraceRecorder();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend(), trace));
+        LogDetection(result, trace, clock.ElapsedMilliseconds);
         ApplyDetection(result);
+    }
+
+    /// <summary>
+    /// A detection run in the log, NOTES-FROM-PLANNING.md entry 41 section 3: one line with its summary and how long it took, and at DEBUG every
+    /// stage record in the console form DETECTION-PIPELINE.md section 6.3 gives, which already carries the resolved parameters and decisions.
+    /// </summary>
+    private static void LogDetection(AutomaticResult result, TraceRecorder trace, long milliseconds)
+    {
+        DiagnosticLog.Current.Write(result.Failure is null ? LogLevel.Info : LogLevel.Warn, "detect.run", [("ms", milliseconds), ("stages", trace.Records.Count), ("summary", result.Summary), ("failure", result.Failure)]);
+        foreach (var record in trace.Records)
+        {
+            DiagnosticLog.Current.Write(LogLevel.Debug, "detect.stage", [("stage", record.Stage), ("status", record.Status), ("ms", record.DurationMs)], TraceConsole.Format(record, 3).Split('\n', StringSplitOptions.RemoveEmptyEntries));
+        }
     }
 
     /// <summary>
@@ -456,16 +507,19 @@ public sealed class MainWindow : Window
 
     private async Task ExportDialog()
     {
+        DiagnosticLog.Info("dialog.open", ("dialog", "export"));
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Export the marking",
             SuggestedFileName = Path.GetFileNameWithoutExtension(session.State.ImagePath ?? "group") + ".grouplab.json",
             DefaultExtension = "json",
         });
+        DiagnosticLog.Info("dialog.result", ("dialog", "export"), ("chosen", file is not null));
         if (file?.TryGetLocalPath() is { } path)
         {
             await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, holeFlags, units));
             status.Text = "Exported to " + path;
+            DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", session.State.Shots.Count)]);
         }
     }
 
@@ -534,6 +588,7 @@ public sealed class MainWindow : Window
                 catch (ArgumentException ex)
                 {
                     problem.Text = ex.Message;
+                    DiagnosticLog.Exception(LogLevel.Warn, "scale.rectangle", ex);
                 }
             }
         })));

@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
+using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
@@ -630,6 +631,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 catch (ArgumentException ex)
                 {
                     Notice?.Invoke(this, "The corner was not moved: " + ex.Message);
+                    DiagnosticLog.Exception(LogLevel.Warn, "scale.corner", ex);
                 }
 
                 break;

@@ -30,6 +30,13 @@ Warnings are errors. Every test must pass, and none is skipped. The tests that r
 - **What to do:** when a stage is added, or what its output means changes, extend the end-to-end test as well as the stage's own.
 - **Source:** NOTES-FROM-PLANNING.md entry 35 section 5.
 
+**Where the application's log is** (NOTES-FROM-PLANNING.md entry 41 sections 3 and 4).
+- **A Debug build run from this repository:** `out/logs`, which git ignores, so a log can be read without anybody pasting it.
+- **A Release build:** `%LOCALAPPDATA%\GroupLab\logs` on Windows, `~/Library/Logs/GroupLab` on macOS, and `$XDG_STATE_HOME/grouplab/logs` or `~/.local/state/grouplab/logs` on Linux.
+- **`GROUPLAB_LOG_DIR`** overrides both.
+- **Detailed lines:** `--verbose`, or the Detailed logging box under Diagnostics, adds DEBUG lines, including every stage record of a detection.
+- **What a log never holds:** a location, a photograph's metadata, or a path. A file appears as its name and a hash.
+
 Three more checks belong in any change that touches the format, the library or the renderer:
 
 ```

@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 
@@ -32,7 +33,8 @@ public sealed class AppSettingsStore(string path)
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {
-            // An unreadable settings file is the same as none: fall back to the region's default.
+            // An unreadable settings file is the same as none: fall back to the region's default, and say so in the log (entry 41 section 3).
+            DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex, ("setting", "units"), ("fallback", "the region's default"));
         }
 
         string? region = null;
@@ -40,9 +42,10 @@ public sealed class AppSettingsStore(string path)
         {
             region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
         }
-        catch (ArgumentException)
+        catch (ArgumentException ex)
         {
             // No region is known, so the default is metric.
+            DiagnosticLog.Exception(LogLevel.Warn, "settings.region", ex, ("fallback", "metric"));
         }
 
         return UnitSettings.ForRegion(region);
@@ -74,6 +77,7 @@ public sealed class AppSettingsStore(string path)
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {
             // An unreadable settings file is the same as none: follow the system.
+            DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex, ("setting", "theme"), ("fallback", "follow system"));
         }
 
         return ThemeChoice.System;
@@ -81,6 +85,31 @@ public sealed class AppSettingsStore(string path)
 
     /// <summary>Remembers the theme. Returns false if the file could not be written, in which case the choice lasts until the application closes.</summary>
     public bool SaveTheme(ThemeChoice theme) => Save(file => file["theme"] = theme.ToString());
+
+    /// <summary>Whether DEBUG lines are logged, NOTES-FROM-PLANNING.md entry 41 section 3. Off unless chosen.</summary>
+    public bool LoadVerbose() => Read(file => file["verboseLogging"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveVerbose(bool verbose) => Save(file => file["verboseLogging"] = verbose);
+
+    /// <summary>
+    /// Where a crash report is sent, entry 41 section 7. Empty unless configured, so a fork of GroupLab never posts to anybody's server and
+    /// the Send button stays hidden; saving a report to disk works either way.
+    /// </summary>
+    public string LoadCrashReportUrl() => Read(file => (string?)file["crashReportUrl"]) ?? "";
+
+    /// <summary>Reads one setting, or null when the file is missing or unreadable.</summary>
+    private T? Read<T>(Func<JsonObject, T?> get)
+    {
+        try
+        {
+            return File.Exists(Path) && JsonNode.Parse(File.ReadAllText(Path)) is JsonObject file ? get(file) : default;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or InvalidOperationException or FormatException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex);
+            return default;
+        }
+    }
 
     /// <summary>Writes one setting into the file, keeping every other setting already in it.</summary>
     private bool Save(Action<JsonObject> set)
@@ -92,8 +121,9 @@ public sealed class AppSettingsStore(string path)
             {
                 file = File.Exists(Path) && JsonNode.Parse(File.ReadAllText(Path)) is JsonObject existing ? existing : new JsonObject();
             }
-            catch (JsonException)
+            catch (JsonException ex)
             {
+                DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex, ("fallback", "a new settings file"));
                 file = new JsonObject();
             }
 
@@ -104,6 +134,7 @@ public sealed class AppSettingsStore(string path)
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
+            DiagnosticLog.Exception(LogLevel.Warn, "settings.write", ex);
             return false;
         }
     }
