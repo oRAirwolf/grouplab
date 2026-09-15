@@ -122,6 +122,7 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Rotate left ([)", () => session.Rotate(-1)));
         toolbar.Children.Add(Button("Rotate right (])", () => session.Rotate(1)));
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
+        toolbar.Children.Add(Button("Report a problem", () => OpenReport(null)));
 
         var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
         panel.Children.Add(crashBanner);
@@ -234,6 +235,7 @@ public sealed class MainWindow : Window
             Classes = { AppStyles.Alert },
         });
         crashBanner.Children.Add(Row(
+            Button("Make a report…", () => OpenReport(pending[^1])),
             Button("Show the record", () => CrashReporter.Reveal(pending[^1])),
             Button("Dismiss", () =>
             {
@@ -244,6 +246,19 @@ public sealed class MainWindow : Window
 
                 ShowPendingCrashes();
             })));
+    }
+
+    /// <summary>
+    /// Opens the report dialog, NOTES-FROM-PLANNING.md entry 41 section 6: about a crash from the banner, with the log of the run that crashed and
+    /// the one before, or about whatever the user wants to report from the toolbar, with this run's log and the one before.
+    /// </summary>
+    private void OpenReport(string? crash)
+    {
+        var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, crash);
+        DiagnosticLog.Info("report.open", ("crash", crash is not null));
+        var report = new ReportWindow(crash, runLog, previousLog);
+        report.Closed += (_, _) => ShowPendingCrashes();
+        report.Show(this);
     }
 
     /// <summary>The in-the-moment notice of entry 41 section 5, best effort: the window may not be able to draw, and the record is already written.</summary>
