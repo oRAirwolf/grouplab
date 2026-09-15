@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -44,7 +45,7 @@ public sealed record IntakeResult(string Submission, string? Refused, IReadOnlyL
 /// <item>Scrub every published file, <see cref="ImageScrubber"/>, and refuse the whole submission if a scrubbed file still fails
 /// <see cref="PublicationCheck"/>.</item>
 /// <item>Write the scrubbed files and <c>provenance.json</c>, with the consent text verbatim and the received and published hashes
-/// side by side, into a new directory named by the submission identifier.</item>
+/// side by side, into a new directory named as the upload page names it, the UTC date and the identifier (entry 34 section 2).</item>
 /// </list>
 /// Nothing is written unless every check passes, and an existing directory is never overwritten.
 /// </summary>
@@ -153,7 +154,12 @@ public static partial class Intake
             return Refuse($"meta.json records {r.StoredName}, which is not in the submission");
         }
 
-        string target = Path.Combine(publicRoot, id);
+        if (DirectoryName(id, submitted) is not { } directoryName)
+        {
+            return Refuse($"meta.json's submitted_utc \"{submitted}\" is not a UTC time, so the published directory cannot be named by its date");
+        }
+
+        string target = Path.Combine(publicRoot, directoryName);
         if (Directory.Exists(target))
         {
             return Refuse($"{target} already exists, and published data is never overwritten");
@@ -223,7 +229,118 @@ public static partial class Intake
         return new IntakeResult(submission, null, files, target);
     }
 
+    /// <summary>
+    /// The directory a published submission lives in, named as the upload page names it, NOTES-FROM-PLANNING.md entry 34 section 2:
+    /// the UTC date of submission and the identifier, <c>YYYY-MM-DD_&lt;id&gt;</c>, as the first real submission arrived
+    /// (<c>2026-09-14_1a8f39ad</c>, submitted at 2026-09-14T20:41:55Z). Null when the time is not a UTC time.
+    /// </summary>
+    public static string? DirectoryName(string submissionId, string submittedUtc) =>
+        submittedUtc.EndsWith('Z') && DateTime.TryParse(submittedUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var when)
+            ? when.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "_" + submissionId
+            : null;
+
+    public const string OwnerProvenanceFormat = "grouplab-provenance-owner-1";
+
+    /// <summary>
+    /// Photographs published by their copyright holder directly, NOTES-FROM-PLANNING.md entry 34 section 2: taken before the upload page
+    /// existed, so there is no submission, no consent record and none needed, and no submission record is invented for them. Every file
+    /// is scrubbed as a donated one is, and the provenance record says who took them and on what terms they are published, with the
+    /// original name, both hashes and what scrubbing removed. A file named in <paramref name="held"/> is recorded with the reason and not
+    /// published. Stored names replace any character a safe name cannot carry with a hyphen. Nothing is written unless every file passes,
+    /// and an existing directory is never overwritten.
+    /// </summary>
+    public static IntakeResult PublishOwner(string sourceDirectory, string target, string takenBy, string statement, IReadOnlyDictionary<string, string>? held = null)
+    {
+        string source = Path.GetFileName(Path.TrimEndingDirectorySeparator(sourceDirectory));
+        IntakeResult Refuse(string reason) => new(source, reason, [], null);
+        held ??= new Dictionary<string, string>();
+        if (string.IsNullOrWhiteSpace(takenBy) || string.IsNullOrWhiteSpace(statement))
+        {
+            return Refuse("an owner's provenance record must say who took the photographs and on what terms they are published");
+        }
+
+        if (Directory.Exists(target))
+        {
+            return Refuse($"{target} already exists, and published data is never overwritten");
+        }
+
+        var names = Directory.EnumerateFiles(sourceDirectory)
+            .Where(p => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()))
+            .Select(p => Path.GetFileName(p))
+            .Order(StringComparer.Ordinal)
+            .ToList();
+        foreach (string name in held.Keys.Where(k => !names.Contains(k)))
+        {
+            return Refuse($"{name} is to be held, and is not an image in {source}");
+        }
+
+        var files = new List<IntakeFile>();
+        var published = new List<(string Name, byte[] Bytes)>();
+        var stored = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        int index = 0;
+        foreach (string name in names)
+        {
+            index++;
+            string storedName = Unsafe().Replace(name, "-");
+            if (!SafeName().IsMatch(storedName) || !stored.Add(storedName))
+            {
+                return Refuse($"{name} has no safe stored name distinct from another file's");
+            }
+
+            byte[] original = File.ReadAllBytes(Path.Combine(sourceDirectory, name));
+            string received = Sha256(original);
+            if (held.TryGetValue(name, out string? reason))
+            {
+                files.Add(new IntakeFile(index, storedName, name, original.LongLength, null, received, null, [], [], [], "held: " + reason));
+                continue;
+            }
+
+            ScrubResult scrubbed;
+            try
+            {
+                scrubbed = ImageScrubber.Scrub(original);
+            }
+            catch (Exception ex) when (ex is InvalidDataException or NotSupportedException)
+            {
+                return Refuse($"{name} could not be scrubbed: {ex.Message}");
+            }
+
+            if (PublicationCheck.LocationProblems(scrubbed.Bytes) is { Count: > 0 } problems)
+            {
+                return Refuse($"{name} still carries {string.Join(", ", problems)} after scrubbing");
+            }
+
+            files.Add(new IntakeFile(index, storedName, name, original.LongLength, null, received, Sha256(scrubbed.Bytes), scrubbed.Removed, scrubbed.Kept, [], null));
+            published.Add((storedName, scrubbed.Bytes));
+        }
+
+        if (published.Count == 0)
+        {
+            return Refuse("nothing would be published");
+        }
+
+        Directory.CreateDirectory(target);
+        foreach (var (name, bytes) in published)
+        {
+            File.WriteAllBytes(Path.Combine(target, name), bytes);
+        }
+
+        var provenance = new
+        {
+            format = OwnerProvenanceFormat,
+            takenBy,
+            statement,
+            intake = new { tool = "grouplab publish-owner", at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture) },
+            files,
+        };
+        File.WriteAllText(Path.Combine(target, PublicationCheck.ProvenanceFile), JsonSerializer.Serialize(provenance, JsonOptions));
+        return new IntakeResult(source, null, files, target);
+    }
+
     public static string Sha256(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
+
+    [GeneratedRegex("[^A-Za-z0-9._-]")]
+    private static partial Regex Unsafe();
 
     private static string? Text(JsonObject o, string key) =>
         o[key] is { } node && node.GetValueKind() == JsonValueKind.String && node.GetValue<string>() is { Length: > 0 } s ? s : null;

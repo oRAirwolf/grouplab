@@ -41,6 +41,11 @@ dotnet run --project src/GroupLab.Cli -- render <file.gltd.json> -o <out.pdf> [-
 
 `out/` is ignored by git.
 
+**Test data.** Donated photographs live in a separate repository, [grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata), last checked against its commit `1544f1d`.
+- **To run the data checks:** clone it beside this repository, at `../grouplab-testdata`, or point `GROUPLAB_TESTDATA` at a checkout.
+- **Without it,** `PublicationTests` skips those checks and says so, and nothing else needs the data.
+- **Getting photographs in:** only through `grouplab intake` for a donated submission, or `grouplab publish-owner` for the owner's own photographs. Both scrub every file and write the provenance record.
+
 ## Where the truth lives
 
 **`tools/` is the authority for geometry.**

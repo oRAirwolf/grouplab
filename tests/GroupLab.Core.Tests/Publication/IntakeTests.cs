@@ -73,7 +73,7 @@ public class IntakeTests : IDisposable
         var result = Intake.Run(Submission(), publicRoot, Triage);
 
         Assert.Null(result.Refused);
-        string published = Path.Combine(publicRoot, "1a8f39ad");
+        string published = Path.Combine(publicRoot, "2026-09-14_1a8f39ad");
         Assert.True(File.Exists(Path.Combine(published, "001_20180623_104930.jpg")));
         Assert.False(File.Exists(Path.Combine(published, "002_card.jpg")));
         byte[] bytes = File.ReadAllBytes(Path.Combine(published, "001_20180623_104930.jpg"));
@@ -101,7 +101,7 @@ public class IntakeTests : IDisposable
         string publicRoot = Path.Combine(root, "donated");
         var result = Intake.Run(Submission(), publicRoot, Triage, accepted: ["002_card.jpg"]);
         Assert.Null(result.Refused);
-        Assert.True(File.Exists(Path.Combine(publicRoot, "1a8f39ad", "002_card.jpg")));
+        Assert.True(File.Exists(Path.Combine(publicRoot, "2026-09-14_1a8f39ad", "002_card.jpg")));
     }
 
     [Fact]

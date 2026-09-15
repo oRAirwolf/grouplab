@@ -10,7 +10,7 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-15, entry 34: grouplab-testdata exists, and here is what goes in it
 
-**Status: open.** Unblocks question 13 section 1 and entry 23 section 5. Lower priority than entry 33 section 1, the end-to-end command, which still comes first.
+**Status: actioned 2026-09-15.** `grouplab-testdata` commit `1544f1d` holds the README, `CONTRIBUTORS.md`, the first donated submission under `donated/2026-09-14_1a8f39ad` (a provenance record only, because triage held all three files), and 26 of the owner's photographs under `owner/` through the new `grouplab publish-owner`. Two are held until Alan confirms taking them: a screenshot and a Signal download. The data test covers everything section 5 lists, and the URL and pinned commit are in the README and `CONTRIBUTING.md`. The originals are still in `scans/mounted/` here, untracked, for Alan to move. Reported in `docs/PHASE1-RESULTS.md` "Entry 34". Unblocks question 13 section 1 and entry 23 section 5. Lower priority than entry 33 section 1, the end-to-end command, which still comes first.
 
 `https://github.com/oRAirwolf/grouplab-testdata` is created: public, GPL-3.0, one commit containing the licence, default branch `main`, no README. **GPL-3.0 is not a choice here and must not be changed**, because it is the licence named in the consent text every contributor agreed to.
 

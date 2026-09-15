@@ -375,8 +375,16 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
     }
 
     /// <summary>
-    /// Entry 22 section 3, for the public test data: no location, nothing not cleared for publication, and for every image a provenance
-    /// record with the consent text and its published hash. Without a checkout it does nothing and says so.
+    /// Entry 22 section 3 and entry 34 sections 2, 3 and 5, for the public test data checkout:
+    /// <list type="bullet">
+    /// <item>every donated submission has a complete provenance record with the consent text, is cleared for publication, and is named
+    /// as the upload page names it;</item>
+    /// <item><c>owner/</c> has a provenance record saying who took the photographs and on what terms;</item>
+    /// <item>no image carries a location, every image is in its record with the hash it was published at, every file recorded as
+    /// published is present, and no image lies anywhere a record does not cover;</item>
+    /// <item>everyone who gave a credit name is in <c>CONTRIBUTORS.md</c>.</item>
+    /// </list>
+    /// Without a checkout it does nothing and says so, so CI does not need the data.
     /// </summary>
     [Fact]
     public void PublicTestDataCarriesNoLocationNoOptOutAndFullProvenance()
@@ -387,16 +395,23 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
             return;
         }
 
-        string root = Path.Combine(data, "donated");
         var failures = new List<string>();
-        foreach (string submission in Directory.Exists(root) ? Directory.EnumerateDirectories(root) : [])
+        var credited = new List<(string Submission, string Name)>();
+        string donated = Path.Combine(data, "donated");
+        int submissions = 0;
+        foreach (string submission in Directory.Exists(donated) ? Directory.EnumerateDirectories(donated) : [])
         {
-            string name = Path.GetFileName(submission);
-            string provenancePath = Path.Combine(submission, PublicationCheck.ProvenanceFile);
-            var provenance = File.Exists(provenancePath) ? JsonNode.Parse(File.ReadAllText(provenancePath)) : null;
-            if (provenance?["consent"]?["text"] is null || provenance["consent"]?["version"] is null || provenance["submissionId"] is null || provenance["submittedUtc"] is null)
+            submissions++;
+            string name = "donated/" + Path.GetFileName(submission);
+            var provenance = Provenance(submission);
+            string? id = (string?)provenance?["submissionId"], submitted = (string?)provenance?["submittedUtc"];
+            if (provenance?["consent"]?["text"] is null || provenance["consent"]?["version"] is null || id is null || submitted is null)
             {
                 failures.Add($"{name}: no complete provenance record");
+            }
+            else if (Intake.DirectoryName(id, submitted) != Path.GetFileName(submission))
+            {
+                failures.Add($"{name}: not named as the upload page names it, {Intake.DirectoryName(id, submitted) ?? "its UTC date and identifier"}");
             }
 
             if (provenance?["excludeFromPublicDataset"]?.GetValueKind() != System.Text.Json.JsonValueKind.False)
@@ -404,19 +419,75 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
                 failures.Add($"{name}: not recorded as cleared for publication");
             }
 
-            foreach (string image in Directory.EnumerateFiles(submission, "*", SearchOption.AllDirectories).Where(p => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(p).ToLowerInvariant())))
+            if ((string?)provenance?["answers"]?["credit_name"] is { Length: > 0 } credit)
             {
-                byte[] bytes = File.ReadAllBytes(image);
-                failures.AddRange(PublicationCheck.LocationProblems(bytes).Select(p => $"{name}/{Path.GetFileName(image)}: {p}"));
-                var entry = (provenance?["files"] as JsonArray)?.FirstOrDefault(f => (string?)f?["storedName"] == Path.GetFileName(image));
-                if ((string?)entry?["publishedSha256"] != Intake.Sha256(bytes))
-                {
-                    failures.Add($"{name}/{Path.GetFileName(image)}: not in the provenance record with its published hash");
-                }
+                credited.Add((name, credit.Trim()));
+            }
+
+            CheckPublishedFiles(name, submission, provenance, failures);
+        }
+
+        string owner = Path.Combine(data, "owner");
+        if (Directory.Exists(owner))
+        {
+            var provenance = Provenance(owner);
+            if ((string?)provenance?["format"] != Intake.OwnerProvenanceFormat || (string?)provenance?["takenBy"] is not { Length: > 0 } || (string?)provenance?["statement"] is not { Length: > 0 })
+            {
+                failures.Add("owner: no complete provenance record saying who took the photographs and on what terms they are published");
+            }
+
+            CheckPublishedFiles("owner", owner, provenance, failures);
+        }
+
+        foreach (string image in Directory.EnumerateFiles(data, "*", SearchOption.AllDirectories).Where(IsImage))
+        {
+            string[] parts = Path.GetRelativePath(data, image).Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (!(parts is ["donated", _, _] || parts is ["owner", _]))
+            {
+                failures.Add($"{string.Join('/', parts)}: an image outside donated/<submission>/ and owner/, where no provenance record covers it");
             }
         }
 
+        string contributorsPath = Path.Combine(data, "CONTRIBUTORS.md");
+        string contributors = File.Exists(contributorsPath) ? File.ReadAllText(contributorsPath) : "";
+        if (!File.Exists(contributorsPath))
+        {
+            failures.Add("CONTRIBUTORS.md is missing");
+        }
+
+        failures.AddRange(credited.Where(c => !contributors.Contains(c.Name, StringComparison.Ordinal)).Select(c => $"{c.Submission}: gave the credit name \"{c.Name}\", which CONTRIBUTORS.md does not list"));
+        output.WriteLine($"checked {submissions} donated submissions{(Directory.Exists(owner) ? " and owner/" : "")} in {data}");
         Assert.True(failures.Count == 0, string.Join("\n", failures));
+    }
+
+    private static bool IsImage(string path) => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(path).ToLowerInvariant());
+
+    private static JsonNode? Provenance(string directory)
+    {
+        string path = Path.Combine(directory, PublicationCheck.ProvenanceFile);
+        return File.Exists(path) ? JsonNode.Parse(File.ReadAllText(path)) : null;
+    }
+
+    /// <summary>No location in any image; each image in the record at the hash it was published at; each file recorded as published present.</summary>
+    private static void CheckPublishedFiles(string name, string directory, JsonNode? provenance, List<string> failures)
+    {
+        var entries = (provenance?["files"] as JsonArray)?.OfType<JsonObject>().ToList() ?? [];
+        var present = new HashSet<string>(StringComparer.Ordinal);
+        foreach (string image in Directory.EnumerateFiles(directory).Where(IsImage))
+        {
+            string file = Path.GetFileName(image);
+            present.Add(file);
+            byte[] bytes = File.ReadAllBytes(image);
+            failures.AddRange(PublicationCheck.LocationProblems(bytes).Select(p => $"{name}/{file}: {p}"));
+            if ((string?)entries.FirstOrDefault(e => (string?)e["storedName"] == file)?["publishedSha256"] != Intake.Sha256(bytes))
+            {
+                failures.Add($"{name}/{file}: not in the provenance record with its published hash");
+            }
+        }
+
+        failures.AddRange(entries
+            .Where(e => (string?)e["publishedSha256"] is not null && !present.Contains((string?)e["storedName"] ?? ""))
+            .Select(e => $"{name}/{(string?)e["storedName"]}: recorded as published, and not present"));
     }
 
     /// <summary>

@@ -1579,6 +1579,58 @@ Nothing has been tuned for speed, and nothing here needs to be before the weeken
 
 ---
 
+## Entry 34. grouplab-testdata populated
+
+`docs/NOTES-FROM-PLANNING.md` entry 34. [grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata) at commit `1544f1d` holds its README, `CONTRIBUTORS.md`, one donated submission and the owner's photographs, about 60 MB.
+
+**The README answers section 1's questions in order:**
+- what the photographs are and what was done to them;
+- the consent text `consent_v1`, verbatim;
+- what is not there;
+- the size;
+- how to cite it;
+- how a contributor asks for removal.
+
+"What is not there" states that opted-out submissions exist, are used for testing only and are never published. It also covers files held at intake and the owner's two held photographs.
+
+**Donated submissions are named as the upload page names them.**
+- **The rule:** `grouplab intake` named the published directory by the identifier alone. It now uses the UTC date of submission and the identifier, `Intake.DirectoryName`.
+- **The check:** the first submission's own directory, `2026-09-14_1a8f39ad` from `2026-09-14T20:41:55Z`, has the same form.
+- **The first submission:** it is published as a provenance record with no image. Triage decoded 0 GroupLab markers on all three photographs, so all three are held until a person looks at them and accepts them, as entry 27 section 1 requires.
+
+**The owner's photographs, `owner/`, through a new `grouplab publish-owner`.**
+- **Scrubbed like a donation:** every file goes through the same scrubber, with the original name, both hashes and what was removed recorded.
+- **An owner's record, not a submission's:** the record says who took the photographs and on what terms they are published. It has no submission identifier and no consent record, as section 2 asks.
+- **Refusals:** it refuses to write without both statements, and never overwrites.
+- **What was removed:** every file had GPS, and the Pixel motion photographs carried 2.5 to 4.1 MB of appended video each, removed with the rest.
+- **The totals:** 26 photographs published, 58 MB.
+
+**Two photographs are held rather than published.** Entry 34 describes `scans/mounted/` as 23 of Alan's own photographs. The directory holds 28 files, and two of them cannot show who took them:
+- `Screenshot_20231029-170033.png` is a phone screenshot of a photograph of a target;
+- `signal-2023-07-25-20-37-40-354-1.jpg` was saved from the Signal messenger.
+
+I looked at both, and at the four `~2` files entry 20 could not open. All six show only targets and backers, with nothing personal in view. Publishing someone else's photograph under GPL-3.0 cannot be undone, and holding one costs nothing, so each is in `owner/provenance.json` with the reason until Alan confirms taking it. `publish-owner` refuses an existing directory, so publishing them later is a new `owner/` run, or a manual addition that the data test would then check.
+
+**The originals.** They are still in `scans/mounted/` in this working tree, untracked, which is where they were. Section 2 says Alan keeps the originals outside both repositories. Moving them is Alan's to do, and until then nothing stops them being committed here by accident.
+
+**The data test, section 5.** `PublicTestDataCarriesNoLocationNoOptOutAndFullProvenance` still does nothing without a checkout. With one, it now requires:
+- a complete provenance record for every donated submission, the directory named from its date and identifier, and publication cleared;
+- a provenance record for `owner/` saying who took the photographs and on what terms;
+- for every image, no location, and an entry in its record at the hash it was published at;
+- every file recorded as published to be present;
+- no image anywhere a record does not cover;
+- every credit name given to be in `CONTRIBUTORS.md`.
+
+It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` without any data.
+
+**Wiring.** The URL and the pinned commit are in the README's "Test data" and in `CONTRIBUTING.md`. `docs/QUESTIONS-FOR-PLANNING.md` question 13 section 1 is settled by this.
+
+**Removal requests.** The data README says a removal takes the photographs out of the current contents, that removing them from history is decided for each request, and that GPL-3.0 copies already downloaded cannot be recalled. Whether to promise a history rewrite is Alan's to decide, so the README does not promise one.
+
+**Tests:** Core 716 passing, App 4 passing, none skipped, with the data checkout present.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1668,3 +1720,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 33: `grouplab analyze` composing `AutomaticMarking` and `GroupAnalysis`, over a separate pipeline for the command line.** The screen and the command then run the same code, so a fault found by one is fixed in both, which is how the sighter fault reached the marking screen's fix.
 - **Entry 33: a printed sheet analysed even when its definition fails today's validator, over refusing it.** Validation decides whether to print a sheet; a sheet already on paper is what it is, and refusing it would make every Phase 0 sheet unanalysable.
 - **Entry 33: `--target` required, over guessing the definition from the image.** Nothing reads the printed identifier or codes yet, and the built-in definitions share marker ids.
+- **Entry 34: two of the owner's photographs held, over publishing all 28.** A screenshot and a messenger download cannot show who took them. Publishing someone else's photograph under GPL-3.0 cannot be undone, and holding one until Alan confirms costs nothing.
+- **Entry 34: a donated submission whose files were all held published as a provenance record alone, over leaving it out.** The record shows that a consented submission arrived and why none of it is published, which is the question a contributor would ask.
+- **Entry 34: a separate `publish-owner` path, over running the owner's photographs through `intake`.** Intake requires a consent record, and entry 34 section 2 rules out inventing one.
