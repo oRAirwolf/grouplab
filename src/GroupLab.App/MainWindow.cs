@@ -16,6 +16,7 @@ using GroupLab.Core.Trace;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Publication;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
 
@@ -59,6 +60,9 @@ public sealed class MainWindow : Window
     // The sheet's printed artwork in image pixels, from the last detection on this image, so the snap and the size check can tell printed
     // ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Null on any image not detected as a GroupLab sheet.
     private GrayImage? artwork;
+
+    // A sheet size the person who shot it stated, from a provenance record beside the image (NOTES-FROM-PLANNING.md entry 37 section 5).
+    private StatedSheetSize? statedSize;
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.85 };
     private readonly AppSettingsStore settingsStore;
@@ -387,6 +391,7 @@ public sealed class MainWindow : Window
         valueImage = max;
         metadata = meta;
         artwork = null;
+        statedSize = StatedSheetSize.Beside(path);
         session.Open(path, meta.Orientation);
         // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
         DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
@@ -396,6 +401,11 @@ public sealed class MainWindow : Window
             ? " Its orientation tag asks for a mirror image, which is not applied; rotate it if it needs turning."
             : turns != 0 ? string.Create(CultureInfo.InvariantCulture, $" Turned {90 * turns} degrees as its orientation tag asks.") : "";
         status.Text = string.Create(CultureInfo.InvariantCulture, $"{Path.GetFileName(path)}, {image.Width} by {image.Height} px{(meta.IsCamera ? $", {meta.CameraModel}" : "")}.{orientation} Set a scale, mark the point of aim, then tap each impact.");
+        if (statedSize is { } stated)
+        {
+            status.Text += $" Its provenance record gives the sheet as {stated.Text}, which the rectangle tool offers as the reference.";
+        }
+
         Refresh();
     }
 
@@ -677,13 +687,26 @@ public sealed class MainWindow : Window
         })));
     }
 
-    private void AskRectangle()
+    /// <summary>
+    /// Asks for the size of a reference rectangle, and offers the sheet size a contributor stated when the image has one (NOTES-FROM-PLANNING.md
+    /// entry 37 section 5): offered and never assumed, in the order it was written.
+    /// </summary>
+    internal void AskRectangle()
     {
         scaleInputs.Children.Clear();
         var width = new TextBox { Text = "1", Width = 70 };
         var height = new TextBox { Text = "1", Width = 70 };
         var unit = units.Linear;
         scaleInputs.Children.Add(new TextBlock { Text = $"Drag any corner onto its mark if it is not on it, then enter the rectangle's width (first to second corner) and height, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
+        if (statedSize is { } stated)
+        {
+            scaleInputs.Children.Add(Button($"Use the stated sheet size, {stated.Text}", () =>
+            {
+                width.Text = UnitSettings.FromInches(stated.WidthInches, unit).ToString("0.###", CultureInfo.InvariantCulture);
+                height.Text = UnitSettings.FromInches(stated.HeightInches, unit).ToString("0.###", CultureInfo.InvariantCulture);
+                status.Text = $"The contributor's notes give the sheet as {stated.Text}, the first number as width. Tap the sheet's own corners, and swap the two numbers if the first side you tapped is the other one.";
+            }));
+        }
         scaleInputs.Children.Add(Row(width, height, Button("Use this rectangle", () =>
         {
             if (canvas.AwaitingTaps is { Count: 4 } corners

@@ -251,7 +251,10 @@ public static partial class Intake
             excludeFromPublicDataset = false,
             consent = new { agreed = true, version = consentVersion, agreedAtUtc = agreedAt, text = consentText },
             answers = meta["answers"]?.DeepClone(),
-            intake = new { tool = "grouplab intake", at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) },
+
+            // Entry 37 section 5: a sheet size the contributor wrote in the notes, as structured fields when it reads without guessing.
+            statedSheetSize = StatedSheetSize.Parse(meta["answers"] is JsonObject answers ? Text(answers, "notes") : null)?.ToJson(),
+            intake =new { tool = "grouplab intake", at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) },
             files,
         };
         File.WriteAllText(Path.Combine(target, PublicationCheck.ProvenanceFile), JsonSerializer.Serialize(provenance, JsonOptions));

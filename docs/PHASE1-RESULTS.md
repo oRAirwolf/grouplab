@@ -2071,6 +2071,61 @@ No picker opened.
 
 ---
 
+## Entry 37 sections 3 to 5. What the donated submissions showed, and the sheet size the contributor stated
+
+`docs/NOTES-FROM-PLANNING.md` entry 37 sections 3 to 5. Nothing is published: the consent conflict of section 2 still holds both photographs.
+
+### Section 3: the wording of the request, measured
+
+The four submissions' `meta.json` answers, counted:
+
+| Submission | When | Answers filled | Photographs | What happened to them |
+|---|---|---|---|---|
+| `2026-09-14_1a8f39ad` | Before the post was edited | 0 of 6 | 3 | Held by triage |
+| `2026-09-15_5068047f` | After | **6 of 6** | 1 | Held for the consent conflict |
+| `2026-09-15_bf6d885d` | After | **6 of 6** | 1 | Held for the consent conflict |
+| `2026-09-15_eac0bae6` | After, opted out | 3 of 6 | 9 | Withheld |
+
+The two complete submissions give backing, attachment, distance, calibre (5.56 NATO and 8.6 Blackout), a credit name, and in the notes the exact commercial target. Planning read both photographs as meeting the brief: whole targets, still stapled to the backer, with all four edges in frame. **The difference between a useless submission and a good one was the wording of the request, not the contributor.**
+
+### Section 4: what an iPhone upload keeps
+
+**The browser was Chrome for iOS, not Safari.** All three later submissions carry the same user agent: iOS 18.7.10, `CriOS/152`. Chrome on iOS uses WebKit, so the upload page's `accept` attribute is answered for WebKit's file picker on an iPhone. Safari itself has still not been used.
+
+**The metadata survives the upload.** Checked on both publishable photographs through `grouplab scrub`, into a scratch copy that was then deleted, printing names and never values:
+- **Present in each original:** a `LensModel` tag, and a GPS block.
+- **What scrubbing removes:** the GPS block, APP10, the thumbnail, and 36 other EXIF fields.
+- **What scrubbing keeps:** ten fields, `Make`, `Model`, `Orientation`, `ExposureTime`, `FNumber`, `ISOSpeedRatings`, `FocalLength`, `PixelXDimension`, `PixelYDimension` and `FocalLengthIn35mmFilm`.
+
+**`LensModel` is not among them.** The scrubber's keep list is entry 29's, and `LensModel` is not on it, so a published iPhone photograph will not carry "iPhone XS Max back dual camera 4.25mm f/1.8".
+- **Lens grouping is unaffected:** it is built from the focal length, f-number, 35 mm equivalent, digital zoom and image size, which are kept.
+- **What is lost:** only the lens's name. The received files, which are never published, keep it.
+- **The keep list is unchanged.** It is entry 29's decision, so it stays until planning asks for `LensModel`.
+
+### Section 5: the stated sheet size, structured
+
+**`statedSheetSize` in the provenance record.** `grouplab intake` reads the notes with `StatedSheetSize.Parse` and writes the size beside the answers, which stay as given: `source` (`answers.notes`), `text`, `width`, `height` and `unit`.
+- **What counts as a size:** two numbers joined by x or ×, followed by a unit. The unit is in, inch, inches, an inch mark, mm or cm.
+- **The inch mark:** both real notes end in U+201D, the curly quote an iPhone keyboard types for `"`, and it is read as one.
+- **Nothing is written for:**
+  - a note with no size, or with two;
+  - a size with no unit, because a guessed unit is a scale error of 2.54 or 25.4 times.
+- **On the real notes:** `5068047f` gives 17.5 by 23 in, and `bf6d885d` gives 23 by 35 in.
+
+**The marking path offers it.**
+- **When it appears:** opening an image that sits beside a provenance record listing it by name, as `grouplab-testdata` publishes it, says the record gives the sheet's size. The rectangle tool then offers "Use the stated sheet size" beside its own boxes.
+- **What the button does:** it fills the width and height in the user's unit, in the order the contributor wrote them. It asks the user to tap the sheet's own corners, and to swap the numbers if the first side tapped is the other one.
+- **What it never does:** set a scale by itself.
+- **No lookup table:** there is none of third-party target sizes, and the size is used as the contributor stated it.
+
+**Tests.**
+- **`StatedSheetSizeTests`, Core:** seven sizes read, six notes that give nothing, the metric conversions, and the record read beside an image.
+- **`IntakeTests`:** the structured size beside the notes as given, and none from empty notes.
+- **`StatedSheetSizeTests`, App:** the offer fills 17.5 and 23 in inches, and an image without a record is offered nothing.
+- **Counts:** Core 756 passing, App 32 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2186,3 +2241,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 35 section 6 item 3: the definition from the sheet's QR codes, over choosing among definitions by registering against each.** A frame that passes its CRC names one definition. A registration that fits well against the wrong definition is possible, because the built-in definitions share marker ids.
 - **Entry 35 section 6 item 3: refuse and ask when the codes do not settle it, over falling back to the nearest match.** Eight of the 37 Phase 0 images are not identified and fall back to naming the definition. A wrong definition would produce a plausible wrong group.
 - **Entry 35 section 6 item 3: the frozen Phase 0 definitions shipped beside the application, over the live library only.** The sheets already printed carry the frozen identifiers, and the print screen's list does not show them.
+- **Entry 37 section 5: no size recorded for a note with no unit, over assuming inches.** Every size in the first notes had its unit, and a wrong assumption is a scale error of 25.4 or 2.54 times, which the marking screen could not detect.
+- **Entry 37 section 5: the stated size offered in the rectangle prompt, over setting the scale from it.** The size is the sheet's, and only a person can say which corners are the sheet's and which side was tapped first.
+- **Entry 37 section 4: the scrubber's keep list left as entry 29 set it, with `LensModel` reported rather than added.** Adding a field to what is published is a publication decision, and the lens grouping does not need it.

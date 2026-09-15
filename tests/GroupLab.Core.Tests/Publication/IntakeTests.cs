@@ -106,6 +106,24 @@ public class IntakeTests : IDisposable
         Assert.Contains("already exists", Intake.Run(Submission(), publicRoot, NoOptOuts, Triage).Refused, StringComparison.Ordinal);
     }
 
+    /// <summary>NOTES-FROM-PLANNING.md entry 37 section 5: the stated sheet size is structured beside the notes, which stay as given.</summary>
+    [Fact]
+    public void ASheetSizeInTheNotesIsCarriedAsStructuredFieldsBesideTheAnswersAsGiven()
+    {
+        const string notes = "Action Target PR-BE6 17.5x23”";
+        string publicRoot = Path.Combine(root, "donated");
+        Assert.Null(Intake.Run(Submission(meta => meta["answers"]!["notes"] = notes), publicRoot, NoOptOuts, Triage).Refused);
+
+        var provenance = JsonNode.Parse(File.ReadAllText(Path.Combine(publicRoot, "2026-09-14_1a8f39ad", PublicationCheck.ProvenanceFile)))!;
+        Assert.Equal(notes, (string?)provenance["answers"]!["notes"]);
+        var size = provenance["statedSheetSize"]!;
+        Assert.Equal(("answers.notes", "17.5x23”", 17.5, 23.0, "in"), ((string?)size["source"], (string?)size["text"], (double)size["width"]!, (double)size["height"]!, (string?)size["unit"]));
+
+        string without = Path.Combine(root, "donated-without");
+        Assert.Null(Intake.Run(Submission(), without, NoOptOuts, Triage).Refused);
+        Assert.Null(JsonNode.Parse(File.ReadAllText(Path.Combine(without, "2026-09-14_1a8f39ad", PublicationCheck.ProvenanceFile)))!["statedSheetSize"]);
+    }
+
     [Fact]
     public void APersonCanAcceptWhatTriageHeld()
     {
