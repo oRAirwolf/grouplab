@@ -250,7 +250,7 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         var input = full;
         if (scale is not 1.0)
         {
-            Cv2.Resize(full, resized, new Size(0, 0), scale, scale, InterpolationFlags.Area);
+            Cv2.Resize(full, resized, new Size(0, 0), scale, scale, scale < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
             input = resized;
         }
 

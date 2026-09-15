@@ -113,7 +113,7 @@ Output is 8-bit per channel linear-indexed RGB plus, where the source was greysc
 
 **Failure mode.** Unsupported codec, corrupt file. Report the format detected and what was missing.
 
-**Amended 2026-09-15, NOTES-FROM-PLANNING.md entry 35 section 6 item 3: the sheet names its definition.** When no definition is given, `S0.identify` follows the decode. It reads the sheet's QR codes at full, half and quarter resolution, stopping at the first that yields a GLTD-B frame passing its CRC, and takes the definition whose identifier the frame's body computes to from the definitions available. Codes that name two definitions or two tiles, or a definition not available, are refused with the reason, and the definition is then asked for. Nothing is chosen from the markers, which the built-in definitions share. On the 37 Phase 0 scans and photographs, 29 gave the definition they were printed from and none gave a wrong one.
+**Amended 2026-09-15, NOTES-FROM-PLANNING.md entry 35 section 6 item 3: the sheet names its definition.** When no definition is given, `S0.identify` follows the decode. It reads the sheet's QR codes at full, double, half and quarter resolution, stopping at the first that yields a GLTD-B frame passing its CRC, and takes the definition whose identifier the frame's body computes to from the definitions available. Codes that name two definitions or two tiles, or a definition not available, are refused with the reason, and the definition is then asked for. Nothing is chosen from the markers, which the built-in definitions share. On the 37 Phase 0 scans and photographs, 29 gave the definition they were printed from and none gave a wrong one.
 
 ### S1. Resolve scale
 

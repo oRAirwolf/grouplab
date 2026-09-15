@@ -22,15 +22,19 @@ public sealed record SheetIdentity(TargetDefinition? Definition, string? Definit
 /// built-in definitions share marker ids, and registering against the wrong definition can look plausible.
 /// </para>
 /// <para>
-/// The image is read at full, half and quarter resolution, stopping at the first that yields a valid frame, since a detector that misses a
-/// code at one resolution can find it at another. Nothing is guessed. Codes that name two definitions or two tiles, and a definition that
+/// The image is read at full, double, half and quarter resolution, stopping at the first that yields a valid frame, since a detector that
+/// misses a code at one resolution can find it at another. Nothing is guessed. Codes that name two definitions or two tiles, and a definition that
 /// is not among the candidates, are refused with the reason, and the caller asks for the definition instead.
 /// </para>
 /// </summary>
 public static class SheetIdentification
 {
-    /// <summary>The resolutions tried, as fractions of the image's own, in order.</summary>
-    public static IReadOnlyList<double> Scales { get; } = [1.0, 0.5, 0.25];
+    /// <summary>
+    /// The resolutions tried, as multiples of the image's own, in order. Double comes second because a 300 DPI sheet's code modules are under
+    /// five pixels, which half and quarter resolution only shrink: the clean 300 DPI render of GL-CF25-LTR read at full resolution on Windows
+    /// and gave no code on the Linux runner, whose OpenCV is a different native build.
+    /// </summary>
+    public static IReadOnlyList<double> Scales { get; } = [1.0, 2.0, 0.5, 0.25];
 
     public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace)
     {
@@ -48,7 +52,7 @@ public static class SheetIdentification
             var payloads = backend.ReadCodes(image, scale);
             read += payloads.Count;
             var frames = payloads.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
-            stage.Detail(string.Create(inv, $"at {scale:0.##} of full resolution: {payloads.Count} codes read, {frames.Count} valid frames"));
+            stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: {payloads.Count} codes read, {frames.Count} valid frames"));
             if (frames.Count == 0)
             {
                 continue;
@@ -74,7 +78,7 @@ public static class SheetIdentification
 
             stage.Parameter("definition", ids[0]);
             stage.Metric("codes decoded", frames.Count, "count");
-            stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} of full resolution"));
+            stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} times full resolution"));
             return new SheetIdentity(match, ids[0], tiles[0], read, null);
         }
 

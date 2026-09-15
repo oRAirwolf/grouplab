@@ -32,7 +32,7 @@ public class SheetIdentificationTests
         var trace = new TraceRecorder();
         var identity = SheetIdentification.Identify(grey, Library, new OpenCvSharpBackend(), trace);
 
-        Assert.True(identity.Failure is null, identity.Failure);
+        Assert.True(identity.Failure is null, identity.Failure is null ? null : identity.Failure + CodeDiagnostics.Describe(grey));
         Assert.Equal(id, identity.DefinitionId);
         Assert.Equal(id, Id(identity.Definition!));
         Assert.Equal(tile, identity.TileIndex);
@@ -50,7 +50,7 @@ public class SheetIdentificationTests
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[page], 300);
         var identity = SheetIdentification.Identify(render, Library, new OpenCvSharpBackend(), new TraceRecorder());
 
-        Assert.True(identity.Failure is null, identity.Failure);
+        Assert.True(identity.Failure is null, identity.Failure is null ? null : identity.Failure + CodeDiagnostics.Describe(render));
         Assert.Equal(Id(definition), identity.DefinitionId);
         Assert.Equal(page, identity.TileIndex);
     }

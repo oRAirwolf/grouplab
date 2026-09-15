@@ -73,7 +73,7 @@ public class EndToEndTests(ITestOutputHelper output)
 
             // Entry 35 section 6 item 3: the same file with no definition named, the sheet naming its own through its printed codes.
             var identified = AnalyzeVerb.Analyze(path, null, out string? identifyFailure, [Repo.PathTo("targets")]);
-            Assert.True(identifyFailure is null, identifyFailure);
+            Assert.True(identifyFailure is null, identifyFailure is null ? null : identifyFailure + CodeDiagnostics.Describe(observed));
             Assert.NotNull(identified);
             Assert.True(identified.Failure is null, identified.Failure);
             Assert.Contains(identified.Trace, r => r.Stage == "S0.identify" && r.Status == GroupLab.Core.Trace.StageStatus.Ok);
