@@ -4,13 +4,16 @@ using GroupLab.Core.Publication;
 namespace GroupLab.Core.Tests.Publication;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 22 section 2, entry 27 section 1 and entry 28 section 1: intake reads the upload page's real
-/// <c>meta.json</c>, refuses an opted-out, unconsented, unprovenanced or altered submission and an unknown schema, holds back what
-/// triage cannot use unless a person accepts it, and publishes scrubbed files with the consent text and both hashes beside them,
-/// never over an existing directory. Empty answers, the normal case, are never a reason to refuse.
+/// NOTES-FROM-PLANNING.md entry 22 section 2, entry 27 section 1, entry 28 section 1 and entry 37 sections 1 and 2: intake reads the
+/// upload page's real <c>meta.json</c>, refuses an opted-out (by either signal), unconsented, unprovenanced or altered submission and an
+/// unknown schema, holds any file whose bytes are in a withheld submission, holds back what triage cannot use unless a person accepts
+/// it, and publishes scrubbed files with the consent text and both hashes beside them, never over an existing directory. Empty answers,
+/// the normal case, are never a reason to refuse.
 /// </summary>
 public class IntakeTests : IDisposable
 {
+    private static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> NoOptOuts = new Dictionary<string, IReadOnlyList<string>>();
+
     private readonly string root = Path.Combine(Path.GetTempPath(), $"grouplab-intake-{Guid.NewGuid():N}");
 
     public void Dispose()
@@ -62,6 +65,14 @@ public class IntakeTests : IDisposable
         return directory;
     }
 
+    /// <summary>A submission beside it with the opt-out file, as the page wrote <c>2026-09-15_eac0bae6</c>.</summary>
+    private string WithSentinel(Action<JsonObject>? edit = null)
+    {
+        string directory = Submission(edit);
+        File.WriteAllText(Path.Combine(directory, Intake.DoNotPublish), "The contributor asked that these photos are not published.\nTesting on a private machine only. Do not add to the public data set.\n");
+        return directory;
+    }
+
     private static TriageVerdict Triage(string name, byte[] bytes) => name.StartsWith("001", StringComparison.Ordinal)
         ? new TriageVerdict(true, ["36 GroupLab markers decoded"])
         : new TriageVerdict(false, ["no GroupLab markers decoded, so neither scale nor registration is available"]);
@@ -70,7 +81,7 @@ public class IntakeTests : IDisposable
     public void AGoodSubmissionIsPublishedScrubbedWithTheConsentTextAndBothHashesAndWhatTriageCouldNotUseIsHeld()
     {
         string publicRoot = Path.Combine(root, "donated");
-        var result = Intake.Run(Submission(), publicRoot, Triage);
+        var result = Intake.Run(Submission(), publicRoot, NoOptOuts, Triage);
 
         Assert.Null(result.Refused);
         string published = Path.Combine(publicRoot, "2026-09-14_1a8f39ad");
@@ -92,14 +103,14 @@ public class IntakeTests : IDisposable
         Assert.Null((string?)files[1]!["publishedSha256"]);
         Assert.Contains("no GroupLab markers", (string?)files[1]!["held"], StringComparison.Ordinal);
 
-        Assert.Contains("already exists", Intake.Run(Submission(), publicRoot, Triage).Refused, StringComparison.Ordinal);
+        Assert.Contains("already exists", Intake.Run(Submission(), publicRoot, NoOptOuts, Triage).Refused, StringComparison.Ordinal);
     }
 
     [Fact]
     public void APersonCanAcceptWhatTriageHeld()
     {
         string publicRoot = Path.Combine(root, "donated");
-        var result = Intake.Run(Submission(), publicRoot, Triage, accepted: ["002_card.jpg"]);
+        var result = Intake.Run(Submission(), publicRoot, NoOptOuts, Triage, accepted: ["002_card.jpg"]);
         Assert.Null(result.Refused);
         Assert.True(File.Exists(Path.Combine(publicRoot, "2026-09-14_1a8f39ad", "002_card.jpg")));
     }
@@ -110,7 +121,11 @@ public class IntakeTests : IDisposable
         string publicRoot = Path.Combine(root, "donated");
         (string Why, Func<string> Make)[] cases =
         [
-            ("opted out", () => Submission(m => m["exclude_from_public_dataset"] = true)),
+            ("exclude_from_public_dataset is true, with no DO-NOT-PUBLISH file", () => Submission(m => m["exclude_from_public_dataset"] = true)),
+            ("DO-NOT-PUBLISH file is present although exclude_from_public_dataset is false. The two signals disagree", () => WithSentinel()),
+            ("exclude_from_public_dataset is true and a DO-NOT-PUBLISH file is present", () => WithSentinel(m => m["exclude_from_public_dataset"] = true)),
+            ("DO-NOT-PUBLISH file is present, and exclude_from_public_dataset is missing", () => WithSentinel(m => m.Remove("exclude_from_public_dataset"))),
+            ("opted out: a DO-NOT-PUBLISH file is present", () => WithSentinel(m => m["schema_version"] = 2)),
             ("unknown and not false", () => Submission(m => m.Remove("exclude_from_public_dataset"))),
             ("schema_version", () => Submission(m => m["schema_version"] = 2)),
             ("agreed", () => Submission(m => m["consent"]!["agreed"] = false)),
@@ -125,10 +140,47 @@ public class IntakeTests : IDisposable
 
         foreach (var (why, make) in cases)
         {
-            var result = Intake.Run(make(), publicRoot, Triage);
+            var result = Intake.Run(make(), publicRoot, NoOptOuts, Triage);
             Assert.Contains(why, result.Refused, StringComparison.Ordinal);
             Assert.False(Directory.Exists(publicRoot) && Directory.EnumerateFileSystemEntries(publicRoot).Any(), $"{why}: something was written");
             Directory.Delete(Path.Combine(root, "incoming"), recursive: true);
         }
+    }
+
+    /// <summary>
+    /// Entry 37 section 2, as it arrived: the same photograph in a publishable submission and in one withheld by the opt-out file. The
+    /// publishable copy is held, even when a person accepts it by name, and its provenance names the withheld submission. A directory
+    /// whose consent cannot be read at all withholds its files too.
+    /// </summary>
+    [Fact]
+    public void BytesInAWithheldSubmissionAreHeldFromEverySubmissionAndTheConflictIsRecorded()
+    {
+        string incoming = Path.Combine(root, "incoming");
+        string optedOut = Path.Combine(incoming, "2026-09-15_eac0bae6");
+        Directory.CreateDirectory(optedOut);
+        File.WriteAllBytes(Path.Combine(optedOut, "003_IMG_1580.jpg"), PhoneImages.Jpeg());
+        File.WriteAllText(Path.Combine(optedOut, Intake.DoNotPublish), "Do not add to the public data set.");
+        File.WriteAllText(Path.Combine(optedOut, "meta.json"), """{ "schema_version": 1, "submission_id": "eac0bae6", "exclude_from_public_dataset": false }""");
+        string unreadable = Path.Combine(incoming, "2026-09-15_unreadable");
+        Directory.CreateDirectory(unreadable);
+        File.WriteAllBytes(Path.Combine(unreadable, "001_card.jpg"), [.. PhoneImages.Jpeg(), 0x00]);
+
+        string submission = Submission();
+        var withheld = Intake.WithheldHashes(incoming);
+
+        Assert.Equal(["eac0bae6"], withheld[Intake.Sha256(PhoneImages.Jpeg())]);
+        Assert.Equal(["2026-09-15_unreadable"], withheld[Intake.Sha256([.. PhoneImages.Jpeg(), 0x00])]);
+        Assert.DoesNotContain(withheld.Values, ids => ids.Contains("1a8f39ad"));
+
+        string publicRoot = Path.Combine(root, "donated");
+        var result = Intake.Run(submission, publicRoot, withheld, Triage, accepted: ["001_20180623_104930.jpg", "002_card.jpg"]);
+
+        Assert.Null(result.Refused);
+        string published = Path.Combine(publicRoot, "2026-09-14_1a8f39ad");
+        Assert.Equal([PublicationCheck.ProvenanceFile], Directory.EnumerateFiles(published).Select(Path.GetFileName));
+        var files = JsonNode.Parse(File.ReadAllText(Path.Combine(published, PublicationCheck.ProvenanceFile)))!["files"]!.AsArray();
+        Assert.Contains("consent conflict", (string?)files[0]!["held"], StringComparison.Ordinal);
+        Assert.Equal(["eac0bae6"], files[0]!["optedOutIn"]!.AsArray().Select(n => (string?)n));
+        Assert.Equal(["2026-09-15_unreadable"], files[1]!["optedOutIn"]!.AsArray().Select(n => (string?)n));
     }
 }

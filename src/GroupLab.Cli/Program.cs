@@ -464,7 +464,7 @@ static int Usage()
         grouplab library verify <layouts.json> <targets-directory>
         grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--allow-invalid]
         grouplab selftest [<targets-directory>]
-        grouplab intake <submission-directory> <public-directory> [--accept <file>]...
+        grouplab intake <submission-directory> <public-directory> [--accept <file>]... [--submissions <directory>]
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
         grouplab analyze <image> --target <file.gltd.json> [-v 1|2|3] [--json <marking.json>]

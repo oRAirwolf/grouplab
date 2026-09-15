@@ -6,11 +6,12 @@ using GroupLab.Core.Publication;
 namespace GroupLab.Cli;
 
 /// <summary>
-/// <c>grouplab intake &lt;submission&gt; &lt;public directory&gt; [--accept &lt;file&gt;]...</c>: NOTES-FROM-PLANNING.md entry 22 section 2,
+/// <c>grouplab intake &lt;submission&gt; &lt;public directory&gt; [--accept &lt;file&gt;]... [--submissions &lt;directory&gt;]</c>: NOTES-FROM-PLANNING.md entry 22 section 2,
 /// the single way a donated photograph enters public test data, with entry 27 section 1's triage. The triage is the cheapest check the
 /// application already has: a photograph on which fewer than four GroupLab markers decode can be neither registered nor scaled, so it is
 /// held with that reason until a person who has looked at it accepts it by name. Entry 27 section 3's facts, the stored size and aspect
-/// and the lens grouping key with digital zoom, are recorded beside the verdict.
+/// and the lens grouping key with digital zoom, are recorded beside the verdict. The opt-outs of every submission in the directory holding
+/// this one, or in <c>--submissions</c>, are read first, entry 37 section 2.
 /// </summary>
 internal static class IntakeVerb
 {
@@ -20,11 +21,16 @@ internal static class IntakeVerb
     public static int Run(string submission, string publicRoot, string[] rest, TextWriter output)
     {
         var accepted = new List<string>();
+        string submissions = Path.GetDirectoryName(Path.GetFullPath(Path.TrimEndingDirectorySeparator(submission)))!;
         for (int i = 0; i < rest.Length; i++)
         {
             if (rest[i] == "--accept" && i + 1 < rest.Length)
             {
                 accepted.Add(rest[++i]);
+            }
+            else if (rest[i] == "--submissions" && i + 1 < rest.Length)
+            {
+                submissions = rest[++i];
             }
             else
             {
@@ -33,8 +39,11 @@ internal static class IntakeVerb
             }
         }
 
+        // NOTES-FROM-PLANNING.md entry 37 section 2: the opt-outs of every submission beside this one, read before anything is published.
+        var withheld = Intake.WithheldHashes(submissions);
+        output.WriteLine($"opt-outs: {withheld.Count} file hashes withheld, from {withheld.Values.SelectMany(v => v).Distinct().Count()} submissions under {submissions}");
         var backend = new OpenCvSharpBackend();
-        var result = Intake.Run(submission, publicRoot, (name, _) => Triage(Path.Combine(submission, name), backend), accepted);
+        var result = Intake.Run(submission, publicRoot, withheld, (name, _) => Triage(Path.Combine(submission, name), backend), accepted);
         if (result.Refused is { } reason)
         {
             output.WriteLine($"{result.Submission}: refused, {reason}. Nothing was written.");

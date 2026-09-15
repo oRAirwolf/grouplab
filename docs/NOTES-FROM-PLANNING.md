@@ -8,6 +8,122 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 37: I was wrong about DO-NOT-PUBLISH, and the same photographs arrived twice with contradictory consent
+
+**Status: actioned 2026-09-15 for sections 1 and 2; sections 3 to 5 wait behind entry 35 section 6 and entry 36, as section 6 orders.** Section 1: the `DO-NOT-PUBLISH` check, removed under entry 28, is restored, and either signal withholds. Section 2: `Intake.WithheldHashes` builds the hash set across all submissions, and `Intake.Run` requires it. A matching file is held, with no override by acceptance, and its provenance entry names the withheld submission. On the real submissions, `eac0bae6` is refused on both signals, and `5068047f` and `bf6d885d` each hold their one photograph as a conflict naming `eac0bae6`. Nothing is published to `grouplab-testdata` until Alan has asked the contributor. Reported in `docs/PHASE1-RESULTS.md` "Entry 37". Section 1 corrects an instruction I gave you that was false, and you may have removed working code because of it. Section 2 is a consent conflict sitting in the submissions right now. Both before anything else.
+
+Three submissions arrived after the Discord post was edited. They are the first useful donated data the project has had.
+
+### 1. Correction: the `DO-NOT-PUBLISH` file exists, and entry 28 told you it did not
+
+Entry 28 section 1 said, as a numbered point: *"There is no `DO-NOT-PUBLISH` sentinel file. The opt-out is `exclude_from_public_dataset` ... do not look for a file that the page does not write."*
+
+**That was wrong.** `2026-09-15_eac0bae6` contains a file named `DO-NOT-PUBLISH`, 129 bytes, reading:
+
+```
+The contributor asked that these photos are not published.
+Testing on a private machine only. Do not add to the public data set.
+```
+
+I generalised from the single submission that existed at the time, which had not opted out and therefore had no sentinel. One example, stated as a fact about the schema. If you removed a check for that file on my say-so, **put it back.**
+
+**Both signals must be honoured, and either one alone is sufficient to withhold.** Treat a submission as opted out if `exclude_from_public_dataset` is true **or** a `DO-NOT-PUBLISH` file is present. Do not require agreement between them, and if they disagree, withhold and say so. A belt-and-braces opt-out is the one place where redundancy is the point rather than a smell.
+
+### 2. The same photographs were submitted twice, once publishable and once not
+
+Two files appear in two submissions with **identical SHA-256**:
+
+| SHA-256 (first 16) | In, publishable | In, opted out |
+|---|---|---|
+| `2fdb872ece4e7088` | `5068047f` / `001_IMG_1580.jpg` | `eac0bae6` / `003_IMG_1580.jpg` |
+| `ce5138799f7f23ec` | `bf6d885d` / `001_IMG_1696.jpg` | `eac0bae6` / `004_IMG_1696.jpg` |
+
+Same contributor, same phone, same credit name, within a few minutes. The likely story is that they submitted two carefully with full answers, then uploaded their whole folder for testing and marked that one do not publish.
+
+**The rule, which is not a judgement call: an opt-out wins by content hash, across every submission.** If bytes appear anywhere in an opted-out submission, those bytes are not published from any submission. Implement it as a hash set built across all submissions before anything is published, not as a per-submission check.
+
+**And flag the conflict rather than resolving it silently.** Publishing under ambiguous consent is the one mistake in this pipeline that cannot be undone. Hold both files, record the conflict in the provenance with both submission ids, and let Alan ask the contributor which they meant. Withholding two photographs for a day costs nothing. Publishing one the contributor did not intend costs the project its trustworthiness on the exact point the consent text makes a promise about.
+
+### 3. The post edit worked, and here is the measurement
+
+| | First submission, before the edit | The two after it |
+|---|---|---|
+| Answers filled | 0 of 6 | **6 of 6, both** |
+| Usable frames | 0 of 3 | **2 of 2** |
+
+The answers now carry backing, attachment, distance, calibre, a credit name, and in the notes the exact commercial target model. Two different calibres, 5.56 NATO and 8.6 Blackout, which is the hole-diameter variety the corpus wanted and had none of.
+
+Worth recording in `PHASE1-RESULTS.md` or wherever the corpus is described: the difference between a useless submission and a good one was the wording of the request, not the contributor.
+
+### 4. iOS is answered, passively, as planned
+
+Four uploads from an iPhone XS Max on iOS 18.7 through Safari. The `accept` attribute question from the upload page specification is settled by real use rather than by testing on a borrowed handset.
+
+**And the metadata survives the upload intact**, which was the real risk. 48 EXIF tags including `Make`, `Model`, `LensModel` reading "iPhone XS Max back dual camera 4.25mm f/1.8", focal length, 35 mm equivalent, f-number and orientation. So iPhone submissions are fully usable for the lens and surface work.
+
+**They also carry GPS.** Both of them. The scrubber is doing real work on real contributor data now, not just on Alan's own photographs.
+
+### 5. Both frames meet the brief, and one detail in them is worth building on
+
+Whole target, still stapled to the backer, all four edges in frame, printed concentric rings, genuine deformation from staples and wind, one with hard sunlight and a shadow across the top third, one with a torn corner curling away from the board. This is the case the project has never had.
+
+**The notes field names the exact target: "Action Target PR-BE6 17.5x23" and "Action Target TCT-MK3-MOD2 23x35".** That is a stated overall sheet dimension, from the person who shot it, and it is a scale reference that needs no grid and no measuring.
+
+**Use what the contributor told you rather than building a lookup table.** Carry the stated dimensions into the provenance record as structured fields when they can be parsed, and let the manual marking path offer them as a scale reference: "this sheet is 17.5 by 23 inches, use its edges". That is more honest than a database of third-party target sizes and it improves every time somebody fills the notes in, which section 3 suggests they now will.
+
+### 6. Order
+
+1. Section 1, restore the sentinel check. It is a correctness fix to a mistake I introduced.
+2. Section 2, the cross-submission hash rule and the conflict flag.
+3. Everything else in this entry can wait behind entry 35 section 6 and entry 36.
+
+---
+
+## 2026-09-15, entry 36: the fixtures are regenerated at full double precision, and my defect is closed
+
+**Status: open.** Files are already on disk, unstaged. Your job is to verify and commit, not to regenerate. Lower priority than entry 35 section 6's two remaining items, and it should be its own commit rather than folded into them.
+
+### 1. What was wrong
+
+`sg_dump.R` and `sg_distr.R` wrote through R's defaults: 15 significant digits in the CSV and `digits = 15` in the JSON. For a comparison at 1e-12 that is invisible. For a **rank** statistic it is not: dropping the last bits changes which values are exactly equal, which changes which observations tie, which moves the statistic in the fourth decimal place.
+
+**That is question 14 in one sentence, and it cost you most of a day.** You chased a 1.2e-4 to 4.9e-4 disagreement through tie rules, median definitions, coordinate frames and two implementations, and the cause was the storage format of the fixture. My file, my defect.
+
+### 2. What is fixed
+
+Both scripts now write **17 significant digits**, which is the round-trip precision of an IEEE 754 double: every double formatted `%.17g` and read back yields the identical double. The stored value is now the value.
+
+The two writers needed different fixes and both are in place:
+
+- **CSV**: values formatted with `sprintf("%.17g", v)`, with `NA`, `NaN`, `Inf` and `-Inf` written as those literals, and `quote = FALSE` so the column stays unquoted as before.
+- **JSON**: `digits = I(17)`. **Not `digits = NA`**, which the documentation describes as maximum precision but which on jsonlite 2.0.0 still emits 15. I tried `NA` first and caught it because the CSV and JSON then disagreed. The `I()` wrapper means significant digits rather than decimal places, and it is the only setting that works.
+
+### 3. What changed in the data, measured rather than assumed
+
+I diffed the new files against the committed ones across three datasets, 21,598 keys:
+
+| | |
+|---|---|
+| Keys missing | **0** |
+| Keys added | **0** |
+| Values whose text changed | 17,000 |
+| Values that changed by more than 1e-14 relative | **0** |
+
+**Every difference is digits appearing, not a value moving.** Nothing you have validated has shifted. I also verified that CSV and JSON now agree bit for bit on all 580 numeric values of `DF300BLK`, which is the check that caught the `digits = NA` problem.
+
+### 4. What you need to do
+
+1. **Run the harness.** Every comparison should still pass. If one now fails, that is interesting rather than alarming: it would mean a value your implementation matched against a rounded fixture and does not match against the true one, which is a real defect the old fixtures were hiding.
+2. **The Fligner keys are the ones to look at.** You reconstructed those values by hand to work around the precision loss. That workaround should now be unnecessary: the four keys should match straight from the fixture. **Remove the reconstruction rather than leaving it in place**, and confirm the values it produced agree with the ones now stored. If they disagree, tell me, because then one of us is wrong and it matters which.
+3. **Update `STATISTICS.md` section 15.4.** It currently records 15-digit precision as a property of the fixtures. That is no longer true, so the entry should say what it was, when it changed, and that question 14's four keys were its only known casualty. Do not delete the note; a defect that was found and fixed is worth more in the record than one that was quietly removed.
+4. **Commit as its own change**, and say in the message that no value moved beyond 1e-14.
+
+### 5. Files
+
+Nine datasets plus `DFdistr`, CSV and JSON, already written to `test/fixtures/shotgroups/`. Both scripts updated in `tools/shotgroups/`. Roughly 14 MB, slightly larger than before because the digits are really there now.
+
+---
+
 ## 2026-09-15, entry 35: the four decisions, and what the sighter bug proves
 
 **Status: actioned 2026-09-15 for sections 1, 4 and 5. Section 2's README warning and section 3 wait on Alan, because this session's permission check refused both. Section 6 items 2 and 3 are next.** Section 1: `CameraOriginal` holds a file with a screenshot or messaging-app name, or no camera make, in both `intake` and `publish-owner`. It flags none of the 26 published owner photographs and none of the donated files. The two photographs are recorded as held permanently at `grouplab-testdata` commit `c80055c`. Section 3: the bundle was verified, and the pack measured at 159.74 MiB, before the refused deletion; nothing was deleted. Section 4: `.gitignore`. Section 5: `CONTRIBUTING.md`. Reported in `docs/PHASE1-RESULTS.md` "Entry 35". Answers your four questions from the entry 33, 32 and 34 report. Section 1 is a decision I am making rather than passing on. Sections 3 and 4 are small and should be done in the next commit.

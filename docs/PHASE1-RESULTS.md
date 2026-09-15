@@ -1683,6 +1683,43 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 37. The opt-out file restored, and consent that wins by content hash
+
+`docs/NOTES-FROM-PLANNING.md` entry 37 sections 1 and 2. Sections 3 to 5 wait, as its section 6 orders.
+
+**Section 1: the `DO-NOT-PUBLISH` check is back.**
+- **Its history:** the intake gate of entries 22 and 27 checked for it. Entry 28 section 1 said the page writes no such file, and the check was removed. The first opted-out submission, `2026-09-15_eac0bae6`, carries one.
+- **Either signal withholds:** a submission is refused when the file is present or `exclude_from_public_dataset` is true. No agreement between them is required.
+- **A disagreement is named:** a file present beside a field reading false is refused with a statement that the two signals disagree.
+- **Order:** both signals are checked before the schema version, so an opted-out submission is always reported as opted out.
+- **Unchanged:** a missing field is still refused as unknown.
+
+**Section 2: an opt-out wins by content hash, across every submission.**
+- **The set:** `Intake.WithheldHashes` reads every submission directory before anything is published. It maps every file hash in each submission that is not plainly publishable to that submission's identifier, counting both the bytes on disk and the hashes `meta.json` recorded.
+- **What counts as withheld:** a submission whose opt-out is set by either signal, is missing, or whose `meta.json` cannot be read. Withholding costs nothing, and publishing under ambiguous consent cannot be undone.
+- **Required, not optional:** `Intake.Run` takes that set as a required argument, so no caller can publish without it.
+- **What a match does:** a file whose bytes are in the set is held whatever triage says, and accepting it by name does not override that. Its entry in the provenance record carries `optedOutIn` with the withheld submission's identifier, beside the record's own `submissionId`.
+- **Where the opt-outs are read from:** `grouplab intake` reads them from the directory holding the submission, or from `--submissions`, and prints how many hashes it withheld.
+
+**On the four real submissions**, run into a scratch directory:
+
+| Submission | Result |
+|---|---|
+| `2026-09-15_eac0bae6` | Refused: `exclude_from_public_dataset` is true and a `DO-NOT-PUBLISH` file is present. Its 9 files are the withheld hashes |
+| `2026-09-15_5068047f` | Its one photograph, `001_IMG_1580.jpg`, held for a consent conflict naming `eac0bae6` |
+| `2026-09-15_bf6d885d` | Its one photograph, `001_IMG_1696.jpg`, held for a consent conflict naming `eac0bae6` |
+| `2026-09-14_1a8f39ad` | Unchanged: its three photographs are held by triage |
+
+**Nothing was published to `grouplab-testdata`.**
+- **What publishing would add:** each new publishable submission would be a provenance record with no photograph, carrying the contributor's answers and credit name.
+- **Why not yet:** a public record of a submission whose consent is in question waits until Alan has asked the contributor which they meant.
+
+**Worth knowing for when consent is settled.** Triage decoded no GroupLab markers on either photograph, because both are commercial Action Target sheets. Entry 27 section 1's triage therefore holds them until a person accepts them by name, even without the conflict. So frames entry 37 calls the case the project has never had can reach the public data only by a person's acceptance.
+
+**Tests:** Core 725 passing, App 4 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1777,3 +1814,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 34: a separate `publish-owner` path, over running the owner's photographs through `intake`.** Intake requires a consent record, and entry 34 section 2 rules out inventing one.
 - **Entry 35: a missing camera make alone is enough to hold a file, over requiring a copy's file name as well.** Entry 35 section 1 calls the make the stronger signal. A person can still accept a held donated file by name, so a false hold costs a look, and a false publication cannot be undone.
 - **Entry 35: an edited phone copy that keeps its camera metadata, the four `~2` photographs, not held.** The rule is about lost camera geometry. Those copies keep their make, model and focal length, and nothing in entry 35 asks for more.
+- **Entry 37: a submission whose consent cannot be read withholds its files' hashes, over ignoring it.** The rule exists because publishing under ambiguous consent cannot be undone, and an unreadable `meta.json` is the most ambiguous consent there is.
+- **Entry 37: a file held for a consent conflict cannot be accepted by name, unlike a file triage holds.** Triage is a judgement about usefulness that a person can overrule; an opt-out is the contributor's decision, and only the contributor can change it.
+- **Entry 37: the two conflicted submissions not published even as provenance records.** Publishing a record of a submission whose consent is in question, with its answers and credit name, waits for the contributor's answer as the photographs do.
