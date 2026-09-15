@@ -21,6 +21,10 @@ public static class RawMeasurements
     private static readonly JsonSerializerOptions Options = new()
     {
         WriteIndented = true,
+
+        // The record is compared byte for byte across platforms (NOTES-FROM-PLANNING.md entry 32 section 3), and the default is the
+        // platform's newline, which wrote CRLF on Windows and LF elsewhere.
+        NewLine = "\n",
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },

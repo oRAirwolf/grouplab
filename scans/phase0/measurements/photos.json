@@ -17,7 +17,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1.66,
+        "lensGroupKey": "2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -2374,7 +2376,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1.66,
+        "lensGroupKey": "2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -4731,7 +4735,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1.66,
+        "lensGroupKey": "2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -7088,7 +7094,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1.66,
+        "lensGroupKey": "2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -9445,7 +9453,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 13
+        "focalLength35mm": 13,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "2.20 mm f/2.2, 13 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -11802,7 +11812,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 13
+        "focalLength35mm": 13,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "2.20 mm f/2.2, 13 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -14159,7 +14171,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 2.2,
         "fNumber": 2.2,
-        "focalLength35mm": 13
+        "focalLength35mm": 13,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "2.20 mm f/2.2, 13 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -16437,7 +16451,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -18794,7 +18810,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -20832,7 +20850,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -22910,7 +22930,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 7,
         "fNumber": 2.4,
-        "focalLength35mm": 69
+        "focalLength35mm": 69,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "7.00 mm f/2.4, 69 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -24548,7 +24570,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 7,
         "fNumber": 2.4,
-        "focalLength35mm": 69
+        "focalLength35mm": 69,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "7.00 mm f/2.4, 69 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -26866,7 +26890,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 7,
         "fNumber": 2.4,
-        "focalLength35mm": 69
+        "focalLength35mm": 69,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "7.00 mm f/2.4, 69 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -28024,7 +28050,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -30381,7 +30409,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [
@@ -32379,7 +32409,9 @@
         "cameraModel": "Galaxy Z Fold7",
         "focalLengthMm": 6.25,
         "fNumber": 1.7,
-        "focalLength35mm": 23
+        "focalLength35mm": 23,
+        "digitalZoomRatio": 1,
+        "lensGroupKey": "6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00, 4000 by 3000"
       },
       "markersExpected": 34,
       "markersMatched": [

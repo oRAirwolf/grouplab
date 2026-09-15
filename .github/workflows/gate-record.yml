@@ -1,0 +1,83 @@
+# The Phase 0 gate record reproduced on every platform, NOTES-FROM-PLANNING.md entry 32 section 3 and entry 35 section 6 item 2. Passing the
+# tests within tolerance is not the claim; reproducing the record is. Each job reruns the eight Phase 0 spike commands, which rewrite
+# scans/phase0/measurements in the working tree, and compares every file byte for byte with the committed record. The one field allowed to
+# differ is detectMs in threshold.json, a detection time, which differs between any two runs (docs/PHASE0-RESULTS.md section 8). Each console
+# table is hashed into the run summary so the three platforms can be set side by side, with the threshold table's time column removed first.
+name: phase 0 gate record
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  record:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build src/GroupLab.Cli --configuration Release
+
+      - name: Rerun the Phase 0 spikes
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/console"
+          for m in sheets photos markers refinement threshold scale field detectors; do
+            echo "::group::grouplab spike $m"
+            start=$SECONDS
+            dotnet src/GroupLab.Cli/bin/Release/net10.0/grouplab.dll spike "$m" | tee "$RUNNER_TEMP/console/$m.txt"
+            echo "$m took $((SECONDS - start)) s"
+            echo "::endgroup::"
+          done
+
+      - name: Compare with the committed record
+        run: |
+          digest() { if command -v sha256sum > /dev/null; then sha256sum | cut -c1-16; else shasum -a 256 | cut -c1-16; fi; }
+          status=0
+          {
+            echo "### ${{ matrix.os }}"
+            echo
+            echo "| Spike | Record against the commit | Console table, sha256 |"
+            echo "|---|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          for m in sheets photos markers refinement threshold scale field detectors; do
+            file="scans/phase0/measurements/$m.json"
+            git show "HEAD:$file" > "$RUNNER_TEMP/committed.json"
+            note=""
+            if [ "$m" = threshold ]; then
+              grep -v '"detectMs"' "$RUNNER_TEMP/committed.json" > "$RUNNER_TEMP/a.json"
+              grep -v '"detectMs"' "$file" > "$RUNNER_TEMP/b.json"
+              note=", detectMs left out"
+              table=$(tr -d '\r' < "$RUNNER_TEMP/console/$m.txt" | awk -F'|' 'BEGIN { OFS = "|" } NF > 6 { $6 = "" } { print }' | digest)
+            else
+              cp "$RUNNER_TEMP/committed.json" "$RUNNER_TEMP/a.json"
+              cp "$file" "$RUNNER_TEMP/b.json"
+              table=$(tr -d '\r' < "$RUNNER_TEMP/console/$m.txt" | digest)
+            fi
+            if cmp -s "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json"; then
+              verdict="identical$note"
+            else
+              status=1
+              lines=$(diff "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json" | grep -c '^[<>]')
+              verdict="**differs**, $lines lines$note"
+              echo "::group::$m.json against the commit"
+              diff "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json" | head -80
+              echo "::endgroup::"
+            fi
+            echo "| \`$m\` | $verdict | \`$table\` |" >> "$GITHUB_STEP_SUMMARY"
+          done
+          exit $status
