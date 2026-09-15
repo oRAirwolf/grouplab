@@ -47,6 +47,7 @@ public sealed class MainWindow : Window
     private readonly StackPanel statistics = new() { Spacing = 4 };
     private readonly StackPanel selection = new() { Spacing = 6 };
     private readonly StackPanel shotList = new() { Spacing = 2 };
+    private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space6, IsVisible = false };
     private readonly StackPanel scaleInputs = new() { Spacing = 6 };
     private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetNames<ExclusionReason>(), SelectedIndex = 0, MinWidth = 140 };
     private GrayImage? grey;
@@ -90,7 +91,13 @@ public sealed class MainWindow : Window
         canvas.LengthTapped += (_, _) => AskLength();
         canvas.RectangleTapped += (_, _) => AskRectangle();
         canvas.Notice += (_, note) => status.Text = note;
-        Opened += (_, _) => DiagnosticLog.Info("app.window", ("scale", RenderScaling), ("width", Width), ("height", Height));
+        Opened += (_, _) =>
+        {
+            CrashReporter.DisplayScale = RenderScaling;
+            DiagnosticLog.Info("app.window", ("scale", RenderScaling), ("width", Width), ("height", Height));
+        };
+        CrashReporter.Recorded += OnCrashRecorded;
+        Closed += (_, _) => CrashReporter.Recorded -= OnCrashRecorded;
 
         var toolbar = new WrapPanel { Margin = new Thickness(Tokens.Space8, Tokens.Space6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
@@ -117,6 +124,8 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
 
         var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
+        panel.Children.Add(crashBanner);
+
         // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
         panel.Children.Add(Heading("Units"));
         panel.Children.Add(Row(linearUnit, angularUnit, distanceUnit));
@@ -190,7 +199,56 @@ public sealed class MainWindow : Window
         SetTool(MarkingTool.Pan);
         ShowUnits();
         Refresh();
+        ShowPendingCrashes();
     }
+
+    /// <summary>The crash banner's text when it is showing, and empty otherwise, for the headless tests.</summary>
+    internal string CrashBannerText => crashBanner.IsVisible ? string.Join(" ", crashBanner.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text)) : "";
+
+    /// <summary>The crash banner, for the headless tests.</summary>
+    internal StackPanel CrashBanner => crashBanner;
+
+    /// <summary>
+    /// The next-launch offer, NOTES-FROM-PLANNING.md entry 41 section 5: a crashing application often cannot draw, so the reliable moment to
+    /// say that something went wrong is the next time GroupLab opens. Every crash record not yet dealt with is offered here until the user
+    /// deals with it.
+    /// </summary>
+    private void ShowPendingCrashes()
+    {
+        crashBanner.Children.Clear();
+        var pending = CrashReporter.PendingCrashes(DiagnosticLog.Current.Directory);
+        crashBanner.IsVisible = pending.Count > 0;
+        if (pending.Count == 0)
+        {
+            return;
+        }
+
+        DiagnosticLog.Info("crash.offered", ("pending", pending.Count));
+        crashBanner.Children.Add(new TextBlock
+        {
+            Text = pending.Count == 1
+                ? "GroupLab closed unexpectedly last time, and recorded what went wrong."
+                : string.Create(CultureInfo.InvariantCulture, $"GroupLab closed unexpectedly {pending.Count} times, and recorded what went wrong."),
+            TextWrapping = TextWrapping.Wrap,
+            FontWeight = FontWeight.SemiBold,
+            Classes = { AppStyles.Alert },
+        });
+        crashBanner.Children.Add(Row(
+            Button("Show the record", () => CrashReporter.Reveal(pending[^1])),
+            Button("Dismiss", () =>
+            {
+                foreach (string crash in pending)
+                {
+                    CrashReporter.MarkHandled(crash);
+                }
+
+                ShowPendingCrashes();
+            })));
+    }
+
+    /// <summary>The in-the-moment notice of entry 41 section 5, best effort: the window may not be able to draw, and the record is already written.</summary>
+    private void OnCrashRecorded(object? sender, string crash) => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        problem.Text = "Something went wrong, and GroupLab recorded what. The window carried on, but check your last change. The next time GroupLab opens it offers the record.");
 
     /// <summary>The unit setting in use, for the headless tests.</summary>
     internal UnitSettings Units => units;
@@ -466,7 +524,19 @@ public sealed class MainWindow : Window
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
-        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend(), trace));
+
+        // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
+        CrashReporter.InFlight = trace;
+        AutomaticResult result;
+        try
+        {
+            result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend(), trace));
+        }
+        finally
+        {
+            CrashReporter.InFlight = null;
+        }
+
         LogDetection(result, trace, clock.ElapsedMilliseconds);
         ApplyDetection(result);
     }

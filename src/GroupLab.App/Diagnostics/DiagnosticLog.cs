@@ -119,11 +119,20 @@ public sealed partial class DiagnosticLog : IDisposable
     public static void Error(string name, params (string Key, object? Value)[] fields) => Current.Write(LogLevel.Error, name, fields);
 
     /// <summary>A line naming an exception by type and message, with its stack and every inner exception on continuation lines.</summary>
-    public static void Exception(LogLevel level, string name, Exception exception, params (string Key, object? Value)[] fields)
+    public static void Exception(LogLevel level, string name, Exception exception, params (string Key, object? Value)[] fields) =>
+        Current.WriteException(level, name, exception, fields);
+
+    public void WriteException(LogLevel level, string name, Exception exception, params (string Key, object? Value)[] fields)
     {
         ArgumentNullException.ThrowIfNull(exception);
-        Current.Write(level, name, [.. fields, ("ex", exception.GetType().FullName), ("message", exception.Message)], Chain(exception));
+        Write(level, name, [.. fields, ("ex", exception.GetType().FullName), ("message", exception.Message)], Chain(exception));
     }
+
+    /// <summary>
+    /// The name of the last INFO or WARN event, which is what the user was last doing: a short stable identifier such as <c>print.select</c>,
+    /// so repeated crash reports group (entry 45 section 2). Kept even when logging is off, because a crash record is still worth one.
+    /// </summary>
+    public static string? LastAction { get; private set; }
 
     /// <summary>A file as the log records it: its name, and a salted hash of its full path, never the directory (entry 41 section 3).</summary>
     public static (string Key, object? Value)[] File(string path) => Current.FileFields(path);
@@ -147,6 +156,12 @@ public sealed partial class DiagnosticLog : IDisposable
 
     public void Write(LogLevel level, string name, IEnumerable<(string Key, object? Value)> fields, IEnumerable<string>? continuation = null)
     {
+        ArgumentNullException.ThrowIfNull(name);
+        if (level is LogLevel.Info or LogLevel.Warn && !name.StartsWith("app.", StringComparison.Ordinal) && !name.StartsWith("crash.", StringComparison.Ordinal))
+        {
+            LastAction = name;
+        }
+
         if (queue is null || DisabledReason is not null || (level == LogLevel.Debug && !Verbose))
         {
             return;

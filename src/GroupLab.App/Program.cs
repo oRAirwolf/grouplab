@@ -24,6 +24,9 @@ internal static class Program
         var (directory, described) = LogDirectory.Resolve(AppInfo.IsDebugBuild, AppContext.BaseDirectory);
         using var log = new DiagnosticLog(directory, verbose) { DescribedDirectory = described };
         DiagnosticLog.Current = log;
+
+        // Entry 41 section 5: the handlers go in before the window exists, so nothing the window does can fail unrecorded.
+        using var crashes = CrashReporter.Install(log);
         var units = settings.LoadUnits();
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields(), ("units", $"{units.Linear} {units.Angular} {units.Distance}"), ("verbose", verbose), ("logdir", described)]);
         var clock = Stopwatch.StartNew();
