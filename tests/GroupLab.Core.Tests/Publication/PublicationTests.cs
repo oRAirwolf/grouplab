@@ -206,6 +206,36 @@ public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 29 section 4 step 3, kept as a standing check: every committed JPEG, scrubbed, decodes to exactly the
+    /// same colour pixels as before, and carries no location afterwards. One file proves the method; every file proves the job.
+    /// </summary>
+    [Fact]
+    public void EveryCommittedPhotographScrubsToIdenticalPixels()
+    {
+        var git = Process.Start(new ProcessStartInfo("git", "ls-files") { WorkingDirectory = Repo.PathTo(), RedirectStandardOutput = true, UseShellExecute = false })!;
+        var jpegs = git.StandardOutput.ReadToEnd().Split('\n', StringSplitOptions.RemoveEmptyEntries).Where(f => Path.GetExtension(f).ToLowerInvariant() is ".jpg" or ".jpeg").ToList();
+        git.WaitForExit();
+
+        var changed = new List<string>();
+        foreach (string file in jpegs)
+        {
+            byte[] original = File.ReadAllBytes(Repo.PathTo(file));
+            byte[] scrubbed = ImageScrubber.Scrub(original).Bytes;
+            using var before = OpenCvSharp.Cv2.ImDecode(original, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+            using var after = OpenCvSharp.Cv2.ImDecode(scrubbed, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+            bool same = before.Size() == after.Size() && before.Type() == after.Type() && OpenCvSharp.Cv2.Norm(before, after, OpenCvSharp.NormTypes.INF) == 0;
+            if (!same || PublicationCheck.LocationProblems(scrubbed).Any(p => p.Contains("GPS", StringComparison.Ordinal)))
+            {
+                changed.Add(file);
+            }
+        }
+
+        output.WriteLine($"{jpegs.Count} committed JPEGs scrubbed; {jpegs.Count - changed.Count} decode to identical pixels with no location left");
+        Assert.True(jpegs.Count >= 16, $"git ls-files listed {jpegs.Count} JPEGs");
+        Assert.True(changed.Count == 0, "pixels changed or a location survived: " + string.Join(", ", changed));
+    }
+
+    /// <summary>
     /// The donated test data checkout, NOTES-FROM-PLANNING.md entry 28 section 4 and the README's "Test data": the directory
     /// <c>GROUPLAB_TESTDATA</c> names, or <c>grouplab-testdata</c> beside this repository; null when there is neither.
     /// </summary>

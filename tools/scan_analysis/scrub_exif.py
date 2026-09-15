@@ -3,6 +3,14 @@
 Strip location and identifying metadata from donated target photographs, keeping
 only the camera facts the registration work needs.
 
+THE C# SCRUBBER IS AUTHORITATIVE.  src/GroupLab.Core/Publication/ImageScrubber.cs
+is the definition, and it is what `grouplab intake` and the history rewrite of
+NOTES-FROM-PLANNING entry 29 use.  This script is for ad hoc use only.  It keeps
+the same tags, but unlike the C# version it leaves XMP and any data after the
+image's end marker in place, and either can carry a location or a date, so its
+output must not be published without `grouplab intake` or PublicationTests
+checking it.  Keep the two whitelists identical.
+
 WHY THIS EXISTS.  Photographs contributed by other people may carry GPS
 coordinates of a shooting range or of private property, device serial numbers,
 and owner names.  None of that belongs in a public repository, and once it is
@@ -25,6 +33,10 @@ WHAT IS KEPT.  Only the tags the pipeline reads or the analysis needs:
                                      marker defocus
     ExposureTime, ISOSpeedRatings    motion blur and noise
     Orientation                      or the image loads rotated
+    DigitalZoomRatio                 digital zoom crops and upscales without
+                                     always updating the 35 mm equivalent, so
+                                     it is part of the lens grouping key
+                                     (NOTES-FROM-PLANNING entries 27 and 29)
 
 WHAT IS REMOVED.  Everything else, which is every GPS field, every maker note,
 every serial number, every embedded thumbnail, and every date.  Dates are
@@ -53,6 +65,7 @@ KEEP_EXIF = {
     piexif.ExifIFD.ISOSpeedRatings,
     piexif.ExifIFD.PixelXDimension,
     piexif.ExifIFD.PixelYDimension,
+    piexif.ExifIFD.DigitalZoomRatio,
 }
 
 EXTS = (".jpg", ".jpeg", ".JPG", ".JPEG")
