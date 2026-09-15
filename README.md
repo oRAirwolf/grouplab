@@ -202,6 +202,8 @@ Windows is the only platform currently buildable: the imaging backend references
 
 ## Licence
 
-GPL-3.0, with an additional permission under section 7 for app-store distribution. Plain GPL-3.0 conflicts with Apple's App Store terms and GPL applications have been removed from the store before; the additional permission is the standard resolution and is cheap to add now and expensive to add after the first outside contributor.
+**GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the licence in force today for every copy of GroupLab from every source.
+
+**An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this. The permission is the standard resolution, and it can only be granted by the copyright holders, so it is far cheaper to add before there are outside contributors than after. It is not in force yet and this README will say so until it is. **Do not rely on it.**
 
 Work by others that GroupLab includes or depends on is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
