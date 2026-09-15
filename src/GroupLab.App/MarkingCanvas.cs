@@ -47,8 +47,9 @@ public enum MarkingTool
 /// </para>
 /// <para>
 /// Every mark is legible on a photograph of a target, NOTES-FROM-PLANNING.md entry 39 section 5, drawn as <see cref="Marks"/> draws it
-/// (entry 42 section 5): a two tone stroke in the mark's own colour. An impact is a ring at the true hole diameter once the calibre and
-/// the scale are known, because it is a measurement and an oversized mark hides the thing it marks.
+/// (entry 42 section 5): a two tone stroke in the mark's own colour. An impact is a ring at the calibre's diameter once the calibre and
+/// the scale are known, because it is a measurement and an oversized mark hides the thing it marks. A hole that reads too large for the
+/// calibre is ringed again in alert at the size it reads, so the disagreement is visible on the image (entry 46 section 1).
 /// </para>
 /// </summary>
 public sealed class MarkingCanvas : Control, ICustomHitTest
@@ -110,8 +111,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Printed markers the registration expected and did not find, image pixels, drawn so the user sees what is missing.</summary>
     public IReadOnlyList<PointD> MissingMarkers { get; set; } = [];
 
-    /// <summary>Shots whose hole reads too large for the group's calibre, ringed in alert (entry 24 section 5 point 3).</summary>
-    public IReadOnlySet<int> FlaggedShots { get; set; } = new HashSet<int>();
+    /// <summary>
+    /// Shots whose hole reads too large for the group's calibre (entry 24 section 5 point 3), each with the extent it reads across in
+    /// inches. Each is ringed again in alert at that measured size, so an oversized hole looks oversized on the image and not only in the
+    /// text (NOTES-FROM-PLANNING.md entry 46 section 1).
+    /// </summary>
+    public IReadOnlyDictionary<int, double> FlaggedShots { get; set; } = new Dictionary<int, double>();
 
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
@@ -342,9 +347,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             Marks.Ring(context, colour, c, radius, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, shot.Exclusion is null ? null : Marks.Dashed);
-            if (FlaggedShots.Contains(shot.Id))
+            if (FlaggedShots.TryGetValue(shot.Id, out double apparent))
             {
-                Marks.Ring(context, Marks.Alert, c, radius + 6, dash: Marks.Dashed);
+                Marks.Ring(context, Marks.Alert, c, OversizeRadius(state, at, radius, apparent), dash: Marks.Dashed);
             }
 
             Marks.Dot(context, colour, c, 1);
@@ -374,6 +379,30 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private double ImpactRadius(MarkingState state, PointD image) => state.Calibre is { } calibre && state.Scale is { } scale
         ? Math.Max(MinimumImpactRadius, calibre.DiameterInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
         : MarkRadius;
+
+    /// <summary>
+    /// The alert ring's radius on screen for a hole that reads too large: half the extent it was measured at, at the image's local scale, so
+    /// its size against the calibre ring is the size of the disagreement (NOTES-FROM-PLANNING.md entry 46 section 1). Never closer than six
+    /// pixels outside the impact ring, so the two stay apart where the measured size is only a little larger.
+    /// </summary>
+    private double OversizeRadius(MarkingState state, PointD image, double impactRadius, double apparentInches) => state.Scale is { } scale
+        ? Math.Max(impactRadius + 6, apparentInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
+        : impactRadius + 6;
+
+    /// <summary>The drawn diameters in inches of a shot's impact ring and, when it is flagged, its alert ring; for the tests of entry 46 section 1.</summary>
+    internal (double Impact, double? Oversize) RingDiametersInches(int shotId)
+    {
+        var state = Session?.State;
+        if (state?.Shots.FirstOrDefault(s => s.Id == shotId) is not { } shot || state.Scale is not { } scale)
+        {
+            return (double.NaN, null);
+        }
+
+        double inchesPerScreenPixel = 1 / (HoleSize.PixelsPerInch(scale, shot.Image) * zoom);
+        double impact = ImpactRadius(state, shot.Image);
+        double? oversize = FlaggedShots.TryGetValue(shotId, out double apparent) ? OversizeRadius(state, shot.Image, impact, apparent) : null;
+        return (2 * impact * inchesPerScreenPixel, oversize * 2 * inchesPerScreenPixel);
+    }
 
     /// <summary>A scale reference's segments and a filled circle at every end.</summary>
     private void DrawReference(DrawingContext context, IReadOnlyList<PointD> points, bool closed)

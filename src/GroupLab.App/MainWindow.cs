@@ -701,7 +701,7 @@ public sealed class MainWindow : Window
         }
 
         holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage, artwork);
-        canvas.FlaggedShots = holeFlags.Select(f => f.ShotId).ToHashSet();
+        canvas.FlaggedShots = holeFlags.ToDictionary(f => f.ShotId, f => f.ApparentInches);
 
         if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
         {

@@ -15,6 +15,70 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 46: two questions off the screenshots, one decision I owe you, and what to do next
+
+**Status: actioned 2026-09-15 for sections 0 to 2; entry 35 section 6, entry 37 sections 3 to 5, and section 3 follow in section 4's order.**
+- **Section 0:** `main` fast-forwarded to `48913ff` and pushed.
+- **Section 1, the calibre:** every impact ring was the calibre, not the measured size, and the canvas comment said "true hole diameter" as the entries do. In the close-up all three rings on bull 13 draw at 0.308 in. Shot 2, which reads 0.508 in, was ringed again in alert only 6 screen pixels outside its own ring. The impact ring stays at the calibre, as you offered. The alert ring on a flagged hole is now drawn at the size it reads, 0.508 in on shot 2, so the oversize case is visible on the image at scale, and the screenshot test asserts both diameters.
+- **Section 2, a real run logs:** the screenshots come from the headless test, which starts no log. A Debug build run from the repository was driven through UI Automation to open a Phase 0 scan through the real file dialog, then closed. It wrote `out/logs/grouplab-20260915-180437-32256.log` holding `app.start`, `dialog.open`, `dialog.result`, `image.open` by name and hash, and `app.exit code=0`. `out/logs` had not existed before, because no build with logging had been run from the repository.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 46". Short. Sections 1 and 2 are questions rather than instructions, and I would rather have the answers than guess. Section 3 settles something entry 42 left open. Section 4 is the order.
+
+Entries 41, 42, 44 and 45 are actioned, CI is green on all three platforms at `f0973ed`, and I have read `docs/PHASE1-RESULTS.md` rather than asking you to repeat yourself. The window now looks like a designed instrument instead of a default one, the marks read on paper, on printed rings and on a dark backer in the donated photograph, and the panel refuses to print a centre from aim when it has no aim. **That is the check that had been open since Friday and it passes.**
+
+### 0. `main` is one commit behind
+
+Alan committed the paper protocol as `48913ff` on `phase-1` and pushed. `main` is still at `f0973ed`. Fast-forward it and push, so the two stay level as they have been all week.
+
+### 1. Is the impact ring drawn at the true hole diameter, or at the calibre?
+
+In `out/screens/marks-closeup-dark.png`, the three impacts on bull 13 are drawn as rings of **the same size**, and shot 2 is the one the panel flags as reading 0.508 in across against a 0.308 in calibre. Entry 42 section 5 says the ring is at the true hole diameter, and entry 43 section 3 repeats it for the composite plot. The stated reason is that the picture should be scale honest, so that two holes marked as one look wrong on the image rather than only in the text.
+
+**I am not calling this a defect from a screenshot.** The check is one number: the drawn diameter of shot 2's ring in inches, against 0.308 and against 0.508.
+
+- If the ring is the **calibre** for every shot, that is a reasonable design and it is not what either entry says, so tell me and I will change the entries rather than have you change the code.
+- If it is the **measured size**, then shot 2's ring should be about two thirds again the size of the others and it is not, so something is clamping it.
+
+Either way, **the oversize case should be visible on the image**, because entry 40's whole lesson was that a person looking at the picture had no way to see what the number was telling them.
+
+### 2. Does a real run say "Logging is off: logging has not started"?
+
+That is what the Diagnostics panel reads in both window screenshots. If that is the headless test, where no log directory is wanted, fine and say so. **If that is what a Debug build run from the repository shows, then entry 41 section 4 is not doing the one thing it exists for**, which is that logs appear in `out/logs` without Alan having to do anything, and I would be reading an empty directory the next time he says something misbehaved.
+
+Worth an explicit check rather than an inspection of the code: run the window, open an image, close it, and confirm a file appeared.
+
+### 3. Shot provenance: my decision, since entry 42 dropped it without meaning to
+
+You flagged that entry 42 section 5 gives one impact colour, and that the gold, orange and green coding for automatic, corrected and manual shots is therefore gone from the image. That was my omission rather than your change, and you were right to name it.
+
+**The decision: it does not come back to the image, and it does come back in the list.**
+
+- **Not on the image**, because colour there already carries selected and excluded, and the rule in entry 42 section 2 is that amber means "this one". Five meanings on one ring is how a legend stops being readable, and the image's job is geometry.
+- **A provenance column in the shot list**, per shot, in `faint`, so it reads without shouting.
+- **A count line above the figures**: something like "12 shots: 9 detected, 2 corrected, 1 placed by hand." That is the thing a person actually wants to know, and it is one line rather than twelve.
+
+**The reason provenance matters at all is worth writing down**, because it is easy to treat as bookkeeping: it is the record of where a human judgement entered a measurement. A group that is nine detected shots and a group that is nine hand-placed ones deserve the same figures and a different amount of confidence, and only the application knows which it is looking at.
+
+### 4. Order
+
+1. **Section 0**, fast-forward `main`. One command.
+2. **Sections 1 and 2**, the two answers. Both are quick and both might change what section 3 is worth doing on top of.
+3. **Entry 35 section 6**, still the oldest open item: the Phase 0 gate reproduced byte for byte on Linux and macOS, and making `--target` unnecessary by reading the definition identifier off the image. This is also gate C2 of the check I am running, so finishing it turns a "never measured" row into a measured one.
+4. **Entry 37 sections 3 to 5**: record what the donated submissions showed, and carry the contributor's stated target dimensions into the provenance as structured fields.
+5. **Section 3 of this entry.**
+
+**Entry 43 stays closed this week.** It is Phase 4 and nothing about it has become urgent.
+
+### 5. One piece of housekeeping, not urgent
+
+Every CI job, including the green ones, now carries a GitHub annotation: `actions/checkout@v4` and `actions/setup-dotnet@v4` target Node.js 20, which is deprecated, and are being forced onto Node.js 24. Nothing is broken and nothing needs doing this week. Move both to v5 the next time you are in `.github/workflows` for another reason.
+
+### 6. What is happening on my side, so you do not wait on it
+
+I am working through a top to bottom check of the project: every actioned entry against what is actually in the tree, the privacy chain end to end, the gates, documentation drift, and loose ends on disk. **Findings will arrive as later entries. Do not wait for them and do not go looking for the plan**; it is mine to run, and where it turns up something for you it will turn up as an ordinary entry in the inbox.
+
+---
+
 ## 2026-09-15, entry 45: the crash report wire contract, fixed, because the server half now exists
 
 **Status: actioned 2026-09-15, with entry 41.**

@@ -1972,6 +1972,32 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 46. The alert ring at the measured size, and a real run's log
+
+`docs/NOTES-FROM-PLANNING.md` entry 46 sections 0 to 2. The rest of the entry is reported below as it lands.
+
+**Section 1: the impact ring is the calibre.**
+- **What the code did:** `MarkingCanvas` drew every impact ring at the calibre's diameter at the image's local scale. So every ring was the same size, whatever the hole measured, and entry 42 section 5's "true hole diameter" was not what it drew.
+- **The close-up, measured by the screenshot test:** the three impacts on bull 13 draw at 0.308 in. Shot 2 reads 0.508 in across. Its alert ring sat 6 screen pixels outside its impact ring, which at the close-up's zoom is a few hundredths of an inch and says nothing about size.
+- **The change:** the impact ring stays at the calibre, which planning offered to write into the entries. A flagged hole's alert ring is drawn at the extent it reads, half of it as the radius, and never closer than 6 pixels outside the impact ring. On shot 2 that is 0.508 in against 0.308, so two holes marked as one look wrong on the image.
+- **Why only flagged holes:** the size check reads a hole's extent only where it finds a dark region on paper within two diameters. On ink or a dark backer it reads nothing, so a ring at the measured size for every shot would fall back to the calibre on exactly the marks where the question matters least clearly.
+- **Test:** `ScreenshotTests` asserts every impact ring at 0.308 in and the flagged ring at the size its flag reads, and writes the figures to `out/screens/marks-closeup-rings.txt`.
+
+**Section 2: a real run writes its log.** The window screenshots come from the headless test, which starts no log, so the panel there says logging has not started. The explicit check was a real run:
+- **The build:** a Debug build run from its place in the repository.
+- **The run:** driven through UI Automation. It clicked Open image, typed the path of `scans/phase0/gl-cf25-ltr-1-600-dpi.png` into the real file dialog, waited, and closed the window.
+- **The result:** `out/logs/grouplab-20260915-180437-32256.log`, which reads in full:
+  - `app.start`, with `channel=debug` and `logdir=<repository>/out/logs`;
+  - `app.window`;
+  - `dialog.open` and `dialog.result chosen=True`;
+  - `image.open file=gl-cf25-ltr-1-600-dpi.png pathid=ab0b3ee4`, with format, size and resolution;
+  - `app.exit code=0 seconds=25.5`.
+- **Why the directory was empty:** `out/logs` had not existed until this run. The only build that had been run from the repository was the copy Alan had open, built before logging existed.
+
+**Tests:** App 31 passing, none skipped. Core unchanged.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2083,3 +2109,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 45: `last_action` as the name of the last event logged, over a separate list of action names.** Every user action already writes a stable event name, such as `print.select`, and a second list would drift from it.
 - **Entry 41: Send saves the package before sending, into the log directory when the user has not saved it.** Section 7 says the zip is kept if sending fails, and the only way to guarantee that is for it to exist before the attempt.
 - **Entry 41: a crash record not rewritten when a second crash lands in the same second of the same process.** The receiver's name pattern leaves no room for a counter, and the first crash is usually the cause.
+- **Entry 46: an alert ring at the measured size on a flagged hole, over every impact ring at its measured size.** The size check reads an extent only for a dark region on paper, so a measured ring for every shot would silently fall back to the calibre on ink and on a dark backer. Every ring stays comparable, and the one that disagrees shows by how much.

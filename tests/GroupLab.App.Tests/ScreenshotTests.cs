@@ -115,6 +115,22 @@ public class ScreenshotTests
                 Capture($"marks-closeup-{name}.png");
             }
 
+            // Entry 46 section 1: every impact ring is the calibre, and a hole that reads too large is ringed again at the size it reads.
+            var rings = new List<string>();
+            foreach (var shot in window.Session.State.Shots)
+            {
+                var (impact, oversize) = window.Canvas.RingDiametersInches(shot.Id);
+                Assert.Equal(0.308, impact, 6);
+                if (window.Canvas.FlaggedShots.TryGetValue(shot.Id, out double apparent))
+                {
+                    Assert.Equal(apparent, oversize!.Value, 6);
+                }
+
+                rings.Add(FormattableString.Invariant($"shot {shot.Id}: impact ring {impact:0.000} in, alert ring {(oversize is { } o ? $"{o:0.000} in, reads {apparent:0.000} in" : "none")}"));
+            }
+
+            File.WriteAllLines(Path.Combine(output, "marks-closeup-rings.txt"), rings);
+
             if (Environment.GetEnvironmentVariable("GROUPLAB_SCREENSHOT_PHOTO") is { Length: > 0 } photo && File.Exists(photo))
             {
                 window.SetTheme(ThemeChoice.Dark);
