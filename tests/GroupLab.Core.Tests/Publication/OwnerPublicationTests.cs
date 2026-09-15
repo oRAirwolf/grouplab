@@ -58,6 +58,23 @@ public sealed class OwnerPublicationTests : IDisposable
     }
 
     [Fact]
+    public void AFileThatIsNotACameraOriginalIsHeldWithoutBeingNamed()
+    {
+        string source = Path.Combine(root, "copies"), target = Path.Combine(root, "owner");
+        Directory.CreateDirectory(source);
+        File.WriteAllBytes(Path.Combine(source, "20260704_192005.jpg"), PhoneImages.Jpeg());
+        File.WriteAllBytes(Path.Combine(source, "Screenshot_20231029-170033.jpg"), [.. PhoneImages.Jpeg(), 0x00]);
+        File.WriteAllBytes(Path.Combine(source, "target.png"), PhoneImages.Png());
+
+        var result = Intake.PublishOwner(source, target, "A. Person", "terms");
+
+        Assert.Null(result.Refused);
+        Assert.Equal(["20260704_192005.jpg"], result.Files.Where(f => f.Held is null).Select(f => f.StoredName));
+        Assert.All(result.Files.Where(f => f.Held is not null), f => Assert.Contains("not a camera original", f.Held, StringComparison.Ordinal));
+        Assert.Equal(["20260704_192005.jpg", PublicationCheck.ProvenanceFile], Directory.EnumerateFiles(target).Select(Path.GetFileName).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
     public void NothingIsWrittenWithoutWhoTookThemOrForAHoldThatNamesNoFile()
     {
         string source = Source(), target = Path.Combine(root, "owner");

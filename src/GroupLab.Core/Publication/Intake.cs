@@ -40,8 +40,9 @@ public sealed record IntakeResult(string Submission, string? Refused, IReadOnlyL
 /// agreed and carries its version, time and text. Empty answers are the normal case and never a reason to refuse.</item>
 /// <item>Refuse a submission whose files do not match, one for one, the <c>stored_name</c>, <c>bytes</c> and <c>sha256</c>
 /// recorded at upload.</item>
-/// <item>Triage every file and say why it is or is not usable. Only candidates are published, unless a person who has looked
-/// accepts a file by name.</item>
+/// <item>Triage every file and say why it is or is not usable, and hold any file that is not a camera original,
+/// <see cref="CameraOriginal"/> (entry 35 section 1). Only camera originals that triage finds usable are published, unless a person
+/// who has looked accepts a file by name.</item>
 /// <item>Scrub every published file, <see cref="ImageScrubber"/>, and refuse the whole submission if a scrubbed file still fails
 /// <see cref="PublicationCheck"/>.</item>
 /// <item>Write the scrubbed files and <c>provenance.json</c>, with the consent text verbatim and the received and published hashes
@@ -182,9 +183,11 @@ public static partial class Intake
             }
 
             var verdict = triage(r.StoredName, original);
-            if (!verdict.Candidate && !accepted.Contains(r.StoredName))
+            string? notOriginal = CameraOriginal.Problem(original, r.OriginalName, r.StoredName);
+            if ((notOriginal is not null || !verdict.Candidate) && !accepted.Contains(r.StoredName))
             {
-                files.Add(new IntakeFile(r.Index, r.StoredName, r.OriginalName, r.Bytes, r.SniffedType, received, null, [], [], verdict.Findings, "held until a person accepts it: " + string.Join("; ", verdict.Findings)));
+                IEnumerable<string> why = notOriginal is null ? verdict.Findings : [notOriginal, .. verdict.Findings];
+                files.Add(new IntakeFile(r.Index, r.StoredName, r.OriginalName, r.Bytes, r.SniffedType, received, null, [], [], verdict.Findings, "held until a person accepts it: " + string.Join("; ", why)));
                 continue;
             }
 
@@ -245,8 +248,8 @@ public static partial class Intake
     /// Photographs published by their copyright holder directly, NOTES-FROM-PLANNING.md entry 34 section 2: taken before the upload page
     /// existed, so there is no submission, no consent record and none needed, and no submission record is invented for them. Every file
     /// is scrubbed as a donated one is, and the provenance record says who took them and on what terms they are published, with the
-    /// original name, both hashes and what scrubbing removed. A file named in <paramref name="held"/> is recorded with the reason and not
-    /// published. Stored names replace any character a safe name cannot carry with a hyphen. Nothing is written unless every file passes,
+    /// original name, both hashes and what scrubbing removed. A file named in <paramref name="held"/>, or one that is not a camera original
+    /// (<see cref="CameraOriginal"/>, entry 35 section 1), is recorded with the reason and not published. Stored names replace any character a safe name cannot carry with a hyphen. Nothing is written unless every file passes,
     /// and an existing directory is never overwritten.
     /// </summary>
     public static IntakeResult PublishOwner(string sourceDirectory, string target, string takenBy, string statement, IReadOnlyDictionary<string, string>? held = null)
@@ -257,6 +260,11 @@ public static partial class Intake
         if (string.IsNullOrWhiteSpace(takenBy) || string.IsNullOrWhiteSpace(statement))
         {
             return Refuse("an owner's provenance record must say who took the photographs and on what terms they are published");
+        }
+
+        if (!Directory.Exists(sourceDirectory))
+        {
+            return Refuse($"{sourceDirectory} does not exist");
         }
 
         if (Directory.Exists(target))
@@ -289,7 +297,8 @@ public static partial class Intake
 
             byte[] original = File.ReadAllBytes(Path.Combine(sourceDirectory, name));
             string received = Sha256(original);
-            if (held.TryGetValue(name, out string? reason))
+            string? reason = held.TryGetValue(name, out string? given) ? given : CameraOriginal.Problem(original, name);
+            if (reason is not null)
             {
                 files.Add(new IntakeFile(index, storedName, name, original.LongLength, null, received, null, [], [], [], "held: " + reason));
                 continue;

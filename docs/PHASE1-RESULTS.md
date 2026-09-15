@@ -1640,6 +1640,49 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 35. Camera originals, the ignore rule, and two steps waiting on Alan
+
+`docs/NOTES-FROM-PLANNING.md` entry 35.
+
+**Section 1: a file that is not a camera original is held by default.** `CameraOriginal.Problem` is the rule.
+- **Two signals, either enough:**
+  - a name a screenshot tool or messaging app writes, under any prefix the upload page adds: `Screenshot` or `Screen Shot`, `signal-`, WhatsApp's `IMG-yyyymmdd-WAnnnn` and Facebook's `FB_IMG_`;
+  - no camera make in the file.
+- **Where it applies:** both `grouplab intake`, where a person can still accept a held file by name, and `grouplab publish-owner`.
+- **No false holds on the real files:**
+  - all 26 published owner photographs pass, including the four edited `~2` Pixel copies, which keep their camera make;
+  - none of the donated submission's three files is flagged, and they stay held for triage's reason alone.
+- **The two held photographs:** `scans/mounted/` is no longer in this working tree, so the rule could not be rerun on them. `CameraOriginalTests` checks both of their exact names.
+- **A small fix found on the way:** `publish-owner` crashed on a missing source directory, and now refuses with the reason.
+
+**The two held photographs are held permanently,** at `grouplab-testdata` commit `c80055c`. `owner/provenance.json` and the data README give the reason: neither is a camera original, so neither can serve the corpus's purpose, whoever took it. If an original turns up, the original is what would be published.
+
+**Section 2: not done.** The README's removal wording stands, with no promise of a history rewrite. This session's permission check refused the edit that adds a warning that the data repository's history may be rewritten, so the warning waits for Alan.
+
+**Section 3: not done, and waiting on Alan.**
+- **Why:** this session's permission check refused deleting the five `refs/original` refs as irreversible local destruction. Nothing was deleted, and the risk entry 35 names is still present.
+- **What was checked first:**
+  - **The backup:** `C:\Dev\grouplab-backup-2026-09-15.bundle` exists, 166,677,290 bytes. `git bundle verify` reports a complete history. It holds sixteen refs, among them all five `refs/original` refs at the same commits as the local ones.
+  - **The pack before any change:** 159.74 MiB in 3 packs, plus 30.50 MiB loose.
+- **Once allowed,** the steps are:
+  1. Delete each `refs/original/*` ref.
+  2. Expire every reflog.
+  3. Garbage collect, pruning unreachable objects immediately.
+  4. Confirm the five old commits are no longer in the object store.
+  5. Report the pack size again.
+
+**Section 4:** `scans/mounted/` is in `.gitignore`.
+
+**Section 5:** `CONTRIBUTING.md` now says that a stage passing its own tests is not evidence that the pipeline is right, and that `EndToEndTests` speaks for the product.
+- **The example it gives:** the sighter fault it found, and what that fault had survived.
+- **What it asks:** when a stage is added, or what its output means changes, extend that test as well as the stage's own.
+
+**Section 6, items 2 and 3, not started:** the Phase 0 gate record compared byte for byte on Linux and macOS, and choosing the definition from the image so that `--target` is no longer required.
+
+**Tests:** Core 724 passing, App 4 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1732,3 +1775,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 34: two of the owner's photographs held, over publishing all 28.** A screenshot and a messenger download cannot show who took them. Publishing someone else's photograph under GPL-3.0 cannot be undone, and holding one until Alan confirms costs nothing.
 - **Entry 34: a donated submission whose files were all held published as a provenance record alone, over leaving it out.** The record shows that a consented submission arrived and why none of it is published, which is the question a contributor would ask.
 - **Entry 34: a separate `publish-owner` path, over running the owner's photographs through `intake`.** Intake requires a consent record, and entry 34 section 2 rules out inventing one.
+- **Entry 35: a missing camera make alone is enough to hold a file, over requiring a copy's file name as well.** Entry 35 section 1 calls the make the stronger signal. A person can still accept a held donated file by name, so a false hold costs a look, and a false publication cannot be undone.
+- **Entry 35: an edited phone copy that keeps its camera metadata, the four `~2` photographs, not held.** The rule is about lost camera geometry. Those copies keep their make, model and focal length, and nothing in entry 35 asks for more.

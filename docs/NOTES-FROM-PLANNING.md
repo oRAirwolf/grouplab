@@ -8,6 +8,59 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 35: the four decisions, and what the sighter bug proves
+
+**Status: actioned 2026-09-15 for sections 1, 4 and 5. Section 2's README warning and section 3 wait on Alan, because this session's permission check refused both. Section 6 items 2 and 3 are next.** Section 1: `CameraOriginal` holds a file with a screenshot or messaging-app name, or no camera make, in both `intake` and `publish-owner`. It flags none of the 26 published owner photographs and none of the donated files. The two photographs are recorded as held permanently at `grouplab-testdata` commit `c80055c`. Section 3: the bundle was verified, and the pack measured at 159.74 MiB, before the refused deletion; nothing was deleted. Section 4: `.gitignore`. Section 5: `CONTRIBUTING.md`. Reported in `docs/PHASE1-RESULTS.md` "Entry 35". Answers your four questions from the entry 33, 32 and 34 report. Section 1 is a decision I am making rather than passing on. Sections 3 and 4 are small and should be done in the next commit.
+
+### 1. Do not publish the two held photographs, and the authorship question does not need answering
+
+`Screenshot_20231029-170033.png` and `signal-2023-07-25-20-37-40-354-1.jpg`. You asked whether Alan took them. **The filenames answer a more useful question first: neither is a camera original.**
+
+One is a screenshot. The other came through Signal, which re-encodes and strips metadata on send. Whatever the underlying photograph was, what we hold is a second-generation copy with no lens information, no orientation tag and recompressed pixels.
+
+**So they fail the corpus's purpose regardless of who took them.** The donated set exists to give the lens and surface work frames whose camera geometry is known, and these two cannot contribute to that. Publishing them would add two files of unknown provenance and no analytical value, under a licence that cannot be revoked.
+
+**Hold them permanently, and record why in the data repository's notes rather than leaving them looking like an open question.** If Alan later confirms he took the originals and still has them, the originals are the thing to publish, not these.
+
+**Generalise it into the intake rule:** a file that is not a camera original is held by default. `Screenshot`, `signal-`, `IMG-\d{8}-WA\d+` and similar are cheap signals, and a missing `Make` tag is a stronger one. That is the same test the Discord post asks contributors to apply, so the tool should apply it too rather than relying on people reading.
+
+### 2. The removal policy as written is right
+
+Saying photographs are removed from the current contents promptly, and that removal from history is decided case by case, is honest and I would not strengthen it. **Do not promise a history rewrite**, because it invalidates every clone anybody has taken and we have just spent a day learning what that costs.
+
+One addition: say in the README that the data repository's history may be rewritten for a removal request, so that anyone building on it knows a rewrite is possible rather than being surprised by one. A warning costs nothing and removes the only reason not to do a rewrite when one is genuinely warranted.
+
+### 3. Delete `refs/original` and garbage collect, now
+
+Those five backup refs are the last copy of the unscrubbed history inside a working repository with a push remote configured. They are one mistaken `--mirror` from publishing the coordinates, and that is a bad thing to leave lying around indefinitely.
+
+**The backup already exists and is verified**: `C:\Dev\grouplab-backup-2026-09-15.bundle`, 158.95 MiB, `git bundle verify` clean, containing all sixteen refs including the originals. That is the copy to keep.
+
+Delete each `refs/original/*` ref, then expire the reflog and garbage collect so the unreachable objects actually leave the pack rather than merely becoming unreferenced. **Report the pack size before and after**, since that is the evidence the objects are gone.
+
+**One thing for Alan rather than you:** that bundle contains his coordinates. It should not sit in a folder that syncs to a cloud drive.
+
+### 4. `scans/mounted/` should be ignored as well as moved
+
+Alan moves the originals out, which is his to do. **Add `scans/mounted/` to `.gitignore` in the same commit as the other work**, so that the folder cannot be committed by accident if it reappears. The `excluded/` lesson from this morning applies exactly: a location that is meant to stay out of the repository should be enforced by a rule, not by everybody remembering.
+
+### 5. What the sighter bug proves, recorded because it will be forgotten
+
+`grouplab analyze` found two bugs on its first run. One crashed hole detection on every Phase 0 sheet. The other **counted shots on sighter bulls as part of the group, and the marking screen had it too.**
+
+That second one is the important one. It does not crash, it does not fail a test, and it produces a plausible number that is wrong. It survived 709 passing tests, a statistics engine validated against 45,476 reference keys, and a detector measured on real scans, because **every stage was correct and the composition was not.** Nobody had ever asked the whole path a question, so nobody had ever seen the wrong answer.
+
+Put a line in `DESIGN.md` section 21 or `CONTRIBUTING.md` to the effect that a stage passing its own tests is not evidence the pipeline is right, and that the synthetic end-to-end test is the one that speaks for the product. It is the most valuable thing learned this week and it is the kind of thing that gets rediscovered expensively.
+
+### 6. Next, in order
+
+1. **Sections 3 and 4 above**, plus section 1's intake rule. Small, and section 3 removes a live risk.
+2. **Entry 32 section 3: the Phase 0 gate record reproduced on Linux and macOS.** CI proves the tests pass there, which is not the same claim. Compare the gate record byte for byte against the Windows run and report whether it is identical or explain the difference. Until that is done, neither platform is offered as a build.
+3. **`--target` should not stay required.** The whole point of the printed codes is that a sheet describes itself. Reading the identifier or the GLTD-B payload off the image and selecting the definition automatically is the difference between a tool and a demonstration, and it needs no new data.
+4. Then wait for the weekend's frames.
+
+---
+
 ## 2026-09-15, entry 34: grouplab-testdata exists, and here is what goes in it
 
 **Status: actioned 2026-09-15.** `grouplab-testdata` commit `1544f1d` holds the README, `CONTRIBUTORS.md`, the first donated submission under `donated/2026-09-14_1a8f39ad` (a provenance record only, because triage held all three files), and 26 of the owner's photographs under `owner/` through the new `grouplab publish-owner`. Two are held until Alan confirms taking them: a screenshot and a Signal download. The data test covers everything section 5 lists, and the URL and pinned commit are in the README and `CONTRIBUTING.md`. The originals are still in `scans/mounted/` here, untracked, for Alan to move. Reported in `docs/PHASE1-RESULTS.md` "Entry 34". Unblocks question 13 section 1 and entry 23 section 5. Lower priority than entry 33 section 1, the end-to-end command, which still comes first.

@@ -19,6 +19,17 @@ dotnet test
 
 Warnings are errors. Every test must pass, and none is skipped. The tests that rasterise PDFs with PDFium run serially, because PDFium is not thread-safe.
 
+**A stage passing its own tests is not evidence that the pipeline is right.**
+- **The test that speaks for the product** is `EndToEndTests`. It renders a sheet with shots at known positions and runs the whole of `grouplab analyze` on the image.
+- **Why:** its first run found shots on sighter bulls counted in the group, in the command line and the marking screen alike. That plausible, wrong number had survived:
+  - 709 passing tests;
+  - a statistics engine matched against 45,476 reference keys;
+  - a hole detector measured on real scans.
+
+  Every stage was right, and their composition was not.
+- **What to do:** when a stage is added, or what its output means changes, extend the end-to-end test as well as the stage's own.
+- **Source:** NOTES-FROM-PLANNING.md entry 35 section 5.
+
 Three more checks belong in any change that touches the format, the library or the renderer:
 
 ```
@@ -41,7 +52,7 @@ dotnet run --project src/GroupLab.Cli -- render <file.gltd.json> -o <out.pdf> [-
 
 `out/` is ignored by git.
 
-**Test data.** Donated photographs live in a separate repository, [grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata), last checked against its commit `1544f1d`.
+**Test data.** Donated photographs live in a separate repository, [grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata), last checked against its commit `c80055c`.
 - **To run the data checks:** clone it beside this repository, at `../grouplab-testdata`, or point `GROUPLAB_TESTDATA` at a checkout.
 - **Without it,** `PublicationTests` skips those checks and says so, and nothing else needs the data.
 - **Getting photographs in:** only through `grouplab intake` for a donated submission, or `grouplab publish-owner` for the owner's own photographs. Both scrub every file and write the provenance record.
