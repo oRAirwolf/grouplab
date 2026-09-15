@@ -23,6 +23,12 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 
 **Not a brief gate, and new:** the whole path from image to group now runs as one command and matches synthetic truth ("Entry 33" below).
 
+**Not a brief gate, measured for the first time: the Phase 0 gate record on Linux and macOS**, entry 32 section 3.
+- **Windows** reproduces it byte for byte.
+- **Linux** reproduces every table, and its records differ only below the precision any table reports.
+- **macOS** reproduces the paper and photograph gate tables, and differs in measurements 1 and 2.
+- **Not met,** because the records are not byte-identical. Whether the difference counts as explained is planning's decision ("Entry 35 section 6" below).
+
 ---
 
 ## M0. The marker module sweep
@@ -2168,6 +2174,57 @@ The two complete submissions give backing, attachment, distance, calibre (5.56 N
 
 ---
 
+## Entry 47. Build and test red on Linux and macOS: the cause, and identification measured per platform
+
+`docs/NOTES-FROM-PLANNING.md` entry 47.
+
+**What went red.** `build and test` was green on all three platforms at `c622591`, and red on Linux and macOS at `a97bcb0` and `b0091ad`. Three tests were involved, all about identifying a sheet from its codes:
+- **Linux:** the clean 300 DPI render of GL-CF25-LTR, and the end-to-end test's rerun without `--target`.
+- **macOS:** the end-to-end rerun alone.
+
+It is green again on all three at `eddee00`, with Core 756 and App 34 on each.
+
+**Not a missing contrib module.** Planning's diagnosis was that the Linux and macOS runtime packages lack `opencv_contrib`'s `wechat_qrcode`. Checked two ways:
+- **The packages, opened.** `libOpenCvSharpExtern.so` in `OpenCvSharp4.official.runtime.linux-x64` 4.13.0.20260627 and `libOpenCvSharpExtern.dylib` in `OpenCvSharp4.runtime.osx.arm64` both carry the `wechat_qrcode_WeChatQRCode` exports, as `OpenCvSharpExtern.dll` in the Windows package does.
+- **The logs.** Each failure read "no code on the sheet could be read", not a missing entry point or a type initializer. On the same runs, identification passed on Linux and macOS for three printed scans, one of them a tile, and for a photograph. That could not have happened had the constructor thrown.
+
+**The cause: detection, on images whose code modules are under five pixels.** A 300 DPI code module is about 4.7 px. The WeChat and plain detectors in the Windows build read both synthetic images at full resolution; the Linux and macOS builds did not. Half and quarter resolution only shrink the modules.
+
+**The fix, `b315853`.**
+- **Double resolution is tried second,** upscaled linearly.
+- **A failing identification test now says what went wrong:** for each resolution, it reports the WeChat boxes and texts, the plain decoder at those boxes, and the plain detector alone. A failure that happens only on a runner then says which step came back empty.
+
+**Doubling had a cost on large images, now bounded.** On the first Windows sweep after the fix:
+- **`gl-cf25-ltr-1-600-dpi.png`:** 52.7 s. It doubled a 4958 by 6458 px scan before reading at quarter resolution.
+- **Where no code is read:** 16 to 47 s.
+
+A resolution that would make the image longer than 8000 px, a 4000 px photograph doubled, is now skipped and recorded as skipped. The same sweep then names the same images, and the 600 DPI scans take 0.7 to 9.0 s.
+
+**Identification measured per platform.** `grouplab identify sweep` runs every Phase 0 image through identification against the whole of `targets`, and counts against the definition and tile each was printed from. It runs in the gate record workflow on each platform and puts its table in the run summary. It fails only on a wrong name, since a refusal is the safe outcome.
+
+**On Windows: 33 of 37 named correctly, 0 wrongly, 4 not named.** That is up from 29 before double resolution:
+
+| Images | Named | Read at |
+|---|---|---|
+| Letter reference sheets, 600 DPI | 6 of 7 | full; sheets 1 and 3 at quarter and half |
+| Letter reference sheets, 300 DPI | 6 of 6 | full; the 96.2 percent and filled data block scans at double |
+| `GL-LR300-T` tiles, 300 and 600 DPI | 8 of 8, each with its tile | full |
+| The four frames of 13 September | 4 of 4 | full |
+| `main1-3`, `main_flat1-3` | 6 of 6 | full |
+| `ultrawide1-3` | 3 of 3 | full; `ultrawide1` and `ultrawide2` at double |
+| `telephoto1-3` | 0 of 3 | none |
+
+- **Not named:** the 600 DPI scan turned 180 degrees, and the three telephoto frames.
+- **Time for a readable sheet:** 0.2 to 9.0 s, except `ultrawide2` at 16.5 s.
+- **Time where no code is read:** 8.5 s for the rotated scan and 15.5 to 17.9 s for the telephoto frames, which a 4000 px photograph spends at double resolution.
+- **Linux and macOS:** their counts are in the gate record run summary of the commit that carries this section, and follow here once read.
+
+**The rule of entry 47 section 4 is taken.** When a required check goes red, the next commit makes it green or deliberately reverts, and an expected red, such as the gate record's, is named in the commit message. `fd05dac` and `eddee00` went up in the same push as the fix, before its CI result was known. Under the rule, the fix would have gone alone.
+
+**Tests:** Core 756 passing, App 34 passing, none skipped, on all three platforms at `eddee00`.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2288,3 +2345,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 37 section 4: the scrubber's keep list left as entry 29 set it, with `LensModel` reported rather than added.** Adding a field to what is published is a publication decision, and the lens grouping does not need it.
 - **Entry 46 section 3: the count line replaces the "Placed:" line, over keeping both.** They carried the same three numbers, and the one planning asked for sits above the figures where it is read first.
 - **Entry 35 section 6 item 2: the gate record workflow left failing on Linux and macOS, over passing within a tolerance.** Entry 32 section 3 asks for byte identity or an explained difference, and choosing a tolerance that makes the difference pass would be choosing the gate.
+- **Entry 47: double resolution tried second, over a capability fallback.** The WeChat module is present in the runtime packages for all three platforms. The failures were detection on code modules under five pixels, which only a larger working image can help.
+- **Entry 47: resolutions past 8000 px skipped, over trying every one.** Doubling a 600 DPI scan cost 52.7 s and gave nothing the scan did not, and the bound lost no image on the sweep.
+- **Entry 47: identification counted per platform in the gate record workflow, over a per-platform expectation in the unit tests.** No count is known yet for Linux or macOS, and an expectation written before measuring would be a guess.

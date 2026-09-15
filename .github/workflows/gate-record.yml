@@ -116,6 +116,16 @@ jobs:
         env:
           MATRIX_OS: ${{ matrix.os }}
 
+      # Entry 47 section 3: how many Phase 0 images name their own definition on this platform. The QR detectors are native code, a
+      # different build on each platform, so the count is measured here rather than assumed from Windows. It is reported, not compared,
+      # and fails the step only when an image names a definition or tile it was not printed from.
+      - name: Identify the Phase 0 sheets from their codes
+        if: always()
+        run: |
+          set -o pipefail
+          dotnet src/GroupLab.Cli/bin/Release/net10.0/grouplab.dll identify sweep | tee "$RUNNER_TEMP/console/identify.txt"
+          { echo "### ${{ matrix.os }}: Phase 0 sheets named from their codes"; echo; cat "$RUNNER_TEMP/console/identify.txt"; } >> "$GITHUB_STEP_SUMMARY"
+
       # The records and console tables as this platform wrote them, so a difference can be checked rather than taken on trust.
       - name: Keep the records
         if: always()

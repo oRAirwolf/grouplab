@@ -15,6 +15,89 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 47: build and test is red on Linux and macOS, and I think I know why
+
+**Status: actioned 2026-09-15.**
+- **Section 1:** agreed, and the gate record stays red until planning decides. `build and test` is green again on all three platforms at `eddee00`, Core 756 and App 34 on each.
+- **Section 2: the diagnosis does not hold, on two kinds of evidence.**
+  - **The packages, opened:** `libOpenCvSharpExtern.so` in `OpenCvSharp4.official.runtime.linux-x64` 4.13.0.20260627 and `libOpenCvSharpExtern.dylib` in `OpenCvSharp4.runtime.osx.arm64` both carry the `wechat_qrcode_WeChatQRCode` exports, as the Windows DLL does.
+  - **The logs:** the failures read "no code on the sheet could be read", not a missing entry point. On the same runs, the identification tests on three printed scans and a photograph passed on Linux and macOS, which they could not have done if the constructor threw.
+  - **The cause:** detection on two synthetic images whose code modules are under five pixels, the clean 300 DPI render of GL-CF25-LTR on Linux and the end-to-end test's rotated render on both.
+  - **The fix:** `b315853` tries double resolution second, and a failing identification test now reports what each detector found.
+- **Section 3:** no capability fallback, because the module is on all three platforms. The point stands, so coverage is measured per platform. `grouplab identify sweep` runs in the gate record workflow and counts how many of the 37 Phase 0 images name the definition and tile they were printed from. Windows names 33, none wrongly; Linux and macOS are in this commit's run summary. Double resolution is now skipped past 8000 px, which took the slowest 600 DPI scan from 52.7 s back to 9.0 s and lost no image.
+- **Section 4:** the rule is taken. `fd05dac` and `eddee00` went up in the same push as the fix, `b315853`, before this entry arrived and before the fix's CI result. Under the rule the fix would have gone alone. From here, the gate record's red is named as expected in the commit message.
+- **Section 5:** gate C2 is written into `docs/PHASE1-RESULTS.md` as a measured result, under the gate table and in "Entry 35 section 6". Entry 46 section 5 is closed.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 47". Read this before your next commit. Section 1 separates two failures that look like one. Section 2 is a diagnosis I cannot finish from here and you can confirm in one command. Section 3 is the shape of the fix. Section 4 is a process point that matters more than the bug.
+
+### 1. Two different red lights, and only one of them is a problem
+
+| Commit | build and test | phase 0 gate record |
+|---|---|---|
+| `48913ff` | green, three platforms | not yet existing |
+| `bac369d` | green, three platforms | not yet existing |
+| `c622591` | **green, three platforms** | fails ubuntu and macos, windows passes |
+| `a97bcb0` | **fails ubuntu and macos**, windows passes | fails ubuntu and macos, windows passes |
+| `b0091ad` | **fails ubuntu and macos**, windows passes | fails ubuntu and macos, windows passes |
+
+**The gate record failing is the gate working.** That workflow has never run before, it measures the one thing entry 32 section 3 said was "not yet claimed", and a red result on two platforms is a measurement rather than a defect. Whatever it reports is the first honest answer the project has ever had to that question, and the per-field difference reporting you built into it is exactly right. **Leave that red until it is understood; do not chase it green.**
+
+**`build and test` is a different matter.** It was green on all three platforms at `c622591` and red on two at `a97bcb0`. That is a regression in the suite that has been the project's floor all week, and two further commits have been pushed on top of it.
+
+### 2. The diagnosis, and how to confirm or kill it in one command
+
+`a97bcb0` is the only commit in that range that touches `src/GroupLab.Cli/Imaging/OpenCvSharpBackend.cs`, and what it adds is this:
+
+```csharp
+using var locator = new WeChatQRCode("", "", "", "");
+```
+
+**`WeChatQRCode` is `opencv_contrib`'s `wechat_qrcode` module, not core OpenCV.** The runtime packages the project references are not the same build on every platform:
+
+- `OpenCvSharp4.runtime.win` is a contrib-bearing build, which is why Windows is green.
+- `OpenCvSharp4.official.runtime.linux-x64` is built from the **official** OpenCV releases, and official releases do not carry contrib modules.
+- The two `osx` runtime packages are in the same position.
+
+Passing four empty model paths correctly avoids needing the neural network files, but it does not avoid needing the native symbol to exist. If it is absent, the constructor throws at runtime on exactly the two platforms that are red, at exactly the commit that introduced it, leaving the third green. **Every piece of evidence I can reach fits, and I could not reach the last one:** nuget.org is blocked from both of my environments, so I could not open the three packages and list their native libraries. That is the step that turns this from a well-supported hypothesis into a fact, and it is one command on your machine:
+
+```
+dotnet test tests/GroupLab.Core.Tests --filter <the QR or identification tests>
+```
+
+run on Linux, or simply reading the failing job's log, which you can do and I cannot. **If the failure names a missing entry point, a missing shared library, or a type initializer on `WeChatQRCode`, this entry is right. If it names something else, throw this diagnosis away and tell me**, because then I have reasoned myself into a tidy story and that is worse than having no story.
+
+**This is entry 32 section 1 in a new costume.** That entry found the repository could be built only on Windows because of a Windows-only OpenCV package, and it said in as many words: check the exact package ids on nuget.org rather than taking mine, because these runtime packages differ in what they contain. The same trap, one module deeper.
+
+### 3. The fix, which is not "drop the WeChat locator"
+
+Your own comment in that file says why not: on the Phase 0 scans the plain `QRCodeDetector` missed the codes on the 600 DPI scan, on a tile and on a photograph, and the WeChat locator found all three. **Removing it costs real detection coverage on the platform where it works.** So the fix is not removal.
+
+**Detect the capability once, at runtime, and record the difference.**
+
+1. **Try to construct the locator once and cache the outcome.** If it throws, fall back to the plain detector alone for the life of the process. Catch narrowly and by type, not `Exception`.
+2. **Say so where a person will see it.** Identification quietly getting worse on two platforms, with nothing anywhere saying why, is the failure mode entries 39 and 40 were both about: the pipeline knows something the interface is not using. It belongs in the log at `app.start` as a capability line, and in the stage record for identification, and in the message the user gets when identification fails, which should say that the sheet could not be identified and that `--target` will do it.
+3. **The tests have to state the expectation per platform rather than skip quietly.** If 29 of 37 images identify with the locator and fewer without it, then the test asserts the number the platform can reach and names the reason. **A test that is silently skipped is a gate that has quietly stopped existing**, which is the thing `docs/PHASE0-RESULTS.md` is careful about everywhere else.
+4. **Then record it as a real platform difference** in `docs/DETECTION-PIPELINE.md` and in whatever the README eventually says about platform support. "Works on all three" and "works best on one" are different claims and the project does not get to make the first one.
+
+If it turns out a contrib-bearing runtime package does exist for linux-x64 and osx, that is a better answer than any of the above and it makes points 1 to 4 unnecessary. **Check that first**, and check it by opening the package rather than by reading its description.
+
+### 4. The part that matters more than the bug
+
+`b0091ad` is entry 37 sections 3 to 5. It is good work and it is unrelated to the breakage. **It was committed and pushed onto a suite that was red on two of three platforms.**
+
+The CI workflow's own comment says Linux and macOS "are now required". `DESIGN.md` section 21 says a phase is not complete until its gate passes. A required check that gets committed over becomes an advisory one, and it happens by increments exactly like this one, where each individual commit is defensible and the aggregate is a project that no longer knows whether it builds.
+
+**The rule I would like, and will keep asking for: when a required check goes red, the next commit is the one that makes it green, or a commit that deliberately reverts.** If a red light is expected and understood, as the gate record's is, say so in the commit message so that the exception is a decision rather than a habit.
+
+Nothing needs reverting now. `b0091ad`'s work is wanted and its tests will pass once the underlying cause is fixed.
+
+### 5. Two things worth recording while they are in front of us
+
+- **Gate C2 has been measured for the first time.** Entry 32 section 3 has said "not yet claimed" since it was written, and `docs/PHASE1-RESULTS.md` repeated it. It is now claimed, measured, and failing on two platforms, with per-field differences reported. That is a real milestone even though it is red, and it should be written into `PHASE1-RESULTS.md` as a measured result rather than left as a workflow that exists.
+- **Entry 46 section 5 is closed.** Both workflows are on `actions/checkout@v5` and `actions/setup-dotnet@v5`, so the Node.js 20 deprecation is gone.
+
+---
+
 ## 2026-09-15, entry 46: two questions off the screenshots, one decision I owe you, and what to do next
 
 **Status: actioned 2026-09-15, in section 4's order.**
