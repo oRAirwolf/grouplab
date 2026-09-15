@@ -1,6 +1,7 @@
 # Build and test on every push and pull request, on all three desktop platforms (NOTES-FROM-PLANNING.md entries 31 section 3, 32 section 4
-# and 33 section 3). Windows is required. Linux and macOS are allowed to fail until they pass, then become required too. Each job writes its
-# test counts to the run summary, because building and agreeing on the numbers are different claims.
+# and 33 section 3). All three are required: Linux and macOS were allowed to fail until they passed, which they did on the first run, with
+# the same test counts as Windows (docs/PHASE1-RESULTS.md "Entry 33"). Each job writes its test counts to the run summary, because
+# building and agreeing on the numbers are different claims.
 name: build and test
 
 on:
@@ -12,7 +13,6 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
-    continue-on-error: ${{ matrix.os != 'windows-latest' }}
     strategy:
       fail-fast: false
       matrix:

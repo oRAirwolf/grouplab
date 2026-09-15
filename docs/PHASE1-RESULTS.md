@@ -1572,8 +1572,17 @@ Nothing has been tuned for speed, and nothing here needs to be before the weeken
   - `OpenCvSharp4.official.runtime.linux-x64` on Linux;
   - `OpenCvSharp4.runtime.osx.x64` and `OpenCvSharp4.runtime.osx.arm64` on macOS.
 - **The ids were checked on nuget.org.** The older `osx.10.15-x64` and `osx_arm64` packages stop at 4.6 and 4.8.
-- **`GroupLab.App`'s `WinExe`** is documented as behaving as `Exe` off Windows. CI is the confirmation.
-- **Not yet claimed:** whether the build passes, and whether it measures the same off Windows. The first CI run shows the first. Entry 32 section 3's gate, the Phase 0 gate record reproducing on that platform, is still to do.
+- **The first CI run passed on all three,** for the commit these changes landed in:
+
+  | Platform | Build | Core | App |
+  |---|---|---|---|
+  | `windows-latest` | passed | 714 of 714, 7 m 33 s | 4 of 4 |
+  | `ubuntu-latest` | passed | 714 of 714, 7 m 27 s | 4 of 4 |
+  | `macos-latest` | passed | 714 of 714, 6 m 50 s | 4 of 4 |
+
+- **`GroupLab.App`'s `WinExe`** builds, and its headless tests pass, on Linux and macOS, so it is harmless there as documented.
+- **Linux and macOS are now required** in the workflow, as entry 32 section 4 asks once they pass.
+- **Not yet claimed: that the Phase 0 gate record reproduces off Windows.** The suite includes conformance test 43 and every stage test, at their tolerances, and all of them pass on all three. That is agreement within tolerance, not the byte-identical comparison, or explained difference, that entry 32 section 3 requires before macOS or Linux is offered to anybody.
 
 **Tests:** Core 714 passing, App 4 passing, none skipped.
 
