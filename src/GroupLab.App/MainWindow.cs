@@ -781,7 +781,9 @@ public sealed class MainWindow : Window
         {
             var reduced = report.WithoutExclusions!;
             bool excluded = report.Excluded > 0;
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"{all.Shots} shots{(excluded ? $", {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}")));
+            // Entry 46 section 3: where a human judgement entered the measurement, in one line above the figures.
+            statistics.Children.Add(Line(PlacedLine(all.Shots, report.Automatic, report.Corrected, report.Manual)
+                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}.")));
             statistics.Children.Add(Line(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
                 ? CentreLine(centre)
                 : $"Centre from aim: {all.CentreFromAimUnavailable}."));
@@ -835,8 +837,6 @@ public sealed class MainWindow : Window
                     Classes = { AppStyles.Alert },
                 });
             }
-
-            statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed: {report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
         }
 
         BuildShotList();
@@ -845,7 +845,7 @@ public sealed class MainWindow : Window
 
     /// <summary>
     /// Every shot as a row, NOTES-FROM-PLANNING.md entry 39 section 4: its number as the image shows it, its bull, and whether it is
-    /// excluded or not a shot. A row selects its shot on the image, and carries the exclusion control, so excluding a flyer does not
+    /// excluded or not a shot, with where it came from beside it in faint text (entry 46 section 3). A row selects its shot on the image, and carries the exclusion control, so excluding a flyer does not
     /// wait for the shot to be selected. At twenty-five shots finding one on the image is a hunt; finding it in the list is not.
     /// </summary>
     private void BuildShotList()
@@ -882,6 +882,7 @@ public sealed class MainWindow : Window
                 Refresh();
             };
             var row = Row(select);
+            row.Children.Add(new TextBlock { Text = ProvenanceWord(shot.Provenance), MinWidth = 72, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } });
             if (!shot.NotAShot)
             {
                 row.Children.Add(Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
@@ -891,6 +892,41 @@ public sealed class MainWindow : Window
             shotList.Children.Add(row);
         }
     }
+
+    /// <summary>
+    /// The count line, NOTES-FROM-PLANNING.md entry 46 section 3: how many shots, and how many were detected, corrected after detection, or
+    /// placed by hand, naming only the kinds present. It records where a human judgement entered the measurement: a group of nine detected
+    /// shots and one of nine placed by hand deserve the same figures and a different amount of confidence, and only the application knows
+    /// which it is showing.
+    /// </summary>
+    internal static string PlacedLine(int shots, int detected, int corrected, int byHand)
+    {
+        var parts = new List<string>();
+        if (detected > 0)
+        {
+            parts.Add(string.Create(CultureInfo.InvariantCulture, $"{detected} detected"));
+        }
+
+        if (corrected > 0)
+        {
+            parts.Add(string.Create(CultureInfo.InvariantCulture, $"{corrected} corrected"));
+        }
+
+        if (byHand > 0)
+        {
+            parts.Add(string.Create(CultureInfo.InvariantCulture, $"{byHand} placed by hand"));
+        }
+
+        return string.Create(CultureInfo.InvariantCulture, $"{shots} {(shots == 1 ? "shot" : "shots")}: {string.Join(", ", parts)}");
+    }
+
+    /// <summary>A shot's provenance as the shot list shows it (entry 46 section 3).</summary>
+    internal static string ProvenanceWord(ShotProvenance provenance) => provenance switch
+    {
+        ShotProvenance.Automatic => "detected",
+        ShotProvenance.Corrected => "corrected",
+        _ => "by hand",
+    };
 
     private void BuildSelection()
     {

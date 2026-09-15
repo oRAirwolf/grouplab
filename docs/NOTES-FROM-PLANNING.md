@@ -17,7 +17,11 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## 2026-09-15, entry 46: two questions off the screenshots, one decision I owe you, and what to do next
 
-**Status: actioned 2026-09-15 for sections 0 to 2; entry 35 section 6, entry 37 sections 3 to 5, and section 3 follow in section 4's order.**
+**Status: actioned 2026-09-15, in section 4's order.**
+- **Sections 0 to 2:** see below.
+- **Section 4 items 3 and 4:** entry 35 section 6 and entry 37 sections 3 to 5, reported there.
+- **Section 3:** the count line above the figures reads like "3 shots: 1 detected, 1 corrected, 1 placed by hand.", naming only the kinds present, and the old "Placed:" line at the foot of the panel is gone. Each row of the shot list carries its provenance in faint, a new `faint` text style over the palette's faint colour. Nothing on the image changed.
+- **Section 5:** both workflows moved to the v5 checkout and setup-dotnet actions when the gate record workflow was written. The artifact upload uses v6, the first version that runs on Node 24.
 - **Section 0:** `main` fast-forwarded to `48913ff` and pushed.
 - **Section 1, the calibre:** every impact ring was the calibre, not the measured size, and the canvas comment said "true hole diameter" as the entries do. In the close-up all three rings on bull 13 draw at 0.308 in. Shot 2, which reads 0.508 in, was ringed again in alert only 6 screen pixels outside its own ring. The impact ring stays at the calibre, as you offered. The alert ring on a flagged hole is now drawn at the size it reads, 0.508 in on shot 2, so the oversize case is visible on the image at scale, and the screenshot test asserts both diameters.
 - **Section 2, a real run logs:** the screenshots come from the headless test, which starts no log. A Debug build run from the repository was driven through UI Automation to open a Phase 0 scan through the real file dialog, then closed. It wrote `out/logs/grouplab-20260915-180437-32256.log` holding `app.start`, `dialog.open`, `dialog.result`, `image.open` by name and hash, and `app.exit code=0`. `out/logs` had not existed before, because no build with logging had been run from the repository.

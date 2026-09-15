@@ -23,6 +23,9 @@ public static class AppStyles
 
     public const string Dim = "dim";
 
+    /// <summary>Quiet text that should read without shouting, such as a shot's provenance in the shot list (NOTES-FROM-PLANNING.md entry 46 section 3).</summary>
+    public const string Faint = "faint";
+
     public const string Alert = "alert";
 
     /// <summary>A status pill, such as the scale's: mono, 11 point, a thin border; good in teal, a hand-drawn reference in amber.</summary>
@@ -105,6 +108,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(Section), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Secondary), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.ForegroundProperty, Brush(p.Dim))),
+        Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Alert), (TextBlock.ForegroundProperty, Brush(p.Alert))),
         Rule(x => x.OfType<TextBlock>().Class(PillText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, 11.0), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),

@@ -2126,6 +2126,18 @@ The two complete submissions give backing, attachment, distance, calibre (5.56 N
 
 ---
 
+## Entry 46 section 3. Shot provenance in the panel, not on the image
+
+`docs/NOTES-FROM-PLANNING.md` entry 46 section 3, planning's decision on the provenance colours entry 42 dropped from the image.
+
+- **Not on the image.** The marks are unchanged: colour there means selected and excluded, and amber means "this one".
+- **A count line above the figures.** It names only the kinds of placement present, for example "12 shots: 9 detected, 2 corrected, 1 placed by hand." Any exclusions and shots marked not a shot follow on the same line. The "Placed: automatic, corrected, by hand" line that sat at the foot of the panel is removed, because it said the same thing below the figures instead of above them.
+- **A provenance column in the shot list.** Each row carries "detected", "corrected" or "by hand" in faint. That uses a new `faint` text style over the palette's faint colour, which the contrast test already holds to 4.5:1 on every surface in both themes.
+- **Why it matters, as planning put it:** provenance is the record of where a human judgement entered a measurement. A group of nine detected shots and one of nine placed by hand deserve the same figures and a different amount of confidence.
+- **Tests:** `ProvenanceTests` checks the count line names only the kinds present. It then builds two detected shots, moves one so it counts as corrected, places one by hand, and requires the count line, no "Placed:" line, and a faint word on each row in order. App 34 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2244,3 +2256,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 37 section 5: no size recorded for a note with no unit, over assuming inches.** Every size in the first notes had its unit, and a wrong assumption is a scale error of 25.4 or 2.54 times, which the marking screen could not detect.
 - **Entry 37 section 5: the stated size offered in the rectangle prompt, over setting the scale from it.** The size is the sheet's, and only a person can say which corners are the sheet's and which side was tapped first.
 - **Entry 37 section 4: the scrubber's keep list left as entry 29 set it, with `LensModel` reported rather than added.** Adding a field to what is published is a publication decision, and the lens grouping does not need it.
+- **Entry 46 section 3: the count line replaces the "Placed:" line, over keeping both.** They carried the same three numbers, and the one planning asked for sits above the figures where it is read first.
