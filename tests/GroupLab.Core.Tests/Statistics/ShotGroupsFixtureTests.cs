@@ -162,7 +162,7 @@ internal static class ShotGroupsComparison
             double distance = values["shots.distance." + at]!.Value;
             int series = (int)values["shots.seriesIndex." + at]!.Value;
             shots.Add((new PointD(values["shots.x." + at]!.Value, values["shots.y." + at]!.Value), distance, series));
-            aimed.Add((new PointD(Aimed(values["shots.x." + at]!.Value, values["shots.xPOA." + at]!.Value), Aimed(values["shots.y." + at]!.Value, values["shots.yPOA." + at]!.Value)), distance, series));
+            aimed.Add((new PointD(values["shots.xPOA." + at]!.Value, values["shots.yPOA." + at]!.Value), distance, series));
         }
 
         var expected = new Dictionary<string, (double Value, ToleranceClass Class)>();
@@ -387,16 +387,6 @@ internal static class ShotGroupsComparison
 
         return report;
     }
-
-    /// <summary>
-    /// A point-of-aim-relative coordinate as R held it, docs/STATISTICS.md section 15.4 item 15. <c>sg_dump.R</c> writes 15 digits, which
-    /// do not round-trip every double, and <c>shots.xPOA</c> carries the subtraction noise of <c>point.x - aim.x</c> in exactly the bits
-    /// lost. The aim is a short decimal, so it is recovered from the two written values to six decimals and the subtraction done again.
-    /// Where the aim is the origin, this is the written value. When planning regenerates the fixtures at 17 significant digits
-    /// (NOTES-FROM-PLANNING.md entry 30 section 4), this rebuild should return the written value for every shot, which is the check
-    /// that the new fixtures and this reconstruction agree.
-    /// </summary>
-    private static double Aimed(double raw, double written) => raw - Math.Round(raw - written, 6);
 
     /// <summary>
     /// The fixture's <c>flignerProbe</c> block, NOTES-FROM-PLANNING.md entry 28 section 3, computed as <c>sg_dump.R</c> computes it:

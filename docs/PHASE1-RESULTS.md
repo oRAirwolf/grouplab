@@ -1720,6 +1720,48 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 36. The shotGroups fixtures at full double precision
+
+`docs/NOTES-FROM-PLANNING.md` entry 36. Planning regenerated the fixtures at 17 significant digits, and this session verified them independently, removed the harness's workaround and committed them. `tools/` was not edited.
+
+**The regenerated values, against the committed fixtures, on all ten files rather than entry 36's three:**
+
+| | |
+|---|---|
+| Keys, nine datasets | 73,086 |
+| Keys missing or added | 0 |
+| Stored numbers whose bits changed | 18,491 |
+| Largest relative change of any stored number | 5.53e-16 |
+| Numbers moved by more than 1e-14 relative | 0 |
+
+**Every difference is digits appearing, not a value moving,** as entry 36 section 3 measured.
+
+**CSV and JSON agree bit for bit** on 71,056 numeric values across the nine datasets, with three exceptions. All three are negative zeros in `DFlandy01`, such as `shots.y.303`, which the CSV writes as `-0` and the JSON as `0`. They compare equal as numbers, and no statistic here can tell them apart.
+
+**The reconstruction is removed, and the harness passes from the fixture alone.**
+- **The change:** `ShotGroupsFixtureTests` now reads `shots.xPOA` and `shots.yPOA` directly. All 67 statistics tests pass, including the four Fligner-Killeen keys question 14 was about.
+- **How the reconstruction compares with the true stored values, entry 36 section 4 point 2:**
+  - identical on 3,775 of 3,978 coordinates, across every dataset but one;
+  - off on 203 coordinates, all in `DFcm`, by at most 3.6e-15.
+- **Why `DFcm`:** the reconstruction assumed each aim is a number with at most six decimals. `DFcm` is in centimetres, where that does not hold.
+- **Which was right:** the stored values are R's own doubles, so they were right, and the reconstruction was an approximation that happened to be close enough for every key it served.
+
+**A defect in the regeneration: `shotGroups_DFdistr.json` holds its table as strings.**
+- **The cause:** `sg_distr.R` formats the table's double columns with `sprintf("%.17g")` for the CSV. It then builds the JSON from the same data frame, so all 8,850 numeric table values are strings, such as `"ES_M": "1.7727261017613225"`. Only `inSection15_3Gate`, an integer column, stayed a number. `sg_dump.R` avoided this by keeping the numeric values aside before formatting, and `sg_distr.R` needs the same.
+- **The CSV** is correct at 17 digits.
+- **What was committed:** nothing in the test suite reads `DFdistr`, and `tools/` is planning's to change. So `sg_distr.R` and both `DFdistr` files are left out of this commit, at their committed 15-digit versions, and `docs/STATISTICS.md` section 15.4 item 15 says so.
+
+**`docs/STATISTICS.md` section 15.4 item 15** is amended, not deleted. It records:
+- what the defect was;
+- that it was fixed on 2026-09-15;
+- that `digits = NA` would not have fixed it;
+- the checks above;
+- that question 14's four keys were its only known casualty.
+
+**Tests:** Core 725 passing, App 4 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1817,3 +1859,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 37: a submission whose consent cannot be read withholds its files' hashes, over ignoring it.** The rule exists because publishing under ambiguous consent cannot be undone, and an unreadable `meta.json` is the most ambiguous consent there is.
 - **Entry 37: a file held for a consent conflict cannot be accepted by name, unlike a file triage holds.** Triage is a judgement about usefulness that a person can overrule; an opt-out is the contributor's decision, and only the contributor can change it.
 - **Entry 37: the two conflicted submissions not published even as provenance records.** Publishing a record of a submission whose consent is in question, with its answers and credit name, waits for the contributor's answer as the photographs do.
+- **Entry 36: `DFdistr` left at its committed version, over committing a JSON whose numbers are strings or editing `sg_distr.R` here.** Nothing reads it, `tools/` is the authority and planning's to change, and a fixture committed in a broken shape would be read as correct later.

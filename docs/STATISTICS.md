@@ -584,14 +584,21 @@ Discovered by reading shotGroups 0.8.4's source and worth writing into the compa
     - **The order `rbind` uses:** the dataset's own factor levels. In `DFlandy01` that is the labels' leading number, 1 to 53, where the fixture's `seriesLabels` list them as strings, "10_..." before "1_...".
     - **What the harness checks:** it pastes the coordinates that way for the probe keys, and every `flignerProbe` key of `DFlandy01` then matches. The same pasting shows the statistics unchanged, because the relabelled groups all hold ten shots.
 
-**Item 15 added 2026-09-15, found answering `docs/QUESTIONS-FOR-PLANNING.md` question 14.**
+**Item 15 added 2026-09-15, found answering `docs/QUESTIONS-FOR-PLANNING.md` question 14, and amended the same day when the defect was fixed, `NOTES-FROM-PLANNING.md` entry 36.**
 
-15. **The fixtures do not carry R's doubles exactly, and on a frame with a point of aim that moves a rank statistic.** This is a property of the fixtures, not a difference between implementations (`NOTES-FROM-PLANNING.md` entry 30 section 4). The values are stored at 15 digits, which is enough for every comparison at 1e-12 and not enough to reproduce a rank-based statistic with near-ties. The four Fligner-Killeen keys are the worked example, and every future tie-sensitive key will meet the same limit until planning regenerates the fixtures at 17 significant digits, after the history rewrite is behind the project.
-    - **The cause.** `sg_dump.R` writes its JSON with `jsonlite::toJSON(digits = 15)` and its CSV with `write.csv`'s 15 significant digits, and neither round-trips every double: 5,957 keys of `DFinch` differ between its two files.
-    - **Which values it spares and which it does not.** Shot coordinates with three decimals survive. The point-of-aim-relative coordinates do not, because R computes them as `point.x - aim.x` and the subtraction's noise sits in exactly the bits that are lost.
-    - **Why it matters for one statistic.** Closed forms are unaffected at 1e-12. The Fligner-Killeen statistic is affected, because it ranks absolute deviations from the group median, and a last-bit difference makes or breaks a tie. Read back from the JSON, `DFinch`'s x statistic comes out 10.073187875409229 against R's 10.075167218103388.
-    - **What the harness does.** The aim is a short decimal, so it recovers each aim from `shots.x` and `shots.xPOA` to six decimals and redoes the subtraction. With that, all four Fligner-Killeen statistics match shotGroups to 5.5e-13 relative or better: `DFinch` x to 1.2e-13 and y to 3e-14, `DFcm` x to 3.4e-14 and y to 5.5e-13.
-    - **What would remove the workaround.** Regenerating with `digits = NA` in the JSON would make the rebuild unnecessary.
+15. **Until 2026-09-15 the fixtures did not carry R's doubles exactly, and on a frame with a point of aim that moved a rank statistic.** This was a property of the fixtures, not a difference between implementations (`NOTES-FROM-PLANNING.md` entry 30 section 4). The values were stored at 15 significant digits. That is enough for every comparison at 1e-12 and not enough to reproduce a rank-based statistic with near-ties.
+    - **The cause.** `sg_dump.R` wrote its JSON with `jsonlite::toJSON(digits = 15)` and its CSV with `write.csv`'s 15 significant digits. Neither round-trips every double: 5,957 keys of `DFinch` differed between its two files.
+    - **Which values it spared and which it did not.** Shot coordinates with three decimals survived. The point-of-aim-relative coordinates did not, because R computes them as `point.x - aim.x` and the subtraction's noise sits in exactly the bits that were lost.
+    - **Why it mattered for one statistic.** Closed forms were unaffected at 1e-12. The Fligner-Killeen statistic was affected, because it ranks absolute deviations from the group median, and a last-bit difference makes or breaks a tie. Read back from the JSON, `DFinch`'s x statistic came out 10.073187875409229 against R's 10.075167218103388.
+    - **What the harness did meanwhile.** The aim is a short decimal, so the harness recovered each aim from `shots.x` and `shots.xPOA` to six decimals and redid the subtraction. With that, all four Fligner-Killeen statistics matched shotGroups to 5.5e-13 relative or better.
+    - **The fix, entry 36.** Both scripts now write 17 significant digits, the round-trip precision of a double: `sprintf("%.17g")` in the CSV, and `digits = I(17)` in the JSON. The `digits = NA` this item once named as the fix still emits 15 digits on jsonlite 2.0.0.
+    - **Checked on the nine regenerated datasets:**
+      - no key added or removed;
+      - no stored number moved by more than 5.6e-16 relative;
+      - CSV and JSON agree bit for bit on 71,056 numeric values, except three negative zeros in `DFlandy01` that the JSON writes as 0.
+    - **The reconstruction is removed.** The harness reads `shots.xPOA` directly, and the four Fligner-Killeen keys pass from the fixture alone. Against the true stored values, the reconstruction was exact on 3,775 of 3,978 coordinates. The other 203 are all `DFcm`, off by at most 3.6e-15, because its aims in centimetres are not six-decimal numbers.
+    - **Its only known casualty** was question 14's four Fligner-Killeen keys, and the day spent on them.
+    - **Still at 15 digits: `shotGroups_DFdistr`.** Its regenerated JSON stores every table value as a string, because `sg_distr.R` formats the columns as text for the CSV before building the JSON from the same frame. It stays at the committed version until the script writes numbers.
 
 ### 15.5 Phase 2 gate
 

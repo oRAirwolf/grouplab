@@ -1,601 +1,601 @@
-"key","scope","fn","component","row","col","value"
-"shots.x.1","","shots","x",NA,"1",2.182
-"shots.y.1","","shots","y",NA,"1",-2.507
-"shots.xPOA.1","","shots","xPOA",NA,"1",2.182
-"shots.yPOA.1","","shots","yPOA",NA,"1",-2.507
-"shots.distance.1","","shots","distance",NA,"1",100
-"shots.x.2","","shots","x",NA,"2",-0.096
-"shots.y.2","","shots","y",NA,"2",-2.898
-"shots.xPOA.2","","shots","xPOA",NA,"2",-0.096
-"shots.yPOA.2","","shots","yPOA",NA,"2",-2.898
-"shots.distance.2","","shots","distance",NA,"2",100
-"shots.x.3","","shots","x",NA,"3",-0.169
-"shots.y.3","","shots","y",NA,"3",-1.868
-"shots.xPOA.3","","shots","xPOA",NA,"3",-0.169
-"shots.yPOA.3","","shots","yPOA",NA,"3",-1.868
-"shots.distance.3","","shots","distance",NA,"3",100
-"shots.x.4","","shots","x",NA,"4",-0.529
-"shots.y.4","","shots","y",NA,"4",-2.085
-"shots.xPOA.4","","shots","xPOA",NA,"4",-0.529
-"shots.yPOA.4","","shots","yPOA",NA,"4",-2.085
-"shots.distance.4","","shots","distance",NA,"4",100
-"shots.x.5","","shots","x",NA,"5",-0.942
-"shots.y.5","","shots","y",NA,"5",-1.95
-"shots.xPOA.5","","shots","xPOA",NA,"5",-0.942
-"shots.yPOA.5","","shots","yPOA",NA,"5",-1.95
-"shots.distance.5","","shots","distance",NA,"5",100
-"shots.x.6","","shots","x",NA,"6",-0.23
-"shots.y.6","","shots","y",NA,"6",-1.013
-"shots.xPOA.6","","shots","xPOA",NA,"6",-0.23
-"shots.yPOA.6","","shots","yPOA",NA,"6",-1.013
-"shots.distance.6","","shots","distance",NA,"6",100
-"shots.x.7","","shots","x",NA,"7",0.419
-"shots.y.7","","shots","y",NA,"7",-0.991
-"shots.xPOA.7","","shots","xPOA",NA,"7",0.419
-"shots.yPOA.7","","shots","yPOA",NA,"7",-0.991
-"shots.distance.7","","shots","distance",NA,"7",100
-"shots.x.8","","shots","x",NA,"8",0.378
-"shots.y.8","","shots","y",NA,"8",-0.692
-"shots.xPOA.8","","shots","xPOA",NA,"8",0.378
-"shots.yPOA.8","","shots","yPOA",NA,"8",-0.692
-"shots.distance.8","","shots","distance",NA,"8",100
-"shots.x.9","","shots","x",NA,"9",0.78
-"shots.y.9","","shots","y",NA,"9",0.369
-"shots.xPOA.9","","shots","xPOA",NA,"9",0.78
-"shots.yPOA.9","","shots","yPOA",NA,"9",0.369
-"shots.distance.9","","shots","distance",NA,"9",100
-"shots.x.10","","shots","x",NA,"10",0.512
-"shots.y.10","","shots","y",NA,"10",-0.125
-"shots.xPOA.10","","shots","xPOA",NA,"10",0.512
-"shots.yPOA.10","","shots","yPOA",NA,"10",-0.125
-"shots.distance.10","","shots","distance",NA,"10",100
-"shots.x.11","","shots","x",NA,"11",0.192
-"shots.y.11","","shots","y",NA,"11",-0.187
-"shots.xPOA.11","","shots","xPOA",NA,"11",0.192
-"shots.yPOA.11","","shots","yPOA",NA,"11",-0.187
-"shots.distance.11","","shots","distance",NA,"11",100
-"shots.x.12","","shots","x",NA,"12",-0.137
-"shots.y.12","","shots","y",NA,"12",-0.095
-"shots.xPOA.12","","shots","xPOA",NA,"12",-0.137
-"shots.yPOA.12","","shots","yPOA",NA,"12",-0.095
-"shots.distance.12","","shots","distance",NA,"12",100
-"shots.x.13","","shots","x",NA,"13",-0.23
-"shots.y.13","","shots","y",NA,"13",0.142
-"shots.xPOA.13","","shots","xPOA",NA,"13",-0.23
-"shots.yPOA.13","","shots","yPOA",NA,"13",0.142
-"shots.distance.13","","shots","distance",NA,"13",100
-"shots.x.14","","shots","x",NA,"14",-1.436
-"shots.y.14","","shots","y",NA,"14",0.596
-"shots.xPOA.14","","shots","xPOA",NA,"14",-1.436
-"shots.yPOA.14","","shots","yPOA",NA,"14",0.596
-"shots.distance.14","","shots","distance",NA,"14",100
-"shots.x.15","","shots","x",NA,"15",-0.457
-"shots.y.15","","shots","y",NA,"15",0.925
-"shots.xPOA.15","","shots","xPOA",NA,"15",-0.457
-"shots.yPOA.15","","shots","yPOA",NA,"15",0.925
-"shots.distance.15","","shots","distance",NA,"15",100
-"shots.x.16","","shots","x",NA,"16",-0.426
-"shots.y.16","","shots","y",NA,"16",1.42
-"shots.xPOA.16","","shots","xPOA",NA,"16",-0.426
-"shots.yPOA.16","","shots","yPOA",NA,"16",1.42
-"shots.distance.16","","shots","distance",NA,"16",100
-"shots.x.17","","shots","x",NA,"17",0.316
-"shots.y.17","","shots","y",NA,"17",1.658
-"shots.xPOA.17","","shots","xPOA",NA,"17",0.316
-"shots.yPOA.17","","shots","yPOA",NA,"17",1.658
-"shots.distance.17","","shots","distance",NA,"17",100
-"shots.x.18","","shots","x",NA,"18",0.769
-"shots.y.18","","shots","y",NA,"18",3.905
-"shots.xPOA.18","","shots","xPOA",NA,"18",0.769
-"shots.yPOA.18","","shots","yPOA",NA,"18",3.905
-"shots.distance.18","","shots","distance",NA,"18",100
-"shots.x.19","","shots","x",NA,"19",-0.426
-"shots.y.19","","shots","y",NA,"19",2.709
-"shots.xPOA.19","","shots","xPOA",NA,"19",-0.426
-"shots.yPOA.19","","shots","yPOA",NA,"19",2.709
-"shots.distance.19","","shots","distance",NA,"19",100
-"shots.x.20","","shots","x",NA,"20",-0.478
-"shots.y.20","","shots","y",NA,"20",2.678
-"shots.xPOA.20","","shots","xPOA",NA,"20",-0.478
-"shots.yPOA.20","","shots","yPOA",NA,"20",2.678
-"shots.distance.20","","shots","distance",NA,"20",100
-"shots.seriesIndex.1","","shots","seriesIndex",NA,"1",1
-"shots.groupIndex.1","","shots","groupIndex",NA,"1",1
-"shots.seriesIndex.2","","shots","seriesIndex",NA,"2",1
-"shots.groupIndex.2","","shots","groupIndex",NA,"2",1
-"shots.seriesIndex.3","","shots","seriesIndex",NA,"3",1
-"shots.groupIndex.3","","shots","groupIndex",NA,"3",1
-"shots.seriesIndex.4","","shots","seriesIndex",NA,"4",1
-"shots.groupIndex.4","","shots","groupIndex",NA,"4",1
-"shots.seriesIndex.5","","shots","seriesIndex",NA,"5",1
-"shots.groupIndex.5","","shots","groupIndex",NA,"5",1
-"shots.seriesIndex.6","","shots","seriesIndex",NA,"6",1
-"shots.groupIndex.6","","shots","groupIndex",NA,"6",1
-"shots.seriesIndex.7","","shots","seriesIndex",NA,"7",1
-"shots.groupIndex.7","","shots","groupIndex",NA,"7",1
-"shots.seriesIndex.8","","shots","seriesIndex",NA,"8",1
-"shots.groupIndex.8","","shots","groupIndex",NA,"8",1
-"shots.seriesIndex.9","","shots","seriesIndex",NA,"9",1
-"shots.groupIndex.9","","shots","groupIndex",NA,"9",1
-"shots.seriesIndex.10","","shots","seriesIndex",NA,"10",1
-"shots.groupIndex.10","","shots","groupIndex",NA,"10",1
-"shots.seriesIndex.11","","shots","seriesIndex",NA,"11",1
-"shots.groupIndex.11","","shots","groupIndex",NA,"11",1
-"shots.seriesIndex.12","","shots","seriesIndex",NA,"12",1
-"shots.groupIndex.12","","shots","groupIndex",NA,"12",1
-"shots.seriesIndex.13","","shots","seriesIndex",NA,"13",1
-"shots.groupIndex.13","","shots","groupIndex",NA,"13",1
-"shots.seriesIndex.14","","shots","seriesIndex",NA,"14",1
-"shots.groupIndex.14","","shots","groupIndex",NA,"14",1
-"shots.seriesIndex.15","","shots","seriesIndex",NA,"15",1
-"shots.groupIndex.15","","shots","groupIndex",NA,"15",1
-"shots.seriesIndex.16","","shots","seriesIndex",NA,"16",1
-"shots.groupIndex.16","","shots","groupIndex",NA,"16",1
-"shots.seriesIndex.17","","shots","seriesIndex",NA,"17",1
-"shots.groupIndex.17","","shots","groupIndex",NA,"17",1
-"shots.seriesIndex.18","","shots","seriesIndex",NA,"18",1
-"shots.groupIndex.18","","shots","groupIndex",NA,"18",1
-"shots.seriesIndex.19","","shots","seriesIndex",NA,"19",1
-"shots.groupIndex.19","","shots","groupIndex",NA,"19",1
-"shots.seriesIndex.20","","shots","seriesIndex",NA,"20",1
-"shots.groupIndex.20","","shots","groupIndex",NA,"20",1
-"meta.distance","","meta","distance",NA,NA,100
-"meta.nDistances","","meta","nDistances",NA,NA,1
-"meta.nSeries","","meta","nSeries",NA,NA,1
-"meta.nGroups","","meta","nGroups",NA,NA,1
-"meta.coinInstalled","","meta","coinInstalled",NA,NA,1
-"meta.mvoutlierInstalled","","meta","mvoutlierInstalled",NA,NA,0
-"meta.nShots","","meta","nShots",NA,NA,20
-"groupSpread.sdXY.unit.x","","groupSpread","sdXY","unit","x",0.756380675530377
-"groupSpread.sdXY.unit.y","","groupSpread","sdXY","unit","y",1.8462087888712
-"groupSpread.sdXY.MOA.x","","groupSpread","sdXY","MOA","x",0.722290337561988
-"groupSpread.sdXY.MOA.y","","groupSpread","sdXY","MOA","y",1.76299948973217
-"groupSpread.sdXY.SMOA.x","","groupSpread","sdXY","SMOA","x",0.756380677611437
-"groupSpread.sdXY.SMOA.y","","groupSpread","sdXY","SMOA","y",1.84620876027958
-"groupSpread.sdXY.mrad.x","","groupSpread","sdXY","mrad","x",0.210105742429966
-"groupSpread.sdXY.mrad.y","","groupSpread","sdXY","mrad","y",0.512835763446771
-"groupSpread.sdXci.unit.sdX (","","groupSpread","sdXci","unit","sdX (",0.575220238197593
-"groupSpread.sdXci.unit.sdX )","","groupSpread","sdXci","unit","sdX )",1.10474816078836
-"groupSpread.sdXci.MOA.sdX (","","groupSpread","sdXci","MOA","sdX (",0.549294864485208
-"groupSpread.sdXci.MOA.sdX )","","groupSpread","sdXci","MOA","sdX )",1.05495677568794
-"groupSpread.sdXci.SMOA.sdX (","","groupSpread","sdXci","SMOA","sdX (",0.575220240672467
-"groupSpread.sdXci.SMOA.sdX )","","groupSpread","sdXci","SMOA","sdX )",1.10474815922225
-"groupSpread.sdXci.mrad.sdX (","","groupSpread","sdXci","mrad","sdX (",0.159783399159382
-"groupSpread.sdXci.mrad.sdX )","","groupSpread","sdXci","mrad","sdX )",0.306874486699631
-"groupSpread.sdYci.unit.sdY (","","groupSpread","sdYci","unit","sdY (",1.40402404986394
-"groupSpread.sdYci.unit.sdY )","","groupSpread","sdYci","unit","sdY )",2.69652019137929
-"groupSpread.sdYci.MOA.sdY (","","groupSpread","sdYci","MOA","sdY (",1.34074418953997
-"groupSpread.sdYci.MOA.sdY )","","groupSpread","sdYci","MOA","sdY )",2.57498698523912
-"groupSpread.sdYci.SMOA.sdY (","","groupSpread","sdYci","SMOA","sdY (",1.40402404109526
-"groupSpread.sdYci.SMOA.sdY )","","groupSpread","sdYci","SMOA","sdY )",2.69652008264425
-"groupSpread.sdYci.mrad.sdY (","","groupSpread","sdYci","mrad","sdY (",0.390006675574257
-"groupSpread.sdYci.mrad.sdY )","","groupSpread","sdYci","mrad","sdY )",0.749033351473755
-"groupSpread.sdXYrob.unit.x","","groupSpread","sdXYrob","unit","x",0.506855842933679
-"groupSpread.sdXYrob.unit.y","","groupSpread","sdXYrob","unit","y",1.45013770436165
-"groupSpread.sdXYrob.MOA.x","","groupSpread","sdXYrob","MOA","x",0.484011676227889
-"groupSpread.sdXYrob.MOA.y","","groupSpread","sdXYrob","MOA","y",1.38477948415392
-"groupSpread.sdXYrob.SMOA.x","","groupSpread","sdXYrob","SMOA","x",0.50685584535551
-"groupSpread.sdXYrob.SMOA.y","","groupSpread","sdXYrob","SMOA","y",1.45013769407772
-"groupSpread.sdXYrob.mrad.x","","groupSpread","sdXYrob","mrad","x",0.140793289471224
-"groupSpread.sdXYrob.mrad.y","","groupSpread","sdXYrob","mrad","y",0.402816023542577
-"groupSpread.covXY.x.x","","groupSpread","covXY","x","x",0.572111726315789
-"groupSpread.covXY.x.y","","groupSpread","covXY","x","y",-0.158042242105263
-"groupSpread.covXY.y.x","","groupSpread","covXY","y","x",-0.158042242105263
-"groupSpread.covXY.y.y","","groupSpread","covXY","y","y",3.40848689210526
-"groupSpread.covXYrob.x.x","","groupSpread","covXYrob","x","x",0.256902845516011
-"groupSpread.covXYrob.x.y","","groupSpread","covXYrob","x","y",0.208372888460664
-"groupSpread.covXYrob.y.x","","groupSpread","covXYrob","y","x",0.208372888460664
-"groupSpread.covXYrob.y.y","","groupSpread","covXYrob","y","y",2.10289936161127
-"groupSpread.distToCtr.unit.mean","","groupSpread","distToCtr","unit","mean",1.63061344467377
-"groupSpread.distToCtr.unit.median","","groupSpread","distToCtr","unit","median",1.51870679001248
-"groupSpread.distToCtr.unit.max","","groupSpread","distToCtr","unit","max",3.98051705969212
-"groupSpread.distToCtr.unit.sigma","","groupSpread","distToCtr","unit","sigma",1.4200906472789
-"groupSpread.distToCtr.unit.RSD","","groupSpread","distToCtr","unit","RSD",0.930353042468024
-"groupSpread.distToCtr.unit.MR","","groupSpread","distToCtr","unit","MR",1.77981968450417
-"groupSpread.distToCtr.MOA.mean","","groupSpread","distToCtr","MOA","mean",1.55712111332975
-"groupSpread.distToCtr.MOA.median","","groupSpread","distToCtr","MOA","median",1.45025813491793
-"groupSpread.distToCtr.MOA.max","","groupSpread","distToCtr","MOA","max",3.80111340940892
-"groupSpread.distToCtr.MOA.sigma","","groupSpread","distToCtr","MOA","sigma",1.35608665933341
-"groupSpread.distToCtr.MOA.RSD","","groupSpread","distToCtr","MOA","RSD",0.888421708231651
-"groupSpread.distToCtr.MOA.MR","","groupSpread","distToCtr","MOA","MR",1.69960256898769
-"groupSpread.distToCtr.SMOA.mean","","groupSpread","distToCtr","SMOA","mean",1.63061342728035
-"groupSpread.distToCtr.SMOA.median","","groupSpread","distToCtr","SMOA","median",1.51870677725434
-"groupSpread.distToCtr.SMOA.max","","groupSpread","distToCtr","SMOA","max",3.98051667974846
-"groupSpread.distToCtr.SMOA.sigma","","groupSpread","distToCtr","SMOA","sigma",1.42009063799556
-"groupSpread.distToCtr.SMOA.RSD","","groupSpread","distToCtr","SMOA","RSD",0.930353043272291
-"groupSpread.distToCtr.SMOA.MR","","groupSpread","distToCtr","SMOA","MR",1.77981965969567
-"groupSpread.distToCtr.mrad.mean","","groupSpread","distToCtr","mrad","mean",0.452948171332065
-"groupSpread.distToCtr.mrad.median","","groupSpread","distToCtr","mrad","median",0.421862990969166
-"groupSpread.distToCtr.mrad.max","","groupSpread","distToCtr","mrad","max",1.10569907059821
-"groupSpread.distToCtr.mrad.sigma","","groupSpread","distToCtr","mrad","sigma",0.394469619128977
-"groupSpread.distToCtr.mrad.RSD","","groupSpread","distToCtr","mrad","RSD",0.258431399247245
-"groupSpread.distToCtr.mrad.MR","","groupSpread","distToCtr","mrad","MR",0.494394346736487
-"groupSpread.sigmaCI.unit.sigma (","","groupSpread","sigmaCI","unit","sigma (",1.16056328658874
-"groupSpread.sigmaCI.unit.sigma )","","groupSpread","sigmaCI","unit","sigma )",1.83018191549693
-"groupSpread.sigmaCI.MOA.sigma (","","groupSpread","sigmaCI","MOA","sigma (",1.1082562933912
-"groupSpread.sigmaCI.MOA.sigma )","","groupSpread","sigmaCI","MOA","sigma )",1.7476949540108
-"groupSpread.sigmaCI.SMOA.sigma (","","groupSpread","sigmaCI","SMOA","sigma (",1.16056328399996
-"groupSpread.sigmaCI.SMOA.sigma )","","groupSpread","sigmaCI","SMOA","sigma )",1.8301818878469
-"groupSpread.sigmaCI.mrad.sigma (","","groupSpread","sigmaCI","mrad","sigma (",0.32237868792708
-"groupSpread.sigmaCI.mrad.sigma )","","groupSpread","sigmaCI","mrad","sigma )",0.508383854466321
-"groupSpread.RSDci.unit.RSD (","","groupSpread","RSDci","unit","RSD (",0.760327227507235
-"groupSpread.RSDci.unit.RSD )","","groupSpread","RSDci","unit","RSD )",1.1990187503982
-"groupSpread.RSDci.MOA.RSD (","","groupSpread","RSDci","MOA","RSD (",0.726059017051896
-"groupSpread.RSDci.MOA.RSD )","","groupSpread","RSDci","MOA","RSD )",1.14497855533013
-"groupSpread.RSDci.SMOA.RSD (","","groupSpread","RSDci","SMOA","RSD (",0.760327229569889
-"groupSpread.RSDci.SMOA.RSD )","","groupSpread","RSDci","SMOA","RSD )",1.19901874702407
-"groupSpread.RSDci.mrad.RSD (","","groupSpread","RSDci","mrad","RSD (",0.211202006855821
-"groupSpread.RSDci.mrad.RSD )","","groupSpread","RSDci","mrad","RSD )",0.333060760920647
-"groupSpread.MRci.unit.MR (","","groupSpread","MRci","unit","MR (",1.45455037433101
-"groupSpread.MRci.unit.MR )","","groupSpread","MRci","unit","MR )",2.29379286855147
-"groupSpread.MRci.MOA.MR (","","groupSpread","MRci","MOA","MR (",1.38899327340961
-"groupSpread.MRci.MOA.MR )","","groupSpread","MRci","MOA","MR )",2.19041076664839
-"groupSpread.MRci.SMOA.MR (","","groupSpread","MRci","SMOA","MR (",1.45455036389591
-"groupSpread.MRci.SMOA.MR )","","groupSpread","MRci","SMOA","MR )",2.29379280569804
-"groupSpread.MRci.mrad.MR (","","groupSpread","MRci","mrad","MR (",0.404041765150859
-"groupSpread.MRci.mrad.MR )","","groupSpread","MRci","mrad","MR )",0.637164664152461
-"groupSpread.maxPairDist.unit","","groupSpread","maxPairDist",NA,"unit",6.85777179556159
-"groupSpread.maxPairDist.MOA","","groupSpread","maxPairDist",NA,"MOA",6.54868769884519
-"groupSpread.maxPairDist.SMOA","","groupSpread","maxPairDist",NA,"SMOA",6.8577697658777
-"groupSpread.maxPairDist.mrad","","groupSpread","maxPairDist",NA,"mrad",1.90493603382832
-"groupSpread.groupRect.unit.width","","groupSpread","groupRect","unit","width",3.618
-"groupSpread.groupRect.unit.height","","groupSpread","groupRect","unit","height",6.803
-"groupSpread.groupRect.unit.FoM","","groupSpread","groupRect","unit","FoM",5.2105
-"groupSpread.groupRect.unit.diag","","groupSpread","groupRect","unit","diag",7.70524061921495
-"groupSpread.groupRect.MOA.width","","groupSpread","groupRect","MOA","width",3.4549352138413
-"groupSpread.groupRect.MOA.height","","groupSpread","groupRect","MOA","height",6.49638453388257
-"groupSpread.groupRect.MOA.FoM","","groupSpread","groupRect","MOA","FoM",4.97566011727518
-"groupSpread.groupRect.MOA.diag","","groupSpread","groupRect","MOA","diag",7.3579599846167
-"groupSpread.groupRect.SMOA.width","","groupSpread","groupRect","SMOA","width",3.6179997187414
-"groupSpread.groupRect.SMOA.height","","groupSpread","groupRect","SMOA","height",6.80299801925683
-"groupSpread.groupRect.SMOA.FoM","","groupSpread","groupRect","SMOA","FoM",5.21049912390087
-"groupSpread.groupRect.SMOA.diag","","groupSpread","groupRect","SMOA","diag",7.70523772723816
-"groupSpread.groupRect.mrad.width","","groupSpread","groupRect","mrad","width",1.00499991541042
-"groupSpread.groupRect.mrad.height","","groupSpread","groupRect","mrad","height",1.8897216598648
-"groupSpread.groupRect.mrad.FoM","","groupSpread","groupRect","mrad","FoM",1.44736085844365
-"groupSpread.groupRect.mrad.diag","","groupSpread","groupRect","mrad","diag",2.14034379935921
-"groupSpread.groupRectMin.unit.width","","groupSpread","groupRectMin","unit","width",6.56584442398691
-"groupSpread.groupRectMin.unit.height","","groupSpread","groupRectMin","unit","height",2.9309325286015
-"groupSpread.groupRectMin.unit.FoM","","groupSpread","groupRectMin","unit","FoM",4.7483884762942
-"groupSpread.groupRectMin.unit.diag","","groupSpread","groupRectMin","unit","diag",7.19031838566376
-"groupSpread.groupRectMin.MOA.width","","groupSpread","groupRectMin","MOA","width",6.2699178358716
-"groupSpread.groupRectMin.MOA.height","","groupSpread","groupRectMin","MOA","height",2.79883424417701
-"groupSpread.groupRectMin.MOA.FoM","","groupSpread","groupRectMin","MOA","FoM",4.5343763289459
-"groupSpread.groupRectMin.MOA.diag","","groupSpread","groupRectMin","MOA","diag",6.86624599830057
-"groupSpread.groupRectMin.SMOA.width","","groupSpread","groupRectMin","SMOA","width",6.56584264614725
-"groupSpread.groupRectMin.SMOA.height","","groupSpread","groupRectMin","SMOA","height",2.93093238555336
-"groupSpread.groupRectMin.SMOA.FoM","","groupSpread","groupRectMin","SMOA","FoM",4.7483878184083
-"groupSpread.groupRectMin.SMOA.diag","","groupSpread","groupRectMin","SMOA","diag",7.19031604156782
-"groupSpread.groupRectMin.mrad.width","","groupSpread","groupRectMin","mrad","width",1.82384516775795
-"groupSpread.groupRectMin.mrad.height","","groupSpread","groupRectMin","mrad","height",0.814147879640928
-"groupSpread.groupRectMin.mrad.FoM","","groupSpread","groupRectMin","mrad","FoM",1.31899660774332
-"groupSpread.groupRectMin.mrad.diag","","groupSpread","groupRectMin","mrad","diag",1.99730999870383
-"groupSpread.minCircleRad.unit","","groupSpread","minCircleRad",NA,"unit",3.43266303261727
-"groupSpread.minCircleRad.MOA","","groupSpread","minCircleRad",NA,"MOA",3.27795148930087
-"groupSpread.minCircleRad.SMOA","","groupSpread","minCircleRad",NA,"SMOA",3.43266279460928
-"groupSpread.minCircleRad.mrad","","groupSpread","minCircleRad",NA,"mrad",0.953517436815865
-"groupSpread.minEll.unit.semi_major","","groupSpread","minEll","unit","semi_major",3.94341162255572
-"groupSpread.minEll.unit.semi_minor","","groupSpread","minEll","unit","semi_minor",1.92880694051701
-"groupSpread.minEll.MOA.semi_major","","groupSpread","minEll","MOA","semi_major",3.76568033772308
-"groupSpread.minEll.MOA.semi_minor","","groupSpread","minEll","MOA","semi_minor",1.84187490905873
-"groupSpread.minEll.SMOA.semi_major","","groupSpread","minEll","SMOA","semi_major",3.94341125360908
-"groupSpread.minEll.SMOA.semi_minor","","groupSpread","minEll","SMOA","semi_minor",1.92880690677906
-"groupSpread.minEll.mrad.semi_major","","groupSpread","minEll","mrad","semi_major",1.095392007848
-"groupSpread.minEll.mrad.semi_minor","","groupSpread","minEll","mrad","semi_minor",0.535779692882432
-"groupSpread.confEll.unit.semi-major","","groupSpread","confEll","unit","semi-major",2.21685411882585
-"groupSpread.confEll.unit.semi-minor","","groupSpread","confEll","unit","semi-minor",0.90007823638841
-"groupSpread.confEll.MOA.semi-major","","groupSpread","confEll","MOA","semi-major",2.11693967985314
-"groupSpread.confEll.MOA.semi-minor","","groupSpread","confEll","MOA","semi-minor",0.859511398466505
-"groupSpread.confEll.SMOA.semi-major","","groupSpread","confEll","SMOA","semi-major",2.21685406302758
-"groupSpread.confEll.SMOA.semi-minor","","groupSpread","confEll","SMOA","semi-minor",0.900078237487227
-"groupSpread.confEll.mrad.semi-major","","groupSpread","confEll","mrad","semi-major",0.615792791325867
-"groupSpread.confEll.mrad.semi-minor","","groupSpread","confEll","mrad","semi-minor",0.250021731027691
-"groupSpread.confEllRob.unit.semi-major","","groupSpread","confEllRob","unit","semi-major",1.74860784496105
-"groupSpread.confEllRob.unit.semi-minor","","groupSpread","confEllRob","unit","semi-minor",0.579699957342065
-"groupSpread.confEllRob.MOA.semi-major","","groupSpread","confEllRob","MOA","semi-major",1.66979745949955
-"groupSpread.confEllRob.MOA.semi-minor","","groupSpread","confEllRob","MOA","semi-minor",0.553572681130727
-"groupSpread.confEllRob.SMOA.semi-major","","groupSpread","confEllRob","SMOA","semi-major",1.74860782182585
-"groupSpread.confEllRob.SMOA.semi-minor","","groupSpread","confEllRob","SMOA","semi-minor",0.579699959816927
-"groupSpread.confEllRob.mrad.semi-major","","groupSpread","confEllRob","mrad","semi-major",0.485724391828398
-"groupSpread.confEllRob.mrad.semi-minor","","groupSpread","confEllRob","mrad","semi-minor",0.161027765580398
-"groupSpread.confEllShape.angle","","groupSpread","confEllShape",NA,"angle",93.1793909921656
-"groupSpread.confEllShape.aspectRatio","","groupSpread","confEllShape",NA,"aspectRatio",2.46295713994935
-"groupSpread.confEllShape.flattening","","groupSpread","confEllShape",NA,"flattening",0.59398400249037
-"groupSpread.confEllShape.trace","","groupSpread","confEllShape",NA,"trace",3.98059861842105
-"groupSpread.confEllShape.det","","groupSpread","confEllShape",NA,"det",1.92505796967742
-"groupSpread.confEllShapeRob.angle","","groupSpread","confEllShapeRob",NA,"angle",83.6391828035686
-"groupSpread.confEllShapeRob.aspectRatio","","groupSpread","confEllShapeRob",NA,"aspectRatio",3.01640154154652
-"groupSpread.confEllShapeRob.flattening","","groupSpread","confEllShapeRob",NA,"flattening",0.668479150992843
-"groupSpread.confEllShapeRob.trace","","groupSpread","confEllShapeRob",NA,"trace",2.35980220712728
-"groupSpread.confEllShapeRob.det","","groupSpread","confEllShapeRob",NA,"det",0.496821569186296
-"groupSpread.CEP.CEP0.5.unit.CorrNormal","","groupSpread","CEP.CEP0.5","unit","CorrNormal",1.50022083074366
-"groupSpread.CEP.CEP0.5.MOA.CorrNormal","","groupSpread","CEP.CEP0.5","MOA","CorrNormal",1.43260534492124
-"groupSpread.CEP.CEP0.5.SMOA.CorrNormal","","groupSpread","CEP.CEP0.5","SMOA","CorrNormal",1.50022081867917
-"groupSpread.CEP.CEP0.5.mrad.CorrNormal","","groupSpread","CEP.CEP0.5","mrad","CorrNormal",0.416728002509079
-"groupLocation.ctr.x","","groupLocation","ctr",NA,"x",-0.000399999999999998
-"groupLocation.ctr.y","","groupLocation","ctr",NA,"y",-0.000450000000000023
-"groupLocation.ctrRob.x","","groupLocation","ctrRob",NA,"x",-0.0412666666666667
-"groupLocation.ctrRob.y","","groupLocation","ctrRob",NA,"y",-0.492666666666667
-"groupLocation.distPOA.unit","","groupLocation","distPOA",NA,"unit",0.00060207972893963
-"groupLocation.distPOA.MOA","","groupLocation","distPOA",NA,"MOA",0.000574943789977022
-"groupLocation.distPOA.SMOA","","groupLocation","distPOA",NA,"SMOA",0.000602079732811026
-"groupLocation.distPOA.mrad","","groupLocation","distPOA",NA,"mrad",0.000167244369149897
-"groupLocation.distPOArob.unit","","groupLocation","distPOArob",NA,"unit",0.49439193179321
-"groupLocation.distPOArob.MOA","","groupLocation","distPOArob",NA,"MOA",0.472109517875851
-"groupLocation.distPOArob.SMOA","","groupLocation","distPOArob",NA,"SMOA",0.494391934195158
-"groupLocation.distPOArob.mrad","","groupLocation","distPOArob",NA,"mrad",0.137331091948944
-"groupLocation.ctrXci.t.x (","","groupLocation","ctrXci","t","x (",-0.354397052885847
-"groupLocation.ctrXci.t.x )","","groupLocation","ctrXci","t","x )",0.353597052885847
-"groupLocation.ctrYci.t.y (","","groupLocation","ctrYci","t","y (",-0.864502310450794
-"groupLocation.ctrYci.t.y )","","groupLocation","ctrYci","t","y )",0.863602310450794
-"groupLocation.Hotelling.statistic","","groupLocation","Hotelling.statistic",NA,NA,3.53397511416519e-06
-"groupLocation.Hotelling.p.value","","groupLocation","Hotelling.p.value",NA,NA,0.999996466031824
-"groupShape.corXY.x.x","","groupShape","corXY","x","x",1
-"groupShape.corXY.x.y","","groupShape","corXY","x","y",-0.113175375341087
-"groupShape.corXY.y.x","","groupShape","corXY","y","x",-0.113175375341087
-"groupShape.corXY.y.y","","groupShape","corXY","y","y",1
-"groupShape.corXYrob.x.x","","groupShape","corXYrob","x","x",1
-"groupShape.corXYrob.x.y","","groupShape","corXYrob","x","y",0.283496375001283
-"groupShape.corXYrob.y.x","","groupShape","corXYrob","y","x",0.283496375001283
-"groupShape.corXYrob.y.y","","groupShape","corXYrob","y","y",1
-"groupShape.ShapiroX.statistic","","groupShape","ShapiroX.statistic",NA,NA,0.92526064226379
-"groupShape.ShapiroX.p.value","","groupShape","ShapiroX.p.value",NA,NA,0.125133795728758
-"groupShape.ShapiroY.statistic","","groupShape","ShapiroY.statistic",NA,NA,0.971565067135458
-"groupShape.ShapiroY.p.value","","groupShape","ShapiroY.p.value",NA,NA,0.78753222325691
-"groupShape.multNorm.statistic","","groupShape","multNorm.statistic",NA,NA,0.607480364275554
-"groupShape.multNorm.p.value","","groupShape","multNorm.p.value",NA,NA,0.545697131420947
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.CorrNormal","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","CorrNormal",1.50022083074366
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsPatnaik","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","GrubbsPatnaik",1.4950263654715
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsPearson","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","GrubbsPearson",1.45824737501618
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsLiu","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","GrubbsLiu",1.45824737501619
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Rayleigh","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","Rayleigh",1.67202896098667
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Krempasky","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","Krempasky",1.50325262334798
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Ignani","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","Ignani",1.49638576832499
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.RMSE","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","RMSE",1.66106613634116
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Ethridge","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","Ethridge",1.21329474888877
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.RAND","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","RAND",1.50064610308934
-"getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Valstar","","getCEP.accuracy_FALSE","CEP.CEP0.5","unit","Valstar",1.50064610308934
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.CorrNormal","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","CorrNormal",3.14457793330537
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsPatnaik","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","GrubbsPatnaik",3.1825164298359
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsPearson","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","GrubbsPearson",3.15547917386723
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsLiu","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","GrubbsLiu",3.15547917386725
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Rayleigh","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","Rayleigh",3.04746628331177
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Krempasky","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","Krempasky",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Ignani","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","Ignani",3.14693813214832
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.RMSE","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","RMSE",3.02748526668075
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Ethridge","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","Ethridge",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.RAND","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","RAND",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Valstar","","getCEP.accuracy_FALSE","CEP.CEP0.9","unit","Valstar",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.CorrNormal","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","CorrNormal",3.70949266224886
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsPatnaik","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","GrubbsPatnaik",3.71967324380907
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsPearson","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","GrubbsPearson",3.71914386948499
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsLiu","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","GrubbsLiu",3.71914386948502
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Rayleigh","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","Rayleigh",3.4760223811564
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Krempasky","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","Krempasky",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Ignani","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","Ignani",3.70749930661645
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.RMSE","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","RMSE",3.45323149372705
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Ethridge","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","Ethridge",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.RAND","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","RAND",NA
-"getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Valstar","","getCEP.accuracy_FALSE","CEP.CEP0.95","unit","Valstar",NA
-"getCEP.accuracy_FALSE.ellShape.aspectRatio","","getCEP.accuracy_FALSE","ellShape",NA,"aspectRatio",2.46295713994935
-"getCEP.accuracy_FALSE.ellShape.flattening","","getCEP.accuracy_FALSE","ellShape",NA,"flattening",0.59398400249037
-"getCEP.accuracy_FALSE.ctr.x","","getCEP.accuracy_FALSE","ctr",NA,"x",-0.000399999999999998
-"getCEP.accuracy_FALSE.ctr.y","","getCEP.accuracy_FALSE","ctr",NA,"y",-0.000450000000000023
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.CorrNormal","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","CorrNormal",1.50022093225802
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsPatnaik","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","GrubbsPatnaik",1.49502646282872
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsPearson","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","GrubbsPearson",1.45824746676103
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsLiu","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","GrubbsLiu",1.45824746676104
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Rayleigh","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","Rayleigh",1.67202902430133
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Krempasky","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","Krempasky",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Ignani","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","Ignani",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.RMSE","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","RMSE",1.61900708000313
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Ethridge","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","Ethridge",1.21348710468676
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.RAND","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","RAND",1.50646694868588
-"getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Valstar","","getCEP.accuracy_TRUE","CEP.CEP0.5","unit","Valstar",1.50064622387064
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.CorrNormal","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","CorrNormal",3.14457804883647
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsPatnaik","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","GrubbsPatnaik",3.1825165521702
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsPearson","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","GrubbsPearson",3.15547929373054
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsLiu","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","GrubbsLiu",3.15547929373056
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Rayleigh","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","Rayleigh",3.04746639871005
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Krempasky","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","Krempasky",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Ignani","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","Ignani",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.RMSE","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","RMSE",2.95082776906035
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Ethridge","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","Ethridge",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.RAND","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","RAND",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Valstar","","getCEP.accuracy_TRUE","CEP.CEP0.9","unit","Valstar",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.CorrNormal","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","CorrNormal",3.70949278707195
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsPatnaik","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","GrubbsPatnaik",3.71967337205824
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsPearson","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","GrubbsPearson",3.71914399877395
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsLiu","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","GrubbsLiu",3.71914399877398
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Rayleigh","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","Rayleigh",3.47602251278279
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Krempasky","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","Krempasky",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Ignani","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","Ignani",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.RMSE","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","RMSE",3.36579388075947
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Ethridge","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","Ethridge",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.RAND","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","RAND",NA
-"getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Valstar","","getCEP.accuracy_TRUE","CEP.CEP0.95","unit","Valstar",NA
-"getCEP.accuracy_TRUE.ellShape.aspectRatio","","getCEP.accuracy_TRUE","ellShape",NA,"aspectRatio",2.46295713994935
-"getCEP.accuracy_TRUE.ellShape.flattening","","getCEP.accuracy_TRUE","ellShape",NA,"flattening",0.59398400249037
-"getCEP.accuracy_TRUE.ctr.x","","getCEP.accuracy_TRUE","ctr",NA,"x",-0.000399999999999998
-"getCEP.accuracy_TRUE.ctr.y","","getCEP.accuracy_TRUE","ctr",NA,"y",-0.000450000000000023
-"getRayParam.sigma.sigma","","getRayParam",".sigma",NA,"sigma",1.4200906472789
-"getRayParam.sigma.sigCIlo","","getRayParam",".sigma",NA,"sigCIlo",1.16056328658874
-"getRayParam.sigma.sigCIup","","getRayParam",".sigma",NA,"sigCIup",1.83018191549693
-"getRayParam.RSD.RSD","","getRayParam",".RSD",NA,"RSD",0.930353042468024
-"getRayParam.RSD.RSDciLo","","getRayParam",".RSD",NA,"RSDciLo",0.760327227507235
-"getRayParam.RSD.RSDciUp","","getRayParam",".RSD",NA,"RSDciUp",1.1990187503982
-"getRayParam.MR.MR","","getRayParam",".MR",NA,"MR",1.77981968450417
-"getRayParam.MR.MRciLo","","getRayParam",".MR",NA,"MRciLo",1.45455037433101
-"getRayParam.MR.MRciUp","","getRayParam",".MR",NA,"MRciUp",2.29379286855147
-"getRayParam.MEDR.MEDR","","getRayParam",".MEDR",NA,"MEDR",1.67202896098667
-"getRayParam.MEDR.MEDRciLo","","getRayParam",".MEDR",NA,"MEDRciLo",1.36645884539308
-"getRayParam.MEDR.MEDRciUP","","getRayParam",".MEDR",NA,"MEDRciUP",2.15487453033266
-"getRiceParam.nu","","getRiceParam",".nu",NA,NA,0.000552683148352059
-"getRiceParam.sigma.sigma","","getRiceParam",".sigma",NA,"sigma",1.4200906472789
-"getRiceParam.sigma.sigCIlo","","getRiceParam",".sigma",NA,"sigCIlo",1.16056328658874
-"getRiceParam.sigma.sigCIup","","getRiceParam",".sigma",NA,"sigCIup",1.83018191549693
-"getRiceParam.MR","","getRiceParam",".MR",NA,NA,1.77981975190051
-"getRiceParam.RSD","","getRiceParam",".RSD",NA,NA,0.930353077697655
-"getHoytParam.q","","getHoytParam",".q",NA,NA,0.40601599750963
-"getHoytParam.omega","","getHoytParam",".omega",NA,NA,3.98059861842105
-"getHitProb.r.R0.5.CorrNormal","","getHitProb","r","R0.5","CorrNormal",0.0845722142856338
-"getHitProb.r.R0.5.GrubbsPatnaik","","getHitProb","r","R0.5","GrubbsPatnaik",0.133319783287476
-"getHitProb.r.R0.5.GrubbsPearson","","getHitProb","r","R0.5","GrubbsPearson",0
-"getHitProb.r.R0.5.GrubbsLiu","","getHitProb","r","R0.5","GrubbsLiu",0
-"getHitProb.r.R0.5.Rayleigh","","getHitProb","r","R0.5","Rayleigh",0.0601018441830652
-"getHitProb.r.R1.CorrNormal","","getHitProb","r","R1","CorrNormal",0.284225026353478
-"getHitProb.r.R1.GrubbsPatnaik","","getHitProb","r","R1","GrubbsPatnaik",0.317359443033464
-"getHitProb.r.R1.GrubbsPearson","","getHitProb","r","R1","GrubbsPearson",0.301383503023223
-"getHitProb.r.R1.GrubbsLiu","","getHitProb","r","R1","GrubbsLiu",0.301383503023223
-"getHitProb.r.R1.Rayleigh","","getHitProb","r","R1","Rayleigh",0.219589345610305
-"getHitProb.r.R2.CorrNormal","","getHitProb","r","R2","CorrNormal",0.674405690706814
-"getHitProb.r.R2.GrubbsPatnaik","","getHitProb","r","R2","GrubbsPatnaik",0.662292133792691
-"getHitProb.r.R2.GrubbsPearson","","getHitProb","r","R2","GrubbsPearson",0.678276790854591
-"getHitProb.r.R2.GrubbsLiu","","getHitProb","r","R2","GrubbsLiu",0.678276790854591
-"getHitProb.r.R2.Rayleigh","","getHitProb","r","R2","Rayleigh",0.629069316743546
-"getBoundingBox.pts.xleft","","getBoundingBox","pts",NA,"xleft",-1.436
-"getBoundingBox.pts.ybottom","","getBoundingBox","pts",NA,"ybottom",-2.898
-"getBoundingBox.pts.xright","","getBoundingBox","pts",NA,"xright",2.182
-"getBoundingBox.pts.ytop","","getBoundingBox","pts",NA,"ytop",3.905
-"getBoundingBox.width","","getBoundingBox","width",NA,NA,3.618
-"getBoundingBox.height","","getBoundingBox","height",NA,NA,6.803
-"getBoundingBox.FoM","","getBoundingBox","FoM",NA,NA,5.2105
-"getBoundingBox.diag","","getBoundingBox","diag",NA,NA,7.70524061921495
-"getMinBBox.pts.1.x","","getMinBBox","pts","1","x",-2.093257793489
-"getMinBBox.pts.1.y","","getMinBBox","pts","1","y",3.27424980315035
-"getMinBBox.pts.2.x","","getMinBBox","pts","2","x",-0.680257793488996
-"getMinBBox.pts.2.y","","getMinBBox","pts","2","y",-3.13775019684965
-"getMinBBox.pts.3.x","","getMinBBox","pts","3","x",2.182
-"getMinBBox.pts.3.y","","getMinBBox","pts","3","y",-2.507
-"getMinBBox.pts.4.x","","getMinBBox","pts","4","x",0.769
-"getMinBBox.pts.4.y","","getMinBBox","pts","4","y",3.905
-"getMinBBox.width","","getMinBBox","width",NA,NA,6.56584442398691
-"getMinBBox.height","","getMinBBox","height",NA,NA,2.9309325286015
-"getMinBBox.FoM","","getMinBBox","FoM",NA,NA,4.7483884762942
-"getMinBBox.diag","","getMinBBox","diag",NA,NA,7.19031838566376
-"getMinBBox.angle","","getMinBBox","angle",NA,NA,102.427531698595
-"getMinCircle.ctr.1","","getMinCircle","ctr",NA,"1",0.496201784330503
-"getMinCircle.ctr.2","","getMinCircle","ctr",NA,"2",0.483193952161416
-"getMinCircle.rad","","getMinCircle","rad",NA,NA,3.43266303261727
-"getMinEllipse.ctr.1","","getMinEllipse","ctr",NA,"1",0.529896208986286
-"getMinEllipse.ctr.2","","getMinEllipse","ctr",NA,"2",0.13935759003234
-"getMinEllipse.shape.angle","","getMinEllipse","shape",NA,"angle",96.2820102728897
-"getMinEllipse.shape.aspectRatio","","getMinEllipse","shape",NA,"aspectRatio",2.0444822857692
-"getMinEllipse.shape.flattening","","getMinEllipse","shape",NA,"flattening",0.510878618533118
-"getMinEllipse.shape.trace","","getMinEllipse","shape",NA,"trace",19.2707914386941
-"getMinEllipse.shape.det","","getMinEllipse","shape",NA,"det",57.85244850773
-"getMinEllipse.size.1","","getMinEllipse","size",NA,"1",3.94341162255572
-"getMinEllipse.size.2","","getMinEllipse","size",NA,"2",1.92880694051701
-"getMinEllipse.area","","getMinEllipse","area",NA,NA,23.8952041298183
-"getMaxPairDist.d","","getMaxPairDist","d",NA,NA,6.85777179556159
-"getMaxPairDist.idx1","","getMaxPairDist","idx1",NA,NA,2
-"getMaxPairDist.idx2","","getMaxPairDist","idx2",NA,NA,18
-"getConfEll.ctr.x","","getConfEll","ctr",NA,"x",-0.000399999999999998
-"getConfEll.ctr.y","","getConfEll","ctr",NA,"y",-0.000450000000000023
-"getConfEll.ctrRob.x","","getConfEll","ctrRob",NA,"x",-0.0412666666666667
-"getConfEll.ctrRob.y","","getConfEll","ctrRob",NA,"y",-0.492666666666667
-"getConfEll.cov.x.x","","getConfEll","cov","x","x",0.572111726315789
-"getConfEll.cov.x.y","","getConfEll","cov","x","y",-0.158042242105263
-"getConfEll.cov.y.x","","getConfEll","cov","y","x",-0.158042242105263
-"getConfEll.cov.y.y","","getConfEll","cov","y","y",3.40848689210526
-"getConfEll.covRob.x.x","","getConfEll","covRob","x","x",0.256902845516011
-"getConfEll.covRob.x.y","","getConfEll","covRob","x","y",0.208372888460664
-"getConfEll.covRob.y.x","","getConfEll","covRob","y","x",0.208372888460664
-"getConfEll.covRob.y.y","","getConfEll","covRob","y","y",2.10289936161127
-"getConfEll.size.unit.semi-major","","getConfEll","size","unit","semi-major",2.21685411882585
-"getConfEll.size.unit.semi-minor","","getConfEll","size","unit","semi-minor",0.90007823638841
-"getConfEll.sizeRob.unit.semi-major","","getConfEll","sizeRob","unit","semi-major",1.74860784496105
-"getConfEll.sizeRob.unit.semi-minor","","getConfEll","sizeRob","unit","semi-minor",0.579699957342065
-"getConfEll.shape.angle","","getConfEll","shape",NA,"angle",93.1793909921656
-"getConfEll.shape.aspectRatio","","getConfEll","shape",NA,"aspectRatio",2.46295713994935
-"getConfEll.shape.flattening","","getConfEll","shape",NA,"flattening",0.59398400249037
-"getConfEll.shape.trace","","getConfEll","shape",NA,"trace",3.98059861842105
-"getConfEll.shape.det","","getConfEll","shape",NA,"det",1.92505796967742
-"getConfEll.shapeRob.angle","","getConfEll","shapeRob",NA,"angle",83.6391828035686
-"getConfEll.shapeRob.aspectRatio","","getConfEll","shapeRob",NA,"aspectRatio",3.01640154154652
-"getConfEll.shapeRob.flattening","","getConfEll","shapeRob",NA,"flattening",0.668479150992843
-"getConfEll.shapeRob.trace","","getConfEll","shapeRob",NA,"trace",2.35980220712728
-"getConfEll.shapeRob.det","","getConfEll","shapeRob",NA,"det",0.496821569186296
-"getConfEll.magFac","","getConfEll","magFac",NA,NA,1.19921688538123
-"getDistToCtr.r.1","","getDistToCtr","r",NA,"1",3.32350156649579
-"getDistToCtr.r.2","","getDistToCtr","r",NA,"2",2.89912665513254
-"getDistToCtr.r.3","","getDistToCtr","r",NA,"3",1.87514505105605
-"getDistToCtr.r.4","","getDistToCtr","r",NA,"4",2.15052706620958
-"getDistToCtr.r.5","","getDistToCtr","r",NA,"5",2.16503019898107
-"getDistToCtr.r.6","","getDistToCtr","r",NA,"6",1.03825510473101
-"getDistToCtr.r.7","","getDistToCtr","r",NA,"7",1.0756791633661
-"getDistToCtr.r.8","","getDistToCtr","r",NA,"8",0.788307022992945
-"getDistToCtr.r.9","","getDistToCtr","r",NA,"9",0.863433531025985
-"getDistToCtr.r.10","","getDistToCtr","r",NA,"10",0.527320075950082
-"getDistToCtr.r.11","","getDistToCtr","r",NA,"11",0.267990041792601
-"getDistToCtr.r.12","","getDistToCtr","r",NA,"12",0.166130257629367
-"getDistToCtr.r.13","","getDistToCtr","r",NA,"13",0.270200226683843
-"getDistToCtr.r.14","","getDistToCtr","r",NA,"14",1.554573884542
-"getDistToCtr.r.15","","getDistToCtr","r",NA,"15",1.03195991322338
-"getDistToCtr.r.16","","getDistToCtr","r",NA,"16",1.48283969548296
-"getDistToCtr.r.17","","getDistToCtr","r",NA,"17",1.68836173923126
-"getDistToCtr.r.18","","getDistToCtr","r",NA,"18",3.98051705969212
-"getDistToCtr.r.19","","getDistToCtr","r",NA,"19",2.74267290475915
-"getDistToCtr.r.20","","getDistToCtr","r",NA,"20",2.72069773449753
-"getRangeStat.range_stat.unit.ES","","getRangeStat","range_stat","unit","ES",6.85777179556159
-"getRangeStat.range_stat.unit.FoM","","getRangeStat","range_stat","unit","FoM",5.2105
-"getRangeStat.range_stat.unit.D","","getRangeStat","range_stat","unit","D",7.70524061921495
-"getRangeStat.range_stat.MOA.ES","","getRangeStat","range_stat","MOA","ES",6.54868769884519
-"getRangeStat.range_stat.MOA.FoM","","getRangeStat","range_stat","MOA","FoM",4.97566011727518
-"getRangeStat.range_stat.MOA.D","","getRangeStat","range_stat","MOA","D",7.3579599846167
-"getRangeStat.range_stat.SMOA.ES","","getRangeStat","range_stat","SMOA","ES",6.8577697658777
-"getRangeStat.range_stat.SMOA.FoM","","getRangeStat","range_stat","SMOA","FoM",5.21049912390087
-"getRangeStat.range_stat.SMOA.D","","getRangeStat","range_stat","SMOA","D",7.70523772723816
-"getRangeStat.range_stat.mrad.ES","","getRangeStat","range_stat","mrad","ES",1.90493603382832
-"getRangeStat.range_stat.mrad.FoM","","getRangeStat","range_stat","mrad","FoM",1.44736085844365
-"getRangeStat.range_stat.mrad.D","","getRangeStat","range_stat","mrad","D",2.14034379935921
-"getRangeStat.CI.ES.unit.ES (","","getRangeStat","CI.ES","unit","ES (",5.04402594021525
-"getRangeStat.CI.ES.unit.ES )","","getRangeStat","CI.ES","unit","ES )",9.08360395971063
-"getRangeStat.CI.ES.MOA.ES (","","getRangeStat","CI.ES","MOA","ES (",4.81668918083084
-"getRangeStat.CI.ES.MOA.ES )","","getRangeStat","CI.ES","MOA","ES )",8.67419822552802
-"getRangeStat.CI.ES.SMOA.ES (","","getRangeStat","CI.ES","SMOA","ES (",5.04402514747449
-"getRangeStat.CI.ES.SMOA.ES )","","getRangeStat","CI.ES","SMOA","ES )",9.08359919877473
-"getRangeStat.CI.ES.mrad.ES (","","getRangeStat","CI.ES","mrad","ES (",1.40111808751145
-"getRangeStat.CI.ES.mrad.ES )","","getRangeStat","CI.ES","mrad","ES )",2.52322198343523
-"getRangeStat.CI.FoM.unit.FoM (","","getRangeStat","CI.FoM","unit","FoM (",3.90145092342531
-"getRangeStat.CI.FoM.unit.FoM )","","getRangeStat","CI.FoM","unit","FoM )",6.71435043990916
-"getRangeStat.CI.FoM.MOA.FoM (","","getRangeStat","CI.FoM","MOA","FoM (",3.72561083352214
-"getRangeStat.CI.FoM.MOA.FoM )","","getRangeStat","CI.FoM","MOA","FoM )",6.41173051432968
-"getRangeStat.CI.FoM.SMOA.FoM (","","getRangeStat","CI.FoM","SMOA","FoM (",3.90145056666239
-"getRangeStat.CI.FoM.SMOA.FoM )","","getRangeStat","CI.FoM","SMOA","FoM )",6.71434853671208
-"getRangeStat.CI.FoM.mrad.FoM (","","getRangeStat","CI.FoM","mrad","FoM (",1.08373626154886
-"getRangeStat.CI.FoM.mrad.FoM )","","getRangeStat","CI.FoM","mrad","FoM )",1.86509680376071
-"getRangeStat.CI.D.unit.D (","","getRangeStat","CI.D","unit","D (",5.76378969951499
-"getRangeStat.CI.D.unit.D )","","getRangeStat","CI.D","unit","D )",9.94259139694466
-"getRangeStat.CI.D.MOA.D (","","getRangeStat","CI.D","MOA","D (",5.50401255398503
-"getRangeStat.CI.D.MOA.D )","","getRangeStat","CI.D","MOA","D )",9.49446937271487
-"getRangeStat.CI.D.SMOA.D (","","getRangeStat","CI.D","SMOA","D (",5.76378850534986
-"getRangeStat.CI.D.SMOA.D )","","getRangeStat","CI.D","SMOA","D )",9.94258514094934
-"getRangeStat.CI.D.mrad.D (","","getRangeStat","CI.D","mrad","D (",1.60105235230235
-"getRangeStat.CI.D.mrad.D )","","getRangeStat","CI.D","mrad","D )",2.76182918806059
-"range2sigma.sigma.unit","","range2sigma",".sigma",NA,"unit",1.54068292310006
-"range2sigma.sigmaCI.unit.sigma (","","range2sigma",".sigmaCI","unit","sigma (",1.16315637964863
-"range2sigma.sigmaCI.unit.sigma )","","range2sigma",".sigmaCI","unit","sigma )",2.09468627266577
-"range2CEP.CEP.unit","","range2CEP",".CEP",NA,"unit",1.81401551517644
-"range2CEP.CEPCI.unit.CEP (","","range2CEP",".CEPCI","unit","CEP (",1.36951197915111
-"range2CEP.CEPCI.unit.CEP )","","range2CEP",".CEPCI","unit","CEP )",2.46630461146226
-"getRangeStatEff.n","","getRangeStatEff","n",NA,NA,20
-"getRangeStatEff.nGroups","","getRangeStatEff","nGroups",NA,NA,1
-"getRangeStatEff.nTotal","","getRangeStatEff","nTotal",NA,NA,20
-"getRangeStatEff.ES_efficiency","","getRangeStatEff","ES_efficiency",NA,NA,2.21071707551709
-"getRangeStatEff.FoM_efficiency","","getRangeStatEff","FoM_efficiency",NA,NA,2.62785216967183
-"getRangeStatEff.D_efficiency","","getRangeStatEff","D_efficiency",NA,NA,2.60355542361727
-"getRangeStatEff.RS_efficiency","","getRangeStatEff","RS_efficiency",NA,NA,3.77559282878745
-"angular.nDistances","","angular","nDistances",NA,NA,1
-"getMOA.deg","","getMOA","deg",NA,NA,0.0159154942068523
-"fromMOA.deg","","fromMOA","deg",NA,NA,62.8334480934633
-"getMOA.rad","","getMOA","rad",NA,NA,0.000277777775991655
-"fromMOA.rad","","fromMOA","rad",NA,NA,3933.37792687529
-"getMOA.MOA","","getMOA","MOA",NA,NA,0.954929652411135
-"fromMOA.MOA","","fromMOA","MOA",NA,NA,1.04719755858073
-"getMOA.SMOA","","getMOA","SMOA",NA,NA,1
-"fromMOA.SMOA","","fromMOA","SMOA",NA,NA,1.00000000062129
-"getMOA.mrad","","getMOA","mrad",NA,NA,0.277777775991655
-"fromMOA.mrad","","fromMOA","mrad",NA,NA,3.60000030000003
-"getMOA.mil","","getMOA","mil",NA,NA,0.282942119232929
-"fromMOA.mil","","fromMOA","mil",NA,NA,3.53429201915949
+key,scope,fn,component,row,col,value
+shots.x.1,,shots,x,NA,1,2.1819999999999999
+shots.y.1,,shots,y,NA,1,-2.5070000000000001
+shots.xPOA.1,,shots,xPOA,NA,1,2.1819999999999999
+shots.yPOA.1,,shots,yPOA,NA,1,-2.5070000000000001
+shots.distance.1,,shots,distance,NA,1,100
+shots.x.2,,shots,x,NA,2,-0.096000000000000002
+shots.y.2,,shots,y,NA,2,-2.8980000000000001
+shots.xPOA.2,,shots,xPOA,NA,2,-0.096000000000000002
+shots.yPOA.2,,shots,yPOA,NA,2,-2.8980000000000001
+shots.distance.2,,shots,distance,NA,2,100
+shots.x.3,,shots,x,NA,3,-0.16900000000000001
+shots.y.3,,shots,y,NA,3,-1.8680000000000001
+shots.xPOA.3,,shots,xPOA,NA,3,-0.16900000000000001
+shots.yPOA.3,,shots,yPOA,NA,3,-1.8680000000000001
+shots.distance.3,,shots,distance,NA,3,100
+shots.x.4,,shots,x,NA,4,-0.52900000000000003
+shots.y.4,,shots,y,NA,4,-2.085
+shots.xPOA.4,,shots,xPOA,NA,4,-0.52900000000000003
+shots.yPOA.4,,shots,yPOA,NA,4,-2.085
+shots.distance.4,,shots,distance,NA,4,100
+shots.x.5,,shots,x,NA,5,-0.94199999999999995
+shots.y.5,,shots,y,NA,5,-1.95
+shots.xPOA.5,,shots,xPOA,NA,5,-0.94199999999999995
+shots.yPOA.5,,shots,yPOA,NA,5,-1.95
+shots.distance.5,,shots,distance,NA,5,100
+shots.x.6,,shots,x,NA,6,-0.23000000000000001
+shots.y.6,,shots,y,NA,6,-1.0129999999999999
+shots.xPOA.6,,shots,xPOA,NA,6,-0.23000000000000001
+shots.yPOA.6,,shots,yPOA,NA,6,-1.0129999999999999
+shots.distance.6,,shots,distance,NA,6,100
+shots.x.7,,shots,x,NA,7,0.41899999999999998
+shots.y.7,,shots,y,NA,7,-0.99099999999999999
+shots.xPOA.7,,shots,xPOA,NA,7,0.41899999999999998
+shots.yPOA.7,,shots,yPOA,NA,7,-0.99099999999999999
+shots.distance.7,,shots,distance,NA,7,100
+shots.x.8,,shots,x,NA,8,0.378
+shots.y.8,,shots,y,NA,8,-0.69199999999999995
+shots.xPOA.8,,shots,xPOA,NA,8,0.378
+shots.yPOA.8,,shots,yPOA,NA,8,-0.69199999999999995
+shots.distance.8,,shots,distance,NA,8,100
+shots.x.9,,shots,x,NA,9,0.78000000000000003
+shots.y.9,,shots,y,NA,9,0.36899999999999999
+shots.xPOA.9,,shots,xPOA,NA,9,0.78000000000000003
+shots.yPOA.9,,shots,yPOA,NA,9,0.36899999999999999
+shots.distance.9,,shots,distance,NA,9,100
+shots.x.10,,shots,x,NA,10,0.51200000000000001
+shots.y.10,,shots,y,NA,10,-0.125
+shots.xPOA.10,,shots,xPOA,NA,10,0.51200000000000001
+shots.yPOA.10,,shots,yPOA,NA,10,-0.125
+shots.distance.10,,shots,distance,NA,10,100
+shots.x.11,,shots,x,NA,11,0.192
+shots.y.11,,shots,y,NA,11,-0.187
+shots.xPOA.11,,shots,xPOA,NA,11,0.192
+shots.yPOA.11,,shots,yPOA,NA,11,-0.187
+shots.distance.11,,shots,distance,NA,11,100
+shots.x.12,,shots,x,NA,12,-0.13700000000000001
+shots.y.12,,shots,y,NA,12,-0.095000000000000001
+shots.xPOA.12,,shots,xPOA,NA,12,-0.13700000000000001
+shots.yPOA.12,,shots,yPOA,NA,12,-0.095000000000000001
+shots.distance.12,,shots,distance,NA,12,100
+shots.x.13,,shots,x,NA,13,-0.23000000000000001
+shots.y.13,,shots,y,NA,13,0.14199999999999999
+shots.xPOA.13,,shots,xPOA,NA,13,-0.23000000000000001
+shots.yPOA.13,,shots,yPOA,NA,13,0.14199999999999999
+shots.distance.13,,shots,distance,NA,13,100
+shots.x.14,,shots,x,NA,14,-1.4359999999999999
+shots.y.14,,shots,y,NA,14,0.59599999999999997
+shots.xPOA.14,,shots,xPOA,NA,14,-1.4359999999999999
+shots.yPOA.14,,shots,yPOA,NA,14,0.59599999999999997
+shots.distance.14,,shots,distance,NA,14,100
+shots.x.15,,shots,x,NA,15,-0.45700000000000002
+shots.y.15,,shots,y,NA,15,0.92500000000000004
+shots.xPOA.15,,shots,xPOA,NA,15,-0.45700000000000002
+shots.yPOA.15,,shots,yPOA,NA,15,0.92500000000000004
+shots.distance.15,,shots,distance,NA,15,100
+shots.x.16,,shots,x,NA,16,-0.42599999999999999
+shots.y.16,,shots,y,NA,16,1.4199999999999999
+shots.xPOA.16,,shots,xPOA,NA,16,-0.42599999999999999
+shots.yPOA.16,,shots,yPOA,NA,16,1.4199999999999999
+shots.distance.16,,shots,distance,NA,16,100
+shots.x.17,,shots,x,NA,17,0.316
+shots.y.17,,shots,y,NA,17,1.6579999999999999
+shots.xPOA.17,,shots,xPOA,NA,17,0.316
+shots.yPOA.17,,shots,yPOA,NA,17,1.6579999999999999
+shots.distance.17,,shots,distance,NA,17,100
+shots.x.18,,shots,x,NA,18,0.76900000000000002
+shots.y.18,,shots,y,NA,18,3.9049999999999998
+shots.xPOA.18,,shots,xPOA,NA,18,0.76900000000000002
+shots.yPOA.18,,shots,yPOA,NA,18,3.9049999999999998
+shots.distance.18,,shots,distance,NA,18,100
+shots.x.19,,shots,x,NA,19,-0.42599999999999999
+shots.y.19,,shots,y,NA,19,2.7090000000000001
+shots.xPOA.19,,shots,xPOA,NA,19,-0.42599999999999999
+shots.yPOA.19,,shots,yPOA,NA,19,2.7090000000000001
+shots.distance.19,,shots,distance,NA,19,100
+shots.x.20,,shots,x,NA,20,-0.47799999999999998
+shots.y.20,,shots,y,NA,20,2.6779999999999999
+shots.xPOA.20,,shots,xPOA,NA,20,-0.47799999999999998
+shots.yPOA.20,,shots,yPOA,NA,20,2.6779999999999999
+shots.distance.20,,shots,distance,NA,20,100
+shots.seriesIndex.1,,shots,seriesIndex,NA,1,1
+shots.groupIndex.1,,shots,groupIndex,NA,1,1
+shots.seriesIndex.2,,shots,seriesIndex,NA,2,1
+shots.groupIndex.2,,shots,groupIndex,NA,2,1
+shots.seriesIndex.3,,shots,seriesIndex,NA,3,1
+shots.groupIndex.3,,shots,groupIndex,NA,3,1
+shots.seriesIndex.4,,shots,seriesIndex,NA,4,1
+shots.groupIndex.4,,shots,groupIndex,NA,4,1
+shots.seriesIndex.5,,shots,seriesIndex,NA,5,1
+shots.groupIndex.5,,shots,groupIndex,NA,5,1
+shots.seriesIndex.6,,shots,seriesIndex,NA,6,1
+shots.groupIndex.6,,shots,groupIndex,NA,6,1
+shots.seriesIndex.7,,shots,seriesIndex,NA,7,1
+shots.groupIndex.7,,shots,groupIndex,NA,7,1
+shots.seriesIndex.8,,shots,seriesIndex,NA,8,1
+shots.groupIndex.8,,shots,groupIndex,NA,8,1
+shots.seriesIndex.9,,shots,seriesIndex,NA,9,1
+shots.groupIndex.9,,shots,groupIndex,NA,9,1
+shots.seriesIndex.10,,shots,seriesIndex,NA,10,1
+shots.groupIndex.10,,shots,groupIndex,NA,10,1
+shots.seriesIndex.11,,shots,seriesIndex,NA,11,1
+shots.groupIndex.11,,shots,groupIndex,NA,11,1
+shots.seriesIndex.12,,shots,seriesIndex,NA,12,1
+shots.groupIndex.12,,shots,groupIndex,NA,12,1
+shots.seriesIndex.13,,shots,seriesIndex,NA,13,1
+shots.groupIndex.13,,shots,groupIndex,NA,13,1
+shots.seriesIndex.14,,shots,seriesIndex,NA,14,1
+shots.groupIndex.14,,shots,groupIndex,NA,14,1
+shots.seriesIndex.15,,shots,seriesIndex,NA,15,1
+shots.groupIndex.15,,shots,groupIndex,NA,15,1
+shots.seriesIndex.16,,shots,seriesIndex,NA,16,1
+shots.groupIndex.16,,shots,groupIndex,NA,16,1
+shots.seriesIndex.17,,shots,seriesIndex,NA,17,1
+shots.groupIndex.17,,shots,groupIndex,NA,17,1
+shots.seriesIndex.18,,shots,seriesIndex,NA,18,1
+shots.groupIndex.18,,shots,groupIndex,NA,18,1
+shots.seriesIndex.19,,shots,seriesIndex,NA,19,1
+shots.groupIndex.19,,shots,groupIndex,NA,19,1
+shots.seriesIndex.20,,shots,seriesIndex,NA,20,1
+shots.groupIndex.20,,shots,groupIndex,NA,20,1
+meta.distance,,meta,distance,NA,NA,100
+meta.nDistances,,meta,nDistances,NA,NA,1
+meta.nSeries,,meta,nSeries,NA,NA,1
+meta.nGroups,,meta,nGroups,NA,NA,1
+meta.coinInstalled,,meta,coinInstalled,NA,NA,1
+meta.mvoutlierInstalled,,meta,mvoutlierInstalled,NA,NA,0
+meta.nShots,,meta,nShots,NA,NA,20
+groupSpread.sdXY.unit.x,,groupSpread,sdXY,unit,x,0.75638067553037702
+groupSpread.sdXY.unit.y,,groupSpread,sdXY,unit,y,1.8462087888712
+groupSpread.sdXY.MOA.x,,groupSpread,sdXY,MOA,x,0.72229033756198824
+groupSpread.sdXY.MOA.y,,groupSpread,sdXY,MOA,y,1.7629994897321672
+groupSpread.sdXY.SMOA.x,,groupSpread,sdXY,SMOA,x,0.7563806776114369
+groupSpread.sdXY.SMOA.y,,groupSpread,sdXY,SMOA,y,1.8462087602795754
+groupSpread.sdXY.mrad.x,,groupSpread,sdXY,mrad,x,0.21010574242996613
+groupSpread.sdXY.mrad.y,,groupSpread,sdXY,mrad,y,0.5128357634467714
+groupSpread.sdXci.unit.sdX (,,groupSpread,sdXci,unit,sdX (,0.57522023819759305
+groupSpread.sdXci.unit.sdX ),,groupSpread,sdXci,unit,sdX ),1.1047481607883629
+groupSpread.sdXci.MOA.sdX (,,groupSpread,sdXci,MOA,sdX (,0.54929486448520803
+groupSpread.sdXci.MOA.sdX ),,groupSpread,sdXci,MOA,sdX ),1.0549567756879428
+groupSpread.sdXci.SMOA.sdX (,,groupSpread,sdXci,SMOA,sdX (,0.57522024067246658
+groupSpread.sdXci.SMOA.sdX ),,groupSpread,sdXci,SMOA,sdX ),1.1047481592222483
+groupSpread.sdXci.mrad.sdX (,,groupSpread,sdXci,mrad,sdX (,0.15978339915938244
+groupSpread.sdXci.mrad.sdX ),,groupSpread,sdXci,mrad,sdX ),0.30687448669963119
+groupSpread.sdYci.unit.sdY (,,groupSpread,sdYci,unit,sdY (,1.4040240498639383
+groupSpread.sdYci.unit.sdY ),,groupSpread,sdYci,unit,sdY ),2.6965201913792902
+groupSpread.sdYci.MOA.sdY (,,groupSpread,sdYci,MOA,sdY (,1.3407441895399703
+groupSpread.sdYci.MOA.sdY ),,groupSpread,sdYci,MOA,sdY ),2.5749869852391218
+groupSpread.sdYci.SMOA.sdY (,,groupSpread,sdYci,SMOA,sdY (,1.4040240410952562
+groupSpread.sdYci.SMOA.sdY ),,groupSpread,sdYci,SMOA,sdY ),2.6965200826442532
+groupSpread.sdYci.mrad.sdY (,,groupSpread,sdYci,mrad,sdY (,0.39000667557425667
+groupSpread.sdYci.mrad.sdY ),,groupSpread,sdYci,mrad,sdY ),0.74903335147375516
+groupSpread.sdXYrob.unit.x,,groupSpread,sdXYrob,unit,x,0.50685584293367936
+groupSpread.sdXYrob.unit.y,,groupSpread,sdXYrob,unit,y,1.4501377043616466
+groupSpread.sdXYrob.MOA.x,,groupSpread,sdXYrob,MOA,x,0.48401167622788943
+groupSpread.sdXYrob.MOA.y,,groupSpread,sdXYrob,MOA,y,1.3847794841539243
+groupSpread.sdXYrob.SMOA.x,,groupSpread,sdXYrob,SMOA,x,0.50685584535551031
+groupSpread.sdXYrob.SMOA.y,,groupSpread,sdXYrob,SMOA,y,1.4501376940777222
+groupSpread.sdXYrob.mrad.x,,groupSpread,sdXYrob,mrad,x,0.14079328947122399
+groupSpread.sdXYrob.mrad.y,,groupSpread,sdXYrob,mrad,y,0.40281602354257701
+groupSpread.covXY.x.x,,groupSpread,covXY,x,x,0.57211172631578944
+groupSpread.covXY.x.y,,groupSpread,covXY,x,y,-0.15804224210526316
+groupSpread.covXY.y.x,,groupSpread,covXY,y,x,-0.15804224210526316
+groupSpread.covXY.y.y,,groupSpread,covXY,y,y,3.4084868921052629
+groupSpread.covXYrob.x.x,,groupSpread,covXYrob,x,x,0.25690284551601067
+groupSpread.covXYrob.x.y,,groupSpread,covXYrob,x,y,0.20837288846066426
+groupSpread.covXYrob.y.x,,groupSpread,covXYrob,y,x,0.20837288846066426
+groupSpread.covXYrob.y.y,,groupSpread,covXYrob,y,y,2.1028993616112666
+groupSpread.distToCtr.unit.mean,,groupSpread,distToCtr,unit,mean,1.6306134446737686
+groupSpread.distToCtr.unit.median,,groupSpread,distToCtr,unit,median,1.5187067900124798
+groupSpread.distToCtr.unit.max,,groupSpread,distToCtr,unit,max,3.9805170596921196
+groupSpread.distToCtr.unit.sigma,,groupSpread,distToCtr,unit,sigma,1.4200906472789028
+groupSpread.distToCtr.unit.RSD,,groupSpread,distToCtr,unit,RSD,0.93035304246802386
+groupSpread.distToCtr.unit.MR,,groupSpread,distToCtr,unit,MR,1.7798196845041683
+groupSpread.distToCtr.MOA.mean,,groupSpread,distToCtr,MOA,mean,1.5571211133297516
+groupSpread.distToCtr.MOA.median,,groupSpread,distToCtr,MOA,median,1.4502581349179258
+groupSpread.distToCtr.MOA.max,,groupSpread,distToCtr,MOA,max,3.8011134094089201
+groupSpread.distToCtr.MOA.sigma,,groupSpread,distToCtr,MOA,sigma,1.3560866593334058
+groupSpread.distToCtr.MOA.RSD,,groupSpread,distToCtr,MOA,RSD,0.88842170823165079
+groupSpread.distToCtr.MOA.MR,,groupSpread,distToCtr,MOA,MR,1.6996025689876864
+groupSpread.distToCtr.SMOA.mean,,groupSpread,distToCtr,SMOA,mean,1.6306134272803472
+groupSpread.distToCtr.SMOA.median,,groupSpread,distToCtr,SMOA,median,1.5187067772543441
+groupSpread.distToCtr.SMOA.max,,groupSpread,distToCtr,SMOA,max,3.9805166797484581
+groupSpread.distToCtr.SMOA.sigma,,groupSpread,distToCtr,SMOA,sigma,1.4200906379955587
+groupSpread.distToCtr.SMOA.RSD,,groupSpread,distToCtr,SMOA,RSD,0.93035304327229129
+groupSpread.distToCtr.SMOA.MR,,groupSpread,distToCtr,SMOA,MR,1.7798196596956655
+groupSpread.distToCtr.mrad.mean,,groupSpread,distToCtr,mrad,mean,0.4529481713320655
+groupSpread.distToCtr.mrad.median,,groupSpread,distToCtr,mrad,median,0.42186299096916585
+groupSpread.distToCtr.mrad.max,,groupSpread,distToCtr,mrad,max,1.1056990705982144
+groupSpread.distToCtr.mrad.sigma,,groupSpread,distToCtr,mrad,sigma,0.3944696191289771
+groupSpread.distToCtr.mrad.RSD,,groupSpread,distToCtr,mrad,RSD,0.25843139924724529
+groupSpread.distToCtr.mrad.MR,,groupSpread,distToCtr,mrad,MR,0.49439434673648663
+groupSpread.sigmaCI.unit.sigma (,,groupSpread,sigmaCI,unit,sigma (,1.1605632865887399
+groupSpread.sigmaCI.unit.sigma ),,groupSpread,sigmaCI,unit,sigma ),1.8301819154969321
+groupSpread.sigmaCI.MOA.sigma (,,groupSpread,sigmaCI,MOA,sigma (,1.1082562933912032
+groupSpread.sigmaCI.MOA.sigma ),,groupSpread,sigmaCI,MOA,sigma ),1.7476949540107969
+groupSpread.sigmaCI.SMOA.sigma (,,groupSpread,sigmaCI,SMOA,sigma (,1.1605632839999558
+groupSpread.sigmaCI.SMOA.sigma ),,groupSpread,sigmaCI,SMOA,sigma ),1.8301818878469018
+groupSpread.sigmaCI.mrad.sigma (,,groupSpread,sigmaCI,mrad,sigma (,0.32237868792707952
+groupSpread.sigmaCI.mrad.sigma ),,groupSpread,sigmaCI,mrad,sigma ),0.50838385446632139
+groupSpread.RSDci.unit.RSD (,,groupSpread,RSDci,unit,RSD (,0.76032722750723525
+groupSpread.RSDci.unit.RSD ),,groupSpread,RSDci,unit,RSD ),1.1990187503982039
+groupSpread.RSDci.MOA.RSD (,,groupSpread,RSDci,MOA,RSD (,0.72605901705189557
+groupSpread.RSDci.MOA.RSD ),,groupSpread,RSDci,MOA,RSD ),1.1449785553301275
+groupSpread.RSDci.SMOA.RSD (,,groupSpread,RSDci,SMOA,RSD (,0.7603272295698893
+groupSpread.RSDci.SMOA.RSD ),,groupSpread,RSDci,SMOA,RSD ),1.1990187470240674
+groupSpread.RSDci.mrad.RSD (,,groupSpread,RSDci,mrad,RSD (,0.21120200685582052
+groupSpread.RSDci.mrad.RSD ),,groupSpread,RSDci,mrad,RSD ),0.33306076092064657
+groupSpread.MRci.unit.MR (,,groupSpread,MRci,unit,MR (,1.454550374331008
+groupSpread.MRci.unit.MR ),,groupSpread,MRci,unit,MR ),2.293792868551467
+groupSpread.MRci.MOA.MR (,,groupSpread,MRci,MOA,MR (,1.3889932734096124
+groupSpread.MRci.MOA.MR ),,groupSpread,MRci,MOA,MR ),2.1904107666483918
+groupSpread.MRci.SMOA.MR (,,groupSpread,MRci,SMOA,MR (,1.4545503638959112
+groupSpread.MRci.SMOA.MR ),,groupSpread,MRci,SMOA,MR ),2.2937928056980401
+groupSpread.MRci.mrad.MR (,,groupSpread,MRci,mrad,MR (,0.40404176515085904
+groupSpread.MRci.mrad.MR ),,groupSpread,MRci,mrad,MR ),0.63716466415246065
+groupSpread.maxPairDist.unit,,groupSpread,maxPairDist,NA,unit,6.8577717955615869
+groupSpread.maxPairDist.MOA,,groupSpread,maxPairDist,NA,MOA,6.5486876988451854
+groupSpread.maxPairDist.SMOA,,groupSpread,maxPairDist,NA,SMOA,6.8577697658777028
+groupSpread.maxPairDist.mrad,,groupSpread,maxPairDist,NA,mrad,1.9049360338283226
+groupSpread.groupRect.unit.width,,groupSpread,groupRect,unit,width,3.6179999999999999
+groupSpread.groupRect.unit.height,,groupSpread,groupRect,unit,height,6.8029999999999999
+groupSpread.groupRect.unit.FoM,,groupSpread,groupRect,unit,FoM,5.2104999999999997
+groupSpread.groupRect.unit.diag,,groupSpread,groupRect,unit,diag,7.7052406192149512
+groupSpread.groupRect.MOA.width,,groupSpread,groupRect,MOA,width,3.454935213841305
+groupSpread.groupRect.MOA.height,,groupSpread,groupRect,MOA,height,6.4963845338825692
+groupSpread.groupRect.MOA.FoM,,groupSpread,groupRect,MOA,FoM,4.9756601172751767
+groupSpread.groupRect.MOA.diag,,groupSpread,groupRect,MOA,diag,7.3579599846166959
+groupSpread.groupRect.SMOA.width,,groupSpread,groupRect,SMOA,width,3.6179997187413955
+groupSpread.groupRect.SMOA.height,,groupSpread,groupRect,SMOA,height,6.802998019256834
+groupSpread.groupRect.SMOA.FoM,,groupSpread,groupRect,SMOA,FoM,5.2104991239008651
+groupSpread.groupRect.SMOA.diag,,groupSpread,groupRect,SMOA,diag,7.7052377272381554
+groupSpread.groupRect.mrad.width,,groupSpread,groupRect,mrad,width,1.004999915410419
+groupSpread.groupRect.mrad.height,,groupSpread,groupRect,mrad,height,1.8897216598647992
+groupSpread.groupRect.mrad.FoM,,groupSpread,groupRect,mrad,FoM,1.4473608584436504
+groupSpread.groupRect.mrad.diag,,groupSpread,groupRect,mrad,diag,2.1403437993592109
+groupSpread.groupRectMin.unit.width,,groupSpread,groupRectMin,unit,width,6.5658444239869098
+groupSpread.groupRectMin.unit.height,,groupSpread,groupRectMin,unit,height,2.930932528601498
+groupSpread.groupRectMin.unit.FoM,,groupSpread,groupRectMin,unit,FoM,4.7483884762942044
+groupSpread.groupRectMin.unit.diag,,groupSpread,groupRectMin,unit,diag,7.1903183856637645
+groupSpread.groupRectMin.MOA.width,,groupSpread,groupRectMin,MOA,width,6.2699178358715981
+groupSpread.groupRectMin.MOA.height,,groupSpread,groupRectMin,MOA,height,2.7988342441770069
+groupSpread.groupRectMin.MOA.FoM,,groupSpread,groupRectMin,MOA,FoM,4.5343763289459034
+groupSpread.groupRectMin.MOA.diag,,groupSpread,groupRectMin,MOA,diag,6.8662459983005704
+groupSpread.groupRectMin.SMOA.width,,groupSpread,groupRectMin,SMOA,width,6.5658426461472477
+groupSpread.groupRectMin.SMOA.height,,groupSpread,groupRectMin,SMOA,height,2.9309323855533576
+groupSpread.groupRectMin.SMOA.FoM,,groupSpread,groupRectMin,SMOA,FoM,4.7483878184082977
+groupSpread.groupRectMin.SMOA.diag,,groupSpread,groupRectMin,SMOA,diag,7.190316041567824
+groupSpread.groupRectMin.mrad.width,,groupSpread,groupRectMin,mrad,width,1.823845167757947
+groupSpread.groupRectMin.mrad.height,,groupSpread,groupRectMin,mrad,height,0.81414787964092838
+groupSpread.groupRectMin.mrad.FoM,,groupSpread,groupRectMin,mrad,FoM,1.3189966077433246
+groupSpread.groupRectMin.mrad.diag,,groupSpread,groupRectMin,mrad,diag,1.9973099987038323
+groupSpread.minCircleRad.unit,,groupSpread,minCircleRad,NA,unit,3.4326630326172665
+groupSpread.minCircleRad.MOA,,groupSpread,minCircleRad,NA,MOA,3.2779514893008717
+groupSpread.minCircleRad.SMOA,,groupSpread,minCircleRad,NA,SMOA,3.4326627946092763
+groupSpread.minCircleRad.mrad,,groupSpread,minCircleRad,NA,mrad,0.95351743681586476
+groupSpread.minEll.unit.semi_major,,groupSpread,minEll,unit,semi_major,3.9434116225557183
+groupSpread.minEll.unit.semi_minor,,groupSpread,minEll,unit,semi_minor,1.9288069405170118
+groupSpread.minEll.MOA.semi_major,,groupSpread,minEll,MOA,semi_major,3.7656803377230763
+groupSpread.minEll.MOA.semi_minor,,groupSpread,minEll,MOA,semi_minor,1.8418749090587263
+groupSpread.minEll.SMOA.semi_major,,groupSpread,minEll,SMOA,semi_major,3.9434112536090793
+groupSpread.minEll.SMOA.semi_minor,,groupSpread,minEll,SMOA,semi_minor,1.9288069067790621
+groupSpread.minEll.mrad.semi_major,,groupSpread,minEll,mrad,semi_major,1.0953920078479953
+groupSpread.minEll.mrad.semi_minor,,groupSpread,minEll,mrad,semi_minor,0.53577969288243177
+groupSpread.confEll.unit.semi-major,,groupSpread,confEll,unit,semi-major,2.2168541188258524
+groupSpread.confEll.unit.semi-minor,,groupSpread,confEll,unit,semi-minor,0.90007823638840967
+groupSpread.confEll.MOA.semi-major,,groupSpread,confEll,MOA,semi-major,2.116939679853143
+groupSpread.confEll.MOA.semi-minor,,groupSpread,confEll,MOA,semi-minor,0.85951139846650493
+groupSpread.confEll.SMOA.semi-major,,groupSpread,confEll,SMOA,semi-major,2.2168540630275841
+groupSpread.confEll.SMOA.semi-minor,,groupSpread,confEll,SMOA,semi-minor,0.90007823748722715
+groupSpread.confEll.mrad.semi-major,,groupSpread,confEll,mrad,semi-major,0.61579279132586706
+groupSpread.confEll.mrad.semi-minor,,groupSpread,confEll,mrad,semi-minor,0.25002173102769087
+groupSpread.confEllRob.unit.semi-major,,groupSpread,confEllRob,unit,semi-major,1.7486078449610545
+groupSpread.confEllRob.unit.semi-minor,,groupSpread,confEllRob,unit,semi-minor,0.57969995734206481
+groupSpread.confEllRob.MOA.semi-major,,groupSpread,confEllRob,MOA,semi-major,1.6697974594995524
+groupSpread.confEllRob.MOA.semi-minor,,groupSpread,confEllRob,MOA,semi-minor,0.55357268113072722
+groupSpread.confEllRob.SMOA.semi-major,,groupSpread,confEllRob,SMOA,semi-major,1.7486078218258516
+groupSpread.confEllRob.SMOA.semi-minor,,groupSpread,confEllRob,SMOA,semi-minor,0.57969995981692723
+groupSpread.confEllRob.mrad.semi-major,,groupSpread,confEllRob,mrad,semi-major,0.48572439182839761
+groupSpread.confEllRob.mrad.semi-minor,,groupSpread,confEllRob,mrad,semi-minor,0.16102776558039797
+groupSpread.confEllShape.angle,,groupSpread,confEllShape,NA,angle,93.179390992165565
+groupSpread.confEllShape.aspectRatio,,groupSpread,confEllShape,NA,aspectRatio,2.4629571399493497
+groupSpread.confEllShape.flattening,,groupSpread,confEllShape,NA,flattening,0.5939840024903702
+groupSpread.confEllShape.trace,,groupSpread,confEllShape,NA,trace,3.9805986184210522
+groupSpread.confEllShape.det,,groupSpread,confEllShape,NA,det,1.925057969677423
+groupSpread.confEllShapeRob.angle,,groupSpread,confEllShapeRob,NA,angle,83.63918280356863
+groupSpread.confEllShapeRob.aspectRatio,,groupSpread,confEllShapeRob,NA,aspectRatio,3.016401541546518
+groupSpread.confEllShapeRob.flattening,,groupSpread,confEllShapeRob,NA,flattening,0.66847915099284261
+groupSpread.confEllShapeRob.trace,,groupSpread,confEllShapeRob,NA,trace,2.3598022071272773
+groupSpread.confEllShapeRob.det,,groupSpread,confEllShapeRob,NA,det,0.49682156918629627
+groupSpread.CEP.CEP0.5.unit.CorrNormal,,groupSpread,CEP.CEP0.5,unit,CorrNormal,1.5002208307436584
+groupSpread.CEP.CEP0.5.MOA.CorrNormal,,groupSpread,CEP.CEP0.5,MOA,CorrNormal,1.4326053449212439
+groupSpread.CEP.CEP0.5.SMOA.CorrNormal,,groupSpread,CEP.CEP0.5,SMOA,CorrNormal,1.5002208186791655
+groupSpread.CEP.CEP0.5.mrad.CorrNormal,,groupSpread,CEP.CEP0.5,mrad,CorrNormal,0.41672800250907888
+groupLocation.ctr.x,,groupLocation,ctr,NA,x,-0.00039999999999999758
+groupLocation.ctr.y,,groupLocation,ctr,NA,y,-0.00045000000000002259
+groupLocation.ctrRob.x,,groupLocation,ctrRob,NA,x,-0.041266666666666667
+groupLocation.ctrRob.y,,groupLocation,ctrRob,NA,y,-0.49266666666666664
+groupLocation.distPOA.unit,,groupLocation,distPOA,NA,unit,0.00060207972893963006
+groupLocation.distPOA.MOA,,groupLocation,distPOA,NA,MOA,0.00057494378997702223
+groupLocation.distPOA.SMOA,,groupLocation,distPOA,NA,SMOA,0.0006020797328110261
+groupLocation.distPOA.mrad,,groupLocation,distPOA,NA,mrad,0.00016724436914989686
+groupLocation.distPOArob.unit,,groupLocation,distPOArob,NA,unit,0.49439193179321023
+groupLocation.distPOArob.MOA,,groupLocation,distPOArob,NA,MOA,0.47210951787585137
+groupLocation.distPOArob.SMOA,,groupLocation,distPOArob,NA,SMOA,0.49439193419515842
+groupLocation.distPOArob.mrad,,groupLocation,distPOArob,NA,mrad,0.13733109194894388
+groupLocation.ctrXci.t.x (,,groupLocation,ctrXci,t,x (,-0.35439705288584733
+groupLocation.ctrXci.t.x ),,groupLocation,ctrXci,t,x ),0.35359705288584731
+groupLocation.ctrYci.t.y (,,groupLocation,ctrYci,t,y (,-0.86450231045079373
+groupLocation.ctrYci.t.y ),,groupLocation,ctrYci,t,y ),0.86360231045079361
+groupLocation.Hotelling.statistic,,groupLocation,Hotelling.statistic,NA,NA,3.5339751141651948e-06
+groupLocation.Hotelling.p.value,,groupLocation,Hotelling.p.value,NA,NA,0.99999646603182413
+groupShape.corXY.x.x,,groupShape,corXY,x,x,1
+groupShape.corXY.x.y,,groupShape,corXY,x,y,-0.11317537534108651
+groupShape.corXY.y.x,,groupShape,corXY,y,x,-0.11317537534108651
+groupShape.corXY.y.y,,groupShape,corXY,y,y,1
+groupShape.corXYrob.x.x,,groupShape,corXYrob,x,x,1
+groupShape.corXYrob.x.y,,groupShape,corXYrob,x,y,0.2834963750012835
+groupShape.corXYrob.y.x,,groupShape,corXYrob,y,x,0.2834963750012835
+groupShape.corXYrob.y.y,,groupShape,corXYrob,y,y,1
+groupShape.ShapiroX.statistic,,groupShape,ShapiroX.statistic,NA,NA,0.92526064226379001
+groupShape.ShapiroX.p.value,,groupShape,ShapiroX.p.value,NA,NA,0.12513379572875838
+groupShape.ShapiroY.statistic,,groupShape,ShapiroY.statistic,NA,NA,0.97156506713545798
+groupShape.ShapiroY.p.value,,groupShape,ShapiroY.p.value,NA,NA,0.78753222325690975
+groupShape.multNorm.statistic,,groupShape,multNorm.statistic,NA,NA,0.60748036427555441
+groupShape.multNorm.p.value,,groupShape,multNorm.p.value,NA,NA,0.54569713142094733
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.CorrNormal,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,CorrNormal,1.5002208307436584
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsPatnaik,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,GrubbsPatnaik,1.4950263654714988
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsPearson,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,GrubbsPearson,1.4582473750161846
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.GrubbsLiu,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,GrubbsLiu,1.4582473750161931
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Rayleigh,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,Rayleigh,1.6720289609866679
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Krempasky,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,Krempasky,1.5032526233479819
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Ignani,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,Ignani,1.4963857683249864
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.RMSE,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,RMSE,1.6610661363411647
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Ethridge,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,Ethridge,1.2132947488887691
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.RAND,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,RAND,1.5006461030893359
+getCEP.accuracy_FALSE.CEP.CEP0.5.unit.Valstar,,getCEP.accuracy_FALSE,CEP.CEP0.5,unit,Valstar,1.5006461030893359
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.CorrNormal,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,CorrNormal,3.1445779333053716
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsPatnaik,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,GrubbsPatnaik,3.1825164298358999
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsPearson,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,GrubbsPearson,3.1554791738672314
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.GrubbsLiu,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,GrubbsLiu,3.1554791738672527
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Rayleigh,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,Rayleigh,3.047466283311774
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Krempasky,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,Krempasky,NA
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Ignani,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,Ignani,3.1469381321483221
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.RMSE,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,RMSE,3.027485266680749
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Ethridge,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,Ethridge,NA
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.RAND,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,RAND,NA
+getCEP.accuracy_FALSE.CEP.CEP0.9.unit.Valstar,,getCEP.accuracy_FALSE,CEP.CEP0.9,unit,Valstar,NA
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.CorrNormal,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,CorrNormal,3.7094926622488571
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsPatnaik,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,GrubbsPatnaik,3.7196732438090705
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsPearson,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,GrubbsPearson,3.7191438694849901
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.GrubbsLiu,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,GrubbsLiu,3.7191438694850154
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Rayleigh,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,Rayleigh,3.4760223811564028
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Krempasky,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,Krempasky,NA
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Ignani,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,Ignani,3.7074993066164454
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.RMSE,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,RMSE,3.4532314937270523
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Ethridge,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,Ethridge,NA
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.RAND,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,RAND,NA
+getCEP.accuracy_FALSE.CEP.CEP0.95.unit.Valstar,,getCEP.accuracy_FALSE,CEP.CEP0.95,unit,Valstar,NA
+getCEP.accuracy_FALSE.ellShape.aspectRatio,,getCEP.accuracy_FALSE,ellShape,NA,aspectRatio,2.4629571399493497
+getCEP.accuracy_FALSE.ellShape.flattening,,getCEP.accuracy_FALSE,ellShape,NA,flattening,0.5939840024903702
+getCEP.accuracy_FALSE.ctr.x,,getCEP.accuracy_FALSE,ctr,NA,x,-0.00039999999999999758
+getCEP.accuracy_FALSE.ctr.y,,getCEP.accuracy_FALSE,ctr,NA,y,-0.00045000000000002259
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.CorrNormal,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,CorrNormal,1.5002209322580158
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsPatnaik,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,GrubbsPatnaik,1.4950264628287233
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsPearson,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,GrubbsPearson,1.4582474667610292
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.GrubbsLiu,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,GrubbsLiu,1.4582474667610379
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Rayleigh,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,Rayleigh,1.6720290243013327
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Krempasky,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,Krempasky,NA
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Ignani,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,Ignani,NA
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.RMSE,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,RMSE,1.6190070800031264
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Ethridge,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,Ethridge,1.2134871046867552
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.RAND,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,RAND,1.5064669486858795
+getCEP.accuracy_TRUE.CEP.CEP0.5.unit.Valstar,,getCEP.accuracy_TRUE,CEP.CEP0.5,unit,Valstar,1.5006462238706395
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.CorrNormal,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,CorrNormal,3.1445780488364665
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsPatnaik,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,GrubbsPatnaik,3.1825165521701972
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsPearson,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,GrubbsPearson,3.1554792937305378
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.GrubbsLiu,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,GrubbsLiu,3.1554792937305591
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Rayleigh,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,Rayleigh,3.0474663987100521
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Krempasky,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,Krempasky,NA
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Ignani,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,Ignani,NA
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.RMSE,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,RMSE,2.9508277690603451
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Ethridge,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,Ethridge,NA
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.RAND,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,RAND,NA
+getCEP.accuracy_TRUE.CEP.CEP0.9.unit.Valstar,,getCEP.accuracy_TRUE,CEP.CEP0.9,unit,Valstar,NA
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.CorrNormal,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,CorrNormal,3.7094927870719463
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsPatnaik,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,GrubbsPatnaik,3.7196733720582369
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsPearson,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,GrubbsPearson,3.7191439987739523
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.GrubbsLiu,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,GrubbsLiu,3.7191439987739763
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Rayleigh,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,Rayleigh,3.4760225127827926
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Krempasky,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,Krempasky,NA
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Ignani,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,Ignani,NA
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.RMSE,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,RMSE,3.3657938807594707
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Ethridge,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,Ethridge,NA
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.RAND,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,RAND,NA
+getCEP.accuracy_TRUE.CEP.CEP0.95.unit.Valstar,,getCEP.accuracy_TRUE,CEP.CEP0.95,unit,Valstar,NA
+getCEP.accuracy_TRUE.ellShape.aspectRatio,,getCEP.accuracy_TRUE,ellShape,NA,aspectRatio,2.4629571399493497
+getCEP.accuracy_TRUE.ellShape.flattening,,getCEP.accuracy_TRUE,ellShape,NA,flattening,0.5939840024903702
+getCEP.accuracy_TRUE.ctr.x,,getCEP.accuracy_TRUE,ctr,NA,x,-0.00039999999999999758
+getCEP.accuracy_TRUE.ctr.y,,getCEP.accuracy_TRUE,ctr,NA,y,-0.00045000000000002259
+getRayParam.sigma.sigma,,getRayParam,.sigma,NA,sigma,1.4200906472789028
+getRayParam.sigma.sigCIlo,,getRayParam,.sigma,NA,sigCIlo,1.1605632865887399
+getRayParam.sigma.sigCIup,,getRayParam,.sigma,NA,sigCIup,1.8301819154969321
+getRayParam.RSD.RSD,,getRayParam,.RSD,NA,RSD,0.93035304246802386
+getRayParam.RSD.RSDciLo,,getRayParam,.RSD,NA,RSDciLo,0.76032722750723525
+getRayParam.RSD.RSDciUp,,getRayParam,.RSD,NA,RSDciUp,1.1990187503982039
+getRayParam.MR.MR,,getRayParam,.MR,NA,MR,1.7798196845041683
+getRayParam.MR.MRciLo,,getRayParam,.MR,NA,MRciLo,1.454550374331008
+getRayParam.MR.MRciUp,,getRayParam,.MR,NA,MRciUp,2.293792868551467
+getRayParam.MEDR.MEDR,,getRayParam,.MEDR,NA,MEDR,1.6720289609866679
+getRayParam.MEDR.MEDRciLo,,getRayParam,.MEDR,NA,MEDRciLo,1.3664588453930815
+getRayParam.MEDR.MEDRciUP,,getRayParam,.MEDR,NA,MEDRciUP,2.1548745303326573
+getRiceParam.nu,,getRiceParam,.nu,NA,NA,0.0005526831483520586
+getRiceParam.sigma.sigma,,getRiceParam,.sigma,NA,sigma,1.4200906472789028
+getRiceParam.sigma.sigCIlo,,getRiceParam,.sigma,NA,sigCIlo,1.1605632865887399
+getRiceParam.sigma.sigCIup,,getRiceParam,.sigma,NA,sigCIup,1.8301819154969321
+getRiceParam.MR,,getRiceParam,.MR,NA,NA,1.7798197519005092
+getRiceParam.RSD,,getRiceParam,.RSD,NA,NA,0.93035307769765463
+getHoytParam.q,,getHoytParam,.q,NA,NA,0.40601599750962969
+getHoytParam.omega,,getHoytParam,.omega,NA,NA,3.9805986184210527
+getHitProb.r.R0.5.CorrNormal,,getHitProb,r,R0.5,CorrNormal,0.084572214285633829
+getHitProb.r.R0.5.GrubbsPatnaik,,getHitProb,r,R0.5,GrubbsPatnaik,0.13331978328747632
+getHitProb.r.R0.5.GrubbsPearson,,getHitProb,r,R0.5,GrubbsPearson,0
+getHitProb.r.R0.5.GrubbsLiu,,getHitProb,r,R0.5,GrubbsLiu,0
+getHitProb.r.R0.5.Rayleigh,,getHitProb,r,R0.5,Rayleigh,0.060101844183065183
+getHitProb.r.R1.CorrNormal,,getHitProb,r,R1,CorrNormal,0.28422502635347768
+getHitProb.r.R1.GrubbsPatnaik,,getHitProb,r,R1,GrubbsPatnaik,0.31735944303346403
+getHitProb.r.R1.GrubbsPearson,,getHitProb,r,R1,GrubbsPearson,0.3013835030232227
+getHitProb.r.R1.GrubbsLiu,,getHitProb,r,R1,GrubbsLiu,0.3013835030232227
+getHitProb.r.R1.Rayleigh,,getHitProb,r,R1,Rayleigh,0.21958934561030483
+getHitProb.r.R2.CorrNormal,,getHitProb,r,R2,CorrNormal,0.67440569070681389
+getHitProb.r.R2.GrubbsPatnaik,,getHitProb,r,R2,GrubbsPatnaik,0.6622921337926907
+getHitProb.r.R2.GrubbsPearson,,getHitProb,r,R2,GrubbsPearson,0.67827679085459103
+getHitProb.r.R2.GrubbsLiu,,getHitProb,r,R2,GrubbsLiu,0.67827679085459103
+getHitProb.r.R2.Rayleigh,,getHitProb,r,R2,Rayleigh,0.62906931674354605
+getBoundingBox.pts.xleft,,getBoundingBox,pts,NA,xleft,-1.4359999999999999
+getBoundingBox.pts.ybottom,,getBoundingBox,pts,NA,ybottom,-2.8980000000000001
+getBoundingBox.pts.xright,,getBoundingBox,pts,NA,xright,2.1819999999999999
+getBoundingBox.pts.ytop,,getBoundingBox,pts,NA,ytop,3.9049999999999998
+getBoundingBox.width,,getBoundingBox,width,NA,NA,3.6179999999999999
+getBoundingBox.height,,getBoundingBox,height,NA,NA,6.8029999999999999
+getBoundingBox.FoM,,getBoundingBox,FoM,NA,NA,5.2104999999999997
+getBoundingBox.diag,,getBoundingBox,diag,NA,NA,7.7052406192149512
+getMinBBox.pts.1.x,,getMinBBox,pts,1,x,-2.0932577934889962
+getMinBBox.pts.1.y,,getMinBBox,pts,1,y,3.27424980315035
+getMinBBox.pts.2.x,,getMinBBox,pts,2,x,-0.6802577934889964
+getMinBBox.pts.2.y,,getMinBBox,pts,2,y,-3.1377501968496495
+getMinBBox.pts.3.x,,getMinBBox,pts,3,x,2.1820000000000004
+getMinBBox.pts.3.y,,getMinBBox,pts,3,y,-2.5070000000000001
+getMinBBox.pts.4.x,,getMinBBox,pts,4,x,0.76900000000000035
+getMinBBox.pts.4.y,,getMinBBox,pts,4,y,3.9049999999999994
+getMinBBox.width,,getMinBBox,width,NA,NA,6.5658444239869098
+getMinBBox.height,,getMinBBox,height,NA,NA,2.930932528601498
+getMinBBox.FoM,,getMinBBox,FoM,NA,NA,4.7483884762942044
+getMinBBox.diag,,getMinBBox,diag,NA,NA,7.1903183856637645
+getMinBBox.angle,,getMinBBox,angle,NA,NA,102.42753169859523
+getMinCircle.ctr.1,,getMinCircle,ctr,NA,1,0.4962017843305031
+getMinCircle.ctr.2,,getMinCircle,ctr,NA,2,0.48319395216141614
+getMinCircle.rad,,getMinCircle,rad,NA,NA,3.4326630326172665
+getMinEllipse.ctr.1,,getMinEllipse,ctr,NA,1,0.52989620898628553
+getMinEllipse.ctr.2,,getMinEllipse,ctr,NA,2,0.13935759003234049
+getMinEllipse.shape.angle,,getMinEllipse,shape,NA,angle,96.282010272889693
+getMinEllipse.shape.aspectRatio,,getMinEllipse,shape,NA,aspectRatio,2.0444822857692002
+getMinEllipse.shape.flattening,,getMinEllipse,shape,NA,flattening,0.510878618533118
+getMinEllipse.shape.trace,,getMinEllipse,shape,NA,trace,19.270791438694118
+getMinEllipse.shape.det,,getMinEllipse,shape,NA,det,57.852448507730003
+getMinEllipse.size.1,,getMinEllipse,size,NA,1,3.9434116225557183
+getMinEllipse.size.2,,getMinEllipse,size,NA,2,1.9288069405170118
+getMinEllipse.area,,getMinEllipse,area,NA,NA,23.895204129818342
+getMaxPairDist.d,,getMaxPairDist,d,NA,NA,6.8577717955615869
+getMaxPairDist.idx1,,getMaxPairDist,idx1,NA,NA,2
+getMaxPairDist.idx2,,getMaxPairDist,idx2,NA,NA,18
+getConfEll.ctr.x,,getConfEll,ctr,NA,x,-0.00039999999999999758
+getConfEll.ctr.y,,getConfEll,ctr,NA,y,-0.00045000000000002259
+getConfEll.ctrRob.x,,getConfEll,ctrRob,NA,x,-0.041266666666666667
+getConfEll.ctrRob.y,,getConfEll,ctrRob,NA,y,-0.49266666666666664
+getConfEll.cov.x.x,,getConfEll,cov,x,x,0.57211172631578944
+getConfEll.cov.x.y,,getConfEll,cov,x,y,-0.15804224210526316
+getConfEll.cov.y.x,,getConfEll,cov,y,x,-0.15804224210526316
+getConfEll.cov.y.y,,getConfEll,cov,y,y,3.4084868921052629
+getConfEll.covRob.x.x,,getConfEll,covRob,x,x,0.25690284551601067
+getConfEll.covRob.x.y,,getConfEll,covRob,x,y,0.20837288846066426
+getConfEll.covRob.y.x,,getConfEll,covRob,y,x,0.20837288846066426
+getConfEll.covRob.y.y,,getConfEll,covRob,y,y,2.1028993616112666
+getConfEll.size.unit.semi-major,,getConfEll,size,unit,semi-major,2.2168541188258524
+getConfEll.size.unit.semi-minor,,getConfEll,size,unit,semi-minor,0.90007823638840967
+getConfEll.sizeRob.unit.semi-major,,getConfEll,sizeRob,unit,semi-major,1.7486078449610545
+getConfEll.sizeRob.unit.semi-minor,,getConfEll,sizeRob,unit,semi-minor,0.57969995734206481
+getConfEll.shape.angle,,getConfEll,shape,NA,angle,93.179390992165565
+getConfEll.shape.aspectRatio,,getConfEll,shape,NA,aspectRatio,2.4629571399493497
+getConfEll.shape.flattening,,getConfEll,shape,NA,flattening,0.5939840024903702
+getConfEll.shape.trace,,getConfEll,shape,NA,trace,3.9805986184210522
+getConfEll.shape.det,,getConfEll,shape,NA,det,1.925057969677423
+getConfEll.shapeRob.angle,,getConfEll,shapeRob,NA,angle,83.63918280356863
+getConfEll.shapeRob.aspectRatio,,getConfEll,shapeRob,NA,aspectRatio,3.016401541546518
+getConfEll.shapeRob.flattening,,getConfEll,shapeRob,NA,flattening,0.66847915099284261
+getConfEll.shapeRob.trace,,getConfEll,shapeRob,NA,trace,2.3598022071272773
+getConfEll.shapeRob.det,,getConfEll,shapeRob,NA,det,0.49682156918629627
+getConfEll.magFac,,getConfEll,magFac,NA,NA,1.1992168853812333
+getDistToCtr.r.1,,getDistToCtr,r,NA,1,3.3235015664957945
+getDistToCtr.r.2,,getDistToCtr,r,NA,2,2.8991266551325423
+getDistToCtr.r.3,,getDistToCtr,r,NA,3,1.875145051056051
+getDistToCtr.r.4,,getDistToCtr,r,NA,4,2.1505270662095839
+getDistToCtr.r.5,,getDistToCtr,r,NA,5,2.165030198981067
+getDistToCtr.r.6,,getDistToCtr,r,NA,6,1.0382551047310096
+getDistToCtr.r.7,,getDistToCtr,r,NA,7,1.0756791633661034
+getDistToCtr.r.8,,getDistToCtr,r,NA,8,0.78830702299294519
+getDistToCtr.r.9,,getDistToCtr,r,NA,9,0.86343353102598464
+getDistToCtr.r.10,,getDistToCtr,r,NA,10,0.52732007595008168
+getDistToCtr.r.11,,getDistToCtr,r,NA,11,0.26799004179260094
+getDistToCtr.r.12,,getDistToCtr,r,NA,12,0.16613025762936742
+getDistToCtr.r.13,,getDistToCtr,r,NA,13,0.27020022668384275
+getDistToCtr.r.14,,getDistToCtr,r,NA,14,1.554573884541999
+getDistToCtr.r.15,,getDistToCtr,r,NA,15,1.0319599132233772
+getDistToCtr.r.16,,getDistToCtr,r,NA,16,1.4828396954829608
+getDistToCtr.r.17,,getDistToCtr,r,NA,17,1.6883617392312584
+getDistToCtr.r.18,,getDistToCtr,r,NA,18,3.9805170596921196
+getDistToCtr.r.19,,getDistToCtr,r,NA,19,2.7426729047591509
+getDistToCtr.r.20,,getDistToCtr,r,NA,20,2.7206977344975312
+getRangeStat.range_stat.unit.ES,,getRangeStat,range_stat,unit,ES,6.8577717955615869
+getRangeStat.range_stat.unit.FoM,,getRangeStat,range_stat,unit,FoM,5.2104999999999997
+getRangeStat.range_stat.unit.D,,getRangeStat,range_stat,unit,D,7.7052406192149512
+getRangeStat.range_stat.MOA.ES,,getRangeStat,range_stat,MOA,ES,6.5486876988451854
+getRangeStat.range_stat.MOA.FoM,,getRangeStat,range_stat,MOA,FoM,4.9756601172751767
+getRangeStat.range_stat.MOA.D,,getRangeStat,range_stat,MOA,D,7.3579599846166959
+getRangeStat.range_stat.SMOA.ES,,getRangeStat,range_stat,SMOA,ES,6.8577697658777028
+getRangeStat.range_stat.SMOA.FoM,,getRangeStat,range_stat,SMOA,FoM,5.2104991239008651
+getRangeStat.range_stat.SMOA.D,,getRangeStat,range_stat,SMOA,D,7.7052377272381554
+getRangeStat.range_stat.mrad.ES,,getRangeStat,range_stat,mrad,ES,1.9049360338283226
+getRangeStat.range_stat.mrad.FoM,,getRangeStat,range_stat,mrad,FoM,1.4473608584436504
+getRangeStat.range_stat.mrad.D,,getRangeStat,range_stat,mrad,D,2.1403437993592109
+getRangeStat.CI.ES.unit.ES (,,getRangeStat,CI.ES,unit,ES (,5.0440259402152465
+getRangeStat.CI.ES.unit.ES ),,getRangeStat,CI.ES,unit,ES ),9.0836039597106328
+getRangeStat.CI.ES.MOA.ES (,,getRangeStat,CI.ES,MOA,ES (,4.8166891808308403
+getRangeStat.CI.ES.MOA.ES ),,getRangeStat,CI.ES,MOA,ES ),8.6741982255280181
+getRangeStat.CI.ES.SMOA.ES (,,getRangeStat,CI.ES,SMOA,ES (,5.0440251474744917
+getRangeStat.CI.ES.SMOA.ES ),,getRangeStat,CI.ES,SMOA,ES ),9.0835991987747313
+getRangeStat.CI.ES.mrad.ES (,,getRangeStat,CI.ES,mrad,ES (,1.4011180875114451
+getRangeStat.CI.ES.mrad.ES ),,getRangeStat,CI.ES,mrad,ES ),2.5232219834352265
+getRangeStat.CI.FoM.unit.FoM (,,getRangeStat,CI.FoM,unit,FoM (,3.9014509234253087
+getRangeStat.CI.FoM.unit.FoM ),,getRangeStat,CI.FoM,unit,FoM ),6.714350439909162
+getRangeStat.CI.FoM.MOA.FoM (,,getRangeStat,CI.FoM,MOA,FoM (,3.7256108335221407
+getRangeStat.CI.FoM.MOA.FoM ),,getRangeStat,CI.FoM,MOA,FoM ),6.4117305143296841
+getRangeStat.CI.FoM.SMOA.FoM (,,getRangeStat,CI.FoM,SMOA,FoM (,3.9014505666623887
+getRangeStat.CI.FoM.SMOA.FoM ),,getRangeStat,CI.FoM,SMOA,FoM ),6.7143485367120848
+getRangeStat.CI.FoM.mrad.FoM (,,getRangeStat,CI.FoM,mrad,FoM (,1.0837362615488615
+getRangeStat.CI.FoM.mrad.FoM ),,getRangeStat,CI.FoM,mrad,FoM ),1.8650968037607076
+getRangeStat.CI.D.unit.D (,,getRangeStat,CI.D,unit,D (,5.7637896995149882
+getRangeStat.CI.D.unit.D ),,getRangeStat,CI.D,unit,D ),9.9425913969446622
+getRangeStat.CI.D.MOA.D (,,getRangeStat,CI.D,MOA,D (,5.5040125539850333
+getRangeStat.CI.D.MOA.D ),,getRangeStat,CI.D,MOA,D ),9.4944693727148692
+getRangeStat.CI.D.SMOA.D (,,getRangeStat,CI.D,SMOA,D (,5.7637885053498552
+getRangeStat.CI.D.SMOA.D ),,getRangeStat,CI.D,SMOA,D ),9.9425851409493404
+getRangeStat.CI.D.mrad.D (,,getRangeStat,CI.D,mrad,D (,1.6010523523023497
+getRangeStat.CI.D.mrad.D ),,getRangeStat,CI.D,mrad,D ),2.7618291880605859
+range2sigma.sigma.unit,,range2sigma,.sigma,NA,unit,1.5406829231000563
+range2sigma.sigmaCI.unit.sigma (,,range2sigma,.sigmaCI,unit,sigma (,1.1631563796486264
+range2sigma.sigmaCI.unit.sigma ),,range2sigma,.sigmaCI,unit,sigma ),2.0946862726657738
+range2CEP.CEP.unit,,range2CEP,.CEP,NA,unit,1.8140155151764445
+range2CEP.CEPCI.unit.CEP (,,range2CEP,.CEPCI,unit,CEP (,1.3695119791511072
+range2CEP.CEPCI.unit.CEP ),,range2CEP,.CEPCI,unit,CEP ),2.4663046114622644
+getRangeStatEff.n,,getRangeStatEff,n,NA,NA,20
+getRangeStatEff.nGroups,,getRangeStatEff,nGroups,NA,NA,1
+getRangeStatEff.nTotal,,getRangeStatEff,nTotal,NA,NA,20
+getRangeStatEff.ES_efficiency,,getRangeStatEff,ES_efficiency,NA,NA,2.2107170755170897
+getRangeStatEff.FoM_efficiency,,getRangeStatEff,FoM_efficiency,NA,NA,2.6278521696718316
+getRangeStatEff.D_efficiency,,getRangeStatEff,D_efficiency,NA,NA,2.6035554236172747
+getRangeStatEff.RS_efficiency,,getRangeStatEff,RS_efficiency,NA,NA,3.7755928287874516
+angular.nDistances,,angular,nDistances,NA,NA,1
+getMOA.deg,,getMOA,deg,NA,NA,0.015915494206852253
+fromMOA.deg,,fromMOA,deg,NA,NA,62.833448093463282
+getMOA.rad,,getMOA,rad,NA,NA,0.00027777777599165526
+fromMOA.rad,,fromMOA,rad,NA,NA,3933.3779268752915
+getMOA.MOA,,getMOA,MOA,NA,NA,0.95492965241113503
+fromMOA.MOA,,fromMOA,MOA,NA,NA,1.0471975585807325
+getMOA.SMOA,,getMOA,SMOA,NA,NA,1
+fromMOA.SMOA,,fromMOA,SMOA,NA,NA,1.0000000006212879
+getMOA.mrad,,getMOA,mrad,NA,NA,0.27777777599165526
+fromMOA.mrad,,fromMOA,mrad,NA,NA,3.6000003000000302
+getMOA.mil,,getMOA,mil,NA,NA,0.28294211923292889
+fromMOA.mil,,fromMOA,mil,NA,NA,3.5342920191594867

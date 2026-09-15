@@ -447,8 +447,32 @@ if (any(duplicated(out$key)))
   stop("duplicate keys, the scheme is not unique: ",
        paste(head(unique(out$key[duplicated(out$key)])), collapse = ", "))
 out <- out[, c("key","scope","fn","component","row","col","value")]
+numericValues <- setNames(as.list(out$value), out$key)   # before %.17g formatting
 
-write.csv(out, paste0(outStem, ".csv"), row.names = FALSE)
+## ---- precision ------------------------------------------------------------
+## The first version of this script wrote through R's defaults: 15 significant
+## digits in the CSV, and jsonlite's digits = 15 in the JSON.  For a comparison
+## at 1e-12 that is invisible.  For a RANK statistic it is not: dropping the
+## last bits changes which values are exactly equal, which changes which
+## observations tie, which changes the statistic in the fourth decimal place.
+##
+## That cost a day.  QUESTIONS-FOR-PLANNING question 14 chased a 1.2e-4 to
+## 4.9e-4 disagreement on four Fligner-Killeen keys through tie rules, median
+## definitions, coordinate frames and two test implementations before the cause
+## turned out to be the storage format of the fixture itself.
+##
+## 17 significant digits is the round-trip precision of an IEEE 754 double:
+## every double formatted with %.17g and read back gives the identical double.
+## So the stored value IS the value, and no future statistic can be defeated by
+## the fixture rather than by the implementation under test.
+out$value <- vapply(out$value, function(v) {
+  if (is.na(v))       "NA"
+  else if (is.nan(v)) "NaN"
+  else if (is.infinite(v)) if (v > 0) "Inf" else "-Inf"
+  else sprintf("%.17g", v)
+}, character(1))
+
+write.csv(out, paste0(outStem, ".csv"), row.names = FALSE, quote = FALSE)
 if (requireNamespace("jsonlite", quietly = TRUE)) {
   writeLines(jsonlite::toJSON(
     list(package       = "shotGroups",
@@ -462,8 +486,8 @@ if (requireNamespace("jsonlite", quietly = TRUE)) {
          stochastic    = STOCHASTIC,
          R             = R.version.string,
          generated     = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
-         values        = setNames(as.list(out$value), out$key)),
-    auto_unbox = TRUE, digits = 15, na = "null", pretty = TRUE),
+         values        = numericValues),
+    auto_unbox = TRUE, digits = I(17), na = "null", pretty = TRUE),
     paste0(outStem, ".json"))
 }
 cat("rows written:", nrow(out), "->", paste0(outStem, ".csv/.json"), "\n")

@@ -81,7 +81,7 @@ Whole target, still stapled to the backer, all four edges in frame, printed conc
 
 ## 2026-09-15, entry 36: the fixtures are regenerated at full double precision, and my defect is closed
 
-**Status: open.** Files are already on disk, unstaged. Your job is to verify and commit, not to regenerate. Lower priority than entry 35 section 6's two remaining items, and it should be its own commit rather than folded into them.
+**Status: actioned 2026-09-15, except `DFdistr`.** Verified on all ten files. The nine datasets have 0 keys added or removed, and no stored number moved by more than 5.53e-16 relative. CSV and JSON agree bit for bit except three negative zeros in `DFlandy01`. The reconstruction is removed, and all 67 statistics tests pass from the fixtures alone. The reconstruction had matched the stored values on 3,775 of 3,978 coordinates. The other 203 are `DFcm`, off by at most 3.6e-15, because its centimetre aims are not six-decimal numbers, so the stored values were right. `STATISTICS.md` section 15.4 item 15 is amended. **Not committed:** `shotGroups_DFdistr.json` stores all 8,850 table values as strings, because `sg_distr.R` formats the columns for the CSV before building the JSON from the same frame. That script and both `DFdistr` files stay uncommitted for you to fix. Reported in `docs/PHASE1-RESULTS.md` "Entry 36". Files are already on disk, unstaged. Your job is to verify and commit, not to regenerate. Lower priority than entry 35 section 6's two remaining items, and it should be its own commit rather than folded into them.
 
 ### 1. What was wrong
 
