@@ -97,6 +97,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Raised when the selection changes.</summary>
     public event EventHandler? SelectionChanged;
 
+    /// <summary>Raised with a sentence the user should see about the last action, such as a tap not snapped onto printed artwork.</summary>
+    public event EventHandler<string>? Notice;
+
+    /// <summary>
+    /// The sheet's printed artwork in image pixels when the image was detected as a GroupLab sheet, so a tap never snaps onto a printed
+    /// ring or numeral (NOTES-FROM-PLANNING.md entry 40 section 1). Null otherwise.
+    /// </summary>
+    public GrayImage? Artwork { get; set; }
+
     /// <summary>The taps of an incomplete scale reference, image pixels.</summary>
     public IReadOnlyList<PointD> PendingTaps => pending;
 
@@ -110,6 +119,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         pending.Clear();
         Selected = null;
         MissingMarkers = [];
+        Artwork = null;
         FitToView();
     }
 
@@ -352,10 +362,16 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 break;
 
             case MarkingTool.Impact:
-                // With a calibre and a scale the snap reaches one bullet diameter (entry 24 section 5 point 2); otherwise a finger's width on screen.
-                var snapped = value is null ? image : Snapping.ToDarkCentroid(value, image, HoleSize.SnapRadiusPixels(session.State, image) ?? (2 * HitRadius / zoom));
-                int? nearestBull = session.State.Bulls.Count == 0 ? null : session.State.Bulls.MinBy(b => Distance(b.Image, snapped))!.Index;
-                Selected = session.AddShot(snapped, nearestBull);
+                // With a calibre and a scale the snap reaches one bullet diameter (entry 24 section 5 point 2); otherwise a finger's width on
+                // screen. On a detected sheet it never lands on printed artwork (entry 40 section 1), and the session assigns the shot to its
+                // nearest bull (entry 39 section 1).
+                var snap = value is null ? new SnapResult(image, null) : Snapping.ToHole(value, image, HoleSize.SnapRadiusPixels(session.State, image) ?? (2 * HitRadius / zoom), Artwork);
+                Selected = session.AddShot(snap.At);
+                if (snap.NotSnapped is { } note)
+                {
+                    Notice?.Invoke(this, note);
+                }
+
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 break;
 

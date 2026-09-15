@@ -283,4 +283,100 @@ public class MarkingScreenTests
             File.Delete(path);
         }
     }
+
+    /// <summary>A window showing the image at the path, fitted, and a tap that goes through the headless platform's pointer input.</summary>
+    private static (MainWindow Window, Action<PointD> Tap) Opened(string path)
+    {
+        var window = NewWindow();
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.OpenImage(path);
+        Dispatcher.UIThread.RunJobs();
+        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        Dispatcher.UIThread.RunJobs();
+        var canvas = window.Canvas;
+        canvas.FitToView();
+        return (window, image =>
+        {
+            var at = canvas.TranslatePoint(canvas.ToControl(image), window)!.Value;
+            window.MouseDown(at, MouseButton.Left);
+            window.MouseUp(at, MouseButton.Left);
+        });
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 39 section 1: on a sheet of bulls every tapped impact is assigned to its nearest bull, and when one is
+    /// not, the panel prints no figure and says what is missing where the figures would be.
+    /// </summary>
+    [AvaloniaFact]
+    public void OnASheetOfBullsTappedShotsAreAssignedAndAnUnassignedShotWithholdsTheFigures()
+    {
+        (int X, int Y)[] holes = [(200, 200), (236, 180), (210, 238), (500, 200), (464, 226), (536, 186)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, tap) = Opened(path);
+            window.Session.LoadDetections(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2), [new BullAim(0, "1", new PointD(215, 205)), new BullAim(1, "2", new PointD(500, 205))], [], "test");
+            window.Canvas.Tool = MarkingTool.Impact;
+            foreach (var (x, y) in holes)
+            {
+                tap(new PointD(x + 2, y - 2));
+            }
+
+            var shots = window.Session.State.Shots;
+            Assert.Equal([0, 0, 0, 1, 1, 1], shots.Select(s => s.Bull ?? -1));
+            Assert.Contains(window.StatisticsText, t => t == "Mean radius");
+
+            window.Session.AssignBull(shots[4].Id, null);
+            Assert.DoesNotContain(window.StatisticsText, t => t == "Mean radius");
+            Assert.Contains(window.StatisticsText, t => t.StartsWith("1 of 6 shots is not assigned to a bull", StringComparison.Ordinal));
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 40 section 1: with the sheet's printed artwork known, a tap on printed ink is placed where it was tapped
+    /// and the status line says why, while a tap by a hole in bare paper still snaps onto it.
+    /// </summary>
+    [AvaloniaFact]
+    public void ATapOnKnownArtworkIsPlacedWhereTappedAndSaysSoWhileATapByAHoleSnaps()
+    {
+        (int X, int Y)[] holes = [(300, 300), (500, 300)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, tap) = Opened(path);
+            var printed = Enumerable.Repeat((byte)255, 800 * 600).ToArray();
+            for (int y = 280; y <= 320; y++)
+            {
+                for (int x = 280; x <= 320; x++)
+                {
+                    if (((x - 300) * (x - 300)) + ((y - 300) * (y - 300)) <= 144)
+                    {
+                        printed[(y * 800) + x] = 0;
+                    }
+                }
+            }
+
+            window.Canvas.Artwork = new GrayImage(800, 600, printed);
+            window.Canvas.Tool = MarkingTool.Impact;
+            tap(new PointD(303, 298));
+            var onInk = window.Session.State.Shots[^1];
+            Assert.True(Math.Abs(onInk.Image.X - 303) < 0.6 && Math.Abs(onInk.Image.Y - 298) < 0.6, $"placed at ({onInk.Image.X:0.00}, {onInk.Image.Y:0.00})");
+            Assert.Contains("printed target", window.StatusText, StringComparison.Ordinal);
+
+            tap(new PointD(503, 298));
+            var hole = window.Session.State.Shots[^1];
+            Assert.True(Math.Abs(hole.Image.X - 500) < 1.5 && Math.Abs(hole.Image.Y - 300) < 1.5, $"shot at ({hole.Image.X:0.0}, {hole.Image.Y:0.0})");
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }

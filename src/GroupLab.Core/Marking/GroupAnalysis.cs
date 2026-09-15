@@ -116,6 +116,16 @@ public static class GroupAnalysis
             return new GroupReport(null, null, excluded, notShots, automatic, corrected, manual, "no scale set", false, "Set a scale before the group can be measured: a reference length, a reference rectangle, or a GroupLab sheet's markers.", sighterShots);
         }
 
+        // Entry 39 section 1: on a sheet of several bulls, a shot with no bull is measured from the single point of aim, so twelve shots near
+        // twelve bulls measured the distance between bulls, to three decimals with an interval. The figures are withheld with what is missing.
+        if (state.Bulls.Count(b => b.Scoring) > 1 && shots.Count(s => s.Bull is null) is > 0 and var unassigned)
+        {
+            string sentence = UnassignedSentence(shots.Count, unassigned);
+            var withheld = Withheld(shots.Count, null, "needs every shot assigned to a bull", "needs every shot assigned to a bull", "needs every shot assigned to a bull", sentence);
+            var withheldReduced = excluded == 0 ? withheld : withheld with { Shots = shots.Count(s => s.Exclusion is null) };
+            return new GroupReport(withheld, withheldReduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, null, sighterShots);
+        }
+
         var all = Figures(state, shots);
         var reduced = excluded == 0 ? all : Figures(state, [.. shots.Where(s => s.Exclusion is null)]);
         string? problem = all is null ? "Mark the shots." : null;
@@ -135,6 +145,45 @@ public static class GroupAnalysis
         return string.Create(CultureInfo.InvariantCulture,
             $"{shots} shot{(shots == 1 ? "" : "s")}. At least {MinimumShotsForDispersion} are needed before a group size is worth quoting, so none is shown.{range}");
     }
+
+    /// <summary>
+    /// The sentence shown where the figures would be when shots on a sheet of several bulls are not all assigned to one (entry 39
+    /// section 1): what the numbers would have measured, and what to do.
+    /// </summary>
+    public static string UnassignedSentence(int shots, int unassigned) => unassigned == shots
+        ? string.Create(CultureInfo.InvariantCulture,
+            $"{shots} shot{(shots == 1 ? "" : "s")}, none assigned to a bull, so figures from them would measure the spread of your marks across the sheet rather than the group. Assign them to bulls, or mark them on one bull.")
+        : string.Create(CultureInfo.InvariantCulture,
+            $"{unassigned} of {shots} shots {(unassigned == 1 ? "is" : "are")} not assigned to a bull, so {(unassigned == 1 ? "it would be" : "they would be")} measured from the point of aim and the rest from their bulls, and no figure means anything. Assign every shot to its bull.");
+
+    /// <summary>
+    /// Figures that cannot be quoted, with the sentence the screen shows in their place: every dispersion figure null beside its reason.
+    /// The rule this implements, from entry 24 section 1 and generalised by entry 39 section 1: whenever the figures cannot measure what
+    /// a reader takes them to measure, the report says what is missing instead of printing a number.
+    /// </summary>
+    private static GroupFigures Withheld(int n, PointD? centreFromAim, string? centreUnavailable, string reason, string shapeReason, string sentence) => new(
+        Shots: n,
+        CentreFromAim: centreFromAim,
+        CentreFromAimUnavailable: centreUnavailable,
+        MeanRadius: null,
+        MeanRadiusUnavailable: reason,
+        Sigma: null,
+        SigmaUnavailable: reason,
+        ExtremeSpread: null,
+        ExtremeSpreadUnavailable: reason,
+        ExtremeSpreadEdgeToEdge: null,
+        ExtremeSpreadEdgeToEdgeUnavailable: reason,
+        TrueSizeRange: null,
+        TrueSizeRangeUnavailable: reason,
+        AspectRatio: null,
+        AspectRatioUnavailable: shapeReason,
+        AngleDegrees: null,
+        AngleDegreesUnavailable: shapeReason,
+        WorstShotInMeanRadii: null,
+        WorstShotInMeanRadiiUnavailable: reason,
+        ExpectedWorstInMeanRadii: null,
+        ExpectedWorstInMeanRadiiUnavailable: reason,
+        DispersionWithheld: sentence);
 
     private static GroupFigures? Figures(MarkingState state, IReadOnlyList<MarkedShot> shots)
     {
@@ -162,29 +211,7 @@ public static class GroupAnalysis
         {
             string withheld = string.Create(CultureInfo.InvariantCulture, $"not quoted below {MinimumShotsForDispersion} shots");
             string shape = n < MinimumShotsForShape ? string.Create(CultureInfo.InvariantCulture, $"needs at least {MinimumShotsForShape} shots") : withheld;
-            return new GroupFigures(
-                Shots: n,
-                CentreFromAim: centreFromAim,
-                CentreFromAimUnavailable: centreUnavailable,
-                MeanRadius: null,
-                MeanRadiusUnavailable: withheld,
-                Sigma: null,
-                SigmaUnavailable: withheld,
-                ExtremeSpread: null,
-                ExtremeSpreadUnavailable: withheld,
-                ExtremeSpreadEdgeToEdge: null,
-                ExtremeSpreadEdgeToEdgeUnavailable: withheld,
-                TrueSizeRange: null,
-                TrueSizeRangeUnavailable: withheld,
-                AspectRatio: null,
-                AspectRatioUnavailable: shape,
-                AngleDegrees: null,
-                AngleDegreesUnavailable: shape,
-                WorstShotInMeanRadii: null,
-                WorstShotInMeanRadiiUnavailable: withheld,
-                ExpectedWorstInMeanRadii: null,
-                ExpectedWorstInMeanRadiiUnavailable: withheld,
-                DispersionWithheld: WithheldSentence(n));
+            return Withheld(n, centreFromAim, centreUnavailable, withheld, shape, WithheldSentence(n));
         }
 
         var rayleigh = GroupStatistics.Rayleigh(offsets);

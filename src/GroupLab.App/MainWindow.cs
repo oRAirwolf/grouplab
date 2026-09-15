@@ -48,6 +48,10 @@ public sealed class MainWindow : Window
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
     private IReadOnlyList<HoleSizeFlag> holeFlags = [];
+
+    // The sheet's printed artwork in image pixels, from the last detection on this image, so the snap and the size check can tell printed
+    // ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Null on any image not detected as a GroupLab sheet.
+    private GrayImage? artwork;
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.85 };
     private readonly AppSettingsStore settingsStore;
@@ -77,6 +81,7 @@ public sealed class MainWindow : Window
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, taps) => AskLength(taps);
         canvas.RectangleTapped += (_, taps) => AskRectangle(taps);
+        canvas.Notice += (_, note) => status.Text = note;
 
         var toolbar = new WrapPanel { Margin = new Thickness(6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
@@ -212,6 +217,9 @@ public sealed class MainWindow : Window
     /// <summary>The canvas, for the headless tests.</summary>
     internal MarkingCanvas Canvas => canvas;
 
+    /// <summary>The status line, for the headless tests.</summary>
+    internal string StatusText => status.Text ?? "";
+
     /// <summary>The session, for the headless tests.</summary>
     internal MarkingSession Session => session;
 
@@ -231,6 +239,7 @@ public sealed class MainWindow : Window
         grey = image;
         valueImage = max;
         metadata = meta;
+        artwork = null;
         session.Open(path, meta.Orientation);
         canvas.SetImage(new Bitmap(stream), max);
         int turns = session.State.ViewQuarterTurns;
@@ -372,6 +381,7 @@ public sealed class MainWindow : Window
         }
 
         canvas.MissingMarkers = result.MissingMarkers;
+        canvas.Artwork = artwork = result.ExpectedArtwork;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Summary);
         SetTool(MarkingTool.Select);
         status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed in red") : "");
@@ -406,7 +416,7 @@ public sealed class MainWindow : Window
             MarkingTool.Length => "Tap two points a known distance apart, then enter the distance.",
             MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. This removes perspective.",
             MarkingTool.Aim => "Tap the point of aim.",
-            MarkingTool.Impact => "Tap each impact. Each tap snaps to the hole under it.",
+            MarkingTool.Impact => "Tap each impact. Each tap snaps to the hole under it, and on a detected GroupLab sheet never onto the printed target. On a sheet of bulls each shot is assigned to its nearest bull.",
             MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it.",
             _ => status.Text,
         };
@@ -474,7 +484,7 @@ public sealed class MainWindow : Window
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, units.Distance).ToString("0.###", CultureInfo.InvariantCulture) : "";
         }
 
-        holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage);
+        holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage, artwork);
         canvas.FlaggedShots = holeFlags.Select(f => f.ShotId).ToHashSet();
 
         if (scaleInputs.Children.Count == 0 || state.Scale is not null)
@@ -542,7 +552,7 @@ public sealed class MainWindow : Window
             {
                 statistics.Children.Add(new TextBlock
                 {
-                    Text = $"Shot {flag.ShotId} reads {units.Length(flag.ApparentInches)} across, larger than a single {units.Length(state.Calibre!.DiameterInches)} hole should ({units.Length(flag.LargestExpectedInches)}): two holes marked as one?",
+                    Text = $"Shot {flag.ShotId} {HoleSize.Describe(flag, state.Calibre!.DiameterInches, units.Length)}",
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = 12,
                     Foreground = Brushes.OrangeRed,

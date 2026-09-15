@@ -44,9 +44,11 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
-/// threshold in grey levels, what was kept and what was refused, and the local shift, pixels, each bull's cell was aligned by.
+/// threshold in grey levels, what was kept and what was refused, the local shift, pixels, each bull's cell was aligned by, and the
+/// expected artwork in image pixels after that alignment, which is where the printed rings, numerals and markers are. The marking
+/// screen's snap and size check read it to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
-public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts);
+public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null);
 
 /// <summary>
 /// Render-and-difference, stages S5 to S8 of docs/DETECTION-PIPELINE.md and docs/PHASE1-BRIEF.md section 4.2. A GroupLab
@@ -237,7 +239,7 @@ public static class RenderDifferenceHoleDetector
             }
         }
 
-        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts);
+        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected);
     }
 
     /// <summary>

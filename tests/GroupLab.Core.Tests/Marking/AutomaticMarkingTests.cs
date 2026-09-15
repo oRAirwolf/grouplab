@@ -43,6 +43,7 @@ public class AutomaticMarkingTests
         Assert.Null(result.Failure);
         Assert.NotNull(result.Scale);
         Assert.Empty(result.MissingMarkers);
+        Assert.Equal((render.Width, render.Height), (result.ExpectedArtwork!.Width, result.ExpectedArtwork.Height));
         Assert.Equal(definition.Bulls.Count, result.Detections.Count);
         var truthImage = holes.Select(h => truth.ToImage(new PointD(h.X, h.Y))).ToList();
         foreach (var (image, bull) in result.Detections)

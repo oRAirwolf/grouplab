@@ -177,16 +177,52 @@ public sealed class MarkingSession
 
     public void SetPointOfAim(PointD? image) => Apply(State with { PointOfAim = image });
 
-    /// <summary>Places a shot by hand, and returns its id.</summary>
+    /// <summary>
+    /// Places a shot by hand, and returns its id. Where the marking has bulls, a shot given no bull is assigned to its nearest,
+    /// NOTES-FROM-PLANNING.md entry 39 section 1: a person marking a GroupLab sheet by hand should not have to know that assignment is a
+    /// separate step, and an unassigned shot on such a sheet is measured from the wrong place.
+    /// </summary>
     public int AddShot(PointD image, int? bull = null)
     {
         int id = State.NextId;
-        Apply(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull)), NextId = id + 1 });
+        Apply(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image))), NextId = id + 1 });
         return id;
     }
 
-    /// <summary>Moves a shot; a detected shot the user moves becomes corrected.</summary>
-    public void MoveShot(int id, PointD image) => Update(id, s => s with { Image = image, Provenance = Touched(s.Provenance) });
+    /// <summary>
+    /// Moves a shot; a detected shot the user moves becomes corrected. A shot on its nearest bull stays on its nearest bull wherever it is
+    /// moved, and a shot the user assigned elsewhere, or unassigned, keeps that choice (entry 39 section 1).
+    /// </summary>
+    public void MoveShot(int id, PointD image) => Update(id, s => s with
+    {
+        Image = image,
+        Bull = s.Bull == NearestBull(State, s.Image) ? NearestBull(State, image) : s.Bull,
+        Provenance = Touched(s.Provenance),
+    });
+
+    /// <summary>The bull a shot at this image point is nearest to, <see cref="NearestBull(MarkingState, PointD)"/>.</summary>
+    public int? NearestBull(PointD image) => NearestBull(State, image);
+
+    /// <summary>
+    /// The nearest-bull rule the detector's assignment falls back to, <see cref="ShotAssignment"/>, for a single shot: nearest on the
+    /// target plane when a scale is set, which is where a sheet's bulls are evenly spaced, and in image pixels otherwise. Null when the
+    /// marking has no bulls.
+    /// </summary>
+    private static int? NearestBull(MarkingState state, PointD image)
+    {
+        if (state.Bulls.Count == 0)
+        {
+            return null;
+        }
+
+        PointD Plane(PointD p) => state.Scale is { } scale ? scale.ToTarget(p) : p;
+        var at = Plane(image);
+        return state.Bulls.MinBy(b =>
+        {
+            var c = Plane(b.Image);
+            return ((c.X - at.X) * (c.X - at.X)) + ((c.Y - at.Y) * (c.Y - at.Y));
+        })!.Index;
+    }
 
     public void DeleteShot(int id)
     {
@@ -207,21 +243,20 @@ public sealed class MarkingSession
 
     /// <summary>
     /// Replaces the bulls and the detected shots with what the automatic path found, keeping shots placed by hand, as one step that
-    /// can be undone.
+    /// can be undone. A kept shot that has no bull is assigned to its nearest under the new registration: marking by hand and then
+    /// detecting left every hand-placed shot unassigned, measured from one aim across the whole sheet (entry 39 section 1).
     /// </summary>
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
         int id = State.NextId;
-        var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).ToList();
+        var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary };
+        var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
         var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull)).ToList();
-        Apply(State with
+        Apply(registered with
         {
-            Scale = scale,
-            Bulls = [.. bulls],
             Shots = [.. kept, .. detected],
             NextId = id,
-            RegistrationSummary = summary,
         });
     }
 

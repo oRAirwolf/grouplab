@@ -9,7 +9,8 @@ namespace GroupLab.Core.Marking;
 
 /// <summary>
 /// What the automatic path hands the marking screen: the measurement with its trace, the registered scale, the bulls, the detected
-/// shots with their assignment, a one-line summary, and the failure when there is one.
+/// shots with their assignment, a one-line summary, the failure when there is one, and the sheet's printed artwork in image pixels, which
+/// the screen's snap and size check read to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
 public sealed record AutomaticResult(
     SheetMeasurement Measurement,
@@ -18,7 +19,8 @@ public sealed record AutomaticResult(
     IReadOnlyList<(PointD Image, int? Bull)> Detections,
     IReadOnlyList<PointD> MissingMarkers,
     string Summary,
-    string? Failure);
+    string? Failure,
+    GrayImage? ExpectedArtwork = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -106,9 +108,12 @@ public static class AutomaticMarking
 
         string summary = string.Create(CultureInfo.InvariantCulture,
             $"{markers}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected);
     }
 }
+
+/// <summary>Where a tap was placed, and why it was not snapped to the dark under it when it was not.</summary>
+public sealed record SnapResult(PointD At, string? NotSnapped);
 
 /// <summary>
 /// DESIGN.md section 13: rough clicks snap to the local centroid, so manual placement is not limited by mouse or finger precision.
@@ -117,7 +122,102 @@ public static class AutomaticMarking
 /// </summary>
 public static class Snapping
 {
-    public static PointD ToDarkCentroid(GrayImage value, PointD click, double radiusPixels)
+    /// <summary>A pixel of the expected artwork at or above this level is paper, the detector's own reading of its render.</summary>
+    public const byte ArtworkPaper = 230;
+
+    public static PointD ToDarkCentroid(GrayImage value, PointD click, double radiusPixels) => Centroid(value, click, radiusPixels, null);
+
+    /// <summary>
+    /// The snap on a sheet whose printed artwork is known, NOTES-FROM-PLANNING.md entry 40 section 1: taps on a rendered, unshot sheet
+    /// snapped to bull 13's inner ring, because a printed ring is darker than paper. The expected artwork says which dark pixels were
+    /// printed. When most of the dark weight under the tap is printed, the tap is placed where it was made and
+    /// <see cref="SnapResult.NotSnapped"/> says why; otherwise only the dark pixels the artwork calls paper pull the snap. Without
+    /// artwork this is <see cref="ToDarkCentroid"/>.
+    /// </summary>
+    public static SnapResult ToHole(GrayImage value, PointD click, double radiusPixels, GrayImage? artwork)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        if (artwork is null || artwork.Width != value.Width || artwork.Height != value.Height)
+        {
+            return new SnapResult(ToDarkCentroid(value, click, radiusPixels), null);
+        }
+
+        var (onPaper, onInk) = DarkWeight(value, artwork, click, radiusPixels);
+        if (onInk > 0 && onInk >= onPaper)
+        {
+            return new SnapResult(click, "placed where tapped: the dark area under the tap is the printed target, not a hole");
+        }
+
+        return new SnapResult(Centroid(value, click, radiusPixels, artwork), null);
+    }
+
+    /// <summary>The dark weight within the radius, as the snap weighs it, on pixels the artwork calls paper and on pixels it calls printed.</summary>
+    private static (double OnPaper, double OnInk) DarkWeight(GrayImage value, GrayImage artwork, PointD click, double radiusPixels)
+    {
+        int x0 = Math.Max(0, (int)(click.X - radiusPixels)), x1 = Math.Min(value.Width - 1, (int)(click.X + radiusPixels));
+        int y0 = Math.Max(0, (int)(click.Y - radiusPixels)), y1 = Math.Min(value.Height - 1, (int)(click.Y + radiusPixels));
+        if (x1 <= x0 || y1 <= y0)
+        {
+            return (0, 0);
+        }
+
+        int paper = PaperLevel(value, x0, x1, y0, y1);
+        double onPaper = 0, onInk = 0;
+        for (int y = y0; y <= y1; y++)
+        {
+            for (int x = x0; x <= x1; x++)
+            {
+                if (((x - click.X) * (x - click.X)) + ((y - click.Y) * (y - click.Y)) > radiusPixels * radiusPixels)
+                {
+                    continue;
+                }
+
+                int i = (y * value.Width) + x;
+                double w = paper - value.Pixels[i] - 40;
+                if (w > 0)
+                {
+                    if (artwork.Pixels[i] >= ArtworkPaper)
+                    {
+                        onPaper += w;
+                    }
+                    else
+                    {
+                        onInk += w;
+                    }
+                }
+            }
+        }
+
+        return (onPaper, onInk);
+    }
+
+    /// <summary>The window's paper level: the grey level nine tenths of its pixels are at or below.</summary>
+    private static int PaperLevel(GrayImage value, int x0, int x1, int y0, int y1)
+    {
+        var histogram = new int[256];
+        int count = 0;
+        for (int y = y0; y <= y1; y++)
+        {
+            for (int x = x0; x <= x1; x++)
+            {
+                histogram[value.Pixels[(y * value.Width) + x]]++;
+                count++;
+            }
+        }
+
+        for (int level = 0, seen = 0; level < 256; level++)
+        {
+            seen += histogram[level];
+            if (seen >= 0.9 * count)
+            {
+                return level;
+            }
+        }
+
+        return 255;
+    }
+
+    private static PointD Centroid(GrayImage value, PointD click, double radiusPixels, GrayImage? artwork)
     {
         ArgumentNullException.ThrowIfNull(value);
         var centre = click;
@@ -130,28 +230,7 @@ public static class Snapping
                 return click;
             }
 
-            var histogram = new int[256];
-            int count = 0;
-            for (int y = y0; y <= y1; y++)
-            {
-                for (int x = x0; x <= x1; x++)
-                {
-                    histogram[value.Pixels[(y * value.Width) + x]]++;
-                    count++;
-                }
-            }
-
-            int paper = 255;
-            for (int level = 0, seen = 0; level < 256; level++)
-            {
-                seen += histogram[level];
-                if (seen >= 0.9 * count)
-                {
-                    paper = level;
-                    break;
-                }
-            }
-
+            int paper = PaperLevel(value, x0, x1, y0, y1);
             double sw = 0, sx = 0, sy = 0;
             for (int y = y0; y <= y1; y++)
             {
@@ -162,8 +241,9 @@ public static class Snapping
                         continue;
                     }
 
-                    double w = paper - value.Pixels[(y * value.Width) + x] - 40;
-                    if (w > 0)
+                    int i = (y * value.Width) + x;
+                    double w = paper - value.Pixels[i] - 40;
+                    if (w > 0 && (artwork is null || artwork.Pixels[i] >= ArtworkPaper))
                     {
                         sw += w;
                         sx += w * x;
