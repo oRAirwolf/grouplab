@@ -2475,6 +2475,36 @@ The surface fit starts from the whole-sheet homography, so it inherits the reord
 
 ---
 
+## Entry 49 section 2. The macOS rerun from Windows' corners: refinement is the first of two, not the only one
+
+`docs/NOTES-FROM-PLANNING.md` entry 49 section 2, ordered by entry 52 section 5 item 4. **The question:** whether corner refinement is the only place the platforms diverge, or the first of two.
+
+**Reproduce:** `grouplab spike corners --export <file>` on one platform and `--replay <file>` on another. In the gate record workflow the `windows corners` job exports the journal and the `macos-latest, from windows corners` job reruns from it, into the run summary. Both report and neither gates.
+
+**The method.** The export records every detection the `markers` and `refinement` measurements ask for, in the order they ask: the image by hash, the settings it was given, and the corners it returned at full precision. The replay hands those back instead of detecting, and reruns the same two measurements with the homography, the warp and the bull fit still the replaying platform's own. Those two are the tables macOS prints differently. The hash is what makes the answer readable: it separates an input this platform built differently from corners this platform refined differently.
+
+**The control, on Windows:** 78 detections replayed, all 78 images identical, and both tables reprint exactly as committed.
+
+| | macOS, detecting for itself | macOS, from Windows' corners |
+|---|---|---|
+| `markers`, lines differing from the committed Windows table | 2 | 1 |
+| `refinement`, lines differing | 19: 3 paper, 16 synthetic | 1, synthetic |
+| Images identical to Windows before detection | | 62 of 78: all 14 of `markers`, 48 of 64 of `refinement` |
+
+**1. Sixteen of the nineteen `refinement` differences were never detection.** The 16 synthetic calls, eight refinement variants at each of 600 and 300 DPI, are handed an image macOS built differently; every paper call and every `markers` call is handed a byte-identical one. The synthetic scan is rendered and then warped by the same native library that detects it, so the difference enters before detection is asked anything. Replaying Windows' corners collapses those 16 rows to one: 300 DPI, subpix 1.5 modules, worst bull 0.00225 in against 0.00226 here, which the bull fit reads off macOS's own raster.
+
+**2. The three differing paper rows were detection, and they come right.** 600 contour, 300 contour and 300 subpix 0.25 module all agree once Windows' corners are used, on byte-identical images. Entry 48 localised this by matching records corner by corner; this shows it directly.
+
+**3. One row differs with the image identical and the corners identical.** `markers`, sheet 3 at 300 DPI, four markers of 34: the 90th percentile worst bull is 0.03100 in on Windows and 0.03099 here. The 600 DPI row above it, which also differed, comes right. Nothing about that row's input differs, so **corner refinement is not the only place the platforms diverge.** It is the first of two, which is what entry 49 section 2 said the rerun would be worth knowing either way.
+
+**What the second divergence is not yet known to be.** That row is a percentile over 40 random four-marker subsets, each refitted by the native homography solve and then read through the bull fit, and both are native code built separately for each platform. Which of the two moves is the same experiment one stage lower, replaying the homography as this replays detection, and it is not claimed here. The difference is one in the last printed digit, 0.00001 in, on the least supported fit in the table.
+
+**What this does not change.** The gate record still fails on macOS, and nothing about the gate is touched (entry 49 section 1). This says where the difference enters, which is what was asked.
+
+**Tests:** Core 758 passing, App 35 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2607,3 +2637,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 52: tables from fits no command reproduces left as measured and marked, over updating the columns that can be regenerated.** Half a row regenerated disagrees with its other half and with the conclusions written beneath the table.
 - **Entry 52 section 3: reordering applied at the homography fit, over shuffling the detector's output.** The sort puts any shuffled detection back in order, so only a shuffle after it measures the registration's sensitivity to order.
 - **Entry 52 section 3: the edge fit's leave-one-out run from the converged pass's start, over rerunning the whole locator per point.** It isolates one point's weight in the fit; rerunning the locator would also move the rays and confound the two.
+- **Entry 49 section 2: the journal replayed by call order, with the image hash reported beside it, over looking each detection up by its image.** A platform whose raster differs would match nothing and replay nothing, and the rerun exists to hand it Windows' corners anyway.
+- **Entry 49 section 2: only the two measurements whose tables differ replayed, over all eight.** The other six already print identically on macOS, so replaying them could only repeat what the gate record shows.

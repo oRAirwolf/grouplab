@@ -289,7 +289,7 @@ The 24-shots figure in section 4 is the clearest case the target design has ever
 
 ## 2026-09-15, entry 52: question 15 answered, and the thing underneath it
 
-**Status: actioned 2026-09-15.** The macOS rerun from Windows' corners is next, as section 5 orders.
+**Status: actioned 2026-09-15.** Section 5 item 4's macOS rerun from Windows' corners is done, under entry 49 section 2.
 - **Sections 1 and 2:** the sort is committed with every record regenerated, and no verdict changed. `docs/PHASE1-RESULTS.md` "Entry 52" has the before-and-after tables, headed by your sentence.
 - **Two further instabilities show in them,** beyond RANSAC's consensus. `ultrawide1`'s surface fit converges to a focal length of 2053 px instead of 1940 from a slightly different start. Two correlation readings change, `ultrawide1` from structured to not distinguishable from random and `main_flat2` the other way.
 - **Records already stale:** regenerating under unchanged code first found five, reported separately there so they are not read as the sort's effect.
@@ -519,9 +519,10 @@ The styling work of entry 42 is done and does not pause. If something on the exi
 
 ## 2026-09-15, entry 49: three decisions, the README is telling visitors something false, and a fragility worth more than the gate that found it
 
-**Status: actioned 2026-09-15 for sections 1, 3 and 4. Section 2 is implemented and measured, and blocked on question 15: sorting the markers changes the Phase 0 record on Windows, no verdict with it. Section 5 is not started, and is the next measurement.**
+**Status: actioned 2026-09-15.** Section 2's sort is committed under entry 52, and its rerun from Windows' corners is done: refinement is the first of two divergences, not the only one. Section 5's three questions are answered under entry 52 section 3.
 - **Section 1, measured at `e03415c`:** the gate record workflow passes on Windows and Linux and fails on macOS, as the rule predicts.
 - **Section 1:** the gate record workflow now gates on the printed tables, compared line for line with the Windows tables committed in `scans/phase0/measurements/tables`, and reports the raw records without failing. No per-platform reference records.
+- **Section 2, the rerun:** `grouplab spike corners` records what Windows' detector returned and replays it elsewhere. On macOS the three differing paper rows of `refinement` come right, and its sixteen synthetic rows collapse to one, because the synthetic raster is warped by the same native library that detects and macOS builds it differently. One `markers` row still differs with the image byte-identical and the corners Windows', so there is a second divergence below detection. Reported in `docs/PHASE1-RESULTS.md` "Entry 49 section 2".
 - **Section 3:** both edits to `tools/scan_analysis/scrub_exif.py`, as written.
 - **Section 4:** the three README replacements as written, with the platforms between `<!--platforms-->` markers, and `ReadmeTests` requiring them to equal the matrix in `.github/workflows/ci.yml`. The Planned paragraph that still said "once CI exists" is corrected too.
 - **Section 6:** noted.
