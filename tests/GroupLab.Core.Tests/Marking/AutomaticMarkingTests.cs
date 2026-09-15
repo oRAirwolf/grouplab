@@ -54,7 +54,11 @@ public class AutomaticMarkingTests
         var session = new MarkingSession();
         session.LoadDetections(result.Scale!, result.Bulls, result.Detections, result.Summary);
         var report = GroupAnalysis.Analyse(session.State);
-        Assert.Equal(definition.Bulls.Count, report.Automatic);
-        Assert.Equal(definition.Bulls.Count, report.AllShots!.Shots);
+        // The sighter bulls' shots are reported and left out of the group (NOTES-FROM-PLANNING.md entry 33 section 1), so the group's
+        // placement counts cover the scoring shots only.
+        int scoring = definition.Bulls.Count(b => b.Scoring);
+        Assert.Equal(scoring, report.Automatic);
+        Assert.Equal(scoring, report.AllShots!.Shots);
+        Assert.Equal(definition.Bulls.Count - scoring, report.SighterShots);
     }
 }

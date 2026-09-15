@@ -63,7 +63,7 @@ These are design mockups, not screenshots of the current build. Every figure on 
 
 | | |
 |---|---|
-| **Language** | C#, on .NET 10. One language across the core and every platform shell, so the desktop and the phone cannot disagree about a measurement. |
+| **Language** | C#, on <!--framework-->.NET 10<!--/framework-->. One language across the core and every platform shell, so the desktop and the phone cannot disagree about a measurement. |
 | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia. |
 | **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on desktop. On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke. |
 | **Fiducials** | AprilTag `tag36h11`. |
@@ -117,7 +117,7 @@ flowchart TB
 What exists and is tested:
 
 - the GLTD target definition format, in JSON (GLTD-J) and as a binary QR payload (GLTD-B)
-- a validator, and twenty-two built-in target sheets
+- a validator, and <!--count:sheets-->22<!--/count--> built-in target sheets
 - a PDF renderer, and a print screen that drives it
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
@@ -140,6 +140,8 @@ Each phase has a gate and is not complete until the gate passes. The gates and t
 | **6. Android** | Camera capture, lens distortion fitted on the device. |
 | **7. Synchronisation** | Cloud provider adapters, three-tier storage. |
 | **8. iOS** | Built and signed on CI. |
+
+**macOS and Linux are wanted and are not a phase.** Nothing in the measurement core is Windows-specific and Avalonia runs on all three, so this is packaging and an imaging-backend reference rather than a port. It is tracked as a continuous requirement: once CI exists it runs on all three, and before either is offered as a build, the Phase 0 gate record has to reproduce on that platform rather than merely compile.
 
 Smaller things already specified and waiting: a three-axis unit setting (inches, centimetres and millimetres; MOA, mil and SMOA; yards and metres), adjust-to-zero turret corrections, calibre-aware edge-to-edge spread, and a volunteer print pack.
 

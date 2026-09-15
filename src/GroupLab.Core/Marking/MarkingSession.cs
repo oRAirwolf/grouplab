@@ -44,7 +44,7 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
 }
 
 /// <summary>A bull a shot can be assigned to: its index and label in the target definition, and its centre in image pixels.</summary>
-public sealed record BullAim(int Index, string Label, PointD Image);
+public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true);
 
 /// <summary>
 /// Everything a marking holds at one moment. It is immutable, so undo is keeping the previous one and every screen reads a

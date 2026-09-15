@@ -67,7 +67,8 @@ public sealed record GroupReport(
     int Manual,
     string Scale,
     bool ScaleAssumesSquareOn,
-    string? Problem);
+    string? Problem,
+    int SighterShots = 0);
 
 /// <summary>
 /// The statistics the marking screen shows, from the engine of M3 and nothing it does not specify. Each shot's offset is taken
@@ -100,19 +101,25 @@ public static class GroupAnalysis
     public static GroupReport Analyse(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var shots = state.Shots.Where(s => s.IsShot).ToList();
+
+        // A shot assigned to a sighter bull is a sighting shot, not part of the group: the first end-to-end run (NOTES-FROM-PLANNING.md
+        // entry 33 section 1) pooled a GL-CF25-LTR sheet's three sighters into its 25-shot group. They are counted, and left out.
+        var sighterBulls = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        var candidates = state.Shots.Where(s => s.IsShot).ToList();
+        int sighterShots = candidates.Count(s => s.Bull is { } b && sighterBulls.Contains(b));
+        var shots = candidates.Where(s => !(s.Bull is { } b && sighterBulls.Contains(b))).ToList();
         int excluded = shots.Count(s => s.Exclusion is not null);
         int notShots = state.Shots.Count(s => !s.IsShot);
         int automatic = shots.Count(s => s.Provenance == ShotProvenance.Automatic), corrected = shots.Count(s => s.Provenance == ShotProvenance.Corrected), manual = shots.Count(s => s.Provenance == ShotProvenance.Manual);
         if (state.Scale is null)
         {
-            return new GroupReport(null, null, excluded, notShots, automatic, corrected, manual, "no scale set", false, "Set a scale before the group can be measured: a reference length, a reference rectangle, or a GroupLab sheet's markers.");
+            return new GroupReport(null, null, excluded, notShots, automatic, corrected, manual, "no scale set", false, "Set a scale before the group can be measured: a reference length, a reference rectangle, or a GroupLab sheet's markers.", sighterShots);
         }
 
         var all = Figures(state, shots);
         var reduced = excluded == 0 ? all : Figures(state, [.. shots.Where(s => s.Exclusion is null)]);
         string? problem = all is null ? "Mark the shots." : null;
-        return new GroupReport(all, reduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, problem);
+        return new GroupReport(all, reduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, problem, sighterShots);
     }
 
     /// <summary>The plain sentence the screen shows for a group too small to quote, with section 9.1's range at that count where there is one.</summary>

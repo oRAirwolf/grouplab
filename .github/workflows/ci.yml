@@ -1,0 +1,53 @@
+# Build and test on every push and pull request, on all three desktop platforms (NOTES-FROM-PLANNING.md entries 31 section 3, 32 section 4
+# and 33 section 3). Windows is required. Linux and macOS are allowed to fail until they pass, then become required too. Each job writes its
+# test counts to the run summary, because building and agreeing on the numbers are different claims.
+name: build and test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    continue-on-error: ${{ matrix.os != 'windows-latest' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build GroupLab.slnx --configuration Release
+
+      - name: Test
+        run: |
+          set -o pipefail
+          status=0
+          for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests; do
+            dotnet test "$project" --configuration Release --no-build 2>&1 | tee -a test-output.txt || status=1
+          done
+          exit $status
+
+      - name: Test counts
+        if: always()
+        run: |
+          {
+            echo "### ${{ matrix.os }}"
+            echo
+            if [ -f test-output.txt ]; then
+              grep -E "Passed!|Failed!" test-output.txt | sed 's/^/- /' || echo "- no test summary was produced"
+            else
+              echo "- the tests did not run"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

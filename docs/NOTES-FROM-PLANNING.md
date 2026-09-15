@@ -8,6 +8,152 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 34: grouplab-testdata exists, and here is what goes in it
+
+**Status: open.** Unblocks question 13 section 1 and entry 23 section 5. Lower priority than entry 33 section 1, the end-to-end command, which still comes first.
+
+`https://github.com/oRAirwolf/grouplab-testdata` is created: public, GPL-3.0, one commit containing the licence, default branch `main`, no README. **GPL-3.0 is not a choice here and must not be changed**, because it is the licence named in the consent text every contributor agreed to.
+
+### 1. The data repository's README is the important file, not an afterthought
+
+It is the only document a contributor or a researcher will read, and it has to answer, without them having to ask:
+
+- **What this is**: photographs of shot targets, donated, for developing and testing GroupLab.
+- **What was done to them**: location metadata removed, pixels untouched, and the hash of both the original and the published file recorded so either can be checked.
+- **What was agreed**: the consent text, quoted verbatim, with its version. Not a summary.
+- **What is not here**: submissions whose contributor ticked the do-not-publish box. State plainly that such submissions exist, are used for testing only, and are never published. A reader should not have to infer that from silence.
+- **How to cite it**, and how a contributor asks for their photographs to be removed. Somebody will, eventually, and an answer written now is calmer than one written then.
+
+### 2. Layout, and one thing that does not fit the submission shape
+
+**One directory per submission**, named as the upload page names it, `YYYY-MM-DD_<id>`, holding the images and a provenance record. That keeps the published tree aligned with what arrives, so a question about any file has one place to look.
+
+**The provenance record carries**: submission id, submitted timestamp, consent version and the consent text verbatim, the six answers as given including empty ones, the original filename, the hash as uploaded and the hash as published, and what the scrubber removed. `grouplab intake` already writes most of this; make sure the consent text itself is in there and not just its version.
+
+**`scans/mounted/` does not fit that shape and should not be forced into it.** Those 23 photographs are Alan's own, taken before the upload page existed, with no submission id and no consent record because none was needed. Give them their own directory, `owner/`, with a provenance record that says what they are, who took them, and that they are published by the copyright holder directly. Inventing a fake submission record for them would be worse than having two shapes.
+
+They still go through the scrubber before they land there, per entry 23 section 5, and Alan keeps the originals outside both repositories.
+
+### 3. Credit the people who asked to be credited
+
+`meta.json` has a `credit_name` field and some contributors will fill it in. **Maintain a `CONTRIBUTORS.md` in the data repository listing those who gave a name**, and say in the README that a name is included only when the contributor supplied one. People who donate their work should be named if they wanted to be, and the field is pointless if nothing reads it.
+
+### 4. Plain git, no LFS, and say the size out loud
+
+Images are added once and never modified, so there is no delta churn and plain git handles this well. LFS would add a requirement on every contributor and a quota question, for a corpus that does not change. **State the current and expected size in the README** so nobody clones half a gigabyte by surprise.
+
+### 5. Wiring it to the code repository
+
+- **Record the URL and a pinned commit** in `grouplab`, somewhere a reader will find it: the README's test-data section already describes this repository, so put it there and in `CONTRIBUTING.md`.
+- **`PublicationTests` already looks for a checkout at `../grouplab-testdata` or the path in `GROUPLAB_TESTDATA`**, and does nothing when absent. Leave that behaviour: CI should not need half a gigabyte to run.
+- **Add one test that runs when the checkout is present**: every published submission has a provenance record, no image carries a location, no do-not-publish submission is present, and every published file matches its recorded hash. That last one is what makes the hashes worth recording.
+
+### 6. Order
+
+Entry 33 section 1 first. Then this. Nothing here is blocked by the weekend, but the end-to-end command is worth more before Monday than a populated data repository is.
+
+---
+
+## 2026-09-15, entry 33: nothing has ever run end to end, and that is what to do before the weekend
+
+**Status: actioned 2026-09-15, except section 6, which stays blocked as the entry says (entry 34 has since unblocked `grouplab-testdata`).** Section 1: `grouplab analyze` runs the whole path with the stage trace, and `EndToEndTests` gates it on synthetic truth: 28 of 28 shots within 0.15 in, worst centre 0.0047 in, 1.7 s. It found two integration faults, both fixed: an invalid definition crashed hole detection, and sighter shots were pooled into the group. Section 3: `ReadmeTests` and a three-platform workflow. Section 4: the runtime packages conditioned per platform. Section 5: `scripts/` and the paper protocol committed, the branch convention rewritten, and a gate status table at the top of `docs/PHASE1-RESULTS.md`. Reported in `docs/PHASE1-RESULTS.md` "Entry 33".
+
+### 1. The pipeline has never been run as one thing
+
+Registration works. The hole detector works. `ShotAssignment` exists. The statistics engine matches 45,476 reference keys. Every piece is green.
+
+**Nothing joins them.** `src/GroupLab.Cli` has verbs for intake, scrubbing, the library and a dozen spikes, and no verb that takes a photograph of a GroupLab sheet and returns a group. The parts have only ever been exercised separately, by spikes that each build their own inputs.
+
+That is the most dangerous state a project of this shape can be in, because every part reports success and the thing the parts exist for has never been attempted. The failures waiting there are interface failures: a coordinate frame that means something different on each side of a call, a unit assumed in one place and converted in another, an ordering that only matters once two stages are composed. None of them can be found by testing the stages.
+
+**Build `grouplab analyze <image> [--target <definition>]`.** One command, the whole path: load, register, detect inside the registered sheet, assign each hole to its bull, pool the offsets into one group, compute the statistics, emit a report. It should run against the sheets already in `scans/`, which means **it needs no paper, no printer and no range trip.**
+
+**Emit the `StageRecord` trace `DESIGN.md` section 19 already specifies**, so the console form exists before any analysis screen does. That is not extra work bolted on; it is how the spikes have been reporting all along, and it is what makes a wrong answer diagnosable rather than merely wrong.
+
+**Then gate it on synthetic truth, which is exact.** `SyntheticSheet` can already render a sheet, so render one with shots placed at coordinates chosen by the test, run the whole command against the rendered image, and require every recovered shot within the conformance threshold of where it was placed. **That is the first test in this project that measures the thing GroupLab actually does**, rather than a stage of it. If the composed answer disagrees with the truth it was built from, no amount of green stages matters.
+
+Report the outcome honestly, including how long it takes and where it is slow. A first end-to-end run that finds three integration bugs is a successful run.
+
+### 2. Why this specifically, and why before the weekend
+
+Alan shoots the Phase 1 paper protocol this weekend and comes back with mounted sheets, which are the frames the photograph gate has been waiting on since entry 17.
+
+**If the end-to-end path does not exist when those frames arrive, they sit unanalysed while somebody writes it**, and the integration bugs get found while the interesting measurement waits. If it does exist, the frames go in on Monday and produce a number the same day.
+
+There is also a smaller reason worth saying: the application currently cannot analyse a GroupLab sheet at all. It can mark a commercial target by hand, which is the fallback path. The primary path, the one the whole target format and fiducial design exists to serve, has no user-facing route. That gap is invisible from the test counts.
+
+### 3. The README guard and three-platform CI
+
+Entry 31 section 3 and entry 32 section 4 are one job, and the repository now exists to run them against.
+
+- **`ReadmeTests`** per entry 31 section 3: every relative link resolves, every referenced image exists, stated counts match reality with the number between marker comments, the stated framework matches `Directory.Build.props`, and no em dash.
+- **A GitHub Actions workflow** on push and pull request, a matrix over `windows-latest`, `ubuntu-latest` and `macos-latest`, running `dotnet build` and `dotnet test`. Windows required; the other two allowed to fail until entry 32 section 1 lands, then required too. Report test counts per platform, because building and agreeing on the numbers are different claims.
+
+### 4. Entry 32 section 1, the one-file defect
+
+The unconditional `OpenCvSharp4.runtime.win` reference. Three lines, and it is the difference between a public repository that a Linux developer can build and one that fails at restore. Do it before the CI matrix, so the matrix has a chance of going green.
+
+### 5. Housekeeping, all small and all currently untracked or stale
+
+- **`scripts/` has never been committed.** `Get-TargetSubmissions.ps1` pulls the donated submissions and is the only copy. It holds no secret: the key path is a parameter and the key lives outside the repository. Commit it.
+- **`docs/PHASE1-PAPER-PROTOCOL.md` and its PDF are untracked.** Alan shoots that protocol this weekend. It should be in the repository before it is used, not after.
+- **`CONTRIBUTING.md` states a branch convention that no longer matches reality.** `main` and `phase-1` are now identical and both are pushed by hand every time. Either say that `main` is the trunk and `phase-1` is retained until Phase 1 formally closes, or propose retiring `phase-1`. Do not leave a document describing a workflow nobody follows.
+- **`docs/PHASE1-RESULTS.md` should say plainly which Phase 1 gates are met and which are not.** The mounted photograph gate is not met and cannot be until the weekend. A results document that does not distinguish "passed" from "not yet measured" is the kind of thing that later gets read as the former.
+
+### 6. Blocked, so that it is clear what is not on this list
+
+- **The mounted photograph gate**, and the backer measurement on a GroupLab sheet. Both need frames that do not exist yet.
+- **`grouplab-testdata`.** The repository has to be created by Alan before anything can be wired to it. Once it exists, the work is a pinned commit and URL recorded here, `scans/mounted/` moved across scrubbed, and the publication test pointed at it.
+- **Adjust-to-zero and the phone specification**, entry 21's remaining scope. Mine to write, not yours to start.
+
+---
+
+## 2026-09-15, entry 32: macOS and Linux, which is one defect today and one gate later
+
+**Status: actioned 2026-09-15 for sections 1 and 4; sections 2 and 3 are the shape of later work, as the entry says.** Section 1: each OpenCvSharp runtime package is conditioned on its platform, with the ids checked on nuget.org. Section 4: the CI matrix is in `.github/workflows/ci.yml`. The first run confirms whether `WinExe` is harmless off Windows. Section 3's gate, the Phase 0 gate record reproducing on macOS and Linux, is not yet done. Reported in `docs/PHASE1-RESULTS.md` "Entry 33". Alan has asked for macOS and Linux support on the list. Section 1 is a real defect that exists now. Sections 2 to 4 are the shape of the work, not a request to start it this week. Entry 31 section 3's README guard and CI come first, and section 4 here is part of the same CI job.
+
+### 1. The repository cannot be built anywhere except Windows, today
+
+`src/GroupLab.Cli/GroupLab.Cli.csproj` references `OpenCvSharp4.runtime.win` **unconditionally**. That package carries the Windows native OpenCV binaries and exists for no other platform, so `dotnet build` on macOS or Linux fails at restore. Nothing else in the tree is Windows-specific as far as I can see, which makes this a one-file problem rather than a port.
+
+**Fix it now rather than when somebody asks**, because it is three lines and because it is currently a lie by omission: the README says the project is C# on .NET 10 with Avalonia, which reads as cross-platform, and it is not.
+
+The shape is a conditioned `PackageReference` per runtime, something like a Windows condition on the existing one and sibling entries for the osx and linux runtime packages. **Check the exact package ids on nuget.org rather than taking mine**, because OpenCvSharp's runtime packages have been renamed more than once and some are pinned to specific distribution versions, which matters for what a Linux user can actually restore.
+
+`src/GroupLab.App/GroupLab.App.csproj` also sets `OutputType` to `WinExe`. On .NET that is harmless off Windows, where it behaves as `Exe`, but confirm rather than assume.
+
+### 2. What is genuinely easy, and why
+
+Avalonia runs on macOS and Linux already and renders through Skia on all three, so the interface is not the problem. `GroupLab.Core` has no platform types and no OpenCV dependency by design, so the measurement code should need nothing. The realistic work is the imaging backend, the packaging, and the differences nobody predicts.
+
+**Three of those worth naming in advance:**
+
+- **Case sensitivity.** Linux filesystems are case-sensitive and Windows is not, so any path with the wrong case works on your machine and fails there. This is a benefit rather than a cost: a Linux build is the cheapest detector of a class of bug that is otherwise invisible until a contributor hits it.
+- **Fonts.** The PDF renderer embeds what it needs, so printing should be unaffected, but the interface picks up system fonts and will look different. Not a correctness problem; worth knowing before somebody reports it as one.
+- **Printing.** The print screen's "save a PDF" path is portable. Driving a printer with scaling disabled, which entry 25 section 2 made a hard requirement, is platform-specific and may simply not be possible on one of them. If so, say so in the dialog on that platform rather than silently printing at whatever scale the driver chooses.
+
+### 3. Where it sits in the plan
+
+**Not a phase.** `DESIGN.md` section 21 numbers phases by capability, and "runs on another desktop" is not a capability, it is a property that either holds continuously or rots. A phase would mean it is allowed to be broken until that phase arrives, which is how a project ends up with a three-week port.
+
+**So: fix section 1 now, and from the moment CI exists, keep all three green on every push.** The cost of that is close to zero while the code is small and rises every month it is deferred.
+
+**The one thing that does need a gate, later:** a build that compiles is not a build that measures. Before macOS or Linux is offered to anybody, **the Phase 0 gate record must reproduce on that platform**, and the comparison is byte-identical or the difference is explained. Floating point, image decoding and font rasterisation all vary by platform, and a quarter-thousandth disagreement in a bull centre is the kind of thing that would otherwise be discovered by a stranger with a scanner.
+
+### 4. CI covers all three, and going public just made that free
+
+Entry 31 section 3 holds a GitHub Actions workflow until the fresh repository exists. It does now, and it is public, so **the hosted runners for `ubuntu-latest`, `macos-latest` and `windows-latest` are free with no minute limit.** That changes the calculation: three-platform CI costs nothing but the yaml.
+
+**When you write that workflow, make it a matrix over the three**, with Windows required and the other two allowed to fail at first so the build is not blocked before section 1 lands. Once they pass, make them required too. Report the test counts per platform, because "it built" and "it produced the same numbers" are different claims and only the second one matters.
+
+### 5. There is a person waiting
+
+Alan has a friend who wants the macOS build, so this is not hypothetical demand. **That is a reason to fix section 1 promptly and not a reason to promise a release.** A macOS build that compiles and has never had its measurements checked is worse than no macOS build, because the friend would trust the numbers.
+
+Also worth knowing: distributing a macOS build that people can open without fighting Gatekeeper needs a paid Apple Developer account and notarisation, which is a separate decision Alan has parked. A build somebody compiles themselves needs none of that, and is the right first offer.
+
+---
+
 ## 2026-09-15, entry 31: the gate is clear, the failing test deserves a better fix than deletion, and the README needs a guard
 
 **Status: actioned 2026-09-15, except section 3, which waits for the fresh repository as the entry says.** Section 2: the real-photograph test now writes its own location into a copy of `main1.jpg` and passes. Section 4: the hash map and citations were already done, the allowlist removal, the section 15.4 wording and the results figures are in, and the worktree branch is deleted. Reported in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Nothing pushed. Section 1 unblocks the push. Section 3 is new work and waits until the fresh repository exists.

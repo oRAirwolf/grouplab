@@ -51,7 +51,7 @@ public static class MarkingFile
             scaleAssumesSquareOn = report.ScaleAssumesSquareOn,
             registration = state.RegistrationSummary,
             pointOfAim = state.PointOfAim,
-            bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image }),
+            bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image, b.Scoring }),
             shots = state.Shots.Select(s => new
             {
                 s.Id,
@@ -120,7 +120,7 @@ public static class MarkingFile
                     : $"This marking file's format is \"{format}\", which this version of GroupLab does not read.");
         }
 
-        var bulls = (file["bulls"] as JsonArray ?? []).Select(b => new BullAim((int)b!["index"]!, (string?)b["label"] ?? "", Point(b["image"])!.Value)).ToImmutableList();
+        var bulls = (file["bulls"] as JsonArray ?? []).Select(b => new BullAim((int)b!["index"]!, (string?)b["label"] ?? "", Point(b["image"])!.Value, (bool?)b["scoring"] ?? true)).ToImmutableList();
         var shots = (file["shots"] as JsonArray ?? []).Select(s => new MarkedShot(
             (int)s!["id"]!,
             Point(s["image"])!.Value,

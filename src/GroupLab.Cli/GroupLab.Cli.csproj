@@ -9,9 +9,18 @@
     <ProjectReference Include="..\GroupLab.Core\GroupLab.Core.csproj" />
   </ItemGroup>
 
+  <!--
+    OpenCV's native binaries come per platform (NOTES-FROM-PLANNING.md entry 32 section 1). The managed wrapper restores everywhere, and each
+    native runtime only on the platform it serves, all at the wrapper's version, checked on nuget.org: Windows; Linux x64 through the official
+    package; and macOS for both Intel and Apple silicon, whose native libraries sit under separate runtime folders so the two coexist. The
+    older osx.10.15-x64 and osx_arm64 packages stop at 4.6 and 4.8 and must not be used with this wrapper.
+  -->
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="OpenCvSharp4.official.runtime.linux-x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.arm64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
   </ItemGroup>
 
 </Project>

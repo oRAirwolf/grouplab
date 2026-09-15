@@ -79,7 +79,11 @@ Where the specification is silent and a choice has to be made to go on, record t
 - **No pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They must never appear in code, comments, documentation or interface text.
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.
-- **Git.** Work on a branch, not `main`. Branch names follow the phase, so `phase-0`, `phase-1` and so on.
+- **Git.** `main` is the trunk and what the repository's front page shows.
+  - **`phase-1`** is kept until Phase 1 formally closes. Today it matches `main`, and both are pushed together.
+  - **`phase-0` and `phase-0a`** are closed phases, kept as history.
+  - **When Phase 1 closes,** `phase-1` is retired rather than carried alongside `main`.
+  - **New work** goes on `main`, or on a short-lived branch merged back into it.
 
 ## Long-running steps
 

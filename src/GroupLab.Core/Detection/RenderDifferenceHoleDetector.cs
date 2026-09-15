@@ -101,7 +101,16 @@ public static class RenderDifferenceHoleDetector
         ArgumentNullException.ThrowIfNull(registration);
         ArgumentNullException.ThrowIfNull(backend);
         options ??= new RenderDifferenceOptions();
-        var scene = SceneBuilder.Build(definition).Pages[tile];
+        // The expected artwork of a sheet already printed, drawn even when today's validator would refuse to print it: the Phase 0 sheets
+        // fail test 26f since entry 13 made it an error, and a sheet on paper is what it is (found by the first end-to-end run, entry 33).
+        var pages = SceneBuilder.Build(definition, new RenderOptions(AllowInvalid: true)).Pages;
+        if (tile < 0 || tile >= pages.Count)
+        {
+            throw new InvalidOperationException(string.Create(System.Globalization.CultureInfo.InvariantCulture,
+                $"the definition renders {pages.Count} page(s), so tile {tile} has no expected artwork to difference against"));
+        }
+
+        var scene = pages[tile];
         pageRender ??= SceneRasterizer.Rasterize(scene, dpi);
         int width = observed.Width, height = observed.Height;
         var expected = ExpectedImage.Render(pageRender, dpi, registration, width, height);

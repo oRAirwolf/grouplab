@@ -6,6 +6,25 @@
 
 ---
 
+## Where the Phase 1 gates stand
+
+Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not yet measured" is never read as "passed". The gates are `docs/PHASE1-BRIEF.md` section 2's.
+
+| Gate | Threshold | Status |
+|---|---|---|
+| Conformance test 43 | 0.001 in worst bull on a synthetic raster | **Met**, and checked on every test run. Must not regress |
+| Paper gate | 0.005 in worst bull on the ten printed sheets | **Met.** Ten of ten through the selected model, worst bull 0.00319 in (M1.5) |
+| Photograph gate, flat | 0.005 in worst bull on `main_flat1-3` | **Not met.** The flat frames nearly pass: the frame that decoded every marker is inside on every scoring bull, and the failures are named (M1.11) |
+| Photograph gate, mounted | 0.005 in worst bull on the seven usable pinned frames | **Not met: 0 of 7**, and an open requirement (M1.11). It cannot be settled until mounted GroupLab sheets are photographed, which is this weekend's paper session |
+| Hole detection, point 1 | At least 25 of 27 on `300_nm_hand_load` with zero false positives | **Met,** as a reproduction of the verified survey result rather than a fresh position check (M2.1) |
+| Hole detection, point 2 | 99 percent of holes with no false positives on synthetic sheets, matched at 0.15 in | **Not met,** under the amended tolerance too (M2.2) |
+| Hole detection, point 3 | Centre accuracy against truth | Reported, not gated |
+| Statistics | `docs/STATISTICS.md` section 15.5 | **Met on points 1 and 3 to 6**: 45,476 keys compared with nothing pending ("Entry 28"), coverage 94.73 percent, the Monte Carlo table within tolerance on all 490 cells. **Point 2 is met on the shots and not on the series**, because the two fixtures group shot 242 differently |
+
+**Not a brief gate, and new:** the whole path from image to group now runs as one command and matches synthetic truth ("Entry 33" below).
+
+---
+
 ## M0. The marker module sweep
 
 `docs/FIDUCIAL-DECISION.md` section 10, measurement 2: the same target printed at 0.3, 0.4, 0.5, 0.6 and 0.8 mm modules, to find the dot-gain floor on the actual printer. The sheets are generated and checked here; the measurement needs paper, and is next weekend's.
@@ -1495,6 +1514,71 @@ Every value the screen shows obeys it:
 
 ---
 
+## Entry 33. The first end-to-end run
+
+`docs/NOTES-FROM-PLANNING.md` entry 33 section 1: every stage was green and nothing had joined them.
+
+**`grouplab analyze <image> --target <definition>` is the whole path.** `src/GroupLab.Core/Analysis/SheetAnalysis.cs` composes the same code the marking screen uses, `AutomaticMarking` and `GroupAnalysis`, so the command line and the screen cannot disagree. The stages are:
+1. decode;
+2. register from the printed markers;
+3. detect holes inside the registered sheet;
+4. assign each hole to its bull;
+5. pool the offsets into one group, and compute its statistics.
+
+**The trace.** Every stage files a `StageRecord`, and the command prints DETECTION-PIPELINE section 6.3's console form, so the console exists before any analysis screen does. Detection records each rejected candidate at its page position, and assignment records every ambiguous shot. `--json` writes the result as a marking file the marking screen opens.
+
+**`--target` is required for now.** The sheet's identifier is printed and encoded in its codes, but nothing reads either. Guessing among built-in definitions that share marker ids is not safe.
+
+**The gate against synthetic truth,** `EndToEndTests`.
+- **The image:** GL-CF25-LTR rendered at 300 DPI, turned 0.7 degrees, scaled by 1.001 and shifted inside a larger frame, with one hole per bull at an offset the test chose.
+- **The run:** the image is written to a PNG, and the command's own analysis runs on the file.
+- **The result:**
+  - **Recovered:** all 28 placed shots, each within the brief's 0.15 in and assigned to the bull it was placed beside, with no strays.
+  - **Centre error:** median 0.0019 in, worst 0.0047 in.
+  - **Pooled group:** 25 scoring shots, mean radius 0.1951 in against the placed shots' 0.1935 in.
+  - **Time:** the whole analysis took 1.7 s.
+
+**It found two integration faults that no stage test could.**
+1. **A printed sheet whose definition fails today's validator could not be analysed at all.**
+   - **The cause:** the Phase 0 sheets fail test 26f, which entry 13 made an error. The renderer refused them, and the hole detector indexed an empty page list and crashed.
+   - **The fix:** the detector now draws the expected artwork of a sheet that already exists whatever the validator says about printing new ones. It records that decision in the trace, and fails with a reason instead of an index error. The automatic path reports it as a failed stage.
+2. **Sighter shots were pooled into the group.** GL-CF25-LTR's three sighters went into its 25-shot group, because `GroupAnalysis` never read a bull's `Scoring` flag.
+   - **The fix:** a bull now carries it, the marking file records it, and shots on a sighter are reported and left out, counted in `SighterShots`.
+   - **Where it shows:** the marking screen shares the fix.
+
+**On the committed Phase 0 images,** which are unshot sheets:
+
+| Image | Registration | Holes | Stages that dominate | Total |
+|---|---|---|---|---|
+| `gl-cf25-ltr-1-600-dpi.png` | 34 of 34 markers, 136 of 136 corners, printed at 100.04 percent | 0, none rejected | holes 4.3 s, bull location 2.5 s, decode 0.7 s | 7.7 s |
+| `main_flat1.jpg` | 34 of 34 markers, homography with radial distortion | 0, 54 candidates rejected | holes 6.6 s, bull location 1.2 s | 8.0 s |
+
+**Where it is slow.**
+- **Hole detection,** 4 to 7 s at these resolutions, is most of every run.
+- **Bull location** is Phase 0's measurement locator, 1 to 2.5 s. Analysis uses its recovered centres, and it could be skipped when only the group is wanted.
+- **Decoding** reads the image twice, once as grey and once as value.
+
+Nothing has been tuned for speed, and nothing here needs to be before the weekend.
+
+**What it is for.** This weekend's mounted sheets go straight into `grouplab analyze` on Monday.
+
+**Entry 33 section 3: the README guard and CI.**
+- **`ReadmeTests`** checks README.md's facts. Every relative link and image must resolve. The number of built-in sheets between `<!--count:sheets-->` markers must match `targets/`. The framework between `<!--framework-->` markers must match `Directory.Build.props`. No em dash may appear. Each failure names the line and says what to change.
+- **`.github/workflows/ci.yml`** builds and tests on Windows, Linux and macOS on every push and pull request, and writes each platform's test counts to the run summary. Windows is required. Linux and macOS may fail until they pass.
+
+**Entry 33 section 4 and entry 32 section 1: OpenCV's native runtime per platform.**
+- **The fix:** the CLI referenced `OpenCvSharp4.runtime.win` unconditionally, so nothing restored off Windows. Each runtime is now conditioned on its platform, at the wrapper's 4.13.0.20260627:
+  - `OpenCvSharp4.runtime.win` on Windows;
+  - `OpenCvSharp4.official.runtime.linux-x64` on Linux;
+  - `OpenCvSharp4.runtime.osx.x64` and `OpenCvSharp4.runtime.osx.arm64` on macOS.
+- **The ids were checked on nuget.org.** The older `osx.10.15-x64` and `osx_arm64` packages stop at 4.6 and 4.8.
+- **`GroupLab.App`'s `WinExe`** is documented as behaving as `Exe` off Windows. CI is the confirmation.
+- **Not yet claimed:** whether the build passes, and whether it measures the same off Windows. The first CI run shows the first. Entry 32 section 3's gate, the Phase 0 gate record reproducing on that platform, is still to do.
+
+**Tests:** Core 714 passing, App 4 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1581,3 +1665,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 28: rebuilding the aimed coordinates from the shot and a recovered aim, over excluding the four Fligner-Killeen keys as a known difference.** The rebuild reproduces R's doubles and all four statistics to 5.5e-13, so the gate checks something true rather than recording a gap; regenerating the fixtures at full precision would make it unnecessary.
 - **Entry 28: a stated digital zoom of 0 read as 1 in the lens key, over keeping the tag's value.** The EXIF standard defines 0 as digital zoom not used, which is the geometry of 1, and every Pixel photograph in `scans/mounted/` states it.
 - **Entry 28: refusing a `meta.json` whose opt-out field is missing, over treating it as false.** A missing opt-out is unknown, and publishing on unknown consent cannot be undone.
+- **Entry 33: `grouplab analyze` composing `AutomaticMarking` and `GroupAnalysis`, over a separate pipeline for the command line.** The screen and the command then run the same code, so a fault found by one is fixed in both, which is how the sighter fault reached the marking screen's fix.
+- **Entry 33: a printed sheet analysed even when its definition fails today's validator, over refusing it.** Validation decides whether to print a sheet; a sheet already on paper is what it is, and refusing it would make every Phase 0 sheet unanalysable.
+- **Entry 33: `--target` required, over guessing the definition from the image.** Nothing reads the printed identifier or codes yet, and the built-in definitions share marker ids.

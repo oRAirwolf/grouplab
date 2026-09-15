@@ -3,6 +3,7 @@ using GroupLab.Core.Detection;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Measurement;
+using GroupLab.Core.Trace;
 
 namespace GroupLab.Core.Marking;
 
@@ -29,10 +30,15 @@ public static class AutomaticMarking
 {
     /// <param name="grey">The image as grey, for the markers.</param>
     /// <param name="value">The image as HSV value, max(R, G, B), for the holes.</param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend)
+    /// <param name="trace">
+    /// Where each stage records what it did (DESIGN.md section 19 [r3]); registration's stages come from <see cref="SheetMeasurer"/>,
+    /// and the hole detection and assignment stages are recorded here.
+    /// </param>
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
-        var measurement = SheetMeasurer.Measure(grey, metadata, definition, new MeasureOptions(), backend);
+        trace ??= new Trace.TraceRecorder();
+        var measurement = SheetMeasurer.Measure(grey, metadata, definition, new MeasureOptions(), backend, trace);
         var fiducials = measurement.Fiducials;
         string markers = fiducials is null ? "no markers" : string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found");
         if (measurement.Registration is not { } registration || fiducials is null)
@@ -43,12 +49,59 @@ public static class AutomaticMarking
         var mapping = registration.Mapping;
         var missing = fiducials.Missing.Select(m => mapping.ToImage(new PointD(m.X, m.Y))).ToList();
         double dpi = (measurement.Scale?.PixelsPerDmmArea ?? fiducials.PixelsPerDmm) * 254;
-        var holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend);
+        RenderDifferenceResult holes;
+        using (var stage = trace.Begin("S5-S8.holes"))
+        {
+            try
+            {
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // DESIGN.md section 19: the trace is never the only place an error appears, so the failure is returned as well as recorded.
+                stage.Done(StageStatus.Failed, ex.Message);
+                return new AutomaticResult(measurement, null, [], [], missing, markers, "hole detection failed: " + ex.Message);
+            }
 
-        var bulls = measurement.Bulls.Select(b => new BullAim(b.Index, b.Name, mapping.ToImage(b.Recovered ?? b.Declared))).ToList();
+            if (GroupLab.Core.Gltd.Validation.GltdValidator.Validate(definition).Any(d => d.Severity == GroupLab.Core.Gltd.Severity.Error))
+            {
+                stage.Decide("expected artwork", "rendered although the definition fails validation", "the sheet is already printed, and what was printed is what must be differenced", "refuse the sheet");
+            }
+
+            stage.Parameter("resolution", string.Create(CultureInfo.InvariantCulture, $"{dpi:0.0} px per inch, from the registration"));
+            stage.Metric("ink fraction", holes.InkFraction, "of paper");
+            stage.Metric("holes", holes.Holes.Count, "count");
+            stage.Metric("rejected", holes.Rejected.Count, "count");
+            foreach (var r in holes.Rejected)
+            {
+                var page = mapping.ToPage(new PointD(r.X, r.Y));
+                stage.Reject(string.Create(CultureInfo.InvariantCulture, $"blob {r.DiameterInches:0.000} in across"), r.Reason, Trace.PointInches.FromDmm(page.X, page.Y));
+            }
+
+            int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized);
+            stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
+                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}"));
+        }
+
+        var bulls = measurement.Bulls.Select(b => new BullAim(b.Index, b.Name, mapping.ToImage(b.Recovered ?? b.Declared), definition.Bulls[b.Index].Scoring)).ToList();
         var bullPages = definition.Bulls.Select(b => new PointD(b.X, b.Y)).ToList();
         var shotPages = holes.Holes.Select(h => mapping.ToPage(new PointD(h.X, h.Y))).ToList();
-        var assignment = ShotAssignment.Assign(shotPages, bullPages);
+        ShotAssignmentResult assignment;
+        using (var stage = trace.Begin("S9.assign"))
+        {
+            assignment = ShotAssignment.Assign(shotPages, bullPages);
+            int ambiguous = assignment.Shots.Count(s => s.Ambiguous), unassigned = assignment.Shots.Count(s => s.Bull is null);
+            stage.Decide("assignment", assignment.Method.ToString(), assignment.Reason);
+            foreach (var s in assignment.Shots.Where(s => s.Ambiguous))
+            {
+                stage.Detail(string.Create(CultureInfo.InvariantCulture,
+                    $"shot {s.Shot + 1} ambiguous: given bull {s.Bull?.ToString(CultureInfo.InvariantCulture) ?? "none"} at {s.Distance / 254:0.000} in, nearest bull {s.NearestBull} at {s.NearestDistance / 254:0.000} in, margin {s.Margin / 254:0.000} in"));
+            }
+
+            stage.Done(ambiguous > 0 || unassigned > 0 ? StageStatus.Degraded : StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
+                $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
+        }
+
         var detections = holes.Holes.Select((h, i) => (new PointD(h.X, h.Y), assignment.Shots[i].Bull)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,

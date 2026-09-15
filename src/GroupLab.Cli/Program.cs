@@ -45,6 +45,7 @@ return args switch
     ["mounted", "pair", "--debug", var directory] => ((Func<int>)(() => { MountedPair.DebugDirectory = directory; return MountedPair.Run("scans", "scans/phase1", Console.Out); }))(),
     ["intake", var submission, var publicRoot, .. var rest] => GroupLab.Cli.IntakeVerb.Run(submission, publicRoot, rest, Console.Out),
     ["scrub", var input, var output] => GroupLab.Cli.ScrubVerb.Run(input, output, Console.Out),
+    ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["stats", "coverage"] => StatsCoverage.Run(Console.Out),
     ["stats", "range-table"] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, 2, 100, 10_000_000, Console.Out),
     ["stats", "range-table", var from, var to] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, int.Parse(from, CultureInfo.InvariantCulture), int.Parse(to, CultureInfo.InvariantCulture), 10_000_000, Console.Out),
@@ -464,6 +465,7 @@ static int Usage()
         grouplab selftest [<targets-directory>]
         grouplab intake <submission-directory> <public-directory> [--accept <file>]...
         grouplab scrub <input-image> <output-image>
+        grouplab analyze <image> --target <file.gltd.json> [-v 1|2|3] [--json <marking.json>]
         grouplab measure <image> <file.gltd.json> [--tile <n>] [--dpi <d>] [--locator centroid|edge] [--model auto|homography|radial|surface]
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]
