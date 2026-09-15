@@ -1,11 +1,20 @@
 <#
 .SYNOPSIS
-    Pull new target photo submissions from pissinhot.com to this machine.
+    Pull new target photo submissions, or GroupLab crash reports, from
+    pissinhot.com to this machine.
 
 .DESCRIPTION
-    Incremental. Lists the submission directories on the server, works out which
-    ones are not here yet, and pulls only those. Running it twice in a row does
-    nothing the second time, so it is safe to run whenever and safe to schedule.
+    Incremental. Lists the directories on the server, works out which ones are
+    not here yet, and pulls only those. Running it twice in a row does nothing
+    the second time, so it is safe to run whenever and safe to schedule.
+
+    TWO COLLECTIONS, ONE SCRIPT
+    The server holds target photo submissions and, with -CrashReports, GroupLab
+    crash reports. They have the same shape on disk: one directory per item, a
+    meta.json beside the payload, and a SHA-256 written by the receiver the
+    moment the item arrived. So this is one script with a mode switch rather
+    than two scripts, because two scripts to remember means one of them quietly
+    stops being run.
 
     Uses the OpenSSH client and tar that ship with Windows 10 1803 and later, so
     it needs nothing installed and does not depend on MobaXterm. It reuses the
@@ -37,6 +46,11 @@
 .EXAMPLE
     .\Get-TargetSubmissions.ps1 -VerifyAll
     Re-checks the hashes of everything already local, not just the new arrivals.
+
+.EXAMPLE
+    .\Get-TargetSubmissions.ps1 -CrashReports
+    Pulls crash reports instead of submissions, into C:\Dev\grouplab-crashreports,
+    and prints what crashed in each one.
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -48,14 +62,32 @@ param(
     [string] $ServerHost = 'ssh.pissinhot.com',
     [string] $ServerUser = 'ubuntu',
     [string] $KeyFile    = 'C:\Users\Airwolf\Documents\ssh-key-2026-03-25.key',
-    [string] $RemoteRoot = '/home/airwolf/web/pissinhot.com/private/target_uploads',
-    [string] $LocalRoot  = 'C:\Dev\grouplab-submissions',
+    # Left empty on purpose: the defaults depend on -CrashReports and are
+    # resolved just below, so that passing either one still overrides.
+    [string] $RemoteRoot,
+    [string] $LocalRoot,
 
-    # Re-verify every submission already on disk, not just the new ones.
+    # Pull crash reports rather than target photo submissions.
+    [switch] $CrashReports,
+
+    # Re-verify everything already on disk, not just the new arrivals.
     [switch] $VerifyAll
 )
 
 $ErrorActionPreference = 'Stop'
+
+# ------------------------------------------------------------------- mode --
+if ($CrashReports) {
+    $itemNoun  = 'crash report'
+    $defRemote = '/home/airwolf/web/pissinhot.com/private/crash_reports'
+    $defLocal  = 'C:\Dev\grouplab-crashreports'
+} else {
+    $itemNoun  = 'submission'
+    $defRemote = '/home/airwolf/web/pissinhot.com/private/target_uploads'
+    $defLocal  = 'C:\Dev\grouplab-submissions'
+}
+if (-not $RemoteRoot) { $RemoteRoot = $defRemote }
+if (-not $LocalRoot)  { $LocalRoot  = $defLocal  }
 
 # ---------------------------------------------------------------- preflight --
 foreach ($exe in 'ssh', 'tar') {
@@ -223,7 +255,7 @@ function Invoke-Remote {
 }
 
 # ------------------------------------------------------------ what is there --
-Write-Host "Listing submissions on $ServerHost ..." -ForegroundColor Cyan
+Write-Host "Listing ${itemNoun}s on $ServerHost ..." -ForegroundColor Cyan
 
 # One name per line. No pipe and no 2>/dev/null on the remote side on purpose:
 # a shell pipeline reports the exit code of its LAST command, so "sudo ls | sort"
@@ -236,7 +268,7 @@ $remote = @(Invoke-Remote "sudo ls -1 '$RemoteRoot'" |
             Sort-Object)
 
 if ($remote.Count -eq 0) {
-    Write-Host "No submissions on the server yet." -ForegroundColor Yellow
+    Write-Host "No ${itemNoun}s on the server yet." -ForegroundColor Yellow
     return
 }
 
@@ -318,6 +350,17 @@ foreach ($dir in $toCheck) {
     }
     $meta = Get-Content $metaPath -Raw | ConvertFrom-Json
 
+    if ($CrashReports) {
+        # A crash report is one zip carrying one hash, written by the receiver
+        # the moment it arrived. Same promise as a submission, fewer files.
+        $p = Join-Path $LocalRoot "$dir\report.zip"
+        if (-not (Test-Path $p)) { $bad += "$dir/report.zip : missing"; continue }
+        $checked++
+        $h = (Get-FileHash $p -Algorithm SHA256).Hash.ToLower()
+        if ($h -ne "$($meta.sha256)".ToLower()) { $bad += "$dir/report.zip : sha256 differs" }
+        continue
+    }
+
     if ($meta.exclude_from_public_dataset) { $optOut += $dir }
 
     foreach ($f in $meta.files) {
@@ -333,7 +376,7 @@ foreach ($dir in $toCheck) {
 
 # ------------------------------------------------------------------ summary --
 Write-Host ""
-Write-Host "Pulled $($pulled.Count) submission(s); verified $checked file(s)." -ForegroundColor Cyan
+Write-Host "Pulled $($pulled.Count) $itemNoun(s); verified $checked file(s)." -ForegroundColor Cyan
 
 if ($bad.Count) {
     Write-Host "PROBLEMS:" -ForegroundColor Red
@@ -344,9 +387,43 @@ if ($bad.Count) {
 
 if ($optOut.Count) {
     Write-Host ""
-    Write-Host "$($optOut.Count) submission(s) are marked DO NOT PUBLISH:" -ForegroundColor Yellow
+    Write-Host "$($optOut.Count) $itemNoun(s) are marked DO NOT PUBLISH:" -ForegroundColor Yellow
     $optOut | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
     Write-Host "  Use them for testing; never commit them to the public data set." -ForegroundColor Yellow
+}
+
+if ($CrashReports -and @($toCheck).Count) {
+    # The whole point of pulling these is finding out what broke, so say it here
+    # rather than making somebody open six zips to find out.
+    Write-Host ""
+    Write-Host "What crashed:" -ForegroundColor Cyan
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    foreach ($dir in @($toCheck)) {
+        $zipPath = Join-Path $LocalRoot "$dir\report.zip"
+        if (-not (Test-Path $zipPath)) { continue }
+
+        $version = ''
+        try { $version = (Get-Content (Join-Path $LocalRoot "$dir\meta.json") -Raw | ConvertFrom-Json).app_version } catch { }
+        $what = 'no crash record in the package'
+
+        try {
+            $zip = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
+            try {
+                $e = $zip.Entries | Where-Object { $_.Name -like 'crash-*.json' } | Select-Object -First 1
+                if ($e) {
+                    $reader = New-Object System.IO.StreamReader($e.Open())
+                    try { $crash = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+                    $top  = @($crash.exceptions)[0]
+                    $what = "$($top.type): $($top.message)"
+                    if ($crash.last_action) { $what += "  (during $($crash.last_action))" }
+                }
+            }
+            finally { $zip.Dispose() }
+        }
+        catch { $what = "the package could not be read: $_" }
+
+        Write-Host ("  {0}  {1,-16}  {2}" -f $dir, $version, $what)
+    }
 }
 
 Write-Host ""
@@ -374,6 +451,11 @@ These are the untouched originals and most of them carry GPS. That is correct:
 scrubbing happens at publication, not at intake. Run
 tools/scan_analysis/scrub_exif.py before anything is published.
 
+Crash reports are the opposite case and carry no photographs and no metadata at
+all, by design. See docs/CRASH-REPORTING.md. If a crash package ever turns up
+with an image in it, the client has a defect: the receiver refuses those, so it
+should not be possible, and it is worth finding out how it happened.
+
 MAKING IT UNATTENDED
 As written, sudo may prompt for a password, which BatchMode turns into a
 failure rather than a hang. To run this from Task Scheduler, add a sudoers rule
@@ -383,6 +465,8 @@ on the server limited to exactly the two commands it uses:
 
     ubuntu ALL=(root) NOPASSWD: /usr/bin/ls -1 /home/airwolf/web/pissinhot.com/private/target_uploads
     ubuntu ALL=(root) NOPASSWD: /usr/bin/tar cf - -C /home/airwolf/web/pissinhot.com/private/target_uploads *
+    ubuntu ALL=(root) NOPASSWD: /usr/bin/ls -1 /home/airwolf/web/pissinhot.com/private/crash_reports
+    ubuntu ALL=(root) NOPASSWD: /usr/bin/tar cf - -C /home/airwolf/web/pissinhot.com/private/crash_reports *
 
 That grants read access to one directory tree and nothing else. It is narrower
 than it looks, but it is still a privilege grant, so decide deliberately rather

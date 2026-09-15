@@ -1911,6 +1911,67 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entries 41 and 45. The diagnostic log, crash records, and report packages
+
+`docs/NOTES-FROM-PLANNING.md` entries 41 and 45, built in entry 41 section 8's order, one commit a step. Everything is in `src/GroupLab.App/Diagnostics`. `docs/CRASH-REPORTING.md` is the contract and the privacy statement.
+
+**Why.** The application logged nothing: `Main` ended in Avalonia's own trace logging, which went nowhere. It had no global exception handler, and every `catch` either set a status line or carried on. When the print screen crashed, nothing could say why.
+
+**Step 1, the log (sections 3 and 4).**
+- **Files:** one plain text file per run, `grouplab-YYYYMMDD-HHmmss-pid.log`, with UTC timestamps to the millisecond and `key=value` fields.
+- **Rotation:** at startup, to the newest twenty files or 20 MB.
+- **The writer:** a background thread behind a bounded queue. When the queue is full it drops DEBUG first and counts what it dropped. ERROR is flushed at once, and everything else within two seconds.
+- **Failure:** silent. If the directory cannot be used, logging is off, and the Diagnostics panel says why.
+- **Where:** `out/logs` for a Debug build run from the repository, the platform's directory otherwise, and `GROUPLAB_LOG_DIR` over both. The first line names the directory in symbols such as `%LOCALAPPDATA%`, because the real path begins with the user's name.
+- **What is recorded:**
+  - `app.start` with the environment, and `app.exit`;
+  - every dialog and its result, and every file open and save;
+  - each detection run, with every stage record at DEBUG in its console form;
+  - a line for each catch that used to swallow its error.
+- **A fault found on the way:** opening a marking file that no longer exists threw instead of saying so, and now says so.
+
+**Section 2's rule,** written as code rather than care:
+- **A file** is its name and a hash of its full path salted per run, never its directory.
+- **Image facts** come only through `ImageFacts`, a whitelist over the metadata GroupLab already reads. That metadata holds no location, timestamp, maker note or free text.
+- **Every value, exception message and stack** has anything shaped like a path replaced.
+- **The tests:**
+  - they build a JPEG carrying a GPS block, a maker note, an `Artist` and an `ImageDescription`;
+  - they open it through the window from a directory named for a person;
+  - they check that no coordinate, name, maker note, directory or drive letter reaches the log, while the file's name and its whitelisted make do.
+
+**Step 2, the crash record (section 5 and entry 45 section 2).**
+- **Handlers:** three, installed before the window exists: the process's unhandled exceptions, unobserved tasks, and the dispatcher's. At the dispatcher, a click handler's exception is marked handled and the window carries on.
+- **On a crash:** an ERROR line with the whole chain, flushed. Then `crash-YYYYMMDD-HHmmss-pid.json` in schema 1, carrying:
+  - the environment;
+  - the last action, the name of the last event logged;
+  - the exceptions, outermost first, with messages and stacks scrubbed of paths;
+  - the stage records of a detection in flight.
+- **The next launch** offers every crash not yet dealt with, in a banner above the settings.
+- **The test:** it throws from a real click handler through the dispatcher, and reads the record back.
+
+**Step 3, the package (section 6 and entry 45 section 1).**
+- **Contents:** one flat zip holding the crash record, the log of the run that crashed and the run before, `environment.txt`, and the user's description and contact only when typed.
+- **The whitelist:** every entry must match the receiver's five patterns, which a test holds equal to the receiver's list. The builder takes no arbitrary file, and a name not on the list is refused.
+- **The cap:** over 2 MB the previous log goes first. A package still over it is saved, not sent.
+- **The dialog:**
+  - it states in one sentence what the report contains and does not;
+  - it lists every entry before anything is written;
+  - it offers Save only, defaulting to the desktop, then Show me the file.
+- **Where it is reached:** the crash banner has Make a report, and the toolbar Report a problem.
+
+**Step 4, the upload (section 7 and entry 45 sections 3 and 4).**
+- **The request:** one HTTPS `POST` of `multipart/form-data`, with the zip in `report` and the version in `version`.
+- **Attempts:** one, with a 30 second timeout, and no retry.
+- **The reply:** a success shows the server's reference, and a failure shows the server's `error` verbatim. Anything else keeps the zip and says where it is.
+- **The address:** `crashReportUrl` in the settings file is empty by default, and while it is empty there is no Send button, so no copy of GroupLab posts anywhere unless configured to.
+- **The pull script:** planning's version of `scripts/Get-TargetSubmissions.ps1`, with `-CrashReports`, was reviewed and committed. It adds a mode, a verify branch for a single zip and a summary of what crashed, and it holds no secret.
+
+**Not done as entry 41 section 8 asked.** Its last point was to reproduce the entry 39 print crash with logging in place, before fixing it, and paste the lines. The print crash was fixed in an earlier commit, before logging existed. So `CrashTests` throws from a click handler through the dispatcher instead, the same path the print crash took, and checks the crash record and the log line it leaves.
+
+**Tests:** App 31 passing, none skipped. Core is unchanged at 729.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2017,3 +2078,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 42: styles rebuilt when the theme changes, over binding each control to a theme resource.** The shell is built in code, and rebuilding one style set keeps every colour decision in `AppStyles` and `Tokens` rather than spread across every control.
 - **Entry 42: a unit left at its figure's size for now, over splitting the figure text.** The existing tests read that text, and section 1 requires them to pass unchanged.
 - **Entry 42: mark labels in light text on a dark plate, over text in the mark's colour.** The mark's colour as text could not be read on the first screenshots, and the colour survives as a bar beside the number.
+- **Entry 41: image facts from the metadata GroupLab already reads, over reading the further facts section 2 permits.** Bit depth, lens model, ISO, exposure and a count of EXIF tags would each mean reading more of a photograph's metadata for the sake of a log, which is the step the rule exists to stop.
+- **Entry 41: the directory named in symbols on the first log line, over the resolved path.** Section 3 asks that the first line report where the log is, and section 3 also forbids a path. `%LOCALAPPDATA%\GroupLab\logs` satisfies both.
+- **Entry 45: `last_action` as the name of the last event logged, over a separate list of action names.** Every user action already writes a stable event name, such as `print.select`, and a second list would drift from it.
+- **Entry 41: Send saves the package before sending, into the log directory when the user has not saved it.** Section 7 says the zip is kept if sending fails, and the only way to guarantee that is for it to exist before the attempt.
+- **Entry 41: a crash record not rewritten when a second crash lands in the same second of the same process.** The receiver's name pattern leaves no room for a counter, and the first crash is usually the cause.

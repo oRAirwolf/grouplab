@@ -56,7 +56,7 @@ public sealed class ReportWindowTests : IDisposable
         Assert.Contains(ReportWindow.Contents, text);
         Assert.Contains(text, t => t.StartsWith("crash-20260915-064212-4242.json", StringComparison.Ordinal));
         Assert.Contains(text, t => t.StartsWith("grouplab-20260914-201500-3100.log", StringComparison.Ordinal));
-        Assert.DoesNotContain(window.GetLogicalDescendants().OfType<Button>(), b => (b.Content as string) == "Send");
+        Assert.DoesNotContain(window.GetLogicalDescendants().OfType<Button>(), b => (b.Content as string) == "Send" && b.IsVisible);
 
         window.SetDescription("It closed when I chose a second sheet.");
         string zip = Path.Combine(root, "grouplab-report-20260915-070000.zip");

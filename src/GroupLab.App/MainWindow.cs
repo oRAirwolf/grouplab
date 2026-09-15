@@ -256,7 +256,7 @@ public sealed class MainWindow : Window
     {
         var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, crash);
         DiagnosticLog.Info("report.open", ("crash", crash is not null));
-        var report = new ReportWindow(crash, runLog, previousLog);
+        var report = new ReportWindow(crash, runLog, previousLog, settingsStore.LoadCrashReportUrl());
         report.Closed += (_, _) => ShowPendingCrashes();
         report.Show(this);
     }

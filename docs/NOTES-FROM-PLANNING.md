@@ -15,6 +15,99 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 45: the crash report wire contract, fixed, because the server half now exists
+
+**Status: actioned 2026-09-15, with entry 41.**
+- **Sections 1 and 2:** the client builds them exactly. Tests check its entry list against the receiver's patterns and the crash record against the schema.
+- **Sections 3 and 4:** it sends one request, and shows the reference or the error verbatim.
+- **Section 6 point 1:** `docs/CRASH-REPORTING.md` carries sections 1 to 4 verbatim, with the privacy statement in plain words.
+- **Section 6 point 2:** `scripts/Get-TargetSubmissions.ps1` is your version with `-CrashReports`, reviewed and committed.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 41 and 45". Depends on entry 41 and should be actioned with it, not before it. This entry exists so that the client you build and the receiver I have written cannot disagree, because the two are being written in different places by different people and that is exactly how wire formats end up mismatched.
+
+The receiver is written and tested. It is at `Claude outputs/crash-report.php`, with its deployment runbook at `Claude outputs/CRASH-REPORT-SERVER.md`, both outside the tracked tree because that directory is ignored. Alan places them when he has twenty minutes. **You do not wait for that**, because entry 41 section 7 already says the client ships with the endpoint blank and the save-to-disk path working.
+
+### 1. The package, which is now a checked contract rather than a description
+
+The receiver refuses any zip containing an entry that is not on this list. The names are matched anchored and case sensitively, and any entry containing a slash, a backslash or `..` is refused outright, so **the package is flat: no directories inside it.**
+
+| Entry | Required | Notes |
+|---|---|---|
+| `crash-YYYYMMDD-HHmmss-<pid>.json` | when there was a crash | section 2 |
+| `grouplab-YYYYMMDD-HHmmss-<pid>.log` | at least one | this run, and the previous run |
+| `environment.txt` | yes | the expanded `app.start` block |
+| `description.txt` | optional | what the user typed, may be empty |
+| `contact.txt` | optional | may be empty |
+
+At most 24 entries, at most 40 MB unpacked, and at most a 100 to 1 compression ratio. The client's own cap is 2 MB for the zip; the server's wall is 5 MB.
+
+**Nothing else is accepted, and that is the privacy guarantee made mechanical.** There is no image type on that list, so a package carrying a photograph is refused by the server even if a future version of the client puts one in by mistake. I tested that case specifically rather than assuming it. If you ever find yourself wanting to add a file to the package, the list in the PHP has to change at the same time, and that friction is the point.
+
+### 2. `crash-*.json`, exact shape
+
+The pull script reads this to print one line per report saying what crashed, so the field names matter. `exceptions` is ordered outermost first.
+
+```json
+{
+  "schema": 1,
+  "created_utc": "2026-09-15T06:42:12.104Z",
+  "app":  { "version": "0.1.0+3f9c2a1", "commit": "3f9c2a1", "channel": "debug" },
+  "environment": {
+    "os": "Windows 10.0.26100", "framework": "net10.0", "renderer": "Direct2D1",
+    "culture": "en-US", "display_scale": 1.5
+  },
+  "last_action": "print.select-target",
+  "exceptions": [
+    { "type": "System.InvalidOperationException",
+      "message": "The control TextBox already has a visual parent.",
+      "stack": "   at GroupLab.App.PrintWindow.ShowFields()..." }
+  ],
+  "stages": []
+}
+```
+
+`stages` holds the `StageRecord` set when an analysis was in flight and an empty array otherwise, per entry 41 section 5. `last_action` is a short stable identifier rather than prose, so that repeated reports group. **`schema` is 1 and it increments if any of this changes**, because a receiver reading a future format should be able to say so rather than guess.
+
+The example above is not invented. It is the crash you fixed this evening, written in this format, and I used it as the test fixture for the pull script.
+
+### 3. The request
+
+- `POST` to the configured URL, `multipart/form-data`.
+- File field name: **`report`**, the zip.
+- Text field: **`version`**, the application version string, optional but send it.
+- Nothing else is read. No headers are required. No authentication.
+
+### 4. The response
+
+Always JSON, always with an `ok` boolean.
+
+```json
+{ "ok": true, "reference": "2026-09-15_1a2b3c4d", "sha256": "6b80184e..." }
+```
+
+**Show the reference to the user** so they can quote it. On failure:
+
+```json
+{ "ok": false, "error": "That report package contains a file this server does not accept: IMG_1580.jpg" }
+```
+
+The `error` string is written to be shown to a person whose application has just crashed, so **display it verbatim rather than mapping status codes to your own wording.** The codes you will see are 400, 405, 413, 415, 422, 429, 500, 503 and 507, and every one of them means keep the file and do not retry automatically. Entry 41 section 7 already says one attempt and no background retry queue; this is the reason it says that.
+
+### 5. What I verified rather than asserted
+
+The receiver was run against nine payloads on a local PHP 8.4 server: a well formed package, one with a photograph added, one with a `../../etc/passwd` entry, one with a subdirectory, one with a `.php` entry, one with a log named outside the pattern, a file that is not a zip at all, a 60 MB zip bomb, and an empty post. The good one stored and returned its reference and hash; the other eight were refused with the right status and a sensible message. The Cloudflare address matcher was tested separately against 19 boundary cases including both ends of every range shape it has to handle.
+
+The pull script's new mode was parsed with the PowerShell 7.4 parser and its new code paths were run: default resolution, override behaviour, the crash verify branch against a real zip and meta, and the summary reader.
+
+**None of that proves the client works.** It proves the far side of the wire is not the thing that will be wrong.
+
+### 6. Two small jobs for you
+
+1. **Write `docs/CRASH-REPORTING.md`** as entry 41 section 7 asks, and put sections 1 to 4 of this entry in it verbatim, plus the privacy statement in plain words. It belongs in the repository because the client is GPL and anybody can read what it sends anyway; writing it down is the difference between a project that can be trusted on this point and one that merely asks to be.
+2. **Copy `Claude outputs/Get-TargetSubmissions.ps1` over `scripts/Get-TargetSubmissions.ps1` and commit it.** It is the existing script with a `-CrashReports` switch, the mode block, a verify branch for single-zip items, a summary that prints what crashed, and the sudoers note extended. It parses clean and the changed paths are exercised above. I am not committing it myself, for the reason in entry 44.
+
+---
+
 ## 2026-09-15, entry 44: I am what overwrote the notes file, and the mailbox convention changes today
 
 **Status: actioned 2026-09-15.** Entries 41 to 44 are folded into this log from `docs/notes/inbox/`, and their inbox files are deleted. The convention is recorded in "How to use this file" above and in `CONTRIBUTING.md`. `docs/notes/inbox/README.md` is committed, so the directory exists in a clean clone. Do this one first. It is short, it costs about fifteen minutes, and it removes the reason the last three hours contained a data-loss scare.
@@ -317,7 +410,16 @@ Add a test that greps the application sources for colour literals outside `Token
 
 ## 2026-09-15, entry 41: the application logs nothing at all, and here is the diagnostics specification
 
-**Status: open.** Section 0 is a correction to entry 39 that costs you thirty seconds. Section 1 answers a question of fact that Alan asked. Sections 2 to 8 are a specification. **This entry ranks behind entry 39 and entry 35 section 6.** Fix the crash first; build this so that the next crash leaves evidence behind it.
+**Status: actioned 2026-09-15, in the order of section 8, one commit a step.**
+- **Section 0:** noted. The quotation is `DESIGN.md` section 13, and nothing built on it changes.
+- **Sections 3 and 4:** a log per run, written to `out/logs` by a Debug build, rotated to twenty files or 20 MB. It records every dialog, file open and save, detection run, and catch that used to swallow its error.
+- **Section 2:** a file is its name and a salted hash, and image facts come through a whitelist. Paths are scrubbed from values, messages and stacks, and tests prove none reaches the log.
+- **Section 5:** three handlers, the crash record in entry 45's schema with the stages of a detection in flight, and the next-launch banner.
+- **Section 6:** the package, built only from the receiver's whitelist, and the dialog that shows it before saving.
+- **Section 7:** the upload behind an empty default address, one attempt, and `docs/CRASH-REPORTING.md`.
+- **Not done as written:** the print crash was fixed before logging existed, so there are no log lines from it to paste. A test throws from a click handler instead and checks the record.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 41 and 45". Section 0 is a correction to entry 39 that costs you thirty seconds. Section 1 answers a question of fact that Alan asked. Sections 2 to 8 are a specification. **This entry ranks behind entry 39 and entry 35 section 6.** Fix the crash first; build this so that the next crash leaves evidence behind it.
 
 ### 0. Correction to entry 39, section 6: the citation is wrong
 

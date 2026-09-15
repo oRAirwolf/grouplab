@@ -24,14 +24,19 @@ public sealed class ReportWindow : Window
     private readonly TextBox contact = new() { PlaceholderText = "An email address, if you would like a reply. Optional." };
     private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly Button reveal = new() { Content = "Show me the file", IsEnabled = false };
+    private readonly Button send = new() { Content = "Send" };
+    private readonly string sendUrl;
     private string? saved;
 
     /// <param name="crash">The crash record the report is about, or null for a report made without a crash.</param>
-    public ReportWindow(string? crash, string? runLog, string? previousLog)
+    /// <param name="sendUrl">Where a report is sent. Empty by default, and while it is empty there is no Send button (entry 41 section 7).</param>
+    public ReportWindow(string? crash, string? runLog, string? previousLog, string sendUrl = "")
     {
+        ArgumentNullException.ThrowIfNull(sendUrl);
         this.crash = crash;
         this.runLog = runLog;
         this.previousLog = previousLog;
+        this.sendUrl = sendUrl.Trim();
         Title = "GroupLab: report a problem";
         Width = 560;
         Height = 600;
@@ -61,6 +66,9 @@ public sealed class ReportWindow : Window
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space6 };
         buttons.Children.Add(save);
         buttons.Children.Add(reveal);
+        send.IsVisible = this.sendUrl.Length > 0;
+        send.Click += async (_, _) => await Send();
+        buttons.Children.Add(send);
         panel.Children.Add(buttons);
         panel.Children.Add(status);
         Content = new ScrollViewer { Content = panel };
@@ -104,6 +112,31 @@ public sealed class ReportWindow : Window
             DiagnosticLog.Exception(LogLevel.Warn, "report.save", ex);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Sends the report, entry 41 section 7 and entry 45: the package is saved first, into the log directory when the user has not saved it,
+    /// so the zip is kept whatever happens; a package over the cap is not sent; and there is one attempt, whose reference or error is shown.
+    /// </summary>
+    private async Task Send()
+    {
+        string path = saved ?? Path.Combine(DiagnosticLog.Current.Directory ?? Path.GetTempPath(), string.Create(System.Globalization.CultureInfo.InvariantCulture, $"grouplab-report-{DateTime.UtcNow:yyyyMMdd-HHmmss}.zip"));
+        if (SaveTo(path) is not { } result)
+        {
+            return;
+        }
+
+        if (result.TooLargeToSend)
+        {
+            status.Text = $"The report is larger than the 2 MB that can be sent, so it was saved and not sent. It is at {path}.";
+            return;
+        }
+
+        send.IsEnabled = false;
+        status.Text = "Sending…";
+        var outcome = await ReportUploader.SendAsync(sendUrl, path, AppInfo.Version);
+        status.Text = outcome.Message;
+        send.IsEnabled = !outcome.Sent;
     }
 
     private async Task SaveDialog()
