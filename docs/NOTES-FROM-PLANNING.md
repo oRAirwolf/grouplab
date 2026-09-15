@@ -15,6 +15,100 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 51: the top to bottom check, and what it found
+
+**Status: actioned 2026-09-15.** Section 6, all five:
+1. `DESIGN.md` section 20 says .NET 10.
+2. `docs/PHASE0-SPIKE-BRIEF.md` cites section 19.
+3. Entry 36's status says entry 38 closed `DFdistr`.
+4. Entry 31's status says section 3 was done under entry 33.
+5. The paths in entries 41, 42 and 43 carry `src/`.
+
+Sections 1 to 5 and 7 are noted. This is a report rather than a set of instructions, except section 6, which is the short list of things to fix. Alan asked for the project checked end to end after nine days and fifty entries. This is that check, and what it did not cover.
+
+### 1. The result, in one line
+
+**The project is in better shape than I predicted, and the one real defect was on the public front page rather than in the code.**
+
+I wrote down in advance what I expected to find, so that finding nothing would be informative rather than reassuring: at least one status that overstated what was done, documentation drift in more places than I had listed, an uncomfortable gates table, and no privacy failure. **Three of those four were wrong.** There is no status that overstates. The gates table is honest and already says so in the documents. The privacy chain is clean and in two places stricter than I specified. Only the documentation drift was as bad as expected, and worse in one place.
+
+### 2. What was checked, and what it found
+
+| | Checked | Result |
+|---|---|---|
+| **A0** entries 39 and 40 restored from memory | diffed against my originals | **identical**, line for line |
+| **A1** paths referenced by entries 22 to 51 | 81 references against the pushed tree | **no dangling reference.** 5 cosmetic, listed in section 6 |
+| **A1** status lines claiming a report | 16 claims against `PHASE1-RESULTS.md` headings | **all 16 exist** |
+| **A2** the named entry claims | 8 entries verified individually | **all pass**, two exceed what the entry asked |
+| **B1, B2** GPS in published history | unauthenticated download, EXIF parsed properly | **zero GPS tags**, both repositories, both phase-0 branches |
+| **B3, B4** opt-out by both signals and by hash | `Intake.cs` and its tests | **passes, and stricter than asked** |
+| **B5** the two permanently held files | published tree | **absent** |
+| **B6** diagnostics privacy | `DiagnosticsTests`, `ReportPackageTests` | **passes emphatically** |
+| **B7** dangerous copies off-repository | `C:\Dev` listing, Alan checked the rest | **clean** |
+| **B, unplanned** does scrubbing move a pixel | decoded both copies and compared arrays | **identical, max difference 0** |
+| **C** the gates | both results documents | **honest**, see section 4 |
+| **D** documentation drift | nine checks | **three findings**, section 6 |
+| **E** loose ends on disk | published tree, branches, ignored paths | **clean** |
+
+### 3. The three things worth remembering from it
+
+**The scrub moves no pixel, and that is now measured.** A published owner photograph is 3.9 MB against an 8.1 MB original, which does not look like metadata. It is: the original carries 72 EXIF tags including 11 GPS tags and a Motion Photo video embedded at offset 4,179,647, and the published copy carries 12 tags, no GPS and no video. Same dimensions, maximum pixel difference zero, identical pixel-array hash. **That is the project's most load-bearing claim and it had never had a number behind it.**
+
+**The consent rules are working, and the consequence is that the public corpus has no donated photographs in it.** `donated/` holds one submission and a single provenance record. The first submission was unusable, one of the three later ones opted out, and the other two each had their only usable frame withheld by the cross-submission hash rule. **The entire donated corpus is gated on one question to one contributor**, which is worth knowing because it is one message rather than a pipeline problem.
+
+**Both wrong status lines understate.** Entry 36 still carves out `DFdistr`, which entry 38 fixed and I measured as correct. Entry 31 still carves out section 3, which is `ReadmeTests`, present with four guards and green on three platforms. I expected the opposite error and did not find it.
+
+### 4. The gates, which are honest and mostly not passed
+
+| Gate | Result |
+|---|---|
+| Conformance test 43 | pass, worst 0.00026 in against 0.001 |
+| Paper, scanned sheets | pass, ten of ten, worst 0.00325 in |
+| Print-scale detection | pass |
+| End-to-end synthetic truth | pass |
+| Photograph, flat | **fail**, three of three |
+| Photograph, mounted | **fail**, zero of seven |
+| Phase 0 record off Windows | **first measured today**, see entries 48 and 49 |
+
+**The documents already said all of this before I looked**, in those words, including that reproducing off Windows was "not yet claimed" and that passing the suite on three platforms is "agreement within tolerance, not the byte-identical comparison". I went looking for a gate recorded as passing that had never been measured and there is not one.
+
+**What the table hides, and it is the important thing: no gate has ever seen paper with holes in it.** The paper gate passes on scanned, unshot sheets. Everything above is the project checking its own arithmetic. The range session is the first time it finds out whether it works.
+
+### 5. Where my own method failed, because that is the useful part
+
+Four times in this check my measurement was the thing that was wrong.
+
+- **A significant-digit counter returned zero** on values that plainly had seventeen, from a bad substitution.
+- **A numeric-string detector flagged `gate.section = "15.3"`** as a number stored as text.
+- **A GPS byte-scan reported a GPS pointer in all eight photographs.** It was counting the byte pair `88 25` anywhere in a 1.7 MB JPEG, where it occurs five to twenty times by chance. Parsing the actual EXIF segment gave zero. **That one would have been an expensive false alarm.**
+- **A citation sweep reported 59 references and missed 26**, because the pattern did not allow for the backtick in `` `DESIGN.md` section 19``. The real count was 85, and re-running it is what found the one genuine error.
+
+Every one was caught by reading the output instead of the verdict. **A check that quietly covers two thirds of its corpus is worse than no check**, because it produces a clean result you believe. That is the habit worth keeping from this exercise, more than any individual finding.
+
+### 6. The fixes, which are small
+
+Everything here is documentation. Nothing in the code needs changing as a result of this check.
+
+1. **`DESIGN.md` section 20 says ".NET 9 with Avalonia".** `Directory.Build.props` says `net10.0`. One line. The README's version is guarded by `ReadmeTests` and stayed right; `DESIGN.md` has no guard and drifted.
+2. **`docs/PHASE0-SPIKE-BRIEF.md` cites `DESIGN.md` section 18** for "wants every stage to emit a structured record". That is section 19, the `[r3]` paragraph. Section 18 is Storage and synchronisation. This is the second wrong citation of section 18 in the corpus; entry 39's was the first and entry 41 corrected it.
+3. **Entry 36's status line still says "except `DFdistr`".** Entry 38 closed it. Amend the status to say so rather than leaving a closed exception standing.
+4. **Entry 31's status line still says "except section 3, which waits for the fresh repository".** `ReadmeTests` exists and passes. Amend it.
+5. **Five path references in entries 41, 42 and 43 omit the `src/` prefix**: `GroupLab.App/Theme/Tokens.cs`, `AppStyles.cs`, `Marks.cs`, `GroupLab.Core/Trace/StageRecord.cs` and `GroupLab.Core/Analysis/SheetAnalysis.cs`. Mine, cosmetic, and the same class of error as the section number above: a pointer that does not resolve. Fix them where you are already editing those entries' statuses.
+
+The README fixes are entry 49 section 4 and are not repeated here.
+
+### 7. What this check did not cover
+
+Stated so that nobody mistakes it for complete.
+
+- **Entries 1 to 21 were checked lightly**, by confirming their artefacts exist rather than re-deriving them. They were gated by Phase 0 results measured at the time.
+- **Nothing was built or run by me.** Every claim needing a compiler or a test run was taken from your reports and from CI, not independently reproduced.
+- **The statistics suite passing from the fixtures alone** is the one gate row I could not fill. The fixtures themselves I did verify: 600 keys, 580 numerics, zero disagreement between CSV and JSON, 441 values at full 17 digits.
+- **Anything after `dfe9f40`** is outside this check. You were mid-run when it was written.
+- **Whether the marks are legible** is a human question and was answered by eye on one photograph, not measured.
+
+---
+
 ## 2026-09-15, entry 50: the README is part of done, and when the analysis screen starts
 
 **Status: actioned 2026-09-15.**
@@ -71,7 +165,8 @@ The styling work of entry 42 is done and does not pause. If something on the exi
 
 ## 2026-09-15, entry 49: three decisions, the README is telling visitors something false, and a fragility worth more than the gate that found it
 
-**Status: actioned 2026-09-15 for sections 1, 3 and 4; sections 2 and 5 are measured next, and reported below as they land.**
+**Status: actioned 2026-09-15 for sections 1, 3 and 4. Section 2 is implemented and measured, and blocked on question 15: sorting the markers changes the Phase 0 record on Windows, no verdict with it. Section 5 is not started, and is the next measurement.**
+- **Section 1, measured at `e03415c`:** the gate record workflow passes on Windows and Linux and fails on macOS, as the rule predicts.
 - **Section 1:** the gate record workflow now gates on the printed tables, compared line for line with the Windows tables committed in `scans/phase0/measurements/tables`, and reports the raw records without failing. No per-platform reference records.
 - **Section 3:** both edits to `tools/scan_analysis/scrub_exif.py`, as written.
 - **Section 4:** the three README replacements as written, with the platforms between `<!--platforms-->` markers, and `ReadmeTests` requiring them to equal the matrix in `.github/workflows/ci.yml`. The Planned paragraph that still said "once CI exists" is corrected too.
@@ -558,7 +653,7 @@ The defect is not carelessness on either side. It is that a single 270 kilobyte 
 
 **Status: open.** This is the expensive half of Alan's question about the concept screens, and it is **Phase 4 work**, behind entry 39, entry 41 and entry 42. Do not start it this week. It is written now because he asked for it and because entry 42 needs to know what it is making room for.
 
-**The single most important instruction in this entry: the window is a view over what `grouplab analyze` already computes.** Entry 33 built the end to end command and `GroupLab.Core/Analysis/SheetAnalysis.cs` holds the result. The screen renders that object. **There is no second analysis implementation and no statistic is computed in the UI layer.** If a figure the screen needs is not in the result object, it goes into the result object and the command gains it too, so the command and the window can never disagree. That property is worth more than any layout in this entry.
+**The single most important instruction in this entry: the window is a view over what `grouplab analyze` already computes.** Entry 33 built the end to end command and `src/GroupLab.Core/Analysis/SheetAnalysis.cs` holds the result. The screen renders that object. **There is no second analysis implementation and no statistic is computed in the UI layer.** If a figure the screen needs is not in the result object, it goes into the result object and the command gains it too, so the command and the window can never disagree. That property is worth more than any layout in this entry.
 
 The four concept screens are in `docs/figures/screens/`. They are the reference and they are accurate, but the text below governs where the two differ.
 
@@ -637,7 +732,7 @@ The order is deliberate and it is an argument, so keep it.
 
 ### 5. Show your work
 
-`DESIGN.md` section 19 already specifies this and `GroupLab.Core/Trace/StageRecord.cs` already implements the record. **The screen is a second rendering of records that exist, not a new feature.** The console form the CLI prints and the timeline the window shows come from one object; if they can disagree, it has been built wrong.
+`DESIGN.md` section 19 already specifies this and `src/GroupLab.Core/Trace/StageRecord.cs` already implements the record. **The screen is a second rendering of records that exist, not a new feature.** The console form the CLI prints and the timeline the window shows come from one object; if they can disagree, it has been built wrong.
 
 **Left column:** the stage list. Header reading "Pipeline, 1787 ms total" with a proportional progress strip beneath it, one segment per stage, width by duration, so the expensive stage is visible at a glance. Then one row per stage: id in mono, name, milliseconds in mono, a status dot in teal, amber or alert, and a one line summary. Selecting a stage shows its record.
 
@@ -797,9 +892,9 @@ Entry 39 section 5 said the white impact ring is unreadable on white paper, and 
 
 The shell is built in C# with no XAML at all, and that is a reasonable choice for a window this size. Keep it.
 
-- **`GroupLab.App/Theme/Tokens.cs`**: one static class, every value in section 2 and 3 as a named member, two palettes, resolved by theme variant. **No colour literal appears anywhere else in the application.** That is the property that makes the light theme possible and the one that quietly fails if it is not enforced from the start.
-- **`GroupLab.App/Theme/AppStyles.cs`**: the Avalonia `Styles` collection for buttons, toggle buttons, text blocks, panels and pills, added in `App.Initialize()` after `FluentTheme`.
-- **`GroupLab.App/Theme/Marks.cs`**: the pen and brush definitions from section 5, used by `MarkingCanvas` and later by the plot, so the image and the plot cannot disagree about what a shot looks like.
+- **`src/GroupLab.App/Theme/Tokens.cs`**: one static class, every value in section 2 and 3 as a named member, two palettes, resolved by theme variant. **No colour literal appears anywhere else in the application.** That is the property that makes the light theme possible and the one that quietly fails if it is not enforced from the start.
+- **`src/GroupLab.App/Theme/AppStyles.cs`**: the Avalonia `Styles` collection for buttons, toggle buttons, text blocks, panels and pills, added in `App.Initialize()` after `FluentTheme`.
+- **`src/GroupLab.App/Theme/Marks.cs`**: the pen and brush definitions from section 5, used by `MarkingCanvas` and later by the plot, so the image and the plot cannot disagree about what a shot looks like.
 
 Add a test that greps the application sources for colour literals outside `Tokens.cs` and fails if it finds any. It is a crude test and it will save the light theme from dying by a thousand hard coded greys.
 
@@ -840,7 +935,7 @@ He asked whether the application is doing debug logging now. I checked the sourc
 
 So when Alan selected two targets in the print dialog and the window disappeared, the application had no way to tell anyone what happened, and neither did he. **That is the real cost of having no logging and the project has already paid it once.** It will pay it repeatedly once anyone other than Alan runs this.
 
-One thing does exist and must not be confused with this. `GroupLab.Core/Trace/StageRecord.cs` is a structured record of pipeline stages, per `DETECTION-PIPELINE.md` section 6.1, and it is real and populated. **That is an explanation of an analysis, written for the user.** It is not diagnostics, it is not written to disk, and it does not survive a crash. Section 5 joins the two at one seam. They stay separate things with separate purposes.
+One thing does exist and must not be confused with this. `src/GroupLab.Core/Trace/StageRecord.cs` is a structured record of pipeline stages, per `DETECTION-PIPELINE.md` section 6.1, and it is real and populated. **That is an explanation of an analysis, written for the user.** It is not diagnostics, it is not written to disk, and it does not survive a crash. Section 5 joins the two at one seam. They stay separate things with separate purposes.
 
 ### 2. The rule that outranks everything else in this entry
 
@@ -1225,7 +1320,7 @@ Whole target, still stapled to the backer, all four edges in frame, printed conc
 
 ## 2026-09-15, entry 36: the fixtures are regenerated at full double precision, and my defect is closed
 
-**Status: actioned 2026-09-15, except `DFdistr`.** Verified on all ten files. The nine datasets have 0 keys added or removed, and no stored number moved by more than 5.53e-16 relative. CSV and JSON agree bit for bit except three negative zeros in `DFlandy01`. The reconstruction is removed, and all 67 statistics tests pass from the fixtures alone. The reconstruction had matched the stored values on 3,775 of 3,978 coordinates. The other 203 are `DFcm`, off by at most 3.6e-15, because its centimetre aims are not six-decimal numbers, so the stored values were right. `STATISTICS.md` section 15.4 item 15 is amended. **Not committed:** `shotGroups_DFdistr.json` stores all 8,850 table values as strings, because `sg_distr.R` formats the columns for the CSV before building the JSON from the same frame. That script and both `DFdistr` files stay uncommitted for you to fix. Reported in `docs/PHASE1-RESULTS.md` "Entry 36". Files are already on disk, unstaged. Your job is to verify and commit, not to regenerate. Lower priority than entry 35 section 6's two remaining items, and it should be its own commit rather than folded into them.
+**Status: actioned 2026-09-15; `DFdistr`, excepted here, was closed by entry 38.** Verified on all ten files. The nine datasets have 0 keys added or removed, and no stored number moved by more than 5.53e-16 relative. CSV and JSON agree bit for bit except three negative zeros in `DFlandy01`. The reconstruction is removed, and all 67 statistics tests pass from the fixtures alone. The reconstruction had matched the stored values on 3,775 of 3,978 coordinates. The other 203 are `DFcm`, off by at most 3.6e-15, because its centimetre aims are not six-decimal numbers, so the stored values were right. `STATISTICS.md` section 15.4 item 15 is amended. **Not committed:** `shotGroups_DFdistr.json` stores all 8,850 table values as strings, because `sg_distr.R` formats the columns for the CSV before building the JSON from the same frame. That script and both `DFdistr` files stay uncommitted for you to fix. Reported in `docs/PHASE1-RESULTS.md` "Entry 36". Files are already on disk, unstaged. Your job is to verify and commit, not to regenerate. Lower priority than entry 35 section 6's two remaining items, and it should be its own commit rather than folded into them.
 
 ### 1. What was wrong
 
@@ -1469,7 +1564,7 @@ Also worth knowing: distributing a macOS build that people can open without figh
 
 ## 2026-09-15, entry 31: the gate is clear, the failing test deserves a better fix than deletion, and the README needs a guard
 
-**Status: actioned 2026-09-15, except section 3, which waits for the fresh repository as the entry says.** Section 2: the real-photograph test now writes its own location into a copy of `main1.jpg` and passes. Section 4: the hash map and citations were already done, the allowlist removal, the section 15.4 wording and the results figures are in, and the worktree branch is deleted. Reported in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Nothing pushed. Section 1 unblocks the push. Section 3 is new work and waits until the fresh repository exists.
+**Status: actioned 2026-09-15. Section 3 waited for the fresh repository, and was done under entry 33: `ReadmeTests` and the three-platform workflow.** Section 2: the real-photograph test now writes its own location into a copy of `main1.jpg` and passes. Section 4: the hash map and citations were already done, the allowlist removal, the section 15.4 wording and the results figures are in, and the worktree branch is deleted. Reported in `docs/PHASE1-RESULTS.md` "Entries 29 and 30". Nothing pushed. Section 1 unblocks the push. Section 3 is new work and waits until the fresh repository exists.
 
 ### 1. The gate, and the go-ahead
 

@@ -2337,6 +2337,25 @@ None of this is changed, as section 2 asks.
 
 ---
 
+## Entry 49 section 2 and entry 51. The marker sort, held for a question, and the check's fixes
+
+**The gate record under entry 49 section 1's rule, measured at `e03415c`:** the printed tables are identical on Windows and Linux, which pass, and differ on macOS, which fails. Build and test is green on all three.
+
+**Entry 49 section 2: implemented and measured, not committed.**
+- **What sorting does on Windows:** it changes every printed Phase 0 table and no gate verdict.
+- **The largest effect:** on the mounted photographs, where RANSAC settles on a different consensus set in a different sample order. `ultrawide3.jpg` keeps 51 corners of 128 instead of 42, and has 18 scoring bulls over the gate instead of 21.
+- **Why it is held:** committing the sort means regenerating committed records and the figures documents quote from them, including the mounted benchmark of `docs/PHASE0-RESULTS.md` section 4.5.
+- **Where it went:** `docs/QUESTIONS-FOR-PLANNING.md` question 15, with the options.
+- **Also waiting on it:** the macOS rerun from Windows' corners, whose order the sort decides.
+
+**Entry 51 section 6:**
+- `DESIGN.md` section 20 now says .NET 10.
+- `docs/PHASE0-SPIKE-BRIEF.md` now cites `DESIGN.md` section 19.
+- Entries 36 and 31 have their stale exceptions closed.
+- Five paths in entries 41 to 43 now start with `src/`.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2464,3 +2483,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 48: the owner corpus republished from the originals through `publish-owner`, over editing the published files.** Every published file still comes from the one scrubber, and the 13 files without a lens model reproduce byte for byte, which shows nothing else changed.
 - **Entry 49 section 1: the printed tables committed as Windows text files, over comparing the platforms with one another inside one run.** A committed reference fails a single platform's job on its own, and it states in the repository what the record is.
 - **Entry 49 section 4: the README's platform guard requires equality with the CI matrix, over naming at least as many.** A README naming a platform CI does not build would be false in the other direction.
+- **Entry 49 section 2: the marker sort held for question 15, over committing it with regenerated records.** It changes committed evidence and a benchmark the Phase 1 surface work is measured against, which entry 49 did not foresee, and the question file exists for a measurement that contradicts what was written down.

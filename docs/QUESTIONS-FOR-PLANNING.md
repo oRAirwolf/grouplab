@@ -12,6 +12,94 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-15, question 15: sorting the markers changes the Phase 0 record on Windows, not only on macOS
+
+**Status: open.** Blocks entry 49 section 2: the sort, and the macOS rerun from Windows' corners, whose order the sort decides. Nothing else waits. Entry 49 section 5, the edge fit's sensitivity, is not blocked and is the next measurement.
+
+### 1. What entry 49 section 2 asked
+
+> Sort the markers by identifier before use. Unconditionally, and not to make a gate green.
+
+### 2. What happened
+
+**Implemented, measured, not committed.**
+- **The change:** `MarkerDetection.InIdentifierOrder()` orders markers and rejections by identifier, then by their first corner. `SheetMeasurer` and `PageRegistration` take the detection through it.
+- **Where it is:** the patch is kept outside the repository, and the tree is as committed.
+- **The measurement:** the eight Phase 0 spike commands were rerun on Windows, and their printed tables compared with the ones committed in `scans/phase0/measurements/tables`.
+
+**Every printed table changes on Windows, and no gate verdict does.**
+
+| Table | Lines that change | Gate verdicts that change |
+|---|---|---|
+| `sheets` | 10 | none: the paper gate column is identical on every sheet |
+| `photos` | 9 | none: the flat gate frames change in no count, and the mounted frames still fail |
+| `markers` | 53 | not a gate |
+| `refinement` | 21 | not a gate |
+| `threshold` | 8 | none: every row still has 10 of 10 sheets inside the paper gate |
+| `scale` | 1 | none |
+| `field` | 4 | not a gate |
+| `detectors` | 1 | not a gate |
+
+**On the scans the figures move in the last places.** `gl-cf25-ltr-1-600-dpi.png`:
+- **Residual maximum:** 0.00504 against 0.00507 in.
+- **Worst bull by edge fit:** 0.00254 against 0.00251 in.
+
+**On the mounted photographs the counts move:**
+
+| Frame | Corners kept | Scoring bulls over the gate |
+|---|---|---|
+| `ultrawide1.jpg` | 66 against 68 of 136 | 13 against 14 of 25 |
+| `ultrawide2.jpg` | 54 against 46 of 136 | 20 against 19 of 25 |
+| `ultrawide3.jpg` | 42 against 51 of 128 | 21 against 18 of 25 |
+| `main1.jpg` | 90 against 94 of 136 | unchanged |
+| `main2.jpg` | 25 against 32 of 104 | 21 against 22 of 25 |
+
+`ultrawide1.jpg`'s worst scoring bull goes from 0.03301 to 0.03902 in.
+
+**Why.**
+- **The mechanism:** `Cv2.FindHomography` with RANSAC draws its samples by position in the correspondence list.
+- **On a flat scan:** the consensus is the same whatever the order, and only the refinement's last digits move.
+- **On a curved sheet:** many corners sit near the RANSAC threshold, so a different sample path settles on a different consensus set, 42 corners against 51 on the same frame.
+- **What that means:** the mounted figures are one arbitrary ordering of the detector's output. That is the order dependence entry 49 section 2 calls a defect, and it is larger than the platform comparison suggested.
+
+### 3. Why this is a decision rather than a fix
+
+**The mounted figures are a benchmark.** `docs/PHASE0-RESULTS.md` section 4.5 states them as "the figures to beat: worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate", and the Phase 1 surface work reports against them.
+
+**Committing the sort changes committed evidence.**
+- **Certainly regenerated:** the eight gate records and their tables.
+- **Probably regenerated, not measured:** the other committed records computed through registration, such as the `surface-*.json`, `mounted-pair.json` and hole detection records.
+- **Also re-derived:** every document figure that quotes those records.
+
+**Not committing it** leaves a known order dependence in the pipeline.
+
+### 4. The options
+
+- **A. Commit the sort and regenerate everything it touches.**
+  - **What it involves:** every committed record computed through registration, and every document figure quoting them, amended with dated before and after figures and the verdicts shown unchanged.
+  - **Cost:** about an afternoon.
+  - **Consequence:** the mounted baseline moves; for example `ultrawide3.jpg` goes from 21 to 18 scoring bulls over the gate.
+- **B. Commit the sort and regenerate only the gate record.**
+  - **What it involves:** the other records are marked as measured in the detector's order until their next rerun.
+  - **Cost:** smaller.
+  - **Consequence:** the committed records then hold two orderings, the kind of unmarked disagreement entry 49 section 1 warned against in another form.
+- **C. Remove the dependence at its source.**
+  - **What it involves:** replace RANSAC's random consensus in registration with a deterministic robust fit, such as an iteratively reweighted homography over all corners.
+  - **Cost:** larger, since it changes the figures as well.
+  - **Consequence:** it answers the fragility in section 2 rather than fixing one ordering of it.
+- **D. Do not sort now.** Record the order dependence as a known defect beside entry 49 section 5's edge fit finding, and decide after the range session.
+
+### 5. What I would choose, and why
+
+**A, and C as the question behind it.**
+- **Why A:**
+  - A record that follows one stated order is worth more than figures that were one arbitrary order.
+  - No verdict changes.
+  - The cost is an afternoon now, against more later, when the range session's frames have been measured under the old order too.
+- **Why C matters:** RANSAC's consensus on a curved sheet moving with an input that should not matter is the same class of fragility as the edge fit's one point of thirty. The sort makes it repeatable; it does not make it stable.
+
+---
+
 ## 2026-09-15, question 13: where donated images live, and coordinates that are already in the repository's history
 
 **Status: answered 2026-09-15**: section 1 by `docs/NOTES-FROM-PLANNING.md` entry 28 section 4 (option A, a GPL-3.0 data repository), section 3 by entry 28 section 1 (the real `meta.json`), and section 2 by entry 29 (option (a), approved by Alan). Before that it read: blocks committing any image: `scans/mounted/`, held by entry 23 section 5, and every donated submission. Nothing else waits. The intake tool, its tests and the publication test are built and committed, and they work against whatever directory the answer names.

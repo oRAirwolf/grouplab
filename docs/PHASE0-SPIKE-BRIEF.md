@@ -65,7 +65,7 @@ The registration residual over marker corners is **reported, not gated**, as RMS
 Nothing new architecturally. Phase 0a already has `IImagingBackend`, `OpenCvSharpBackend`, the derivations and the definitions. This spike adds a measurement harness and a report, and it stays command line only.
 
 - A `measure` verb on the CLI that takes an image and a definition, registers, locates every bull, and emits the per-bull error table plus the residual diagnostics as structured output.
-- Whatever the report needs to be legible: DESIGN.md section 18 wants every stage to emit a structured record, and this is the first thing that consumes one.
+- Whatever the report needs to be legible: DESIGN.md section 19 wants every stage to emit a structured record, and this is the first thing that consumes one.
 - **No UI. No detection beyond markers, homography and bull location. No statistics.** Render-and-difference is Phase 1 and has its own five-criterion gate.
 
 ## 5. Bull location, which is the one method question
