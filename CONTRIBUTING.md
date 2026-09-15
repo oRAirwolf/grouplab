@@ -95,6 +95,11 @@ Where the specification is silent and a choice has to be made to go on, record t
   - Explain which paragraph the code is obeying, and why. Do not narrate what clear code already says.
 - **Determinism.** Rendering the same definition twice must give identical bytes (conformance test 38): no timestamps and no unordered iteration.
 - **Documents.** Markdown for files in the repository, and no em dashes.
+- **The README is part of done.** A commit that makes a statement in `README.md` false updates that statement in the same commit, not the next one (NOTES-FROM-PLANNING.md entry 50 section 1).
+  - **Why:** the README said for days that only Windows builds, after CI had built and tested all three platforms (entry 49 section 4).
+  - **Where a change is likely to falsify something:** Building (which platforms build and which are offered), Status (what exists), Planned (the phase table), Concept screens (how far the application is from them), Built with (versions and dependencies), Test data (the `grouplab-testdata` commit pin), Repository layout (a directory added or moved), and Licence.
+  - **What this is not:** a reason to touch the README on every commit, or to generate its prose. Most commits change nothing it claims.
+  - **What is guarded:** a claim that can be checked against something the repository already knows goes between markers, and `ReadmeTests` checks it: the sheet count, the framework, and the platforms CI builds.
 - **Commit ids in documents.** Do not cite a bare commit id unless it is worth maintaining through a history rewrite. Prefer a document reference, a test name or a milestone label.
   - **Why:** the 2026-09-14 rewrite changed 42 ids and left nine citations pointing at commits that no longer exist.
   - **Where the map is:** [docs/REWRITE-HASH-MAP.md](docs/REWRITE-HASH-MAP.md).

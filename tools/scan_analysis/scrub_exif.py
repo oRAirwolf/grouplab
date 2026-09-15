@@ -31,6 +31,12 @@ WHAT IS KEPT.  Only the tags the pipeline reads or the analysis needs:
                                      geometries into one joint fit and crashes it
     FNumber                          depth of field, which drives far-edge
                                      marker defocus
+    LensModel                        which camera in a multi-camera phone took
+                                     the frame.  The same 35 mm equivalent can
+                                     come from different physical lenses in
+                                     different modes, and focal length alone
+                                     cannot tell them apart
+                                     (NOTES-FROM-PLANNING entry 48)
     ExposureTime, ISOSpeedRatings    motion blur and noise
     Orientation                      or the image loads rotated
     DigitalZoomRatio                 digital zoom crops and upscales without
@@ -66,6 +72,7 @@ KEEP_EXIF = {
     piexif.ExifIFD.PixelXDimension,
     piexif.ExifIFD.PixelYDimension,
     piexif.ExifIFD.DigitalZoomRatio,
+    piexif.ExifIFD.LensModel,
 }
 
 EXTS = (".jpg", ".jpeg", ".JPG", ".JPEG")

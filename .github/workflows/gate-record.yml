@@ -1,9 +1,12 @@
-# The Phase 0 gate record reproduced on every platform, NOTES-FROM-PLANNING.md entry 32 section 3 and entry 35 section 6 item 2. Passing the
-# tests within tolerance is not the claim; reproducing the record is. Each job reruns the eight Phase 0 spike commands, which rewrite
-# scans/phase0/measurements in the working tree, and compares every file byte for byte with the committed record. The one field allowed to
-# differ is detectMs in threshold.json, a detection time, which differs between any two runs (docs/PHASE0-RESULTS.md section 8). Where a file
-# differs, the step says how: how many values, the largest difference under each field name, and anything that is not a number. Each console
-# table is hashed into the run summary so the three platforms can be set side by side, with the threshold table's time column removed first.
+# The Phase 0 gate record reproduced on every platform, NOTES-FROM-PLANNING.md entry 32 section 3, entry 35 section 6 item 2 and entry 49
+# section 1. The record reproduces on a platform when every gate verdict is identical and every printed table is identical: the tables are
+# what a person reads and acts on, and a verdict can only change through a figure in them. Each job reruns the eight Phase 0 spike commands
+# and compares their console tables line for line with the Windows tables committed in scans/phase0/measurements/tables. The threshold
+# table's detection time column is the one thing left out, because it differs between any two runs. That comparison fails the job.
+#
+# The raw records are still compared byte for byte with the committed ones, and where they differ the step reports how many values differ,
+# the largest difference under each field name, and anything that is not a number. That is reported, never gated: a raw difference below
+# printed precision is a question worth seeing, not a failure. Nothing here sets a tolerance or names a magnitude.
 name: phase 0 gate record
 
 on:
@@ -44,16 +47,34 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Compare with the committed record
+      - name: Compare the printed tables, and report the raw records
         run: |
           py=$(command -v python3 || command -v python)
           "$py" - sheets photos markers refinement threshold scale field detectors <<'PY'
-          import hashlib, json, os, subprocess, sys
+          import difflib, json, os, subprocess, sys
+
+          def table(text, m):
+              lines = text.replace("\r", "").split("\n")
+              if m == "threshold":
+                  lines = ["|".join(c if i != 5 else "" for i, c in enumerate(line.split("|"))) if line.count("|") > 6 else line for line in lines]
+              return lines
 
           summary = open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8")
-          summary.write(f"### {os.environ['MATRIX_OS']}\n\n| Spike | Record against the commit | Console table, sha256 |\n|---|---|---|\n")
+          summary.write(f"### {os.environ['MATRIX_OS']}\n\n| Spike | Printed table, gated | Raw record, reported |\n|---|---|---|\n")
           failed = False
           for m in sys.argv[1:]:
+              reference = table(open(f"scans/phase0/measurements/tables/{m}.txt", encoding="utf-8").read(), m)
+              printed = table(open(os.path.join(os.environ["RUNNER_TEMP"], "console", f"{m}.txt"), encoding="utf-8").read(), m)
+              if printed == reference:
+                  verdict = "identical" + (", time column left out" if m == "threshold" else "")
+              else:
+                  failed = True
+                  changed = [line for line in difflib.unified_diff(reference, printed, "windows", "here", n=0, lineterm="") if line[:1] in "+-" and not line.startswith(("+++", "---"))]
+                  verdict = f"**differs**, {sum(1 for line in changed if line.startswith('-'))} lines"
+                  print(f"::group::{m}: printed table against the committed Windows table")
+                  print("\n".join(changed))
+                  print("::endgroup::")
+
               path = f"scans/phase0/measurements/{m}.json"
               committed = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True).stdout
               generated = open(path, "rb").read()
@@ -62,54 +83,48 @@ jobs:
               def text(data):
                   return b"\n".join(line for line in data.split(b"\n") if not any(f'"{k}"'.encode() in line for k in skip))
 
-              console = open(os.path.join(os.environ["RUNNER_TEMP"], "console", f"{m}.txt"), "rb").read().replace(b"\r", b"")
-              if m == "threshold":
-                  console = b"\n".join(b"|".join(c if i != 5 else b"" for i, c in enumerate(line.split(b"|"))) if line.count(b"|") > 6 else line for line in console.split(b"\n"))
-              table = hashlib.sha256(console).hexdigest()[:16]
-              note = ", detectMs left out" if skip else ""
               if text(committed) == text(generated):
-                  summary.write(f"| `{m}` | identical{note} | `{table}` |\n")
-                  continue
+                  raw = "identical"
+              else:
+                  differences = []
 
-              failed = True
-              differences = []
+                  def walk(a, b, where):
+                      if isinstance(a, dict) and isinstance(b, dict):
+                          for key in sorted(set(a) | set(b)):
+                              if key in skip:
+                                  continue
+                              if key not in a or key not in b:
+                                  differences.append((f"{where}/{key}", a.get(key, "<absent>"), b.get(key, "<absent>")))
+                              else:
+                                  walk(a[key], b[key], f"{where}/{key}")
+                      elif isinstance(a, list) and isinstance(b, list):
+                          if len(a) != len(b):
+                              differences.append((where, f"{len(a)} items", f"{len(b)} items"))
+                          for i, (x, y) in enumerate(zip(a, b)):
+                              walk(x, y, f"{where}/{i}")
+                      elif a != b or type(a) is not type(b):
+                          differences.append((where, a, b))
 
-              def walk(a, b, where):
-                  if isinstance(a, dict) and isinstance(b, dict):
-                      for key in sorted(set(a) | set(b)):
-                          if key in skip:
-                              continue
-                          if key not in a or key not in b:
-                              differences.append((f"{where}/{key}", a.get(key, "<absent>"), b.get(key, "<absent>")))
-                          else:
-                              walk(a[key], b[key], f"{where}/{key}")
-                  elif isinstance(a, list) and isinstance(b, list):
-                      if len(a) != len(b):
-                          differences.append((where, f"{len(a)} items", f"{len(b)} items"))
-                      for i, (x, y) in enumerate(zip(a, b)):
-                          walk(x, y, f"{where}/{i}")
-                  elif a != b or type(a) is not type(b):
-                      differences.append((where, a, b))
+                  walk(json.loads(committed), json.loads(generated), "")
+                  number = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+                  numeric = [d for d in differences if number(d[1]) and number(d[2])]
+                  other = [d for d in differences if not (number(d[1]) and number(d[2]))]
+                  by_field = {}
+                  for where, a, b in numeric:
+                      field = where.rsplit("/", 1)[-1]
+                      if field not in by_field or abs(a - b) > abs(by_field[field][1] - by_field[field][2]):
+                          by_field[field] = (where, a, b)
+                  largest = sorted(by_field.items(), key=lambda kv: -abs(kv[1][1] - kv[1][2]))
+                  head = ", ".join(f"{field} {abs(a - b):.4g}" for field, (_, a, b) in largest[:4])
+                  raw = f"{len(differences)} values differ, {len(numeric)} numeric (largest by field: {head}), {len(other)} not numeric"
+                  print(f"::group::{m}.json: {raw}")
+                  for field, (where, a, b) in largest:
+                      print(f"  {field:<24} {abs(a - b):.6g}   at {where}: {a} committed, {b} here")
+                  for where, a, b in other[:40]:
+                      print(f"  not numeric at {where}: {a!r} committed, {b!r} here")
+                  print("::endgroup::")
 
-              walk(json.loads(committed), json.loads(generated), "")
-              number = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
-              numeric = [d for d in differences if number(d[1]) and number(d[2])]
-              other = [d for d in differences if not (number(d[1]) and number(d[2]))]
-              by_field = {}
-              for where, a, b in numeric:
-                  field = where.rsplit("/", 1)[-1]
-                  if field not in by_field or abs(a - b) > abs(by_field[field][1] - by_field[field][2]):
-                      by_field[field] = (where, a, b)
-              largest = sorted(by_field.items(), key=lambda kv: -abs(kv[1][1] - kv[1][2]))
-              head = ", ".join(f"{field} {abs(a - b):.4g}" for field, (_, a, b) in largest[:4])
-              summary.write(f"| `{m}` | **differs**: {len(differences)} values, {len(numeric)} numeric (largest by field: {head}), {len(other)} not numeric{note} | `{table}` |\n")
-              print(f"::group::{m}.json: {len(differences)} values differ, {len(numeric)} numeric, {len(other)} not numeric")
-              print("largest difference under each field name:")
-              for field, (where, a, b) in largest:
-                  print(f"  {field:<24} {abs(a - b):.6g}   at {where}: {a} committed, {b} here")
-              for where, a, b in other[:40]:
-                  print(f"  not numeric at {where}: {a!r} committed, {b!r} here")
-              print("::endgroup::")
+              summary.write(f"| `{m}` | {verdict} | {raw} |\n")
 
           sys.exit(1 if failed else 0)
           PY

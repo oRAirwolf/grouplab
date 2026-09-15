@@ -67,6 +67,27 @@ public partial class ReadmeTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 49 section 4 and 50 section 1: the README said for days that only Windows builds, after CI had built
+    /// and tested all three platforms. The platforms it names as building must be the platforms the build and test workflow runs.
+    /// </summary>
+    [Fact]
+    public void TheStatedPlatformsAreThePlatformsCiBuildsAndTests()
+    {
+        var matrix = CiMatrix().Match(File.ReadAllText(Repo.PathTo(".github", "workflows", "ci.yml")));
+        Assert.True(matrix.Success, ".github/workflows/ci.yml has no `os: [...]` matrix to compare the README against.");
+        var names = new Dictionary<string, string> { ["windows"] = "Windows", ["ubuntu"] = "Linux", ["macos"] = "macOS" };
+        var built = matrix.Groups["os"].Value.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Select(runner => names.TryGetValue(runner.Split('-')[0], out string? name) ? name : runner).Order(StringComparer.Ordinal).ToList();
+        var stated = Lines.Select((line, i) => (Line: i + 1, Match: Platforms().Match(line))).Where(x => x.Match.Success).ToList();
+        Assert.True(stated.Count > 0, "README.md no longer names the platforms that build between <!--platforms--> and <!--/platforms--> markers, so this test cannot check it. Put the markers back around them.");
+        foreach (var (line, match) in stated)
+        {
+            var claimed = match.Groups["list"].Value.Replace(" and ", ", ", StringComparison.Ordinal).Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Order(StringComparer.Ordinal).ToList();
+            Assert.True(claimed.SequenceEqual(built), $"README.md line {line} names {string.Join(", ", claimed)} as building; ci.yml builds and tests on {string.Join(", ", built)}. Change the platforms between the markers to match the workflow.");
+        }
+    }
+
     [Fact]
     public void NoEmDashAppears()
     {
@@ -85,4 +106,10 @@ public partial class ReadmeTests
 
     [GeneratedRegex(@"<TargetFramework>net(?<v>\d+)\.0</TargetFramework>")]
     private static partial Regex TargetFramework();
+
+    [GeneratedRegex(@"<!--platforms-->(?<list>[^<]+)<!--/platforms-->")]
+    private static partial Regex Platforms();
+
+    [GeneratedRegex(@"os:\s*\[(?<os>[^\]]+)\]")]
+    private static partial Regex CiMatrix();
 }

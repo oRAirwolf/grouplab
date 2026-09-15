@@ -2307,6 +2307,36 @@ None of this is changed, as section 2 asks.
 
 ---
 
+## Entries 49 and 50. What the gate record compares, a README that told visitors something false, and when entry 43 starts
+
+`docs/NOTES-FROM-PLANNING.md` entries 49 and 50. Entry 49 sections 2 and 5, the marker sort and the edge fit's sensitivity, are measured next and reported in their own section.
+
+**Entry 49 section 1: the gate record reproduces when every verdict and every printed table is identical.**
+- **What is gated:** each platform's eight console tables, compared line for line with the Windows tables now committed in `scans/phase0/measurements/tables`. The threshold table's detection time column is left out, as it differs between any two runs. Those Windows tables are the ones this machine and the Windows runner both print.
+- **What is reported, not gated:** the raw records, still compared byte for byte, with the count of differing values and the largest difference under each field name in the run summary.
+- **Expected under the rule:** Windows and Linux pass, and macOS fails, since two of its study tables differ in print.
+- **Why this is not a gate written after the results:** it sets no tolerance and names no magnitude. It says which artefact carries the claim, which is the one a person reads.
+- **What was not done:** no per-platform reference records, so the repository asserts one truth.
+
+**Entry 49 section 3:** `tools/scan_analysis/scrub_exif.py` keeps `LensModel`, with its docstring line, as planning wrote them.
+
+**Entry 49 section 4 and entry 50 section 1: the README.**
+- **Building** now says GroupLab builds and its tests pass on Windows, Linux and macOS, that every push runs the suite on all three, and that the application is offered for Windows until the gate record reproduces elsewhere. The paragraph it replaces said only Windows builds.
+- **Concept screens** says the application carries the screens' palette, type and marks, and not their layout.
+- **Status** adds the self-identifying sheet, the `analyze` command and the diagnostics, and no longer lists the assignment editor as missing.
+- **Planned** no longer says "once CI exists".
+- **Guarded:** the platforms sit between `<!--platforms-->` markers, and `ReadmeTests` requires them to equal the `os` matrix of `.github/workflows/ci.yml`.
+- **The rule:** `CONTRIBUTING.md` now says a commit that makes a statement in the README false updates it in the same commit, with the sections most likely to go stale.
+
+**Entry 50 section 2: when entry 43, the analysis screen, starts.** All three of these, and not before:
+1. **The gate record workflow is green on Windows, Linux and macOS,** under the rule above.
+2. **The edge fit's sensitivity is measured and reported:** the one edge point of thirty that moved a bull 0.30 dmm on `telephoto3.jpg` (entry 49 section 5).
+3. **Alan's range session has been through the pipeline.**
+
+**Tests:** Core 758 passing, none skipped; `ReadmeTests` has a fifth test, the platform guard.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2432,3 +2462,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 47: identification counted per platform in the gate record workflow, over a per-platform expectation in the unit tests.** No count is known yet for Linux or macOS, and an expectation written before measuring would be a guess.
 - **Entry 48: Linux's gate record difference explained and left red in the workflow, over a Linux reference record or a rule that passes it.** Making the job green needs either Linux's own records committed as its reference, or a rule about which differences pass. The first adds about 12 MB and the second is a gate written after the results, so the choice is planning's.
 - **Entry 48: the owner corpus republished from the originals through `publish-owner`, over editing the published files.** Every published file still comes from the one scrubber, and the 13 files without a lens model reproduce byte for byte, which shows nothing else changed.
+- **Entry 49 section 1: the printed tables committed as Windows text files, over comparing the platforms with one another inside one run.** A committed reference fails a single platform's job on its own, and it states in the repository what the record is.
+- **Entry 49 section 4: the README's platform guard requires equality with the CI matrix, over naming at least as many.** A README naming a platform CI does not build would be false in the other direction.

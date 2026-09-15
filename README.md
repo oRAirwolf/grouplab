@@ -41,7 +41,7 @@ The one-shot-per-bull design is what makes the accuracy possible. Holes never ov
 
 ## Concept screens
 
-These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application as it exists today has a marking screen and a print screen and looks nothing like this yet.
+These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has a marking screen and a print screen. They now carry the palette, the type and the marks these screens are drawn in, and not their layout: there is no navigation rail, no composite plot and no analysis screen yet.
 
 ![Analysis screen](docs/figures/screens/analysis-dark.png)
 
@@ -124,8 +124,11 @@ What exists and is tested:
 - the statistics engine, validated key for key against the R package `shotGroups`
 - a desktop window with a manual marking path for commercial targets
 - an intake tool that verifies donated photographs, refuses opt-outs, and strips location data without altering a pixel
+- a sheet that names its own definition from its printed codes, so no target has to be named by hand
+- an end-to-end `analyze` command, from photograph to report
+- diagnostic logging, crash records and a report package, with no location data in any of them
 
-What does not exist yet: the full analysis screen shown above, the assignment editor, load comparison, the chronograph and ballistic work, and any mobile build.
+What does not exist yet: the full analysis screen shown above, load comparison, the chronograph and ballistic work, and any mobile build.
 
 Each phase has a gate and is not complete until the gate passes. The gates and their measured results are in `DESIGN.md` section 21 and `docs/PHASE1-RESULTS.md`.
 
@@ -141,7 +144,7 @@ Each phase has a gate and is not complete until the gate passes. The gates and t
 | **7. Synchronisation** | Cloud provider adapters, three-tier storage. |
 | **8. iOS** | Built and signed on CI. |
 
-**macOS and Linux are wanted and are not a phase.** Nothing in the measurement core is Windows-specific and Avalonia runs on all three, so this is packaging and an imaging-backend reference rather than a port. It is tracked as a continuous requirement: once CI exists it runs on all three, and before either is offered as a build, the Phase 0 gate record has to reproduce on that platform rather than merely compile.
+**macOS and Linux are wanted and are not a phase.** Nothing in the measurement core is Windows-specific and Avalonia runs on all three, so this is packaging and an imaging-backend reference rather than a port. It is tracked as a continuous requirement: CI builds and tests all three on every push, and before either is offered as a build, the Phase 0 gate record has to reproduce on that platform rather than merely compile.
 
 Smaller things already specified and waiting: a three-axis unit setting (inches, centimetres and millimetres; MOA, mil and SMOA; yards and metres), adjust-to-zero turret corrections, calibre-aware edge-to-edge spread, and a volunteer print pack.
 
@@ -200,7 +203,7 @@ dotnet test
 dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf
 ```
 
-Windows is the only platform currently buildable: the imaging backend references the Windows-native OpenCV runtime package unconditionally. macOS and Linux need that reference made conditional, which is a known and small fix.
+GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. The desktop application is offered as a build for Windows today: before Linux or macOS is offered, the Phase 0 gate record has to reproduce on that platform rather than merely compile, which is tracked in `docs/PHASE1-RESULTS.md`.
 
 ## Licence
 

@@ -1,0 +1,25 @@
+| Image | Detector | Markers | Residual RMS / max (in) | Centroid mean / worst (in) | Edge fit mean / worst (in) |
+|---|---|---|---|---|---|
+| `gl-cf25-ltr-1-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00217 / 0.00504 | 0.00225 / 0.00397 | 0.00126 / 0.00254 |
+| `gl-cf25-ltr-1-600-dpi.png` | libapriltag, as returned | 34/34 | 0.00224 / 0.00442 | 0.00226 / 0.00519 | 0.00099 / 0.00196 |
+| `gl-cf25-ltr-1-600-dpi.png` | libapriltag, minus half a pixel | 34/34 | 0.00224 / 0.00442 | 0.00230 / 0.00412 | 0.00135 / 0.00259 |
+| `gl-cf25-ltr-2-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00219 / 0.00561 | 0.00217 / 0.00431 | 0.00145 / 0.00316 |
+| `gl-cf25-ltr-2-600-dpi.png` | libapriltag, as returned | 34/34 | 0.00217 / 0.00433 | 0.00208 / 0.00482 | 0.00106 / 0.00245 |
+| `gl-cf25-ltr-2-600-dpi.png` | libapriltag, minus half a pixel | 34/34 | 0.00217 / 0.00433 | 0.00222 / 0.00436 | 0.00145 / 0.00331 |
+| `gl-cf25-ltr-3-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00211 / 0.00447 | 0.00212 / 0.00425 | 0.00125 / 0.00290 |
+| `gl-cf25-ltr-3-600-dpi.png` | libapriltag, as returned | 34/34 | 0.00217 / 0.00440 | 0.00229 / 0.00507 | 0.00113 / 0.00245 |
+| `gl-cf25-ltr-3-600-dpi.png` | libapriltag, minus half a pixel | 34/34 | 0.00217 / 0.00440 | 0.00219 / 0.00395 | 0.00137 / 0.00290 |
+| `gl-cf25-ltr-2-600-dpi-rot180.png` | OpenCV, shipped settings | 34/34 | 0.00213 / 0.00533 | 0.00308 / 0.00658 | 0.00140 / 0.00268 |
+| `gl-cf25-ltr-2-600-dpi-rot180.png` | libapriltag, as returned | 34/34 | 0.00216 / 0.00458 | 0.00376 / 0.00754 | 0.00235 / 0.00350 |
+| `gl-cf25-ltr-2-600-dpi-rot180.png` | libapriltag, minus half a pixel | 34/34 | 0.00216 / 0.00458 | 0.00303 / 0.00648 | 0.00126 / 0.00247 |
+| `gl-cf25-ltr-1-300-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00189 / 0.00419 | 0.00280 / 0.00495 | 0.00126 / 0.00250 |
+| `gl-cf25-ltr-1-300-dpi.png` | libapriltag, as returned | 34/34 | 0.00195 / 0.00420 | 0.00327 / 0.00680 | 0.00163 / 0.00277 |
+| `gl-cf25-ltr-1-300-dpi.png` | libapriltag, minus half a pixel | 34/34 | 0.00195 / 0.00420 | 0.00288 / 0.00500 | 0.00136 / 0.00256 |
+
+| Image | Markers in both | Mean offset, libapriltag minus OpenCV, x / y (px) | RMS about that mean (px) |
+|---|---|---|---|
+| `gl-cf25-ltr-1-600-dpi.png` | 34 | +0.436 / +0.487 | 1.202 |
+| `gl-cf25-ltr-2-600-dpi.png` | 34 | +0.418 / +0.535 | 1.217 |
+| `gl-cf25-ltr-3-600-dpi.png` | 34 | +0.337 / +0.371 | 1.211 |
+| `gl-cf25-ltr-2-600-dpi-rot180.png` | 34 | +0.590 / +0.454 | 1.243 |
+| `gl-cf25-ltr-1-300-dpi.png` | 34 | +0.480 / +0.460 | 0.422 |

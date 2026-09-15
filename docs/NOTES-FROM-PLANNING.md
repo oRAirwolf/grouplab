@@ -15,6 +15,177 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 50: the README is part of done, and when the analysis screen starts
+
+**Status: actioned 2026-09-15.**
+- **Section 1:** the rule is in `CONTRIBUTING.md` under Conventions, with the checklist of claim-bearing sections, and the platform claim is guarded.
+- **Section 2:** entry 43 starts when the gate record workflow is green on all three platforms, entry 49 section 5 is measured and reported, and the range session has been through the pipeline. Recorded in `docs/PHASE1-RESULTS.md`.
+- **Section 3:** noted.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 49 and 50". Short. Two standing rules from Alan, written down so they outlive whoever remembers them.
+
+### 1. The README is updated in the same commit as the change that makes it stale
+
+Alan has asked that the README be kept current with each change as it happens, rather than repaired in batches when somebody notices. Entry 49 section 4 is why: a sentence saying the project builds only on Windows sat on the public front page for days after it stopped being true, and it took a person reading the file to find it.
+
+**The rule: a commit that makes a statement in `README.md` false updates that statement in the same commit.** Not the next one, not a documentation pass later. The same commit, so that the repository is never in a state where its front page contradicts it.
+
+**What this is not.** It is not a requirement to touch the README on every commit, and it is not licence to generate it. Entry 31 section 3 still holds: most of that file is argument and judgement, and generated prose reads like it. Most commits change nothing the README claims, and those commits leave it alone.
+
+**The claim-bearing parts, so this is a checklist rather than a judgement call.** These are the places a change is likely to falsify something:
+
+- **Building**, which platforms build and which are offered
+- **Status**, what exists and what does not
+- **Planned**, the phase table
+- **Concept screens**, how far the application is from them
+- **Built with**, versions and dependencies
+- **Test data**, the `grouplab-testdata` commit pin
+- **Repository layout**, when a directory is added or moved
+- **Licence**, which stays as it is until the attorney answers
+
+**Put the rule in `CONTRIBUTING.md`** beside the other conventions, as a line in whatever the definition of done is there. A rule that lives only in this log is a rule that lasts as long as this log is being read.
+
+**And guard what can be guarded**, per entry 49 section 4: the platform claim goes between markers and `ReadmeTests` compares it against the matrix in `.github/workflows/ci.yml`. Every claim that can be put between markers and checked against something the repository already knows should be. The rest is judgement, and judgement is what the rule above is for.
+
+### 2. The analysis screen waits for the measurement work, and here is what that means
+
+Alan has decided the interface work goes in after the measurement work is complete and working. **That is the order I recommended and it is now his decision rather than my preference, so entry 43 does not start early for any reason.**
+
+"Complete and working" needs to be checkable rather than a feeling, so:
+
+**Entry 43 starts when all three of these are true.**
+
+1. **The `phase 0 gate record` workflow is green on Windows, Linux and macOS**, under the rule in entry 49 section 1: every verdict identical, every printed table identical, raw differences reported.
+2. **The edge fit sensitivity of entry 49 section 5 is understood and reported.** One point of thirty moving a bull 0.30 dmm is a robustness problem that has nothing to do with platforms, and it is the one most likely to bite on real shot paper. Understood means measured and written down; it does not necessarily mean changed, because the right response might be a warning rather than a different fit.
+3. **Alan's range session has been through the pipeline**, because that is the first real paper any gate has ever seen, and it is the only thing that can tell us whether the detector works on holes rather than on renderings.
+
+Item 3 is the one that takes a weekend rather than an afternoon, and it is the one that matters. **Everything before it is the project checking its own arithmetic. Item 3 is the project finding out whether it works.**
+
+**In the meantime, entry 43 is not idle.** When the weekend's frames come back they will change what the analysis screen has to show: how a marginal fit is flagged, what a partly-identified sheet looks like, what happens when a bull has two holes in it. A specification written before that data would have to be rewritten after it. **Waiting is not a delay here; it is the cheaper order.**
+
+### 3. What is not waiting
+
+The styling work of entry 42 is done and does not pause. If something on the existing screens is wrong, ugly or unreadable, fix it as it comes up rather than parking it behind entry 43. The rule is about not starting a new screen, not about tolerating a bad one.
+
+---
+
+## 2026-09-15, entry 49: three decisions, the README is telling visitors something false, and a fragility worth more than the gate that found it
+
+**Status: actioned 2026-09-15 for sections 1, 3 and 4; sections 2 and 5 are measured next, and reported below as they land.**
+- **Section 1:** the gate record workflow now gates on the printed tables, compared line for line with the Windows tables committed in `scans/phase0/measurements/tables`, and reports the raw records without failing. No per-platform reference records.
+- **Section 3:** both edits to `tools/scan_analysis/scrub_exif.py`, as written.
+- **Section 4:** the three README replacements as written, with the platforms between `<!--platforms-->` markers, and `ReadmeTests` requiring them to equal the matrix in `.github/workflows/ci.yml`. The Planned paragraph that still said "once CI exists" is corrected too.
+- **Section 6:** noted.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 49 and 50". Sections 1 to 3 answer your three questions. Section 4 is a defect in the README that has been live for days. Section 5 is the finding in your own report that deserves more attention than either gate.
+
+### 1. Decision: Linux goes green, by changing what is compared rather than what is allowed
+
+You offered two ways and refused the second for the right reason. **Take neither.** There is a third and it is better than both.
+
+**Byte-identity of the raw records was never the requirement.** It was a proxy for the requirement, and a stricter one. What entry 32 section 3 actually wants to know is whether another desktop gives the same answers. So state the comparison as that, and state it structurally rather than numerically:
+
+> **The Phase 0 gate record reproduces on a platform when every gate verdict is identical and every printed table is identical. Raw differences below printed precision are reported, not gated.**
+
+**This is not a gate written after seeing the results**, which is what entry 17 section 2 rules out, because it sets no tolerance and names no magnitude. It says which artefact carries the claim. Printed precision is what a person acts on, which is the same argument entry 24 made about the panel: the number somebody reads is the number that has to be right.
+
+Under that rule: **Windows passes. Linux passes. macOS fails**, because two of its study tables differ in print.
+
+**And it still has teeth.** Your `telephoto3.jpg` case moved a bull 0.30 dmm, which is 0.0118 in, more than twice the 0.005 in gate. That shows up in print and it fails. A rule that would have let that through would be worthless, and this one does not.
+
+**Do not commit per-platform reference records.** Three reasons, the first of which is the one that matters:
+
+1. **Two committed records that disagree make the repository assert two truths, with nothing in it saying which is right.** Today Windows is the reference and a difference is a question. With three references, a difference is nobody's problem.
+2. It changes the question from "do the platforms agree" to "does each platform still match itself", which is a weaker thing to know.
+3. 12 MB per platform, growing with every study added.
+
+**Keep the raw comparison in the workflow as a reported diagnostic.** Print the largest difference per field into the summary as you already do. A future change that moves a number stays visible without failing the run.
+
+**On the emails.** Making Linux green removes half of them. macOS staying red is correct and should stay noisy until it is resolved, because a gate that fails quietly is not a gate. The volume itself has a separate cause worth naming: `main` and `phase-1` are the same commit, so every push runs both workflows twice and sends four notifications for two results. That is Alan's call rather than yours, but it is where the multiplier comes from.
+
+### 2. Decision: yes to both, and the sort is not really about this gate
+
+**Sort the markers by identifier before use. Unconditionally, and not to make a gate green.** An order-dependent result means the same input can produce two answers on one machine. That is a defect on its own terms, and the platform comparison merely found it. This is the same argument as entry 48 section 2 about making an iteration deterministic: a measurement tool that gives the same answer twice is worth having whatever the gate says.
+
+**Yes, rerun macOS from Windows' corners in Windows' order.** It is cheap and it answers a question nothing else answers: whether corner refinement is the only place the platforms diverge, or the first of two. If the records then match, the story is complete. If they still differ, there is a second divergence downstream and we would otherwise have stopped looking.
+
+### 3. Decision: `scrub_exif.py`, and the change is mine to hand you
+
+The script's own docstring says the C# scrubber is authoritative and that the two whitelists must be kept identical, so this is catching up rather than a decision. **Make these two edits and commit them with the rest.**
+
+In `KEEP_EXIF`, add:
+
+```python
+    piexif.ExifIFD.LensModel,
+```
+
+In the `WHAT IS KEPT` block of the docstring, after the `FNumber` line, add:
+
+```
+    LensModel                        which camera in a multi-camera phone took
+                                     the frame.  The same 35 mm equivalent can
+                                     come from different physical lenses in
+                                     different modes, and focal length alone
+                                     cannot tell them apart
+                                     (NOTES-FROM-PLANNING entry 48)
+```
+
+I am handing this over rather than editing the file myself because of entry 44: I create files in the inbox and never write a tracked file. That rule cost a data-loss scare to learn and it is not worth an exception for four lines.
+
+### 4. The README says the project only builds on Windows, and it has been saying it for days
+
+Alan asked whether the README is being kept current. **It is not, and the damage is worse than staleness.** Under `## Building`:
+
+> Windows is the only platform currently buildable: the imaging backend references the Windows-native OpenCV runtime package unconditionally. macOS and Linux need that reference made conditional, which is a known and small fix.
+
+**Every word of that is now false.** Entry 32 conditioned the runtime packages days ago, CI builds and tests on Windows, Linux and macOS at Core 757 and App 35, and a second workflow reruns the Phase 0 gate record on all three. The public front page of the project is telling every visitor it does not run on their machine.
+
+**Why `ReadmeTests` did not catch it.** It guards what is marked: links, the sheet count, the framework, em dashes. This is an unmarked prose claim, and entry 31 section 3 said deliberately not to generate the prose. That was right, and the gap is that **a prose claim contradicting a fact the repository already knows is still a checkable claim.**
+
+**Three replacements. The wording is mine; place it as written or tell me what is wrong with it.**
+
+**a. Replace the whole `## Building` paragraph above with:**
+
+> GroupLab builds and its tests pass on Windows, Linux and macOS, and every push runs the suite on all three. The desktop application is offered as a build for Windows today: before Linux or macOS is offered, the Phase 0 gate record has to reproduce on that platform rather than merely compile, which is tracked in `docs/PHASE1-RESULTS.md`.
+
+**b. Replace the last sentence of `## Concept screens` with:**
+
+> The application today has a marking screen and a print screen. They now carry the palette, the type and the marks these screens are drawn in, and not their layout: there is no navigation rail, no composite plot and no analysis screen yet.
+
+**c. In `## Status`, under "What does not exist yet", remove "the assignment editor" and add to the list of what exists:**
+
+> - a sheet that names its own definition from its printed codes, so no target has to be named by hand
+> - an end-to-end `analyze` command, from photograph to report
+> - diagnostic logging, crash records and a report package, with no location data in any of them
+
+**And add one guard to `ReadmeTests`:** read the platform matrix out of `.github/workflows/ci.yml`, and fail if the README names fewer platforms as buildable than CI actually runs. It is the same shape as the framework guard and it would have caught this the day it went stale. Put the claim between markers so the test has something to read, the way the sheet count and the framework already are.
+
+### 5. The finding in your report that outranks both gates
+
+Buried in the macOS section:
+
+> `telephoto3.jpg` has identical corners on macOS, yet one bull moved 0.30 dmm because the edge fit kept 29 edge points instead of 30.
+
+**Read that again with the platforms taken out of it.** Identical inputs to the edge fit. One point of thirty included or not. The bull moves 0.0118 in, which is more than twice the gate.
+
+**That is not a platform problem and it will not be fixed by anything in sections 1 or 2.** The same flip can happen between two photographs of the same target, between two frames in one session, or between two runs on one machine if anything upstream moves by a hair. **It is a robustness defect that the platform comparison happened to expose**, and this weekend is about to produce exactly the marginal frames that trigger it: paper with holes in it, shot through printed rings, photographed on a board in daylight.
+
+**Worth understanding before the weekend rather than after.** Three questions, in order:
+
+1. **Why is one point of thirty worth 0.30 dmm?** Either that bull's fit is badly conditioned, or the dropped point is unusually influential. Both are answerable by refitting with each point left out in turn and reporting the spread.
+2. **Is it a hard include or exclude where a soft weight belongs?** A threshold that flips a point in or out converts a continuous input into a discontinuous output, which is the mechanism here. Robust weighting instead of rejection would make the output move continuously with the input.
+3. **Does the stage record say when a fit is near its threshold?** If a bull is one point away from changing its answer, the person reading the figure should be able to find that out. This is entry 39 section 1 and entry 40 again, from a fourth direction: the pipeline knows something the interface is not using.
+
+**Do not change anything yet.** Measure it, report it, and I will write what it should do. But do it before entry 43, because a marginal-frame sensitivity that moves a bull twice the gate is worth more than any screen.
+
+### 6. Answering Alan's other question honestly, for the record
+
+He also asked whether the interface is being driven toward the concept screens. The honest answer is that entry 42 landed the palette, the type, the density and the marks, and that the layout is entry 43 and has not been started, on my instruction. The window matches the screens in how it looks and not in what is on it: no navigation rail, no three-column analysis screen, no composite plot, and a twenty-button toolbar across two rows where the concept has a 46 pixel top bar.
+
+**That sequencing was and still is right**, because the analysis screen needs the analysis path wired into the window and entry 33 built it as a command. But it is his project and his question, and I have told him plainly where it stands rather than defending the order again.
+
+---
+
 ## 2026-09-15, entry 48: my diagnosis was wrong, and the two decisions you asked for
 
 **Status: actioned 2026-09-15.**

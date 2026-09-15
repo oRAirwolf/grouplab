@@ -1,0 +1,12 @@
+| Threshold window max | Downsample | Markers matched | Sheets with every marker | Detection time, mean (ms) | Residual RMS, mean (in) | Worst bull, any sheet (in) | Sheets inside the paper gate |
+|---|---|---|---|---|---|---|---|
+| 7 px | 1x | 0 of 240 | 0 of 10 | 58 |  |  | 0 of 10 |
+| 15 px | 1x | 225 of 240 | 1 of 10 | 67 | 0.00201 | 0.00364 | 10 of 10 |
+| 23 px, OpenCV's default | 1x | 238 of 240 | 8 of 10 | 70 | 0.00207 | 0.00458 | 10 of 10 |
+| 35 px | 1x | 238 of 240 | 8 of 10 | 75 | 0.00209 | 0.00325 | 10 of 10 |
+| half the marker side, 49 px | 1x | 239 of 240 | 9 of 10 | 72 | 0.00210 | 0.00397 | 10 of 10 |
+| the marker side, 95 px, shipped | 1x | 240 of 240 | 10 of 10 | 73 | 0.00208 | 0.00325 | 10 of 10 |
+| 71 px | 1x | 240 of 240 | 10 of 10 | 72 | 0.00209 | 0.00342 | 10 of 10 |
+| the marker side | 2x | 240 of 240 | 10 of 10 | 25 | 0.00177 | 0.00328 | 10 of 10 |
+| the marker side | 3x | 239 of 240 | 9 of 10 | 15 | 0.00169 | 0.00328 | 10 of 10 |
+| the marker side, native 300 DPI scans | none | 240 of 240 | 10 of 10 | 20 | 0.00194 | 0.00358 | 10 of 10 |
