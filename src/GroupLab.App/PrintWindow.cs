@@ -207,7 +207,7 @@ public sealed class PrintWindow : Window
             }
 
             loadBlock.Children.Add(fields);
-            loadBlock.Children.Add(Row(new TextBlock { Text = "Serial", Width = 140, VerticalAlignment = VerticalAlignment.Center }, serial));
+            loadBlock.Children.Add(Row(new TextBlock { Text = "Serial", Width = 140, VerticalAlignment = VerticalAlignment.Center }, Detached(serial)));
         }
         else
         {
@@ -238,11 +238,12 @@ public sealed class PrintWindow : Window
 
         foreach (var (key, box) in fieldBoxes)
         {
-            fields.Children.Add(Row(new TextBlock { Text = SceneBuilder.FieldCaption(key), Width = 140, VerticalAlignment = VerticalAlignment.Center }, box));
+            fields.Children.Add(Row(new TextBlock { Text = SceneBuilder.FieldCaption(key), Width = 140, VerticalAlignment = VerticalAlignment.Center }, Detached(box)));
         }
     }
 
-    private void Turn(int by)
+    /// <summary>Turns the preview by sheets of a tiled set.</summary>
+    internal void Turn(int by)
     {
         if (selected is null)
         {
@@ -333,6 +334,22 @@ public sealed class PrintWindow : Window
                 status.Text = "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
             }
         }
+    }
+
+    /// <summary>
+    /// A control shown again in a rebuilt row, taken out of the row it was last in. The serial box and the load block's field boxes
+    /// outlive the rows that hold them, and Avalonia refuses a control that already has a parent: selecting a second sheet with a load
+    /// block, or choosing Filled a second time, crashed the screen (NOTES-FROM-PLANNING.md entry 39 section 2).
+    /// </summary>
+    private static T Detached<T>(T control)
+        where T : Control
+    {
+        if (control.Parent is Panel parent)
+        {
+            parent.Children.Remove(control);
+        }
+
+        return control;
     }
 
     private static StackPanel Row(params Control[] children)

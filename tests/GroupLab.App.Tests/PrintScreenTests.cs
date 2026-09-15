@@ -48,4 +48,46 @@ public class PrintScreenTests
 
         window.Close();
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 39 section 2: selecting more than one target crashed the screen, and it has been used by a person
+    /// once before the session pack is printed from it. Every sheet is selected in turn and then in reverse, its load block switched
+    /// between blank and filled more than once, its pages turned, and every sheet saved, with a PDF or a stated reason.
+    /// </summary>
+    [AvaloniaFact]
+    public void EverySheetCanBeSelectedInTurnToggledPagedAndSavedWithoutACrash()
+    {
+        var window = new PrintWindow { Width = 1200, Height = 800 };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        string directory = Path.Combine(Path.GetTempPath(), $"grouplab-print-{Guid.NewGuid():N}");
+        try
+        {
+            foreach (var (sheet, pass) in window.Sheets.Select(s => (s, 1)).Concat(window.Sheets.Reverse().Select(s => (s, 2))))
+            {
+                window.Select(sheet.File);
+                Dispatcher.UIThread.RunJobs();
+                Assert.NotNull(window.PreviewSource);
+                window.SetFilled(true);
+                window.SetFilled(false);
+                window.SetFilled(true);
+                window.Turn(1);
+                window.Turn(-1);
+                if (pass == 1)
+                {
+                    string path = Path.Combine(directory, sheet.File.Replace(".gltd.json", ".pdf", StringComparison.Ordinal));
+                    Assert.True(window.SavePdf(path) || window.StatusText.Length > 0, $"{sheet.File}: neither saved nor refused with a reason");
+                }
+            }
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+
+        window.Close();
+    }
 }
