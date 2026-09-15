@@ -123,6 +123,12 @@ a `Status:` line. Act on every entry marked `open`, in order, then change its
 status to `actioned <date>` in the same commit as the work. Never delete an
 entry; the file is a log.
 
+**New entries arrive in `docs/notes/inbox/`.**
+- **Delivery:** the planning session creates one file per entry, `entry-NN.md`, and never writes any existing file.
+- **The only writer:** this session is the only writer of the log.
+- **Actioning an entry includes folding it into the top of the log,** in ascending entry number, and deleting its inbox file.
+- **Why:** two writers rewriting one file collided once (NOTES-FROM-PLANNING.md entry 44).
+
 **`docs/QUESTIONS-FOR-PLANNING.md`** carries questions going **out**. When a
 genuine decision blocks you, append a dated section with `Status: open`, state
 the question, the options with their real costs, and what you would choose and

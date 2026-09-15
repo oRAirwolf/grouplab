@@ -4,7 +4,478 @@ Instructions, decisions and measurements coming into the Claude Code session fro
 
 **How to use this file.** Entries are dated sections, newest first. Act on every entry marked `Status: open`, in order, then change its status to `actioned <date>` in the same commit as the work. Never delete an entry. This file is a log, and the reasoning in it is often the only written record of why something is the way it is.
 
+**How entries arrive, from entry 44 on.**
+- **Delivery:** the planning session delivers each new entry as its own file in `docs/notes/inbox/`, named `entry-NN.md`, and never writes this log or any other existing file.
+- **The only writer:** the Claude Code session is the only writer of this log.
+- **Actioning includes three steps:** folding the entry into the top of the log, setting its status, and deleting its inbox file.
+- **Several files waiting:** fold them in ascending entry number, so the newest ends up first.
+- **Why:** two writers rewriting one file with no locking overwrote this log once, and separate paths cannot collide.
+
 Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
+
+---
+
+## 2026-09-15, entry 44: I am what overwrote the notes file, and the mailbox convention changes today
+
+**Status: actioned 2026-09-15.** Entries 41 to 44 are folded into this log from `docs/notes/inbox/`, and their inbox files are deleted. The convention is recorded in "How to use this file" above and in `CONTRIBUTING.md`. `docs/notes/inbox/README.md` is committed, so the directory exists in a clean clone. Do this one first. It is short, it costs about fifteen minutes, and it removes the reason the last three hours contained a data-loss scare.
+
+### 1. Stop looking for what wrote that file
+
+You asked, reasonably, that somebody find out what saved over `docs/NOTES-FROM-PLANNING.md`, in case it does it again. **Do not spend a session on forensics. It was me, and here is the evidence rather than an apology.**
+
+At 05:37:11 UTC on 15 September I took a snapshot of `docs/NOTES-FROM-PLANNING.md`, 229,605 bytes, holding entries 1 to 40. I prepended three new entries to that snapshot in memory and wrote the whole 273,172-byte result back over the file some minutes later, while you were in the middle of editing the same file to mark entries 39 and 40 actioned. **Two processes were rewriting one file with no locking and no merge, and one of them was working from a snapshot that was already stale when it was taken.**
+
+I cannot prove from here that my write is the specific event you found at 23:56 local, because what you describe recovering held only entries 1 to 22 and what I wrote held 1 to 43. So one of two things happened: either there was a second writer as well, or the sequence was more tangled than either of us can reconstruct without the reflog. **What is not in doubt is that my write was unsafe, that it would have destroyed your status edits regardless, and that the recovery work you did was caused by me.** You did the right thing at every step of it, including refusing to overwrite the damaged file before understanding it.
+
+**Nothing was lost.** The only things I wrote after entry 40 were entries 41, 42 and 43, and all three are in this delivery. There is nothing for you to re-request and nothing for Alan to re-send.
+
+### 2. The new convention, which is the actual fix
+
+The defect is not carelessness on either side. It is that a single 270 kilobyte append-only log is being rewritten in full by two writers who cannot see each other. Being more careful does not fix that; changing the shape does.
+
+**From now on I never modify `docs/NOTES-FROM-PLANNING.md`. I only create new files.**
+
+- New entries arrive as **one file per entry** at `docs/notes/inbox/entry-NN.md`, where `NN` is the entry number. Each file holds exactly one entry, beginning with its `## date, entry NN: title` heading and its `**Status: open.**` line, in the same form as the entries in the log.
+- **I create those files and nothing else.** I never open an existing file for writing in that repository again. If I need to correct an entry I have already delivered, I deliver a new entry that corrects it, which is what entries 37 and 41 section 0 already did anyway.
+- **You own `docs/NOTES-FROM-PLANNING.md` exclusively.** When you action an entry, fold its file into the top of the log in the existing newest-first order, set its status, and delete the file from the inbox. You are then the only writer that file has ever had, and a collision is not possible.
+- If two of my files are waiting, fold them in ascending entry number so the log's order stays right.
+
+**Why this and not a lock or a convention about timing.** A lock needs both sides to honour it and I cannot see your process. A timing convention fails the first time Alan asks me for something while you are running, which is most of the time. Separate paths cannot collide at all, which is a property rather than a promise.
+
+### 3. What to do now
+
+1. Fold `entry-41.md`, `entry-42.md`, `entry-43.md` and this file into `docs/NOTES-FROM-PLANNING.md`, newest last to first so entry 44 ends up at the top, and delete the four inbox files.
+2. **Amend the "How to use this file" paragraph at the top of the log** to record the convention: entries arrive in `docs/notes/inbox/`, Claude Code is the only writer of the log itself, and folding an entry in is part of actioning it. Written down, it survives both of us forgetting.
+3. Add `docs/notes/inbox/` to the repository with a `README.md` of two sentences saying what it is, so the directory exists in a clean clone and nobody deletes it as junk.
+4. Commit that as its own change before starting on entry 41.
+
+### 4. Two things from your report, answered
+
+**Press, drag, release was the right call and it stands.** Alan's words were click, drag, then click to set, and you built press-drag-release instead. Press-drag-release is what every drawing tool on every platform does, it works with a finger without a second tap, and a plain press and release with no movement still places a shot, so the simple case is unharmed. Click-drag-click is a modal interaction: between the two clicks the application is in a state the user cannot see and cannot leave except by clicking. **Keep what you built.** If Alan tries it and dislikes it, he will say so and it is a small change, but do not pre-emptively build the other one.
+
+**The marks you have now are a partial version of entry 42 section 5 and that is fine.** You gave every mark a dark outline, which is the right instinct and the right direction. Entry 42 gives the exact form, a 3 pixel dark halo at 55 percent under a 1.6 pixel coloured core, with the specific colour per mark type. Do not redo the outline work now; entry 42 will replace those values wholesale when it lands, and there is no point painting the same wall twice.
+
+---
+
+## 2026-09-15, entry 43: the analysis screen, written down at last
+
+**Status: open.** This is the expensive half of Alan's question about the concept screens, and it is **Phase 4 work**, behind entry 39, entry 41 and entry 42. Do not start it this week. It is written now because he asked for it and because entry 42 needs to know what it is making room for.
+
+**The single most important instruction in this entry: the window is a view over what `grouplab analyze` already computes.** Entry 33 built the end to end command and `GroupLab.Core/Analysis/SheetAnalysis.cs` holds the result. The screen renders that object. **There is no second analysis implementation and no statistic is computed in the UI layer.** If a figure the screen needs is not in the result object, it goes into the result object and the command gains it too, so the command and the window can never disagree. That property is worth more than any layout in this entry.
+
+The four concept screens are in `docs/figures/screens/`. They are the reference and they are accurate, but the text below governs where the two differ.
+
+### 1. The shell the screens share
+
+A 56 pixel navigation rail on the left: wordmark, then Analyse, Library, Sessions, Compare, Rifles, then a spacer, then Settings at the bottom. Icons are 19 pixel line drawings at 1.6 stroke, in `faint`, and `amber` on `#221c12` for the current screen.
+
+A 46 pixel top bar: breadcrumb on the left reading wordmark, then the load, then the date and distance in `dim`; on the right the registration pill, then Show work, Export, and Report as the single primary button.
+
+**The registration pill is the honesty indicator and it is always visible.** "registered, residual 0.0007 in" in teal when the sheet registered; a plain state when it did not; **never absent**. Every number on the screen depends on the scale being right, and the pill is the one place that says whether it is. When the scale came from a hand drawn reference rather than from registration, the pill says that instead, in `amber`, and says what the reference was.
+
+### 2. The analysis screen
+
+Three columns: 300, flexible, 372.
+
+**Left column, top to bottom:**
+
+1. **Sheet.** A thumbnail grid of the bulls, each drawn as a small ring set with its impacts as filled dots. This is a map, not a picture: it is the fastest way to see that the shots landed where you think they did, and to notice that one bull has two holes and another has none. Clicking a bull scrolls the shot list and highlights those shots on the plot.
+2. **Load, read from the sheet.** Cartridge, bullet, powder and charge, brass, primer, seating with CBTO, and the definition identifier in `faint`. **The heading says "read from the sheet" and it is literal**: these came off the printed load block that the shooter filled in, per the paper protocol, and the screen should not present typed-in data and read-off data as though they were the same thing. Where a field was typed rather than read, mark it.
+3. **Shot list**, filling the rest of the column. Columns: number, x, y, r, and a tag. Mono, 11.5 point, tabular, 3 by 14 padding, signed x and y with an explicit plus so the column aligns. Tags are 9.5 point uppercase: `contested` in amber, `worst` in dim, `excluded` in dim struck through. A flagged row gets a `#1e1a12` background.
+
+**This is the same control as entry 39 section 4, and it must be built once.** The editor needs a shot list, this screen needs a shot list, and they are the same list with the same selection behaviour. If two of them get written, the two will diverge within a month.
+
+**Centre column: the composite plot.** Section 3.
+
+**Right column: the figures.** Section 4.
+
+### 3. The composite plot
+
+This is the most important thing the application draws, because it is the picture of the project's whole argument: every shot from every bull, overlaid on its own bull's centre, making one group out of twenty five one-shot groups.
+
+**What is drawn:**
+
+- **Each shot as a ring at its true hole diameter**, in `impact`, stroke 1.6, with a centre pip. Not a dot. The plot is to scale and the holes are to scale, and a reader should be able to see that two shots overlap.
+- **The group centre** as a small teal cross.
+- **CEP 50 and CEP 90** as dashed teal circles.
+- **Extreme spread** as a dashed amber line between the two shots that define it, with both shot numbers labelled. Naming the two shots is what turns extreme spread from a number into something a person can check.
+- **The point of aim** as a cross, distinct in shape from the group centre, never as a circle.
+- **A scale bar** in the current linear unit, and axis ticks at round values.
+
+**The plot's extent is a round number of units and is not fitted to the data.** This matters more than it sounds. Auto-fitting makes a half inch group and a three inch group look identical, which is precisely the illusion this project exists to dispel. Pick the extent by rounding up to the next step in a fixed ladder, show it, and let a good group look small.
+
+**Every drawn element appears in the legend beneath the plot, and nothing appears in the plot that is not in the legend.** Four entries in the concept screen, one per element. If a fifth thing gets drawn, the legend grows.
+
+**Interaction.** Hovering a shot highlights the matching list row; hovering a row highlights the shot. Clicking either selects, in amber, and the exclusion control acts on the selection. Excluding a shot redraws the plot and every figure immediately, and **the count in the heading changes with it**, because a group of twenty four that was twenty five needs to say so.
+
+**Export** produces PNG and SVG of the plot alone, at a stated size, with the legend, the scale bar and the load line included, because the exported plot ends up in a forum post with no context around it.
+
+### 4. The figure stack
+
+The order is deliberate and it is an argument, so keep it.
+
+| Figure | What is shown beneath it |
+|---|---|
+| **Rayleigh sigma**, as the lead, at 29 point on `panel2` | the confidence interval, and the angular equivalent |
+| Extreme spread | the two shots that define it, the angular equivalent, and **"no interval, ES has no useful one"** |
+| Mean radius | the confidence interval and the standard deviation |
+| CEP 90 | CEP 50 and CEP 95 beside it |
+| Offset from aim | x and y components and the angular equivalent |
+| Group width by height | standard deviation in x and in y |
+
+**Sigma leads because it uses every shot.** Extreme spread sits second because it is the number everybody quotes, and the line underneath it doing the teaching is the most valuable sentence on the screen: it is the only place a reader learns, without being lectured, that the figure they have always used has no confidence interval worth printing.
+
+**Every figure carries its interval, or states why it has none.** This is entry 24 and entry 39 section 1 generalised into a layout rule: **no bare number appears anywhere on this screen.** Where a figure cannot be computed, the row says what is missing instead of printing something, in the place where the number would have been, not in a side panel.
+
+**Every interval carries its real coverage**, "94.7% interval" and not a rounded 95, which entry 40 recorded as already working in the current panel. Do not lose it in the rewrite.
+
+**Below the figures, the notes.** Short paragraphs, 11.5 point, `dim`, with the lead clause in `text` and semibold. Two are known already and both are in the concept screen:
+
+- Circularity: "**Circular within tolerance.** Pitman-Morgan p = 0.476, so there is no evidence of vertical stringing in these 25 shots."
+- The flyer note, which entry 40 confirmed is already reasoning correctly in the current panel: "**Shot 22 is not a flyer.** It sits at 2.27 mean radii from centre. At n = 25 the expected worst shot is 2.18, and two thirds of honest groups this size contain one past 2.00."
+
+**A note appears only when it has something to say.** A screen of permanently present, permanently hedged sentences teaches nobody anything. If the group is not circular, the note says so; if it is unremarkable, the note is absent.
+
+**At the bottom, one disclosure row**: "Full CEP table, bivariate fit, comparison". It opens the secondary panel of `DESIGN.md` section 19, and that panel remembers that it was opened.
+
+### 5. Show your work
+
+`DESIGN.md` section 19 already specifies this and `GroupLab.Core/Trace/StageRecord.cs` already implements the record. **The screen is a second rendering of records that exist, not a new feature.** The console form the CLI prints and the timeline the window shows come from one object; if they can disagree, it has been built wrong.
+
+**Left column:** the stage list. Header reading "Pipeline, 1787 ms total" with a proportional progress strip beneath it, one segment per stage, width by duration, so the expensive stage is visible at a glance. Then one row per stage: id in mono, name, milliseconds in mono, a status dot in teal, amber or alert, and a one line summary. Selecting a stage shows its record.
+
+**Below it, the artefact panes**, two by two: the expected artwork rendered from the definition, the observed image, the difference residual, and the registration residual with its vector field. Each pane has a caption naming the stage and one figure in italics on the right.
+
+**Right column:** the console form, verbatim, in mono, exactly the text `grouplab analyze --trace` prints, including the indented continuation lines that carry the alternatives and the reasons. Not a prettier version of it. The same text, so that a user reading the screen and a user reading a pasted terminal dump are reading the same thing.
+
+**Two constraints, already written in `DESIGN.md` section 19 and repeated here because they are the ones that get lost:** the trace must never be the only place an error appears, so a failed stage also produces a normal, prominent error with the trace as the detail behind it; and the theatre must not slow the pipeline down, so artefact generation defaults on for one interactive analysis and off for batch.
+
+**Clicking a rejection in a stage record highlights it on the image.** That is the feature that turns this from a log viewer into a tool.
+
+### 6. Compare loads
+
+**Cards**, one per load, each with its heading, shot count and date, a small version of the composite plot at the same fixed scale as every other card, and three figures: sigma with its interval, mean radius with its standard deviation, extreme spread with its angular equivalent. **Same scale across cards is not optional**; two plots at different scales side by side is a lie told by a layout.
+
+**The verdict block**, in prose, leading with the conclusion. When the answer is that the loads cannot be told apart, the heading says so in those words: "These two loads are not distinguishable on this evidence". Then the reasoning: the point difference, the overlap of the intervals, the test and its p value, and the sentence that has to be there, that a non-significant result is not evidence that they are the same.
+
+**The sample size table**, and this is the part of GroupLab that does not exist anywhere else:
+
+| To resolve a difference of | Shots per load | Rounds total | Sessions at 25 a sheet |
+|---|---|---|---|
+
+with the row matching the observed difference highlighted. **This table is the project's argument in its most useful form** and it belongs on the screen rather than in a help page. A person who came to find out which load is better leaves knowing why fifty rounds could not have told them, and roughly what would.
+
+**Right column:** an interval comparison, one horizontal bar per load showing the confidence interval with the point estimate marked, on a shared axis, with a sentence beneath it about how much they overlap. Then "Tests run", a plain two column list naming each test and its result: sigma ratio by likelihood ratio, group centre by Hotelling's T squared, circularity by Pitman-Morgan, and the bootstrap method and replicate count. **Name the tests.** A reader who wants to check the work can, and a reader who does not is unharmed by four lines of small text.
+
+Then "What would help more": the honest redirect, when the data supports one. If measured velocity standard deviation accounts for only a fraction of the observed vertical at distance, say so, because it means a charge weight search will not move the thing the shooter is trying to move.
+
+### 7. What this entry deliberately does not specify
+
+The Library, Sessions and Rifles screens. The report generator behind the primary button. The light theme's plot colours, which need checking against printed output rather than deciding here. The mobile layouts.
+
+And one thing worth saying plainly: **the README currently carries six concept screens above the fold with one sentence admitting the application looks nothing like them.** That sentence is accurate and it is doing a great deal of work. Once entry 39's editor and entry 42's styling land, the gap narrows enough that the wording should be revisited, and once this entry lands it should be removed. Until then it stays, because it is true.
+
+### 8. Verification
+
+1. **No statistic is computed in `GroupLab.App`.** A test asserting that the application project references no statistics type directly, or a review that says so explicitly.
+2. The window's figures and the `grouplab analyze` output agree, to the digit, on the same input. Drive it from the same fixture the command's tests use.
+3. Excluding a shot changes the plot, every figure, every interval and the count, in one redraw.
+4. The console text in the show-your-work panel is byte identical to the CLI's, asserted by a test rather than by eye.
+5. Screenshots against all four concept screens, sent to me.
+
+---
+
+## 2026-09-15, entry 42: the styling pass, with the concept screens' actual values
+
+**Status: open.** Alan asked whether the window will come to look like the concept screens on its own, and the honest answer is no, it will not, because nobody ever wrote the screens down as a specification. This entry is the cheap half of fixing that. Entry 43 is the expensive half.
+
+**This ranks behind entry 39.** Do the crash, the bull assignment and the editor first. This is chrome, it changes no number and no behaviour, and it must not be allowed to delay the editor. **It is its own commit.**
+
+### 1. What this pass is and what it is not
+
+The six concept screens in the README were built as HTML and rendered to PNG. They are not decoration: they encode a palette, a type scale, a density and a layout that were chosen deliberately, and `DESIGN.md` section 19 already states the reasoning behind the identity, the typography, the density split and the four themes. **What was never done is the translation from those screens into values the application can use.** So the application drifted into Avalonia's Fluent defaults with `Brushes.OrangeRed` bolted on, and it looks nothing like the pictures, and that is nobody's fault except the absence of this document.
+
+This pass delivers **the shell: palette, typography, spacing, control styles, and the marks drawn on the image**. It does not deliver the composite plot, the figure stack, the stage timeline or the comparison screen. Those are entry 43.
+
+**The constraint that keeps this honest: after this pass, every existing test still passes unchanged.** `MainWindow.StatisticsText` is already exposed for the tests to read. If a styling change moves a number, a label or a sentence, the tests will say so and the change is wrong. Chrome only.
+
+### 2. The palette, exactly
+
+These are the values from the concept screens, not approximations of them. Dark is the primary and the concept screens are dark. Light is the same structure with the roles swapped.
+
+**Dark:**
+
+| Token | Value | Used for |
+|---|---|---|
+| `bg` | `#131417` | window background |
+| `panel` | `#1a1c20` | top bar, panel surfaces |
+| `panel2` | `#212429` | raised surfaces, buttons, the lead figure block |
+| `sunk` | `#0f1013` | the navigation rail, the image and plot area |
+| `line` | `#2c3037` | panel separators, one device pixel |
+| `line2` | `#3a3f47` | control borders, the breadcrumb separator |
+| `text` | `#e6e8ea` | primary text |
+| `dim` | `#9aa1a9` | secondary text, figure names, legends |
+| `faint` | `#697079` | section labels, units, row numbers |
+| `amber` | `#e0912f` | the one accent: selection, primary button, highlighted shot |
+| `teal` | `#6fbfa8` | confirmations, CEP circles, group centre |
+| `alert` | `#e0604a` | errors and warnings |
+| `paper` | `#eceae4` | printed paper, in drawn illustrations |
+| `bull` | `#0b0c0e` | printed ink, in drawn illustrations |
+| `impact` | `#c8442f` | a bullet hole, on the image and in the plot |
+
+**Amber is the only accent colour and it means "this one".** Selection, focus, the current tool, the primary action, the highlighted shot. If a second accent appears for a second purpose, the first one stops meaning anything.
+
+**Light** keeps every role and swaps the ramp: `bg #f4f3f0`, `panel #ffffff`, `panel2 #eceae4`, `sunk #e4e2dd`, `line #d3d0c9`, `line2 #bdb9b0`, `text #1a1c20`, `dim #5a6068`, `faint #868c94`. The three signal colours darken slightly for contrast on light: `amber #b46f16`, `teal #3f8873`, `alert #bf4531`. Check each text pair against a 4.5:1 contrast ratio and adjust the value rather than the role if one falls short.
+
+**Deliver dark, light, and follow system in this pass.** Avalonia's `ActualThemeVariant` gives follow-system for free once the two palettes exist. High contrast is the fourth theme in `DESIGN.md` section 19 and it is later work; do not fake it by bumping the contrast of the dark theme.
+
+**Replace `Brushes.OrangeRed` and `Brushes.DarkOrange`** in `MainWindow.cs` with `alert` and `amber`. Those two raw named colours are the loudest thing on the screen right now and neither is in the design.
+
+### 3. Typography
+
+**Faces.** IBM Plex Sans for chrome, IBM Plex Sans Condensed for the wordmark, IBM Plex Mono for every numeric readout. IBM Plex is licensed OFL-1.1, which is GPL compatible, so bundling it is clean. **Embed the three families as resources in `GroupLab.App`** rather than relying on the system, because the concept screens are only reproducible with them and a missing face silently changes every measurement column. Add IBM Plex and its licence to `THIRD-PARTY-NOTICES.md` in the same commit.
+
+Fallback stacks, for the case where embedding fails: sans falls back to the system UI face; mono falls back to `Cascadia Mono, Consolas, Menlo, monospace`, which is what `MainWindow.cs` already declares.
+
+**Scale.** These are the concept screens' sizes and they map one to one onto Avalonia's device independent pixels.
+
+| Role | Size | Weight | Notes |
+|---|---|---|---|
+| Section label | 10 | 600 | uppercase, letter spacing 0.09em, colour `faint` |
+| List header | 10 | 600 | uppercase, letter spacing 0.06em, colour `faint` |
+| Table row | 11.5 | 400 | mono, tabular figures |
+| Secondary text, notes, legends | 11.5 | 400 | colour `dim`, line height 1.55 |
+| Body, labels, buttons | 12 to 13 | 400 to 500 | 13 is the base |
+| Wordmark | 13 | 700 | condensed, letter spacing 0.1em |
+| Figure value | 21 | 500 | mono, letter spacing -0.01em |
+| Lead figure value | 29 | 500 | mono, colour `text` |
+
+**Every numeric readout is mono with tabular figures.** This is already half true in `MainWindow.cs` and it needs to be all true, including the shot list from entry 39 section 4. Set the `tnum` font feature where Avalonia exposes it; IBM Plex Mono is tabular by default, so the mono readouts are safe either way, and the feature matters only if a proportional face is ever used for numbers, which it should not be.
+
+**Units are set in the surrounding text size and the `dim` colour, not in the figure size.** "0.1046 in" is a 21 point number followed by a 13 point unit. A full size "in" next to a measurement competes with the digits for no reason.
+
+### 4. Layout and spacing
+
+The concept screens use a 56 pixel navigation rail, a 46 pixel top bar, and a three column work area of 300, flexible, 372. Hold those numbers. The current window has a wrap panel of buttons across the top and a single 380 pixel right panel, which is close to the 372 by accident and nothing else matches.
+
+**Do not build the navigation rail in this pass.** It navigates to screens that do not exist. Leave the current toolbar in place and style it. The rail arrives with entry 43.
+
+**The spacing scale is 4, 6, 8, 12, 14, 20.** Section padding is 12 vertical by 14 horizontal. Panel separators are one device pixel in `line`. Control margins are 2. Row padding is 3 by 14. Nothing gets a value off this scale without a reason written next to it.
+
+**Corner radius is 3 for surfaces and 4 for buttons.** Not 8, not pill shaped. The application is a measuring instrument and it should read like one.
+
+**Buttons.** Default: background `panel2`, border `line2`, text `text`, 12 point at weight 500, padding 6 by 12. Primary: background and border `amber`, text `#17120a`, weight 600. **At most one primary button is visible at a time.** Toggle buttons in the on state take the rail treatment: text `amber` on `#221c12` with a `#3a2d18` inner border.
+
+**Status pills**, for things like the registration result: mono, 11 point, 4 by 9 padding, 3 radius, border `line2`, text `dim`; in the good state, text `teal`, border `#2c463f`, background `#141f1c`.
+
+### 5. The marks drawn on the image, which is the part that is not cosmetic
+
+Entry 39 section 5 said the white impact ring is unreadable on white paper, and set the general rule: **every mark the application draws must be legible on a photograph of a target**, which is mostly white paper with black printing and coloured rings, sometimes on a dark backer, sometimes in hard sunlight with a shadow across a third of it. That is a harder constraint than looking good against the application's own dark chrome, and it is the one that decides these values.
+
+**The answer is a two tone stroke, not a colour choice.** Any single colour loses against something in the corpus. Every mark is drawn as a 3 pixel stroke in `#0b0c0e` at 55 percent opacity, with the mark's own colour stroked at 1.6 pixels on top of it. The dark halo reads on paper and on bright ring colours; the bright core reads on ink and on a dark backer. Stroke widths are in screen pixels and do not scale with zoom, so a mark stays visible at any magnification.
+
+| Mark | Colour | Shape |
+|---|---|---|
+| Impact, normal | `impact` `#c8442f` | ring at the true hole diameter, plus a one pixel centre pip |
+| Impact, selected | `amber` | same, stroke 2 |
+| Impact, excluded | `dim`, dashed | same |
+| Scale reference | `teal` | line with a filled circle at each end, per entry 39 section 3 |
+| Point of aim | `teal` | a cross, not a circle, so it never reads as a shot |
+| Bull centre, when shown | `faint` | a small cross |
+| Detector rejection | `alert`, dashed | ring |
+| Missing marker | `alert` | the existing red cross is right, keep it |
+
+**The impact ring is drawn at the true hole diameter rather than at a fixed screen size.** It is a measurement and it should look like one, and an oversized mark hides the thing it is marking. Entry 40's snapped-to-artwork case is visible immediately when the ring is the size of a bullet, and invisible when every mark is a fixed twelve pixel circle.
+
+### 6. Where this lives in the code
+
+The shell is built in C# with no XAML at all, and that is a reasonable choice for a window this size. Keep it.
+
+- **`GroupLab.App/Theme/Tokens.cs`**: one static class, every value in section 2 and 3 as a named member, two palettes, resolved by theme variant. **No colour literal appears anywhere else in the application.** That is the property that makes the light theme possible and the one that quietly fails if it is not enforced from the start.
+- **`GroupLab.App/Theme/AppStyles.cs`**: the Avalonia `Styles` collection for buttons, toggle buttons, text blocks, panels and pills, added in `App.Initialize()` after `FluentTheme`.
+- **`GroupLab.App/Theme/Marks.cs`**: the pen and brush definitions from section 5, used by `MarkingCanvas` and later by the plot, so the image and the plot cannot disagree about what a shot looks like.
+
+Add a test that greps the application sources for colour literals outside `Tokens.cs` and fails if it finds any. It is a crude test and it will save the light theme from dying by a thousand hard coded greys.
+
+### 7. Verification
+
+1. Every existing test passes unchanged. If `StatisticsText` moved, revert and find out why.
+2. Screenshots of the marking window in dark and light, side by side with `docs/figures/screens/analysis-dark.png` and `analysis-light.png`. They will not match, because the content is different and that is entry 43. **The palette, the type and the density should match.** Send them to me and I will say whether they do.
+3. Open `gl-cf25-ltr-1-600-dpi.png`, place an impact on bare paper, one on a printed ring, and one on a printed numeral, and confirm all three marks are readable. Then do the same on one of the donated photographs with the shadow across it.
+4. The colour literal test from section 6.
+
+---
+
+## 2026-09-15, entry 41: the application logs nothing at all, and here is the diagnostics specification
+
+**Status: open.** Section 0 is a correction to entry 39 that costs you thirty seconds. Section 1 answers a question of fact that Alan asked. Sections 2 to 8 are a specification. **This entry ranks behind entry 39 and entry 35 section 6.** Fix the crash first; build this so that the next crash leaves evidence behind it.
+
+### 0. Correction to entry 39, section 6: the citation is wrong
+
+Entry 39 quoted the editor-before-detector argument and attributed it to `DESIGN.md` section 18. **It is section 13, "Assignment and manual editing", at line 309.** Section 18 is "Storage and synchronisation" and says nothing about editors. The quotation itself is verbatim and correct, and the instruction built on it stands unchanged. Only the section number was wrong, and I would rather correct it than have you go looking in the wrong place.
+
+### 1. The answer to Alan's question is no, nothing, and that is exactly why the print crash told us nothing
+
+He asked whether the application is doing debug logging now. I checked the sources rather than assuming, because I have twice this week stated a fact from one example and been wrong. What I found:
+
+- **`Program.cs` is 1,203 bytes and `Main` is a single line.** The builder chain ends with `.LogToTrace()`. That is Avalonia's own framework logging, written into `System.Diagnostics.Trace`. `OutputType` is `WinExe`, so on Windows there is no console attached, and no trace listener is registered anywhere in the solution. **That output goes nowhere and is discarded.** It is not application logging and it never was.
+- **There is no global exception handler.** Nothing in the solution references `AppDomain.CurrentDomain.UnhandledException`, `TaskScheduler.UnobservedTaskException`, or Avalonia's dispatcher unhandled exception event.
+- **There are eight `catch` blocks in the entire shell.** Two in `MainWindow.cs`, three in `AppSettings.cs`, three in `PrintWindow.cs`. Every one of them is narrow by exception type, which is good practice, and every one of them either sets a status string or silently continues. **Not one of them records anything anywhere.**
+- **No logging package is referenced by any project.** `GroupLab.App.csproj` carries `Avalonia.Desktop` and `Avalonia.Themes.Fluent`, and nothing else.
+
+So when Alan selected two targets in the print dialog and the window disappeared, the application had no way to tell anyone what happened, and neither did he. **That is the real cost of having no logging and the project has already paid it once.** It will pay it repeatedly once anyone other than Alan runs this.
+
+One thing does exist and must not be confused with this. `GroupLab.Core/Trace/StageRecord.cs` is a structured record of pipeline stages, per `DETECTION-PIPELINE.md` section 6.1, and it is real and populated. **That is an explanation of an analysis, written for the user.** It is not diagnostics, it is not written to disk, and it does not survive a crash. Section 5 joins the two at one seam. They stay separate things with separate purposes.
+
+### 2. The rule that outranks everything else in this entry
+
+**A log file must never contain a GPS coordinate, and must never contain the contents of a photograph's metadata block. A crash package must never contain a photograph.**
+
+I am putting this first, before any design, because the failure mode is not hypothetical and it is not subtle.
+
+`GroupLab.Core/Imaging/ImageMetadata.cs` reads EXIF, and EXIF on a phone photograph routinely carries the latitude and longitude of the place the photograph was taken. Entry 37 section 4 recorded that both iPhone submissions arrived carrying GPS. The single most natural line of code to write when adding logging to an image open is "record what we read from the file", and writing that line puts a contributor's home address, or the location of Alan's range, into a plain text file. Section 6 of this entry then offers to zip that text file up and section 7 offers to upload it to a public web server.
+
+**The project spent two days of rewriting git history to remove exactly those coordinates. Do not reintroduce them through the diagnostics channel.**
+
+The positive form of the rule, which is what you implement:
+
+1. **The logger takes a fixed, enumerated set of image facts and nothing else.** Permitted: pixel width, pixel height, bit depth, channel count, declared DPI and its source, EXIF orientation, camera make, camera model, lens model, focal length, focal length in 35 mm equivalent, f-number, digital zoom ratio, ISO, exposure time, and the count of EXIF tags present. Everything else is excluded, and that includes every tag in the GPS IFD, every maker note, every timestamp, and every free-text field such as `ImageDescription`, `UserComment`, `Artist`, `Copyright` and `XPComment`.
+2. **The enumeration is a whitelist in one place**, not a blacklist scattered across call sites, for the same reason `scrub_exif.py` uses a whitelist.
+3. **A test asserts it.** Build a synthetic image carrying a GPS block, a maker note and an `Artist` field, run an image open through the logger, and assert that none of those strings and no coordinate appears anywhere in the produced log text. This is the direct sibling of the `PublicationTests` GPS assertion, and it is written the same way: **the test creates the GPS block itself** so that it is testing the logger rather than testing whatever happens to be on disk.
+4. **File paths are not logged.** See section 3.
+
+### 3. The log file
+
+**Location.** One directory, chosen per platform by the normal convention, resolved once at startup and reported in the first line of the log itself so nobody has to guess:
+
+| Platform | Directory |
+|---|---|
+| Windows | `%LOCALAPPDATA%\GroupLab\logs` |
+| macOS | `~/Library/Logs/GroupLab` |
+| Linux | `$XDG_STATE_HOME/grouplab/logs`, falling back to `~/.local/state/grouplab/logs` |
+
+`GROUPLAB_LOG_DIR` overrides it everywhere. Section 4 uses that.
+
+**One file per run**, named `grouplab-YYYYMMDD-HHmmss-<pid>.log`, UTC in the name so the files sort. A second process starting in the same second gets a distinct name because the pid is in it.
+
+**Format.** Plain text, one event per line, fixed leading columns so it reads as a table in Notepad and parses with a split. After the fixed columns, zero or more `key=value` pairs, values quoted only when they contain a space.
+
+```
+2026-09-15T18:42:07.104Z  INFO  app.start      version=0.1.0+3f9c2a1 os="Windows 10.0.26100" framework=net10.0 renderer=Direct2D1 culture=en-US units=inch
+2026-09-15T18:42:19.882Z  INFO  image.open     file="gl-cf25-ltr-1-600-dpi.png" pathid=7f3a2c11 w=5100 h=6600 dpi=600 dpisource=png-phys
+2026-09-15T18:42:31.507Z  WARN  marking.size   shot=1 measured=0.521in expected=0.338in reason=oversize
+2026-09-15T18:43:02.119Z  ERROR print.render   targets=2 ex=System.NullReferenceException at GroupLab.App.PrintWindow.Preview+0x4c
+```
+
+Timestamps are UTC with milliseconds, in ISO 8601, always. Local time in a log file that gets mailed to another timezone is a trap.
+
+**Paths are not written.** The `file=` field carries **the file name and extension only, never the directory**, because directories on Windows begin `C:\Users\<the person's actual name>` and frequently continue into folder names that identify people. `pathid=` is the first eight hex digits of a SHA-256 of the full path, salted per run, which lets you see that the same file was opened three times without disclosing where it lives. If you ever genuinely need the directory to diagnose something, ask the user for it in that moment; do not collect it in advance.
+
+**Levels.** `ERROR`, `WARN`, `INFO`, `DEBUG`. `INFO` is the default. `DEBUG` is switched on by a `--verbose` command line flag or a settings checkbox, and the setting is remembered in `AppSettings`.
+
+**Rotation.** Keep the newest twenty files, or 20 MB in total, whichever bites first, and delete the oldest on startup. Never unbounded. A log directory that grows forever is a defect that shows up in a year as a support question about disk space.
+
+**Failure is silent and total.** If the log directory cannot be created or written, the application starts normally with logging disabled and says so nowhere except in the settings screen. **Logging must never be able to prevent the application from running.** Wrap the writer so that an exception inside it cannot propagate.
+
+**Threading.** Writes go through a single background writer with a bounded queue. If the queue fills, drop `DEBUG` first and count the drops, then emit one `WARN` recording the count. A logger that blocks the UI thread is worse than no logger.
+
+**Flush discipline.** `ERROR` flushes immediately. Everything else may buffer, but the buffer flushes at least every two seconds. A crash must not take the last four seconds of context with it, because the last four seconds of context is the whole point.
+
+**What gets logged, at minimum:**
+
+- `app.start`: version including the commit hash, operating system and version, framework, Avalonia rendering backend, display scale, culture, and the resolved unit preferences. This block answers most first questions without anybody asking them.
+- `app.exit`: exit code and run duration.
+- Every file open and every file save, per the field rules above.
+- Every detection and analysis run: a one-line summary, and the whole `StageRecord` set at `DEBUG`. See section 5.
+- **Every currently swallowed `catch`.** All eight of them get a line. Today `AppSettings` can fail to read settings and the user is never told and neither are we; that becomes one `WARN`.
+- Every dialog opened and its result, because "what was he doing when it died" is the first question every time.
+- Unhandled exceptions, per section 5.
+
+### 4. Getting logs to me without Alan doing anything
+
+This is the part Alan asked for specifically and it is nearly free.
+
+**In a `Debug` build, the log directory defaults to `<repository root>/out/logs`** unless `GROUPLAB_LOG_DIR` says otherwise. `out/` is already in `.gitignore`, so nothing leaks into commits, and I can read `C:\Dev\grouplab\out\logs` directly whenever Alan says the application misbehaved. **He pastes nothing.** That is the whole feature.
+
+Resolve the repository root by walking up from the executable's directory looking for `GroupLab.slnx`, and fall back to the platform directory in section 3 if it is not found, so a copied Debug build does not scatter files.
+
+**Release builds never do this.** They use the platform directory only.
+
+Add one line to `CONTRIBUTING.md` saying where the logs are in each case, because the next contributor will ask.
+
+### 5. The crash record
+
+**Install three handlers at startup**, before the window is constructed:
+
+1. `AppDomain.CurrentDomain.UnhandledException`
+2. `TaskScheduler.UnobservedTaskException`
+3. Avalonia's dispatcher unhandled exception, so that an exception thrown inside a click handler is caught rather than tearing the process down
+
+On any of them, do the smallest possible amount of work, because the process may be moments from dying:
+
+1. Write `ERROR` with the full exception chain, every inner exception, and the full stack, and flush.
+2. Write a sibling file `crash-YYYYMMDD-HHmmss-<pid>.json` in the same directory, containing: the exception type, message and stack for every exception in the chain; the same environment block as `app.start`; the name of the last user action; and **the current `StageRecord` set if an analysis was in flight**. That last item is the seam with section 1: the trace already knows the resolved parameters and the decisions taken, and a crash report carrying it is worth ten that do not.
+3. Then, and only then, attempt to show a dialog.
+
+**The dialog is best effort and the file is not.** A crashing application often cannot draw. So the reliable path is the other one: **on the next launch, if any `crash-*.json` exists that has not been dealt with, the application says so and offers the same choices.** Build that path first and treat the in-the-moment dialog as a convenience.
+
+Alan's words were that an option should come up asking whether to generate a log package. That is right, and the next-launch prompt is how it actually reaches people, because the in-process one is exactly the thing a hard crash takes with it.
+
+### 6. The log package
+
+A single zip, written wherever the user chooses and offered by default on the desktop, named `grouplab-report-YYYYMMDD-HHmmss.zip`.
+
+**Contents, and this list is exhaustive:**
+
+- `crash-*.json` if there is one.
+- The log file for the crashed run.
+- The log file for the previous run, which is often where the real cause is.
+- `environment.txt`: the `app.start` block, expanded, plus installed .NET version and screen configuration.
+- `description.txt` if the user typed one.
+- `contact.txt` if the user typed one, which is blank by default and clearly optional.
+
+**Not included, ever:** the image being worked on, any photograph, any EXIF, any GPS, any file path, any marking file, any settings file that contains paths, and anything from the submissions directory. If a future maintainer wants an image attached, that is a separate, explicit, per-file consent, not a checkbox in a crash dialog.
+
+**The consent dialog shows the user what is in the package before it goes anywhere.** Two buttons that matter: "Show me the file", which opens the containing folder, and "Save only". Sending is a third button and it is never the default. Nothing is sent without a click. Nothing is ever sent silently, on a timer, or at startup.
+
+Say in the dialog, in one plain sentence, what the package contains and what it does not: something close to "This report contains error details, your GroupLab log files, and information about your computer. It does not contain your photographs or any location information."
+
+**The zip path works today and needs no server.** Build it first and completely. A user who mails a zip to Alan is already better off than everyone is right now.
+
+### 7. The upload, and the part that is deliberately not being built yet
+
+Alan wants the package to reach his server so we can retrieve them. That splits into a client half and a server half, and **only the client half is yours**.
+
+**The client contract, which you build now:**
+
+- HTTPS `POST`, `multipart/form-data`, one file field, to a URL held in configuration. HTTPS through Cloudflare is fine here; the proxy carries web traffic normally. The SSH problem from the submission-pull script does not apply.
+- **The configured URL is empty by default and the send button is hidden when it is empty.** Save-to-disk still works. That means this ships and is useful before the server exists, and it means a fork of GroupLab does not accidentally post to Alan's server.
+- Client-side size cap of 2 MB. If the package exceeds it, drop the previous run's log and try again; if it still exceeds, offer save-only and say why.
+- One attempt, a short timeout, no background retry queue. **If the upload fails, keep the zip, tell the user exactly where it is, and stop.** A crash reporter that retries in the background is a crash reporter that eventually sends something the user has forgotten about.
+- On success, show the reference the server returns so the user can quote it.
+
+**Write down the contract in `docs/CRASH-REPORTING.md`**: the request shape, the response shape, the size cap, the exact contents of the zip, and the privacy statement in plain words. It belongs in the repository because the client is GPL and anyone can read what it sends anyway. Writing it down is the difference between a project that can be trusted on this and one that merely asks to be.
+
+**The server half is mine and Alan's, not yours.** I will write the receiver and he will place it, in one batch with the other server work, rather than piecemeal. Two things about it that affect your side, so you can design against them:
+
+1. **There is no secret.** The endpoint URL ships inside an open-source client, so any token in the client is public the day it is published. The server must therefore assume anyone can post to it: a hard size cap, a rate limit per address, rejection of anything that is not a well formed zip of the expected shape, storage **outside the web root** alongside `target_uploads`, never serving the stored files back, and a switch Alan can flip to stop accepting. Do not invent a token scheme to work around this; it does not work and it creates a false sense of safety.
+2. **Retrieval reuses what exists.** Rather than a second script, the crash reports will be pulled by adding a `-CrashReports` switch to `scripts/Get-TargetSubmissions.ps1`, with the same SSH mechanism, the same SHA-256 verification at both ends, and a default local root of `C:\Dev\grouplab-crashreports`. **One command fetches both.** Alan has asked that manual work be batched, and two scripts to run instead of one is exactly the sort of thing that stops getting run.
+
+### 8. Order, and how to know it worked
+
+1. **Section 3, the log file, plus section 4, the dev folder default.** This is the whole of the value for the next week, because the next week is Alan running it alone.
+2. **Section 5, the handlers and the crash record**, including the next-launch prompt.
+3. **Section 6, the zip and the consent dialog.**
+4. **Section 7, the client upload behind an empty default**, and `docs/CRASH-REPORTING.md`.
+
+**Verification, and I want these as tests rather than as assurances:**
+
+- The GPS and metadata test from section 2 point 3.
+- A test that asserts no absolute path and no drive letter appears in a log produced by opening a file from a deep directory.
+- A test that throws from a click handler and asserts that a `crash-*.json` exists afterwards, is valid JSON, and names the thrown type.
+- A test that the rotation policy leaves exactly twenty files after twenty five runs, oldest deleted.
+- A test that the package builder produces a zip containing exactly the permitted entries and no others, driven by a list rather than by inspection, so that adding a file to the package without updating the list fails the build.
+- **Reproduce the entry 39 print crash with logging in place, before you fix it**, and paste the resulting log lines into your report. That is the first real test of whether this thing does its job, and it costs nothing because you have to reproduce the crash anyway.
 
 ---
 
