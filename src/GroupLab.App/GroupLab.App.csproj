@@ -41,6 +41,9 @@
   <!-- The built-in library ships beside the application, for the print screen (NOTES-FROM-PLANNING.md entry 25 section 2). -->
   <ItemGroup>
     <None Include="..\..\targets\*.gltd.json" Link="targets\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The frozen definitions the Phase 0 sheets were printed from, so the codes on those sheets name a definition the application has
+         (NOTES-FROM-PLANNING.md entry 35 section 6 item 3). They sit below targets, where the print screen's list does not look. -->
+    <None Include="..\..\targets\frozen\**\*.gltd.json" Link="targets\frozen\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

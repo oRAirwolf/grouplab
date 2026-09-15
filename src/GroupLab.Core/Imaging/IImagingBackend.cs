@@ -43,6 +43,13 @@ public interface IImagingBackend
     /// less the shift. Render-and-difference uses it to align the expected image to the observed one locally.
     /// </summary>
     (PointD Shift, double Response) PhaseCorrelate(GrayImage reference, GrayImage moved);
+
+    /// <summary>
+    /// The payload of every QR code read from the image resampled by <paramref name="scale"/>, as the bytes that were encoded, binary
+    /// included, in no particular order and possibly repeated. A sheet is identified from these (NOTES-FROM-PLANNING.md entry 35 section 6
+    /// item 3). A code that does not decode is left out.
+    /// </summary>
+    IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale);
 }
 
 /// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>

@@ -1,7 +1,8 @@
 # The Phase 0 gate record reproduced on every platform, NOTES-FROM-PLANNING.md entry 32 section 3 and entry 35 section 6 item 2. Passing the
 # tests within tolerance is not the claim; reproducing the record is. Each job reruns the eight Phase 0 spike commands, which rewrite
 # scans/phase0/measurements in the working tree, and compares every file byte for byte with the committed record. The one field allowed to
-# differ is detectMs in threshold.json, a detection time, which differs between any two runs (docs/PHASE0-RESULTS.md section 8). Each console
+# differ is detectMs in threshold.json, a detection time, which differs between any two runs (docs/PHASE0-RESULTS.md section 8). Where a file
+# differs, the step says how: how many values, the largest difference under each field name, and anything that is not a number. Each console
 # table is hashed into the run summary so the three platforms can be set side by side, with the threshold table's time column removed first.
 name: phase 0 gate record
 
@@ -34,7 +35,6 @@ jobs:
 
       - name: Rerun the Phase 0 spikes
         run: |
-          set -o pipefail
           mkdir -p "$RUNNER_TEMP/console"
           for m in sheets photos markers refinement threshold scale field detectors; do
             echo "::group::grouplab spike $m"
@@ -46,38 +46,72 @@ jobs:
 
       - name: Compare with the committed record
         run: |
-          digest() { if command -v sha256sum > /dev/null; then sha256sum | cut -c1-16; else shasum -a 256 | cut -c1-16; fi; }
-          status=0
-          {
-            echo "### ${{ matrix.os }}"
-            echo
-            echo "| Spike | Record against the commit | Console table, sha256 |"
-            echo "|---|---|---|"
-          } >> "$GITHUB_STEP_SUMMARY"
-          for m in sheets photos markers refinement threshold scale field detectors; do
-            file="scans/phase0/measurements/$m.json"
-            git show "HEAD:$file" > "$RUNNER_TEMP/committed.json"
-            note=""
-            if [ "$m" = threshold ]; then
-              grep -v '"detectMs"' "$RUNNER_TEMP/committed.json" > "$RUNNER_TEMP/a.json"
-              grep -v '"detectMs"' "$file" > "$RUNNER_TEMP/b.json"
-              note=", detectMs left out"
-              table=$(tr -d '\r' < "$RUNNER_TEMP/console/$m.txt" | awk -F'|' 'BEGIN { OFS = "|" } NF > 6 { $6 = "" } { print }' | digest)
-            else
-              cp "$RUNNER_TEMP/committed.json" "$RUNNER_TEMP/a.json"
-              cp "$file" "$RUNNER_TEMP/b.json"
-              table=$(tr -d '\r' < "$RUNNER_TEMP/console/$m.txt" | digest)
-            fi
-            if cmp -s "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json"; then
-              verdict="identical$note"
-            else
-              status=1
-              lines=$(diff "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json" | grep -c '^[<>]')
-              verdict="**differs**, $lines lines$note"
-              echo "::group::$m.json against the commit"
-              diff "$RUNNER_TEMP/a.json" "$RUNNER_TEMP/b.json" | head -80
-              echo "::endgroup::"
-            fi
-            echo "| \`$m\` | $verdict | \`$table\` |" >> "$GITHUB_STEP_SUMMARY"
-          done
-          exit $status
+          py=$(command -v python3 || command -v python)
+          "$py" - sheets photos markers refinement threshold scale field detectors <<'PY'
+          import hashlib, json, os, subprocess, sys
+
+          summary = open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8")
+          summary.write(f"### {os.environ['MATRIX_OS']}\n\n| Spike | Record against the commit | Console table, sha256 |\n|---|---|---|\n")
+          failed = False
+          for m in sys.argv[1:]:
+              path = f"scans/phase0/measurements/{m}.json"
+              committed = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True).stdout
+              generated = open(path, "rb").read()
+              skip = {"detectMs"} if m == "threshold" else set()
+
+              def text(data):
+                  return b"\n".join(line for line in data.split(b"\n") if not any(f'"{k}"'.encode() in line for k in skip))
+
+              console = open(os.path.join(os.environ["RUNNER_TEMP"], "console", f"{m}.txt"), "rb").read().replace(b"\r", b"")
+              if m == "threshold":
+                  console = b"\n".join(b"|".join(c if i != 5 else b"" for i, c in enumerate(line.split(b"|"))) if line.count(b"|") > 6 else line for line in console.split(b"\n"))
+              table = hashlib.sha256(console).hexdigest()[:16]
+              note = ", detectMs left out" if skip else ""
+              if text(committed) == text(generated):
+                  summary.write(f"| `{m}` | identical{note} | `{table}` |\n")
+                  continue
+
+              failed = True
+              differences = []
+
+              def walk(a, b, where):
+                  if isinstance(a, dict) and isinstance(b, dict):
+                      for key in sorted(set(a) | set(b)):
+                          if key in skip:
+                              continue
+                          if key not in a or key not in b:
+                              differences.append((f"{where}/{key}", a.get(key, "<absent>"), b.get(key, "<absent>")))
+                          else:
+                              walk(a[key], b[key], f"{where}/{key}")
+                  elif isinstance(a, list) and isinstance(b, list):
+                      if len(a) != len(b):
+                          differences.append((where, f"{len(a)} items", f"{len(b)} items"))
+                      for i, (x, y) in enumerate(zip(a, b)):
+                          walk(x, y, f"{where}/{i}")
+                  elif a != b or type(a) is not type(b):
+                      differences.append((where, a, b))
+
+              walk(json.loads(committed), json.loads(generated), "")
+              number = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+              numeric = [d for d in differences if number(d[1]) and number(d[2])]
+              other = [d for d in differences if not (number(d[1]) and number(d[2]))]
+              by_field = {}
+              for where, a, b in numeric:
+                  field = where.rsplit("/", 1)[-1]
+                  if field not in by_field or abs(a - b) > abs(by_field[field][1] - by_field[field][2]):
+                      by_field[field] = (where, a, b)
+              largest = sorted(by_field.items(), key=lambda kv: -abs(kv[1][1] - kv[1][2]))
+              head = ", ".join(f"{field} {abs(a - b):.4g}" for field, (_, a, b) in largest[:4])
+              summary.write(f"| `{m}` | **differs**: {len(differences)} values, {len(numeric)} numeric (largest by field: {head}), {len(other)} not numeric{note} | `{table}` |\n")
+              print(f"::group::{m}.json: {len(differences)} values differ, {len(numeric)} numeric, {len(other)} not numeric")
+              print("largest difference under each field name:")
+              for field, (where, a, b) in largest:
+                  print(f"  {field:<24} {abs(a - b):.6g}   at {where}: {a} committed, {b} here")
+              for where, a, b in other[:40]:
+                  print(f"  not numeric at {where}: {a!r} committed, {b!r} here")
+              print("::endgroup::")
+
+          sys.exit(1 if failed else 0)
+          PY
+        env:
+          MATRIX_OS: ${{ matrix.os }}

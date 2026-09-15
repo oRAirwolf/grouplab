@@ -71,6 +71,14 @@ public class EndToEndTests(ITestOutputHelper output)
             output.WriteLine($"whole analysis {clock.ElapsedMilliseconds} ms");
             Assert.True(result.Failure is null, result.Failure);
 
+            // Entry 35 section 6 item 3: the same file with no definition named, the sheet naming its own through its printed codes.
+            var identified = AnalyzeVerb.Analyze(path, null, out string? identifyFailure, [Repo.PathTo("targets")]);
+            Assert.True(identifyFailure is null, identifyFailure);
+            Assert.NotNull(identified);
+            Assert.True(identified.Failure is null, identified.Failure);
+            Assert.Contains(identified.Trace, r => r.Stage == "S0.identify" && r.Status == GroupLab.Core.Trace.StageStatus.Ok);
+            Assert.Equal(result.Shots.Select(s => s.PageInches), identified.Shots.Select(s => s.PageInches));
+
             var errors = new List<double>();
             var misses = new List<string>();
             var used = new HashSet<int>();

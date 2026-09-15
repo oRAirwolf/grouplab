@@ -233,6 +233,44 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         return (new PointD(shift.X, shift.Y), response);
     }
 
+    /// <summary>
+    /// QR codes located by OpenCV's WeChat detector, without its neural network models, and each decoded by the plain
+    /// <see cref="QRCodeDetector"/> at the corners it found, together with whatever the plain detector finds by itself (NOTES-FROM-PLANNING.md
+    /// entry 35 section 6 item 3). Neither is enough alone. On the Phase 0 scans the plain detector missed the codes on the 600 DPI scan, a
+    /// tile and a photograph it was tried on. The WeChat detector found them on all three, but it hands each payload back through a UTF-8
+    /// string, so every byte of a GLTD-B frame above 0x7F came back as U+FFFD and no frame passed its CRC. The plain decoder's string holds
+    /// one byte per character, which Latin-1 turns back into the encoded bytes exactly: 29 of the 37 Phase 0 images gave a frame that decoded
+    /// to the definition they were printed from, at full, half or quarter resolution.
+    /// </summary>
+    public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        using var full = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        using var resized = new Mat();
+        var input = full;
+        if (scale is not 1.0)
+        {
+            Cv2.Resize(full, resized, new Size(0, 0), scale, scale, InterpolationFlags.Area);
+            input = resized;
+        }
+
+        using var locator = new WeChatQRCode("", "", "", "");
+        using var decoder = new QRCodeDetector();
+        var texts = new List<string>();
+        locator.DetectAndDecode(input, out Point2f[][] boxes);
+        foreach (var box in boxes)
+        {
+            texts.Add(decoder.Decode(input, box) ?? "");
+        }
+
+        if (decoder.DetectMulti(input, out Point2f[] corners) && decoder.DecodeMulti(input, corners, out string?[] decoded))
+        {
+            texts.AddRange(decoded.Select(t => t ?? ""));
+        }
+
+        return [.. texts.Where(t => t.Length > 0).Select(t => System.Text.Encoding.Latin1.GetBytes(t))];
+    }
+
     public static GrayImage Copy(Mat mat)
     {
         ArgumentNullException.ThrowIfNull(mat);

@@ -1677,7 +1677,7 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 - **The example it gives:** the sighter fault it found, and what that fault had survived.
 - **What it asks:** when a stage is added, or what its output means changes, extend that test as well as the stage's own.
 
-**Section 6, items 2 and 3, not started:** the Phase 0 gate record compared byte for byte on Linux and macOS, and choosing the definition from the image so that `--target` is no longer required.
+**Section 6, items 2 and 3:** reported in "Entry 35 section 6" below.
 
 **Tests:** Core 724 passing, App 4 passing, none skipped.
 
@@ -1998,6 +1998,79 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entry 35 section 6. The sheet names its own definition, and the gate record on three platforms
+
+`docs/NOTES-FROM-PLANNING.md` entry 35 section 6 items 2 and 3, the order entry 46 section 4 gives.
+
+### Item 3: the definition read off the sheet
+
+`grouplab analyze <image>` no longer needs `--target`, and the marking screen's Detect asks for a definition only when the sheet's codes cannot give one.
+
+**How.**
+- **The codes, not the markers:** every GroupLab sheet prints its definition as a GLTD-B frame in each QR code, and the identifier is computed from the frame's body. So a frame that passes its CRC names exactly one definition. The built-in definitions share marker ids, which is why nothing is chosen from the markers.
+- **`SheetIdentification`, in Core:**
+  - it reads the codes at full, half and quarter resolution and stops at the first that yields a valid frame;
+  - it finds the definition with that identifier among the candidates;
+  - it records `S0.identify` in the trace.
+- **What it refuses, with the reason:** codes naming two definitions or two tiles, a damaged frame, and an identifier not among the candidates.
+- **Where the candidates come from:**
+  - **The command:** every `*.gltd.json` under `--library` directories, by default `targets`, frozen definitions included.
+  - **The application:** the definitions shipped beside it, which now include the three frozen Phase 0 definitions, so the sheets Alan has already printed are recognised. The print screen's list does not look in the frozen directory.
+
+**Reading binary QR codes through OpenCV took two detectors.** GLTD-B frames are binary, and both of OpenCvSharp's QR decoders return strings. Measured on the Phase 0 scans before choosing:
+- **The WeChat detector,** without its neural network models, finds codes reliably. But it returns the payload through UTF-8, so every byte above 0x7F came back as U+FFFD and no frame passed its CRC.
+- **The plain `QRCodeDetector`** returns one byte per character, which Latin-1 turns back into the frame exactly. But on its own it missed the codes on the 600 DPI scan, a tile and a photograph it was tried on.
+- **So the backend locates with WeChat and decodes with the plain decoder at the corners WeChat found,** and adds whatever the plain detector finds alone.
+
+**On the 37 Phase 0 images, 29 name the definition they were printed from, and none names a wrong one.**
+
+| Images | Identified | At |
+|---|---|---|
+| Letter reference sheets, 300 and 600 DPI, including the 96.2 percent and blank data block renders | 10 of 13 | mostly full resolution; 600 DPI sheets 1 and 3 at quarter and half |
+| `GL-LR300-T` tiles, 300 and 600 DPI | 8 of 8, each with its own tile index | full |
+| The four frames of 13 September | 4 of 4 | full |
+| `main1-3`, `main_flat1-3` | 6 of 6 | full |
+| `telephoto1-3`, `ultrawide1-3` | 1 of 6 | full |
+
+- **The eight that are not identified:**
+  - the 600 DPI scan turned 180 degrees;
+  - the 300 DPI 96.2 percent scan;
+  - the 300 DPI filled data block scan;
+  - five of the six wall photographs.
+- **What happens to them:** they fall back to naming the definition, with the reason. Nothing was tuned to raise the count, which would fit the reader to the frames it is reported on.
+- **Speed:** a readable code at full resolution costs 0.2 to 3.4 s. A 600 DPI scan that needs every resolution costs about 8.5 s.
+
+**Checked on a real run.** The Debug application was driven through UI Automation: open `gl-cf25-ltr-1-600-dpi.png`, press Detect, close. The log reads:
+- `detect.identify definition=GL-YCSK-DZZ1-R0VJ-4T5Y tile=0 codes=1`;
+- then `detect.run`, with 34 of 34 markers and registration RMS 0.0022 in.
+
+No picker opened.
+
+**Tests.**
+- **`SheetIdentificationTests`:**
+  - three printed scans and a photograph, one of them a tile;
+  - four fresh renders of built-ins, one of them tile 3 of `GL-LR300-T`, which CI decodes on all three platforms;
+  - refusals through a fake backend: two definitions, two tiles, an identifier not among the candidates, a damaged frame and no codes.
+- **`EndToEndTests`:** reruns the rendered sheet without a definition and requires the identical shots.
+
+### Item 2: the Phase 0 gate record on three platforms
+
+**The workflow.** `.github/workflows/gate-record.yml` runs on every push, on Windows, Linux and macOS:
+- it reruns the eight Phase 0 spike commands;
+- it compares every record byte for byte with the commit, leaving out only `threshold.json`'s `detectMs`, a detection time;
+- it hashes each console table into the run summary.
+
+**Before the first run, locally on Windows.**
+- **Seven records** reproduced exactly.
+- **`photos.json`** lacked the two camera fields the code has written since the lens work, and is regenerated. No measured value in it changed.
+- **The newline:** the records were written with the platform's newline, CRLF on Windows and LF elsewhere. They are now written with LF everywhere, so the bytes on disk are comparable.
+
+**The first run: Windows reproduces the record exactly; Linux and macOS do not.** The step that should have said how they differ stopped at the first difference, because the runner's shell ends a step on a failing pipeline. It now reports how many values differ, the largest difference under each field name, and anything that is not a number. The comparison follows when that run lands.
+
+**Tests:** Core 740 passing, App 31 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2110,3 +2183,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 41: Send saves the package before sending, into the log directory when the user has not saved it.** Section 7 says the zip is kept if sending fails, and the only way to guarantee that is for it to exist before the attempt.
 - **Entry 41: a crash record not rewritten when a second crash lands in the same second of the same process.** The receiver's name pattern leaves no room for a counter, and the first crash is usually the cause.
 - **Entry 46: an alert ring at the measured size on a flagged hole, over every impact ring at its measured size.** The size check reads an extent only for a dark region on paper, so a measured ring for every shot would silently fall back to the calibre on ink and on a dark backer. Every ring stays comparable, and the one that disagrees shows by how much.
+- **Entry 35 section 6 item 3: the definition from the sheet's QR codes, over choosing among definitions by registering against each.** A frame that passes its CRC names one definition. A registration that fits well against the wrong definition is possible, because the built-in definitions share marker ids.
+- **Entry 35 section 6 item 3: refuse and ask when the codes do not settle it, over falling back to the nearest match.** Eight of the 37 Phase 0 images are not identified and fall back to naming the definition. A wrong definition would produce a plausible wrong group.
+- **Entry 35 section 6 item 3: the frozen Phase 0 definitions shipped beside the application, over the live library only.** The sheets already printed carry the frozen identifiers, and the print screen's list does not show them.

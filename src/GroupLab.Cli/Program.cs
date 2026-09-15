@@ -467,7 +467,7 @@ static int Usage()
         grouplab intake <submission-directory> <public-directory> [--accept <file>]... [--submissions <directory>]
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
-        grouplab analyze <image> --target <file.gltd.json> [-v 1|2|3] [--json <marking.json>]
+        grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [-v 1|2|3] [--json <marking.json>]
         grouplab measure <image> <file.gltd.json> [--tile <n>] [--dpi <d>] [--locator centroid|edge] [--model auto|homography|radial|surface]
                          [--mask <dmm>] [--refine none|subpix|contour] [--refine-window <modules>] [--threshold-window <px>]
                          [--downsample <f>] [--json <out.json>] [-v 1|2|3]

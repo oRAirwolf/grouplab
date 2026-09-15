@@ -2,20 +2,24 @@ using System.Globalization;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Analysis;
 using GroupLab.Core.Gltd.Json;
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Registration;
 using GroupLab.Core.Trace;
 
 namespace GroupLab.Cli;
 
 /// <summary>
-/// <c>grouplab analyze &lt;image&gt; --target &lt;definition&gt; [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
+/// <c>grouplab analyze &lt;image&gt; [--target &lt;definition&gt;] [--library &lt;directory&gt;]... [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
 /// section 1, a photograph or scan of a GroupLab sheet in and a group out, through <see cref="SheetAnalysis"/>. It prints the stage trace in
 /// DETECTION-PIPELINE.md section 6.3's console form, then every recovered shot and the pooled group, and with <c>--json</c> writes the result
 /// as a marking file the marking screen can open.
 /// <para>
-/// <c>--target</c> is required for now. The definition's identifier is printed on the sheet and encoded in its codes, but nothing in the
-/// pipeline reads either yet, and guessing among the built-in definitions, which share marker ids, is not safe.
+/// Without <c>--target</c> the sheet names its own definition, NOTES-FROM-PLANNING.md entry 35 section 6 item 3: <see cref="SheetIdentification"/>
+/// reads the GLTD-B frame in its printed codes and finds the definition with that identifier among every <c>*.gltd.json</c> under the
+/// <c>--library</c> directories, by default <c>targets</c> in the current directory with the frozen definitions beneath it. It never guesses
+/// among definitions, which share marker ids: when the codes cannot be read, it says why and asks for <c>--target</c>.
 /// </para>
 /// </summary>
 public static class AnalyzeVerb
@@ -24,6 +28,7 @@ public static class AnalyzeVerb
     {
         ArgumentNullException.ThrowIfNull(rest);
         string? target = null, json = null;
+        var libraries = new List<string>();
         int verbosity = 1;
         for (int i = 0; i < rest.Length; i++)
         {
@@ -31,6 +36,9 @@ public static class AnalyzeVerb
             {
                 case "--target" when i + 1 < rest.Length:
                     target = rest[++i];
+                    break;
+                case "--library" when i + 1 < rest.Length:
+                    libraries.Add(rest[++i]);
                     break;
                 case "--json" when i + 1 < rest.Length:
                     json = rest[++i];
@@ -45,13 +53,7 @@ public static class AnalyzeVerb
             }
         }
 
-        if (target is null)
-        {
-            error.WriteLine("analyze: --target <definition> is required; nothing reads the sheet's identifier from the image yet.");
-            return 2;
-        }
-
-        var result = Analyze(imagePath, target, out string? loadFailure);
+        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null);
         if (loadFailure is not null)
         {
             error.WriteLine($"analyze: {loadFailure}");
@@ -89,15 +91,28 @@ public static class AnalyzeVerb
         return 0;
     }
 
-    /// <summary>The whole analysis of one image against one definition file, as the command runs it; null with the reason when either cannot be read.</summary>
-    public static SheetAnalysisResult? Analyze(string imagePath, string definitionPath, out string? failure)
+    /// <summary>Where definitions are looked for when the command names neither a definition nor a library.</summary>
+    public const string DefaultLibrary = "targets";
+
+    /// <summary>
+    /// The whole analysis of one image, as the command runs it: against the definition file named, or, when none is, against the definition
+    /// the sheet's codes name among those under <paramref name="libraries"/>. Null with the reason when the image cannot be read, or no
+    /// definition can be.
+    /// </summary>
+    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null)
     {
         failure = null;
-        var read = GltdJsonReader.ReadFile(definitionPath);
-        if (read.Definition is null)
+        TargetDefinition? definition = null;
+        if (definitionPath is not null)
         {
-            failure = $"{definitionPath} is not a readable GroupLab definition: {string.Join("; ", read.Diagnostics.Select(d => d.Message))}";
-            return null;
+            var read = GltdJsonReader.ReadFile(definitionPath);
+            if (read.Definition is null)
+            {
+                failure = $"{definitionPath} is not a readable GroupLab definition: {string.Join("; ", read.Diagnostics.Select(d => d.Message))}";
+                return null;
+            }
+
+            definition = read.Definition;
         }
 
         var trace = new TraceRecorder();
@@ -121,7 +136,20 @@ public static class AnalyzeVerb
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture, $"{metadata.Format} {grey.Width}x{grey.Height}{camera}"));
         }
 
-        return SheetAnalysis.Run(imagePath, grey, value, metadata, read.Definition, new OpenCvSharpBackend(), trace);
+        var backend = new OpenCvSharpBackend();
+        if (definition is null)
+        {
+            var identity = SheetIdentification.Identify(grey, SheetIdentification.Candidates(libraries ?? [DefaultLibrary]), backend, trace);
+            if (identity.Definition is null)
+            {
+                failure = $"{identity.Failure}; name the sheet's definition with --target <definition>";
+                return null;
+            }
+
+            definition = identity.Definition;
+        }
+
+        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace);
     }
 
     private static void WriteGroup(TextWriter output, GroupReport report)

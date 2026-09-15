@@ -16,6 +16,7 @@ using GroupLab.Core.Trace;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
 
 namespace GroupLab.App;
@@ -515,32 +516,52 @@ public sealed class MainWindow : Window
             return;
         }
 
-        DiagnosticLog.Info("dialog.open", ("dialog", "definition"));
-        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = "Choose the sheet's definition",
-            AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("GroupLab definitions") { Patterns = ["*.gltd.json"] }],
-        });
-        DiagnosticLog.Info("dialog.result", ("dialog", "definition"), ("chosen", files.Count > 0));
-        if (files.Count == 0 || files[0].TryGetLocalPath() is not { } path)
-        {
-            return;
-        }
-
-        var read = GltdJsonReader.ReadFile(path);
-        if (read.Definition is not { } definition)
-        {
-            problem.Text = "That file is not a readable GroupLab definition.";
-            return;
-        }
-
-        status.Text = "Registering and detecting…";
+        status.Text = "Reading the sheet's codes…";
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
 
         // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
+        CrashReporter.InFlight = trace;
+        SheetIdentity identity;
+        try
+        {
+            identity = await Task.Run(() => SheetIdentification.Identify(g, ShippedDefinitions(), new OpenCvSharpBackend(), trace));
+        }
+        finally
+        {
+            CrashReporter.InFlight = null;
+        }
+
+        DiagnosticLog.Info("detect.identify", ("definition", identity.DefinitionId), ("tile", identity.TileIndex), ("codes", identity.CodesRead), ("failure", identity.Failure));
+
+        // Entry 35 section 6 item 3: the sheet names its own definition, and only when its codes cannot is the user asked for one.
+        if (identity.Definition is not { } definition)
+        {
+            status.Text = $"The sheet's codes did not give its definition: {identity.Failure}. Choose the definition.";
+            DiagnosticLog.Info("dialog.open", ("dialog", "definition"));
+            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Choose the sheet's definition",
+                AllowMultiple = false,
+                FileTypeFilter = [new FilePickerFileType("GroupLab definitions") { Patterns = ["*.gltd.json"] }],
+            });
+            DiagnosticLog.Info("dialog.result", ("dialog", "definition"), ("chosen", files.Count > 0));
+            if (files.Count == 0 || files[0].TryGetLocalPath() is not { } path)
+            {
+                return;
+            }
+
+            if (GltdJsonReader.ReadFile(path).Definition is not { } chosen)
+            {
+                problem.Text = "That file is not a readable GroupLab definition.";
+                return;
+            }
+
+            definition = chosen;
+        }
+
+        status.Text = "Registering and detecting…";
         CrashReporter.InFlight = trace;
         AutomaticResult result;
         try
@@ -555,6 +576,12 @@ public sealed class MainWindow : Window
         LogDetection(result, trace, clock.ElapsedMilliseconds);
         ApplyDetection(result);
     }
+
+    /// <summary>
+    /// The definitions shipped beside the application, the built-in library with the frozen Phase 0 definitions below it, which a sheet's
+    /// codes are matched against (NOTES-FROM-PLANNING.md entry 35 section 6 item 3).
+    /// </summary>
+    private static IReadOnlyList<GroupLab.Core.Gltd.Model.TargetDefinition> ShippedDefinitions() => SheetIdentification.Candidates([Path.Combine(AppContext.BaseDirectory, "targets")]);
 
     /// <summary>
     /// A detection run in the log, NOTES-FROM-PLANNING.md entry 41 section 3: one line with its summary and how long it took, and at DEBUG every
