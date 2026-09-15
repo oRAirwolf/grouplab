@@ -45,8 +45,8 @@ internal static class IntakeVerb
         foreach (var file in result.Files)
         {
             output.WriteLine(file.Held is null
-                ? $"  {file.Name}: published, received {file.ReceivedSha256[..12]}, published {file.PublishedSha256![..12]}; removed {(file.Removed.Count == 0 ? "nothing" : string.Join(", ", file.Removed))}"
-                : $"  {file.Name}: {file.Held}");
+                ? $"  {file.StoredName}: published, received {file.ReceivedSha256[..12]}, published {file.PublishedSha256![..12]}; removed {(file.Removed.Count == 0 ? "nothing" : string.Join(", ", file.Removed))}"
+                : $"  {file.StoredName}: {file.Held}");
             foreach (string finding in file.Triage)
             {
                 output.WriteLine($"      {finding}");

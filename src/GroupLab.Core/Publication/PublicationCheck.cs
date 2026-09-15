@@ -10,9 +10,6 @@ namespace GroupLab.Core.Publication;
 /// </summary>
 public static class PublicationCheck
 {
-    /// <summary>The name of the file an upload writes into a submission a contributor opted out of publishing.</summary>
-    public const string DoNotPublish = "DO-NOT-PUBLISH";
-
     /// <summary>The provenance record every published submission directory carries.</summary>
     public const string ProvenanceFile = "provenance.json";
 

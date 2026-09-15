@@ -132,7 +132,7 @@ internal static class PhoneImages
 /// repository fails its tests when an image under public test data carries a location, sits in an opted-out submission, or lacks
 /// provenance, or when any committed image carries GPS other than the ones question 13 is about.
 /// </summary>
-public class PublicationTests
+public class PublicationTests(Xunit.Abstractions.ITestOutputHelper output)
 {
     /// <summary>
     /// The committed Phase 0 phone photographs that carry an EXIF GPS block, 13 of them with a non-zero position. They are in history,
@@ -205,37 +205,58 @@ public class PublicationTests
         }
     }
 
-    /// <summary>Entry 22 section 3, for the public test data path: no location, no opted-out submission, and provenance for every image.</summary>
+    /// <summary>
+    /// The donated test data checkout, NOTES-FROM-PLANNING.md entry 28 section 4 and the README's "Test data": the directory
+    /// <c>GROUPLAB_TESTDATA</c> names, or <c>grouplab-testdata</c> beside this repository; null when there is neither.
+    /// </summary>
+    private static string? TestDataRoot()
+    {
+        string? configured = Environment.GetEnvironmentVariable("GROUPLAB_TESTDATA");
+        if (configured is not null)
+        {
+            Assert.True(Directory.Exists(configured), $"GROUPLAB_TESTDATA names {configured}, which does not exist");
+            return configured;
+        }
+
+        string beside = Path.GetFullPath(Path.Combine(Repo.PathTo(), "..", "grouplab-testdata"));
+        return Directory.Exists(beside) ? beside : null;
+    }
+
+    /// <summary>
+    /// Entry 22 section 3, for the public test data: no location, nothing not cleared for publication, and for every image a provenance
+    /// record with the consent text and its published hash. Without a checkout it does nothing and says so.
+    /// </summary>
     [Fact]
     public void PublicTestDataCarriesNoLocationNoOptOutAndFullProvenance()
     {
-        string root = Repo.PathTo("testdata", "donated");
-        if (!Directory.Exists(root))
+        if (TestDataRoot() is not { } data)
         {
+            output.WriteLine("not run: there is no grouplab-testdata checkout beside this repository, and GROUPLAB_TESTDATA is not set");
             return;
         }
 
+        string root = Path.Combine(data, "donated");
         var failures = new List<string>();
-        foreach (string submission in Directory.EnumerateDirectories(root))
+        foreach (string submission in Directory.Exists(root) ? Directory.EnumerateDirectories(root) : [])
         {
             string name = Path.GetFileName(submission);
-            if (File.Exists(Path.Combine(submission, PublicationCheck.DoNotPublish)))
-            {
-                failures.Add($"{name}: marked {PublicationCheck.DoNotPublish}");
-            }
-
             string provenancePath = Path.Combine(submission, PublicationCheck.ProvenanceFile);
             var provenance = File.Exists(provenancePath) ? JsonNode.Parse(File.ReadAllText(provenancePath)) : null;
-            if (provenance?["consentVersion"] is null || provenance["submissionId"] is null || provenance["submittedAt"] is null)
+            if (provenance?["consent"]?["text"] is null || provenance["consent"]?["version"] is null || provenance["submissionId"] is null || provenance["submittedUtc"] is null)
             {
                 failures.Add($"{name}: no complete provenance record");
+            }
+
+            if (provenance?["excludeFromPublicDataset"]?.GetValueKind() != System.Text.Json.JsonValueKind.False)
+            {
+                failures.Add($"{name}: not recorded as cleared for publication");
             }
 
             foreach (string image in Directory.EnumerateFiles(submission, "*", SearchOption.AllDirectories).Where(p => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(p).ToLowerInvariant())))
             {
                 byte[] bytes = File.ReadAllBytes(image);
                 failures.AddRange(PublicationCheck.LocationProblems(bytes).Select(p => $"{name}/{Path.GetFileName(image)}: {p}"));
-                var entry = (provenance?["files"] as JsonArray)?.FirstOrDefault(f => (string?)f?["name"] == Path.GetFileName(image));
+                var entry = (provenance?["files"] as JsonArray)?.FirstOrDefault(f => (string?)f?["storedName"] == Path.GetFileName(image));
                 if ((string?)entry?["publishedSha256"] != Intake.Sha256(bytes))
                 {
                     failures.Add($"{name}/{Path.GetFileName(image)}: not in the provenance record with its published hash");

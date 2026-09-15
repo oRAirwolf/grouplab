@@ -29,7 +29,14 @@ public sealed record ImageMetadata(
     /// as 1, so a frame without it never joins a frame that states 1.
     /// </summary>
     public string LensGroupKey => string.Create(System.Globalization.CultureInfo.InvariantCulture,
-        $"{FocalLengthMm:0.00} mm f/{FNumber:0.0}, {FocalLength35mm?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "unknown"} mm equivalent, digital zoom {(DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : "unknown")}, {Width} by {Height}");
+        $"{FocalLengthMm:0.00} mm f/{FNumber:0.0}, {FocalLength35mm?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "unknown"} mm equivalent, digital zoom {(EffectiveDigitalZoom is { } zoom ? zoom.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : "unknown")}, {Width} by {Height}");
+
+    /// <summary>
+    /// The digital zoom the frame went through: the tag's value, except that a stated 0 is 1, because the EXIF standard defines a
+    /// DigitalZoomRatio of 0 as digital zoom not used, which is what every Pixel photograph in <c>scans/mounted/</c> states. A missing
+    /// tag stays unknown.
+    /// </summary>
+    public double? EffectiveDigitalZoom => DigitalZoomRatio == 0 ? 1 : DigitalZoomRatio;
 
     /// <summary>
     /// A photograph rather than a scan. A focal length is the one tag a scanner never writes. A lens is identified by

@@ -162,14 +162,18 @@ internal static class ShotGroupsComparison
             double distance = values["shots.distance." + at]!.Value;
             int series = (int)values["shots.seriesIndex." + at]!.Value;
             shots.Add((new PointD(values["shots.x." + at]!.Value, values["shots.y." + at]!.Value), distance, series));
-            aimed.Add((new PointD(values["shots.xPOA." + at]!.Value, values["shots.yPOA." + at]!.Value), distance, series));
+            aimed.Add((new PointD(Aimed(values["shots.x." + at]!.Value, values["shots.xPOA." + at]!.Value), Aimed(values["shots.y." + at]!.Value, values["shots.yPOA." + at]!.Value)), distance, series));
         }
 
-        bool aimedFrame = shots.Zip(aimed).Any(p => p.First.Point != p.Second.Point);
         var expected = new Dictionary<string, (double Value, ToleranceClass Class)>();
         if (labels.Count > 1)
         {
             CompareGroups(expected, labels, aimed, unitFactor);
+        }
+
+        if (labels.Count > 2)
+        {
+            FlignerProbe(expected, labels, aimed);
         }
 
         if (labels.Count > 1)
@@ -341,15 +345,6 @@ internal static class ShotGroupsComparison
                 continue;
             }
 
-            // On the two frames with a point of aim, no centring or tie rule tried reproduces shotGroups' Fligner-Killeen statistic,
-            // which this engine matches to 1e-13 wherever the aim is the origin; question 14 asks planning to settle it in R.
-            if (aimedFrame && System.Text.RegularExpressions.Regex.IsMatch(key, @"^compareGroups\.Fligner[XY]\.statistic$"))
-            {
-                const string FlignerReason = "awaiting planning, question 14: shotGroups' Fligner-Killeen statistic on a frame with a point of aim is not reproduced";
-                report.Pending[FlignerReason] = report.Pending.GetValueOrDefault(FlignerReason) + 1;
-                continue;
-            }
-
             string? pending = Pending(local);
             if (pending is not null)
             {
@@ -391,6 +386,69 @@ internal static class ShotGroupsComparison
         }
 
         return report;
+    }
+
+    /// <summary>
+    /// A point-of-aim-relative coordinate as R held it, docs/STATISTICS.md section 15.4 item 15. <c>sg_dump.R</c> writes 15 digits, which
+    /// do not round-trip every double, and <c>shots.xPOA</c> carries the subtraction noise of <c>point.x - aim.x</c> in exactly the bits
+    /// lost. The aim is a short decimal, so it is recovered from the two written values to six decimals and the subtraction done again.
+    /// Where the aim is the origin, this is the written value.
+    /// </summary>
+    private static double Aimed(double raw, double written) => raw - Math.Round(raw - written, 6);
+
+    /// <summary>
+    /// The fixture's <c>flignerProbe</c> block, NOTES-FROM-PLANNING.md entry 28 section 3, computed as <c>sg_dump.R</c> computes it:
+    /// the vectors <c>compareGroups</c> hands the Fligner-Killeen test, each series' median, count and mean centred score, the score
+    /// variance, the count of absolute deviations R's <c>table()</c> sees as tied at 15 significant digits, the statistic rebuilt from
+    /// them, and whether the frame's rows are in series order (section 15.4 item 14).
+    /// </summary>
+    private static void FlignerProbe(Dictionary<string, (double, ToleranceClass)> into, List<string> labels, List<(PointD Point, double Distance, int Series)> shots)
+    {
+        int n = shots.Count;
+        var series = shots.Select(s => s.Series).ToList();
+        into["flignerProbe.rowsSortedBySeries"] = (series.SequenceEqual(series.Order()) ? 1 : 0, ClosedForm);
+
+        // The coordinates as compareGroups pastes them, section 15.4 item 14: split by series and bound back in the dataset's own factor
+        // level order, then set beside the rows in their original order. That order is the labels' leading number, 1, 2 and on to 53 in
+        // DFlandy01, where the fixture lists the labels as strings, "10_..." before "1_...". Where the rows are already in that order this
+        // is every shot beside its own label.
+        static (long Number, string Label) LevelOrder(string label) =>
+            (long.TryParse(new string([.. label.TakeWhile(char.IsAsciiDigit)]), NumberStyles.None, CultureInfo.InvariantCulture, out long number) ? number : long.MaxValue, label);
+        var pasted = shots.Select((s, i) => (Shot: s, Row: i)).OrderBy(p => LevelOrder(labels[p.Shot.Series - 1])).ThenBy(p => p.Row).Select(p => p.Shot).ToList();
+        foreach (var (axis, key) in new[] { ('x', "FlignerX"), ('y', "FlignerY") })
+        {
+            var v = pasted.Select(s => axis == 'x' ? s.Point.X : s.Point.Y).ToList();
+            for (int i = 0; i < n; i++)
+            {
+                into[string.Create(CultureInfo.InvariantCulture, $"flignerProbe.{key}.input.{i + 1}")] = (v[i], GeometryClass);
+            }
+
+            var levels = series.Distinct().Order().ToList();
+            var medians = levels.ToDictionary(l => l, l =>
+            {
+                var sorted = Enumerable.Range(0, n).Where(i => series[i] == l).Select(i => v[i]).Order().ToArray();
+                return sorted.Length % 2 == 1 ? sorted[sorted.Length / 2] : (sorted[(sorted.Length / 2) - 1] + sorted[sorted.Length / 2]) / 2;
+            });
+            var centred = Enumerable.Range(0, n).Select(i => v[i] - medians[series[i]]).ToArray();
+            var scores = GroupComparison.MidRanks([.. centred.Select(Math.Abs)]).Select(r => Distributions.NormalQuantile((1 + (r / (n + 1))) / 2)).ToArray();
+            double mean = scores.Average();
+            var scoresCentred = scores.Select(a => a - mean).ToArray();
+            double variance = scoresCentred.Sum(a => a * a) / (n - 1), statistic = 0;
+            foreach (int level in levels)
+            {
+                var members = Enumerable.Range(0, n).Where(i => series[i] == level).ToList();
+                double groupMean = members.Average(i => scoresCentred[i]);
+                statistic += members.Count * groupMean * groupMean;
+                string label = labels[level - 1];
+                into[$"flignerProbe.{key}.groupMedian.{label}"] = (medians[level], ClosedForm);
+                into[$"flignerProbe.{key}.scoreMean.{label}"] = (groupMean, RankTestClass);
+                into[$"flignerProbe.{key}.n.{label}"] = (members.Count, ClosedForm);
+            }
+
+            into[$"flignerProbe.{key}.scoreVar"] = (variance, RankTestClass);
+            into[$"flignerProbe.{key}.tiedValues"] = (centred.Select(d => Math.Abs(d).ToString("G15", CultureInfo.InvariantCulture)).GroupBy(t => t).Count(g => g.Count() > 1), ClosedForm);
+            into[$"flignerProbe.{key}.recomputed"] = (statistic / variance, RankTestClass);
+        }
     }
 
     /// <summary>
@@ -519,7 +577,7 @@ internal static class ShotGroupsComparison
             return "STATISTICS.md section 4: CEP estimators deliberately not implemented in version one";
         }
 
-        if (key.Contains("Rob", StringComparison.Ordinal) || key.Contains("rob", StringComparison.Ordinal))
+        if (!key.StartsWith("flignerProbe.", StringComparison.Ordinal) && (key.Contains("Rob", StringComparison.Ordinal) || key.Contains("rob", StringComparison.Ordinal)))
         {
             return "robust (MCD) estimates: no section of STATISTICS.md specifies them";
         }

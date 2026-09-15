@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-15, question 13: where donated images live, and coordinates that are already in the repository's history
 
-**Status: open. Blocks committing any image**: `scans/mounted/`, held by entry 23 section 5, and every donated submission. Nothing else waits. The intake tool, its tests and the publication test are built and committed, and they work against whatever directory the answer names.
+**Status: answered 2026-09-15**: section 1 by `docs/NOTES-FROM-PLANNING.md` entry 28 section 4 (option A, a GPL-3.0 data repository), section 3 by entry 28 section 1 (the real `meta.json`), and section 2 by entry 29 (option (a), approved by Alan). Before that it read: blocks committing any image: `scans/mounted/`, held by entry 23 section 5, and every donated submission. Nothing else waits. The intake tool, its tests and the publication test are built and committed, and they work against whatever directory the answer names.
 
 ### 1. Entry 22 section 1: where the images live
 
@@ -82,7 +82,7 @@ If the page writes other names, it is a small change. A submission missing any o
 
 ## 2026-09-15, question 14: shotGroups' Fligner-Killeen statistic on the two frames with a point of aim
 
-**Status: open.** Nothing waits on it. Four keys are pending with this question named, and every other key of the regenerated fixtures is compared.
+**Status: answered 2026-09-15**, by `docs/NOTES-FROM-PLANNING.md` entry 28 section 3: the input is `shots.xPOA`. The difference turned out to be the fixture's 15-digit JSON, which drops the last bits of every aimed coordinate and so changes the ties; with the aims recovered and the subtraction redone, all four statistics match to 5.5e-13, `docs/STATISTICS.md` section 15.4 item 15. Before that it read: nothing waits on it. Four keys are pending with this question named, and every other key of the regenerated fixtures is compared.
 
 **Where it stands.** With `shots.xPOA` and `shots.yPOA`, question 11's 2,163 awaiting keys are compared, and all of them pass. The exceptions are `compareGroups.FlignerX.statistic` and `compareGroups.FlignerY.statistic` on `DFinch` and `DFcm`, the two frames with a point of aim. On every frame whose aim is the origin, `GroupComparison.FlignerKilleen` matches shotGroups to 1e-13, `DF300BLKhl` at 0.09095279082138376 against 0.09095279082139468.
 
@@ -111,7 +111,7 @@ If the page writes other names, it is a small change. A submission missing any o
 
 ## 2026-09-15, question 12: the fewest shots a group size is quoted for, and entry 24's coverage premise
 
-**Status: open.** Nothing waits on it. The marking panel withholds every dispersion figure below 5 shots in the interim, which is one constant, `GroupAnalysis.MinimumShotsForDispersion` in `src/GroupLab.Core/Marking/GroupAnalysis.cs`.
+**Status: answered 2026-09-15**, by `docs/NOTES-FROM-PLANNING.md` entry 28 section 2: option A, five shots. Before that it read: nothing waits on it. The marking panel withholds every dispersion figure below 5 shots in the interim, which is one constant, `GroupAnalysis.MinimumShotsForDispersion` in `src/GroupLab.Core/Marking/GroupAnalysis.cs`.
 
 **What entry 24 section 1 asks.** "Pick the thresholds from `STATISTICS.md` section 9, which already models how well sigma is known from n shots, rather than from anybody's taste. If section 9 does not give a clean answer, raise it as a question rather than choosing a round number."
 

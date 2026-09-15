@@ -564,6 +564,35 @@ Discovered by reading shotGroups 0.8.4's source and worth writing into the compa
 11. **`fromMOA` in SMOA is not the exact inverse of `getMOA`.** In every scope of every fixture it is the inverse times 1 + 6.21288e-10, so section 12.5's anchor holds for `getMOA` and the round trip misses section 15.3's 1e-12. The harness encodes the constant rather than reproducing it in GroupLab.
 12. **shotGroups' CorrNormal CEP is not a root of its own distribution.** Its hit probabilities match GroupLab's Hoyt CDF to 1e-15, but under that CDF its CEPs miss their probability: on `DF300BLK` by +3.7e-6, +2.9e-6 and -5.8e-7 at 0.50, 0.90 and 0.95, and by 3e-6 to 2.3e-5 relative across 899 keys, which is a root finder with a coarse tolerance. For this key, section 15.3's 1e-8 is replaced by three checks. The distribution is gated through the hit probabilities at 1e-8. GroupLab's CEP must be a root of it to 1e-12. shotGroups' CEP is compared at 1e-4 relative.
 
+**Items 13 and 14 added 2026-09-15, `NOTES-FROM-PLANNING.md` entry 28 sections 2 and 5.**
+
+13. **`getRangeStat`'s interval does not cover the expected range statistic at the level it states.** It scales the observed statistic by the table's 2.5 and 97.5 percent quantiles over its mean. That covers the expected extreme spread less often than 95 percent, most at the smallest groups. GroupLab reports the interval formed as the observed statistic times the mean over each quantile, `RangeStatistics.MeanInterval`, which does cover it. The harness still compares shotGroups' form against shotGroups. Coverage of the expected extreme spread over 40,000 circular normal groups at each n, `SmallGroupCoverageTests`:
+
+    | n | shotGroups' `getRangeStat` form | GroupLab's form |
+    |---|---|---|
+    | 2 | 84.66 % | 95.10 % |
+    | 3 | 89.39 % | 94.96 % |
+    | 5 | 92.31 % | 95.17 % |
+    | 10 | 93.91 % | 94.93 % |
+    | 20 | 94.68 % | 94.94 % |
+
+14. **`compareGroups` pairs coordinates with the wrong series labels when a frame's rows are not in series order.** It builds the coordinate columns with `split()` then `rbind()`, which returns rows in factor level order, and attaches them with `cbind()` to a frame still in its original order.
+    - **In the fixtures:** in `DFlandy01`, 519 of 530 rows carry a coordinate from another row.
+    - **Why no fixture value changes:** every series there is a contiguous block of ten shots. The misalignment only relabels whole groups of equal size, which leaves the Fligner-Killeen, Kruskal-Wallis and MANOVA statistics unchanged. The per-series outputs are computed from the correctly named list, not the pasted columns.
+    - **What GroupLab does:** it pairs every coordinate with its own label. The fixtures happen not to distinguish the two, and a frame with interleaved series would.
+    - **Where it is recorded:** `flignerProbe.rowsSortedBySeries` records it per dataset. It is 0 only for `DFlandy01`.
+    - **The order `rbind` uses:** the dataset's own factor levels. In `DFlandy01` that is the labels' leading number, 1 to 53, where the fixture's `seriesLabels` list them as strings, "10_..." before "1_...".
+    - **What the harness checks:** it pastes the coordinates that way for the probe keys, and every `flignerProbe` key of `DFlandy01` then matches. The same pasting shows the statistics unchanged, because the relabelled groups all hold ten shots.
+
+**Item 15 added 2026-09-15, found answering `docs/QUESTIONS-FOR-PLANNING.md` question 14.**
+
+15. **The fixtures do not carry R's doubles exactly, and on a frame with a point of aim that moves a rank statistic.**
+    - **The cause.** `sg_dump.R` writes its JSON with `jsonlite::toJSON(digits = 15)` and its CSV with `write.csv`'s 15 significant digits, and neither round-trips every double: 5,957 keys of `DFinch` differ between its two files.
+    - **Which values it spares and which it does not.** Shot coordinates with three decimals survive. The point-of-aim-relative coordinates do not, because R computes them as `point.x - aim.x` and the subtraction's noise sits in exactly the bits that are lost.
+    - **Why it matters for one statistic.** Closed forms are unaffected at 1e-12. The Fligner-Killeen statistic is affected, because it ranks absolute deviations from the group median, and a last-bit difference makes or breaks a tie. Read back from the JSON, `DFinch`'s x statistic comes out 10.073187875409229 against R's 10.075167218103388.
+    - **What the harness does.** The aim is a short decimal, so it recovers each aim from `shots.x` and `shots.xPOA` to six decimals and redoes the subtraction. With that, all four Fligner-Killeen statistics match shotGroups to 5.5e-13 relative or better: `DFinch` x to 1.2e-13 and y to 3e-14, `DFcm` x to 3.4e-14 and y to 5.5e-13.
+    - **What would remove the workaround.** Regenerating with `digits = NA` in the JSON would make the rebuild unnecessary.
+
 ### 15.5 Phase 2 gate
 
 1. Every closed-form quantity in section 15.3 matches within tolerance on all eight fixtures.

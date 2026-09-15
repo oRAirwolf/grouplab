@@ -9,7 +9,7 @@
   "coinInstalled": true,
   "stochastic": "groupShape.multNorm.p.value",
   "R": "R version 4.3.3 (2024-02-29)",
-  "generated": "2026-09-14T20:39:10Z",
+  "generated": "2026-09-14T23:29:49Z",
   "values": {
     "shots.x.1": 2.182,
     "shots.y.1": -2.507,

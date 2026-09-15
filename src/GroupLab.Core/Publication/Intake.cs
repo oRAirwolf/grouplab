@@ -8,26 +8,43 @@ namespace GroupLab.Core.Publication;
 /// <summary>What a person or a tool found about whether one photograph can be used at all, NOTES-FROM-PLANNING.md entry 27 section 1.</summary>
 public sealed record TriageVerdict(bool Candidate, IReadOnlyList<string> Findings);
 
-/// <summary>One file of a submission: both hashes, what scrubbing removed and kept, the triage, and why it was held back if it was.</summary>
-public sealed record IntakeFile(string Name, string ReceivedSha256, string? PublishedSha256, IReadOnlyList<string> Removed, IReadOnlyList<string> Kept, IReadOnlyList<string> Triage, string? Held);
+/// <summary>
+/// One file of a submission: the names the upload page gave it, both hashes, what scrubbing removed and kept, the triage, and why it
+/// was held back if it was. <see cref="OriginalName"/> is the contributor's own file name, recorded and never used as a path.
+/// </summary>
+public sealed record IntakeFile(
+    int Index,
+    string StoredName,
+    string? OriginalName,
+    long Bytes,
+    string? SniffedType,
+    string ReceivedSha256,
+    string? PublishedSha256,
+    IReadOnlyList<string> Removed,
+    IReadOnlyList<string> Kept,
+    IReadOnlyList<string> Triage,
+    string? Held);
 
 /// <summary>A submission's outcome: refused with the reason, or published into a directory with its provenance record.</summary>
 public sealed record IntakeResult(string Submission, string? Refused, IReadOnlyList<IntakeFile> Files, string? PublishedDirectory);
 
 /// <summary>
-/// The single way a donated photograph enters public test data, NOTES-FROM-PLANNING.md entry 22 section 2, with entry 27 section 1's
-/// triage. A submission is a directory of original files and the <c>meta.json</c> the upload page wrote. In order:
+/// The single way a donated photograph enters public test data, NOTES-FROM-PLANNING.md entry 22 section 2, reading the upload page's
+/// <c>meta.json</c> exactly as entry 28 section 1 records it, with entry 27 section 1's triage. In order:
 /// <list type="number">
-/// <item>Refuse a directory holding a <c>DO-NOT-PUBLISH</c> file, and one whose <c>meta.json</c> says so, the file first because a
-/// file is harder to miss.</item>
-/// <item>Refuse a submission whose provenance is incomplete (its identifier, consent text version or submission time), or whose files
-/// do not match, one for one, the SHA-256 recorded at upload.</item>
+/// <item>Refuse any <c>schema_version</c> but 1, rather than guess at a format that has changed.</item>
+/// <item>Refuse a submission whose <c>exclude_from_public_dataset</c> is true, or missing, which is unknown and not false. It is
+/// the page's only opt-out; there is no sentinel file.</item>
+/// <item>Refuse a submission without complete provenance: <c>submission_id</c>, <c>submitted_utc</c>, and a <c>consent</c> that was
+/// agreed and carries its version, time and text. Empty answers are the normal case and never a reason to refuse.</item>
+/// <item>Refuse a submission whose files do not match, one for one, the <c>stored_name</c>, <c>bytes</c> and <c>sha256</c>
+/// recorded at upload.</item>
 /// <item>Triage every file and say why it is or is not usable. Only candidates are published, unless a person who has looked
-/// accepts a file by name: entry 27 found that an open request mostly produces photographs nothing can measure.</item>
+/// accepts a file by name.</item>
 /// <item>Scrub every published file, <see cref="ImageScrubber"/>, and refuse the whole submission if a scrubbed file still fails
 /// <see cref="PublicationCheck"/>.</item>
-/// <item>Write the scrubbed files and <c>provenance.json</c>, carrying the received and published hashes side by side, the consent
-/// version, the submission time and the answers, into a new directory named by the submission identifier.</item>
+/// <item>Write the scrubbed files and <c>provenance.json</c>, with the consent text verbatim and the received and published hashes
+/// side by side, into a new directory named by the submission identifier.</item>
 /// </list>
 /// Nothing is written unless every check passes, and an existing directory is never overwritten.
 /// </summary>
@@ -35,17 +52,15 @@ public static partial class Intake
 {
     public const string ProvenanceFormat = "grouplab-provenance-1";
 
+    /// <summary>The only <c>meta.json</c> schema this tool reads.</summary>
+    public const int SchemaVersion = 1;
+
     public static IntakeResult Run(string submissionDirectory, string publicRoot, Func<string, byte[], TriageVerdict> triage, IReadOnlyCollection<string>? accepted = null)
     {
         ArgumentNullException.ThrowIfNull(triage);
         string submission = Path.GetFileName(Path.TrimEndingDirectorySeparator(submissionDirectory));
         IntakeResult Refuse(string reason) => new(submission, reason, [], null);
         accepted ??= [];
-
-        if (File.Exists(Path.Combine(submissionDirectory, PublicationCheck.DoNotPublish)))
-        {
-            return Refuse($"the contributor opted out: {PublicationCheck.DoNotPublish} is present");
-        }
 
         string metaPath = Path.Combine(submissionDirectory, "meta.json");
         if (!File.Exists(metaPath))
@@ -63,41 +78,79 @@ public static partial class Intake
             return Refuse("meta.json cannot be read: " + ex.Message);
         }
 
-        if (Flag(meta, "doNotPublish") || Flag(meta, "optOut"))
+        if (meta["schema_version"] is not { } version || version.GetValueKind() != JsonValueKind.Number || version.GetValue<double>() != SchemaVersion)
         {
-            return Refuse("meta.json records that the contributor opted out of publication");
+            return Refuse($"meta.json's schema_version is {meta["schema_version"]?.ToJsonString() ?? "missing"}, and this tool reads only version {SchemaVersion}");
         }
 
-        string? id = Text(meta, "submissionId"), consent = Text(meta, "consentVersion"), submitted = Text(meta, "submittedAt");
-        if (id is null || consent is null || submitted is null)
+        switch (meta["exclude_from_public_dataset"]?.GetValueKind())
         {
-            return Refuse("meta.json lacks the provenance a published image must carry: submissionId, consentVersion and submittedAt are all required");
+            case JsonValueKind.True:
+                return Refuse("the contributor opted out: exclude_from_public_dataset is true");
+            case JsonValueKind.False:
+                break;
+            default:
+                return Refuse("meta.json does not say whether the contributor opted out: exclude_from_public_dataset is missing, which is unknown and not false");
         }
 
-        if (!SafeIdentifier().IsMatch(id))
+        string? id = Text(meta, "submission_id"), submitted = Text(meta, "submitted_utc");
+        var consent = meta["consent"] as JsonObject;
+        string? consentVersion = consent is null ? null : Text(consent, "version"), agreedAt = consent is null ? null : Text(consent, "agreed_at_utc"), consentText = consent is null ? null : Text(consent, "text");
+        if (id is null || submitted is null)
+        {
+            return Refuse("meta.json lacks submission_id or submitted_utc, which a published image's provenance must carry");
+        }
+
+        if (consent?["agreed"]?.GetValueKind() != JsonValueKind.True)
+        {
+            return Refuse("meta.json does not record that the contributor agreed to the consent text");
+        }
+
+        if (consentVersion is null || agreedAt is null || consentText is null)
+        {
+            return Refuse("meta.json's consent record lacks its version, its agreed_at_utc or its text, and the text is what the contributor agreed to");
+        }
+
+        if (!SafeName().IsMatch(id))
         {
             return Refuse($"the submission identifier \"{id}\" is not a safe directory name");
         }
 
-        var recorded = RecordedHashes(meta);
+        var recorded = new List<(int Index, string StoredName, string? OriginalName, long Bytes, string? SniffedType, string Sha256)>();
+        foreach (var item in (meta["files"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            string? stored = Text(item, "stored_name"), sha = Text(item, "sha256");
+            if (stored is null || sha is null || item["bytes"]?.GetValueKind() != JsonValueKind.Number)
+            {
+                return Refuse("a file in meta.json lacks its stored_name, bytes or sha256");
+            }
+
+            if (!SafeName().IsMatch(stored))
+            {
+                return Refuse($"the stored name \"{stored}\" is not a safe file name");
+            }
+
+            int index = item["index"]?.GetValueKind() == JsonValueKind.Number ? item["index"]!.GetValue<int>() : recorded.Count + 1;
+            recorded.Add((index, stored, Text(item, "original_name"), item["bytes"]!.GetValue<long>(), Text(item, "sniffed_type"), sha));
+        }
+
         var images = Directory.EnumerateFiles(submissionDirectory)
             .Where(p => PublicationCheck.ImageExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()))
             .Select(p => Path.GetFileName(p))
-            .Order(StringComparer.Ordinal)
-            .ToList();
-        if (images.Count == 0)
+            .ToHashSet(StringComparer.Ordinal);
+        if (recorded.Count == 0)
         {
-            return Refuse("the submission holds no JPEG or PNG files");
+            return Refuse("meta.json records no files");
         }
 
-        foreach (string name in images.Where(n => !recorded.ContainsKey(n!)))
+        foreach (string name in images.Where(n => recorded.All(r => r.StoredName != n)))
         {
-            return Refuse($"{name} has no hash in meta.json, so it cannot be shown to be the file that was consented to");
+            return Refuse($"{name} is in the submission but not in meta.json, so it cannot be shown to be a file that was consented to");
         }
 
-        foreach (string name in recorded.Keys.Where(n => !images.Contains(n)))
+        foreach (var r in recorded.Where(r => !File.Exists(Path.Combine(submissionDirectory, r.StoredName))))
         {
-            return Refuse($"meta.json records {name}, which is not in the submission");
+            return Refuse($"meta.json records {r.StoredName}, which is not in the submission");
         }
 
         string target = Path.Combine(publicRoot, id);
@@ -108,20 +161,24 @@ public static partial class Intake
 
         var files = new List<IntakeFile>();
         var published = new List<(string Name, byte[] Bytes)>();
-        foreach (string name in images!)
+        foreach (var r in recorded.OrderBy(r => r.Index))
         {
-            byte[] original = File.ReadAllBytes(Path.Combine(submissionDirectory, name));
-            string received = Sha256(original);
-            if (!string.Equals(received, recorded[name], StringComparison.OrdinalIgnoreCase))
+            byte[] original = File.ReadAllBytes(Path.Combine(submissionDirectory, r.StoredName));
+            if (original.LongLength != r.Bytes)
             {
-                return Refuse($"{name} does not match the SHA-256 recorded at upload: it is {received}, meta.json says {recorded[name]}");
+                return Refuse($"{r.StoredName} is {original.LongLength} bytes, where meta.json recorded {r.Bytes}");
             }
 
-            var verdict = triage(name, original);
-            bool publish = verdict.Candidate || accepted.Contains(name);
-            if (!publish)
+            string received = Sha256(original);
+            if (!string.Equals(received, r.Sha256, StringComparison.OrdinalIgnoreCase))
             {
-                files.Add(new IntakeFile(name, received, null, [], [], verdict.Findings, "held until a person accepts it: " + string.Join("; ", verdict.Findings)));
+                return Refuse($"{r.StoredName} does not match the SHA-256 recorded at upload: it is {received}, meta.json says {r.Sha256}");
+            }
+
+            var verdict = triage(r.StoredName, original);
+            if (!verdict.Candidate && !accepted.Contains(r.StoredName))
+            {
+                files.Add(new IntakeFile(r.Index, r.StoredName, r.OriginalName, r.Bytes, r.SniffedType, received, null, [], [], verdict.Findings, "held until a person accepts it: " + string.Join("; ", verdict.Findings)));
                 continue;
             }
 
@@ -132,16 +189,16 @@ public static partial class Intake
             }
             catch (Exception ex) when (ex is InvalidDataException or NotSupportedException)
             {
-                return Refuse($"{name} could not be scrubbed: {ex.Message}");
+                return Refuse($"{r.StoredName} could not be scrubbed: {ex.Message}");
             }
 
             if (PublicationCheck.LocationProblems(scrubbed.Bytes) is { Count: > 0 } problems)
             {
-                return Refuse($"{name} still carries {string.Join(", ", problems)} after scrubbing");
+                return Refuse($"{r.StoredName} still carries {string.Join(", ", problems)} after scrubbing");
             }
 
-            files.Add(new IntakeFile(name, received, Sha256(scrubbed.Bytes), scrubbed.Removed, scrubbed.Kept, verdict.Findings, null));
-            published.Add((name, scrubbed.Bytes));
+            files.Add(new IntakeFile(r.Index, r.StoredName, r.OriginalName, r.Bytes, r.SniffedType, received, Sha256(scrubbed.Bytes), scrubbed.Removed, scrubbed.Kept, verdict.Findings, null));
+            published.Add((r.StoredName, scrubbed.Bytes));
         }
 
         Directory.CreateDirectory(target);
@@ -153,12 +210,14 @@ public static partial class Intake
         var provenance = new
         {
             format = ProvenanceFormat,
+            schemaVersion = SchemaVersion,
             submissionId = id,
-            consentVersion = consent,
-            submittedAt = submitted,
+            submittedUtc = submitted,
+            excludeFromPublicDataset = false,
+            consent = new { agreed = true, version = consentVersion, agreedAtUtc = agreedAt, text = consentText },
             answers = meta["answers"]?.DeepClone(),
             intake = new { tool = "grouplab intake", at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) },
-            files = files.Select(f => new { f.Name, f.ReceivedSha256, f.PublishedSha256, f.Removed, f.Kept, f.Triage, f.Held }),
+            files,
         };
         File.WriteAllText(Path.Combine(target, PublicationCheck.ProvenanceFile), JsonSerializer.Serialize(provenance, JsonOptions));
         return new IntakeResult(submission, null, files, target);
@@ -166,44 +225,11 @@ public static partial class Intake
 
     public static string Sha256(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
 
-    /// <summary>The received hashes, from <c>files</c> as an object of name to hash or as an array of objects with a name and a sha256.</summary>
-    private static Dictionary<string, string> RecordedHashes(JsonObject meta)
-    {
-        var hashes = new Dictionary<string, string>(StringComparer.Ordinal);
-        switch (meta["files"])
-        {
-            case JsonObject map:
-                foreach (var (name, value) in map)
-                {
-                    if (value?.GetValueKind() == JsonValueKind.String)
-                    {
-                        hashes[name] = value.GetValue<string>();
-                    }
-                }
-
-                break;
-            case JsonArray list:
-                foreach (var item in list.OfType<JsonObject>())
-                {
-                    if (Text(item, "name") is { } name && Text(item, "sha256") is { } hash)
-                    {
-                        hashes[name] = hash;
-                    }
-                }
-
-                break;
-        }
-
-        return hashes;
-    }
-
     private static string? Text(JsonObject o, string key) =>
         o[key] is { } node && node.GetValueKind() == JsonValueKind.String && node.GetValue<string>() is { Length: > 0 } s ? s : null;
 
-    private static bool Flag(JsonObject o, string key) => o[key] is { } node && node.GetValueKind() == JsonValueKind.True;
-
-    [GeneratedRegex("^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$")]
-    private static partial Regex SafeIdentifier();
+    [GeneratedRegex("^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$")]
+    private static partial Regex SafeName();
 
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 }

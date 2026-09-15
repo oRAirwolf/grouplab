@@ -53,6 +53,11 @@ public class ImageMetadataTests
         Assert.Contains("digital zoom 1.64", zoomed.LensGroupKey, StringComparison.Ordinal);
         Assert.Contains("digital zoom unknown", absent.LensGroupKey, StringComparison.Ordinal);
         Assert.Equal(3, new[] { zoomed, stated, absent }.Select(m => m.LensGroupKey).Distinct().Count());
+
+        // EXIF defines a stated 0 as digital zoom not used, which is the geometry of a stated 1.
+        var zero = ImageMetadataReader.Read(ExifJpeg(zoom: (0, 1)));
+        Assert.Equal(0, zero.DigitalZoomRatio!.Value);
+        Assert.Equal(stated.LensGroupKey, zero.LensGroupKey);
     }
 
     /// <summary>A minimal little-endian JPEG whose EXIF block carries a 2.2 mm focal length, a 13 mm equivalent and, optionally, a digital zoom ratio.</summary>

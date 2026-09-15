@@ -356,6 +356,86 @@ if (length(serLev) > 1L) {
   })
 }
 
+## ---- Fligner-Killeen input probe ------------------------------------------
+## QUESTIONS-FOR-PLANNING question 14 asked for the vector compareGroups hands
+## to its Fligner-Killeen test, because four keys on the two frames with a real
+## point of aim would not reproduce and the input was the remaining unknown.
+##
+## Three things this block records, in order of how much they cost to find out:
+##
+##  1. THE INPUT ITSELF.  compareGroups calls getXYmat per series WITHOUT
+##     relPOA, and that argument defaults to TRUE, so the test sees aimed
+##     coordinates.  They are identical to the shots.xPOA / shots.yPOA already
+##     in these fixtures, so the input was never the difference.  Emitted
+##     anyway, because "identical" is worth being able to check rather than
+##     being told.
+##
+##  2. THE ROW ORDER TRAP.  compareGroups builds the coordinates with
+##     split() then rbind(), which returns rows in FACTOR LEVEL order, and
+##     attaches them with cbind() to a frame still in its ORIGINAL row order.
+##     When a dataset is not already sorted by series those two orders differ
+##     and every coordinate is paired with the wrong series.  Every dataset
+##     here happens to be sorted, so it does not bite, but a reimplementation
+##     that sorts internally would silently disagree on one that is not.
+##     Recorded as rowsSortedBySeries so the assumption is checkable.
+##
+##  3. THE INTERMEDIATE QUANTITIES, per series, so a disagreement can be
+##     bisected instead of guessed at: the group median that centres the
+##     values, the mean of the centred normal scores, and the score variance.
+##
+## The formula below is stats:::fligner.test.default verbatim, and it is NOT
+## the textbook form.  R centres the scores first, divides by sum(a^2)/(n-1),
+## and then sums n_i * mean(a_i)^2.  The textbook form agrees to about 4e-15
+## here, so this is not the source of a 2e-3 disagreement, but it is written
+## out in full so there is nothing left to infer.
+if (length(serLev) > 2L) {
+  attempt("flignerProbe", {
+    D <- setNames(DF, tolower(names(DF)))
+    if (!all(c("aim.x", "aim.y") %in% names(D))) { D$aim.x <- 0; D$aim.y <- 0 }
+
+    ## compareGroups drops any series with fewer than two points first.
+    cnt  <- table(D$series)
+    drop <- names(cnt)[cnt < 2L]
+    if (length(drop)) D <- droplevels(D[!(D$series %in% drop), , drop = FALSE])
+
+    sorted <- identical(as.integer(factor(D$series)),
+                        sort(as.integer(factor(D$series))))
+    add("flignerProbe", "rowsSortedBySeries", as.numeric(sorted))
+
+    xyL <- lapply(split(D, D$series, drop = TRUE),
+                  function(z) getXYmat(z, xyTopLeft = TRUE, center = FALSE))
+    D <- cbind(D, do.call("rbind", xyL))
+
+    g <- factor(D$series)
+    n <- nrow(D)
+    for (ax in c("x", "y")) {
+      key <- if (ax == "x") "FlignerX" else "FlignerY"
+      v   <- D[[ax]]
+
+      for (i in seq_len(n))
+        add("flignerProbe", paste0(key, ".input"), v[i], row = as.character(i))
+
+      med <- tapply(v, g, median)
+      xc  <- v - med[g]
+      a   <- qnorm((1 + rank(abs(xc)) / (n + 1)) / 2)
+      ac  <- a - mean(a)
+      vv  <- sum(ac^2) / (n - 1)
+      sp  <- split(ac, g)
+      st  <- sum(lengths(sp) * vapply(sp, mean, 0)^2) / vv
+
+      for (lab in levels(g)) {
+        add("flignerProbe", paste0(key, ".groupMedian"), med[[lab]], row = lab)
+        add("flignerProbe", paste0(key, ".scoreMean"),   mean(sp[[lab]]), row = lab)
+        add("flignerProbe", paste0(key, ".n"),           length(sp[[lab]]), row = lab)
+      }
+      add("flignerProbe", paste0(key, ".scoreVar"),   vv)
+      add("flignerProbe", paste0(key, ".tiedValues"),
+          sum(table(abs(xc)) > 1L))
+      add("flignerProbe", paste0(key, ".recomputed"), st)
+    }
+  })
+}
+
 ## ---- write ----------------------------------------------------------------
 out <- do.call(rbind, rows)
 out$key <- paste0(out$scope,

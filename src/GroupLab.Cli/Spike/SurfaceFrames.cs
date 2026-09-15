@@ -132,7 +132,7 @@ public static class SurfaceFrames
     {
         var fits = new Dictionary<string, SurfaceFrameResult>(StringComparer.Ordinal);
         var seeds = new Dictionary<string, FocalSeed>(StringComparer.Ordinal);
-        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm, p.Metadata.DigitalZoomRatio, p.Image.Width, p.Image.Height)))
+        foreach (var lens in photos.Where(p => p.Frame is not null).GroupBy(p => (p.Metadata.FocalLengthMm, p.Metadata.FNumber, p.Metadata.FocalLength35mm, p.Metadata.EffectiveDigitalZoom, p.Image.Width, p.Image.Height)))
         {
             var members = lens.ToList();
             string name = LensName(members[0]);
@@ -163,7 +163,7 @@ public static class SurfaceFrames
     }
 
     private static string LensName(Prepared p) =>
-        string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm equivalent, digital zoom {(p.Metadata.DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}, {p.Image.Width} by {p.Image.Height}");
+        string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm equivalent, digital zoom {(p.Metadata.EffectiveDigitalZoom is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}, {p.Image.Width} by {p.Image.Height}");
 
     /// <summary>The frame started from <paramref name="focalPixels"/>: its Phase 0 lens fit's plane pose through that focal length.</summary>
     internal static SurfaceFrame AtFocal(Prepared p, double focalPixels) =>
@@ -172,7 +172,7 @@ public static class SurfaceFrames
     private static Row PhotoRow(int order, Prepared p, Dictionary<string, SurfaceFrameResult> fits, Dictionary<string, FocalSeed> seeds, Action<string> progress)
     {
         string gate = p.Sample.Gate switch { SampleSet.PhotographGate.Mounted => "mounted", SampleSet.PhotographGate.Flat => "flat", _ => "not gated" };
-        string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm eq., zoom {(p.Metadata.DigitalZoomRatio is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}");
+        string lensName = string.Create(Inv, $"{p.Metadata.FocalLengthMm:0.00} mm f/{p.Metadata.FNumber:0.0}, {p.Metadata.FocalLength35mm} mm eq., zoom {(p.Metadata.EffectiveDigitalZoom is { } zoom ? zoom.ToString("0.00", Inv) : "unknown")}");
         if (p.Failure is not null || !fits.TryGetValue(p.Sample.File, out var fit))
         {
             progress($"{p.Sample.File}: {p.Failure ?? "no fit"}");

@@ -1391,6 +1391,64 @@ Every value the screen shows obeys it:
 
 ---
 
+## Entry 28. Questions 12 to 14 answered, and the real upload schema
+
+`docs/NOTES-FROM-PLANNING.md` entry 28 answers questions 12, 13 section 1 and section 3, and 14.
+
+**Reproduce:** `dotnet test tests/GroupLab.Core.Tests --filter "ShotGroupsFixture|Publication|ImageMetadataTests"`
+
+**Section 1: intake reads the page's real `meta.json`.** Every name the tool had guessed was wrong. It now reads schema 1 exactly as the first real submission has it.
+- **Snake case throughout:** `submission_id`, `submitted_utc`, `exclude_from_public_dataset`, `consent`, `answers`, and `files` as objects with `index`, `stored_name`, `original_name`, `bytes`, `sniffed_type` and `sha256`.
+- **Refused, with nothing written:**
+  - any other `schema_version`;
+  - an opt-out, or an opt-out field that is missing, which is unknown and not false;
+  - a consent not agreed, or missing its version, time or text;
+  - a file whose byte count or hash differs from the upload's, or whose `stored_name` is not a safe file name.
+- **No sentinel file.** The page writes none, so the tool no longer looks for `DO-NOT-PUBLISH`.
+- **Recorded in `provenance.json`:** the consent text verbatim, since a later version will say something else. Also `original_name`, which is never used as a path.
+- **Empty answers are accepted.** They are the normal case.
+- **The tests:** `IntakeTests` builds its submissions from entry 28's file, field for field, and refuses eleven variations of it.
+
+**Section 2: question 12, five shots.** The panel already does it. Section 15.4 item 13 now carries the coverage table for extreme spread's two interval forms, so the number no longer lives only in a test.
+
+**Section 3: question 14, and the difference was the fixtures' precision.**
+- **Planning's probe:** `compareGroups` hands the test exactly `shots.xPOA`, and neither the Fligner-Killeen formula nor `coin` accounts for the gap.
+- **What GroupLab found:** from the same written vector, its statistic was 10.073187875409229 against R's 10.075167218103388. Its medians and counts matched the probe exactly, and its normal quantiles matched an independent incomplete-gamma computation to 1e-15.
+- **The cause.** `sg_dump.R` writes the JSON at 15 digits, which does not round-trip R's doubles. The aimed coordinates carry the noise of `point.x - aim.x` in exactly the bits lost, and those bits make or break ties among the absolute deviations. On raw coordinates, which are short decimals, GroupLab already matched R to 2e-13.
+- **The fix.** The harness recovers each aim to six decimals from `shots.x` and `shots.xPOA`, and redoes the subtraction. All four statistics then match: `DFinch` x to 1.2e-13 and y to 3e-14, `DFcm` x to 3.4e-14 and y to 5.5e-13. Recorded as section 15.4 item 15.
+- **The probe keys:** every one of the 4,414 is now compared by `sg_dump.R`'s own definitions. On `DFlandy01` that meant reproducing the misaligned pasting of section 5, below.
+
+**The harness now.**
+- **Compared:** 45,476 keys plus 600 checks that GroupLab's CorrNormal CEP is a root of its distribution.
+- **Otherwise:** nothing outside tolerance, disputed or pending.
+
+| Dataset | Compared, with root checks | Excluded |
+|---|---|---|
+| `DF300BLK` | 324 | 282 |
+| `DFscar17` | 314 | 212 |
+| `DFcciHV` | 1,181 | 694 |
+| `DF300BLKhl` | 1,749 | 973 |
+| `DFcm` | 5,775 | 4,778 |
+| `DFinch` | 5,775 | 4,778 |
+| `DFsavage` | 4,424 | 2,614 |
+| `DFlandy04` | 3,351 | 2,186 |
+| `DFlandy01` | 23,183 | 11,063 |
+
+- **A slip the new keys exposed.** The rule excluding robust estimates matched any key containing "rob", and so every key of `flignerProbe`. It now leaves the probe alone.
+
+**Section 4: question 13 section 1, a separate GPL-3.0 data repository.** The README has a "Test data" section.
+- **What it says:** donated photographs live in `grouplab-testdata`, under GPL-3.0 as the consent text says. The only way in is `grouplab intake`.
+- **What reads it:** `PublicationTests` reads a checkout beside this repository, or the one `GROUPLAB_TESTDATA` names. Without either it does nothing and says so in its output.
+- **Not done:** the repository does not exist yet, so no URL or commit is pinned. Creating it is Alan's.
+
+**Section 5: `compareGroups` pastes coordinates beside the wrong labels.** Recorded as section 15.4 item 14, with the binding order the probe confirmed. GroupLab pairs every coordinate with its own label.
+
+**Also: a stated digital zoom of 0 is 1.** Every Pixel photograph in `scans/mounted/` states a DigitalZoomRatio of 0, which the EXIF standard defines as digital zoom not used. `ImageMetadata.EffectiveDigitalZoom` reads it as 1 for the lens key and the joint fit, and a missing tag stays unknown.
+
+**Tests:** Core 708, App 4, all passing.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1474,3 +1532,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entries 22 and 27: the scrubber in C#, over running `scrub_exif.py`.** Its library is not installed and nothing may be installed; the C# version follows the script's policy, keeps digital zoom for entry 27, and also removes XMP and trailing data, which the script leaves.
 - **Entry 27: triage by decoded markers, holding rather than refusing what fails it.** Markers are the check the application already has; a held file costs a person one look and an `--accept`, where a refused one would need resubmitting.
 - **Entry 22: the committed-image guard names the 16 photographs with GPS, over failing the suite until history is rewritten.** The rewrite is a decision for question 13; a named list keeps the suite green without letting a seventeenth image in or letting the list go stale.
+- **Entry 28: rebuilding the aimed coordinates from the shot and a recovered aim, over excluding the four Fligner-Killeen keys as a known difference.** The rebuild reproduces R's doubles and all four statistics to 5.5e-13, so the gate checks something true rather than recording a gap; regenerating the fixtures at full precision would make it unnecessary.
+- **Entry 28: a stated digital zoom of 0 read as 1 in the lens key, over keeping the tag's value.** The EXIF standard defines 0 as digital zoom not used, which is the geometry of 1, and every Pixel photograph in `scans/mounted/` states it.
+- **Entry 28: refusing a `meta.json` whose opt-out field is missing, over treating it as false.** A missing opt-out is unknown, and publishing on unknown consent cannot be undone.

@@ -8,6 +8,187 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-14, entry 29: Alan has approved scrubbing the coordinates out of history, and one scrubber is already out of date
+
+**Status: open.** Answers question 13 section 2. **Read section 4 before running anything: this entry stops short of the irreversible steps on purpose.**
+
+### 1. The decision
+
+**Option (a). Replace the sixteen files in history with scrubbed copies, before the repository goes public.** Alan has approved it. Your reasoning was right on every point, including that the rewrite and the push are not yours to run.
+
+### 2. A catch that has to be handled first, or the rewrite destroys something we just decided we need
+
+`tools/scan_analysis/scrub_exif.py`, which entry 23 section 5 told you to commit and which the planning record has been treating as the scrubber, **whitelists only these tags:** Make, Model, Orientation, FocalLength, FocalLengthIn35mmFilm, FNumber, ExposureTime, ISO, PixelXDimension and PixelYDimension.
+
+**`DigitalZoomRatio` is not on that list.** Entry 27 section 2 established that it has to join the lens-fit grouping key, because `FocalLengthIn35mmFilm` is not updated for digital zoom on every device. So the Python scrubber, run as it stands, destroys the tag the grouping now depends on. Any image already scrubbed with it has lost that tag and cannot get it back.
+
+**Three things follow.**
+
+1. **The C# `ImageScrubber` is the definition from now on**, since you have already given it `DigitalZoomRatio`. Use it for the history rewrite, not the Python script.
+2. **Align or retire `scrub_exif.py`.** Two scrubbers with different whitelists is a trap that will be sprung by whoever reaches for the wrong one. My preference is to keep it, add `DigitalZoomRatio`, and put a line at the top saying the C# implementation is authoritative and this one exists for ad hoc use. If you would rather delete it, say so and I will agree.
+3. **Check whether anything has already been scrubbed with the Python version and lost the tag.** `scans/mounted/` is the candidate. If it has, the originals are outside the repository on Alan's machine and can be rescrubbed; flag it rather than quietly accepting the loss.
+
+### 3. Scrub all sixteen, not the thirteen with coordinates
+
+`main_flat1` to `main_flat3` carry an empty GPS block. Scrub them too.
+
+**The reason is the test, not the privacy.** If three files keep a GPS block, `PublicationTests` has to carry a permanent allowlist of three names, and an allowlist is a thing that goes stale and that somebody eventually adds a fourth name to. **After the rewrite the list should be empty and the rule should be absolute: no committed image carries a GPS block of any kind.** A rule with no exceptions cannot rot.
+
+### 4. The order of operations, and where to stop
+
+Steps 1 to 5 are yours. **Step 6 onwards is Alan's, and you must not run any of it.**
+
+1. **Find every recorded hash first, and report before touching anything.** Search the whole repository, documentation, tests, fixtures and code, for any recorded SHA-256 or other digest of the sixteen files. The scrub changes their bytes, so any recorded hash becomes wrong the moment the rewrite lands, and it has to change in the same rewrite or the record silently lies. **If you find any, stop and report them rather than proceeding.** This is the step most likely to turn a clean rewrite into a mess discovered a week later.
+
+2. **Make the bundle.** `git bundle create ../grouplab-prerewrite-2026-09-14.bundle --all` from the repository root, so it lands **outside** the working tree, then `git bundle verify` it and report the result. It is the only way back if the rewrite goes wrong, so it is worth the thirty seconds to confirm it is readable rather than assuming.
+
+3. **Produce the scrubbed copies and prove the pixels are untouched, on all sixteen.** A test already shows `main1.jpg` decodes identically. **Extend that to every one of the sixteen**, comparing decoded pixel data rather than file size, and report the count. One file proves the method; sixteen prove the job.
+
+4. **Run the rewrite**, replacing those paths' contents in every commit that contains them.
+
+5. **Verify, and report the numbers.**
+   - `PublicationTests` finds zero committed images with a GPS block, with an empty allowlist.
+   - The full suite passes: Core and App, with counts.
+   - The Phase 0 gate records still reproduce from the rewritten files, because that is the claim entry 11 made about frozen fixtures and this is the first thing that could break it.
+   - Report the pack size before and after.
+
+6. **Stop there. Do not push, do not force push, do not delete any remote.** Report that steps 1 to 5 are done and what they found.
+
+**Why the hard stop.** A force push leaves the old objects reachable by hash on GitHub for an indefinite period, so it does not actually remove the coordinates from the remote. The clean route is for Alan to delete the private repository on GitHub and push the rewritten history to a fresh one. Deleting a repository is his to do and cannot be undone, so it happens with him at the keyboard, after he has read your report from step 5.
+
+### 5. What does not change
+
+The scrub touches metadata only, so every measurement, every gate result and every table in `PHASE0-RESULTS.md` stands unchanged. Nothing in the planning record needs revisiting because of this. If step 3 finds a file whose pixels do change, that is a defect in the scrubber and the rewrite stops until it is fixed.
+
+---
+
+## 2026-09-14, entry 28: questions 12, 13 and 14 answered, and every field name the intake tool guessed is wrong
+
+**Status: actioned 2026-09-15.** Section 1: `grouplab intake` reads `meta.json` schema 1 exactly as recorded, with no sentinel file, the consent text verbatim and `original_name` kept but never a path. Section 2: question 12 answered and the extreme spread coverage table in `docs/STATISTICS.md` section 15.4 item 13. Section 3: the regenerated fixtures committed, and the four Fligner-Killeen keys and every probe key compared; the difference was the fixtures' 15-digit JSON, section 15.4 item 15. Section 4: the README's "Test data" and `PublicationTests` read a `grouplab-testdata` checkout, which Alan has yet to create. Section 5: section 15.4 item 14. Reported in `docs/PHASE1-RESULTS.md` "Entry 28". Section 1 is the urgent one: it stops the intake tool refusing every real submission. Section 4 needs Alan and is not mine or yours to decide.
+
+Entries 22 to 27 are all actioned and the work behind them is good. Question 12's correction of my own entry 24 is right and I have taken it. What follows answers all three open questions, and adds one finding that came out of answering question 14.
+
+### 1. Question 13 section 3: the real `meta.json`, which does not match a single assumed name
+
+You asked me to confirm or correct the fields, because no document specifies them. **Every one of them is different.** A real submission is now on Alan's disk, pulled and hash-verified, and this is its `meta.json` in full, field for field:
+
+```json
+{
+    "schema_version": 1,
+    "submission_id": "1a8f39ad",
+    "submitted_utc": "2026-09-14T20:41:55Z",
+    "exclude_from_public_dataset": false,
+    "consent": {
+        "agreed": true,
+        "version": "consent_v1",
+        "agreed_at_utc": "2026-09-14T20:41:55Z",
+        "text": "I took these photos, or I have permission to share them. ..."
+    },
+    "answers": {
+        "target_backing": "", "attachment_method": "", "shot_distance": "",
+        "caliber": "", "notes": "", "credit_name": ""
+    },
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ... OPR/135.0.0.0",
+    "files": [
+        {
+            "index": 1,
+            "stored_name": "001_20180623_104930.jpg",
+            "original_name": "20180623_104930.jpg",
+            "bytes": 3043798,
+            "sniffed_type": "image/jpeg",
+            "sha256": "870dac2119a5c701cc19980189e0f332aba11b4af310c2ee92fc2775ca638857"
+        }
+    ]
+}
+```
+
+The corrections, against what question 13 section 3 lists:
+
+| Assumed | Actual |
+|---|---|
+| `submissionId` | `submission_id` |
+| `submittedAt` | `submitted_utc` |
+| `consentVersion` | `consent.version`, nested |
+| `doNotPublish` or `optOut` | `exclude_from_public_dataset` |
+| `files` as object of name to hash, or array of `{name, sha256}` | array of objects keyed `stored_name`, with `sha256`, plus `index`, `original_name`, `bytes`, `sniffed_type` |
+| `answers` | `answers`, correct, with the six keys above |
+
+**The whole file is `snake_case`.** Read it that way rather than adding a camelCase fallback, and fail loudly on an unknown `schema_version` rather than guessing, since the page writes `schema_version: 1` precisely so a later change can be detected.
+
+**Three more things the real file settles.**
+
+1. **There is no `DO-NOT-PUBLISH` sentinel file.** The opt-out is `exclude_from_public_dataset`, a boolean in `meta.json`, and nothing else. Check that field; do not look for a file that the page does not write. Treat a missing field as unknown and refuse, not as false.
+2. **`consent.agreed` and `consent.text` exist and should be required and recorded.** The provenance record should carry the consent text verbatim, because it is what the contributor actually agreed to and a later version will say something different. `consent.version` alone is a pointer to a document we would then have to keep.
+3. **`original_name` is the contributor's own filename** and may carry a date, a camera prefix, or nothing. Keep it in the provenance record and never use it as a path.
+
+**Also worth knowing before you test against it:** on the first real submission all six answers came back as empty strings, not absent keys. Empty is the normal case, so an empty answer must never be a refusal reason.
+
+### 2. Question 12: A, five shots, and entry 24 got the coverage wrong
+
+**Take option A.** Section 9.1 names the five-shot row for exactly this purpose, and printing its range in words from 5 to 19 shots covers what entry 24 asked for with "between that minimum and about twenty". B withholds the count most people actually fire, and your objection to C is the right one: hiding the interval hides the very thing that says how little five shots know.
+
+**Entry 24 section 1 cited the wrong figure and you were right to say so.** I attributed the bootstrap BCa interval's 79.5 percent coverage to the panel, which does not use it. The panel's own intervals cover 92.5 percent at two shots and 94.3 at five. So my sentence "an interval whose real coverage is 80 percent must not be labelled 95" was true of the bootstrap and false of the thing Alan was looking at. What actually misled him was a headline printed to three decimals above an interval spanning a factor of twelve, which is exactly the width problem you identify, and withholding the headline fixes it.
+
+**Two things I want kept from entry 24 regardless.** Below the minimum, still show the shot positions and the centre from the aim, because both are exact at any count. And label every interval with its real coverage rather than a bare 95, which you have already done.
+
+**On extreme spread, diverge from shotGroups and say so.** Your measurement is that shotGroups' form covers 84.66 percent at two shots and 92.31 at five while claiming 95, and that `RangeStatistics.MeanInterval` covers 94.9 to 95.2 across the range. Question 11's principle applies unchanged: keep GroupLab correct where the reference is not, keep the harness comparing the reference's own form against the reference, and record the difference. Put the coverage table itself into `STATISTICS.md` section 15.4 alongside the entry, not only in `SmallGroupCoverageTests.cs`, because a number that lives only in a test is a number nobody reads.
+
+### 3. Question 14: the input was never the difference, and the probe is now in the repository
+
+**I ran it.** `tools/shotgroups/sg_dump.R` has a new `flignerProbe` block and all nine fixtures are regenerated. **The regeneration is purely additive: 68,672 pre-existing keys are byte identical and 4,414 keys are new.** I verified that by diffing every key and value against the committed files before writing them, so nothing you have already validated has moved.
+
+New keys, on the five datasets with three or more series:
+
+- `flignerProbe.FlignerX.input.<i>` and `.FlignerY.input.<i>`, the exact vectors;
+- `.groupMedian.<series>`, `.scoreMean.<series>`, `.n.<series>`, `.scoreVar`, `.tiedValues`;
+- `.recomputed`, the statistic rebuilt from those vectors, which matches `compareGroups.FlignerX.statistic` to 1e-13 on every dataset;
+- `flignerProbe.rowsSortedBySeries`, for the reason in section 5.
+
+**The answer: the input is identical to `shots.xPOA` and `shots.yPOA`, which you already had.** `compareGroups` calls `getXYmat` per series without passing `relPOA`, and that argument defaults to `TRUE`, so the test sees aimed coordinates. I confirmed the per-series construction is bit-identical to the whole-frame one on `DFinch`: `identical()` returns true and the maximum absolute difference is exactly zero.
+
+**And `coin` is not the difference either.** `compareGroups` calls `coin::fligner_test` when `coin` is installed, which it was when these fixtures were generated, and base R's `fligner.test` otherwise. I measured both on all three datasets and they agree to 1e-13, so that branch does not matter here.
+
+**So the disagreement is inside your implementation, and here is the formula to check against.** `stats:::fligner.test.default` is not the textbook form, and the difference is in what gets centred:
+
+```
+x  <- x - tapply(x, g, median)[g]        # centre by group median
+a  <- qnorm((1 + rank(abs(x)) / (n + 1)) / 2)
+a  <- a - mean(a)                        # centre the SCORES, before anything else
+v  <- sum(a^2) / (n - 1)
+stat <- sum( n_i * mean(a_i)^2 ) / v     # a_i are the centred scores
+```
+
+`rank` uses its default `ties.method = "average"`. I checked the textbook form, `sum(n_i (Abar_i - abar)^2) / var(a)`, and the group-sums form against this on `DFinch`: all three agree to 4e-15. **So the formula is not a 2e-3 effect and your tie hypothesis does not explain the gap.**
+
+**What I swept and could not make produce your 10.073187875409229**, so you need not repeat it: grouping by `series`, `orgser` and `group`; `ties.method` of average, first, min and max; group centring by median, lower median, upper median, type-7 quantile and mean; and raw against aimed coordinates. Aimed gives 10.075167218103, raw gives 10.072777268233, and your value sits between them and matches neither. **That shape, between the two, is what a partially aimed vector looks like**, so I would look first at whether the aim is being applied to some rows and not others, or to x and not y, rather than at tie handling.
+
+**If the probe shows your input matching and the statistic still differing**, then it is genuinely R's last bits and section 15.4 gains a thirteenth known difference. I do not expect that, given the size of the gap.
+
+### 4. Question 13 section 1: option A, the separate data repository
+
+**Take A, `grouplab-testdata`.** Your reasoning and entry 22's agree and I have nothing to add to it. Two conditions:
+
+1. **It must be GPL-3.0.** Not a choice. The consent text the contributors actually agreed to says "published as part of GroupLab's public test data on GitHub under the GPL-3.0 license". Licensing the data anything else, including something more conventional for images, would publish it on terms nobody consented to.
+2. **The pinned commit and URL live in this repository**, as you propose, and the publication test continues to no-op when the checkout is absent. Say so in the README of both repositories, because the failure mode is a contributor cloning one and wondering why tests skip.
+
+`scans/mounted/` goes there, scrubbed, as the first contents. The Phase 0 and Phase 1 scans stay here because committed gate records read them by path.
+
+### 5. A finding from writing the probe: `compareGroups` misaligns its own coordinates
+
+`compareGroups` builds the coordinate columns with `split()` then `rbind()`, which returns rows in **factor level order**, and attaches them with `cbind()` to a frame still in its **original row order**. When those two orders differ, every coordinate is paired with the wrong series label.
+
+**`DFlandy01` is such a dataset**, and it is in the fixture set. 519 of its 530 rows carry a coordinate from a different row than the label beside them.
+
+**It changes no value here, and the reason is worth understanding rather than trusting.** Every series in `DFlandy01` is a contiguous block of exactly ten shots, so the misalignment permutes whole blocks and leaves the partition intact. The Fligner, Kruskal and MANOVA statistics are invariant under relabelling groups of equal size, so they come out identical: 44.0020356303247 either way. The per-series outputs are unaffected for a different reason, that they are computed from the correctly named `xyL` list rather than from the pasted columns. I checked three series centres against a correct alignment and they agree exactly.
+
+**So no fixture key is wrong.** But it is one interleaved dataset away from being wrong, and a reimplementation that sorts internally would be doing the right thing and disagreeing. `flignerProbe.rowsSortedBySeries` now records it per dataset, and it is 0 only for `DFlandy01`. **Record it in `STATISTICS.md` section 15.4 as a known difference**, with the note that GroupLab should align coordinates to labels correctly and that the fixtures happen not to distinguish the two.
+
+### 6. Question 13 section 2 is Alan's, not ours
+
+The coordinates already in history are his, the rewrite is irreversible and the force push changes what every clone has. I have put the recommendation and its conditions to him directly rather than deciding it here. **Until he answers, commit no image**, which is what you are already doing.
+
+---
+
 ## 2026-09-14, entry 27: the first donated submission, and a correction to how frames must be grouped for a joint lens fit
 
 **Status: actioned 2026-09-15.** Amends entry 16. Section 1: intake triages every file by decoded markers and holds what it cannot use with the reason. Section 2: `DigitalZoomRatio` is read, is in the lens grouping key as unknown when absent, and the key is recorded with the fits. Section 3 is recorded per file. Reported in `docs/PHASE1-RESULTS.md` "Entries 22 and 27". Section 2 is the one with code consequences; sections 1 and 3 are intake findings that belong on the record before the donated set grows.
