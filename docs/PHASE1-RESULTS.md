@@ -2226,7 +2226,7 @@ A resolution that would make the image longer than 8000 px, a 4000 px photograph
   | `ubuntu-latest`, x64 | **32 of 37** | the same four, and `gl-cf25-ltr-1-600-dpi.png` |
 
 - **The one platform difference:** Linux does not name `gl-cf25-ltr-1-600-dpi.png`, which Windows and macOS read only at quarter resolution. Named with `--target`, that scan registers on Linux as it does on Windows: the sheets table of the gate record is identical there. So identification works on all three platforms, and is one sheet short on Linux; it is not the same on all three.
-- **The runners are about twice as slow as this machine:** an image that gives no code took 17.7 to 45.4 s there.
+- **The runners are about twice as slow as this machine:** an image that gives no code took 4.1 to 45.4 s there.
 
 **The rule of entry 47 section 4 is taken.** When a required check goes red, the next commit makes it green or deliberately reverts, and an expected red, such as the gate record's, is named in the commit message. `fd05dac` and `eddee00` went up in the same push as the fix, before its CI result was known. Under the rule, the fix would have gone alone.
 
