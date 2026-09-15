@@ -379,4 +379,124 @@ public class MarkingScreenTests
             File.Delete(path);
         }
     }
+
+    private static Avalonia.Point At(MainWindow window, PointD image) => window.Canvas.TranslatePoint(window.Canvas.ToControl(image), window)!.Value;
+
+    /// <summary>A press at one image point, a move to another, and a release there, through the headless pointer input.</summary>
+    private static void Drag(MainWindow window, PointD from, PointD to)
+    {
+        window.MouseDown(At(window, from), MouseButton.Left);
+        window.MouseMove(At(window, to));
+        window.MouseUp(At(window, to), MouseButton.Left);
+    }
+
+    private static bool Near(PointD a, PointD b) => Math.Abs(a.X - b.X) < 0.6 && Math.Abs(a.Y - b.Y) < 0.6;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 39 section 3: the reference length is drawn while it is made, out to the pointer; it stays, waiting for
+    /// its size, after the second tap; an end dragged before the length is used is the end used; and an end of the length in use can be
+    /// dragged afterwards, as one step undo reverses.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheScaleLineIsDrawnAsItIsMadeAndItsEndsDragBeforeAndAfterItIsUsed()
+    {
+        string path = SyntheticTarget([(400, 300)]);
+        try
+        {
+            var (window, tap) = Opened(path);
+            var canvas = window.Canvas;
+            canvas.Tool = MarkingTool.Length;
+            tap(new PointD(100, 100));
+            Assert.Single(canvas.PendingTaps);
+            window.MouseMove(At(window, new PointD(250, 110)));
+            Assert.True(canvas.Hover is { } hover && Near(hover, new PointD(250, 110)), $"hover {canvas.Hover}");
+
+            tap(new PointD(300, 100));
+            Assert.Empty(canvas.PendingTaps);
+            Assert.Equal(2, canvas.AwaitingTaps.Count);
+
+            Drag(window, new PointD(300, 100), new PointD(320, 100));
+            Assert.Empty(canvas.PendingTaps);
+            Assert.True(Near(canvas.AwaitingTaps[1], new PointD(320, 100)), $"end at {canvas.AwaitingTaps[1]}");
+
+            window.ScaleInputs.GetLogicalDescendants().OfType<TextBox>().Single().Text = "2.2";
+            window.ScaleInputs.GetLogicalDescendants().OfType<Button>().Single().RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var used = Assert.IsType<LengthReference>(window.Session.State.Scale);
+            Assert.True(Near(used.B, new PointD(320, 100)), $"B at {used.B}");
+            Assert.Empty(canvas.AwaitingTaps);
+
+            canvas.Tool = MarkingTool.Select;
+            Drag(window, new PointD(100, 100), new PointD(80, 100));
+            Assert.True(Near(Assert.IsType<LengthReference>(window.Session.State.Scale).A, new PointD(80, 100)));
+            window.Session.Undo();
+            Assert.True(Near(Assert.IsType<LengthReference>(window.Session.State.Scale).A, new PointD(100, 100)));
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 39 section 4: an impact is placed by pressing, dragging to where it belongs and letting go, not tapped
+    /// blind. A press on bare paper dragged onto a hole makes one shot, snapped onto that hole.
+    /// </summary>
+    [AvaloniaFact]
+    public void AnImpactIsPlacedByPressingDraggingAndLettingGoAndSnapsWhereItIsLetGo()
+    {
+        (int X, int Y)[] holes = [(300, 300), (420, 300)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            window.Canvas.Tool = MarkingTool.Impact;
+            Drag(window, new PointD(250, 220), new PointD(416, 303));
+            var shot = Assert.Single(window.Session.State.Shots);
+            Assert.True(Math.Abs(shot.Image.X - 420) < 1.5 && Math.Abs(shot.Image.Y - 300) < 1.5, $"shot at ({shot.Image.X:0.0}, {shot.Image.Y:0.0})");
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 39 section 4: every shot is a row with its number and bull; a row selects its shot, and excludes it
+    /// from the row without selecting it first.
+    /// </summary>
+    [AvaloniaFact]
+    public void EveryShotIsARowThatSelectsItAndExcludesItFromTheRow()
+    {
+        (int X, int Y)[] holes = [(300, 300), (360, 280), (330, 350)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, tap) = Opened(path);
+            window.Session.SetScale(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2));
+            window.Canvas.Tool = MarkingTool.Impact;
+            foreach (var (x, y) in holes)
+            {
+                tap(new PointD(x, y));
+            }
+
+            var ids = window.Session.State.Shots.Select(s => s.Id).ToList();
+            List<Button> Rows() => [.. window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => b.Tag is int)];
+            Assert.Equal(ids, Rows().Select(b => (int)b.Tag!));
+            Assert.Equal("2  bull none", Rows()[1].Content);
+
+            Rows()[1].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.Equal(ids[1], window.Canvas.Selected);
+
+            window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => (b.Content as string) == "Exclude").ElementAt(2).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.Equal(ExclusionReason.CalledFlyer, window.Session.State.Find(ids[2])!.Exclusion);
+            Assert.Equal("3  bull none, excluded as CalledFlyer", Rows()[2].Content);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }

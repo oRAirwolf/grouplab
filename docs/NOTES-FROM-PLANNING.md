@@ -8,6 +8,127 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 40: the tap is snapping to printed artwork, and three things are working
+
+**Status: actioned 2026-09-15.**
+- **Section 1:** the detector returns its aligned expected artwork. A tap on printed ink is placed where it was tapped, and the status line says so. The size message names both explanations, or only the printed target when the region is mostly artwork.
+- **Section 3:** closed with entry 39 section 1.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 39 and 40". Amends entry 39, which still stands in full and in its stated order. This is one new finding and one correction to a message.
+
+Alan re-marked the same rendered sheet with a realistic ten-shot group around bull 13, a .338 calibre and 100 yards.
+
+### 1. Two shots snapped to the target, not to a hole
+
+The panel reports, twice, in orange:
+
+> Shot 1 reads 0.521 in across, larger than a single 0.338 in hole should (0.471 in): two holes marked as one?
+
+**The diagnosis in that message is wrong, and the detection behind it is right.**
+
+`gl-cf25-ltr-1-600-dpi.png` is a rendered sheet that has never been shot. **There are no holes in it at all.** Every tap that "snapped to the hole under it" snapped to printed ink, and the two flagged shots sit on bull 13's inner ring, which measures about 0.52 in on that sheet. The size check caught them because 0.521 in is too big for a .338 bullet, and that is the safety net from entry 24 section 5 point 3 working on its first real outing. Good.
+
+But it reached the right conclusion by the wrong route, and it told the user the wrong thing. Two overlapping holes is one explanation for an oversized blob. **Snapping to the target's own artwork is another, and on a GroupLab sheet it is the one we can rule in or out exactly**, because the definition says where every printed ring and dot is.
+
+**Two changes.**
+
+1. **The snap should not land on known artwork.** When a sheet is registered, the renderer knows precisely where the printed rings, dots, numerals and markers are. A tap whose snap target coincides with artwork rather than with a difference from artwork should either not snap at all and place where the user tapped, or snap and say what it snapped to. This is the same architectural point as entry 23 section 4, where the detector had to be confined to the registered sheet: **the pipeline knows things the interaction is not using.**
+
+2. **The message should name both possibilities rather than only the one.** Something closer to: "Shot 1 reads 0.521 in across, larger than one 0.338 in bullet hole (0.471 in). Two holes marked as one, or a tap that snapped to the printed target rather than a hole." When the shot's position coincides with artwork, say the second and not the first.
+
+**Why this matters beyond a rendered sheet.** Entry 25's paper protocol asks Alan to shoot holes on bare paper, through printed ring strokes, and touching printed numerals, on purpose. Those are exactly the cases where a snap can latch onto ink instead of a tear. This weekend will produce the real version of what this screenshot shows by accident.
+
+### 2. Three things worth recording as working
+
+Not everything needs fixing and it is worth the record saying which.
+
+- **The calibre arithmetic is right.** Extreme spread 2.333 in centre to centre, edge to edge 2.671 in, difference 0.338 in, which is exactly one bullet diameter. Entry 24 section 5 point 1 asked for both figures labelled so the number matches whatever the shooter is used to quoting, and that is what the panel does.
+- **Every interval carries its real coverage**, "94.7% interval", not a flat 95. That is entry 24 section 1 and entry 23 section 2 landing where they were meant to land: on the screen a person reads.
+- **The flyer line reasons correctly and refuses the obvious answer.** "Worst shot at 1.32 mean radii; a group of 10 is expected to put its worst at 1.89, so a shot there is not a flyer by that measure alone." That is the project's whole argument, in one sentence, in front of a user.
+
+### 3. Unchanged from entry 39
+
+Every shot still reads "manual, bull none", so entry 39 section 1 stands exactly as written. In this particular marking it does no harm, because Alan placed a point of aim and the shots cluster around one bull, so the single-aim measurement is the right one. **That is luck rather than design**, and the first person to mark a real 25-bull sheet by hand will get entry 39's wrong answer instead.
+
+---
+
+## 2026-09-15, entry 39: Alan's second session with the window, and the panel is reporting a meaningless number again
+
+**Status: actioned 2026-09-15; section 6's README wording is left until the editor has been used.**
+- **Section 2:** the crash was a control shown in two rows. It is fixed, with a test that reproduced it and that selects, toggles, pages and saves every sheet.
+- **Section 1:** shots are assigned to their nearest bull when placed, when detection loads bulls, and when moved. Any unassigned shot on a sheet of several scoring bulls withholds the figures, with the reason where they would be, and the rule is in `CONTRIBUTING.md`.
+- **Sections 3 to 5:**
+  - the scale line is drawn while made, stays while waiting, and its ends drag before and after use;
+  - impacts are placed by press, drag and release, and listed as rows that select and exclude;
+  - no mark is white, and every mark has a dark outline.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 39 and 40". Section 1 is a correctness problem he did not report and probably could not have. Section 2 is a crash. Sections 3 to 6 are interaction work, and they are the current phase rather than a later one. This entry outranks everything except entry 35 section 6.
+
+Alan opened `gl-cf25-ltr-1-600-dpi.png`, ran **Detect on a GroupLab sheet** against the matching definition, and it worked: 34 of 38 markers, registration RMS 0.0022 in, all 25 bulls located, the 4 missing markers crossed in red. That is the primary path working in the window for the first time, and it is worth saying so before the rest of this entry.
+
+### 1. Hand-placed shots are not assigned to bulls, so the composite group silently does not happen
+
+His panel reports **mean radius 2.294 in, sigma 1.830 in, centre from aim 2.770 in right and 1.131 in low**, from 12 shots on a sheet whose bulls sit 1.5 in apart.
+
+**Those numbers are not measuring dispersion. They are measuring the distance between bulls.** He placed one impact near each of twelve different bull centres. The rifle's grouping is not in that figure at all.
+
+`GroupAnalysis` is correct and is not the problem. Line 152 measures each shot from its bull's centre when the shot has a bull, and from the single point of aim otherwise. The Selected shot panel gives the reason in three words: **"Shot 12: manual, bull none"**. Every hand-placed shot on a fully registered sheet came out unassigned, so all twelve were measured from one aim point on bull 1, and the composite premise the entire target design exists to serve quietly did not apply.
+
+**Two things to fix, and the second matters more than the first.**
+
+1. **On a registered sheet, a hand-placed impact should be assigned to a bull automatically**, by the same nearest-bull rule `ShotAssignment` already implements for the detector, with the existing manual override for when it guesses wrong. A person marking a GroupLab sheet by hand should not have to know that assignment is a separate concept.
+
+2. **When the composite does not apply, the panel must say so where the figures are, not in a side panel.** This is the same failure as the two-shot mean radius from entry 24, arriving by a different route: a confident figure, to three decimals, with an interval beside it, that means nothing. The rule from entry 24 generalises and should be written down as such: **whenever the panel cannot compute what the user thinks it is computing, it says what is missing instead of printing a number.** Here that is a line reading something like "12 shots, none assigned to a bull, so these figures measure the spread of your marks rather than the group. Assign them to bulls, or mark them on one bull."
+
+**Why he could not have caught this.** The figure is plausible, the interval is plausible, the honesty line about the reference length is present and reassuring, and nothing anywhere says the shots are unassigned except three words under a heading about the one shot he happened to select.
+
+### 2. The print screen crashes on selecting multiple targets
+
+Selecting more than one target in the print dialog crashes the application. **Reproduce it, fix it, and add a test that selects several.** He is printing his session pack from that screen this weekend and it has been used by a person exactly once.
+
+While you are in there: the print screen is the one piece of this the weekend depends on, so it is worth ten minutes of trying to break it deliberately rather than only fixing the reported path.
+
+### 3. The scale tool shows nothing while it is being used
+
+Two taps and then nothing visible until "use this length" is pressed. **Draw the line as it is being made**, with a circle at each end, and keep it drawn afterwards so the reference stays visible while the rest of the marking happens. A measurement you cannot see is one you cannot check, and this one scales every number on the screen.
+
+**And it should be draggable.** Place by click, then drag either endpoint to adjust, rather than starting again. Same for the rectangle.
+
+### 4. Impacts should be placeable by drag, and listed
+
+His words, and they are right: click, then drag the point to where it belongs, then click to set. Tapping blind and hoping is the wrong interaction for a measurement tool at any zoom level.
+
+**Each shot should also appear as a row in the right-hand panel**, clickable, selecting it on the image, with its number, its bull, and whether it is excluded. At twelve shots the current design already makes finding one specific shot a hunt around the image. At twenty-five it will be worse. The row is also where the flyer and exclusion controls belong, rather than only appearing once something is selected.
+
+### 5. The impact marker must not be white
+
+White circles on white paper. Use something that reads on paper, on black ink and on a dark backer, since all three occur in the corpus. The green fill he has now works; the outer ring does not.
+
+Worth a general rule while you are choosing: **every mark the application draws has to be legible on a photograph of a target**, which is mostly white with black printing and coloured rings. That is a stronger constraint than looking good against the application's own dark chrome.
+
+### 6. The concept screens: what is deferred and what is not
+
+Alan asked whether the difference between the window and the README's concept screens is work set aside for later. **Partly, and the part that is not deferred is the part he is complaining about.**
+
+**Deferred, legitimately.** The composite group plot, the full statistics layout, the stage timeline, the comparison screen, the light theme. Those are the Phase 4 Windows application in `DESIGN.md` section 21, and they need the analysis path wired into the window first, which entry 33 built only as a command.
+
+**Not deferred: the editor.** `DESIGN.md` section 18 says it plainly, and it has said so since revision 1:
+
+> The editor is built before the detector, not after it. A good editor with a mediocre detector is a usable product. A bad editor with a good detector still frustrates users on every target the detector gets wrong, and no detector reaches one hundred percent.
+
+Sections 3, 4 and 5 of this entry are the editor. By the project's own stated order they come before more analysis features, not after. **Treat them as the current milestone rather than as polish**, and do not let the concept screens' absence be used to defer them, because they are a different thing.
+
+**One honest note for the record.** The README puts six concept screens above the fold and says in plain words that they are mockups and the application looks nothing like them. That is accurate but it is doing a lot of work for one sentence, and the gap will widen before it closes. Worth revisiting the wording once the editor work here lands, so the page describes an application somebody could recognise.
+
+### 7. Order
+
+1. Section 2, the crash. It blocks the weekend.
+2. Section 1, assignment and the honest panel. It is producing wrong numbers today.
+3. Sections 3, 4 and 5, the editor.
+4. Then entry 35 section 6 and the rest.
+
+---
+
 ## 2026-09-15, entry 38: the DFdistr defect is mine and it is fixed, plus the negative zeros
 
 **Status: actioned 2026-09-15.** Verified independently:

@@ -42,6 +42,7 @@ public sealed class MainWindow : Window
     private readonly TextBlock problem = new() { Foreground = Brushes.OrangeRed, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
     private readonly StackPanel statistics = new() { Spacing = 4 };
     private readonly StackPanel selection = new() { Spacing = 6 };
+    private readonly StackPanel shotList = new() { Spacing = 2 };
     private readonly StackPanel scaleInputs = new() { Spacing = 6 };
     private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetNames<ExclusionReason>(), SelectedIndex = 0, MinWidth = 140 };
     private GrayImage? grey;
@@ -79,8 +80,8 @@ public sealed class MainWindow : Window
         canvas.Session = session;
         session.Changed += (_, _) => Refresh();
         canvas.SelectionChanged += (_, _) => Refresh();
-        canvas.LengthTapped += (_, taps) => AskLength(taps);
-        canvas.RectangleTapped += (_, taps) => AskRectangle(taps);
+        canvas.LengthTapped += (_, _) => AskLength();
+        canvas.RectangleTapped += (_, _) => AskRectangle();
         canvas.Notice += (_, note) => status.Text = note;
 
         var toolbar = new WrapPanel { Margin = new Thickness(6), Orientation = Orientation.Horizontal };
@@ -136,6 +137,8 @@ public sealed class MainWindow : Window
         })));
         panel.Children.Add(problem);
         panel.Children.Add(statistics);
+        panel.Children.Add(Heading("Shots"));
+        panel.Children.Add(shotList);
         panel.Children.Add(Heading("Selected shot"));
         panel.Children.Add(selection);
 
@@ -219,6 +222,14 @@ public sealed class MainWindow : Window
 
     /// <summary>The status line, for the headless tests.</summary>
     internal string StatusText => status.Text ?? "";
+
+    /// <summary>The list of shots, for the headless tests.</summary>
+    internal StackPanel ShotList => shotList;
+
+    /// <summary>A shot's number as the image and the list show it, or its id when it is marked as not a shot and has no number.</summary>
+    private string ShotLabel(int id) => MarkingCanvas.ShotNumbers(session.State).TryGetValue(id, out int number)
+        ? number.ToString(CultureInfo.InvariantCulture)
+        : id.ToString(CultureInfo.InvariantCulture);
 
     /// <summary>The session, for the headless tests.</summary>
     internal MarkingSession Session => session;
@@ -413,46 +424,55 @@ public sealed class MainWindow : Window
         status.Text = tool switch
         {
             MarkingTool.Pan => "Drag to move the image. Zoom with the wheel or the buttons.",
-            MarkingTool.Length => "Tap two points a known distance apart, then enter the distance.",
-            MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. This removes perspective.",
+            MarkingTool.Length => "Tap two points a known distance apart. The line is drawn as you make it; drag either end onto its mark, then enter the distance. The ends stay draggable afterwards.",
+            MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. Drag any corner onto its mark. This removes perspective.",
             MarkingTool.Aim => "Tap the point of aim.",
-            MarkingTool.Impact => "Tap each impact. Each tap snaps to the hole under it, and on a detected GroupLab sheet never onto the printed target. On a sheet of bulls each shot is assigned to its nearest bull.",
-            MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it.",
+            MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull.",
+            MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it. Drag an end of the scale to adjust it.",
             _ => status.Text,
         };
     }
 
-    private void AskLength(IReadOnlyList<PointD> taps)
+    /// <summary>
+    /// Asks for the size of a reference length. The ends are read from the canvas when the length is used, not when it was tapped, so
+    /// an end dragged onto its mark in between is the one used (NOTES-FROM-PLANNING.md entry 39 section 3).
+    /// </summary>
+    private void AskLength()
     {
         scaleInputs.Children.Clear();
         var length = new TextBox { Text = "1", Width = 80 };
         var unit = units.Linear;
-        scaleInputs.Children.Add(new TextBlock { Text = $"Distance between the two taps, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
+        scaleInputs.Children.Add(new TextBlock { Text = $"Drag either end onto its mark if it is not on it, then enter the distance between the ends, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
         scaleInputs.Children.Add(Row(length, Button("Use this length", () =>
         {
-            if (double.TryParse(length.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
+            if (canvas.AwaitingTaps is { Count: 2 } ends && double.TryParse(length.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
             {
-                session.SetScale(new LengthReference(taps[0], taps[1], UnitSettings.ToInches(d, unit)));
+                var reference = new LengthReference(ends[0], ends[1], UnitSettings.ToInches(d, unit));
+                canvas.ClearAwaiting();
+                session.SetScale(reference);
                 SetTool(MarkingTool.Aim);
             }
         })));
     }
 
-    private void AskRectangle(IReadOnlyList<PointD> taps)
+    private void AskRectangle()
     {
         scaleInputs.Children.Clear();
         var width = new TextBox { Text = "1", Width = 70 };
         var height = new TextBox { Text = "1", Width = 70 };
         var unit = units.Linear;
-        scaleInputs.Children.Add(new TextBlock { Text = $"Rectangle width (first to second tap) and height, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
+        scaleInputs.Children.Add(new TextBlock { Text = $"Drag any corner onto its mark if it is not on it, then enter the rectangle's width (first to second corner) and height, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
         scaleInputs.Children.Add(Row(width, height, Button("Use this rectangle", () =>
         {
-            if (double.TryParse(width.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double w) && w > 0
+            if (canvas.AwaitingTaps is { Count: 4 } corners
+                && double.TryParse(width.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double w) && w > 0
                 && double.TryParse(height.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double h) && h > 0)
             {
                 try
                 {
-                    session.SetScale(new RectangleReference(taps, UnitSettings.ToInches(w, unit), UnitSettings.ToInches(h, unit)));
+                    var reference = new RectangleReference([.. corners], UnitSettings.ToInches(w, unit), UnitSettings.ToInches(h, unit));
+                    canvas.ClearAwaiting();
+                    session.SetScale(reference);
                     SetTool(MarkingTool.Aim);
                 }
                 catch (ArgumentException ex)
@@ -487,7 +507,7 @@ public sealed class MainWindow : Window
         holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage, artwork);
         canvas.FlaggedShots = holeFlags.Select(f => f.ShotId).ToHashSet();
 
-        if (scaleInputs.Children.Count == 0 || state.Scale is not null)
+        if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
         {
             scaleInputs.Children.Clear();
             scaleInputs.Children.Add(new TextBlock
@@ -552,7 +572,7 @@ public sealed class MainWindow : Window
             {
                 statistics.Children.Add(new TextBlock
                 {
-                    Text = $"Shot {flag.ShotId} {HoleSize.Describe(flag, state.Calibre!.DiameterInches, units.Length)}",
+                    Text = $"Shot {ShotLabel(flag.ShotId)} {HoleSize.Describe(flag, state.Calibre!.DiameterInches, units.Length)}",
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = 12,
                     Foreground = Brushes.OrangeRed,
@@ -562,7 +582,56 @@ public sealed class MainWindow : Window
             statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Placed: {report.Automatic} automatic, {report.Corrected} corrected, {report.Manual} by hand")));
         }
 
+        BuildShotList();
         BuildSelection();
+    }
+
+    /// <summary>
+    /// Every shot as a row, NOTES-FROM-PLANNING.md entry 39 section 4: its number as the image shows it, its bull, and whether it is
+    /// excluded or not a shot. A row selects its shot on the image, and carries the exclusion control, so excluding a flyer does not
+    /// wait for the shot to be selected. At twenty-five shots finding one on the image is a hunt; finding it in the list is not.
+    /// </summary>
+    private void BuildShotList()
+    {
+        shotList.Children.Clear();
+        var state = session.State;
+        if (state.Shots.Count == 0)
+        {
+            shotList.Children.Add(Line("None yet."));
+            return;
+        }
+
+        var numbers = MarkingCanvas.ShotNumbers(state);
+        foreach (var shot in state.Shots)
+        {
+            int id = shot.Id;
+            string bull = shot.Bull is { } b ? state.Bulls.FirstOrDefault(x => x.Index == b)?.Label ?? b.ToString(CultureInfo.InvariantCulture) : "none";
+            string text = shot.NotAShot
+                ? $"not a shot, bull {bull}"
+                : string.Create(CultureInfo.InvariantCulture, $"{numbers[id]}  bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}");
+            var select = new Button
+            {
+                Content = text,
+                Tag = id,
+                MinWidth = 230,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                FontWeight = id == canvas.Selected ? FontWeight.Bold : FontWeight.Normal,
+                Margin = new Thickness(0),
+            };
+            select.Click += (_, _) =>
+            {
+                canvas.Selected = id;
+                Refresh();
+            };
+            var row = Row(select);
+            if (!shot.NotAShot)
+            {
+                row.Children.Add(Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
+                    session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null)));
+            }
+
+            shotList.Children.Add(row);
+        }
     }
 
     private void BuildSelection()
@@ -582,7 +651,7 @@ public sealed class MainWindow : Window
 
         string bull = shot.Bull is { } b ? session.State.Bulls.FirstOrDefault(x => x.Index == b)?.Label ?? b.ToString(CultureInfo.InvariantCulture) : "none";
         selection.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-            $"Shot {id}: {shot.Provenance.ToString().ToLowerInvariant()}, bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}{(shot.NotAShot ? ", not a shot" : "")}")));
+            $"Shot {ShotLabel(id)}: {shot.Provenance.ToString().ToLowerInvariant()}, bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}{(shot.NotAShot ? ", not a shot" : "")}")));
         selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
             session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null))));
         selection.Children.Add(Row(

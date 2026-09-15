@@ -1780,6 +1780,69 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 
 ---
 
+## Entries 39 and 40. The print crash, unassigned shots, the snap onto artwork, and the editor
+
+`docs/NOTES-FROM-PLANNING.md` entries 39 and 40, from Alan's second session with the window, in entry 39 section 7's order. Each part is its own commit.
+
+**Entry 39 section 2: the print screen crash.**
+- **The cause:** choosing a second sheet that has a load block, or switching a load block to Filled a second time, threw "The control TextBox already has a visual parent". The serial box and the field boxes outlive the rows that hold them, and Avalonia refuses a control with two parents.
+- **The fix:** each is taken out of its previous row before it is shown in a new one.
+- **The test:** `EverySheetCanBeSelectedInTurnToggledPagedAndSavedWithoutACrash` reproduced the crash before the fix, as entry 39 asked. It is also the deliberate attempt to break the screen:
+  - every built-in sheet is selected in turn, then in reverse;
+  - its load block is switched between blank and filled more than once;
+  - its pages are turned;
+  - each sheet is saved, with a PDF or a stated reason.
+
+**Entry 39 section 1: hand-placed shots and the composite group.**
+- **Alan's exact sequence is not reconstructable from the entry:**
+  - detection does load the bulls, and the canvas already gave a shot tapped after it its nearest bull;
+  - but a shot marked before detection was kept with no bull;
+  - opening the image again clears the bulls.
+- **So every route is closed rather than the one guessed at:**
+  - `MarkingSession` assigns a hand-placed shot to its nearest bull, measured on the target plane when a scale is set;
+  - detection assigns any hand-placed shot marked before it;
+  - a moved shot follows its nearest bull, unless the user had assigned it elsewhere or unassigned it.
+- **The second change, which entry 39 says matters more:** on a sheet of more than one scoring bull, `GroupAnalysis` withholds every figure while any counted shot is unassigned, and puts the reason where the figures would be. For example: "1 of 6 shots is not assigned to a bull, so it would be measured from the point of aim and the rest from their bulls, and no figure means anything. Assign every shot to its bull."
+- **A sheet of one scoring bull is not affected,** because its single aim is the right origin.
+- **The general rule** is now written in `CONTRIBUTING.md`: a report never prints a number it cannot mean.
+
+**Entry 40 section 1: the snap onto printed artwork.**
+- **What changed in the detector:** it now returns its expected artwork after alignment, in image pixels, and the window keeps it after "Detect on a GroupLab sheet".
+- **The snap:** a tap whose dark surroundings are mostly printed ink is placed where it was tapped, and the status line says "placed where tapped: the dark area under the tap is the printed target, not a hole". Otherwise, only dark pixels the artwork calls paper pull the snap.
+- **The size message** now names both explanations: "Two holes marked as one, or a tap that snapped to the printed target rather than a hole." When the region is mostly artwork it names only the printed target, because that is then known.
+- **The limit:** the artwork exists only after detection in the current window. A reopened marking, or an image scaled by hand, has none, so there the message names both explanations and the snap is the old one.
+
+**Entry 39 sections 3 to 5: the editor.**
+- **The scale line:**
+  - it is drawn as it is made, out to the pointer, with a circle at every end;
+  - after the last tap it stays drawn while it waits for its size;
+  - either end can be dragged onto its mark before the length is used, and the dragged end is the one used;
+  - after it is used, an end of the reference in use can be dragged with the Select tool, as one step undo reverses;
+  - a rectangle's corners behave the same way.
+- **Placing an impact:** press, drag to where it belongs, and let go. A dashed ring shows where it will snap while it is dragged, and the shot is set where it is let go.
+  - **Entry 39 quoted Alan as click, drag, then click to set.** One press-drag-release gesture was chosen, because it is the same gesture with a finger and a single tap still places a shot.
+  - **If Alan wants the two-click form,** it is a small change.
+- **The shot list:**
+  - every shot is a row with its number as drawn, its bull, and whether it is excluded or not a shot;
+  - a row selects its shot on the image;
+  - each row carries an Exclude or Restore button, using the reason chosen under Selected shot, which starts at called flyer.
+- **The marks:**
+  - nothing is drawn in white;
+  - the selection ring is pink;
+  - every stroke, ring and label is drawn over a dark outline.
+
+  **These have not been looked at by eye,** because the headless tests render nothing this session can see. Alan's next session is the check.
+
+**Entry 39 section 6.** The README's wording about its concept screens is left as it is until someone has used the new editor, so that the page is changed to describe an application a person has seen.
+
+**Worth knowing:**
+- **A running window:** `GroupLab.App` was running throughout this work, and held its build folder. The app tests were built into a separate folder.
+- **Its build is out of date:** the window that is open is the build from before these changes. It needs restarting to show them.
+
+**Tests:** Core 729 passing, App 10 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1878,3 +1941,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 37: a file held for a consent conflict cannot be accepted by name, unlike a file triage holds.** Triage is a judgement about usefulness that a person can overrule; an opt-out is the contributor's decision, and only the contributor can change it.
 - **Entry 37: the two conflicted submissions not published even as provenance records.** Publishing a record of a submission whose consent is in question, with its answers and credit name, waits for the contributor's answer as the photographs do.
 - **Entry 36: `DFdistr` left at its committed version, over committing a JSON whose numbers are strings or editing `sg_distr.R` here.** Nothing reads it, `tools/` is the authority and planning's to change, and a fixture committed in a broken shape would be read as correct later.
+- **Entries 39 and 40: any unassigned shot on a sheet of several scoring bulls withholds every figure, over quoting the assigned shots alone.** Leaving shots out without saying so would be a different wrong number, and the sentence in their place tells the user exactly what to do.
+- **Entry 40: a tap on printed ink placed where it was tapped, with a note, over snapping onto the ink and naming it.** The centre of a printed stroke is never the answer, and a tap placed where the user put it is at worst as wrong as the user.
+- **Entry 39: a moved shot follows its nearest bull unless the user assigned it elsewhere, over keeping whatever bull it had.** A shot dragged across to the next bull is almost always a correction of position, and a deliberate reassignment is recognisable because it differs from the nearest.
+- **Entry 39: an impact placed by press, drag and release, over click, drag, click.** It is one gesture with a finger or a pointer, and a plain tap still places a shot.
