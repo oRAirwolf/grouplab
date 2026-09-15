@@ -8,7 +8,7 @@ Split into three sittings so the range day stays short. Only part B needs the ra
 - **Part B, at the range.** Shoot two sheets, photograph them mounted before you take them down. About 15 minutes on top of a normal session.
 - **Part C, at home, after.** Scan the shot sheets, drop the files in folders. About 20 minutes.
 
-**About 50 rounds.** Two sheets, one shot per bull. A third sheet is optional and only if you want a second calibre in the set.
+**About 53 rounds.** Two sheets, one shot per scoring bull, plus three sighters on S2. A third sheet is optional and only if you want a second calibre in the set.
 
 ---
 
@@ -16,9 +16,13 @@ Split into three sittings so the range day stays short. Only part B needs the ra
 
 ### A1. Print the pack
 
-Ask Claude Code to generate it:
+**Print it from the application, not from a command.** The print screen now exists, it lists all twenty-two built-in sheets, and it drives the printer with scaling disabled rather than asking you to remember. **This is the first time a human has used it**, so it is a test as much as a task. If it fails or confuses you, note what happened and fall back to the command below; that report is worth as much as the paper.
 
-> Produce the Phase 1 print pack as PDFs in `scans/phase1/print-pack/`: three copies of the corrected `GL-CF25-LTR` from the geometry commit, and the five marker module sweep sheets from `scans/phase1/module-sweep/`. Print one page each, Letter, and tell me the identifier printed on each sheet so I can check the right geometry went out.
+Print **three copies of `GL-CF25-LTR`**. Print **S1 with the load data block filled in** with your real load before you shoot it, and **S2 and S3 with a blank block** to write at the range. Both paths need exercising and this is the natural moment.
+
+The five marker sweep sheets are not in the built-in library, so those still come from the command line:
+
+> Print the five marker module sweep sheets from `scans/phase1/module-sweep/` as PDFs, one page each, Letter, and tell me the identifier printed on each sheet.
 
 **Eight pages.** Three target sheets and five sweep sheets.
 
@@ -68,7 +72,9 @@ This is the only sheet in the set printed from the corrected geometry and never 
 
 ### B1. Shoot S1 normally
 
-Your real load, the way you would actually shoot it. 25 rounds, one per bull. Nothing special.
+Your real load, the way you would actually shoot it. **25 rounds, one per scoring bull. Leave the three sighter bulls empty.**
+
+That sentence is new and it matters. `GL-CF25-LTR` carries 25 scoring bulls plus 3 sighters, and the original text just said "one per bull", which is ambiguous on a sheet that has both.
 
 ### B2. Shoot S2 deliberately awkwardly
 
@@ -79,8 +85,11 @@ Your real load, the way you would actually shoot it. 25 rounds, one per bull. No
 - A couple on or touching a printed numeral
 - **At least one pair overlapping inside a single bull**, close enough that the two tears merge
 - **At least one shot landing in a neighbouring bull's cell**
+- **Three rounds into the three sighter bulls**
 
-25 rounds. Do not try to make it neat.
+That last one is new and it is deliberate. A bug found on 15 September was counting shots on sighter bulls as part of the measured group, which inflates the result silently and produces a plausible wrong answer. It is fixed, and it has only ever been tested against a synthetic sheet. Three rounds gives it a real one.
+
+28 rounds on this sheet: 25 scoring plus 3 sighters. Do not try to make it neat.
 
 ### B3. Optional: S3, a second calibre
 
@@ -94,14 +103,20 @@ Four frames per sheet, thirty seconds each:
 
 1. Square on, from wherever you would normally stand to take the photo
 2. Deliberately off to one side, a steep angle
-3. Further back, so the sheet is smaller in the frame
+3. Further back, so the sheet is smaller in the frame. **Walk backwards. Do not pinch to zoom**, because zooming crops the sensor and changes the lens geometry the software has to undo, and on some phones the metadata does not record that it happened
 4. Whatever the light is doing worst. Your shadow across it, or sun glare, or deep shade
 
 Take them **however you normally photograph a target**. Do not try to take good photographs. Then take one extra frame of each sheet with the main camera specifically, so there is something directly comparable with the Phase 0 set.
 
 Whole sheet, all four edges in frame, every time. A close-up of the group is the one thing that cannot be used.
 
-### B5. Two marks in pen, on S2 only
+### B5. Write down what is behind the paper
+
+One line, in your notes or a photograph of the backer itself: what each sheet was stapled to. Cardboard, corrugated plastic, OSB, and what colour.
+
+A measurement in September found that a hole photographed against a dark backer reads about 0.023 in off from the same hole scanned against the white scanner lid, which is nearly three times the noise floor. That makes the backer a term in the error budget rather than a detail, and right now it has been measured once, on one sheet, against one mat.
+
+### B6. Two marks in pen, on S2 only
 
 After shooting, before it comes down. Thirty seconds:
 
@@ -120,21 +135,29 @@ Real targets in the sample set carry both, drawn by whoever shot them, and the s
 
 If a sheet is torn or curled, scan it anyway and do not flatten it first. A damaged sheet is a real case.
 
-### C2. Put everything where it goes
+### C2. Put everything in a staging folder **outside** the repository, and tell me the total size
 
 ```
-scans/phase1/paper/          S1/S2/S3 before and after, C1
-scans/phase1/mounted/        the range photographs
-scans/phase1/module-sweep/scans/   M03 to M08
+C:\Dev\grouplab-session-2026-09-20\paper\        S1/S2/S3 before and after, C1
+C:\Dev\grouplab-session-2026-09-20\mounted\      the range photographs
+C:\Dev\grouplab-session-2026-09-20\sweep\        M03 to M08
 ```
 
-Then commit and push.
+**Do not commit them yet.** This changed on 15 September. Eight scans at 600 DPI plus a dozen phone photographs is plausibly three hundred megabytes, and the repository was deliberately rebuilt that week to remove weight and is now public. Where each set belongs is a decision worth thirty seconds rather than a surprise:
+
+- Sheets that a gate reads by path belong in the code repository.
+- Mounted photographs are closer to the donated corpus and probably belong in `grouplab-testdata` under `owner/`.
+
+Run `Get-ChildItem <folder> -Recurse | Measure-Object Length -Sum` and send me the number. I will tell you where each set goes, and Claude Code moves them in one commit.
 
 ### C3. Tell me three things
 
 1. Anything that went wrong or felt stupid. Especially if a step was more work than it looked.
 2. How the scale check in A1 came out.
 3. Whether the printer produced anything visibly rough on the 0.3 mm sweep sheet, which is the one most likely to be past what it can do.
+4. **How the print screen behaved.** It had never been used by a person before this session.
+
+**One thing that is different from last time.** As of 15 September the whole path runs as a single command, `grouplab analyze`, so a scan can go in and a group size can come out the same day. You are no longer waiting on integration work before your paper turns into a number.
 
 ---
 
