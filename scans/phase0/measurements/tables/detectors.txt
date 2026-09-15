@@ -1,6 +1,6 @@
 | Image | Detector | Markers | Residual RMS / max (in) | Centroid mean / worst (in) | Edge fit mean / worst (in) |
 |---|---|---|---|---|---|
-| `gl-cf25-ltr-1-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00217 / 0.00504 | 0.00225 / 0.00397 | 0.00126 / 0.00254 |
+| `gl-cf25-ltr-1-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00217 / 0.00507 | 0.00223 / 0.00393 | 0.00129 / 0.00251 |
 | `gl-cf25-ltr-1-600-dpi.png` | libapriltag, as returned | 34/34 | 0.00224 / 0.00442 | 0.00226 / 0.00519 | 0.00099 / 0.00196 |
 | `gl-cf25-ltr-1-600-dpi.png` | libapriltag, minus half a pixel | 34/34 | 0.00224 / 0.00442 | 0.00230 / 0.00412 | 0.00135 / 0.00259 |
 | `gl-cf25-ltr-2-600-dpi.png` | OpenCV, shipped settings | 34/34 | 0.00219 / 0.00561 | 0.00217 / 0.00431 | 0.00145 / 0.00316 |

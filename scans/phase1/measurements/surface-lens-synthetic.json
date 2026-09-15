@@ -20667,8 +20667,8 @@
       "surfaceSighterIn": 1.6027063856447634,
       "wholeSheetWorstIn": 0.0845460676683404,
       "f": "NaN",
-      "preferSurface": true,
-      "selectedWorstIn": 194.8515285646946,
+      "preferSurface": false,
+      "selectedWorstIn": 2.247572156479896,
       "twistCornerIn": 0.00027095161976243496,
       "twistF": 1.1345453643350365,
       "twistExplained": 0.04341171229568486

@@ -4,6 +4,7 @@
 **Brief** `docs/PHASE0-SPIKE-BRIEF.md`
 **Reproduce** every table with `grouplab spike sheets|photos|markers|refinement|threshold|scale|field|detectors`, and any single image with `grouplab measure <image> <definition> -v 3`
 **Raw rows** each of those commands also writes the per-bull, per-corner and per-transform values behind its table to `scans/phase0/measurements/<command>.json` (section 6)
+**Amended** 15 September 2026, `docs/NOTES-FROM-PLANNING.md` entry 52: the markers are now sorted by identifier before use, and every table and figure here that a `grouplab spike` command prints is regenerated with them. No verdict changed. What moved, and why the movement measures how unstable registration is on these frames rather than an improvement, is in `docs/PHASE1-RESULTS.md` "Entry 52"
 
 ---
 
@@ -14,8 +15,8 @@
 | Conformance test 43, unchanged | Synthetic raster of the PDF | 0.001 in worst bull | **Pass** on every page of every built-in sheet |
 | Paper gate | 600 DPI scan of each of the ten printed sheets | 0.005 in worst bull | **Pass, ten of ten.** Worst 0.00325 in, tile 3 |
 | Photograph gate, flat, Phase 0 | `main_flat1-3`: sheet 3 lying flat, main camera | 0.005 in worst bull | **Fail, three of three.** Worst 0.00661, 0.01016 and 0.01183 in. With every marker decoded, every scoring bull passes and only the sighter S1 fails, on the geometry section 4.4 fixes; the other two frames lose far-edge markers to defocus. Section 3b |
-| Photograph gate, mounted, Phase 1 | The seven usable frames of sheet 3 hanging from a pin | 0.005 in worst bull | **Fail, seven of seven, as DESIGN.md section 21 [r5] expects** until a surface model exists. Worst 0.048 to 0.114 in. Section 3a; `telephoto1` and `telephoto3` overflow the frame and are excluded |
-| Print-scale detection | `gl-cf25-ltr-96.2-*` against `gl-cf25-ltr-1-*` | Ratio 0.962 within 0.001 | **Pass** at both resolutions: 0.96197 at 600 DPI and 0.96201 at 300, by area |
+| Photograph gate, mounted, Phase 1 | The seven usable frames of sheet 3 hanging from a pin | 0.005 in worst bull | **Fail, seven of seven, as DESIGN.md section 21 [r5] expects** until a surface model exists. Worst 0.052 to 0.114 in. Section 3a; `telephoto1` and `telephoto3` overflow the frame and are excluded |
+| Print-scale detection | `gl-cf25-ltr-96.2-*` against `gl-cf25-ltr-1-*` | Ratio 0.962 within 0.001 | **Pass** at both resolutions: 0.96195 at 600 DPI and 0.96201 at 300, by area |
 
 The registration residual over marker corners is reported, not gated, per DESIGN.md section 21.
 
@@ -25,27 +26,27 @@ The shipped pipeline: homography, and the edge-fit bull locator. The centroid co
 
 | Scan | DPI | Markers | Residual RMS / max | Bull mean / worst, edge fit | Paper gate | Bull mean / worst, centroid |
 |---|---|---|---|---|---|---|
-| `gl-cf25-ltr-1` | 600 | 34/34 | 0.00217 / 0.00504 | 0.00126 / 0.00254 | pass | 0.00225 / 0.00397 |
+| `gl-cf25-ltr-1` | 600 | 34/34 | 0.00217 / 0.00507 | 0.00129 / 0.00251 | pass | 0.00223 / 0.00393 |
 | `gl-cf25-ltr-2` | 600 | 34/34 | 0.00219 / 0.00561 | 0.00145 / 0.00316 | pass | 0.00217 / 0.00431 |
 | `gl-cf25-ltr-3` | 600 | 34/34 | 0.00211 / 0.00447 | 0.00125 / 0.00290 | pass | 0.00212 / 0.00425 |
-| `gl-cf25-ltr-96.2` | 600 | 34/34 | 0.00224 / 0.00510 | 0.00151 / 0.00234 | pass | 0.00168 / 0.00397 |
-| `gl-cf25-ltr-d-blank` | 600 | 34/34 | 0.00259 / 0.00730 | 0.00121 / 0.00227 | pass | 0.00239 / 0.00521 |
-| `gl-cf25-ltr-d-filled` | 600 | 34/34 | 0.00265 / 0.00722 | 0.00141 / 0.00247 | pass | 0.00217 / 0.00459 |
+| `gl-cf25-ltr-96.2` | 600 | 34/34 | 0.00225 / 0.00502 | 0.00156 / 0.00340 | pass | 0.00174 / 0.00391 |
+| `gl-cf25-ltr-d-blank` | 600 | 34/34 | 0.00259 / 0.00719 | 0.00119 / 0.00219 | pass | 0.00237 / 0.00519 |
+| `gl-cf25-ltr-d-filled` | 600 | 34/34 | 0.00275 / 0.00694 | 0.00161 / 0.00251 | pass | 0.00236 / 0.00454 |
 | `gl-lr300-t-1` | 600 | 9/9 | 0.00181 / 0.00505 | 0.00203 / 0.00254 | pass | 0.00162 / 0.00323 |
-| `gl-lr300-t-2` | 600 | 9/9 | 0.00165 / 0.00445 | 0.00193 / 0.00267 | pass | 0.00201 / 0.00343 |
+| `gl-lr300-t-2` | 600 | 9/9 | 0.00166 / 0.00439 | 0.00201 / 0.00271 | pass | 0.00210 / 0.00349 |
 | `gl-lr300-t-3` | 600 | 9/9 | 0.00145 / 0.00306 | 0.00217 / 0.00325 | pass | 0.00236 / 0.00278 |
 | `gl-lr300-t-4` | 600 | 9/9 | 0.00195 / 0.00424 | 0.00189 / 0.00317 | pass | 0.00260 / 0.00590 |
 | `gl-cf25-ltr-2-rot180` | 600 | 34/34 | 0.00213 / 0.00533 | 0.00140 / 0.00268 | not gated | 0.00308 / 0.00658 |
 | `gl-cf25-ltr-1` | 300 | 34/34 | 0.00189 / 0.00419 | 0.00126 / 0.00250 | not gated | 0.00280 / 0.00495 |
-| `gl-cf25-ltr-2` | 300 | 34/34 | 0.00194 / 0.00428 | 0.00135 / 0.00276 | not gated | 0.00219 / 0.00514 |
-| `gl-cf25-ltr-3` | 300 | 34/34 | 0.00194 / 0.00441 | 0.00131 / 0.00295 | not gated | 0.00232 / 0.00609 |
+| `gl-cf25-ltr-2` | 300 | 34/34 | 0.00193 / 0.00429 | 0.00136 / 0.00289 | not gated | 0.00219 / 0.00511 |
+| `gl-cf25-ltr-3` | 300 | 34/34 | 0.00193 / 0.00432 | 0.00131 / 0.00312 | not gated | 0.00234 / 0.00616 |
 | `gl-cf25-ltr-96.2` | 300 | 34/34 | 0.00175 / 0.00392 | 0.00141 / 0.00243 | not gated | 0.00209 / 0.00432 |
-| `gl-cf25-ltr-d-blank` | 300 | 34/34 | 0.00206 / 0.00442 | 0.00131 / 0.00220 | not gated | 0.00303 / 0.00492 |
-| `gl-cf25-ltr-d-filled` | 300 | 34/34 | 0.00246 / 0.00570 | 0.00147 / 0.00227 | not gated | 0.00269 / 0.00521 |
+| `gl-cf25-ltr-d-blank` | 300 | 34/34 | 0.00208 / 0.00449 | 0.00133 / 0.00224 | not gated | 0.00306 / 0.00498 |
+| `gl-cf25-ltr-d-filled` | 300 | 34/34 | 0.00246 / 0.00577 | 0.00145 / 0.00228 | not gated | 0.00268 / 0.00514 |
 | `gl-lr300-t-1` | 300 | 9/9 | 0.00178 / 0.00369 | 0.00211 / 0.00311 | not gated | 0.00320 / 0.00498 |
 | `gl-lr300-t-2` | 300 | 9/9 | 0.00189 / 0.00433 | 0.00227 / 0.00279 | not gated | 0.00286 / 0.00432 |
 | `gl-lr300-t-3` | 300 | 9/9 | 0.00180 / 0.00352 | 0.00244 / 0.00358 | not gated | 0.00352 / 0.00555 |
-| `gl-lr300-t-4` | 300 | 9/9 | 0.00189 / 0.00380 | 0.00224 / 0.00316 | not gated | 0.00231 / 0.00483 |
+| `gl-lr300-t-4` | 300 | 9/9 | 0.00190 / 0.00379 | 0.00219 / 0.00312 | not gated | 0.00229 / 0.00488 |
 
 Every tile is identified from its markers alone, and each matches its file name. The ink spread the edge fit solves for is 0.022 to 0.025 mm per edge at 600 DPI on every scan, and 0.005 to 0.012 mm at 300.
 
@@ -55,7 +56,7 @@ All four frames are the ultrawide lens, 2.20 mm at f/2.2 (notes entry 6). The sh
 
 | Photograph | Markers | Residual RMS / max | Homography alone, RMS | Lens k1 / k2 | Distortion at the frame edge | Bull mean, edge fit | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Photograph gate |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `20260913_130543` | 34/34 | 0.00329 / 0.00920 | 0.00362 | +0.0097 / -0.0236 | 106 px = 1.029 in | 0.00231 | 0.00569 at 15 | 2 of 25 | 0.00383 at S3 | 0 of 3 | fail |
+| `20260913_130543` | 34/34 | 0.00329 / 0.00920 | 0.00357 | +0.0097 / -0.0236 | 106 px = 1.029 in | 0.00231 | 0.00569 at 15 | 2 of 25 | 0.00383 at S3 | 0 of 3 | fail |
 | `20260913_130550` | 34/34 | 0.00331 / 0.00883 | 0.00391 | -0.0020 / -0.0043 | 34 px = 0.263 in | 0.00252 | 0.00678 at 15 | 1 of 25 | 0.00876 at S3 | 1 of 3 | fail |
 | `20260913_130554` | 34/34 | 0.00370 / 0.00942 | 0.00387 | +0.0049 / -0.0100 | 42 px = 0.370 in | 0.00309 | 0.00597 at 11 | 3 of 25 | 0.01083 at S3 | 3 of 3 | fail |
 | `20260913_130559` | 34/34 | 0.00248 / 0.00560 | 0.00297 | +0.0034 / -0.0091 | 42 px = 0.171 in | 0.00198 | 0.00338 at 15 | 0 of 25 | 0.00922 at S3 | 2 of 3 | fail |
@@ -83,31 +84,31 @@ Notes entry 6: nine frames of sheet 3, three per lens, to separate the lens, fla
 
 | Lens | Photograph | Markers | Corners kept | Residual RMS, kept / all corners | Homography alone, RMS | Bull mean | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Photograph gate |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Ultrawide, 2.20 mm f/2.2 | `ultrawide1` | 34/34 | 66 of 136 | 0.00432 / 0.02331 | 0.01829 | 0.01212 | 0.03301 at 21 | 13 of 25 | 0.06983 at S1 | 3 of 3 | fail |
-| | `ultrawide2` | 34/34 | 54 of 136 | 0.00559 / 0.03282 | 0.01788 | 0.01963 | 0.06983 at 5 | 20 of 25 | 0.08732 at S1 | 3 of 3 | fail |
-| | `ultrawide3` | 32/34 | 42 of 128 | 0.00610 / 0.06022 | 0.01913 | 0.01944 | 0.09123 at 21 | 21 of 25 | 0.07995 at S2 | 3 of 3 | fail |
-| Main, 6.25 mm f/1.7 | `main1` | 34/34 | 90 of 136 | 0.00474 / 0.01421 | 0.01609 | 0.00836 | 0.01532 at 21 | 8 of 25 | 0.04841 at S1 | 3 of 3 | fail |
-| | `main2` | 26/34 | 25 of 104 | 0.00353 / 0.05684 | 0.01966 | 0.01664 | 0.04350 at 10 | 21 of 25 | 0.06231 at S1 | 3 of 3 | fail |
-| | `main3` | 27/34 | 58 of 108 | 0.00535 / 0.02374 | 0.01636 | 0.01881 | 0.06540 at 21 | 20 of 25 | 0.11379 at S1 | 3 of 3 | fail |
+| Ultrawide, 2.20 mm f/2.2 | `ultrawide1` | 34/34 | 68 of 136 | 0.00420 / 0.02449 | 0.01843 | 0.01224 | 0.03902 at 21 | 14 of 25 | 0.07450 at S1 | 3 of 3 | fail |
+| | `ultrawide2` | 34/34 | 46 of 136 | 0.00436 / 0.03756 | 0.01972 | 0.01981 | 0.08305 at 5 | 19 of 25 | 0.07438 at S1 | 3 of 3 | fail |
+| | `ultrawide3` | 32/34 | 51 of 128 | 0.00547 / 0.07041 | 0.01721 | 0.02270 | 0.11331 at 21 | 18 of 25 | 0.10643 at S2 | 3 of 3 | fail |
+| Main, 6.25 mm f/1.7 | `main1` | 34/34 | 94 of 136 | 0.00501 / 0.01472 | 0.01428 | 0.00860 | 0.01824 at 21 | 8 of 25 | 0.05183 at S1 | 3 of 3 | fail |
+| | `main2` | 26/34 | 32 of 104 | 0.00494 / 0.05665 | 0.02033 | 0.01980 | 0.08900 at 5 | 22 of 25 | 0.06950 at S1 | 3 of 3 | fail |
+| | `main3` | 27/34 | 58 of 108 | 0.00535 / 0.02374 | 0.01571 | 0.01881 | 0.06540 at 21 | 20 of 25 | 0.11379 at S1 | 3 of 3 | fail |
 | Telephoto, 7.00 mm f/2.4 | `telephoto1` | 16/34 | | | | | | | | | excluded: the sheet overflows the frame |
-| | `telephoto2` | 33/34 | 38 of 132 | 0.00622 / 0.03080 | 0.02003 | 0.01955 | 0.04584 at 21 | 21 of 25 | 0.09626 at S1 | 3 of 3 | fail |
+| | `telephoto2` | 33/34 | 38 of 132 | 0.00622 / 0.03080 | 0.02041 | 0.01955 | 0.04584 at 21 | 21 of 25 | 0.09626 at S1 | 3 of 3 | fail |
 | | `telephoto3` | 4/34 | | | | | | | | | excluded: the sheet overflows the frame |
 
 The table frames of section 3 keep 135 or 136 corners of 136, with at most 0.0038 in RMS over all of them.
 
-**The gate does not track focal length.** The worst bull is 0.070 to 0.091 in on the ultrawide, 0.048 to 0.114 on the main camera and 0.096 on the telephoto. The telephoto, the longest lens and the one whose distortion should be smallest, is no better than the ultrawide.
+**The gate does not track focal length.** The worst bull is 0.075 to 0.113 in on the ultrawide, 0.052 to 0.114 on the main camera and 0.096 on the telephoto. The telephoto, the longest lens and the one whose distortion should be smallest, is no better than the ultrawide.
 
 **These frames are not of a flat sheet.** In every frame the sheet hangs from a single pin at the top centre and its edges are visibly curved; nothing holds its lower half to the wall. The data say the same: no single plane-plus-lens model fits the corners. The misfit grows towards the free bottom edge: the two lowest marker rows, y = 2200 and 2300 dmm, sit 0.026 to 0.138 in RMS from the fit on every frame, where the table frames are 0.0025 to 0.0033 in at the same rows. `telephoto2`, on the longest lens, needs 0.020 in RMS from a homography alone.
 
 **So the set cannot answer the three questions entry 6 set it.**
 
 1. **Lens.** Every lens fails by 0.05 to 0.11 in, the size of the surface misfit, which hides a lens effect the size of section 3's, 0.004 to 0.011 in. What the set shows is that focal length does not rescue a curved sheet.
-2. **Flatness.** The paired comparison runs the other way from the one intended: the table frames are the flatter set, and `ultrawide1-3` are 6 to 16 times worse by worst bull than `20260913_1305*` with the same lens.
-3. **Sighter geometry.** Scoring bulls fail on every frame, 8 to 21 of 25, so the sighters cannot be isolated. A sighter is still the worst bull on six of the seven frames.
+2. **Flatness.** The paired comparison runs the other way from the one intended: the table frames are the flatter set, and `ultrawide1-3` are 7 to 20 times worse by worst bull than `20260913_1305*` with the same lens.
+3. **Sighter geometry.** Scoring bulls fail on every frame, 8 to 22 of 25, so the sighters cannot be isolated. A sighter is still the worst bull on four of the seven frames.
 
 **Detection on these frames.** The pipeline matches 34, 26 and 27 markers on `main1-3`, 34, 34 and 32 on `ultrawide1-3`, and 16, 33 and 4 on `telephoto1-3`. Entry 6's scratch counts differ on seven of the nine. `main2` loses markers at the far edge of the sheet, which is visibly out of focus at f/1.7. The canonical-cell change of section 4.1 was measured on these frames and on all 21 scans before it shipped.
 
-Notes entry 8 answers question 5: the protocol said "pin or tape", which is not flat, and `docs/PHASE0-PRINT-PROTOCOL.md` section 7 now asks for all four edges restrained. Two frames of a flat sheet are the one open item of the spike. **The wall set stays committed as the baseline a Phase 1 registration of a curved sheet has to beat** (section 4.5): a realistic curvature, under the shipped global registration, worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate, and 0.014 to 0.060 in corner RMS over all corners, every row in `scans/phase0/measurements/photos.json`.
+Notes entry 8 answers question 5: the protocol said "pin or tape", which is not flat, and `docs/PHASE0-PRINT-PROTOCOL.md` section 7 now asks for all four edges restrained. Two frames of a flat sheet are the one open item of the spike. **The wall set stays committed as the baseline a Phase 1 registration of a curved sheet has to beat** (section 4.5): a realistic curvature, under the shipped global registration, worst scoring bull 0.018 to 0.113 in, 8 to 22 of 25 scoring bulls over the gate, and 0.015 to 0.070 in corner RMS over all corners, every row in `scans/phase0/measurements/photos.json`.
 
 ## 3b. The flat photographs of sheet 3: Phase 0's photograph gate
 
@@ -115,11 +116,11 @@ Notes entry 10: `main_flat1-3`, sheet 3 lying flat, the main camera at 6.25 mm f
 
 | Photograph | Keystone (notes entry 10) | Markers | Corners kept | Residual RMS, kept / all corners | Homography alone, RMS | Lens k1 / k2 | Bull mean | Worst scoring bull | Scoring bulls over the gate | Worst sighter | Sighters over the gate | Flat gate |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `main_flat1` | 0.997, square on | 34/34 | 136 of 136 | 0.00270 / 0.00270 | 0.00729 | -0.0512 / +0.0659 | 0.00187 | 0.00343 at 21 | **0 of 25** | 0.00661 at S1 | 1 of 3 | fail |
+| `main_flat1` | 0.997, square on | 34/34 | 136 of 136 | 0.00270 / 0.00270 | 0.00718 | -0.0512 / +0.0659 | 0.00187 | 0.00343 at 21 | **0 of 25** | 0.00661 at S1 | 1 of 3 | fail |
 | `main_flat2` | 0.926 | 25/34 | 100 of 100 | 0.00315 / 0.00315 | 0.00587 | -0.0436 / +0.0531 | 0.00270 | 0.00566 at 13 | 2 of 25 | 0.01016 at S1 | 2 of 3 | fail |
 | `main_flat3` | 0.802 | 23/34 | 91 of 92 | 0.00395 / 0.00424 | 0.01107 | -0.0721 / +0.1058 | 0.00392 | 0.01183 at 1 | 6 of 25 | 0.00496 at S1 | 0 of 3 | fail |
 
-**These frames are flat.** The fit keeps every corner, or all but one, and the residual over all corners equals the residual over those kept, where the pinned frames keep 25 to 90 of 104 to 136.
+**These frames are flat.** The fit keeps every corner, or all but one, and the residual over all corners equals the residual over those kept, where the pinned frames keep 32 to 94 of 104 to 136.
 
 **With every marker decoded, the scoring bulls pass and only a sighter fails.** On `main_flat1` all 25 scoring bulls are inside the gate, worst 0.00343 in, and S1, at 0.00661 in, is the only bull over it. S1 lies outside the marker lattice, on the geometry that section 4.4 identifies and the deferred commit fixes. This is the case entry 6's third question asked for: a flat sheet, a well-behaved lens, and only a sighter failing.
 
@@ -137,7 +138,7 @@ Notes entry 10: `main_flat1-3`, sheet 3 lying flat, the main camera at 6.25 mm f
 
 **The lens is modelled and is not the limit.** The main camera's fitted distortion is consistent across frames, k1 -0.044 to -0.073 and k2 +0.053 to +0.106 on the flat frames and `main1`, and it is real: a homography alone leaves 0.0059 to 0.0111 in RMS, and the lens term brings it to 0.0027 to 0.0042 over all corners. `main_flat3`'s 4.9 in of distortion at the frame edge is the polynomial extrapolated past the markers into an empty half of the frame, not a measurement.
 
-**Entry 6's three questions, answered.** Lens: not the limit on a flat sheet, since the frame with every marker passes every scoring bull. Flatness: the dominant cause, an order of magnitude, 0.048 to 0.114 in pinned against 0.0066 to 0.0118 in flat with the same sheet and lens. Sighter geometry: confirmed on a flat sheet rather than inferred.
+**Entry 6's three questions, answered.** Lens: not the limit on a flat sheet, since the frame with every marker passes every scoring bull. Flatness: the dominant cause, an order of magnitude, 0.052 to 0.114 in pinned against 0.0066 to 0.0118 in flat with the same sheet and lens. Sighter geometry: confirmed on a flat sheet rather than inferred.
 
 ## 4. Findings
 
@@ -192,7 +193,7 @@ Notes entries 8 and 10, and DESIGN.md section 21 [r5]. A target stapled to a boa
 
 These were measured with a scratch diagnostic, before the detection changes of section 4.1, and Phase 1 re-measures them in the pipeline. **Its limit is the sighters**: they stayed at 0.008 to 0.013 in whichever markers were chosen, because no nearby marker brackets them. A local registration cannot help a bull outside the lattice, which is section 4.4 reached from a third direction; a developable fit constrains the surface beyond the markers, but a sighter outside the lattice is still extrapolated.
 
-**The benchmark is the nine pinned frames**, seven measured and two excluded as overflowing the frame, and the figures to beat are section 3a's: worst scoring bull 0.015 to 0.091 in, 8 to 21 of 25 scoring bulls over the gate, 0.014 to 0.060 in corner RMS over all corners. The flat frames of section 3b are the control a surface fit must not make worse.
+**The benchmark is the nine pinned frames**, seven measured and two excluded as overflowing the frame, and the figures to beat are section 3a's: worst scoring bull 0.018 to 0.113 in, 8 to 22 of 25 scoring bulls over the gate, 0.015 to 0.070 in corner RMS over all corners. Before entry 52 sorted the markers they read 0.015 to 0.091 in, 8 to 21 and 0.014 to 0.060 in. The frames, the markers and the corners are the same; only their order changed, so the difference measures how unstable registration is on these frames, not a harder benchmark. The flat frames of section 3b are the control a surface fit must not make worse.
 
 ## 5. The measurements of the brief, section 6
 
@@ -202,23 +203,23 @@ Random subsets of the matched markers, 40 per count, refitted by homography; bul
 
 | Sheet | Markers used | Residual RMS, median / p90 | Worst bull, median / p90 | Mean bull, median |
 |---|---|---|---|---|
-| sheet 1 | 4 | 0.00412 / 0.01787 | 0.00898 / 0.03859 | 0.00320 |
-| sheet 1 | 6 | 0.00292 / 0.00429 | 0.00545 / 0.00857 | 0.00203 |
-| sheet 1 | **9** | 0.00244 / 0.00264 | **0.00333 / 0.00487** | 0.00154 |
-| sheet 1 | 16 | 0.00228 / 0.00240 | 0.00286 / 0.00339 | 0.00137 |
-| sheet 1 | 34 | 0.00217 | 0.00254 | 0.00126 |
-| sheet 2 | 4 | 0.00590 / 0.02359 | 0.01316 / 0.05078 | 0.00393 |
-| sheet 2 | 6 | 0.00318 / 0.00462 | 0.00640 / 0.00969 | 0.00235 |
-| sheet 2 | **9** | 0.00245 / 0.00302 | **0.00400 / 0.00568** | 0.00158 |
-| sheet 2 | 16 | 0.00232 / 0.00249 | 0.00351 / 0.00437 | 0.00155 |
+| sheet 1 | 4 | 0.00509 / 0.03502 | 0.01140 / 0.07296 | 0.00336 |
+| sheet 1 | 6 | 0.00283 / 0.00649 | 0.00531 / 0.01383 | 0.00216 |
+| sheet 1 | **9** | 0.00240 / 0.00291 | **0.00368 / 0.00652** | 0.00161 |
+| sheet 1 | 16 | 0.00225 / 0.00232 | 0.00292 / 0.00351 | 0.00134 |
+| sheet 1 | 34 | 0.00217 | 0.00251 | 0.00129 |
+| sheet 2 | 4 | 0.00707 / 0.01677 | 0.01665 / 0.03385 | 0.00511 |
+| sheet 2 | 6 | 0.00283 / 0.00438 | 0.00507 / 0.00840 | 0.00198 |
+| sheet 2 | **9** | 0.00248 / 0.00320 | **0.00401 / 0.00641** | 0.00152 |
+| sheet 2 | 16 | 0.00230 / 0.00245 | 0.00342 / 0.00478 | 0.00154 |
 | sheet 2 | 34 | 0.00219 | 0.00316 | 0.00145 |
-| sheet 3 | 4 | 0.00605 / 0.01639 | 0.01295 / 0.03924 | 0.00418 |
-| sheet 3 | 6 | 0.00266 / 0.00391 | 0.00438 / 0.00743 | 0.00181 |
-| sheet 3 | **9** | 0.00241 / 0.00304 | **0.00370 / 0.00575** | 0.00145 |
-| sheet 3 | 16 | 0.00220 / 0.00225 | 0.00302 / 0.00401 | 0.00134 |
+| sheet 3 | 4 | 0.00418 / 0.01453 | 0.00782 / 0.03104 | 0.00297 |
+| sheet 3 | 6 | 0.00253 / 0.00399 | 0.00418 / 0.00880 | 0.00173 |
+| sheet 3 | **9** | 0.00235 / 0.00272 | **0.00310 / 0.00411** | 0.00142 |
+| sheet 3 | 16 | 0.00220 / 0.00231 | 0.00303 / 0.00413 | 0.00128 |
 | sheet 3 | 34 | 0.00211 | 0.00290 | 0.00125 |
 
-**Nine markers, the real tiles.** The four GL-LR300-T tiles register from their nine printed markers at 0.00254 to 0.00325 in worst bull at 600 DPI and 0.00279 to 0.00358 at 300, every one inside the paper gate. Nine well-spread markers do better than nine random ones, whose 90th percentile reaches 0.0049 to 0.0057. Four markers are not enough; beyond sixteen the gain is small.
+**Nine markers, the real tiles.** The four GL-LR300-T tiles register from their nine printed markers at 0.00254 to 0.00325 in worst bull at 600 DPI and 0.00279 to 0.00358 at 300, every one inside the paper gate. Nine well-spread markers do better than nine random ones, whose 90th percentile reaches 0.0041 to 0.0065. Four markers are not enough; beyond sixteen the gain is small.
 
 ### Measurement 2: corner refinement
 
@@ -226,42 +227,42 @@ Paper, sheets 1 to 3; residual and bull mean are the mean over the sheets, the w
 
 | DPI | Refinement | Residual RMS | Residual max | Bull mean | Worst bull |
 |---|---|---|---|---|---|
-| 600 | none | 0.00255 | 0.00633 | 0.00133 | 0.00279 |
-| 600 | contour | 0.00194 | 0.00406 | 0.00137 | 0.00336 |
-| 600 | subpix, shipped | 0.00216 | 0.00504 | 0.00132 | 0.00316 |
-| 600 | subpix, 0.25 module | 0.00254 | 0.00592 | 0.00128 | 0.00316 |
-| 600 | subpix, 0.5 module | 0.00202 | 0.00445 | 0.00131 | 0.00316 |
+| 600 | none | 0.00255 | 0.00643 | 0.00131 | 0.00291 |
+| 600 | contour | 0.00194 | 0.00393 | 0.00134 | 0.00339 |
+| 600 | subpix, shipped | 0.00216 | 0.00505 | 0.00133 | 0.00316 |
+| 600 | subpix, 0.25 module | 0.00252 | 0.00588 | 0.00129 | 0.00321 |
+| 600 | subpix, 0.5 module | 0.00202 | 0.00442 | 0.00132 | 0.00316 |
 | 600 | subpix, 1 module | 0.00169 | 0.00407 | 0.00126 | 0.00335 |
-| 600 | subpix, 1.5 modules | 0.00415 | 0.00922 | 0.00132 | 0.00328 |
-| 600 | subpix, 2 modules | 0.00642 | 0.00988 | 0.00464 | 0.01056 |
-| 300 | none | 0.00287 | 0.00729 | 0.00128 | 0.00295 |
-| 300 | contour | 0.00176 | 0.00414 | 0.00140 | 0.00357 |
-| 300 | subpix, shipped | 0.00192 | 0.00429 | 0.00131 | 0.00295 |
-| 300 | subpix, 0.25 module | 0.00329 | 0.00836 | 0.00135 | 0.00321 |
-| 300 | subpix, 0.5 module | 0.00214 | 0.00485 | 0.00135 | 0.00328 |
-| 300 | subpix, 1 module | 0.00186 | 0.00418 | 0.00130 | 0.00288 |
-| 300 | subpix, 1.5 modules | 0.00400 | 0.00853 | 0.00144 | 0.00312 |
-| 300 | subpix, 2 modules | 0.00634 | 0.00991 | 0.00466 | 0.01343 |
+| 600 | subpix, 1.5 modules | 0.00416 | 0.00964 | 0.00168 | 0.00517 |
+| 600 | subpix, 2 modules | 0.00637 | 0.00991 | 0.00362 | 0.01057 |
+| 300 | none | 0.00284 | 0.00728 | 0.00135 | 0.00340 |
+| 300 | contour | 0.00177 | 0.00414 | 0.00140 | 0.00351 |
+| 300 | subpix, shipped | 0.00192 | 0.00427 | 0.00131 | 0.00312 |
+| 300 | subpix, 0.25 module | 0.00331 | 0.00873 | 0.00140 | 0.00428 |
+| 300 | subpix, 0.5 module | 0.00214 | 0.00488 | 0.00135 | 0.00322 |
+| 300 | subpix, 1 module | 0.00186 | 0.00416 | 0.00130 | 0.00308 |
+| 300 | subpix, 1.5 modules | 0.00399 | 0.00933 | 0.00147 | 0.00294 |
+| 300 | subpix, 2 modules | 0.00651 | 0.00987 | 0.00429 | 0.00986 |
 
 Synthetic, where truth is known: corner error against truth in pixels, with its radial component about the marker centre.
 
 | DPI | Refinement | Corner error RMS (px) | Radial bias (px, + outward) | Worst bull (in) |
 |---|---|---|---|---|
-| 600 | none | 0.632 | -0.334 | 0.00030 |
+| 600 | none | 0.632 | -0.334 | 0.00036 |
 | 600 | contour | 0.583 | -0.434 | 0.00019 |
 | 600 | subpix, shipped | 0.159 | -0.136 | 0.00012 |
 | 600 | subpix, 0.5 module | 0.142 | -0.118 | 0.00012 |
 | 600 | subpix, 1 module | 0.247 | -0.175 | 0.00015 |
-| 600 | subpix, 1.5 modules | 2.327 | -1.669 | 0.00136 |
+| 600 | subpix, 1.5 modules | 2.327 | -1.669 | 0.00204 |
 | 300 | none | 0.641 | -0.335 | 0.00016 |
-| 300 | contour | 0.610 | -0.408 | 0.00024 |
+| 300 | contour | 0.610 | -0.408 | 0.00069 |
 | 300 | subpix, shipped | 0.163 | -0.120 | 0.00028 |
 | 300 | subpix, 0.25 module | 0.795 | -0.465 | 0.00157 |
 | 300 | subpix, 0.5 module | 0.215 | -0.198 | 0.00026 |
 | 300 | subpix, 1 module | 0.226 | -0.179 | 0.00034 |
-| 300 | subpix, 1.5 modules | 1.231 | -0.908 | 0.00118 |
+| 300 | subpix, 1.5 modules | 1.231 | -0.908 | 0.00225 |
 
-**Which regime the difference lives in.** Corner accuracy depends on the window in both regimes the same way: best between about 0.4 and 1 module, and broken from 1.5 modules, where the window reaches the next module's edge. **The bull does not.** On paper the worst bull stays at 0.00279 to 0.00336 in at 600 DPI for every setting short of 2 modules, refinement off included, so the preliminary measurement's "the window makes no difference" is true of what the gate measures and false of the residual. Its flat residual across 3 to 24 px is what recent OpenCV produces when only the pixel window is set, because `relativeCornerRefinmentWinSize` then caps the effective window at 0.3 of a module, about 3.5 px at 600 DPI; that is the likely explanation rather than a confirmed one, since the preliminary run's OpenCV version is not recorded. The Phase 0a synthetic result, one module better than 0.3, is the corner regime; the paper result is the bull regime. **The inward corner bias is the detector's**: it is present on the synthetic raster, whose edges are exact, at -0.12 to -0.20 px under subpixel refinement. The shipped window is kept.
+**Which regime the difference lives in.** Corner accuracy depends on the window in both regimes the same way: best between about 0.4 and 1 module, and broken from 1.5 modules, where the window reaches the next module's edge. **The bull does not.** On paper the worst bull stays at 0.00291 to 0.00339 in at 600 DPI for every setting short of 1.5 modules, refinement off included, and at 1.5 modules reaches 0.00517 in on one sheet, over the gate, so the preliminary measurement's "the window makes no difference" is true of what the gate measures and false of the residual. Its flat residual across 3 to 24 px is what recent OpenCV produces when only the pixel window is set, because `relativeCornerRefinmentWinSize` then caps the effective window at 0.3 of a module, about 3.5 px at 600 DPI; that is the likely explanation rather than a confirmed one, since the preliminary run's OpenCV version is not recorded. The Phase 0a synthetic result, one module better than 0.3, is the corner regime; the paper result is the bull regime. **The inward corner bias is the detector's**: it is present on the synthetic raster, whose edges are exact, at -0.12 to -0.20 px under subpixel refinement. The shipped window is kept.
 
 ### Measurement 3: adaptive threshold window and downsampling
 
@@ -270,17 +271,17 @@ The 600 DPI scans of all ten sheets, 240 markers, with the edge-fit locator; the
 | Threshold window max | Downsample | Markers matched | Sheets with every marker | Detection time, mean (ms) | Residual RMS, mean (in) | Worst bull, any sheet (in) | Sheets inside the paper gate |
 |---|---|---|---|---|---|---|---|
 | 7 px | none | 0 of 240 | 0 of 10 | 59 | | | 0 of 10 |
-| 15 px | none | 225 of 240 | 1 of 10 | 59 | 0.00201 | 0.00364 | 10 of 10 |
-| 23 px, OpenCV's default | none | 238 of 240 | 8 of 10 | 60 | 0.00207 | 0.00458 | 10 of 10 |
-| 35 px | none | 238 of 240 | 8 of 10 | 60 | 0.00209 | 0.00325 | 10 of 10 |
-| 49 px, half the marker side | none | 239 of 240 | 9 of 10 | 63 | 0.00210 | 0.00397 | 10 of 10 |
-| 71 px | none | 240 of 240 | 10 of 10 | 64 | 0.00209 | 0.00342 | 10 of 10 |
-| **95 px, the marker side, shipped** | none | **240 of 240** | **10 of 10** | 64 | 0.00208 | 0.00325 | 10 of 10 |
-| the marker side | 2x | 240 of 240 | 10 of 10 | 21 | 0.00177 | 0.00328 | 10 of 10 |
-| the marker side | 3x | 239 of 240 | 9 of 10 | 13 | 0.00169 | 0.00328 | 10 of 10 |
+| 15 px | none | 225 of 240 | 1 of 10 | 59 | 0.00202 | 0.00364 | 10 of 10 |
+| 23 px, OpenCV's default | none | 238 of 240 | 8 of 10 | 60 | 0.00207 | 0.00340 | 10 of 10 |
+| 35 px | none | 238 of 240 | 8 of 10 | 60 | 0.00207 | 0.00340 | 10 of 10 |
+| 49 px, half the marker side | none | 239 of 240 | 9 of 10 | 63 | 0.00209 | 0.00340 | 10 of 10 |
+| 71 px | none | 240 of 240 | 10 of 10 | 64 | 0.00209 | 0.00340 | 10 of 10 |
+| **95 px, the marker side, shipped** | none | **240 of 240** | **10 of 10** | 64 | 0.00209 | 0.00340 | 10 of 10 |
+| the marker side | 2x | 240 of 240 | 10 of 10 | 21 | 0.00178 | 0.00328 | 10 of 10 |
+| the marker side | 3x | 239 of 240 | 9 of 10 | 13 | 0.00167 | 0.00328 | 10 of 10 |
 | the marker side, native 300 DPI scans | none | 240 of 240 | 10 of 10 | 17 | 0.00194 | 0.00358 | 10 of 10 |
 
-**The window should reach the marker's side**, which ships: 71 and 95 px find every marker on every sheet, and OpenCV's default loses two. **Downsampling is not adopted, and it is no longer a detection problem.** Before the canonical-cell change of section 4.1 it lost 8 and 32 of 240 markers; with it, 2x finds all 240 and 3x finds 239, three to five times faster. The worst bull on any sheet differs by 0.00003 in, so the gate cannot choose between them; the corner residual is lower on the downsampled rows, which section 4.3 says is not a reason. Full resolution ships because every other table here was measured at it; 2x is the measured option if detection time ever matters. A native 300 DPI scan detects every marker too. Unchanged rows timed 5 to 25 percent faster than in the previous run, so compare times within one run only.
+**The window should reach the marker's side**, which ships: 71 and 95 px find every marker on every sheet, and OpenCV's default loses two. **Downsampling is not adopted, and it is no longer a detection problem.** Before the canonical-cell change of section 4.1 it lost 8 and 32 of 240 markers; with it, 2x finds all 240 and 3x finds 239, three to five times faster. The worst bull on any sheet differs by 0.00012 in, so the gate cannot choose between them; the corner residual is lower on the downsampled rows, which section 4.3 says is not a reason. Full resolution ships because every other table here was measured at it; 2x is the measured option if detection time ever matters. A native 300 DPI scan detects every marker too. Unchanged rows timed 5 to 25 percent faster than in the previous run, so compare times within one run only.
 
 ### Measurement 4: OpenCV against the AprilTag reference detector
 
@@ -288,7 +289,7 @@ Recorded in `docs/FIDUCIAL-DECISION.md` section 10, where it is measurement 8. R
 
 | Image | OpenCV, shipped | libapriltag, as returned | libapriltag, minus half a pixel |
 |---|---|---|---|
-| `gl-cf25-ltr-1-600` | 0.00126 / 0.00254 | 0.00099 / 0.00196 | 0.00135 / 0.00259 |
+| `gl-cf25-ltr-1-600` | 0.00129 / 0.00251 | 0.00099 / 0.00196 | 0.00135 / 0.00259 |
 | `gl-cf25-ltr-2-600` | 0.00145 / 0.00316 | 0.00106 / 0.00245 | 0.00145 / 0.00331 |
 | `gl-cf25-ltr-3-600` | 0.00125 / 0.00290 | 0.00113 / 0.00245 | 0.00137 / 0.00290 |
 | `gl-cf25-ltr-2-600-rot180` | 0.00140 / 0.00268 | 0.00235 / 0.00350 | 0.00126 / 0.00247 |
@@ -302,7 +303,7 @@ Bull mean / worst per cell. The corner residuals of the two detectors are within
 
 | DPI | Sheet 1 scale x / y / area | 96.2 percent sheet x / y / area | Ratio x / y / area | Within 0.001 of 0.962 |
 |---|---|---|---|---|
-| 600 | 1.00008 / 1.00063 / 1.00036 | 0.96214 / 0.96250 / 0.96232 | 0.96206 / 0.96189 / 0.96197 | yes |
+| 600 | 1.00006 / 1.00062 / 1.00034 | 0.96217 / 0.96237 / 0.96227 | 0.96211 / 0.96178 / 0.96195 | yes |
 | 300 | 1.00012 / 1.00056 / 1.00034 | 0.96216 / 0.96250 / 0.96233 | 0.96205 / 0.96196 / 0.96201 | yes |
 
 The printer's own scale, x 1.0001 and y 1.0006, cancels in the ratio, as `docs/PHASE0-PRINT-PROTOCOL.md` section 5.1 intended.
@@ -314,12 +315,12 @@ Sheets 1 to 3 at 600 DPI. Systematic is the per-bull mean over the three sheets;
 | Locator | Single sheet mean / worst | Systematic mean / worst | Random RMS | Smooth share of systematic, RMS | Systematic after the smooth share, mean / worst |
 |---|---|---|---|---|---|
 | Edge fit, shipped | 0.00132 / 0.00316 | 0.00128 / 0.00268 | 0.00048 | 0.00137 | 0.00039 / 0.00071 |
-| Centroid | 0.00218 / 0.00431 | 0.00201 / 0.00374 | 0.00104 | 0.00150 | 0.00147 / 0.00314 |
+| Centroid | 0.00217 / 0.00431 | 0.00201 / 0.00373 | 0.00103 | 0.00149 | 0.00147 / 0.00314 |
 
 | Locator | Sheet 1 against 2 | 1 against 3 | 2 against 3 | Sheet 1, 600 against 300 DPI | Rotated rescan against sheet 2 | Rotated rescan against the scanner-fixed prediction |
 |---|---|---|---|---|---|---|
 | Edge fit | +0.921 | +0.835 | +0.879 | +0.973 | +0.659 | -0.051 |
-| Centroid | +0.817 | +0.811 | +0.875 | +0.889 | +0.805 | -0.274 |
+| Centroid | +0.824 | +0.812 | +0.875 | +0.890 | +0.805 | -0.274 |
 
 **The field is fixed to the paper under both locators**, as `docs/PHASE0-PRELIM.md` section 5a found. **With the shipped locator the systematic part is 0.0013 in and the random part 0.0005 in**, and **most of the systematic part is smooth**: a quadratic over the page leaves 0.0004 in mean and 0.0007 in worst. A printer whose systematic component were calibrated out would register this sheet to well under a thousandth. Nobody should build that now; this is the size of the prize. The extra error the rotated rescan shows under a centroid, 0.00658 in worst against 0.00431 unrotated, is absent under the edge fit, 0.00268 against 0.00316, so the scanner-fixed component noted in `docs/NOTES-FROM-PLANNING.md` entry 2 belongs to the centroid rather than to the ink.
 
@@ -376,9 +377,9 @@ Notes entry 10 closes Phase 0 on the flat photographs. Against DESIGN.md section
 |---|---|
 | Conformance test 43 | **Pass** |
 | Paper gate | **Pass**, ten of ten, worst 0.00325 in |
-| Print-scale detection | **Pass**, 0.96197 and 0.96201 |
+| Print-scale detection | **Pass**, 0.96195 and 0.96201 |
 | Photograph gate, flat | **Fail**, three of three, worst 0.00661, 0.01016 and 0.01183 in |
-| Photograph gate, mounted | Phase 1's; fails seven of seven, 0.048 to 0.114 in, as expected |
+| Photograph gate, mounted | Phase 1's; fails seven of seven, 0.052 to 0.114 in, as expected |
 
 **The flat gate fails, and every failure has a named cause that the spike did not change.** On the one frame that decoded every marker, the scoring bulls pass and the only failure is a sighter outside the marker lattice. The others add bulls made extrapolated by far-edge markers lost to defocus, and four bulls inside the lattice over the gate by at most 0.0007 in. Whether the flat gate passes on a sheet whose lattice brackets its sighters is **not measured**: that needs the geometry commit of section 4.4 and a print of it, and no paper is being used.
 

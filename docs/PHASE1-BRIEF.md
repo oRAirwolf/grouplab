@@ -89,7 +89,7 @@ Run the scans through it too. The ten printed sheets on a flatbed are as flat as
 
 ### 3.5 What to report
 
-The benchmark and the figures to beat are in `PHASE0-RESULTS.md` sections 3a and 4.5: worst scoring bull 0.015 to 0.091 in across the seven usable pinned frames, 8 to 21 of 25 scoring bulls over the gate, corner RMS 0.014 to 0.060 in over all corners.
+The benchmark and the figures to beat are in `PHASE0-RESULTS.md` sections 3a and 4.5: worst scoring bull 0.018 to 0.113 in across the seven usable pinned frames, 8 to 22 of 25 scoring bulls over the gate, corner RMS 0.015 to 0.070 in over all corners. Those are the figures measured again with the markers sorted (`docs/NOTES-FROM-PLANNING.md` entry 52); first stated as 0.015 to 0.091 in, 8 to 21 and 0.014 to 0.060 in, for the same frames and corners in another order.
 
 Report per frame: recovered ruling angle, bend amplitude in inches of deflection, refined focal length, corners kept and total, residual over kept and over all, bull mean, worst scoring bull, worst sighter, scoring bulls over the gate, and whether it needed a cylinder or something more general. Raw rows as `scans/phase0/measurements/surface.json` under the entry 7 convention. Compare against the whole-sheet homography and against the nearest-marker diagnostic of section 4.5 in the same table, so the three approaches sit side by side.
 

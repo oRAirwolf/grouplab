@@ -110,6 +110,17 @@ public sealed record MarkerRejection(int Id, IReadOnlyList<PointD> Corners, stri
 public sealed record MarkerDetection(IReadOnlyList<DetectedMarker> Markers, IReadOnlyList<MarkerRejection> Rejected, IReadOnlyList<IReadOnlyList<PointD>> Undecoded)
 {
     public int CandidatesNotDecoded => Undecoded.Count;
+
+    /// <summary>
+    /// The same detection in an order that depends only on what was found, NOTES-FROM-PLANNING.md entry 49 section 2: markers and rejections
+    /// by identifier, then by their first corner, and undecoded quads by their first corner. A detector may return its candidates in any
+    /// order, and the macOS runner's did return them in another; the homography's RANSAC samples by position in the list, so an
+    /// order-dependent result could give two answers for one image. Everything that measures takes the detection through here.
+    /// </summary>
+    public MarkerDetection InIdentifierOrder() => new(
+        [.. Markers.OrderBy(m => m.Id).ThenBy(m => m.Corners[0].Y).ThenBy(m => m.Corners[0].X)],
+        [.. Rejected.OrderBy(r => r.Id).ThenBy(r => r.Corners[0].Y).ThenBy(r => r.Corners[0].X)],
+        [.. Undecoded.OrderBy(q => q[0].Y).ThenBy(q => q[0].X)]);
 }
 
 /// <summary>A fitted transform and which correspondences RANSAC kept (DETECTION-PIPELINE.md stage S3).</summary>

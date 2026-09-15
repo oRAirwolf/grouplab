@@ -180,7 +180,7 @@ public static class SheetMeasurer
         double pixelsPerDmm = dpi is { } known
             ? known / 254
             : 0.5 * Math.Max(image.Width, image.Height) / Math.Max(definition.Page.Width, definition.Page.Height);
-        var detection = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm, options));
+        var detection = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm, options)).InIdentifierOrder();
         if (dpi is null)
         {
             double[] sides = [.. detection.Markers.Select(MeanSide).Order()];
@@ -191,7 +191,7 @@ public static class SheetMeasurer
                     string.Create(inv, $"it is the median side of {sides.Length} markers decoded by a first pass sized for {f.MarkerSize * pixelsPerDmm:0.0} px"),
                     "the first pass alone");
                 pixelsPerDmm = side / f.MarkerSize;
-                detection = backend.DetectMarkers(image, DetectionOptions(side, options));
+                detection = backend.DetectMarkers(image, DetectionOptions(side, options)).InIdentifierOrder();
             }
         }
 

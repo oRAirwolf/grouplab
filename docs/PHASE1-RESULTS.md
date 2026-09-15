@@ -39,7 +39,7 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 
 | Module | Marker / quiet zone / footprint (dmm) | Markers | Lattice matches `layout.py` | Identifier | Validator | Test 43 worst bull, 300 / 600 DPI (in) | PDF pages |
 |---|---|---|---|---|---|---|---|
-| 0.3 mm | 24 / 6 / 36 | 44 | yes | `GL-DFA3-H72S-8KKS-A00S` | clean | 0.00016 / 0.00003 | 1 |
+| 0.3 mm | 24 / 6 / 36 | 44 | yes | `GL-DFA3-H72S-8KKS-A00S` | clean | 0.00013 / 0.00003 | 1 |
 | 0.4 mm | 32 / 8 / 48 | 44 | yes | `GL-78H9-DKWN-AHDV-4WAK` | clean | 0.00017 / 0.00008 | 1 |
 | 0.5 mm | 40 / 10 / 60 | 34 | yes | `GL-YCSK-DZZ1-R0VJ-4T5Y` | 3 warnings, test 26f | 0.00026 / 0.00012 | 1 |
 | 0.6 mm | 48 / 12 / 72 | 34 | yes | `GL-683J-3ZR8-60D5-0FGG` | 3 warnings, test 26f | 0.00012 / 0.00004 | 1 |
@@ -62,6 +62,11 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 ## M1. The developable surface fit
 
 **Reproduce:** `grouplab surface synthetic` and `grouplab surface rendered` for the synthetic truth, then `grouplab surface frames --joint` for the real frames as M1.5 to M1.9 fitted them; since M1.11, `grouplab surface frames` fits one frame at a time. Raw rows: `scans/phase1/measurements/surface-synthetic.json` and `surface-rendered.json`, and `scans/phase0/measurements/surface.json`.
+
+**Amended 15 September 2026, `docs/NOTES-FROM-PLANNING.md` entry 52: the markers are now sorted before use.**
+- **Regenerated:** every table below that a command prints today. That is M0's test 43 row, M1.10's real-frame tables from `surface general`, and M1.11's frames-alone and correlation tables from `surface frames`, `surface noise` and `surface correlation`, with the prose that reads them.
+- **Left as measured:** the tables from fits no command reproduces today, in the detector's marker order. They are M1.5's joint fits and its comparison table, M1.7's held lens, M1.8's joint noise run and M1.9's grouped joint fits. Their whole-sheet figures are superseded by `docs/PHASE0-RESULTS.md` section 3a.
+- **What moved, and why it is not an improvement:** "Entry 52" below.
 
 ### M1.1 The model
 
@@ -172,14 +177,14 @@ The paper gate on the ten gated scans, through the orthographic surface. Worst b
 
 | Scan | Markers | Homography | Surface | Deflection (in) | F (critical) | Bend kept | Selected | Paper gate: homography / surface / selected |
 |---|---|---|---|---|---|---|---|---|
-| `gl-cf25-ltr-1-600-dpi.png` | 34/34 | 0.00254 | 0.00394 | 0.064 | -10.6 (6.91) | no | 0.00251 | pass / pass / pass |
+| `gl-cf25-ltr-1-600-dpi.png` | 34/34 | 0.00251 | 0.00394 | 0.064 | -10.6 (6.91) | no | 0.00251 | pass / pass / pass |
 | `gl-cf25-ltr-2-600-dpi.png` | 34/34 | 0.00316 | 0.00372 | 0.173 | -14.0 (6.91) | no | 0.00316 | pass / pass / pass |
 | `gl-cf25-ltr-3-600-dpi.png` | 34/34 | 0.00290 | 0.00406 | 0.015 | -11.9 (6.91) | no | 0.00290 | pass / pass / pass |
-| `gl-cf25-ltr-96.2-600-dpi.png` | 34/34 | 0.00234 | 0.00329 | 0.059 | 1.1 (6.91) | no | 0.00260 | pass / pass / pass |
-| `gl-cf25-ltr-d-blank-600-dpi.png` | 34/34 | 0.00227 | 0.00240 | 0.103 | -4.5 (6.91) | no | 0.00219 | pass / pass / pass |
-| `gl-cf25-ltr-d-filled-600-dpi.png` | 34/34 | 0.00247 | 0.00290 | 0.221 | 11.2 (6.91) | yes | 0.00290 | pass / pass / pass |
+| `gl-cf25-ltr-96.2-600-dpi.png` | 34/34 | 0.00340 | 0.00329 | 0.059 | 1.1 (6.91) | no | 0.00260 | pass / pass / pass |
+| `gl-cf25-ltr-d-blank-600-dpi.png` | 34/34 | 0.00219 | 0.00240 | 0.103 | -4.5 (6.91) | no | 0.00219 | pass / pass / pass |
+| `gl-cf25-ltr-d-filled-600-dpi.png` | 34/34 | 0.00251 | 0.00290 | 0.221 | 11.2 (6.91) | yes | 0.00290 | pass / pass / pass |
 | `gl-lr300-t-1-600-dpi.png` | 9/9 | 0.00254 | 0.01867 | 2.515 | 4.1 (6.91) | no | 0.00254 | pass / fail / pass |
-| `gl-lr300-t-2-600-dpi.png` | 9/9 | 0.00267 | 0.02087 | 2.573 | 2.0 (6.91) | no | 0.00267 | pass / fail / pass |
+| `gl-lr300-t-2-600-dpi.png` | 9/9 | 0.00271 | 0.02087 | 2.573 | 2.0 (6.91) | no | 0.00271 | pass / fail / pass |
 | `gl-lr300-t-3-600-dpi.png` | 9/9 | 0.00325 | 0.01817 | 2.598 | 1.2 (6.91) | no | 0.00319 | pass / fail / pass |
 | `gl-lr300-t-4-600-dpi.png` | 9/9 | 0.00317 | 0.03366 | 1.845 | 1.3 (6.91) | no | 0.00314 | pass / fail / pass |
 
@@ -522,16 +527,16 @@ What the changes did:
 
 | Gate | Photograph | Whole sheet | Cylinder | General | Selected | Scoring bulls over the gate | Gate |
 |---|---|---|---|---|---|---|---|
-| flat | `main_flat1.jpg` | 0.00343 / 0.00661 | 0.00443 / 0.00654 | 0.09489 / 0.00507 | 0.09489 / 0.00507 | 0 / 0 / 16 / 16 | fail / fail / fail / fail |
-| flat | `main_flat2.jpg` | 0.00566 / 0.01016 | 0.01780 / 0.01134 | 0.04167 / 0.02254 | 0.07760 / 0.05044 | 2 / 5 / 25 / 8 | fail / fail / fail / fail |
-| flat | `main_flat3.jpg` | 0.01183 / 0.00496 | 0.02581 / 0.00648 | 0.06219 / 0.05635 | 0.06219 / 0.05635 | 6 / 9 / 21 / 21 | fail / fail / fail / fail |
-| mounted | `main1.jpg` | 0.01532 / 0.04841 | 0.01177 / 0.00620 | 0.03131 / 0.04765 | 0.03131 / 0.04765 | 8 / 8 / 9 / 9 | fail / fail / fail / fail |
-| mounted | `main2.jpg` | 0.04350 / 0.06231 | 0.05971 / 0.01856 | 0.04921 / 0.06129 | 0.04921 / 0.06129 | 21 / 19 / 24 / 24 | fail / fail / fail / fail |
-| mounted | `main3.jpg` | 0.06540 / 0.11379 | 0.04522 / 0.00508 | 0.05439 / 0.01669 | 0.07518 / NaN | 20 / 7 / 23 / 15 | fail / fail / fail / fail |
+| flat | `main_flat1.jpg` | 0.00343 / 0.00661 | 0.00443 / 0.00654 | 0.09425 / 0.00507 | 0.09425 / 0.00507 | 0 / 0 / 16 / 16 | fail / fail / fail / fail |
+| flat | `main_flat2.jpg` | 0.00566 / 0.01016 | 0.01780 / 0.01134 | 0.04278 / 0.02184 | 0.07760 / 0.05044 | 2 / 5 / 25 / 8 | fail / fail / fail / fail |
+| flat | `main_flat3.jpg` | 0.01183 / 0.00496 | 0.02581 / 0.00648 | 0.06230 / 0.05640 | 0.06230 / 0.05640 | 6 / 9 / 21 / 21 | fail / fail / fail / fail |
+| mounted | `main1.jpg` | 0.01824 / 0.05183 | 0.01177 / 0.00620 | 0.02783 / 0.07217 | 0.02783 / 0.07217 | 8 / 8 / 11 / 11 | fail / fail / fail / fail |
+| mounted | `main2.jpg` | 0.08900 / 0.06950 | 0.05971 / 0.01856 | 0.05537 / 0.07244 | 0.05537 / 0.07244 | 22 / 19 / 24 / 24 | fail / fail / fail / fail |
+| mounted | `main3.jpg` | 0.06540 / 0.11379 | 0.04522 / 0.00508 | 0.05446 / 0.01612 | 0.05116 / NaN | 20 / 7 / 23 / 13 | fail / fail / fail / fail |
 | mounted | `telephoto2.jpg` | 0.04584 / 0.09626 | 0.02241 / 0.01371 | 0.02330 / 0.01102 | 0.02330 / 0.01102 | 21 / 8 / 8 / 8 | fail / fail / fail / fail |
-| mounted | `ultrawide1.jpg` | 0.03301 / 0.06983 | 0.01435 / 0.04783 | 0.03226 / 0.00461 | 0.03226 / 0.00461 | 13 / 18 / 11 / 11 | fail / fail / fail / fail |
-| mounted | `ultrawide2.jpg` | 0.06983 / 0.08732 | 0.03409 / 0.01686 | 0.02549 / 0.02181 | 0.02549 / 0.02181 | 20 / 10 / 17 / 17 | fail / fail / fail / fail |
-| mounted | `ultrawide3.jpg` | 0.09123 / 0.07995 | 0.04056 / 0.05194 | 0.03211 / 0.07210 | 0.03211 / 0.07210 | 21 / 14 / 14 / 14 | fail / fail / fail / fail |
+| mounted | `ultrawide1.jpg` | 0.03902 / 0.07450 | 0.01682 / 0.04843 | 0.05385 / NaN | 0.05385 / NaN | 14 / 17 / 9 / 9 | fail / fail / fail / fail |
+| mounted | `ultrawide2.jpg` | 0.08305 / 0.07438 | 0.03367 / 0.01675 | 0.03467 / 0.04004 | 0.05184 / 0.04464 | 19 / 11 / 23 / 21 | fail / fail / fail / fail |
+| mounted | `ultrawide3.jpg` | 0.11331 / 0.10643 | 0.03695 / 0.04062 | 0.04669 / 0.03528 | 0.04669 / 0.03528 | 18 / 12 / 21 / 21 | fail / fail / fail / fail |
 
 **The frames fitted alone do not depend on the joint fit, and they are the measurement.** Each frame has its own focal length and lens, as cylinder and as general surface:
 
@@ -540,24 +545,24 @@ What the changes did:
 | flat | `main_flat1.jpg` | 0.65 / 0.64 | 136 / 136 of 136 | 0.55 / 0.55 | 52.4 | 0.00305 / 0.00830 | 0.00292 / 0.00728 | 0.00343 / 0.00661 | 0 / 0 / 0 | fail / fail / fail |
 | flat | `main_flat2.jpg` | 0.86 / 0.80 | 100 / 100 of 100 | 0.74 / 0.70 | 29.4 | 0.02314 / 0.01054 | 0.01804 / 0.01002 | 0.00566 / 0.01016 | 6 / 8 / 2 | fail / fail / fail |
 | flat | `main_flat3.jpg` | 0.66 / 0.63 | 91 / 91 of 92 | 0.58 / 0.55 | 25.1 | 0.00814 / 0.00465 | 0.00777 / 0.00416 | 0.00777 / 0.00416 | 3 / 4 / 4 | fail / fail / fail |
-| mounted | `main1.jpg` | 0.87 / 1.03 | 125 / 130 of 136 | 0.74 / 0.87 | 26.3 | 0.00604 / 0.01820 | 0.00764 / 0.02498 | 0.00764 / 0.02498 | 4 / 5 / 5 | fail / fail / fail |
-| mounted | `main2.jpg` | 1.74 / 1.85 | 70 / 67 of 104 | 1.46 / 1.57 | 32.5 | 0.05149 / 0.01694 | 0.05060 / 0.01110 | 0.05060 / 0.01110 | 19 / 19 / 19 | fail / fail / fail |
+| mounted | `main1.jpg` | 0.87 / 1.08 | 125 / 128 of 136 | 0.74 / 0.92 | 26.2 | 0.00604 / 0.01820 | 0.00860 / 0.02981 | 0.00860 / 0.02981 | 4 / 9 / 9 | fail / fail / fail |
+| mounted | `main2.jpg` | 1.56 / 1.62 | 70 / 72 of 104 | 1.46 / 1.54 | 36.6 | 0.05149 / 0.01694 | 0.05434 / 0.01460 | 0.05434 / 0.01460 | 19 / 19 / 19 | fail / fail / fail |
 | mounted | `main3.jpg` | 0.94 / 0.94 | 96 / 98 of 108 | 0.88 / 0.83 | 37.0 | 0.03353 / 0.00968 | 0.03440 / 0.02806 | 0.03440 / 0.02806 | 5 / 7 / 7 | fail / fail / fail |
 | mounted | `telephoto2.jpg` | 1.12 / 1.09 | 105 / 104 of 132 | 0.97 / 0.96 | 27.3 | 0.02241 / 0.01371 | 0.02330 / 0.01102 | 0.02330 / 0.01102 | 8 / 8 / 8 | fail / fail / fail |
-| mounted | `ultrawide1.jpg` | 1.25 / 1.25 | 113 / 113 of 136 | 1.15 / 1.18 | 12.8 | 0.01249 / 0.02129 | 0.01165 / 0.02064 | 0.01165 / 0.02064 | 9 / 11 / 11 | fail / fail / fail |
-| mounted | `ultrawide2.jpg` | 1.08 / 1.08 | 110 / 109 of 136 | 0.99 / 0.99 | 33.8 | 0.05809 / 0.00758 | 0.05645 / 0.01645 | 0.05645 / 0.01645 | 9 / 9 / 9 | fail / fail / fail |
-| mounted | `ultrawide3.jpg` | 1.36 / 1.33 | 87 / 95 of 128 | 1.23 / 1.26 | 46.7 | 0.06660 / 0.03095 | 0.05749 / 0.05103 | 0.05749 / 0.05103 | 12 / 15 / 15 | fail / fail / fail |
+| mounted | `ultrawide1.jpg` | 1.33 / 1.27 | 113 / 117 of 136 | 1.20 / 1.18 | 22.5 | 0.01044 / 0.02522 | 0.00976 / 0.02257 | 0.00976 / 0.02257 | 9 / 9 / 9 | fail / fail / fail |
+| mounted | `ultrawide2.jpg` | 1.08 / 1.05 | 108 / 108 of 136 | 0.98 / 0.99 | 33.7 | 0.05784 / 0.00747 | 0.05767 / 0.01464 | 0.05767 / 0.01464 | 8 / 9 / 9 | fail / fail / fail |
+| mounted | `ultrawide3.jpg` | 1.30 / 1.78 | 81 / 85 of 128 | 1.13 / 1.62 | 40.8 | 0.05509 / 0.03144 | 0.04669 / 0.03528 | 0.04669 / 0.03528 | 13 / 21 / 21 | fail / fail / fail |
 
 **What the real frames say.**
 
 1. **No mounted frame comes inside 0.005 in, as either surface.**
-   - General surface alone: worst scoring bull 0.00764 to 0.05749 in.
-   - Cylinder alone: 0.00604 to 0.06660 in.
+   - General surface alone: worst scoring bull 0.00860 to 0.05767 in.
+   - Cylinder alone: 0.00604 to 0.05784 in.
 2. **The general surface changes almost nothing on these frames.**
-   - **Worst scoring bull:** it moves by -14 to +26 percent, better on four mounted frames and worse on three.
-   - **Corners:** the median forward residual moves by at most 0.16 px, and the corners kept by at most eight.
+   - **Worst scoring bull:** it moves by -15 to +42 percent, better on three mounted frames and worse on four.
+   - **Corners:** the median forward residual moves by at most 0.48 px, and the corners kept by at most four.
    - **Contrast with synthetic truth:** on a synthetic cone it removes the whole of the cylinder's error. The shape M1.7 found on these corners is not one this family takes up either.
-3. **Its fitted turns carry no information.** They are 25 to 52 degrees on the three flat frames, where there is no bend for a turn to act on, and 13 to 47 degrees on the mounted ones.
+3. **Its fitted turns carry no information.** They are 25 to 52 degrees on the three flat frames, where there is no bend for a turn to act on, and 23 to 41 degrees on the mounted ones.
 4. **Fitted alone, `main1` is the best mounted frame, and its cylinder beats its joint fit.** Its cylinder alone gives 0.00604 in, against 0.01177 in its joint fit (M1.5), with 125 corners kept against 120. The shared camera costs `main1` a factor of two, and it is still outside the gate.
 
 **So, per entry 16 section 5, this is where the surface models stop, and M2 is next.**
@@ -598,9 +603,9 @@ Every gated photograph fitted alone (`grouplab surface frames`, then `surface no
 
 | Gate | Photograph | Corners kept | Deflection (in) | F (critical) | Bend kept | Surface | Selected | Robust corner sigma (px per axis) | Equivalent sweep noise (px) |
 |---|---|---|---|---|---|---|---|---|---|
-| mounted | `ultrawide1` | 113 of 136 | 0.219 | 420.6 (4.62) | yes | 0.01249 / 0.02129 | 0.01249 / 0.02129 | 1.15 | 1.26 |
-| mounted | `ultrawide2` | 110 of 136 | 0.302 | 502.0 (4.62) | yes | 0.05809 / 0.00758 | 0.05809 / 0.00758 | 0.99 | 1.05 |
-| mounted | `ultrawide3` | 87 of 128 | 0.574 | 620.1 (4.62) | yes | 0.06660 / 0.03095 | 0.06660 / 0.03095 | 1.23 | 1.36 |
+| mounted | `ultrawide1` | 113 of 136 | 0.227 | 375.4 (4.62) | yes | 0.01044 / 0.02522 | 0.01044 / 0.02522 | 1.20 | 1.31 |
+| mounted | `ultrawide2` | 108 of 136 | 0.307 | 489.4 (4.62) | yes | 0.05784 / 0.00747 | 0.05784 / 0.00747 | 0.98 | 1.03 |
+| mounted | `ultrawide3` | 81 of 128 | 0.492 | 411.9 (4.62) | yes | 0.05509 / 0.03144 | 0.05509 / 0.03144 | 1.13 | 1.23 |
 | mounted | `main1` | 125 of 136 | 0.417 | 267.5 (4.62) | yes | 0.00604 / 0.01820 | 0.00604 / 0.01820 | 0.74 | 0.77 |
 | mounted | `main2` | 70 of 104 | 0.417 | 210.1 (4.62) | yes | 0.05149 / 0.01694 | 0.05149 / 0.01694 | 1.46 | 1.60 |
 | mounted | `main3` | 96 of 108 | 0.440 | 587.9 (4.62) | yes | 0.03353 / 0.00968 | 0.03353 / 0.00968 | 0.88 | 0.93 |
@@ -609,7 +614,7 @@ Every gated photograph fitted alone (`grouplab surface frames`, then `surface no
 | flat | `main_flat2` | 100 of 100 | 0.172 | -4.9 (4.62) | no | 0.02314 / 0.01054 | 0.00566 / 0.01016 | 0.74 | 0.78 |
 | flat | `main_flat3` | 91 of 92 | 0.020 | 22.7 (4.62) | yes | 0.00814 / 0.00465 | 0.00814 / 0.00465 | 0.58 | 0.60 |
 
-- **Mounted: still 0 of 7.** Worst scoring bull 0.00604 to 0.06660 in, corner sigma 0.74 to 1.46 px.
+- **Mounted: still 0 of 7.** Worst scoring bull 0.00604 to 0.05784 in, corner sigma 0.74 to 1.46 px.
 - **Better alone on six of seven.** Against M1.9's joint fits, the worst scoring bull is better on `ultrawide1`, `main1`, `main2`, `main3` and `telephoto2`, the same on `telephoto2`'s lens group of one, and worse on `ultrawide2` and `ultrawide3`.
 - **A false bend on a flat frame.** Fitted alone, `main_flat3` keeps a bend it does not have, F 22.7 against 4.62. Its selected worst bull, 0.00814 in, is nonetheless better than the joint fit's plane, 0.01108. It is the F test's second false positive on a flat sheet, after M1.5's filled scan.
 
@@ -625,16 +630,16 @@ Every gated photograph fitted alone (`grouplab surface frames`, then `surface no
 
 | Gate | Photograph | Markers | RMS marker residual (dmm) | Neighbour distance (dmm) | Neighbour pairs | Neighbour correlation | p | Far correlation | Reading |
 |---|---|---|---|---|---|---|---|---|---|
-| mounted | `ultrawide1.jpg` | 34 | 1.96 | 570 | 104 | +0.18 | < 0.001 | +0.01 | structured |
-| mounted | `ultrawide2.jpg` | 32 | 2.41 | 570 | 97 | +0.15 | 0.003 | -0.09 | not distinguishable from random |
-| mounted | `ultrawide3.jpg` | 30 | 3.25 | 570 | 88 | +0.20 | < 0.001 | -0.18 | structured |
-| mounted | `main1.jpg` | 34 | 1.32 | 570 | 104 | +0.06 | 0.054 | +0.01 | not distinguishable from random |
+| mounted | `ultrawide1.jpg` | 34 | 2.07 | 570 | 104 | +0.15 | 0.002 | +0.01 | not distinguishable from random |
+| mounted | `ultrawide2.jpg` | 32 | 2.43 | 570 | 97 | +0.16 | 0.002 | -0.10 | not distinguishable from random |
+| mounted | `ultrawide3.jpg` | 30 | 3.02 | 570 | 89 | +0.18 | < 0.001 | -0.14 | structured |
+| mounted | `main1.jpg` | 34 | 1.32 | 570 | 104 | +0.06 | 0.081 | +0.01 | not distinguishable from random |
 | mounted | `main2.jpg` | 24 | 2.18 | 570 | 68 | +0.29 | < 0.001 | -0.18 | structured |
-| mounted | `main3.jpg` | 27 | 1.80 | 570 | 76 | +0.08 | 0.077 | -0.04 | not distinguishable from random |
+| mounted | `main3.jpg` | 27 | 1.80 | 570 | 76 | +0.08 | 0.068 | -0.04 | not distinguishable from random |
 | mounted | `telephoto2.jpg` | 33 | 2.65 | 570 | 96 | +0.15 | 0.012 | +0.05 | not distinguishable from random |
-| flat | `main_flat1.jpg` | 34 | 0.60 | 570 | 104 | +0.09 | 0.032 | -0.10 | not distinguishable from random |
-| flat | `main_flat2.jpg` | 25 | 0.70 | 570 | 70 | +0.22 | 0.002 | -0.17 | not distinguishable from random |
-| flat | `main_flat3.jpg` | 23 | 0.75 | 570 | 63 | -0.01 | 0.293 | +0.02 | not distinguishable from random |
+| flat | `main_flat1.jpg` | 34 | 0.60 | 570 | 104 | +0.09 | 0.038 | -0.10 | not distinguishable from random |
+| flat | `main_flat2.jpg` | 25 | 0.70 | 570 | 70 | +0.22 | < 0.001 | -0.17 | structured |
+| flat | `main_flat3.jpg` | 23 | 0.75 | 570 | 63 | -0.01 | 0.311 | +0.02 | not distinguishable from random |
 
 Calibration, fitted the same way:
 
@@ -649,15 +654,15 @@ Calibration, fitted the same way:
 **What it says.**
 
 1. **It is mostly not structured, and partly structured on some frames.**
-   - **Significant:** three of seven mounted frames, `ultrawide1` +0.18, `ultrawide3` +0.20 and `main2` +0.29.
-   - **Borderline:** `ultrawide2` (p 0.003) and `telephoto2` (p 0.012), both at +0.15.
+   - **Significant:** two of seven mounted frames, `ultrawide3` +0.18 and `main2` +0.29.
+   - **Borderline:** `ultrawide1` at +0.15 and p 0.002, `ultrawide2` at +0.16 and p 0.002, and `telephoto2` at +0.15 and p 0.012.
    - **Not correlated:** `main1` and `main3`, +0.06 and +0.08.
    - **The ceiling:** on no frame do neighbouring markers share more than about 29 percent of the residual variance.
-2. **The calibration places it.** White corner noise after the fit reads -0.06 to -0.12, never significant. A synthetic twist of 0.25 in reads +0.21, significant on 3 of 10 seeds, and 0.50 in reads +0.28, on 10 of 10. The three structured mounted frames sit where a quarter to half inch of twist puts them.
-3. **The flat controls are not clean.** `main_flat2` reads +0.22 at p 0.002 and `main_flat1` +0.09, with no bend at all. That bounds how much of any frame's structure can be put down to how the sheet is held.
+2. **The calibration places it.** White corner noise after the fit reads -0.06 to -0.12, never significant. A synthetic twist of 0.25 in reads +0.21, significant on 3 of 10 seeds, and 0.50 in reads +0.28, on 10 of 10. The two structured mounted frames sit where a quarter to half inch of twist puts them.
+3. **The flat controls are not clean.** `main_flat2` reads +0.22 at p 0.001, structured by this test, and `main_flat1` +0.09, with no bend at all. That bounds how much of any frame's structure can be put down to how the sheet is held.
 4. **For the paper protocol, both sentences apply, in this order.**
-   - **Corner quality first:** light, aperture and distance. On the mounted frames the per-marker residual is 1.3 to 3.3 dmm, against 0.6 to 0.75 dmm on the flat ones, and most of that excess is not shared by neighbouring markers.
-   - **How the sheet is held second.** Three frames carry a structured part that a quarter to half inch of twist would produce.
+   - **Corner quality first:** light, aperture and distance. On the mounted frames the per-marker residual is 1.3 to 3.0 dmm, against 0.6 to 0.75 dmm on the flat ones, and most of that excess is not shared by neighbouring markers.
+   - **How the sheet is held second.** Two mounted frames carry a structured part that a quarter to half inch of twist would produce, and so does one flat control.
 5. **Entry 17's clue is not settled by this.** Double the residual producing twenty times the bull error was expected to mean correlated error. One reading consistent with both is error coherent within a marker, all four corners moving together. That does not average out over 136 corners, since only about 34 markers are independent, and it reads as random between neighbours. It is not measured here.
 
 #### Amended 2026-09-15: a gently deformed sheet, measured (entry 23 section 3)
@@ -2356,6 +2361,65 @@ None of this is changed, as section 2 asks.
 
 ---
 
+## Entry 52. The markers sorted before use, every record regenerated, and what the movement measures
+
+`docs/NOTES-FROM-PLANNING.md` entry 52 sections 1 and 2. Sections 3 and 4 are next: how far registration and the edge fit move under reordering and under one point left out, and the paragraph on the measurement uncertainty the intervals do not include.
+
+**These figures moved because the markers are now sorted before use. The sheet, the markers and the corners are identical; only their order changed. The movement measures how unstable the registration is on these frames, not an improvement in it.**
+
+**The change.** `MarkerDetection.InIdentifierOrder()` orders markers and rejections by identifier, then by their first corner, and undecoded quads by their first corner, and `SheetMeasurer` and `PageRegistration` take every detection through it. The homography's RANSAC draws its samples by position in its list of correspondences, so until now the answer depended on the order the detector happened to return the markers in. It was chosen for determinism: had sorting made every mounted frame worse, it would still be the change.
+
+**No gate verdict changed.**
+- **Paper gate:** ten of ten, worst 0.00325 in, as before.
+- **Photograph gate, flat:** fails three of three. No bull figure of `main_flat1-3` moved at the printed precision.
+- **Photograph gate, mounted:** fails seven of seven.
+- **Print-scale detection:** passes, 0.96195 at 600 DPI where it was 0.96197.
+- **Conformance test 43 on the module sweep's five sheets:** passes on every sheet.
+
+**What moved in the whole-sheet registration**, `grouplab spike photos`, on every photograph whose printed figures moved beyond the homography's own RMS:
+
+| Photograph | Gate | Corners kept, before / after | Scoring bulls over the gate, before / after | Worst scoring bull (in), before / after | Worst bull of any kind (in), before / after |
+|---|---|---|---|---|---|
+| `ultrawide1.jpg` | mounted | 66 / 68 of 136 | 13 / 14 of 25 | 0.03301 / 0.03902 | 0.06983 / 0.07450 |
+| `ultrawide2.jpg` | mounted | 54 / 46 of 136 | 20 / 19 of 25 | 0.06983 / 0.08305 | 0.08732 / 0.08305 |
+| `ultrawide3.jpg` | mounted | 42 / 51 of 128 | 21 / 18 of 25 | 0.09123 / 0.11331 | 0.09123 / 0.11331 |
+| `main1.jpg` | mounted | 90 / 94 of 136 | 8 / 8 of 25 | 0.01532 / 0.01824 | 0.04841 / 0.05183 |
+| `main2.jpg` | mounted | 25 / 32 of 104 | 21 / 22 of 25 | 0.04350 at bull 10 / 0.08900 at bull 5 | 0.06231 / 0.08900 |
+
+`main3.jpg` and `telephoto2.jpg` moved in no figure but the homography's RMS. The benchmark of `docs/PHASE0-RESULTS.md` section 4.5 moves with these rows: worst scoring bull 0.018 to 0.113 in where it was 0.015 to 0.091, scoring bulls over the gate 8 to 22 where it was 8 to 21, and corner RMS 0.015 to 0.070 in where it was 0.014 to 0.060.
+
+**What moved in the surface fit**, each frame fitted alone (`grouplab surface frames`), the selected model:
+
+| Photograph | Corners kept, before / after | Worst scoring / sighter (in), before | Worst scoring / sighter (in), after | Scoring bulls over the gate, before / after |
+|---|---|---|---|---|
+| `ultrawide1.jpg` | 113 / 113 of 136 | 0.01249 / 0.02129 | 0.01044 / 0.02522 | 9 / 9 |
+| `ultrawide2.jpg` | 110 / 108 of 136 | 0.05809 / 0.00758 | 0.05784 / 0.00747 | 9 / 8 |
+| `ultrawide3.jpg` | 87 / 81 of 128 | 0.06660 / 0.03095 | 0.05509 / 0.03144 | 12 / 13 |
+
+The surface fit starts from the whole-sheet homography, so it inherits the reordering. On `ultrawide1.jpg` it keeps the same 113 corners and converges to a focal length of 2053 px instead of 1940: a second place where the answer depends on where the fit starts, not only on its data.
+
+**Elsewhere, the scans and the studies.**
+- **Scans:** the figures move in the last places. The largest move is `gl-cf25-ltr-96.2-600-dpi.png`'s worst edge-fit bull, 0.00234 to 0.00340 in, still inside the gate.
+- **Measurement 1, random subsets of markers:** the four-marker rows move most. Sheet 1's 90th percentile worst bull goes from 0.03859 to 0.07296 in, and nine random markers now reach 0.0041 to 0.0065 in at the 90th percentile.
+- **Measurement 2, corner refinement:** at 600 DPI the 1.5-module window's worst bull goes from 0.00328 to 0.00517 in, over the gate on one sheet. The shipped window's worst bull, 0.00316 in, does not move.
+- **Measurement 3, threshold window:** the shipped window's worst bull on any sheet goes from 0.00325 to 0.00340 in.
+- **The surface correlation:** two readings change. `ultrawide1.jpg` goes from structured to not distinguishable from random, at p 0.002, and `main_flat2.jpg` goes from not distinguishable to structured, at p 0.001. M1.11's prose now says two structured mounted frames, not three, and one structured flat control.
+
+**What was regenerated, and what was not.**
+- **Records:** every committed record that a command writes: the thirteen in `scans/phase0/measurements`, the Phase 1 records, the module sweep's PDFs, and the committed Windows tables the gate record workflow compares against.
+- **`mounted-pair.json` was not regenerated.** `grouplab mounted pair` reads `scans/mounted/`, which entry 35 section 4 moved out of the repository, so its reproduce line no longer runs from a checkout. It locates dots on an OnTarget sheet rather than GroupLab markers, so the sort cannot move it.
+- **Documents:** both results documents, `DESIGN.md` section 21 [r5] and `docs/PHASE1-BRIEF.md`'s benchmark carry the regenerated figures; the benchmark keeps the old figures beside the new. The tables from fits that no command reproduces today, M1.5's, M1.7's, M1.8's and M1.9's, are left as measured, and M1 says so at its head.
+
+**How the sort's effect was isolated, and what that found.** Every record was regenerated twice under identical code, once without the sort and once with it, and every figure above compares those two runs. The unsorted run already differed from the committed records in five places, which are now regenerated with the rest and are not the sort's effect:
+- **The synthetic hole detection records:** 139 and 93 values, rim closures, elongations and centre errors of up to 0.00008 in.
+- **`surface-lens-synthetic.json`:** in one trial of 800 the selection flipped, and its selected worst bull went from 194.85 in to 2.25 in.
+- **`surface-lens.json` and `surface-rendered.json`:** they gained the `family` and `turn` fields later code writes.
+- **The module sweep's five PDFs:** they gained `/ViewerPreferences << /PrintScaling /None >>`, which entry 25 added to the renderer.
+
+**Tests:** Core 758 passing with the records as committed, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2484,3 +2548,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 49 section 1: the printed tables committed as Windows text files, over comparing the platforms with one another inside one run.** A committed reference fails a single platform's job on its own, and it states in the repository what the record is.
 - **Entry 49 section 4: the README's platform guard requires equality with the CI matrix, over naming at least as many.** A README naming a platform CI does not build would be false in the other direction.
 - **Entry 49 section 2: the marker sort held for question 15, over committing it with regenerated records.** It changes committed evidence and a benchmark the Phase 1 surface work is measured against, which entry 49 did not foresee, and the question file exists for a measurement that contradicts what was written down.
+- **Entry 52: every record regenerated twice under identical code, without the sort and with it, over comparing the sorted run with the committed records.** Five records were already stale, and comparing against them would have credited their changes to the sort.
+- **Entry 52: tables from fits no command reproduces left as measured and marked, over updating the columns that can be regenerated.** Half a row regenerated disagrees with its other half and with the conclusions written beneath the table.

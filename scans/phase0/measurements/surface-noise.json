@@ -854,17 +854,17 @@
           "corners": 136,
           "kept": 113,
           "pixelsPerDmm": 1.0993652934438398,
-          "rmsKeptPx": 1.002898107292346,
-          "rmsAllPx": 1.6235258234804149,
-          "robustPx": 1.1535953602064641,
-          "robustDmm": 1.0493285235453857
+          "rmsKeptPx": 0.9899177743698048,
+          "rmsAllPx": 1.7122095355795193,
+          "robustPx": 1.1952453136378722,
+          "robustDmm": 1.0872139777067924
         },
-        "robustDmm": 1.0493285235453857,
+        "robustDmm": 1.0872139777067924,
         "equivalentNoisePx": {
-          "byPixels": 1.2584699510532267,
-          "byDmm": 1.1022439665987895
+          "byPixels": 1.311353599409523,
+          "byDmm": 1.1494871579961234
         },
-        "worstScoringBullIn": 0.012488976377952756
+        "worstScoringBullIn": 0.010440157480314962
       },
       {
         "file": "ultrawide2.jpg",
@@ -872,19 +872,19 @@
         "markers": 34,
         "statistics": {
           "corners": 136,
-          "kept": 110,
+          "kept": 108,
           "pixelsPerDmm": 0.9959150823311905,
-          "rmsKeptPx": 0.869201250046673,
-          "rmsAllPx": 3.390692782567737,
-          "robustPx": 0.9926909728389928,
-          "robustDmm": 0.9967626662660325
+          "rmsKeptPx": 0.8534524302728645,
+          "rmsAllPx": 3.3829855559421955,
+          "robustPx": 0.9771559028415125,
+          "robustDmm": 0.9811638764966112
         },
-        "robustDmm": 0.9967626662660325,
+        "robustDmm": 0.9811638764966112,
         "equivalentNoisePx": {
-          "byPixels": 1.0541669365362913,
-          "byDmm": 1.036694300866045
+          "byPixels": 1.0344417961399117,
+          "byDmm": 1.0172425976476036
         },
-        "worstScoringBullIn": 0.05809133858267717
+        "worstScoringBullIn": 0.057839763779527556
       },
       {
         "file": "ultrawide3.jpg",
@@ -892,19 +892,19 @@
         "markers": 32,
         "statistics": {
           "corners": 128,
-          "kept": 87,
+          "kept": 81,
           "pixelsPerDmm": 0.8964243725035634,
-          "rmsKeptPx": 0.8630945649933617,
-          "rmsAllPx": 3.6432101201168536,
-          "robustPx": 1.2310712493410179,
-          "robustDmm": 1.373313005650261
+          "rmsKeptPx": 0.7647323506703336,
+          "rmsAllPx": 3.18003454081116,
+          "robustPx": 1.1335714839229762,
+          "robustDmm": 1.2645478176336287
         },
-        "robustDmm": 1.373313005650261,
+        "robustDmm": 1.2645478176336287,
         "equivalentNoisePx": {
-          "byPixels": 1.356842394226079,
-          "byDmm": 1.5042627977648415
+          "byPixels": 1.233045297605537,
+          "byDmm": 1.370622597080342
         },
-        "worstScoringBullIn": 0.066598031496063
+        "worstScoringBullIn": 0.05508740157480315
       },
       {
         "file": "main1.jpg",
@@ -914,7 +914,7 @@
           "corners": 136,
           "kept": 125,
           "pixelsPerDmm": 1.0304566324157123,
-          "rmsKeptPx": 0.7872308540520667,
+          "rmsKeptPx": 0.7872308540520668,
           "rmsAllPx": 1.0237390270865094,
           "robustPx": 0.7361043664721811,
           "robustDmm": 0.7143477399398387
@@ -935,7 +935,7 @@
           "kept": 70,
           "pixelsPerDmm": 1.0423626172521323,
           "rmsKeptPx": 1.0332874438195963,
-          "rmsAllPx": 4.265672489469703,
+          "rmsAllPx": 4.265672489469704,
           "robustPx": 1.4587040798080542,
           "robustDmm": 1.3994209459021831
         },
@@ -955,7 +955,7 @@
           "kept": 96,
           "pixelsPerDmm": 1.075396748085874,
           "rmsKeptPx": 0.8299215982417183,
-          "rmsAllPx": 1.3576539130379712,
+          "rmsAllPx": 1.3576529253879714,
           "robustPx": 0.8807694493206182,
           "robustDmm": 0.8190181445948411
         },
@@ -974,8 +974,8 @@
           "corners": 132,
           "kept": 105,
           "pixelsPerDmm": 1.0375529186868482,
-          "rmsKeptPx": 0.8133146415701544,
-          "rmsAllPx": 2.0352053835925714,
+          "rmsKeptPx": 0.8133146415701541,
+          "rmsAllPx": 2.035205383592572,
           "robustPx": 0.9682831943812232,
           "robustDmm": 0.9332374059596937
         },
@@ -994,8 +994,8 @@
           "corners": 136,
           "kept": 136,
           "pixelsPerDmm": 1.0309506071701109,
-          "rmsKeptPx": 0.5204502584630767,
-          "rmsAllPx": 0.5204502584630767,
+          "rmsKeptPx": 0.5204502584630768,
+          "rmsAllPx": 0.5204502584630768,
           "robustPx": 0.5540101178492228,
           "robustDmm": 0.5373779441965147
         },
@@ -1034,8 +1034,8 @@
           "corners": 92,
           "kept": 91,
           "pixelsPerDmm": 1.067206626326719,
-          "rmsKeptPx": 0.5763934513245048,
-          "rmsAllPx": 0.6208301443981736,
+          "rmsKeptPx": 0.5763934513245049,
+          "rmsAllPx": 0.6208301443981739,
           "robustPx": 0.5797206736071683,
           "robustDmm": 0.5432131503929495
         },

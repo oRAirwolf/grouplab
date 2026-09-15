@@ -15,6 +15,354 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-15, entry 54: the phone, which is not a small desktop
+
+**Status: open, and deferred to Phase 6 as the entry says.** Section 11's first task needs no phone: whether frame-quality thresholds separate pass from fail on the Phase 0 frames. It is queued after entry 52 sections 3 and 4.
+
+Entry 21's remaining scope, the other half, and the last thing owed from it. **Phase 6 work and explicitly not for this week.** It is written now because it has been owed since entry 21, and because one part of it, section 5, should change what the desktop does long before any phone exists.
+
+This entry is more uncertain than entry 53. Section 11 says which parts I am confident about and which need a spike before anybody commits to them, and that division is the most useful thing in it.
+
+### 1. The reframing, which is the whole entry
+
+The obvious plan is GroupLab on a small screen: the same marking, the same figures, a phone-shaped layout. **That is the wrong product and the project's own measurements say so.**
+
+Look at where accuracy is actually lost:
+
+| | Result |
+|---|---|
+| Conformance test 43, synthetic | pass, worst 0.00026 in |
+| Paper gate, scanned sheets | pass, ten of ten, worst 0.00325 in |
+| Photograph gate, flat | **fail, three of three** |
+| Photograph gate, mounted | **fail, zero of seven** |
+
+**Every gate the project passes is on a scan. Every gate it fails is on a photograph.** A phone is a camera. Its contribution is not another screen for the analysis: it is the only device in the system that can act *before the photograph exists*.
+
+So: **the phone is a capture instrument that tells you the frame is bad while you can still fix it.** Everything else it does is secondary.
+
+Nothing else on the market can do this, and it is not cleverness on our part. It falls out of the sheet knowing what it is: GroupLab holds the marker lattice, the expected artwork and the registration residual, so it can judge a frame against the thing it is a photograph *of*. A generic camera app has nothing to compare against.
+
+### 2. What the capture assistant checks, and where its thresholds come from
+
+Live, on the preview, at whatever frame rate marker detection sustains:
+
+- **Are the markers there?** How many of the sheet's markers are decoding, and which are missing. Missing corner markers are the ones that matter, because they are what extrapolates badly.
+- **How oblique is it?** From the marker lattice, without any fit.
+- **Is the sheet flat?** The lattice's departure from a plane is measurable from the markers alone, and it is the difference between a frame that will pass and the mounted case that fails zero of seven.
+- **Is it sharp, and is it still?** Defocus at the far edge is already a named cause of Phase 0 failures.
+- **Is the whole sheet in frame**, including all four edges.
+- **Is there glare across the rings?**
+
+**Do not invent the thresholds.** The project has 37 Phase 0 images with measured registration residuals and recorded verdicts, in `scans/phase0/measurements/photos.json`, plus whatever the range session adds. **Fit the thresholds to that set and state the false-accept and false-reject rates**, the same way every other number in this project has to earn its place. A capture assistant that says "good" on a frame that then fails the gate is worse than no assistant, because the person has packed up and gone home.
+
+**Tell the user what to change, not that something is wrong.** "Move left" and "step back" and "the top right corner is cut off" are actions. "Registration residual high" is not.
+
+### 3. The refusal, and the thing it must never do
+
+**The assistant advises. It does not block the shutter.** Somebody standing in the rain at a range they drove two hours to reach must be able to take the picture anyway. A frame captured against advice is captured, marked as such, and analysed like any other.
+
+**And when a frame is analysed later and fails, the record must say whether the assistant warned at the time.** That is how we find out whether the thresholds are any good, and it costs one field.
+
+### 4. Several frames, which is the phone's real advantage
+
+A person holding a phone can take five frames from slightly different positions in two seconds. A scanner cannot, and a person with a camera on a tripod will not.
+
+Two levels, and the first is nearly free:
+
+1. **Pick the best.** Capture a short burst, register each, keep the one with the lowest residual. This requires no new mathematics and would likely have turned some of Phase 0's flat failures into passes on its own.
+2. **Use them together.** Several views of the same curved sheet constrain the surface far better than one, because a single view confounds the surface with the lens. **This is the most promising idea in this entry and the least proven**, and it goes directly at the mounted gate, which is the gate the project cannot currently pass at all.
+
+**Level 2 is a spike, not a plan.** It needs proving on real frames before anybody builds a product around it. Level 1 should be done regardless.
+
+### 5. Owning the camera removes a whole class of defect, and this one matters now
+
+The corpus has repeatedly been damaged by not knowing what the camera did. Entry 16 found that a cropped ultrawide keeps its physical focal length and changes only the 35 mm equivalent, so grouping by the physical value alone mixed two pixel geometries and crashed a joint fit. Entry 27 found that `DigitalZoomRatio` has to join the lens grouping key, and that its absence means unknown rather than 1.0. Entry 37 found the first submission unusable because of what the phone had done to the frames.
+
+**Every one of those is a consequence of receiving a photograph rather than taking one.** A capture app owns the camera, and can therefore:
+
+- **refuse digital zoom outright**, which deletes entry 27's problem rather than working around it
+- **record the true focal length, the physical camera and the sensor crop**, rather than inferring them
+- **lock exposure and focus** across a burst, so frames in one burst are comparable
+- **write a provenance block it authored**, rather than parsing one a phone wrote
+
+**And here is the part that is not Phase 6.** A phone the app controls will, over many sessions, accumulate frames from the *same physical camera*. That is a per-device lens prior, and it makes every individual frame better conditioned than a one-frame fit can be. **The desktop can start collecting that now**, from the donated corpus and from Alan's own frames, keyed on the grouping key entries 16, 27 and 48 have between them established: make, model, lens model, physical focal length, 35 mm equivalent and digital zoom ratio. If a per-device prior measurably improves the fit on the frames we already have, that is a Phase 1 finding that arrives years before the phone does, and it is worth testing as soon as there is a spare afternoon.
+
+### 6. What runs on the phone and what does not
+
+**On the phone:** capture, the live assistant, registration, hole detection, and a verdict with its figures. The verdict has to be on the device, because a person at a range wants to know whether to shoot the sheet again before they take it down.
+
+**Not on the phone:** marking by hand, assignment correction, load comparison, the analysis screen. Those need a pointer and a large display, and entry 43 is written for a desktop. **A phone that tries to be an editor will be a bad editor**, and `DESIGN.md` section 13 is explicit that a bad editor is worse than a mediocre detector.
+
+**The handoff is the marking file, not the photograph.** It is small, it is already the project's interchange format, and it means the phone and the desktop disagree about nothing.
+
+### 7. The imaging backend, and a licence constraint that is already decided
+
+`IImagingBackend` exists and the OpenCV backend lives behind it, which was the right call and pays off here. **The mobile backend is a second implementation of that interface, not a port of the first**, because the OpenCvSharp runtime packages do not cover Android or iOS.
+
+`DESIGN.md` section 20 already settled the licensing: the printed marker is AprilTag `tag36h11` specifically so the mobile detector can be **the AprilTag reference implementation under BSD-2-Clause**, through P/Invoke. Emgu.CV is plain GPL-3.0 with no app-store additional permission, and a downstream distributor cannot add one to somebody else's code, so shipping GroupLab plus Emgu.CV through the App Store would reproduce exactly the conflict the fiducial choice exists to avoid.
+
+**That decision is made and this entry does not reopen it.** What it does add: whatever else the mobile backend needs, thresholding, contours, homography, has to be checked against the same constraint one library at a time, and the answer has to be recorded in `THIRD-PARTY-NOTICES.md` before the dependency is taken rather than after.
+
+### 8. Privacy, where the default is the whole design
+
+A phone application that photographs targets is a camera app that knows where you are. The project has already spent two days removing coordinates from its own history.
+
+- **Nothing leaves the device by default.** No account, no upload, no telemetry, no cloud. Synchronisation is Phase 7 and is a separate, explicit choice.
+- **The scrubber's rule from entry 48 applies at capture**: keep what describes the camera and the exposure, drop what describes where, when, who, or anything typed. On a device we control, the location is never written in the first place, which is better than removing it.
+- **Donating a frame is a deliberate act with its own consent**, the same as the upload page, never a setting somebody leaves on.
+- **The diagnostics rules of entry 41 apply unchanged**, and a phone makes them sharper: a crash report from a phone must carry no photograph, no location and no path.
+
+### 9. Sequencing, and the one thing that is genuinely blocked
+
+`DESIGN.md` section 21 puts Android at Phase 6 and iOS at Phase 8, built on GitHub Actions macOS runners, which are free for public repositories.
+
+**Android first, and the reason is not technical.** iOS distribution needs the GPL section 7 additional permission, which is drafted, is not in force, and is with an attorney. **Until that comes back, iOS is blocked on a legal answer rather than on engineering**, and no amount of work moves it. Android has no equivalent barrier.
+
+Nothing here should start before the desktop passes the photograph gates. **A capture assistant is worthless if the analysis behind it cannot measure a photograph correctly**, and today it cannot.
+
+### 10. The gate
+
+Two, and the second is the one that matters.
+
+1. **The same 0.005 in worst bull**, on frames the phone captured, flat and mounted reported separately, as everywhere else.
+2. **The fraction of frames a person who has not read anything captures successfully**, measured on people who are not Alan and not me. **That is the product, and it is the only number that says whether the capture assistant works.** A phone build that passes gate 1 and fails gate 2 has moved the problem rather than solved it.
+
+### 11. What I am confident about, and what needs a spike first
+
+Stated plainly, because the rest of this entry reads more certain than it is.
+
+**Confident:**
+
+- the reframing in section 1, which follows from measurements the project already has
+- section 5's list of defects that owning the camera removes, every one of which is a defect the corpus actually suffered
+- section 6's split, which follows from `DESIGN.md` section 13
+- section 8, which is policy rather than engineering
+- section 9's ordering, since the iOS blocker is a fact
+
+**Needs proving before anybody plans around it:**
+
+- **Avalonia's maturity on Android**, particularly camera preview and native interop. I have not checked, and this entry should not be read as saying it is fine.
+- **AprilTag detection fast enough on a phone for a live preview.** Plausible, unmeasured.
+- **Multi-frame surface fitting**, section 4 level 2. The most promising idea here and the least supported.
+- **Whether the assistant's thresholds separate pass from fail at all.** Fit them to the 37 Phase 0 frames first. If they do not separate on data we already have, the feature does not work and that is cheap to find out.
+
+**Do the last one first.** It needs no phone, no Avalonia and no camera: it is an afternoon with `photos.json` and it can kill or confirm the central idea of this entry before anybody writes a line of mobile code.
+
+### 12. What I am not specifying
+
+The interface itself, because it should be drawn after the assistant's thresholds exist and not before. Offline target printing from a phone. Chronograph pairing. Anything about synchronisation, which is Phase 7. And the iOS specifics, which wait on the attorney.
+
+---
+
+## 2026-09-15, entry 53: adjust to zero, which is the project's argument applied to the thing everybody actually does
+
+**Status: open, and deferred to Phase 5 as the entry says.** Every closed-form figure in sections 3 and 4 checked against the formulas and reproduced: the multipliers on sigma, the median and 95 percent misses, every cell of the shots-needed table, and the 0.74 in three-shot miss. Section 9's coverage tests are written with the feature.
+
+Entry 21's remaining scope, half of it. Not for this week: this is Phase 5 work and nothing about it is urgent. It is written now because it has been owed since entry 21 and because the numbers in section 3 are worth having in front of us before the range session rather than after.
+
+Every figure below is closed form, and every one was checked against a 200,000 replication simulation before it was written down. The method is in section 9 so you can reproduce it rather than trust it.
+
+### 1. Why this deserves more care than it looks like it needs
+
+Zeroing is the single most common thing anybody does with a paper target. The universal ritual is three shots, measure the offset, turn the turrets, declare it zeroed. Every target program on the market will do that arithmetic. **None of them will tell you that on a half-MOA rifle a three-shot zero leaves you off by up to 0.74 inches at 100 yards, 95 percent of the time.**
+
+That number is the whole reason GroupLab should have this feature. The arithmetic is trivial and everyone has it. The uncertainty is not, nobody has it, and it is the part that changes what a person should do.
+
+**And it is the strongest argument the 25-bull sheet has.** Section 4 works it out: zeroing a half-MOA rifle to within a quarter MOA, at 95 percent confidence, takes 24 shots. A GroupLab sheet gives you 25 on one page, pooled into one centre. The target design pays for itself on the most ordinary task in shooting, and that case has never been made anywhere in the project's documents.
+
+### 2. The arithmetic, which is the easy part
+
+**Input:** the group centre relative to the point of aim, in linear units at the distance shot; the shot distance; the turret's click value; and the angular convention in force.
+
+1. **Linear to angular**, using the actual shot distance. True MOA is 1.047 in per 100 yd; IPHY is 1 in per 100 yd; a mil is 3.6 in per 100 yd. `DESIGN.md` section 20 makes true MOA the default with IPHY available, and both must be labelled, never silently swapped.
+2. **Angular to clicks**, by the stated click value: quarter MOA, eighth MOA, tenth mil, twentieth mil.
+3. **Express it in the turret's own words**, not signed numbers. A group low and left gives **"UP 3, RIGHT 2"**. Nobody has ever stood at a bench and thought in negative y.
+4. **Round to whole clicks and state the residual**, because a turret has no half positions. "UP 3, RIGHT 2, leaving 0.04 MOA low" is honest; silently rounding is not.
+
+**Two things this is not, and the panel should say so.**
+
+- **It is not a ballistic correction.** It puts the point of impact on the point of aim at the distance you shot. If you shot at 200 and want a 100 yard zero, that is the solver's job, and the solver is Phase 5. Until it exists the panel says which distance the correction applies to and stops.
+- **It is not a click-value check.** See section 6.
+
+### 3. The honest part: when is a correction worth making at all
+
+The measured centre is an estimate from `n` shots. Its standard error on each axis is `sigma / sqrt(n)`, where `sigma` is the per-axis standard deviation, which is the same Rayleigh sigma the panel already leads with.
+
+**The rule: adjust an axis only when its confidence interval excludes zero.** If the interval spans zero, the honest statement is that the rifle is not measurably off centre on that axis, and turning the turret is turning noise into the rifle.
+
+**Degrees of freedom, and this connects to machinery that already exists.** For a circular group, sigma is estimated from all `2n` coordinates, so `df = 2n - 2`. GroupLab already runs a Pitman-Morgan test for circularity, so use it: **if circularity is not rejected, pool and use `df = 2n - 2`. If it is rejected, estimate each axis separately with `df = n - 1`** and accept the wider interval, because a group that strings vertically genuinely knows less about its vertical centre.
+
+**The smallest offset distinguishable from zero at 95 percent, in units of sigma:**
+
+| Shots | df | multiplier on sigma |
+|---|---|---|
+| 3 | 4 | **1.603** |
+| 5 | 8 | 1.031 |
+| 10 | 18 | 0.664 |
+| 20 | 38 | 0.453 |
+| 25 | 48 | **0.402** |
+| 50 | 98 | 0.281 |
+
+Worked for a half-MOA rifle at 100 yards, which is a good rifle:
+
+| Shots | detectable offset | at 100 yd | in quarter-MOA clicks |
+|---|---|---|---|
+| 3 | 0.80 MOA | 0.84 in | **3.2** |
+| 5 | 0.52 MOA | 0.54 in | 2.1 |
+| 10 | 0.33 MOA | 0.35 in | 1.3 |
+| 25 | 0.20 MOA | 0.21 in | 0.8 |
+
+**Read the first row again.** Off three shots, on a rifle that shoots half MOA, an offset smaller than about three clicks cannot be told from zero. The correction people most often make after a three-shot group is smaller than that.
+
+### 4. Where the zero actually lands afterwards, which is what a person wants to know
+
+Adjust by the measured offset and the remaining error is the sampling error of the centre. Radially that is Rayleigh with parameter `sigma / sqrt(n)`, so the 95th percentile is `2.448 * sigma / sqrt(n)`.
+
+| Shots | median miss | 95% miss |
+|---|---|---|
+| 3 | 0.680 sigma | **1.413 sigma** |
+| 5 | 0.527 | 1.095 |
+| 10 | 0.372 | 0.774 |
+| 25 | 0.235 | **0.490** |
+| 50 | 0.167 | 0.346 |
+
+**And the table that should be on the screen**, shots needed to put the zero within a target radius 95 percent of the time, `n >= (2.448 * sigma / target)^2`:
+
+| Rifle sigma | within 0.5 MOA | within 0.25 MOA | within 0.1 MOA |
+|---|---|---|---|
+| 0.25 MOA | 2 | 6 | 38 |
+| **0.50 MOA** | 6 | **24** | 150 |
+| 0.75 MOA | 14 | 54 | 338 |
+| 1.00 MOA | 24 | 96 | 600 |
+
+This is the same shape as the compare-loads table in entry 43 section 6, and it should be built from the same code. **The project's one repeated argument is that the number of shots decides what you are allowed to conclude, and this is that argument applied to zeroing.**
+
+Add the click quantisation to the residual: rounding to whole clicks leaves a per-axis error uniform on plus or minus half a click, variance `c^2 / 12`. On a quarter-MOA turret that is small beside the sampling error at any realistic `n`, and on a coarse turret at high `n` it starts to dominate. Say which is dominating, because the answer tells the shooter whether more shots or a finer turret is the thing that would help.
+
+### 5. What the panel says
+
+- **When the interval excludes zero on an axis:** the correction in the turret's words, with its own interval. "UP 3 clicks, somewhere between 2 and 5."
+- **When it does not:** "Windage is not measurably off centre on 5 shots. Leave it alone." Not a correction of zero, which reads like a measurement. A sentence.
+- **Always:** where the zero will be afterwards, and the shots-needed row for this rifle.
+- **Never** a correction without an interval. This is entry 24, entry 39 section 1 and entry 40 for the fifth time: no bare number on a screen.
+
+**Refuse, rather than compute, when:**
+
+- there is no point of aim, or shots are unassigned on a multi-bull sheet, per entry 39 section 1
+- the shot distance is not set, because the angular conversion needs it
+- the click value is not set
+- fewer than 3 shots, where sigma has a single degree of freedom and the interval is meaningless. Say what is missing, in the place the figure would have been.
+
+### 6. Turret tracking, which is nearly free and nobody offers it
+
+Once somebody adjusts and shoots again, GroupLab has both centres and knows how many clicks were dialled. **Measured movement per click falls straight out**, with an interval, from data the user produced anyway.
+
+A turret that moves 0.22 MOA per advertised quarter MOA click is 12 percent slow, which at distance is a miss nobody can explain. It is the sort of defect that gets blamed on the ammunition for years.
+
+Two cautions, both mandatory. **It needs enough shots in both groups to say anything**, and the same interval logic applies to the difference of two centres, so the standard error is `sigma * sqrt(1/n1 + 1/n2)`. And **it must never be offered from two three-shot groups**, where the interval on the ratio will span most of the plausible range and the answer will be noise wearing a decimal point.
+
+### 7. One thing this specification cannot promise
+
+Every interval above assumes the shot coordinates are exact. Entry 52 section 4 is the reason to say so here rather than quietly: the pipeline has at least two places where a continuous input change produces a discontinuous output change, and until those are measured the coordinates have an uncertainty that none of these intervals include.
+
+**It does not invalidate any of this**, because measurement instability is far smaller than shot dispersion on any group worth zeroing from. But the panel should not claim more than it has, and when entry 52's experiments produce a number, this feature is one of the places it belongs.
+
+### 8. What I am not specifying
+
+Holdover and dial-to-distance tables, which need the solver. Multiple zeros, or a zero that is deliberately offset. Canted-reticle correction. First and second focal plane differences, which do not affect the arithmetic but do affect what a reticle measurement means, and reticle measurement is not an input here.
+
+### 9. How to check my numbers, because they are mine and I have been wrong this week
+
+Every figure was verified by simulation before it was written, at 200,000 replications with the group drawn from a circular bivariate normal:
+
+- **The interval is honest.** With the true offset at zero, the rule says "adjust" 4.91, 5.00, 5.10, 4.93 and 5.00 percent of the time at n = 3, 5, 10, 20 and 25. It should be 5.
+- **The critical values are right.** The empirical 95th percentile of `|xbar| / (sigma_hat / sqrt(n))` came out 2.767, 2.307, 2.099 and 2.001 at n = 3, 5, 10 and 25, against `t(2n-2, 0.975)` of 2.776, 2.306, 2.101 and 2.011.
+- **The residual table is right.** Simulated 95th percentile radial miss: 1.410, 1.097, 0.776, 0.548, 0.489 and 0.345 sigma, against the closed form's 1.413, 1.095, 0.774, 0.547, 0.490 and 0.346.
+
+**Reproduce these as tests rather than taking them from this entry.** A coverage test at n = 5 and n = 25 that fails if the false-adjust rate leaves 4.5 to 5.5 percent is worth more than any assertion in this document, and it is the same pattern as the interval coverage tests the statistics engine already has.
+
+### 10. One line for the README, when this ships
+
+The 24-shots figure in section 4 is the clearest case the target design has ever had, and it currently appears nowhere. When this feature exists, the README's problem statement should carry it: **zeroing a half-MOA rifle to within a quarter MOA takes about 24 shots, and a GroupLab sheet gives you 25 of them on one page.**
+
+---
+
+## 2026-09-15, entry 52: question 15 answered, and the thing underneath it
+
+**Status: actioned 2026-09-15 for sections 1 and 2; sections 3 and 4 are next, then the macOS rerun.**
+- **Sections 1 and 2:** the sort is committed with every record regenerated, and no verdict changed. `docs/PHASE1-RESULTS.md` "Entry 52" has the before-and-after tables, headed by your sentence.
+- **Two further instabilities show in them,** beyond RANSAC's consensus. `ultrawide1`'s surface fit converges to a focal length of 2053 px instead of 1940 from a slightly different start. Two correlation readings change, `ultrawide1` from structured to not distinguishable from random and `main_flat2` the other way.
+- **Records already stale:** regenerating under unchanged code first found five, reported separately there so they are not read as the sort's effect.
+
+Section 1 is the decision you asked for. Section 2 is how to land it without wrecking the benchmark. Section 3 answers your deeper question, which is the better question. Section 4 is what sections 1 to 3 add up to, and it is the most important paragraph I have written in this log.
+
+Stopping on this rather than committing it was right. It is exactly the case the blocking-question rule exists for.
+
+### 1. Decision: commit the sort. For determinism, and not for the numbers
+
+**Yes, commit it.** The reason is that a measuring instrument must give the same answer for the same input, and today it does not. Marker order carries no information: the same sheet, the same markers, the same corners, presented in a different sequence, is the same measurement. An output that moves with it is wrong in a way that has nothing to do with which output is better.
+
+**Now the part that matters more than the decision.** `ultrawide3.jpg` goes from 42 kept corners to 51, and from 21 scoring bulls over the gate to 18. **That looks like an improvement and it is not one.** It is the same algorithm on the same data with the inputs in a different order. If those numbers land in `PHASE1-RESULTS.md` without a flag on them, then in a month somebody reads 18 against the old 21 and cites it as the surface work improving, and that will be the project citing noise as progress in its own results document.
+
+So the instruction is not "commit the sort". It is: **commit the sort, and make it impossible to mistake the movement for an improvement.**
+
+I want to be explicit about my own reasoning here, because the trap is close. I am not choosing the sort because it improved `ultrawide3`. If sorting had made every mounted frame worse I would still be asking for it, for the same reason. **The moment the justification becomes "it gives better numbers", it is an algorithm chosen after seeing results, which entry 17 section 2 rules out.**
+
+### 2. How to regenerate without destroying the benchmark
+
+The mounted figures are what the surface work is measured against. Changing a benchmark is sometimes necessary and always dangerous, because afterwards nobody can compare across the change unless the change is recorded.
+
+1. **Regenerate every record and every quoted figure**, as you proposed. Half-regenerated is worse than either state.
+2. **Put a before-and-after table in `PHASE1-RESULTS.md`** for every frame whose figures moved: kept corners before and after, bulls over gate before and after, worst bull before and after.
+3. **Head that table with one sentence in plain words**, something close to: *"These figures moved because the markers are now sorted before use. The sheet, the markers and the corners are identical; only their order changed. The movement measures how unstable the registration is on these frames, not an improvement in it."*
+4. **Say it in the commit message too**, not only in the document, because the commit is what somebody bisecting will read.
+5. **No gate verdict changes**, which you have already established. Say that explicitly as well, because it is the reassuring half and it is true.
+
+### 3. Your deeper question: yes, and it is more urgent than the sort
+
+You asked whether registration should stop relying on RANSAC's random consensus, which on a curved sheet shifts with an input that should not matter. **Yes, that needs answering, and the sort does not answer it.**
+
+Sorting removes one source of variation. It does not remove the sensitivity. The same fragility is still there and will move the answer for any other reason the input order or the random draw changes: one more marker found, one corner refined a fraction differently, a different platform, a different seed.
+
+**Here is what I think is happening, offered as a hypothesis for you to test rather than a conclusion.** RANSAC finds consensus for a model. On a flat sheet a homography is very nearly the right model, the inliers are unambiguous, and the consensus is stable. **On a mounted sheet the sheet is curved, so a planar model cannot fit it, there is no clean inlier set, and RANSAC returns whichever subset happened to look best on the draws it tried.** That would explain why the mounted photographs are exactly the frames that swing, and it would mean the instability is a symptom of model mismatch rather than a RANSAC tuning problem.
+
+**The experiment that settles it, and it is cheap.** Run registration on the mounted frames K times, say 200, with the marker order shuffled differently each time, and report the distribution rather than a value:
+
+- kept corners: minimum, median, maximum
+- scoring bulls over gate: minimum, median, maximum
+- worst bull: minimum, median, maximum
+
+Do the same for three flat frames as a control. **If the flat frames give a single value and the mounted ones give a spread, the hypothesis holds and the fix is about the model, not the sampler.**
+
+**And the result has a consequence that I want stated before you run it, so it cannot be read as convenient afterwards.** If `ultrawide3`'s kept-corner count ranges over anything like 42 to 51 across orderings, then **the mounted gate's 0 of 7 has never had an error bar, and some part of it is sampling noise rather than measurement.** That does not make the mounted gate pass. It means the number the surface work has been measured against for a week has an uncertainty nobody has quantified, and any conclusion drawn from a change smaller than that spread was not supported. I would rather know that than not.
+
+**Do the same experiment for the edge fit of entry 49 section 5 at the same time.** One point of thirty moving a bull 0.30 dmm is the same shape of problem: leave each point out in turn, report the spread. Two experiments, one method, and they share the tooling.
+
+### 4. What these add up to, which is bigger than either
+
+**The pipeline has at least two places where a continuous change in the input produces a discontinuous change in the output.** RANSAC's consensus set, found by reordering markers. The edge fit's kept-point count, found on `telephoto3` with identical corners. Both were found by accident, while chasing something else. **Neither was found by looking for them, which is the reason to assume there are more.**
+
+Now the part that matters, and it goes to what this project is for.
+
+GroupLab's entire argument is that a measurement should come with an honest statement of its uncertainty, and that software which prints a confident number it cannot support is doing harm. Every interval the application prints today describes **shot-to-shot dispersion**: how much the rifle and the shooter scatter. **None of them describes measurement instability: how much the answer would move if the measurement were repeated.**
+
+If a bull's position can jump 0.30 dmm because one edge point of thirty fell the other side of a threshold, then the measurement has an uncertainty that no interval on the screen accounts for. **A 94.7 percent interval computed from perfectly measured coordinates is not a 94.7 percent interval when the coordinates themselves can move.** The project would be doing, in a smaller way, the thing it exists to criticise.
+
+**I am not asking for that to be solved now, and it must not turn into a rewrite before the range weekend.** I am asking for it to be written down, in `DESIGN.md` section 14 or `STATISTICS.md`, as a known and unquantified source of uncertainty that the intervals do not currently include. Naming it costs a paragraph. Leaving it unnamed is how a project ends up believing its own error bars.
+
+The two experiments in section 3 are the first measurement of it.
+
+### 5. Order
+
+1. **The sort, with section 2's regeneration and its before-and-after table.** It unblocks the macOS rerun, which has been waiting on it.
+2. **The two spread experiments**, section 3. Edge fit and marker ordering, one method.
+3. **The paragraph in section 4**, written once the experiments give it a number to cite, or written without one if they take longer than expected.
+4. Then the macOS rerun from Windows' corners, and the rest of the gate record.
+
+**Entry 43 stays where entry 50 put it.** Nothing here changes that, and section 4 is a reason to be glad the interface is not the thing being worked on this week.
+
+---
+
 ## 2026-09-15, entry 51: the top to bottom check, and what it found
 
 **Status: actioned 2026-09-15.** Section 6, all five:
