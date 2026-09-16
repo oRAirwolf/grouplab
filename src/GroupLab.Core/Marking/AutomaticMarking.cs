@@ -10,17 +10,21 @@ namespace GroupLab.Core.Marking;
 /// <summary>
 /// What the automatic path hands the marking screen: the measurement with its trace, the registered scale, the bulls, the detected
 /// shots with their assignment, a one-line summary, the failure when there is one, and the sheet's printed artwork in image pixels, which
-/// the screen's snap and size check read to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
+/// the screen's snap and size check read to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Each detection
+/// keeps its whole assignment, margin and nearest bull included, the matching's method and reason travel with them, and the candidates
+/// the detector refused come through too, so the editor has what it shows (entry 70 section 4).
 /// </summary>
 public sealed record AutomaticResult(
     SheetMeasurement Measurement,
     SheetReference? Scale,
     IReadOnlyList<BullAim> Bulls,
-    IReadOnlyList<(PointD Image, int? Bull)> Detections,
+    IReadOnlyList<DetectedShot> Detections,
     IReadOnlyList<PointD> MissingMarkers,
     string Summary,
     string? Failure,
-    GrayImage? ExpectedArtwork = null);
+    GrayImage? ExpectedArtwork = null,
+    ShotAssignmentResult? Assignment = null,
+    IReadOnlyList<RejectedCandidate>? Rejected = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -85,7 +89,11 @@ public static class AutomaticMarking
                 $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}"));
         }
 
-        var bulls = measurement.Bulls.Select(b => new BullAim(b.Index, b.Name, mapping.ToImage(b.Recovered ?? b.Declared), definition.Bulls[b.Index].Scoring)).ToList();
+        // Entry 70 section 5: two nearly identical positions, kept apart on purpose. A shot's offset is a measurement, and the shooter aimed
+        // at the bull as printed, so the aim point is the located centre. Assignment is a classification, and it uses the definition's
+        // exact geometry: registration error is of order 0.005 in and printing 0.003 in, against a 0.15 in ambiguity margin, so the choice
+        // cannot flip an assignment that was not already flagged. Do not unify them for tidiness.
+        var bulls = measurement.Bulls.Select(b => new BullAim(b.Index, b.Name, mapping.ToImage(b.Recovered ?? b.Declared), definition.Bulls[b.Index].Scoring, b.Declared)).ToList();
         var bullPages = definition.Bulls.Select(b => new PointD(b.X, b.Y)).ToList();
         var shotPages = holes.Holes.Select(h => mapping.ToPage(new PointD(h.X, h.Y))).ToList();
         ShotAssignmentResult assignment;
@@ -104,11 +112,12 @@ public static class AutomaticMarking
                 $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
         }
 
-        var detections = holes.Holes.Select((h, i) => (new PointD(h.X, h.Y), assignment.Shots[i].Bull)).ToList();
+        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i])).ToList();
+        var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
             $"{markers}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected);
     }
 }
 

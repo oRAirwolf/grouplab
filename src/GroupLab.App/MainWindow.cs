@@ -622,7 +622,7 @@ public sealed class MainWindow : Window
 
         canvas.MissingMarkers = result.MissingMarkers;
         canvas.Artwork = artwork = result.ExpectedArtwork;
-        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Summary);
+        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary);
         SetTool(MarkingTool.Select);
         status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed out") : "");
     }

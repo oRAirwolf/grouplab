@@ -1,4 +1,5 @@
 using System.Text.Json;
+using GroupLab.Core.Detection;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Registration;
@@ -249,5 +250,42 @@ public class MarkingSessionTests
         var snapped = Snapping.ToDarkCentroid(new GrayImage(size, size, pixels), new PointD(55, 50), 15);
         Assert.Equal(60, snapped.X, 1);
         Assert.Equal(45, snapped.Y, 1);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 70 section 4: what the matching decided reaches the marking. Each detected shot keeps its figures in inches
+    /// under the id it is given, a hand-placed shot kept from before has none, the refused candidates come through, and undo takes it all back.
+    /// </summary>
+    [Fact]
+    public void TheMatchingsFiguresAndTheRefusedCandidatesReachTheMarkingUnderTheShotIds()
+    {
+        var scale = new LengthReference(new PointD(0, 0), new PointD(100, 0), 1);
+        var bulls = new[] { new BullAim(0, "1", new PointD(200, 200), Declared: new PointD(254, 254)), new BullAim(1, "2", new PointD(500, 200), Declared: new PointD(635, 254)) };
+        var session = new MarkingSession();
+        int hand = session.AddShot(new PointD(190, 190));
+        var assignment = new ShotAssignmentResult(AssignmentMethod.OneToOne, "as many shots as bulls",
+        [
+            new AssignedShot(0, 1, 104.14, 0, 159.258, 105.918, true),
+            new AssignedShot(1, 0, 25.4, 0, 25.4, 381, false),
+        ]);
+        DetectedShot[] detections = [new(new PointD(330, 200), assignment.Shots[0]), new(new PointD(210, 210), assignment.Shots[1])];
+        RejectedCandidate[] rejected = [new(new PointD(700, 700), 0.14, "below the size gate")];
+
+        session.LoadDetections(scale, bulls, detections, assignment, rejected, "test");
+
+        var review = session.State.Assignment!;
+        Assert.Equal(AssignmentMethod.OneToOne, review.Method);
+        Assert.Null(review.For(hand));
+        var ids = session.State.Shots.Where(s => s.Provenance == ShotProvenance.Automatic).Select(s => s.Id).ToList();
+        var contested = review.For(ids[0])!;
+        Assert.Equal((1, 0), (contested.Bull!.Value, contested.NearestBull));
+        Assert.Equal(0.41, contested.DistanceInches, 6);
+        Assert.Equal(0.627, contested.NearestInches, 6);
+        Assert.Equal(0.417, contested.MarginInches, 6);
+        Assert.Equal(1, review.NeedingReview);
+        Assert.Equal("below the size gate", Assert.Single(review.Rejected).Reason);
+
+        session.Undo();
+        Assert.Null(session.State.Assignment);
     }
 }

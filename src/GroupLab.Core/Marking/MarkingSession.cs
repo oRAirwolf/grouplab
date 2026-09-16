@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using GroupLab.Core.Detection;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Registration;
 
@@ -43,8 +44,12 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
     public bool IsShot => !NotAShot;
 }
 
-/// <summary>A bull a shot can be assigned to: its index and label in the target definition, and its centre in image pixels.</summary>
-public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true);
+/// <summary>
+/// A bull a shot can be assigned to: its index and label in the target definition, its centre in image pixels, and, for a detected sheet,
+/// its declared centre in page dmm. The image centre is where the bull was located, and offsets are measured from it; the declared centre
+/// is the definition's exact geometry, and assignment classifies against it (NOTES-FROM-PLANNING.md entry 70 section 5).
+/// </summary>
+public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true, PointD? Declared = null);
 
 /// <summary>
 /// Everything a marking holds at one moment. It is immutable, so undo is keeping the previous one and every screen reads a
@@ -67,7 +72,8 @@ public sealed record MarkingState(
     int ViewQuarterTurns = 0,
     int? ExifOrientation = null,
     Calibre? Calibre = null,
-    double? ShotDistanceInches = null)
+    double? ShotDistanceInches = null,
+    AssignmentReview? Assignment = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -249,14 +255,35 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
+        Load(scale, bulls, [.. detections], summary, _ => null);
+    }
+
+    /// <summary>
+    /// The same, with what the matching decided and what the detector refused, NOTES-FROM-PLANNING.md entry 70 section 4: each detected
+    /// shot's figures are kept under the id it is given here, with the method, its reason and the refused candidates, so the editor can
+    /// show a contested case and count what needs review. A shot kept from before carries no figures, because the matching did not place it.
+    /// </summary>
+    public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<DetectedShot> detections, ShotAssignmentResult? assignment, IEnumerable<RejectedCandidate> rejected, string summary)
+    {
+        ArgumentNullException.ThrowIfNull(detections);
+        ArgumentNullException.ThrowIfNull(rejected);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull))], summary, firstId => assignment is null
+            ? null
+            : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment))], [.. rejected]));
+    }
+
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull)> detections, string summary, Func<int, AssignmentReview?> review)
+    {
         int id = State.NextId;
         var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary };
         var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
+        int firstId = id;
         var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull)).ToList();
         Apply(registered with
         {
             Shots = [.. kept, .. detected],
             NextId = id,
+            Assignment = review(firstId),
         });
     }
 

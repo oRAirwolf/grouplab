@@ -42,7 +42,7 @@ public static class SheetAnalysis
         using var stage = trace.Begin("S10.group");
         var session = new MarkingSession();
         session.Open(imagePath, metadata.Orientation);
-        session.LoadDetections(scale, automatic.Bulls, automatic.Detections, automatic.Summary);
+        session.LoadDetections(scale, automatic.Bulls, automatic.Detections, automatic.Assignment, automatic.Rejected ?? [], automatic.Summary);
         var state = session.State;
         var bulls = state.Bulls.ToDictionary(b => b.Index);
         var shots = state.Shots.Select(s =>
