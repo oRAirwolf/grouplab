@@ -8,6 +8,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using GroupLab.App;
+using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using OpenCvSharp;
@@ -342,6 +343,49 @@ public class MarkingScreenTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 73 section 6: every row of the shot list fits inside the right column, the longest text giving way before
+    /// any button is cut off, and a detection that is not a shot is taken out from its row and put back the same way.
+    /// </summary>
+    [AvaloniaFact]
+    public void EveryShotListRowFitsTheColumnAndAFalsePositiveIsTakenOutFromItsRow()
+    {
+        (int X, int Y)[] holes = [(200, 200), (236, 180), (500, 200)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            window.Session.LoadDetections(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2), [new BullAim(0, "1", new PointD(215, 205)), new BullAim(1, "22", new PointD(500, 205))],
+                [.. holes.Select(h => (new PointD(h.X, h.Y), (int?)1))], "test");
+            window.Session.SetExclusion(window.Session.State.Shots[0].Id, ExclusionReason.CalledFlyer);
+            Dispatcher.UIThread.RunJobs();
+
+            double width = Tokens.RightColumnWidth - Tokens.SectionPadding.Left - Tokens.SectionPadding.Right;
+            var rows = window.ShotList.Children.OfType<Grid>().ToList();
+            Assert.Equal(holes.Length, rows.Count);
+            foreach (var row in rows)
+            {
+                row.Measure(new Avalonia.Size(width, double.PositiveInfinity));
+                row.Arrange(new Avalonia.Rect(0, 0, width, row.DesiredSize.Height));
+                Assert.All(row.Children, c => Assert.True(c.Bounds.Right <= width + 0.5, $"{c.GetType().Name} ends at {c.Bounds.Right:0.0} in a {width:0.0} column"));
+            }
+
+            var target = window.Session.State.Shots[1];
+            rows[1].Children.OfType<Button>().Single(b => (b.Content as string) == "Not a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.Session.State.Find(target.Id)!.NotAShot);
+
+            window.ShotList.Children.OfType<Grid>().ElementAt(1).Children.OfType<Button>().Single(b => (b.Content as string) == "It is a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(window.Session.State.Find(target.Id)!.NotAShot);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 40 section 1: with the sheet's printed artwork known, a tap on printed ink is placed where it was tapped
     /// and the status line says why, while a tap by a hole in bare paper still snaps onto it.
     /// </summary>
@@ -487,14 +531,14 @@ public class MarkingScreenTests
             var ids = window.Session.State.Shots.Select(s => s.Id).ToList();
             List<Button> Rows() => [.. window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => b.Tag is int)];
             Assert.Equal(ids, Rows().Select(b => (int)b.Tag!));
-            Assert.Equal("2  bull none", Rows()[1].Content);
+            Assert.Equal("2  bull none", ((TextBlock)Rows()[1].Content!).Text);
 
             Rows()[1].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.Equal(ids[1], window.Canvas.Selected);
 
             window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => (b.Content as string) == "Exclude").ElementAt(2).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.Equal(ExclusionReason.CalledFlyer, window.Session.State.Find(ids[2])!.Exclusion);
-            Assert.Equal("3  bull none, excluded as CalledFlyer", Rows()[2].Content);
+            Assert.Equal("3  bull none, excluded as CalledFlyer", ((TextBlock)Rows()[2].Content!).Text);
             window.Close();
         }
         finally

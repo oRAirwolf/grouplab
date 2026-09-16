@@ -868,27 +868,38 @@ public sealed class MainWindow : Window
                 : string.Create(CultureInfo.InvariantCulture, $"{numbers[id]}  bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}");
             var select = new Button
             {
-                Content = text,
+                Content = new TextBlock
+                {
+                    Text = text,
+                    FontFamily = Mono,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    FontWeight = id == canvas.Selected ? FontWeight.Bold : FontWeight.Normal,
+                },
                 Tag = id,
-                FontFamily = Mono,
-                MinWidth = 230,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
-                FontWeight = id == canvas.Selected ? FontWeight.Bold : FontWeight.Normal,
                 Margin = new Thickness(0),
             };
+            ToolTip.SetTip(select, text);
             select.Click += (_, _) =>
             {
                 canvas.Selected = id;
                 Refresh();
             };
-            var row = Row(select);
-            row.Children.Add(new TextBlock { Text = ProvenanceWord(shot.Provenance), MinWidth = 72, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } });
+
+            // NOTES-FROM-PLANNING.md entry 73 section 6: the row fits the column, its text giving way first rather than its buttons being cut
+            // off, and a detection that is not a shot can be taken out from here. "Not a shot" keeps the mark and its provenance and can be
+            // undone from the same row; deleting stays in the selection panel.
+            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto") };
+            AddCell(row, select, 0);
+            AddCell(row, new TextBlock { Text = ProvenanceWord(shot.Provenance), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } }, 1);
             if (!shot.NotAShot)
             {
-                row.Children.Add(Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-                    session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null)));
+                AddCell(row, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
+                    session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null)), 2);
             }
 
+            AddCell(row, Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)), 3);
             shotList.Children.Add(row);
         }
     }
@@ -1022,6 +1033,13 @@ public sealed class MainWindow : Window
         var button = new Button { Content = label, Margin = new Thickness(2) };
         button.Click += async (_, _) => await action();
         return button;
+    }
+
+    private static void AddCell(Grid grid, Control child, int column)
+    {
+        Grid.SetColumn(child, column);
+        child.Margin = new Thickness(column == 0 ? 0 : 6, 0, 0, 0);
+        grid.Children.Add(child);
     }
 
     private static StackPanel Row(params Control[] children)
