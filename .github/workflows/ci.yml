@@ -51,3 +51,58 @@ jobs:
               echo "- the tests did not run"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # NOTES-FROM-PLANNING.md entry 61 sections 1 and 5 item 2: one Linux format, the self-contained tarball, because it falls out of a build
+  # that already happens and costs nothing to keep. AppImage if somebody wants a menu entry; .deb, .rpm, snap and flatpak when a person asks
+  # for one by name, because each is a permanent obligation and there are no Linux users yet.
+  #
+  # Built on Linux rather than cross-published, because src/GroupLab.Cli/GroupLab.Cli.csproj references the OpenCV native runtime package
+  # for the build host's own platform, so only a Linux host puts the Linux native library in the output.
+  #
+  # Entry 63 section 2: the build host sets the floor. A binary built against an older glibc runs on a newer one and not the other way, so
+  # this tarball runs on the runner's distribution and newer, and proving it on a newer release would prove nothing about an older one.
+  # ubuntu-latest is Ubuntu 24.04 today, which is also what the test matrix and the gate record run on. The day ubuntu-latest moves to 26.04
+  # the floor moves with it and nothing here will say so, which is why the step prints the release and the glibc version it built against.
+  #
+  # The application reads the system region on first run (InvariantGlobalization is false, see src/GroupLab.App/GroupLab.App.csproj), so the
+  # machine that unpacks this needs ICU. Every desktop Ubuntu has it; a minimal container may not.
+  tarball:
+    name: linux tarball
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish self-contained
+        run: dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab
+
+      - name: Pack it, and say what it runs on
+        run: |
+          set -o pipefail
+          tar -czf grouplab-linux-x64.tar.gz -C publish grouplab
+          . /etc/os-release
+          glibc=$(ldd --version | head -1 | awk '{print $NF}')
+          compressed=$(du -h grouplab-linux-x64.tar.gz | cut -f1)
+          unpacked=$(du -sh publish/grouplab | cut -f1)
+          files=$(find publish/grouplab -type f | wc -l)
+          native=$(find publish/grouplab -name 'libOpenCvSharpExtern*' | wc -l)
+          {
+            echo "### linux tarball"
+            echo
+            echo "- built on $PRETTY_NAME against glibc $glibc, which is the oldest release it runs on"
+            echo "- $compressed compressed, $unpacked unpacked, $files files, $native native OpenCV libraries"
+          } >> "$GITHUB_STEP_SUMMARY"
+          test "$native" -ge 1
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: grouplab-linux-x64
+          path: grouplab-linux-x64.tar.gz
+          retention-days: 30
