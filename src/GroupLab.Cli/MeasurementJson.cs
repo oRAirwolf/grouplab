@@ -45,7 +45,7 @@ internal static class MeasurementJson
             lens = m.Lens,
             worstError = m.WorstError,
             meanError = m.MeanError,
-            bulls = m.Bulls.Select(b => new { label = b.Name, declared = b.Declared, recovered = b.Recovered, b.Dx, b.Dy, b.Error, b.Iterations, b.Threshold, b.InkSpread, b.EdgePoints, b.Failure }),
+            bulls = m.Bulls.Select(b => new { label = b.Name, declared = b.Declared, recovered = b.Recovered, b.Dx, b.Dy, b.Error, b.Iterations, b.Threshold, b.InkSpread, b.EdgePoints, b.NearThresholdRays, b.Failure }),
             trace = m.Trace,
         };
         return JsonSerializer.Serialize(document, Options);

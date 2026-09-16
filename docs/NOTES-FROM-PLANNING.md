@@ -444,8 +444,9 @@ Both are at `C:\Dev\grouplab-originals\friend-2026-09-16\`, for local testing on
 
 ## 2026-09-16, entry 55: the spread result, an edge count that predicts trust, and a precision the tables do not have
 
-**Status: open.** Nothing here is started: entry 58 section 3 came first, as Alan directed and as entry 59 order item 4 agrees.
-- **Next, and before the weekend:** section 3 item 1, the edge point count and the near-threshold ray count in the stage record. It changes no behaviour and it cannot be added to frames already measured.
+**Status: open, with section 3 item 1 done.** It came after entry 58 section 3, as Alan directed and as entry 59 order item 4 agrees.
+- **Section 3 item 1 is in, before the weekend.** Every located bull's edge point count and its count of rays that sat within a tenth of the crossing threshold are in the `P0.bulls` stage record, with the sparsest bull named in a line that prints at any verbosity. No behaviour changed: the `sheets` table reprints identically and no committed record moved. Reported in `docs/PHASE1-RESULTS.md` "Entry 55 section 3 item 1".
+- **Next:** section 4's deterministic raster, then section 5's precision derivation, then entry 54 section 11's first task. Section 3 item 2 waits for the weekend's sparse bulls, as you ordered.
 - **Section 4 stands and is accepted:** the synthetic raster is warped by the native library that then detects it, so those sixteen rows measure the raster and not the detector. Generating it in managed code is the fix, not an explanation.
 - **Section 5 is understood as conditional:** a digit count derived from the measured instability, applied to every table and platform, decided without reference to the macOS difference, and macOS still failing if it still differs. The derivation comes to you before anything is printed differently.
 

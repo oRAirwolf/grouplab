@@ -561,6 +561,16 @@ public static class SheetMeasurer
                 stage.Reject($"bull {located.Name}", why, PointInches.FromDmm(bull.X, bull.Y));
             }
 
+            if (located.EdgePoints is { } points)
+            {
+                stage.Metric($"edgePoints[{located.Name}]", points, "points");
+            }
+
+            if (located.NearThresholdRays is { } nearRays)
+            {
+                stage.Metric($"raysNearThreshold[{located.Name}]", nearRays, "rays");
+            }
+
             results.Add(located);
         }
 
@@ -579,6 +589,21 @@ public static class SheetMeasurer
         if (found.All(r => r.InkSpread is not null))
         {
             stage.Metric("inkSpread", found.Average(r => r.InkSpread!.Value) / 10, "mm per edge");
+        }
+
+        // NOTES-FROM-PLANNING.md entry 55 section 3 item 1: entry 52 section 3 measured a sixteenfold difference in how far one
+        // point can move a bull, between a bull of 900 edge points and one of 14, and it is predictable from a count the locator
+        // already has. The count is recorded here so that nothing downstream has to guess which bulls were thinly supported.
+        if (found.Select(r => r.EdgePoints).OfType<int>().Order().ToList() is { Count: > 0 } counts)
+        {
+            var sparsest = found.Where(r => r.EdgePoints == counts[0]).Select(r => r.Name).First();
+            stage.Metric("fewestEdgePoints", counts[0], "points");
+            stage.Detail(string.Create(inv, $"edge points per located bull: fewest {counts[0]} at bull {sparsest}, median {counts[counts.Count / 2]}, most {counts[^1]}"));
+        }
+
+        if (found.Select(r => r.NearThresholdRays).OfType<int>().ToList() is { Count: > 0 } nearCounts)
+        {
+            stage.Metric("raysNearThreshold", nearCounts.Sum(), "rays");
         }
 
         stage.Done(results.All(r => r.Failure is null) ? StageStatus.Ok : StageStatus.Degraded,

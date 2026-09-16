@@ -2555,6 +2555,30 @@ The four browser-test uploads contribute four byte hashes and one photograph key
 
 ---
 
+## Entry 55 section 3 item 1. What each bull rested on, recorded where it can be read
+
+`docs/NOTES-FROM-PLANNING.md` entry 55 section 3 item 1, resting on entry 52 section 3, which measured why the count is worth having.
+
+**Why a count is worth recording.** Leaving one edge point out moves a bull of 106 to 900 points by at most 0.0002 in, and `telephoto3`'s 14-point bull by 0.0032 in, two thirds of the whole gate. That is a sixteenfold difference in how far a bull can move, and it is predictable before anybody looks at the answer, from a number the locator already has and then threw away.
+
+**What is recorded now**, in the `P0.bulls` stage record, for every located bull:
+- **`edgePoints[<bull>]`,** the points its fit rested on.
+- **`raysNearThreshold[<bull>]`,** how many of its 180 rays per edge had a rise within a tenth of the threshold that decides whether a ray yields an edge point at all.
+- **`fewestEdgePoints`** across the sheet, and a detail line naming the sparsest bull, which prints at any verbosity.
+- **In `grouplab measure --json`** the count rides beside the existing `edgePoints` field on each bull.
+
+**Why that threshold and not the fit's rejection.** Entry 52 section 3 asked where a hard include or exclude sits, and found it is not in the rejection: at convergence the fit rejects no point on any bull measured. The step is earlier, in the crossing test, where a profile whose ends differ by less than half the bull's ink-to-paper range yields nothing. A ray within a tenth of that line is one the image could flip either way, so it is counted on both sides of the line rather than only where it failed. The tenth is the convention `EdgeFitBullLocator.LeaveOneOut` already uses for a point near the rejection limit.
+
+**Nothing about what is located changed, and it is shown rather than asserted.**
+- **The `sheets` table reprints identically,** line for line, against the committed Windows table.
+- **No committed record moved.** The new count is in the stage record and in `grouplab measure --json`, and deliberately not in `scans/phase0/measurements`, so the gate record's raw comparison is untouched and no regeneration was needed.
+
+**What it is for, which is not done.** Section 3 item 2 asks for the relationship between the point count and the leave-one-out spread, measured rather than guessed, and says plainly not to pick a cutoff from the three sparse bulls in one frame. That waits for the weekend's frames, where a sheet that overflows the frame is what produces sparse bulls. The field has to exist first, because it cannot be added to data already measured.
+
+**Tests:** Core 760 passing, App 35 passing, none skipped, including a new one that fixes the stage record's per-bull counts against the locator's own.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2691,3 +2715,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 49 section 2: only the two measurements whose tables differ replayed, over all eight.** The other six already print identically on macOS, so replaying them could only repeat what the gate record shows.
 - **Entry 58 section 4: the opt-out's second key is what a file scrubs to, over the decoded pixels.** It collapses the four re-exports to one value as a pixel hash would, and it keeps a consent mechanism inside `GroupLab.Core`, which has no image decoder and whose tests run on every platform.
 - **Entry 58 section 3: either key alone withholds, over requiring both.** The same reasoning as entry 37 section 1's two opt-out signals: redundancy is the point, and publishing under ambiguous consent cannot be undone.
+- **Entry 55 section 3 item 1: the counts recorded in the stage record and in `grouplab measure --json`, over the committed spike records.** A field in the spike records would regenerate thirteen of them and move the gate record's raw comparison, for a diagnostic that changes no figure anybody reads.
+- **Entry 55 section 3 item 1: a ray counted as marginal within a tenth of the crossing threshold on either side, over counting only the rays that failed it.** A ray that just cleared the threshold is as easily flipped by the image as one that just missed it, and the tenth is the convention the leave-one-out already uses for the rejection limit.

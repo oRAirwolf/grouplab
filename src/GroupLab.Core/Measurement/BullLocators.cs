@@ -22,6 +22,7 @@ public sealed record BullLocation(
     double? Threshold = null,
     double? InkSpread = null,
     int? EdgePoints = null,
+    int? NearThresholdRays = null,
     string? Failure = null)
 {
     public string Name => Label ?? Index.ToString(CultureInfo.InvariantCulture);
@@ -263,7 +264,7 @@ public static class EdgeFitBullLocator
         var edges = Edges(bands);
         var centre = declared;
         double spread = 0, reach = bands[0].Outer + MaximumHalfWidth + 1;
-        int used = 0;
+        int used = 0, near = 0;
         var histogram = new int[256];
         (List<Observation>? Observations, PointD Start, double Spread) last = (null, declared, 0);
         for (int pass = 1; pass <= MaximumPasses; pass++)
@@ -288,6 +289,7 @@ public static class EdgeFitBullLocator
             }
 
             var observations = new List<Observation>(edges.Count * Rays);
+            near = 0;
             foreach (var edge in edges)
             {
                 double across = Math.Ceiling(2 * edge.HalfWidth / step) + 1;
@@ -311,10 +313,20 @@ public static class EdgeFitBullLocator
                         inside = !double.IsNaN(samples[s]);
                     }
 
-                    if (inside && Crossing(samples, edge.Sign, contrast) is { } at)
+                    if (!inside)
+                    {
+                        continue;
+                    }
+
+                    if (Crossing(samples, edge.Sign, contrast, out bool nearThreshold) is { } at)
                     {
                         double radius = edge.Radius - edge.HalfWidth + (at * step);
                         observations.Add(new Observation(centre.X + (radius * cos), centre.Y + (radius * sin), edge.Radius, edge.Sign));
+                    }
+
+                    if (nearThreshold)
+                    {
+                        near++;
                     }
                 }
             }
@@ -339,11 +351,11 @@ public static class EdgeFitBullLocator
             last = (observations, start, startSpread);
             if (shift < CentroidBullLocator.Convergence)
             {
-                return new Converged(new BullLocation(index, bull.Label, declared, centre, pass, null, spread, used), observations, start, startSpread);
+                return new Converged(new BullLocation(index, bull.Label, declared, centre, pass, null, spread, used, near), observations, start, startSpread);
             }
         }
 
-        return new Converged(new BullLocation(index, bull.Label, declared, centre, MaximumPasses, null, spread, used, "did not converge"), last.Observations, last.Start, last.Spread);
+        return new Converged(new BullLocation(index, bull.Label, declared, centre, MaximumPasses, null, spread, used, near, "did not converge"), last.Observations, last.Start, last.Spread);
     }
 
     private readonly record struct Edge(double Radius, int Sign, double HalfWidth);
@@ -377,9 +389,16 @@ public static class EdgeFitBullLocator
     /// <summary>
     /// The sample index where the profile crosses midway between its two ends, nearest the declared edge. A profile whose
     /// ends differ by less than half the bull's ink-to-paper range, or in the wrong direction, has no edge to report.
+    /// <para>
+    /// <paramref name="nearThreshold"/> is set when that rise lies within a tenth of the half-contrast threshold, on either
+    /// side of it, NOTES-FROM-PLANNING.md entry 55 section 3 item 1. Entry 52 section 3 found that this test, rather than the
+    /// fit's rejection, decides how many points a bull rests on, so a ray this close to it is one the image could flip either
+    /// way. It is counted and reported; nothing here depends on it.
+    /// </para>
     /// </summary>
-    private static double? Crossing(double[] v, int sign, double contrast)
+    private static double? Crossing(double[] v, int sign, double contrast, out bool nearThreshold)
     {
+        nearThreshold = false;
         int n = v.Length, end = Math.Max(3, n / 8);
         if (n < MinimumSamples)
         {
@@ -396,7 +415,9 @@ public static class EdgeFitBullLocator
         inner /= end;
         outer /= end;
         double rise = sign > 0 ? outer - inner : inner - outer;
-        if (rise < 0.5 * contrast)
+        double threshold = 0.5 * contrast;
+        nearThreshold = Math.Abs(rise - threshold) <= 0.1 * threshold;
+        if (rise < threshold)
         {
             return null;
         }
