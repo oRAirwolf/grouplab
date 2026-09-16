@@ -32,7 +32,8 @@ public class PrintScreenTests
         Assert.Equal(string.Empty, elsewhere.Verb);
         Assert.True(elsewhere.UseShellExecute);
         Assert.Equal(path, elsewhere.FileName);
-        Assert.Contains("no print command", elsewhereStatus, StringComparison.Ordinal);
+        Assert.Contains("GroupLab cannot send this to a printer", elsewhereStatus, StringComparison.Ordinal);
+        Assert.DoesNotContain("system has no", elsewhereStatus, StringComparison.Ordinal);
         Assert.Contains("open in your viewer", elsewhereStatus, StringComparison.Ordinal);
     }
 

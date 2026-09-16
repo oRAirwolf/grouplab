@@ -374,7 +374,7 @@ public sealed class PrintWindow : Window
         ? (new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" },
             "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.")
         : (new ProcessStartInfo(path) { UseShellExecute = true },
-            "This system has no print command GroupLab can call, so the PDF is open in your viewer. Print from there at Actual size, or 100%.");
+            "GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer. Print from there at Actual size, or 100%.");
 
     /// <summary>
     /// A control shown again in a rebuilt row, taken out of the row it was last in. The serial box and the load block's field boxes

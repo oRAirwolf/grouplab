@@ -15,6 +15,312 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-16, entry 69: the assignment editor is the target, the concept is section 13 drawn, and most of it already exists in Core
+
+**Status: actioned 2026-09-16 for order items 1 and 2. Items 3 and 4 wait for Alan's report on using the application.**
+- **Item 1: the design target was already committed,** at `docs/figures/screens/assignment-editor.png` and linked from the README. Your file is the same picture pixel for pixel, re-encoded at 2.5 times the size with a content-credential block, so it is left uncommitted rather than added as a second copy.
+- **Item 2: the table is six rows right and two wrong.** `Reason` is a one-line method explanation, not the card's prose, and `FlaggedShots` rings oversized holes, not contested assignments.
+- **The larger finding:** the per-shot figures the card needs are computed in `AutomaticMarking` and dropped before they reach the session, and matching is never rerun after an edit. So the job is presentation plus that plumbing and one decision, and both come before layout. Reported in `docs/PHASE1-RESULTS.md` "Entries 65 to 69".
+
+Alan has named the assignment editor as what the UI work builds towards, on the grounds that it is the beginning of the process. **`DESIGN.md` section 13 opens by saying the same thing in stronger terms**, so this is the document's own sequencing reasserting itself rather than a new preference:
+
+> The editor is built before the detector, not after it. A good editor with a mediocre detector is a usable product. A bad editor with a good detector still frustrates users on every target the detector gets wrong, and no detector reaches one hundred percent.
+
+### 1. The concept image is now in the repository, because it was not anywhere Claude Code could see it
+
+I searched the working tree for concept artwork and found none: no file matching `*concept*` outside `.git`. **The design target existed only in chat**, which means every instruction to "make it look like the concept" has been unactionable by anyone who cannot see the picture.
+
+I have placed it at **`docs/figures/concept-assignment-editor.png`**. It is untracked; commit it or move it, but do not leave the target outside the repository again.
+
+### 2. It is not a mood board. It is section 13 rendered, down to the measured numbers
+
+The contested-assignment card in the concept reads:
+
+> This hole is 0.627 in from bull 4 and 1.043 in from bull 9. Nearest bull says 4, but bull 4 already holds a shot at 0.289 in and bull 9 holds none. One-to-one matching gives it to bull 9.
+
+`DESIGN.md` section 13 [r3] says:
+
+> a hole 0.627 inches from bull 4 belongs to bull 9 at 1.043 inches because bull 4 already has a closer shot
+
+**Same case, same figures, from `338lmao.jpg` in the corpus.** The hint text "Rough clicks snap to the local centroid" is also section 13's requirement quoted verbatim, and the three provenance pills are section 13's "automatic, automatic then corrected, or manual".
+
+**So the concept can be built from the document**, and where the two disagree the document is not automatically right: the picture is newer and Alan drew it. Say which one you followed when they differ.
+
+### 3. The encouraging part: the model already has nearly all of this
+
+I read the source rather than assuming. What is already there:
+
+| Concept element | Where it already lives |
+|---|---|
+| One-to-one matching, and why it beats nearest bull | `Core/Detection/ShotAssignment.cs`, `AssignmentMethod.OneToOne` |
+| The numbers in the contested card | `AssignedShot`: `Bull`, `Distance`, `NearestBull`, `NearestDistance`, `Margin`, `Ambiguous` |
+| The card's explanatory prose | `ShotAssignmentResult.Reason`, which already exists to carry exactly this |
+| The `automatic` / `corrected` / `manual` pills | `ShotProvenance` in `Core/Marking/MarkingSession.cs` |
+| "Not a shot" | `MarkedShot.NotAShot` |
+| Click a hole, then click a bull | `MarkingCanvas.cs`, already citing section 13 in a comment |
+| Flagged shots with an alert ring | `MarkingCanvas.FlaggedShots` |
+| Counting by provenance | `Core/Marking/GroupAnalysis.cs` |
+
+**The gap between the application and the concept is mostly presentation, not capability.** That is a much smaller job than the picture suggests, and it is the single most useful thing I learned today.
+
+### 4. What I did not find, and therefore what is actually new
+
+Stated as "did not find" rather than "does not exist", per entry 66:
+
+- **An ordered review queue** with per-item status. `Ambiguous` exists per shot; a queue with `NOW`, `NEXT`, `ADDED` and `KEPT OUT`, ordered by what to look at next, I did not find.
+- **An edit session with a commit point.** The concept's header carries "Discard edits" and "Accept and analyse", and a "2 of 26 need review" counter. That implies the editor is a mode you enter and leave, and analysis happens on acceptance.
+- **A `Score` readout** beside position, diameter and margin.
+- **The chrome**: the icon tool strip, the keycap hints, the left mode rail, the breadcrumb.
+- **The paper-cream sheet on dark chrome**, which is the largest visual difference and is a theme question rather than a layout one.
+
+### 5. The gate already exists and should not be reinvented
+
+`DESIGN.md` section 21, Phase 3: **"a full 25-shot target with several misassignments corrected in under two minutes."**
+
+That is a better gate than anything I would write, because it measures the thing section 13 says the editor is for. **Every styling decision should be argued against it**: if a change does not make that two minutes easier, it is taste rather than design, which is fine as long as it is labelled.
+
+**The left rail's other four icons imply screens that do not exist**, and drawing them is how a UI pass turns into a rewrite. Build the assignment editor. Leave the rail as a rail.
+
+### 6. What I am deliberately not specifying yet
+
+**I am not writing a layout specification from one screenshot.** I have been wrong five times today by supplying a cause for a difference I had not looked into, and a screen is a worse place to do that than a toolbar separator.
+
+What I want first is the thing Alan has not been able to do, which is **use the application**. His own words: he has not spent much time in it because Claude Code has been working and he did not want to cause conflicts. **That blocker is solvable and it is the highest-value thing in this entry**, because an hour of him using it will produce better direction than anything I can infer from a picture.
+
+### 7. Order
+
+1. **Commit the concept image**, or tell planning where it should live instead.
+2. **Read section 3's table and confirm or correct it.** If any of those already exist in a form I missed, the job is smaller again; if any is less complete than it looks, I want that before anything is designed around it.
+3. **Then the editor**, argued against section 21's two-minute gate.
+4. The chrome last, because it is the part most likely to be redrawn once somebody has actually used the screen.
+
+---
+
+## 2026-09-16, entry 68: Windows first, then Android, and the two things that must not be shelved with Linux
+
+**Status: taken 2026-09-16.** Entry 65 section 5, entry 67 section 4 and entry 65 section 4 step 3 were not touched. Both workflows still run all three platforms, and the macOS gate record stays open as a measurement question beside entry 55 section 5.
+
+A direction change from Alan, recorded so it is not re-argued, plus two carve-outs that matter more than the change itself.
+
+Alan's order, in his words: get the Windows application dialled and the UI fixed before testing on other platforms, and **Android has priority over Linux**.
+
+### 1. What this shelves
+
+- **Entry 65 section 5's remaining items.** The crash package on Linux, "Show me the file", and the gate record run locally. Parked, not cancelled.
+- **Entry 67 section 4 entirely.** Running the tarball, and the ICU question the SDK install may already have spoiled. The VM stays built and the questions keep.
+- **Entry 65 section 4 step 3**, calling `lp`. It was never urgent and it is now clearly not.
+
+**The VM was not wasted.** It answered all seven of entry 61 section 2's questions in one sitting and found one defect. Leaving it there with nothing further asked of it is the correct end state for a tool that has done its job.
+
+### 2. What must not be shelved with it: CI on all three platforms
+
+**Shelving Linux testing means shelving the VM. It does not mean shelving the workflows**, and the difference is the whole argument of entry 60.
+
+`ci.yml` and `gate-record.yml` run all three platforms on every push and cost nobody any attention while they stay green. **That is what stops Linux and macOS becoming a port later**, which entry 60's README text calls the expensive way to do it, and that text is now published and says so to anybody reading the repository. Turning the matrix down to Windows to move faster would be the single easiest way to make the published page untrue and to hand a future self a month of work.
+
+**Nothing in Alan's message asks for that, and I am writing it down anyway**, because "we are shelving Linux" is the kind of sentence that quietly becomes a matrix change three weeks later.
+
+### 3. What must not be shelved with it: the macOS gate record
+
+macOS is currently the only red job, on a small number of measurement rows traced to corner refinement inside the native imaging library plus one further divergence below it.
+
+**That is not a macOS problem. It is a question about the measurement**, and it would be exactly as interesting if it had shown up between two Windows machines. Three platforms running the same code on the same input produce two different answers, and we know where but not why.
+
+**Shelving it as platform work would be a category error.** It belongs with entry 55's precision derivation, which is already queued and which comes to planning before anything prints differently, because both are asking the same question: how much of the last digit is real.
+
+### 4. What Android priority actually buys, and what it does not
+
+**The prerequisite for mobile needs no device and is already queued**: entry 54 section 11's first task, whether the capture assistant's thresholds separate pass from fail on the Phase 0 frames. Entry 62 said plainly that if they do not, most of entry 54 falls. **So Android moving up the order changes nothing about what happens next**, which is a good sign that the order was roughly right.
+
+**What it does not remove is the dependency.** Entry 54's phone case is a person standing at a range holding a camera, and entry 62 section 4 said a green result on the tablet says nothing about that. **The range session and a photograph of a sheet still mounted where it was shot remain the critical path**, and they are the critical path for Android more than for anything else.
+
+**The Galaxy Tab S8 Ultra remains usable immediately** when Phase 6 starts, with no account and no signing, which is the one thing entry 62 established that this reordering makes relevant sooner.
+
+### 5. What I still need before UI work can be specified
+
+**"Dialled" and "fixed" are not yet specific enough for me to write an entry against**, and I have spent today being wrong five times by supplying a cause for a difference I had not looked into. I am not going to do it again with a screen.
+
+Asked of Alan separately: which of the concept screenshots the current window is furthest from, and whether the complaint is layout, density, typography, the panel, or the marking canvas itself.
+
+**Entry 43, the analysis screen, stays closed.** Entry 50's three conditions gate it and one of them is the gate record green on all three platforms, which macOS still fails. **A styling pass on the screens that already exist is not gated by that** and can proceed as soon as it is specified.
+
+---
+
+## 2026-09-16, entry 67: `lp` is there, the XDG log path works, and the VM may already have spoiled the one test the tarball needs
+
+**Status: actioned 2026-09-16 for section 3. Section 4 is shelved by entry 68.**
+- **`git add --renormalize .` moves nothing on this machine.** Measured again with `core.autocrlf` off: 109 files as committed, and only the `.gitattributes` line itself once `* text=auto` is added. Your prediction holds; the adopting commit would be one line.
+- **Nothing was committed.** Adopting it is Alan's call, and the index was reset after each measurement. Reported in `docs/PHASE1-RESULTS.md` "Entries 65 to 69".
+
+Sections 1 and 2 close open questions. Section 4 is a warning about the machine rather than about the code, and it is the reason this entry is not just two lines appended to entry 65.
+
+Everything here was measured on Alan's Ubuntu 24.04 desktop VM, by him, at my request. Per entry 66, how I looked is part of each claim.
+
+### 1. `lp` is present, so entry 65 section 4 applies in full
+
+`which lp lpr lpstat` returns `/usr/bin/lp`, `/usr/bin/lpr` and `/usr/bin/lpstat` on a stock 24.04 desktop with nothing installed but the .NET SDK.
+
+**So the sentence "This system has no print command GroupLab can call" is false on the commonest Linux desktop there is**, and it is false on the machine we are testing on. Entry 65 section 4's first step is answered and its steps 2 and 3 both stand:
+
+- **The wording is wrong now** and should describe GroupLab rather than the person's computer, whatever is decided about `lp`.
+- **`lp` is worth calling**, because GroupLab's premise is a sheet printed at exactly 100 percent and `lp` takes the scaling option directly. This is the one platform where GroupLab could guarantee actual size instead of asking for it.
+
+Still not urgent. Still the only place the Linux path could be better than the Windows one.
+
+### 2. The XDG log path works, and entry 61 section 2 is now fully answered
+
+A Release run wrote `~/.local/state/grouplab/logs/grouplab-20260916-181326-3564.log`. `XDG_STATE_HOME` is unset on a stock 24.04, so this is `LogDirectory`'s fallback branch and it is correct.
+
+**That was the last of the seven things entry 61 section 2 said the VM existed to answer.** All seven are answered and the only defect found among them is the print wording in section 1.
+
+### 3. `* text=auto` should go in, and the renormalisation commit should be empty
+
+Claude Code left this to Alan with the cost stated as "one renormalisation commit". **I think that cost is very likely zero, and if it is, the decision is easy.**
+
+The committed blobs are already LF: `git show :<path>` returned zero CRLF lines on every file I sampled. `* text=auto` normalises on commit, and blobs that are already normalised have nothing to change, **so `git add --renormalize .` should report no changes at all.** That is a prediction from three sampled files and the rule, not a measurement of all 476, so check it rather than believe it: run `git add --renormalize .` and look at `git status` before committing anything.
+
+**If it is empty, take it**, because the repository currently depends on one line in one person's global git config on one machine, and the first contributor who clones on Windows without `core.autocrlf` gets the state entry 64 wrongly described as already true. **If it is not empty, stop and report what moved**, because then something about the tree is not what either of us thinks.
+
+### 4. The SDK install may have pulled in ICU, which is the thing the tarball test was for
+
+Claude Code's report says nobody has run the tarball, and names the two questions it answers: whether it launches on a desktop Ubuntu, and whether ICU is present.
+
+**Installing the .NET SDK on that VM may have already answered the second question by changing it.** The SDK package depends on ICU, so if `libicu` was not there before, it is there now, and a tarball that launches on this machine proves nothing about a machine that never had the SDK. **That is exactly the user we are trying to model**, since the whole point of a self-contained tarball is somebody with no .NET at all.
+
+**Check before drawing any conclusion from a successful launch:**
+
+```
+grep -B2 -A6 dotnet /var/log/apt/history.log | head -60
+apt list --installed 'libicu*'
+```
+
+If the history shows `libicu` among the packages the SDK pulled in, **this VM can no longer answer the ICU question** and a second machine or a reverted snapshot is needed for it. If ICU was already present on the stock desktop image, the VM is fine and the tarball can be tested here.
+
+**Either way the first question is still worth answering here today**, because "does the tarball launch and draw a window" is not affected by any of this. Download the artifact from the `linux tarball` job, unpack it somewhere outside the repository, and run it. **Run it from a directory that is not a git checkout**, because `LogDirectory` walks up looking for a repository root and we have already been fooled once by the difference between its Debug and Release branches.
+
+### 5. What this does not change
+
+The range session and the mounted photograph gate are still the critical path, and nothing in this entry is on it. The VM has now found one wording defect and confirmed six things that were already right, which is roughly what a first look at a new platform should produce.
+
+---
+
+## 2026-09-16, entry 66: entry 64 was an artifact of where I was standing, and that invalidates a class of thing I measure
+
+**Status: noted 2026-09-16, and measured.** The one sentence worth acting on was measured under entry 67 section 3: a git without `core.autocrlf` sees 109 files and 21,634 lines, exactly entry 64, so entry 64 described a real state from a machine where it is real. The rule in section 3 is taken on this side too: the report says how each absence was looked for.
+
+One sentence of it is worth acting on. The rest is a limit on what my measurements of this repository mean.
+
+Entry 64 reported 109 tracked files permanently modified, 21,634 lines of line-ending churn waiting for a `git add -A`, and a working tree that was neither normalized nor clean. **It was wrong, and Claude Code's correction names the reason: `core.autocrlf` is `true` in the global config, so staging normalizes and the churn cannot be committed.**
+
+I reported it as unset because I ran `git config --get core.autocrlf` and got nothing back.
+
+### 1. Why that command lied, and what else it takes with it
+
+**The shell I reach this repository through is not Alan's machine.** The folder is mounted into a separate Linux VM, and that VM has its own `$HOME` and its own `~/.gitconfig`. Repository-local config is shared, because it lives in `.git/config` inside the folder. **Global config is not.** So a global setting on Alan's Windows machine reads as absent to me, and I reported an absence I had no way to see.
+
+The same applies to `git status` and `git diff` themselves, which is the part that actually matters. **Those commands do not report the state of the repository. They report the state of the repository as evaluated by the git I am running, with the config that git can see.** Every line of entry 64's evidence is a true measurement taken from the wrong machine.
+
+**The class this invalidates, so I do not walk into it again:**
+
+- **`git status` and `git diff` cleanliness**, which depend on `core.autocrlf`, `core.eol` and `core.fileMode`. On Alan's machine the tree is clean. Through the bridge it shows 109 modified files. **Neither of us is misreading git; we are running two different gits.**
+- **Line endings as git sees them.** Line endings on disk are real and I measured them correctly. What git does with them is not.
+- **File modes and the executable bit**, for the same reason.
+- **Path case sensitivity.** The mount is case sensitive and NTFS is not, so a casing bug could appear here that never appears there, or the reverse.
+- **Anything reading an environment variable, a user profile, a home directory or an installed tool.** `which dotnet` through the bridge says nothing about Alan's machine.
+
+**What stays reliable:** file contents, file sizes, timestamps, `git log`, `git show`, committed blobs, and anything else answered purely by bytes in the folder.
+
+### 2. The one thing still worth doing
+
+**Nothing about line endings needs fixing, and entry 64's section 4 should not be run.** Claude Code already established that and did not run it, which was right.
+
+But entry 64's last paragraph asked a real question that survives its wrong premise. **The tree is clean because of a setting in one person's global git config.** Anyone who clones without `core.autocrlf` set, including CI, a second machine, or a contributor, gets the state entry 64 described for real. `* text=auto` in `.gitattributes` moves that guarantee from a machine into the repository, at the cost of one renormalization commit.
+
+**That is Alan's call and not mine**, and it is worth making deliberately rather than discovering the first time somebody else clones.
+
+### 3. The general form, because this is the third time
+
+Entry 47 asserted an unverified fact about OpenCV packaging. Entry 57 asserted a browser. Entry 64 asserted a git config. **All three were confident statements about something I could not see from where I was standing, and all three were cheap to check and expensive to believe.**
+
+The rule that would have caught every one: **when I state that something is absent, say how I looked.** "`core.autocrlf` is unset" would have become "`git config --get core.autocrlf` returned nothing, from a shell that may not be reading the same config", and the flaw would have been visible in the sentence as I wrote it.
+
+---
+
+## 2026-09-16, entry 65: GroupLab renders on Linux, five of my five screenshot hypotheses were wrong, and one real thing is left
+
+**Status: actioned 2026-09-16 for section 4 step 2. Section 4 step 3 and section 5 are shelved by entry 68.**
+- **Step 2:** off Windows the print window now says "GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer." It names no platform, because the same branch runs on macOS.
+- **Why it is red:** the status line carries the alert style for every message, including the successful ones. Noted and not changed, with the rest of the chrome. Reported in `docs/PHASE1-RESULTS.md` "Entries 65 to 69".
+
+Section 4 is the only item asking for work. Sections 1 to 3 are the record of the first time anybody looked.
+
+Alan built the 24.04 VM and ran the application. `XDG_SESSION_TYPE` is `wayland`, so everything below is Avalonia's X11 backend through XWayland. He sent screenshots of Ubuntu and of Windows at a comparable size, which is what made the rest of this entry possible.
+
+### 1. It works, and more of it works than anybody had grounds to assume
+
+Confirmed by looking, not by inference:
+
+| | Result |
+|---|---|
+| Window, toolbar, panel, status bar | draw correctly, and the two-row toolbar wrap is identical on Windows |
+| Embedded IBM Plex | renders, including the monospace scale block |
+| Theme, set to Follow system | dark, and `gsettings get org.gnome.desktop.interface color-scheme` returns `prefer-dark`, so it followed correctly |
+| File dialog | the GTK portal chooser, with GroupLab's own title, the Images filter applied, and the home directory reachable |
+| Print window | target list, description, preview artwork, sheet paging, all correct |
+| PDF handoff | the sheet opened in the system document viewer and looks right |
+| Crash report dialog | opens, lists both run logs plus `environment.txt`, `description.txt` and `contact.txt` |
+| Log file | written, one per run, correct name pattern |
+
+**Entry 61 section 2 listed seven things the VM existed to answer. Six of them are answered and passed on the first attempt.**
+
+### 2. Everything I flagged from the screenshots was already right
+
+I raised five things. **All five were correct behaviour and four of them were already reasoned about in code comments I had not read.**
+
+| What I flagged | What it actually is |
+|---|---|
+| Toolbar separators render as a horizontal dash | identical on Windows. Not a platform difference |
+| The scale block is monospace while its surroundings are not | identical on Windows. Deliberate |
+| Follow system may not detect the Linux theme | it detected it. `prefer-dark` |
+| The log path ignores entry 41's XDG location | `LogDirectory.Resolve` puts logs under `<repository>/out/logs` **in a Debug build** by design, and the platform paths including `$XDG_STATE_HOME/grouplab/logs` are implemented below it. Alan ran Debug on Linux and Release on Windows, so the two panels differ by build configuration and not by platform |
+| The crash report has no Send button on Linux | the Send button is hidden while the send URL is empty, which is entry 41 section 7's own design |
+
+**Worth recording rather than quietly dropping.** The pattern is that I read a screenshot, found a difference, and proposed a cause, five times, without opening the code that explains it. Each one carried a stated check, which is why the whole set cost one message instead of a week, and that is the only part of this I would keep.
+
+### 3. Entry 61 section 3 was wrong about the mechanism, and its caveat is what saved it
+
+Entry 61 predicted that setting `Verb` on Unix throws `PlatformNotSupportedException`, that neither `catch (Win32Exception)` sees it, and that pressing Print offers the user a crash report.
+
+**It throws `Win32Exception` with `ERROR_NO_ASSOCIATION`, so the original catch would have caught it and the fallback would have run.** The button was never going to crash. `PrintWindow.PrintLaunch` now carries that correction in its own documentation, and the fix taken is the one entry 61 asked for anyway: do not set `Verb` off Windows at all.
+
+Entry 61 said "check it before changing anything, because if `Verb` is silently ignored on Unix rather than throwing, the code is merely useless there rather than broken, and the fix is different". **That sentence is the only reason a wrong mechanism did not become a wrong fix.**
+
+### 4. The one live finding: the print message tells a Linux user something untrue, and `lp` is the opportunity
+
+Pressing Print on Linux shows, in red:
+
+> This system has no print command GroupLab can call, so the PDF is open in your viewer. Print from there at Actual size, or 100%.
+
+**Read as a statement about GroupLab it is true. Read as a statement about the user's system it is false**, and it is the second reading a person will take. Any Ubuntu desktop with CUPS has `lp`, and the sentence tells its owner their machine cannot print.
+
+**The wording is the small half. The large half is that `lp` exists and nothing calls it.**
+
+GroupLab's whole premise is a sheet printed at exactly 100 percent, and the print window says in its own words that it "cannot set your printer driver". On Windows that is a real limit of the shell verb. **On Linux it is not a limit at all**: `lp` takes the scaling options directly, so this is the one platform where GroupLab could guarantee actual size rather than ask for it, and it currently does the weakest thing available.
+
+So, in order:
+
+1. **Establish whether `lp` is there.** `which lp lpr lpstat` in the VM. If it is absent on a stock Ubuntu desktop, the message is closer to true than I think and most of this section falls.
+2. **Fix the wording either way**, so it describes GroupLab rather than the person's computer. Something like: *GroupLab cannot hand this to a printer on Linux, so the PDF is open in your viewer.*
+3. **Then consider calling `lp` when it exists**, with the no-scaling option set explicitly, falling back to the viewer when it does not. Not urgent, since there are still zero Linux users, and worth writing down because it is the one place where the Linux path could be better than the Windows one rather than merely equal.
+
+### 5. What the VM has not answered yet
+
+- **Whether the XDG log path works in practice.** The code intends `~/.local/state/grouplab/logs`, and only the Debug path has been seen. A Release run would confirm it, and it is the last of entry 61 section 2's seven items still open.
+- **Whether the crash package actually builds on Linux.** The dialog was opened and no report was saved, so the zip, the temp directory and "Show me the file" are all still untested on a platform whose temp handling differs.
+- **The gate record locally**, which CI already covers and which therefore comes last.
+
+---
+
 ## 2026-09-16, entry 64: 109 tracked files have shown as modified for two days, and the whole difference is line endings
 
 **Status: actioned 2026-09-16, and the diagnosis is corrected.** Verified before anything was taken, as you asked: `git status --short` lists only the untracked inbox entries, and `git diff --shortstat`, `git diff -w --shortstat` and `git diff --cached --shortstat` are all empty. There was nothing to discard, so `git checkout -- .` was not run.

@@ -2657,6 +2657,63 @@ if (verb != string.Empty &&
 
 ---
 
+## Entries 65 to 69. The renormalisation measured, the design target found where it already was, and the editor's real size
+
+`docs/NOTES-FROM-PLANNING.md` entries 65 to 69, in the order Alan set: entry 67 section 3, the concept image, entry 69 section 3, and entry 65 section 4 step 2. Entry 68 shelves entry 65 section 5, entry 67 section 4 and entry 65 section 4 step 3, and none of them was touched. The CI matrix stays on all three platforms and the macOS gate record stays open.
+
+### Entry 67 section 3: `git add --renormalize .`
+
+**On this machine it moves nothing:** no file staged. Entry 66 is right that this answer depends on which git asks, so the question `* text=auto` exists to answer was measured too, with `core.autocrlf` switched off for the one command, and the index reset afterwards:
+
+| | Files the renormalisation stages |
+|---|---|
+| This machine, `core.autocrlf` true | 0 |
+| `core.autocrlf` false, `.gitattributes` as committed | **109 files, 21,634 lines each way** |
+| `core.autocrlf` false, with `* text=auto` added | 1, the `.gitattributes` line itself |
+
+- **Entry 64 described a real state,** the one any git without `core.autocrlf` sees. Its figures reproduce exactly.
+- **Entry 67's prediction holds:** with `* text=auto` the renormalisation moves no content, so the commit that adopts it would be that one line.
+- **Nothing was committed.** Adopting it remains Alan's decision, as entry 66 says.
+
+### The concept image: already in the repository
+
+**The design target has been committed since the concept screens were added,** at `docs/figures/screens/assignment-editor.png`, and the README's concept table links it. Entry 69 section 1 searched for `*concept*`, and this file is named for its screen.
+
+**The new file is the same picture.** Both decode to the same 1440 by 900 pixels (SHA-256 of the pixels `249c0ffb...`). The new copy is 480,726 bytes against 188,998, RGBA against a palette, and carries a C2PA content-credential chunk naming Claude and Anthropic as the software that provided it. **It was not committed:** a second copy adds nothing but size and a provenance block, and it is left untracked at `docs/figures/concept-assignment-editor.png` for Alan to delete or keep.
+
+### Entry 69 section 3, read against the source
+
+| Concept element | Entry 69 said | What the source has |
+|---|---|---|
+| One-to-one matching | `ShotAssignment`, `AssignmentMethod.OneToOne` | **Confirmed.** Hungarian matching, with nearest-bull when shots outnumber bulls |
+| The contested card's numbers | `AssignedShot` | **Computed, then dropped.** `AutomaticMarking` computes them for every shot and writes the ambiguous ones into the `S9.assign` trace, then hands the session only a position and a bull. `MarkedShot` has no field for them, so the application cannot show the card or the review counter today |
+| The card's prose | `ShotAssignmentResult.Reason` | **Corrected.** `Reason` is one line about the method, "as many shots as bulls". The card's sentence, including the distance of the shot already holding bull 4, has to be composed from the per-shot figures and the other shots' assignments |
+| Provenance pills | `ShotProvenance` | **Confirmed,** automatic, corrected and manual, with a moved or reassigned detection becoming corrected |
+| Not a shot | `MarkedShot.NotAShot` | **Confirmed,** and setting it on a detection marks that detection corrected |
+| Click a hole, then a bull | `MarkingCanvas` | **Confirmed,** in the canvas's press handler, citing section 13 |
+| Alert rings | `MarkingCanvas.FlaggedShots` | **Corrected.** Those are oversized holes from the calibre check, entry 24 section 5 and entry 46 section 1, not contested assignments. Nothing rings a contested one |
+| Counting by provenance | `GroupAnalysis` | **Confirmed** |
+
+**What exists and the table did not list:** undo and redo in the session, section 13's snap to the local centroid (`Snapping`, which quotes the sentence the concept's hint quotes), and the calibre size check, which reaches the window live and is the source the concept's "diameter against the median" queue row needs.
+
+**What the "did not find" list should add, stated as how it was looked for:**
+- **Assignment is not rerun after an edit.** A placed shot goes to its nearest bull and a moved one keeps its bull, so one-to-one matching happens once, at detection. A contested card would go stale after the first correction unless the matching is rerun, or the card says it was computed before the edit.
+- **Assignment uses the declared bull positions,** while the canvas draws the located ones. On a well-registered sheet the difference is small; it is still a difference to state wherever a distance is printed.
+- **No score.** A detected hole carries its diameter and solidity; nothing named score or confidence was found in `Core/Detection` or `Core/Marking`.
+- **Rejected candidates reach only the trace.** The queue's "added" and "kept out" rows need them, and `AutomaticResult` does not carry them.
+
+**So the job is presentation plus one plumbing change and one decision.** The plumbing is carrying the per-shot assignment detail and the rejected candidates from `AutomaticMarking` into the session. The decision is whether matching reruns as the person edits. Both come before any layout, and neither is started, since Alan's report on using the application comes first.
+
+### Entry 65 section 4 step 2: the print wording
+
+Off Windows, the print window said "This system has no print command GroupLab can call". Entry 67 established that a stock Ubuntu 24.04 desktop has `lp`, so the sentence read as a false statement about the person's computer. It now reads **"GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer."** It names no platform, because the same branch runs on macOS.
+
+**Noted and not changed:** the print window's status line carries the alert style for every message, so the confirmation that a PDF was sent or saved is drawn in red too. That is a styling question, held with the rest of the chrome until Alan has used the application.
+
+**Tests:** App 36 passing, none skipped. No Core file changed.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2799,3 +2856,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 64: the working tree left alone, over running the fix as written.** Nothing differed, so the command would have been a no-op dressed as a repair, and running it would have left a false record that something was cleaned.
 - **Entry 61 section 5 item 2: the tarball built on `ubuntu-latest`, over pinning `ubuntu-24.04`.** Pinning would freeze the glibc floor deliberately and freeze it silently apart from the test matrix, which tracks `ubuntu-latest`; printing the release it built on keeps the day they diverge visible, which is what entry 63 section 2 asks for.
 - **Entry 61 section 5 item 2: the step fails when the native imaging library is missing, over shipping whatever publish produced.** A tarball without `libOpenCvSharpExtern.so` installs, launches, and then cannot detect a marker, which is a failure that arrives late and in front of a user rather than in CI.
+- **Entries 65 to 69: the concept image left uncommitted, over committing a second copy.** The committed `docs/figures/screens/assignment-editor.png` is the same picture pixel for pixel, and the copy would add 481 KB and a content-credential block to the history for nothing.
+- **Entry 65 section 4 step 2: wording that names no platform, over "on Linux".** The branch it describes runs on macOS as well.
