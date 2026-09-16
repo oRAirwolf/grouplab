@@ -1,3 +1,7 @@
+# Every text file is stored with LF whatever the committer's git does, so the tree is clean on a clone without core.autocrlf
+# (NOTES-FROM-PLANNING.md entry 70 section 1). The rules below narrow it where bytes are compared exactly.
+* text=auto
+
 # Canonical GLTD-J is LF-only by specification (TARGET-SCHEMA.md section 6),
 # and fixtures are compared byte for byte, so neither may be converted on checkout.
 targets/** text eol=lf
