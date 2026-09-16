@@ -27,6 +27,8 @@ Four rules that decide every design question below.
 
 `n` shots. Shot `i` has coordinates `(x_i, y_i)` in the composite group frame, which is the offset from that shot's own bull centre. Distances are linear at the target plane, in the canonical storage unit of DESIGN.md section 14.
 
+**What a composite group from a sheet of bulls measures, `docs/NOTES-FROM-PLANNING.md` entry 72 section 2.** With one shot per bull, the offsets pool two things that no statistic can separate from one sheet: the rifle's dispersion, and the shooter re-aiming at a different bull for every shot. A sight zeroed for another distance adds a different correction on every bull, and at short range, where a subsonic load prints furthest from where it is aimed, that term is at its largest. **So a sigma from such a sheet is the sheet's dispersion, with both sources in it, and is never reported as the rifle's.** This is a property of every load development sheet GroupLab prints, not a fault of any one target.
+
 `c` is the group centre, `(x̄, ȳ)` unless a known point of aim is supplied. `r_i` is the radial distance from shot `i` to the centre.
 
 **The working model** is the bivariate normal with covariance `Σ`. The **circular** case is `Σ = σ²I`, under which `r` follows a Rayleigh distribution with scale `σ`. Most closed forms assume it. The **elliptical** case is general `Σ`, under which `r` follows a Hoyt distribution.

@@ -15,6 +15,294 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-16, entry 74: entry 70 conflated two different decisions, and a hand-placed shot must not pin its bull
+
+**Status: actioned 2026-09-16.**
+- **Section 1:** `MarkedShot.BullChosen` records whether a person chose the bull, set by click a hole then a bull, and saved in the marking file. The matching reads it alone, so a hole added by hand is matched like a detection. **One sentence here is not how the code works:** a corrected shot does not have a chosen bull by definition, because moving a shot or marking it not a shot also corrects it.
+- **Section 2:** recorded in `DESIGN.md` section 13 beside the rule, with the requirement that the screen tell a reopened marking from one with nothing to review. The format is unchanged.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 74 and entry 73 section 1".
+
+Section 1 corrects entry 70 section 3 and answers the question Claude Code raised. Section 2 records a limitation its report named in passing that should not be discovered later.
+
+Claude Code implemented entry 70 section 3 exactly as written and then asked the right question:
+
+> A hand-placed shot is pinned to its nearest bull. So adding a missed hole next to a detection pushes that detection to another bull, and it shows as moved. That follows entry 70 as written; if a hand-placed hole should be matched like a detection instead, the rule needs changing.
+
+**The rule needs changing, and the reason is that entry 70 treated two different decisions as one.**
+
+### 1. Placing a hole and choosing a bull are not the same decision
+
+When a person clicks to add a hole the detector missed, they are saying **"there is a hole here"**. That is an observation about the image, and it is theirs absolutely: nothing should ever move a mark a person placed.
+
+**They are usually not saying anything at all about which bull it belongs to.** The software chose that for them by snapping to the nearest one, and entry 70 then treated that software choice as a human decision and gave it the strongest constraint in the system. **A choice the person never made ends up shoving a real detection off its bull.**
+
+That is backwards, and it is worst in exactly the situation the editor exists for. Somebody working through a sheet correcting misses would find each correction silently rearranging the shots around it.
+
+**The rule, restated:**
+
+1. **Position is the person's whenever they placed or moved a mark.** Nothing re-solves a position, ever. This part of entry 70 was right.
+2. **A bull is pinned only when a person actually chose that bull.** Clicking a hole and then clicking a bull is a chosen assignment. Adding a mark and accepting whatever it snapped to is not.
+3. **Everything else takes part in the matching**, including hand-placed shots whose bull nobody chose. They compete for bulls like any detection.
+
+**So `ShotProvenance` is not sufficient to decide pinning and entry 70 was wrong to use it.** What is needed is a separate fact on the shot: **did a person choose this bull?** One boolean, and deliberately not the same thing as how the mark got there. A `Manual` shot may or may not have a chosen bull. A `Corrected` shot has one by definition.
+
+**What this fixes in Claude Code's scenario.** Adding a missed hole beside a detection no longer displaces that detection by fiat. Both are free, the matching weighs them together, and whatever it returns is the globally optimal answer for the shots now on the sheet. **If a detection still moves, that is a real result rather than an artefact**, and it belongs in the review queue as a `Moved` item exactly as implemented.
+
+**It also fixes the counts test.** Under the old rule a hand-placed shot consumed a bull the moment it was placed, which could trip the more-shots-than-bulls fallback earlier than the sheet warranted. Applying the count to the whole free set is the behaviour `DESIGN.md` section 13 describes.
+
+**Everything else in entry 70 section 3 stands**: re-solve on every edit, surface moved shots, honour the counts rule live and say when the method changes, and undo removes the pin along with the reassignment.
+
+### 2. The assignment detail does not survive a save, and that should be said out loud
+
+Claude Code's report notes, without making anything of it, that a saved marking does not keep the sheet's page mapping, so the assignment detail exists only while a detection is loaded.
+
+**The consequence is worth stating plainly: save a marking, reopen it, and the contested card has nothing to say.** The margins, the alternatives and the reason are all gone, and the review queue with them.
+
+**That is acceptable for now and it is not acceptable silently.** Somebody will hit it, and the failure looks like a bug rather than a limit. Two things follow:
+
+- **The screen should say so** rather than showing an empty queue that looks like there is nothing to review. A marking reopened without its image is a different state from a marking with no outstanding questions.
+- **Record it in `DESIGN.md` section 13 beside the rule**, so the decision to carry the mapping in the marking file later is made deliberately rather than forced by a bug report.
+
+**I am not asking for the file format to change now.** The editor is not built yet and changing a format to support a screen that does not exist is the wrong order.
+
+### 3. What else in that report was right and needs nothing
+
+Noted so it is not re-examined: the three print status states with a test that proves red does not persist after a success; the declared and located bull positions now carried side by side with a comment saying why they differ, which closes entry 70 section 5; and `* text=auto` verified against both `core.autocrlf` settings before committing, which is entry 66's rule applied without being asked.
+
+---
+
+## 2026-09-16, entry 73: the first hour anybody has spent using GroupLab, and the headline numbers on screen are wrong
+
+**Status: actioned 2026-09-16 for sections 1, 2, 3, 6 and 7, in section 9's order. Section 5 needs a decision, section 8 is answered from Alan's log, and section 4 waits for the label.**
+- **Section 1:** matching now runs over separate scoring and sighter pools. On the scan, extreme spread went from 2.224 to 1.361 in, as you predicted, but **the ellipse aspect rose, 2.630 to 2.818**, its axis turning from 62.5 to 26.7 degrees: the elongation is in the ten scoring shots, not the two sighter holes.
+- **Section 2:** the warning names every explanation instead of declaring ink.
+- **Section 3:** not supported. Flagged marks sit 0.017 in from the hole's own centre, like the unflagged ones, and only 1 of 5 points toward the ink.
+- **Section 5:** rings already scale with zoom once a calibre is set; the fixed ring is the no-calibre state. Choose what to draw then: the detector's measured diameter for detected shots, or a centre mark that claims no size.
+- **Section 6:** rows fit the column, and Not a shot is on each row. Delete and Not a shot were already in the selection panel.
+- **Section 7:** the reference figures are behind a remembered expander. The two interval labels are left at their exact coverages, as entry 24 decided.
+- **Section 8:** the application identified the sheet from its codes in both of Alan's sessions and never asked for a definition; he opened a saved marking after each image. Whether detection should run on open, and the printed name's wording and placement, are yours.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 74 and entry 73 section 1" and "Entry 73 sections 2 to 8".
+
+Alan ran the application against the friend's 600 DPI scan and reported eight things. **One of them makes the statistics wrong**, and it is first because everything else is cosmetic beside it. The others are ordered after it by severity.
+
+Registration was excellent: **38 of 38 markers, RMS 0.0036 in**. Nothing below is about registration.
+
+### 1. Sighter holes are being assigned to scoring bulls, and the group statistics are inflated by it
+
+**The screen shows dashed lines running from two sighter-row holes up to bulls 22 and 23.** They are labelled 11 and 12. The sheet's sighter row sits below row 5, and two holes fired at sighters have been matched to scoring bulls a full row away.
+
+**The model knows about sighters and the assignment does not use it.** `Bull` carries a `Scoring` flag, `BullAim` carries it through, and `GroupAnalysis` builds a `sighterBulls` set and excludes shots assigned to them. **`ShotAssignment` never mentions `Scoring` at all**, so the one-to-one matching pools sighter bulls and scoring bulls into a single set and is free to give a sighter's hole to a scoring bull.
+
+**Excluding by bull cannot save this**, because by the time the statistics run the shot is sitting on a scoring bull. The exclusion happens one layer too late.
+
+**The consequence is visible in the numbers.** A hole fired at a sighter and attributed to bull 22 enters the composite group with an offset of roughly a full row spacing. That is why extreme spread reads **2.224 in** while the scatter inside bulls 1 to 10 is plainly a fraction of that, and it is why the **error ellipse aspect is 2.63 with its major axis at 62 degrees**. The group is not elongated. It has two points a row and a half away from the rest.
+
+**The fix is the physical constraint the sheet already encodes.** A shot fired at a sighter can never belong to a scoring bull, and the reverse. **Run the matching over two separate pools**, scoring and sighter, and apply section 13's counts rule to each pool independently.
+
+**A prediction to check rather than believe:** removing shots 11 and 12 should take extreme spread well below 2.224 in and bring the ellipse aspect from 2.63 down toward 1. **If it does not, my reading of those dashed lines is wrong and I want to know.**
+
+**So the answer to Alan's question is: yes, in effect.** The sighter bulls themselves are excluded correctly. Two sighter holes got onto scoring bulls and are being counted.
+
+### 2. The oversize warnings state a cause they cannot know
+
+Setting the calibre produces five warnings of this form:
+
+> Shot 2 reads 0.607 in across, larger than one 0.308 in bullet hole (0.441 in), and it sits on the printed target: **this is printed ink under the mark rather than a hole.**
+
+**The measurement is fine and the conclusion is asserted.** The application cannot know it is ink. Several of the flagged marks are plainly real holes that happen to sit on a printed ring.
+
+`DESIGN.md` section 2 says this software must never give a confident wrong answer. **A sentence that names one cause out of several, in red, is that.** The honest form states the measurement and lists what would explain it: ink under the mark, two holes read as one, or a hole on a printed line merging with it. Shot 9's message already does this correctly and the others do not, so the right wording exists in the same file.
+
+### 3. A hypothesis for the off-centre markers, with the test attached
+
+Alan reports marker centres not aligning with hole centres when zoomed in. **Two different things are mixed together here and they need separating before anything is changed.**
+
+The first is certain and is section 5 below: the marks do not scale, so at high zoom a fixed-size glyph sits over a large hole and cannot be judged by eye at all.
+
+The second is a hypothesis. **Every mark flagged as oversize in section 2 sits on or touching a printed ring line**, and reads 0.5 to 0.6 in across against a 0.441 in bullet hole. That is consistent with the detector merging the hole with the ink it touches, which would both inflate the measured diameter and **pull the reported centre toward the ink**.
+
+**Test it rather than assume it.** For each flagged shot, compute the centre of the bright aperture alone, excluding anything as dark as printed ink, and report the displacement from the reported centre and its direction. **If the displacement points consistently at the nearest ring line, the mechanism is confirmed and the fix is in the detector.** If it does not, the marks are correct and only section 5 is real.
+
+### 4. At least one detection has no hole under it
+
+Alan reports a mark pointing at a spot with no hole, and there is a circle below the caption at the bottom of the sheet with nothing visible under it.
+
+**This needs the label number from Alan before anybody hunts for it**, and it is worth having because the corpus has no recorded false positive on real paper at 600 DPI.
+
+### 5. The marks do not scale with zoom
+
+Confirmed from the screenshots: the mark glyphs are the same size on screen at fit and at high zoom.
+
+**This is worse than cosmetic. It is what stops a person checking the detector's work**, which is the entire purpose of the editor. A mark whose size means nothing cannot be compared against the hole it claims to be on.
+
+**Marks should be drawn in sheet units and scale with the image**, so that at high zoom the mark and the hole can be compared directly. The calibre ring already has a real diameter to draw.
+
+### 6. A shot cannot be deleted from the list, and the button is clipped
+
+The right column's shot list offers Exclude, **its text is cut off by the panel width**, and there is no delete.
+
+**Exclude and delete are different things and both are needed.** Excluding keeps a real shot out of the statistics, which is `ExclusionReason`'s job. Deleting removes something that is not a shot at all, which is what a false positive needs. `MarkedShot.NotAShot` exists for exactly this and is not reachable from the list.
+
+**This blocks the Phase 3 gate directly**: twenty-five shots with several misassignments corrected in under two minutes is not possible when a wrong mark cannot be removed.
+
+### 7. The statistics panel is a wall of prose, and section 19 already says what to do
+
+Alan calls it hard to read and confusing. `DESIGN.md` section 19 specifies the answer and the application is not following it:
+
+> The primary panel shows the composite group, the headline figures, and the confidence interval on each. **Reference material, the full CEP table, the bivariate fit, and the comparison machinery live one click away in a panel that remembers it was opened.**
+
+Currently everything is in the primary panel: the aim offset, mean radius, sigma, extreme spread, edge to edge, the 0.77 to 1.42 sample-size caveat, the error ellipse aspect and axis, and the worst-shot flyer test, as continuous prose.
+
+**Headline figures with their intervals stay. The rest goes behind the disclosure.** This is not layout work being pulled forward; it is a specification the screen is currently ignoring.
+
+One detail worth fixing while there: the intervals read **94.8%** and **95.0%**. Two different coverages side by side invites a question nobody meant to raise.
+
+### 8. The sheet does not carry its own name, and opening a definition should not be manual
+
+The caption prints `GL-20J3-Y141-0BN3-EYME` and no human name, so a person holding the sheet cannot tell which target it is.
+
+**Two separate asks, and Alan is right on both:**
+
+- **The application should identify the sheet itself.** The corner blocks carry GLTD-B, registration found 38 of 38 markers, and the definition identifier is in the payload. Opening an image of a GroupLab sheet should load its definition without anybody choosing a file.
+- **The printed caption should carry the human name as well as the identifier**, because the identifier is for the software and the name is for the person holding the paper. This changes the renderer and therefore every sheet printed afterwards, so it is a deliberate change rather than a quick one.
+
+### 9. Order
+
+1. **Section 1.** The numbers are wrong until it is fixed.
+2. **Section 2.** One wording change, and it is the difference between honest and not.
+3. **Sections 5 and 6.** Together they are what makes the editor usable enough to judge anything else.
+4. **Section 3's test**, which may or may not turn into detector work.
+5. **Section 7**, following section 19 rather than inventing a layout.
+6. **Section 8**, the identification flow first and the printed name second.
+7. Section 4 once Alan supplies the label number.
+
+---
+
+## 2026-09-16, entry 72: the shooting details for 3a493942, and a warning about what its sigma will mean
+
+**Status: actioned 2026-09-16 for sections 1 to 3. Section 4 is a question for Alan.**
+- **Section 2 is in `docs/STATISTICS.md`** where the composite group is defined: a sigma from a one-shot-per-bull sheet is the sheet's dispersion, with re-aiming in it, and is never reported as the rifle's.
+- **Section 3, against the prediction:** 0 of 10 scoring shots misassigned, where you predicted 2 to 3. The ratio moved: after entry 73's fix the sigma is 0.274 in, putting the spacing at 5.5 sigma, where your model expects about 0.15 of a shot in ten. The sigma comes from the same shots, so the agreement is weaker than it looks.
+- **Section 1's details** are not written into the submission's provenance: they came from Alan, not from the shooter, which is entry 57 section 5's distinction.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 71 and 72".
+
+Short. It fills the blank answers entry 71 section 6 item 1 asked for, and it carries one caveat that has to reach the analysis before anybody quotes a number from this sheet.
+
+Alan has the details from the shooter: **300 Blackout, 220 grain subsonic, at 25 yards.**
+
+### 1. Use these in place of the blank fields
+
+| Field | Value |
+|---|---|
+| `caliber` | **300 Blackout**, bullet diameter **0.308 in** |
+| Load | 220 grain subsonic |
+| `shot_distance` | **25 yd** |
+| `target_backing` | cardboard silhouette on a wooden stake, read from the photographs |
+| `attachment_method` | packing tape at the four corners, over the chamfered corner tips only |
+
+0.308 is the number the hole size check wants. It is the same bullet diameter as the friend's earlier target, so the calibre gate has a second real sample rather than a first.
+
+### 2. A one-shot-per-bull sheet does not measure the rifle, and at 25 yards that gap is widest
+
+**This matters more than the numbers themselves.** A load development sheet gives one shot per bull, so what the composite group contains is **dispersion plus the shooter's ability to re-aim on each of ten different bulls**. Those two are not separable from one sheet, and nothing in the statistics can separate them.
+
+At 25 yards the aiming term is proportionally at its worst: the target subtends a large angle, the bulls are small on the retina at that distance only in absolute terms, and any optic is almost certainly zeroed for somewhere else. **A subsonic 220 grain load at 25 yards with a sight zeroed at 50 or 100 yards will not print where it is aimed**, and a per-bull aiming correction by the shooter puts a different error on every bull.
+
+**So whatever sigma comes out of this sheet is not the rifle's sigma**, and it must not be reported as though it were. The honest form is that it is the sheet's dispersion, with the sources named. **`DESIGN.md` section 2 says this software must never give a confident wrong answer, and quoting a rifle's precision from a sheet like this would be exactly that.**
+
+**This is a general property of the load development sheet rather than a fault of this target**, and it should be written into `docs/STATISTICS.md` wherever the composite group is described, because every load development sheet GroupLab prints has it.
+
+### 3. A prediction, so it can be killed
+
+The shooter used **bulls 1 to 10 consecutively rather than every other bull**, so the suggestion to double the effective spacing was not taken.
+
+His previous sheet sat at a spacing-to-sigma ratio of 3.89, entry 56 predicted roughly 21 percent misassignment at that ratio, and 2 of 10 were observed. **Same rifle, same load, same distance, same sheet geometry.**
+
+**So I expect roughly 2 to 3 of the fourteen-odd shots on this sheet to be nearest to a bull other than their own.** If `analyze` comes back with none, either the ratio has moved or entry 56's model is wrong, and both are worth knowing. If it comes back with far more, the same. **State the observed count against this prediction when the run is reported**, rather than just reporting the count.
+
+### 4. One question worth one message
+
+**Was the friend's earlier target also subsonic?** If it was supersonic, the two targets give the hole size check the same bullet diameter at two very different velocities, which is a contrast the corpus has nothing else like. If it was subsonic too, this is a repeat, which is still useful and worth knowing as a repeat rather than mistaken for a contrast.
+
+---
+
+## 2026-09-16, entry 71: submission 3a493942 is the mounted gate's first real material, and it is good
+
+**Status: actioned 2026-09-16 for order items 1, 2 and 3. Items 4 and 5 are not ones this side can do.**
+- **Item 1:** intake refuses the submission as received, because the scan is not in `meta.json`. Run on a copy without the scan, it publishes `IMG_5820` and `IMG_5822` scrubbed and holds the other four on triage, which decoded 0 to 3 markers on them. **Triage is wrong about all four**: every frame registers with 33 to 38 markers, so the gate's fixed marker-size guesses are a defect, recorded and not fixed. Nothing reached `grouplab-testdata`, and the scan's consent is still your decision.
+- **Item 2:** all six register. The flat homography's worst scoring bull is 0.011 to 0.059 in; the surface model's 0.0053 to 0.046 in, with `IMG_5820` at 0.00531 and `IMG_5819` at 0.00587, the closest any mounted frame has come and still outside 0.005 in. The large errors are on clean bulls at the bottom corners, not on the holed ones.
+- **Item 3:** the scan's 10 scoring shots are all matched to their nearest bull, and 5 sighter-row holes share 3 sighter bulls. Reported against entry 72 below.
+- **Section 3's tape instruction** is noted for the upload page, with section 6's upload limit.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 71 and 72".
+
+This is the thing the critical path has been waiting on since Phase 1 opened. Six camera originals of a GroupLab sheet **still taped where it was shot**, plus a 600 DPI scan of the same sheet, consented and not opted out.
+
+Sheet **`GL-20J3-Y141-0BN3-EYME`**, 5 by 5 with a three-bull sighter row. Submitted 2026-09-16T19:05:24Z.
+
+### 1. What arrived
+
+| | |
+|---|---|
+| Photographs | 6, `IMG_5819` to `IMG_5824`, taken 15:01:24 to 15:01:49 |
+| Camera | iPhone 17 Pro, back triple camera, **main lens on all six** (6.765 mm, f/1.78, 35 mm equivalent 24) |
+| Pixels | **5712 x 4284, 24.5 MP each** |
+| EXIF | **68 tags**, `LensModel` present, `DigitalZoomRatio` absent as always |
+| Exposure | ISO 80, 1/361 to 1/563. Bright daylight, no flash |
+| GPS | **15 tags each.** Values not read. To be scrubbed |
+| Scan | `Scan_20260916.png`, 5100 x 7013 at **600 DPI**, 54.7 MB |
+| Consent | agreed, `consent_v1`, `exclude_from_public_dataset` false, no `DO-NOT-PUBLISH` |
+
+**All six are camera originals chosen from the camera roll.** Nobody used the page's own capture button, so entry 58's stripped-file case does not arise. **These are the first consented, publishable, mounted photographs in the corpus.**
+
+### 2. It is mounted the way the gate means
+
+Taped at the four corners to a **bowed cardboard silhouette target on a wooden stake**, outdoors on a berm, in dappled daylight. The cardboard's bow is plainly visible in `IMG_5822` and `IMG_5824`.
+
+**That is the case `DESIGN.md` section 21 [r6] says no frame has ever come inside 0.005 in on**, and every measurement behind that statement came from Alan's own seven frames of a sheet hanging from a single pin. **This is a second, independent mounting, by a different person, with a different fixing method, on a different backing.** Whatever the numbers say, they say something the corpus could not say this morning.
+
+### 3. The tape is placed perfectly, and that was luck
+
+The four tape squares sit diagonally across the **chamfered paper corner tips only**. Every one of the four corner data blocks is fully clear, and so is every AprilTag I can see. At full resolution the blocks and tags are crisp.
+
+**My instructions to the shooter never mentioned this**, and tape across a corner block would have cost the entire session with nothing to show for it. **Add it to the instruction**: tape or staple outside the printed area, and never across a corner block or one of the small square markers.
+
+### 4. Frame quality is not uniform, and three of the six are the useful ones
+
+| Frame | Angle | Sheet in frame |
+|---|---|---|
+| `IMG_5820` | near straight on | fills the frame, roughly **400 px per inch of paper** |
+| `IMG_5822`, `IMG_5824` | off-axis, useful | good fill |
+| `IMG_5819`, `IMG_5821`, `IMG_5823` | wider angles | **sheet small in frame**, so far fewer pixels on each marker |
+
+Worth measuring rather than assuming: **the three wide frames may fail on marker size** the way the synthetic images in entry 48 did. If they do, that is a finding about how far back a contributor can stand, which is guidance we currently do not have and cannot get any other way.
+
+### 5. The shots are exactly the material the editor work needs
+
+Impacts fall on **bulls 1 to 10 and the three sighters**, roughly fourteen to sixteen holes, with bulls 11 to 25 clean.
+
+**Several sit outside their bull's rings.** One is above bull 5 and clear of it, one sits on bull 8's upper ring, and one near bull 4 lies between 4 and 5. **So this sheet carries genuine assignment ambiguity on real paper**, which is the material entry 70's contested-assignment work has to be built against. It is a better fixture than anything synthetic, and better than entry 56's sheet because it comes with a mounted photograph as well as a scan.
+
+### 6. Four problems, none fatal
+
+1. **Every substantive answer is blank.** `target_backing`, `attachment_method`, `shot_distance`, `caliber` and `credit_name` are all empty strings. The backing and the attachment are readable from the photographs. **The distance and the calibre are not recoverable from anything** and both matter: distance sets the scale of everything reported, and calibre drives the hole size check. **Ask the shooter.**
+2. **The scan is not in `meta.json`.** It was placed in the folder by hand, so it has no manifest entry and no recorded hash, and the intake path will not treat it as part of this submission. Decide deliberately whether it is covered by the same consent record, rather than assuming.
+3. **The page refused the scan for size.** A 600 DPI scan is **the single most useful artefact a contributor can give us**, and the upload page rejects it. That limit should rise, or the page should offer another route.
+4. **`notes` reads "Safari"**, carried over from the browser test. Harmless, and worth knowing before anybody reads it as a comment about the target.
+
+### 7. Order
+
+1. **`grouplab intake` on the submission**, which scrubs the GPS. First consented mounted frames through the publication path.
+2. **Register all six frames and report worst scoring-bull error per frame**, flat homography and the developable surface both, against the `PHASE1-RESULTS.md` tables. **This is the mounted gate measured on somebody else's mounting**, and it is the first independent test of the Phase 1 result.
+3. **`analyze` the scan**, and report detections, assignment method, and every ambiguous shot with its margin. Keep it as the fixture for entry 70's contested card.
+4. **Raise the upload size limit** so the next scan does not need a person in the loop.
+5. Ask Alan for the distance and the calibre.
+
+---
+
 ## 2026-09-16, entry 70: four decisions, so the editor is not blocked on me
 
 **Status: actioned 2026-09-16 for sections 1, 3, 4, 5 and 6, in section 7's order. Layout is not started.**

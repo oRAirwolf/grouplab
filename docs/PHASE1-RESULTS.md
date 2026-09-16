@@ -2801,6 +2801,87 @@ Entry 70's rule pinned a shot by its provenance, so a hole added by hand took it
 
 ---
 
+## Entry 73 sections 2 to 8. Alan's first session, after the statistics fix
+
+`docs/NOTES-FROM-PLANNING.md` entry 73, in its section 9 order after section 1, which is reported above with entry 74.
+
+**Section 2: the oversize warning no longer names a cause it cannot know.** On the printed target it said "this is printed ink under the mark rather than a hole". It now gives the measurement and where the mark sits, and names every explanation: printed ink under the mark, two holes read as one, or a hole on a printed line merging with the ink. This reverses entry 40 section 1's choice to name only the ink, and the test that pinned that choice now pins the new wording.
+
+**Section 5: the marks already scale once a calibre is set.** With a calibre and a scale, the impact ring is drawn at the bullet's diameter at the image's local scale times the zoom, never below 3 px, and its alert ring at the measured extent. Before a calibre is set there is no real diameter to draw, and the ring is a fixed 11 px. **Nothing was changed.** A ring drawn at an invented diameter would look like a calibre claim, and the honest alternatives, the detector's own measured diameter for detected shots or a centre mark that makes no size claim, are a decision for planning.
+
+**Section 6: the shot list's rows fit, and a false positive is taken out from its row.** The row was a 230 px text button, the provenance word and Exclude, about 384 px in a column with roughly 340 inside its padding. Rows are now a grid whose text gives way first, trimmed with an ellipsis and shown in full as a tooltip. Each row gains **Not a shot**, with **It is a shot** to undo it. Delete and Not a shot were never missing from the application, only from the list: both were already in the selection panel. A test lays every row out at the column's inner width and checks nothing ends past it.
+
+**Section 3: the off-centre hypothesis is not supported.** For each shot on `Scan_20260916.png` with calibre 0.308 in, the hole's own centre was taken as the darkness-weighted centroid of pixels darker than paper and not printed, using the registered expected artwork to exclude ink, and the reported centre's displacement from it was compared with the direction of the printed ink within 0.4 in.
+
+| | Shots | Median displacement | Pointing at the ink, cosine above 0.5 |
+|---|---|---|---|
+| Flagged oversize | 5 | 0.0171 in | 1 of 5 |
+| Not flagged | 10 | 0.0187 in | 2 of 10 |
+
+The flagged marks are displaced no more than the others and not consistently toward the ink, so the detector is not pulling their centres onto the rings. **No detector change follows.** One control row is an artefact: shot 14's 0.203 in comes from its window reaching the neighbouring hole, shot 15.
+
+**Section 7: the headline figures stay in view.** The placement line, centre from aim, mean radius, sigma and extreme spread with their intervals, and any size warnings stay in the panel; edge to edge, the angular note, the small-group size range, the error ellipse and the worst-shot test sit in a "More figures" expander, closed until opened and remembered in the settings file, as `DESIGN.md` section 19 specifies. **The 94.8% and 95.0% labels are left alone**: entry 24 chose to label each interval with its exact coverage rather than bend its endpoints to make it 95 percent, and making them match would undo that.
+
+**Section 8: the sheet already names its own definition, and Alan's log says so.** His two sessions logged `detect.identify definition=GL-20J3-Y141-0BN3-EYME tile=0 codes=3` and no definition picker; the picker only opens when the codes cannot be read. What each session did do was **Open marking** after opening the image, which is a separate, optional step. So the flow he asked for exists, and what may have misled him is that detection waits for the Detect button. Whether it should run on opening an image is a behaviour decision, not taken here. **The printed human name** changes the renderer, every sheet printed afterwards and the committed module-sweep PDFs, and waits for planning's wording and placement.
+
+**Section 4** waits for the label number from Alan.
+
+---
+
+## Entries 71 and 72. The first consented mounted photographs, registered, and the scan against its prediction
+
+`docs/NOTES-FROM-PLANNING.md` entries 71 and 72, submission `2026-09-16_3a493942`, sheet `GL-20J3-Y141-0BN3-EYME`.
+
+### Intake
+
+**As submitted, intake refuses the whole submission:** `Scan_20260916.png` is in the folder and not in `meta.json`, so nothing shows it was consented to. That is entry 71 section 6 item 2's open decision, and it was not taken here: the submission folder is untouched.
+
+**Run on a scratch copy without the scan**, with opt-outs read from the real submissions and output to a scratch directory rather than `grouplab-testdata`:
+- **`IMG_5820` and `IMG_5822` published,** each with GPS, 35 other EXIF fields, the thumbnail, the multi-picture index, APP2, APP10 and a trailer removed.
+- **The other four held by triage:** 0 markers decoded on `IMG_5819`, `IMG_5821` and `IMG_5823`, 3 on `IMG_5824`. They stay unpublished and unscrubbed until a person who has looked accepts them by name.
+- **Triage is wrong about all four,** as the registration below shows: every one registers. Triage tries three fixed guesses of the marker size, and the measurement's own first pass finds it. That is a defect in the intake gate, recorded here and not fixed in this pass.
+
+### Registration, all six frames
+
+`grouplab measure <frame> targets/GL-CF25-LTR.gltd.json --model homography|surface`, read from the originals on this machine. The surface model is the generalised cylinder through a camera with radial distortion.
+
+| Frame | Model | Markers | Corners kept | Scoring bulls located | Worst scoring bull (in) | Scoring bulls over 0.005 in | Worst sighter (in) |
+|---|---|---|---|---|---|---|---|
+| `IMG_5819` | homography (homography) | 38 of 38 | 114 of 152 | 25 of 25 | 0.01101 at 8 | 16 of 25 | 0.00624 at S1 |
+| `IMG_5819` | surface (generalised cylinder through a camera wi) | 38 of 38 | 134 of 152 | 25 of 25 | 0.00587 at 20 | 3 of 25 | 0.01332 at S2 |
+| `IMG_5820` | homography (homography) | 38 of 38 | 97 of 152 | 25 of 25 | 0.02587 at 5 | 16 of 25 | 0.01250 at S2 |
+| `IMG_5820` | surface (generalised cylinder through a camera wi) | 38 of 38 | 136 of 152 | 25 of 25 | 0.00531 at 1 | 2 of 25 | 0.01354 at S2 |
+| `IMG_5821` | homography (homography) | 36 of 38 | 79 of 144 | 25 of 25 | 0.03717 at 21 | 20 of 25 | 0.04737 at S1 |
+| `IMG_5821` | surface (generalised cylinder through a camera wi) | 36 of 38 | 115 of 144 | 25 of 25 | 0.01283 at 21 | 10 of 25 | 0.01451 at S2 |
+| `IMG_5822` | homography (homography) | 34 of 38 | 68 of 136 | 25 of 25 | 0.03451 at 21 | 19 of 25 | 0.04730 at S1 |
+| `IMG_5822` | surface (generalised cylinder through a camera wi) | 34 of 38 | 115 of 136 | 25 of 25 | 0.02338 at 25 | 8 of 25 | 0.02738 at S3 |
+| `IMG_5823` | homography (homography) | 36 of 38 | 64 of 144 | 25 of 25 | 0.05864 at 21 | 17 of 25 | 0.08783 at S3 |
+| `IMG_5823` | surface (generalised cylinder through a camera wi) | 36 of 38 | 113 of 144 | 25 of 25 | 0.02886 at 21 | 11 of 25 | 0.01503 at S2 |
+| `IMG_5824` | homography (homography) | 33 of 38 | 66 of 132 | 25 of 25 | 0.04800 at 25 | 16 of 25 | 0.07076 at S3 |
+| `IMG_5824` | surface (generalised cylinder through a camera wi) | 33 of 38 | 109 of 132 | 25 of 25 | 0.04607 at 21 | 11 of 25 | 0.01900 at S1 |
+
+**Holes do not explain the worst bulls.** Bulls 1 to 10 carry the shots, and under the surface model the worst of them is 0.00825 in on any frame. On `IMG_5821` to `IMG_5824` the worst bull under both models is a clean one, 21 or 25 at the bottom corners, by a wide margin. On `IMG_5819` and `IMG_5820` the worst holed and worst clean bulls are within 0.005 in of each other, the holed one slightly worse under the homography. So the large errors are registration at the lower corners, where the sheet is taped to the bowed cardboard, not hole damage.
+
+**Against the Phase 1 record.**
+- **The flat homography fails every frame,** worst scoring bull 0.011 to 0.059 in, inside the range the pinned sheet gave, 0.018 to 0.113 in.
+- **The surface model halves the worst bull or better** on four of six frames, and on `IMG_5820` and `IMG_5819` reaches **0.00531 and 0.00587 in**, with 2 and 3 scoring bulls over the gate. That is closer to 0.005 in than any mounted frame in this document, and still not inside it.
+- **So the mounted gate still has no passing frame,** now on a second mounting by a different person with a different fixing. Entry 52 section 3 applies to every figure here: each is one registration, and on the pinned sheet a frame's worst bull varied by up to threefold with nothing but the order of its corners.
+- **The best two are `IMG_5820`, which fills the frame, and `IMG_5819`, one of the wide frames;** the oblique `IMG_5822` to `IMG_5824` do worst. Entry 71's concern that the wide frames would fail on marker size did not happen: all three decoded 36 to 38 of 38 markers.
+
+### The scan against entry 72's prediction
+
+After entry 73 section 1, `grouplab analyze Scan_20260916.png` finds 15 holes: 10 in the scoring pool, on bulls 1 to 10, and 5 in the sighter row for 3 sighter bulls.
+
+- **Observed misassignment: 0 of 10 scoring shots.** One-to-one matching gives every scoring shot its nearest bull, none is flagged, and the ten occupy bulls 1 to 10 once each, so no shot is nearest a bull other than the one it was matched to. **Entry 72 predicted 2 to 3.**
+- **The prediction assumed the old ratio, and the ratio moved.** Entry 56's model was applied at spacing over sigma 3.89. This sheet's sigma after the fix is 0.274 in, which puts the 1.5 in spacing at **5.5 sigma**, where the same model expects about 1.5 percent per shot, about 0.15 of a shot in ten. Against that, 0 is what the model predicts.
+- **Two caveats.** The sigma comes from the same shots, and a shot that had landed nearest the wrong bull would make it smaller, so the agreement is weaker than it looks. And "own bull" can only mean the bull matching assigns, since the firing order is not known.
+- **Before the fix** the sigma was 0.492 in, inflated by the two sighter holes, which puts the ratio at 3.05 and would have predicted about one shot in four misassigned.
+- **The sighter row holds five holes for three bulls**, which the counts rule handles by nearest bull, all flagged. Whether two extra sighter shots were fired, or some of these are not shots, is for the shooter.
+
+**Tests:** Core 771 passing, App 39 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2951,3 +3032,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 74: pinning read from `BullChosen` alone, over `Corrected` or a chosen bull.** A shot becomes corrected when it is moved or marked not a shot, and neither of those chooses a bull.
 - **Entry 73 section 1: a shot's pool is its nearest bull's, with the margin still measured to every bull, over a pool chosen by page region.** The sheet already says which bulls are sighters, and nearest-bull is the rule's own fallback; a region would be a second geometry to keep in step with every definition.
 - **Entry 73 section 1: the overall method reported as nearest-bull when either pool fell back, over reporting the scoring pool's.** Reporting one-to-one would hide that a pool stopped being matched, which is the thing section 13 says must be said; the reason names each pool.
+- **Entry 73 section 5: no mark size invented when no calibre is set, over drawing a nominal diameter.** A ring at a made-up diameter reads as a claim about the bullet, which is the kind of implied fact section 2 rules out.
+- **Entry 73 section 7: the interval labels left at their exact coverage, over matching them.** Entry 24 decided the label states the coverage the interval actually has.
+- **Entry 71: intake run on a copy without the unlisted scan, over adding the scan to the manifest.** Whether the consent covers the scan is the contributor's question, and the submission as received is left as it is.
+- **Entry 71: the worst bull reported beside the worst clean bull, over the worst bull alone.** On a shot sheet the holes cut the rings of the bulls they hit, and separating the two shows the error is registration.
