@@ -6,7 +6,8 @@ namespace GroupLab.Core.Tests.Marking;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entries 39 section 1 and 40 section 1, the marking screen's two findings from its second human session:
 /// hand-placed shots on a sheet of bulls are assigned to them, a group whose shots are not is not quoted, and a tap on printed artwork
-/// is neither snapped onto it nor explained as two holes.
+/// is not snapped onto it. Entry 73 section 2: an oversized mark on the artwork is not declared to be ink, because a real hole on a
+/// printed ring reads the same, so every explanation is named.
 /// </summary>
 public class ArtworkAndAssignmentTests
 {
@@ -127,7 +128,7 @@ public class ArtworkAndAssignmentTests
     }
 
     [Fact]
-    public void AnOversizedRegionOnArtworkIsCalledThePrintedTargetAndOtherwiseBothExplanationsAreNamed()
+    public void AnOversizedRegionOnArtworkSaysWhereItSitsAndNamesEveryExplanationRatherThanOne()
     {
         var (value, artwork) = Sheet();
         var session = new MarkingSession();
@@ -139,7 +140,8 @@ public class ArtworkAndAssignmentTests
         Assert.Equal(ring, onArtwork.ShotId);
         Assert.True(onArtwork.OnArtwork);
         Assert.Contains("sits on the printed target", onArtwork.Problem, StringComparison.Ordinal);
-        Assert.DoesNotContain("Two holes", onArtwork.Problem, StringComparison.Ordinal);
+        Assert.Contains("Printed ink under the mark, two holes read as one, or a hole on a printed line", onArtwork.Problem, StringComparison.Ordinal);
+        Assert.DoesNotContain("rather than a hole", onArtwork.Problem, StringComparison.Ordinal);
 
         var unknown = Assert.Single(HoleSize.Check(session.State, value));
         Assert.False(unknown.OnArtwork);

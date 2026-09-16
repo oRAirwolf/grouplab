@@ -159,7 +159,8 @@ public static class HoleSize
     /// <summary>
     /// The sentence for a flag, in whatever units <paramref name="length"/> writes, NOTES-FROM-PLANNING.md entry 40 section 1. An oversized
     /// dark region is two holes marked as one or a mark on the printed target, and both are named. Where the artwork is known and the
-    /// region is mostly printed, only the second is, because it is then known.
+    /// region touches it, the sentence says so and still names every explanation, entry 73 section 2: a real hole on a printed ring reads
+    /// exactly as ink under a mark does, the software cannot tell them apart, and naming one cause in red would be a confident wrong answer.
     /// </summary>
     public static string Describe(HoleSizeFlag flag, double calibreInches, Func<double, string> length)
     {
@@ -167,7 +168,7 @@ public static class HoleSize
         ArgumentNullException.ThrowIfNull(length);
         string size = $"reads {length(flag.ApparentInches)} across, larger than one {length(calibreInches)} bullet hole ({length(flag.LargestExpectedInches)})";
         return flag.OnArtwork
-            ? size + ", and it sits on the printed target: this is printed ink under the mark rather than a hole."
+            ? size + ", and it sits on the printed target. Printed ink under the mark, two holes read as one, or a hole on a printed line merging with the ink would each read this way."
             : size + ". Two holes marked as one, or a tap that snapped to the printed target rather than a hole.";
     }
 
