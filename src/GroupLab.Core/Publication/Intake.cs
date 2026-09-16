@@ -43,8 +43,10 @@ public sealed record IntakeResult(string Submission, string? Refused, IReadOnlyL
 /// agreed and carries its version, time and text. Empty answers are the normal case and never a reason to refuse.</item>
 /// <item>Refuse a submission whose files do not match, one for one, the <c>stored_name</c>, <c>bytes</c> and <c>sha256</c>
 /// recorded at upload.</item>
-/// <item>Hold any file whose bytes are also in a withheld submission, whatever else is true of it and whoever accepts it, and record
-/// that submission's identifier beside it (entry 37 section 2): an opt-out wins by content hash, across every submission.</item>
+/// <item>Hold any file whose bytes, or whose photograph, are also in a withheld submission, whatever else is true of it and whoever
+/// accepts it, and record that submission's identifier beside it (entry 37 section 2): an opt-out wins by content hash, across every
+/// submission. Two hashes carry that rule, entry 58 sections 3 and 4: the file's own bytes, and <see cref="PhotographSha256"/>, which is
+/// the same for two exports of one photograph although the files differ. Either match alone withholds.</item>
 /// <item>Triage every file and say why it is or is not usable, and hold any file that is not a camera original,
 /// <see cref="CameraOriginal"/> (entry 35 section 1). Only camera originals that triage finds usable are published, unless a person
 /// who has looked accepts a file by name.</item>
@@ -186,6 +188,7 @@ public static partial class Intake
 
         var files = new List<IntakeFile>();
         var published = new List<(string Name, byte[] Bytes)>();
+        List<string> WithheldIn(string key) => withheldElsewhere.TryGetValue(key, out var ids) ? [.. ids.Where(other => other != id)] : [];
         foreach (var r in recorded.OrderBy(r => r.Index))
         {
             byte[] original = File.ReadAllBytes(Path.Combine(submissionDirectory, r.StoredName));
@@ -200,11 +203,20 @@ public static partial class Intake
                 return Refuse($"{r.StoredName} does not match the SHA-256 recorded at upload: it is {received}, meta.json says {r.Sha256}");
             }
 
-            if (withheldElsewhere.TryGetValue(received, out var optedOutIn) && optedOutIn.Where(other => other != id).ToList() is { Count: > 0 } others)
+            // Entry 58 sections 3 and 4: the bytes, and the photograph, which matches another export of the same picture.
+            var byBytes = WithheldIn(received);
+            var byPhotograph = PhotographSha256(original) is { } photograph ? [.. WithheldIn(photograph).Except(byBytes, StringComparer.Ordinal)] : new List<string>();
+            if (byBytes.Count > 0 || byPhotograph.Count > 0)
             {
+                string how = (byBytes.Count, byPhotograph.Count) switch
+                {
+                    ( > 0, 0) => $"the same bytes are in submission {string.Join(", ", byBytes)}, which is withheld",
+                    (0, > 0) => $"the same photograph, exported again as different bytes, is in submission {string.Join(", ", byPhotograph)}, which is withheld",
+                    _ => $"the same bytes are in submission {string.Join(", ", byBytes)}, and the same photograph, exported again as different bytes, is in submission {string.Join(", ", byPhotograph)}, both withheld",
+                };
                 files.Add(new IntakeFile(r.Index, r.StoredName, r.OriginalName, r.Bytes, r.SniffedType, received, null, [], [], [],
-                    $"held for a consent conflict: the same bytes are in submission {string.Join(", ", others)}, which is withheld. An opt-out wins by content hash and no acceptance overrides it; the contributor has to be asked which they meant",
-                    others));
+                    $"held for a consent conflict: {how}. An opt-out wins by content hash and no acceptance overrides it; the contributor has to be asked which they meant",
+                    [.. byBytes, .. byPhotograph]));
                 continue;
             }
 
@@ -377,6 +389,26 @@ public static partial class Intake
 
     public static string Sha256(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
 
+    /// <summary>
+    /// The key that matches one photograph however many times it has been exported, NOTES-FROM-PLANNING.md entry 58 sections 3 and 4: the
+    /// SHA-256 of what the file scrubs to. iOS rewrites an identifier inside the maker note on every export from the library, so four
+    /// uploads of one photograph arrived with four file hashes; scrubbing drops the maker note and copies the compressed image data byte
+    /// for byte, so all four scrub to one value. It closes the re-export hole and no other: a re-encoded, cropped or rotated copy is a
+    /// different photograph to this key, as it is to any hash, and only a perceptual hash would match those. Null for a file that cannot
+    /// be scrubbed, which is a file this tool would refuse to publish anyway.
+    /// </summary>
+    public static string? PhotographSha256(byte[] file)
+    {
+        try
+        {
+            return Sha256(ImageScrubber.Scrub(file).Bytes);
+        }
+        catch (Exception ex) when (ex is InvalidDataException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>The upload page's opt-out file, entry 37 section 1.</summary>
     public const string DoNotPublish = "DO-NOT-PUBLISH";
 
@@ -386,7 +418,9 @@ public static partial class Intake
     /// submission is plainly publishable only when its <c>meta.json</c> reads <c>exclude_from_public_dataset</c> false and it has no
     /// <c>DO-NOT-PUBLISH</c> file. One with the field true or missing, an unreadable <c>meta.json</c> or the file present is withheld,
     /// because withholding costs nothing and publishing under ambiguous consent cannot be undone. Both the bytes on disk and the hashes
-    /// <c>meta.json</c> recorded are counted. The identifier is the submission's own, or its directory name when that cannot be read.
+    /// <c>meta.json</c> recorded are counted, and beside each file on disk its <see cref="PhotographSha256"/>, so that another export of
+    /// the same photograph is withheld too (entry 58 sections 3 and 4). A hash <c>meta.json</c> recorded has no file to scrub, and counts
+    /// by bytes alone. The identifier is the submission's own, or its directory name when that cannot be read.
     /// </summary>
     public static IReadOnlyDictionary<string, IReadOnlyList<string>> WithheldHashes(string submissionsRoot)
     {
@@ -412,7 +446,12 @@ public static partial class Intake
             var hashes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (string file in Directory.EnumerateFiles(directory).Where(p => Path.GetFileName(p) is not ("meta.json" or DoNotPublish)))
             {
-                hashes.Add(Sha256(File.ReadAllBytes(file)));
+                byte[] bytes = File.ReadAllBytes(file);
+                hashes.Add(Sha256(bytes));
+                if (PhotographSha256(bytes) is { } photograph)
+                {
+                    hashes.Add(photograph);
+                }
             }
 
             foreach (var item in (meta?["files"] as JsonArray ?? []).OfType<JsonObject>())

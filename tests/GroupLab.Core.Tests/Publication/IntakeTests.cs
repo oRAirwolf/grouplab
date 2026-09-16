@@ -31,7 +31,7 @@ public class IntakeTests : IDisposable
     {
         string directory = Path.Combine(root, "incoming", "1a8f39ad");
         Directory.CreateDirectory(directory);
-        byte[] sheet = PhoneImages.Jpeg(), card = [.. PhoneImages.Jpeg(), 0x00];
+        byte[] sheet = PhoneImages.Jpeg(), card = Card();
         File.WriteAllBytes(Path.Combine(directory, "001_20180623_104930.jpg"), sheet);
         File.WriteAllBytes(Path.Combine(directory, "002_card.jpg"), card);
         JsonObject FileEntry(int index, string stored, string original, byte[] bytes) => new()
@@ -64,6 +64,12 @@ public class IntakeTests : IDisposable
         File.WriteAllText(Path.Combine(directory, "meta.json"), meta.ToJsonString());
         return directory;
     }
+
+    /// <summary>A second photograph, not another export of the first: the scan differs, so it differs by bytes and by photograph.</summary>
+    private static byte[] Card() => PhoneImages.Jpeg(scan: 0x99);
+
+    /// <summary>Another export of the sheet, entry 58 section 3: different bytes after the end marker, the same photograph.</summary>
+    private static byte[] SheetExportedAgain() => [.. PhoneImages.Jpeg(), 0x00];
 
     /// <summary>A submission beside it with the opt-out file, as the page wrote <c>2026-09-15_eac0bae6</c>.</summary>
     private string WithSentinel(Action<JsonObject>? edit = null)
@@ -181,13 +187,13 @@ public class IntakeTests : IDisposable
         File.WriteAllText(Path.Combine(optedOut, "meta.json"), """{ "schema_version": 1, "submission_id": "eac0bae6", "exclude_from_public_dataset": false }""");
         string unreadable = Path.Combine(incoming, "2026-09-15_unreadable");
         Directory.CreateDirectory(unreadable);
-        File.WriteAllBytes(Path.Combine(unreadable, "001_card.jpg"), [.. PhoneImages.Jpeg(), 0x00]);
+        File.WriteAllBytes(Path.Combine(unreadable, "001_card.jpg"), Card());
 
         string submission = Submission();
         var withheld = Intake.WithheldHashes(incoming);
 
         Assert.Equal(["eac0bae6"], withheld[Intake.Sha256(PhoneImages.Jpeg())]);
-        Assert.Equal(["2026-09-15_unreadable"], withheld[Intake.Sha256([.. PhoneImages.Jpeg(), 0x00])]);
+        Assert.Equal(["2026-09-15_unreadable"], withheld[Intake.Sha256(Card())]);
         Assert.DoesNotContain(withheld.Values, ids => ids.Contains("1a8f39ad"));
 
         string publicRoot = Path.Combine(root, "donated");
@@ -200,5 +206,35 @@ public class IntakeTests : IDisposable
         Assert.Contains("consent conflict", (string?)files[0]!["held"], StringComparison.Ordinal);
         Assert.Equal(["eac0bae6"], files[0]!["optedOutIn"]!.AsArray().Select(n => (string?)n));
         Assert.Equal(["2026-09-15_unreadable"], files[1]!["optedOutIn"]!.AsArray().Select(n => (string?)n));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 58 sections 3 and 4: the same photograph exported twice is two files with two byte hashes, as four
+    /// uploads of one picture arrived on 16 September. An opt-out on one export withholds the other, which the byte hash alone never did,
+    /// and a person accepting it by name does not override that. A genuinely different photograph is not withheld with it.
+    /// </summary>
+    [Fact]
+    public void AnotherExportOfAnOptedOutPhotographIsHeldAlthoughItsBytesDiffer()
+    {
+        string incoming = Path.Combine(root, "incoming");
+        string optedOut = Path.Combine(incoming, "2026-09-16_21ea25de");
+        Directory.CreateDirectory(optedOut);
+        File.WriteAllBytes(Path.Combine(optedOut, "001_IMG_5818.jpg"), SheetExportedAgain());
+        File.WriteAllText(Path.Combine(optedOut, "meta.json"), """{ "schema_version": 1, "submission_id": "21ea25de", "exclude_from_public_dataset": true }""");
+
+        string submission = Submission();
+        var withheld = Intake.WithheldHashes(incoming);
+        Assert.DoesNotContain(Intake.Sha256(PhoneImages.Jpeg()), withheld.Keys);
+        Assert.Equal(["21ea25de"], withheld[Intake.PhotographSha256(PhoneImages.Jpeg())!]);
+        Assert.DoesNotContain(Intake.PhotographSha256(Card())!, withheld.Keys);
+
+        var result = Intake.Run(submission, Path.Combine(root, "donated"), withheld, Triage, accepted: ["001_20180623_104930.jpg", "002_card.jpg"]);
+
+        Assert.Null(result.Refused);
+        var sheet = result.Files.Single(f => f.Index == 1);
+        Assert.Contains("the same photograph, exported again as different bytes", sheet.Held, StringComparison.Ordinal);
+        Assert.Equal(["21ea25de"], sheet.OptedOutIn);
+        Assert.Null(sheet.PublishedSha256);
+        Assert.Null(result.Files.Single(f => f.Index == 2).Held);
     }
 }

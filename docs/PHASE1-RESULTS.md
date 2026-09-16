@@ -1710,6 +1710,7 @@ It passes against the checkout. `OwnerPublicationTests` covers `publish-owner` w
 - **What counts as withheld:** a submission whose opt-out is set by either signal, is missing, or whose `meta.json` cannot be read. Withholding costs nothing, and publishing under ambiguous consent cannot be undone.
 - **Required, not optional:** `Intake.Run` takes that set as a required argument, so no caller can publish without it.
 - **What a match does:** a file whose bytes are in the set is held whatever triage says, and accepting it by name does not override that. Its entry in the provenance record carries `optedOutIn` with the withheld submission's identifier, beside the record's own `submissionId`.
+- **Amended 2026-09-16, entry 58 sections 3 and 4:** the set holds a second key beside the bytes, what each withheld file scrubs to, so another export of the same photograph is held too. A byte hash alone missed that, and the four uploads of 16 September are four hashes of one picture. See "Entry 58 sections 3 and 4".
 - **Where the opt-outs are read from:** `grouplab intake` reads them from the directory holding the submission, or from `--submissions`, and prints how many hashes it withheld.
 
 **On the four real submissions**, run into a scratch directory:
@@ -2133,6 +2134,8 @@ The two complete submissions give backing, attachment, distance, calibre (5.56 N
 
 **The browser was Chrome for iOS, not Safari.** All three later submissions carry the same user agent: iOS 18.7.10, `CriOS/152`. Chrome on iOS uses WebKit, so the upload page's `accept` attribute is answered for WebKit's file picker on an iPhone. Safari itself has still not been used.
 
+**Amended 2026-09-16, entry 58 section 1: read nothing from a user agent on iOS.** DuckDuckGo reports itself as Safari, so the field cannot tell those two apart, and no absence of a browser can be concluded from it. Four deliberate uploads later settled what actually happens: every iOS browser preserves the file, and a photograph captured inside the page is what loses the camera data. See "Entry 58 sections 3 and 4".
+
 **The metadata survives the upload.** Checked on both publishable photographs through `grouplab scrub`, into a scratch copy that was then deleted, printing names and never values:
 - **Present in each original:** a `LensModel` tag, and a GPS block.
 - **What scrubbing removes:** the GPS block, APP10, the thumbnail, and 36 other EXIF fields.
@@ -2505,6 +2508,53 @@ The surface fit starts from the whole-sheet homography, so it inherits the reord
 
 ---
 
+## Entry 58 sections 3 and 4. The opt-out now survives a re-export, by a key the scrubber already computes
+
+`docs/NOTES-FROM-PLANNING.md` entry 58 sections 3 and 4, its order items 1, 2 and 4, and entry 37 section 2, which this amends.
+
+**The hole.** An opt-out won by content hash, and four uploads of one photograph have four content hashes. iOS rewrites a 36-character identifier inside the Apple maker note on every export from the library, so a contributor who uploads a photograph, thinks better of it, and sends the same picture again with the opt-out ticked was never matched. Entry 37's rule worked only because that contributor uploaded the identical file twice.
+
+**The key, measured before it was chosen.** Planning offered the decoded pixels and asked for the scrubbed bytes to be measured first, as the cheaper option. They are enough:
+
+| | Distinct values across the four uploads |
+|---|---|
+| File SHA-256 | 4: `7daf9d32`, `0330f435`, `d8b85ced`, `f42b5ba1` |
+| SHA-256 of the scrubbed bytes | 1: `8b106005` |
+
+- **Why it works:** scrubbing rebuilds the metadata and copies the compressed image data byte for byte, so two exports of one photograph scrub to the same bytes. The maker note, where the changing identifier lives, is dropped.
+- **It is not so loose as to merge different photographs.** The two Android frames of one scene, taken a minute apart by one phone, scrub to `db2863ae` and `93630e53`. The other frame of the same shot sheet, `fc4d1649`, scrubs to `89d53b2f`, distinct from all four above.
+- **It is deterministic:** the same file scrubbed twice gives the same key.
+- **It needs no image decoder,** which decided it over the pixel hash. Decoding lives in the CLI behind OpenCV and the opt-out check lives in `GroupLab.Core`, so a pixel key would have moved a consent mechanism out of the layer whose tests run on every platform, for a key that measures no better here.
+
+**What changed.** `Intake.PhotographSha256` is the SHA-256 of what a file scrubs to. `Intake.WithheldHashes` records it beside each withheld file's byte hash, and `Intake.Run` holds a file when either key matches, naming which one did. That is the same belt-and-braces reasoning entry 37 section 1 applied to the two opt-out signals: either alone withholds. A hash that only `meta.json` recorded has no file to scrub and still counts by bytes.
+
+**On the real submissions**, read by `grouplab intake --submissions`:
+
+| | Count |
+|---|---|
+| Distinct byte hashes withheld | 13 |
+| Distinct photograph keys withheld | 10 |
+| Total keys, from 5 withheld submissions | 23 |
+
+The four browser-test uploads contribute four byte hashes and one photograph key between them. That single key is the hole closed: a publishable fifth export of that photograph is now held, where before it would have been published.
+
+**The limits, written down rather than discovered later.**
+- **It does not survive re-encoding.** A messaging app's copy has different compressed data and is a different photograph to this key, as it is to a pixel hash. Only a perceptual hash would match those, and none is proposed.
+- **It does not survive a crop or a rotation.**
+- **It is a function of the current scrubber,** and cannot drift, because both sides are computed in the same run from the same code rather than stored.
+
+**Entry 58 order item 2, the first real exercise of intake on these files.**
+- **The four opted-out uploads:** each refused, "exclude_from_public_dataset is true and a DO-NOT-PUBLISH file is present". Nothing was written.
+- **`fc4d1649`,** the stripped iPhone frame: held, "not a camera original: it has no camera make", with 38 GroupLab markers decoded at 4032 by 3024. That is `CameraOriginal` meeting a genuinely stripped real file for the first time, and holding it.
+- **The two consented Android photographs,** entry 59 order item 2, the first consented GPS-bearing files to go through the publication path: both published, each with GPS, 31 other EXIF fields, the thumbnail, XMP, the multi-picture index and a trailer removed. `PublicationTests` passes over the published copies, 8 of 8, with `CONTRIBUTORS.md`, `LICENSE` and `README.md` stood in for the testdata checkout. Nothing was published into `grouplab-testdata`: the run wrote to a scratch directory.
+- **Entry 59 section 3 falls out of the same run,** printed by triage: lens group `2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66` for the camera app's frame and `6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00` for the page capture. One phone, one scene, one 35 mm equivalent, two optical configurations, which is entries 16 and 27 on real files rather than argued.
+
+**A standing note, entry 58 order item 4: the user agent cannot identify a browser on iOS.** DuckDuckGo's user agent is indistinguishable from Safari's, so `user_agent` in `meta.json` is not evidence of which browser a contributor used, and nothing should be concluded from it. It is recorded here, where the donated corpus is described, rather than in `docs/DETECTION-PIPELINE.md` section 2, which describes the `scans/` corpus.
+
+**Tests:** Core 759 passing, App 35 passing, none skipped. The intake fixture's second file is now a second photograph rather than the first with a trailing byte, because under a scrubbed-bytes key those two were one photograph and the test meant them to differ.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2639,3 +2689,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 52 section 3: the edge fit's leave-one-out run from the converged pass's start, over rerunning the whole locator per point.** It isolates one point's weight in the fit; rerunning the locator would also move the rays and confound the two.
 - **Entry 49 section 2: the journal replayed by call order, with the image hash reported beside it, over looking each detection up by its image.** A platform whose raster differs would match nothing and replay nothing, and the rerun exists to hand it Windows' corners anyway.
 - **Entry 49 section 2: only the two measurements whose tables differ replayed, over all eight.** The other six already print identically on macOS, so replaying them could only repeat what the gate record shows.
+- **Entry 58 section 4: the opt-out's second key is what a file scrubs to, over the decoded pixels.** It collapses the four re-exports to one value as a pixel hash would, and it keeps a consent mechanism inside `GroupLab.Core`, which has no image decoder and whose tests run on every platform.
+- **Entry 58 section 3: either key alone withholds, over requiring both.** The same reasoning as entry 37 section 1's two opt-out signals: redundancy is the point, and publishing under ambiguous consent cannot be undone.

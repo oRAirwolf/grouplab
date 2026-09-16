@@ -11,7 +11,7 @@ namespace GroupLab.Cli;
 /// application already has: a photograph on which fewer than four GroupLab markers decode can be neither registered nor scaled, so it is
 /// held with that reason until a person who has looked at it accepts it by name. Entry 27 section 3's facts, the stored size and aspect
 /// and the lens grouping key with digital zoom, are recorded beside the verdict. The opt-outs of every submission in the directory holding
-/// this one, or in <c>--submissions</c>, are read first, entry 37 section 2.
+/// this one, or in <c>--submissions</c>, are read first, entry 37 section 2, by bytes and by photograph (entry 58 sections 3 and 4).
 /// </summary>
 internal static class IntakeVerb
 {
@@ -41,7 +41,7 @@ internal static class IntakeVerb
 
         // NOTES-FROM-PLANNING.md entry 37 section 2: the opt-outs of every submission beside this one, read before anything is published.
         var withheld = Intake.WithheldHashes(submissions);
-        output.WriteLine($"opt-outs: {withheld.Count} file hashes withheld, from {withheld.Values.SelectMany(v => v).Distinct().Count()} submissions under {submissions}");
+        output.WriteLine($"opt-outs: {withheld.Count} hashes withheld, by bytes and by photograph, from {withheld.Values.SelectMany(v => v).Distinct().Count()} submissions under {submissions}");
         var backend = new OpenCvSharpBackend();
         var result = Intake.Run(submission, publicRoot, withheld, (name, _) => Triage(Path.Combine(submission, name), backend), accepted);
         if (result.Refused is { } reason)

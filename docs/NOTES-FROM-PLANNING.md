@@ -15,6 +15,532 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-16, entry 59: Android keeps what iOS drops, and two frames from one phone prove entries 16 and 27 live
+
+**Status: open, with order item 2 done.** Item 4 is taken: entry 58 section 3 came first.
+- **Both files are published clean** into a scratch directory, with GPS and 31 other EXIF fields removed from each, and `PublicationTests` passes over the published copies. First consented GPS-bearing files through the publication path.
+- **Section 3 is visible in the tool's own output:** triage printed lens group `2.20 mm f/2.2, 23 mm equivalent, digital zoom 1.66` for the camera app's frame and `6.25 mm f/1.7, 23 mm equivalent, digital zoom 1.00` for the page capture. One phone, one scene, one 35 mm equivalent, two optical configurations.
+- **Section 4's lens-key check is queued** in place of entry 58 section 5, and section 1's narrowing is taken: the iOS story is iOS only, and the Android in-page capture is not a degraded file.
+
+Section 1 narrows a claim in entry 58 that I made too broadly. Section 3 is the valuable part and it is a demonstration, on real files, of the thing entries 16 and 27 were written about. Section 4 changes what the upload page should check.
+
+Alan submitted two photographs from a Samsung Galaxy Z Fold7 on Android 16 through Firefox: `2853d64d` taken with the camera app and chosen from files, and `b5f6b92e` taken with the page's own picture button. Both consented, neither opted out.
+
+### 1. On Android the in-page capture keeps everything, so entry 58's story is iOS only
+
+| | iOS, captured in page | Android, captured in page | Android, from files |
+|---|---|---|---|
+| EXIF tags | **8** | **58** | **58** |
+| GPS tags | **0** | **6** | **6** |
+| Make, Model | absent | present | present |
+| Focal length, 35 mm equivalent | absent | present | present |
+| `DigitalZoomRatio` | absent | present | present |
+
+**So the stripping is a property of iOS's capture path, not of in-page capture.** Entry 58 section 1 said the least useful capture path is also the most private one and that those were the same fact. **That is true on iOS and false on Android**, where the page's own capture attached a position like any other photograph. Read that paragraph as scoped to iOS.
+
+**The Android in-page capture is not a degraded file at all.** Same 12 MP, same tag count, same fields. There is nothing to warn anybody about.
+
+### 2. `LensModel` is not universal
+
+The iPhone files carry `LensModel` reading "iPhone 17 Pro back triple camera 6.765mm f/1.78". **Both Samsung files have no `LensModel` at all.**
+
+Entry 48 added it to the scrubber's keep list on the argument that it names which camera in a multi-camera phone took the frame. **That argument holds and the field is still worth keeping, and it cannot be relied on**, because a large share of Android phones do not write it. Anything that needs to know which camera took a frame has to work without it, which section 3 shows is possible.
+
+### 3. Two frames, one phone, one minute, the same 35 mm equivalent, and different optics
+
+This is the finding.
+
+| | Camera app, from files | Page's picture button |
+|---|---|---|
+| Physical focal length | **2.2 mm** | **6.25 mm** |
+| Aperture | **f/2.2** | **f/1.7** |
+| `DigitalZoomRatio` | **1.66** | **1.0** |
+| 35 mm equivalent | **23** | **23** |
+| Pixels | 4000 x 3000 | 4000 x 3000 |
+
+**The same phone, minutes apart, used two different physical cameras, and both frames report an identical 35 mm equivalent of 23.** One is the ultrawide cropped 1.66 times to reach that framing; the other is the main camera at no zoom.
+
+**That is entry 16 and entry 27 demonstrated on real files rather than argued.** Entry 16 found that a cropped ultrawide keeps its physical focal length and changes only the equivalent, and that grouping by the physical value alone mixes two pixel geometries into one joint fit and crashes it. Entry 27 found that `DigitalZoomRatio` has to join the grouping key and that its absence means unknown rather than 1.0.
+
+**Here both fire at once, and the pair is a test case.** Anything grouping by 35 mm equivalent pools these two, and they should never be pooled: one is an upscaled crop of a small sensor region and the other is a native frame. **Only the combination of physical focal length, aperture and digital zoom separates them**, and on this phone there is no `LensModel` to fall back on.
+
+**One consequence nobody had written down: which camera takes the picture is a property of the capture path, not of the phone.** The camera app chose the ultrawide and the browser chose the main camera, on the same device, for the same scene, within a minute. Any assumption that a contributor's frames come from one optical configuration is wrong, and it is wrong in a way that is invisible unless these fields are read.
+
+**And the better-provenanced frame is the optically worse one.** The camera app file has the cleaner story and is an upscaled 1.66 times crop of the ultrawide. The page capture, which I was ready to warn people away from, used the better lens. That is worth remembering the next time I am confident about which path to recommend.
+
+### 4. So stop classifying the capture path and test for the fields
+
+Entry 58 section 5 asked for three provenance states and a page message about camera originals. **Narrow it.**
+
+**The question that matters is not how the file was captured. It is whether the file carries the fields the work needs.** That question has one answer on every platform, needs no signature table, and does not go stale when Apple or Google change something.
+
+1. **`CameraOriginal` keeps its job**, which is deciding whether a file is a camera original for publication purposes. That is a different question and entry 35 section 1 answers it well.
+2. **Add a separate, plainly named check: does this file carry a usable lens grouping key?** Make, model, physical focal length, 35 mm equivalent, aperture, and digital zoom, with `LensModel` as a bonus rather than a requirement. Record the answer in the provenance as a field.
+3. **The page says something only when the answer is no**, which on the evidence so far means iOS in-page captures and messaging copies and nothing else. On Android it will say nothing, correctly.
+4. **The lens and surface work filters on that field** rather than inferring anything from filenames or tag counts.
+
+**That is less code than entry 58 asked for and it survives platform changes**, which the signature table would not.
+
+### 5. Both of these carry a position, and they are consented
+
+Six GPS tags each, `exclude_from_public_dataset` false, no `DO-NOT-PUBLISH`. They are Alan's own photographs so the location is his and he knows it is there.
+
+**They are the first consented, publishable, GPS-bearing files to reach the corpus.** Everything before them was either opted out or already stripped. **So they are the first real end-to-end test of the scrubber on the publication path**, rather than on files that were never going to be published. Worth running deliberately rather than incidentally, and worth checking the published copies with `PublicationTests` afterwards.
+
+### 6. Order
+
+1. **Section 4's lens-key check**, replacing entry 58 section 5's three states.
+2. **`grouplab intake` on `2853d64d` and `b5f6b92e`**, then `PublicationTests` on the result. First consented GPS-bearing files through the publication path.
+3. **Keep the pair as a fixture for the grouping key.** Two frames, one phone, one scene, identical 35 mm equivalent, different optics, and the correct behaviour is that they are never pooled. **That is a better test than anything synthetic**, and it exists only because Alan happened to take the same picture twice.
+4. Entry 58 section 3's pixel hash still comes before all of this.
+
+---
+
+## 2026-09-16, entry 58: the browser was innocent, and the content-hash opt-out has a hole
+
+**Status: actioned 2026-09-16 for sections 3 and 4, and order items 1, 2 and 4.**
+- **The hole is closed, by the cheaper key you asked to be measured first.** The four uploads scrub to one value, `8b106005`, where their bytes give four. `Intake.PhotographSha256` is that value, `WithheldHashes` records it beside each withheld file's byte hash, and either match alone withholds.
+- **It does not collide:** the two Android frames of one scene scrub to different values, and so does the other frame of the shot sheet. It is deterministic, and it needs no image decoder, which keeps the consent check inside `GroupLab.Core`.
+- **Order item 2 is done:** the four opted-out uploads are refused with nothing written; `fc4d1649` is held as not a camera original; the two consented Android photographs publish clean and `PublicationTests` passes over them.
+- **Order item 4 is done,** as a standing note where the donated corpus is described rather than in `docs/DETECTION-PIPELINE.md`, whose section 2 describes the `scans/` corpus.
+- **Section 5 is not done, and is narrowed by entry 59 section 4** into one check for whether a file carries a usable lens grouping key. That is the next thing after entry 55 section 3 item 1.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 58 sections 3 and 4".
+
+Section 1 retracts entry 57 section 2. Section 3 is a defect in a consent mechanism and it is the reason this entry exists. Section 4 is a fix I have tested.
+
+Alan's friend uploaded the same camera original through Chrome for iOS, Firefox for iOS, DuckDuckGo and Safari, all four marked do not publish. Four submissions, `21ea25de`, `60d5c524`, `b73d9520` and `d2425244`.
+
+### 1. My hypothesis was wrong. No browser strips anything
+
+| | Chrome for iOS | Firefox for iOS | DuckDuckGo | Safari |
+|---|---|---|---|---|
+| Bytes | 5,272,027 | 5,272,027 | 5,272,027 | 5,272,027 |
+| EXIF tags | **69** | **69** | **69** | **69** |
+| GPS tags | 15 | 15 | 15 | 15 |
+| Make, Model, LensModel | present | present | present | present |
+
+**Every iOS browser preserved everything.** The upload path is sound and was never the problem.
+
+**The real cause is that the damaged photograph was never a file at all.** Alan established it: his friend followed the link from Discord and used the **"Take Photo"** option in the iOS picker rather than choosing a file. The photograph was captured straight into the page and never reached the camera roll.
+
+Every piece of evidence fits, and two of them fit nothing else:
+
+| | In-page capture | Chosen from the camera roll |
+|---|---|---|
+| Name | `image.jpg` | `IMG_5818.jpeg` |
+| Resolution | 4032 x 3024, **12.2 MP** | 5712 x 4284, **24.5 MP** |
+| EXIF tags | 8 | 69 |
+| GPS tags | **0** | 15 |
+
+**12 MP is the capture preset a page gets. 24 MP is what the Camera app writes on a 17 Pro.** A page-side capture never runs the Camera app's pipeline, so the lens model, the maker note and the rest are never written rather than being stripped afterwards.
+
+**And it carries no position at all, by construction**, because a web page has no location permission. That is worth noticing on its own: **the least useful capture path is also the most private one**, and those two facts are the same fact. Anybody proposing to push contributors away from it should know they are trading a privacy property for lens data.
+
+**I got this wrong and I want to be precise about what was and was not right about it.** The conclusion was wrong. The form was right: I gave the hypothesis a two-minute test, said in advance what each outcome would mean, and the test killed it the same afternoon rather than anybody acting on it. That is entry 47's lesson applied, and it is the only reason a wrong idea of mine cost twenty minutes instead of a week.
+
+**One thing that would have misled anybody: DuckDuckGo reports itself as Safari.** Its user agent is indistinguishable, so the `user_agent` field cannot identify it, and the original damaged upload recorded "Safari" while possibly being a chat app's in-app browser. **The user agent is not evidence of which browser was used on iOS**, and nothing should be concluded from it.
+
+### 2. What the pristine originals contain
+
+iPhone 17 Pro, back triple camera 6.765 mm f/1.78, 35 mm equivalent 24, ISO 800, 1/60, **5712 by 4284**, which is 24 megapixels and a good deal larger than anything in the corpus.
+
+**`DigitalZoomRatio` is absent even here, on an untouched camera original.** That is entry 27's point demonstrated on pristine data: absence means unknown, and the grouping key must treat it as unknown rather than as 1.0.
+
+**They carry 15 GPS tags.** I did not read the values and no one should; the count is the only part that matters. These are the first files since entry 37 to give the scrubber real work, and they are marked do not publish, so running intake on them is a test rather than a publication.
+
+**All four carry `DO-NOT-PUBLISH` and `exclude_from_public_dataset` was not needed to stop them.** The belt-and-braces opt-out of entry 37 section 1 did its job on its first real outing.
+
+### 3. The defect: entry 37's opt-out by content hash does not survive a re-export
+
+**The four files are the same photograph and have four different SHA-256 values.**
+
+The only difference between them is **29 bytes, a 36-character UUID inside the Apple maker note**, which iOS regenerates every time the photo is exported from the library. Everything else in 5.27 MB is byte-identical: same pixels, same EXIF, same GPS.
+
+Entry 37 section 2 established the rule after the same photographs arrived twice with contradictory consent:
+
+> An opt-out wins by content hash, across every submission. If bytes appear anywhere in an opted-out submission, those bytes are not published from any submission.
+
+**That rule silently fails whenever the two uploads are separate exports rather than the same file.** A contributor who uploads a photograph, thinks better of it, and re-sends the same picture with the opt-out ticked, will not be matched. The hash set will hold bytes that no longer describe the photograph we are trying to withhold.
+
+**It worked in entry 37 only because that contributor uploaded the identical file twice.** Had he re-exported it from his camera roll, the conflict would never have been detected and one of those photographs would have been published against his intention. **That is the one mistake in this pipeline that cannot be undone**, and it has been one re-export away since the rule was written.
+
+### 4. The fix, tested rather than proposed
+
+**Add a pixel hash beside the byte hash and match on either.**
+
+| | Distinct values across the four uploads |
+|---|---|
+| File SHA-256 | **4** |
+| SHA-256 of the decoded pixels | **1** |
+
+One value for all four. And it does not collide with the other frame of the same sheet taken moments earlier, so it is not so loose as to merge different photographs.
+
+**Keep both.** The byte hash is exact and cheap and catches the identical-file case. The pixel hash catches the same-photograph-re-exported case, which is the one that is currently open. **Either matching is enough to withhold**, which is the same belt-and-braces reasoning entry 37 section 1 applied to the two opt-out signals and for the same reason: redundancy is the point rather than a smell.
+
+**Two limits worth writing down rather than discovering later.** A pixel hash does not survive re-encoding, so a messaging app's copy will not match its original; nothing matches those except a perceptual hash, and I am not proposing one. And it does not survive a crop or a rotation. **It closes the re-export hole and no other**, which is worth saying so nobody assumes more of it.
+
+The scrubber offers a third option worth measuring while you are in there: **it strips the maker note, so scrubbed copies of these four may well be byte-identical.** If they are, the scrubbed hash is a cheaper key than decoding pixels. Check it; if it holds, prefer it.
+
+### 5. The upload page fix is now precise
+
+Entry 57 section 2 asked the page to check whether a file is a camera original. **That is still right and now it is the whole of the fix**, since no browser needs naming.
+
+`CameraOriginal` from entry 35 section 1 already makes this judgement in `grouplab intake`, after the contributor has gone. The same check belongs in the page while they are still there, and the signals are all in the damaged file: **no camera make, a generic name, and a resolution below what that camera writes.**
+
+**Do not refuse it and do not nag.** A frame with no lens data is still good for the geometry, the registration and the gates, which is most of what the corpus is for. It is useless only for the lens and surface work. So one sentence at the moment of choosing, something like: *"Taking the photo here is fine, and choosing one from your camera roll instead keeps the lens details that make a photo most useful to us."* Then let them decide.
+
+**Record which path it came from, rather than inferring it later.** `CameraOriginal` returns a boolean today. Three states carry more: **camera original**, **captured in this page**, and **unknown or altered**. The first two are cleanly separable by the table in section 1. The third is the residue. A field costs nothing and it lets the lens work exclude in-page captures without guessing, which is the thing that will otherwise be re-derived by somebody in a year.
+
+### 6. Order
+
+1. **Section 4's pixel hash**, with the scrubbed-hash check first in case it is cheaper. This closes a consent hole and it comes before anything else in this entry.
+2. **Run `grouplab intake` on the four browser-test submissions.** First real exercise of the scrubber on GPS-bearing files since entry 37, and first real exercise of `CameraOriginal` against a genuine stripped file if you include `fc4d1649`.
+3. **Section 5's page check.**
+4. **Record in `docs/DETECTION-PIPELINE.md` or wherever the corpus is described that the user agent cannot identify an iOS browser**, so nobody draws a conclusion from it later.
+
+### 7. What this does not change
+
+The four test submissions are all the same photograph of the same flat sheet, so they add nothing to the corpus beyond this finding. **The mounted gate still has no real example.** Entry 56's scan and photographs are still the only real-holes material, and the flat photograph case is still the only gate this has moved.
+
+---
+
+## 2026-09-16, entry 57: submission fc4d1649, and a two-minute test that matters more than the submission
+
+**Status: open, and section 2 is closed by entry 58 section 1.** The browser test was run by you and no browser strips anything; the damaged file was captured inside the page.
+- **Order item 2 is done:** `grouplab intake` on `fc4d1649` holds it, "not a camera original: it has no camera make", with 38 markers decoded at 4032 by 3024. First real stripped file `CameraOriginal` has met, and it held it. Reported in `docs/PHASE1-RESULTS.md` "Entry 58 sections 3 and 4".
+- **Item 3,** analyze on photograph A against the scan of the same sheet, is queued with entry 56's runs.
+- **Item 4, section 5's provenance distinction,** is queued and nothing has been written into a provenance record that the contributor did not supply. The three answers Alan knows by conversation are not in `fc4d1649`'s record.
+
+Section 2 is a hypothesis with a test attached, and if it is right it changes what the upload page has to do. Section 5 is a provenance integrity point that must not be skipped.
+
+### 1. What arrived
+
+`2026-09-16_fc4d1649`, submitted 15:15 UTC. **Consent agreed, `exclude_from_public_dataset` false, no `DO-NOT-PUBLISH`.** One file, `001_image.jpg`, 2,135,426 bytes, SHA-256 `50182f7cac67247a`.
+
+It is the same physical sheet as entry 56: `GL-20J3-Y141-0BN3-EYME`, the same thirteen holes, the same concrete.
+
+**It is not the same photograph Alan was messaged.** Normalised correlation between the two is 0.59, so they are two separate frames taken moments apart from slightly different positions.
+
+**So the project now holds three views of one physical sheet with real holes in it:**
+
+| | Resolution | Path |
+|---|---|---|
+| 300 DPI scan | 2550 x 3506 | flatbed, entry 56 |
+| Photograph A | 4032 x 3024 | this submission, consented |
+| Photograph B | 2160 x 2880 | messaged to Alan, downscaled, no consent |
+
+**That is the first flat photograph gate material with real holes, and it comes with a scan of the same sheet.** The scan is the strongest reference the project has ever had for a photograph, because measuring a photograph against a scan of the same paper separates the photograph's error from the printing's.
+
+### 2. The headline: this iPhone upload lost its camera data, and I think the browser did it
+
+**Full resolution survived. The camera metadata did not.**
+
+| | Entry 37's iPhone uploads | This one |
+|---|---|---|
+| Browser | **Chrome for iOS** | **Safari** |
+| Resolution | full | full, 4032 x 3024 |
+| EXIF tags | **48** | **8** |
+| Make, Model, LensModel | present | **absent** |
+| Focal length, 35 mm equivalent, f-number | present | **absent** |
+| GPS | present, and scrubbed | absent |
+
+Eight tags and the only useful one is Orientation.
+
+**The hypothesis: Safari's file picker strips EXIF where Chrome for iOS does not.** The alternative is that this contributor stripped it himself before uploading. Those two have completely different fixes and I cannot tell them apart from one file.
+
+**The test, and it takes two minutes.** Alan photographs anything with his own iPhone, then uploads the same file to `pissinhot.com/targets` twice, once through Safari and once through Chrome for iOS. Compare the tag counts on the two submissions.
+
+- **If Safari strips it**, then a large share of iPhone submissions have been arriving without lens data and nobody knew why, and no amount of instructing contributors will fix it. The upload page would need to say which browser to use, which is an unpleasant thing to have to say and better than silently collecting unusable frames.
+- **If Safari does not strip it**, the contributor did, and the fix is the page telling him so.
+
+**Either way the page should check and say so at upload time.** `CameraOriginal` from entry 35 section 1 already makes this judgement in `grouplab intake`, after the fact, when the contributor has gone. The same check belongs in the page while the person is still standing there: *"This photo has had its camera information removed, which makes it much less useful. A photo straight from the camera roll keeps it."*
+
+**Entries 16, 27 and 48 are why this matters.** They established between them that the lens grouping key needs make, model, lens model, focal length, 35 mm equivalent and digital zoom ratio. **This frame carries none of them.** It is good for the geometry, where `LensFit` recovers the lens from the image, and useless for the lens and surface work.
+
+### 3. The answers went backwards, and the reason is probably structural
+
+| | First submission | After the Discord edit | This one |
+|---|---|---|---|
+| Answers filled | 0 of 6 | 6 of 6, both | **1 of 6** |
+
+Only `target_backing` is set, to "Other or not sure". No attachment method, no distance, no calibre, no notes, no credit name.
+
+Entry 37 section 3 recorded that the difference between a useless submission and a good one was the wording of the request rather than the contributor. **This submission is evidence for that and against where the wording currently lives.** The two good ones came from people who read the edited Discord post. This one came from a person Alan asked directly, who therefore never saw it.
+
+**So the page is carrying less than the post is**, and the post is the part that worked. Whatever the post says that the page does not should move onto the page. I am not specifying the wording here because I have not read the current page text; if somebody stages it for me I will write it.
+
+### 4. What this does and does not unblock
+
+**Does:** the flat photograph gate now has a real-holes case, twice over, with a scan of the same sheet as reference.
+
+**Does not:** the mounted gate. This sheet is flat on concrete. **The gate that fails zero of seven still has no real example**, and it remains the single most valuable thing anybody could send.
+
+### 5. Provenance: we know things the contributor did not tell us, and the record must say which is which
+
+Alan knows from conversation that this is **300 Blackout at 25 yards with three sighters**. **The submission says none of it.**
+
+**That knowledge must not be written into the provenance as though the contributor supplied it.** Entry 37 section 5 established that a stated sheet dimension is valuable precisely because it came from the person who shot it. The same principle cuts the other way here: a figure attributed to a contributor who never gave it is a corpus that lies about its own sources, and it is the sort of error that is invisible later and impossible to unpick.
+
+**Record it as third-party stated, with who said it, or leave the fields empty.** If the provenance record has no way to express that distinction, it needs one, and that is a small schema change worth making now while there is exactly one instance rather than fifty.
+
+The clean fix is to ask him to resubmit with the answers filled in. That is better than any amount of annotation.
+
+### 6. The two files that are not consented
+
+The scan and photograph B, both in `C:\Dev\grouplab-originals\friend-2026-09-16\`, have no consent record. **Nothing changes about them: no consent, no publication.** Photograph A, this submission, is consented and may be published once intake clears it.
+
+**Worth noticing that the consented copy is also the better one**, at full resolution against photograph B's downscale. The rule and the quality happen to point the same way here, which is luck rather than design.
+
+### 7. Order
+
+1. **Section 2's browser test.** Two minutes, and it decides whether the upload page needs to name a browser.
+2. **Run `grouplab intake` on `fc4d1649`.** It is the first submission to exercise `CameraOriginal` against a real stripped file, and I want to see what it says.
+3. **Run `grouplab analyze` on photograph A**, against the scan of the same sheet as reference. First flat photograph gate case with real holes.
+4. **Section 5's provenance distinction**, before any of this reaches `grouplab-testdata`.
+5. Section 3's page wording, once somebody stages the current page text for me.
+
+---
+
+## 2026-09-16, entry 56: the first GroupLab sheet anybody has shot, and a design rule it hands us
+
+**Status: open.** Queued behind entry 55 section 3 item 1. Nothing from these two files is published or committed: they carry no consent record, and section 10 is right that this changes nothing.
+- **Order items 1 and 2,** `grouplab analyze` on the scan and on the photograph against your thirteen holes, are the next measurement after the stage-record field.
+- **Section 7's table and section 8's disagreement flag** follow them, so the rule lands with the pipeline's own numbers beside yours rather than before them.
+
+Alan's friend shot a `GL-CF25-LTR` with **300 Blackout at 25 yards, three sighters**, scanned it, and sent a photograph. **This is the first GroupLab sheet in existence with holes in it, and the first photograph of real holes.** Section 7 is the finding that matters most and it is a product rule the project does not have.
+
+Everything measured below is mine, from my own hole finder on the scan. **It is a cross-check for the pipeline, not an answer.** Where the pipeline disagrees, assume the pipeline and tell me.
+
+### 1. What arrived
+
+- **A 300 DPI flatbed scan.** 2550 by 3506 px, exactly 8.5 in wide, so the scanner overran the page bottom.
+- **A photograph**, sheet flat on concrete, taken from above, slightly oblique, with a shadow across the lower left. Whole sheet in frame with margin, markers crisp. **This is flat photograph gate material with real holes, which has never existed before.**
+- **No before-shooting scan**, so no clean per-sheet reference to difference against. The sheet declares its own definition, `GL-20J3-Y141-0BN3-EYME`, the live `GL-CF25-LTR`, so the expected artwork is derivable.
+- **Known now:** .308 bullet, 25 yards, three sighters, so the ten holes in the top two rows are one shot each at bulls 1 to 10.
+
+### 2. The photograph has no metadata at all, and that is a finding
+
+2160 by 2880 px and **zero EXIF tags**. No make, no model, no lens, no focal length, nothing. An iPhone frame is 4032 by 3024; this has been downscaled, re-encoded and stripped, which is what a messaging app does.
+
+**`CameraOriginal` from entry 35 section 1 would flag this correctly**, and this is the first real file to exercise it.
+
+**The consequence is specific.** Entries 16, 27 and 48 between them established that the lens grouping key needs make, model, lens model, focal length, 35 mm equivalent and digital zoom ratio. **This frame carries none of them**, so it is useless for the lens and surface work and useful only for the geometry, where `LensFit` recovers the lens from the image itself.
+
+This is the clearest argument yet for the upload page: **the messaging path destroys exactly the data two entries were written to protect.** Ask him for the original, sent as a file rather than in a message.
+
+### 3. The sheet was printed correctly, and proves it itself
+
+| | Measured | Design | Scale |
+|---|---|---|---|
+| Across | 448.9 px, 1.4963 in | 1.5000 in | **99.75%** |
+| Down | 449.5 px, 1.4983 in | 1.5000 in | **99.89%** |
+
+Printed at actual size within a quarter of a percent. The 0.14 percent difference between axes is printer or scanner and this data cannot separate them.
+
+### 4. Thirteen holes, found without a miss
+
+My finder keys on the torn-fibre crown, mid-grey over a wide ragged area, unlike printed ink which is near-binary. **Thirteen blobs found, thirteen holes present, no false positive and no miss.** That count is the first thing the detector should be checked against.
+
+| # | x in | y in | | # | x in | y in |
+|---|---|---|---|---|---|---|
+| 1 | 3.30 | 1.57 | | 8 | 3.21 | 2.98 |
+| 2 | 7.25 | 1.85 | | 9 | 6.27 | 3.07 |
+| 3 | 5.24 | 1.93 | | 10 | 7.53 | 3.53 |
+| 4 | 4.26 | 1.96 | | 11 | 3.10 | 9.18 |
+| 5 | 2.14 | 2.37 | | 12 | 5.29 | 9.45 |
+| 6 | 4.68 | 2.71 | | 13 | 6.02 | 9.45 |
+
+Origin is the scan's top left at 300 DPI.
+
+### 5. What a .308 hole in paper actually measures, which the size check needs
+
+Overlaying a true 0.308 in circle on an isolated hole: **the torn crown matches the calibre closely, reaching a little beyond it in places, and the bright aperture inside is roughly 0.21 in, about 0.68 of the bullet diameter.** Paper is elastic and closes behind the bullet.
+
+**So a detector reporting the crown measures about the calibre, and one reporting the bright core measures about seven tenths of it.** Entry 40's size check compares a measured hole against what the calibre should give, and **which of those two quantities it is comparing changes the answer by a third.** That needs stating explicitly wherever the check lives.
+
+**A correction to my own work, because it nearly went into this entry as fact.** My first pass reported the disturbed disc as 0.214 in equivalent diameter, which would have made a .308 hole look far too small and the size check look broken. That was a gap-filled mask underestimating the area. The overlay picture is what caught it. **Fourth time this week my own measurement was the thing that was wrong, and the only reason it did not reach you is that I looked at the picture.**
+
+**On a white-lid flatbed scan the aperture is about as bright as the paper**, so the only reliable signal is the crown. Anything requiring a dark centre will reject these outright. Worth confirming against the shipped detector rather than assuming either way.
+
+### 6. The detector cases in it, better than anything we could have staged
+
+- **A hole through the centre dot.** Hole 4 is 0.078 in from bull 3's centre and has destroyed the printed dot. **Any locator using the centre dot has just lost it on that bull.**
+- **Holes on the inner ring.** Holes 2 and 10, at 0.190 and 0.285 in from their centres.
+- **Holes that break the outer ring.** Holes 12 and 13 sit on S3's ring, and my own ring finder failed to find S3 because of it.
+- **A hole beside a fiducial**, hole 1, close to a tag36h11 marker without touching it.
+- **Not present: no two holes overlap.** Closest pair 0.73 in. Entry 40's two-holes-as-one case is still unexercised on real paper.
+
+### 7. The design rule this hands us, which nothing in the project states
+
+**A 25-bull sheet has an implicit accuracy requirement and we have never written it down.**
+
+On a square lattice of spacing `s`, a shot is nearest its own bull while it stays inside that bull's Voronoi cell, a square of side `s`, so misassignment under nearest-bull is a per-axis excursion and is closed form. Verified against 400,000 simulated shots at three ratios, agreeing to three decimals:
+
+| Spacing / sigma | Misassigned | |
+|---|---|---|
+| 3 | 24.9% | 1 in 4 |
+| 4 | 8.9% | 1 in 11 |
+| 5 | 2.5% | 1 in 41 |
+| **6** | **0.54%** | 1 in 185 |
+| 7 | 0.09% | 1 in 1,075 |
+| 8 | 0.013% | 1 in 7,894 |
+
+**Being off zero makes it worse**, which is its own argument for zeroing first: at 6 sigma spacing, a centre 1 sigma off aim takes misassignment from 0.54 to 2.54 percent.
+
+**This sheet sits at spacing over sigma of 3.89.** Expected misassignment 10 percent zeroed, 21 percent with its actual 0.38 in offset. Observed: 2 of 10. The arithmetic and the paper agree.
+
+**The rule: bull spacing wants to be at least 6 sigma at the shooting distance, and 7 is comfortable.** For `GL-CF25-LTR` at 1.5 in that means sigma at or under 0.25 in on the paper, whatever the distance.
+
+### 8. The two assignment methods fail in opposite ways, and that is the product finding
+
+With the shot count now known, this is confirmed rather than hypothesised.
+
+| | Nearest bull | One to one |
+|---|---|---|
+| Distinct bulls claimed | 8 of 10 | **10 of 10** |
+| Holes assigned differently | | 2 (holes 5 and 6) |
+
+**Nearest-bull silently double-assigns. One-to-one silently forces a bijection that may not exist.** Had he fired 13 at 10 bulls rather than 10, one-to-one would have produced a confident wrong answer and nothing on the sheet would distinguish the cases. **Only the shooter knows.**
+
+So, the same shape as entries 39, 40, 52 and 55 from a sixth direction: **when the two methods disagree, that is information and it must reach the user.** Here they disagree on 2 of 10, and that disagreement is the flag.
+
+**In order of value:**
+
+1. **Compute both and say when they disagree**, naming the shots. Change no default.
+2. **Report spacing over sigma beside the figures**, and say plainly when the sheet was too fine: "your group is 0.39 in sigma and the bulls are 1.5 in apart, so about one shot in ten lands closer to a neighbour than its own bull. A coarser sheet would measure this rifle better."
+3. **Put it on the print screen**, where it does most good, before the ammunition is spent.
+4. **Put the rule in `DESIGN.md` section 9 and `TARGET-LIBRARY.md`**, per family, so every sheet states the dispersion it suits.
+
+### 9. The group, as a sanity check only
+
+Taking the one-to-one assignment as correct: **Rayleigh sigma 0.386 in, mean radius 0.471 in, extreme spread 1.496 in centre to centre and 1.804 in edge to edge, centre 0.236 in right and 0.300 in high.**
+
+At 25 yards, where one MOA is 0.2618 in, that is **sigma 1.47 MOA, mean radius 1.80 MOA, extreme spread 5.71 MOA.** Treat all of it as something for the pipeline to disagree with.
+
+### 10. Consent, which is not optional even though the risk here is nil
+
+**Neither file came through the upload page and neither carries a consent record.** A target scan has no location data and the photograph has no metadata at all, so the privacy risk is about as low as it gets, and that changes nothing: **no consent record, no publication.** Not into `grouplab-testdata`, not committed here.
+
+Both are at `C:\Dev\grouplab-originals\friend-2026-09-16\`, for local testing only. Scan `eb62a183ea291186`, photograph `a621dabe4507b57b`.
+
+**It is worth asking properly**, because this is the first real shot sheet and it would be a valuable committed fixture.
+
+### 11. What to ask the friend for, in one message
+
+1. **The original photograph as a file**, not through a messaging app, so it keeps its camera data. Section 2 is why.
+2. **More photographs**, especially of a sheet still mounted where it was shot. **That is the gate the project cannot pass and there is no real example of it.**
+3. **Consent through `pissinhot.com/targets`**, which also collects the rifle and load we are missing.
+
+### 12. Order
+
+1. **Run `grouplab analyze` on the scan** and compare against section 4's thirteen holes and section 9's figures. Report where the pipeline and I disagree.
+2. **Run it on the photograph**, which is the first flat photograph gate case with real holes.
+3. **Section 8 item 1**, the two-method disagreement flag.
+4. **Section 7's table into `DESIGN.md` and `TARGET-LIBRARY.md`.**
+5. Section 8 items 2 and 3 after the weekend, with more than one real sheet to reason from.
+
+---
+
+## 2026-09-16, entry 55: the spread result, an edge count that predicts trust, and a precision the tables do not have
+
+**Status: open.** Nothing here is started: entry 58 section 3 came first, as Alan directed and as entry 59 order item 4 agrees.
+- **Next, and before the weekend:** section 3 item 1, the edge point count and the near-threshold ray count in the stage record. It changes no behaviour and it cannot be added to frames already measured.
+- **Section 4 stands and is accepted:** the synthetic raster is warped by the native library that then detects it, so those sixteen rows measure the raster and not the detector. Generating it in managed code is the fix, not an explanation.
+- **Section 5 is understood as conditional:** a digit count derived from the measured instability, applied to every table and platform, decided without reference to the macOS difference, and macOS still failing if it still differs. The derivation comes to you before anything is printed differently.
+
+Section 3 is a product change. Section 4 is a harness defect worth removing rather than explaining. Section 5 revises something I wrote in entry 49, and I flag the risk in it explicitly because it could be mistaken for moving a gate to suit a result.
+
+First, the work itself. Recording the hypothesis before the run, keeping the sheet, markers and corners identical across 200 orderings, hashing the images in the replay so an input difference could not be mistaken for a corner difference, and finding the one M1 comparison the spread invalidates without being asked to look: that is the standard the rest of this should be held to.
+
+### 1. The prediction held, including the part that cost something
+
+Flat frames give one registration in 200 orderings, two on `main_flat3`. Mounted frames give 15 to 70. The instability comes from the model's mismatch to a curved sheet, and sorting made it repeatable without making it smaller. **That is the hypothesis confirmed, and confirming it is the cheap half.**
+
+The expensive half is the one I wrote down in advance so it could not be argued away afterwards: **the mounted figures were single draws from wide spreads, and the spreads are the first error bars they have ever had.** `ultrawide2`'s worst scoring bull ranges 0.030 to 0.096 in. M1.5 read a conclusion from 0.06983 against 0.09183, and both of those sit inside that one frame's range. You found that yourself and recorded it. **Any other M1 comparison resting on a mounted-frame difference smaller than that frame's spread needs the same treatment**, and the spread table is now the thing to check each against.
+
+**The verdict is robust and that matters.** The lowest worst bull in 1,400 mounted registrations is 0.01342 in, against a 0.005 in gate. No ordering lets a mounted frame pass. The gate's answer was never in doubt; only the numbers underneath it were.
+
+**And the earlier observation reconciles.** The 0.30 dmm move seen on the macOS runner sits inside `telephoto3` bull 24's leave-one-out range of 0.53 dmm. Two numbers that had been floating separately in this log are now one finding.
+
+### 2. The edge fit answer is better than my question was
+
+I asked whether a hard include or exclude sat where a weight belongs, and assumed the fit's rejection. You found it is not there: at convergence the fit rejects no point on any bull measured. **The step is earlier, in whether a ray yields an edge point at all**, and the reason a sparse bull is fragile is that one ray is a large share of its evidence.
+
+That is a better answer than the question deserved, and it moves where any fix would go.
+
+### 3. The finding that should become a product change: edge count predicts how much to trust a bull
+
+The numbers separate cleanly:
+
+| Bull | Edge points | Largest leave-one-out shift |
+|---|---|---|
+| dense, across ten frames | 106 to 900 | **0.0002 in** |
+| `telephoto3` bull 24 | 29, and did not converge | 0.53 dmm, 0.0021 in |
+| `telephoto3` bull 25 | 14 | 0.82 dmm, **0.0032 in** |
+
+**A 14-point bull's sensitivity is about two thirds of the whole gate. A 106-point bull's is a twentieth of it.** That is a sixteenfold difference in how much a bull's position can be trusted, and it is predictable before anybody looks at the answer, from a count the locator already has.
+
+Non-convergence is already recorded as a rejection with a reason, which is right. **The point count is recorded nowhere, and neither is whether a bull's points sit near the crossing threshold.** This is entry 39 section 1, entry 40 and entry 52 section 4 arriving from a fifth direction: the pipeline knows something the interface is not using. The difference is that this time there is a number attached.
+
+**Two things, and the first is small.**
+
+1. **Record the edge point count per bull in the stage record**, and the count of its rays that fell near the crossing threshold. Change no behaviour. It is a field, and without it nothing downstream can ever know the difference between a bull measured from 900 points and one measured from 14.
+2. **Measure the relationship rather than picking a threshold.** Plot the leave-one-out spread against the point count for every bull in every frame you have, and find where it crosses some stated fraction of the gate. **Do not guess a cutoff from the three sparse bulls in one frame**, which is all the sparse data that exists today. The weekend will add more, and a sheet that overflows the frame is exactly the case that produces them.
+
+When there is a relationship, a bull below the line gets said out loud, in the place its figure appears. I will write what that looks like once the curve exists.
+
+### 4. Sixteen of the nineteen macOS differences are a harness defect, not a platform difference
+
+This is the most useful thing in your report and I want to be sure it is read as a defect rather than an explanation.
+
+**A test whose input differs by platform is not testing what it claims.** Sixteen refinement rows differ because the synthetic raster is warped by the same native library that then detects it, and macOS builds the raster differently. The detector was looking at a different picture. Whatever those rows measured, it was not the detector's behaviour.
+
+**So do not explain them. Remove them.** Generate the synthetic raster deterministically in managed code so the input is byte-identical on every platform, and the test measures the thing its name claims. That is worth doing whether or not any gate cares, and it removes sixteen of nineteen differences as a side effect rather than as a goal.
+
+**Unless the native warp is essential to what that test measures**, in which case say so and I will withdraw this, because I am reasoning from your summary rather than from the code.
+
+What remains after that is three paper rows where detection genuinely differs on byte-identical images, and one markers row at 0.03100 against 0.03099 with the image byte-identical and the corners Windows' own. **That is a real second divergence and you were right not to claim a cause for it.** It is also about three parts in a hundred thousand, which section 5 is about.
+
+### 5. The gate tables print more precision than the measurement has, and I need to be careful here
+
+Entry 49 section 1 set the rule: a platform passes when every verdict and every printed table match. **I wrote that before the spread experiment existed, and the experiment has made one of its assumptions visible.**
+
+The tables print five decimal places of an inch. The spread experiment just measured what those numbers are actually worth: on a mounted frame the registration's own instability reaches hundredths of an inch, and on the best flat frame it is 0.0035 in. **Printing 0.03100 for a quantity whose instability is in the second or third decimal is printing three digits of noise**, and a comparison that fails on the fifth decimal is failing on something nobody could act on.
+
+**So the tables should print the precision the measurement supports, and that precision is now measurable rather than a matter of taste.**
+
+**Here is the risk, stated plainly, because it is the same trap entry 17 section 2 named and I do not get an exemption from it.** Reducing printed precision would make the macOS markers row stop differing. If the number of digits were chosen because it makes macOS pass, that is a gate rewritten to suit a result and it would be dishonest.
+
+**What keeps it legitimate, and these are conditions rather than assurances:**
+
+- **The digit count is derived from the measured instability**, from section 1's table, and the derivation is written down where anybody can check it.
+- **It applies to every table and every platform**, including Windows against itself.
+- **It is decided without reference to the macOS difference**, and then whatever happens to that difference happens.
+- **If the honest digit count still leaves macOS differing, macOS still fails.** That is the test of whether this was done in good faith.
+
+**So: propose the digit count from the instability figures, show the derivation, and tell me what it does to all three platforms.** I will decide after seeing it, not before, and if it looks like it was reverse-engineered I will say so.
+
+This is also the better fix for a reason that has nothing to do with platforms. A project whose entire argument is that software should not print confident numbers it cannot support has been printing five decimals of an inch in its own gate tables for weeks. **That is the sin the project exists to criticise, in its own results document.**
+
+### 6. Where entry 43 stands
+
+Entry 50's first condition, the gate record green on all three platforms, is still unmet and stays unmet. **Nothing in this entry relaxes it.** Section 4 removes a defect in the harness. Section 5 proposes a precision derived from measurement, to be judged on its derivation.
+
+If after both macOS still differs on the three paper rows, then it differs, the workflow stays red, and entry 43 stays closed. That is the arrangement working rather than failing.
+
+### 7. Order
+
+1. **Section 3 item 1**, the edge count in the stage record. Small, and it needs to exist before the weekend's frames arrive, because those frames are where sparse bulls will come from and the field cannot be added retrospectively to data already measured.
+2. **Section 4**, the deterministic raster.
+3. **Section 5**, the precision proposal with its derivation.
+4. **Entry 54 section 11's first task**, whether the capture thresholds separate pass from fail on the Phase 0 frames. It needs no phone and it can kill or confirm that entry cheaply.
+5. **Section 3 item 2**, the point-count relationship, after the weekend adds sparse bulls.
+
+Item 1 before the weekend. The rest can wait for it.
+
+---
+
 ## 2026-09-15, entry 54: the phone, which is not a small desktop
 
 **Status: open, and deferred to Phase 6 as the entry says.** Section 11's first task needs no phone: whether frame-quality thresholds separate pass from fail on the Phase 0 frames. It is queued after entry 52 sections 3 and 4.

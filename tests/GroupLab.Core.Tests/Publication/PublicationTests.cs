@@ -17,7 +17,8 @@ internal static class PhoneImages
     /// digital zoom ratio; a GPS block with a latitude; XMP carrying GPS; a comment; a scan of made-up entropy bytes with a stuffed
     /// FF 00; and a trailer after the end marker, as a motion photo appends.
     /// </summary>
-    public static byte[] Jpeg()
+    /// <param name="scan">The first byte of the entropy-coded scan, so a test can build a second photograph rather than a second copy of one.</param>
+    public static byte[] Jpeg(byte scan = 0x12)
     {
         byte[] Ascii(string s) => Encoding.ASCII.GetBytes(s + "\0");
         byte[] Rational(params (uint N, uint D)[] values) => [.. values.SelectMany(v => BitConverter.GetBytes(v.N).Concat(BitConverter.GetBytes(v.D)))];
@@ -39,7 +40,7 @@ internal static class PhoneImages
         Segment(0xDB, [0, .. Enumerable.Repeat((byte)1, 64)]);
         Segment(0xC0, [8, 0, 16, 0, 16, 1, 1, 0x11, 0]);
         Segment(0xDA, [1, 1, 0, 0, 63, 0]);
-        file.AddRange([0x12, 0x34, 0xFF, 0x00, 0x56, 0xFF, 0xD9]);
+        file.AddRange([scan, 0x34, 0xFF, 0x00, 0x56, 0xFF, 0xD9]);
         file.AddRange(Encoding.ASCII.GetBytes("MotionPhoto_Data trailer"));
         return [.. file];
     }
