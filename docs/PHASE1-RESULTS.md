@@ -2579,6 +2579,52 @@ The four browser-test uploads contribute four byte hashes and one photograph key
 
 ---
 
+## Entry 61 section 3. The print verb off Windows: checked before it was changed, and the prediction was wrong in its mechanism
+
+`docs/NOTES-FROM-PLANNING.md` entry 61 section 3, which asked for this to be checked rather than assumed, and said the fix differs with the answer.
+
+**The prediction.** That `Verb = "print"` with `UseShellExecute` throws `PlatformNotSupportedException` on Unix, that neither `catch (Win32Exception)` sees it, and that pressing Print therefore offers the person a crash report every time.
+
+**What the runtime actually does**, `dotnet/runtime`, `SafeProcessHandle.Unix.cs`, where `UseShellExecute` is implemented:
+
+```csharp
+string verb = startInfo.Verb;
+if (verb != string.Empty &&
+    !string.Equals(verb, "open", StringComparison.OrdinalIgnoreCase))
+{
+    throw new Win32Exception(Interop.Errors.ERROR_NO_ASSOCIATION, SR.Format(SR.UseShellExecuteVerbNotSupported, verb));
+}
+```
+
+**It is a `Win32Exception`,** which the existing catch already handles. The print button does not crash on Linux or macOS, the fallback runs, and the PDF opens in the viewer. That is planning's own second branch: merely useless there rather than broken. `ProcessStartInfo.Verbs` returns an empty array off Windows and throws nothing, and the resource string names the rule: only an empty verb or "open" is supported.
+
+**What is real, and is fixed.** On those platforms every press threw, logged a `print.command` warning, and then told the person "your PDF viewer has no print command GroupLab can call", which blames their viewer for a platform fact. Now `PrintWindow.PrintLaunch` decides by platform:
+- **Windows** asks for the shell `print` verb, and falls back to opening the file when the viewer registered no print command, as before.
+- **Linux and macOS** are asked only to open the file, and the words say so: "This system has no print command GroupLab can call, so the PDF is open in your viewer."
+- **No catch was added for `PlatformNotSupportedException`.** It cannot be thrown here, and a catch for an impossible exception is a claim about behaviour that is not true.
+
+**What is verified and what is not.** The behaviour is read from the runtime source and the branch is chosen by `OperatingSystem.IsWindows()`, and a test pins both branches without starting a process. Nobody has yet pressed the button on Linux: what remains unproven there is only whether a desktop opener exists at all, which the existing failure message already covers, and which is what entry 61 section 2's VM is for.
+
+---
+
+## Entry 64. The line endings: nothing to discard, and the cause is a machine setting rather than the tree
+
+`docs/NOTES-FROM-PLANNING.md` entry 64, which asked for the difference to be verified as whitespace before its fix was taken.
+
+**Measured first, as asked.** `git status --short` lists only the untracked inbox entries. `git diff --shortstat`, `git diff -w --shortstat` and `git diff --cached --shortstat` are all empty. There are no 109 modified files, so `git checkout -- .` would have discarded nothing and was not run.
+
+**The working copies really are CRLF**, as the entry says: `GrayImage.cs` 30 of 30 lines, `.gitattributes` 10 of 10, `RangeStatistics.csv` 594 of 594. The committed blobs are LF.
+
+**Why they nonetheless agree, which the entry has wrong.** `core.autocrlf` is not unset. It is **true**, from `C:/Users/Airwolf/.gitconfig`, so git converts CRLF to LF when staging and back on checkout. A CRLF working copy of an LF blob is therefore not modified, and **`git add -A` cannot bake in the churn the entry warns about** while that setting holds. The warnings git prints on commit, "LF will be replaced by CRLF the next time Git touches it", are that conversion announcing itself on the files this session rewrote as LF.
+
+**The stale lock is deleted.** `.git/index.lock.stale-claude-20260916` was 0 bytes with no live `.git/index.lock` beside it.
+
+**The policy question is left open deliberately.** `* text=auto` in `.gitattributes` would move the normalisation from one machine into the repository, at the cost of one renormalisation commit touching every text file: exactly the churn the entry warns about, paid once on purpose instead of once by accident. It is defensible either way while every clone in use has `core.autocrlf` on, and it stops being defensible the moment a contributor whose git does not sees what entry 64 described. That is a decision for whoever owns `.gitattributes` and nothing was changed there.
+
+**Tests:** Core 760 passing, App 36 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2717,3 +2763,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 58 section 3: either key alone withholds, over requiring both.** The same reasoning as entry 37 section 1's two opt-out signals: redundancy is the point, and publishing under ambiguous consent cannot be undone.
 - **Entry 55 section 3 item 1: the counts recorded in the stage record and in `grouplab measure --json`, over the committed spike records.** A field in the spike records would regenerate thirteen of them and move the gate record's raw comparison, for a diagnostic that changes no figure anybody reads.
 - **Entry 55 section 3 item 1: a ray counted as marginal within a tenth of the crossing threshold on either side, over counting only the rays that failed it.** A ray that just cleared the threshold is as easily flipped by the image as one that just missed it, and the tenth is the convention the leave-one-out already uses for the rejection limit.
+- **Entry 61 section 3: no catch added for `PlatformNotSupportedException`, over adding one defensively.** The runtime throws `Win32Exception` for a verb off Windows, so a catch for the other would assert a behaviour that does not exist and would outlive anybody who remembers why it is there.
+- **Entry 64: the working tree left alone, over running the fix as written.** Nothing differed, so the command would have been a no-op dressed as a repair, and running it would have left a false record that something was cleaned.

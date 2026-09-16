@@ -12,6 +12,30 @@ namespace GroupLab.App.Tests;
 /// </summary>
 public class PrintScreenTests
 {
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 61 section 3: Windows gets the shell print verb, and Linux and macOS are not asked for one. .NET
+    /// refuses any verb but open there, throwing Win32Exception(ERROR_NO_ASSOCIATION), so asking would throw on every press, log a
+    /// warning, and then blame the PDF viewer for a platform fact. The words shown differ with the platform for the same reason.
+    /// </summary>
+    [Fact]
+    public void ThePrintLaunchAsksWindowsForAPrintVerbAndAsksTheOthersOnlyToOpenTheFile()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "grouplab-print-launch.pdf");
+
+        var (onWindows, windowsStatus) = PrintWindow.PrintLaunch(path, windows: true);
+        Assert.Equal("print", onWindows.Verb);
+        Assert.True(onWindows.UseShellExecute);
+        Assert.Equal(path, onWindows.FileName);
+        Assert.Contains("print command", windowsStatus, StringComparison.Ordinal);
+
+        var (elsewhere, elsewhereStatus) = PrintWindow.PrintLaunch(path, windows: false);
+        Assert.Equal(string.Empty, elsewhere.Verb);
+        Assert.True(elsewhere.UseShellExecute);
+        Assert.Equal(path, elsewhere.FileName);
+        Assert.Contains("no print command", elsewhereStatus, StringComparison.Ordinal);
+        Assert.Contains("open in your viewer", elsewhereStatus, StringComparison.Ordinal);
+    }
+
     [AvaloniaFact]
     public void TheLibraryListsEverySheetAndSavesAPdfThatAsksForNoScaling()
     {

@@ -326,26 +326,55 @@ public sealed class PrintWindow : Window
             return;
         }
 
+        bool windows = OperatingSystem.IsWindows();
+        var (start, sent) = PrintLaunch(path, windows);
         try
         {
-            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" })?.Dispose();
-            status.Text = "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.";
+            Process.Start(start)?.Dispose();
+            status.Text = sent;
+            return;
         }
-        catch (Win32Exception printing)
+        catch (Win32Exception printing) when (windows)
         {
             DiagnosticLog.Exception(LogLevel.Warn, "print.command", printing, ("fallback", "open the PDF"));
-            try
-            {
-                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
-                status.Text = "Your PDF viewer has no print command GroupLab can call, so the PDF is open in it. Print from there at Actual size, or 100%.";
-            }
-            catch (Win32Exception ex)
-            {
-                status.Text = "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
-                DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
-            }
+        }
+        catch (Win32Exception opening)
+        {
+            status.Text = "No application could open the PDF (" + opening.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
+            DiagnosticLog.Exception(LogLevel.Warn, "print.open", opening, ("fallback", "the saved PDF"));
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
+            status.Text = "Your PDF viewer has no print command GroupLab can call, so the PDF is open in it. Print from there at Actual size, or 100%.";
+        }
+        catch (Win32Exception ex)
+        {
+            status.Text = "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
+            DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
         }
     }
+
+    /// <summary>
+    /// How the PDF is handed to the system, and what to tell the person, NOTES-FROM-PLANNING.md entry 61 section 3.
+    /// <para>
+    /// <b>Windows</b> has a shell "print" verb, which hands the file to the print command its PDF viewer registered, and a viewer that
+    /// registered none raises <see cref="Win32Exception"/> so the caller can open the file instead.
+    /// </para>
+    /// <para>
+    /// <b>Linux and macOS have no such verb at all.</b> .NET implements <c>UseShellExecute</c> there by running the desktop's own opener,
+    /// and refuses any verb but "open": <c>SafeProcessHandle.Unix.cs</c> throws <c>Win32Exception(ERROR_NO_ASSOCIATION)</c> for anything
+    /// else. Asking for one would throw on every press, log a warning, and then blame the person's PDF viewer for a platform fact, so
+    /// nothing asks. The PDF is opened and the words say so.
+    /// </para>
+    /// </summary>
+    internal static (ProcessStartInfo Start, string Status) PrintLaunch(string path, bool windows) => windows
+        ? (new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" },
+            "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.")
+        : (new ProcessStartInfo(path) { UseShellExecute = true },
+            "This system has no print command GroupLab can call, so the PDF is open in your viewer. Print from there at Actual size, or 100%.");
 
     /// <summary>
     /// A control shown again in a rebuilt row, taken out of the row it was last in. The serial box and the load block's field boxes

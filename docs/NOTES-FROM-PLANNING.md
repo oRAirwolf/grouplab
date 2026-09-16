@@ -15,6 +15,313 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-16, entry 64: 109 tracked files have shown as modified for two days, and the whole difference is line endings
+
+**Status: actioned 2026-09-16, and the diagnosis is corrected.** Verified before anything was taken, as you asked: `git status --short` lists only the untracked inbox entries, and `git diff --shortstat`, `git diff -w --shortstat` and `git diff --cached --shortstat` are all empty. There was nothing to discard, so `git checkout -- .` was not run.
+- **`core.autocrlf` is not unset. It is true,** from the global config, so staging converts CRLF to LF and the CRLF working copies you found are not modified against their LF blobs. `git add -A` cannot bake in the churn while that holds.
+- **The working copies are CRLF exactly as you measured them,** 30 of 30, 10 of 10 and 594 of 594 on the three files you named.
+- **The stale lock is deleted.** It was 0 bytes with no live `.git/index.lock` beside it.
+- **`.gitattributes` is untouched,** and the `* text=auto` question is yours: it moves normalisation from one machine into the repository at the cost of one renormalisation commit, and it becomes urgent the day somebody clones without `core.autocrlf`. Reported in `docs/PHASE1-RESULTS.md` "Entry 64".
+
+Found incidentally while checking which inbox entries were still outstanding. It is not breaking anything today and it is a landmine, so it is worth half an hour now rather than a bad commit later.
+
+### 1. What the working tree looks like
+
+`git status` reports **109 modified tracked files**, and `git diff --shortstat` reports **21,634 insertions and 21,634 deletions**, exactly equal.
+
+**`git diff -w --shortstat` reports nothing at all.** Every one of those 21,634 line pairs differs only in whitespace, and specifically in line endings: the working copies are CRLF and the committed blobs are LF.
+
+| | Working tree | Index and HEAD |
+|---|---|---|
+| `src/GroupLab.Core/Imaging/GrayImage.cs` | 30 CRLF of 30 lines | 0 CRLF |
+| `.gitattributes` | 5 CRLF of 10 lines | 0 CRLF |
+| `src/GroupLab.Core/Statistics/RangeStatistics.csv` | 594 CRLF of 594 lines | 0 CRLF |
+
+`core.autocrlf` and `core.eol` are both unset, so git converts nothing on its own and a CRLF working file will differ from an LF blob permanently.
+
+### 2. What caused it, on the evidence of the timestamps
+
+**Every modified file was last written on 13 or 14 September. Every file that agrees was last written on 15 September or later.** Nothing is mixed.
+
+So this is not a bulk rewrite that happened recently. It is the residue of the repository being normalized to LF around the 14 September history rewrite, after which **the files that have been edited since were rewritten as LF and now agree, and the files nobody has touched since still hold their original CRLF bytes.** The working tree was never renormalized to match.
+
+`.gitattributes` is the clearest single piece of evidence: its first five lines are CRLF and its last five are LF, because part of it was rewritten and part was not.
+
+### 3. Why it matters even though nothing is broken
+
+1. **`git status` is unusable.** 112 lines of output of which three are real, which is how a genuine uncommitted change goes unnoticed.
+2. **One `git add -A` bakes in 21,634 lines of line-ending churn** and destroys `git blame` across most of the repository. Every commit for two days has evidently staged named paths, which is the only reason this has not happened already.
+3. **`RangeStatistics.csv` is not covered by any `text eol=lf` rule** in `.gitattributes`, and nor are the `.cs` files. The rules cover `targets/**`, `tests/**/Fixtures/**`, `src/**/*.json` and `scans/phase0/measurements/**`. So the byte-for-byte comparisons are protected and the rest of the tree is not.
+
+### 4. The fix, and I have deliberately not run it
+
+Because the whole difference is whitespace, verified above, the committed content is authoritative and nothing is lost by taking it:
+
+```
+git checkout -- .
+```
+
+**Verify before and after rather than trusting the paragraph above.** `git diff -w --shortstat` should be empty before, which is the claim that no real change is being discarded, and `git status --short` should show only the untracked inbox entries after.
+
+**Then decide whether to prevent the recurrence**, which is a policy choice rather than a cleanup and belongs to whoever owns `.gitattributes`. Adding `* text=auto` normalizes on commit and makes the working tree's endings a local matter, at the cost of one renormalization commit that touches everything once. Doing nothing is also defensible now that the tree is consistent. **What is not defensible is leaving it as it stands**, where the state is neither normalized nor clean.
+
+### 5. One thing I left behind, which I cannot remove myself
+
+A read-only `git status` of mine created `.git/index.lock` and could not remove it, because the bridge I use cannot delete files. A stale lock blocks every subsequent git command, so I renamed it out of the way to **`.git/index.lock.stale-claude-20260916`** and confirmed git works again.
+
+**Delete that file.** It is inside `.git` so it never appears in `git status`, and it has no purpose.
+
+---
+
+## 2026-09-16, entry 63: the Linux VM is 24.04, not 26.04, and the reason has a packaging consequence
+
+**Status: open, and recorded.** Nothing here is buildable yet: the tarball step entry 61 section 5 item 2 asks for does not exist.
+- **24.04 is the version,** for the reason you give: the VM earns its keep by reproducing CI, and `ubuntu-latest` is 24.04.
+- **Section 2's floor is the part that outlives the VM,** and it goes on the workflow step that builds the tarball, on the day that step is written, so a silent runner upgrade to 26.04 is a question somebody has to answer rather than a default.
+- **Not added to the CI matrix,** as you say: a preview label buys early warning at the price of a flaky job.
+
+Entry 61 section 2 said "Ubuntu LTS first" without naming a version, which is the sort of gap that gets re-argued in three months. This names it and records why, and section 2 is a build constraint that outlives the VM.
+
+Ubuntu 26.04.1 LTS is out and it is the obvious choice if newer is better. It is the wrong one here.
+
+### 1. The reason the VM exists is CI reproduction, and CI is 24.04
+
+`.github/workflows/ci.yml` and `.github/workflows/gate-record.yml` both run `ubuntu-latest`. **`ubuntu-latest` is still Ubuntu 24.04.** Ubuntu 26.04 exists on GitHub Actions only behind the explicit `ubuntu-26.04` label, which is marked preview, and no migration date for `ubuntu-latest` has been published. The 22.04 images only began deprecation on 17 September 2026, which is the rhythm: 24.04 has just become the settled default rather than the new thing.
+
+Entry 61 section 2 justified the VM on one property, that a CI failure becomes reproducible in seconds instead of through a ten minute push cycle. **A 26.04 VM does not have that property.** It is a third platform to reason about rather than a local copy of the second.
+
+### 2. glibc runs forward and not backward, so the tarball must be built on the oldest supported distribution
+
+Entry 61 section 2 named the native OpenCV runtime's glibc as the most likely thing to break across distributions. That asymmetry has a direction that was not written down.
+
+**A binary built against an older glibc runs on a newer one. A binary built against a newer glibc does not run on an older one.** So a newer distribution is the forgiving end of the range, and proving GroupLab on 26.04 proves almost nothing about 24.04, while the reverse is close to guaranteed.
+
+**The consequence for entry 61 section 5 item 2, the self-contained tarball:** the build host sets the floor. Built on `ubuntu-latest` at 24.04 the tarball runs on 24.04 and newer. Built on 26.04 it would run on 26.04 and newer and would fail on the distribution CI itself uses, which is the kind of defect nobody finds until a stranger reports it.
+
+**Write the floor down wherever the tarball is produced**, as a comment on the workflow step, so that the day `ubuntu-latest` moves to 26.04 the question is asked deliberately rather than answered by a silent runner upgrade. That day is the whole risk here, and it will arrive without an announcement in this repository.
+
+### 3. 26.04 has no X11 session at all, which narrows what a result there means
+
+GNOME 50 removed the X11 session and Ubuntu 26.04 ships Wayland only, with XWayland for X11 clients. **Avalonia's Linux backend is X11.** Native Wayland support is in progress and existing applications are carried by XWayland.
+
+So on 26.04 GroupLab necessarily runs through XWayland, and on 24.04 it can run natively on X11 or through XWayland depending on which session is chosen at the login screen. **24.04 can test both paths and 26.04 can test only one.** Since DPI scaling and the file dialogs are two of the things entry 61 section 2 wanted looked at, and both are exactly where that distinction shows up, the older release is the more capable test machine.
+
+### 4. Where 26.04 does belong
+
+**Later, and as a second machine rather than a replacement.** Entry 61 section 2 asked for the second VM to be older or differently built, on the argument that a newer distribution proves the happy path and an older one proves the range. 26.04 is on the wrong side of that for now and becomes the right side the day `ubuntu-latest` moves.
+
+**Not in the CI matrix yet.** Adding `ubuntu-26.04` while it is a preview label buys early warning at the cost of a job that can queue and flake, which is the maintenance tax entry 61 section 1 argued against. The trigger to add it is the label going generally available, not the distribution existing.
+
+---
+
+## 2026-09-16, entry 62: two tablets, and a scope correction to what the licence actually blocks
+
+**Status: actioned 2026-09-16 for section 2. Sections 1, 3 and 4 are recorded.**
+- **Section 2's correction is in the README,** in the paragraph entry 60 supplied, rather than as a later amendment to it. Entry 54 section 9 keeps its original wording until that entry is actioned, and this correction applies to it then.
+- **Section 3 is noted and nothing is built.** Entry 54's two-way split is recorded as resting on a phone rather than on a tablet with a pen, and the question waits on section 11's first task, which needs no device.
+- **Section 4's warning is taken:** a green result on a tablet says the software runs on the operating system and says nothing about a person at a range holding a camera.
+
+Section 2 corrects something I have now written twice, in entry 54 and in entry 60's README text. Section 3 is a product question entry 54 never asked because I was thinking about the wrong device.
+
+Alan has a **Samsung Galaxy Tab S8 Ultra** and an **iPad Mini 6**. Both are real hardware for Phase 6 and Phase 8 and neither existed in my picture when entry 54 was written.
+
+### 1. What each one can actually do today
+
+| | Galaxy Tab S8 Ultra | iPad Mini 6 |
+|---|---|---|
+| Build produced on | Windows, directly | needs a Mac, or the macOS runners `DESIGN.md` section 21 already names |
+| Installed by | `adb install`, no account | signing, and a Mac in the loop |
+| Usable now | **yes** | not without a Mac |
+
+**The Android tablet is usable immediately and the iPad is not**, and the obstacle for the iPad is a Mac rather than a licence. That matters for section 2.
+
+### 2. The licence blocks distribution, not testing, and I have said otherwise twice
+
+Entry 54 section 9 says iOS "is blocked on a legal answer rather than on engineering" and that "no amount of work moves iOS until that comes back". Entry 60's replacement README text repeats it.
+
+**That is true of App Store distribution and false of everything else.** The GPL section 7 additional permission exists because plain GPL-3.0 conflicts with Apple's App Store terms. It has nothing to say about building GroupLab, installing it on a device you own, or testing it there.
+
+**So iOS work is not blocked. iOS shipping is.** The distinction matters because the current wording would have somebody conclude there is no point starting, and the whole reason `DESIGN.md` section 9 chose AprilTag `tag36h11` over an ArUco dictionary was to keep the mobile detector on a BSD-2-Clause implementation so that the App Store path stays open when the permission lands. **That work can be proved on the iPad long before the lawyer answers.**
+
+**Amend entry 60's README text.** Where it says "No amount of work moves iOS until that comes back", use instead:
+
+> The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
+
+And the same correction applies to entry 54 section 9 when it is actioned.
+
+### 3. A tablet is not a big phone, and entry 54 assumed it was
+
+Entry 54 section 6 drew a line: capture and a verdict on the device, and **not** marking by hand, assignment correction or the analysis screen, because "a phone that tries to be an editor will be a bad editor".
+
+**That reasoning was about a phone and I applied it to mobile.** A 14.6 inch tablet with a stylus is a different proposition, and for the one task in this project that is pure pointing, it may be a better one than a desktop.
+
+**Marking impacts is tap-to-place on a zoomed image.** Entry 39 section 4 asked for press, drag and release precisely so it works with a finger. A pen on a large screen is the most natural input that interaction could have, and better than a mouse, not worse.
+
+**I am not proposing to build it.** I am recording that entry 54's split was drawn on an assumption that does not survive contact with this hardware, and that the honest shape may be three-way rather than two:
+
+- **phone**: capture, and the assistant that says the frame is bad while it can still be fixed
+- **tablet**: marking and correction, where a pen beats a mouse
+- **desktop**: analysis, comparison, reporting, the library
+
+**The question to answer before any of that matters is entry 54 section 11's first task**, which needs no device at all: whether the capture assistant's thresholds separate pass from fail on the Phase 0 frames. If they do not, most of entry 54 falls and this question falls with it.
+
+### 4. What these tablets are good for now, and what they are not
+
+**Good for: the platform.** Does the application build, install, launch, draw, find its files, write its log, survive a crash, and render the embedded fonts. That is most of what Phase 6 is, and the Android tablet can start answering it whenever somebody wants to.
+
+**Not good for: the use case.** Nobody photographs a target with a 14.6 inch tablet. **These test whether the software runs on the operating system. They do not test the thing entry 54 says the phone is for**, which is a person standing at a range holding a camera. Proving the capture assistant needs a phone, in a hand, in daylight, with a target on a stand.
+
+Worth saying plainly so that a green result on a tablet is not mistaken for the mobile case working.
+
+### 5. Order
+
+Unchanged, and nothing here moves up. The range session and the mounted photograph gate are still the critical path. When mobile does start, the Android tablet removes the first obstacle to Phase 6, and the iPad removes one of two for Phase 8 with a Mac still needed for the other.
+
+---
+
+## 2026-09-16, entry 61: one Linux package format, not five, and a printing defect I can predict without the VM
+
+**Status: actioned 2026-09-16 for section 3. Sections 1, 2, 4 and 5 are recorded as direction.**
+- **Section 3, checked before it was changed, and your prediction is wrong in its mechanism.** .NET throws `Win32Exception(ERROR_NO_ASSOCIATION)` for a verb off Windows, not `PlatformNotSupportedException`, so the existing catch already handles it and the print button does not crash on Linux or macOS. It is your own second branch: useless there rather than broken.
+- **The real defect, and it is fixed.** Every press off Windows threw, logged a warning, and then blamed the person's PDF viewer for a platform fact. Windows now keeps the print verb, everywhere else is asked only to open the file, and the words say which happened. Reported in `docs/PHASE1-RESULTS.md` "Entry 61 section 3".
+- **Section 1 is taken:** the tarball, then AppImage only if somebody asks. Section 5 item 2 is the next piece of work in this entry, with entry 63 section 2's floor written on the step that builds it.
+- **Section 2 is Alan's to do when he wants it.** The VM is not on the critical path, as you say.
+
+Section 3 is checkable today and does not need a VM. Sections 1 and 2 are a direction decision so it does not get re-argued every few months.
+
+Alan has offered to build a Linux VM on VMware Workstation, and assumed we would want `.deb`, `.rpm`, snap, flatpak and AppImage.
+
+### 1. Five formats is four too many, and the reason is maintenance rather than effort
+
+Each packaging format is not a one-off job. It is a permanent obligation: its own build, its own update path, its own bug reports from people whose distribution does something slightly different, and in two cases an account and a review queue belonging to somebody else.
+
+| Format | What it costs, forever |
+|---|---|
+| Self-contained tarball | **nothing.** `dotnet publish --self-contained` already produces the directory; tar it |
+| AppImage | a small recipe, plus a desktop entry and an icon. No account, no review |
+| `.deb` | a control file and dependency declarations per distribution version, and a repository if updates are to work |
+| `.rpm` | the same again, differently, for the Fedora and RHEL family |
+| snap | a Canonical account, a manifest, a review queue, confinement rules that will fight a file picker |
+| flatpak | a Flathub account, a manifest, a review queue, a runtime to track |
+
+**There are currently zero Linux users.** Not few: zero. Linux is not offered as a download, nobody runs it day to day, and nothing outside CI has ever launched the window on it.
+
+**So: the tarball now, because it falls out of a build that already happens and costs nothing. AppImage when somebody wants a menu entry. The other four when a person asks for one by name.** Adding a format later because somebody wanted it is a good day's work. Maintaining four nobody uses is a tax paid every release forever, and it is exactly the sort of thing that makes a small project feel like a chore.
+
+This also matches what Windows already does. `DESIGN.md` section 20 chose unsigned direct downloads plus a store listing, not every installer technology available.
+
+### 2. The VM is worth building, and not for packaging
+
+**The reason to build it is that nobody has ever seen GroupLab render on Linux.** CI is headless. It proves the code runs and the numbers agree. It has never drawn a window.
+
+**Ubuntu LTS first**, because CI runs `ubuntu-latest` and matching it makes a CI failure reproducible in seconds rather than through a ten-minute push cycle. That single property is worth more than distribution coverage.
+
+**A second VM later, on Debian stable or a RHEL-family distribution**, and the reason is specific: the native OpenCV runtime is built against a particular glibc, and that is the most likely thing to break across distributions. A newer Ubuntu proves the happy path. An older or differently-built distribution proves the range. That is a later luxury.
+
+**What the VM would actually be used for**, so it is not just set up and stared at:
+
+- **The window, looked at by a person.** Fonts, spacing, dialogs, DPI scaling. The application embeds IBM Plex precisely so it does not depend on system fonts, and that has never been tested anywhere the system fonts differ.
+- **The file dialogs**, which are a different implementation on Linux and have never been opened.
+- **Case sensitivity.** `DESIGN.md` and entry 32 section 2 both name it. The target library loads `targets/*.gltd.json` by path; any wrong case works on Windows and fails only here.
+- **The log directory.** Entry 41 specified `$XDG_STATE_HOME/grouplab/logs` with a fallback, and no one has ever checked that a log appears there.
+- **The crash handler and the report package**, on a platform whose paths and temp directories differ.
+- **The gate record**, locally and quickly, instead of through CI.
+- **Printing**, which is section 3 and which I think is already broken.
+
+### 3. The print button is probably broken on Linux, and this does not need the VM to check
+
+`src/GroupLab.App/PrintWindow.cs` launches the print like this:
+
+```csharp
+Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" })?.Dispose();
+```
+
+with two fallbacks, both `catch (Win32Exception)`.
+
+**`Verb` is a Windows shell concept.** On Unix, `UseShellExecute = true` maps to `xdg-open`, and my understanding is that setting `Verb` to a non-empty string there throws `PlatformNotSupportedException` rather than doing anything. **`PlatformNotSupportedException` is not a `Win32Exception`, so neither catch block sees it.**
+
+If that is right, then on Linux and macOS:
+
+1. the print button throws,
+2. **nothing catches it**, so it reaches the dispatcher handler entry 41 installed,
+3. and the user is offered a crash report for pressing Print.
+
+**That is worse than not printing**, because entry 41's handler will faithfully report it as a crash every single time, and the fallback path that exists specifically to open the PDF instead never runs.
+
+**I could not test this.** There is no .NET runtime in either environment I can reach, so this is a prediction from reading the code and not a measurement. **Check it before changing anything**, because if `Verb` is silently ignored on Unix rather than throwing, the code is merely useless there rather than broken, and the fix is different.
+
+**If it is right, the fix has two parts.** Catch the platform exception as well, so the fallback runs. And on Unix do not set `Verb` at all: open the PDF in the default viewer and say so, which is what the first fallback already does and what a Linux user would expect anyway.
+
+**This is worth doing whatever happens with the VM**, because the same code path runs on macOS, and macOS is a platform we already build and test.
+
+### 4. Where this sits
+
+**Not on the critical path and it should not displace anything.** The range session and the mounted photograph gate are the critical path. The VM is cheap for Alan and it unblocks a class of work that otherwise waits indefinitely, which is a good reason to do it soon and not a reason to do it first.
+
+### 5. Order
+
+1. **Section 3**, the print path. Checkable now, affects macOS too, and it is a defect rather than a feature.
+2. **The self-contained tarball** as a build output, since it costs nothing and gives the VM something to install.
+3. The VM itself, whenever Alan has half an hour.
+4. AppImage if and when somebody wants a menu entry.
+
+---
+
+## 2026-09-16, entry 60: the README undersells Linux and macOS, and here is the replacement text
+
+**Status: actioned 2026-09-16.** Your text is in the README as written, with one change: the iOS sentence carries entry 62 section 2's correction instead of "No amount of work moves iOS until that comes back", so the retraction lands with the paragraph rather than after it. The phase table's iOS row says the permission gates distribution and not development, for the same reason.
+- **What I did not touch:** the `<!--platforms-->` markers further down, which `ReadmeTests` holds equal to the CI matrix, and the test counts you deliberately left out.
+
+Small and self-contained. Alan's decision, my wording. Place it or tell me what is wrong with it.
+
+### 1. What is wrong with the current text
+
+The Planned section ends with:
+
+> **macOS and Linux are wanted and are not a phase.** Nothing in the measurement core is Windows-specific and Avalonia runs on all three, so this is packaging and an imaging-backend reference rather than a port. It is tracked as a continuous requirement: CI builds and tests all three on every push, and before either is offered as a build, the Phase 0 gate record has to reproduce on that platform rather than merely compile.
+
+**Every fact in it is true and the framing is wrong.** "Wanted and not a phase" reads as a nice-to-have somebody might get to. What is actually happening is that every commit builds and tests all three platforms, and a second workflow reruns the entire Phase 0 measurement record on all three and compares it against the Windows record. **That is a harder bar than most projects apply to their primary platform**, and the page describes it as an aspiration.
+
+It also buries the ordering. Alan's priority is Windows 10 and 11 first, then Android, then iOS, with Linux and macOS built alongside Windows rather than after it, and not used as test platforms.
+
+### 2. Replace the paragraph above with this
+
+> ### Platforms
+>
+> **Windows 10 and 11 is what GroupLab is built for.** It is where the application is developed and used, where every screenshot comes from, and the only platform offered as a download today.
+>
+> **Linux and macOS are built and tested alongside it, not after it.** Every push builds and runs the whole suite on all three. A second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record, which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers.
+>
+> | Platform | Built and tested | Reproduces the Phase 0 record | Offered as a download | Used day to day |
+> |---|---|---|---|---|
+> | Windows 10 and 11 | every push | the reference | **yes** | yes |
+> | Linux | every push | **yes** | not yet | no |
+> | macOS | every push | not yet | not yet | no |
+>
+> **What stands between Linux and macOS and a download is the record, not the build.** Linux reproduces it. macOS differs on a small number of measurement rows, traced to corner refinement inside the native imaging library and to one further divergence below it. That is an open item with a named cause rather than an unknown, and it is tracked in `docs/PHASE1-RESULTS.md`.
+>
+> **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
+>
+> **Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and is held up by a licence question rather than by engineering: distribution through the App Store needs the GPL section 7 additional permission described under Licence, which is drafted and with a lawyer and not in force. No amount of work moves iOS until that comes back.
+
+### 3. One line in the phase table
+
+The table's row **8. iOS** reads "Built and signed on CI." Make it:
+
+> | **8. iOS** | Built and signed on CI. Waits on the licence permission under Licence, not on engineering. |
+
+So the ordering has its reason attached where somebody reads the order.
+
+### 4. What I deliberately left out
+
+**No test counts.** They change every few commits and `ReadmeTests` has no marker to guard them, so a number there goes stale the way the build-platform sentence did. The table says "every push", which stays true.
+
+**No claim that Linux or macOS is supported.** They build, they test, and one of them reproduces the record. None of that is the same as somebody being able to download and run it, and the table keeps those four things in separate columns on purpose.
+
+**No date for either.** There is not one, and the last thing that section needs is another aspiration.
+
+---
+
 ## 2026-09-16, entry 59: Android keeps what iOS drops, and two frames from one phone prove entries 16 and 27 live
 
 **Status: open, with order item 2 done.** Item 4 is taken: entry 58 section 3 came first.

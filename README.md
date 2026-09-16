@@ -142,9 +142,25 @@ Each phase has a gate and is not complete until the gate passes. The gates and t
 | **5. Chronograph, solver, comparison** | Garmin Xero import and reconciliation, a ballistic solver validated against an independent implementation, load-versus-load significance testing, velocity regression, predicted against measured vertical. |
 | **6. Android** | Camera capture, lens distortion fitted on the device. |
 | **7. Synchronisation** | Cloud provider adapters, three-tier storage. |
-| **8. iOS** | Built and signed on CI. |
+| **8. iOS** | Built and signed on CI. Waits on the licence permission under Licence for distribution, not for development. |
 
-**macOS and Linux are wanted and are not a phase.** Nothing in the measurement core is Windows-specific and Avalonia runs on all three, so this is packaging and an imaging-backend reference rather than a port. It is tracked as a continuous requirement: CI builds and tests all three on every push, and before either is offered as a build, the Phase 0 gate record has to reproduce on that platform rather than merely compile.
+### Platforms
+
+**Windows 10 and 11 is what GroupLab is built for.** It is where the application is developed and used, where every screenshot comes from, and the only platform offered as a download today.
+
+**Linux and macOS are built and tested alongside it, not after it.** Every push builds and runs the whole suite on all three. A second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record, which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers.
+
+| Platform | Built and tested | Reproduces the Phase 0 record | Offered as a download | Used day to day |
+|---|---|---|---|---|
+| Windows 10 and 11 | every push | the reference | **yes** | yes |
+| Linux | every push | **yes** | not yet | no |
+| macOS | every push | not yet | not yet | no |
+
+**What stands between Linux and macOS and a download is the record, not the build.** Linux reproduces it. macOS differs on a small number of measurement rows, traced to corner refinement inside the native imaging library and to one further divergence below it. That is an open item with a named cause rather than an unknown, and it is tracked in `docs/PHASE1-RESULTS.md`.
+
+**Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
+
+**Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and needs the GPL section 7 additional permission described under Licence, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
 
 Smaller things already specified and waiting: a three-axis unit setting (inches, centimetres and millimetres; MOA, mil and SMOA; yards and metres), adjust-to-zero turret corrections, calibre-aware edge-to-edge spread, and a volunteer print pack.
 
