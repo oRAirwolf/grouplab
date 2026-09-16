@@ -92,6 +92,14 @@ public sealed class AppSettingsStore(string path)
     public bool SaveVerbose(bool verbose) => Save(file => file["verboseLogging"] = verbose);
 
     /// <summary>
+    /// Whether the statistics panel's further figures are open, DESIGN.md section 19: reference material lives one click away in a panel
+    /// that remembers it was opened (NOTES-FROM-PLANNING.md entry 73 section 7). Closed unless a person opened it.
+    /// </summary>
+    public bool LoadMoreFigures() => Read(file => file["moreFiguresOpen"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveMoreFigures(bool open) => Save(file => file["moreFiguresOpen"] = open);
+
+    /// <summary>
     /// Where a crash report is sent, entry 41 section 7. Empty unless configured, so a fork of GroupLab never posts to anybody's server and
     /// the Send button stays hidden; saving a report to disk works either way.
     /// </summary>

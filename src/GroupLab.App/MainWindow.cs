@@ -47,6 +47,11 @@ public sealed class MainWindow : Window
     private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
+
+    // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
+    // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
+    private readonly StackPanel moreFigures = new() { Spacing = 4 };
+    private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = 6 };
     private readonly StackPanel shotList = new() { Spacing = 2 };
     private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space6, IsVisible = false };
@@ -86,6 +91,15 @@ public sealed class MainWindow : Window
     {
         settingsStore = settings;
         units = settings.LoadUnits();
+        moreFiguresPanel.Content = moreFigures;
+        moreFiguresPanel.IsExpanded = settings.LoadMoreFigures();
+        moreFiguresPanel.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == Expander.IsExpandedProperty)
+            {
+                settingsStore.SaveMoreFigures(moreFiguresPanel.IsExpanded);
+            }
+        };
         ApplyTheme(settings.LoadTheme());
         Title = "GroupLab";
         Width = 1400;
@@ -365,6 +379,9 @@ public sealed class MainWindow : Window
 
     /// <summary>The list of shots, for the headless tests.</summary>
     internal StackPanel ShotList => shotList;
+
+    /// <summary>The disclosure holding the reference figures, for the headless tests.</summary>
+    internal Expander MoreFigures => moreFiguresPanel;
 
     /// <summary>A shot's number as the image and the list show it, or its id when it is marked as not a shot and has no number.</summary>
     private string ShotLabel(int id) => MarkingCanvas.ShotNumbers(session.State).TryGetValue(id, out int number)
@@ -777,6 +794,7 @@ public sealed class MainWindow : Window
         }
 
         statistics.Children.Clear();
+        moreFigures.Children.Clear();
         if (report.AllShots is { } all)
         {
             var reduced = report.WithoutExclusions!;
@@ -798,7 +816,7 @@ public sealed class MainWindow : Window
                 statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadFigureSize, FontWeight.Medium));
                 statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.FigureSize, FontWeight.Medium));
                 statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.BodySize, FontWeight.Normal, subordinate: true));
-                statistics.Children.Add(new TextBlock
+                moreFigures.Children.Add(new TextBlock
                 {
                     Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
                         ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
@@ -808,21 +826,21 @@ public sealed class MainWindow : Window
                 });
                 if (state.ShotDistanceInches is null)
                 {
-                    statistics.Children.Add(Line("Angular figures need the shot distance."));
+                    moreFigures.Children.Add(Line("Angular figures need the shot distance."));
                 }
 
                 if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
                 {
-                    statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
+                    moreFigures.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
                         $"From {all.Shots} shots the true group size could be anywhere from {range.Lower:0.00} to {range.Upper:0.00} times what they measure (STATISTICS.md section 9.1).")));
                 }
 
-                statistics.Children.Add(Line(all.AspectRatio is { } aspect
+                moreFigures.Children.Add(Line(all.AspectRatio is { } aspect
                     ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees")
                     : $"Error ellipse: {all.AspectRatioUnavailable}."));
                 if (all.WorstShotInMeanRadii is { } worst)
                 {
-                    statistics.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
+                    moreFigures.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
                         $"Worst shot at {worst:0.00} mean radii; a group of {all.Shots} is expected to put its worst at {all.ExpectedWorstInMeanRadii:0.00}, so a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")));
                 }
             }
@@ -836,6 +854,11 @@ public sealed class MainWindow : Window
                     FontSize = Tokens.SecondarySize,
                     Classes = { AppStyles.Alert },
                 });
+            }
+
+            if (moreFigures.Children.Count > 0)
+            {
+                statistics.Children.Add(moreFiguresPanel);
             }
         }
 

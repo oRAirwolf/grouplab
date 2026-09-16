@@ -343,6 +343,47 @@ public class MarkingScreenTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 73 section 7 and DESIGN.md section 19: the headline figures stay in the panel, the reference figures are
+    /// one click away, closed until opened, and a window opened later remembers that they were.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheReferenceFiguresSitBehindADisclosureThatRemembersItWasOpened()
+    {
+        (int X, int Y)[] holes = [(200, 200), (236, 180), (210, 238), (500, 200), (464, 226), (536, 186)];
+        string path = SyntheticTarget(holes);
+        string settings = Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json");
+        try
+        {
+            var store = new AppSettingsStore(settings);
+            var window = new MainWindow(store);
+            window.Show();
+            window.OpenImage(path);
+            window.Session.LoadDetections(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2), [new BullAim(0, "1", new PointD(215, 205)), new BullAim(1, "2", new PointD(500, 205))],
+                [.. holes.Select(h => (new PointD(h.X, h.Y), (int?)(h.X < 350 ? 0 : 1)))], "test");
+            Dispatcher.UIThread.RunJobs();
+
+            string[] reference = [.. window.MoreFigures.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")];
+            Assert.Contains(window.StatisticsText, t => t == "Mean radius");
+            Assert.DoesNotContain(reference, t => t == "Mean radius");
+            Assert.Contains(reference, t => t.StartsWith("Error ellipse", StringComparison.Ordinal));
+            Assert.False(window.MoreFigures.IsExpanded);
+            Assert.False(store.LoadMoreFigures());
+
+            window.MoreFigures.IsExpanded = true;
+            Assert.True(store.LoadMoreFigures());
+            window.Close();
+
+            var later = new MainWindow(new AppSettingsStore(settings));
+            Assert.True(later.MoreFigures.IsExpanded);
+        }
+        finally
+        {
+            File.Delete(path);
+            File.Delete(settings);
+        }
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 73 section 6: every row of the shot list fits inside the right column, the longest text giving way before
     /// any button is cut off, and a detection that is not a shot is taken out from its row and put back the same way.
     /// </summary>
