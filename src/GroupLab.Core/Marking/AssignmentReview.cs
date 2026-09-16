@@ -17,9 +17,10 @@ public sealed record RejectedCandidate(PointD Image, double DiameterInches, stri
 /// <summary>
 /// One shot's assignment as a person reviews it, in inches: the bull it holds and its distance there, its nearest bull and that distance,
 /// the margin between its nearest and second-nearest bulls, and whether it wants a look, because the margin is small or the matching gave
-/// it a bull other than its nearest. Keyed by the marking's shot id, not by a position in a list.
+/// it a bull other than its nearest. Keyed by the marking's shot id, not by a position in a list. <see cref="DetectedBull"/> is the bull
+/// detection first gave it, so a shot the matching has since moved can be shown as moved for as long as it stays moved (entry 70 section 3).
 /// </summary>
-public sealed record ShotAssignmentDetail(int ShotId, int? Bull, double DistanceInches, int NearestBull, double NearestInches, double MarginInches, bool Ambiguous);
+public sealed record ShotAssignmentDetail(int ShotId, int? Bull, double DistanceInches, int NearestBull, double NearestInches, double MarginInches, bool Ambiguous, int? DetectedBull);
 
 /// <summary>
 /// What the matching decided, carried into the marking so the editor shows it rather than rebuilding it from the trace (NOTES-FROM-PLANNING.md
@@ -29,8 +30,20 @@ public sealed record ShotAssignmentDetail(int ShotId, int? Bull, double Distance
 /// composed where it is shown, from one shot's figures and the other shots' bulls.
 /// </para>
 /// </summary>
-public sealed record AssignmentReview(AssignmentMethod Method, string Reason, ImmutableList<ShotAssignmentDetail> Shots, ImmutableList<RejectedCandidate> Rejected)
+public sealed record AssignmentReview(AssignmentMethod Method, string Reason, ImmutableList<ShotAssignmentDetail> Shots, ImmutableList<RejectedCandidate> Rejected, AssignmentMethod DetectedMethod)
 {
+    /// <summary>
+    /// The shots the matching has moved off the bull detection gave them, because a person's decision elsewhere took that bull or freed
+    /// another (entry 70 section 3 item 3). Resolving one contested case can cause a second, and the second must never be invisible.
+    /// </summary>
+    public IEnumerable<ShotAssignmentDetail> Moved => Shots.Where(s => s.Bull != s.DetectedBull);
+
+    /// <summary>
+    /// Whether the method is no longer the one detection used: an edit took the unplaced shots above the bulls left to them, so matching
+    /// stopped being forced, or back below. A method that changes without saying so is a confident wrong answer (entry 70 section 3 item 4).
+    /// </summary>
+    public bool MethodChanged => Method != DetectedMethod;
+
     /// <summary>The figures for one shot, or null for a shot the matching did not place, such as one placed by hand.</summary>
     public ShotAssignmentDetail? For(int shotId) => Shots.FirstOrDefault(s => s.ShotId == shotId);
 
@@ -38,8 +51,8 @@ public sealed record AssignmentReview(AssignmentMethod Method, string Reason, Im
     public int NeedingReview => Shots.Count(s => s.Ambiguous);
 
     /// <summary>A matched shot's figures, from the page dmm <see cref="ShotAssignment"/> works in to inches.</summary>
-    internal static ShotAssignmentDetail Detail(int shotId, AssignedShot shot) =>
-        new(shotId, shot.Bull, shot.Distance / DmmPerInch, shot.NearestBull, shot.NearestDistance / DmmPerInch, shot.Margin / DmmPerInch, shot.Ambiguous);
+    internal static ShotAssignmentDetail Detail(int shotId, AssignedShot shot, int? detectedBull) =>
+        new(shotId, shot.Bull, shot.Distance / DmmPerInch, shot.NearestBull, shot.NearestDistance / DmmPerInch, shot.Margin / DmmPerInch, shot.Ambiguous, detectedBull);
 
     private const double DmmPerInch = 254;
 }

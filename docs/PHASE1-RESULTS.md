@@ -2714,6 +2714,51 @@ Off Windows, the print window said "This system has no print command GroupLab ca
 
 ---
 
+## Entry 70. Five decisions taken: LF in the repository, a status line with states, the editor's plumbing, and its matching rule
+
+`docs/NOTES-FROM-PLANNING.md` entry 70, in its section 7 order. No layout work was started.
+
+### Section 1: `* text=auto`, and the duplicate image deleted
+
+`* text=auto` is the first line of `.gitattributes`, so the narrower `eol=lf` rules below it still govern the files compared byte for byte. Measured again before committing: the renormalisation staged only `.gitattributes`, both with this machine's `core.autocrlf` and with it switched off. The untracked duplicate `docs/figures/concept-assignment-editor.png` is deleted; the design target stays where it has been, `docs/figures/screens/assignment-editor.png`.
+
+### Section 6: the print status line says which state it reports
+
+Every message used to carry the alert style. Now each carries one of three: **success** in teal, for a saved PDF or one sent to the Windows print command; **information** in plain text, for a PDF opened in the viewer for the person to print; and **alert** in red, for a missing library, an unprintable sheet, a failed write, or nothing able to open the file. A test fails a save, sees the alert, then saves and sees success rather than a red line left over.
+
+### Section 4: what the matching decided reaches the marking
+
+- **`AutomaticResult.Detections`** is a list of `DetectedShot`, each a position with its whole `AssignedShot`. The `ShotAssignmentResult` travels with them, and the detector's refused candidates come through as `RejectedCandidate` rather than reaching only the trace.
+- **`MarkingState.Assignment`** holds an `AssignmentReview`: the method and its reason, each detected shot's figures in inches under its marking id, the refused candidates, and the method detection used. It is state, so undo covers it, and `NeedingReview` is the concept's "2 of 26" counter.
+- **The card's sentence is not stored.** `Reason` stays a note about the method; the sentence is composed where it is shown.
+- **`BullAim` carries each bull's declared page position** beside its located image position (section 5), and both places they are used say why they differ.
+- **Nothing new is saved in a marking file.** A sheet's page mapping is not saved, so the review lives while a detection is loaded, and a reopened marking has none until detection runs again.
+
+### Section 3: the matching rule
+
+Implemented in `MarkingSession`, applied after every change to the shots and on loading a detection:
+
+| Item | As implemented |
+|---|---|
+| 1. A person's bull is pinned | a shot that is a shot and is manual or corrected keeps its bull |
+| 2. The rest re-solve on every edit | the untouched detections are matched against the bulls no pinned shot holds, classifying on declared positions |
+| 3. A cascade goes in the queue | each shot keeps the bull detection gave it, and `AssignmentReview.Moved` lists every shot whose bull now differs, for as long as it differs |
+| 4. The counts rule holds live | more untouched shots than free bulls gives nearest free bull, every shot flagged, and `MethodChanged` true |
+| 5. Undo restores the pins | provenance and the review are both state, so one undo takes back the reassignment, the pin and the cascade together |
+
+**Three consequences worth knowing before the editor is drawn:**
+- **A shot placed by hand is pinned to the bull it was given,** which is its nearest. A person adding a missed hole beside an automatic one therefore pushes the automatic one to another bull, and it shows as moved. That is the rule as entry 70 wrote it; if a hand-placed hole should itself be matched, the rule changes, not the code's intent.
+- **A shot marked not a shot takes part in nothing.** It holds no bull against the others and is not matched.
+- **The rule runs only while a detected sheet is loaded.** A marking made entirely by hand keeps the nearest-bull rule it always had.
+
+**On loading, the rule reaches detection's own answer** when nobody's decision is in the way, since it matches the same shots against the same declared positions; the synthetic end-to-end test checks that nothing shows as moved and the method is unchanged.
+
+**What is not done:** nothing draws any of this yet. The contested card, the amber ring with its dashed lines, the review queue and the method-change notice are the editor's presentation, which waits for Alan's report on using the application.
+
+**Tests:** Core 768 passing, App 37 passing, none skipped. Seven new tests hold the rule: the contested shot and its figures on loading, a person's decision kept and the displaced shot shown as moved, undo restoring the pin, a deletion re-solving the rest, the counts rule switching method and back, not-a-shot left out, and a marking without a detection left alone.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2858,3 +2903,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 61 section 5 item 2: the step fails when the native imaging library is missing, over shipping whatever publish produced.** A tarball without `libOpenCvSharpExtern.so` installs, launches, and then cannot detect a marker, which is a failure that arrives late and in front of a user rather than in CI.
 - **Entries 65 to 69: the concept image left uncommitted, over committing a second copy.** The committed `docs/figures/screens/assignment-editor.png` is the same picture pixel for pixel, and the copy would add 481 KB and a content-credential block to the history for nothing.
 - **Entry 65 section 4 step 2: wording that names no platform, over "on Linux".** The branch it describes runs on macOS as well.
+- **Entry 70 section 3: a moved shot recorded as the difference from the bull detection gave it, over a list of notices appended at each edit.** The difference is derived from state, so undo, redo and a shot moved back all keep it true without bookkeeping, and it stays visible for as long as it stands rather than until the next edit.
+- **Entry 70 section 3: the counts rule falls back to the nearest free bull, over the nearest of all bulls.** A bull a person has decided is not available to the matching in either mode, so the two methods differ only in whether the matching is forced.
+- **Entry 70 section 6: three status states, over styling only the failures.** Success needs its own colour for the same reason alert does: a line that reads the same whether it worked or not teaches people to stop reading it.

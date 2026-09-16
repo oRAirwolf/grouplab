@@ -15,6 +15,89 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-16, entry 70: four decisions, so the editor is not blocked on me
+
+**Status: actioned 2026-09-16 for sections 1, 3, 4, 5 and 6, in section 7's order. Layout is not started.**
+- **Section 1:** `* text=auto` is the first line of `.gitattributes`, and the renormalisation staged only that file, with and without `core.autocrlf`. The duplicate image is deleted.
+- **Section 6:** the print status line carries success, information or alert, each styled for what it is.
+- **Section 4:** each detection reaches the marking with its whole assignment, the method and reason travel with them, and the refused candidates come through. The card's sentence is left to be composed where it is shown.
+- **Section 3:** your five items, as written. Pinned means manual or corrected; the untouched detections re-solve on every edit against the bulls nobody holds; a moved shot is listed for as long as it stays moved, derived from the bull detection gave it rather than kept as a notice; the counts rule switches method live and says so; undo takes the pin back with the reassignment.
+- **One consequence of item 1 to confirm:** a hand-placed shot is pinned to its nearest bull, so adding a missed hole beside a detection pushes the detection elsewhere, shown as moved. If a hand-placed hole should instead be matched like a detection, that is a change to the rule.
+- **Section 5:** the split is kept and written down in both places it is used, and in `DESIGN.md` section 13.
+- **Section 2:** noted. The index-first rule is taken on this side too.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 70".
+
+Each section is a decision rather than a finding. Section 3 is the one Claude Code asked for and the one that blocks layout work.
+
+### 1. Adopt `* text=auto`, and delete the image I wrongly added
+
+**`* text=auto` goes in.** The measurement settles it: on a git without `core.autocrlf` the repository is 109 files and 21,634 lines away from clean, and adding the line stages exactly one file, `.gitattributes` itself. **One line, zero content churn, and the 109-file state stops existing for everybody rather than for one machine.** Entry 67 section 3 predicted an empty renormalisation and that is what came back.
+
+**Delete `docs/figures/concept-assignment-editor.png`.** I added it on the strength of a claim that was false.
+
+### 2. What I got wrong, because the failure is worth more than the file
+
+I searched the working tree for `*concept*`, found nothing, and reported that **the design target existed only in chat** and that every instruction to match the concept had been unactionable. Both statements were confident and both were wrong. **The concept has been committed all along at `docs/figures/screens/assignment-editor.png`, and the README carries a table linking it.**
+
+Entry 66 section 3, written earlier the same day, says: **when I state that something is absent, say how I looked.** I did not apply it one entry later. "No file matches `*concept*`" is a fact about a glob. "The design target is not in the repository" is a claim about the repository, and the index that would have answered it is the README, which I never opened.
+
+**The rule needs a second half: search the index before searching the filesystem.** A repository with a README table of its own figures has already answered the question, and a filename pattern is a guess about what somebody chose to call something.
+
+### 3. The decision: matching reruns, and a person's decision is a constraint rather than an input
+
+Claude Code asked whether matching reruns as the person edits. **Neither plain yes nor plain no is right, and the failure mode of each is instructive.**
+
+**Never rerunning** means the assignment goes stale the moment a shot is added, moved or deleted, and a person who adds a missed hole gets an answer computed for a different set of shots.
+
+**Always rerunning** is worse, and specifically worse in one-to-one matching. Pushing a shot onto bull 9 pushes whatever held bull 9 somewhere else. **A person resolving one contested case would silently cause a second one**, and the software would have reversed a decision the person just made. That is the behaviour `DESIGN.md` section 2 says this application must never have.
+
+**The rule:**
+
+1. **Every bull a person sets is pinned.** `ShotProvenance` already records this: `Corrected` and `Manual` are pinned, `Automatic` is free.
+2. **Matching re-solves on every edit, over the unpinned shots only**, against the bulls the pinned shots have not taken.
+3. **When the re-solve moves an automatic shot, it goes in the review queue as its own item**, naming what moved and why. The cascade is the part that must never be invisible.
+4. **The counts rule of section 13 is honoured live.** If an edit takes the detections above the number of bulls, matching stops being forced, the method falls back to nearest bull within the gate, every shot is flagged, and **the screen says the method changed**. A method that changes without saying so is a confident wrong answer wearing the previous answer's clothes.
+5. **Undo restores the pins, not just the positions.** Undoing a reassignment has to unpin it, or the matching stays constrained by a decision that no longer exists.
+
+**This costs no new machinery.** Provenance exists, undo exists, the matching exists, and the queue is being built anyway.
+
+### 4. The plumbing, named precisely
+
+`AutomaticResult.Detections` is `IReadOnlyList<(PointD Image, int? Bull)>`. **`AutomaticMarking` computes the margin, the nearest bull and the ambiguity flag, and then throws all three away at that tuple.** Everything the contested card and the "2 of 26 need review" counter need is calculated and discarded one line before it could be used.
+
+**Carry it instead.** The tuple becomes the `AssignedShot` record that already exists, the `ShotAssignmentResult` travels with it for its method and reason, and the rejected candidates come through rather than reaching only the trace, because the concept's queue shows two of them: a candidate below the size gate, and a marker caption rejected on stroke width.
+
+**Two things the card needs that are not there yet**, both small and both better named now than discovered later:
+
+- **The card's prose is composed, not stored.** `ShotAssignmentResult.Reason` is a one-line note about the method. The sentence in the concept is built from one shot's own numbers, and it should be built where it is shown.
+- **Nothing rings a contested assignment.** `FlaggedShots` rings oversized holes from the calibre check. The concept draws a contested detection as an amber ring with a dashed line to each candidate bull, which is a second mark type rather than a reuse of the first.
+
+### 5. Declared versus located bull positions: keep the split, and write it down
+
+Claude Code reports that assignment uses declared bull positions. `AutomaticMarking` builds `BullAim` from `b.Recovered ?? b.Declared`. **So classification uses the declared geometry and the aim point uses the located one, and I think that is correct rather than an oversight.**
+
+- **Assignment is a classification**, and the declared positions are the definition's exact geometry. Registration error is of order 0.005 in and printing error 0.003 in, against a 0.15 in ambiguity margin, so the choice cannot flip an assignment that was not already flagged.
+- **The offset is a measurement**, and the shooter aimed at the printed bull rather than the declared one, so it must use the recovered position. `BullAim` already does.
+
+**Say so in a comment where each is used.** An undocumented split between two nearly identical quantities is exactly the thing somebody unifies in six months for tidiness.
+
+### 6. The red success message is a defect, not layout
+
+The print window styles its status line as an alert for every message, so a successful send shows in red. **That is not a styling preference to defer**, it is the mechanism by which people learn to ignore red, and the next red message that matters is the one about a sheet printing three percent small.
+
+**Fix it with the wording change rather than with the layout**: success, information and alert are three states and the line should carry which one it is.
+
+### 7. Order
+
+1. `* text=auto`, and delete the duplicate image. Both one-liners.
+2. Section 6, the status line states. Small, and it stops a habit forming.
+3. Section 4's plumbing. **Nothing about the editor can be drawn until the detail reaches the session**, so this is the real first step of the editor.
+4. Section 3's rule, implemented against that plumbing.
+5. Layout last, and still after Alan has used the application.
+
+---
+
 ## 2026-09-16, entry 69: the assignment editor is the target, the concept is section 13 drawn, and most of it already exists in Core
 
 **Status: actioned 2026-09-16 for order items 1 and 2. Items 3 and 4 wait for Alan's report on using the application.**

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using GroupLab.Core.Detection;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Registration;
@@ -191,7 +192,7 @@ public sealed class MarkingSession
     public int AddShot(PointD image, int? bull = null)
     {
         int id = State.NextId;
-        Apply(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image))), NextId = id + 1 });
+        Apply(Rematch(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image))), NextId = id + 1 }));
         return id;
     }
 
@@ -234,7 +235,7 @@ public sealed class MarkingSession
     {
         if (State.Find(id) is { } shot)
         {
-            Apply(State with { Shots = State.Shots.Remove(shot) });
+            Apply(Rematch(State with { Shots = State.Shots.Remove(shot) }));
         }
     }
 
@@ -269,7 +270,7 @@ public sealed class MarkingSession
         ArgumentNullException.ThrowIfNull(rejected);
         Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull))], summary, firstId => assignment is null
             ? null
-            : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment))], [.. rejected]));
+            : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment, d.Assignment.Bull))], [.. rejected], assignment.Method));
     }
 
     private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull)> detections, string summary, Func<int, AssignmentReview?> review)
@@ -279,12 +280,62 @@ public sealed class MarkingSession
         var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
         int firstId = id;
         var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull)).ToList();
-        Apply(registered with
+        Apply(Rematch(registered with
         {
             Shots = [.. kept, .. detected],
             NextId = id,
             Assignment = review(firstId),
-        });
+        }));
+    }
+
+    /// <summary>
+    /// The matching rule of NOTES-FROM-PLANNING.md entry 70 section 3, applied after every change to the shots.
+    /// <list type="number">
+    /// <item><b>A person's decision is a constraint, not an input.</b> A shot placed by hand or corrected keeps its bull; only shots detection
+    /// placed and nobody has touched are matched. Re-solving everything would let one person's reassignment silently reverse another
+    /// shot's, which is the behaviour DESIGN.md section 2 rules out.</item>
+    /// <item><b>The rest re-solve on every edit</b>, against the bulls no such decision holds, so a shot added, moved or deleted never leaves
+    /// an answer computed for a different set of shots.</item>
+    /// <item><b>A shot the re-solve moves stays visible</b> as moved, <see cref="AssignmentReview.Moved"/>, for as long as it stays moved.</item>
+    /// <item><b>Section 13's counts rule holds live.</b> More unplaced shots than free bulls, and no matching is forced: each goes to its nearest
+    /// free bull, every one is flagged, and <see cref="AssignmentReview.MethodChanged"/> says so.</item>
+    /// <item><b>Undo restores the pins</b> as well as the positions, because both are the state undo keeps.</item>
+    /// </list>
+    /// It runs while a detected sheet is loaded: it needs the page mapping and each bull's declared position, and classifies against the
+    /// declared geometry (entry 70 section 5). A marking with no detection, or one reopened from a file, which keeps no mapping, is left
+    /// to the nearest-bull rule it has always used.
+    /// </summary>
+    private static MarkingState Rematch(MarkingState state)
+    {
+        if (state.Assignment is not { } previous || state.Scale is not SheetReference sheet || state.Bulls.Any(b => b.Declared is null))
+        {
+            return state;
+        }
+
+        var taken = state.Shots.Where(s => s.IsShot && s.Provenance != ShotProvenance.Automatic && s.Bull is not null).Select(s => s.Bull!.Value).ToHashSet();
+        var free = state.Shots.Where(s => s.IsShot && s.Provenance == ShotProvenance.Automatic).ToList();
+        var open = state.Bulls.Where(b => !taken.Contains(b.Index)).ToList();
+        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)]);
+        int? Index(int? position) => position is { } p && p >= 0 ? open[p].Index : null;
+
+        var bulls = new Dictionary<int, int?>();
+        var details = new List<ShotAssignmentDetail>(free.Count);
+        for (int i = 0; i < free.Count; i++)
+        {
+            var matched = result.Shots[i];
+            int? bull = Index(matched.Bull);
+            bulls[free[i].Id] = bull;
+            details.Add(AssignmentReview.Detail(free[i].Id, matched with { Bull = bull, NearestBull = Index(matched.NearestBull) ?? -1 }, previous.For(free[i].Id)?.DetectedBull));
+        }
+
+        string reason = taken.Count == 0
+            ? result.Reason
+            : string.Create(CultureInfo.InvariantCulture, $"{result.Reason}, over the {free.Count} untouched detections and the {open.Count} bulls no decision of yours holds");
+        return state with
+        {
+            Shots = [.. state.Shots.Select(s => bulls.TryGetValue(s.Id, out int? bull) ? s with { Bull = bull } : s)],
+            Assignment = previous with { Method = result.Method, Reason = reason, Shots = [.. details] },
+        };
     }
 
     private void Update(int id, Func<MarkedShot, MarkedShot> change)
@@ -294,7 +345,7 @@ public sealed class MarkingSession
             return;
         }
 
-        Apply(State with { Shots = State.Shots.Replace(shot, change(shot)) });
+        Apply(Rematch(State with { Shots = State.Shots.Replace(shot, change(shot)) }));
     }
 
     private static ShotProvenance Touched(ShotProvenance provenance) => provenance == ShotProvenance.Automatic ? ShotProvenance.Corrected : provenance;

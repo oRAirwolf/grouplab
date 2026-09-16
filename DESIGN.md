@@ -326,6 +326,16 @@ Provenance matters because it keeps the statistics honest about where the number
 
 **[r3] A margin under about 0.15 inches between nearest and second-nearest bull is a review-queue item by construction**, because a 0.05 inch registration error would flip it.
 
+**Amended 2026-09-16, `docs/NOTES-FROM-PLANNING.md` entry 70 section 3: matching reruns as the person edits, and a person's decision is a constraint rather than an input.** Never rerunning leaves an answer computed for a different set of shots the moment one is added, moved or deleted. Always rerunning is worse: in one-to-one matching, pushing a shot onto a bull pushes whatever held it somewhere else, so resolving one contested case would silently reverse a decision the person had just made. So:
+
+- A bull set by a person is pinned: a shot placed by hand, or detected and then corrected, keeps it.
+- The shots nobody has touched re-solve on every edit, against the bulls no pinned shot holds.
+- A shot the re-solve moves off its detected bull is a review item for as long as it stays moved.
+- The counts rule above holds live: more untouched shots than free bulls, and matching stops being forced, every shot is flagged, and the screen says the method changed.
+- Undo restores the pins as well as the positions.
+
+Assignment classifies against the definition's declared bull positions, and offsets are measured from the located ones. The two are kept apart on purpose: registration and printing error are a few thousandths of an inch against a 0.15 inch margin, so the choice cannot flip an assignment that was not already flagged, and the shooter aimed at the bull as printed.
+
 ## 14. Statistics
 
 ### Baseline

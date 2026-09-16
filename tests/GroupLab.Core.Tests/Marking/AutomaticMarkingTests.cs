@@ -73,6 +73,10 @@ public class AutomaticMarkingTests
         }
 
         Assert.Equal(result.Rejected!.Count, review.Rejected.Count);
+
+        // Loading re-solves under the rule of entry 70 section 3, and with nobody's decision in the way it reaches detection's own answer.
+        Assert.Empty(review.Moved);
+        Assert.False(review.MethodChanged);
         var report = GroupAnalysis.Analyse(session.State);
         // The sighter bulls' shots are reported and left out of the group (NOTES-FROM-PLANNING.md entry 33 section 1), so the group's
         // placement counts cover the scoring shots only.
