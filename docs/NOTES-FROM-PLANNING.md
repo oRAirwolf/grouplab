@@ -75,9 +75,9 @@ A read-only `git status` of mine created `.git/index.lock` and could not remove 
 
 ## 2026-09-16, entry 63: the Linux VM is 24.04, not 26.04, and the reason has a packaging consequence
 
-**Status: open, and recorded.** Nothing here is buildable yet: the tarball step entry 61 section 5 item 2 asks for does not exist.
-- **24.04 is the version,** for the reason you give: the VM earns its keep by reproducing CI, and `ubuntu-latest` is 24.04.
-- **Section 2's floor is the part that outlives the VM,** and it goes on the workflow step that builds the tarball, on the day that step is written, so a silent runner upgrade to 26.04 is a question somebody has to answer rather than a default.
+**Status: actioned 2026-09-16.** The tarball step exists now, and section 2's floor is written on it rather than in a document nobody reads while editing a workflow.
+- **24.04 is confirmed from the runner itself,** which reports `Image: ubuntu-24.04`, version 20260907.300.1, so your reading of `ubuntu-latest` holds today.
+- **The step prints the release and the glibc it built against,** into the job log and the run summary, so the day `ubuntu-latest` moves to 26.04 the floor moves visibly. It is deliberately not pinned: pinning would hold the tarball still while the test matrix moved, and the question you want asked is which of the two should move.
 - **Not added to the CI matrix,** as you say: a preview label buys early warning at the price of a flaky job.
 
 Entry 61 section 2 said "Ubuntu LTS first" without naming a version, which is the sort of gap that gets re-argued in three months. This names it and records why, and section 2 is a build constraint that outlives the VM.
@@ -181,10 +181,10 @@ Unchanged, and nothing here moves up. The range session and the mounted photogra
 
 ## 2026-09-16, entry 61: one Linux package format, not five, and a printing defect I can predict without the VM
 
-**Status: actioned 2026-09-16 for section 3. Sections 1, 2, 4 and 5 are recorded as direction.**
+**Status: actioned 2026-09-16 for sections 3 and 5 item 2. Sections 1, 2 and 4 are recorded as direction, and section 5 items 3 and 4 are Alan's to call.**
 - **Section 3, checked before it was changed, and your prediction is wrong in its mechanism.** .NET throws `Win32Exception(ERROR_NO_ASSOCIATION)` for a verb off Windows, not `PlatformNotSupportedException`, so the existing catch already handles it and the print button does not crash on Linux or macOS. It is your own second branch: useless there rather than broken.
 - **The real defect, and it is fixed.** Every press off Windows threw, logged a warning, and then blamed the person's PDF viewer for a platform fact. Windows now keeps the print verb, everywhere else is asked only to open the file, and the words say which happened. Reported in `docs/PHASE1-RESULTS.md` "Entry 61 section 3".
-- **Section 1 is taken:** the tarball, then AppImage only if somebody asks. Section 5 item 2 is the next piece of work in this entry, with entry 63 section 2's floor written on the step that builds it.
+- **Section 1 is taken, and section 5 item 2 is done.** The `linux tarball` job publishes self-contained on `ubuntu-latest` and uploads the artifact: 90 MB compressed, 214 MB unpacked, 256 files, carrying the native imaging library, the target library and now GroupLab's own licence, which it was not carrying. AppImage waits for somebody wanting a menu entry. Reported in `docs/PHASE1-RESULTS.md` "Entry 61 section 5 item 2".
 - **Section 2 is Alan's to do when he wants it.** The VM is not on the critical path, as you say.
 
 Section 3 is checkable today and does not need a VM. Sections 1 and 2 are a direction decision so it does not get re-argued every few months.

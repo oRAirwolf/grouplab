@@ -86,6 +86,9 @@ jobs:
       - name: Pack it, and say what it runs on
         run: |
           set -o pipefail
+          # GPL-3.0 section 4: the licence travels with the binary. The IBM Plex licence is already beside it, copied by the project
+          # file for the fonts compiled into the application.
+          cp LICENSE publish/grouplab/LICENSE
           tar -czf grouplab-linux-x64.tar.gz -C publish grouplab
           . /etc/os-release
           glibc=$(ldd --version | head -1 | awk '{print $NF}')
@@ -98,7 +101,7 @@ jobs:
             echo
             echo "- built on $PRETTY_NAME against glibc $glibc, which is the oldest release it runs on"
             echo "- $compressed compressed, $unpacked unpacked, $files files, $native native OpenCV libraries"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
           test "$native" -ge 1
 
       - uses: actions/upload-artifact@v6

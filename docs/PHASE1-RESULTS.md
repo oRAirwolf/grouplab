@@ -2625,6 +2625,38 @@ if (verb != string.Empty &&
 
 ---
 
+## Entry 61 section 5 item 2. A Linux tarball, built where its floor is set
+
+`docs/NOTES-FROM-PLANNING.md` entry 61 sections 1 and 5 item 2, and entry 63 section 2, whose constraint decides where it is built.
+
+**Reproduce:** the `linux tarball` job in `.github/workflows/ci.yml`, on every push. The artifact is `grouplab-linux-x64`.
+
+**One format.** The tarball falls out of `dotnet publish --self-contained`, which the build already does, so it costs nothing to keep. AppImage waits for somebody wanting a menu entry, and `.deb`, `.rpm`, snap and flatpak wait for a person to ask by name, because each is a permanent obligation and there are no Linux users yet.
+
+**What the first run produced**, measured from the artifact rather than from the log:
+
+| | |
+|---|---|
+| Compressed | 90 MB, 94,107,807 bytes |
+| Unpacked | 214 MB, 256 files |
+| Native imaging | `libOpenCvSharpExtern.so` present |
+| Application | `GroupLab.App` launcher, `GroupLab.App.dll`, `grouplab.dll` |
+| Target library | 25 definitions, the twenty built-ins and the frozen Phase 0 ones |
+
+**It is built on Linux rather than cross-published,** because `src/GroupLab.Cli/GroupLab.Cli.csproj` references the OpenCV native runtime package conditionally on the build host's platform, so only a Linux host puts the Linux native library in the output. The step fails when that library is absent rather than shipping a tarball that installs and then cannot find a marker, which would be the worst shape of failure: late, and in front of a user.
+
+**Entry 63 section 2's floor, verified rather than assumed.** The runner reports `Image: ubuntu-24.04`, version 20260907.300.1, which is what entry 63 says `ubuntu-latest` still is. A binary built against an older glibc runs on a newer one and not the other way, so this tarball runs on 24.04 and newer, and building it on 26.04 would have raised the floor above the distribution CI itself uses. The step prints the release and the glibc version it built against, so the day `ubuntu-latest` moves the floor moves visibly rather than silently. It is not pinned to `ubuntu-24.04`, as entry 63 section 2 asks: pinning would hold the floor still while the test matrix moved, and the question planning wants asked is which of the two should move.
+
+**Two things the first run taught, both fixed in the same commit.**
+- **The figures reached only the run summary,** so reading them back meant downloading the artifact. They now go to the job log as well, which is where anybody diagnosing a build looks first.
+- **The tarball carried the IBM Plex licence and not GroupLab's own.** The project file copies the font licence because the SIL Open Font License asks that every copy carry it; nothing copied `LICENSE`. GPL-3.0 section 4 asks the same of the binary, and this is the first build output meant to be handed to anybody, so the step now packs it. **The same question applies to a Windows download when one exists**, and there is no such build output yet to fix.
+
+**What is not verified: nobody has run it.** Whether it launches on a desktop Ubuntu, and whether ICU is present, which the application needs because it reads the system region on first run, is exactly what entry 61 section 2's VM is for.
+
+**Tests:** unchanged, Core 760 and App 36 passing, none skipped. This commit is a workflow and a file copy, with no code in it.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2765,3 +2797,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 55 section 3 item 1: a ray counted as marginal within a tenth of the crossing threshold on either side, over counting only the rays that failed it.** A ray that just cleared the threshold is as easily flipped by the image as one that just missed it, and the tenth is the convention the leave-one-out already uses for the rejection limit.
 - **Entry 61 section 3: no catch added for `PlatformNotSupportedException`, over adding one defensively.** The runtime throws `Win32Exception` for a verb off Windows, so a catch for the other would assert a behaviour that does not exist and would outlive anybody who remembers why it is there.
 - **Entry 64: the working tree left alone, over running the fix as written.** Nothing differed, so the command would have been a no-op dressed as a repair, and running it would have left a false record that something was cleaned.
+- **Entry 61 section 5 item 2: the tarball built on `ubuntu-latest`, over pinning `ubuntu-24.04`.** Pinning would freeze the glibc floor deliberately and freeze it silently apart from the test matrix, which tracks `ubuntu-latest`; printing the release it built on keeps the day they diverge visible, which is what entry 63 section 2 asks for.
+- **Entry 61 section 5 item 2: the step fails when the native imaging library is missing, over shipping whatever publish produced.** A tarball without `libOpenCvSharpExtern.so` installs, launches, and then cannot detect a marker, which is a failure that arrives late and in front of a user rather than in CI.
