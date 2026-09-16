@@ -38,8 +38,13 @@ public enum ExclusionReason
 /// <summary>
 /// One impact on the image: its position in image pixels, where that came from, whether it is excluded and why, whether it has
 /// been marked as not a shot at all (a detection that was handwriting, a staple, a tear), and the bull it is assigned to, if any.
+/// <para>
+/// <see cref="BullChosen"/> says whether a person chose that bull, NOTES-FROM-PLANNING.md entry 74 section 1. It is deliberately not
+/// <see cref="Provenance"/>: placing a hole says "there is a hole here", choosing a bull says "it belongs there", and only the second
+/// constrains the matching. A shot placed by hand whose bull the software picked has a person's position and the software's bull.
+/// </para>
 /// </summary>
-public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null)
+public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null, bool BullChosen = false)
 {
     /// <summary>Counted in the group: not marked as not a shot. Excluded shots are counted in the full figures and left out of the reduced ones.</summary>
     public bool IsShot => !NotAShot;
@@ -187,12 +192,13 @@ public sealed class MarkingSession
     /// <summary>
     /// Places a shot by hand, and returns its id. Where the marking has bulls, a shot given no bull is assigned to its nearest,
     /// NOTES-FROM-PLANNING.md entry 39 section 1: a person marking a GroupLab sheet by hand should not have to know that assignment is a
-    /// separate step, and an unassigned shot on such a sheet is measured from the wrong place.
+    /// separate step, and an unassigned shot on such a sheet is measured from the wrong place. That nearest bull is the software's choice,
+    /// so the shot takes part in the matching like a detection (entry 74 section 1); a bull passed in is the caller's choice, and is kept.
     /// </summary>
     public int AddShot(PointD image, int? bull = null)
     {
         int id = State.NextId;
-        Apply(Rematch(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image))), NextId = id + 1 }));
+        Apply(Rematch(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image), BullChosen: bull is not null)), NextId = id + 1 }));
         return id;
     }
 
@@ -245,8 +251,11 @@ public sealed class MarkingSession
     /// <summary>Marks a detection as not a shot, or restores it.</summary>
     public void SetNotAShot(int id, bool notAShot) => Update(id, s => s with { NotAShot = notAShot, Provenance = Touched(s.Provenance) });
 
-    /// <summary>Assigns a shot to a bull, or to none, DESIGN.md section 13's click a hole then click a bull; a detected shot reassigned becomes corrected.</summary>
-    public void AssignBull(int id, int? bull) => Update(id, s => s with { Bull = bull, Provenance = Touched(s.Provenance) });
+    /// <summary>
+    /// Assigns a shot to a bull, or to none, DESIGN.md section 13's click a hole then click a bull. It is the one place a person chooses a
+    /// bull, so the choice is pinned against the matching (entry 74 section 1), and a detected shot reassigned becomes corrected.
+    /// </summary>
+    public void AssignBull(int id, int? bull) => Update(id, s => s with { Bull = bull, BullChosen = true, Provenance = Touched(s.Provenance) });
 
     /// <summary>
     /// Replaces the bulls and the detected shots with what the automatic path found, keeping shots placed by hand, as one step that
@@ -291,14 +300,16 @@ public sealed class MarkingSession
     /// <summary>
     /// The matching rule of NOTES-FROM-PLANNING.md entry 70 section 3, applied after every change to the shots.
     /// <list type="number">
-    /// <item><b>A person's decision is a constraint, not an input.</b> A shot placed by hand or corrected keeps its bull; only shots detection
-    /// placed and nobody has touched are matched. Re-solving everything would let one person's reassignment silently reverse another
-    /// shot's, which is the behaviour DESIGN.md section 2 rules out.</item>
+    /// <item><b>A person's choice of bull is a constraint, not an input.</b> A shot whose bull a person chose keeps it; every other shot is
+    /// matched, including one placed by hand whose bull the software picked, because placing a hole is not choosing a bull (entry 74
+    /// section 1, correcting entry 70). Re-solving the chosen ones too would let one reassignment silently reverse another, which
+    /// DESIGN.md section 2 rules out. Positions are never re-solved: a mark a person placed or moved stays where they put it.</item>
     /// <item><b>The rest re-solve on every edit</b>, against the bulls no such decision holds, so a shot added, moved or deleted never leaves
     /// an answer computed for a different set of shots.</item>
     /// <item><b>A shot the re-solve moves stays visible</b> as moved, <see cref="AssignmentReview.Moved"/>, for as long as it stays moved.</item>
     /// <item><b>Section 13's counts rule holds live.</b> More unplaced shots than free bulls, and no matching is forced: each goes to its nearest
-    /// free bull, every one is flagged, and <see cref="AssignmentReview.MethodChanged"/> says so.</item>
+    /// free bull, every one is flagged, and <see cref="AssignmentReview.MethodChanged"/> says so. Sighter and scoring bulls are separate
+    /// pools with the rule applied in each, so a sighter's hole is never matched to a scoring bull (entry 73 section 1).</item>
     /// <item><b>Undo restores the pins</b> as well as the positions, because both are the state undo keeps.</item>
     /// </list>
     /// It runs while a detected sheet is loaded: it needs the page mapping and each bull's declared position, and classifies against the
@@ -312,10 +323,10 @@ public sealed class MarkingSession
             return state;
         }
 
-        var taken = state.Shots.Where(s => s.IsShot && s.Provenance != ShotProvenance.Automatic && s.Bull is not null).Select(s => s.Bull!.Value).ToHashSet();
-        var free = state.Shots.Where(s => s.IsShot && s.Provenance == ShotProvenance.Automatic).ToList();
+        var taken = state.Shots.Where(s => s.IsShot && s.BullChosen && s.Bull is not null).Select(s => s.Bull!.Value).ToHashSet();
+        var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).ToList();
         var open = state.Bulls.Where(b => !taken.Contains(b.Index)).ToList();
-        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)]);
+        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)]);
         int? Index(int? position) => position is { } p && p >= 0 ? open[p].Index : null;
 
         var bulls = new Dictionary<int, int?>();
@@ -325,12 +336,13 @@ public sealed class MarkingSession
             var matched = result.Shots[i];
             int? bull = Index(matched.Bull);
             bulls[free[i].Id] = bull;
-            details.Add(AssignmentReview.Detail(free[i].Id, matched with { Bull = bull, NearestBull = Index(matched.NearestBull) ?? -1 }, previous.For(free[i].Id)?.DetectedBull));
+            // A shot the matching has not placed before, one just placed by hand, is measured against the bull it was given when placed.
+            details.Add(AssignmentReview.Detail(free[i].Id, matched with { Bull = bull, NearestBull = Index(matched.NearestBull) ?? -1 }, previous.For(free[i].Id) is { } before ? before.DetectedBull : free[i].Bull));
         }
 
         string reason = taken.Count == 0
             ? result.Reason
-            : string.Create(CultureInfo.InvariantCulture, $"{result.Reason}, over the {free.Count} untouched detections and the {open.Count} bulls no decision of yours holds");
+            : string.Create(CultureInfo.InvariantCulture, $"{result.Reason}, over the {free.Count} shots whose bull nobody chose and the {open.Count} bulls no choice of yours holds");
         return state with
         {
             Shots = [.. state.Shots.Select(s => bulls.TryGetValue(s.Id, out int? bull) ? s with { Bull = bull } : s)],

@@ -6,9 +6,9 @@ using GroupLab.Core.Registration;
 namespace GroupLab.Core.Tests.Marking;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 70 section 3: matching re-solves on every edit over the shots nobody has touched, a person's decision is a
-/// constraint rather than an input, a shot the re-solve moves is shown as moved, the counts rule holds live and says when the method
-/// changes, and undo restores the pins. The sheet is the page itself, one pixel to one dmm, with two bulls 400 dmm apart and two detected
+/// NOTES-FROM-PLANNING.md entry 70 section 3, as entry 74 section 1 corrects it: matching re-solves on every edit over every shot whose
+/// bull nobody chose, hand-placed ones included, a chosen bull is a constraint rather than an input, a shot the re-solve moves is shown
+/// as moved, the counts rule holds live over the whole free set and says when the method changes, and undo restores the pins. The sheet is the page itself, one pixel to one dmm, with two bulls 400 dmm apart and two detected
 /// shots: one close to bull 1, and one 160 dmm from bull 1 and 240 from bull 2, which one-to-one matching gives to bull 2.
 /// </summary>
 public class MatchingRuleTests
@@ -20,12 +20,17 @@ public class MatchingRuleTests
     /// <summary>A session with the two detections loaded as the automatic path would load them, and the ids of the near and the contested shot.</summary>
     private static (MarkingSession Session, int Near, int Contested) Loaded()
     {
-        PointD[] shots = [new(30, 0), new(160, 0)];
+        var session = LoadedWith([new(30, 0), new(160, 0)]);
+        var ids = session.State.Shots.Select(s => s.Id).ToList();
+        return (session, ids[0], ids[1]);
+    }
+
+    private static MarkingSession LoadedWith(PointD[] shots)
+    {
         var assignment = ShotAssignment.Assign(shots, [.. Bulls.Select(b => b.Declared!.Value)]);
         var session = new MarkingSession();
         session.LoadDetections(Sheet, Bulls, [.. shots.Select((p, i) => new DetectedShot(p, assignment.Shots[i]))], assignment, [], "test");
-        var ids = session.State.Shots.Select(s => s.Id).ToList();
-        return (session, ids[0], ids[1]);
+        return session;
     }
 
     private static int? BullOf(MarkingSession session, int id) => session.State.Find(id)!.Bull;
@@ -59,10 +64,13 @@ public class MatchingRuleTests
         Assert.Null(review.For(contested));
         var moved = Assert.Single(review.Moved);
         Assert.Equal((near, 0, 1), (moved.ShotId, moved.DetectedBull!.Value, moved.Bull!.Value));
-        Assert.Contains("no decision of yours holds", review.Reason, StringComparison.Ordinal);
+        Assert.Contains("no choice of yours holds", review.Reason, StringComparison.Ordinal);
     }
 
-    /// <summary>Item 5: undo takes the pin away with the reassignment, so the matching is not left constrained by a decision that no longer exists.</summary>
+    /// <summary>
+    /// Item 5: undo takes the pin away with the reassignment, so the matching is not left constrained by a decision that no longer exists.
+    /// Moving a shot afterwards is a position, not a choice of bull, so it pins nothing (entry 74 section 1).
+    /// </summary>
     [Fact]
     public void UndoRestoresThePinsAsWellAsTheBulls()
     {
@@ -73,10 +81,38 @@ public class MatchingRuleTests
 
         Assert.Equal((0, 1), (BullOf(session, near), BullOf(session, contested)));
         Assert.Equal(ShotProvenance.Automatic, session.State.Find(contested)!.Provenance);
+        Assert.False(session.State.Find(contested)!.BullChosen);
         Assert.Empty(session.State.Assignment!.Moved);
 
         session.MoveShot(near, new PointD(35, 0));
         Assert.Equal((0, 1), (BullOf(session, near), BullOf(session, contested)));
+        Assert.False(session.State.Find(near)!.BullChosen);
+        Assert.NotNull(session.State.Assignment!.For(near));
+    }
+
+    /// <summary>
+    /// Entry 74 section 1, Claude Code's scenario: a missed hole added beside a detection used to take the detection's bull by fiat and push
+    /// the detection away. Now both are free, the matching weighs them together, and here the detection keeps its bull and the hand-placed
+    /// hole is the one given the other bull, which the queue shows against the bull it was placed with.
+    /// </summary>
+    [Fact]
+    public void AHoleAddedByHandIsMatchedRatherThanPinnedToTheBullItSnappedTo()
+    {
+        var session = LoadedWith([new(10, 0)]);
+        int detected = session.State.Shots[0].Id;
+
+        int hand = session.AddShot(new PointD(60, 0));
+
+        Assert.False(session.State.Find(hand)!.BullChosen);
+        Assert.Equal((0, 1), (BullOf(session, detected), BullOf(session, hand)));
+        var moved = Assert.Single(session.State.Assignment!.Moved);
+        Assert.Equal((hand, 0, 1), (moved.ShotId, moved.DetectedBull!.Value, moved.Bull!.Value));
+
+        // Choosing the bull is a different decision, and that one is pinned: now the detection is the shot that moves.
+        session.AssignBull(hand, 0);
+        Assert.True(session.State.Find(hand)!.BullChosen);
+        Assert.Equal((1, 0), (BullOf(session, detected), BullOf(session, hand)));
+        Assert.Equal(detected, Assert.Single(session.State.Assignment!.Moved).ShotId);
     }
 
     /// <summary>Item 2: deleting a detection frees its bull, and the untouched shot that was pushed away comes back to its nearest bull.</summary>
@@ -95,22 +131,23 @@ public class MatchingRuleTests
     }
 
     /// <summary>
-    /// Item 4: a hand-placed shot takes bull 2, which leaves two untouched detections for one free bull. No matching is forced, both go to
-    /// the nearest free bull, both are flagged, and the review says the method changed. Deleting the hand-placed shot puts matching back.
+    /// Item 4, over the whole free set as entry 74 section 1 says: a third shot placed by hand on two bulls takes the free shots above the
+    /// bulls, so no matching is forced, each goes to its nearest bull, all are flagged, and the review says the method changed. Deleting the
+    /// hand-placed shot puts matching back.
     /// </summary>
     [Fact]
-    public void MoreUntouchedShotsThanFreeBullsStopsTheMatchingAndSaysSo()
+    public void MoreFreeShotsThanFreeBullsStopsTheMatchingAndSaysSo()
     {
         var (session, near, contested) = Loaded();
 
         int hand = session.AddShot(new PointD(405, 0));
 
-        Assert.Equal(1, BullOf(session, hand));
         var review = session.State.Assignment!;
         Assert.Equal(AssignmentMethod.NearestBull, review.Method);
         Assert.True(review.MethodChanged);
+        Assert.Equal(3, review.Shots.Count);
         Assert.All(review.Shots, s => Assert.True(s.Ambiguous));
-        Assert.Equal((0, 0), (BullOf(session, near), BullOf(session, contested)));
+        Assert.Equal((0, 0, 1), (BullOf(session, near), BullOf(session, contested), BullOf(session, hand)));
 
         session.DeleteShot(hand);
         Assert.Equal(AssignmentMethod.OneToOne, session.State.Assignment!.Method);

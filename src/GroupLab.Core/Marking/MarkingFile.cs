@@ -61,6 +61,7 @@ public static class MarkingFile
                 exclusion = s.Exclusion?.ToString(),
                 s.NotAShot,
                 s.Bull,
+                s.BullChosen,
             }),
             report,
         };
@@ -127,7 +128,8 @@ public static class MarkingFile
             Enum.Parse<ShotProvenance>((string)s["provenance"]!),
             (string?)s["exclusion"] is { } reason ? Enum.Parse<ExclusionReason>(reason) : null,
             (bool?)s["notAShot"] ?? false,
-            (int?)s["bull"])).ToImmutableList();
+            (int?)s["bull"],
+            (bool?)s["bullChosen"] ?? false)).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,

@@ -2759,6 +2759,48 @@ Implemented in `MarkingSession`, applied after every change to the shots and on 
 
 ---
 
+## Entry 74 and entry 73 section 1. A chosen bull is its own fact, and sighter holes no longer enter the group
+
+`docs/NOTES-FROM-PLANNING.md` entry 74 section 1, and entry 73 section 1, in that order as Alan set it.
+
+### Entry 74: only a chosen bull is pinned
+
+Entry 70's rule pinned a shot by its provenance, so a hole added by hand took its nearest bull as if a person had chosen it and pushed any detection off that bull. **Placing a hole and choosing a bull are different decisions**, so `MarkedShot.BullChosen` now records the second on its own:
+- **Set only where a person chooses a bull:** `AssignBull`, which is click a hole then a bull, including choosing no bull, and `AddShot` when a caller passes a bull. No caller does today.
+- **Everything else is matched,** hand-placed shots included. A hand-placed shot's baseline for "moved" is the bull it was placed with.
+- **Saved in the marking file** as an optional `bullChosen` field, read as false when absent. The format version does not change.
+- **One statement in entry 74 is not how the code behaves:** "a `Corrected` shot has one by definition". A detected shot also becomes corrected when it is moved or marked not a shot, neither of which chooses a bull, so `BullChosen` is not implied by `Corrected` and the rule reads only `BullChosen`.
+
+**Entry 74's scenario, as a test:** one detection 10 dmm from bull 1, and a hole added by hand 60 dmm from it. Under entry 70 the hand-placed hole took bull 1 and the detection was pushed 390 dmm to bull 2. Now both are matched, the detection keeps bull 1, and the hand-placed hole is the one given bull 2, listed as moved from the bull it was placed with. Choosing bull 1 for the hand-placed hole then pins it, and the detection moves, which is a real result of a real decision.
+
+**Entry 74 section 2 is recorded** in `DESIGN.md` section 13: the assignment detail does not survive a save, and the screen must distinguish "reopened, detail not available" from "nothing to review" when the queue is drawn. The file format is not changed.
+
+### Entry 73 section 1: two pools
+
+`ShotAssignment.Assign` takes the bulls' scoring flags. Each shot joins the pool of its nearest bull, each pool is matched on its own with section 13's counts rule applied in it, and the margin is still measured to every bull so a hole near the boundary between the rows is flagged. The automatic path and the live re-solve both pass the flags. Callers that pass none, such as the synthetic holes spike, behave exactly as before, so no committed record moves.
+
+**On `Scan_20260916.png`**, submission 3a493942 at 600 DPI, 38 of 38 markers, the sheet Alan used:
+
+| | Before | After |
+|---|---|---|
+| Holes detected | 15 | 15 |
+| Assignment | one-to-one over all 28 bulls | scoring: 10 shots for 25 bulls, one-to-one; sighter: 5 shots for 3 bulls, nearest-bull |
+| Shots 11 and 12 | bulls 22 and 23, a row away | sighters S1 and S2, their nearest bulls at 0.578 and 0.717 in |
+| Shots in the group | 12 | 10 |
+| Extreme spread | 2.224 in | **1.361 in** |
+| Mean radius | 0.617 in | 0.344 in |
+| Sigma | 0.492 in | 0.274 in |
+| Error ellipse aspect | 2.630, major axis 62.5 degrees | **2.818**, major axis 26.7 degrees |
+
+**Entry 73's prediction, half confirmed.**
+- **Extreme spread fell well below 2.224 in, as predicted.** The two sighter holes are out of the group.
+- **The ellipse aspect did not fall toward 1. It rose, to 2.818,** and its axis turned from 62.5 to 26.7 degrees. The two sighter holes had set the axis, since they sat 1.2 and 1.5 in below their assigned bulls. Without them, the ten scoring shots are themselves spread along a diagonal: shot 1 at (-0.609, -0.338) in and shot 5 at (+0.591, +0.304) in from their bulls carry most of it. An independent computation from the printed offsets gives the same 2.817 and 26.7 degrees. **So the reading of the dashed lines was right and the explanation of the aspect was not:** the elongation is in the scoring shots. Whether ten shots with this aspect say anything about the rifle is `docs/STATISTICS.md` section 7's circularity test, not something this run asserts.
+- **Five sighter-row holes for three sighter bulls.** The sighter pool falls back to nearest-bull, flags all five, and the overall method is reported as nearest-bull with the reason naming both pools. Three of the five share sighter S1.
+
+**Tests:** Core 771 passing, App 37 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -2906,3 +2948,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 70 section 3: a moved shot recorded as the difference from the bull detection gave it, over a list of notices appended at each edit.** The difference is derived from state, so undo, redo and a shot moved back all keep it true without bookkeeping, and it stays visible for as long as it stands rather than until the next edit.
 - **Entry 70 section 3: the counts rule falls back to the nearest free bull, over the nearest of all bulls.** A bull a person has decided is not available to the matching in either mode, so the two methods differ only in whether the matching is forced.
 - **Entry 70 section 6: three status states, over styling only the failures.** Success needs its own colour for the same reason alert does: a line that reads the same whether it worked or not teaches people to stop reading it.
+- **Entry 74: pinning read from `BullChosen` alone, over `Corrected` or a chosen bull.** A shot becomes corrected when it is moved or marked not a shot, and neither of those chooses a bull.
+- **Entry 73 section 1: a shot's pool is its nearest bull's, with the margin still measured to every bull, over a pool chosen by page region.** The sheet already says which bulls are sighters, and nearest-bull is the rule's own fallback; a region would be a second geometry to keep in step with every definition.
+- **Entry 73 section 1: the overall method reported as nearest-bull when either pool fell back, over reporting the scoring pool's.** Reporting one-to-one would hide that a pool stopped being matched, which is the thing section 13 says must be said; the reason names each pool.

@@ -71,4 +71,44 @@ public class ShotAssignmentTests
         Assert.True(result.Shots[0].Margin / Inch < ShotAssignment.AmbiguousMarginInches);
         Assert.True(result.Shots[0].Ambiguous);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 73 section 1: three holes in the sighter row for two sighter bulls. As one pool, one-to-one matching
+    /// sends a sighter's hole up to a scoring bull a row away, which then enters the group. As two pools, the sighter row falls back to
+    /// nearest-bull on its own, every sighter hole stays on a sighter and is flagged, and the scoring shot is matched as before.
+    /// </summary>
+    [Fact]
+    public void SighterHolesAreNeverMatchedToScoringBullsWhenThePoolsAreSeparate()
+    {
+        PointD[] bulls = [new(0, 0), new(1.5 * Inch, 0), new(3 * Inch, 0), new(0, 3 * Inch), new(1.5 * Inch, 3 * Inch)];
+        bool[] scoring = [true, true, true, false, false];
+        PointD[] shots = [new(0.1 * Inch, 0), new(0.1 * Inch, 3 * Inch), new(0.2 * Inch, 2.9 * Inch), new(1.4 * Inch, 3 * Inch)];
+
+        var pooledAsOne = ShotAssignment.Assign(shots, bulls);
+        Assert.Contains(pooledAsOne.Shots.Skip(1), s => s.Bull is { } b && scoring[b]);
+
+        var result = ShotAssignment.Assign(shots, bulls, scoring: scoring);
+
+        Assert.Equal(0, result.Shots[0].Bull);
+        Assert.False(result.Shots[0].Ambiguous);
+        Assert.Equal([3, 3, 4], result.Shots.Skip(1).Select(s => s.Bull!.Value).ToArray());
+        Assert.All(result.Shots.Skip(1), s => Assert.True(s.Ambiguous));
+        Assert.Equal(AssignmentMethod.NearestBull, result.Method);
+        Assert.Contains("3 sighter shots for 2 sighter bulls", result.Reason, StringComparison.Ordinal);
+        Assert.Contains("1 scoring shots for 3 scoring bulls", result.Reason, StringComparison.Ordinal);
+    }
+
+    /// <summary>A hole near the boundary between the rows is flagged by its margin to every bull, not only to the bulls of its own pool.</summary>
+    [Fact]
+    public void TheMarginIsMeasuredAgainstEveryBullWhateverThePool()
+    {
+        PointD[] bulls = [new(0, 0), new(0, 1.5 * Inch)];
+        PointD[] shots = [new(0, 0.7 * Inch)];
+
+        var result = ShotAssignment.Assign(shots, bulls, scoring: [true, false]);
+
+        Assert.Equal(0, result.Shots[0].Bull);
+        Assert.True(result.Shots[0].Margin / Inch < ShotAssignment.AmbiguousMarginInches);
+        Assert.True(result.Shots[0].Ambiguous);
+    }
 }

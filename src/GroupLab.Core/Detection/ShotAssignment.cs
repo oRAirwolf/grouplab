@@ -36,6 +36,13 @@ public sealed record ShotAssignmentResult(AssignmentMethod Method, string Reason
 /// A shot whose nearest and second-nearest bulls are within <see cref="AmbiguousMarginInches"/> of each other is flagged
 /// either way, as is a shot the matching gave to a bull other than its nearest: the pipeline says so rather than deciding
 /// silently. The manual interface of DESIGN.md section 13 is where a person settles them.
+/// <para>
+/// <b>Sighter and scoring bulls are two pools</b>, NOTES-FROM-PLANNING.md entry 73 section 1. A shot fired at a sighter can never belong
+/// to a scoring bull, nor the reverse, yet one matching over both was free to give a sighter's hole to a scoring bull a row away when
+/// the sighters had more holes than bulls, and the statistics then pooled it into the group. Given the bulls' scoring flags, each shot
+/// joins the pool of its nearest bull and each pool is matched on its own, with the counts rule above applied per pool. The margin is
+/// still measured against every bull, so a hole near the boundary between the two rows is flagged whichever pool it joined.
+/// </para>
 /// </summary>
 public static class ShotAssignment
 {
@@ -45,12 +52,75 @@ public static class ShotAssignment
     private const double DmmPerInch = 254;
 
     /// <param name="shots">Shot centres, page dmm.</param>
-    /// <param name="bulls">Bull centres, page dmm; normally the scoring bulls.</param>
+    /// <param name="bulls">Bull centres, page dmm.</param>
     /// <param name="gateInches">Beyond this distance a shot is left unassigned by nearest-bull.</param>
-    public static ShotAssignmentResult Assign(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches = double.PositiveInfinity)
+    /// <param name="scoring">
+    /// Whether each bull is a scoring bull, in the order of <paramref name="bulls"/>. When both kinds are present the two are matched as
+    /// separate pools; without it every bull is one pool, as before.
+    /// </param>
+    /// <returns>
+    /// Every shot's assignment, with bull indices into <paramref name="bulls"/>. The method is nearest-bull when either pool had more shots
+    /// than bulls, and the reason says what happened in each pool.
+    /// </returns>
+    public static ShotAssignmentResult Assign(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches = double.PositiveInfinity, IReadOnlyList<bool>? scoring = null)
     {
         ArgumentNullException.ThrowIfNull(shots);
         ArgumentNullException.ThrowIfNull(bulls);
+        if (scoring is null || scoring.Distinct().Count() < 2)
+        {
+            return AssignPool(shots, bulls, gateInches);
+        }
+
+        if (scoring.Count != bulls.Count)
+        {
+            throw new ArgumentException($"{scoring.Count} scoring flags were given for {bulls.Count} bulls.", nameof(scoring));
+        }
+
+        // A hole fired at a sighter is nearest a sighter, so each shot's pool is its nearest bull's.
+        var ranked = shots.Select(s => Enumerable.Range(0, bulls.Count).Select(b => (Bull: b, Distance: Distance(s, bulls[b]))).OrderBy(x => x.Distance).ToList()).ToList();
+        var assigned = new AssignedShot[shots.Count];
+        var method = AssignmentMethod.OneToOne;
+        var reasons = new List<string>();
+        foreach (bool pool in (bool[])[true, false])
+        {
+            int[] poolBulls = [.. Enumerable.Range(0, bulls.Count).Where(b => scoring[b] == pool)];
+            int[] poolShots = [.. Enumerable.Range(0, shots.Count).Where(s => scoring[ranked[s][0].Bull] == pool)];
+            if (poolShots.Length == 0)
+            {
+                continue;
+            }
+
+            var part = AssignPool([.. poolShots.Select(s => shots[s])], [.. poolBulls.Select(b => bulls[b])], gateInches);
+            if (part.Method == AssignmentMethod.NearestBull)
+            {
+                method = AssignmentMethod.NearestBull;
+            }
+
+            reasons.Add(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{poolShots.Length} {(pool ? "scoring" : "sighter")} shots for {poolBulls.Length} {(pool ? "scoring" : "sighter")} bulls, {part.Reason}"));
+            for (int k = 0; k < poolShots.Length; k++)
+            {
+                var shot = part.Shots[k];
+                int s = poolShots[k];
+                double margin = ranked[s].Count > 1 ? ranked[s][1].Distance - ranked[s][0].Distance : double.PositiveInfinity;
+                assigned[s] = shot with
+                {
+                    Shot = s,
+                    Bull = shot.Bull is { } b ? poolBulls[b] : null,
+                    NearestBull = shot.NearestBull >= 0 ? poolBulls[shot.NearestBull] : -1,
+                    Margin = margin,
+                    Ambiguous = shot.Ambiguous || margin < AmbiguousMarginInches * DmmPerInch,
+                };
+            }
+        }
+
+        return new ShotAssignmentResult(method, string.Join("; ", reasons), assigned);
+    }
+
+    private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+
+    /// <summary>One pool of bulls, every shot competing for it: the matching of the class summary.</summary>
+    private static ShotAssignmentResult AssignPool(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches)
+    {
         if (bulls.Count == 0)
         {
             return new ShotAssignmentResult(AssignmentMethod.NearestBull, "no bulls", [.. shots.Select((_, i) => new AssignedShot(i, null, double.NaN, -1, double.NaN, double.NaN, true))]);

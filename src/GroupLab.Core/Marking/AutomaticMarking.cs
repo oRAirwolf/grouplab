@@ -99,7 +99,8 @@ public static class AutomaticMarking
         ShotAssignmentResult assignment;
         using (var stage = trace.Begin("S9.assign"))
         {
-            assignment = ShotAssignment.Assign(shotPages, bullPages);
+            // Entry 73 section 1: sighter and scoring bulls are matched as separate pools, so a sighter's hole never lands on a scoring bull.
+            assignment = ShotAssignment.Assign(shotPages, bullPages, scoring: [.. definition.Bulls.Select(b => b.Scoring)]);
             int ambiguous = assignment.Shots.Count(s => s.Ambiguous), unassigned = assignment.Shots.Count(s => s.Bull is null);
             stage.Decide("assignment", assignment.Method.ToString(), assignment.Reason);
             foreach (var s in assignment.Shots.Where(s => s.Ambiguous))

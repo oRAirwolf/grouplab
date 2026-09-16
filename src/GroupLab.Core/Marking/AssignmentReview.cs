@@ -33,8 +33,9 @@ public sealed record ShotAssignmentDetail(int ShotId, int? Bull, double Distance
 public sealed record AssignmentReview(AssignmentMethod Method, string Reason, ImmutableList<ShotAssignmentDetail> Shots, ImmutableList<RejectedCandidate> Rejected, AssignmentMethod DetectedMethod)
 {
     /// <summary>
-    /// The shots the matching has moved off the bull detection gave them, because a person's decision elsewhere took that bull or freed
-    /// another (entry 70 section 3 item 3). Resolving one contested case can cause a second, and the second must never be invisible.
+    /// The shots the matching has moved off the bull they first had, the one detection gave them or, for a shot placed by hand, the one it
+    /// was placed with, because an edit elsewhere took that bull or freed another (entry 70 section 3 item 3). Resolving one contested case
+    /// can cause a second, and the second must never be invisible.
     /// </summary>
     public IEnumerable<ShotAssignmentDetail> Moved => Shots.Where(s => s.Bull != s.DetectedBull);
 
@@ -44,7 +45,7 @@ public sealed record AssignmentReview(AssignmentMethod Method, string Reason, Im
     /// </summary>
     public bool MethodChanged => Method != DetectedMethod;
 
-    /// <summary>The figures for one shot, or null for a shot the matching did not place, such as one placed by hand.</summary>
+    /// <summary>The figures for one shot, or null for a shot the matching did not place, such as one whose bull a person chose.</summary>
     public ShotAssignmentDetail? For(int shotId) => Shots.FirstOrDefault(s => s.ShotId == shotId);
 
     /// <summary>How many shots want a person's look: the concept's "2 of 26 need review".</summary>

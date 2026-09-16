@@ -328,11 +328,14 @@ Provenance matters because it keeps the statistics honest about where the number
 
 **Amended 2026-09-16, `docs/NOTES-FROM-PLANNING.md` entry 70 section 3: matching reruns as the person edits, and a person's decision is a constraint rather than an input.** Never rerunning leaves an answer computed for a different set of shots the moment one is added, moved or deleted. Always rerunning is worse: in one-to-one matching, pushing a shot onto a bull pushes whatever held it somewhere else, so resolving one contested case would silently reverse a decision the person had just made. So:
 
-- A bull set by a person is pinned: a shot placed by hand, or detected and then corrected, keeps it.
-- The shots nobody has touched re-solve on every edit, against the bulls no pinned shot holds.
+- A bull is pinned only when a person chose it, by clicking a hole and then a bull. **Amended by entry 74 section 1:** placing a hole says there is a hole there, not which bull it belongs to, so a hole added by hand whose bull the software picked is matched like a detection. Whether a person chose the bull is recorded on the shot on its own, separately from how the mark got there.
+- Every shot whose bull nobody chose re-solves on every edit, against the bulls no chosen shot holds. Positions are never re-solved.
 - A shot the re-solve moves off its detected bull is a review item for as long as it stays moved.
 - The counts rule above holds live: more untouched shots than free bulls, and matching stops being forced, every shot is flagged, and the screen says the method changed.
 - Undo restores the pins as well as the positions.
+- **Sighter and scoring bulls are two pools, entry 73 section 1.** A shot fired at a sighter can never belong to a scoring bull, nor the reverse, so each shot joins the pool of its nearest bull and the counts rule above applies in each pool on its own. Matching both as one pool gave two sighter holes to scoring bulls a row away, and the group statistics counted them.
+
+**A known limit, entry 74 section 2: the assignment detail does not survive a save.** A marking file keeps each shot's bull and whether a person chose it, but not the sheet's page mapping, so a reopened marking has no margins, alternatives or reasons until detection runs again, and its review queue is empty for that reason rather than because nothing needs review. The screen must say which of the two it is. Carrying the mapping in the file is a later, deliberate decision.
 
 Assignment classifies against the definition's declared bull positions, and offsets are measured from the located ones. The two are kept apart on purpose: registration and printing error are a few thousandths of an inch against a 0.15 inch margin, so the choice cannot flip an assignment that was not already flagged, and the shooter aimed at the bull as printed.
 
