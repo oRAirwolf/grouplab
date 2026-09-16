@@ -22,19 +22,51 @@ public class PrintScreenTests
     {
         string path = Path.Combine(Path.GetTempPath(), "grouplab-print-launch.pdf");
 
-        var (onWindows, windowsStatus) = PrintWindow.PrintLaunch(path, windows: true);
+        var (onWindows, windowsStatus, windowsKind) = PrintWindow.PrintLaunch(path, windows: true);
+        Assert.Equal(StatusKind.Success, windowsKind);
         Assert.Equal("print", onWindows.Verb);
         Assert.True(onWindows.UseShellExecute);
         Assert.Equal(path, onWindows.FileName);
         Assert.Contains("print command", windowsStatus, StringComparison.Ordinal);
 
-        var (elsewhere, elsewhereStatus) = PrintWindow.PrintLaunch(path, windows: false);
+        var (elsewhere, elsewhereStatus, elsewhereKind) = PrintWindow.PrintLaunch(path, windows: false);
+        Assert.Equal(StatusKind.Information, elsewhereKind);
         Assert.Equal(string.Empty, elsewhere.Verb);
         Assert.True(elsewhere.UseShellExecute);
         Assert.Equal(path, elsewhere.FileName);
         Assert.Contains("GroupLab cannot send this to a printer", elsewhereStatus, StringComparison.Ordinal);
         Assert.DoesNotContain("system has no", elsewhereStatus, StringComparison.Ordinal);
         Assert.Contains("open in your viewer", elsewhereStatus, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 70 section 6: the status line says which state it reports. A save that fails is an alert, and a save
+    /// that works afterwards is a success, not a red line left over from the failure.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheStatusLineIsAnAlertOnlyWhenSomethingFailed()
+    {
+        var window = new PrintWindow { Width = 1200, Height = 800 };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.Select("GL-CF25-LTR.gltd.json");
+        string blocker = Path.Combine(Path.GetTempPath(), $"grouplab-status-{Guid.NewGuid():N}");
+        string good = blocker + ".pdf";
+        File.WriteAllText(blocker, "a file where a directory is needed");
+        try
+        {
+            Assert.False(window.SavePdf(Path.Combine(blocker, "sheet.pdf")));
+            Assert.Equal(StatusKind.Alert, window.StatusState);
+
+            Assert.True(window.SavePdf(good), window.StatusText);
+            Assert.Equal(StatusKind.Success, window.StatusState);
+        }
+        finally
+        {
+            File.Delete(blocker);
+            File.Delete(good);
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -60,6 +92,7 @@ public class PrintScreenTests
         try
         {
             Assert.True(window.SavePdf(path), window.StatusText);
+            Assert.Equal(StatusKind.Success, window.StatusState);
             string pdf = Encoding.Latin1.GetString(File.ReadAllBytes(path));
             Assert.StartsWith("%PDF", pdf, StringComparison.Ordinal);
             Assert.Contains("/PrintScaling /None", pdf, StringComparison.Ordinal);

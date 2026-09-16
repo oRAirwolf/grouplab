@@ -33,6 +33,7 @@ public static class AppStyles
 
     public const string PillText = "pill-text";
 
+    /// <summary>Something that worked: teal. On a status line it marks success, so that red keeps meaning something (NOTES-FROM-PLANNING.md entry 70 section 6).</summary>
     public const string Good = "good";
 
     public const string Warn = "warn";
@@ -110,6 +111,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Alert), (TextBlock.ForegroundProperty, Brush(p.Alert))),
+        Rule(x => x.OfType<TextBlock>().Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),
         Rule(x => x.OfType<TextBlock>().Class(PillText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, 11.0), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),

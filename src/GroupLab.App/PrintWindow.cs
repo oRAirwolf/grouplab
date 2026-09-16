@@ -50,7 +50,7 @@ public sealed class PrintWindow : Window
     private readonly Dictionary<string, TextBox> fieldBoxes = new(StringComparer.Ordinal);
     private readonly TextBox serial = new() { Width = 120, PlaceholderText = "optional" };
     private readonly CheckBox note = new() { Content = "Print the actual-size instruction along the bottom of each sheet", IsChecked = true };
-    private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
+    private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock pageCaption = new() { VerticalAlignment = VerticalAlignment.Center };
     private readonly Image preview = new() { Stretch = Stretch.Uniform, Height = 520, HorizontalAlignment = HorizontalAlignment.Left };
     private LibrarySheet? selected;
@@ -112,7 +112,7 @@ public sealed class PrintWindow : Window
         }
         else
         {
-            status.Text = "The built-in library was not found beside the application.";
+            SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
         }
     }
 
@@ -124,6 +124,24 @@ public sealed class PrintWindow : Window
 
     /// <summary>The message line, for the headless tests.</summary>
     internal string StatusText => status.Text ?? "";
+
+    internal StatusKind StatusState { get; private set; } = StatusKind.Information;
+
+    /// <summary>
+    /// Shows a message with the state it reports, NOTES-FROM-PLANNING.md entry 70 section 6. The line used to be red for everything,
+    /// including a successful save, which teaches people to read past red; the next red message may be the one that matters.
+    /// </summary>
+    private void SetStatus(string text, StatusKind kind)
+    {
+        status.Text = text;
+        StatusState = kind;
+        status.Classes.Remove(AppStyles.Alert);
+        status.Classes.Remove(AppStyles.Good);
+        if (kind != StatusKind.Information)
+        {
+            status.Classes.Add(kind == StatusKind.Alert ? AppStyles.Alert : AppStyles.Good);
+        }
+    }
 
     /// <summary>Selects a sheet by its file name.</summary>
     internal void Select(string file) => list.SelectedIndex = sheets.ToList().FindIndex(s => s.File == file);
@@ -157,12 +175,12 @@ public sealed class PrintWindow : Window
             PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null));
         if (result.Pdf is null)
         {
-            status.Text = "This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));
+            SetStatus("This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)), StatusKind.Alert);
             DiagnosticLog.Warn("print.render", ("sheet", selected.File), ("filled", fill), ("errors", result.Diagnostics.Count(d => d.Severity == Severity.Error)));
             return null;
         }
 
-        status.Text = "";
+        SetStatus("", StatusKind.Information);
         return result;
     }
 
@@ -181,16 +199,16 @@ public sealed class PrintWindow : Window
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            status.Text = "The PDF could not be written: " + ex.Message;
+            SetStatus("The PDF could not be written: " + ex.Message, StatusKind.Alert);
             DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(path), ("kind", "pdf")]);
             return false;
         }
 
         DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "pdf"), ("sheet", selected!.File), ("pages", result.Pages.Count)]);
 
-        status.Text = result.Pages.Count > 1
+        SetStatus(result.Pages.Count > 1
             ? string.Create(CultureInfo.InvariantCulture, $"Saved {result.Pages.Count} sheets to {path}. Print every page; each is numbered beside its identifier.")
-            : "Saved to " + path + ".";
+            : "Saved to " + path + ".", StatusKind.Success);
         return true;
     }
 
@@ -327,11 +345,11 @@ public sealed class PrintWindow : Window
         }
 
         bool windows = OperatingSystem.IsWindows();
-        var (start, sent) = PrintLaunch(path, windows);
+        var (start, sent, sentKind) = PrintLaunch(path, windows);
         try
         {
             Process.Start(start)?.Dispose();
-            status.Text = sent;
+            SetStatus(sent, sentKind);
             return;
         }
         catch (Win32Exception printing) when (windows)
@@ -340,7 +358,7 @@ public sealed class PrintWindow : Window
         }
         catch (Win32Exception opening)
         {
-            status.Text = "No application could open the PDF (" + opening.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
+            SetStatus("No application could open the PDF (" + opening.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
             DiagnosticLog.Exception(LogLevel.Warn, "print.open", opening, ("fallback", "the saved PDF"));
             return;
         }
@@ -348,11 +366,11 @@ public sealed class PrintWindow : Window
         try
         {
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
-            status.Text = "Your PDF viewer has no print command GroupLab can call, so the PDF is open in it. Print from there at Actual size, or 100%.";
+            SetStatus("Your PDF viewer has no print command GroupLab can call, so the PDF is open in it. Print from there at Actual size, or 100%.", StatusKind.Information);
         }
         catch (Win32Exception ex)
         {
-            status.Text = "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.";
+            SetStatus("No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
             DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
         }
     }
@@ -370,11 +388,11 @@ public sealed class PrintWindow : Window
     /// nothing asks. The PDF is opened and the words say so.
     /// </para>
     /// </summary>
-    internal static (ProcessStartInfo Start, string Status) PrintLaunch(string path, bool windows) => windows
+    internal static (ProcessStartInfo Start, string Status, StatusKind Kind) PrintLaunch(string path, bool windows) => windows
         ? (new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" },
-            "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.")
+            "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.", StatusKind.Success)
         : (new ProcessStartInfo(path) { UseShellExecute = true },
-            "GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer. Print from there at Actual size, or 100%.");
+            "GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer. Print from there at Actual size, or 100%.", StatusKind.Information);
 
     /// <summary>
     /// A control shown again in a rebuilt row, taken out of the row it was last in. The serial box and the load block's field boxes
@@ -416,4 +434,12 @@ public sealed class PrintWindow : Window
         button.Click += async (_, _) => await action();
         return button;
     }
+}
+
+/// <summary>What a status line reports, NOTES-FROM-PLANNING.md entry 70 section 6: success in teal, information in plain text, alert in red.</summary>
+internal enum StatusKind
+{
+    Success,
+    Information,
+    Alert,
 }
