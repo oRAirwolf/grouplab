@@ -213,6 +213,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     }
 
     /// <summary>Zooms by a factor about a point of the control, the centre when none is given.</summary>
+    /// <summary>Brings an image point to the centre of the control at the current zoom, for the review queue.</summary>
+    public void CentreOn(PointD image)
+    {
+        var at = ToControl(image);
+        offset += new Vector((Bounds.Width / 2) - at.X, (Bounds.Height / 2) - at.Y);
+        InvalidateVisual();
+    }
+
     public void ZoomBy(double factor, Point? about = null)
     {
         EnsureView();

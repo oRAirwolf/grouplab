@@ -64,16 +64,6 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
 public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true, PointD? Declared = null);
 
 /// <summary>
-/// Everything a marking holds at one moment. It is immutable, so undo is keeping the previous one and every screen reads a
-/// state that cannot change under it.
-/// <para>
-/// Every position is in the stored pixel frame, <see cref="ViewRotation.StoredPixelFrame"/>. <see cref="ViewQuarterTurns"/> is how the
-/// screen turns the image for display, clockwise, and is part of the state only so that undo covers it and a saved marking reopens
-/// the way it was left (NOTES-FROM-PLANNING.md entry 26); it never changes a position. <see cref="ExifOrientation"/> is the image's
-/// tag as read, or null when it has none, as a flatbed scan does not.
-/// </para>
-/// </summary>
-/// <summary>
 /// What a marking's detection was run with, NOTES-FROM-PLANNING.md entry 80 section 5: the calibre named, or none, and the size its holes were
 /// taken to measure. The same image detects differently with a calibre and without, so two markings are comparable only when these agree.
 /// </summary>
@@ -84,6 +74,16 @@ public sealed record DetectionRecord(Calibre? Calibre, double? HoleSizeInches)
         : "detected without a calibre, so whether a mark was one hole or two was judged by its shape alone";
 }
 
+/// <summary>
+/// Everything a marking holds at one moment. It is immutable, so undo is keeping the previous one and every screen reads a
+/// state that cannot change under it.
+/// <para>
+/// Every position is in the stored pixel frame, <see cref="ViewRotation.StoredPixelFrame"/>. <see cref="ViewQuarterTurns"/> is how the
+/// screen turns the image for display, clockwise, and is part of the state only so that undo covers it and a saved marking reopens
+/// the way it was left (NOTES-FROM-PLANNING.md entry 26); it never changes a position. <see cref="ExifOrientation"/> is the image's
+/// tag as read, or null when it has none, as a flatbed scan does not.
+/// </para>
+/// </summary>
 public sealed record MarkingState(
     string? ImagePath,
     ScaleReference? Scale,
@@ -97,7 +97,8 @@ public sealed record MarkingState(
     Calibre? Calibre = null,
     double? ShotDistanceInches = null,
     AssignmentReview? Assignment = null,
-    DetectionRecord? Detection = null)
+    DetectionRecord? Detection = null,
+    ImmutableHashSet<string>? Dismissed = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -267,6 +268,16 @@ public sealed class MarkingSession
 
     /// <summary>Excludes a shot with its reason, or restores it with null.</summary>
     public void SetExclusion(int id, ExclusionReason? reason) => Update(id, s => s with { Exclusion = reason });
+
+    /// <summary>Puts back a whole earlier state as one undoable step, as the editor's Discard edits does.</summary>
+    public void Restore(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        Apply(state);
+    }
+
+    /// <summary>Records that a person looked at a review item and chose to leave the marking as it is, <see cref="ReviewQueue"/>.</summary>
+    public void Dismiss(string reviewKey) => Apply(State with { Dismissed = (State.Dismissed ?? []).Add(reviewKey) });
 
     /// <summary>Marks a detection as not a shot, or restores it.</summary>
     public void SetNotAShot(int id, bool notAShot) => Update(id, s => s with { NotAShot = notAShot, Provenance = Touched(s.Provenance) });

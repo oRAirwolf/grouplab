@@ -244,7 +244,7 @@
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
       "holes": 0,
       "rejected": 44,
-      "insideZones": 1,
+      "insideZones": 2,
       "splitHalves": 0,
       "oversized": 0,
       "failure": null
@@ -254,7 +254,7 @@
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
       "holes": 0,
       "rejected": 68,
-      "insideZones": 4,
+      "insideZones": 3,
       "splitHalves": 0,
       "oversized": 0,
       "failure": null
@@ -292,20 +292,20 @@
     {
       "name": "ultrawide2.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 4,
-      "rejected": 77,
-      "insideZones": 6,
-      "splitHalves": 4,
+      "holes": 2,
+      "rejected": 78,
+      "insideZones": 7,
+      "splitHalves": 2,
       "oversized": 0,
       "failure": null
     },
     {
       "name": "ultrawide3.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 4,
-      "rejected": 86,
-      "insideZones": 4,
-      "splitHalves": 4,
+      "holes": 9,
+      "rejected": 83,
+      "insideZones": 5,
+      "splitHalves": 8,
       "oversized": 0,
       "failure": null
     },
@@ -322,20 +322,20 @@
     {
       "name": "main2.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 9,
-      "rejected": 101,
-      "insideZones": 10,
-      "splitHalves": 8,
+      "holes": 11,
+      "rejected": 100,
+      "insideZones": 12,
+      "splitHalves": 10,
       "oversized": 0,
       "failure": null
     },
     {
       "name": "main3.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 4,
-      "rejected": 109,
-      "insideZones": 9,
-      "splitHalves": 4,
+      "holes": 6,
+      "rejected": 108,
+      "insideZones": 10,
+      "splitHalves": 6,
       "oversized": 0,
       "failure": null
     },
@@ -352,10 +352,10 @@
     {
       "name": "telephoto2.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 0,
-      "rejected": 213,
-      "insideZones": 16,
-      "splitHalves": 0,
+      "holes": 2,
+      "rejected": 212,
+      "insideZones": 15,
+      "splitHalves": 2,
       "oversized": 0,
       "failure": null
     },
@@ -374,7 +374,7 @@
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
       "holes": 0,
       "rejected": 54,
-      "insideZones": 3,
+      "insideZones": 4,
       "splitHalves": 0,
       "oversized": 0,
       "failure": null
@@ -384,7 +384,7 @@
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
       "holes": 0,
       "rejected": 165,
-      "insideZones": 4,
+      "insideZones": 7,
       "splitHalves": 0,
       "oversized": 0,
       "failure": null
@@ -392,10 +392,10 @@
     {
       "name": "main_flat3.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 0,
-      "rejected": 150,
-      "insideZones": 5,
-      "splitHalves": 0,
+      "holes": 2,
+      "rejected": 149,
+      "insideZones": 7,
+      "splitHalves": 2,
       "oversized": 0,
       "failure": null
     },

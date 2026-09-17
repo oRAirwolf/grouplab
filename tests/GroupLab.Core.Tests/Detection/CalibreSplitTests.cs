@@ -227,6 +227,28 @@ public class CalibreSplitTests
         Assert.Equal(HoleSizeSource.Sheet, RenderDifferenceHoleDetector.SizeReference(spread, options).Source);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 83 section 2: sizes are read at each hole's own scale. Under a perspective that changes the scale by about a
+    /// quarter across the page, identical holes read the same size, where one scale for the image read the near ones large and flagged them.
+    /// </summary>
+    [Fact]
+    public void IdenticalHolesReadTheSameSizeAcrossAnObliqueView()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        const double dpi = 150;
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
+        double s = 254 / dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 2e-4, 0, 1]));
+        var holes = definition.Bulls.Select((b, k) => Hole(b.X + 90, b.Y + 90, 0.06, k % 4)).ToList();
+        var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, [], new Random(83));
+        var result = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, new OpenCvSharpBackend(), pageRender: render);
+        var sizes = result.Holes.Where(h => !h.PossibleMerge).Select(h => h.DiameterInches).Order().ToList();
+        double left = RenderDifferenceHoleDetector.LocalPixelsPerInch(truth, new PointD(0, 0)), right = RenderDifferenceHoleDetector.LocalPixelsPerInch(truth, new PointD(render.Width, 0));
+        Assert.True(Math.Max(left, right) / Math.Min(left, right) > 1.2, $"the view is not oblique enough: {left:0} and {right:0} px per inch");
+        Assert.True(sizes[^1] / sizes[0] < 1.12, $"sizes {sizes[0]:0.000} to {sizes[^1]:0.000} in");
+        Assert.DoesNotContain(result.Holes, h => h.Oversized);
+    }
+
     /// <summary>With fewer than five whole marks and no calibre there is no size to veto with, and an elongated blob is split on shape alone.</summary>
     [Fact]
     public void WithoutASizeTheShapeAloneDecides()

@@ -220,10 +220,12 @@ public static class RenderDifferenceHoleDetector
 
         // S8: filters, declared zones, the position prior, and the weighted centre.
         var zones = Zones(definition, scene, tile);
-        double smallest = Math.PI * Math.Pow(options.MinimumDiameterInches * dpi / 2, 2), largest = Math.PI * Math.Pow(options.MaximumDiameterInches * dpi / 2, 2);
+        // NOTES-FROM-PLANNING.md entry 83 section 2: every size is converted at the blob's own scale. One scale for the whole image read holes
+        // on the near side of an oblique photograph up to 30 percent large, which is what the oversize flags on those frames were.
+        double largestSquareInches = Math.PI * Math.Pow(options.MaximumDiameterInches / 2, 2);
         var holes = new List<RenderDifferenceHole>();
         var rejected = new List<RejectedBlob>();
-        var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double Area, double Hx, double Hy, double Diameter, double Solidity, double Closure, double? CalibreHoles)>();
+        var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double AreaInches, double Hx, double Hy, double DiameterInches, double Solidity, double Closure, double? CalibreHoles)>();
         foreach (var blob in backend.FilledBlobs(closed))
         {
             var (area, hx, hy) = Polygon(blob.Hull);
@@ -233,14 +235,17 @@ public static class RenderDifferenceHoleDetector
             }
 
             double diameter = 2 * Math.Sqrt(area / Math.PI), solidity = blob.Area / area;
+            double ppi = LocalPixelsPerInch(registration, new PointD(hx, hy));
+            double diameterIn = diameter / ppi, areaIn = area / (ppi * ppi);
+            bool tooSmall = diameterIn < options.MinimumDiameterInches;
             double aspect = Math.Max(blob.Width, blob.Height) / Math.Max(1.0, Math.Min(blob.Width, blob.Height));
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
-            var moments = area < smallest ? default : Moments(residual, expected, width, blob);
-            double? calibreHoles = options.CalibreInches is { } calibre ? area / (Math.PI * Math.Pow(calibre * dpi / 2, 2)) : null;
-            bool elongated = moments.Elongation >= options.SplitElongation && area <= 2 * largest;
-            string? shape = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
-                : area > largest && !elongated ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
+            var moments = tooSmall ? default : Moments(residual, expected, width, blob);
+            double? calibreHoles = options.CalibreInches is { } calibre ? areaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
+            bool elongated = moments.Elongation >= options.SplitElongation && areaIn <= 2 * largestSquareInches;
+            string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in")
+                : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
                 : null;
@@ -250,7 +255,7 @@ public static class RenderDifferenceHoleDetector
                 : null);
             if (why is not null)
             {
-                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi, why, shape is null ? zone?.Name : null));
+                rejected.Add(new RejectedBlob(hx, hy, diameterIn, why, shape is null ? zone?.Name : null));
                 continue;
             }
 
@@ -258,18 +263,18 @@ public static class RenderDifferenceHoleDetector
             double closure = Closure(binary, width, height, cx, cy, diameter);
             if (closure < options.MinimumClosure)
             {
-                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi, FormattableString.Invariant($"open, rim closure {closure:0.00}")));
+                rejected.Add(new RejectedBlob(hx, hy, diameterIn, FormattableString.Invariant($"open, rim closure {closure:0.00}")));
                 continue;
             }
 
             if (elongated)
             {
-                elongatedBlobs.Add((blob, moments, area, hx, hy, diameter, solidity, closure, calibreHoles));
+                elongatedBlobs.Add((blob, moments, areaIn, hx, hy, diameterIn, solidity, closure, calibreHoles));
                 continue;
             }
 
             // A blob the size says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
-            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles));
+            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles));
         }
 
         // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78, 81 and 82). An elongated blob
@@ -277,27 +282,26 @@ public static class RenderDifferenceHoleDetector
         // kept as one hole unless it is also at least ResidueElongation long, which no real hole in the corpus came near (at most 1.72): then
         // it is a sliver of photographed residue and is refused (entry 78 section 2). The size is graded, SizeReference.
         var reference = SizeReference([.. holes.Select(h => h.DiameterInches)], options);
-        double HolesOf(double area, double size) => area / (Math.PI * Math.Pow(size * dpi / 2, 2));
-        foreach (var (blob, moments, area, hx, hy, diameter, solidity, closure, calibreHoles) in elongatedBlobs)
+        foreach (var (blob, moments, areaIn, hx, hy, diameterIn, solidity, closure, calibreHoles) in elongatedBlobs)
         {
-            double sizeHoles = HolesOf(area, reference.VetoInches);
+            double sizeHoles = areaIn / (Math.PI * Math.Pow(reference.VetoInches / 2, 2));
             bool vetoed = sizeHoles < options.SplitMinimumHoles;
             if (vetoed && moments.Elongation >= options.ResidueElongation)
             {
-                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi,
+                rejected.Add(new RejectedBlob(hx, hy, diameterIn,
                     FormattableString.Invariant($"residue: elongation {moments.Elongation:0.00} with the area of {sizeHoles:0.00} holes, too small to be two and longer than a hole")));
                 continue;
             }
 
             if (vetoed)
             {
-                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true));
+                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true));
                 continue;
             }
 
             foreach (var (mx, my) in Split(residual, width, blob, moments))
             {
-                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
+                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
             }
         }
 
@@ -318,6 +322,13 @@ public static class RenderDifferenceHoleDetector
         }
 
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference);
+    }
+
+    /// <summary>Image pixels per page inch at an image point, from the registration's local area scale.</summary>
+    internal static double LocalPixelsPerInch(IPageMapping registration, PointD image)
+    {
+        var (xx, xy, yx, yy) = registration.Jacobian(image);
+        return 254 / Math.Sqrt(Math.Abs((xx * yy) - (xy * yx)));
     }
 
     /// <summary>

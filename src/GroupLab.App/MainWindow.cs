@@ -54,6 +54,12 @@ public sealed class MainWindow : Window
     // corrections it must not throw away (NOTES-FROM-PLANNING.md entry 78 section 4).
     private MarkingState? detectedState;
 
+    // DESIGN.md section 13 and NOTES-FROM-PLANNING.md entry 83 section 4: the assignment editor's review queue, what needs a decision and how
+    // to give it, at the top of the panel, driven from the keyboard.
+    private readonly StackPanel review = new() { Spacing = Tokens.Space6 };
+    private string? currentReview;
+    private string bullTyped = "";
+
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
 
@@ -154,6 +160,9 @@ public sealed class MainWindow : Window
 
         var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
         panel.Children.Add(crashBanner);
+        panel.Children.Add(Heading("Review"));
+        panel.Children.Add(review);
+        AddHandler(KeyDownEvent, OnReviewKey, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
         // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
         panel.Children.Add(Heading("Units"));
@@ -775,7 +784,7 @@ public sealed class MainWindow : Window
         canvas.MissingMarkers = result.MissingMarkers;
         canvas.Artwork = artwork = result.ExpectedArtwork;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
-        detectedState = session.State;
+        RememberDetected();
         SetTool(MarkingTool.Select);
         status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed out") : "");
     }
@@ -889,6 +898,7 @@ public sealed class MainWindow : Window
         var state = session.State;
         var report = GroupAnalysis.Analyse(state);
         problem.Text = report.Problem ?? "";
+        ShowReview(state);
 
         if (!calibreBox.IsKeyboardFocusWithin && (calibreBox.Text ?? "") != (state.Calibre?.Name ?? ""))
         {
@@ -1142,6 +1152,215 @@ public sealed class MainWindow : Window
                 session.DeleteShot(id);
                 canvas.Selected = null;
             })));
+    }
+
+    /// <summary>The review queue as it stands, for the headless tests.</summary>
+    internal IReadOnlyList<ReviewItem> ReviewItems { get; private set; } = [];
+
+    /// <summary>The item the editor is on, or null when nothing needs a decision.</summary>
+    internal ReviewItem? CurrentReview => ReviewItems.FirstOrDefault(i => i.Key == currentReview);
+
+    /// <summary>Every line of the review panel, for the headless tests.</summary>
+    internal IEnumerable<string> ReviewText => review.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>
+    /// The review panel: how many items still need a decision, the current one as a card with its choices, and the whole queue in order with
+    /// each item's state. Discard edits puts back what detection found, as one step that can be undone.
+    /// </summary>
+    private void ShowReview(MarkingState state)
+    {
+        review.Children.Clear();
+        ReviewItems = ReviewQueue.For(state);
+        int open = ReviewQueue.Open(ReviewItems);
+        var current = ReviewItems.FirstOrDefault(i => i.Key == currentReview && !i.Resolved) ?? ReviewItems.FirstOrDefault(i => !i.Resolved);
+        currentReview = current?.Key;
+        int shots = state.Shots.Count(s => s.IsShot);
+        var count = new TextBlock
+        {
+            Text = ReviewItems.Count == 0 ? (state.Assignment is null ? "Nothing detected to review." : "Nothing needs review.") : $"{open} of {shots} need review",
+            FontFamily = Mono,
+            VerticalAlignment = VerticalAlignment.Center,
+            Classes = { open > 0 ? AppStyles.Alert : AppStyles.Secondary },
+        };
+        var header = Row(count);
+        if (detectedState is not null && !ReferenceEquals(state, detectedState))
+        {
+            header.Children.Add(Button("Discard edits", () =>
+            {
+                session.Restore(detectedState);
+                status.Text = "Edits discarded: the marking is as detection left it. Undo brings the edits back.";
+            }));
+        }
+
+        review.Children.Add(header);
+        if (current is not null)
+        {
+            var card = new StackPanel { Spacing = Tokens.Space6 };
+            card.Children.Add(new TextBlock { Text = ReviewTitle(current.Kind), FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Alert } });
+            card.Children.Add(new TextBlock { Text = current.Sentence, TextWrapping = TextWrapping.Wrap });
+            var choices = new WrapPanel();
+            foreach (var choice in current.Choices)
+            {
+                choices.Children.Add(Button(choice.Label, () => Choose(current, choice)));
+            }
+
+            card.Children.Add(choices);
+            card.Children.Add(Line("Enter takes the first choice, Space moves to the next item, a bull's number then Enter reassigns the selected shot, N marks it not a shot."));
+            review.Children.Add(new Border { Child = card, Padding = new Thickness(Tokens.Space8), BorderThickness = new Thickness(1), BorderBrush = Marks.Alert, CornerRadius = new CornerRadius(4) });
+        }
+
+        int n = 0;
+        foreach (var item in ReviewItems)
+        {
+            n++;
+            string state_ = item.Resolved ? "DONE" : item.Key == currentReview ? "NOW" : "NEXT";
+            var line = new Button
+            {
+                Content = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}   {state_}",
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(0),
+                Opacity = item.Resolved ? 0.6 : 1,
+            };
+            line.Click += (_, _) => FocusReview(item);
+            review.Children.Add(line);
+        }
+    }
+
+    private static string ReviewTitle(ReviewKind kind) => kind switch
+    {
+        ReviewKind.Contested => "Contested assignment",
+        ReviewKind.Oversized => "Possibly two holes",
+        ReviewKind.Doubled => "Two shots on one bull",
+        ReviewKind.Unassigned => "No bull",
+        _ => "Refused candidate",
+    };
+
+    private string BullLabel(int index) => session.State.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
+
+    /// <summary>Takes the marking as it stands as what detection left, the state Discard edits returns to.</summary>
+    internal void RememberDetected()
+    {
+        detectedState = session.State;
+        Refresh();
+    }
+
+    /// <summary>Carries out a review choice and moves to the next item that still needs one.</summary>
+    internal void Choose(ReviewItem item, ReviewChoice choice)
+    {
+        DiagnosticLog.Info("review.choose", ("kind", item.Kind.ToString()), ("action", choice.Action.ToString()));
+        var shot = ReviewQueue.Apply(session, item, choice);
+        status.Text = $"{ReviewTitle(item.Kind)}: {choice.Label}.";
+        canvas.Selected = shot ?? canvas.Selected;
+        NextReview();
+    }
+
+    /// <summary>Makes an item current, selects its shot and brings it to the middle of the view.</summary>
+    internal void FocusReview(ReviewItem item)
+    {
+        currentReview = item.Key;
+        canvas.Selected = item.ShotId ?? canvas.Selected;
+        canvas.CentreOn(item.Image);
+        Refresh();
+    }
+
+    /// <summary>The next item that still needs a decision after the current one, wrapping round, as Space does.</summary>
+    internal void NextReview()
+    {
+        var items = ReviewQueue.For(session.State);
+        var open = items.Where(i => !i.Resolved).ToList();
+        if (open.Count == 0)
+        {
+            currentReview = null;
+            Refresh();
+            status.Text = items.Count == 0 ? status.Text : "Every review item is decided.";
+            return;
+        }
+
+        int at = items.ToList().FindIndex(i => i.Key == currentReview);
+        var next = items.Skip(at + 1).FirstOrDefault(i => !i.Resolved && i.Key != currentReview) ?? open[0];
+        FocusReview(next);
+    }
+
+    /// <summary>
+    /// The editor's keys, DESIGN.md section 13's keyboard-driven verification: Space for the next item, Enter for the current item's first
+    /// choice, a bull's label typed and then Enter to reassign the selected shot, N for not a shot, Escape to clear what was typed. They are
+    /// taken before a focused button sees them, so Space never presses the last button clicked.
+    /// </summary>
+    internal void OnReviewKey(object? sender, KeyEventArgs e)
+    {
+        if (e.Source is TextBox || e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return;
+        }
+
+        char? typed = e.Key switch
+        {
+            >= Key.D0 and <= Key.D9 => (char)('0' + (e.Key - Key.D0)),
+            >= Key.NumPad0 and <= Key.NumPad9 => (char)('0' + (e.Key - Key.NumPad0)),
+            Key.S => 'S',
+            _ => null,
+        };
+        if (typed is { } c)
+        {
+            bullTyped += c;
+            status.Text = canvas.Selected is { } selected
+                ? $"Bull {bullTyped}: Enter puts shot {ShotLabel(selected)} on it, Escape clears."
+                : $"Bull {bullTyped}: select a shot, then Enter puts it on that bull.";
+            e.Handled = true;
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.Back when bullTyped.Length > 0:
+                bullTyped = bullTyped[..^1];
+                break;
+            case Key.Escape when bullTyped.Length > 0:
+                bullTyped = "";
+                status.Text = "Cleared.";
+                break;
+            case Key.Enter when bullTyped.Length > 0:
+                AssignTyped();
+                break;
+            case Key.Enter when CurrentReview is { Choices.Count: > 0 } item:
+                Choose(item, item.Choices[0]);
+                break;
+            case Key.Space:
+                NextReview();
+                break;
+            case Key.N when canvas.Selected is { } id:
+                session.SetNotAShot(id, true);
+                status.Text = $"Shot {ShotLabel(id)} marked not a shot.";
+                NextReview();
+                break;
+            default:
+                return;
+        }
+
+        e.Handled = true;
+    }
+
+    private void AssignTyped()
+    {
+        string label = bullTyped;
+        bullTyped = "";
+        if (canvas.Selected is not { } id)
+        {
+            status.Text = "Select a shot first, then type its bull and press Enter.";
+            return;
+        }
+
+        if (session.State.Bulls.FirstOrDefault(b => string.Equals(b.Label, label, StringComparison.OrdinalIgnoreCase)) is not { } bull)
+        {
+            status.Text = $"There is no bull {label} on this sheet.";
+            return;
+        }
+
+        string was = ShotLabel(id);
+        session.AssignBull(id, bull.Index);
+        DiagnosticLog.Info("review.typed", ("bull", bull.Label));
+        status.Text = $"Shot {was} is now on bull {bull.Label}.";
+        NextReview();
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

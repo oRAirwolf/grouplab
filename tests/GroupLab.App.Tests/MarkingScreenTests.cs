@@ -469,6 +469,76 @@ public class MarkingScreenTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 83 section 4 and DESIGN.md section 13: the assignment editor. A shot the matching gave a bull other than its
+    /// nearest is a contested item with its sentence and choices; Enter takes the first choice and pins it; undo brings the item back; a bull
+    /// typed and Enter reassigns the selected shot, which here makes a new item, two shots on one bull; Discard edits puts back what detection
+    /// found; and the counter says how many still need a decision throughout.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheReviewQueueSettlesAContestedShotFromTheKeyboard()
+    {
+        (int X, int Y)[] holes = [(200, 200), (330, 200)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            var session = window.Session;
+            var scale = new LengthReference(new PointD(100, 100), new PointD(300, 100), 2);
+            BullAim[] bulls = [new(0, "1", new PointD(215, 205)), new(1, "2", new PointD(515, 205))];
+            var a = new GroupLab.Core.Detection.AssignedShot(0, 0, 40, 0, 40, 3000, false);
+            var b = new GroupLab.Core.Detection.AssignedShot(1, 1, 480, 0, 300, 180, false);
+            var assignment = new GroupLab.Core.Detection.ShotAssignmentResult(GroupLab.Core.Detection.AssignmentMethod.OneToOne, "as many shots as bulls", [a, b]);
+            session.LoadDetections(scale, bulls, [new DetectedShot(new PointD(200, 200), a), new DetectedShot(new PointD(330, 200), b)], assignment, [], "test");
+            window.RememberDetected();
+            Dispatcher.UIThread.RunJobs();
+            int contested = session.State.Shots[1].Id;
+
+            Assert.True(window.ReviewText.Contains("1 of 2 need review"), string.Join(" | ", window.ReviewText));
+            var item = window.CurrentReview!;
+            Assert.Equal((ReviewKind.Contested, (int?)contested), (item.Kind, item.ShotId));
+            Assert.Contains("One-to-one matching gives it to bull 2", item.Sentence, StringComparison.Ordinal);
+            Assert.Equal(["Bull 2, as matched", "Bull 1", "Not a shot"], item.Choices.Select(c => c.Label));
+
+            Press(window, Key.Enter);
+            Assert.True(session.State.Find(contested)!.BullChosen);
+            Assert.Equal(1, session.State.Find(contested)!.Bull);
+            Assert.True(window.ReviewText.Contains("0 of 2 need review"), string.Join(" | ", window.ReviewText));
+
+            session.Undo();
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.ReviewText.Contains("1 of 2 need review"), string.Join(" | ", window.ReviewText));
+
+            window.Canvas.Selected = contested;
+            Press(window, Key.D1);
+            Press(window, Key.Enter);
+            Assert.Equal((0, true), (session.State.Find(contested)!.Bull!.Value, session.State.Find(contested)!.BullChosen));
+
+            // Putting it on bull 1 makes a new item, two shots on one bull, which Enter keeps.
+            Assert.Equal(ReviewKind.Doubled, window.CurrentReview!.Kind);
+            Assert.True(window.ReviewText.Contains("1 of 2 need review"), string.Join(" | ", window.ReviewText));
+            Press(window, Key.Enter);
+            Assert.True(window.ReviewText.Contains("0 of 2 need review"), string.Join(" | ", window.ReviewText));
+
+            var discard = window.GetLogicalDescendants().OfType<Button>().Single(x => Equals(x.Content, "Discard edits"));
+            discard.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(session.State.Find(contested)!.BullChosen);
+            Assert.True(window.ReviewText.Contains("1 of 2 need review"), string.Join(" | ", window.ReviewText));
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static void Press(MainWindow window, Key key)
+    {
+        window.OnReviewKey(window, new KeyEventArgs { Key = key, RoutedEvent = InputElement.KeyDownEvent, Source = window });
+        Dispatcher.UIThread.RunJobs();
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 82 section 6: the detector's oversize flag reaches the marking screen, as a ring on the canvas and a sentence
     /// in the panel, quieter when tentative, and moving the shot clears it with the measurement it described.
     /// </summary>

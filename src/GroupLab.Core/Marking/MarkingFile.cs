@@ -44,6 +44,8 @@ public static class MarkingFile
             exifOrientation = state.ExifOrientation,
             displayRotationDegrees = 90 * state.ViewQuarterTurns,
             calibre = state.Calibre is { } calibre ? new { name = calibre.Name, diameterInches = calibre.DiameterInches } : null,
+            // NOTES-FROM-PLANNING.md entry 83 section 4: the review items a person chose to leave as they are, so a reopened marking does not ask again.
+            reviewKept = (state.Dismissed ?? []).Order(StringComparer.Ordinal),
             // NOTES-FROM-PLANNING.md entry 80 section 5: what the detection ran with, which the calibre above need not match. Null when
             // nothing was detected; a detection without a calibre records that absence.
             detection = state.Detection is { } detection
@@ -163,7 +165,8 @@ public static class MarkingFile
                 ? new DetectionRecord(
                     detection["calibre"] is { } used ? new Calibre((string?)used["name"] ?? "", (double)used["diameterInches"]!) : null,
                     (double?)detection["holeSizeInches"])
-                : null);
+                : null,
+            Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null);
         return (state, notes);
     }
 
