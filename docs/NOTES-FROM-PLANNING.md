@@ -15,6 +15,134 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 79: the bullet is not the hole, a handoff rule for long jobs, and a self-lock
+
+**Status: actioned 2026-09-17.**
+- **Section 1: measured.** Detected diameter over calibre is 0.944, sd 0.039, on 24 scan holes, and 0.986, sd 0.110, on 75 photograph holes. The detector uses that ratio times the calibre, and the calibre only separates one hole from two.
+- **Sections 2 and 3:** `CONTRIBUTING.md` carries the rule and the convention of running long command-line jobs from a published copy.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 78 and 79".
+
+Section 1 must reach the threshold work before its sweep result does. Section 2 is a process change, because the same thing has now happened twice.
+
+### 1. Entry 78 section 4 is unsafe as written, and Claude Code's own probe says why
+
+Its probe found that **"calibre must match hole size: at 0.30 in, overlapping 0.235 in holes read as less than one."**
+
+**That is the flaw in what I proposed.** Entry 78 section 4 said to feed the calibre into segmentation, and I wrote as though the calibre and the hole were the same measurement. **They are not, and this project established that months ago**: a .308 bullet leaves a bright aperture of roughly 0.21 in inside a torn crown reaching about the calibre. So a detector handed 0.308 as the expected hole size may be looking for something half again larger than what it will find, depending on which part of the hole the segmentation actually latches onto.
+
+**Do not use the calibre as the expected diameter. Measure the relationship first.**
+
+The corpus can answer it directly and no new data is needed. **For every sheet whose calibre is known, compare the detected diameters against the stated bullet diameter, and report the ratio with its spread.** That gives one number and an uncertainty, and it is what the segmentation should be given rather than the calibre itself.
+
+**Two things worth knowing before that runs**, because they will shape how the ratio is read:
+
+- **The ratio is probably not a constant.** Paper weight, backing, velocity and how square the bullet arrives all change how much the crown tears. If the spread is wide, a single ratio is the wrong model and the calibre becomes a loose prior rather than a target.
+- **It may differ between scans and photographs**, because a flatbed sees the crown lit differently from a camera. Report the two corpora separately rather than pooled.
+
+**If the spread turns out to be wide, entry 78 section 4 should be narrowed to using the calibre only to separate the two failure directions** (a mark near half the expected size is a split, a mark near double is a merge) **rather than to set an absolute expected size.** That weaker use survives a variable ratio and still fixes the defect that matters.
+
+### 2. A long job should end a turn, not be waited on
+
+Claude Code has now twice finished its work, started something long, set a monitor, and gone quiet when the monitor expired. Both times the report read as a crash and was not one. **Both times real results were sitting committed and unread.**
+
+**The rule: when a job will outlast the turn, stop the turn.** Report what was started, the exact path its output will appear at, and the one command that reads it. Then stop. The next instruction reads the result.
+
+**That is better than waiting even when the monitor works**, because a blocked session cannot be given anything else to do, and because a summary written before the long job finishes is still a summary, which is what was missing both times.
+
+**Two specific cases to treat this way**: a CI run, and any sweep or corpus pass that takes more than a few minutes.
+
+### 3. The CLI locks its own build output
+
+Building while a sweep ran failed with the CLI binary locked by the running `grouplab` process, and it was worked around with an alternate output path.
+
+**That is the same shape as the problem Alan has with the application**, which is why he now runs from `C:\Dev\grouplab-run` rather than from the build output. **A long CLI run should not execute out of `bin`**, for the same reason: it blocks every build for as long as it runs.
+
+Worth a published copy or a documented convention rather than a per-incident workaround, and it is small.
+
+---
+
+## 2026-09-17, entry 78: the ink test answers, my one-mechanism hypothesis is wrong, and split and oversized are one threshold in two directions
+
+**Status: actioned 2026-09-17 in part.** Section 3's thresholds wait on the split calibration sweep, and section 2 follows them.
+- **Section 1:** accepted. No difference-stage fix for split or oversized was pursued.
+- **Section 3: corrected before it was built on.** The 54 oversized punched detections are all split halves, most of correctly separated neighbours, and read as oversized only because a half reports its blob's diameter. The split decision is still one threshold with two failures. `grouplab holes split-calibration` measures it per blob, and it was still running at the report.
+- **Section 4:** the size a hole of the named calibre is detected at reaches segmentation, as entry 79 section 1 corrected it.
+  - It only vetoes a split of a blob too small to be two holes, and flags a whole blob of two or more holes rather than cutting it.
+  - Without a calibre, nothing changes.
+  - The friend's earlier sheet at .308 reads 13 holes with sigma 0.391 in, against 0.390 in hand-merged.
+- **Section 2:** not started. **Section 6:** both CI runs passed on all three platforms, so the fingerprint test holds.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 78 and 79".
+
+I read `scans/phase1/measurements/ink-proximity.json` directly rather than waiting for a summary. 2,875 detections, 2,811 from punched scans and 64 from photographs of unshot sheets. **The test entry 77 section 4 asked for has answered, and it answers against me.**
+
+### 1. Inside the scans, proximity to printed ink explains nothing at all
+
+| Detections in punched scans | n | median distance to artwork | within 0.05 in of artwork |
+|---|---|---|---|
+| **all** | 2811 | 0.0972 in | **28.9%** |
+| spurious | 17 | 0.1181 in | 29.4% |
+| split | 36 | 0.0807 in | 27.8% |
+| oversized | 54 | 0.1329 in | **25.9%** |
+| flagged oversize | 162 | 0.1417 in | 25.3% |
+| none of the above | 2542 | 0.0950 in | 29.2% |
+
+**Every symptom sits at or slightly below the baseline.** Oversized marks are if anything *farther* from printed ink than a typical detection.
+
+**Entry 77 section 4 proposed that all three symptoms were one defect in the difference stage, near printed edges. On the scans that is simply false**, and it was my hypothesis from eyeballing five marks in one screenshot and seeing ring lines under them.
+
+**It also means the original warning text was wrong on the facts, not only presumptuous.** "It sits on the printed target: this is printed ink under the mark" named the one explanation the corpus contradicts.
+
+### 2. All of the ink association lives in the photographs, and every lens does it
+
+| Detections on photographs of unshot sheets | n | median distance to artwork | within 0.05 in |
+|---|---|---|---|
+| all, and every one is false by construction | **64** | **0.0234 in** | **68.8%** |
+
+**An unshot sheet photographs with sixty-four holes in it, and two thirds of them are within a twentieth of an inch of printed ink.** Across `main`, `telephoto` and `ultrawide` frames alike, so it is not a lens property.
+
+**That is a real mechanism and it is confined to photographs.** The scans register well enough that the expected artwork cancels; the photographs do not, and what survives along a printed edge becomes a hole. **This is the one thing entry 77 section 4 got right, and it is a difference-stage or registration-residue question rather than a segmentation one.**
+
+**It also removes the last reason to box the "Print at actual size" sentence.** That was one false detection in a scan, and at corpus scale scans show no ink association, so a box there would have been built for a pattern that does not exist.
+
+### 3. Split and oversized never co-occur, and their sizes say why
+
+| | n | median diameter |
+|---|---|---|
+| all scan detections | 2811 | **0.3356 in** |
+| split | 36 | **0.2946 in** |
+| oversized | 54 | **0.7529 in** |
+
+**Zero detections are both.** Split fragments measure just under one .308 bullet. Oversized marks measure more than two.
+
+**These are not two defects. They are one segmentation threshold failing in each direction**: too aggressive and a torn hole breaks into pieces, too permissive and two neighbouring holes become one mark. **So they must be calibrated together**, because tightening to fix the merges will make more splits and the reverse.
+
+**Split is the one to lead on**, because it is the defect that put sigma at 0.607 in where the truth is 0.390 in on the friend's earlier sheet. **A 55 percent error in the headline number is the most serious thing currently known about this pipeline.**
+
+### 4. The calibre is already known and is being used too late
+
+The person supplies a calibre. Today it is used **after** segmentation, to print a warning about a mark that is already wrong.
+
+**A .308 bullet makes a hole of a known size. Two marks of 0.29 in sitting 0.2 in apart are one hole split. A single mark of 0.75 in is two holes merged.** The information that resolves both is the number the user typed before the analysis ran.
+
+**Feed the calibre into segmentation rather than into a message about its output.** That is not new machinery and it is the natural fix for section 3.
+
+**Two constraints, so this does not turn into a detector that only finds what it expects.** It must still work with no calibre set, because the field is optional and most sheets will not have one. And a mark that disagrees with the calibre must still be reported rather than reshaped into agreement, because a genuinely odd hole is a finding and not an error.
+
+### 5. Order
+
+1. **Section 3, split and oversized, calibrated together**, with split leading because of the sigma error.
+2. **Section 4's use of the calibre**, as the mechanism for doing item 1 well.
+3. **Section 2's photograph residue**, which is a different stage and a different fix.
+4. **Nothing about boxing the print note.** Section 2 closed it.
+
+### 6. One thing left hanging that is not mine
+
+Claude Code stopped without a summary because it was waiting on CI for the entry 77 push, specifically because **the new fingerprint test assumes the PDF comes out byte-identical on Linux and macOS as on Windows.** It was right not to guess. That result is still unknown and should be read before anything else is built on top of it.
+
+---
+
 ## 2026-09-17, entry 77: depth of field explains the angled frames and does not explain the gate, and the exclusion box nearly ate a real shot
 
 **Status: actioned 2026-09-17.**

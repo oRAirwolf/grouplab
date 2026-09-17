@@ -3211,6 +3211,122 @@ Each frame's 25 scoring bulls are shown under both models. Error is in thousandt
 
 ---
 
+## Entries 78 and 79. The split, the size a hole of a calibre is detected at, and the thresholds still being measured
+
+`docs/NOTES-FROM-PLANNING.md` entries 78 and 79.
+- **The order:** entry 78 section 5's order, with entry 79 section 1 applied before anything was built on entry 78 section 4.
+- **Entry 78 section 1:** not pursued as a difference-stage fix for split or oversized, as it asks.
+- **The print note:** no box is added over it.
+
+### CI for the entry 77 push, which entry 78 section 6 asked about first
+
+Both **build and test** runs for the entry 77 commits passed on Windows, Ubuntu and macOS, the Linux tarball included. So the PDF fingerprint test holds on all three platforms: the renderer's PDF is byte-identical on each. The only red is the phase 0 gate record on macOS, which stays open.
+
+### Entry 78 section 3, checked against the record before it was built on
+
+**Entry 78 read the 54 "oversized" punched detections in `ink-proximity.json` as two holes merged into one mark. They are not.**
+- **All 54 are split halves.** Most are halves of neighbouring punched holes that the split separated correctly.
+- **Why they read as oversized.** Every half reports its whole blob's diameter, and that is what the harness compared. The harness's oversize column for split halves is therefore an artefact, and that is corrected here.
+- **The 36 "split" detections are split halves too**, as entry 77 reported.
+
+**So entry 78's reading, that split and oversized are one threshold failing in two directions, rests partly on that artefact.**
+
+**The design point itself stands.** Stage S8's split decision is one threshold with two failures:
+- a blob holding one hole that is split, a hole counted twice;
+- a blob holding two holes that is not split, one oversized mark.
+
+**`grouplab holes split-calibration [--local <manifest>]` measures that decision per blob**, over the elongation threshold crossed with the calibre veto below.
+- **The corpus:**
+  - the six 300 DPI letter scans punched once with single holes and once with overlapping pairs;
+  - the two real sheets, the scan and seven photographs.
+- **The synthetic sheets' single-hole size** is the median whole single-hole blob, 0.338 in over 848 blobs.
+- **It is still running,** as the report says; its thresholds are not chosen yet.
+
+### Entry 79 section 1: the bullet is not the hole, measured
+
+**Detected diameter over stated calibre**, on the two real .308 sheets. These are whole detections matched to hand-verified holes, from the local ink-proximity record.
+
+| | Holes | Mean | sd | Range | 10th to 90th percentile |
+|---|---|---|---|---|---|
+| Scans | 24 | 0.944 | 0.039 | 0.868 to 1.021 | 0.898 to 0.992 |
+| Photographs | 75 | 0.986 | 0.110 | 0.740 to 1.304 | 0.863 to 1.131 |
+
+**By image:**
+
+| Image | Holes | Mean | sd |
+|---|---|---|---|
+| Alan's scan | 13 | 0.952 | 0.050 |
+| The friend's scan | 11 | 0.934 | 0.017 |
+| The six mounted frames | 13, 13, 13, 13, 10, and none on `IMG_5823` | 0.951, 1.003, 0.943, 1.043, 1.068 | up to 0.149 |
+| The friend's photograph | 12 | 0.924 | 0.050 |
+
+**What the ratio shows.**
+- **The detector measures the torn crown, not the bright aperture.** Its extent is close to the calibre, not the aperture's 0.68 of it.
+- **The probe's 0.235 in holes were the synthesis's own size**, which is smaller than any real .308 hole measures.
+- **The spread differs by image kind.** Scans are tight, with a coefficient of variation of 4 percent. Photographs are moderately wide, at 11 percent, and their frame means move by 15 percent.
+
+**What is used, therefore.**
+- **Not the calibre,** but the calibre times these measured ratios: `AutomaticMarking.ScanHoleToCalibre` 0.944 and `PhotographHoleToCalibre` 0.986.
+- **Which ratio applies** is decided by whether the image carries camera data. A photograph stripped of it is taken as a scan. The one such photograph, the friend's, measures 0.924, close to the scan ratio.
+- **The calibre's role is narrowed as section 1 asks when the spread is wide.** It separates one hole from two, and nothing else. No filter reads it as an absolute size.
+
+### Entry 78 section 4: the size fed into segmentation, with its two guards
+
+**`RenderDifferenceOptions.CalibreInches`** is the size a single hole is detected at. When it is set:
+- **the veto:** a blob whose elongation asks for a split, but whose area holds fewer than `SplitMinimumHoles` such holes, is kept as one hole. Such a hole is flagged `SplitVetoed`, and is exempt from the aspect and size filters just as a split candidate is;
+- **the report:** a whole blob of `CalibreOversizeHoles` holes or more is flagged oversized and left as one mark.
+
+**The size can stop a split but never make one**, and a hole that disagrees with it is reported, not cut to agree. Those are entry 78's two guards.
+
+**Without a calibre, nothing changes.**
+- **The rule is the old one:** a blob with no calibre is judged exactly as before.
+- **Both real scans read as before:** 15 holes each, sigma 0.607 and 0.274 in.
+- **The corpus counts are unchanged,** because no committed or local record names a calibre.
+
+**The defaults are provisional until the sweep reports.** `SplitMinimumHoles` is 1.5 and `CalibreOversizeHoles` is 1.8.
+
+**Where the calibre comes from.**
+- **`grouplab analyze --calibre <calibre>`** passes it on the command line.
+- **The marking screen** passes the calibre named at the time of detection.
+  - A calibre named for one image stays named for the next, in view in the box, so detection on opening can use it.
+  - Naming a calibre after a detection nobody has corrected detects again with it.
+  - Naming one after a correction says the next Detect would use it and would replace the corrections, and leaves the marks alone.
+- **The S5-S8 stage records** the calibre and the size used, and how many splits the calibre stopped.
+
+**The result that matters:** on the friend's earlier sheet at .308, the two holes that each read twice now read once.
+
+| The friend's earlier sheet | Holes | Sigma (in) |
+|---|---|---|
+| Without a calibre | 15 | 0.607 |
+| At .308 | 13 | 0.391 |
+| Hand-merged truth, entry 76 section 2 | 13 | 0.390 |
+
+**Alan's scan does not move.** Its one split blob, the sighter hole joined to the print note's residue, holds 2.2 holes' area, so the calibre does not veto it.
+
+**Tests.**
+- **`CalibreSplitTests`** puts a hole of each of four kinds on a synthetic sheet:
+  - a plain hole is untouched;
+  - a hole with hand ink joined to it is cut in two without the size and kept whole with it;
+  - an overlapping pair is split either way;
+  - a large round hole of 2.9 holes' area stays one mark, flagged.
+- **`AutomaticMarkingTests`** checks that the detector is handed 0.308 times 0.944 on a scan, and that the trace says so.
+- **The marking screen's test** checks detecting again, leaving corrections alone, and carrying the calibre to the next image.
+
+### Entry 78 section 2
+
+**Not started.** The photograph residue is a different stage and follows the threshold work.
+
+### Entry 79 sections 2 and 3: long jobs, and the CLI's lock on its own build
+
+**`CONTRIBUTING.md` "Long-running steps" now carries entry 79 section 2's rule** in place of the old one.
+- **The rule:** a CI run or a sweep that outlasts the turn ends the turn, with its output path and the command that reads it.
+- **The convention it adds:** long command-line jobs run from a published copy outside the build tree, not from `bin`.
+- **Why:** the running sweep held `grouplab.exe` in `bin`, and this work was built and tested to a separate output path under `tests/GroupLab.Core.Tests/bin/alt` until it ends.
+
+**Tests:** Core 810 passing, App 43 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3377,3 +3493,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 77 section 4: oversize measured three ways, over the detector's diameter alone.** Entry 73's warnings came from the screen's size check, which is a different measurement, and the test had to see the one that was reported.
 - **Entry 77 section 5: a sheet with no clear place prints no name, over shrinking the name further or trying another margin.** Section 5 states the rule. One place with one clearance is also what the placement test can check on every sheet.
 - **Entry 77 section 5: the identifier caption left at the bottom beside the new name line, over moving it.** It is C6's recovery path, and its zone is what every sheet already printed is read with.
+- **Entry 78 section 4: the calibre only vetoes a split, over also splitting a round blob of two holes' area.** Splitting on size alone would cut a genuinely odd hole to fit the expectation, which section 4's second guard rules out; the blob is flagged instead.
+- **Entry 79 section 1: a measured ratio per image kind, over the calibre or one pooled ratio.** Scans and photographs measure holes differently, 0.944 against 0.986, and section 1 asked for them apart.
+- **Entry 79 section 1: a photograph without camera data taken as a scan, over refusing the ratio.** There is nothing in such a file to tell the two apart, and the one such photograph measures 0.924, within the scan ratio's spread.
+- **Entry 78 section 4: a calibre named after an uncorrected detection detects again, over asking.** Nothing a person did is lost, and a result found without the size is the one section 3 says is wrong.
