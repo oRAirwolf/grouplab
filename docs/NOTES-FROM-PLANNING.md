@@ -15,6 +15,130 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 87: there are two size checks disagreeing five to one, and a status table that must not be allowed to lie
+
+**Status: actioned 2026-09-18.**
+- **Section 1: the table scored the detector's flag**, which the queue counts, so it stands. Reproduced on Alan's scan: the detector fires once, the screen's check five times, on holes reading 0.267 to 0.310 in that the check reads at 0.508 to 0.607 in because it takes in the ring.
+  - The screen's check is gone. The detector's flag is the only size opinion, and it is a queue item.
+  - Its evidence is kept as a test: the dark region under a mark on a printed line reads over three times wider than on a hole beside one.
+- **Section 2: the README's Planned section** lists every phase of DESIGN.md section 21 with one of the four states and its gate, and the features inside each phase with a state each. `ReadmeTests` fails if the two documents disagree, and refuses test counts, percentages and dates.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 87 and 86".
+
+Section 1 corrects entry 86 section 2 before it is actioned. Section 2 is Alan's README request with the part that makes it survive.
+
+### 1. The detector counts one oversized mark and the screen prints five warnings
+
+The log from Alan's session says, on every one of four runs:
+
+> 14 holes inside the registered sheet, 32 candidates rejected, 0 of them hole-sized inside exclusion zones, **1 oversized**
+
+**One.** That is S1b, and Alan kept it, which the log records as `review.choose kind=Oversized action=Keep`.
+
+**The panel underneath prints five oversize warnings**, on shots 1, 4, 6, 7 and 10.
+
+**So there are two different size checks running on the same image and they disagree five to one.** The detector's own oversized flag fires once. The screen's calibre size check fires five times. Only the first is in the review queue.
+
+**That explains the inconsistency entry 86 section 4 complained about.** The queue reads "0 of 14 need review" honestly, because the queue tracks the detector's flag and that flag is satisfied. The five red sentences below it come from a check the queue does not know about.
+
+**And it partly retracts entry 86 section 2.** I said the ground-truth list behind the per-frame false-flag table was wrong on five marks. **If that table scored the detector's flag rather than the screen's check, it was right and I was comparing two different measurements.** Entry 82 section 4 said as much in passing: "the on-screen size check still rises near ink, 78 percent against 2 percent on punched scans", and I read past it.
+
+**So do not rewrite the ground truth yet. Establish which check the per-frame table scored.** If it scored the detector's flag, the table stands, the five screen warnings are the defect, and the ground truth is fine.
+
+**Either way the five screen warnings are false**, because Alan has confirmed with the shooter that all five are single holes. **What changes is where the defect lives.**
+
+**Two size checks is one too many.** Whichever survives should be the only one, it should feed the review queue, and nothing should print a size opinion that the queue has not counted. **A number on screen that no queue item accounts for is how a person learns to ignore the queue.**
+
+### 2. The README status table, and the two things that stop it becoming untrue
+
+Alan wants a detailed planned-feature section with status marks, kept current.
+
+**The README already has a Planned section with the eight phases.** What is missing is the features inside each phase and a state on each.
+
+**Use four states, not three.** Three collapses a distinction this project is living inside right now:
+
+| Mark | Means |
+|---|---|
+| **Not started** | no code |
+| **In progress** | being built, not usable |
+| **Built, not proven** | the code exists and works, and its gate has not been met or cannot yet be run |
+| **Done** | its gate has been met and recorded |
+
+**The assignment editor is the reason.** It was built this week, it works, and `DESIGN.md` section 21's Phase 3 gate cannot be run because no sheet with 25 shots exists. **Calling that finished would make a public page untrue, and calling it in progress would be equally wrong.** The four-state version says exactly what is true.
+
+**Two guards, because a hand-maintained status list goes stale and this one already has form.** Entry 60 found the README claiming Windows was the only buildable platform for days after that stopped being true, and deliberately left test counts out because they go stale.
+
+1. **A test ties it to `DESIGN.md`.** Every phase in section 21 must appear in the README's table with exactly one state, and every feature listed under a phase must carry one. **The test fails if a phase or feature exists in one document and not the other**, so the two cannot drift apart silently.
+2. **Changing a state belongs in the commit that changes the thing.** Not a separate chore run at each push, because a chore gets skipped and then the page lies. **A gate met is a state change in the same commit that records the gate.**
+
+**Three things to leave out**, following entry 60: **no test counts, no percentages, no dates.** All three go stale within days and none of them tells a reader anything the state marks do not.
+
+**And say what "Done" is measured against.** Each phase already has its gate in `DESIGN.md` section 21. **Put the gate's one-line summary beside the state**, so a reader can see what the mark is claiming rather than trusting it. The Planned table already does this for some phases and should do it for all.
+
+---
+
+## 2026-09-18, entry 86: I told Alan to delete a real shot, and the ground truth behind the threshold work is wrong on five marks
+
+**Status: actioned 2026-09-18.**
+- **Section 1: recorded.** S1b is a bullet hole, Alan has restored it, and the rule is that a recorded defect is evidence about the past: check it is still there before using it to explain something on screen. It cost one wrong figure of mine, corrected below.
+- **Section 2: retracted by entry 87 section 1.** The per-frame table scored the detector's flag, not the screen's check, so the ground truth stands. One correction: the table counted the flag on S1b as a hole joined to the print note, which was my assumption. S1b encloses no ink, so Alan's scan has one false detector flag of 14.
+- **Section 3: measured, and the answer is no for the detector.** Enclosed ink correlates with diameter at -0.53 on Alan's scan and -0.28 on the friend's, and flagged punched marks enclose slightly less ink than unflagged ones. It is what inflated the screen's check, which is gone. Every detection now carries the quantity.
+- **Section 4:** settled by entry 87 section 1. There is one size opinion and the queue counts it. The cascade is recorded as designed behaviour.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 87 and 86".
+
+Section 1 is my error and needs undoing in the application. Section 2 invalidates a measurement the recent threshold work rested on. Section 3 is the refinement that explains why the corpus test missed it.
+
+### 1. S1b is a real bullet hole and I said it was ink
+
+I told Alan the fourth sighter detection was the print-note ink from entry 77 and to press N. **He did, and it was a shot.**
+
+**Three independent confirmations:**
+
+- **The pixels.** At 600 DPI the mark above the "Print at actual size, 100 percent." line is a torn brown-grey hole with a ragged crown. The sentence beside it is flat, sharp-edged and blue-grey. **They do not look remotely alike at full resolution.**
+- **The shooter.** Alan reports ten shots at the scoring bulls and four at the sighters.
+- **The log.** `detect.run` reports "4 sighter shots for 3 sighter bulls", and separately rejects a string of blobs at y = 10.65 and y = 10.80 as too small or outside every bull's cell. **That is the print-note ink being correctly refused.**
+
+**Undo it**: the selected-shot panel has "It is a shot", or Undo in the toolbar.
+
+**How I got it wrong, precisely, because the shape of it is worth more than the mistake.** Entry 77 recorded a false detection from the print-note sentence at page (2.909, 10.784). S1b sat near that position, so I matched it by proximity and did not look at the pixels. **The log shows that defect is already fixed.** So I took a finding that had since been resolved, treated it as the current state, and used it to explain a mark I had not examined.
+
+**The rule that follows: a recorded defect is evidence about the past. Before using one to explain something on screen, check it is still there.**
+
+### 2. The five oversize flags are false, and the ground truth used to validate the thresholds says otherwise
+
+Alan has looked at shots 1, 4, 6, 7 and 10 and **all five are single holes.** No doubles anywhere on the sheet.
+
+They read 0.547, 0.607, 0.600, 0.607 and 0.508 in against 0.441 for one .308 hole. **So five of ten scoring shots on a clean 600 DPI scan are falsely flagged as possibly two holes.**
+
+**The per-frame table reports the friend's scan as 0 of 13 false flags, with or without a calibre.** Those two statements cannot both be true.
+
+**The likely reconciliation is the one that matters**: the ground-truth list used for that table records those five marks as genuinely oversized, because nobody had asked the shooter. **The shooter has now answered, and the ground truth is wrong on five of thirteen marks on the sheet the thresholds were validated against.**
+
+**Correct the ground truth first, then re-run the per-frame table and the confirming sweep.** Every threshold decision from entry 81 onward was checked against real holes holding the veto, and five of those real holes were labelled wrongly.
+
+**These same five, with the same five diameters, appear in the entry 73 screenshots.** They predate all of this week's work and have survived every change to it, which is consistent with a defect nothing has yet addressed rather than a regression.
+
+### 3. The corpus test asked how far a detection is from ink, and the question is how much ink is inside it
+
+Entry 78 measured each detection's distance to the nearest printed edge and found no association on the scans. **That is the wrong quantity, and this sheet shows why.**
+
+**A hole centred on a ring line and a hole sitting beside one both have a distance to ink of nearly zero.** Only the first has a large amount of ink within its own footprint. The corpus test pooled them and the effect cancelled.
+
+**The visible evidence, side by side at full resolution:** shot 1 straddles bull 1's inner ring and is flagged at 0.547 in. Shot 2 is a hole of similar size sitting beside bull 2's inner ring rather than on it, and is not flagged.
+
+**The test, and it is a different measurement rather than a re-run:** for every detection, compute the area of expected printed artwork falling **inside the detection's own footprint**, and compare that between flagged and unflagged marks. **If the flagged ones enclose substantially more ink, the mechanism is the blob absorbing the line it sits on**, which inflates the measured diameter while leaving the centre where it was, and that is consistent with entry 73 section 3 finding no centre displacement.
+
+**I am offering this as a hypothesis with its test attached, and it is the fourth explanation I have proposed for these five marks.** The previous three were focus, residue proximity and image scale, and the third was right about the oblique photographs and is not what is happening here, on a flatbed scan with no scale variation at all.
+
+### 4. Two smaller things from the same screen
+
+**The review queue says "Nothing needs review" while five red warnings sit below it.** Either the oversize warnings belong in the queue as items, or the queue should not claim the sheet is settled. **As it stands the counter is telling a person something the panel beneath it contradicts**, which is how a queue stops being trusted.
+
+**The cascade is real and worth keeping as a design observation.** One detection's status changed four other shots from needing review to settled, because the sighter counts went from four-for-three to three-for-three and matching became possible. **That is the counts rule working exactly as designed**, and it is worth recording that a single decision can legitimately resolve several queue items at once, because it will look like a bug to somebody one day.
+
+---
+
 ## 2026-09-17, entry 83: the per-frame table says obliquity, not focus, and the detector has reached the point of diminishing returns
 
 **Status: actioned 2026-09-17, with the Phase 3 gate left for Alan to time.**

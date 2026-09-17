@@ -3826,6 +3826,104 @@ Real single holes flagged, of the true whole marks in each frame:
 
 ---
 
+## Entries 87 and 86. Two size checks reduced to one, ink inside the footprint measured, and the README's states
+
+`docs/NOTES-FROM-PLANNING.md` entry 87 first, because it corrects entry 86, then entry 86.
+
+### Entry 87 section 1: which check the per-frame table scored, and one check from here
+
+**The per-frame false-flag table scored the detector's flag.** Its harness reads `RenderDifferenceHole.Oversized`, the flag the review queue counts. **So the table stands and the ground truth behind it needed no rewrite.**
+
+**Both checks reproduced on Alan's 600 DPI scan, at .308:**
+
+| | Fires |
+|---|---|
+| The detector's flag, which the queue counts | 1, on S1b, at 2.18 holes' area |
+| The screen's calibre size check | 5, on the shots at bulls 1, 4, 6, 7 and 10 |
+
+**Those five are the ones Alan has confirmed with the shooter as single holes.** Their two measurements, side by side:
+
+| Shot | The detector's diameter | Ink inside its footprint | The screen's dark-region extent |
+|---|---|---|---|
+| 1 | 0.274 in | 0.12 | 0.547 in |
+| 4 | 0.296 in | 0.11 | 0.607 in |
+| 6 | 0.267 in | 0.10 | 0.600 in |
+| 7 | 0.310 in | 0.11 | 0.607 in |
+| 10 | 0.282 in | 0.10 | 0.508 in |
+
+**The detector reads all five as ordinary holes, about 0.29 in. The screen's check reads them at about twice that.** It measures the dark region connected to the mark, and a printed ring is dark and connected, so the ring is included.
+
+**So the screen's check is the defect, and it is gone.** What is left of `HoleSize` measures and judges nothing: the snap radius, and the apparent extent as a number anything may read.
+- **The one size opinion** is the detector's flag, which is a review queue item, so nothing on screen asserts a size the queue has not counted.
+- **What went with it:** the alert ring driven by that check, its five red sentences in the panel, its wording, and the `holeSizeFlags` field in the marking file. The detector's flag has its own ring and its own sentence, and rides on each shot in the file.
+- **Its evidence is kept as a test:** the dark region under a mark on a printed line reads more than three times wider than the same measurement on a hole beside one.
+
+**One correction to my own figures, from entry 86 section 1.** The per-frame table counted the flag on S1b as correct, on the ground that it was a hole joined to the print note's ink. **That was my assumption and it is wrong.**
+- **S1b encloses no printed ink at all,** 0.00 of its footprint, and it reads 0.429 in across.
+- **So Alan's scan has one false detector flag of 14 marks**, not none, and the print note is not part of it.
+- **What the flag is saying** is that the mark covers 2.18 single holes' area. On a sheet where the shooter counted four sighter shots and the detector found four, that reading is unexplained rather than explained.
+
+### Entry 86 section 1: S1b is a real shot, and the rule that follows
+
+**Recorded.** The fourth sighter detection is a bullet hole. I identified it as the print note's ink by its position, from entry 77, without looking at the pixels, and told Alan to mark it not a shot. He has restored it.
+
+**Entry 77's defect was already fixed.** The print note's ink is refused by the size and cell filters, and the log shows that happening on the same run.
+
+**The rule, recorded here because it is a working rule and not an apology: a recorded defect is evidence about the past.** Before using one to explain something on screen, check it is still there.
+
+**Nothing in the application needed changing for it.** The selected-shot panel's "It is a shot" and Undo both restore such a mark, and the review queue does not ask about it again.
+
+### Entry 86 section 3: ink inside the detection's own footprint, measured
+
+**This is a new measurement, not a re-run.** Each detection's footprint is its own hull, and the quantity is the mean expected printed-ink coverage inside it. It is now on every detection as `RenderDifferenceHole.InkFraction` and in `ink-proximity.json` as `inkInside`.
+
+**On the two real scans, where there is no scale variation, enclosed ink does not explain the detector's diameters.**
+
+| Sheet | Marks | Correlation of enclosed ink with diameter |
+|---|---|---|
+| Alan's scan | 14 | **-0.53** |
+| The friend's scan | 13 | **-0.28** |
+
+**Both are negative:** the marks enclosing the most ink are, if anything, the smaller ones.
+
+**On the punched scans, the flagged marks are larger and enclose slightly less ink:**
+
+| Punched scans | Marks | Median enclosed ink | Median diameter |
+|---|---|---|---|
+| Flagged | 1154 | 0.06 | 0.401 in |
+| Unflagged | 1567 | 0.07 | 0.304 in |
+
+**So the mechanism entry 86 section 3 proposes is not what inflates the detector's diameters.** Their size comes from merged holes, which is what the flag is for.
+
+**It is exactly what inflated the screen's check**, and that is where the hypothesis was right: the extent it measured ran along the ring. The measurement above is what separates the two, and the check that had the defect is gone.
+
+**What the enclosed-ink figures do show** is that a hole centred on a ring encloses 0.10 to 0.13 of its own footprint in ink on these sheets, and one beside a ring encloses none. It is a usable quantity, now recorded for every detection in the corpus, and nothing currently reads it.
+
+### Entry 87 section 2: the README's planned features and their states
+
+**The Planned section now lists every phase of `DESIGN.md` section 21 with one of four states and its gate**, and, under "What each phase holds", the features inside each phase with a state on each.
+
+| State | Means |
+|---|---|
+| Not started | no code |
+| In progress | being built, not usable |
+| Built, not proven | the code exists and works, and its gate has not been met or cannot yet be run |
+| Done | its gate has been met and recorded |
+
+**The states as they stand:** Phase 0a done; phases 0, 1, 2 and 3 built, not proven; phase 4 in progress; phases 5 to 8 not started.
+
+**The editor is why the fourth state exists.** It works, and its gate needs a 25-shot target nobody has shot, so neither "done" nor "in progress" would be true.
+
+**The two guards entry 87 asks for.**
+- **A test ties the two documents together.** `ReadmeTests` reads `DESIGN.md` section 21's phases and the README's table: the same phases must appear in both, each with exactly one of the four states and a gate beside it, each with a feature list, and every feature must carry a state. Checked by breaking it both ways: an invented state fails, and a renamed phase fails.
+- **A state changes in the commit that changes the thing,** which the section says in its last line rather than leaving to habit.
+
+**Three things kept out, following entry 60:** no test counts, no percentages and no dates. The test enforces that too, refusing a per cent sign, a year, or a phrase like "40 tests". A gate's own threshold, such as 99 percent of holes found, is the gate and is spelled in words.
+
+**Tests:** Core 821 passing, App 45 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4014,3 +4112,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 83 section 4: the review queue computed from the marking, over storing it.** Every edit changes what needs review, and a stored queue would go stale; only a person's "keep it" is stored, because nothing else can know it.
 - **Entry 83 section 4: the editor built into the marking screen, over a separate mode with Accept and analyse.** The statistics are already live on every edit, so an accept step would commit nothing. Discard edits is kept, as one undoable step.
 - **Entry 83 section 4: the review keys taken on the tunnel route, over the window's key handler.** A focused button would otherwise take Space and Enter, and pressing Space would press the last choice again.
+- **Entry 87 section 1: the screen's calibre size check removed, over keeping it and feeding it into the queue.** It measures the dark region connected to a mark, so a printed ring is part of every mark that touches one, and it read five confirmed single holes at about twice their size. Adding those five to the queue would have made the queue wrong rather than the panel.
+- **Entry 87 section 1: `HoleSize` kept as a measurement.** The apparent extent is what the harnesses read and what the snap radius needs, and keeping it without a threshold is what makes the removal a removal of a judgement rather than of a number.
+- **Entry 86 section 3: the enclosed-ink fraction recorded on every detection although nothing reads it.** It is the quantity that separates a hole on a ring from one beside it, it cost nothing to carry, and it is what proved the hypothesis wrong rather than plausible.
+- **Entry 87 section 2: the README's states tied to DESIGN.md by a test, over a review habit.** Entry 60 found the README stale for days, and the two documents can now only disagree by failing a test.
