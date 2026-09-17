@@ -15,6 +15,71 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 83: the per-frame table says obliquity, not focus, and the detector has reached the point of diminishing returns
+
+**Status: actioned 2026-09-17, with the Phase 3 gate left for Alan to time.**
+- **Section 2: the falsely flagged holes are not the ones nearest ink.** They are the ones on the near side of an oblique frame, which the detector read large because it converted sizes with one scale for the whole image. Sizes are now read at each blob's own scale.
+  - False flags without a calibre fall to 2 on 5822 and 1 on 5824, and to 0 on every other frame.
+  - The clean photographs' residue rises from 24 to 35.
+- **Section 3:** left alone. 5823's boundary is recorded with its geometry: one blob covering the sheet.
+- **Section 4: the assignment editor is built.**
+  - A review queue lists contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with its choices.
+  - The screen shows a counter, a card and Discard edits. Space, Enter, typed bull labels and N work it.
+  - On the friend's scan, all ten scoring shots are on their true bulls, and three presses of Enter settle the queue.
+  - The two-minute gate needs a 25-shot sheet and a person.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 83".
+
+Section 4 is a direction call and is the one that matters most.
+
+60 spurious to 24 on the clean photographs, and the merged-pair flag now reaches the screen. **Both of those are good and neither is what this entry is about.**
+
+### 1. I repeated a characterisation without checking it, and the table I asked for contradicts it
+
+Entry 82 section 4 said almost all the false flags sit in the three oblique out-of-focus frames. **I took that from the previous report and passed it on. The per-frame numbers say something different:**
+
+| Frame | Without calibre | With .308 |
+|---|---|---|
+| Both scans, the friend's photograph, **5820** | **0** | **0** |
+| 5819 | 1 of 14 | **0** |
+| 5821 | 3 of 14 | **0** |
+| **5822** | **5 of 14** | **3 of 14** |
+| **5824** | **6 of 12** | **3 of 12** |
+
+**5822 and 5824 are the worst, and entry 71 called them the two useful off-axis frames.** 5819 and 5821, the wide ones with the sheet small in frame, are better and a calibre clears them entirely.
+
+**So the pattern is obliquity, not the sheet being small and not focus.** The square-on frame is clean, both scans are clean, and every off-axis frame has false flags without a calibre.
+
+### 2. A calibre does not rescue an oblique frame, and that is the interesting part
+
+**5822 and 5824 keep 3 false flags each even with .308 named.** That is roughly a quarter of their real holes, on the two frames a contributor would think were their best.
+
+**A mechanism that fits, and it connects to work already done.** Entry 77 measured the flat-homography worst bull at 0.011 to 0.059 in on these frames against 0.005 on the square ones. **A larger registration residual means the expected artwork lands slightly off, leaving residue along printed edges, and residue touching a real hole merges with it into a blob that reads oversize.** Entry 78 section 2 already found that photograph residue clusters on printed artwork at a median of 0.023 in.
+
+**The test needs no new data.** The per-detection distance to nearest artwork already exists for these frames. **Check whether the falsely flagged holes on 5822 and 5824 are the ones nearest printed ink.** If they are, this is the same residue defect reaching real holes rather than a separate size problem, and the fix belongs with entry 78 section 2 rather than with the flag.
+
+### 3. Three things that are right and should not be pushed further
+
+**The remaining 24 are honestly irreducible.** Ten residue blobs of 0.20 to 0.30 in could be two joined .17 holes, and saying so rather than guessing is the correct answer. Leave them.
+
+**The bimodality and merged-pair interaction is benign.** A sheet where a quarter of the marks are merged pairs is a sheet in real trouble, and asking for the calibre is exactly the right response to it. Nobody should try to make bimodality distinguish the two cases without a calibre, because the information is not there.
+
+**5823 detecting no holes at all is a measured boundary and is worth recording as one.** There is now a real frame where the whole pipeline finds nothing, and knowing where that edge sits is guidance we can give contributors. `PHASE1-RESULTS.md` should name it with its geometry rather than treating it as a bad file.
+
+### 4. The detector has had its due, and the editor has not
+
+**This was right to do.** It began because Alan used the application and found the numbers were wrong, and since then a 55 percent sigma error has been fixed and checked against hand-merged truth, real spurious detections have gone from 17 to two or three, split and merge are handled with real holes holding the veto, and the size rule has an absolute floor. **That is a serious week of work on the thing that was actually broken.**
+
+**It is now producing right answers on good inputs**, and the remaining items are a quarter of the holes on the two most oblique frames in the corpus, ten blobs that genuinely cannot be resolved without more information, and one frame that fails outright for optical reasons already quantified.
+
+**`DESIGN.md` section 13 opens by saying the editor is built before the detector, not after it.** Entry 69 found that most of the assignment editor already exists in Core, entry 70's plumbing is done, entry 74's pinning rule is done, entry 75's numbering is done. **What does not exist is the screen**, and it is what Alan named as the target four days ago.
+
+**So: after section 2's test, stop tuning the detector and build the assignment editor.** The gate is already written in `DESIGN.md` section 21, a full 25-shot target with several misassignments corrected in under two minutes, and the friend's scan is now a fixture that gives real material to correct.
+
+**One thing that should come with it.** Alan has been asked twice for a ground truth pass and has not had a tool worth doing it in. **Every detector change from here should be scored against that pass**, and the editor is what makes producing it bearable. The two pieces of work want each other.
+
+---
+
 ## 2026-09-17, entry 82: the quarter-point rule calibrates on noise, which is why 64 only became 60
 
 **Status: actioned 2026-09-17.**

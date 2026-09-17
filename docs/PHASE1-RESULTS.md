@@ -3687,6 +3687,145 @@ Real single holes flagged, of the true whole marks in each frame:
 
 ---
 
+## Entry 83. The oblique false flags were a scale defect, 5823's boundary, and the assignment editor
+
+`docs/NOTES-FROM-PLANNING.md` entry 83, in its order:
+- section 2's test first;
+- section 3's three things left alone, one of them recorded;
+- then section 4, the editor.
+
+### Section 2: the falsely flagged holes are not the ones nearest ink
+
+**The test used the per-detection distances already in the local ink-proximity record, which has no calibre. It answers no.**
+- **The flagged holes on `IMG_5822`** lie 0.030 to 0.105 in from printed artwork. The unflagged ones lie 0.008 to 0.252 in, and include the nearest of all.
+- **On `IMG_5824`,** flagged holes lie 0.039 to 0.190 in away and unflagged ones 0.004 to 0.324 in.
+- **So this is not entry 78 section 2's residue reaching real holes.**
+
+**What the flagged holes share is where they sit.**
+- **Their size:** they read 0.33 to 0.40 in, where the frame's other holes read about 0.28.
+- **Their position:** they are on the side of the sheet nearer the camera.
+
+**The cause is in the conversion to inches.** Render-and-difference converted every blob's pixel size to inches with one scale for the whole image, the registration's scale at the page centre. On an oblique frame the local scale across the sheet runs from 0.85 to 1.30 times that, so near-side holes read up to 30 percent large.
+
+**Measured at each hole's own scale, the false flags without a calibre fall:**
+
+| Frame | Before | After |
+|---|---|---|
+| `IMG_5819` | 1 | 0 |
+| `IMG_5821` | 3 | 0 |
+| `IMG_5822` | 5 | 2 |
+| `IMG_5824` | 6 | 1 |
+
+**The fix, and it is a correctness fix rather than tuning.** Every size in the detector is converted at the blob's own scale, from the registration's Jacobian. That covers the size gates, the diameter, the calibre area, the veto and the flag.
+- **Its test:** identical holes under a perspective that changes the scale by more than a fifth across the page read within 12 percent of each other, and none is flagged.
+
+**At local scale, with the corpus re-recorded:**
+
+| Frame | False flags without a calibre | With .308 |
+|---|---|---|
+| `IMG_5822` | 2 | 1 |
+| `IMG_5824` | 1 | 1 |
+| Both scans, the friend's photograph, `IMG_5819`, `IMG_5820`, `IMG_5821` | 0 | 0 |
+
+**What it costs on the clean Phase 0 photographs.** Their spurious detections rise from 24 to 35.
+- **Why:** residue on the far side of a sheet now reads at its true, larger size, so fewer slivers fall under the floor's veto.
+- **Why it is left:** those are the blobs entry 83 section 3 says cannot be told from two small holes without a calibre, and it is honest to leave them.
+- **What else moved:** nothing in the synthetic records, whose sheets are square to the camera.
+
+**The ratio of detected diameter to calibre on photographs**, entry 79's 0.986 with frame means 0.92 to 1.07, was measured with the single scale. Part of its spread is therefore this defect. It should be measured again at local scale before it is used for anything finer than telling one hole from two.
+
+### Section 3: left alone, and 5823's boundary recorded
+
+**Left as they are, as entry 83 asks:**
+- the residue blobs a calibre alone could resolve;
+- the interaction between two sizes and merged pairs.
+
+**`IMG_5823` is a measured boundary: the whole pipeline finds none of its 14 holes.**
+
+**Its geometry.** It is the most oblique frame of submission 3a493942.
+
+| Measure | Value |
+|---|---|
+| Bulls 1, 5, 21 and 25 (px per dmm) | 0.695, 0.905, 0.632, 0.809 |
+| Top of the sheet against the bottom (scale) | 1.11 times |
+| Left against right (scale) | 0.78 |
+| Resolution along x against y (at the page centre) | 177 against 202 px per inch |
+| Markers decoded | 36 of 38 |
+| Marker corners kept by the registration | 42 of 144 |
+| Worst bull, flat homography | 0.059 in |
+| Worst bull, surface model | 0.029 in |
+
+**What happens in the detector.** The expected artwork does not land on the print. The difference between them becomes one blob 11.1 in across that covers the sheet, and it is refused as too large, taking every hole with it. The 1 detection left is spurious.
+
+**What a contributor can be told.** A frame whose scale changes by more than a fifth from one side of the sheet to the other, and whose registration keeps under a third of the marker corners, is past what the detector can read. Take it more square, or from further away (entry 77 section 1).
+
+### Section 4: the assignment editor
+
+**The detector work stops here.** What was built is the screen DESIGN.md section 13 describes and entries 69 and 70 found the model already supports.
+
+**`ReviewQueue`, in Core, lists what the marking wants a person to look at**, each with a sentence that names no single cause and the choices that settle it, in this order:
+
+| Kind | When | Choices |
+|---|---|---|
+| **Contested assignment** | the matching gave a shot a bull other than its nearest, its margin is under 0.15 in, or an edit moved it | the bull as matched, its nearest bull, the bull it was detected on, or not a shot |
+| **Possibly two holes** | the detector's oversize flag | one shot, or not a shot |
+| **Two shots on one bull** | a scoring bull holds more than one shot | keep them |
+| **No bull** | a shot has no bull | its nearest bull, not a shot, or leave it |
+| **Refused candidate** | a scoring bull with no shot, where a candidate was refused as just too small | add a shot there, or leave it out |
+
+**The contested sentence is the concept's.** For example: "This hole is 0.706 in from bull 2 and 0.934 in from bull 1. Nearest bull says 2, but bull 2 already holds shot 2 at 0.709 in. One-to-one matching gives it to bull 1."
+
+**How an item is settled.**
+- **Resolved** once a person has chosen the shot's bull, marked it not a shot, or kept it.
+- **"Keep" is remembered** on the marking and in its file as `reviewKept`, so a reopened marking does not ask again, and undo takes it back.
+
+**On the marking screen**, a Review section heads the panel. It shows:
+- **the counter**, "k of n need review";
+- **Discard edits**, which puts back what detection found as one undoable step;
+- **the current item** as a card, with its choices as buttons;
+- **the whole queue** in order, each item marked NOW, NEXT or DONE, and each a button that selects its shot and centres the view on it.
+
+**The keys, taken before any focused button sees them:**
+
+| Key | Does |
+|---|---|
+| **Space** | moves to the next open item |
+| **Enter** | takes the current item's first choice |
+| **A bull's label, then Enter** | puts the selected shot on that bull; S1 is typed as S then 1 |
+| **N** | marks the selected shot not a shot |
+| **Escape** | clears what was typed |
+
+**Settling one item can open another,** and the queue shows it. Putting a contested shot on a bull that already has one makes a "two shots on one bull" item.
+
+**On the friend's scan, the fixture entry 83 names:**
+- **The detection:** after it, all ten scoring shots are on their true bulls by entry 56's truth, where nearest-bull would put two on the wrong one.
+- **The queue:** three items. They are entry 56's two cases, the hole beside bull 2 that is bull 1's and the hole above bull 8 that lies nearer bull 3, plus one sighter.
+- **The cost:** three presses of Enter settle all of them.
+- **The same measurement,** with any first choice that was wrong, costs a click on the shot, the bull's label and Enter.
+
+**The Phase 3 gate is not met, because it cannot yet be measured.**
+- **What it asks for:** DESIGN.md section 21 asks for a full 25-shot target with several misassignments corrected in under two minutes.
+- **What the corpus has:** neither real sheet is a 25-shot target; each has ten scoring shots.
+- **What the gate times:** a person, so it is Alan's to run.
+- **What it would take:** a 25-shot sheet, shot and scanned, opened in this screen, with its misassignments corrected against a clock.
+- **What the same session gives:** the ground-truth pass entry 83 asks for, saved as a marking, which every later detector change can be scored against.
+
+**Tests.**
+- **`ReviewQueueTests`** check the order, the choices, settling items one at a time, adding a refused candidate as a hand-placed shot, and keeping across a save and an undo.
+- **The screen test** settles a contested shot with Enter, undoes it, reassigns by typing a bull, sees the doubled bull that makes, keeps it, and discards the edits.
+
+### Records
+
+**Re-recorded at local scale:**
+- **`detection-counts.json`:** ten clean photographs move by a few detections each, and the punched scans do not move.
+- **`ink-proximity.json`:** every photographed detection's diameter is now read at its own scale.
+- **The local records** are re-recorded as well.
+- **`holes-synthetic.json` and `holes-synthetic-held-out.json`** came back identical and are unchanged, because their sheets are square to the camera.
+
+**Tests:** Core 820 passing, App 45 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3870,3 +4009,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 82 section 3: two sizes need a gap of five pooled deviations, over three.** An even spread of sizes cut in half is 3.3 apart, so three would ask for a calibre on any wide one-calibre sheet.
 - **Entry 82 section 3: no flags at all on two sizes, over tentative flags on the larger group.** Entry 82 asks for one sentence rather than many flags, and a sheet of two calibres would have every larger hole flagged as a merge.
 - **Entry 82 section 6: the detector's flag drawn beside the size check's, over merging the two.** They measure different things, the detector's residual against the size check's dark region, and each says what it measured.
+- **Entry 83 section 2: sizes converted at each blob's own scale, over leaving the detector alone as entry 83 section 4 asked.** Section 2's test found a wrong unit conversion rather than a tuning question. A size read 30 percent wrong on any oblique photograph is a defect, and the fix is a few lines.
+- **Entry 83 section 2: the clean photographs' rise from 24 to 35 accepted, over restoring the single scale for the veto.** The single scale was wrong for real holes and for residue alike, and the residue it hid is the kind section 3 says cannot be resolved without a calibre.
+- **Entry 83 section 4: the review queue computed from the marking, over storing it.** Every edit changes what needs review, and a stored queue would go stale; only a person's "keep it" is stored, because nothing else can know it.
+- **Entry 83 section 4: the editor built into the marking screen, over a separate mode with Accept and analyse.** The statistics are already live on every edit, so an accept step would commit nothing. Discard edits is kept, as one undoable step.
+- **Entry 83 section 4: the review keys taken on the tunnel route, over the window's key handler.** A focused button would otherwise take Space and Enter, and pressing Space would press the last choice again.
