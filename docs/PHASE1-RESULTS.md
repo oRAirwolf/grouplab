@@ -3570,6 +3570,123 @@ Quantiles: minimum, 5th, 10th, 25th, 50th, 75th, 90th and 95th percentiles, maxi
 
 ---
 
+## Entry 82. A graded single-hole size with a physical floor, one sentence for two sizes, and the flag on the screen
+
+`docs/NOTES-FROM-PLANNING.md` entry 82.
+
+### Section 1: why 64 only became 60, checked against the code
+
+**The mechanism is slightly different from entry 82's reading, and the fix is the same.**
+- **Round marks only.** The quarter-point is taken over the round marks: those not elongated enough to ask for a split.
+- **What the clean photographs have.** Every residue blob there has an elongation of at least 1.54, and all but four at least 1.8. So the round marks number fewer than five.
+- **So there was no size, not a noisy one.** The rule fell back to shape alone, and shape alone splits residue.
+
+**The conclusion stands either way.** The rule had nothing to offer exactly where residue is worst: a sheet with no holes, or with more residue than holes.
+
+### Section 2: the floor, and the size graded by what supports it
+
+**`RenderDifferenceHoleDetector.SizeReference`** now says where a single hole's size comes from. The result carries it as `HoleSize`.
+
+| Source | When | Size | Veto | Flags |
+|---|---|---|---|---|
+| **Calibre** | a calibre is named | the calibre times the measured ratio | it | against it |
+| **Sheet** | 12 or more round marks, and no calibre | the quarter-point round mark, clamped to what a bullet can make | it | against it |
+| **SheetTentative** | 5 to 11 round marks | the same quarter-point | the floor | quieter (section 7) |
+| **Bound** | fewer than 5 round marks | the floor, 0.16 in | the floor | none |
+
+- **The floor** is `SmallestHoleInches`, the smallest hole any bullet makes: 0.16 in, a .17 bullet at the scan ratio.
+- **The ceiling** is `LargestHoleInches`, 0.60 in, the detector's own largest hole.
+- **Why the floor flags nothing:** every real hole is larger than the smallest.
+
+**What the floor does on a sheet with no holes.** A blob with less area than 1.5 of the smallest holes is not two holes of any calibre, so the veto and the residue rule work there.
+- **On the clean Phase 0 photographs:** spurious detections fall from 60 to 24.
+- **What is left.** Of the 28 residue blobs at least 2.2 long there, the 10 left are 0.20 to 0.30 in across. That is as large as two joined .17 holes. Without a calibre or real holes on the sheet, they cannot honestly be told from such a pair, and they stay split.
+- **On the corpus:** nothing that registers a real sheet with holes moved. `IMG_5823`, which finds no holes, lost one spurious detection.
+
+### Section 3: one calibre per real sheet, and two sizes asked about rather than flagged
+
+**No real sheet in the corpus carries two calibres.**
+- **Alan's submission** leaves its calibre field blank. His scan's holes form one group, 0.87 to 1.02 of .308.
+- **The friend's sheet** is .308 by entry 56, and its holes range from 0.91 to 0.96.
+- **The owner corpus** has one cartridge per file, by name.
+- **So the synthetic flag counts are the survey's mixed population, not a sheet's.** They remain high, up to 62 marks a case on the held-out seeds. The synthetic sizes form one continuous spread, not two groups.
+
+**Two sizes.** Where a sheet's round marks fall clearly into two groups, no size fits it:
+- **The test:** each group is at least a quarter of the marks; the group medians differ by at least 1.35 in area; the gap is at least five pooled standard deviations.
+- **What happens then:** no mark is flagged, the veto falls back to the floor, and the stage and the screen's summary say, in one sentence, "the marks fall into two sizes, about X and Y in across, so no one hole size fits this sheet: name the calibre to have oversized marks flagged".
+- **Why five deviations.** An even spread of sizes cut in half is about 3.3 deviations apart, so a lower bar would call any wide spread two sizes. Two tight groups sit far above it: about 10 for the composite pairs below, and about 6 for two calibres on a scan.
+
+**Its cost, stated plainly.** Merged pairs are a second size too. On the composite sheets, pairs are half the marks: at 0.10 and 0.15 in apart all 13 on a sheet merge, and at 0.20 in about 5.
+- **Without a calibre** each such sheet now reads as two sizes, flags none of its merged pairs, and asks for the calibre. That is 0 of 93 merged pairs flagged, where entry 81's rule flagged all 93.
+- **With .308** all 93 are flagged, and no single hole is.
+- **Why it rarely matters.** A real sheet reaches this only when a quarter of its marks are merged pairs. The composite sheets were built at half to test the flag, so this is the worst case, not the common one.
+
+### Section 4: false flags by frame
+
+Real single holes flagged, of the true whole marks in each frame:
+
+| Frame | Without a calibre | With .308 |
+|---|---|---|
+| Alan's scan | 0 of 14 | 0 of 14 |
+| The friend's scan | 0 of 13 | 0 of 13 |
+| The friend's photograph | 0 of 13 | 0 of 13 |
+| `IMG_5820` | 0 of 13 | 0 of 13 |
+| `IMG_5819` | 1 of 14 | 0 of 14 |
+| `IMG_5821` | 3 of 14 | 0 of 14 |
+| `IMG_5822` | 5 of 14 | 3 of 14 |
+| `IMG_5824` | 6 of 12 | 3 of 12 |
+| `IMG_5823` | detects no holes | detects no holes |
+
+**On scans, and on the frames a person could reasonably take, the rate is zero or one in fourteen.** The false flags are in the oblique, focus-limited frames of entry 77.
+
+**Two flags are right, and neither is counted above.** Each is a hole joined to residue:
+- Alan's sighter hole and the print note, flagged in his scan with or without a calibre;
+- the hole beside bull 10 in the friend's photograph.
+
+### Section 5
+
+**Recorded:** solidity does not separate the three populations, and the rule is to ask for distributions before proposing a discriminator.
+
+### Section 6: the flag on the marking screen
+
+**It was not there.** The screen showed only its own size check, which needs a calibre and reads printed ink. The detector's flag reached no further than a count in the trace.
+
+**Now it reaches the marking and every place a person reads.**
+- **On the marking:** `DetectedShot` and `MarkedShot` carry it as `DetectedOversize`, the area in single holes and whether it is tentative. Moving the shot clears it with the measurement it described.
+- **In the marking file:** as `oversize`.
+- **On the canvas:** an alert-coloured dashed ring just outside the mark, faint when tentative.
+- **In the panel:** a sentence, in the alert style, or the secondary style when tentative. For example: "Shot 7 covers about 1.9 holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and add the second shot if there is one."
+- **In `grouplab analyze`:** beside the shot.
+
+**Tested.** A screen test loads a flagged and a tentatively flagged detection, finds both on the canvas and in the panel, and finds the flag gone once the shot is moved.
+
+**The synthetic two-per-bull drop, weighed as entry 82 section 6 asks.** It is acceptable because the merges it leaves are flagged and now seen. Two shots on one bull is the case the sheet is designed to prevent, entry 75's `7a` and `7b`, so a percentage point there weighs less than one on single holes.
+
+### Section 7: the floor on the quarter-point graded
+
+**Grading.**
+- **Below 5 round marks:** only the floor, which vetoes and never flags.
+- **From 5 to 11:** the quarter-point flags tentatively, and the veto uses the floor.
+- **From 12:** it is trusted.
+
+**What a tentative flag looks like.** It is drawn faint and worded "may be two holes ... judged from too few marks to be sure. Name the calibre to check it." The summary says the size came from few marks.
+
+**Where it applies here.** No real frame in the corpus falls in the tentative range: each has 13 or 14 round marks, or none. The grade is exercised by `TheSizeOfASingleHoleIsGradedByWhatSupportsIt`.
+
+### Records
+
+**Re-recorded:**
+- `holes-synthetic.json` and `holes-synthetic-held-out.json`, which move only in their oversize counts;
+- `detection-counts.json`, where the clean photographs lose 36 detections and three punched sheets lose one or two oversize flags;
+- `ink-proximity.json`;
+- the local record.
+
+**Held-out recall and strays** are as entry 81 recorded them.
+
+**Tests:** Core 816 passing, App 44 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3748,3 +3865,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 81 section 2: the single hole without a calibre is the sheet's 25th percentile mark, over its median.** On the composite sheets half the marks were merged pairs, and the median moved to a pair's size and flagged none of them.
 - **Entry 81 section 3: the residue fix on size and elongation together, over solidity.** Solidity overlaps across all three populations, real single holes reaching 0.59, while size splits the elongated ones cleanly.
 - **Entry 78 section 2: a small elongated blob kept as one hole below 2.2, over refusing every blob the size vetoes.** Refusing a real hole is a silent loss, and the margin between the most elongated real hole, 1.72, and the split threshold, 1.80, is too thin to refuse on.
+- **Entry 82 section 2: the floor used to veto and never to flag, over clamping the quarter-point alone.** On the clean photographs there were no round marks to clamp, and a floor that flagged would flag every real hole, since each is larger than the smallest a bullet makes.
+- **Entry 82 section 2: the floor at 0.16 in, over 0.17.** 0.17 is the bullet; a .17 hole measures about 0.944 of it on a scan, and the floor must sit below any real hole.
+- **Entry 82 section 3: two sizes need a gap of five pooled deviations, over three.** An even spread of sizes cut in half is 3.3 apart, so three would ask for a calibre on any wide one-calibre sheet.
+- **Entry 82 section 3: no flags at all on two sizes, over tentative flags on the larger group.** Entry 82 asks for one sentence rather than many flags, and a sheet of two calibres would have every larger hole flagged as a merge.
+- **Entry 82 section 6: the detector's flag drawn beside the size check's, over merging the two.** They measure different things, the detector's residual against the size check's dark region, and each says what it measured.

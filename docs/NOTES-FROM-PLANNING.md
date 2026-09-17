@@ -15,6 +15,85 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 82: the quarter-point rule calibrates on noise, which is why 64 only became 60
+
+**Status: actioned 2026-09-17.**
+- **Section 1: checked.** The quarter-point is taken over round marks only, and the clean photographs' residue is all elongated, so there the rule had no size rather than a noisy one. The conclusion is the same.
+- **Section 2:**
+  - The single-hole size is graded: calibre, sheet from 12 round marks, tentative from 5, and otherwise the floor of 0.16 in. It is always clamped to 0.16 to 0.60 in, and the floor vetoes but never flags.
+  - The clean photographs go from 60 spurious detections to 24. The 10 residue blobs left are as large as two joined .17 holes.
+- **Section 3:** no real sheet carries two calibres.
+  - Two clearly separate sizes now flag nothing and ask for the calibre in one sentence.
+  - On the composite sheets, where merged pairs are half the marks, that means none of their pairs is flagged without a calibre.
+- **Section 4:** false flags by frame are 0 on both scans and on the friend's photograph, and 0 to 6 on the mounted frames, the most in the oblique ones.
+- **Section 6: the flag was not on the screen.** It now reaches the marking, the file, the canvas, the panel and `analyze`.
+- **Section 7:** the quarter-point is graded, and its flags are tentative and drawn faint below 12 marks.
+- **Section 5:** recorded.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 82".
+
+Section 1 is a logical flaw rather than a tuning question, and the unshot-sheet result is its proof. Section 2 is a fix available without a calibre. Section 5 retracts my solidity suggestion.
+
+### 1. The size rule assumes most marks are holes, and the case that needs it most is the case where they are not
+
+Without a calibre, the single-hole size is the quarter-point of the sheet's own marks once there are five of them. **That assumes the marks are mostly real holes.**
+
+**The clean Phase 0 photographs are sheets with no holes at all.** Every mark on them is residue. The quarter-point of sixty residue blobs is the size of a residue blob, so the rule adopts noise as its reference and then judges the noise against itself. **The veto cannot fire because the thing it would veto is what set its scale.**
+
+**That is why the residue fix moved 64 spurious detections to 60.** It is not a weak fix, it is a fix that cannot engage on that image, and it will equally fail to engage on any real photograph where residue outnumbers holes. A three-shot group photographed badly, with twenty residue blobs and three holes, has its hole size set by residue.
+
+**A rule that degrades as the problem gets worse is the wrong shape**, and this one is at its weakest exactly where it is needed most.
+
+### 2. The sheet already knows what a bullet hole can be, without anybody typing a calibre
+
+Registration gives the scale in real units and the definition gives the geometry, so **the software knows how many inches a pixel is before it looks at a single mark.**
+
+**Every bullet hole in existence is between roughly 0.17 in and 0.60 in across**, from a .17 centrefire to a .58 muzzleloader. That is an absolute prior, it needs no calibre, it needs no marks, and it holds on a sheet with nothing on it.
+
+**Bound the inferred size by that range**, so the quarter-point rule can refine within it but never adopt a reference outside it. On the clean photographs the residue blobs would then fail the bound outright rather than becoming the standard everything else is judged against.
+
+**This does not replace the quarter-point rule**, which is doing real work on sheets that are mostly holes. It stops it running off the end.
+
+### 3. The mixed-size flood is probably the same mistake entry 80 caught
+
+The flag firing on 19 to 65 marks a case on the mixed-size synthetic holes is alarming, and **those sheets were built from a survey mixing .264, .308 and .338**, which is a model of the corpus rather than of a sheet.
+
+**A real sheet is one rifle and one calibre.** A quarter-point taken across three calibres sits near the smallest, so everything larger reads oversize, and the flood follows. **Check whether any real sheet in the corpus carries more than one calibre before treating that number as a defect.** I expect none does.
+
+**The genuine case is rare and worth handling honestly rather than by flagging half the sheet.** Somebody changes load mid-sheet, or shoots a rimfire sighter row beside centrefire. **When the mark sizes are clearly bimodal, the quarter-point rule is invalid and the software should say so and ask for a calibre**, rather than emitting forty red flags. One sentence beats forty.
+
+### 4. Report the false-flag rate by frame, not pooled
+
+Six real holes falsely flagged with a calibre and thirteen without, out of 99, reads as 6 and 13 percent. **Almost all of them are in the three oblique out-of-focus frames**, which entry 77 measured as optically incapable of being sharp.
+
+**So the pooled rate is a statement about a set that includes three frames we already know are unusable.** Report it per frame. The number that matters to a user is the rate on a frame they could reasonably have taken, and on scans it is zero.
+
+**Same correction as the scan ratio in entry 80 section 3, for the same reason**: the sheet or the frame is the unit, not the hole.
+
+### 5. Solidity does not separate, and I should not have proposed it from medians
+
+Spurious blobs reach 0.89, real single holes fall to 0.59, joined pairs to 0.70. **The ranges overlap completely and my entry 81 section 3 suggestion is dead.**
+
+**I proposed it from two medians, 0.65 against 0.95, and medians cannot show separation.** Two well-separated medians are consistent with total overlap, which is exactly what the distributions show. The right call was made by asking for the distributions before building on it, and the rule that follows is simple: **never propose a discriminator from summary statistics. Ask for the distributions first, or do not raise it.**
+
+Size does the job instead, and the reported figures are clean: among blobs elongated 1.8 or more, spurious ones hold at most 1.08 holes' area and joined pairs at least 1.80. **That is a real gap with nothing in it**, which is what a discriminator looks like.
+
+### 6. The synthetic two-per-bull drop is acceptable, and its weight should be lower than it looks
+
+94.0 to 87.5 percent at 600 DPI, and 96.4 to 90.5 at 300.
+
+**Acceptable, on one condition that is now met**: the merges are flagged. Entry 81 argued a loud failure beats a quiet one, and the new 1.35-hole flag catching all 78 composited pairs is what makes it loud. **Confirm the flag is visible on the marking screen and not only in the analysis output**, because a flag a person does not see is a quiet failure wearing a loud one's clothes.
+
+**And two holes in one bull is a case the sheet is designed to prevent.** It is entry 75's `7a` and `7b` exception. It happens when somebody fires more rounds than there are bulls, which is real but is not the ordinary case, so **a percentage point there is not worth a percentage point on single holes.** Worth saying because that table will be read again later without this context.
+
+### 7. The five-mark floor is too low for a quarter-point
+
+The quarter-point of five marks is the second smallest of five. **That is an extremely noisy estimate of a percentile**, and the rule switches on at exactly that count as though it were reliable.
+
+**Grade it rather than switching it.** Below about a dozen marks the estimate deserves a wide tolerance or a fallback to section 2's absolute bound alone. **Where the rule is running but unreliable, the flag should be quieter, not the same red as on a full sheet.**
+
+---
+
 ## 2026-09-17, entry 81: question 17, and 1.80 goes in everywhere rather than only when a calibre is named
 
 **Status: actioned 2026-09-17.**
