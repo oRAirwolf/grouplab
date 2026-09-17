@@ -383,10 +383,20 @@ public sealed class MainWindow : Window
     /// <summary>The disclosure holding the reference figures, for the headless tests.</summary>
     internal Expander MoreFigures => moreFiguresPanel;
 
-    /// <summary>A shot's number as the image and the list show it, or its id when it is marked as not a shot and has no number.</summary>
-    private string ShotLabel(int id) => MarkingCanvas.ShotNumbers(session.State).TryGetValue(id, out int number)
-        ? number.ToString(CultureInfo.InvariantCulture)
-        : id.ToString(CultureInfo.InvariantCulture);
+    /// <summary>
+    /// A shot's name as the image and the list show it, NOTES-FROM-PLANNING.md entry 75: its bull's number, lettered when the bull holds more
+    /// than one, or the word unassigned. On a plain group with no bulls there is no printed number, and the shot is named by where it is.
+    /// </summary>
+    private string ShotLabel(int id)
+    {
+        var state = session.State;
+        return ShotLabels.For(state).FirstOrDefault(l => l.ShotId == id) is { Text: { } text } ? text : state.Find(id) is { } shot ? WhereOnTarget(state, shot.Image) : "";
+    }
+
+    /// <summary>Where a shot is, on the target in the display unit when there is a scale and in image pixels otherwise.</summary>
+    private string WhereOnTarget(MarkingState state, PointD image) => state.Scale is { } scale && scale.ToTarget(image) is var at
+        ? $"at {units.Number(at.X)}, {units.Length(at.Y)}"
+        : string.Create(CultureInfo.InvariantCulture, $"at {image.X:0}, {image.Y:0} px");
 
     /// <summary>The session, for the headless tests.</summary>
     internal MarkingSession Session => session;
@@ -881,14 +891,18 @@ public sealed class MainWindow : Window
             return;
         }
 
-        var numbers = MarkingCanvas.ShotNumbers(state);
-        foreach (var shot in state.Shots)
+        // NOTES-FROM-PLANNING.md entry 75: rows in the sheet's order, each named by its bull, with no per-detection index.
+        foreach (var label in ShotLabels.For(state))
         {
+            var shot = state.Find(label.ShotId)!;
             int id = shot.Id;
-            string bull = shot.Bull is { } b ? state.Bulls.FirstOrDefault(x => x.Index == b)?.Label ?? b.ToString(CultureInfo.InvariantCulture) : "none";
-            string text = shot.NotAShot
-                ? $"not a shot, bull {bull}"
-                : string.Create(CultureInfo.InvariantCulture, $"{numbers[id]}  bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}");
+            // A named shot is its bull's label; a word, unassigned or not a shot, is followed by where the mark is, because the word alone
+            // does not say which one; a plain group's shot is named by where it is.
+            string name = label.Text is not { } named ? WhereOnTarget(state, shot.Image)
+                : shot.NotAShot || shot.Bull is null ? $"{named}, {WhereOnTarget(state, shot.Image)}"
+                : named;
+
+            string text = string.Create(CultureInfo.InvariantCulture, $"{name}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}");
             var select = new Button
             {
                 Content = new TextBlock
@@ -977,9 +991,8 @@ public sealed class MainWindow : Window
             return;
         }
 
-        string bull = shot.Bull is { } b ? session.State.Bulls.FirstOrDefault(x => x.Index == b)?.Label ?? b.ToString(CultureInfo.InvariantCulture) : "none";
         selection.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-            $"Shot {ShotLabel(id)}: {shot.Provenance.ToString().ToLowerInvariant()}, bull {bull}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}{(shot.NotAShot ? ", not a shot" : "")}")));
+            $"Shot {ShotLabel(id)}: {shot.Provenance.ToString().ToLowerInvariant()}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}")));
         selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
             session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null))));
         selection.Children.Add(Row(

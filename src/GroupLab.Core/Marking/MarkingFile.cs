@@ -35,6 +35,7 @@ public static class MarkingFile
     {
         ArgumentNullException.ThrowIfNull(state);
         var report = GroupAnalysis.Analyse(state);
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         var document = new
         {
             format = Format,
@@ -52,9 +53,11 @@ public static class MarkingFile
             registration = state.RegistrationSummary,
             pointOfAim = state.PointOfAim,
             bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image, b.Scoring }),
+            // NOTES-FROM-PLANNING.md entry 75: the name a person sees, the bull's, beside the id that keeps the file's identity.
             shots = state.Shots.Select(s => new
             {
                 s.Id,
+                label = labels[s.Id].Text,
                 image = s.Image,
                 targetInches = state.Scale?.ToTarget(s.Image),
                 provenance = s.Provenance.ToString(),

@@ -410,12 +410,18 @@ public class MarkingScreenTests
                 Assert.All(row.Children, c => Assert.True(c.Bounds.Right <= width + 0.5, $"{c.GetType().Name} ends at {c.Bounds.Right:0.0} in a {width:0.0} column"));
             }
 
+            // Entry 75: three shots on bull 22 are 22a, 22b and 22c, top to bottom, and no row carries a bare index.
+            Grid RowOf(int id) => window.ShotList.Children.OfType<Grid>().Single(r => r.Children.OfType<Button>().Any(b => b.Tag is int t && t == id));
+            string TextOf(Grid row) => ((TextBlock)row.Children.OfType<Button>().Single(b => b.Tag is int).Content!).Text!;
+            Assert.Equal(["22a", "22b, excluded as CalledFlyer", "22c"], rows.Select(TextOf));
+
             var target = window.Session.State.Shots[1];
-            rows[1].Children.OfType<Button>().Single(b => (b.Content as string) == "Not a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            RowOf(target.Id).Children.OfType<Button>().Single(b => (b.Content as string) == "Not a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.True(window.Session.State.Find(target.Id)!.NotAShot);
+            Assert.StartsWith("not a shot, at ", TextOf(RowOf(target.Id)), StringComparison.Ordinal);
 
-            window.ShotList.Children.OfType<Grid>().ElementAt(1).Children.OfType<Button>().Single(b => (b.Content as string) == "It is a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            RowOf(target.Id).Children.OfType<Button>().Single(b => (b.Content as string) == "It is a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.False(window.Session.State.Find(target.Id)!.NotAShot);
             window.Close();
@@ -571,15 +577,17 @@ public class MarkingScreenTests
 
             var ids = window.Session.State.Shots.Select(s => s.Id).ToList();
             List<Button> Rows() => [.. window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => b.Tag is int)];
-            Assert.Equal(ids, Rows().Select(b => (int)b.Tag!));
-            Assert.Equal("2  bull none", ((TextBlock)Rows()[1].Content!).Text);
+
+            // Entry 75: a plain group has no printed numbers, so its rows are in position order and named by where each shot is.
+            Assert.Equal([ids[1], ids[0], ids[2]], Rows().Select(b => (int)b.Tag!));
+            Assert.All(Rows(), r => Assert.StartsWith("at ", ((TextBlock)r.Content!).Text, StringComparison.Ordinal));
 
             Rows()[1].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            Assert.Equal(ids[1], window.Canvas.Selected);
+            Assert.Equal(ids[0], window.Canvas.Selected);
 
             window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => (b.Content as string) == "Exclude").ElementAt(2).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.Equal(ExclusionReason.CalledFlyer, window.Session.State.Find(ids[2])!.Exclusion);
-            Assert.Equal("3  bull none, excluded as CalledFlyer", ((TextBlock)Rows()[2].Content!).Text);
+            Assert.EndsWith(", excluded as CalledFlyer", ((TextBlock)Rows()[2].Content!).Text, StringComparison.Ordinal);
             window.Close();
         }
         finally

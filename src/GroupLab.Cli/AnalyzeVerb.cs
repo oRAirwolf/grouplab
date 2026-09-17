@@ -73,11 +73,14 @@ public static class AnalyzeVerb
         }
 
         output.WriteLine();
-        output.WriteLine("shot  bull   page x, y (in)      offset from bull x, y (in)");
-        foreach (var s in result.Shots)
+        output.WriteLine("shot        bull   page x, y (in)      offset from bull x, y (in)");
+        // NOTES-FROM-PLANNING.md entry 75: a shot is named by its bull, in the sheet's order, and never by the order detection emitted it.
+        var byId = result.Shots.ToDictionary(s => s.Id);
+        foreach (var label in ShotLabels.For(result.Marking!).Where(l => byId.ContainsKey(l.ShotId)))
         {
+            var s = byId[label.ShotId];
             output.WriteLine(string.Create(CultureInfo.InvariantCulture,
-                $"{s.Id,4}  {s.BullLabel ?? "none",-5}  {s.PageInches.X,7:0.000}, {s.PageInches.Y,7:0.000}   {(s.OffsetInches is { } o ? $"{o.X,+8:+0.000;-0.000}, {o.Y,+8:+0.000;-0.000}" : "no bull")}{(s.Sighter ? "   sighter, not in the group" : "")}"));
+                $"{label.Text ?? "",-10}  {s.BullLabel ?? "none",-5}  {s.PageInches.X,7:0.000}, {s.PageInches.Y,7:0.000}   {(s.OffsetInches is { } o ? $"{o.X,+8:+0.000;-0.000}, {o.Y,+8:+0.000;-0.000}" : "no bull")}{(s.Sighter ? "   sighter, not in the group" : "")}"));
         }
 
         output.WriteLine();

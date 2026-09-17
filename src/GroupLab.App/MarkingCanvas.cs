@@ -155,19 +155,6 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         InvalidateVisual();
     }
 
-    /// <summary>The number each counted shot is drawn and listed with, in marking order. A shot marked as not a shot has none.</summary>
-    public static IReadOnlyDictionary<int, int> ShotNumbers(MarkingState state)
-    {
-        ArgumentNullException.ThrowIfNull(state);
-        var numbers = new Dictionary<int, int>();
-        foreach (var shot in state.Shots.Where(s => !s.NotAShot))
-        {
-            numbers[shot.Id] = numbers.Count + 1;
-        }
-
-        return numbers;
-    }
-
     public void SetImage(Bitmap? image, GrayImage? valueImage)
     {
         bitmap?.Dispose();
@@ -327,7 +314,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             Marks.Cross(context, Marks.Teal, ToControl(aim), 14, 2);
         }
 
-        var numbers = ShotNumbers(state);
+        // NOTES-FROM-PLANNING.md entry 75: a shot carries its bull's number and nothing else, and a doubled bull or a shot with no bull is
+        // drawn in the alert colour so it looks as abnormal as it is. A plain group has no printed numbers, and its marks carry none.
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         foreach (var shot in state.Shots)
         {
             var at = dragging == shot.Id ? dragAt : shot.Image;
@@ -353,7 +342,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             Marks.Dot(context, colour, c, 1);
-            Marks.Label(context, numbers[shot.Id].ToString(System.Globalization.CultureInfo.InvariantCulture) + (shot.Exclusion is null ? "" : " excluded"), colour, c + new Vector(radius + 4, -radius - 8));
+            var label = labels[shot.Id];
+            string text = string.Join(" ", new[] { label.Text, shot.Exclusion is null ? null : "excluded" }.Where(t => t is not null));
+            if (text.Length > 0)
+            {
+                Marks.Label(context, text, label.Abnormal && !selected ? Marks.Alert : colour, c + new Vector(radius + 4, -radius - 8));
+            }
         }
 
         // An impact being placed is "this one", in amber: a cross where the pointer is, and a ring where it will snap when let go (entry 39 section 4).
