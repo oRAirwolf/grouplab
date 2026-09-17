@@ -65,7 +65,7 @@ internal static class IntakeVerb
         return 0;
     }
 
-    /// <summary>Whether the photograph could be measured at all, and what it is: markers decoded at three guesses of their size, its geometry and its lens key.</summary>
+    /// <summary>Whether the photograph could be measured at all, and what it is: the markers <see cref="MarkerTriage"/> decodes, its geometry and its lens key.</summary>
     private static TriageVerdict Triage(string path, IImagingBackend backend)
     {
         var findings = new List<string>();
@@ -80,9 +80,8 @@ internal static class IntakeVerb
             return new TriageVerdict(false, ["the image cannot be decoded: " + ex.Message]);
         }
 
-        int markers = new[] { 20.0, 40.0, 80.0 }
-            .Select(fraction => backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, Math.Max(image.Width, image.Height) / fraction)).Markers.Select(m => m.Id).Distinct().Count())
-            .Max();
+        // NOTES-FROM-PLANNING.md entry 76 section 4: the count reaches the marker sizes of a sheet photographed from where a person stands.
+        int markers = MarkerTriage.Count(image, backend);
         findings.Add(markers >= MarkersForRegistration
             ? string.Create(CultureInfo.InvariantCulture, $"{markers} GroupLab markers decoded, enough to register")
             : string.Create(CultureInfo.InvariantCulture, $"{markers} GroupLab markers decoded, fewer than the {MarkersForRegistration} registration needs, so the automatic path can neither register nor scale it"));
