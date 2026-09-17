@@ -12,6 +12,72 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-18, question 18: assisted hole placement on a target with no definition, which the detector as built cannot do
+
+**Status: open.** Raised by `docs/NOTES-FROM-PLANNING.md` entry 90 section 5, which asks for this one as a design answer rather than a wording fix or a phase.
+
+### 1. The promise, and why it has no phase
+
+`DESIGN.md` section 3, In scope:
+
+> A secondary mode that analyses any target, including store-bought targets and blank paper, using a user-defined scale and **manual or assisted hole placement**
+
+Entry 90 section 5:
+
+> Assisted hole placement on a store-bought target has no definition to render and difference against, so the detector as built cannot do it. **Whether that bullet is achievable at all is a design question**, and it should be answered before it is either scheduled or quietly dropped.
+
+**That is correct about the detector.** `RenderDifferenceHoleDetector` renders the definition through the fitted registration and differences the image against it. With no definition there is no render, no artwork mask, no exclusion zones and no bull-cell position prior. Nothing in it degrades gracefully; it has no input.
+
+**Everything else in the bullet is built.** The scale is set by a reference length or rectangle, marking by hand works on any photograph, and the whole editor, the queue and the statistics run off hand-marked shots.
+
+### 2. What is already built and what it means for the word "assisted"
+
+**Two of the three things "assisted" could mean already exist, and they exist without a definition.**
+
+| What | Built | Needs a definition |
+|---|---|---|
+| **A tap snapped to the hole under it.** `Snapping.ToHole` takes the artwork as an optional argument. With no artwork it snaps to the dark centroid within the radius | **yes** | no |
+| **A snap radius from the calibre**, so the snap is the size of a hole rather than an arbitrary distance | **yes** | no |
+| **Finding holes unprompted**, with no tap to start from | yes, `RenderDifferenceHoleDetector` | **yes, absolutely** |
+
+So the question is not whether assistance is possible. **It is whether "assisted placement" means the second column or the third**, and the document does not say.
+
+### 3. Three cases, and they are not equally hard
+
+**Blank paper is not the hard case and it may be nearly free.** A sheet with nothing printed on it has a predictable appearance: paper. Render-and-difference degenerates to finding dark blobs on a light field, which is what the difference stage does once the render is a constant. The size filters work, because the user has given a scale; the shape and solidity filters work unchanged. What is lost is the artwork mask, the exclusion zones and the bull-cell prior, and on blank paper there is nothing for them to do.
+
+**A store-bought printed target is the hard case, and it is the one the bullet names first.** Rings, numbers, a logo and a scoring legend are dark, connected and shaped like nothing in particular. They are exactly what the artwork mask exists to remove, and there is no mask. The clean-photograph residue figures give the scale of the problem: on sheets where the artwork *is* modelled, 35 spurious detections survive on the clean frames. Unmodelled artwork would not add a few; each ring edge is a candidate the pipeline has no reason to refuse.
+
+**A definition the user creates for a store-bought target is the third case, and it loops straight back into the deferred designer.** If the user can trace the rings of a bought target once, the sheet has a definition, the full detector applies, and this bullet becomes a use of the visual designer rather than a separate mode. That is the only route that gets the full detector onto bought targets, and it cannot be scheduled while the designer is deferred.
+
+### 4. The options, with their real costs
+
+| | Option | Cost | What the user gets |
+|---|---|---|---|
+| **A** | **Define "assisted" as the snap that exists**, and say so in section 3: a tap lands on the hole under it, at a radius set by the calibre. No unprompted detection without a definition | **none, it is built.** One sentence in section 3 and one feature line with a state | Every hole still needs a tap. On a 25-shot sheet that is 25 taps, which is the current secondary mode |
+| **B** | **Definition-free detection on blank paper only.** The difference stage against a constant paper model, the existing size, shape and solidity filters, and every candidate into the review queue | **moderate.** A second entry point into the pipeline and a scale-only registration path. Measurable on donated material only if anybody shoots blank paper, and nobody in the corpus has | Unprompted detection where the sheet has no artwork, which is a real workflow: plain paper at a known scale is what people use for a quick ladder |
+| **C** | **Definition-free detection on printed bought targets**, by learning the artwork from the image: fitting concentric rings, or exploiting the symmetry a bought target has | **high, and it is research.** No corpus material at all, and the failure mode is false positives on artwork, which is the one thing the Phase 1 gate forbids outright (G2: zero false positives from target artwork) | The bullet as literally written |
+| **D** | **Drop "assisted" from the bullet** and promise manual placement in that mode | **none** | Honest, and it removes a capability the design has promised since revision 1 |
+
+### 5. What I would choose, and why
+
+**A now, B named in Phase 4 or Phase 5, C refused until somebody asks for it, and never D.**
+
+- **A is already true and unsaid**, which is the worst state for a promise to be in. The snap is assistance, it works with no definition, and one sentence makes the bullet accurate today.
+- **B is worth having and is small**, but it should be scheduled against a real photograph of a real sheet of paper with real holes in it, and no such image exists in the corpus. Naming it in a phase and shooting one sheet of plain paper at the next range session costs almost nothing and turns it into an ordinary measured feature.
+- **C would put unmodelled artwork into the detector**, and the Phase 1 gate's G2 exists precisely to prevent that. It is also the case the user can solve for themselves under option three of section 3, by tracing the target once in the designer, which is a better answer than a ring-fitting heuristic.
+- **D is a last resort** because nothing about the promise turned out to be wrong. The word was simply never defined.
+
+### 6. What the answer needs to settle
+
+1. **Which meaning of "assisted" section 3 intends**, so the bullet can be made accurate rather than hopeful.
+2. **Whether blank-paper detection is worth a phase**, and if so which one. It is the only one of the three that is both useful and cheap.
+3. **Whether a user-traced definition for a bought target is the intended route to the full detector on bought targets.** If it is, the bullet and the deferred designer are one item and should say so, and the designer's specification should carry it.
+
+Until the answer comes back, the bullet is recorded as deferred in `DESIGN.md` section 3 and in the README's Planned section, both pointing at this question.
+
+---
+
 ## 2026-09-17, question 17: the real holes veto the shipped split threshold, and only a higher one survives
 
 **Status: answered 2026-09-17**, by NOTES-FROM-PLANNING.md entry 81. 1.80 goes in everywhere, not only with a calibre, and the gap it rests on is measured with pairs made from real holes.

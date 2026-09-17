@@ -129,10 +129,12 @@ public partial class ReadmeTests
             Assert.True(row.Groups["gate"].Value.Trim().Length > 20, $"phase {row.Groups["id"].Value} has no gate beside its state");
         }
 
-        // Every phase has a feature list under "What each phase holds", and every feature carries a state.
-        var headings = planned.Select(l => FeatureHeading().Match(l)).Where(m => m.Success).Select(m => m.Groups["id"].Value).ToList();
+        // Every phase has a feature list under "What each phase holds", and every feature carries a state. The deferrals below that
+        // subsection are not features and are checked by EveryPromiseInScopeNamesAPhaseThatExistsOrSaysItIsDeferred instead.
+        var holds = Between(planned, "### What each phase holds", "### Deferred");
+        var headings = holds.Select(l => FeatureHeading().Match(l)).Where(m => m.Success).Select(m => m.Groups["id"].Value).ToList();
         Assert.Equal(inDesign.Keys.Order(), headings.Order());
-        var features = planned.Select(l => Feature().Match(l)).Where(m => m.Success).ToList();
+        var features = holds.Select(l => Feature().Match(l)).Where(m => m.Success).ToList();
         Assert.True(features.Count >= inDesign.Count, $"only {features.Count} features carry a state");
         foreach (var feature in features)
         {
@@ -146,6 +148,59 @@ public partial class ReadmeTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 90: the test above ties the README's phases to DESIGN.md section 21, and nothing tied section 21 to
+    /// section 3. So a promise could sit in scope for the life of the project with no phase building it, and the status table would
+    /// faithfully report the phases that exist while saying nothing about the ones that should. Ten promises had gone that way.
+    /// <para>
+    /// Every In scope bullet must therefore name at least one phase of section 21, or say it is deferred and cite the document that
+    /// records the reason. Either is acceptable and they read differently, which is the point: a reader can tell a deliberate deferral
+    /// from a forgotten promise, and so can this test. A phase named in scope must also exist, so renaming a phase cannot orphan a bullet.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void EveryPromiseInScopeNamesAPhaseThatExistsOrSaysItIsDeferred()
+    {
+        var design = File.ReadAllLines(Repo.PathTo("DESIGN.md"));
+        int from = Array.FindIndex(design, l => l.StartsWith("### In scope", StringComparison.Ordinal));
+        int to = Array.FindIndex(design, l => l.StartsWith("### Out of scope", StringComparison.Ordinal));
+        Assert.True(from >= 0 && to > from, "DESIGN.md section 3 no longer lists In scope before Out of scope, so this test cannot read the promises.");
+
+        var phases = design.Select(l => DesignPhase().Match(l)).Where(m => m.Success)
+            .Select(m => m.Groups["id"].Value).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        Assert.NotEmpty(phases);
+
+        var bullets = design[from..to].Where(l => l.StartsWith("- ", StringComparison.Ordinal)).ToList();
+        Assert.True(bullets.Count >= 8, $"DESIGN.md section 3 In scope lists only {bullets.Count} promises; it has carried ten or more since revision 1, so the list is probably not being read correctly.");
+
+        int deferred = 0;
+        foreach (string bullet in bullets)
+        {
+            var named = NamedPhase().Matches(bullet).Select(m => m.Groups["id"].Value).ToList();
+            bool defers = bullet.Contains("deferred", StringComparison.OrdinalIgnoreCase);
+            Assert.True(
+                named.Count > 0 || defers,
+                $"DESIGN.md section 3 promises something that no phase builds and no deferral covers. Name the phase of section 21 that builds it, or mark it deferred and cite the reason: {bullet}");
+
+            foreach (string id in named)
+            {
+                Assert.True(phases.Contains(id), $"DESIGN.md section 3 sends a promise to Phase {id}, which section 21 does not have. Correct the phase, or add it: {bullet}");
+            }
+
+            if (defers)
+            {
+                deferred++;
+                Assert.True(
+                    bullet.Contains("docs/NOTES-FROM-PLANNING.md", StringComparison.Ordinal) || bullet.Contains("docs/QUESTIONS-FOR-PLANNING.md", StringComparison.Ordinal),
+                    $"a deferral must say where its reason is recorded, in the notes or as an open question, or it is a quiet drop: {bullet}");
+            }
+        }
+
+        // The README carries the same deferrals, so the page cannot drop what the design still promises.
+        int listed = Section("## Planned", "## What GroupLab is not").Count(l => l.StartsWith("- **Deferred", StringComparison.Ordinal));
+        Assert.True(listed >= deferred, $"DESIGN.md section 3 defers {deferred} promises and the README's Planned section lists {listed}. Add the missing one under \"Deferred, and why\", beginning the line with \"- **Deferred\".");
+    }
+
     /// <summary>The lines of one README section, from its heading to the next one named.</summary>
     private static string[] Section(string heading, string next)
     {
@@ -154,6 +209,18 @@ public partial class ReadmeTests
         Assert.True(from >= 0 && to > from, $"README has no {heading} section before {next}");
         return [.. Lines[from..to]];
     }
+
+    /// <summary>The lines between two headings inside a set of lines already taken from one section.</summary>
+    private static string[] Between(string[] lines, string heading, string next)
+    {
+        int from = Array.FindIndex(lines, l => l.StartsWith(heading, StringComparison.Ordinal));
+        int to = Array.FindIndex(lines, l => l.StartsWith(next, StringComparison.Ordinal));
+        Assert.True(from >= 0 && to > from, $"the README's Planned section has no {heading} before {next}");
+        return [.. lines[from..to]];
+    }
+
+    [GeneratedRegex(@"\bPhase (?<id>[0-9]+a?)\b")]
+    private static partial Regex NamedPhase();
 
     [GeneratedRegex(@"^\*\*Phase (?<id>[0-9]+a?): (?<name>[^.*]+)\.\*\*")]
     private static partial Regex DesignPhase();

@@ -78,10 +78,20 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// <see cref="InkFraction"/> is how much of the expected printed artwork lies inside the detection's own footprint, the mean ink coverage
 /// over its hull: the quantity NOTES-FROM-PLANNING.md entry 86 section 3 asks for, which tells a hole centred on a ring from one beside it
 /// where the distance to the nearest edge cannot.
+/// <para>
+/// <see cref="AreaInches"/> and <see cref="Aspect"/> are the shape, NOTES-FROM-PLANNING.md entry 88 section 1: a mark larger than one hole
+/// has three possible causes and the flag names two of them. The third is a bullet that arrived yawed, which makes one oval hole rather than
+/// two round ones, and the three separate by shape. The area is the hull's, in square inches at the blob's own scale, and the aspect is its
+/// bounding box's long side over its short side. <see cref="Elongation"/> is the same quantity from the residual-weighted second moments,
+/// which is orientation-free where the box is not, and <see cref="Solidity"/> is what a waist between two lobes shows in.
+/// </para>
+/// <para>
+/// A split half carries its parent blob's geometry, as it already does for the diameter, because a half has no separate hull.
+/// </para>
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
-    double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0);
+    double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -241,7 +251,7 @@ public static class RenderDifferenceHoleDetector
             double ppi = LocalPixelsPerInch(registration, new PointD(hx, hy));
             double diameterIn = diameter / ppi, areaIn = area / (ppi * ppi);
             bool tooSmall = diameterIn < options.MinimumDiameterInches;
-            double aspect = Math.Max(blob.Width, blob.Height) / Math.Max(1.0, Math.Min(blob.Width, blob.Height));
+            double aspect = BoxAspect(blob);
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = tooSmall ? default : Moments(residual, expected, width, blob);
@@ -277,7 +287,8 @@ public static class RenderDifferenceHoleDetector
             }
 
             // A blob the size says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
-            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, InkFraction: moments.Ink));
+            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
+                AreaInches: areaIn, Aspect: aspect));
         }
 
         // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78, 81 and 82). An elongated blob
@@ -298,13 +309,15 @@ public static class RenderDifferenceHoleDetector
 
             if (vetoed)
             {
-                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true, InkFraction: moments.Ink));
+                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true, InkFraction: moments.Ink,
+                    AreaInches: areaIn, Aspect: BoxAspect(blob)));
                 continue;
             }
 
             foreach (var (mx, my) in Split(residual, width, blob, moments))
             {
-                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink));
+                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
+                    AreaInches: areaIn, Aspect: BoxAspect(blob)));
             }
         }
 
@@ -328,6 +341,13 @@ public static class RenderDifferenceHoleDetector
     }
 
     /// <summary>Image pixels per page inch at an image point, from the registration's local area scale.</summary>
+    /// <summary>The long side of a blob's bounding box over its short side: the shape number of NOTES-FROM-PLANNING.md entry 88 section 1.</summary>
+    internal static double BoxAspect(ImageBlob blob)
+    {
+        ArgumentNullException.ThrowIfNull(blob);
+        return Math.Max(blob.Width, blob.Height) / Math.Max(1.0, Math.Min(blob.Width, blob.Height));
+    }
+
     internal static double LocalPixelsPerInch(IPageMapping registration, PointD image)
     {
         var (xx, xy, yx, yy) = registration.Jacobian(image);

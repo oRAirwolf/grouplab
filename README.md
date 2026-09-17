@@ -179,13 +179,16 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 2. Core and statistics.**
 - **Built, not proven.** The statistics engine, checked key for key against `shotGroups`.
+- **Built, not proven.** Significance testing: rank and dispersion tests between two groups and among several, MANOVA on the shot coordinates, and the dispersion ratio with its interval.
+- **Built, not proven.** Hit probability inside a radius at the distance shot, by three estimators, with the CEP table behind it.
 - **Done.** Every figure with the interval it actually has, and the reference a figure needs to be read against.
 - **Done.** Composite groups, pooled groups and load comparison in the engine.
+- **Done.** Calibre-aware edge-to-edge extreme spread, with the reason printed in place of the figure when no calibre is set.
 
 **Phase 3. Editor.**
 - **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, and not a shot.
-- **Done.** Marking by hand on any photograph, with a reference length or rectangle for scale.
+- **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Not started.** The concept screen's appearance: the tool strip, the breadcrumb, the left rail and the paper-coloured sheet.
 
@@ -193,13 +196,21 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
+- **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
 - **In progress.** The analysis screen shown above.
 - **Not started.** A target library, session records and reporting.
+- **Not started.** Records for rifles, barrels and loads, beside the session records.
+- **Not started.** The stage timeline that shows the analysis doing its work: scrubbable, artefacts appearing as they land, and a rejection clicked to highlight it on the image. Every stage already emits the record it needs; the screen that shows it does not exist.
+- **Not started.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system.
+- **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
+- **Not started.** Adjust-to-zero turret corrections, in whichever angular unit is set.
+- **Not started.** A volunteer print pack: the sheets and the instructions a donor needs to shoot and photograph one.
 
 **Phase 5. Chronograph, solver, and comparison.**
 - **Not started.** Garmin Xero import and reconciliation against marked shots.
 - **Not started.** A ballistic solver, validated against an independent implementation.
 - **Not started.** Load against load, velocity regression, and predicted against measured vertical.
+- **Not started.** Hit probability at a distance other than the one shot, and distance normalisation, both propagated through the solver rather than by scaling a group linearly.
 
 **Phase 6. Android.**
 - **Not started.** The camera capture path, with lens distortion fitted on the device.
@@ -210,7 +221,14 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 **Phase 8. iOS.**
 - **Not started.** A CI build, signed. It waits on the licence permission under Licence, for distribution rather than for development.
 
-A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree.
+### Deferred, and why
+
+**Two promises in `DESIGN.md` section 3 carry no phase on purpose.** A deferral means the promise still stands, nobody is working on it, and the reason is written down. It is not a quiet drop, and it is checked: a scope bullet with neither a phase nor a deferral fails a test.
+
+- **Deferred: the parametric target editor and the full visual designer.** The format is ready for them, and a fully custom sheet of forty arbitrarily placed bulls fits inside a QR payload with room to spare. What is missing is a specification of the authoring screen, and one is being written with the shooter who asked for it rather than guessed at from a picture.
+- **Deferred: assisted hole placement on a target with no definition.** The detector renders the target's definition and differences the image against it. A store-bought target or a sheet of blank paper has no definition, so the method as built has nothing to difference, and whether anything weaker is worth having is an open question in `docs/QUESTIONS-FOR-PLANNING.md` rather than a phase.
+
+A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
 
 ### Platforms
 
@@ -229,8 +247,6 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
 **Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and needs the GPL section 7 additional permission described under Licence, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
-
-Smaller things already specified and waiting: a three-axis unit setting (inches, centimetres and millimetres; MOA, mil and SMOA; yards and metres), adjust-to-zero turret corrections, calibre-aware edge-to-edge spread, and a volunteer print pack.
 
 ## What GroupLab is not
 

@@ -15,6 +15,242 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 90: ten promises with no phase behind them, and three tiers of commitment of which only one is tracked
+
+**Status: actioned 2026-09-18.**
+- **Sections 1 and 2: all ten given a phase or a deferral, and which is which is recorded.** Eight scheduled: hit probability in Phase 2 with its at-distance half in Phase 5, distance normalisation in Phase 5, records for rifles, barrels and loads in Phase 4, the secondary mode in Phase 3 where it already works, and the support link, the four themes and the stage timeline in Phase 4. **Two deferred with their reasons:** the parametric editor and the visual designer, which wait on a specification, and assisted hole placement, which is section 5's question.
+- **Section 3: both gaps closed.** Significance testing is back on the page, and so is hit probability, which was missing from both plans while being implemented: the engine carries rank and dispersion tests, MANOVA and the dispersion ratio, and three hit-probability estimators. The trailing orphan line is deleted and its four items are features with states.
+- **Section 4: the test now reads the scope.** Every In scope bullet must name a phase that exists in section 21, or say it is deferred and cite where the reason is written. Verified by breaking it both ways.
+- **Section 5: question 18.** It also found that two of the three things "assisted" could mean are already built and need no definition: a tap snaps to the hole under it, at a radius set by the calibre. Only unprompted detection needs a definition, and that is the part a store-bought target cannot give.
+
+Alan asked whether anything else is missing. **Ten things are**, and section 4 is why they were able to go missing.
+
+I read `DESIGN.md` section 3 bullet by bullet against section 21 and against the README's Planned section, and checked section 19's interface commitments the same way.
+
+### 1. In scope, and in no phase
+
+| Promise in section 3 | In section 21 | In the README's Planned section |
+|---|---|---|
+| **A parametric target editor** | no | no |
+| **A full visual target designer** | no | no |
+| **Hit probability** | **no** | **no** |
+| **Distance normalisation** | **no** | **no** |
+| **Records for rifles, barrels and loads** | sessions only | **sessions only** |
+| **The secondary mode for any target**, including store-bought and blank paper | no | no |
+| **Assisted hole placement** in that mode | no | no |
+| **An unobtrusive support link** | no | **no** |
+
+**Hit probability is named twice in scope**, once as a statistic and once as a thing the ballistic solver exists to serve, and it appears in no phase and nowhere in the README. **Distance normalisation is the same.** Both are reasons the solver is being ported at all, so Phase 5 may intend them without saying so, and that needs confirming rather than assuming.
+
+**The records bullet names four things and the plan carries one.** Rifles, barrels and loads appear nowhere in the Planned section. A load record in particular is what the whole load-development premise rests on, and the word "load" appears there only inside sheet names.
+
+### 2. Promised in section 19, and in no phase
+
+| | In the Planned section |
+|---|---|
+| **Four themes: dark, light, high contrast, follow system** | no |
+| **The analysis showing its work**: a stage timeline the user can scrub, artefacts appearing as they land, clicking a rejection to highlight it on the image | **no** |
+
+**The second of those is one of the most distinctive things in the whole design.** The machinery under it exists, because every stage already emits a structured record and the console form of it gave the Phase 0 and Phase 1 spikes their output. **The screen that makes it visible is in no phase at all**, which is how a headline feature becomes an internal diagnostic by default.
+
+### 3. Things dropped between `DESIGN.md` and the README
+
+**Significance testing appears in section 21 and not in the README's Planned section.** That is a different kind of miss from the ones above: the plan has it and the page lost it.
+
+**The README's Planned section ends with a line of orphans:** "a three-axis unit setting, adjust-to-zero turret corrections, calibre-aware edge-to-edge spread, and a volunteer print pack". **Four named features with no phase and no state**, sitting below the table that exists to give everything a state.
+
+### 4. Why all of this was able to happen, which matters more than the list
+
+**There are three tiers of commitment in this repository and only the middle one is tracked.**
+
+| Tier | What it is | Tracked by |
+|---|---|---|
+| `DESIGN.md` section 3 | what the project promises to do | **nothing** |
+| `DESIGN.md` section 21 | the phases | entry 87's test, against the README |
+| The README's trailing line | acknowledged and parked | **nothing** |
+
+**Entry 87's test ties phase names and states between two documents. It does not check that the phases cover the scope, and it does not check the features inside a phase.** So a promise can sit in scope for the life of the project, and a feature can be dropped from a phase's list, and the test stays green while the page looks complete.
+
+**Three changes, in order of value:**
+
+1. **Every section 3 bullet names at least one phase, or carries an explicit deferral with its reason.** A promise with neither is a bug in the plan.
+2. **Extend entry 87's test upward**, so a scope bullet with no phase fails the same way a missing phase does. The check that catches this should not be a person reading two documents.
+3. **Delete the trailing orphan line or give its four items states.** As it stands it is a second, untracked planning system sitting under the tracked one.
+
+### 5. What I am not claiming
+
+**Some of these may be deliberate.** Hit probability and distance normalisation might be understood as inside Phase 5's solver work, and the secondary mode might be understood as inside Phase 3's marking by hand.
+
+**That is exactly the point.** If they are covered, the phase should say so in words, because a reader cannot tell the difference between a deliberate omission and a forgotten promise, and neither can a test.
+
+**One of them needs a real answer rather than a wording fix.** Assisted hole placement on a store-bought target has no definition to render and difference against, so the detector as built cannot do it. **Whether that bullet is achievable at all is a design question**, and it should be answered before it is either scheduled or quietly dropped.
+
+---
+
+## 2026-09-18, entry 89: the target designer is in scope and in no phase, and the case for 30 bulls is about subgroups rather than precision
+
+**Status: actioned 2026-09-18.**
+- **Section 1: the hole is confirmed and the designer is deferred rather than scheduled**, on Alan's instruction that a specification is coming from Jeff first. `DESIGN.md` section 3 and the README both carry the deferral with its reason, which is a state the status table can see.
+- **Section 2: swept, and the designer was not the only one.** Ten promises had no phase. Eight now name one and two are deferred, listed in `docs/PHASE1-RESULTS.md`. Entry 87's test is extended upward: a scope bullet with no phase and no deferral now fails.
+- **Section 3: recorded.** The case for 30 is what the number divides into rather than the interval it buys.
+- **Section 4: checked, and the answer is no at every level.** `dataBlock` has one field set for the sheet, `instance` is a flat map excluded from the definition, and a bull carries only `scoring` as a partition. Labels cannot serve, being explicitly non-unique. **The analysis half already exists**, since the comparison tests all take a group label per shot, so six loads on one sheet could be compared today and nothing can tell them which shot is which. Three routes with their costs are in the results, and the cheapest by far is a session-level mapping that needs no format change and works on the existing 30-bull sheets.
+- **Section 5: for Alan and Jeff.** The format question section 4 raises is what their answers decide.
+
+Section 1 is a hole in the plan that the new status table cannot see. Section 3 is a product requirement hiding behind a sheet size.
+
+### 1. `DESIGN.md` section 3 already promises a designer, and no phase builds it
+
+Section 3, In scope, first bullet:
+
+> Generating printable targets with embedded registration markers, **in a built-in library, through a parametric editor, and through a full visual designer**
+
+**A parametric editor and a full visual designer are both in scope, and neither appears anywhere in section 21's phases or in the README's feature list.** Phase 4 carries "a target library", which is browsing what exists, not authoring something new.
+
+**The format is already ready for it.** Section 9 [r3] measured a fully custom target with forty arbitrarily placed bulls at roughly 215 bytes, inside a QR payload with room to spare. **The thing that would carry a user's own design is built and tested. Nothing plans the screen that makes one.**
+
+### 2. The status table is honest and its foundation is not, and that is a gap in the guard
+
+Entry 87's test ties the README to section 21. **Nothing ties section 21 to section 3.** So a promise made in scope can sit there for the life of the project without ever becoming a phase, and the status table will faithfully report the phases that exist while saying nothing about the ones that should.
+
+**Sweep section 3 against section 21 and list every in-scope item with no phase that builds it.** The designer is one. **I would not assume it is the only one**, and the sweep costs one pass through two sections.
+
+**Then extend entry 87's test one step**: every In scope bullet must name at least one phase, or be explicitly marked as covered elsewhere. That closes the loop at the top rather than only at the bottom.
+
+### 3. Thirty bulls already exist, and the statistical case for them is not the obvious one
+
+**The library already carries `GL-CF30-LTR` at 30 bulls, `GL-LR30-TAB` at 30, and `GL-RF36-LTR` at 36.** Whatever Jeff wants to shoot, a sheet for it is already printable.
+
+**The precision argument is weak.** The 95 percent interval on sigma, as a multiple of the estimate:
+
+| Shots | Interval | Width | Against 25 |
+|---|---|---|---|
+| 25 | 0.834 to 1.249 | 0.415 | 1.000 |
+| **30** | 0.847 to 1.222 | **0.375** | **0.904** |
+| 36 | 0.858 to 1.198 | 0.340 | 0.818 |
+| 50 | 0.877 to 1.163 | 0.285 | 0.687 |
+
+**Going from 25 shots to 30 buys a 10 percent narrower interval.** Real, and not worth redesigning a sheet for. Getting the interval down to a third of sigma takes 46 shots.
+
+**The strong argument is what the number divides into:**
+
+| Sheet | Subgroup splits available |
+|---|---|
+| **25** | **5 x 5 only** |
+| **30** | 2 x 15, 3 x 10, **5 x 6, 6 x 5**, 10 x 3, 15 x 2 |
+| 36 | 2 x 18, 3 x 12, 4 x 9, **6 x 6**, 9 x 4, 12 x 3, 18 x 2 |
+
+**Six charge weights at five shots each, or three groups of ten compared against one another, fit on 30 and cannot fit on 25.** That is almost certainly the analysis Jeff means, and it is a structural property of the number rather than a statistical one.
+
+### 4. The requirement that implies, which is not a bigger sheet
+
+**A 30-bull sheet on its own changes nothing.** If the software treats all 30 as one composite group, six charge weights at five shots each is still reported as a single group of 30 and the comparison Jeff wants cannot be made.
+
+**What is actually needed is for a sheet to know which bulls belong to which subgroup**, so that one sheet can carry six loads and the analysis can compare them. Some sheets already carry a nine-field load block, so there is a foothold, and whether the load block ties fields to specific bulls is worth checking rather than assuming.
+
+**So the request is not 30 bulls. It is subgroups within a sheet**, and that is a format question, an analysis question and a designer question at once, which is a further reason section 1's gap matters.
+
+### 5. What to ask Jeff, and it is not "why 30"
+
+**Ask for the analysis by name and for what it needs the software to know.** Three questions:
+
+1. **Which analysis**, specifically, does 30 allow that 25 does not.
+2. **How are the 30 divided** when he shoots them: six loads of five, three of ten, or something else.
+3. **What does the result compare**: each subgroup against each other, each against a reference, or a trend across an ordered ladder.
+
+**Those three answers turn a sheet preference into a specification.** "Thirty is better" cannot be built from; "six charge weights of five shots each, compared pairwise for a significant difference in dispersion" can, and it also says what the designer in section 1 has to let somebody express.
+
+---
+
+## 2026-09-18, entry 88: the one unexplained flag may be a yawed bullet, and my attempt to measure it was not trustworthy
+
+**Status: actioned 2026-09-18.**
+- **Section 1: measured, and the answer is a third cause that is neither of the two proposed.** Every detection now carries its aspect, elongation, solidity and hull area. S1b reads elongation 1.60 with solidity 0.59, the least convex mark on the sheet. A yawed bullet makes an oval and an oval is convex, so yaw predicts a high solidity; and a composited pair of real holes the size of S1b reads an elongation over 2. **What the shape says is one hole with a ragged rim, counted by its convex hull:** S1b's hull holds 2.10 single holes' area and its ink holds 1.23, an equivalent diameter of 0.329 in. Four of the five oversize flags on real material are the same shape. The candidate fix, flagging on ink area or requiring a solidity, is recorded with its numbers and not applied, per entry 83 section 3.
+- **Section 2: accepted, and the measurement is in the code as you ask.** The figures from the guessed crops are withdrawn. Nothing was inferred from them.
+- **Section 3: entry 84 done in this commit**, both items.
+
+Small. Section 1 is a candidate cause for the only detector flag left unexplained on the corpus's best sheet, with a one-line test. Section 2 is a measurement of mine that should not be believed.
+
+### 1. S1b is a single hole covering 2.18 holes' area with no ink in it, and nothing has named a third cause
+
+Claude Code's own correction leaves this open: **S1b encloses no printed artwork at all, measures 0.429 in, and is confirmed by the shooter as one shot.** So neither of the two causes the flag names applies. It is not two holes and it is not a hole joined to ink.
+
+**There is a third cause and this project has never written it down: a bullet that arrives yawed rather than point-first makes an oval hole considerably larger than its calibre.** A 220 grain subsonic 300 Blackout at 25 yards is exactly the load where that happens, because a heavy subsonic can be marginally stabilised at short range, and a sighter fired low is exactly where somebody finds out.
+
+**The test costs one line and belongs where the footprints already are.** `ink-proximity.json` already carries per-detection geometry. **Add each detection's aspect ratio and its area beside its diameter**, and the three causes separate by shape without any new machinery:
+
+| | Shape |
+|---|---|
+| Clean hole | round, aspect near 1 |
+| **Yawed or angled hit** | **oval, aspect well above 1, single lobe** |
+| Two holes read as one | two lobes with a waist between them |
+
+**If S1b is a clean oval, the flag is behaving correctly and only its wording is wrong.** The message currently offers two causes, neither of which fits, which is the same failure entry 73 section 2 corrected once already: naming causes that exclude the real one.
+
+**And it would be a finding about shooting rather than about software.** A target that can say "this hole is oval, the bullet was not flying straight" is telling a handloader something they want to know and cannot easily see by eye.
+
+### 2. I tried to measure it from the scan and the numbers were wrong
+
+I cropped the scan at guessed page coordinates, thresholded for anything darker than paper, and took the largest connected region. **On the scoring bulls that region is the printed ring, not the hole**, which is why one of my rows reported a major axis of 1.2 inches. On S1b I caught a fragment and reported an equivalent diameter of 0.129 in against the detector's 0.429.
+
+**None of those numbers mean what the row said they meant**, and I am recording that rather than quietly dropping it, because every figure I quoted this week that turned out to be wrong had the same shape: a measurement whose construction I had not checked.
+
+**I also could not reliably tell which crop was which**, because I was locating marks by guessing page coordinates while the detector knows exactly where each one is. **That is the reason section 1's test belongs in the code and not in an analysis of mine.**
+
+### 3. Entry 84 is still in the inbox and still worth doing
+
+It was committed by accident, un-tracked, and left in place. Its two items stand:
+
+- **A synthetic 25-shot sheet with injected errors**, timed as a rehearsal of the Phase 3 gate and explicitly not recorded as passing it, so that when a real 25-shot sheet exists the session measures the editor rather than finding something obvious.
+- **Re-measuring the photograph ratio**, because entry 79's 0.986 was taken before the single-scale defect was fixed.
+
+---
+
+## 2026-09-18, entry 84: the editor behaves like the concept and does not look like it, and the gate needs 25 shots nobody has fired
+
+**Status: actioned 2026-09-18.**
+- **Section 1: recorded, and nothing styled.** The appearance waits on an hour of Alan's use, and the concept screen's look is a Phase 3 feature with the state "not started" rather than an unwritten intention.
+- **Section 2: rehearsed and explicitly not gated.** A synthetic 25-bull sheet with the five injected errors: 15 queue items, settled with the right answers in 22 key presses, one tap and 9 ms of software time. Four findings, of which two matter: one extra shot in a cell displaced a chain of three assignments and all three reached the queue with the right bull offered, and the merged pair cannot be finished from the keyboard because its item offers no way to add the second shot.
+- **Section 3: the photograph ratio re-measured at each blob's own scale, 0.986 to 0.948**, with the spread falling from 11 percent to 4 and the frame means from a 15 percent range to 6. `PhotographHoleToCalibre` changed to the new figure. The rise from 24 to 35 spurious detections on the clean photographs is recorded deliberately as the correct direction.
+- **Section 4: recorded.** Each hypothesis written with the test that would kill it. It is the practice being kept.
+
+Section 2 is a blocker with a cheap way around it. Section 3 is a small correctness follow-up that should not be forgotten.
+
+### 1. Behaviour first was the right order, and appearance is now the remaining half
+
+The review queue, the counter, the card with its choices, the keyboard path of Space, Enter, a bull label, and N, and a "keep it" decision that saves and undoes: **that is the concept's behaviour, and it is in.**
+
+**On the friend's scan all ten scoring shots land on their true bulls, where nearest-bull would have put two wrong, and three presses of Enter settle the queue.** That is the thing working.
+
+**What is not in is the concept's appearance**: the icon tool strip, the breadcrumb header, the paper-coloured sheet on dark chrome, the left rail, the typography. **That was not asked for and it should not have been**, because a screen styled before it is used is styled against a guess.
+
+**The order from here is Alan first, not planning first.** An hour in the current editor, doing the job it exists for, produces the list a styling pass should be written against. Anything I specify before that is me describing a picture.
+
+### 2. The Phase 3 gate needs a 25-shot sheet and both real sheets have ten
+
+`DESIGN.md` section 21 sets the gate at a full 25-shot target with several misassignments corrected in under two minutes. **Neither real sheet can test it**, and a range session is the critical path it has always been.
+
+**There is a useful halfway step that costs nobody a trip to the range.** Build a synthetic 25-shot sheet with errors deliberately injected: two contested assignments, one merged pair, one false candidate, one bull with two shots and one with none. **Time the workflow against that now.**
+
+**It is not the gate and it must not be recorded as passing it.** What it does is let the two-minute workflow be exercised, timed and improved before anybody drives anywhere, so that when a real 25-shot sheet exists the session measures the editor rather than discovering an obvious problem with it.
+
+**When the real sheet is shot, one session produces three things at once**: the Phase 3 gate timed properly, the ground-truth marking entry 83 wants for scoring detector changes, and a second real sheet for the corpus.
+
+### 3. Two things the scale fix leaves behind
+
+**The photograph ratio must be re-measured.** Entry 79's 0.986 was taken with a single scale for the whole image, which section 2 of this week's work has just shown is wrong on any oblique frame. **Anything resting on that number rests on a measurement made with the defect in place.**
+
+**Spurious detections on the clean photographs rose from 24 to 35**, because far-side residue now reads at its true larger size and fewer slivers fall under the floor. **That is the correct direction and it should be left alone**, per entry 83 section 3. Worth recording the rise deliberately, so that a future reader does not see 24 become 35 and treat it as a regression.
+
+### 4. The third explanation was the right one, and none of the first two were mine by accident
+
+The false flags on the oblique frames were explained, in order, as out-of-focus corners, then as residue on printed ink, then as **one scale applied to an image whose true scale varies from 0.85 to 1.30 across the sheet.** Only the third was right, and it was found by testing the second rather than by reasoning further.
+
+**All three were mine, and the only reason the wrong two cost minutes instead of days is that each was written with the test that would kill it.** That is now the fourth time this week the pattern has held, and it is the single practice worth keeping from it.
+
+**It is also the strongest argument for section 1's ordering.** A styling specification written from a screenshot would be the same kind of guess, and unlike a detector hypothesis it would take a week to disprove.
+
+---
+
 ## 2026-09-18, entry 87: there are two size checks disagreeing five to one, and a status table that must not be allowed to lie
 
 **Status: actioned 2026-09-18.**

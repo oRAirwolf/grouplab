@@ -3924,6 +3924,158 @@ Real single holes flagged, of the true whole marks in each frame:
 
 ---
 
+## Entries 90, 89, 88 and 84. The scope given phases, the load block checked, the shape of the last unexplained flag, and the 25-shot rehearsal
+
+`docs/NOTES-FROM-PLANNING.md` entries 90, 89 section 4, 88 section 1 and 84, in that order.
+
+### Entry 90 section 1 and 2: ten promises, eight scheduled and two deferred
+
+**Every bullet of `DESIGN.md` section 3 now names a phase or is marked deferred with the reason, and section 19's two commitments name a phase.** Which each one got:
+
+| Promise | Given | Where it now stands |
+|---|---|---|
+| A parametric target editor | **Deferred** | No specification of the authoring screen exists, and one is being written with the shooter who asked for it. The format is not the obstacle: a fully custom sheet of forty arbitrarily placed bulls fits in a QR payload |
+| A full visual target designer | **Deferred** | The same reason and the same specification |
+| Hit probability | **Phase 2**, built not proven | Three estimators are in the engine, with the CEP table behind them. At a distance other than the one shot it goes through the solver, which is Phase 5 |
+| Distance normalisation | **Phase 5**, not started | Named in the phase rather than left implied by the solver being ported |
+| Records for rifles, barrels and loads | **Phase 4**, not started | Beside the session records, which were the only one of the four the plan carried |
+| The secondary mode for any target | **Phase 3**, done | It is marking by hand on any photograph against a reference length, which exists. The phase's feature line now says so in the document's own words |
+| Assisted hole placement in that mode | **Deferred** | Question 18. A store-bought target has no definition to render and difference against |
+| An unobtrusive support link | **Phase 4**, not started | One menu item, on the terms in section 20 |
+| The four themes | **Phase 4**, not started | Dark, light, high contrast, follow system |
+| The stage timeline that shows the analysis working | **Phase 4**, not started | The record every stage emits exists and the console form of it gave both spikes their output. The screen does not exist |
+
+**Two things the sweep found that the list did not predict.**
+- **Significance testing and hit probability are built and the README had lost both.** The engine carries rank and dispersion tests between two groups and among several, MANOVA on shot coordinates, the dispersion ratio with its interval and Holm correction, and three hit-probability estimators. Entry 90 section 3 spotted significance testing missing from the page; hit probability was missing from both documents' plans while being implemented. The page understated the engine rather than overstating it, which is the rarer direction.
+- **The three-axis unit setting is done**, and it was sitting in the trailing orphan line rather than in a phase.
+
+**The four orphans are now features with states and the line is gone:** the unit setting done, adjust-to-zero turret corrections not started, calibre-aware edge-to-edge spread done, the volunteer print pack not started.
+
+### Entry 90 section 4 item 2: the test now reads the scope
+
+**`ReadmeTests.EveryPromiseInScopeNamesAPhaseThatExistsOrSaysItIsDeferred`** reads `DESIGN.md` section 3's In scope list and requires of every bullet:
+- **a phase of section 21 by number**, and that phase must exist, so renaming a phase cannot orphan a promise; **or**
+- **the word deferred, with a citation** of the notes or of the questions file, so a deferral cannot be a quiet drop.
+
+It also requires the README to list at least as many deferrals as section 3 declares. **Checked by breaking it both ways:** removing "(Phase 5)" from the chronograph bullet fails with "promises something that no phase builds and no deferral covers", and sending it to a Phase 12 fails with "which section 21 does not have".
+
+**The feature scan of entry 87's test is now scoped to the "What each phase holds" subsection**, so the deferral bullets below it are not read as features with impossible states.
+
+### Entry 90 section 5: assisted hole placement is question 18, and two thirds of it is already built
+
+**Raised as a question rather than scheduled, as the entry asks.** What the question carries, which was not known before it was written:
+
+| What "assisted" could mean | Built | Needs a definition |
+|---|---|---|
+| A tap snapped to the hole under it | **yes**, `Snapping.ToHole` takes the artwork as an optional argument and falls back to the dark centroid | no |
+| A snap radius set by the calibre, so the snap is the size of a hole | **yes** | no |
+| Finding holes unprompted | yes, render-and-difference | **yes** |
+
+**So the bullet is not unachievable; it is undefined.** Blank paper is the easy case, because paper has a predictable appearance and the difference stage degenerates to dark blobs on a light field. A printed store-bought target is the hard case and is exactly what the artwork mask exists for. A user-traced definition is the third route and it loops back into the deferred designer. The question puts those three to planning with their costs and recommends naming the snap as the promise now, scheduling blank paper, and refusing ring-fitting heuristics.
+
+### Entry 89 section 4: nothing in the stack ties a load field to a bull
+
+**Checked rather than assumed, and the answer is no, at every level.**
+
+| | What it carries | Any bull association |
+|---|---|---|
+| `dataBlock` (section 3.10) | one band, one `layout`, one `fieldSet`, one geometry | **none.** Nine captions for the sheet |
+| `instance` (section 3.11) | a flat map of field name to value, explicitly not part of the definition or its identifier | **none** |
+| `bulls[i]` (section 3.5) | x, y, ringSet, label, scoring, labelOffset | **`scoring` only**, a two-way split into the composite pool and the sighters |
+| `MarkedShot` | a bull index, provenance, exclusion, diameter, oversize | **none.** No group tag |
+
+**Labels cannot be pressed into service**, because section 3.5 states they are not identifiers, are not required to be unique, and the sample data has a real sheet with two bulls both labelled 9.
+
+**The analysis half of subgroups already exists.** `GroupComparison.KruskalWallis`, `FlignerKilleen`, `ManovaGroups` and `DispersionRatio` all take a group label per shot, so six loads on one sheet could be compared today. Nothing can tell them which shot belongs to which load.
+
+**Three routes, with their costs, for planning rather than as a plan.**
+
+| | Where the mapping would live | Cost |
+|---|---|---|
+| **A** | A subgroup tag on each bull in the definition | A new field in GLTD-J, a new block and flag bit in GLTD-B, and new identifiers for every sheet that uses it. The printed sheet can then label its own subgroups |
+| **B** | In `instance`, where per-print data belongs | The GLTD-I budget is 152 bytes and one filled standard-9 set already measures 128, so six loads cannot ride in the printed code |
+| **C** | In the session, as an editor step: these bulls hold this load | **No format change, and it works on the existing 30-bull and 36-bull sheets today.** The sheet itself says nothing, so the shooter writes the loads in the blank block by hand |
+
+**C first is the recommendation**, with A only if the printed sheet must carry the subgroups. This is recorded as a finding; entry 89 section 5's questions for Jeff are what decide it.
+
+### Entry 88 section 1: S1b's shape measured, and the flag is counting the hull
+
+**Every detection now carries its shape**, in `RenderDifferenceHole` and in `ink-proximity.json`: the bounding box aspect, the orientation-free elongation from the residual-weighted second moments, the hull solidity, and the hull area in square inches at the blob's own scale. Entry 88 section 2 asked for the measurement to live where the detector knows which mark is which, and it does.
+
+**S1b, against the sheet it is on and against real pairs of known separation:**
+
+| | Diameter | Elongation | Solidity |
+|---|---|---|---|
+| The other 13 marks on Alan's scan | 0.267 to 0.314 in | 1.05 to 1.39 | 0.89 to 0.97 |
+| **S1b** | **0.429 in** | **1.60** | **0.59** |
+| Composited pairs of real holes, 0.15 in apart | 0.380 in | 1.65 | 0.926 |
+| the same, 0.25 in apart | 0.425 in | 2.12 | 0.875 |
+| the same, 0.35 in apart | 0.466 in | 2.73 | 0.785 |
+
+**The yaw explanation is not supported by the shape.** A bullet arriving yawed makes an oval, and an oval is convex: it would read a high solidity, like every clean hole on the sheet. S1b has the lowest solidity of any mark on it by a wide margin.
+
+**Two holes is not supported either.** A composited pair the size of S1b reads an elongation over 2, and S1b reads 1.60. Pairs never fall below 0.70 solidity at any separation that keeps them one mark.
+
+**What the numbers do say, and it is a finding about the flag rather than about the shot.** The flag measures hull area, and a mark with a ragged outline has a hull much larger than its ink.
+
+| Flagged mark | Hull | Ink inside the hull | In single holes, hull against ink |
+|---|---|---|---|
+| S1b, Alan's scan | 0.1444 sq in | 0.0847 sq in | **2.10 against 1.23** |
+| `IMG_5822` at (2.850, 9.299) | 0.1212 | 0.0772 | 1.76 against 1.12 |
+| `IMG_5824` at (1.371, 1.988) | 0.1030 | 0.0708 | 1.50 against 1.03 |
+| `IMG_5822` at (7.225, 3.479) | 0.0933 | 0.0823 | 1.36 against 1.20 |
+| The friend's photograph at (7.621, 3.554) | 0.1689 | 0.1253 | 2.46 against 1.82 |
+
+A single hole on Alan's scan is 0.0687 sq in of hull at the median. **Four of the five flags on real material hold one hole's worth of ink**, so the third cause of an oversized reading is neither two holes nor a yawed bullet: it is one hole with a torn or ragged rim, counted by its convex hull.
+
+**Nothing was changed for it**, per entry 83 section 3. The candidate fix is to flag on ink area, or to require a solidity, and it moves a threshold the Phase 1 gate is measured against, so it is recorded with its numbers rather than applied. S1b's ink area of 0.0847 sq in is an equivalent diameter of 0.329 in, which is an ordinary .308 hole.
+
+**One figure confirmed rather than re-derived:** S1b encloses 0.00 of its footprint in printed ink, as entry 87's correction said.
+
+### Entry 84 section 3: the photograph ratio, re-measured at each blob's own scale
+
+**Entry 79's 0.986 was measured with one scale for a whole oblique image, which the entry 83 fix showed is wrong by up to 30 percent across a sheet.** Re-measured from the rebuilt local record, whole matched detections with no oversize flag:
+
+| | Holes | Mean | sd | Spread of frame means |
+|---|---|---|---|---|
+| Photographs, entry 79, one scale for the image | 75 | 0.986 | 0.110 | 0.92 to 1.07 |
+| **Photographs, now, each blob's own scale** | 76 | **0.948** | **0.039** | **0.918 to 0.976** |
+| Scans, now | 26 | 0.938 | 0.044 | 0.923 and 0.952 by sheet |
+
+**The defect was inflating both the figure and its spread.** The coefficient of variation falls from 11 percent to 4 percent, and the frame-to-frame spread from 15 percent to 6.
+
+**`AutomaticMarking.PhotographHoleToCalibre` is 0.948**, the re-measurement, where it was 0.986. **`ScanHoleToCalibre` stays 0.944**: scans have no scale variation to fix and re-measure at 0.938, the move coming from the friend's scan's verified hole list growing by two, which is inside the sheet-to-sheet spread that entry 80 section 3 established as the unit of uncertainty.
+
+**The two image kinds now agree within 0.010**, so the distinction between them was substantially an artefact of the defect. The constants are kept separate because two sheets are not evidence for merging them, and the figure is read only to tell one hole from two.
+
+**The spurious rise entry 84 section 3 asks to record deliberately:** the clean photographs carry **35** spurious detections where they carried 24, because far-side residue now reads at its true larger size and fewer slivers fall under the floor. It is the correct direction and it is left alone.
+
+### Entry 84 section 2: the 25-shot rehearsal, which is not the gate
+
+**A synthetic GL-CF25-LTR sheet, 26 marks for 25 scoring bulls, with entry 84's five errors injected:** two shots placed past halfway to the next bull, one merged pair 0.17 in apart, one shot fired at one bull and landed on its neighbour, one half-size faint mark, leaving one bull with two and one with none. The holes are drawn at the 0.871 scale entry 81 established, so a single one reads what a real .308 hole reads.
+
+**What the software did.**
+
+| | |
+|---|---|
+| Registration and detection at 600 DPI | 9 to 22 seconds, all 26 marks found, 25 detections, the pair read as one mark |
+| The queue as detection left it | **15 items:** 4 contested, 11 oversized |
+| Settled with the answer truth says is right | **19 items handled, 22 key presses, 1 tap on the image, 9 ms of software time**, 0 left open |
+| After settling | 26 shots, every bull holding what was fired at it except the stray, which no image can attribute |
+
+**Four findings, which is what a rehearsal is for.**
+
+1. **One extra shot in a cell displaced a chain of three assignments.** One-to-one matching moved bull 20's own shot to bull 22, 4.7 inches away, the stray onto bull 20, and bull 22's shot onto bull 21. **All three surfaced as contested items with the right bull among the choices**, which is the mechanism working; nearest-bull would have put the stray on bull 20 and left bull 21 silently empty.
+2. **The merged pair cannot be finished from the keyboard.** Its item reads "add the second shot if there is one" and offers only "One shot" and "Not a shot", so the second shot is a tap on the image. That is the one injected error the keyboard path does not cover, and it is worth a choice on the item.
+3. **The synthetic hole model overstates the flag load.** Eleven of 25 marks were flagged oversized at the corrected scale, and 17 of 23 unscaled, against **one of 14 on Alan's real scan**. The model's area spread is far wider than real holes', so a synthetic sheet rehearses the assignment path honestly and the flag load not at all.
+4. **A half-size mark is still a shot.** At 0.5 scale it reads over the 0.15 in floor, so no refused-candidate item arose. Rehearsing that item needs a mark near the floor rather than merely small.
+
+**It is not the Phase 3 gate and is not recorded as passing it.** The gate is a person correcting several misassignments on a real 25-shot sheet in under two minutes, and nothing here measures a person reading fifteen cards. What it establishes is that the software's own share of those two minutes is 9 milliseconds of editing and 9 to 22 seconds of analysis, that the injected errors all reach the queue, and that one of them needs a mouse.
+
+**Tests:** Core and App suites both pass, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4116,3 +4268,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 87 section 1: `HoleSize` kept as a measurement.** The apparent extent is what the harnesses read and what the snap radius needs, and keeping it without a threshold is what makes the removal a removal of a judgement rather than of a number.
 - **Entry 86 section 3: the enclosed-ink fraction recorded on every detection although nothing reads it.** It is the quantity that separates a hole on a ring from one beside it, it cost nothing to carry, and it is what proved the hypothesis wrong rather than plausible.
 - **Entry 87 section 2: the README's states tied to DESIGN.md by a test, over a review habit.** Entry 60 found the README stale for days, and the two documents can now only disagree by failing a test.
+- **Entry 90: the parametric editor and the visual designer deferred, over giving them a phase.** Alan is getting a specification from Jeff, and a phase for a screen nobody has specified would be a date attached to a guess. The deferral is explicit, carries its reason, and is checked by a test, which is the difference between parking something and losing it.
+- **Entry 90: assisted hole placement raised as a question, over scheduling it or dropping it.** The detector differences against a definition and a store-bought target has none, so the bullet is not schedulable as written; but two of the three meanings of "assisted" are already built, so it is not droppable either. That is a design answer and not a wording fix.
+- **Entry 90: the scope test requires a citation on a deferral.** A bullet could otherwise satisfy the test with the word alone, which is exactly the quiet drop the test exists to catch.
+- **Entry 88: the oversize flag left alone although the measurement points at a defect in it.** Four of five flags on real material hold one hole's worth of ink inside a ragged hull, so flagging on ink area would remove them; the threshold is one the Phase 1 gate is measured against, and entry 83 section 3 says stop tuning the detector. Recorded with its numbers instead.
+- **Entry 84: `PhotographHoleToCalibre` changed to the re-measured 0.948 and `ScanHoleToCalibre` left at 0.944.** The photograph figure was measured with the single-scale defect in place; the scan figure was not, and its 0.006 move comes from a longer verified hole list rather than from the fix.
+- **Entry 84: the 25-shot rehearsal recorded as a rehearsal.** It measures the software's share of the two minutes and nothing about a person, so recording it as the Phase 3 gate would put a state of "done" on a page where the thing being gated has not happened.

@@ -41,8 +41,15 @@ public static class AutomaticMarking
     /// the bullet is not the hole. Measured on the two real .308 sheets, whole detections matched to hand-verified holes. On scans there are
     /// only two sheets, and the sheet is the unit of uncertainty (entry 80 section 3): 0.952 over 13 holes and 0.934 over 11, pooled 0.944.
     /// The holes within a sheet share paper, printer, scanner and bullet, so their spread of 0.039 says little about the next sheet. On
-    /// photographs, 75 holes over seven frames of the same two sheets: pooled 0.986, frame means from 0.92 to 1.07. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
+    /// photographs, 76 holes over six frames of the same two sheets: pooled 0.948, frame means from 0.918 to 0.976. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
     /// about 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
+    /// <para>
+    /// <b>The photograph figure was re-measured after the local-scale fix, NOTES-FROM-PLANNING.md entry 84 section 3.</b> It was 0.986 with a
+    /// spread of 0.110 and frame means over a 15 percent range, all of it taken with one scale applied to an image whose true scale varies
+    /// across the sheet. At each blob's own scale it is 0.948 with a spread of 0.039, and the frame means span 0.058. The scans, which have no
+    /// scale variation to fix, re-measure at 0.938 pooled, 0.952 and 0.923 by sheet; the constant stays at 0.944 because a move of that size on
+    /// two sheets sits inside the sheet-to-sheet spread and only the one-hole-against-two separation reads it.
+    /// </para>
     /// <para>
     /// What these figures are good for, entry 81 section 4: telling one hole from two is a factor-of-two judgement, and an error of a few
     /// percent in them cannot flip it, so two sheets are enough for that. They are not enough for anything that needs the absolute size, such
@@ -50,7 +57,7 @@ public static class AutomaticMarking
     /// many more sheets first rather than inherit a precision these never had.
     /// </para>
     /// </summary>
-    public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.986;
+    public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.948;
 
     /// <param name="grey">The image as grey, for the markers.</param>
     /// <param name="value">The image as HSV value, max(R, G, B), for the holes.</param>

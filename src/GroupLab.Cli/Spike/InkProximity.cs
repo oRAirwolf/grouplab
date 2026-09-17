@@ -22,6 +22,10 @@ namespace GroupLab.Cli.Spike;
 /// <list type="bullet">
 /// <item><b>Ink inside the footprint</b>, NOTES-FROM-PLANNING.md entry 86 section 3: how much of the expected artwork lies inside each
 /// detection's own hull, which separates a hole centred on a ring from one beside it where a distance cannot.</item>
+/// <item><b>Shape</b>, NOTES-FROM-PLANNING.md entry 88 section 1: the aspect of the bounding box, the orientation-free elongation from the
+/// residual-weighted second moments, the hull solidity and the hull area, beside the diameter. A mark bigger than one hole is two holes, a
+/// hole joined to ink, or one hole a yawed bullet made, and only shape tells them apart: round is clean, one long lobe is a yawed or angled
+/// hit, and two lobes with a waist between them are two holes read as one.</item>
 /// <item><b>Printed edges</b> are of two kinds, measured apart. <b>Artwork</b> is what the expected image draws: rings, dots, markers, codes
 /// and rules, whose edges are the ink-to-paper transitions of <see cref="SceneRasterizer"/>'s render at 1 px per dmm. <b>Text</b> is what
 /// the expected image does not draw, bull numbers, the identifier and the print note, measured as the distance to each run's glyph box
@@ -49,7 +53,8 @@ public static class InkProximity
     public static IReadOnlyList<double> BinEdges { get; } = [0, 0.02, 0.05, 0.1, 0.2, double.PositiveInfinity];
 
     public sealed record Detection(string Image, string Corpus, double XIn, double YIn, double DiameterIn, double ArtworkIn, double TextIn, bool Spurious, bool Split, bool Oversized,
-        bool OversizeFlag, bool PossibleMerge, double? SizeRatio, double? ApparentIn = null, bool? SizeCheckOversized = null, double InkInside = 0);
+        bool OversizeFlag, bool PossibleMerge, double? SizeRatio, double? ApparentIn = null, bool? SizeCheckOversized = null, double InkInside = 0,
+        double Aspect = 0, double Elongation = 0, double Solidity = 0, double AreaSqIn = 0);
 
     /// <summary>The real sheets' calibre, .308, for the size check.</summary>
     public const double RealCalibreInches = 0.308;
@@ -127,7 +132,7 @@ public static class InkProximity
                 foreach (var d in results[k])
                 {
                     output.WriteLine(string.Create(CultureInfo.InvariantCulture,
-                        $"    ({d.XIn:0.000}, {d.YIn:0.000}) in, {d.DiameterIn:0.000} in across, artwork {d.ArtworkIn:0.000} in, text {d.TextIn:0.000} in{(d.Spurious ? ", spurious" : "")}{(d.Split ? ", split" : "")}{(d.Oversized ? ", oversized" : "")}{(d.PossibleMerge ? ", split by the detector" : "")}{(d.OversizeFlag ? ", flagged oversized" : "")}{(d.ApparentIn is { } ap ? $", size check {ap:0.000} in" : "")}{(d.SizeCheckOversized == true ? " OVER" : "")}"));
+                        $"    ({d.XIn:0.000}, {d.YIn:0.000}) in, {d.DiameterIn:0.000} in across, artwork {d.ArtworkIn:0.000} in, text {d.TextIn:0.000} in{(d.Spurious ? ", spurious" : "")}{(d.Split ? ", split" : "")}{(d.Oversized ? ", oversized" : "")}{(d.PossibleMerge ? ", split by the detector" : "")}{(d.OversizeFlag ? ", flagged oversized" : "")}{(d.ApparentIn is { } ap ? $", size check {ap:0.000} in" : "")}{(d.SizeCheckOversized == true ? " OVER" : "")}, aspect {d.Aspect:0.00}, elongation {d.Elongation:0.00}, solidity {d.Solidity:0.00}, area {d.AreaSqIn:0.0000} sq in"));
                 }
             }
         }
@@ -245,7 +250,8 @@ public static class InkProximity
             double? ratio = nearest[i] >= 0 && !h.PossibleMerge && reference is { } r ? raw[i] / r : null;
             return new Detection(item.Name, item.Corpus, RawMeasurements.R(pages[i].X / DmmPerInch), RawMeasurements.R(pages[i].Y / DmmPerInch), RawMeasurements.R(h.DiameterInches),
                 RawMeasurements.R(edges[i].Artwork), RawMeasurements.R(edges[i].Text), nearest[i] < 0, split[i], ratio >= OversizeRatio, h.Oversized, h.PossibleMerge,
-                ratio is { } v ? RawMeasurements.R(v) : null, apparent[i] is { } a ? RawMeasurements.R(a) : null, SizeCheck(i), RawMeasurements.R(h.InkFraction));
+                ratio is { } v ? RawMeasurements.R(v) : null, apparent[i] is { } a ? RawMeasurements.R(a) : null, SizeCheck(i), RawMeasurements.R(h.InkFraction),
+                RawMeasurements.R(h.Aspect), RawMeasurements.R(double.IsNaN(h.Elongation) ? 0 : h.Elongation), RawMeasurements.R(h.Solidity), RawMeasurements.R(h.AreaInches));
         })];
     }
 

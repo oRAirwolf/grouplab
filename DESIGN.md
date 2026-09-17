@@ -42,16 +42,18 @@ The governing principle is that the software should never help a shooter believe
 
 ### In scope
 
-- Generating printable targets with embedded registration markers, in a built-in library, through a parametric editor, and through a full visual designer
-- Analysing scans and photographs of those targets, fully automatically where possible
-- A secondary mode that analyses any target, including store-bought targets and blank paper, using a user-defined scale and manual or assisted hole placement
-- A manual editor capable of correcting, adding, removing, and reassigning every detection
-- Group statistics with confidence intervals, significance testing, and hit probability
-- Records for rifles, barrels, loads, and sessions
-- Chronograph import, beginning with Garmin Xero
-- A ported ballistic trajectory solver, used by hit probability, distance normalisation, and velocity-to-vertical analysis
-- An unobtrusive link for supporting the project financially
-- Optional synchronisation through the user's own cloud storage
+**[r7] Every bullet names the phase or phases of section 21 that build it, or is marked deferred and says where the reason is recorded.** A promise with neither is a bug in the plan: `docs/NOTES-FROM-PLANNING.md` entry 90 found ten of them sitting in scope with no phase behind them, and a reader could not tell a deliberate omission from a forgotten promise. `ReadmeTests` now fails on a bullet with neither, so the check is no longer a person reading two sections against each other.
+
+- Generating printable targets with embedded registration markers, in a built-in library (Phase 0a for the format, the sheets and the renderer; Phase 4 for the library screen). **The parametric editor and the full visual designer are deferred**, with the reason in `docs/NOTES-FROM-PLANNING.md` entry 90 section 1: the format carries a fully custom sheet already, and what is missing is a specification of the authoring screen, which is being written with the shooter asking for it rather than guessed at
+- Analysing scans and photographs of those targets, fully automatically where possible (Phase 0 for registration, Phase 1 for detection and assignment)
+- A secondary mode that analyses any target, including store-bought targets and blank paper, using a user-defined scale and manual hole placement (Phase 3, where marking by hand against a reference length or rectangle is what that mode is). **Assisted placement in that mode is deferred** pending question 18 of `docs/QUESTIONS-FOR-PLANNING.md`: a store-bought target has no definition to render and difference against, so whether the detector as built can assist at all is a design question rather than a scheduling one
+- A manual editor capable of correcting, adding, removing, and reassigning every detection (Phase 3)
+- Group statistics with confidence intervals, significance testing, and hit probability (Phase 2, all three in the engine; hit probability at a distance other than the one shot needs the solver and is Phase 5)
+- Records for rifles, barrels, loads, and sessions (Phase 4, all four, and the load record is what the load-development premise rests on)
+- Chronograph import, beginning with Garmin Xero (Phase 5)
+- A ported ballistic trajectory solver, used by hit probability, distance normalisation, and velocity-to-vertical analysis (Phase 5, and distance normalisation is named in that phase rather than assumed inside it)
+- An unobtrusive link for supporting the project financially (Phase 4, one menu item, on the terms in section 20)
+- Optional synchronisation through the user's own cloud storage (Phase 7)
 
 ### Out of scope
 
@@ -446,9 +448,11 @@ A small project-operated service remains useful for distributing the target defi
 
 **Density.** Progressive, with a specific split. The primary panel shows the composite group, the headline figures, and the confidence interval on each, because those change decisions and burying them would defeat the project's premise. Reference material, the full CEP table, the bivariate fit, and the comparison machinery live one click away in a panel that remembers it was opened.
 
-**Themes.** Four, matching the site: dark, light, high contrast, and follow system.
+**Themes.** Four, matching the site: dark, light, high contrast, and follow system. **[r7]** Phase 4.
 
 **[r3] The analysis shows its work.** Every pipeline stage emits a structured record carrying its resolved parameters, the decisions it made with their alternatives, what it rejected and why, and its artefacts. That gives three things from one contract: a stage timeline the user can scrub, with clicking a rejection highlighting it on the image; a live run where each stage's artefact appears as it lands, so the markers light up, the residual map settles, the artwork vanishes and the holes emerge; and a console form that gives the Phase 0 and Phase 1 spikes their output for free before any UI exists.
+
+**[r7] The contract is built and the screen is Phase 4.** Every stage already emits its record, and the console form of it gave the Phase 0 and Phase 1 spikes their output as intended. The scrubbable timeline, the artefacts appearing as they land and the rejection clicked to highlight it on the image are the Phase 4 half, and they are now listed there rather than left implied by the contract underneath them, which is how a headline feature becomes an internal diagnostic by default (`docs/NOTES-FROM-PLANNING.md` entry 90 section 2).
 
 The sequence is a real depiction of what happened and nothing false needs adding to it. Two constraints, written down here rather than discovered in review: **the trace must never be the only place an error appears**, so a failed stage produces a normal prominent error with the trace as the detail behind it, and **the theatre must not slow the pipeline down**, so artefact generation defaults on for a single interactive analysis and off for batch.
 
@@ -538,15 +542,22 @@ G3 is the one the naive methods fail and the one that actually distinguishes a s
 
 **Phase 3: Editor.** The manual editing and assignment interface, built against real detections including bad ones. Gate: a full 25-shot target with several misassignments corrected in under two minutes.
 
-**Phase 4: Windows application.** Target library, generation, printing, analysis, reporting, session records.
+**Phase 4: Windows application.** Target library, generation, printing, analysis, reporting, session records. **[r7]** Also, named here because section 3 and section 19 promise them and no phase carried them: records for rifles, barrels and loads beside the sessions, the four themes of section 19, the stage timeline of section 19 that shows the analysis doing its work, the support link of section 20, the three-axis unit setting, adjust-to-zero turret corrections, and the volunteer print pack. The gate is unchanged.
 
-**Phase 5: Chronograph, solver, and comparison.** Xero import, reconciliation interface, ballistic solver port validated against ballistics.js, load-versus-load significance testing, velocity regression, predicted-versus-measured vertical analysis.
+**Phase 5: Chronograph, solver, and comparison.** Xero import, reconciliation interface, ballistic solver port validated against ballistics.js, load-versus-load significance testing, velocity regression, predicted-versus-measured vertical analysis. **[r7]** And the two things the solver is being ported to serve, which section 3 promises and this phase had left to inference: hit probability propagated to a distance other than the one shot, and distance normalisation. The gate is unchanged.
 
 **Phase 6: Android.** Camera capture path, distortion fitting on device. Package ID chosen here and permanent thereafter.
 
 **Phase 7: Synchronisation.** Cloud provider adapters, three-tier storage.
 
 **Phase 8: iOS.** CI-based build and signing.
+
+**[r7, 18 September 2026] The sweep of section 3 and section 19 against these phases, and the two deferrals it produced.** `docs/NOTES-FROM-PLANNING.md` entry 90 read every scope bullet and every interface commitment against this section and against the README's Planned section, and found ten promises with no phase behind them. Eight are now scheduled in the phase that was already the right home for them, and they are spelled out in the phase lines above and in the README's per-phase feature lists with a state each: hit probability and distance normalisation in Phase 5, records for rifles, barrels and loads in Phase 4, the secondary mode in Phase 3, the support link, the four themes and the stage timeline in Phase 4. **Two are deferred rather than scheduled**, because scheduling either would be guessing:
+
+- **The parametric editor and the full visual designer.** The format is ready, and section 9 [r3] measured a fully custom sheet of forty arbitrarily placed bulls at roughly 215 bytes inside a QR payload with room to spare, so nothing in the format blocks it. What is missing is a specification of the authoring screen, and one is being written with the shooter who asked for it. Entry 84 section 1 makes the same argument for the editor's appearance: a screen specified before it is used is specified against a picture.
+- **Assisted hole placement on a target with no definition.** The detector works by rendering the definition and differencing against it, and a store-bought target or a sheet of blank paper has no definition, so the method as built has nothing to difference. Whether anything weaker is worth having is question 18 of `docs/QUESTIONS-FOR-PLANNING.md`, and it is a design answer rather than a wording fix.
+
+A deferral is a statement that the promise is still made and is not being worked on, with the reason recorded. It is not a quiet drop, and the test cannot tell the difference between a deferral and a scheduled phase except by the words, which is the point: both are explicit.
 
 ## 22. Risks
 
