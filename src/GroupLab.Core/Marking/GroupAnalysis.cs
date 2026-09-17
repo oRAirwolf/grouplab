@@ -72,7 +72,8 @@ public sealed record GroupReport(
     string Scale,
     bool ScaleAssumesSquareOn,
     string? Problem,
-    int SighterShots = 0);
+    int SighterShots = 0,
+    string? Detection = null);
 
 /// <summary>
 /// The statistics the marking screen shows, from the engine of M3 and nothing it does not specify. Each shot's offset is taken
@@ -117,7 +118,7 @@ public static class GroupAnalysis
         int automatic = shots.Count(s => s.Provenance == ShotProvenance.Automatic), corrected = shots.Count(s => s.Provenance == ShotProvenance.Corrected), manual = shots.Count(s => s.Provenance == ShotProvenance.Manual);
         if (state.Scale is null)
         {
-            return new GroupReport(null, null, excluded, notShots, automatic, corrected, manual, "no scale set", false, "Set a scale before the group can be measured: a reference length, a reference rectangle, or a GroupLab sheet's markers.", sighterShots);
+            return new GroupReport(null, null, excluded, notShots, automatic, corrected, manual, "no scale set", false, "Set a scale before the group can be measured: a reference length, a reference rectangle, or a GroupLab sheet's markers.", sighterShots, state.Detection?.Describe());
         }
 
         // Entry 39 section 1: on a sheet of several bulls, a shot with no bull is measured from the single point of aim, so twelve shots near
@@ -127,13 +128,13 @@ public static class GroupAnalysis
             string sentence = UnassignedSentence(shots.Count, unassigned);
             var withheld = Withheld(shots.Count, null, "needs every shot assigned to a bull", "needs every shot assigned to a bull", "needs every shot assigned to a bull", sentence);
             var withheldReduced = excluded == 0 ? withheld : withheld with { Shots = shots.Count(s => s.Exclusion is null) };
-            return new GroupReport(withheld, withheldReduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, null, sighterShots);
+            return new GroupReport(withheld, withheldReduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, null, sighterShots, state.Detection?.Describe());
         }
 
         var all = Figures(state, shots);
         var reduced = excluded == 0 ? all : Figures(state, [.. shots.Where(s => s.Exclusion is null)]);
         string? problem = all is null ? "Mark the shots." : null;
-        return new GroupReport(all, reduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, problem, sighterShots);
+        return new GroupReport(all, reduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, problem, sighterShots, state.Detection?.Describe());
     }
 
     /// <summary>The plain sentence the screen shows for a group too small to quote, with section 9.1's range at that count where there is one.</summary>

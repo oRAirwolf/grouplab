@@ -25,7 +25,8 @@ public sealed record AutomaticResult(
     GrayImage? ExpectedArtwork = null,
     ShotAssignmentResult? Assignment = null,
     IReadOnlyList<RejectedCandidate>? Rejected = null,
-    RenderDifferenceResult? Difference = null);
+    RenderDifferenceResult? Difference = null,
+    DetectionRecord? Detection = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -37,9 +38,10 @@ public static class AutomaticMarking
 {
     /// <summary>
     /// What render-and-difference measures a hole at, as a fraction of the stated bullet diameter, NOTES-FROM-PLANNING.md entry 79 section 1:
-    /// the bullet is not the hole. Measured on the two real .308 sheets, whole detections matched to hand-verified holes. On scans, 24 holes:
-    /// mean 0.944, sd 0.039, range 0.87 to 1.02. On photographs, 75 holes over seven frames: mean 0.986, sd 0.110, range 0.74 to 1.30, and
-    /// frame means from 0.92 to 1.07. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
+    /// the bullet is not the hole. Measured on the two real .308 sheets, whole detections matched to hand-verified holes. On scans there are
+    /// only two sheets, and the sheet is the unit of uncertainty (entry 80 section 3): 0.952 over 13 holes and 0.934 over 11, pooled 0.944.
+    /// The holes within a sheet share paper, printer, scanner and bullet, so their spread of 0.039 says little about the next sheet. On
+    /// photographs, 75 holes over seven frames of the same two sheets: pooled 0.986, frame means from 0.92 to 1.07. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
     /// about 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
     /// </summary>
     public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.986;
@@ -76,11 +78,13 @@ public static class AutomaticMarking
         var missing = fiducials.Missing.Select(m => mapping.ToImage(new PointD(m.X, m.Y))).ToList();
         double dpi = (measurement.Scale?.PixelsPerDmmArea ?? fiducials.PixelsPerDmm) * 254;
         RenderDifferenceResult holes;
+        DetectionRecord detection;
         using (var stage = trace.Begin("S5-S8.holes"))
         {
             try
             {
                 double ratio = metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre;
+                detection = new DetectionRecord(calibre, calibre?.DiameterInches * ratio);
                 holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * ratio));
             }
             catch (InvalidOperationException ex)
@@ -151,8 +155,8 @@ public static class AutomaticMarking
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
-            $"{markers}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes);
+            $"{markers}, {detection.Describe()}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection);
     }
 }
 

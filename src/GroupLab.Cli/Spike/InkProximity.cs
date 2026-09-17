@@ -31,7 +31,8 @@ namespace GroupLab.Cli.Spike;
 /// also the nearest of another detection. <b>Oversized:</b> its diameter over what the image's own clear detections give, 1.25 times or
 /// more. For a punched hole that is the measured diameter over the hole's drawn outer diameter, normalised by the median of that ratio among
 /// detections 0.2 in or more from any printed edge; for a real hole it is the diameter over the median of those clear detections. The
-/// detector's own oversize flag is reported beside it. So is the marking screen's size check, which is what entry 73 section 2 saw: the
+/// detector's own oversize flag is reported beside it. A split half has no size of its own, because it reports its whole blob's diameter, so
+/// it is not given one; one row of the record is one detection, and for a split half its diameter is the blob's. So is the marking screen's size check, which is what entry 73 section 2 saw: the
 /// apparent extent of the dark region under the detection, <see cref="HoleSize"/>'s measurement, over the largest a single hole can read,
 /// a .308 hole plus <see cref="HoleSize.AllowanceInches"/> on the real sheets as the screen has it, and on the punched scans the extent over
 /// the hole's drawn diameter, normalised by clear holes and flagged at 1.25 as the hull diameter is, because the size check does not read a
@@ -238,7 +239,8 @@ public static class InkProximity
         failure = null;
         return [.. difference.Holes.Select((h, i) =>
         {
-            double? ratio = nearest[i] >= 0 && reference is { } r ? raw[i] / r : null;
+            // A split half reports its whole blob's diameter, so it has no size of its own to compare (NOTES-FROM-PLANNING.md entry 80 section 4).
+            double? ratio = nearest[i] >= 0 && !h.PossibleMerge && reference is { } r ? raw[i] / r : null;
             return new Detection(item.Name, item.Corpus, RawMeasurements.R(pages[i].X / DmmPerInch), RawMeasurements.R(pages[i].Y / DmmPerInch), RawMeasurements.R(h.DiameterInches),
                 RawMeasurements.R(edges[i].Artwork), RawMeasurements.R(edges[i].Text), nearest[i] < 0, split[i], ratio >= OversizeRatio, h.Oversized, h.PossibleMerge,
                 ratio is { } v ? RawMeasurements.R(v) : null, apparent[i] is { } a ? RawMeasurements.R(a) : null, SizeCheck(i));

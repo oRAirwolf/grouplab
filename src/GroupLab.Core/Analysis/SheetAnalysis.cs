@@ -42,7 +42,7 @@ public static class SheetAnalysis
         using var stage = trace.Begin("S10.group");
         var session = new MarkingSession();
         session.Open(imagePath, metadata.Orientation);
-        session.LoadDetections(scale, automatic.Bulls, automatic.Detections, automatic.Assignment, automatic.Rejected ?? [], automatic.Summary);
+        session.LoadDetections(scale, automatic.Bulls, automatic.Detections, automatic.Assignment, automatic.Rejected ?? [], automatic.Summary, automatic.Detection);
         if (calibre is not null)
         {
             session.SetCalibre(calibre);

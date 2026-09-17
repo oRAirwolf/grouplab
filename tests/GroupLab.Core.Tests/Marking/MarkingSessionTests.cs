@@ -237,6 +237,47 @@ public class MarkingSessionTests
         Assert.Equal(3, root.GetProperty("report").GetProperty("allShots").GetProperty("shots").GetInt32());
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 80 section 5: a marking records what its detection ran with, a calibre or its absence, apart from the
+    /// calibre named now, and the file and the report both carry it. A marking nothing detected records no detection at all.
+    /// </summary>
+    [Fact]
+    public void AMarkingRecordsTheCalibreItsDetectionRanWithIncludingNone()
+    {
+        var bulls = new[] { new BullAim(0, "1", new PointD(100, 100)) };
+        var assigned = new AssignedShot(0, 0, 0, 0, 0, double.PositiveInfinity, false);
+        var scale = new LengthReference(new PointD(0, 0), new PointD(100, 0), 1);
+
+        var none = new MarkingSession();
+        none.Open("sheet.png");
+        none.LoadDetections(scale, bulls, [new DetectedShot(new PointD(110, 100), assigned)], null, [], "test", new DetectionRecord(null, null));
+        using (var json = JsonDocument.Parse(MarkingFile.Write(none.State)))
+        {
+            var detection = json.RootElement.GetProperty("detection");
+            Assert.Equal(JsonValueKind.Null, detection.GetProperty("calibre").ValueKind);
+            Assert.Contains("without a calibre", detection.GetProperty("description").GetString(), StringComparison.Ordinal);
+            Assert.Contains("without a calibre", json.RootElement.GetProperty("report").GetProperty("detection").GetString(), StringComparison.Ordinal);
+        }
+
+        var named = new MarkingSession();
+        named.Open("sheet.png");
+        var calibre = new Calibre(".308", 0.308);
+        named.LoadDetections(scale, bulls, [new DetectedShot(new PointD(110, 100), assigned)], null, [], "test", new DetectionRecord(calibre, 0.2908));
+        named.SetCalibre(new Calibre(".223", 0.224));
+        var (read, _) = MarkingFile.Read(MarkingFile.Write(named.State));
+        Assert.Equal(new DetectionRecord(calibre, 0.2908), read.Detection);
+        Assert.Equal(0.224, read.Calibre!.DiameterInches, 9);
+        Assert.Contains("with the calibre .308", GroupAnalysis.Analyse(read).Detection, StringComparison.Ordinal);
+
+        var manual = new MarkingSession();
+        manual.Open("group.jpg");
+        manual.SetScale(scale);
+        manual.AddShot(new PointD(10, 10));
+        using var plain = JsonDocument.Parse(MarkingFile.Write(manual.State));
+        Assert.Equal(JsonValueKind.Null, plain.RootElement.GetProperty("detection").ValueKind);
+        Assert.Null(GroupAnalysis.Analyse(manual.State).Detection);
+    }
+
     [Fact]
     public void ARoughClickSnapsToTheHoleItIsNear()
     {

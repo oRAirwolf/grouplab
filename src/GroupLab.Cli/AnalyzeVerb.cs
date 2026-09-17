@@ -175,6 +175,11 @@ public static class AnalyzeVerb
 
         var inv = CultureInfo.InvariantCulture;
         output.WriteLine(string.Create(inv, $"group: {all.Shots} shots, pooled about their own bulls{(report.SighterShots > 0 ? $", {report.SighterShots} sighter shots left out" : "")}; scale from {report.Scale}"));
+        if (report.Detection is { } detection)
+        {
+            output.WriteLine("  " + detection);
+        }
+
         if (all.DispersionWithheld is { } withheld)
         {
             output.WriteLine("  " + withheld);

@@ -72,6 +72,17 @@ public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring
 /// tag as read, or null when it has none, as a flatbed scan does not.
 /// </para>
 /// </summary>
+/// <summary>
+/// What a marking's detection was run with, NOTES-FROM-PLANNING.md entry 80 section 5: the calibre named, or none, and the size its holes were
+/// taken to measure. The same image detects differently with a calibre and without, so two markings are comparable only when these agree.
+/// </summary>
+public sealed record DetectionRecord(Calibre? Calibre, double? HoleSizeInches)
+{
+    public string Describe() => Calibre is { } calibre
+        ? string.Create(System.Globalization.CultureInfo.InvariantCulture, $"detected with the calibre {calibre.Name}, whose holes were taken to measure {HoleSizeInches:0.000} in")
+        : "detected without a calibre, so whether a mark was one hole or two was judged by its shape alone";
+}
+
 public sealed record MarkingState(
     string? ImagePath,
     ScaleReference? Scale,
@@ -84,7 +95,8 @@ public sealed record MarkingState(
     int? ExifOrientation = null,
     Calibre? Calibre = null,
     double? ShotDistanceInches = null,
-    AssignmentReview? Assignment = null)
+    AssignmentReview? Assignment = null,
+    DetectionRecord? Detection = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -271,7 +283,7 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null))], summary, _ => null);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null))], summary, null, _ => null);
     }
 
     /// <summary>
@@ -279,19 +291,19 @@ public sealed class MarkingSession
     /// shot's figures are kept under the id it is given here, with the method, its reason and the refused candidates, so the editor can
     /// show a contested case and count what needs review. A shot kept from before carries no figures, because the matching did not place it.
     /// </summary>
-    public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<DetectedShot> detections, ShotAssignmentResult? assignment, IEnumerable<RejectedCandidate> rejected, string summary)
+    public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<DetectedShot> detections, ShotAssignmentResult? assignment, IEnumerable<RejectedCandidate> rejected, string summary, DetectionRecord? detection = null)
     {
         ArgumentNullException.ThrowIfNull(detections);
         ArgumentNullException.ThrowIfNull(rejected);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches))], summary, firstId => assignment is null
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches))], summary, detection, firstId => assignment is null
             ? null
             : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment, d.Assignment.Bull))], [.. rejected], assignment.Method));
     }
 
-    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter)> detections, string summary, Func<int, AssignmentReview?> review)
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
     {
         int id = State.NextId;
-        var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary };
+        var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection };
         var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
         int firstId = id;
         var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter)).ToList();

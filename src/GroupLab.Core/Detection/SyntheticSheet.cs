@@ -61,7 +61,12 @@ public static class SyntheticSheet
     /// </summary>
     public const double RimWidthInches = 0.035, RimWidthSdInches = 0.020;
 
-    public static SyntheticHole SampleHole(Random random, double x, double y, bool onInk, HoleBacking backing)
+    /// <param name="scale">
+    /// Every length of the hole multiplied by this, 1 for the survey's population. The survey mixed .264, .308 and .338, and render-and-difference
+    /// reads these holes at 1.10 times .308 where it reads real .308 scan holes at 0.944 (NOTES-FROM-PLANNING.md entry 80 section 2), so a
+    /// sweep that stands in for one calibre scales them to it.
+    /// </param>
+    public static SyntheticHole SampleHole(Random random, double x, double y, bool onInk, HoleBacking backing, double scale = 1)
     {
         ArgumentNullException.ThrowIfNull(random);
         double Normal(double mean, double sd, double low, double high) => Math.Clamp(mean + (sd * SyntheticSurface.Gaussian(random)), low, high);
@@ -71,7 +76,7 @@ public static class SyntheticSheet
         double coreV = backing == HoleBacking.ScannerLid ? Normal(192.55, 26.70, 75, 250) : Normal(70, 25, 20, 150);
         double[] amplitudes = [.. Enumerable.Range(0, 4).Select(_ => random.NextDouble() * LobeAmplitude)];
         double[] phases = [.. Enumerable.Range(0, 4).Select(_ => random.NextDouble() * 2 * Math.PI)];
-        return new SyntheticHole(x, y, rimRadius, rimWidth, rimV, coreV, ZoneInches * DmmPerInch, amplitudes, phases);
+        return new SyntheticHole(x, y, scale * rimRadius, scale * rimWidth, rimV, coreV, scale * ZoneInches * DmmPerInch, amplitudes, phases);
     }
 
     /// <summary>Two crossing strokes centred on a point, as a shooter marks a hole: the X marks of section 7.1, 0.0625 in wide at grey 98.</summary>

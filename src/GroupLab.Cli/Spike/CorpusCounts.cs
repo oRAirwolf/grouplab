@@ -176,7 +176,8 @@ public static class CorpusCounts
     /// dmm across and down, and run through the automatic path again. Null with the reason when the clean image does not register.
     /// </summary>
     /// <param name="pairs">Punch a second hole overlapping each, as the synthetic suite's overlapping pairs are drawn, for the split's calibration.</param>
-    public static PunchedRun? RunPunched(string file, TargetDefinition definition, int offset, out string? failure, bool pairs = false)
+    /// <param name="holeScale">Every punched hole's lengths multiplied by this, <see cref="SyntheticSheet.SampleHole"/>.</param>
+    public static PunchedRun? RunPunched(string file, TargetDefinition definition, int offset, out string? failure, bool pairs = false, double holeScale = 1)
     {
         ArgumentNullException.ThrowIfNull(definition);
         failure = null;
@@ -196,12 +197,12 @@ public static class CorpusCounts
         {
             for (int x = offset; x < definition.Page.Width; x += PunchPitchDmm)
             {
-                var hole = SyntheticSheet.SampleHole(random, x, y, onInk: false, HoleBacking.ScannerLid);
+                var hole = SyntheticSheet.SampleHole(random, x, y, onInk: false, HoleBacking.ScannerLid, holeScale);
                 holes.Add(hole);
                 if (pairs)
                 {
                     double angle = random.NextDouble() * 2 * Math.PI, apart = (0.5 + (0.4 * random.NextDouble())) * 2 * hole.RimRadius;
-                    holes.Add(SyntheticSheet.SampleHole(random, x + (apart * Math.Cos(angle)), y + (apart * Math.Sin(angle)), onInk: false, HoleBacking.ScannerLid));
+                    holes.Add(SyntheticSheet.SampleHole(random, x + (apart * Math.Cos(angle)), y + (apart * Math.Sin(angle)), onInk: false, HoleBacking.ScannerLid, holeScale));
                 }
             }
         }

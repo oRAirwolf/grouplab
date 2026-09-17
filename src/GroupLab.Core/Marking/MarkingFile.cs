@@ -44,6 +44,16 @@ public static class MarkingFile
             exifOrientation = state.ExifOrientation,
             displayRotationDegrees = 90 * state.ViewQuarterTurns,
             calibre = state.Calibre is { } calibre ? new { name = calibre.Name, diameterInches = calibre.DiameterInches } : null,
+            // NOTES-FROM-PLANNING.md entry 80 section 5: what the detection ran with, which the calibre above need not match. Null when
+            // nothing was detected; a detection without a calibre records that absence.
+            detection = state.Detection is { } detection
+                ? new
+                {
+                    calibre = detection.Calibre is { } used ? new { name = used.Name, diameterInches = used.DiameterInches } : null,
+                    holeSizeInches = detection.HoleSizeInches,
+                    description = detection.Describe(),
+                }
+                : null,
             holeSizeFlags = holeSizeFlags ?? [],
             shotDistanceInches = state.ShotDistanceInches,
             displayUnits = displayUnits is { } units ? new { linear = units.Linear.ToString(), angular = units.Angular.ToString(), distance = units.Distance.ToString() } : null,
@@ -146,7 +156,12 @@ public static class MarkingFile
             turns,
             orientation,
             file["calibre"] is { } calibre ? new Calibre((string?)calibre["name"] ?? "", (double)calibre["diameterInches"]!) : null,
-            (double?)file["shotDistanceInches"]);
+            (double?)file["shotDistanceInches"],
+            Detection: file["detection"] is JsonObject detection
+                ? new DetectionRecord(
+                    detection["calibre"] is { } used ? new Calibre((string?)used["name"] ?? "", (double)used["diameterInches"]!) : null,
+                    (double?)detection["holeSizeInches"])
+                : null);
         return (state, notes);
     }
 
