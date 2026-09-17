@@ -47,6 +47,7 @@ return args switch
     ["holes", "ink-proximity", "--local", var manifest, "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", manifest, true, Console.Out),
     ["holes", "split-calibration"] => SplitCalibration.Run("scans/phase0", SampleSet.FrozenDirectory, null, Console.Out),
     ["holes", "split-calibration", "--local", var manifest] => SplitCalibration.Run("scans/phase0", SampleSet.FrozenDirectory, manifest, Console.Out),
+    ["holes", "composite-pairs", "--local", var manifest] => CompositePairs.Run("scans/phase0", SampleSet.FrozenDirectory, manifest, Console.Out),
     ["holes", "synthetic"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out),
     ["holes", "synthetic", "--realism"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, realismOnly: true),
     ["holes", "synthetic", "--held-out"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, heldOut: true),
@@ -483,6 +484,7 @@ static int Usage()
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]
+        grouplab holes composite-pairs --local <manifest.json>
         grouplab identify sweep
         grouplab spike stability
         grouplab spike corners --export <file.json> | --replay <file.json>

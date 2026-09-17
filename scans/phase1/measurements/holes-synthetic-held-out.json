@@ -116,7 +116,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 3,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -219,7 +219,7 @@
       "holes": 28,
       "foundTight": 19,
       "foundLoose": 28,
-      "strays": 1,
+      "strays": 0,
       "centreErrorsInches": [
         0.0020261384995058254,
         0.0029298329205926688,
@@ -248,16 +248,10 @@
         0.01599786427255841,
         0.019156870776766127,
         0.02240977426097758,
-        0.0739227831782262
+        0.029705420187556283
       ],
       "missed": [],
-      "strayDetections": [
-        {
-          "xIn": 2.8065,
-          "yIn": 2.4886,
-          "closure": 0.7333
-        }
-      ],
+      "strayDetections": [],
       "matchedClosures": [
         1,
         0.9361111111111111,
@@ -288,18 +282,17 @@
         1,
         0.7333333333333333
       ],
-      "strayClosures": [
-        0.7333333333333333
-      ],
+      "strayClosures": [],
       "assignedRight": 28,
       "nearestRight": 28,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 29,
-      "assignmentMethod": "NearestBull",
+      "assignmentFlagged": 0,
+      "assignmentMethod": "OneToOne",
       "singleElongations": [
         1.0800109574865857,
         1.0591675887475505,
         1.0392579429996296,
+        1.4923348688179314,
         1.0857475509894778,
         1.1321859285224471,
         1.0925486130789723,
@@ -326,9 +319,9 @@
         1.1052716901518047
       ],
       "pairElongations": [],
-      "splitHalves": 2,
-      "splitHalvesMatched": 1,
-      "oversized": 0,
+      "splitHalves": 0,
+      "splitHalvesMatched": 0,
+      "oversized": 17,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -526,7 +519,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 15,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -634,8 +627,8 @@
       "method": "render-and-difference",
       "seed": 1001,
       "holes": 56,
-      "foundTight": 40,
-      "foundLoose": 55,
+      "foundTight": 39,
+      "foundLoose": 52,
       "strays": 0,
       "centreErrorsInches": [
         0.001383132290379491,
@@ -666,7 +659,6 @@
         0.0058223060624913265,
         0.006477524859658576,
         0.006517758367816604,
-        0.006780521316265984,
         0.006819986343471755,
         0.006976361328488039,
         0.007395772527980119,
@@ -685,14 +677,12 @@
         0.01288045493558616,
         0.013554403873208954,
         0.0150479571352875,
-        0.015324767685006476,
         0.016916104458532897,
         0.018644485174039632,
         0.02129740206995417,
-        0.022701607319661306,
-        0.023957655442540676,
-        0.033636838944570153,
-        0.04336172576789666
+        0.07620981990976705,
+        0.08035411549983061,
+        0.08588629849746852
       ],
       "missed": [
         {
@@ -702,6 +692,30 @@
           "rimWidthIn": 0.0224,
           "rimV": 4.6997,
           "coreV": 212.9734
+        },
+        {
+          "xIn": 7.3086,
+          "yIn": 3.6605,
+          "rimRadiusIn": 0.0688,
+          "rimWidthIn": 0.01,
+          "rimV": 2,
+          "coreV": 160.7105
+        },
+        {
+          "xIn": 2.7941,
+          "yIn": 6.3451,
+          "rimRadiusIn": 0.05,
+          "rimWidthIn": 0.01,
+          "rimV": 40.8914,
+          "coreV": 170.093
+        },
+        {
+          "xIn": 5.8727,
+          "yIn": 6.8007,
+          "rimRadiusIn": 0.05,
+          "rimWidthIn": 0.01,
+          "rimV": 36.8222,
+          "coreV": 175.2432
         }
       ],
       "strayDetections": [],
@@ -735,7 +749,6 @@
         0.9916666666666667,
         0.9722222222222222,
         1,
-        1,
         0.9916666666666667,
         1,
         0.9333333333333333,
@@ -758,15 +771,13 @@
         1,
         1,
         1,
-        1,
-        1,
         1
       ],
       "strayClosures": [],
-      "assignedRight": 55,
-      "nearestRight": 55,
+      "assignedRight": 52,
+      "nearestRight": 52,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 55,
+      "assignmentFlagged": 52,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.075860506121793,
@@ -799,11 +810,15 @@
         1.1100214147469514,
         1.0271740855559586
       ],
-      "pairElongations": [],
-      "splitHalves": 26,
-      "splitHalvesMatched": 26,
-      "oversized": 1,
-      "oversizedOverTwo": 0,
+      "pairElongations": [
+        1.6957882824446273,
+        1.5811912647834991,
+        1.7941544349410783
+      ],
+      "splitHalves": 20,
+      "splitHalvesMatched": 20,
+      "oversized": 15,
+      "oversizedOverTwo": 3,
       "mergedUnflagged": 0
     },
     {
@@ -1076,8 +1091,8 @@
       "method": "render-and-difference",
       "seed": 1002,
       "holes": 56,
-      "foundTight": 39,
-      "foundLoose": 53,
+      "foundTight": 37,
+      "foundLoose": 49,
       "strays": 0,
       "centreErrorsInches": [
         0.0006473847283534805,
@@ -1101,9 +1116,7 @@
         0.005910250976068877,
         0.006018008828336386,
         0.006315271006016975,
-        0.0063426969578501075,
         0.006507954168232002,
-        0.006712580989032205,
         0.00690233901242438,
         0.006984888580567413,
         0.007111961104407228,
@@ -1124,17 +1137,23 @@
         0.011389303280296205,
         0.011501761498900689,
         0.013012745712763615,
-        0.014585509848526466,
         0.016119203250555148,
         0.017634705043764326,
-        0.022176382996594007,
         0.022560070811630573,
-        0.03748075948046223,
-        0.03912198957891736,
-        0.07093096599823297,
-        0.10992184995436098
+        0.034772642157479335,
+        0.058151183663142744,
+        0.07261407263964582,
+        0.1310727656874067
       ],
       "missed": [
+        {
+          "xIn": 2.5239,
+          "yIn": 2.1988,
+          "rimRadiusIn": 0.0547,
+          "rimWidthIn": 0.01,
+          "rimV": 166.532,
+          "coreV": 243.556
+        },
         {
           "xIn": 4.2989,
           "yIn": 3.986,
@@ -1142,6 +1161,30 @@
           "rimWidthIn": 0.0153,
           "rimV": 26.6499,
           "coreV": 219.0587
+        },
+        {
+          "xIn": 4.3713,
+          "yIn": 5.204,
+          "rimRadiusIn": 0.0571,
+          "rimWidthIn": 0.01,
+          "rimV": 5.6005,
+          "coreV": 190.3047
+        },
+        {
+          "xIn": 7.0176,
+          "yIn": 5.4608,
+          "rimRadiusIn": 0.05,
+          "rimWidthIn": 0.0167,
+          "rimV": 77.5343,
+          "coreV": 193.7014
+        },
+        {
+          "xIn": 1.3479,
+          "yIn": 7.5768,
+          "rimRadiusIn": 0.0537,
+          "rimWidthIn": 0.0148,
+          "rimV": 22.5315,
+          "coreV": 158.565
         },
         {
           "xIn": 6.0566,
@@ -1183,9 +1226,7 @@
         1,
         1,
         1,
-        1,
         0.9083333333333333,
-        1,
         1,
         0.9555555555555556,
         1,
@@ -1207,9 +1248,7 @@
         1,
         1,
         1,
-        1,
         0.9583333333333334,
-        1,
         0.9916666666666667,
         1,
         1,
@@ -1217,14 +1256,15 @@
         1
       ],
       "strayClosures": [],
-      "assignedRight": 53,
-      "nearestRight": 53,
+      "assignedRight": 49,
+      "nearestRight": 49,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 53,
+      "assignmentFlagged": 49,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.1483485579196528,
         1.021211863329625,
+        1.644523682317357,
         1.0339594803729029,
         1.0481332744067047,
         1.0719185235567434,
@@ -1263,11 +1303,15 @@
         1.0162393472145461,
         1.0751958462096658
       ],
-      "pairElongations": [],
-      "splitHalves": 14,
-      "splitHalvesMatched": 14,
-      "oversized": 2,
-      "oversizedOverTwo": 0,
+      "pairElongations": [
+        1.5919755825932795,
+        1.6197334111085604,
+        1.775374735003429
+      ],
+      "splitHalves": 6,
+      "splitHalvesMatched": 6,
+      "oversized": 18,
+      "oversizedOverTwo": 3,
       "mergedUnflagged": 0
     },
     {
@@ -1465,16 +1509,15 @@
       "method": "render-and-difference",
       "seed": 1003,
       "holes": 56,
-      "foundTight": 25,
-      "foundLoose": 50,
-      "strays": 2,
+      "foundTight": 24,
+      "foundLoose": 46,
+      "strays": 0,
       "centreErrorsInches": [
         0.0003443672933486051,
         0.0017375883361469317,
         0.0019362248709165898,
         0.002179504877180603,
         0.002199791394217547,
-        0.0025769236698139045,
         0.0044153432511032835,
         0.004431389492764047,
         0.0045298364384057195,
@@ -1500,25 +1543,22 @@
         0.012074816127925842,
         0.012334094118654186,
         0.013082904407303454,
-        0.013433432004332457,
-        0.01446782460340453,
         0.01468400334632338,
-        0.014896159972123603,
         0.015091406784125398,
         0.017009510303780364,
-        0.017407984994977147,
         0.020504247445270234,
-        0.0210678010448709,
         0.022753056481168165,
         0.024771946495502517,
-        0.025007028287475565,
+        0.02497387866842656,
         0.027819006423758886,
-        0.029852879348117038,
+        0.030585366987893745,
         0.031079716330159823,
         0.04252508597201082,
         0.04678684338168535,
-        0.08241487524590099,
-        0.09334408966219511
+        0.08116170697583865,
+        0.10932506013150466,
+        0.11942070246606572,
+        0.1350193771152708
       ],
       "missed": [
         {
@@ -1528,6 +1568,22 @@
           "rimWidthIn": 0.01,
           "rimV": 6.6739,
           "coreV": 248.6328
+        },
+        {
+          "xIn": 5.8597,
+          "yIn": 2.0528,
+          "rimRadiusIn": 0.0685,
+          "rimWidthIn": 0.0421,
+          "rimV": 36.3343,
+          "coreV": 195.7355
+        },
+        {
+          "xIn": 4.0496,
+          "yIn": 3.3637,
+          "rimRadiusIn": 0.0557,
+          "rimWidthIn": 0.0124,
+          "rimV": 30.212,
+          "coreV": 192.683
         },
         {
           "xIn": 2.671,
@@ -1546,12 +1602,28 @@
           "coreV": 157.0956
         },
         {
+          "xIn": 7.3779,
+          "yIn": 5.5788,
+          "rimRadiusIn": 0.062,
+          "rimWidthIn": 0.0174,
+          "rimV": 29.5417,
+          "coreV": 158.6981
+        },
+        {
           "xIn": 2.4333,
           "yIn": 7.6648,
           "rimRadiusIn": 0.0951,
           "rimWidthIn": 0.051,
           "rimV": 14.5764,
           "coreV": 186.3176
+        },
+        {
+          "xIn": 4.5664,
+          "yIn": 7.9713,
+          "rimRadiusIn": 0.0692,
+          "rimWidthIn": 0.018,
+          "rimV": 51.6824,
+          "coreV": 119.9631
         },
         {
           "xIn": 3.9235,
@@ -1570,20 +1642,8 @@
           "coreV": 178.0711
         }
       ],
-      "strayDetections": [
-        {
-          "xIn": 5.871,
-          "yIn": 5.7419,
-          "closure": 0.7389
-        },
-        {
-          "xIn": 6.6578,
-          "yIn": 6.3306,
-          "closure": 0.8528
-        }
-      ],
+      "strayDetections": [],
       "matchedClosures": [
-        1,
         1,
         1,
         1,
@@ -1620,28 +1680,22 @@
         1,
         1,
         1,
+        0.8527777777777777,
         1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
+        0.7388888888888889,
         0.9138888888888889,
         1,
         0.9138888888888889,
-        0.7388888888888889,
-        0.8527777777777777
+        1,
+        1,
+        1,
+        1
       ],
-      "strayClosures": [
-        0.7388888888888889,
-        0.8527777777777777
-      ],
-      "assignedRight": 50,
-      "nearestRight": 50,
+      "strayClosures": [],
+      "assignedRight": 46,
+      "nearestRight": 46,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 52,
+      "assignmentFlagged": 46,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.1160522467988374,
@@ -1656,6 +1710,8 @@
         1.0452545379243414,
         1.1003787473732118,
         1.0262448116675453,
+        1.4928006333299662,
+        1.4844031190912161,
         1.2010049193263248,
         1.0916871094150356,
         1.1704672834791436,
@@ -1675,11 +1731,16 @@
         1.0447386781555015,
         1.2567909711637149
       ],
-      "pairElongations": [],
-      "splitHalves": 22,
-      "splitHalvesMatched": 20,
-      "oversized": 0,
-      "oversizedOverTwo": 0,
+      "pairElongations": [
+        1.780388897945345,
+        1.7075238741624963,
+        1.7843848979080108,
+        1.7586943236313417
+      ],
+      "splitHalves": 10,
+      "splitHalvesMatched": 10,
+      "oversized": 20,
+      "oversizedOverTwo": 4,
       "mergedUnflagged": 0
     },
     {
@@ -2029,7 +2090,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 11,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2240,7 +2301,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 10,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2445,7 +2506,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
+      "oversized": 11,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2560,8 +2621,8 @@
       "method": "render-and-difference",
       "seed": 1001,
       "holes": 56,
-      "foundTight": 31,
-      "foundLoose": 56,
+      "foundTight": 30,
+      "foundLoose": 51,
       "strays": 0,
       "centreErrorsInches": [
         0.0002851472918060455,
@@ -2582,7 +2643,6 @@
         0.005076860983787633,
         0.005151673636599558,
         0.005305684299697014,
-        0.005438832761726139,
         0.005651118297720386,
         0.005865226785260615,
         0.005885656521663227,
@@ -2613,15 +2673,52 @@
         0.01839214495136307,
         0.01855545654403791,
         0.021610054689802254,
-        0.022704510214593097,
-        0.025700848838336253,
         0.03247615300571137,
-        0.03752687388170752,
         0.04495722703965509,
-        0.09762885033532397,
-        0.11074779662660199
+        0.1227341568200198
       ],
-      "missed": [],
+      "missed": [
+        {
+          "xIn": 1.2573,
+          "yIn": 1.6826,
+          "rimRadiusIn": 0.0648,
+          "rimWidthIn": 0.0412,
+          "rimV": 51.0652,
+          "coreV": 231.1863
+        },
+        {
+          "xIn": 2.9487,
+          "yIn": 4.8742,
+          "rimRadiusIn": 0.05,
+          "rimWidthIn": 0.0343,
+          "rimV": 43.1147,
+          "coreV": 191.5054
+        },
+        {
+          "xIn": 2.6552,
+          "yIn": 5.0923,
+          "rimRadiusIn": 0.09,
+          "rimWidthIn": 0.0706,
+          "rimV": 51.8989,
+          "coreV": 199.6272
+        },
+        {
+          "xIn": 2.602,
+          "yIn": 7.7925,
+          "rimRadiusIn": 0.0651,
+          "rimWidthIn": 0.0338,
+          "rimV": 2,
+          "coreV": 163.9019
+        },
+        {
+          "xIn": 2.405,
+          "yIn": 7.9016,
+          "rimRadiusIn": 0.0788,
+          "rimWidthIn": 0.022,
+          "rimV": 12.0171,
+          "coreV": 144.16
+        }
+      ],
       "strayDetections": [],
       "matchedClosures": [
         0.9833333333333333,
@@ -2637,7 +2734,6 @@
         1,
         1,
         0.9777777777777777,
-        1,
         1,
         1,
         1,
@@ -2675,17 +2771,13 @@
         1,
         1,
         1,
-        1,
-        1,
-        1,
-        1,
         1
       ],
       "strayClosures": [],
-      "assignedRight": 56,
-      "nearestRight": 56,
+      "assignedRight": 51,
+      "nearestRight": 51,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 56,
+      "assignmentFlagged": 51,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.0636888171450407,
@@ -2733,11 +2825,13 @@
         1.0366357176866992,
         1.0382762170462023
       ],
-      "pairElongations": [],
-      "splitHalves": 12,
-      "splitHalvesMatched": 12,
-      "oversized": 0,
-      "oversizedOverTwo": 0,
+      "pairElongations": [
+        1.6501765399143462
+      ],
+      "splitHalves": 6,
+      "splitHalvesMatched": 6,
+      "oversized": 26,
+      "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
     {
@@ -2962,8 +3056,8 @@
       "method": "render-and-difference",
       "seed": 1002,
       "holes": 56,
-      "foundTight": 37,
-      "foundLoose": 56,
+      "foundTight": 35,
+      "foundLoose": 51,
       "strays": 0,
       "centreErrorsInches": [
         0.0010793872660786734,
@@ -2994,12 +3088,10 @@
         0.007474763296032277,
         0.007523945287257838,
         0.007621647123086103,
-        0.0076821507771927065,
         0.007862534599859826,
         0.008044013315939324,
         0.008215822223897523,
         0.008539430011213552,
-        0.009050514525562253,
         0.009502678977847219,
         0.009964548496585204,
         0.00999534876542073,
@@ -3010,8 +3102,6 @@
         0.01281156004667598,
         0.012888349502178102,
         0.013603187405330616,
-        0.014210305728633929,
-        0.014316197770330984,
         0.015054231042902254,
         0.015193707300089615,
         0.01566626498633113,
@@ -3020,10 +3110,50 @@
         0.019522887389057043,
         0.020746330987296585,
         0.026864754721509444,
-        0.045784172750426295,
-        0.08309201294166771
+        0.11622579140876728
       ],
-      "missed": [],
+      "missed": [
+        {
+          "xIn": 2.6573,
+          "yIn": 3.4971,
+          "rimRadiusIn": 0.0658,
+          "rimWidthIn": 0.0328,
+          "rimV": 2,
+          "coreV": 232.9813
+        },
+        {
+          "xIn": 6.013,
+          "yIn": 5.2667,
+          "rimRadiusIn": 0.0928,
+          "rimWidthIn": 0.0542,
+          "rimV": 38.844,
+          "coreV": 160.3985
+        },
+        {
+          "xIn": 5.6605,
+          "yIn": 5.3276,
+          "rimRadiusIn": 0.0522,
+          "rimWidthIn": 0.0299,
+          "rimV": 25.6302,
+          "coreV": 182.0142
+        },
+        {
+          "xIn": 1.5794,
+          "yIn": 8.2686,
+          "rimRadiusIn": 0.0655,
+          "rimWidthIn": 0.0208,
+          "rimV": 2,
+          "coreV": 146.2021
+        },
+        {
+          "xIn": 1.3323,
+          "yIn": 7.9154,
+          "rimRadiusIn": 0.0917,
+          "rimWidthIn": 0.0496,
+          "rimV": 24.8866,
+          "coreV": 167.4027
+        }
+      ],
       "strayDetections": [],
       "matchedClosures": [
         1,
@@ -3056,9 +3186,7 @@
         1,
         1,
         1,
-        1,
         0.8861111111111111,
-        1,
         1,
         1,
         1,
@@ -3073,10 +3201,7 @@
         1,
         1,
         1,
-        1,
-        1,
         0.9166666666666666,
-        1,
         1,
         1,
         1,
@@ -3084,10 +3209,10 @@
         1
       ],
       "strayClosures": [],
-      "assignedRight": 56,
-      "nearestRight": 56,
+      "assignedRight": 51,
+      "nearestRight": 51,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 56,
+      "assignmentFlagged": 51,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.0736947915276478,
@@ -3133,11 +3258,13 @@
         1.0222280719656551,
         1.0911178907174712
       ],
-      "pairElongations": [],
-      "splitHalves": 14,
-      "splitHalvesMatched": 14,
-      "oversized": 2,
-      "oversizedOverTwo": 0,
+      "pairElongations": [
+        1.731457078155676
+      ],
+      "splitHalves": 8,
+      "splitHalvesMatched": 8,
+      "oversized": 19,
+      "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
     {
@@ -3552,7 +3679,7 @@
       ],
       "splitHalves": 16,
       "splitHalvesMatched": 16,
-      "oversized": 1,
+      "oversized": 17,
       "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
@@ -3760,7 +3887,7 @@
       "holes": 28,
       "foundTight": 24,
       "foundLoose": 28,
-      "strays": 1,
+      "strays": 0,
       "centreErrorsInches": [
         0.0010057551300615467,
         0.0011643071009862444,
@@ -3789,16 +3916,10 @@
         0.010310947032001683,
         0.010625453085155194,
         0.018487773543140917,
-        0.02469116084748828
+        0.026858777948101653
       ],
       "missed": [],
-      "strayDetections": [
-        {
-          "xIn": 1.5271,
-          "yIn": 6.5215,
-          "closure": 1
-        }
-      ],
+      "strayDetections": [],
       "matchedClosures": [
         0.9111111111111111,
         0.9972222222222222,
@@ -3829,14 +3950,12 @@
         1,
         1
       ],
-      "strayClosures": [
-        1
-      ],
+      "strayClosures": [],
       "assignedRight": 28,
       "nearestRight": 28,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 29,
-      "assignmentMethod": "NearestBull",
+      "assignmentFlagged": 0,
+      "assignmentMethod": "OneToOne",
       "singleElongations": [
         1.0747532654551073,
         1.1575549945390027,
@@ -3856,6 +3975,7 @@
         1.1090492742493594,
         1.1236653368652696,
         1.0357730001866783,
+        1.4523880413940458,
         1.02390840509618,
         1.0241827425140304,
         1.0622157718061354,
@@ -3867,9 +3987,9 @@
         1.087622853603488
       ],
       "pairElongations": [],
-      "splitHalves": 2,
-      "splitHalvesMatched": 1,
-      "oversized": 0,
+      "splitHalves": 0,
+      "splitHalvesMatched": 0,
+      "oversized": 15,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4088,7 +4208,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 3,
+      "oversized": 14,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4198,7 +4318,7 @@
       "holes": 28,
       "foundTight": 24,
       "foundLoose": 27,
-      "strays": 1,
+      "strays": 0,
       "centreErrorsInches": [
         0.00025379508005161667,
         0.0014484089626343806,
@@ -4226,7 +4346,7 @@
         0.00945926850372948,
         0.013496926248024952,
         0.014001988637459313,
-        0.08485979007546457
+        0.027860569419594937
       ],
       "missed": [
         {
@@ -4238,13 +4358,7 @@
           "coreV": 219.8873
         }
       ],
-      "strayDetections": [
-        {
-          "xIn": 3.9598,
-          "yIn": 8.0443,
-          "closure": 0.8139
-        }
-      ],
+      "strayDetections": [],
       "matchedClosures": [
         1,
         1,
@@ -4274,13 +4388,11 @@
         1,
         0.8138888888888889
       ],
-      "strayClosures": [
-        0.8138888888888889
-      ],
-      "assignedRight": 24,
+      "strayClosures": [],
+      "assignedRight": 27,
       "nearestRight": 27,
-      "assignmentDiffers": 3,
-      "assignmentFlagged": 3,
+      "assignmentDiffers": 0,
+      "assignmentFlagged": 0,
       "assignmentMethod": "OneToOne",
       "singleElongations": [
         1.0626747163264052,
@@ -4305,15 +4417,16 @@
         1.0281139899191833,
         1.0836164008565576,
         1.071903986647055,
+        1.4802183712289128,
         1.0816515619597944,
         1.0242095041208203,
         1.1083327182265745,
         1.0847645382038602
       ],
       "pairElongations": [],
-      "splitHalves": 2,
-      "splitHalvesMatched": 1,
-      "oversized": 3,
+      "splitHalves": 0,
+      "splitHalvesMatched": 0,
+      "oversized": 10,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4531,7 +4644,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 16,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4735,7 +4848,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
+      "oversized": 7,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4953,7 +5066,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 18,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5144,7 +5257,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5252,9 +5365,9 @@
       "method": "render-and-difference",
       "seed": 1002,
       "holes": 28,
-      "foundTight": 22,
+      "foundTight": 23,
       "foundLoose": 28,
-      "strays": 1,
+      "strays": 0,
       "centreErrorsInches": [
         0.0017322913707688188,
         0.002493175215015134,
@@ -5273,6 +5386,7 @@
         0.007100125342892909,
         0.007134406905389962,
         0.007376820968594118,
+        0.007844993759913136,
         0.008435834061292573,
         0.008709925966900635,
         0.008779261007639603,
@@ -5282,17 +5396,10 @@
         0.011766749983409343,
         0.014404613837740981,
         0.014835658429517654,
-        0.015420312184220342,
-        0.11596549125447643
+        0.015420312184220342
       ],
       "missed": [],
-      "strayDetections": [
-        {
-          "xIn": 7.1162,
-          "yIn": 3.7668,
-          "closure": 0.9083
-        }
-      ],
+      "strayDetections": [],
       "matchedClosures": [
         1,
         1,
@@ -5311,6 +5418,7 @@
         1,
         1,
         1,
+        0.9083333333333333,
         1,
         1,
         1,
@@ -5320,17 +5428,14 @@
         1,
         1,
         1,
-        1,
-        0.9083333333333333
+        1
       ],
-      "strayClosures": [
-        0.9083333333333333
-      ],
+      "strayClosures": [],
       "assignedRight": 28,
       "nearestRight": 28,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 29,
-      "assignmentMethod": "NearestBull",
+      "assignmentFlagged": 0,
+      "assignmentMethod": "OneToOne",
       "singleElongations": [
         1.0751092340202761,
         1.007156764322643,
@@ -5358,12 +5463,13 @@
         1.0977855429465657,
         1.166149322533595,
         1.157345106034722,
-        1.085528701969294
+        1.085528701969294,
+        1.8960848897561202
       ],
       "pairElongations": [],
-      "splitHalves": 2,
-      "splitHalvesMatched": 1,
-      "oversized": 1,
+      "splitHalves": 0,
+      "splitHalvesMatched": 0,
+      "oversized": 12,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5561,7 +5667,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5745,7 +5851,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 16,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5961,7 +6067,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 15,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6180,7 +6286,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 15,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6385,7 +6491,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
+      "oversized": 12,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6597,7 +6703,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -7042,9 +7148,9 @@
       ],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
-      "oversizedOverTwo": 2,
-      "mergedUnflagged": 23
+      "oversized": 5,
+      "oversizedOverTwo": 5,
+      "mergedUnflagged": 20
     },
     {
       "group": "hard",
@@ -7361,7 +7467,7 @@
       "seed": 1002,
       "holes": 56,
       "foundTight": 1,
-      "foundLoose": 29,
+      "foundLoose": 28,
       "strays": 0,
       "centreErrorsInches": [
         0.007339645505899553,
@@ -7387,12 +7493,11 @@
         0.039528115059842904,
         0.039958229079523205,
         0.04043611321032491,
+        0.042029231667123426,
         0.04518643166635879,
         0.05188547147987667,
         0.058549430887336995,
-        0.06467015592635088,
-        0.08424842873168435,
-        0.1495253993410098
+        0.06467015592635088
       ],
       "missed": [
         {
@@ -7458,6 +7563,14 @@
           "rimWidthIn": 0.0357,
           "rimV": 30.1594,
           "coreV": 231.4743
+        },
+        {
+          "xIn": 5.5992,
+          "yIn": 3.6393,
+          "rimRadiusIn": 0.064,
+          "rimWidthIn": 0.0159,
+          "rimV": 34.4894,
+          "coreV": 224.5026
         },
         {
           "xIn": 7.6393,
@@ -7641,15 +7754,14 @@
         1,
         1,
         1,
-        1,
         1
       ],
       "strayClosures": [],
-      "assignedRight": 29,
-      "nearestRight": 29,
+      "assignedRight": 28,
+      "nearestRight": 28,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 29,
-      "assignmentMethod": "NearestBull",
+      "assignmentFlagged": 0,
+      "assignmentMethod": "OneToOne",
       "singleElongations": [],
       "pairElongations": [
         1.2524688506341133,
@@ -7678,13 +7790,14 @@
         1.0782251310929039,
         1.310162765949631,
         1.080672462383207,
-        1.2385271752754763
+        1.2385271752754763,
+        1.910443942005533
       ],
-      "splitHalves": 2,
-      "splitHalvesMatched": 2,
-      "oversized": 0,
-      "oversizedOverTwo": 0,
-      "mergedUnflagged": 27
+      "splitHalves": 0,
+      "splitHalvesMatched": 0,
+      "oversized": 11,
+      "oversizedOverTwo": 11,
+      "mergedUnflagged": 17
     },
     {
       "group": "hard",
@@ -8094,7 +8207,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 12,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -8636,7 +8749,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 28,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -8725,7 +8838,7 @@
       "holes": 28,
       "foundTight": 21,
       "foundLoose": 27,
-      "strays": 30,
+      "strays": 27,
       "centreErrorsInches": [
         0.0017036434618844594,
         0.0018892383592561176,
@@ -8767,13 +8880,8 @@
       ],
       "strayDetections": [
         {
-          "xIn": 4.3036,
-          "yIn": 1.681,
-          "closure": 0.6917
-        },
-        {
-          "xIn": 4.3212,
-          "yIn": 1.5815,
+          "xIn": 4.312,
+          "yIn": 1.6339,
           "closure": 0.6917
         },
         {
@@ -8862,13 +8970,8 @@
           "closure": 0.7
         },
         {
-          "xIn": 1.3577,
-          "yIn": 7.0511,
-          "closure": 0.6833
-        },
-        {
-          "xIn": 1.3732,
-          "yIn": 7.1509,
+          "xIn": 1.365,
+          "yIn": 7.0977,
           "closure": 0.6833
         },
         {
@@ -8877,13 +8980,8 @@
           "closure": 0.8028
         },
         {
-          "xIn": 4.5805,
-          "yIn": 8.4153,
-          "closure": 0.7
-        },
-        {
-          "xIn": 4.6515,
-          "yIn": 8.4874,
+          "xIn": 4.6147,
+          "yIn": 8.4501,
           "closure": 0.7
         },
         {
@@ -8948,7 +9046,6 @@
       ],
       "strayClosures": [
         0.6916666666666667,
-        0.6916666666666667,
         1,
         0.8027777777777778,
         0.6888888888888889,
@@ -8967,9 +9064,7 @@
         0.6861111111111111,
         0.7,
         0.6833333333333333,
-        0.6833333333333333,
         0.8027777777777778,
-        0.7,
         0.7,
         0.8,
         0.8,
@@ -8981,7 +9076,7 @@
       "assignedRight": 27,
       "nearestRight": 27,
       "assignmentDiffers": 0,
-      "assignmentFlagged": 57,
+      "assignmentFlagged": 54,
       "assignmentMethod": "NearestBull",
       "singleElongations": [
         1.061547861425446,
@@ -9013,9 +9108,9 @@
         1.075756358539348
       ],
       "pairElongations": [],
-      "splitHalves": 6,
+      "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 6,
+      "oversized": 27,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9227,7 +9322,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 15,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9432,7 +9527,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 2,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9644,7 +9739,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 3,
+      "oversized": 10,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9826,7 +9921,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 13,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -10002,7 +10097,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 0,
+      "oversized": 14,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -10190,7 +10285,7 @@
       "pairElongations": [],
       "splitHalves": 2,
       "splitHalvesMatched": 2,
-      "oversized": 3,
+      "oversized": 8,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -12536,7 +12631,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 1,
+      "oversized": 0,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },

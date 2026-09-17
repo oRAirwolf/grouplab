@@ -17,9 +17,11 @@ namespace GroupLab.Core.Detection;
 /// sliver a registration error leaves along every printed edge, so the opening here is sized for that.
 /// </para>
 /// <para>
-/// The split threshold of 1.45 lies between the elongation of single synthetic holes, 99th percentile 1.26 to 1.37 by case,
-/// and that of merged neighbours, 5th percentile 1.51 and 1.58, on the development seeds (docs/PHASE1-RESULTS.md M2.2). A
-/// lobed single hole can pass it, as far as 1.61 there, and becomes two holes, both flagged.
+/// The split threshold is 1.80, NOTES-FROM-PLANNING.md entry 81 section 1. It was 1.45, set between the elongation of single synthetic
+/// holes, 99th percentile 1.26 to 1.37 by case, and that of merged neighbours, 5th percentile 1.51 and 1.58, on the development seeds
+/// (docs/PHASE1-RESULTS.md M2.2). Real holes overruled it: at 1.45 a real hole joined to printed or photographed ink is cut in two, which
+/// invents a shot nobody can see, and at 1.80 no real hole in the corpus is split (entry 80 section 2). A merged pair left whole is the
+/// louder failure, one mark of about twice a hole's area, which the oversize flag reports.
 /// </para>
 /// </summary>
 public sealed record RenderDifferenceOptions(
@@ -33,11 +35,12 @@ public sealed record RenderDifferenceOptions(
     double PaperBlockInches = 0.25,
     double MaximumShiftInches = 0.1,
     double MinimumClosure = 0,
-    double SplitElongation = 1.45,
+    double SplitElongation = 1.80,
     /// <summary>The size a single hole is detected at, inches: the calibre times what holes of it measure, never the bullet diameter itself.</summary>
     double? CalibreInches = null,
     double SplitMinimumHoles = 1.5,
-    double CalibreOversizeHoles = 1.8);
+    double OversizeHoles = 1.35,
+    double ResidueElongation = 2.2);
 
 /// <summary>
 /// A hole found by render-and-difference, image pixels: the intensity-weighted centroid of its residual, its hull diameter,
@@ -95,9 +98,10 @@ public sealed record RenderDifferenceResult(double Dpi, double InkFraction, doub
 /// <c>300_nm_hand_load</c>, which docs/DETECTION-PIPELINE.md's corpus table requires reported as two shots or flagged, never
 /// silently as one. A blob whose residual's principal standard deviations differ by a ratio of at least
 /// <see cref="RenderDifferenceOptions.SplitElongation"/>, up to twice the largest single hole's area, is split by weighted
-/// two-means into two holes, each flagged as a possible merge. A hole wider than the sheet's median by two robust standard
-/// deviations is flagged as oversized, S8's response to ink over a hole, because an overlapping pair's residual can be as
-/// round as a single hole's and no split finds it.</item>
+/// two-means into two holes, each flagged as a possible merge. A whole mark with the area of
+/// <see cref="RenderDifferenceOptions.OversizeHoles"/> single holes or more is flagged as oversized, because an overlapping pair's
+/// residual can be as round as a single hole's and no split finds it; a single hole is the calibre's size, or without one the sheet's
+/// 25th percentile whole mark.</item>
 /// </list>
 /// </summary>
 public static class RenderDifferenceHoleDetector
@@ -189,6 +193,7 @@ public static class RenderDifferenceHoleDetector
         double smallest = Math.PI * Math.Pow(options.MinimumDiameterInches * dpi / 2, 2), largest = Math.PI * Math.Pow(options.MaximumDiameterInches * dpi / 2, 2);
         var holes = new List<RenderDifferenceHole>();
         var rejected = new List<RejectedBlob>();
+        var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double Area, double Hx, double Hy, double Diameter, double Solidity, double Closure, double? CalibreHoles)>();
         foreach (var blob in backend.FilledBlobs(closed))
         {
             var (area, hx, hy) = Polygon(blob.Hull);
@@ -202,12 +207,8 @@ public static class RenderDifferenceHoleDetector
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = area < smallest ? default : Moments(residual, expected, width, blob);
-            // Entry 78 section 4: with a calibre, a blob with less area than SplitMinimumHoles holes of that calibre is one hole however
-            // elongated, so the calibre can stop a split but never make one. Without a calibre the shape alone decides, as before.
             double? calibreHoles = options.CalibreInches is { } calibre ? area / (Math.PI * Math.Pow(calibre * dpi / 2, 2)) : null;
             bool elongated = moments.Elongation >= options.SplitElongation && area <= 2 * largest;
-            bool vetoed = elongated && calibreHoles < options.SplitMinimumHoles;
-            bool merge = elongated && !vetoed;
             string? shape = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
                 : area > largest && !elongated ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
@@ -231,30 +232,57 @@ public static class RenderDifferenceHoleDetector
                 continue;
             }
 
-            if (merge)
+            if (elongated)
             {
-                foreach (var (mx, my) in Split(residual, width, blob, moments))
-                {
-                    holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
-                }
-
+                elongatedBlobs.Add((blob, moments, area, hx, hy, diameter, solidity, closure, calibreHoles));
                 continue;
             }
 
-            // A blob the calibre says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
-            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation,
-                Oversized: calibreHoles >= options.CalibreOversizeHoles, CalibreHoles: calibreHoles, SplitVetoed: vetoed));
+            // A blob the size says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
+            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles));
         }
 
-        // S8: wider than the sheet's median by two robust standard deviations, flagged rather than refused.
-        var single = holes.Where(h => !h.PossibleMerge).Select(h => h.DiameterInches).Order().ToList();
-        if (single.Count >= 5)
+        // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78 and 81). The size is the calibre's
+        // when one is named, and otherwise the sheet's own 25th percentile whole mark once there are five; with neither, shape alone decides.
+        // An elongated blob with less area than SplitMinimumHoles such holes is not two holes, so the size can stop a split but never make
+        // one. Such a blob is kept as one hole unless it is also at least ResidueElongation long, which no real hole in the corpus came near
+        // (at most 1.72): then it is a sliver of photographed residue and is refused (entry 78 section 2).
+        var round = holes.Select(h => h.DiameterInches).Order().ToList();
+        double? singleSize = options.CalibreInches ?? (round.Count >= 5 ? round[round.Count / 4] : null);
+        foreach (var (blob, moments, area, hx, hy, diameter, solidity, closure, calibreHoles) in elongatedBlobs)
         {
-            double median = single[single.Count / 2];
-            double spread = 1.4826 * single.Select(d => Math.Abs(d - median)).Order().ElementAt(single.Count / 2);
+            double? sizeHoles = singleSize is { } one ? area / (Math.PI * Math.Pow(one * dpi / 2, 2)) : null;
+            bool vetoed = sizeHoles < options.SplitMinimumHoles;
+            if (vetoed && moments.Elongation >= options.ResidueElongation)
+            {
+                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi,
+                    FormattableString.Invariant($"residue: elongation {moments.Elongation:0.00} with the area of {sizeHoles:0.00} holes, too small to be two and longer than a hole")));
+                continue;
+            }
+
+            if (vetoed)
+            {
+                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true));
+                continue;
+            }
+
+            foreach (var (mx, my) in Split(residual, width, blob, moments))
+            {
+                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
+            }
+        }
+
+        // S8: a whole mark with the area of OversizeHoles single holes or more is flagged, never cut (NOTES-FROM-PLANNING.md entry 81
+        // section 2). A single hole is the calibre's size when one is named, and otherwise the sheet's own 25th percentile whole mark once there
+        // are five, a quantile a sheet of mostly merged pairs cannot move. The rule it replaces, the median plus two robust deviations, flagged
+        // ordinary holes on a tight sheet and missed merged pairs on a sheet where they were half the marks.
+        var whole = holes.Where(h => !h.PossibleMerge).Select(h => h.DiameterInches).Order().ToList();
+        double? single = options.CalibreInches ?? (whole.Count >= 5 ? whole[whole.Count / 4] : null);
+        if (single is { } size)
+        {
             for (int k = 0; k < holes.Count; k++)
             {
-                if (!holes[k].PossibleMerge && holes[k].DiameterInches > median + (2 * spread))
+                if (!holes[k].PossibleMerge && Math.Pow(holes[k].DiameterInches / size, 2) >= options.OversizeHoles)
                 {
                     holes[k] = holes[k] with { Oversized = true };
                 }

@@ -43,6 +43,12 @@ public static class AutomaticMarking
     /// The holes within a sheet share paper, printer, scanner and bullet, so their spread of 0.039 says little about the next sheet. On
     /// photographs, 75 holes over seven frames of the same two sheets: pooled 0.986, frame means from 0.92 to 1.07. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
     /// about 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
+    /// <para>
+    /// What these figures are good for, entry 81 section 4: telling one hole from two is a factor-of-two judgement, and an error of a few
+    /// percent in them cannot flip it, so two sheets are enough for that. They are not enough for anything that needs the absolute size, such
+    /// as reporting a measured calibre back to a person or comparing hole sizes between loads. A use of that kind must measure the ratio on
+    /// many more sheets first rather than inherit a precision these never had.
+    /// </para>
     /// </summary>
     public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.986;
 
@@ -100,7 +106,7 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("resolution", string.Create(CultureInfo.InvariantCulture, $"{dpi:0.0} px per inch, from the registration"));
-            stage.Parameter("calibre", calibre is null ? "none named, so the split reads shape alone" : string.Create(CultureInfo.InvariantCulture,
+            stage.Parameter("calibre", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
                 $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * (metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre):0.000} in {(metadata.IsCamera ? "in a photograph" : "on a scan")}: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");
@@ -119,11 +125,13 @@ public static class AutomaticMarking
             }
 
             int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized), vetoed = holes.Holes.Count(h => h.SplitVetoed);
-            stage.Metric("splits the calibre stopped", vetoed, "count");
+            int residue = holes.Rejected.Count(r => r.Reason.StartsWith("residue", StringComparison.Ordinal));
+            stage.Metric("splits the hole size stopped", vetoed, "count");
+            stage.Metric("residue refused", residue, "count");
             stage.Metric("split halves", merges, "count");
             stage.Metric("oversized", oversized, "count");
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
-                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by the calibre" : "")}"));
+                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by their size" : "")}{(residue > 0 ? $", {residue} refused as residue" : "")}"));
         }
 
         // Entry 70 section 5: two nearly identical positions, kept apart on purpose. A shot's offset is a measurement, and the shooter aimed
