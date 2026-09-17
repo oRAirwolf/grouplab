@@ -122,7 +122,21 @@ Where the specification is silent and a choice has to be made to go on, record t
 
 ## Long-running steps
 
-**Do not end a turn waiting to be notified that something finished.** If a step is long, run it in the foreground and wait for it in that turn, printing progress as it goes. If the tooling offers a real background mechanism with a handle you can poll, poll it in the same turn until it completes. A turn that ends while work is outstanding does not pause the work, it abandons it, and the session then reports progress that is not happening. The only correct reason to end a turn with work outstanding is a blocking question in `docs/QUESTIONS-FOR-PLANNING.md`, and that is a stop, not a wait. Print progress not because it is tidy, but because without it nobody, including you, can tell a slow run from a stopped one.
+**A job that will outlast the turn ends the turn** (NOTES-FROM-PLANNING.md entry 79 section 2, replacing the earlier rule of waiting in the turn). A CI run, or a sweep or corpus pass of more than a few minutes, is started, and the turn then reports:
+- what was started;
+- the exact path its output will appear at;
+- the one command that reads it.
+
+Then stop. The next instruction reads the result. A session blocked on a wait cannot be given anything else, and a summary written before the job finishes is still a summary. Print progress from long jobs, because without it nobody can tell a slow run from a stopped one.
+
+**Run a long command-line job from a published copy, never from `bin`.** A running `grouplab` holds its own build output, and every build fails for as long as it runs. Publish to a directory outside the build tree, and run from there:
+
+```
+dotnet publish src/GroupLab.Cli -c Release -o ../grouplab-cli
+../grouplab-cli/grouplab holes split-calibration --local <manifest.json> > <output file>
+```
+
+The copy reads `scans/` and `targets/` relative to the current directory, so run it from the repository root. Republish when the code the job measures changes. The desktop application is run the same way, from its own copy.
 
 ## Talking to the planning session
 

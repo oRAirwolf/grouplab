@@ -11,7 +11,7 @@ using GroupLab.Core.Trace;
 namespace GroupLab.Cli;
 
 /// <summary>
-/// <c>grouplab analyze &lt;image&gt; [--target &lt;definition&gt;] [--library &lt;directory&gt;]... [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
+/// <c>grouplab analyze &lt;image&gt; [--target &lt;definition&gt;] [--library &lt;directory&gt;]... [--calibre &lt;calibre&gt;] [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
 /// section 1, a photograph or scan of a GroupLab sheet in and a group out, through <see cref="SheetAnalysis"/>. It prints the stage trace in
 /// DETECTION-PIPELINE.md section 6.3's console form, then every recovered shot and the pooled group, and with <c>--json</c> writes the result
 /// as a marking file the marking screen can open.
@@ -28,6 +28,7 @@ public static class AnalyzeVerb
     {
         ArgumentNullException.ThrowIfNull(rest);
         string? target = null, json = null;
+        Calibre? calibre = null;
         var libraries = new List<string>();
         int verbosity = 1;
         for (int i = 0; i < rest.Length; i++)
@@ -39,6 +40,15 @@ public static class AnalyzeVerb
                     break;
                 case "--library" when i + 1 < rest.Length:
                     libraries.Add(rest[++i]);
+                    break;
+                case "--calibre" when i + 1 < rest.Length:
+                    calibre = Calibre.Parse(rest[++i], out string? problem);
+                    if (problem is not null)
+                    {
+                        error.WriteLine($"analyze: {problem}");
+                        return 2;
+                    }
+
                     break;
                 case "--json" when i + 1 < rest.Length:
                     json = rest[++i];
@@ -53,7 +63,7 @@ public static class AnalyzeVerb
             }
         }
 
-        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null);
+        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null, calibre);
         if (loadFailure is not null)
         {
             error.WriteLine($"analyze: {loadFailure}");
@@ -102,7 +112,7 @@ public static class AnalyzeVerb
     /// the sheet's codes name among those under <paramref name="libraries"/>. Null with the reason when the image cannot be read, or no
     /// definition can be.
     /// </summary>
-    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null)
+    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null)
     {
         failure = null;
         TargetDefinition? definition = null;
@@ -152,7 +162,7 @@ public static class AnalyzeVerb
             definition = identity.Definition;
         }
 
-        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace);
+        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace, calibre);
     }
 
     private static void WriteGroup(TextWriter output, GroupReport report)

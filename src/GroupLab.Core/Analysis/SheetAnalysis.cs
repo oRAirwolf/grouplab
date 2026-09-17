@@ -30,10 +30,10 @@ public sealed record SheetAnalysisResult(
 /// </summary>
 public static class SheetAnalysis
 {
-    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace)
+    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace, Calibre? calibre = null)
     {
         ArgumentNullException.ThrowIfNull(trace);
-        var automatic = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace);
+        var automatic = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, calibre: calibre);
         if (automatic.Failure is not null || automatic.Scale is not { } scale)
         {
             return new SheetAnalysisResult(automatic, [], null, null, trace.Records, automatic.Failure ?? "registration failed");
@@ -43,6 +43,11 @@ public static class SheetAnalysis
         var session = new MarkingSession();
         session.Open(imagePath, metadata.Orientation);
         session.LoadDetections(scale, automatic.Bulls, automatic.Detections, automatic.Assignment, automatic.Rejected ?? [], automatic.Summary);
+        if (calibre is not null)
+        {
+            session.SetCalibre(calibre);
+        }
+
         var state = session.State;
         var bulls = state.Bulls.ToDictionary(b => b.Index);
         var shots = state.Shots.Select(s =>

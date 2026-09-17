@@ -33,7 +33,11 @@ public sealed record RenderDifferenceOptions(
     double PaperBlockInches = 0.25,
     double MaximumShiftInches = 0.1,
     double MinimumClosure = 0,
-    double SplitElongation = 1.45);
+    double SplitElongation = 1.45,
+    /// <summary>The size a single hole is detected at, inches: the calibre times what holes of it measure, never the bullet diameter itself.</summary>
+    double? CalibreInches = null,
+    double SplitMinimumHoles = 1.5,
+    double CalibreOversizeHoles = 1.8);
 
 /// <summary>
 /// A hole found by render-and-difference, image pixels: the intensity-weighted centroid of its residual, its hull diameter,
@@ -41,7 +45,7 @@ public sealed record RenderDifferenceOptions(
 /// the principal standard deviations of that residual, and whether it is one of two holes split from a single blob.
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
-    double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false);
+    double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -198,11 +202,16 @@ public static class RenderDifferenceHoleDetector
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = area < smallest ? default : Moments(residual, expected, width, blob);
-            bool merge = moments.Elongation >= options.SplitElongation && area <= 2 * largest;
+            // Entry 78 section 4: with a calibre, a blob with less area than SplitMinimumHoles holes of that calibre is one hole however
+            // elongated, so the calibre can stop a split but never make one. Without a calibre the shape alone decides, as before.
+            double? calibreHoles = options.CalibreInches is { } calibre ? area / (Math.PI * Math.Pow(calibre * dpi / 2, 2)) : null;
+            bool elongated = moments.Elongation >= options.SplitElongation && area <= 2 * largest;
+            bool vetoed = elongated && calibreHoles < options.SplitMinimumHoles;
+            bool merge = elongated && !vetoed;
             string? shape = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
-                : area > largest && !merge ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
+                : area > largest && !elongated ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
-                : aspect > options.MaximumAspect && !merge ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
+                : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
                 : null;
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
@@ -226,13 +235,15 @@ public static class RenderDifferenceHoleDetector
             {
                 foreach (var (mx, my) in Split(residual, width, blob, moments))
                 {
-                    holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true));
+                    holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
                 }
 
                 continue;
             }
 
-            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation));
+            // A blob the calibre says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
+            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation,
+                Oversized: calibreHoles >= options.CalibreOversizeHoles, CalibreHoles: calibreHoles, SplitVetoed: vetoed));
         }
 
         // S8: wider than the sheet's median by two robust standard deviations, flagged rather than refused.

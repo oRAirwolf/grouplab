@@ -50,6 +50,10 @@ public sealed class MainWindow : Window
     private readonly Button cancelDetection = new() { Content = "Cancel detection", Margin = new Thickness(Tokens.Space8, 2), IsVisible = false };
     private CancellationTokenSource? detection;
 
+    // The marking exactly as the last detection left it, so setting a calibre can tell untouched marks, which it may detect again, from
+    // corrections it must not throw away (NOTES-FROM-PLANNING.md entry 78 section 4).
+    private MarkingState? detectedState;
+
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
 
@@ -430,7 +434,16 @@ public sealed class MainWindow : Window
         metadata = meta;
         artwork = null;
         statedSize = StatedSheetSize.Beside(path);
+        // Entry 78 section 4: the calibre is used in finding holes, so the one named stays named for the next sheet, where detection
+        // on opening can use it. It stays in view in the calibre box.
+        var calibre = session.State.Calibre;
         session.Open(path, meta.Orientation);
+        if (calibre is not null)
+        {
+            session.Load(session.State with { Calibre = calibre });
+        }
+
+        detectedState = null;
         // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
         DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
         canvas.SetImage(new Bitmap(stream), max);
@@ -533,8 +546,37 @@ public sealed class MainWindow : Window
             return;
         }
 
+        bool untouched = detectedState is not null && ReferenceEquals(session.State, detectedState);
+        bool changed = calibre?.DiameterInches != session.State.Calibre?.DiameterInches;
         session.SetCalibre(calibre);
+        if (!changed || calibre is null || detectedState is null)
+        {
+            return;
+        }
+
+        // Entry 78 section 4: the calibre decides whether a blob too small for two holes is split, so marks found without it are found again
+        // with it, but only while nobody has corrected them.
+        if (untouched)
+        {
+            DetectionTask = Detect(automatic: false);
+            status.Text = CalibreRedetectText;
+        }
+        else
+        {
+            status.Text = CalibreAfterCorrectionsText;
+        }
     }
+
+    /// <summary>Types a calibre into the box and presses Set, for the headless tests.</summary>
+    internal void EnterCalibre(string text)
+    {
+        calibreBox.Text = text;
+        SetCalibreFromBox();
+    }
+
+    internal const string CalibreRedetectText = "Detecting again with the calibre, which keeps a mark too small to be two holes in one piece.";
+
+    internal const string CalibreAfterCorrectionsText = "The calibre is used in finding holes from the next Detect, which would replace the corrections made here.";
 
     private async Task OpenMarkingDialog()
     {
@@ -686,7 +728,8 @@ public sealed class MainWindow : Window
 
         status.Text = automatic ? $"Recognised {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
-        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token), token);
+        var calibre = session.State.Calibre;
+        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre), token);
         CrashReporter.InFlight = null;
         token.ThrowIfCancellationRequested();
         LogDetection(result, trace, clock.ElapsedMilliseconds);
@@ -732,6 +775,7 @@ public sealed class MainWindow : Window
         canvas.MissingMarkers = result.MissingMarkers;
         canvas.Artwork = artwork = result.ExpectedArtwork;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary);
+        detectedState = session.State;
         SetTool(MarkingTool.Select);
         status.Text = result.Summary + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed out") : "");
     }

@@ -35,6 +35,15 @@ public sealed record AutomaticResult(
 /// </summary>
 public static class AutomaticMarking
 {
+    /// <summary>
+    /// What render-and-difference measures a hole at, as a fraction of the stated bullet diameter, NOTES-FROM-PLANNING.md entry 79 section 1:
+    /// the bullet is not the hole. Measured on the two real .308 sheets, whole detections matched to hand-verified holes. On scans, 24 holes:
+    /// mean 0.944, sd 0.039, range 0.87 to 1.02. On photographs, 75 holes over seven frames: mean 0.986, sd 0.110, range 0.74 to 1.30, and
+    /// frame means from 0.92 to 1.07. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
+    /// about 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
+    /// </summary>
+    public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.986;
+
     /// <param name="grey">The image as grey, for the markers.</param>
     /// <param name="value">The image as HSV value, max(R, G, B), for the holes.</param>
     /// <param name="trace">
@@ -45,7 +54,11 @@ public static class AutomaticMarking
     /// Checked between the stages, so a screen can stop a detection it started on its own (NOTES-FROM-PLANNING.md entry 76 section 4). A stage
     /// already running finishes first.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default)
+    /// <param name="calibre">
+    /// The bullet, when the person has named one: segmentation reads it so a blob too small to be two holes is never split in two
+    /// (NOTES-FROM-PLANNING.md entry 78 section 4). Optional, and detection without it is what it always was.
+    /// </param>
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
@@ -67,7 +80,8 @@ public static class AutomaticMarking
         {
             try
             {
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend);
+                double ratio = metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre;
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * ratio));
             }
             catch (InvalidOperationException ex)
             {
@@ -82,6 +96,8 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("resolution", string.Create(CultureInfo.InvariantCulture, $"{dpi:0.0} px per inch, from the registration"));
+            stage.Parameter("calibre", calibre is null ? "none named, so the split reads shape alone" : string.Create(CultureInfo.InvariantCulture,
+                $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * (metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre):0.000} in {(metadata.IsCamera ? "in a photograph" : "on a scan")}: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");
             stage.Metric("rejected", holes.Rejected.Count, "count");
@@ -98,11 +114,12 @@ public static class AutomaticMarking
                 stage.Reject(string.Create(CultureInfo.InvariantCulture, $"blob {r.DiameterInches:0.000} in across"), r.Reason, Trace.PointInches.FromDmm(page.X, page.Y));
             }
 
-            int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized);
+            int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized), vetoed = holes.Holes.Count(h => h.SplitVetoed);
+            stage.Metric("splits the calibre stopped", vetoed, "count");
             stage.Metric("split halves", merges, "count");
             stage.Metric("oversized", oversized, "count");
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
-                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}"));
+                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by the calibre" : "")}"));
         }
 
         // Entry 70 section 5: two nearly identical positions, kept apart on purpose. A shot's offset is a measurement, and the shooter aimed

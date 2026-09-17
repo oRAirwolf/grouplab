@@ -45,6 +45,8 @@ return args switch
     ["holes", "ink-proximity", "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", null, true, Console.Out),
     ["holes", "ink-proximity", "--local", var manifest] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", manifest, false, Console.Out),
     ["holes", "ink-proximity", "--local", var manifest, "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", manifest, true, Console.Out),
+    ["holes", "split-calibration"] => SplitCalibration.Run("scans/phase0", SampleSet.FrozenDirectory, null, Console.Out),
+    ["holes", "split-calibration", "--local", var manifest] => SplitCalibration.Run("scans/phase0", SampleSet.FrozenDirectory, manifest, Console.Out),
     ["holes", "synthetic"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out),
     ["holes", "synthetic", "--realism"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, realismOnly: true),
     ["holes", "synthetic", "--held-out"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, heldOut: true),
@@ -477,9 +479,10 @@ static int Usage()
         grouplab intake <submission-directory> <public-directory> [--accept <file>]... [--submissions <directory>]
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
-        grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [-v 1|2|3] [--json <marking.json>]
+        grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [-v 1|2|3] [--json <marking.json>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
+        grouplab holes split-calibration [--local <manifest.json>]
         grouplab identify sweep
         grouplab spike stability
         grouplab spike corners --export <file.json> | --replay <file.json>

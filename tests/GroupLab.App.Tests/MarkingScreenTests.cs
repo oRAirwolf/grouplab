@@ -406,6 +406,46 @@ public class MarkingScreenTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 78 section 4: the calibre is used in finding holes. Named after a detection nobody has corrected, it detects
+    /// again; named after a correction, it says the next Detect would use it and leaves the marks alone; and it stays named for the next sheet.
+    /// </summary>
+    [AvaloniaFact]
+    public void NamingACalibreDetectsAgainOnlyWhileTheMarksAreUntouched()
+    {
+        string sheet = RenderedSheet();
+        try
+        {
+            var window = DetectingWindow();
+            window.OpenImage(sheet);
+            Pump(window);
+            var first = window.DetectionTask;
+
+            window.EnterCalibre(".308");
+            Assert.NotSame(first, window.DetectionTask);
+            Assert.Equal(MainWindow.CalibreRedetectText, window.StatusText);
+            Pump(window);
+            Assert.IsType<SheetReference>(window.Session.State.Scale);
+            Assert.Equal(0.308, window.Session.State.Calibre!.DiameterInches, 6);
+
+            var detected = window.DetectionTask;
+            window.Session.AddShot(new PointD(600, 600));
+            window.EnterCalibre(".223");
+            Assert.Same(detected, window.DetectionTask);
+            Assert.Equal(MainWindow.CalibreAfterCorrectionsText, window.StatusText);
+            Assert.Contains(window.Session.State.Shots, s => s.Provenance == ShotProvenance.Manual);
+
+            window.OpenImage(sheet);
+            Assert.Equal(".223", window.Session.State.Calibre!.Name);
+            Pump(window);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(sheet);
+        }
+    }
+
     /// <summary>Entry 76 section 4: a detection started on opening can be cancelled, and then nothing of it is applied.</summary>
     [AvaloniaFact]
     public void ADetectionStartedOnOpeningCanBeCancelled()

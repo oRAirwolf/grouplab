@@ -15,6 +15,31 @@ namespace GroupLab.Core.Tests.Marking;
 /// </summary>
 public class AutomaticMarkingTests
 {
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 79 section 1: a named calibre reaches segmentation as the size its holes are detected at, the calibre times
+    /// the measured ratio for a scan, never the bullet diameter itself, and the trace says which size was used.
+    /// </summary>
+    [Fact]
+    public void ANamedCalibreReachesTheDetectorAsTheSizeItsHolesMeasure()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        const double dpi = 150;
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
+        double s = 254 / dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var holes = definition.Bulls.Take(4).Select(b => new SyntheticHole(b.X + 90, b.Y + 90, 0.06 * 254, 0.035 * 254, 34, 192, 0.014 * 254, [0.3, 0.2, 0.1, 0.1], [0, 1, 2, 3])).ToList();
+        var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, [], new Random(79));
+        var trace = new GroupLab.Core.Trace.TraceRecorder();
+
+        var result = AutomaticMarking.Run(observed, observed, ImageMetadata.ForScan(render.Width, render.Height, dpi), definition, new OpenCvSharpBackend(), trace, calibre: new Calibre(".308", 0.308));
+
+        double size = 0.308 * AutomaticMarking.ScanHoleToCalibre;
+        Assert.NotEmpty(result.Difference!.Holes);
+        Assert.All(result.Difference.Holes, h => Assert.Equal(Math.Pow(h.DiameterInches / size, 2), h.CalibreHoles!.Value, 9));
+        var stage = trace.Records.Single(r => r.Stage == "S5-S8.holes");
+        Assert.Contains(stage.Parameters, p => p.Name == "calibre" && p.Value.Contains("a hole of about 0.291 in on a scan", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void ARenderedSheetIsPrefilledWithOneAssignedShotPerBull()
     {
