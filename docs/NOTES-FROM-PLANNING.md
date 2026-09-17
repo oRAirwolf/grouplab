@@ -15,6 +15,154 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 76: the ellipse aspect needs its null, entry 56 lost its only real corroboration, and five decisions
+
+**Status: actioned 2026-09-17, except section 4's printed name, which is question 16.**
+- **Section 1:** `CircularAspect` gives the aspect's circular null exactly, and it matches the simulation here. The report and the panel print the median and how often circular shots exceed the measured aspect, in section 10's form. `STATISTICS.md` section 7 has the table.
+- **Section 2: the hypothesis does not hold.**
+  - Re-run with the two split duplicate detections merged, the earlier sheet gives σ 0.390 in and 2 of 10 misassigned, at ratio 3.84.
+  - Its sighters were never in its figures.
+  - `STATISTICS.md` section 9.3 records the table with its one real-paper corroboration, and says how weak that is.
+  - The pipeline itself reports σ 0.607 in on that sheet, because two holes crossing printed ink were each found twice. That is a detector defect for its own entry.
+- **Section 3: the camera was always nearer the paper's top**, so top against bottom cannot separate the two causes. Left against right can: in three of four oblique frames, the bad bottom corner is the one farther from the camera, and its markers failed to decode where the photograph is out of focus. That is optical. A small lift at the bottom corners is not excluded; a frame taken from below would settle it.
+- **Section 4:**
+  - The scan is not published.
+  - The marker check is fixed, and all six frames pass on merit.
+  - Rings are drawn at the measured diameter, with the calibre beside them.
+  - Detection starts on opening a recognised sheet, with progress and Cancel.
+  - **The printed name was built and reverted.** Its wider exclusion box hid a real hole on Alan's already-printed scan, 15 holes to 13, so question 16 asks where the name can go. The check also found the scan's print-note false positive.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 75 and 76".
+
+Sections 1 and 2 are measurements. Section 3 is a test that separates two explanations using frames already in hand. Section 4 answers the five decisions Claude Code asked for.
+
+Two of my three predictions were wrong. The sighter fix took extreme spread from 2.224 in to 1.361 in as predicted. **The ellipse aspect rose rather than fell, and the scan has zero misassigned shots against my two to three.** Both are worth more than the predictions were.
+
+### 1. The error ellipse aspect is reported without any reference, and it misleads in both directions
+
+The panel prints **"error ellipse aspect 2.818, major axis at 26.7 degrees"** as a bare fact. A person has no way to know what that number does when nothing is wrong.
+
+**Simulated, 400,000 replications, shots drawn from a perfectly circular process:**
+
+| Shots | median aspect | 75th | 90th | 95th | 99th |
+|---|---|---|---|---|---|
+| **10** | **1.53** | 1.83 | 2.21 | 2.51 | 3.25 |
+| 12 | 1.46 | 1.71 | 2.02 | 2.25 | 2.80 |
+
+**A perfectly round ten-shot group reports an aspect of about 1.5 half the time.** Anyone reading the current panel would see elongation in a group that has none, on every second target they analyse.
+
+**And for this sheet the number does mean something.** An aspect of 2.818 or more happens in **2.5 percent** of ten-shot circular groups, so the elongation is probably real and the 26.7 degree axis is probably worth looking at. **Nothing on the screen distinguishes those two cases**, and they are opposite conclusions from the same readout.
+
+**The project already solves this exact problem one line below.** The flyer test reads "worst shot at 2.40 mean radii; a group of 12 is expected to put its worst at 1.95", which is a statistic with its null attached, from `STATISTICS.md` section 10. **The ellipse line should follow the same pattern**: aspect 2.82, where ten circular shots give about 1.5 and exceed 2.82 one time in forty.
+
+**This is not a new statistic and not new machinery.** It is the same treatment already applied next door, withheld from the one readout most likely to make somebody chase a problem that is not there.
+
+### 2. My misassignment prediction was wrong, and the interesting part is why entry 56 no longer has any real support
+
+Zero of ten scoring shots are misassigned. Sigma is 0.274 in, the bulls are 5.5 sigma apart, and entry 56's model expects about 0.15 of a shot in ten at that spacing. **The model and the observation agree. My input to the model was wrong**, because I assumed this sheet would sit where the friend's earlier sheet did, at a ratio of 3.89.
+
+**It does not, and the reason may be the defect that was just fixed.** The earlier sheet implied a sigma of 0.385 in. This one, same rifle, same load, same distance, measures 0.274 in. **The earlier sheet was analysed before the sighter pooling was fixed**, and if sighter holes were assigned to scoring bulls there as well, its sigma was inflated by exactly the mechanism entry 73 section 1 removed, its spacing-to-sigma ratio was pushed down, and its "2 of 10 misassigned" was partly counting those same sighter holes.
+
+**Re-run the friend's earlier target through the fixed pipeline.** If sigma falls and the misassignment count drops toward zero, that settles it.
+
+**The consequence matters more than the cause.** Entry 56's misassignment table was validated against 400,000 simulated shots, so the model itself stands. Its one corroboration on real paper was that earlier sheet. **If that measurement was contaminated, then after this fix there is no real-paper corroboration of the table at all**, because both real sheets now report zero. **Say so in `docs/STATISTICS.md` rather than leaving the table looking field-tested.** A table validated only in simulation is fine; a table that looks validated on paper and is not, is the kind of thing this project exists to avoid.
+
+### 3. The mounted gate is 6 percent away, and the six frames can tell us why
+
+`IMG_5820` reaches **0.00531 in** against a 0.005 in gate under the surface model, with `IMG_5819` at 0.00587 in. Alan's own seven frames ranged 0.006 to 0.067 in. **An independent mounting, by a different person, with tape on cardboard, is the closest anything has come.**
+
+The finding to pull on is that **the large errors sit on clean bulls at the bottom corners of the sheet rather than on the bulls with holes in them.** Two explanations, and they are not close to each other:
+
+- **Optical.** The camera was above the sheet, so its lower edge is farther and more foreshortened, fewer pixels land per inch of paper there, and every marker in that region localises worse. This predicts nothing about the paper.
+- **Mechanical.** Tape at four corners pins the sheet at four points and the paper puckers near the fixings, and a pucker involves stretching, which a developable surface cannot represent by definition. This predicts a real limit on the model.
+
+**The six frames separate them, and no new data is needed.** They were taken from different positions within twenty-five seconds of each other, of one sheet that did not move.
+
+> **If the error is optical, the worst region moves with the camera** and is always the part of the sheet farthest from it in that frame. **If it is mechanical, the worst region stays at the bottom corners of the paper** in all six, whatever the viewpoint.
+
+**Report the per-bull residual for each of the six frames as a map over the sheet**, and the answer will be visible without any statistics. **If it is optical, the gate is a photography instruction** and the guidance becomes shoot square to the sheet and fill the frame. **If it is mechanical, the surface model has a named limit** and the fallback in `PHASE0-RESULTS.md` section 4.5 comes back onto the table.
+
+### 4. The five decisions
+
+**Scan consent: no, and do not reason about intent.** The consent record lists six files and the scan is not one of them. Intake refusing the submission is the guard working, and overriding it once teaches everybody that the guard is a nuisance. **The route is to raise the page's size limit, have the shooter upload the scan through the page, and get a real record.** The scan stays local for testing until then, which costs nothing because it is already local.
+
+**The four held photographs: no, do not accept by name. Fix the check.** They were held because intake's quick check found 0 to 3 markers on frames that all register with 33 to 38. **That is a defect in the check, and accepting its output by hand is working around a bug in the one mechanism that decides what gets published.** Fix it, re-run, and let the four pass or fail on their merits.
+
+**Rings before a calibre is set: draw the measured diameter.** The detector measured one, it is real, and it is in sheet units so it scales for free. **A centre mark hides the single most diagnostic number the detector produces**, which is the same number that catches merged holes and ink, as this week's oversize warnings showed. Draw the measured diameter always, and when a calibre is set draw the expected one beside it in a visibly different style, so the comparison that generates the warning is visible rather than described.
+
+**Detect on open: yes, when the image is recognised as a GroupLab sheet.** The sheet self-describes and the software already knows. A button that makes a person ask for the only sensible next step is friction with no decision in it. Three conditions: **do nothing and say so** when the image is not a recognised sheet, **keep the manual button** for re-running, and **make it cancellable with visible progress**, because the scan is 35 megapixels and a frozen window during a long detect is worse than a button.
+
+**The printed name: name first, identifier second, same caption line.** Something of the form `GroupLab 5x5 Load Development, A4 · GL-20J3-Y141-0BN3-EYME`. The name is for the person holding the paper and the identifier is for the software and for support, so the name leads. Keep the actual-size sentence exactly where it is, because it is the more important instruction on the sheet.
+
+**One thing to check before touching the renderer, and it is not obvious.** Render-and-difference compares the image against the expected artwork. **The caption is inside the analysed region** on this sheet, and there is a detection near it. **So changing the caption changes what the detector expects for every sheet already printed**, and a sheet printed today and analysed next month would differ from its own definition. Establish whether the caption is excluded from the difference region before changing it; if it is not, that exclusion is part of this change rather than a follow-up.
+
+### 5. On my own accuracy, briefly, because the pattern is now clear
+
+Yesterday and today I was wrong about the OpenCV packaging, a browser, a git config, the concept image being absent, five screenshot observations, the print mechanism, the ink-merging hypothesis, the ellipse aspect and the misassignment count.
+
+**The pattern is not random. Every prediction I got right came from reading the source or the data first; every one I got wrong was a cause I supplied for an effect I had only observed.** The spread prediction held because I had read `ShotAssignment` and seen the dashed lines. The aspect prediction failed because I assumed one cause for an elongation I had not decomposed.
+
+**So the working rule, stronger than entry 66's:** when I state a cause, say what I read that supports it, and when I have read nothing, say that instead and attach the test. **Every wrong call in that list cost minutes because it carried a test. That is the only reason the list is survivable.**
+
+---
+
+## 2026-09-16, entry 75: one numbering system on the screen, and it is the one printed on the paper
+
+**Status: actioned 2026-09-17.**
+- **Sections 1 to 4:** a shot is labelled by its bull on the canvas, in the SHOTS list, in `grouplab analyze` and in the marking file. The list is in the sheet's order, a doubled bull reads `7a`, `7b` by position, and a shot with no bull reads `unassigned` in the alert colour. No per-detection index is shown anywhere.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entries 75 and 76".
+
+A rule from Alan, and it is not negotiable: **a shot on bull 1 must be 1 everywhere it appears.** Anything else is confusing and should not be done.
+
+### 1. What the screen does now
+
+Two numbering systems are drawn in identical boxes, side by side, and nothing distinguishes them.
+
+- The box at a bull's centre is **the bull number**, printed on the paper.
+- The box beside a hole is **that shot's position in the SHOTS list**, in the order the detector emitted it.
+
+The SHOTS list reads `1 bull 5`, `2 bull 4`, `3 bull 1`, `4 bull 2`, `5 bull 3`. So bull 1's hole is labelled 3, bull 2's is labelled 4, and bull 5's is labelled 1.
+
+**Alan's first reading was that the software had assigned bull 1's hole to bull 3.** That is the natural reading and the display gave him no way to reach another one.
+
+### 2. Why it is worse than confusing
+
+**A number beside a bullet hole reads as shot order**, the sequence the rounds were fired in. That is a real quantity in load development and a shooter will assume it is what they are looking at.
+
+**The detector cannot know firing order and never will.** So the screen implies a fact it does not have, in the place a person is most likely to act on it. `DESIGN.md` section 2 says this software must never give a confident wrong answer, and an implication counts.
+
+### 3. The rule
+
+**One numbering system, and it is the bull's.** A shot is identified by the bull it sits on: in the panel, on the canvas, in the review queue, and in anything exported. On a one-shot-per-bull sheet that identifier is unique, and the person already has it because it is printed beside the bull on the paper in their hand.
+
+1. **The SHOTS list is ordered by bull and labelled by bull.** Bull 1's shot is row 1. Sighters follow the scoring bulls, S1 to S3.
+2. **The canvas carries bull numbers only.** No per-detection index anywhere.
+3. **Detection order is an implementation detail and is not shown.** If something internal needs a stable identity, it stays internal.
+
+### 4. The two exceptions, and they must not look like bull numbers
+
+The rule holds because the sheet is one shot per bull. Two cases break that, and both are what the review queue exists for.
+
+- **A bull with more than one shot.** Label them so they cannot be read as bull numbers: **`7a` and `7b`**, never `26` and `27`.
+- **A shot with no bull**, which is what the holes below the sighter row are. These need a name that is not an integer: **the word unassigned**, or a mark carrying no number at all.
+
+**Both cases are abnormal and should look abnormal.** A person glancing at the sheet should see at once that something needs a decision, and a plain integer in a box is the one thing that says the opposite.
+
+### 5. The concept already did this, and I did not notice until Alan asked
+
+In `docs/figures/screens/assignment-editor.png` there are **no per-detection numbers on the canvas at all**: bull numbers, a ring on each detection, and a review queue naming things as "contested between bull 4 and bull 9" and "bull 17 had no detection".
+
+**That is twice today the concept has answered a question I was treating as open.** Entry 66's lesson again: read what the project already holds before reasoning from first principles.
+
+### 6. Consequence for the ground truth baseline
+
+The current indices are stable within a run and renumber as soon as the shot set changes, which entry 73 section 1's sighter fix will do.
+
+**So the ground truth lists must record the bull alongside the index**, as `label 3 on bull 1`, against a named commit. Once this entry is implemented the index is gone and the bull is all that remains, which is the right long-term form for that baseline anyway.
+
+---
+
 ## 2026-09-16, entry 74: entry 70 conflated two different decisions, and a hand-placed shot must not pin its bull
 
 **Status: actioned 2026-09-16.**

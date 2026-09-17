@@ -2882,6 +2882,153 @@ After entry 73 section 1, `grouplab analyze Scan_20260916.png` finds 15 holes: 1
 
 ---
 
+## Entries 75 and 76. One numbering system, five decisions, the aspect's null, and two predictions tested
+
+`docs/NOTES-FROM-PLANNING.md` entries 75 and 76, in the order Alan set:
+- entry 75;
+- entry 76 section 4;
+- then sections 1, 3 and 2.
+
+### Entry 75: a shot is named by its bull, everywhere
+
+**The rule as implemented.** `ShotLabels.For` gives every shot the label of the bull it is assigned to, in the sheet's order: scoring bulls, then sighters, then shots with no bull, then shots marked not a shot.
+- **A bull holding two or more shots** labels them `7a`, `7b` by position on the image, top to bottom then left to right.
+- **A shot with no bull** is labelled `unassigned`, in the alert colour, so it can never be read as a bull number.
+- **A shot marked not a shot** is labelled `not a shot`, in the alert colour as well.
+- **A plain group with no bulls** has no labels at all, and its list is ordered by position.
+
+**Where it applies.**
+- **The canvas.** It draws no per-detection index anywhere.
+- **The SHOTS list.** It is ordered and named by label. An unassigned shot or one that is not a shot reads "unassigned, at x, y" so two of them can be told apart.
+- **`grouplab analyze`'s shot column** and the marking file, which gains a `label` field.
+
+The shot's internal identity stays internal. The detection order is no longer shown anywhere.
+
+### Entry 76 section 4: the five decisions
+
+**Scan consent: not published.** `Scan_20260916.png` stays local, and the submission folder is untouched.
+
+**The four held photographs: the check is fixed, and all six now pass on merit.**
+- **The fault.** Intake's triage tried three guesses of a marker's side: a 20th, a 40th and an 80th of the long side. A sheet photographed from where a person stands has markers at a 110th to a 175th.
+- **The fix.** `MarkerTriage` now tries down to a 320th. Wherever a guess decodes anything, it detects again at the median side it found, which is the bootstrap the measurement itself uses.
+- **The test.** `MarkerTriageTests` places a rendered `GL-CF25-LTR` at 228 DPI in a 6000 by 4500 frame, and requires all but two printed markers counted.
+- **The re-run.** Intake ran on a scratch copy without the scan, with output to a scratch directory and nothing written to `grouplab-testdata`.
+  - All six frames published, with 38, 38, 36, 35, 37 and 33 markers counted.
+  - `PublicationTests` passes over the published copies, 8 of 8, with stand-in checkout files.
+
+**Rings: the measured diameter, always, with the calibre beside it.**
+- **What is recorded.** A detected shot carries the diameter the detector measured, through `DetectedShot` into `MarkedShot.MeasuredDiameterInches`, and the marking file saves it.
+- **How it is drawn.** The canvas draws the ring at that diameter in sheet units. Once a calibre is set, the calibre's hole is drawn beside it, faint and dashed.
+- **When there is no measurement.** A shot placed by hand has none, and moving a detected shot drops it, because the measurement described the detector's point and not the person's. Such a shot keeps the calibre ring.
+
+**Detect on open: yes, on a recognised sheet only.**
+- **On a GroupLab sheet,** opening an image starts detection. The status bar shows an indeterminate progress bar and a Cancel button.
+- **On anything else,** it does nothing and says so: "Nothing detected: this image is not a GroupLab sheet GroupLab recognises". The Detect button still runs detection by hand, with the definition picker as before.
+- **What cancelling does.** It checks at each resolution of identification and between detection's stages, then says "Detection cancelled". **Cancellation takes effect only at those checkpoints**, so a long stage runs to its end before it stops.
+
+**The printed name: checked first, as section 4 asked, and not changed, because the check failed.**
+- **Where the caption sits.** The identifier caption is inside the analysed region.
+- **How it is excluded today.** The expected artwork is drawn by `SceneRasterizer`, which draws no text. The caption is kept out of the difference only by an exclusion box sized to the caption's own text.
+- **What the change needed.** Putting the name in front of the identifier widens that text, so the box had to widen too. It was widened to cover both the new caption and the identifier alone, which is what every sheet printed so far carries.
+- **What the change did.** On Alan's scan, a sheet printed before the change, the wider box covers blank paper beside the old caption. **It hid a real sighter hole**, S1's shot at page (3.070, 10.573) in.
+- **The counts.**
+  - 15 holes before the change.
+  - 13 holes with it.
+  - 15 holes again once it was reverted.
+- **So the change breaks sheets already printed.** It was reverted in full and is not in the repository. Question 16 asks planning where the name can go.
+
+**A false positive the check turned up, which answers entry 73 section 4.** The scan's shot at page (2.909, 10.784) in is not a hole.
+- **Where it sits.** On the printed sentence "Print at actual size, 100 percent", whose baseline is 45 dmm above the bottom edge.
+- **Why it was detected.** That sentence is not in any exclusion zone, so its ink reads as a difference.
+- **What would fix it.** A box around that sentence alone, its glyph band plus 10 dmm. It would remove this detection without reaching the hole at 10.573 in. **It is not implemented**, because it changes what the detector reads on every printed sheet. It is part of question 16.
+
+### Entry 76 section 1: the aspect is printed beside what a circular group gives
+
+**The null is exact rather than simulated.** `CircularAspect` integrates the density of the inverse aspect for n circular shots, `u^(n-3) (1 - u²) / (1 + u²)^(n-1)`, derived in `docs/STATISTICS.md` section 7.
+- **Against entry 76's simulation.** It reproduces the simulated quantiles at 10 and 12 shots within their noise.
+- **Against a seeded simulation.** One at 3, 5 and 25 shots agrees as well.
+- **Entry 76's worked case.** An aspect of 2.818 from ten shots is exceeded by circular groups with probability 0.0249.
+
+**The report** carries `circularMedianAspect` and `circularAspectExceedance`, each with its reason when it is null.
+
+**The panel** reads, for example, "Error ellipse aspect 2.82, major axis at 27 degrees; 10 circular shots give about 1.5 and exceed 2.82 one time in forty (STATISTICS.md section 7)". Section 7 now carries the table at 5, 10, 12 and 25 shots.
+
+### Entry 76 section 3: the per-bull residual maps
+
+Each frame's 25 scoring bulls are shown under both models. Error is in thousandths of an inch, with the paper's top row first.
+
+| Frame | Homography, rows top to bottom | Surface, rows top to bottom |
+|---|---|---|
+| `IMG_5819` | 5.1 5.5 9.2 5.6 10.9 / 5.9 10.9 11.0 9.1 3.8 / 6.0 8.7 7.7 7.4 1.5 / 2.5 3.5 1.9 4.2 1.7 / 8.5 5.6 4.1 2.8 8.8 | 2.7 1.3 2.8 2.9 2.6 / 1.8 2.6 1.9 0.7 4.7 / 4.6 3.8 2.5 1.6 5.6 / 1.9 2.6 2.3 2.4 5.9 / 5.9 4.0 3.9 0.4 5.0 |
+| `IMG_5820` | 8.9 8.0 7.5 14.1 25.9 / 2.8 7.3 5.4 5.0 22.6 / 6.0 9.4 6.1 5.4 13.3 / 4.0 5.0 2.4 4.6 11.9 / 4.9 4.1 3.4 2.4 21.0 | 5.3 3.3 1.4 2.3 1.8 / 2.6 2.2 1.5 2.0 4.5 / 2.7 3.0 2.6 1.6 3.8 / 1.6 3.3 3.8 1.1 3.4 / 5.2 2.9 4.1 1.4 3.3 |
+| `IMG_5821` | 5.7 5.9 14.8 24.7 16.5 / 1.4 5.6 8.9 16.3 15.8 / 4.8 7.0 5.5 7.3 7.9 / 8.9 2.0 0.4 5.6 4.3 / 37.2 16.7 8.4 6.7 5.3 | 2.4 2.3 4.4 6.6 5.6 / 5.6 4.0 2.6 5.2 5.9 / 1.1 1.8 4.3 1.1 0.8 / 2.4 2.4 5.3 4.0 5.6 / 12.8 1.8 5.7 3.3 11.1 |
+| `IMG_5822` | 1.5 5.7 6.4 8.9 12.0 / 6.3 13.9 11.0 5.5 7.0 / 12.4 15.8 11.9 3.6 8.0 / 3.1 6.5 5.0 1.0 8.8 / 34.5 13.6 5.0 0.6 8.4 | 3.0 2.7 3.5 5.2 8.0 / 5.0 3.4 1.5 3.3 3.5 / 1.4 1.5 4.6 1.3 2.8 / 2.2 2.7 4.5 5.8 12.5 / 8.0 2.3 2.5 8.4 23.4 |
+| `IMG_5823` | 14.1 3.1 7.5 11.6 6.2 / 9.5 0.9 5.2 3.9 0.2 / 1.8 3.4 7.7 3.3 3.4 / 13.5 9.5 5.3 10.1 15.5 / 58.6 34.9 26.7 30.3 41.5 | 6.2 5.9 1.7 7.7 5.0 / 7.6 4.8 3.9 3.5 4.3 / 3.4 6.7 7.7 1.2 3.9 / 5.5 2.7 6.5 0.6 2.6 / 28.9 2.7 9.0 6.9 0.8 |
+| `IMG_5824` | 12.4 1.4 3.5 2.5 10.9 / 11.7 1.9 8.3 7.5 12.0 / 4.3 7.0 13.3 9.3 9.2 / 3.5 1.0 4.9 3.4 18.2 / 34.4 14.0 10.9 22.1 48.0 | 6.8 8.3 2.3 5.5 1.4 / 5.7 6.1 6.0 1.4 3.6 / 2.3 4.3 7.1 0.6 3.3 / 17.4 6.2 2.7 2.0 2.8 / 46.1 14.6 2.5 4.5 1.6 |
+
+**Under the surface model, the large errors are all in the bottom row.** Every scoring bull over 0.010 in is bull 21 or 25, the paper's bottom corners, or a neighbour of one.
+
+**The camera is where the prediction has to be read, and it was not placed to separate top from bottom.**
+- **How distance was measured.** Pixels per dmm, taken from the fitted marker mapping at each corner bull, show how far each corner was from the camera.
+- **The finding.** In every frame the paper's top was nearer than its bottom, by a scale ratio of 1.07 to 1.19. So the bottom corners were always the far ones.
+- **What that means.** "The worst region stays at the bottom" and "the worst region is the part farthest from the camera" predict the same thing in all six frames, and top against bottom cannot separate them.
+
+**Left against right can separate them, because the camera swung.** The frames differ in which bottom corner was farther from the camera.
+
+| Frame | Pixels per dmm at 21 and 25 | Farther bottom corner | Markers not decoded | Surface error at 21 and 25 (in) |
+|---|---|---|---|---|
+| `IMG_5819` | 0.923, 0.933 | neither | none | 0.0059, 0.0050 |
+| `IMG_5820` | 1.275, 1.281 | neither | none | 0.0052, 0.0033 |
+| `IMG_5821` | 0.909, 0.744 | 25 | two, bottom right | 0.0128, 0.0111 |
+| `IMG_5822` | 1.254, 0.950 | 25 | four, bottom right | 0.0080, 0.0234 |
+| `IMG_5823` | 0.632, 0.809 | 21 | two, bottom left | 0.0289, 0.0008 |
+| `IMG_5824` | 0.812, 1.093 | 21 | five, bottom left | 0.0461, 0.0016 |
+
+**The results, frame by frame.**
+- **The two square-on frames:** both corners are small.
+- **Three of the four oblique frames:** the bad corner is the far one, by a factor of 3 to 36.
+- **`IMG_5821`:** the corner farther from the camera is the better of the two, by 0.0017 in, and both are over 0.010 in. It is the one frame against the pattern, and it is close to a tie.
+
+**The paper did not move between frames**, as entry 76 says. So the bad corner switching from right to left follows the camera, not a fixed pucker at one corner.
+
+**The mechanism the frames show is lost markers.**
+- **Which markers.** In every oblique frame, the markers that failed to decode are at the far bottom corner.
+- **Why they failed.** A crop of `IMG_5824` shows that corner visibly out of focus, and `IMG_5822`'s far corner the same.
+- **What follows.** The bull there loses the markers either side of it and is extrapolated from further away.
+- **The same rows elsewhere.** Even in the two square-on frames, some corners of the bottom two marker rows are rejected as outliers.
+
+**What this settles and what it does not.**
+- **Settled:** the dominant cause is viewing geometry. The far corner goes soft, its markers drop out, and its bull loses support. That is the optical branch, and **the gate becomes a photography instruction.** Stand square to the sheet: the two frames taken that way have their worst scoring bull at 0.0059 and 0.0053 in under the surface model, and no bull over 0.010 in.
+- **Not settled:** whether a small lift at both bottom corners also contributes. Obliquity would amplify it, and the far corner would show it more. This data cannot tell that apart from the optical cause, because the far corner was always a bottom one.
+- **What would settle it.** One frame taken from below the sheet, so the top corners are the far ones.
+
+### Entry 76 section 2: the friend's earlier sheet, re-run, keeps its corroboration
+
+`grouplab analyze` was run on the 300 DPI scan of entry 56, which is local only and has no consent record. The marking was written to a scratch directory.
+
+**The pipeline's own figures on that sheet are wrong, for a reason that is not the sighter pooling.**
+- **What it found.** 15 holes: 12 scoring and 3 sighters.
+- **What the sheet has.** 10 scoring holes, one per bull, entry 56 section 1. A crop of the scan shows exactly those ten, including one near bull 6 that entry 56's table leaves out: the table lists nine rows under ten numbers.
+- **The two extra detections are duplicates.** The hole through bull 3's centre dot and the hole on bull 10's inner ring were each found twice, 0.151 in and 0.139 in apart, on either side of the printed ink.
+- **What the duplicates did.** One-to-one matching then gave twelve shots to bulls. **The pipeline reports sigma 0.607 in, which is wrong.**
+- **Not fixed here.** This is a detector defect for its own entry: a hole that crosses printed ink can be split into two.
+
+**With the duplicates merged at their midpoints**, the ten real holes give:
+- **σ 0.390 in**, 95% interval 0.295 to 0.577 in, against entry 56's 0.386 in;
+- mean radius 0.489 in and extreme spread 1.493 in;
+- aspect 1.24, which circular groups exceed 83 times in a hundred;
+- **spacing over σ 3.84.**
+- **Nearest-bull misassignment: 2 of 10.** Those are the shot left of bull 2, which is bull 1's, and the shot above bull 8, which lies nearer bull 3.
+
+**Entry 76's hypothesis does not hold.** That sheet's sighters were never in its figures: entry 56 left them out by hand, and the pipeline leaves them out too. **Sigma did not fall, and the count did not move.**
+- **The table still has its one real-paper corroboration.** At ratio 3.84 it expects 1.1 misassigned shots in ten centred on the aim, or 2.1 at the group's measured offset, and 2 were observed.
+- **Why the two sheets differ.** The difference from Alan's scan, σ 0.274 in, is the two groups' own. Their intervals overlap.
+- **Where it is recorded.** `docs/STATISTICS.md` section 9.3 now holds the table, its closed form, and what it rests on. The corroboration is described as one sheet of ten shots, which agrees with the table but cannot discriminate much.
+
+**Tests:** Core 782 passing, App 42 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3036,3 +3183,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 73 section 7: the interval labels left at their exact coverage, over matching them.** Entry 24 decided the label states the coverage the interval actually has.
 - **Entry 71: intake run on a copy without the unlisted scan, over adding the scan to the manifest.** Whether the consent covers the scan is the contributor's question, and the submission as received is left as it is.
 - **Entry 71: the worst bull reported beside the worst clean bull, over the worst bull alone.** On a shot sheet the holes cut the rings of the bulls they hit, and separating the two shows the error is registration.
+- **Entry 76 section 4: the printed name reverted, over landing it with a box that covers both captions.** On a sheet already printed the wider box hid a real hole, and the analyser cannot tell which caption a sheet carries; where the name goes is question 16.
+- **Entry 76 section 4: detection cancelled at checkpoints between stages, over interrupting a stage.** A stage stopped halfway leaves nothing a person can use, and the checkpoints are where the work can be dropped cleanly.
+- **Entry 76 section 4: a moved shot drops its measured diameter, over keeping it.** The measurement described the point the detector chose, and a ring at that size around a point a person chose would claim a measurement nobody made.
+- **Entry 76 section 1: the aspect's null integrated exactly, over a simulated table.** The density has a closed form for every n, so there is no table to extend or to seed.
+- **Entry 76 section 2: the two split detections merged at their midpoints for the re-run, over the pipeline's figures or hand-picked positions.** The pipeline's figures count one hole twice, and the midpoint uses only what the pipeline found, which is the question entry 76 asked.
+- **Entry 75: a shot with no bull named "unassigned, at x, y" in the list, over "unassigned" alone.** Two such shots would otherwise read the same, and the position is a fact the screen has, not an order.

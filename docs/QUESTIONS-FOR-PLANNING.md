@@ -12,6 +12,48 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-17, question 16: the printed name cannot go on the caption line without hiding holes on sheets already printed
+
+**Status: open.** Blocks entry 76 section 4's printed name, and the print-note exclusion described in section 4 below. Nothing else waits.
+
+### 1. What entry 76 section 4 asked
+
+> **The printed name: name first, identifier second, same caption line.** Something of the form `GroupLab 5x5 Load Development, A4 · GL-20J3-Y141-0BN3-EYME`.
+
+> Establish whether the caption is excluded from the difference region before changing it; if it is not, that exclusion is part of this change rather than a follow-up.
+
+### 2. What the check found
+
+**The caption is inside the analysed region, and it is excluded only by a box sized to its own text.**
+- **Why a box is needed at all.** `RenderDifferenceHoleDetector` builds the expected artwork with `SceneRasterizer`, which draws no text. Every printed word would read as a difference unless a zone covers it.
+- **How the caption's box is sized.** The identifier's box is estimated from the text's length, at 0.6 times the font size per character, 25 dmm tall, plus 10 dmm all round. Its baseline is 80 dmm above the bottom edge.
+
+**The change was built and measured.**
+- **What was built.** The caption became name, middle dot, identifier. The box was widened to cover both the new caption and the identifier alone, which is what every sheet printed so far carries. It was measured with the exact Helvetica widths.
+- **What happened on Alan's scan**, a sheet printed before the change: the detector found **13 holes instead of 15**. The wider box covers blank paper beside the old caption, and a real sighter hole sits there, at page (3.070, 10.573) in.
+- **What was done.** The change was reverted in full, and the scan reads 15 again.
+
+**So any caption wider than the one already printed hides holes on every sheet already printed**, because the analyser has no way to know which caption a given sheet carries.
+
+### 3. The options
+
+1. **Put the name on a line of its own, outside every region a hole can reach**, for example in the top margin beside a code. **Cost:** a new exclusion zone there, which on old sheets covers paper nobody shoots near. It also departs from "same caption line".
+2. **Keep the name on the caption line, and exclude it only where ink is actually present:** threshold the band against the paper, and exclude only the glyph blobs that are found. **Cost:** a new mechanism in the detector, and a hole that touches a glyph could be excluded with it.
+3. **Keep the name on the caption line, and accept that sheets printed before the change lose holes in the widened band.** **Cost:** a known silent miss on real sheets. I would not choose this.
+4. **Encode which caption a sheet carries**, so the analyser excludes the right box. **Cost:** a GLTD change, and every sheet printed so far has no such field, so it only helps sheets printed afterwards. Old sheets would need the current box as their default.
+
+**What I would choose: option 1.** It keeps every printed sheet reading as it does today, and it needs no new detector mechanism. The name is for the person holding the paper, and a line of its own is at least as easy to read.
+
+### 4. A related exclusion, for the same decision
+
+**The scan's detection at page (2.909, 10.784) in is not a hole.** It sits on the printed sentence "Print at actual size, 100 percent", whose baseline is 45 dmm above the bottom edge. That sentence is in no exclusion zone, which also answers entry 73 section 4.
+
+- **What would fix it.** A box around that sentence alone, covering its glyph band plus 10 dmm. It would remove the false positive without reaching the sighter hole above it.
+- **Why it waits.** It changes what the detector reads on every printed sheet, which is the same kind of change as section 3. It belongs with that decision.
+- **What I would choose:** add the box, sized exactly to the sentence as printed today, which has not changed.
+
+---
+
 ## 2026-09-15, question 15: sorting the markers changes the Phase 0 record on Windows, not only on macOS
 
 **Status: open.** Blocks entry 49 section 2: the sort, and the macOS rerun from Windows' corners, whose order the sort decides. Nothing else waits. Entry 49 section 5, the edge fit's sensitivity, is not blocked and is the next measurement.
