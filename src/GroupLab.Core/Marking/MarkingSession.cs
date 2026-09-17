@@ -46,10 +46,11 @@ public enum ExclusionReason
 /// <para>
 /// <see cref="MeasuredDiameterInches"/> is the diameter the detector measured for a detected shot, the number that shows a merged pair
 /// or ink under a mark (entry 76 section 4). A shot placed by hand has none, and moving a shot clears it, because the measurement
-/// described the point the detector chose and not the one the person chose instead.
+/// described the point the detector chose and not the one the person chose instead. <see cref="Oversize"/> is the detector's flag on
+/// the same measurement, entry 82 section 6, and is cleared with it.
 /// </para>
 /// </summary>
-public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null, bool BullChosen = false, double? MeasuredDiameterInches = null)
+public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null, bool BullChosen = false, double? MeasuredDiameterInches = null, DetectedOversize? Oversize = null)
 {
     /// <summary>Counted in the group: not marked as not a shot. Excluded shots are counted in the full figures and left out of the reduced ones.</summary>
     public bool IsShot => !NotAShot;
@@ -227,6 +228,7 @@ public sealed class MarkingSession
     {
         Image = image,
         MeasuredDiameterInches = image == s.Image ? s.MeasuredDiameterInches : null,
+        Oversize = image == s.Image ? s.Oversize : null,
         Bull = s.Bull == NearestBull(State, s.Image) ? NearestBull(State, image) : s.Bull,
         Provenance = Touched(s.Provenance),
     });
@@ -283,7 +285,7 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null))], summary, null, _ => null);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null))], summary, null, _ => null);
     }
 
     /// <summary>
@@ -295,18 +297,18 @@ public sealed class MarkingSession
     {
         ArgumentNullException.ThrowIfNull(detections);
         ArgumentNullException.ThrowIfNull(rejected);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches))], summary, detection, firstId => assignment is null
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize))], summary, detection, firstId => assignment is null
             ? null
             : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment, d.Assignment.Bull))], [.. rejected], assignment.Method));
     }
 
-    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
     {
         int id = State.NextId;
         var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection };
         var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
         int firstId = id;
-        var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter)).ToList();
+        var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter, Oversize: d.Oversize)).ToList();
         Apply(Rematch(registered with
         {
             Shots = [.. kept, .. detected],

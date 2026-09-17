@@ -71,10 +71,11 @@ public class AutomaticMarkingTests
         Assert.Equal((render.Width, render.Height), (result.ExpectedArtwork!.Width, result.ExpectedArtwork.Height));
         Assert.Equal(definition.Bulls.Count, result.Detections.Count);
         var truthImage = holes.Select(h => truth.ToImage(new PointD(h.X, h.Y))).ToList();
-        foreach (var (image, assigned, diameter) in result.Detections)
+        foreach (var (image, assigned, diameter, oversize) in result.Detections)
         {
             // Entry 76 section 4: every detection carries the diameter the detector measured, which the canvas draws.
             Assert.True(diameter is > 0, $"a detection at {image} carries no measured diameter");
+            Assert.Null(oversize);
             int nearest = Enumerable.Range(0, truthImage.Count).MinBy(i => Math.Pow(truthImage[i].X - image.X, 2) + Math.Pow(truthImage[i].Y - image.Y, 2));
             Assert.Equal(nearest, assigned.Bull);
         }

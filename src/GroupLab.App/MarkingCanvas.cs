@@ -118,6 +118,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// </summary>
     public IReadOnlyDictionary<int, double> FlaggedShots { get; set; } = new Dictionary<int, double>();
 
+    /// <summary>
+    /// The shots the detector flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6, with whether the flag is tentative: an alert ring
+    /// just outside the mark, and a faint one when the size behind it came from too few marks.
+    /// </summary>
+    public IReadOnlyDictionary<int, bool> DetectorFlags { get; set; } = new Dictionary<int, bool>();
+
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
 
@@ -345,6 +351,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             if (FlaggedShots.TryGetValue(shot.Id, out double apparent))
             {
                 Marks.Ring(context, Marks.Alert, c, OversizeRadius(state, at, radius, apparent), dash: Marks.Dashed);
+            }
+
+            if (DetectorFlags.TryGetValue(shot.Id, out bool tentative))
+            {
+                Marks.Ring(context, tentative ? Marks.Faint : Marks.Alert, c, radius + 4, tentative ? 1 : Tokens.MarkCoreWidth, Marks.Dashed);
             }
 
             Marks.Dot(context, colour, c, 1);

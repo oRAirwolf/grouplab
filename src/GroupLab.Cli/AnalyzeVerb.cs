@@ -90,7 +90,7 @@ public static class AnalyzeVerb
         {
             var s = byId[label.ShotId];
             output.WriteLine(string.Create(CultureInfo.InvariantCulture,
-                $"{label.Text ?? "",-10}  {s.BullLabel ?? "none",-5}  {s.PageInches.X,7:0.000}, {s.PageInches.Y,7:0.000}   {(s.OffsetInches is { } o ? $"{o.X,+8:+0.000;-0.000}, {o.Y,+8:+0.000;-0.000}" : "no bull")}{(s.Sighter ? "   sighter, not in the group" : "")}"));
+                $"{label.Text ?? "",-10}  {s.BullLabel ?? "none",-5}  {s.PageInches.X,7:0.000}, {s.PageInches.Y,7:0.000}   {(s.OffsetInches is { } o ? $"{o.X,+8:+0.000;-0.000}, {o.Y,+8:+0.000;-0.000}" : "no bull")}{(s.Sighter ? "   sighter, not in the group" : "")}{(result.Marking!.Find(s.Id)?.Oversize is { } flag ? string.Create(CultureInfo.InvariantCulture, $"   {(flag.Tentative ? "may be two holes" : "oversized")}, about {flag.Holes:0.0} holes' area") : "")}"));
         }
 
         output.WriteLine();

@@ -469,6 +469,41 @@ public class MarkingScreenTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 82 section 6: the detector's oversize flag reaches the marking screen, as a ring on the canvas and a sentence
+    /// in the panel, quieter when tentative, and moving the shot clears it with the measurement it described.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheDetectorsOversizeFlagIsOnTheScreen()
+    {
+        (int X, int Y)[] holes = [(200, 200), (400, 200)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            var session = window.Session;
+            var scale = new LengthReference(new PointD(100, 100), new PointD(300, 100), 2);
+            var assigned = new GroupLab.Core.Detection.AssignedShot(0, 0, 0, 0, 0, double.PositiveInfinity, false);
+            session.LoadDetections(scale, [new BullAim(0, "1", new PointD(215, 205))],
+                [new DetectedShot(new PointD(200, 200), assigned, 0.52, new DetectedOversize(1.9, false)), new DetectedShot(new PointD(400, 200), assigned, 0.40, new DetectedOversize(1.5, true))], null, [], "test");
+            Dispatcher.UIThread.RunJobs();
+            var ids = session.State.Shots.Select(s => s.Id).ToList();
+            Assert.Equal(new Dictionary<int, bool> { [ids[0]] = false, [ids[1]] = true }, window.Canvas.DetectorFlags);
+            Assert.Contains(window.StatisticsText, t => t.Contains("covers about 1.9 holes' area", StringComparison.Ordinal));
+            Assert.Contains(window.StatisticsText, t => t.Contains("may be two holes", StringComparison.Ordinal));
+
+            session.MoveShot(ids[0], new PointD(205, 200));
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(window.Canvas.DetectorFlags.ContainsKey(ids[0]));
+            Assert.DoesNotContain(window.StatisticsText, t => t.Contains("1.9 holes", StringComparison.Ordinal));
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 76 section 4: a detected shot's ring is the diameter the detector measured, in sheet units at any zoom, with
     /// the calibre's hole drawn beside it once a calibre is set; a shot placed by hand, which has no measurement, keeps the calibre ring, and
     /// moving a detected shot drops the measurement.

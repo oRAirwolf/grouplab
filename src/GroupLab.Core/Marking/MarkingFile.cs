@@ -76,6 +76,7 @@ public static class MarkingFile
                 s.Bull,
                 s.BullChosen,
                 s.MeasuredDiameterInches,
+                oversize = s.Oversize is { } flag ? new { holes = flag.Holes, tentative = flag.Tentative } : null,
             }),
             report,
         };
@@ -144,7 +145,8 @@ public static class MarkingFile
             (bool?)s["notAShot"] ?? false,
             (int?)s["bull"],
             (bool?)s["bullChosen"] ?? false,
-            (double?)s["measuredDiameterInches"])).ToImmutableList();
+            (double?)s["measuredDiameterInches"],
+            s["oversize"] is JsonObject flag ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false) : null)).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,

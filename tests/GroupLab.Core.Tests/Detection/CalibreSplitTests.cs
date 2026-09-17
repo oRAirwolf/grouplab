@@ -12,9 +12,9 @@ namespace GroupLab.Core.Tests.Detection;
 /// NOTES-FROM-PLANNING.md entries 78 section 4 and 79 section 1: the size a hole of the named calibre is detected at, fed into segmentation.
 /// On a synthetic GL-CF25-LTR at 150 DPI with a hole of each of four kinds by bull:
 /// <list type="bullet">
-/// <item><b>A single hole with a stroke of hand ink joined to it:</b> elongated, but its area holds fewer than two holes, so it is one hole.
-/// With a calibre the size of a hole is the calibre's; without one it is the sheet's own 25th percentile mark (entry 81 section 3), and
-/// the answer is the same. With too few marks to know a size it is cut in two, as shape alone decides.</item>
+/// <item><b>A single hole with a stroke of hand ink joined to it:</b> elongated, but its area holds fewer than two holes of the calibre, so
+/// with the calibre it is one hole. Without one, this sheet's round marks fall into two sizes, plain and large, so no size fits it
+/// (entry 82 section 3) and shape alone cuts it in two.</item>
 /// <item><b>Two overlapping holes:</b> split with the size named as without it. The size only stops a split, it never prevents a real one.</item>
 /// <item><b>One large round hole:</b> about three holes' area and nothing to split along. It stays one mark, flagged oversized, rather than
 /// being cut to agree with the size.</item>
@@ -68,7 +68,9 @@ public class CalibreSplitTests
         var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, strokes, new Random(78));
         var backend = new OpenCvSharpBackend();
         var mechanism = new RenderDifferenceOptions(SplitElongation: 1.45);
-        var without = Blobs(definition, truth, RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism, render));
+        var withoutResult = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism, render);
+        Assert.Equal(HoleSizeSource.TwoSizes, withoutResult.HoleSize!.Source);
+        var without = Blobs(definition, truth, withoutResult);
         var with = Blobs(definition, truth, RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism with { CalibreInches = SingleHoleInches }, render));
 
         for (int k = 0; k < kinds.Length; k++)
@@ -83,7 +85,7 @@ public class CalibreSplitTests
                     Assert.False(after.Holes[0].Oversized);
                     break;
                 case Kind.Stroked:
-                    Assert.True(Assert.Single(before.Holes).SplitVetoed);
+                    Assert.Equal(2, before.Holes.Count);
                     var kept = Assert.Single(after.Holes);
                     Assert.True(kept.SplitVetoed);
                     Assert.False(kept.PossibleMerge);
@@ -116,8 +118,8 @@ public class CalibreSplitTests
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
         double s = 254 / dpi;
         var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
-        var holes = definition.Bulls.Take(8).Select((b, k) => Hole(b.X + 90, b.Y + 90, 0.06, k)).ToList();
-        var strokes = definition.Bulls.Skip(10).Take(4).Select(b => new InkStroke(b.X - 160, b.Y + 50, b.X - 50, b.Y + 160, 0.04 * 254, 60)).ToList();
+        var holes = definition.Bulls.Take(14).Select((b, k) => Hole(b.X + 90, b.Y + 90, 0.06, k)).ToList();
+        var strokes = definition.Bulls.Skip(16).Take(4).Select(b => new InkStroke(b.X - 160, b.Y + 50, b.X - 50, b.Y + 160, 0.04 * 254, 60)).ToList();
         var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, strokes, new Random(811));
         foreach (double? calibre in new double?[] { null, SingleHoleInches })
         {
@@ -141,11 +143,11 @@ public class CalibreSplitTests
         var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
         var holes = new List<SyntheticHole>();
         var pairs = new List<int>();
-        for (int k = 0; k < 12; k++)
+        for (int k = 0; k < 20; k++)
         {
             var bull = definition.Bulls[k];
             holes.Add(Hole(bull.X + 90, bull.Y + 90, 0.06, k));
-            if (k % 4 == 0)
+            if (k % 5 == 0)
             {
                 holes.Add(Hole(bull.X + 90 + (0.09 * 254), bull.Y + 90, 0.06, k + 100));
                 pairs.Add(k);
@@ -157,12 +159,72 @@ public class CalibreSplitTests
         {
             var result = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, new OpenCvSharpBackend(), new RenderDifferenceOptions(CalibreInches: calibre), render);
             var blobs = Blobs(definition, truth, result);
-            for (int k = 0; k < 12; k++)
+            Assert.Equal(calibre is null ? HoleSizeSource.Sheet : HoleSizeSource.Calibre, result.HoleSize!.Source);
+            for (int k = 0; k < 20; k++)
             {
                 var mark = Assert.Single(Assert.Single(blobs, b => b.Bull == k).Holes);
                 Assert.True(mark.Oversized == pairs.Contains(k), $"bull {k}, calibre {calibre}: {mark.DiameterInches:0.000} in, oversized {mark.Oversized}");
             }
         }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 82 sections 1 and 2: on a sheet with no holes at all, the case the residue is worst on, there is no size to
+    /// learn, and the smallest hole any bullet makes still vetoes a sliver too small to be two of them.
+    /// </summary>
+    [Fact]
+    public void OnASheetWithNoHolesTheSmallestPossibleHoleStillRefusesASliver()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        const double dpi = 150;
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
+        double s = 254 / dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var strokes = definition.Bulls.Take(4).Select(b => new InkStroke(b.X - 160, b.Y + 50, b.X - 50, b.Y + 160, 0.035 * 254, 60)).ToList();
+        var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, [], strokes, new Random(820));
+        var result = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, new OpenCvSharpBackend(), pageRender: render);
+        Assert.Equal(HoleSizeSource.Bound, result.HoleSize!.Source);
+        Assert.Empty(result.Holes);
+        Assert.True(strokes.Count == result.Rejected.Count(r => r.Reason.StartsWith("residue", StringComparison.Ordinal)), string.Join(" | ", result.Rejected.Select(r => $"{r.DiameterInches:0.000} {r.Reason}")));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 82 sections 2, 3 and 7: where the size of a single hole comes from. A calibre is used as named. Without one
+    /// the sheet's quarter-point round mark is trusted from twelve marks, tentative from five, and below that only the smallest possible hole
+    /// is known, which flags nothing. The quarter-point never leaves what a bullet can make. Two clearly separate sizes give no size and a
+    /// request for the calibre; a continuous spread, however wide, does not.
+    /// </summary>
+    [Fact]
+    public void TheSizeOfASingleHoleIsGradedByWhatSupportsIt()
+    {
+        var options = new RenderDifferenceOptions();
+        var calibre = RenderDifferenceHoleDetector.SizeReference([0.29, 0.30], options with { CalibreInches = 0.29 });
+        Assert.Equal((HoleSizeSource.Calibre, 0.29, (double?)0.29), (calibre.Source, calibre.VetoInches, calibre.FlagInches));
+
+        var few = RenderDifferenceHoleDetector.SizeReference([0.29, 0.30, 0.31], options);
+        Assert.Equal((HoleSizeSource.Bound, options.SmallestHoleInches, (double?)null), (few.Source, few.VetoInches, few.FlagInches));
+
+        double[] seven = [0.28, 0.29, 0.29, 0.30, 0.30, 0.31, 0.32];
+        var tentative = RenderDifferenceHoleDetector.SizeReference(seven, options);
+        Assert.Equal((HoleSizeSource.SheetTentative, options.SmallestHoleInches, (double?)0.29), (tentative.Source, tentative.VetoInches, tentative.FlagInches));
+
+        double[] full = [.. Enumerable.Range(0, 16).Select(i => 0.28 + (0.002 * i))];
+        var sheet = RenderDifferenceHoleDetector.SizeReference(full, options);
+        Assert.Equal(HoleSizeSource.Sheet, sheet.Source);
+        Assert.Equal(full[4], sheet.VetoInches, 9);
+
+        double[] residue = [.. Enumerable.Range(0, 16).Select(i => 0.150 + (0.001 * i))];
+        var clamped = RenderDifferenceHoleDetector.SizeReference(residue, options);
+        Assert.Equal(options.SmallestHoleInches, clamped.VetoInches, 9);
+
+        double[] twoCalibres = [.. Enumerable.Repeat(0.24, 8).Select((d, i) => d + (0.001 * i)), .. Enumerable.Repeat(0.32, 8).Select((d, i) => d + (0.001 * i))];
+        var two = RenderDifferenceHoleDetector.SizeReference(twoCalibres, options);
+        Assert.Equal(HoleSizeSource.TwoSizes, two.Source);
+        Assert.Null(two.FlagInches);
+        Assert.Contains("name the calibre", two.Description, StringComparison.Ordinal);
+
+        double[] spread = [.. Enumerable.Range(0, 20).Select(i => 0.20 + (0.01 * i))];
+        Assert.Equal(HoleSizeSource.Sheet, RenderDifferenceHoleDetector.SizeReference(spread, options).Source);
     }
 
     /// <summary>With fewer than five whole marks and no calibre there is no size to veto with, and an elongated blob is split on shape alone.</summary>

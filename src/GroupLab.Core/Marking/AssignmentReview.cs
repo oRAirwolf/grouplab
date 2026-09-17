@@ -8,7 +8,21 @@ namespace GroupLab.Core.Marking;
 /// A shot as the automatic path found it: its position in image pixels, how stage S9 assigned it (NOTES-FROM-PLANNING.md entry 70 section
 /// 4), and the diameter the detector measured, which the canvas draws (entry 76 section 4).
 /// </summary>
-public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double? DiameterInches = null);
+public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double? DiameterInches = null, DetectedOversize? Oversize = null);
+
+/// <summary>
+/// A detection flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6: about how many single holes' area it holds, and whether the
+/// size it was judged against came from too few marks to trust. It reaches the marking so the person sees it, not only the analysis.
+/// </summary>
+public sealed record DetectedOversize(double Holes, bool Tentative)
+{
+    /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
+    public string Describe(string shot) => Tentative
+        ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Name the calibre to check it.")
+        : string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and add the second shot if there is one.");
+}
 
 /// <summary>
 /// A candidate the hole detector refused: where it was in image pixels, how large it read, and why. The concept's review queue shows two

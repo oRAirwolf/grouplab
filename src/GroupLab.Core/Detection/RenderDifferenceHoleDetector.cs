@@ -40,7 +40,36 @@ public sealed record RenderDifferenceOptions(
     double? CalibreInches = null,
     double SplitMinimumHoles = 1.5,
     double OversizeHoles = 1.35,
-    double ResidueElongation = 2.2);
+    double ResidueElongation = 2.2,
+    double SmallestHoleInches = 0.16,
+    double LargestHoleInches = 0.60,
+    int MarksForSheetSize = 12,
+    int MarksForTentativeSize = 5);
+
+/// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
+public enum HoleSizeSource
+{
+    /// <summary>The calibre the person named, times what holes of it measure.</summary>
+    Calibre,
+
+    /// <summary>The sheet's own quarter-point round mark, from enough marks to trust.</summary>
+    Sheet,
+
+    /// <summary>The sheet's own quarter-point round mark, from too few marks to trust fully: its flags are tentative and it vetoes no split.</summary>
+    SheetTentative,
+
+    /// <summary>No size the sheet can give, so only the smallest hole any bullet makes: enough to veto a split, never to flag.</summary>
+    Bound,
+
+    /// <summary>The round marks fall into two sizes, so no one size fits the sheet, and the person is asked for the calibre.</summary>
+    TwoSizes,
+}
+
+/// <summary>
+/// The size of a single hole a pass judged marks against, inches, and where it came from. <see cref="VetoInches"/> is the size a split is
+/// vetoed against and <see cref="FlagInches"/> the size oversized marks are flagged against, null where the source cannot support it.
+/// </summary>
+public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches, double? FlagInches, int RoundMarks, string Description);
 
 /// <summary>
 /// A hole found by render-and-difference, image pixels: the intensity-weighted centroid of its residual, its hull diameter,
@@ -48,7 +77,8 @@ public sealed record RenderDifferenceOptions(
 /// the principal standard deviations of that residual, and whether it is one of two holes split from a single blob.
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
-    double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false);
+    double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
+    double? SizeHoles = null, bool OversizeTentative = false);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -56,7 +86,7 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 /// expected artwork in image pixels after that alignment, which is where the printed rings, numerals and markers are. The marking
 /// screen's snap and size check read it to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
-public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null)
+public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null)
 {
     /// <summary>
     /// The candidates an exclusion zone swallowed, NOTES-FROM-PLANNING.md entry 77 section 3 item 1: each passed every size, compactness and
@@ -242,16 +272,15 @@ public static class RenderDifferenceHoleDetector
             holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameter / dpi, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles));
         }
 
-        // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78 and 81). The size is the calibre's
-        // when one is named, and otherwise the sheet's own 25th percentile whole mark once there are five; with neither, shape alone decides.
-        // An elongated blob with less area than SplitMinimumHoles such holes is not two holes, so the size can stop a split but never make
-        // one. Such a blob is kept as one hole unless it is also at least ResidueElongation long, which no real hole in the corpus came near
-        // (at most 1.72): then it is a sliver of photographed residue and is refused (entry 78 section 2).
-        var round = holes.Select(h => h.DiameterInches).Order().ToList();
-        double? singleSize = options.CalibreInches ?? (round.Count >= 5 ? round[round.Count / 4] : null);
+        // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78, 81 and 82). An elongated blob
+        // with less area than SplitMinimumHoles such holes is not two holes, so the size can stop a split but never make one. Such a blob is
+        // kept as one hole unless it is also at least ResidueElongation long, which no real hole in the corpus came near (at most 1.72): then
+        // it is a sliver of photographed residue and is refused (entry 78 section 2). The size is graded, SizeReference.
+        var reference = SizeReference([.. holes.Select(h => h.DiameterInches)], options);
+        double HolesOf(double area, double size) => area / (Math.PI * Math.Pow(size * dpi / 2, 2));
         foreach (var (blob, moments, area, hx, hy, diameter, solidity, closure, calibreHoles) in elongatedBlobs)
         {
-            double? sizeHoles = singleSize is { } one ? area / (Math.PI * Math.Pow(one * dpi / 2, 2)) : null;
+            double sizeHoles = HolesOf(area, reference.VetoInches);
             bool vetoed = sizeHoles < options.SplitMinimumHoles;
             if (vetoed && moments.Elongation >= options.ResidueElongation)
             {
@@ -273,23 +302,109 @@ public static class RenderDifferenceHoleDetector
         }
 
         // S8: a whole mark with the area of OversizeHoles single holes or more is flagged, never cut (NOTES-FROM-PLANNING.md entry 81
-        // section 2). A single hole is the calibre's size when one is named, and otherwise the sheet's own 25th percentile whole mark once there
-        // are five, a quantile a sheet of mostly merged pairs cannot move. The rule it replaces, the median plus two robust deviations, flagged
-        // ordinary holes on a tight sheet and missed merged pairs on a sheet where they were half the marks.
-        var whole = holes.Where(h => !h.PossibleMerge).Select(h => h.DiameterInches).Order().ToList();
-        double? single = options.CalibreInches ?? (whole.Count >= 5 ? whole[whole.Count / 4] : null);
-        if (single is { } size)
+        // section 2), and tentatively where the size came from too few marks to trust (entry 82 section 7).
+        if (reference.FlagInches is { } flagSize)
         {
+            bool tentative = reference.Source == HoleSizeSource.SheetTentative;
             for (int k = 0; k < holes.Count; k++)
             {
-                if (!holes[k].PossibleMerge && Math.Pow(holes[k].DiameterInches / size, 2) >= options.OversizeHoles)
+                double holesOf = Math.Pow(holes[k].DiameterInches / flagSize, 2);
+                holes[k] = holes[k] with { SizeHoles = holesOf };
+                if (!holes[k].PossibleMerge && holesOf >= options.OversizeHoles)
                 {
-                    holes[k] = holes[k] with { Oversized = true };
+                    holes[k] = holes[k] with { Oversized = true, OversizeTentative = tentative };
                 }
             }
         }
 
-        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected);
+        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference);
+    }
+
+    /// <summary>
+    /// The size of a single hole, graded by what supports it (NOTES-FROM-PLANNING.md entries 81 and 82).
+    /// <list type="bullet">
+    /// <item><b>A calibre</b> named is used as it is, for the veto and the flags.</item>
+    /// <item><b>Without one, the sheet's quarter-point round mark</b>, clamped to the sizes a bullet hole can have, SmallestHoleInches to
+    /// LargestHoleInches, so no reference outside what a bullet makes is ever adopted. From MarksForSheetSize round marks it is trusted for
+    /// both. From MarksForTentativeSize it only flags, tentatively, because the quarter-point of a handful of marks is little better than
+    /// a guess, and the veto falls back to the bound.</item>
+    /// <item><b>Two sizes.</b> Where the round marks fall clearly into two groups, no one size fits: a sheet shot with two calibres, or one
+    /// with as many merged pairs as single holes. Nothing is flagged, the veto falls back to the bound, and the description asks for the
+    /// calibre, one sentence rather than a flag on half the sheet (entry 82 section 3).</item>
+    /// <item><b>The bound alone</b> otherwise: the smallest hole any bullet makes. A blob with less area than SplitMinimumHoles of those is
+    /// not two holes of any calibre, so the veto still works on a sheet with no holes to learn from, which is where the residue is worst.
+    /// It flags nothing, because every real hole is larger than the smallest.</item>
+    /// </list>
+    /// </summary>
+    internal static HoleSizeReference SizeReference(IReadOnlyList<double> roundDiameters, RenderDifferenceOptions options)
+    {
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        int n = roundDiameters.Count;
+        if (options.CalibreInches is { } calibre)
+        {
+            return new HoleSizeReference(HoleSizeSource.Calibre, calibre, calibre, n, string.Create(inv, $"a hole is taken as {calibre:0.000} in, from the calibre named"));
+        }
+
+        double bound = options.SmallestHoleInches;
+        if (n < options.MarksForTentativeSize)
+        {
+            return new HoleSizeReference(HoleSizeSource.Bound, bound, null, n, string.Create(inv,
+                $"with {n} round mark{(n == 1 ? "" : "s")} and no calibre, a hole is only known to be at least {bound:0.00} in, so no mark is judged oversized"));
+        }
+
+        var sorted = roundDiameters.Order().ToList();
+        double quarter = Math.Clamp(sorted[n / 4], bound, options.LargestHoleInches);
+        if (n >= options.MarksForSheetSize && TwoSizes(sorted) is { } groups)
+        {
+            return new HoleSizeReference(HoleSizeSource.TwoSizes, bound, null, n, string.Create(inv,
+                $"the marks fall into two sizes, about {groups.Small:0.00} and {groups.Large:0.00} in across, so no one hole size fits this sheet: name the calibre to have oversized marks flagged"));
+        }
+
+        return n >= options.MarksForSheetSize
+            ? new HoleSizeReference(HoleSizeSource.Sheet, quarter, quarter, n, string.Create(inv, $"a hole is taken as {quarter:0.000} in, the quarter-point of {n} round marks"))
+            : new HoleSizeReference(HoleSizeSource.SheetTentative, bound, quarter, n, string.Create(inv,
+                $"a hole is taken as about {quarter:0.000} in from only {n} round marks, so oversized marks are flagged tentatively; name the calibre to be sure"));
+    }
+
+    /// <summary>
+    /// Two clearly separate sizes among the round marks, or null: the split of the sorted log areas with the largest between-group
+    /// variance, each group at least a quarter of the marks, whose group medians differ by at least the oversize ratio in area and whose
+    /// gap is at least five pooled standard deviations. A continuous spread of sizes, however wide, is not two sizes: an even spread cut in
+    /// half is only about three and a half apart.
+    /// </summary>
+    internal static (double Small, double Large)? TwoSizes(IReadOnlyList<double> sortedDiameters)
+    {
+        var logs = sortedDiameters.Select(d => 2 * Math.Log(d)).ToList();
+        int n = logs.Count, least = Math.Max(3, (int)Math.Ceiling(n / 4.0));
+        int bestCut = -1;
+        double bestBetween = 0;
+        for (int cut = least; cut <= n - least; cut++)
+        {
+            double m1 = logs.Take(cut).Average(), m2 = logs.Skip(cut).Average();
+            double between = cut * (n - cut) * (m2 - m1) * (m2 - m1);
+            if (between > bestBetween)
+            {
+                (bestBetween, bestCut) = (between, cut);
+            }
+        }
+
+        if (bestCut < 0)
+        {
+            return null;
+        }
+
+        var small = logs.Take(bestCut).ToList();
+        var large = logs.Skip(bestCut).ToList();
+        static double Sd(List<double> v)
+        {
+            double m = v.Average();
+            return Math.Sqrt(v.Sum(x => (x - m) * (x - m)) / Math.Max(1, v.Count - 1));
+        }
+
+        double pooled = Math.Sqrt((Sd(small) * Sd(small) + (Sd(large) * Sd(large))) / 2);
+        double gap = large.Average() - small.Average();
+        double medianSmall = sortedDiameters[bestCut / 2], medianLarge = sortedDiameters[bestCut + ((n - bestCut) / 2)];
+        return gap >= Math.Log(1.35) && gap >= 5 * pooled ? (medianSmall, medianLarge) : null;
     }
 
     /// <summary>

@@ -106,6 +106,15 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("resolution", string.Create(CultureInfo.InvariantCulture, $"{dpi:0.0} px per inch, from the registration"));
+            if (holes.HoleSize is { } holeSize)
+            {
+                stage.Parameter("hole size", holeSize.Description);
+                if (holeSize.Source is HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative)
+                {
+                    stage.Detail(holeSize.Description);
+                }
+            }
+
             stage.Parameter("calibre", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
                 $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * (metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre):0.000} in {(metadata.IsCamera ? "in a photograph" : "on a scan")}: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
@@ -159,11 +168,12 @@ public static class AutomaticMarking
                 $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
         }
 
-        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches)).ToList();
+        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches,
+            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
-            $"{markers}, {detection.Describe()}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
+            $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
         return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection);
     }
 }

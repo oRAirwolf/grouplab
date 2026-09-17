@@ -905,6 +905,7 @@ public sealed class MainWindow : Window
 
         holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage, artwork);
         canvas.FlaggedShots = holeFlags.ToDictionary(f => f.ShotId, f => f.ApparentInches);
+        canvas.DetectorFlags = state.Shots.Where(s => s.IsShot && s.Oversize is not null).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
 
         if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
         {
@@ -979,6 +980,18 @@ public sealed class MainWindow : Window
                     moreFigures.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
                         $"Worst shot at {worst:0.00} mean radii; a group of {all.Shots} is expected to put its worst at {all.ExpectedWorstInMeanRadii:0.00}, so a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")));
                 }
+            }
+
+            // Entry 82 section 6: the detector's flag on a mark that covers about two holes, in the panel as well as on the canvas.
+            foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null && !holeFlags.Any(f => f.ShotId == s.Id)))
+            {
+                statistics.Children.Add(new TextBlock
+                {
+                    Text = shot.Oversize!.Describe(ShotLabel(shot.Id)),
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = Tokens.SecondarySize,
+                    Classes = { shot.Oversize.Tentative ? AppStyles.Secondary : AppStyles.Alert },
+                });
             }
 
             foreach (var flag in holeFlags)

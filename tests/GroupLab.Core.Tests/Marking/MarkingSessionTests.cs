@@ -262,10 +262,11 @@ public class MarkingSessionTests
         var named = new MarkingSession();
         named.Open("sheet.png");
         var calibre = new Calibre(".308", 0.308);
-        named.LoadDetections(scale, bulls, [new DetectedShot(new PointD(110, 100), assigned)], null, [], "test", new DetectionRecord(calibre, 0.2908));
+        named.LoadDetections(scale, bulls, [new DetectedShot(new PointD(110, 100), assigned, 0.5, new DetectedOversize(1.87, true))], null, [], "test", new DetectionRecord(calibre, 0.2908));
         named.SetCalibre(new Calibre(".223", 0.224));
         var (read, _) = MarkingFile.Read(MarkingFile.Write(named.State));
         Assert.Equal(new DetectionRecord(calibre, 0.2908), read.Detection);
+        Assert.Equal(new DetectedOversize(1.87, true), read.Shots.Single().Oversize);
         Assert.Equal(0.224, read.Calibre!.DiameterInches, 9);
         Assert.Contains("with the calibre .308", GroupAnalysis.Analyse(read).Detection, StringComparison.Ordinal);
 

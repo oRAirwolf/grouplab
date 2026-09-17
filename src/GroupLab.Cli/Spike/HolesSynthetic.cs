@@ -155,7 +155,7 @@ public static class HolesSynthetic
         }
 
         output.WriteLine();
-        output.WriteLine("Render-and-difference's flags. Split: holes split from one blob as a possible merge, and how many were matched to a truth hole. Oversized: holes flagged as wider than the sheet's median by two robust standard deviations, and how many have two or more truth holes within half their hull diameter. Unflagged merges: unsplit, unflagged detections with two or more truth holes within half their hull diameter, reported silently as one.");
+        output.WriteLine("Render-and-difference's flags. Split: holes split from one blob as a possible merge, and how many were matched to a truth hole. Oversized: whole marks flagged as covering 1.35 single holes or more, a single hole being the sheet's quarter-point round mark (entries 81 and 82), and how many have two or more truth holes within half their hull diameter. The synthetic holes mix the survey's calibres, so this counts more flags than a one-calibre sheet would. Unflagged merges: unsplit, unflagged detections with two or more truth holes within half their hull diameter, reported silently as one.");
         output.WriteLine();
         output.WriteLine("| Group | Case | DPI | Holes per bull | Split halves | Split halves matched | Oversized | Oversized over two or more holes | Unflagged merges |");
         output.WriteLine("|---|---|---|---|---|---|---|---|---|");
