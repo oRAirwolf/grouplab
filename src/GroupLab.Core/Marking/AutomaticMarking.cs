@@ -24,7 +24,8 @@ public sealed record AutomaticResult(
     string? Failure,
     GrayImage? ExpectedArtwork = null,
     ShotAssignmentResult? Assignment = null,
-    IReadOnlyList<RejectedCandidate>? Rejected = null);
+    IReadOnlyList<RejectedCandidate>? Rejected = null,
+    RenderDifferenceResult? Difference = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -84,6 +85,13 @@ public static class AutomaticMarking
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");
             stage.Metric("rejected", holes.Rejected.Count, "count");
+            var swallowed = holes.InsideZones;
+            stage.Metric("inside exclusion zones", swallowed.Count, "count");
+            foreach (var zone in swallowed.GroupBy(r => r.Zone!).OrderBy(g => g.Key, StringComparer.Ordinal))
+            {
+                stage.Detail(string.Create(CultureInfo.InvariantCulture, $"{zone.Count()} hole-sized candidate{(zone.Count() == 1 ? "" : "s")} inside {zone.Key}, where no hole is looked for"));
+            }
+
             foreach (var r in holes.Rejected)
             {
                 var page = mapping.ToPage(new PointD(r.X, r.Y));
@@ -91,8 +99,10 @@ public static class AutomaticMarking
             }
 
             int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized);
+            stage.Metric("split halves", merges, "count");
+            stage.Metric("oversized", oversized, "count");
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
-                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}"));
+                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}"));
         }
 
         // Entry 70 section 5: two nearly identical positions, kept apart on purpose. A shot's offset is a measurement, and the shooter aimed
@@ -124,8 +134,8 @@ public static class AutomaticMarking
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
-            $"{markers}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected);
+            $"{markers}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes);
     }
 }
 

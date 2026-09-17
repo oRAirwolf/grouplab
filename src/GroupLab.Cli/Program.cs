@@ -41,6 +41,10 @@ return args switch
     ["surface", "noise"] => SurfaceNoise.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     ["surface", "correlation"] => SurfaceCorrelation.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     ["holes", "baseline"] => HolesBaseline.Run("scans", "scans/phase1", Console.Out),
+    ["holes", "ink-proximity"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", null, false, Console.Out),
+    ["holes", "ink-proximity", "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", null, true, Console.Out),
+    ["holes", "ink-proximity", "--local", var manifest] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", manifest, false, Console.Out),
+    ["holes", "ink-proximity", "--local", var manifest, "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", manifest, true, Console.Out),
     ["holes", "synthetic"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out),
     ["holes", "synthetic", "--realism"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, realismOnly: true),
     ["holes", "synthetic", "--held-out"] => HolesSynthetic.Run("targets", "scans/phase1", Console.Out, heldOut: true),
@@ -50,6 +54,8 @@ return args switch
     ["scrub", var input, var output] => GroupLab.Cli.ScrubVerb.Run(input, output, Console.Out),
     ["publish-owner", var source, var target, .. var rest] => GroupLab.Cli.OwnerVerb.Run(source, target, rest, Console.Out),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
+    ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
+        CorpusCounts.Run("scans/phase0", SampleSet.FrozenDirectory, "targets", rest.SkipWhile(a => a != "--local").Skip(1).FirstOrDefault(), rest.Contains("--write"), Console.Out),
     ["identify", "sweep"] => IdentifySweep.Run("scans/phase0", "targets", Console.Out),
     ["stats", "coverage"] => StatsCoverage.Run(Console.Out),
     ["stats", "range-table"] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, 2, 100, 10_000_000, Console.Out),
@@ -472,6 +478,8 @@ static int Usage()
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
         grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [-v 1|2|3] [--json <marking.json>]
+        grouplab corpus counts [--local <manifest.json>] [--write]
+        grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab identify sweep
         grouplab spike stability
         grouplab spike corners --export <file.json> | --replay <file.json>

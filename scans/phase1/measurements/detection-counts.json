@@ -1,0 +1,583 @@
+{
+  "measurement": "detection-counts",
+  "command": "grouplab corpus counts --write",
+  "artwork": {
+    "GL-CF25-100M-A4.gltd.json": "585f42f74c5c4a3be3fb1f6b5f03475bbef377144eec0f5e8849151228aa28e2",
+    "GL-CF25-A4.gltd.json": "621d326ef306c77bf749011841e27f506dacf6bf0b2a365bf619adff045fff67",
+    "GL-CF25-LTR-D.gltd.json": "a5c07105eb9bb665629037777fb07fb727919b457f2ef914a85f86df8247b56b",
+    "GL-CF25-LTR.gltd.json": "129db9102b2bb8da2f6b4bc9bda500d123849130490fce5ebad78a481218d6df",
+    "GL-CF30-LTR.gltd.json": "d7ff313064f7fd684cc796cb47fc2ca9cf50ae582cf9bab19fd9935bed5575fd",
+    "GL-LR25-A3.gltd.json": "4aa6e563c01cf623e11314416d9058082cf841f4aa782d92d390830f6c0211ee",
+    "GL-LR25-TAB.gltd.json": "042101f9733fef4e0e50456ae1450b0a761d468c185ed4cd7e3cc2d97037ce6d",
+    "GL-LR30-TAB.gltd.json": "fea12b7fb7b3e7163246a1c03866c4df35a8dcaa82b11cb4e8552cf23a06e1d5",
+    "GL-LR300-R24.gltd.json": "ee53790881817d0883f9d5e15f308580fb61456528f723b4dfebe52a10be7487",
+    "GL-LR300-R36.gltd.json": "987e6cfd7d38a51949872f59588a3e366897b6a1282e5ced82e87c0ea874b9ff",
+    "GL-LR300-R42.gltd.json": "c28ed84fda09403c64e7cfabd3f75da1974e52a48f9885ada989d74a118c8a66",
+    "GL-LR300-T.3x2.gltd.json": "1c4a8dac0799f523ddd1a49117b1c443a55f7e043fab66dd2a8f64a5372fd109",
+    "GL-LR300-T.gltd.json": "56a6080d85ed30f25dcb0b6f0299d24394afc08266e148ed968621b7054be58b",
+    "GL-LR300-TA4.3x2.gltd.json": "05751c2bb27ac932d2367f4cb9aa6e29c15dd0afc9dc2b0592a48be7957a6e59",
+    "GL-LR300-TA4.gltd.json": "682e2a2e59ae3ab1ed3f43c12c21b3e14c77732de609a8f9c8357384fabc537d",
+    "GL-RF25-A4.gltd.json": "c8432e249e81baccb0df618c0ec9224668c44783024aa88d936fb5edf166dae8",
+    "GL-RF25-LTR.gltd.json": "2d87685c7282167e165d2b40e5ca2cf4c9e637a1de225752e86635c7b8365046",
+    "GL-RF36-LTR.gltd.json": "7cdab95a7551b5f3864cde56fb775ac5df118ebd38ff31104cc3e71944e64cf2",
+    "GL-ZERO-MIL-100M.gltd.json": "06014f0926194b6eb875731a46a69c1debc6cd2d211ca49bf135cf0758f8d5b7",
+    "GL-ZERO-MIL-100Y.gltd.json": "6e294f053ed1320005b2ddd31590e76dd68d8a535e60cc8832e6e4226ece0f0e",
+    "GL-ZERO-MOA-100M.gltd.json": "be4837f9a55f00e7d74c30a66f3128f32a63ccd6387bb50a783142aa80d3241c",
+    "GL-ZERO-MOA-100Y.gltd.json": "a940733fbfbc88bbaa5c6276fea74a4f6fd10fb8c0d50cb8f86389b2448a65e0",
+    "frozen/phase0/GL-G8JP-FF4D-AE0T-GPMN.gltd.json": "56a6080d85ed30f25dcb0b6f0299d24394afc08266e148ed968621b7054be58b",
+    "frozen/phase0/GL-R0T0-384Z-HRBE-M0EW.gltd.json": "a5c07105eb9bb665629037777fb07fb727919b457f2ef914a85f86df8247b56b",
+    "frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json": "31371f942cbe00ea804e15985c01023abc479ff9350bf5fae9edeb518108b18f"
+  },
+  "rows": [
+    {
+      "name": "gl-cf25-ltr-1-600-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-600-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-3-600-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-96.2-600-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-blank-600-dpi.png",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json",
+      "holes": 0,
+      "rejected": 2,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-filled-600-dpi.png",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json",
+      "holes": 0,
+      "rejected": 6,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-1-600-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-2-600-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 2,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-3-600-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-4-600-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-600-dpi-rot180.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-1-300-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-300-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-3-300-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 0,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-96.2-300-dpi.png",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 8,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-blank-300-dpi.png",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json",
+      "holes": 0,
+      "rejected": 2,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-filled-300-dpi.png",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json",
+      "holes": 0,
+      "rejected": 6,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-1-300-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-2-300-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-3-300-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-lr300-t-4-300-dpi.png",
+      "definition": "GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
+      "holes": 0,
+      "rejected": 1,
+      "insideZones": 0,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "20260913_130543.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 44,
+      "insideZones": 1,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "20260913_130550.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 68,
+      "insideZones": 4,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "20260913_130554.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 49,
+      "insideZones": 1,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "20260913_130559.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 19,
+      "insideZones": 1,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "ultrawide1.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 2,
+      "rejected": 57,
+      "insideZones": 4,
+      "splitHalves": 2,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "ultrawide2.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 6,
+      "rejected": 76,
+      "insideZones": 6,
+      "splitHalves": 6,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "ultrawide3.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 8,
+      "rejected": 84,
+      "insideZones": 4,
+      "splitHalves": 8,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main1.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 2,
+      "rejected": 70,
+      "insideZones": 3,
+      "splitHalves": 2,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main2.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 20,
+      "rejected": 96,
+      "insideZones": 10,
+      "splitHalves": 20,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main3.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 8,
+      "rejected": 107,
+      "insideZones": 9,
+      "splitHalves": 8,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "telephoto1.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 8,
+      "rejected": 170,
+      "insideZones": 6,
+      "splitHalves": 8,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "telephoto2.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 4,
+      "rejected": 211,
+      "insideZones": 16,
+      "splitHalves": 4,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "telephoto3.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 109,
+      "insideZones": 18,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main_flat1.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 54,
+      "insideZones": 3,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main_flat2.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 0,
+      "rejected": 165,
+      "insideZones": 4,
+      "splitHalves": 0,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "main_flat3.jpg",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+      "holes": 6,
+      "rejected": 147,
+      "insideZones": 5,
+      "splitHalves": 6,
+      "oversized": 0,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-1-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
+      "holes": 161,
+      "rejected": 140,
+      "insideZones": 21,
+      "splitHalves": 8,
+      "oversized": 11,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-1-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 266 holes punched",
+      "holes": 155,
+      "rejected": 104,
+      "insideZones": 28,
+      "splitHalves": 6,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-1-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 252 holes punched",
+      "holes": 168,
+      "rejected": 110,
+      "insideZones": 40,
+      "splitHalves": 8,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
+      "holes": 158,
+      "rejected": 146,
+      "insideZones": 20,
+      "splitHalves": 2,
+      "oversized": 10,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 266 holes punched",
+      "holes": 155,
+      "rejected": 105,
+      "insideZones": 28,
+      "splitHalves": 6,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-2-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 252 holes punched",
+      "holes": 167,
+      "rejected": 107,
+      "insideZones": 40,
+      "splitHalves": 8,
+      "oversized": 9,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-3-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
+      "holes": 163,
+      "rejected": 139,
+      "insideZones": 21,
+      "splitHalves": 10,
+      "oversized": 9,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-3-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 266 holes punched",
+      "holes": 154,
+      "rejected": 103,
+      "insideZones": 27,
+      "splitHalves": 6,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-3-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 252 holes punched",
+      "holes": 170,
+      "rejected": 109,
+      "insideZones": 39,
+      "splitHalves": 10,
+      "oversized": 9,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-96.2-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
+      "holes": 157,
+      "rejected": 129,
+      "insideZones": 19,
+      "splitHalves": 4,
+      "oversized": 9,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-96.2-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 266 holes punched",
+      "holes": 155,
+      "rejected": 105,
+      "insideZones": 32,
+      "splitHalves": 8,
+      "oversized": 7,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-96.2-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 252 holes punched",
+      "holes": 165,
+      "rejected": 92,
+      "insideZones": 40,
+      "splitHalves": 2,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-blank-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 285 holes punched",
+      "holes": 165,
+      "rejected": 135,
+      "insideZones": 32,
+      "splitHalves": 10,
+      "oversized": 13,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-blank-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 266 holes punched",
+      "holes": 137,
+      "rejected": 118,
+      "insideZones": 45,
+      "splitHalves": 8,
+      "oversized": 9,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-blank-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 252 holes punched",
+      "holes": 142,
+      "rejected": 131,
+      "insideZones": 49,
+      "splitHalves": 4,
+      "oversized": 8,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-filled-300-dpi.png, punched from 25 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 285 holes punched",
+      "holes": 164,
+      "rejected": 133,
+      "insideZones": 26,
+      "splitHalves": 8,
+      "oversized": 12,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-filled-300-dpi.png, punched from 75 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 266 holes punched",
+      "holes": 132,
+      "rejected": 109,
+      "insideZones": 28,
+      "splitHalves": 6,
+      "oversized": 7,
+      "failure": null
+    },
+    {
+      "name": "gl-cf25-ltr-d-filled-300-dpi.png, punched from 125 dmm",
+      "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 252 holes punched",
+      "holes": 143,
+      "rejected": 125,
+      "insideZones": 45,
+      "splitHalves": 6,
+      "oversized": 9,
+      "failure": null
+    }
+  ]
+}

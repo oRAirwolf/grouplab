@@ -157,6 +157,29 @@ public static class SyntheticSheet
         return new GrayImage(width, height, pixels);
     }
 
+    /// <summary>
+    /// Synthetic holes punched into an image that already exists, through its registration, with no blur or noise added. A scan of a sheet
+    /// printed before a change to the artwork, punched, is how the committed corpus has holes on old print: NOTES-FROM-PLANNING.md entry 77
+    /// section 3 item 2 asks that a change to printed artwork be checked against sheets already printed, and those sheets have no holes.
+    /// </summary>
+    public static GrayImage Punch(GrayImage observed, IPageMapping truth, double dpi, IReadOnlyList<SyntheticHole> holes)
+    {
+        ArgumentNullException.ThrowIfNull(observed);
+        ArgumentNullException.ThrowIfNull(truth);
+        ArgumentNullException.ThrowIfNull(holes);
+        int width = observed.Width, height = observed.Height;
+        var v = observed.Pixels.Select(p => (float)p).ToArray();
+        double pixelsPerDmm = dpi / DmmPerInch;
+        foreach (var hole in holes)
+        {
+            var centre = truth.ToImage(new PointD(hole.X, hole.Y));
+            double reach = ((hole.RimRadius * (1 + hole.LobeAmplitudes.Sum())) + (hole.RimWidth / 2) + (5 * hole.ZoneLength)) * pixelsPerDmm;
+            Paint(v, width, height, centre.X - reach, centre.Y - reach, centre.X + reach, centre.Y + reach, truth, (page, current) => Hole(page, hole, current, (int)centre.X, (int)centre.Y, width, height));
+        }
+
+        return new GrayImage(width, height, [.. v.Select(p => (byte)Math.Clamp(Math.Round(p), 0, 255))]);
+    }
+
     /// <summary>The paper level the sheet is printed on: 245.65 at the centre, five grey levels across and four down.</summary>
     public static double Paper(double x, double y, int width, int height) => 245.65 + (5 * ((x / width) - 0.5)) - (4 * ((y / height) - 0.5));
 

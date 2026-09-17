@@ -1,3 +1,4 @@
+using GroupLab.Core.Gltd.Derivation;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Registration;
@@ -48,7 +49,15 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 /// expected artwork in image pixels after that alignment, which is where the printed rings, numerals and markers are. The marking
 /// screen's snap and size check read it to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
-public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null);
+public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null)
+{
+    /// <summary>
+    /// The candidates an exclusion zone swallowed, NOTES-FROM-PLANNING.md entry 77 section 3 item 1: each passed every size, compactness and
+    /// shape filter and was refused only because it lies inside a zone. A zone is blind, so a hole there is dropped from every figure, and this
+    /// count is how that shows as a number rather than as nothing.
+    /// </summary>
+    public IReadOnlyList<RejectedBlob> InsideZones => [.. Rejected.Where(r => r.Zone is not null)];
+}
 
 /// <summary>
 /// Render-and-difference, stages S5 to S8 of docs/DETECTION-PIPELINE.md and docs/PHASE1-BRIEF.md section 4.2. A GroupLab
@@ -129,7 +138,7 @@ public static class RenderDifferenceHoleDetector
         double inkFraction = InkFraction(observed, expected, paper, block);
 
         // S5, alignment: each bull's cell by phase correlation, the rest by the median shift.
-        var cells = Cells(definition);
+        var cells = BullCells.Of(definition);
         var (aligned, shifts) = Align(observed, expected, paper, block, inkFraction, cells, registration, options.MaximumShiftInches * dpi, backend);
         expected = aligned;
         inkFraction = InkFraction(observed, expected, paper, block);
@@ -190,16 +199,18 @@ public static class RenderDifferenceHoleDetector
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = area < smallest ? default : Moments(residual, expected, width, blob);
             bool merge = moments.Elongation >= options.SplitElongation && area <= 2 * largest;
-            string? why = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
+            string? shape = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
                 : area > largest && !merge ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect && !merge ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
-                : zone is not null ? $"inside {zone.Name}"
-                : !cells.Any(c => Math.Abs(page.X - c.X) <= c.HalfWidth && Math.Abs(page.Y - c.Y) <= c.HalfHeight) ? "outside every bull's cell"
                 : null;
+            string? why = shape
+                ?? (zone is not null ? $"inside {zone.Name}"
+                : !cells.Any(c => Math.Abs(page.X - c.X) <= c.HalfWidth && Math.Abs(page.Y - c.Y) <= c.HalfHeight) ? "outside every bull's cell"
+                : null);
             if (why is not null)
             {
-                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi, why));
+                rejected.Add(new RejectedBlob(hx, hy, diameter / dpi, why, shape is null ? zone?.Name : null));
                 continue;
             }
 
@@ -761,23 +772,5 @@ public static class RenderDifferenceHoleDetector
         }
 
         return zones;
-    }
-
-    /// <summary>Each bull's cell, page dmm: centred on the bull, the grid pitch across and down, from the spacing of the bulls.</summary>
-    private static List<(double X, double Y, double HalfWidth, double HalfHeight)> Cells(TargetDefinition definition)
-    {
-        static double Pitch(IEnumerable<int> values)
-        {
-            var distinct = values.Distinct().Order().ToList();
-            var gaps = distinct.Zip(distinct.Skip(1), (a, b) => b - a).Where(g => g > 0).ToList();
-            return gaps.Count == 0 ? 0 : gaps.Min();
-        }
-
-        var scoring = definition.Bulls.Where(b => b.Scoring).ToList();
-        double pitchX = Pitch(scoring.Select(b => b.X)), pitchY = Pitch(scoring.Select(b => b.Y));
-        double pitch = Math.Max(pitchX, pitchY);
-        pitchX = pitchX > 0 ? pitchX : pitch;
-        pitchY = pitchY > 0 ? pitchY : pitch;
-        return [.. definition.Bulls.Select(b => ((double)b.X, (double)b.Y, pitchX / 2, pitchY / 2))];
     }
 }

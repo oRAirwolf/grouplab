@@ -459,8 +459,25 @@ public sealed class MainWindow : Window
     /// <summary>The detection started last, for the headless tests to wait on.</summary>
     internal Task? DetectionTask { get; private set; }
 
+    /// <summary>
+    /// What the status says the moment Cancel is pressed, NOTES-FROM-PLANNING.md entry 77 section 5: cancelling takes effect between stages, so
+    /// the text names the longest a stage runs, lest a Cancel that has worked look ignored. The longest measured is hole detection on Alan's
+    /// 35 megapixel scan at 600 DPI, 5.6 s on the development machine.
+    /// </summary>
+    internal const string CancellingText = "Cancelling. The step in progress finishes first, which can take up to about 6 seconds on a 600 DPI scan.";
+
     /// <summary>Stops the detection in progress at its next stage; what it had not yet applied is dropped.</summary>
-    internal void CancelDetection() => detection?.Cancel();
+    internal void CancelDetection()
+    {
+        if (detection is null)
+        {
+            return;
+        }
+
+        detection.Cancel();
+        cancelDetection.IsEnabled = false;
+        status.Text = CancellingText;
+    }
 
     /// <summary>
     /// Reopens a saved marking: its image, its marks, and the view turned the way it was left (NOTES-FROM-PLANNING.md entry 26 point 4).
@@ -600,7 +617,7 @@ public sealed class MainWindow : Window
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
-        detectionProgress.IsVisible = cancelDetection.IsVisible = true;
+        detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
         try
         {
             await Detect(automatic, g, v, m, trace, clock, token);

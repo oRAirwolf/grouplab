@@ -56,6 +56,29 @@ public static class SceneBuilder
 
     public const long PrintNoteFontSize = 36;
 
+    /// <summary>
+    /// The printed name line, NOTES-FROM-PLANNING.md entry 77 section 5: the sheet's name, then <see cref="NameSeparator"/>, then its
+    /// identifier, centred with its top <see cref="NameTop"/> dmm below the top edge, the margin the codes keep, at up to
+    /// <see cref="NameFontSize"/> half-dmm and never below <see cref="NameMinimumFontSize"/>. It goes only where the analyser never looks and
+    /// needs no exclusion box: at least <see cref="NameCellClearance"/> dmm from every bull's cell, which is where render-and-difference
+    /// looks for holes, and <see cref="NameItemClearance"/> dmm from anything else printed. A sheet with no such place prints no name.
+    /// </summary>
+    public const string NameSeparator = " · ";
+
+    public const long NameTop = 136;
+
+    public const long NameFontSize = 50;
+
+    public const long NameMinimumFontSize = 24;
+
+    /// <summary>
+    /// Clearance from a cell, dmm: a hole centred on a cell's edge reaches up to about 40 dmm past it, and the difference's closing joins
+    /// residue within about 28 dmm, so 60 keeps the name's residue from ever joining a hole's.
+    /// </summary>
+    public const long NameCellClearance = 60;
+
+    public const long NameItemClearance = 30;
+
     /// <summary>The printed caption of a load-block field, for a screen that asks for its value.</summary>
     public static string FieldCaption(string key) => Builder.CaptionFor(key);
 
@@ -142,6 +165,7 @@ public static class SceneBuilder
             AddDataBlock(items);
             AddIdentifier(items, tile);
             AddPrintNote(items);
+            AddName(items, tile);
             return new Scene(2L * d.Page.Width, 2L * d.Page.Height, tile, items);
         }
 
@@ -608,13 +632,59 @@ public static class SceneBuilder
                 return;
             }
 
-            string text = _encoding!.DefinitionId;
-            if (d.Tiling is { } t)
+            items.Add(new TextRun(SceneLayer.Identifier, RoleColour(InkRole.Text), d.Page.Width, (2L * d.Page.Height) - 160, 50, IdentifierText(tile), TextAnchor.Centre));
+        }
+
+        /// <summary>The identifier as printed, with a tile's place in its assembly.</summary>
+        private string IdentifierText(int tile) => d.Tiling is { } t
+            ? _encoding!.DefinitionId + string.Create(CultureInfo.InvariantCulture, $"   tile {tile + 1} of {t.Cols * t.Rows}")
+            : _encoding!.DefinitionId;
+
+        /// <summary>The name line of <see cref="NameSeparator"/>'s summary, at the largest size that fits where the analyser never looks, or nothing.</summary>
+        private void AddName(List<SceneItem> items, int tile)
+        {
+            if (string.IsNullOrWhiteSpace(d.Name))
             {
-                text += string.Create(CultureInfo.InvariantCulture, $"   tile {tile + 1} of {t.Cols * t.Rows}");
+                return;
             }
 
-            items.Add(new TextRun(SceneLayer.Identifier, RoleColour(InkRole.Text), d.Page.Width, (2L * d.Page.Height) - 160, 50, text, TextAnchor.Centre));
+            string text = d.Name + NameSeparator + IdentifierText(tile);
+            var cells = BullCells.Of(d);
+            var printed = items.Select(Bounds).ToList();
+            for (long size = NameFontSize; size >= NameMinimumFontSize; size -= 2)
+            {
+                double width = HelveticaMetrics.TextWidth(text, size) / 2.0, top = NameTop, bottom = top + (0.93 * size / 2.0);
+                double left = (d.Page.Width - width) / 2.0, right = left + width;
+                if (left < NameTop
+                    || cells.Any(c => Overlaps((left, top, right, bottom), (c.X - c.HalfWidth, c.Y - c.HalfHeight, c.X + c.HalfWidth, c.Y + c.HalfHeight), NameCellClearance))
+                    || printed.Any(b => Overlaps((left, top, right, bottom), b, NameItemClearance)))
+                {
+                    continue;
+                }
+
+                long baseline = (2 * NameTop) + (long)Math.Ceiling(0.72 * size);
+                items.Add(new TextRun(SceneLayer.Name, RoleColour(InkRole.Text), d.Page.Width, baseline, size, text, TextAnchor.Centre));
+                return;
+            }
+        }
+
+        private static bool Overlaps((double Left, double Top, double Right, double Bottom) a, (double Left, double Top, double Right, double Bottom) b, double gap) =>
+            a.Left < b.Right + gap && b.Left < a.Right + gap && a.Top < b.Bottom + gap && b.Top < a.Bottom + gap;
+
+        /// <summary>An item's extent in dmm; a text run's is its glyph box, cap height 0.72 and descender 0.21 of its size.</summary>
+        private static (double Left, double Top, double Right, double Bottom) Bounds(SceneItem item) => item switch
+        {
+            DiscBand disc => ((disc.CentreX - disc.OuterRadius) / 2.0, (disc.CentreY - disc.OuterRadius) / 2.0, (disc.CentreX + disc.OuterRadius) / 2.0, (disc.CentreY + disc.OuterRadius) / 2.0),
+            RectFill rect => (rect.X / 2.0, rect.Y / 2.0, (rect.X + rect.Width) / 2.0, (rect.Y + rect.Height) / 2.0),
+            TextRun run => TextBounds(run),
+            _ => throw new InvalidOperationException($"No extent for {item.GetType().Name}."),
+        };
+
+        private static (double Left, double Top, double Right, double Bottom) TextBounds(TextRun run)
+        {
+            double width = HelveticaMetrics.TextWidth(run.Text, run.FontSize) / 2.0, x = run.X / 2.0, baseline = run.Baseline / 2.0, size = run.FontSize / 2.0;
+            double left = run.Anchor switch { TextAnchor.Centre => x - (width / 2), TextAnchor.Right => x - width, _ => x };
+            return (left, baseline - (0.72 * size), left + width, baseline + (0.21 * size));
         }
 
         private static Rgb ParseRgb(string srgb) => new(

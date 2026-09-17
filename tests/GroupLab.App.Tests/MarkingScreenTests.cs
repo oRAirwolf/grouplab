@@ -416,6 +416,7 @@ public class MarkingScreenTests
             var window = DetectingWindow();
             window.OpenImage(sheet);
             window.CancelDetection();
+            Assert.Equal(MainWindow.CancellingText, window.StatusText);
             Pump(window);
             Assert.Null(window.Session.State.Scale);
             Assert.StartsWith("Detection cancelled", window.StatusText, StringComparison.Ordinal);

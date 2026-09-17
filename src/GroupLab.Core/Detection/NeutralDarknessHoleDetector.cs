@@ -21,8 +21,12 @@ public sealed record HoleDetectionOptions(
 /// </summary>
 public sealed record DetectedHole(double X, double Y, double DiameterPixels, double DiameterInches, double Solidity, double PaperV, double CoreMeanV, double AnnulusMinimumV, double RaggednessInches = double.NaN);
 
-/// <summary>A blob refused by a size, compactness or elongation filter, with the reason.</summary>
-public sealed record RejectedBlob(double X, double Y, double DiameterInches, string Reason);
+/// <summary>
+/// A blob refused by a size, compactness or elongation filter, with the reason. <see cref="Zone"/> names the exclusion zone when that is
+/// what refused it: the blob passed every filter a hole has to pass and was refused only for where it lies (NOTES-FROM-PLANNING.md entry 77
+/// section 3).
+/// </summary>
+public sealed record RejectedBlob(double X, double Y, double DiameterInches, string Reason, string? Zone = null);
 
 /// <summary>Everything one detection pass found, with the resolution and paper level it used.</summary>
 public sealed record HoleDetection(double Dpi, double PaperLevel, IReadOnlyList<DetectedHole> Holes, IReadOnlyList<RejectedBlob> Rejected);

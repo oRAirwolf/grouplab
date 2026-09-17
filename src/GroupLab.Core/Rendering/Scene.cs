@@ -20,6 +20,9 @@ public enum SceneLayer
 
     /// <summary>The print instruction along the bottom edge, drawn only when a print asks for it (NOTES-FROM-PLANNING.md entry 25 section 2).</summary>
     PrintNote,
+
+    /// <summary>The sheet's name and identifier along the top margin, outside every bull's cell (NOTES-FROM-PLANNING.md entry 77 section 5).</summary>
+    Name,
 }
 
 public enum TextAnchor

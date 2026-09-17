@@ -93,6 +93,11 @@ The specification states what is printed but not where. These are drawing conven
 
 - **Bull labels.** Left of the outermost disc, vertically centred, 15 dmm gap, 25 dmm Helvetica (a capital about 18 dmm tall). Printed only on sheets with more than one bull. Test 14 includes label boxes, and the placement was measured across every built-in sheet: at 35 dmm a label to the left lands 2.5 dmm into the top-left code of GL-LR300-T and one to the right 3.5 dmm into the top-right code, and a label below the disc overlaps a bottom code on GL-CF30-LTR at any size. Left at 25 dmm is the only fixed rule that clears all twenty, with 3.1 dmm to spare on the tile.
 - **Human-readable identifier.** Centred horizontally, baseline 80 dmm above the bottom page edge.
+- **The printed name, added 2026-09-17 by NOTES-FROM-PLANNING.md entry 77 section 5.**
+  - **What it reads:** the sheet's name, a middle dot, then the identifier, a tile's place included.
+  - **Where it goes:** centred, its glyph box starting 136 dmm below the top edge, which is the margin the codes keep. It is drawn at 25 dmm, shrunk in 1 dmm steps to no less than 12 dmm.
+  - **When it is left off:** it goes only where the box stays at least 60 dmm from every bull's cell, the region render-and-difference looks for holes in, and 30 dmm from everything else printed. A sheet with no such place prints no name; the tiles are the built-in sheets without one.
+  - **Why:** the name therefore needs no exclusion zone, and a sheet printed before it existed reads exactly as it did. The identifier caption at the bottom is unchanged.
 - **Measurement grid labels.** Inside the field, beside the axes.
 - **Data block rows.** Row boundaries are `5 + round((height - 10) * r / rows)` under the tie rule of section 2, which reproduces the 100 dmm rows section 3.10 gives for both built-in block heights. The reserved square sits at the right-hand end, its top at `round((height - reserve) / 2)`.
 - **Canonical key order** for top-level blocks section 3.1 does not place: `codes`, `print`, `dataBlock`, `instance`, `tiling`, `grids`, then unknown fields in the order read.
