@@ -33,11 +33,11 @@ public class AutomaticMarkingTests
 
         var result = AutomaticMarking.Run(observed, observed, ImageMetadata.ForScan(render.Width, render.Height, dpi), definition, new OpenCvSharpBackend(), trace, calibre: new Calibre(".308", 0.308));
 
-        double size = 0.308 * AutomaticMarking.ScanHoleToCalibre;
+        double size = 0.308 * AutomaticMarking.HoleToCalibre;
         Assert.NotEmpty(result.Difference!.Holes);
-        Assert.All(result.Difference.Holes, h => Assert.Equal(Math.Pow(h.DiameterInches / size, 2), h.CalibreHoles!.Value, 9));
+        Assert.All(result.Difference.Holes, h => Assert.Equal(h.AreaInches / (Math.PI * Math.Pow(size / 2, 2)), h.CalibreHoles!.Value, 9));
         var stage = trace.Records.Single(r => r.Stage == "S5-S8.holes");
-        Assert.Contains(stage.Parameters, p => p.Name == "calibre" && p.Value.Contains("a hole of about 0.291 in on a scan", StringComparison.Ordinal));
+        Assert.Contains(stage.Parameters, p => p.Name == "calibre" && p.Value.Contains("a hole of about 0.291 in:", StringComparison.Ordinal));
     }
 
     [Fact]

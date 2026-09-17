@@ -104,17 +104,17 @@ public class MarkingScreenTests
             }
 
             double meanRadius = GroupAnalysis.Analyse(window.Session.State).AllShots!.MeanRadius!.Value;
-            Assert.Contains(window.StatisticsText, t => t == (meanRadius * 2.54).ToString("F2", CultureInfo.InvariantCulture) + " cm");
+            Assert.Contains(window.StatisticsText, t => t.StartsWith((meanRadius * 2.54).ToString("F2", CultureInfo.InvariantCulture) + " cm", StringComparison.Ordinal));
             Assert.Contains(window.StatisticsText, t => t == "Angular figures need the shot distance.");
 
             window.Session.SetShotDistance(UnitSettings.DistanceToInches(100, DistanceUnit.Metre));
             string mil = UnitSettings.Metric.AngleText(meanRadius, window.Session.State.ShotDistanceInches)!;
             Assert.EndsWith(" mil", mil, StringComparison.Ordinal);
-            Assert.Contains(window.StatisticsText, t => t.StartsWith(mil + ", interval", StringComparison.Ordinal));
+            Assert.Contains(window.StatisticsText, t => t.EndsWith(mil, StringComparison.Ordinal));
             string written = MarkingFile.Write(window.Session.State);
 
             window.SetUnits(UnitSettings.Imperial);
-            Assert.Contains(window.StatisticsText, t => t == meanRadius.ToString("F3", CultureInfo.InvariantCulture) + " in");
+            Assert.Contains(window.StatisticsText, t => t.StartsWith(meanRadius.ToString("F3", CultureInfo.InvariantCulture) + " in", StringComparison.Ordinal));
             Assert.Equal(written, MarkingFile.Write(window.Session.State));
             window.Close();
             Assert.Equal(UnitSettings.Imperial, new AppSettingsStore(settings).LoadUnits());

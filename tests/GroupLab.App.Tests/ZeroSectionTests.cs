@@ -1,0 +1,105 @@
+using Avalonia.Controls;
+using Avalonia.Headless.XUnit;
+using Avalonia.LogicalTree;
+using Avalonia.Threading;
+using GroupLab.App;
+using GroupLab.App.Theme;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
+
+namespace GroupLab.App.Tests;
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entries 91, 92 and 93: the zero correction in its own section above the group statistics, with a refusal and a
+/// shot count where the offset is smaller than the shots can resolve; and the concept's chrome, whose rail is built and whose destinations
+/// are not.
+/// </summary>
+public class ZeroSectionTests
+{
+    private static MainWindow NewWindow()
+    {
+        var store = new AppSettingsStore(Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json"));
+        store.SaveUnits(UnitSettings.Imperial);
+        return new MainWindow(store) { Width = 1400, Height = 900 };
+    }
+
+    /// <summary>A marking of ten shots on a circle, centred <paramref name="offsetInches"/> right of the point of aim.</summary>
+    private static void Mark(MainWindow window, double offsetInches, double sigmaInches)
+    {
+        var session = window.Session;
+        session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));
+        session.SetPointOfAim(new PointD(0, 0));
+        double radius = sigmaInches * Math.Sqrt(2);
+        for (int k = 0; k < 10; k++)
+        {
+            double angle = 2 * Math.PI * k / 10;
+            session.AddShot(new PointD(100 * (offsetInches + (radius * Math.Cos(angle))), 100 * radius * Math.Sin(angle)));
+        }
+
+        Dispatcher.UIThread.RunJobs();
+    }
+
+    [AvaloniaFact]
+    public void AnOffsetInsideTheSamplingErrorIsRefusedWithAShotCount()
+    {
+        var window = NewWindow();
+        window.Show();
+        Mark(window, offsetInches: 0.10, sigmaInches: 0.27);
+
+        var lines = window.ZeroText.ToList();
+
+        Assert.Contains(lines, t => t.Contains("Group centre, windage", StringComparison.Ordinal));
+        Assert.Contains(lines, t => t.Contains("Group centre, elevation", StringComparison.Ordinal));
+        Assert.Contains(lines, t => t.StartsWith("Not distinguishable from zero at 10 shots", StringComparison.Ordinal));
+        Assert.Contains(lines, t => t.Contains("shots would settle it", StringComparison.Ordinal));
+        Assert.DoesNotContain(lines, t => t.StartsWith("Dial", StringComparison.Ordinal));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void AnOffsetLargerThanTheSamplingErrorIsACorrectionAndTheTurretGoesTheOtherWay()
+    {
+        var window = NewWindow();
+        window.Show();
+        Mark(window, offsetInches: 1.2, sigmaInches: 0.27);
+
+        var lines = window.ZeroText.ToList();
+
+        var dial = Assert.Single(lines, t => t.StartsWith("Dial", StringComparison.Ordinal));
+        Assert.Contains("left", dial, StringComparison.Ordinal);
+        Assert.Contains(lines, t => t.Contains("right", StringComparison.Ordinal) && t.Contains("Group centre", StringComparison.Ordinal) is false);
+        window.Close();
+    }
+
+    /// <summary>Entry 93 section 4: the rail is built and its destinations are not, so its other icons say which phase builds them.</summary>
+    [AvaloniaFact]
+    public void TheRailIsBuiltAndItsOtherDestinationsAreNot()
+    {
+        var window = NewWindow();
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        var rail = window.GetLogicalDescendants().OfType<Button>().Where(b => b.Classes.Contains(AppStyles.RailButton)).ToList();
+
+        Assert.Equal(5, rail.Count);
+        rail[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains("not built yet", window.StatusText, StringComparison.Ordinal);
+        window.Close();
+    }
+
+    /// <summary>Entry 93 section 2: the breadcrumb says what is open and what is on it.</summary>
+    [AvaloniaFact]
+    public void TheBreadcrumbNamesTheDocumentAndItsCounts()
+    {
+        var window = NewWindow();
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains("no image open", window.BreadcrumbText, StringComparison.Ordinal);
+
+        Mark(window, offsetInches: 0.1, sigmaInches: 0.27);
+
+        Assert.Contains("10 shots", window.BreadcrumbText, StringComparison.Ordinal);
+        window.Close();
+    }
+}

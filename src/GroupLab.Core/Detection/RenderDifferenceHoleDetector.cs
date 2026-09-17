@@ -79,11 +79,13 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// over its hull: the quantity NOTES-FROM-PLANNING.md entry 86 section 3 asks for, which tells a hole centred on a ring from one beside it
 /// where the distance to the nearest edge cannot.
 /// <para>
-/// <see cref="AreaInches"/> and <see cref="Aspect"/> are the shape, NOTES-FROM-PLANNING.md entry 88 section 1: a mark larger than one hole
-/// has three possible causes and the flag names two of them. The third is a bullet that arrived yawed, which makes one oval hole rather than
-/// two round ones, and the three separate by shape. The area is the hull's, in square inches at the blob's own scale, and the aspect is its
-/// bounding box's long side over its short side. <see cref="Elongation"/> is the same quantity from the residual-weighted second moments,
-/// which is orientation-free where the box is not, and <see cref="Solidity"/> is what a waist between two lobes shows in.
+/// <see cref="AreaInches"/>, <see cref="HullAreaInches"/> and <see cref="Aspect"/> are the shape, NOTES-FROM-PLANNING.md entry 88 section 1: a
+/// mark larger than one hole has three possible causes and the flag named two of them. The third is one ordinary hole with a torn rim, and it
+/// is what four of the five flags on real material turned out to be. <see cref="AreaInches"/> is the mark's own area, in square inches at its
+/// own scale, and <see cref="HullAreaInches"/> is the area of the convex hull thrown around it; a ragged hole's hull holds twice its ink.
+/// <see cref="Aspect"/> is the bounding box's long side over its short side, <see cref="Elongation"/> is the same quantity from the
+/// residual-weighted second moments, which is orientation-free where the box is not, and <see cref="Solidity"/> is the ratio of the two areas,
+/// which is what a waist between two lobes and a torn rim both show in.
 /// </para>
 /// <para>
 /// A split half carries its parent blob's geometry, as it already does for the diameter, because a half has no separate hull.
@@ -91,7 +93,8 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
-    double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN);
+    double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN,
+    double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -238,7 +241,7 @@ public static class RenderDifferenceHoleDetector
         double largestSquareInches = Math.PI * Math.Pow(options.MaximumDiameterInches / 2, 2);
         var holes = new List<RenderDifferenceHole>();
         var rejected = new List<RejectedBlob>();
-        var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double AreaInches, double Hx, double Hy, double DiameterInches, double Solidity, double Closure, double? CalibreHoles)>();
+        var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double AreaInches, double MarkAreaInches, double Hx, double Hy, double DiameterInches, double Solidity, double Closure, double? CalibreHoles)>();
         foreach (var blob in backend.FilledBlobs(closed))
         {
             var (area, hx, hy) = Polygon(blob.Hull);
@@ -249,13 +252,13 @@ public static class RenderDifferenceHoleDetector
 
             double diameter = 2 * Math.Sqrt(area / Math.PI), solidity = blob.Area / area;
             double ppi = LocalPixelsPerInch(registration, new PointD(hx, hy));
-            double diameterIn = diameter / ppi, areaIn = area / (ppi * ppi);
+            double diameterIn = diameter / ppi, areaIn = area / (ppi * ppi), markAreaIn = blob.Area / (ppi * ppi);
             bool tooSmall = diameterIn < options.MinimumDiameterInches;
             double aspect = BoxAspect(blob);
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = tooSmall ? default : Moments(residual, expected, width, blob);
-            double? calibreHoles = options.CalibreInches is { } calibre ? areaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
+            double? calibreHoles = options.CalibreInches is { } calibre ? markAreaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
             bool elongated = moments.Elongation >= options.SplitElongation && areaIn <= 2 * largestSquareInches;
             string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in")
                 : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
@@ -282,13 +285,19 @@ public static class RenderDifferenceHoleDetector
 
             if (elongated)
             {
-                elongatedBlobs.Add((blob, moments, areaIn, hx, hy, diameterIn, solidity, closure, calibreHoles));
+                elongatedBlobs.Add((blob, moments, areaIn, markAreaIn, hx, hy, diameterIn, solidity, closure, calibreHoles));
                 continue;
             }
 
             // A blob the size says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
+            // Where it is large enough that the flag may fire on it, the two centres a split would give are carried with it, so that a person
+            // told "this may be two shots" can take both without a mouse (NOTES-FROM-PLANNING.md entry 94 section 4).
+            var halves = markAreaIn >= options.OversizeHoles * Math.PI * Math.Pow(options.SmallestHoleInches / 2, 2)
+                ? Split(residual, width, blob, moments)
+                : null;
             holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
-                AreaInches: areaIn, Aspect: aspect));
+                AreaInches: markAreaIn, Aspect: aspect, HullAreaInches: areaIn,
+                SplitA: halves is null ? null : new PointD(halves[0].X, halves[0].Y), SplitB: halves is null ? null : new PointD(halves[1].X, halves[1].Y)));
         }
 
         // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78, 81 and 82). An elongated blob
@@ -296,7 +305,7 @@ public static class RenderDifferenceHoleDetector
         // kept as one hole unless it is also at least ResidueElongation long, which no real hole in the corpus came near (at most 1.72): then
         // it is a sliver of photographed residue and is refused (entry 78 section 2). The size is graded, SizeReference.
         var reference = SizeReference([.. holes.Select(h => h.DiameterInches)], options);
-        foreach (var (blob, moments, areaIn, hx, hy, diameterIn, solidity, closure, calibreHoles) in elongatedBlobs)
+        foreach (var (blob, moments, areaIn, markAreaIn, hx, hy, diameterIn, solidity, closure, calibreHoles) in elongatedBlobs)
         {
             double sizeHoles = areaIn / (Math.PI * Math.Pow(reference.VetoInches / 2, 2));
             bool vetoed = sizeHoles < options.SplitMinimumHoles;
@@ -310,25 +319,33 @@ public static class RenderDifferenceHoleDetector
             if (vetoed)
             {
                 holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true, InkFraction: moments.Ink,
-                    AreaInches: areaIn, Aspect: BoxAspect(blob)));
+                    AreaInches: markAreaIn, Aspect: BoxAspect(blob), HullAreaInches: areaIn));
                 continue;
             }
 
             foreach (var (mx, my) in Split(residual, width, blob, moments))
             {
                 holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
-                    AreaInches: areaIn, Aspect: BoxAspect(blob)));
+                    AreaInches: markAreaIn, Aspect: BoxAspect(blob), HullAreaInches: areaIn));
             }
         }
 
-        // S8: a whole mark with the area of OversizeHoles single holes or more is flagged, never cut (NOTES-FROM-PLANNING.md entry 81
+        // S8: a whole mark holding the area of OversizeHoles single holes or more is flagged, never cut (NOTES-FROM-PLANNING.md entry 81
         // section 2), and tentatively where the size came from too few marks to trust (entry 82 section 7).
+        //
+        // The area counted is the mark's own, not its convex hull's (entry 94 section 1). The hull cannot do this job: a torn single hole
+        // reads about 2.1 holes of hull and a genuinely merged pair about 2.2, while their own areas are about 1 and about 2. Four of the five
+        // flags this detector raised on real material were ordinary holes with ragged rims, and a flag that is wrong four times in five is
+        // noise rather than a loud failure. The reference size is still a hull diameter, from the sheet's round marks or from the calibre, so
+        // a clean hole reads about 0.94 rather than 1.00 of it and the threshold is that much harder to reach; the separation it has to make
+        // is a factor of two, and the measured margin after the change is 0.91 for a single hole against 1.40 for a pair barely touching.
         if (reference.FlagInches is { } flagSize)
         {
             bool tentative = reference.Source == HoleSizeSource.SheetTentative;
+            double oneHole = Math.PI * Math.Pow(flagSize / 2, 2);
             for (int k = 0; k < holes.Count; k++)
             {
-                double holesOf = Math.Pow(holes[k].DiameterInches / flagSize, 2);
+                double holesOf = holes[k].AreaInches / oneHole;
                 holes[k] = holes[k] with { SizeHoles = holesOf };
                 if (!holes[k].PossibleMerge && holesOf >= options.OversizeHoles)
                 {

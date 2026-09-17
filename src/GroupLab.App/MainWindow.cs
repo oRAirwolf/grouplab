@@ -63,6 +63,17 @@ public sealed class MainWindow : Window
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
 
+    /// <summary>The breadcrumb header's text: what is open and what is on it, NOTES-FROM-PLANNING.md entry 93 section 2.</summary>
+    private readonly TextBlock breadcrumb = new() { VerticalAlignment = VerticalAlignment.Center, FontSize = Tokens.SecondarySize };
+
+    /// <summary>
+    /// The zero correction, NOTES-FROM-PLANNING.md entry 92 section 1. It sits above the group statistics and not among them because it
+    /// answers a different question at a different moment: what to dial now, read standing at a bench with a turret cap in one hand, where
+    /// the statistics say how well the rifle shoots, read afterwards sitting down. It also has a different truth condition, being a claim
+    /// about what the rifle will do next rather than a description of the shots on the sheet.
+    /// </summary>
+    private readonly StackPanel zeroPanel = new() { Spacing = 2 };
+
     // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
     // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
@@ -90,7 +101,7 @@ public sealed class MainWindow : Window
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly TextBox shotDistance = new() { Width = 90 };
     private readonly TextBlock shotDistanceUnit = new() { VerticalAlignment = VerticalAlignment.Center };
-    private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light" }, MinWidth = 140 };
+    private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light", "High contrast" }, MinWidth = 140 };
     private bool showingTheme;
     private UnitSettings units;
     private bool showingUnits;
@@ -133,14 +144,23 @@ public sealed class MainWindow : Window
         Closed += (_, _) => CrashReporter.Recorded -= OnCrashRecorded;
 
         var toolbar = new WrapPanel { Margin = new Thickness(Tokens.Space8, Tokens.Space6), Orientation = Orientation.Horizontal };
-        toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
+        // Opening an image and detecting are the header's two actions now (entry 93 section 2), so the strip holds the tools and the rest.
         toolbar.Children.Add(Button("Open marking", async () => await OpenMarkingDialog()));
-        toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false)));
         toolbar.Children.Add(Button("Print a target", () => new PrintWindow().Show()));
         toolbar.Children.Add(new Separator { Width = 12 });
-        foreach (var (tool, label) in new[] { (MarkingTool.Pan, "Pan (P)"), (MarkingTool.Length, "Scale: length (L)"), (MarkingTool.Rectangle, "Scale: rectangle (R)"), (MarkingTool.Aim, "Point of aim (A)"), (MarkingTool.Impact, "Impact (I)"), (MarkingTool.Select, "Select (V)") })
+        // Entry 93 section 2: a tool strip of icons with their keys as keycaps, rather than a wrapped row of text buttons. The name stays
+        // beside the icon, because an icon alone is a guess for anyone who has not used the application before.
+        foreach (var (tool, glyph, name, key) in new[]
         {
-            var button = new ToggleButton { Content = label, Margin = new Thickness(2) };
+            (MarkingTool.Pan, "\u271b", "Pan", "P"),
+            (MarkingTool.Length, "\u2194", "Scale: length", "L"),
+            (MarkingTool.Rectangle, "\u25ad", "Scale: rectangle", "R"),
+            (MarkingTool.Aim, "\u2316", "Point of aim", "A"),
+            (MarkingTool.Impact, "\u25c9", "Impact", "I"),
+            (MarkingTool.Select, "\u25b8", "Select", "V"),
+        })
+        {
+            var button = new ToggleButton { Content = ToolContent(glyph, name, key), Margin = new Thickness(2) };
             button.Click += (_, _) => SetTool(tool);
             toolButtons[tool] = button;
             toolbar.Children.Add(button);
@@ -214,6 +234,9 @@ public sealed class MainWindow : Window
             session.SetShotDistance(null);
         })));
         panel.Children.Add(problem);
+        panel.Children.Add(Heading("Zero correction"));
+        panel.Children.Add(zeroPanel);
+        panel.Children.Add(Heading("Group"));
         panel.Children.Add(statistics);
         panel.Children.Add(Heading("Shots"));
         panel.Children.Add(shotList);
@@ -221,6 +244,19 @@ public sealed class MainWindow : Window
         panel.Children.Add(selection);
 
         // Entry 42 section 4: the bar across the top, a right column 372 wide, and a status line, each separated by one pixel of line.
+        // Entry 93 section 2 adds the concept's chrome around them: the breadcrumb header above the tool strip, and the icon rail down the
+        // left. The header carries the document's identity and its counts on the left, and one primary action with a secondary beside it on
+        // the right, which is where the concept puts them.
+        var crumbs = new DockPanel();
+        var actions = new StackPanel { Orientation = Orientation.Horizontal };
+        var primary = Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false));
+        primary.Classes.Add(AppStyles.Primary);
+        actions.Children.Add(Button("Open image", async () => await OpenImageDialog()));
+        actions.Children.Add(primary);
+        DockPanel.SetDock(actions, Dock.Right);
+        crumbs.Children.Add(actions);
+        crumbs.Children.Add(breadcrumb);
+        var header = new Border { Child = crumbs, Classes = { AppStyles.Breadcrumb } };
         var bar = new Border { Child = toolbar, Classes = { AppStyles.Bar } };
         var side = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = panel }, Classes = { AppStyles.Side } };
         cancelDetection.Click += (_, _) => CancelDetection();
@@ -231,14 +267,22 @@ public sealed class MainWindow : Window
         statusLine.Children.Add(status);
         var statusBar = new Border { Child = statusLine, Classes = { AppStyles.StatusBar } };
         var dock = new DockPanel();
+        DockPanel.SetDock(header, Dock.Top);
         DockPanel.SetDock(bar, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(side, Dock.Right);
+        dock.Children.Add(header);
         dock.Children.Add(bar);
         dock.Children.Add(statusBar);
         dock.Children.Add(side);
         dock.Children.Add(canvas);
-        Content = dock;
+
+        var whole = new DockPanel();
+        var rail = Rail();
+        DockPanel.SetDock(rail, Dock.Left);
+        whole.Children.Add(rail);
+        whole.Children.Add(dock);
+        Content = whole;
         SetTool(MarkingTool.Pan);
         ShowUnits();
         Refresh();
@@ -354,6 +398,7 @@ public sealed class MainWindow : Window
             {
                 ThemeChoice.Dark => ThemeVariant.Dark,
                 ThemeChoice.Light => ThemeVariant.Light,
+                ThemeChoice.HighContrast => Tokens.HighContrastVariant,
                 _ => ThemeVariant.Default,
             };
         }
@@ -939,6 +984,8 @@ public sealed class MainWindow : Window
 
         statistics.Children.Clear();
         moreFigures.Children.Clear();
+        ShowBreadcrumb(state);
+        ShowZero(state);
         if (report.AllShots is { } all)
         {
             var reduced = report.WithoutExclusions!;
@@ -957,9 +1004,16 @@ public sealed class MainWindow : Window
             }
             else
             {
+                // Entry 92 section 3: one row per figure, label left and value right, with the angular conversion on the same row as its
+                // linear value. Nine lines of prose became three rows and two intervals. Sigma's interval earns its second line and mean
+                // radius's does too, being the headline; extreme spread's is behind the same disclosure as everything else, because it is the
+                // least informative of the three and its interval changes no decision.
                 statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadFigureSize, FontWeight.Medium));
                 statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.FigureSize, FontWeight.Medium));
-                statistics.Children.Add(Figure("Extreme spread, centre to centre", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.BodySize, FontWeight.Normal, subordinate: true));
+                statistics.Children.Add(Figure("Extreme spread", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.BodySize, FontWeight.Normal, subordinate: true, interval: false));
+                moreFigures.Children.Add(Line(all.ExtremeSpread is { Lower: { } esLower, Upper: { } esUpper, Coverage: { } esCoverage }
+                    ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is centre to centre, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
+                    : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}."));
                 moreFigures.Children.Add(new TextBlock
                 {
                     Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
@@ -1192,7 +1246,8 @@ public sealed class MainWindow : Window
             }
 
             card.Children.Add(choices);
-            card.Children.Add(Line("Enter takes the first choice, Space moves to the next item, a bull's number then Enter reassigns the selected shot, N marks it not a shot."));
+            card.Children.Add(Line("Enter takes the first choice, Space moves to the next item, a bull's number then Enter reassigns the selected shot, N marks it not a shot."
+                + (current.Choices.Any(c => c.Action == ReviewAction.SplitIntoTwo) ? " T takes this mark as two shots." : "")));
             review.Children.Add(new Border { Child = card, Padding = new Thickness(Tokens.Space8), BorderThickness = new Thickness(1), BorderBrush = Marks.Alert, CornerRadius = new CornerRadius(4) });
         }
 
@@ -1314,6 +1369,10 @@ public sealed class MainWindow : Window
                 break;
             case Key.Space:
                 NextReview();
+                break;
+            // Entry 94 section 4: the one item that used to need the mouse. T takes an oversized mark as the two shots the detector says it is.
+            case Key.T when CurrentReview is { } two && two.Choices.FirstOrDefault(c => c.Action == ReviewAction.SplitIntoTwo) is { } split:
+                Choose(two, split);
                 break;
             case Key.N when canvas.Selected is { } id:
                 session.SetNotAShot(id, true);
@@ -1442,36 +1501,32 @@ public sealed class MainWindow : Window
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
     internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 
+    /// <summary>The zero correction section's lines, for the headless tests (NOTES-FROM-PLANNING.md entries 91 and 92).</summary>
+    internal IEnumerable<string> ZeroText => zeroPanel.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>The breadcrumb header's line, for the headless tests (entry 93 section 2).</summary>
+    internal string BreadcrumbText => breadcrumb.Text ?? "";
+
     /// <summary>
     /// One figure in the monospace with tabular figures DESIGN.md section 19 asks for, and beneath it, smaller, its interval labelled
     /// with the coverage it actually has (NOTES-FROM-PLANNING.md entry 24 section 1), then the figure without exclusions when there
     /// are any. Every line wraps, so the largest type cannot clip at the panel's edge (entry 24 section 2). Extreme spread is drawn
     /// smaller and dimmer: present, and visibly subordinate.
     /// </summary>
-    private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false)
+    private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false, bool interval = true)
     {
         double? distance = session.State.ShotDistanceInches;
         string Interval(ReportedEstimate e) => e is { Lower: { } lower, Upper: { } upper, Coverage: { } coverage }
             ? string.Create(CultureInfo.InvariantCulture, $"{100 * coverage:0.0}% interval {units.Number(lower)} to {units.Length(upper)}")
             : $"no interval: {e.IntervalUnavailable}";
-        string? Angle(ReportedEstimate e) => units.AngleText(e.Value, distance) is { } value
-            ? value + (e is { Lower: { } lower, Upper: { } upper } ? $", interval {units.Angle(lower, distance)!.Value.ToString("0.00", CultureInfo.InvariantCulture)} to {units.AngleText(upper, distance)}" : "")
-            : null;
-        // Entry 42 section 3: the name in dim, the value in mono at the figure size, and every interval line in mono at 11.5 in dim.
-        TextBlock Detail(string text) => new() { Text = text, FontFamily = Mono, FontSize = Tokens.SecondarySize, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Dim } };
-        var column = new StackPanel { Spacing = 0 };
-        column.Children.Add(new TextBlock { Text = name, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
-        var value = new TextBlock { Text = units.Length(all.Value), FontFamily = Mono, FontSize = size, FontWeight = weight, LetterSpacing = subordinate ? 0 : Tokens.FigureSpacing, TextWrapping = TextWrapping.Wrap };
-        if (subordinate)
-        {
-            value.Classes.Add(AppStyles.Dim);
-        }
 
-        column.Children.Add(value);
-        column.Children.Add(Detail(Interval(all)));
-        if (Angle(all) is { } angle)
+        // Entry 92 section 3 item 2: the angular conversion rides on the same row as its linear value rather than taking a line of its own.
+        string Value(ReportedEstimate e) => units.AngleText(e.Value, distance) is { } angle ? $"{units.Length(e.Value)}  {angle}" : units.Length(e.Value);
+        var column = new StackPanel { Spacing = 0 };
+        column.Children.Add(Readout(name, Value(all), size, weight, subordinate));
+        if (interval)
         {
-            column.Children.Add(Detail(angle));
+            column.Children.Add(Detail(Interval(all)));
         }
 
         if (reduced is not null)
@@ -1482,5 +1537,161 @@ public sealed class MainWindow : Window
         }
 
         return column;
+    }
+
+    /// <summary>
+    /// One readout, NOTES-FROM-PLANNING.md entry 92 section 3 and entry 93 section 2: the label on the left and the value on the right, as
+    /// the concept's selected-detection panel has it. Three headline figures with two lines of interval each was nine lines of prose before
+    /// a reader reached anything else.
+    /// </summary>
+    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false)
+    {
+        var name = new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.Secondary } };
+        var figure = new TextBlock
+        {
+            Text = value,
+            FontFamily = Mono,
+            FontSize = size,
+            FontWeight = weight,
+            LetterSpacing = subordinate ? 0 : Tokens.FigureSpacing,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            TextAlignment = TextAlignment.Right,
+            TextWrapping = TextWrapping.Wrap,
+        };
+        if (subordinate)
+        {
+            figure.Classes.Add(AppStyles.Dim);
+        }
+
+        var row = new DockPanel();
+        DockPanel.SetDock(name, Dock.Left);
+        row.Children.Add(name);
+        row.Children.Add(figure);
+        return row;
+    }
+
+    /// <summary>
+    /// A tool's face, NOTES-FROM-PLANNING.md entry 93 section 2: the icon, the name, and the key that does it drawn as a keycap rather than
+    /// written in brackets. The keys are the ones the window already answers to, so the strip states the keyboard path rather than hiding it.
+    /// </summary>
+    private static Control ToolContent(string glyph, string name, string key)
+    {
+        var row = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        row.Children.Add(new TextBlock { Text = glyph, FontSize = 15, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space6, 0) });
+        row.Children.Add(new TextBlock { Text = name, VerticalAlignment = VerticalAlignment.Center });
+        row.Children.Add(Keycap(key));
+        return row;
+    }
+
+    /// <summary>One key drawn as a key: a bordered box with the letter in mono, as the concept shows its hints.</summary>
+    private static Control Keycap(string key) => new Border
+    {
+        Child = new TextBlock { Text = key, Classes = { AppStyles.KeycapText } },
+        VerticalAlignment = VerticalAlignment.Center,
+        Classes = { AppStyles.Keycap },
+    };
+
+    /// <summary>
+    /// The left rail, NOTES-FROM-PLANNING.md entry 93 sections 2 and 4. The concept's rail implies five destinations and one exists, so the
+    /// rail is built and its destinations are not: the four that are not built say which phase builds them rather than opening an empty
+    /// screen, because a styling pass that starts inventing screens is how this becomes a rewrite.
+    /// </summary>
+    private Control Rail()
+    {
+        var rail = new StackPanel { Width = 52 };
+        var here = Button("\u25c9", () => status.Text = "You are on the analysis screen.");
+        here.Classes.Add(AppStyles.RailButton);
+        here.Classes.Add(AppStyles.Good);
+        ToolTip.SetTip(here, "Analyse");
+        rail.Children.Add(here);
+        foreach (var (glyph, name, phase) in new[]
+        {
+            ("\u25a4", "Target library", "Phase 4"),
+            ("\u2399", "Print", "Phase 4"),
+            ("\u2261", "Session records", "Phase 4"),
+            ("\u2317", "Reports", "Phase 4"),
+        })
+        {
+            var button = Button(glyph, () => status.Text = $"{name} is {phase} and is not built yet. The rail shows where it will be.");
+            button.Classes.Add(AppStyles.RailButton);
+            ToolTip.SetTip(button, $"{name}, {phase}");
+            rail.Children.Add(button);
+        }
+
+        return new Border { Child = rail, Classes = { AppStyles.Rail } };
+    }
+
+    /// <summary>The breadcrumb's line: the application, the document, and what is on it.</summary>
+    private void ShowBreadcrumb(MarkingState state)
+    {
+        string document = state.ImagePath is { } path ? Path.GetFileName(path) : "no image open";
+        int shots = state.Shots.Count(sh => sh.IsShot);
+        int open = ReviewQueue.Open(ReviewQueue.For(state));
+        breadcrumb.Text = shots == 0
+            ? $"GroupLab  \u203a  {document}"
+            : FormattableString.Invariant($"GroupLab  \u203a  {document}  \u203a  {shots} shots{(open > 0 ? $", {open} to review" : "")}");
+    }
+
+    /// <summary>Entry 42 section 3: a second line under a readout, in mono at the secondary size and dim.</summary>
+    private static TextBlock Detail(string text) =>
+        new() { Text = text, FontFamily = Mono, FontSize = Tokens.SecondarySize, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Dim } };
+
+    /// <summary>
+    /// The zero correction section, NOTES-FROM-PLANNING.md entries 91 and 92: windage and elevation as separate rows because a turret has
+    /// two knobs and nobody dials a diagonal, each in a linear and an angular unit at once, the uncertainty in the same units, and either a
+    /// correction or a refusal with the shot count that would settle it. Never a bare number.
+    /// </summary>
+    private void ShowZero(MarkingState state)
+    {
+        zeroPanel.Children.Clear();
+        if (Zeroing.For(state) is not { } zero)
+        {
+            zeroPanel.Children.Add(Line(state.Scale is null
+                ? "Set a scale, then mark at least five shots, and the correction to dial appears here."
+                : $"Needs at least {GroupAnalysis.MinimumShotsForDispersion} shots on bulls or a point of aim: an offset cannot be told from noise without the group's own spread."));
+            return;
+        }
+
+        double? distance = state.ShotDistanceInches;
+        string Both(double inches) => units.AngleText(Math.Abs(inches), distance) is { } angle
+            ? $"{units.Length(Math.Abs(inches))}  {angle}"
+            : units.Length(Math.Abs(inches));
+
+        zeroPanel.Children.Add(Readout("Group centre, windage", $"{Both(zero.Windage.OffsetInches)} {zero.Windage.Sits}"));
+        zeroPanel.Children.Add(Readout("Group centre, elevation", $"{Both(zero.Elevation.OffsetInches)} {zero.Elevation.Sits}"));
+        zeroPanel.Children.Add(Detail($"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent"));
+
+        var dial = new List<string>();
+        if (zero.Windage.Distinguishable)
+        {
+            dial.Add($"{Both(zero.Windage.OffsetInches)} {zero.Windage.Dial}");
+        }
+
+        if (zero.Elevation.Distinguishable)
+        {
+            dial.Add($"{Both(zero.Elevation.OffsetInches)} {zero.Elevation.Dial}");
+        }
+
+        var verdict = new TextBlock { TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold };
+        if (dial.Count > 0)
+        {
+            verdict.Text = "Dial " + string.Join(" and ", dial) + ".";
+            verdict.Classes.Add(AppStyles.Good);
+        }
+        else
+        {
+            int? settle = zero.Windage.ShotsToSettle is { } w && zero.Elevation.ShotsToSettle is { } e ? Math.Min(w, e) : zero.Windage.ShotsToSettle ?? zero.Elevation.ShotsToSettle;
+            verdict.Text = FormattableString.Invariant($"Not distinguishable from zero at {zero.Shots} shots: the smallest offset these shots can call is {Both(zero.DetectableInches)}.")
+                + (settle is { } more ? FormattableString.Invariant($" About {more} shots would settle it. Shoot more before touching the turret.") : " Nothing this rifle can shoot would settle an offset this small.");
+            verdict.Classes.Add(AppStyles.Secondary);
+        }
+
+        zeroPanel.Children.Add(verdict);
+        zeroPanel.Children.Add(Detail(zero.Circular
+            ? $"sigma pooled over both axes on {zero.DegreesOfFreedom} degrees of freedom, the group being circular"
+            : $"each axis on its own, {zero.DegreesOfFreedom} degrees of freedom, the group not being circular"));
+        zeroPanel.Children.Add(Line(distance is null
+            ? "Angular figures need the shot distance. It corrects the zero at the distance shot; moving a zero between distances needs the solver."
+            : "It corrects the zero at the distance shot. Moving a zero between distances needs the ballistic solver, and clicks need the scope's click value."));
     }
 }

@@ -4076,6 +4076,115 @@ A single hole on Alan's scan is 0.0687 sq in of hull at the median. **Four of th
 
 ---
 
+## Entries 94, 91, 92 and 93. The flag counts the mark, subgroups in the session, the zero correction, and the concept as the design language
+
+`docs/NOTES-FROM-PLANNING.md` entry 94 first, then 91, 92 and 93.
+
+### Entry 94 section 1: the oversize flag counts the mark's own area, and the sweep that confirms it
+
+**The flag measured the area of a convex hull thrown around a mark. It now measures the mark.** A torn single hole and a genuinely merged pair are 2.1 and 2.2 holes of hull, which nothing can separate, and about 1 and about 2 of their own area, which separates cleanly.
+
+**Entry 81's confirming sweep re-run, because the thresholds were fitted against the wrong quantity.** Composited pairs of real holes at known separations, with the calibre named, `grouplab holes composite-pairs`:
+
+| | Single holes | Pairs 0.10 in apart | 0.15 in apart | 0.20 in apart |
+|---|---|---|---|---|
+| **Holes' area read, min to max** | **0.86 to 1.01** | **1.30 to 1.41** | 1.49 to 1.59 | 1.73 to 1.75 |
+| Flagged, before, by hull | 0 percent | 100 percent | 100 percent | 38 percent of those still one mark |
+| **Flagged, now, by area** | **0 percent** | **69 percent** | **100 percent** | 38 percent of those still one mark |
+
+**Nothing changed for a single hole and the 1.35 threshold is unchanged.** What changed is at the tightest separation: a pair whose centres are 0.10 in apart overlaps by two thirds, so its ink really is only 1.37 holes, and about a third of those now fall under the threshold.
+
+**That is the trade and it is worth taking.** On real material:
+
+| | Flags on the corpus's real sheets |
+|---|---|
+| Before, by hull | **5**, of which four were ordinary holes with ragged rims |
+| **Now, by area** | **2** |
+
+The two that remain are S1b, at 1.37 of the sheet's own single-hole size, and the friend's photograph's 0.464 in mark at 1.90, which holds nearly two holes of ink and is the one mark on real material that looks like two shots.
+
+**The threshold was left at 1.35 deliberately.** Lowering it to about 1.28 would catch every 0.10 in pair, and it would also bring S1b back, because a torn hole holding 1.28 holes of ink and a pair holding 1.30 are not separable by area either. Fitting a threshold into that gap would be fitting it to one mark.
+
+**What else reads the new quantity:** the review queue's sentence, the canvas ring, and `RenderDifferenceHole.CalibreHoles`, so nothing reports a mark as bigger than it is. The hull area is kept beside it as `HullAreaInches`, since solidity is the ratio of the two and the shape measurements of entry 88 rest on it.
+
+### Entry 94 section 4: the merged pair has a keyboard path
+
+**The item the flag exists to raise offered "One shot" and "Not a shot", so a mark that really was two shots sent a person to the mouse.** It now offers **"Two shots"**, and the detector supplies where they go: when a mark is large enough that the flag may fire on it, the same weighted split the detector uses when it does cut a blob runs anyway, and the two centres ride on the flag through the marking file. Taking the choice moves the shot to the first centre and puts a second on the other, on the same bull, clearing the size flag from both because it was a statement about one mark that is now two. The pair then appears as a bull holding two shots, which is the item that asks whether that is what happened.
+
+**On the keyboard it is `T`**, beside Enter for the first choice, Space for the next item, a bull's number to reassign and N for not a shot.
+
+**The rehearsal, re-run:**
+
+| | Before | After |
+|---|---|---|
+| Queue items as detection leaves it | 15 | **8** |
+| Items handled to settle everything | 19 | 12 |
+| Key presses | 22 | **15** |
+| **Taps on the image** | **1** | **0** |
+
+**The loop is keyboard-complete on the injected set**, which is what entry 84 built the rehearsal to find out and entry 94 section 4 asked for before the gate is timed for real.
+
+### Entry 94 section 5: the synthetic flag ratio, re-checked
+
+**It was 11 of 25 synthetic marks against 1 of 14 on real paper, about ten to one. It is now 4 of 25 against 1 of 14, about two to one.** Most of the excess was the hull rather than the hole model: a synthetic hole's rim is rougher than a real one's, and the hull counted that roughness as area. What is left is a real but much smaller difference, and a synthetic sheet is now within a factor of two of real paper on the flag as well as honest on the assignment path.
+
+### Entry 94 section 2: subgroups take the session route
+
+**One sheet can now carry several loads**, and nothing about the format changed.
+- **`MarkingState.Subgroups`** maps a bull index to a name, in the session and in the marking file, so a saved marking still knows which bulls held which load.
+- **`GroupAnalysis.Subgroups`** reports each subgroup with its own figures, computed exactly as a whole sheet's are, and compares them: Fligner-Killeen on each shot's distance from its own subgroup's centre for dispersion, and the one-way MANOVA of `docs/STATISTICS.md` section 8.2 on the offsets for the centres, which for two subgroups is Hotelling's test.
+- **No verdict is drawn.** The p-values sit beside the subgroups, for the same reason entry 91 gives about a zero correction: which load is better is a claim about the next group.
+- **The whole-sheet figures are unchanged**, and a bull in no subgroup is in none.
+
+**It works on the thirty-bull and thirty-six-bull sheets in the library today**, so six charge weights at five shots each can be shot and compared before anything is designed. When Jeff's specification arrives the format question reopens with this as the fallback that already works.
+
+### Entry 94 section 3: one hole-size constant
+
+**`ScanHoleToCalibre` 0.944 and `PhotographHoleToCalibre` 0.986 are one constant, `HoleToCalibre` 0.945**, over 102 holes on eight frames of two sheets, sheet means 0.949 and 0.932, frame means 0.918 to 0.976. **The branch went with them:** a photograph carrying no camera data was read as a scan, which mattered only while the two figures differed.
+
+### Entries 91 and 92: the zero correction, with its uncertainty
+
+**It is its own section, above the group statistics**, because it answers a different question at a different moment: what to dial now, read standing at a bench, against how well the rifle shoots, read afterwards sitting down. It is also the one figure on the screen that is a claim about the next group rather than a description of this one.
+
+**What it shows**, per entry 92 section 2:
+
+| Row | |
+|---|---|
+| Group centre, windage | the offset, in a linear and an angular unit at once, and which way it sits |
+| Group centre, elevation | the same, as a separate row, because a turret has two knobs and nobody dials a diagonal |
+| give or take | the uncertainty on each axis, in the same units, at 95 percent |
+| **The verdict** | either "Dial 0.44 MOA left and 0.23 MOA down", or "Not distinguishable from zero at 10 shots: the smallest offset these shots can call is 0.70 MOA. About 25 shots would settle it." |
+
+**The rule is entry 53 section 3's** and the code computes its table rather than copying it: the smallest offset distinguishable from zero is `t(0.975, df) / sqrt(n)` times sigma, which is 1.603 sigma at three shots, 1.031 at five, 0.664 at ten and 0.402 at twenty-five, with `df = 2n - 2` for a circular group and `n - 1` per axis where circularity is rejected, since a group that strings vertically knows less about its vertical centre. A test reproduces all six rows of the table from the formula.
+
+**One correction to entry 92 section 1's example, and it matters at a bench.** The entry writes the correction for a centre sitting left and high as "dial 0.44 MOA left and 0.23 MOA down". **The turret moves the point of impact, so a group sitting left is corrected by dialling right.** The code takes the direction opposite the offset and the two words are kept apart in the readout: where the group sits, and what to dial.
+
+**Two things it does not do**, both named on screen: it does not cross a distance, which is the solver's job in Phase 5, and it does not count clicks, which needs the scope's click value, which is a rifle record, which entry 90 scheduled in Phase 4. Until then it stops at a linear and an angular figure, and every turret is marked in one of them.
+
+**Also entry 91 section 1's wording correction:** the label says group centre. The mean radius is a distance, not a place.
+
+### Entry 92 section 3: the statistics as label and value rows
+
+**Three headline figures, each followed by two lines of interval, was nine lines before a reader reached anything else.** Now each figure is one row, label left and value right, with the angular conversion on the same row as its linear value. Sigma and mean radius keep an interval line; extreme spread's interval moved behind "More figures", because it is the least informative of the three and its interval changes no decision. The row is the concept's own selected-detection pattern, arrived at from two directions: entry 92 section 3 from use, entry 93 section 2 from the design.
+
+### Entry 93: the concept as a design language, and the four themes from one token set
+
+**Entry 84's hold on appearance is lifted**, on Alan's approval of the concept as the guideline, and the parts that touch the working loop came first, per entry 93 section 5.
+
+- **The tool strip** is icons with their keys drawn as keycaps rather than a wrapped row of text buttons, and the names stay beside the icons, because an icon alone is a guess for anyone who has not used the application.
+- **The breadcrumb header** carries what is open and what is on it, with one primary action in amber on the right and a secondary beside it.
+- **The left rail is built and its destinations are not**, per entry 93 section 4. Four of its five icons say which phase builds them rather than opening an empty screen. A styling pass that starts inventing screens is how this becomes a rewrite.
+- **Readouts are label and value rows**, which is entry 92 section 3.
+- **The two accents keep fixed meanings**: teal for what the software found on its own, amber for what needs a person and for the primary action. A test holds them to their hues in every theme.
+
+**The four-theme token guard, which entry 93 section 3 calls not optional.** The high contrast theme is **derived from the dark tokens in code**, not drawn: every hue is kept and every text colour is lifted along it until it reaches WCAG's AAA ratio of 7:1 against a black window and near-black panels, with the separators taken to a visible grey. Light was already derived by hand under entry 42.
+
+**Two tests hold the guard.** Every text colour reaches its ratio on every surface in all three palettes, 4.5:1 for dark and light and 7:1 for high contrast; and the other themes are the same roles as the dark one, with teal still green, amber still warm and alert still red, so "teal is what the software found" survives a theme change. If a token set cannot produce the other themes it is not a token set, and this is where that would show.
+
+**What is not done:** the paper-coloured sheet on dark chrome, and the rest of the framing. Entry 93 section 5 puts those second, and the gate has not moved: appearance does not pass Phase 3, a person with a stopwatch and a real 25-shot sheet does.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4274,3 +4383,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 88: the oversize flag left alone although the measurement points at a defect in it.** Four of five flags on real material hold one hole's worth of ink inside a ragged hull, so flagging on ink area would remove them; the threshold is one the Phase 1 gate is measured against, and entry 83 section 3 says stop tuning the detector. Recorded with its numbers instead.
 - **Entry 84: `PhotographHoleToCalibre` changed to the re-measured 0.948 and `ScanHoleToCalibre` left at 0.944.** The photograph figure was measured with the single-scale defect in place; the scan figure was not, and its 0.006 move comes from a longer verified hole list rather than from the fix.
 - **Entry 84: the 25-shot rehearsal recorded as a rehearsal.** It measures the software's share of the two minutes and nothing about a person, so recording it as the Phase 3 gate would put a state of "done" on a page where the thing being gated has not happened.
+- **Entry 94 section 1: the oversize threshold left at 1.35 while the quantity under it changed.** Area reads about six percent lower than the hull-derived reference it is compared against, so the threshold is already slightly stricter; and the value that would catch every 0.10 in pair would also flag S1b again, which is the false flag the change exists to remove.
+- **Entry 94 section 1: the hull area kept beside the mark's area rather than dropped.** Solidity is the ratio of the two, and entry 88's shape measurements rest on it.
+- **Entry 94 section 4: the split's two centres computed at detection time and carried on the flag, over computing them when the choice is taken.** The review queue has no image, and a choice that needs the pixels is a choice that needs a mouse.
+- **Entry 94 section 2: subgroups keyed by bull rather than by shot.** A shot moves between bulls during review and its load does not; the sheet's layout is what holds the loads.
+- **Entries 91 and 92: the zero correction refuses rather than rounds.** Where the offset is inside the sampling error the panel gives a shot count instead of a number, because a bare figure will be dialled.
+- **Entry 93 section 3: high contrast derived from the dark tokens in code, over a fourth hand-drawn palette.** A palette that cannot be derived is evidence the roles carry values rather than meanings, and deriving it is what proves the concept is a design language rather than one screenshot.

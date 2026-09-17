@@ -45,6 +45,23 @@ public static class AppStyles
 
     public const string StatusBar = "status-bar";
 
+    /// <summary>
+    /// The concept's chrome, NOTES-FROM-PLANNING.md entry 93 section 2. The rail is the narrow icon strip down the left, the breadcrumb
+    /// header carries the document's identity and its counts, the primary action is the one amber button in the top right, and a keycap is
+    /// the little bordered letter beside a tool that says which key does it.
+    /// </summary>
+    public const string Rail = "rail";
+
+    public const string RailButton = "rail-button";
+
+    public const string Breadcrumb = "breadcrumb";
+
+    public const string Primary = "primary";
+
+    public const string Keycap = "keycap";
+
+    public const string KeycapText = "keycap-text";
+
     private sealed class GroupLabStyles : Styles
     {
     }
@@ -123,6 +140,17 @@ public static class AppStyles
         Rule(x => x.OfType<Border>().Class(StatusBar), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 1, 0, 0))),
         Rule(x => x.OfType<Button>(), ButtonSetters()),
         Rule(x => x.OfType<ToggleButton>(), ButtonSetters()),
+
+        // Entry 93 section 2: the document is light and the application is dark, so the chrome is panel over the window's own colour, and
+        // the two accents keep their meanings: teal for what the software found on its own, amber for what needs a person and for the one
+        // primary action.
+        Rule(x => x.OfType<Border>().Class(Rail), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 0, 1, 0))),
+        Rule(x => x.OfType<Button>().Class(RailButton), (TemplatedControl.BackgroundProperty, Brush(p.Panel)), (TemplatedControl.BorderBrushProperty, Brush(p.Panel)), (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.FontSizeProperty, 17.0), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space8, Tokens.Space6)), (Layoutable.MarginProperty, new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, 0))),
+        Rule(x => x.OfType<Button>().Class(RailButton).Class(Good), (TemplatedControl.ForegroundProperty, Brush(p.Teal)), (TemplatedControl.BackgroundProperty, Brush(p.TealTint)), (TemplatedControl.BorderBrushProperty, Brush(p.TealTintBorder))),
+        Rule(x => x.OfType<Border>().Class(Breadcrumb), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space12, Tokens.Space6))),
+        Rule(x => x.OfType<Button>().Class(Primary), (TemplatedControl.BackgroundProperty, Brush(p.Amber)), (TemplatedControl.ForegroundProperty, Brush(p.OnAmber)), (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.FontWeightProperty, FontWeight.SemiBold)),
+        Rule(x => x.OfType<Border>().Class(Keycap), (Border.BackgroundProperty, Brush(p.Sunk)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4, 0)), (Layoutable.MarginProperty, new Thickness(Tokens.Space6, 0, 0, 0))),
+        Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
     ];
 
     /// <summary>Buttons, entry 42 section 4: 12 point at weight 500, padding 6 by 12, radius 4, margin 2.</summary>

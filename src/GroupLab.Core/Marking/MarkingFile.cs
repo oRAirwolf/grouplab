@@ -64,6 +64,11 @@ public static class MarkingFile
             registration = state.RegistrationSummary,
             pointOfAim = state.PointOfAim,
             bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image, b.Scoring }),
+            // NOTES-FROM-PLANNING.md entry 94 section 2: which bulls hold which load. It lives in the session and never in the sheet, so it
+            // has to survive here or a reopened marking loses the comparison the sheet was shot for.
+            subgroups = state.Subgroups is { } map && !map.ByBull.IsEmpty
+                ? map.ByBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, name = p.Value })
+                : null,
             // NOTES-FROM-PLANNING.md entry 75: the name a person sees, the bull's, beside the id that keeps the file's identity.
             shots = state.Shots.Select(s => new
             {
@@ -77,7 +82,15 @@ public static class MarkingFile
                 s.Bull,
                 s.BullChosen,
                 s.MeasuredDiameterInches,
-                oversize = s.Oversize is { } flag ? new { holes = flag.Holes, tentative = flag.Tentative } : null,
+                oversize = s.Oversize is { } flag
+                    ? new
+                    {
+                        holes = flag.Holes,
+                        tentative = flag.Tentative,
+                        splitA = flag.SplitA is { } a ? new { x = a.X, y = a.Y } : null,
+                        splitB = flag.SplitB is { } b ? new { x = b.X, y = b.Y } : null,
+                    }
+                    : null,
             }),
             report,
         };
@@ -147,7 +160,9 @@ public static class MarkingFile
             (int?)s["bull"],
             (bool?)s["bullChosen"] ?? false,
             (double?)s["measuredDiameterInches"],
-            s["oversize"] is JsonObject flag ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false) : null)).ToImmutableList();
+            s["oversize"] is JsonObject flag
+                ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]))
+                : null)).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,
@@ -165,7 +180,10 @@ public static class MarkingFile
                     detection["calibre"] is { } used ? new Calibre((string?)used["name"] ?? "", (double)used["diameterInches"]!) : null,
                     (double?)detection["holeSizeInches"])
                 : null,
-            Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null);
+            Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
+            Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
+                ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
+                : null);
         return (state, notes);
     }
 

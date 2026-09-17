@@ -64,6 +64,30 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
 public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true, PointD? Declared = null);
 
 /// <summary>
+/// Which bulls hold which load, NOTES-FROM-PLANNING.md entry 94 section 2: a name for each bull that carries one, kept in the session and
+/// never in the target definition. It is what lets one sheet carry six charge weights and be compared load against load, which is the
+/// analysis Jeff's thirty bulls are for (entry 89 section 3).
+/// <para>
+/// <b>Why here rather than in the format.</b> The comparison half was already built and had nothing to feed it: every test in
+/// <see cref="GroupLab.Core.Statistics.GroupComparison"/> takes a group label per shot, and no layer of GLTD could supply one. A bull carries
+/// only <c>scoring</c>, a two-way split; the data block holds one field set for the whole sheet; and <c>instance</c> is a flat map excluded
+/// from the definition and its identifier. A session mapping needs no format change, so it works on today's thirty-bull sheets and cannot be
+/// wrong in a way that outlives a definition identifier. When a specification arrives the format question reopens with this as the fallback
+/// that already works.
+/// </para>
+/// </summary>
+public sealed record SubgroupMap(ImmutableDictionary<int, string> ByBull)
+{
+    public static SubgroupMap Empty { get; } = new(ImmutableDictionary<int, string>.Empty);
+
+    /// <summary>The subgroup a bull belongs to, or null where it belongs to none.</summary>
+    public string? For(int bull) => ByBull.TryGetValue(bull, out string? name) ? name : null;
+
+    /// <summary>The subgroup names in the order they first appear by bull index, so a report lists them the way the sheet is shot.</summary>
+    public IReadOnlyList<string> Names => [.. ByBull.OrderBy(p => p.Key).Select(p => p.Value).Distinct(StringComparer.Ordinal)];
+}
+
+/// <summary>
 /// What a marking's detection was run with, NOTES-FROM-PLANNING.md entry 80 section 5: the calibre named, or none, and the size its holes were
 /// taken to measure. The same image detects differently with a calibre and without, so two markings are comparable only when these agree.
 /// </summary>
@@ -98,7 +122,8 @@ public sealed record MarkingState(
     double? ShotDistanceInches = null,
     AssignmentReview? Assignment = null,
     DetectionRecord? Detection = null,
-    ImmutableHashSet<string>? Dismissed = null)
+    ImmutableHashSet<string>? Dismissed = null,
+    SubgroupMap? Subgroups = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -287,6 +312,43 @@ public sealed class MarkingSession
     /// bull, so the choice is pinned against the matching (entry 74 section 1), and a detected shot reassigned becomes corrected.
     /// </summary>
     public void AssignBull(int id, int? bull) => Update(id, s => s with { Bull = bull, BullChosen = true, Provenance = Touched(s.Provenance) });
+
+    /// <summary>
+    /// Puts a bull in a subgroup, or takes it out of one when the name is null or blank (NOTES-FROM-PLANNING.md entry 94 section 2). Nothing
+    /// about the sheet changes: this is the session saying which bulls hold which load.
+    /// </summary>
+    public void SetSubgroup(int bull, string? name)
+    {
+        var map = State.Subgroups ?? SubgroupMap.Empty;
+        string? trimmed = string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+        var next = trimmed is null ? map.ByBull.Remove(bull) : map.ByBull.SetItem(bull, trimmed);
+        if (next != map.ByBull)
+        {
+            Apply(State with { Subgroups = next.IsEmpty ? null : new SubgroupMap(next) });
+        }
+    }
+
+    /// <summary>Takes every bull out of its subgroup.</summary>
+    public void ClearSubgroups()
+    {
+        if (State.Subgroups is not null)
+        {
+            Apply(State with { Subgroups = null });
+        }
+    }
+
+    /// <summary>
+    /// Take one mark as two shots, NOTES-FROM-PLANNING.md entry 94 section 4: the shot moves to the first half and a second appears at the
+    /// other, both on the bull the mark held. The size flag goes from both, because it was a statement about one mark that is now two, and
+    /// the pair shows up in the queue as a bull holding two shots, which is the item that asks whether that is what happened.
+    /// </summary>
+    /// <returns>The id of the second shot.</returns>
+    public int SplitShot(int id, PointD first, PointD second)
+    {
+        var shot = State.Find(id) ?? throw new ArgumentOutOfRangeException(nameof(id), id, "no such shot");
+        Update(id, s => s with { Image = first, Oversize = null, MeasuredDiameterInches = null, Provenance = Touched(s.Provenance) });
+        return AddShot(second, shot.Bull);
+    }
 
     /// <summary>
     /// Replaces the bulls and the detected shots with what the automatic path found, keeping shots placed by hand, as one step that

@@ -157,4 +157,7 @@ public enum ThemeChoice
     Dark,
 
     Light,
+
+    /// <summary>NOTES-FROM-PLANNING.md entry 93 section 3's fourth theme, derived from the dark tokens at WCAG's AAA ratio.</summary>
+    HighContrast,
 }

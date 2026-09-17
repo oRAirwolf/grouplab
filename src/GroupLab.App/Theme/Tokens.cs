@@ -84,8 +84,91 @@ public static class Tokens
         TealTint: Hex(0xebf1ef),
         TealTintBorder: Hex(0xa5c0b8));
 
-    /// <summary>The palette for a resolved theme variant. Follow-system resolves to one of the two before it reaches here.</summary>
-    public static Palette For(ThemeVariant? variant) => variant == ThemeVariant.Light ? Light : Dark;
+    /// <summary>
+    /// High contrast, NOTES-FROM-PLANNING.md entry 93 section 3. It is not a fourth set of hand-picked values: it is <see cref="Dark"/> put
+    /// through <see cref="Sharpen"/>, which keeps every hue and lifts every text colour until it reaches <see cref="HighContrastRatio"/>
+    /// against the surfaces it sits on, over a black window and near-black panels, with the separators taken to a visible grey.
+    /// <para>
+    /// The entry's guard is the reason it is derived rather than drawn: <b>if a token set cannot produce the other themes, it is not a token
+    /// set, it is a dark theme with names on it.</b> Deriving this one proves the roles carry meaning rather than values, and it is why the
+    /// concept's approval could be taken as a design language rather than as one screenshot.
+    /// </para>
+    /// </summary>
+    public static Palette HighContrast { get; } = Sharpen(Dark);
+
+    /// <summary>What every text colour must reach against its surfaces in the high contrast theme: WCAG's AAA ratio for body text.</summary>
+    public const double HighContrastRatio = 7.0;
+
+    /// <summary>The theme variant the high contrast palette answers to. It inherits from dark, so any control Avalonia styles itself stays dark rather than turning light.</summary>
+    public static ThemeVariant HighContrastVariant { get; } = new("GroupLabHighContrast", ThemeVariant.Dark);
+
+    /// <summary>The palette for a resolved theme variant. Follow-system resolves to one of the three before it reaches here.</summary>
+    public static Palette For(ThemeVariant? variant) =>
+        variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
+
+    /// <summary>
+    /// One palette pushed to <see cref="HighContrastRatio"/>: the window goes black and the panels nearly so, the separators go to a grey
+    /// that can be seen, and every text and accent colour is lifted along its own hue until it clears the ratio on every surface it is set
+    /// on. Nothing here invents a colour; it moves the ones the concept chose.
+    /// </summary>
+    private static Palette Sharpen(Palette p)
+    {
+        var bg = Hex(0x000000);
+        var panel = Hex(0x090a0c);
+        var panel2 = Hex(0x141619);
+        Color Lift(Color colour) => Toward(colour, Hex(0xffffff), [bg, panel, panel2], HighContrastRatio);
+        return p with
+        {
+            Bg = bg,
+            Panel = panel,
+            Panel2 = panel2,
+            Sunk = bg,
+            Line = Hex(0x6d747c),
+            Line2 = Hex(0x99a1aa),
+            Text = Hex(0xffffff),
+            Dim = Lift(p.Dim),
+            Faint = Lift(p.Faint),
+            Amber = Lift(p.Amber),
+            Teal = Lift(p.Teal),
+            Alert = Lift(p.Alert),
+            OnAmber = Hex(0x000000),
+            AmberTint = bg,
+            AmberTintBorder = Lift(p.Amber),
+            TealTint = bg,
+            TealTintBorder = Lift(p.Teal),
+        };
+    }
+
+    /// <summary>
+    /// A colour moved along the straight line toward <paramref name="target"/> by the smallest step that reaches <paramref name="ratio"/>
+    /// against every one of <paramref name="surfaces"/>, in a hundredth-of-the-way steps. It is the same method entry 42 used by hand for
+    /// the colours the concept's own values left short of 4.5:1, written down so the next palette does not need a person with a calculator.
+    /// </summary>
+    private static Color Toward(Color colour, Color target, IReadOnlyList<Color> surfaces, double ratio)
+    {
+        for (int step = 0; step <= 100; step++)
+        {
+            var moved = Mix(colour, target, step / 100.0);
+            if (surfaces.All(s => ContrastRatio(moved, s) >= ratio))
+            {
+                return moved;
+            }
+        }
+
+        return target;
+    }
+
+    private static Color Mix(Color a, Color b, double t) =>
+        Color.FromRgb((byte)Math.Round(a.R + ((b.R - a.R) * t)), (byte)Math.Round(a.G + ((b.G - a.G) * t)), (byte)Math.Round(a.B + ((b.B - a.B) * t)));
+
+    /// <summary>WCAG relative luminance contrast, the same ratio <c>ThemeTests</c> checks, so the palettes are built against the test's own rule.</summary>
+    public static double ContrastRatio(Color a, Color b)
+    {
+        static double Channel(byte v) => v / 255.0 <= 0.03928 ? v / 255.0 / 12.92 : Math.Pow(((v / 255.0) + 0.055) / 1.055, 2.4);
+        static double Luminance(Color c) => (0.2126 * Channel(c.R)) + (0.7152 * Channel(c.G)) + (0.0722 * Channel(c.B));
+        double la = Luminance(a), lb = Luminance(b);
+        return (Math.Max(la, lb) + 0.05) / (Math.Min(la, lb) + 0.05);
+    }
 
     // Typography, entry 42 section 3. The faces are embedded (Assets/Fonts), each with the fallback stack section 3 names.
     public static FontFamily Sans { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Sans, $Default");

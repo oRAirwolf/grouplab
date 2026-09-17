@@ -76,6 +76,24 @@ public sealed record GroupReport(
     string? Detection = null);
 
 /// <summary>
+/// One subgroup of a sheet, NOTES-FROM-PLANNING.md entry 94 section 2: its name, the bulls that hold it, and its own figures, computed
+/// exactly as a whole sheet's are. A sheet of thirty bulls carrying six charge weights is six of these.
+/// </summary>
+public sealed record Subgroup(string Name, IReadOnlyList<int> Bulls, int Shots, GroupFigures? Figures);
+
+/// <summary>
+/// The sheet's subgroups and what comparing them says, entry 94 section 2 and entry 89 section 3. Both tests are the non-parametric ones
+/// docs/STATISTICS.md section 8.3 names, because a subgroup on one sheet is small and a five-shot load is the usual case:
+/// <see cref="DispersionPValue"/> is Fligner-Killeen on each shot's distance from its own subgroup's centre, and
+/// <see cref="CentrePValue"/> is the one-way MANOVA of section 8.2 on the shot offsets, which for two subgroups is Hotelling's test.
+/// <para>
+/// No verdict is drawn here. A p-value is reported beside the subgroups and the reader decides, because "this load is better" is a claim
+/// about the next group rather than about this one, and entry 91 makes the same point about a zero correction.
+/// </para>
+/// </summary>
+public sealed record SubgroupReport(IReadOnlyList<Subgroup> Subgroups, double? DispersionPValue, double? CentrePValue, string? ComparisonUnavailable);
+
+/// <summary>
 /// The statistics the marking screen shows, from the engine of M3 and nothing it does not specify. Each shot's offset is taken
 /// from its bull's centre when it is assigned to one, which is the composite group of docs/STATISTICS.md section 2, and otherwise
 /// from the point of aim when one is marked, and otherwise from the image origin, in which case there is no centre offset to report.
@@ -135,6 +153,109 @@ public static class GroupAnalysis
         var reduced = excluded == 0 ? all : Figures(state, [.. shots.Where(s => s.Exclusion is null)]);
         string? problem = all is null ? "Mark the shots." : null;
         return new GroupReport(all, reduced, excluded, notShots, automatic, corrected, manual, state.Scale.Description, state.Scale.AssumesSquareOn, problem, sighterShots, state.Detection?.Describe());
+    }
+
+    /// <summary>
+    /// The sheet's subgroups, NOTES-FROM-PLANNING.md entry 94 section 2, or null where no bull has been put in one. Shots on bulls with no
+    /// subgroup are left out of every subgroup and stay in the whole-sheet figures, which are unchanged by any of this: a subgroup is a way
+    /// of reading one sheet, not a different sheet.
+    /// </summary>
+    public static SubgroupReport? Subgroups(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        if (state.Subgroups is not { } map || map.ByBull.IsEmpty || state.Scale is not { } scale)
+        {
+            return null;
+        }
+
+        var bulls = state.Bulls.ToDictionary(b => b.Index);
+        var scoring = state.Bulls.Where(b => b.Scoring).Select(b => b.Index).ToHashSet();
+        var shots = state.Shots
+            .Where(s => s.IsShot && s.Exclusion is null && s.Bull is { } b && scoring.Contains(b) && map.For(b) is not null)
+            .ToList();
+
+        var subgroups = map.Names
+            .Select(name =>
+            {
+                var theirs = shots.Where(s => map.For(s.Bull!.Value) == name).ToList();
+                var theirBulls = map.ByBull.Where(p => p.Value == name).Select(p => p.Key).Order().ToList();
+                return new Subgroup(name, theirBulls, theirs.Count, Figures(state, theirs));
+            })
+            .ToList();
+
+        // The comparison needs two subgroups that each have shots, and the offsets are composite: each shot from its own bull's centre.
+        var usable = subgroups.Where(g => g.Shots > 0).ToList();
+        if (usable.Count < 2)
+        {
+            return new SubgroupReport(subgroups, null, null, "needs shots in at least two subgroups");
+        }
+
+        var offsets = new List<PointD>();
+        var labels = new List<int>();
+        for (int k = 0; k < usable.Count; k++)
+        {
+            foreach (var shot in shots.Where(s => map.For(s.Bull!.Value) == usable[k].Name))
+            {
+                var at = scale.ToTarget(shot.Image);
+                var origin = scale.ToTarget(bulls[shot.Bull!.Value].Image);
+                offsets.Add(new PointD(at.X - origin.X, at.Y - origin.Y));
+                labels.Add(k);
+            }
+        }
+
+        // Fligner-Killeen reads one number per shot, so it gets each shot's distance from its own subgroup's centre.
+        var centres = Enumerable.Range(0, usable.Count)
+            .ToDictionary(k => k, k => GroupStatistics.Centre([.. Enumerable.Range(0, offsets.Count).Where(i => labels[i] == k).Select(i => offsets[i])]));
+        var radii = Enumerable.Range(0, offsets.Count)
+            .Select(i => Math.Sqrt(Math.Pow(offsets[i].X - centres[labels[i]].X, 2) + Math.Pow(offsets[i].Y - centres[labels[i]].Y, 2)))
+            .ToList();
+
+        double? dispersion = null, centre = null;
+        string? unavailable = null;
+        if (offsets.Count <= usable.Count + 1)
+        {
+            unavailable = "needs more shots than subgroups before either test has anything to say";
+        }
+        else
+        {
+            dispersion = GroupComparison.FlignerKilleen(radii, labels).PValue;
+            centre = GroupComparison.ManovaGroups(offsets, labels).PValue;
+        }
+
+        return new SubgroupReport(subgroups, dispersion, centre, unavailable);
+    }
+
+    /// <summary>
+    /// Each shot's offset from what it is measured against, in inches at the target: its own bull's centre where it has one, which is the
+    /// composite group of docs/STATISTICS.md section 2, and otherwise the point of aim. It is one definition, read by the figures and by the
+    /// zero correction (NOTES-FROM-PLANNING.md entry 91), so the two can never disagree about where the centre is.
+    /// </summary>
+    public static IReadOnlyList<PointD> CompositeOffsets(MarkingState state, IReadOnlyList<MarkedShot> shots)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shots);
+        if (state.Scale is not { } scale)
+        {
+            return [];
+        }
+
+        var bulls = state.Bulls.ToDictionary(b => b.Index);
+        PointD? aim = state.PointOfAim is { } poa ? scale.ToTarget(poa) : null;
+        return [.. shots.Select(s =>
+        {
+            var at = scale.ToTarget(s.Image);
+            PointD? origin = s.Bull is { } b && bulls.TryGetValue(b, out var bull) ? scale.ToTarget(bull.Image) : aim;
+            return origin is { } o ? new PointD(at.X - o.X, at.Y - o.Y) : at;
+        })];
+    }
+
+    /// <summary>Whether there is anything to measure an offset from: a point of aim, or shots on bulls.</summary>
+    public static bool HasOrigin(MarkingState state, IReadOnlyList<MarkedShot> shots)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shots);
+        var bulls = state.Bulls.Select(b => b.Index).ToHashSet();
+        return state.PointOfAim is not null || shots.Any(s => s.Bull is { } b && bulls.Contains(b));
     }
 
     /// <summary>The plain sentence the screen shows for a group too small to quote, with section 9.1's range at that count where there is one.</summary>
@@ -201,15 +322,8 @@ public static class GroupAnalysis
             return null;
         }
 
-        var bulls = state.Bulls.ToDictionary(b => b.Index);
-        PointD? aim = state.PointOfAim is { } poa ? scale.ToTarget(poa) : null;
-        bool anyAim = aim is not null || shots.Any(s => s.Bull is { } b && bulls.ContainsKey(b));
-        var offsets = shots.Select(s =>
-        {
-            var at = scale.ToTarget(s.Image);
-            PointD? origin = s.Bull is { } b && bulls.TryGetValue(b, out var bull) ? scale.ToTarget(bull.Image) : aim;
-            return origin is { } o ? new PointD(at.X - o.X, at.Y - o.Y) : at;
-        }).ToList();
+        bool anyAim = HasOrigin(state, shots);
+        var offsets = CompositeOffsets(state, shots);
 
         int n = offsets.Count;
         var centre = GroupStatistics.Centre(offsets);

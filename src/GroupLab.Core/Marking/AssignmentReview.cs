@@ -13,15 +13,21 @@ public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double?
 /// <summary>
 /// A detection flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6: about how many single holes' area it holds, and whether the
 /// size it was judged against came from too few marks to trust. It reaches the marking so the person sees it, not only the analysis.
+/// <para>
+/// <see cref="SplitA"/> and <see cref="SplitB"/> are where the two halves sit if the mark is two holes, in image pixels, from the same
+/// weighted split the detector uses when it does cut a blob. They exist so that taking the mark as two shots is a key press rather than a
+/// tap on the image: NOTES-FROM-PLANNING.md entry 94 section 4 found the two-minute loop breaking at exactly the item the flag exists to
+/// raise, because the only way to add the second shot was the mouse.
+/// </para>
 /// </summary>
-public sealed record DetectedOversize(double Holes, bool Tentative)
+public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null)
 {
     /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
     public string Describe(string shot) => Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Name the calibre to check it.")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and add the second shot if there is one.");
+            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.");
 }
 
 /// <summary>

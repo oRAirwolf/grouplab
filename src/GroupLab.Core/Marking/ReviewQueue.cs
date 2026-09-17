@@ -46,6 +46,9 @@ public enum ReviewAction
 
     /// <summary>Place a shot where the refused candidate was, on the bull named.</summary>
     AddShot,
+
+    /// <summary>Take one oversized mark as two shots, one at each half of it (NOTES-FROM-PLANNING.md entry 94 section 4).</summary>
+    SplitIntoTwo,
 }
 
 /// <summary>
@@ -124,8 +127,17 @@ public static class ReviewQueue
         foreach (var shot in shots.Where(s => s.Oversize is not null))
         {
             string key = $"oversized:{shot.Id}";
-            items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]),
-                [new ReviewChoice("One shot", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
+            var choices = new List<ReviewChoice> { new("One shot", ReviewAction.Keep) };
+
+            // The item the flag exists to raise is a mark that really is two shots, and until entry 94 section 4 the only way to take it as
+            // two was a tap on the image, so the keyboard loop broke on exactly that item. The detector says where the two halves sit.
+            if (shot.Oversize is { SplitA: not null, SplitB: not null })
+            {
+                choices.Add(new ReviewChoice("Two shots", ReviewAction.SplitIntoTwo, shot.Bull));
+            }
+
+            choices.Add(new ReviewChoice("Not a shot", ReviewAction.NotAShot));
+            items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]), choices, Dismissed(key)));
         }
 
         foreach (var group in shots.Where(s => s.Bull is { } b && bulls.TryGetValue(b, out var bull) && bull.Scoring).GroupBy(s => s.Bull!.Value).Where(g => g.Count() > 1))
@@ -194,6 +206,9 @@ public static class ReviewQueue
                 return id;
             case ReviewAction.AddShot:
                 return session.AddShot(item.Image, choice.Bull);
+            case ReviewAction.SplitIntoTwo when item.ShotId is { } id && session.State.Find(id)?.Oversize is { SplitA: { } a, SplitB: { } b }:
+                session.SplitShot(id, a, b);
+                return id;
             default:
                 session.Dismiss(item.Key);
                 return item.ShotId;

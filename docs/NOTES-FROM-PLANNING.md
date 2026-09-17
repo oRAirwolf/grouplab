@@ -15,6 +15,254 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 94: the oversize flag measures the hull instead of the mark, and four decisions
+
+**Status: actioned 2026-09-18.**
+- **Section 1: the flag counts the mark's own area.** Flags on real material fall from 5 to 2, and the two left are S1b at 1.37 holes and the friend's photograph's mark at 1.90. Entry 81's sweep re-run: single holes read 0.86 to 1.01 holes and are never flagged; pairs 0.15 in apart and wider are caught as before; **pairs 0.10 in apart, which overlap by two thirds, are caught 69 percent of the time rather than 100**, because their ink genuinely is 1.37 holes. The 1.35 threshold is unchanged deliberately, since the threshold that would catch them all would bring S1b back.
+- **Section 2: the session route, built.** Bulls map to load names in the session and the marking file, each subgroup reports its own figures, and the two are compared by Fligner-Killeen and MANOVA. No format change, so it works on the thirty-bull sheets today.
+- **Section 3: one constant.** `HoleToCalibre` 0.945 over 102 holes, and the treat-a-photograph-as-a-scan branch is gone with it.
+- **Section 4: "Two shots" is on the item**, reachable with T, placing both shots where the detector's own split puts them. The rehearsal now settles everything with 15 key presses and **no taps**.
+- **Section 5: both recorded.** The synthetic-to-real flag ratio fell from about ten to one to about two to one, so most of the excess was the hull rather than the hole model.
+
+Section 1 overrides a "leave it alone" I wrote, and gives the reason. Sections 2 to 4 are decisions Claude Code asked for or earned.
+
+### 1. The flag counts the convex hull, and that is the wrong quantity
+
+**S1b is answered and both candidate causes are dead, including mine.** Elongation 1.60 and solidity 0.59, the least convex mark on the sheet. **A yawed bullet makes a convex oval, so yaw predicts high solidity and S1b has the lowest on the page.** A composited pair of that size reads elongation above 2. Neither fits.
+
+**What fits is the measurement itself.** S1b's hull holds 2.10 holes and its ink holds 1.23, and its equivalent diameter is 0.329 in. **It is an ordinary hole with a ragged rim, and the flag is counting the area of a convex hull thrown around the spikes.**
+
+**Four of the five oversize flags on real material are the same shape.**
+
+**Change it to count the mark's own area, and I am overriding entry 83 section 3's leave-it-alone to say so.** That list was about ten irreducible blobs and a benign bimodality interaction. **A flag that fires falsely on four of five ordinary holes is a different thing: it is not a loud failure, it is noise, and noise is what teaches people to ignore a flag.**
+
+**Area is strictly better than hull for this job and the arithmetic says why:**
+
+| | Own area | Convex hull |
+|---|---|---|
+| Ragged single hole | about 1 hole | **about 2.1 holes** |
+| Genuinely merged pair | about 2 holes | about 2.2 holes |
+
+**Hull cannot tell them apart, 2.1 against 2.2. Area separates them cleanly, 1 against 2.** Entry 81 chose 1.80 everywhere on the argument that a loud failure beats a quiet one, and that argument only holds while the loud failure is rare.
+
+**Re-run entry 81's confirming sweep afterwards**, because the thresholds were fitted against a flag that was measuring the wrong quantity.
+
+### 2. Subgroups: take the session-level route
+
+**The analysis half is already built and nothing can feed it.** `KruskalWallis`, `FlignerKilleen`, `ManovaGroups` and `DispersionRatio` all take a group label per shot, and no layer of the format can supply one.
+
+**Take the cheapest route: a session-level mapping of bulls to subgroups, with no format change.**
+
+Three reasons. **It works on today's 30-bull sheets**, so Jeff can shoot one before anything is designed. **It needs no format change**, so it cannot be wrong in a way that outlives a definition identifier. **And the right format answer depends on Jeff's specification**, which has not arrived, so committing the format now would be deciding without the thing that decides it.
+
+**When the specification arrives, the format question reopens with the session mapping as the fallback that already works.**
+
+### 3. Collapse the two hole-size constants into one
+
+Photographs re-measure at **0.948 with a 4 percent spread**, scans at **0.938**. **They agree within 0.010 and the spread is four times that.**
+
+**Two constants that cannot be told apart are one constant with extra branching.** Keeping them also keeps the fudge that sits beside them, where a photograph with no camera data is treated as a scan, which was only ever needed because the two differed.
+
+**Collapse them, and record that the difference was largely the single-scale defect rather than a property of the two media.** If a later measurement separates them, split them again with the evidence attached.
+
+### 4. The merged pair has no keyboard path, and that is what the rehearsal was for
+
+Twenty-two key presses, one tap, and **the one tap is the merged pair**, whose queue item offers only "One shot" and "Not a shot".
+
+**So if a mark really is two holes, the two-minute loop breaks at exactly the item the flag exists to raise.** A person is sent to the mouse to place a second shot by hand, and the concept's whole premise is that verifying twenty-five shots takes seconds.
+
+**Fix it before the Phase 3 gate is timed for real**, or the gate measures a loop with a hole in it. The choice needs a third option, something that splits the mark into two shots and puts both on the queue for placement, reachable from the keyboard like the others.
+
+**The rehearsal earned its keep.** It also showed one extra shot in a cell displacing a chain of three assignments with all three reaching the queue carrying the right bull, which is entries 70 and 74 working under load and is the first evidence of that.
+
+### 5. Two things worth recording rather than acting on
+
+**The synthetic hole model flags 11 of 25 oversized against 1 of 14 on real paper.** So it rehearses assignment honestly and the flag load not at all. **After section 1, re-check that ratio**: if the synthetic sheets still flag ten times more often than real ones, the synthetic hole shape is wrong in a way entry 80's size rescaling did not fix.
+
+**Entry 90's sweep found the README understating the engine, not only overstating it.** Significance testing and hit probability are built, with rank and dispersion tests, MANOVA, a dispersion ratio, Holm correction and three hit-probability estimators, and the page had lost both.
+
+**That is the more interesting half of that finding.** A page can be wrong in two directions, and I went looking for only one of them. **The test that now ties scope to phases catches both**, which is worth more than the ten items it found.
+
+---
+
+## 2026-09-18, entry 93: the concept is approved as the guideline, which is a design language rather than one screenshot
+
+**Status: actioned 2026-09-18**, for the working loop; the framing is in progress.
+- **Section 1: recorded.** Building to an approved reference is a different activity from inventing one.
+- **Section 2: the language, not the screenshot.** In: the icon tool strip with its keys as keycaps, the breadcrumb header with the document's identity and counts, one primary action in amber with a secondary beside it, label and value readouts, and the status words the queue already carried. Not yet: the paper-coloured sheet on dark chrome and the rest of the framing, which section 5 puts second.
+- **Section 3: the guard is met and tested.** High contrast is derived from the dark tokens in code, every hue kept and every text colour lifted along it to 7:1, and two tests hold all three palettes to their ratios and to their roles. The theme choice is four: dark, light, high contrast, follow system.
+- **Section 4: the rail is built and its destinations are not.** Four of its five icons name the phase that builds them rather than opening an empty screen.
+- **Section 5: taken in that order**, and the gate has not moved.
+
+Alan: the concept screenshots are liked, they are the guideline for the UI, and refinement follows from there. **Entry 84's hold on appearance is lifted.**
+
+### 1. Why this release is legitimate and not just me relenting
+
+Entry 84 held the styling pass because **a screen styled before it is used is styled against a guess.** That reason is satisfied differently here rather than waived: **the concept is not a guess, it is Alan's own approved reference**, and building to an approved reference is a different activity from inventing one.
+
+**Entry 92 section 4 already released one piece of this** on the other route, Alan's twice-repeated report that the statistics block is hard to read. **Both routes are now open and the whole appearance job is unblocked.**
+
+### 2. There is one concept screen, and most screens are not it
+
+`docs/figures/screens/assignment-editor.png` shows the assignment editor. **The print window, the analysis screen, the target library, session records and reporting have no concept and are not going to get one before they are built.**
+
+**So the instruction is not "match the screenshot". It is "extract the design language from it and apply that language everywhere."** Those are different jobs and the second is the larger one.
+
+What the concept actually specifies, and what should be written down as rules rather than copied pixel by pixel:
+
+- **The chrome**: a narrow icon rail, a breadcrumb header carrying the document's identity and counts, one primary action in the top right, and a secondary beside it.
+- **A tool strip of icons with keyboard hints as keycaps**, rather than a wrapped row of text buttons.
+- **The document is light and the application is dark.** The sheet is paper-coloured on dark chrome, which is the single largest visual difference from today and the one that most defines the look.
+- **Two accent colours with fixed meanings**: teal for what the software found on its own, amber for what needs a person and for the primary action.
+- **Readouts as label and value rows**, which is entry 92 section 3's fix arrived at independently.
+- **Status as a word, not a colour alone**: NOW, NEXT, ADDED, KEPT OUT.
+
+**`DESIGN.md` section 19 already sets the typography**, a neutral UI sans for chrome and a monospace with tabular figures for every numeric readout, and that is already true of the application today and should not regress.
+
+### 3. Four themes, or the fourth one is a rewrite
+
+**The concept is one theme and the design promises four**: dark, light, high contrast and follow system.
+
+**A palette extracted by matching a dark screenshot will not produce a light one.** Colours picked to look right on dark chrome carry no information about their light equivalents, and discovering that later means redoing every value.
+
+`Theme/Tokens.cs` and `Theme/AppStyles.cs` already exist, so the structure is there.
+
+**The guard: extract the concept's values into tokens, and produce the light and high-contrast variants from those same tokens in the same piece of work.** Not afterwards. **If a token set cannot produce the light theme, it is not a token set, it is a dark theme with names on it.**
+
+### 4. The left rail's other four icons still do not get drawn
+
+Entry 69 section 5 said it and it matters more now that the concept is the approved guideline: **the rail implies five destinations and only one exists.**
+
+**Build the rail. Do not build its destinations.** A UI pass that starts inventing the screens behind four icons is how this becomes a rewrite rather than a styling job.
+
+### 5. Order, and what still judges it
+
+**The parts of the concept that touch the working loop come first**, because they are the parts that can move `DESIGN.md` section 21's Phase 3 gate of twenty-five shots corrected in under two minutes: the icon tool strip, the keycap hints, the review card and queue, and entry 92's readout rows.
+
+**The framing comes second**: the breadcrumb, the rail, the paper-coloured sheet, the accent palette. **Those change how it looks and not how long the job takes.**
+
+**The gate has not moved.** Appearance does not pass Phase 3, a person with a stopwatch and a 25-shot sheet does, and entry 84 section 2's synthetic rehearsal is still the cheap way to find the obvious problems before anybody drives to a range.
+
+---
+
+## 2026-09-18, entry 92: the zero correction is its own section, and Alan's report unblocks the statistics panel specifically
+
+**Status: actioned 2026-09-18.**
+- **Section 1: the correction sits above the group statistics, in its own section**, and the reason is in the code rather than in a layout: it answers a different question at a different moment, and it is the one figure on the screen that is a claim about the next group.
+- **Section 2: the section holds those five things and nothing else.** Sigma, mean radius and extreme spread stay where they are.
+- **Section 3: the block is rows now.** One row per figure, label left and value right, with the angular conversion on the same row as its linear value. Sigma and mean radius keep an interval line; extreme spread's moved behind the same disclosure as everything else.
+- **Section 4: taken as the styling input it is**, and applied to this piece. Entry 93 then lifted the hold on the rest.
+
+Section 1 is a placement decision with a reason that should outlive the styling pass. Section 3 says why the statistics block is still hard to read after the fix that was supposed to fix it.
+
+### 1. The zero correction is separated because it answers a different question, not because it is prettier
+
+**Alan wants the scope offset defined very separately from the group statistics so people can find it. Agreed, and the reason matters more than the layout.**
+
+**They answer different questions and are read at different moments.** The group statistics answer "how well does this rifle and load shoot", which is a judgement made afterwards, sitting down, comparing one load against another. **The zero correction answers "what do I dial right now", which is read standing at a bench with a turret cap in one hand.**
+
+**A number read at a bench must be findable in one glance and must not require reading past three confidence intervals to reach.** That is the whole argument, and it is why this is not a styling preference that a later pass can decide differently.
+
+**It also has a different truth condition.** Every group statistic is true of the shots on the sheet. **The zero correction is a claim about what the rifle will do next**, and entry 91 established it is frequently not supportable at the shot counts people actually fire. **Mixing a prediction in among descriptions invites it to be read with the same confidence as them.**
+
+### 2. What the section holds
+
+**Its own heading, above the group statistics rather than below them**, because it is the thing most people opened the application to get.
+
+- **The correction, or the refusal.** Either "dial 0.44 MOA left and 0.23 MOA down", or "not distinguishable from zero at 10 shots", never a bare number.
+- **Linear and angular together**, per entry 91 section 3.
+- **Windage and elevation as separate rows**, because a turret has two knobs and nobody dials a diagonal.
+- **The uncertainty, in the same units.**
+- **When the answer is a refusal, the shot count that would settle it.**
+
+**Nothing else belongs in it.** Sigma, mean radius and extreme spread are group statistics and stay where they are.
+
+### 3. The statistics block is still hard to read after the fix that was meant to fix it, and that is information
+
+Entry 73 section 7 said the panel was a wall of prose and asked for `DESIGN.md` section 19's split: headline figures in the primary panel, reference material behind a disclosure that remembers it was opened. **That landed as the "More figures" expander.** Alan has used it since and still reports the statistics as hard to read.
+
+**So the disclosure was not the problem.** What is left in the primary panel is three headline figures, each followed by two lines of interval, in monospace: **nine lines before a reader reaches anything else.** Every line is correct and the block is dense.
+
+**The concept screen already shows the pattern that fixes it.** Its Selected Detection panel is a label and value table: Position, Diameter, Score, Margin, one row each, label left and value right. **Four facts in four lines.**
+
+So, for the three headline figures:
+
+1. **One row per figure**, label left and value right.
+2. **The angular conversion on the same row as its linear value**, not on a line of its own.
+3. **The interval as a second line only where it changes a decision**, and otherwise behind the same disclosure as everything else. Sigma's interval earns its place. Extreme spread's probably does not, since extreme spread is already the least informative of the three.
+
+### 4. This is the styling input I said I was waiting for, and it applies to this piece only
+
+Entry 84 section 1 said appearance waits until Alan has used the editor, because a screen styled before it is used is styled against a guess.
+
+**He has now used it and reported the same difficulty twice, unprompted, which is exactly the evidence that was missing.** So the statistics panel can be specified now and this entry does it.
+
+**It does not unblock the rest.** The tool strip, the breadcrumb, the left rail and the paper-coloured sheet still have no report behind them, and they stay where entry 84 left them until there is one.
+
+---
+
+## 2026-09-18, entry 91: the zero correction exists, and shipping it without its uncertainty would invite people to chase noise
+
+**Status: actioned 2026-09-18.**
+- **Section 1: built, and the label says group centre.** The correction is its own section with windage and elevation as separate rows, each in a linear and an angular unit at once, following the unit setting, so nobody converts by hand.
+- **Section 2: built as the part that decides it.** The uncertainty is on screen in the same units, and where the offset is smaller than the shots can resolve the answer is a refusal and a shot count rather than a number: entry 53 section 3's t(0.975, df) / sqrt(n) times sigma, computed rather than copied, with df = 2n - 2 for a circular group and n - 1 per axis where circularity is rejected. A test reproduces all six rows of your table from the formula.
+- **Section 3: all four items.** Named, both units, the uncertainty, and a verdict in words.
+- **Section 4: recorded and stopped at MOA and mil.** Clicks need the scope's click value, which is the rifle record entry 90 scheduled in Phase 4, and the panel says so.
+- **One correction to your example, in section 1's spirit:** a turret moves the point of impact, so a group sitting left is corrected by dialling right. The readout keeps the two words apart, where the group sits and what to dial.
+
+Alan wants the statistical point of impact and its offset from the point of aim, in mils, MOA, centimetres and inches, so a shooter can dial a scope. **Most of it is already on screen.** Section 2 is the part that decides whether the feature is any good.
+
+### 1. What already exists, and one correction to the wording
+
+The panel already reads:
+
+> Centre from aim: 0.097 in left, 0.060 in high (0.37 MOA left, 0.23 MOA high)
+
+**So the statistical point of impact and its offset from aim are computed and displayed today**, in inches and MOA, split into the two axes.
+
+**Missing from the request: mil and centimetres.** Both are already specified and parked in the README's trailing orphan line, as "a three-axis unit setting: inches, centimetres and millimetres; MOA, mil and SMOA; yards and metres". **So this part of Alan's request is entry 90 section 3's orphan line**, which is a good argument for giving those four items states rather than deleting the line.
+
+**One wording correction, gently.** Alan described it as the centre of the mean radius. **The mean radius is a distance, not a place**: it is the average distance of the shots from the group centre. The place is the group centre, which is the mean of the shot coordinates. **The label on screen should say group centre and not mean radius centre**, because a shooter who confuses the two will misread every number beside it.
+
+### 2. On Alan's own sheet, the correction he would dial is smaller than its own uncertainty
+
+Ten shots, sigma 0.274 in, at 25 yards, offset 0.097 left and 0.060 high.
+
+| | Inches | MOA | Mil | cm |
+|---|---|---|---|---|
+| **Offset from aim** | 0.114 | **0.44** | 0.127 | 0.29 |
+| **95 percent region for the centre** | 0.212 | **0.81** | 0.236 | 0.54 |
+| **Smallest detectable offset at 10 shots** | 0.182 | **0.70** | 0.202 | 0.46 |
+
+**The measured offset is 0.63 of the smallest offset ten shots can distinguish from zero.** Dialling it would be correcting for something the data cannot establish is there.
+
+**This matters more than the units do.** A readout that says "0.44 MOA left" with nothing beside it will be dialled, and the shooter will have moved their zero to chase sampling noise. **That is the confident wrong answer `DESIGN.md` section 2 exists to prevent**, and it is the single most common error in practical zeroing.
+
+**The machinery is already built.** Entry 53's detectable-offset table gives the multiplier on sigma at each shot count, verified by a 200,000 replication simulation: 1.603 at three shots, 1.031 at five, 0.664 at ten, 0.402 at twenty-five. **The feature needs no new statistics, only the table it already has.**
+
+**And it gives the shooter something better than a correction: a number of shots.** On this sheet an offset of 0.114 in becomes detectable at 25 shots and not before. **"Shoot fifteen more before you touch the turret" is more useful than a false correction**, and a GroupLab sheet holds exactly 25.
+
+### 3. What the readout should say
+
+1. **The group centre, named as the group centre**, with its offset from aim split into windage and elevation, because a turret has two knobs.
+2. **Both a linear and an angular unit at once**, following the person's unit setting: the target is measured in inches or centimetres and the turret is marked in MOA or mil, and making somebody convert between them by hand is the one thing this readout exists to avoid.
+3. **The uncertainty on the offset**, in the same units, as a plain interval rather than a symbol.
+4. **A verdict in words.** Either the offset is larger than this many shots can resolve, so it is real and here is the correction, or it is not, so here is the number of shots that would settle it.
+
+**The verdict is the feature.** Points 1 to 3 are arithmetic the application already nearly does.
+
+### 4. What is needed to give a correction in clicks, and it is already a known gap
+
+**The output a shooter actually wants is clicks, not MOA.** Turning 0.44 MOA into clicks needs the scope's click value, a quarter MOA or a tenth of a mil or something else.
+
+**That is a rifle record, and entry 90 found rifle records missing from the plan entirely.** `DESIGN.md` section 3 promises records for rifles, barrels, loads and sessions, and only sessions survived into any phase.
+
+**So this request and entry 90's gap are the same gap seen from two directions**, and it is worth saying so rather than treating clicks as a small addition later. **Until a rifle record exists the readout stops at MOA and mil**, which is still usable because every turret is marked in one of them.
+
+**Adjust-to-zero turret corrections is also in the orphan line**, which makes three of that line's four items load-bearing for this one request.
+
+---
+
 ## 2026-09-18, entry 90: ten promises with no phase behind them, and three tiers of commitment of which only one is tracked
 
 **Status: actioned 2026-09-18.**

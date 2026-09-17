@@ -31,28 +31,33 @@ public partial class ThemeTests
         return (Math.Max(la, lb) + 0.05) / (Math.Min(la, lb) + 0.05);
     }
 
+    /// <summary>
+    /// Entry 42 section 2 for dark and light, and NOTES-FROM-PLANNING.md entry 93 section 3 for high contrast, which is held to WCAG's AAA
+    /// ratio rather than AA. All three palettes come from one token set, and this is the test that says so: the high contrast one is derived
+    /// from the dark one in code, so a role whose meaning does not survive the derivation fails here rather than in somebody's eyes.
+    /// </summary>
     [Fact]
-    public void EveryTextColourReachesFourAndAHalfToOneOnEverySurfaceInBothThemes()
+    public void EveryTextColourReachesItsRatioOnEverySurfaceInEveryTheme()
     {
         var failures = new List<string>();
-        foreach (var (name, palette) in new[] { ("dark", Tokens.Dark), ("light", Tokens.Light) })
+        foreach (var (name, palette, ratio) in new[] { ("dark", Tokens.Dark, 4.5), ("light", Tokens.Light, 4.5), ("high contrast", Tokens.HighContrast, Tokens.HighContrastRatio) })
         {
             foreach (var (role, colour) in palette.TextColours)
             {
                 foreach (var (surface, background) in palette.TextSurfaces)
                 {
-                    if (Contrast(colour, background) < 4.5)
+                    if (Contrast(colour, background) < ratio)
                     {
-                        failures.Add($"{name} {role} on {surface}: {Contrast(colour, background):0.00}");
+                        failures.Add($"{name} {role} on {surface}: {Contrast(colour, background):0.00}, wanted {ratio:0.0}");
                     }
                 }
             }
 
             foreach (var (pair, fore, back) in new[] { ("primary text on amber", palette.OnAmber, palette.Amber), ("amber on its tint", palette.Amber, palette.AmberTint), ("teal on its tint", palette.Teal, palette.TealTint) })
             {
-                if (Contrast(fore, back) < 4.5)
+                if (Contrast(fore, back) < ratio)
                 {
-                    failures.Add($"{name} {pair}: {Contrast(fore, back):0.00}");
+                    failures.Add($"{name} {pair}: {Contrast(fore, back):0.00}, wanted {ratio:0.0}");
                 }
             }
         }
@@ -60,6 +65,24 @@ public partial class ThemeTests
         Assert.True(failures.Count == 0, string.Join("\n", failures));
     }
 
+    /// <summary>
+    /// Entry 93 section 3's guard as a test: the light and high contrast themes are the same roles as the dark one rather than separate
+    /// inventions, and the accents keep their own hues, so "teal is what the software found and amber is what needs a person" survives a
+    /// theme change. If a token set cannot produce the other themes, it is not a token set, it is a dark theme with names on it.
+    /// </summary>
+    [Fact]
+    public void TheOtherThemesAreTheSameRolesAndKeepTheAccentsTheirOwnHues()
+    {
+        foreach (var (name, palette) in new[] { ("light", Tokens.Light), ("high contrast", Tokens.HighContrast) })
+        {
+            Assert.True(Contrast(palette.Text, palette.Bg) >= 4.5, $"{name}: text on the window");
+            Assert.True(palette.Teal.G > palette.Teal.R, $"{name}: teal is no longer green");
+            Assert.True(palette.Amber.R > palette.Amber.B, $"{name}: amber is no longer warm");
+            Assert.True(palette.Alert.R > palette.Alert.G, $"{name}: alert is no longer red");
+            Assert.NotEqual(Tokens.Dark.Bg, palette.Bg);
+            Assert.NotEqual(Tokens.Dark.Text, palette.Text);
+        }
+    }
     /// <summary>Entry 42 section 6: a crude test that saves the light theme from dying by a thousand hard coded greys.</summary>
     [Fact]
     public void NoColourLiteralAppearsOutsideTheTokens()

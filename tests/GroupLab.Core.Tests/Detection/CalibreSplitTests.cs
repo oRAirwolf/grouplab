@@ -100,6 +100,13 @@ public class CalibreSplitTests
                     Assert.Single(before.Holes);
                     Assert.True(large.Oversized, $"bull {k}: a hole of {large.CalibreHoles:0.00} single holes is not flagged");
                     Assert.False(large.SplitVetoed);
+
+                    // NOTES-FROM-PLANNING.md entry 94 section 1: the flag counts the mark's own area, not the convex hull thrown around it,
+                    // and a flagged mark carries the two centres a split would give so that taking it as two shots needs no mouse.
+                    Assert.True(large.AreaInches <= large.HullAreaInches, "a mark cannot hold more ink than its own hull");
+                    Assert.Equal(large.AreaInches / (Math.PI * Math.Pow(SingleHoleInches / 2, 2)), large.SizeHoles!.Value, 6);
+                    Assert.NotNull(large.SplitA);
+                    Assert.NotNull(large.SplitB);
                     break;
             }
         }

@@ -184,13 +184,15 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** Every figure with the interval it actually has, and the reference a figure needs to be read against.
 - **Done.** Composite groups, pooled groups and load comparison in the engine.
 - **Done.** Calibre-aware edge-to-edge extreme spread, with the reason printed in place of the figure when no calibre is set.
+- **Built, not proven.** Subgroups within one sheet: bulls mapped to loads in the session, each subgroup with its own figures, compared by dispersion and by centre, so one sheet can carry six charge weights.
+- **Done.** The zero correction: the group centre's offset from the point of aim with its uncertainty, and, where the offset is smaller than the shots can resolve, the number of shots that would settle it instead of a correction.
 
 **Phase 3. Editor.**
 - **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
-- **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, and not a shot.
+- **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
-- **Not started.** The concept screen's appearance: the tool strip, the breadcrumb, the left rail and the paper-coloured sheet.
+- **In progress.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header and the left rail are in; the paper-coloured sheet and the rest of the framing are not.
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
@@ -201,9 +203,9 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Not started.** A target library, session records and reporting.
 - **Not started.** Records for rifles, barrels and loads, beside the session records.
 - **Not started.** The stage timeline that shows the analysis doing its work: scrubbable, artefacts appearing as they land, and a rejection clicked to highlight it on the image. Every stage already emits the record it needs; the screen that shows it does not exist.
-- **Not started.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system.
+- **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
 - **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
-- **Not started.** Adjust-to-zero turret corrections, in whichever angular unit is set.
+- **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once. Clicks wait on the rifle record above, because a click value is a property of the scope.
 - **Not started.** A volunteer print pack: the sheets and the instructions a donor needs to shoot and photograph one.
 
 **Phase 5. Chronograph, solver, and comparison.**

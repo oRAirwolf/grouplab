@@ -25,7 +25,7 @@ namespace GroupLab.Cli.Spike;
 /// report lists every setting that survives rather than one optimum.</item>
 /// <item><b>The synthetic holes stand in for .308 on a scan.</b> The survey they are drawn from mixed .264, .308 and .338, and
 /// render-and-difference reads them larger for their calibre than it reads real holes. Their lengths are scaled so the median whole single
-/// hole reads .308 times <see cref="AutomaticMarking.ScanHoleToCalibre"/>, the factor found by interpolating two trial scales, and the named
+/// hole reads .308 times <see cref="AutomaticMarking.HoleToCalibre"/>, the factor found by interpolating two trial scales, and the named
 /// size is that same figure.</item>
 /// <item><b>Real sheets</b> are named .308 times the ratio for their kind, scan or photograph, as the automatic path names it.</item>
 /// <item><b>A blob</b> is the detections sharing one hull. It holds the true holes within its own radius of the hull's centre, and never
@@ -64,7 +64,7 @@ public static class SplitCalibration
             output.Flush();
         }
 
-        double target = InkProximity.RealCalibreInches * AutomaticMarking.ScanHoleToCalibre;
+        double target = InkProximity.RealCalibreInches * AutomaticMarking.HoleToCalibre;
         var shipped = new RenderDifferenceOptions();
 
         // Register each scan once.
@@ -102,7 +102,7 @@ public static class SplitCalibration
         double scale = 0.8 + ((target - atLower) * (1 - 0.8) / (atOne - atLower));
         double atScale = Median(scale);
         Say(string.Create(inv, $"synthetic single hole: {atOne:0.000} in at the survey's scale, {atOne / InkProximity.RealCalibreInches:0.000} of .308; {atLower:0.000} in at 0.80"));
-        Say(string.Create(inv, $"scaled by {scale:0.000}: {atScale:0.000} in, {atScale / InkProximity.RealCalibreInches:0.000} of .308, against {AutomaticMarking.ScanHoleToCalibre:0.000} measured on real scans"));
+        Say(string.Create(inv, $"scaled by {scale:0.000}: {atScale:0.000} in, {atScale / InkProximity.RealCalibreInches:0.000} of .308, against {AutomaticMarking.HoleToCalibre:0.000} measured on real sheets"));
 
         var cases = new List<Case>();
         foreach (var r in registered)
@@ -131,7 +131,7 @@ public static class SplitCalibration
 
                 cases.Add(new Case((string)i["name"]!, true, camera ? "real photographs" : "real scans", r.Value, d, r.Mapping, r.Dpi, r.Render,
                     [.. truth.Select(p => new PointD((double)p![0]! * DmmPerInch, (double)p[1]! * DmmPerInch))],
-                    InkProximity.RealCalibreInches * (camera ? AutomaticMarking.PhotographHoleToCalibre : AutomaticMarking.ScanHoleToCalibre)));
+                    InkProximity.RealCalibreInches * AutomaticMarking.HoleToCalibre));
             }
         }
 

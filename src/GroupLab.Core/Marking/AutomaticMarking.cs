@@ -38,17 +38,21 @@ public static class AutomaticMarking
 {
     /// <summary>
     /// What render-and-difference measures a hole at, as a fraction of the stated bullet diameter, NOTES-FROM-PLANNING.md entry 79 section 1:
-    /// the bullet is not the hole. Measured on the two real .308 sheets, whole detections matched to hand-verified holes. On scans there are
-    /// only two sheets, and the sheet is the unit of uncertainty (entry 80 section 3): 0.952 over 13 holes and 0.934 over 11, pooled 0.944.
-    /// The holes within a sheet share paper, printer, scanner and bullet, so their spread of 0.039 says little about the next sheet. On
-    /// photographs, 76 holes over six frames of the same two sheets: pooled 0.948, frame means from 0.918 to 0.976. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of
-    /// about 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
+    /// the bullet is not the hole. The detector's extent is the torn crown, which reaches about the calibre, not the bright aperture of about
+    /// 0.68 of it. Only the split's veto reads it, a separation between one hole and two, never an absolute size.
     /// <para>
-    /// <b>The photograph figure was re-measured after the local-scale fix, NOTES-FROM-PLANNING.md entry 84 section 3.</b> It was 0.986 with a
-    /// spread of 0.110 and frame means over a 15 percent range, all of it taken with one scale applied to an image whose true scale varies
-    /// across the sheet. At each blob's own scale it is 0.948 with a spread of 0.039, and the frame means span 0.058. The scans, which have no
-    /// scale variation to fix, re-measure at 0.938 pooled, 0.952 and 0.923 by sheet; the constant stays at 0.944 because a move of that size on
-    /// two sheets sits inside the sheet-to-sheet spread and only the one-hole-against-two separation reads it.
+    /// <b>One figure, not two, NOTES-FROM-PLANNING.md entry 94 section 3.</b> It was two, 0.944 on a scan and 0.986 in a photograph, and the
+    /// photograph figure was measured with one scale applied to an image whose true scale varies by up to 30 percent across a sheet. Re-measured
+    /// at each blob's own scale (entry 84 section 3) the photographs read 0.948 with a spread of 0.039 where they had read 0.986 with 0.110, and
+    /// the scans, which had no scale variation to fix, read 0.938. <b>The two agree within 0.010 and the spread is four times that</b>, so the
+    /// difference was the defect rather than a property of the two media, and one constant is what the measurement supports: 102 holes over
+    /// eight frames of two sheets, pooled 0.945, sheet means 0.949 and 0.932, frame means 0.918 to 0.976.
+    /// </para>
+    /// <para>
+    /// The branch that went with the two figures is gone too: a photograph carrying no camera data was read as a scan, which mattered only
+    /// while the two differed. The sheet is the unit of uncertainty (entry 80 section 3), and two sheets are enough to tell one hole from two
+    /// and not enough to report a size back to a person. If a later measurement separates the media, split the constant again with the evidence
+    /// attached.
     /// </para>
     /// <para>
     /// What these figures are good for, entry 81 section 4: telling one hole from two is a factor-of-two judgement, and an error of a few
@@ -57,7 +61,7 @@ public static class AutomaticMarking
     /// many more sheets first rather than inherit a precision these never had.
     /// </para>
     /// </summary>
-    public const double ScanHoleToCalibre = 0.944, PhotographHoleToCalibre = 0.948;
+    public const double HoleToCalibre = 0.945;
 
     /// <param name="grey">The image as grey, for the markers.</param>
     /// <param name="value">The image as HSV value, max(R, G, B), for the holes.</param>
@@ -96,9 +100,8 @@ public static class AutomaticMarking
         {
             try
             {
-                double ratio = metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre;
-                detection = new DetectionRecord(calibre, calibre?.DiameterInches * ratio);
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * ratio));
+                detection = new DetectionRecord(calibre, calibre?.DiameterInches * HoleToCalibre);
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre));
             }
             catch (InvalidOperationException ex)
             {
@@ -123,7 +126,7 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("calibre", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
-                $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * (metadata.IsCamera ? PhotographHoleToCalibre : ScanHoleToCalibre):0.000} in {(metadata.IsCamera ? "in a photograph" : "on a scan")}: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
+                $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * HoleToCalibre:0.000} in: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");
             stage.Metric("rejected", holes.Rejected.Count, "count");
@@ -176,7 +179,7 @@ public static class AutomaticMarking
         }
 
         var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches,
-            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative) : null)).ToList();
+            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,

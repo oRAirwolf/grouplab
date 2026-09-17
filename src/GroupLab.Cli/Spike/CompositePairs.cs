@@ -59,7 +59,7 @@ public static class CompositePairs
 
         var definition = GltdJsonReader.ReadFile(Path.Combine(frozen, SampleSet.CentreFire)).Definition!;
         var scoring = definition.Bulls.Select((b, k) => (b, k)).Where(x => x.b.Scoring).ToList();
-        var calibre = InkProximity.RealCalibreInches * AutomaticMarking.ScanHoleToCalibre;
+        var calibre = InkProximity.RealCalibreInches * AutomaticMarking.HoleToCalibre;
         Say("blob,target,separation,calibre,kind,marks,flagged,elongation,solidity,diameter,calibreHoles");
         var rows = new List<(double D, bool Calibre, bool Pair, int Marks, bool Flagged)>();
         foreach (var sample in SampleSet.All.Where(s => s.Definition == SampleSet.CentreFire && s.Kind == SampleSet.SampleKind.Scan && s.Dpi == 600 && s.Gated && !s.File.Contains("96.2", StringComparison.Ordinal)))
