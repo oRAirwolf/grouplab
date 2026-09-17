@@ -12,6 +12,65 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-17, question 17: the real holes veto the shipped split threshold, and only a higher one survives
+
+**Status: open.** Blocks adopting any split threshold, and the photograph residue fix of entry 78 section 2, which depends on the threshold. Nothing else waits: the size veto is in and works as shipped.
+
+### 1. What entry 80 section 2 asked
+
+> Synthetic material is for coverage, because 848 holes explore the parameter space in a way 99 cannot. **Real holes get the veto.** A threshold that the synthetic sweep prefers but that misclassifies a single real hole is the wrong threshold.
+
+### 2. What the sweep found
+
+**The synthetic holes were rescaled first.** Unscaled, the current detector reads them at 0.335 in, which is 1.088 of .308. The survey they were fitted to mixed .264, .308 and .338. Scaled by 0.871, they read 0.291 in, 0.944 of .308, matching real scans. The run is `grouplab holes split-calibration --local <manifest>`.
+
+**Blobs misclassified, split elongation against size veto.**
+- **Synthetic** is the six scans punched with single holes: a single hole split in two.
+- **Real** is Alan's scan, the friend's scan and the friend's photograph, which has no camera data: a single hole split in two.
+- **Real photos** is the six mounted frames.
+
+| Elongation | Size veto | Synthetic singles split | Real split | Real photos split | Real spurious |
+|---|---|---|---|---|---|
+| 1.45 (shipped) | none | 16 | 4 | 4 | 18 |
+| 1.45 | under 1.2 to 1.8 holes | 0 to 3 | **2** | 0 | 9 |
+| 1.60 | under 1.2 to 1.8 holes | 0 to 2 | **1** | 0 | 9 |
+| **1.80** | **under 1.2 to 1.8 holes** | **0** | **0** | **0** | **9** |
+| 1.80 | none | 3 | 0 | 0 | 17 |
+
+**The two real blobs still split at 1.45 are each one hole joined to printed or photographed ink.**
+- Alan's sighter hole beside the print note.
+- A hole beside bull 10 in the friend's photograph.
+
+Both hold more than two holes' area, so the size veto cannot see them. Only a higher elongation threshold leaves them whole.
+
+**The synthetic pairs say what 1.80 costs.** Of about 840 merged overlapping pairs, 5 split at 1.45 with no veto and none at 1.80. The corpus holds no real merged pair, so the cost on real neighbours is not measured.
+
+### 3. The options
+
+1. **Elongation 1.80 with the size veto at 1.5 holes.** It misclassifies no real hole, and it halves real spurious detections, 18 to 9. **Cost:** it changes the default without a calibre as well, so the committed synthetic records move, and a real pair of neighbours whose shape alone separated them would stay one mark.
+2. **Keep 1.45, and use 1.80 only when a calibre is named.** Nothing changes without a calibre. **Cost:** the two real holes stay split whenever no calibre is named.
+3. **Keep 1.45 everywhere** until a sheet with real merged pairs exists. **Cost:** two real holes in nine images stay split.
+
+**What I would choose: option 2 now, and option 1 once a real merged pair has been measured.** It is the one change that no real hole argues against and that moves nothing already recorded.
+
+### 4. The photograph residue, entry 78 section 2, which depends on the answer
+
+**On photographs every spurious detection is a split half:** 64 on clean sheets and 19 on real ones.
+
+| | Elongation, median (range) | Solidity, median |
+|---|---|---|
+| Spurious blobs | 4.6 (1.54 to 7.4) | 0.65 |
+| True holes | 1.17 (at most 1.67) | 0.95 |
+
+**Why a plain cap is not enough.**
+- **How elongated a real pair can be.** Two equal round holes that touch have an elongation of at most about 2.24.
+- **What a cap would remove.** A cap there would remove 70 of the 83 spurious halves and no true hole.
+- **Why it is not safe alone.** The difference stage's closing can join two real holes up to about 0.11 in apart, whose elongation can reach about 2.6. A plain cap could therefore silently drop two real holes.
+
+**The proposed fix combines both conditions.** A blob the size veto calls too small for two holes, and more elongated than any single hole measured, is refused as residue rather than kept as one hole. Without a calibre, the size would come from the sheet's own round holes. It is not built, because it sits on the threshold chosen above.
+
+---
+
 ## 2026-09-17, question 16: the printed name cannot go on the caption line without hiding holes on sheets already printed
 
 **Status: answered 2026-09-17**, by NOTES-FROM-PLANNING.md entry 77 section 5. The name goes outside the analysed region, so it needs no exclusion box; a sheet with no such place carries no name. No box is added over the print note.

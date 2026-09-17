@@ -15,6 +15,84 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 80: the split fix lands on truth, and the sweep about to set its thresholds is running on the wrong population
+
+**Status: actioned 2026-09-17, with the split threshold put to planning as question 17.**
+- **Section 2:**
+  - The synthetic holes simulate the survey's mix of .264, .308 and .338, and read at 1.088 of .308. They are scaled by 0.871 to read 0.944 of it, the scan figure.
+  - The sweep now reports synthetic coverage and the real veto apart. The real holes veto every setting at elongation 1.45; only 1.80 misclassifies none.
+  - Nothing is adopted.
+- **Section 3:** two scan sheets, 0.952 and 0.934, pooled 0.944, recorded with the sheet as the unit.
+- **Section 4:** the harness no longer sizes a split half. With the halves excluded, the detector's own oversize rate is 0% everywhere.
+- **Section 5:** a marking, its file and its report record what the detection ran with, a calibre or none, apart from the calibre named now.
+- **Entry 78 section 2:** measured. Every spurious detection on a photograph is a split half, with a median elongation of 4.6 against 1.17 for true holes. The fix is proposed in question 17 and not built.
+- **Section 1:** recorded as a measurement.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 80".
+
+Section 1 records a result. Section 2 is a question that must be answered before the sweep's thresholds are adopted, and it is the reason this entry exists tonight rather than tomorrow.
+
+### 1. The worst known defect is fixed and checked against hand-merged truth
+
+| Friend's earlier sheet | Holes | Sigma |
+|---|---|---|
+| Without a calibre | 15 | **0.607 in** |
+| At .308 | 13 | **0.391 in** |
+| **Hand-merged truth** | **13** | **0.390 in** |
+
+**0.391 against 0.390.** A 55 percent error in the headline statistic is gone, and it was verified against a hand-made answer rather than against a plausible-looking output. **That is the strongest thing to happen to this pipeline this week** and it should be recorded in `PHASE1-RESULTS.md` as a measurement rather than as a fix.
+
+### 2. The sweep's own first line says the synthetic holes are not the right size
+
+`split-cal.txt` reports its synthetic single-hole size as **0.338 in over 848 holes**.
+
+The ratio of detected diameter to stated calibre, just measured on real material:
+
+| | Holes | Mean | Spread |
+|---|---|---|---|
+| Scans | 24 | **0.944** | 0.039 |
+| Photographs | 75 | **0.986** | 0.110, frame means 0.92 to 1.07 |
+
+**If the synthetic sheets simulate .308, their ratio is 0.338 / 0.308 = 1.097.** That is 16 percent above the scans and 11 percent above the photographs, and **it sits outside the entire range of frame means measured on real paper.**
+
+**The sweep has 848 synthetic holes against 99 real ones**, so synthetic material outnumbers real by more than eight to one and will dominate anything fitted to it. **A split threshold tuned on holes that read 10 percent large relative to their calibre is tuned for a population that does not exist.**
+
+**So, before the sweep's numbers are adopted, answer one question: what calibre do the synthetic sheets simulate, and what is their detected-diameter ratio against it?** If that ratio is not close to 0.944, the synthetic holes need rescaling or the sweep needs reweighting.
+
+**And whatever the answer, change the shape of the fit.** Synthetic material is for coverage, because 848 holes explore the parameter space in a way 99 cannot. **Real holes get the veto.** A threshold that the synthetic sweep prefers but that misclassifies a single real hole is the wrong threshold, and the report should say so explicitly rather than presenting one optimum.
+
+### 3. The uncertainty on those ratios is smaller than the holes deserve
+
+**24 scan holes are not 24 independent measurements.** They come from a small number of sheets, and paper, printer, scanner, lighting and the stated calibre are all shared within a sheet. So the hole-to-hole spread of 0.039 understates the uncertainty in the mean, possibly by a lot.
+
+**Claude Code already did this correctly for the photographs** by reporting frame means of 0.92 to 1.07 alongside the pooled figure. **Do the same for the scans: report the per-sheet means and let the spread between sheets carry the uncertainty.** If there are only two or three sheets, say so, because "0.944 with a spread of 0.039" reads far more settled than three numbers would.
+
+**One thing that is already clear and worth keeping**: 0.944 on scans sits well below 1, which says **the detector reads a scanned hole a few percent smaller than the bullet that made it.** That is a small, real, systematic effect, and having it measured at all is new.
+
+### 4. My evidence for entry 78 section 3 was partly an artefact, and the conclusion survives
+
+Claude Code found that all 54 "oversized" punched detections were halves of split blobs, each reporting the parent blob's diameter. **So my oversized median of 0.7529 in was measuring a blob, not a mark**, and the neat picture of "split at 0.29, oversized at 0.75, two directions of one threshold" was partly built on that.
+
+**The conclusion stands and the evidence for it was weaker than I presented.** One threshold can still fail both ways, `grouplab holes split-calibration` now measures it per blob, and the sigma result in section 1 is what actually establishes it.
+
+**This is the second time today a number I quoted came from a harness whose construction I had not checked.** The rule that follows: when I cite a figure from a measurement file, say what one row of it represents. Had I written "each oversized row is one detection's own diameter", I would have had to check whether that was true.
+
+### 5. A calibre now changes the answer, so the record has to say which one was used
+
+Thirteen holes at .308 and fifteen without. **The same image now analyses differently depending on a field the person may or may not have filled in**, which is correct behaviour and a provenance obligation.
+
+**A marking and an exported analysis must record the calibre they were produced with, including its absence.** Two markings of one sheet, one with a calibre and one without, are not comparable and nothing downstream should treat them as though they were.
+
+### 6. What is left, in order
+
+1. **Section 2's question**, before the sweep's thresholds are adopted. Everything else waits on it.
+2. Section 3's per-sheet means.
+3. Section 5's provenance field.
+4. Entry 78 section 2, the photograph residue, which was already waiting on thresholds.
+5. Section 1 into `PHASE1-RESULTS.md`.
+
+---
+
 ## 2026-09-17, entry 79: the bullet is not the hole, a handoff rule for long jobs, and a self-lock
 
 **Status: actioned 2026-09-17.**

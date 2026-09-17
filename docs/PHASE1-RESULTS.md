@@ -3327,6 +3327,112 @@ Both **build and test** runs for the entry 77 commits passed on Windows, Ubuntu 
 
 ---
 
+## Entry 80. The synthetic holes rescaled, the split fit shaped by real holes, and what a detection ran with
+
+`docs/NOTES-FROM-PLANNING.md` entry 80, in its section 6 order.
+
+### Section 2: what the synthetic holes simulate, and the sweep reshaped
+
+**The synthetic holes simulate no single calibre.**
+- **Where they come from.** `SyntheticSheet` was fitted so that the baseline detector measures its holes as `docs/SCAN-MEASUREMENTS.md` section 3.2 measured 343 real holes.
+- **What that population was.** 260 of those holes had a known calibre: 189 were .264, 42 were .308 and 29 were .338, a mean nominal of 0.279 in.
+- **How the two detectors read them.** Render-and-difference reads these synthetic holes at 0.335 in, which is 1.088 of .308 and 1.20 of the survey's mix. On real .308 scan holes it reads 0.944 of the calibre, about 1.03 times what the baseline read on the survey's .308 holes. That suggests the synthetic disturbed zone reads larger to this detector than a real one does; the cause is not measured.
+- **The earlier sweep's first line** was 0.338 in at the shipped settings, 1.097 of .308, as entry 80 said. It was stopped, unfinished, after 88 minutes of processor time. Its real rows had used the bullet diameter, not the corrected size.
+
+**Rescaled.** `SyntheticSheet.SampleHole` takes a scale for every length of the hole. The sweep finds the scale at which its single holes read .308 times the scan ratio.
+- **The two trial scales:** 0.335 in at 1 and 0.266 in at 0.8.
+- **The interpolated scale:** 0.871, at which a single hole reads **0.291 in, 0.944 of .308, the scan figure.**
+- **The size the veto is given** is that same figure.
+
+**The fit is in two parts, reported apart.**
+- **Coverage:** the synthetic singles and pairs.
+- **The veto:** the real holes.
+- **The survivors:** the report lists every setting that misclassifies no real hole, ranked by synthetic errors.
+- **Where it runs:** from the published copy, as `CONTRIBUTING.md` now says, which was also that convention's first use.
+
+**Per blob, the real holes veto every setting at the shipped elongation of 1.45.**
+- **What is left.** Two real blobs, each one hole joined to ink, are still cut in two at 1.45 whatever the size veto. At 1.60, one is.
+- **What survives.** Only an elongation of 1.80 misclassifies no real hole: with the size veto at any level from 1.2 to 1.8 holes, 9 real spurious detections, and without it, 17.
+- **The synthetic cost of 1.80:**
+  - single holes are never split once the veto is on;
+  - overlapping pairs almost never separate by shape at any setting, at most 59 of about 840;
+  - so 1.80 costs the 5 pairs that split at 1.45 with no veto.
+- **What is not measured.** No real merged pair exists in the corpus, so the cost on real neighbours is unknown.
+- **The misses.** The 609 synthetic singles and 1304 synthetic pair holes missed at every setting are the punched holes outside every bull's cell, which the position prior refuses by design.
+
+**No threshold is adopted.** Question 17 puts the choice to planning.
+- **My recommendation:** 1.80 only when a calibre is named, now, and everywhere once a real merged pair is measured.
+- **Why it is planning's decision.** Changing the default without a calibre moves the committed synthetic records.
+- **The provisional defaults stay:** 1.45, a veto under 1.5 holes, and a flag at 1.8 holes.
+
+**Not yet measured.** The flag direction: whether merged pairs that stay whole are flagged oversized at 1.8 holes. The sweep does not score it. The synthetic pairs' union is 1.2 to 1.6 holes, which suggests most would not be.
+
+### Section 3: the scan ratio by sheet
+
+**There are two scan sheets, and the sheet is the unit.**
+
+| Sheet | Holes | Ratio |
+|---|---|---|
+| Alan's | 13 | 0.952 |
+| The friend's | 11 | 0.934 |
+| Pooled | 24 | 0.944 |
+
+- **The hole-to-hole spread of 0.039** is within sheets that share paper, printer, scanner and bullet, so it says little about the next sheet.
+- **The friend's photograph,** which carries no camera data and is taken as a scan, measures 0.924.
+- **Both sheets read a scanned hole a few percent smaller than the bullet.** With two sheets, how much smaller is not settled.
+- **Recorded in:** `AutomaticMarking.ScanHoleToCalibre`'s documentation.
+
+### Section 4: the harness artefact removed
+
+**`grouplab holes ink-proximity` no longer gives a split half a size ratio**, because a half reports its whole blob's diameter.
+- **One row of `ink-proximity.json`** is one detection, and for a split half its diameter is the blob's.
+- **Regenerated,** the detector's own oversize rate is 0% in every distance bin, on punched and real sheets alike. Every oversized row before was a half.
+- **The marking screen's size check is unchanged** by this, at 78% near ink and 2% clear on punched scans.
+
+### Section 5: what a detection ran with
+
+**The record.** `DetectionRecord` holds the calibre a detection ran with, or none, and the size its holes were taken to measure.
+- **Where it is kept:** on the marking, in the marking file as `detection`, and in the report as a sentence.
+- **Its three states:**
+  - **null** when nothing was detected;
+  - **"detected without a calibre, so whether a mark was one hole or two was judged by its shape alone"** when detection ran without one;
+  - **"detected with the calibre .308, whose holes were taken to measure 0.291 in"** when it ran with one.
+- **Kept apart from the calibre named now,** which a person may change after detecting without detecting again.
+- **Where else it appears.** `grouplab analyze` prints it under the group, and the automatic path's summary, shown on the marking screen, says it too.
+- **Its test** writes, reads and reports both kinds, and a marking made by hand records none.
+
+**The rule it serves:** two markings of one sheet, one detected with a calibre and one without, are not comparable. Nothing in GroupLab compares markings yet; when something does, it reads this.
+
+### Entry 78 section 2: the photograph residue, measured, with its fix waiting on question 17
+
+**On photographs, every spurious detection is a split half:** 64 on clean sheets and 19 on real ones. The features separate them from real holes cleanly.
+
+| | Blobs | Elongation, median (range) | Solidity, median | Diameter, median |
+|---|---|---|---|---|
+| Spurious | 83 | 4.6 on clean sheets and 4.2 on real ones (1.54 to 7.4 overall) | 0.65 to 0.68 | 0.18 to 0.19 in |
+| True holes | 84 | 1.17 (at most 1.67) | 0.95 | 0.30 in |
+
+- **Why a plain cap will not do.** A merged pair of equal holes cannot exceed an elongation of about 2.24. A cap there would remove 70 of the 83 spurious halves and no true hole. But the closing can join two real holes up to about 0.11 in apart, and those can reach about 2.6. A cap alone could therefore drop two real holes silently.
+- **The proposal.** Refuse a blob that the size veto calls too small for two holes and that is more elongated than any single hole. It is described in question 17 and not built.
+
+### Section 1: the friend's earlier sheet, as a measurement
+
+**Measured with `grouplab analyze`, from the published copy,** on the friend's 300 DPI scan of `GL-20J3-Y141-0BN3-EYME`. The scan is local and unpublished.
+
+| | Holes | Sigma (in) | Interval (in), with its coverage |
+|---|---|---|---|
+| Without a calibre | 15 | 0.607 | 0.470 to 0.859, 94.8% |
+| With `--calibre .308` | 13 | 0.391 | 0.295 to 0.578, 94.7% |
+| Hand-merged, entry 76 section 2 | 13 | 0.390 | 0.295 to 0.577, 94.7% |
+
+- **Why the two runs differ.** Without a calibre, the two holes that cross printed ink at bulls 3 and 10 each read twice. With .308 each reads once, because their blobs hold 0.78 and 0.89 of a hole's area.
+- **Against the truth.** The detected sigma is within 0.001 in of the sigma computed from the hand-merged holes.
+- **What it rests on.** The comparison checks the detector against a hand-made answer, on one sheet. Alan's scan reads identically either way, 15 holes and sigma 0.274 in.
+
+**Tests:** Core 811 passing, App 43 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3497,3 +3603,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 79 section 1: a measured ratio per image kind, over the calibre or one pooled ratio.** Scans and photographs measure holes differently, 0.944 against 0.986, and section 1 asked for them apart.
 - **Entry 79 section 1: a photograph without camera data taken as a scan, over refusing the ratio.** There is nothing in such a file to tell the two apart, and the one such photograph measures 0.924, within the scan ratio's spread.
 - **Entry 78 section 4: a calibre named after an uncorrected detection detects again, over asking.** Nothing a person did is lost, and a result found without the size is the one section 3 says is wrong.
+- **Entry 80 section 2: the old sweep stopped unfinished, over letting it run.** Its synthetic holes were the wrong size, and its real rows used the bullet diameter, so its result could only have been discarded.
+- **Entry 80 section 2: the synthetic holes scaled to read like .308 on a scan, over reweighting the sweep.** A scale fixes what the holes are; a weight would only change how much a wrong population counts.
+- **Entry 80 section 2: no split threshold adopted, over adopting the survivor.** The only setting the real holes allow also changes the default without a calibre and moves committed synthetic records, and no real merged pair has been measured to say what it costs.
+- **Entry 78 section 2: the residue fix proposed and not built, over a plain elongation cap.** A cap alone would refuse two real holes joined by the closing, a silent loss, and the safe form depends on the threshold still open.
