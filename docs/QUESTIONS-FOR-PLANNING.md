@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-17, question 17: the real holes veto the shipped split threshold, and only a higher one survives
 
-**Status: open.** Blocks adopting any split threshold, and the photograph residue fix of entry 78 section 2, which depends on the threshold. Nothing else waits: the size veto is in and works as shipped.
+**Status: answered 2026-09-17**, by NOTES-FROM-PLANNING.md entry 81. 1.80 goes in everywhere, not only with a calibre, and the gap it rests on is measured with pairs made from real holes.
 
 ### 1. What entry 80 section 2 asked
 

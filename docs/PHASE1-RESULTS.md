@@ -832,6 +832,8 @@ The synthetic holes are 19 percent wider, 20 grey levels darker in the core and 
    - **The overlap:** arrowheads read 0.65 to 0.81, and four read 1.00 where the centre fell on a stroke. Holes read as low as 0.73.
    - **Why it stays ungated:** a real rim is often a C, which the synthesis never draws, so a gate set here would refuse real holes the synthesis cannot show.
 
+**Re-recorded 2026-09-17:** the tables below are the split threshold of 1.45 as first read. `holes-synthetic.json` and `holes-synthetic-held-out.json` now hold the figures at 1.80, with the new oversize flag and residue rule, because real holes overruled 1.45 (entry 81, "Entry 81" below).
+
 **The gate reading, held-out seeds 1001 to 1003, run once.** Main sheets:
 
 | DPI | Holes per bull | Method | Holes | Within 0.01 in | Within 0.15 in | Strays | Centre error median / 95th pct (in) |
@@ -3433,6 +3435,141 @@ Both **build and test** runs for the entry 77 commits passed on Windows, Ubuntu 
 
 ---
 
+## Entry 81. Split elongation 1.80 everywhere, merged pairs flagged, and photograph residue refused
+
+`docs/NOTES-FROM-PLANNING.md` entry 81, which answers question 17. The measurements below came from the published copy.
+
+### Section 1: 1.80 is the split threshold, with or without a calibre
+
+**`RenderDifferenceOptions.SplitElongation` is now 1.80.** Entry 81 section 1 gives the reasons:
+- the real holes veto 1.45;
+- a hole cut in two is the quiet failure and a merged pair the loud one;
+- the case for 1.45 rested on the disqualified synthetic population;
+- one threshold avoids two detectors.
+
+**The size a single hole is taken to be now applies without a calibre too.** Without one it is the sheet's own 25th percentile whole mark, once there are five. So a calibre changes an answer only by supplying that size, and the same rule runs either way.
+
+### Section 2: merged pairs made from real holes, and the flag that missed them
+
+**`grouplab holes composite-pairs --local <manifest>`.**
+- **Where the holes come from.** Of Alan's 14 real holes, the 3 that lie clear of printed ink are lifted from his 600 DPI scan.
+- **How they are placed.** They are pasted in pairs, darker pixel winning, 0.70 in below each even scoring bull of the three clean GL-CF25-LTR 600 DPI scans, at centre separations from 0.10 to 0.45 in. Single holes go on the odd bulls.
+- **What the holes measure.** Each reads about 0.29 in across.
+
+**Under the old flag, with 1.80, the gap entry 81 feared was real.**
+- **The pairs:** every pair 0.10 or 0.15 in apart became one mark, and none of the 78 was flagged, with or without .308.
+- **What they measure:** those marks hold 1.39 to 1.72 holes' area, under the calibre flag's 1.8.
+- **Without a calibre:** the old rule, the median plus two robust deviations, flagged 12 of 36 ordinary single holes once the pairs split, because three near-identical source holes give a tiny spread.
+
+**The flag is fixed, not the threshold.** `OversizeHoles` is 1.35: a whole mark with the area of 1.35 single holes or more is flagged. The single hole is the calibre's size, or the sheet's 25th percentile whole mark, a quantile a sheet of mostly merged pairs cannot move.
+
+**With it, and with or without .308:**
+
+| Separation (in) | Pairs | One mark | Flagged | Two marks | Singles falsely flagged |
+|---|---|---|---|---|---|
+| 0.10 | 39 | 39 | **39** | 0 | 0 of 36 |
+| 0.15 | 39 | 39 | **39** | 0 | 0 of 36 |
+| 0.20 | 39 | 15 | **15** | 24 | 0 of 36 |
+| 0.25 to 0.45 | 39 each | 0 | | 39 | 0 of 36 |
+
+**Every pair left as one mark is flagged, and no single hole is.** From 0.20 in apart, 1.80 splits a pair once its elongation reaches 1.8, and from 0.25 in it always does. So the loud failure really is loud.
+
+**What the flag costs on real sheets.** The rule was checked first against the 99 real whole holes of the two sheets:
+
+| Where | Falsely flagged, with the calibre | Without it |
+|---|---|---|
+| All 99 real whole holes | 6 | 13 |
+| Scans (24 holes) | 0 | 0 |
+| The three oblique frames 5821, 5822 and 5824 | most | most |
+
+**In the re-recorded local corpus**, 17 whole marks on real sheets are flagged.
+- **Two are a hole joined to residue,** not two holes: Alan's sighter hole with the print note, and the friend's photograph's hole beside bull 10. Both used to be split into a real hole and a spurious one.
+- **The other 15 are single holes in photographs:** one in `IMG_5819`, and 14 in the three oblique, focus-limited frames.
+
+**The synthetic sheets are a different story.** Their holes carry the survey's mixed-calibre size spread, so the flag fires on 19 to 65 marks a case, where it fired on 0 to 25 before. That population is not one calibre, and this is not read as a real false-alarm rate.
+
+### Section 3: the three populations, in full, and why solidity cannot carry the fix
+
+Quantiles: minimum, 5th, 10th, 25th, 50th, 75th, 90th and 95th percentiles, maximum.
+- **Spurious blobs:** 42 blobs from the photographs, each split pair counted once, at 1.45.
+- **Real single holes:** 107 from both sheets, 27 of them on scans.
+- **Real joined pairs:** 246 composite pairs joined by the closing.
+
+| Elongation | min | 5% | 10% | 25% | 50% | 75% | 90% | 95% | max |
+|---|---|---|---|---|---|---|---|---|---|
+| Spurious blobs | 1.54 | 1.55 | 1.67 | 3.65 | 4.43 | 5.79 | 7.15 | 7.17 | 7.37 |
+| Real single holes | 1.01 | 1.04 | 1.06 | 1.09 | 1.17 | 1.30 | 1.40 | 1.49 | 1.72 |
+| Real joined pairs | 1.26 | 1.27 | 1.41 | 1.65 | 1.96 | 2.53 | 2.74 | 2.89 | 3.08 |
+
+| Solidity | min | 5% | 10% | 25% | 50% | 75% | 90% | 95% | max |
+|---|---|---|---|---|---|---|---|---|---|
+| Spurious blobs | 0.55 | 0.57 | 0.57 | 0.61 | 0.66 | 0.75 | 0.81 | 0.85 | 0.89 |
+| Real single holes | 0.59 | 0.74 | 0.88 | 0.92 | 0.95 | 0.97 | 0.99 | 0.99 | 1.00 |
+| Real joined pairs | 0.70 | 0.71 | 0.78 | 0.81 | 0.88 | 0.93 | 0.94 | 0.94 | 0.94 |
+
+**Solidity does not separate them.**
+- **Spurious blobs** reach 0.89.
+- **Real single holes** go down to 0.59. On scans, 7 of 27 fall below 0.8, holes whose residual picks up ink at a ring.
+- **Joined pairs** fall to 0.70 as their separation grows, from 0.91 to 0.94 at 0.10 in down to 0.70 to 0.80 at 0.35 in.
+- **At solidity under 0.85** the rule would catch 40 of 42 spurious blobs, but also 10 real single holes and 78 joined pairs.
+
+**Size separates them where the shape asks for a split.**
+- **Spurious blobs with elongation 1.8 or more:** 36 of 42, holding at most 1.08 holes' area.
+- **Joined pairs with elongation 1.8 or more:** 153, holding at least 1.80.
+- **So the size veto stays, and it is the size that carries the fix.**
+
+### Entry 78 section 2: the photograph residue fix, built on that
+
+**The rule.** An elongated blob that the size calls too small for two holes, under `SplitMinimumHoles` 1.5, is:
+- **refused as residue** when its elongation is also at least `ResidueElongation` 2.2, which is half a unit beyond the most elongated real single hole measured, 1.72;
+- **kept as one hole** otherwise.
+
+**How the split is decided now.** It is taken after every other blob is seen, so the sheet's own hole size is known. The S5-S8 stage counts splits the hole size stopped and residue refused.
+
+**Tests.**
+- A diagonal sliver, which the bounding-box aspect filter passes, is refused, and the holes beside it stand.
+- A merged pair at the shipped settings stays one mark and is flagged, and its single neighbours are not, with a calibre and without.
+- With too few marks to know a size, shape alone decides.
+- The veto's mechanism test pins elongation 1.45, where its drawn shapes split.
+
+**What it leaves.**
+- **The gap:** on a sheet with fewer than five holes and no calibre there is no size, so residue is still split.
+- **Where that shows:** the clean Phase 0 photographs, which have no holes, still give 60 spurious detections, down from 64.
+- **What might close it:** naming a calibre supplies the size and should close the gap. That is not measured on the clean photographs.
+
+### Section 4
+
+**Recorded where the ratio is defined,** in `AutomaticMarking.ScanHoleToCalibre`'s documentation.
+- **What two sheets are enough for:** telling one hole from two, a factor-of-two judgement a few percent cannot flip.
+- **What they are not enough for:** anything that needs the absolute size, such as a measured calibre reported back, or hole sizes compared between loads.
+
+### What moved in the committed records, and why
+
+**`holes-synthetic.json` and `holes-synthetic-held-out.json` were re-recorded** because the split threshold moved from 1.45 to 1.80 and the oversize flag and residue rule changed (entry 81). The M2.2 tables above are the 1.45 figures.
+
+**Held-out, render-and-difference:**
+- **One hole per bull:** unchanged, 100 percent at 600 and 300 DPI.
+- **Two holes per bull:** 94.0 falls to 87.5 percent at 600 DPI, and 96.4 falls to 90.5 percent at 300 DPI. Neighbours closer than the closing's reach, with elongation between 1.45 and 1.80, are now one flagged mark.
+- **Overlapping pairs:** 53 of 112 found within 0.15 in, against 54.
+- **Arrowheads:** 50 strays, against 53.
+- **Registration rows:** unchanged except one hole at 0.040 in, which is now within 0.01 in in 44 cases rather than 43.
+
+**`detection-counts.json`:**
+- **The punched scans:** each loses 1 to 4 holes and 2 to 8 split halves, and gains oversize flags, 54 to 72 per sheet against 7 to 13.
+- **Two clean photographs** lose detections: `main2` goes from 20 to 19 and `telephoto1` from 8 to 5.
+- **Printed artwork** did not change.
+
+**The local record:**
+- **The friend's scan** reads 13 holes without a calibre, the sigma fix without one.
+- **The friend's photograph** goes from 24 detections to 13.
+- **The oblique frames** go from 17 to 14 and from 18 to 13.
+
+**`ink-proximity.json`:** split halves on the real sheets fall from 34 to 2, and spurious detections from 20 to 3.
+
+**Tests:** Core 814 passing, App 43 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3607,3 +3744,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 80 section 2: the synthetic holes scaled to read like .308 on a scan, over reweighting the sweep.** A scale fixes what the holes are; a weight would only change how much a wrong population counts.
 - **Entry 80 section 2: no split threshold adopted, over adopting the survivor.** The only setting the real holes allow also changes the default without a calibre and moves committed synthetic records, and no real merged pair has been measured to say what it costs.
 - **Entry 78 section 2: the residue fix proposed and not built, over a plain elongation cap.** A cap alone would refuse two real holes joined by the closing, a silent loss, and the safe form depends on the threshold still open.
+- **Entry 81 section 2: the oversize flag rebuilt around a single-hole size, over keeping the median rule and lowering the calibre flag alone.** The median rule flagged ordinary holes on a tight sheet and let pairs through on a sheet full of them, so a calibre-only fix would have left the loud failure silent whenever no calibre is named.
+- **Entry 81 section 2: the single hole without a calibre is the sheet's 25th percentile mark, over its median.** On the composite sheets half the marks were merged pairs, and the median moved to a pair's size and flagged none of them.
+- **Entry 81 section 3: the residue fix on size and elongation together, over solidity.** Solidity overlaps across all three populations, real single holes reaching 0.59, while size splits the elongated ones cleanly.
+- **Entry 78 section 2: a small elongated blob kept as one hole below 2.2, over refusing every blob the size vetoes.** Refusing a real hole is a silent loss, and the margin between the most elongated real hole, 1.72, and the split threshold, 1.80, is too thin to refuse on.

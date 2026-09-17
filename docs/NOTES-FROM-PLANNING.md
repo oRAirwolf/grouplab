@@ -15,6 +15,75 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 81: question 17, and 1.80 goes in everywhere rather than only when a calibre is named
+
+**Status: actioned 2026-09-17.**
+- **Section 1:** the split elongation is 1.80 everywhere, and the single-hole size now applies without a calibre too, as the sheet's own 25th percentile mark. The synthetic records are re-recorded, with the reason in `PHASE1-RESULTS.md`.
+- **Section 2: pairs composited from Alan's real holes showed the gap was real.**
+  - Under the old flag, every pair 0.10 or 0.15 in apart was one unflagged mark.
+  - The flag is fixed: a whole mark of 1.35 single holes or more is flagged. Now all 78 such marks are flagged and no composite single hole is.
+  - On the real sheets, the new flag falsely flags 13 of 99 single holes without a calibre, 6 with one, almost all in the oblique frames.
+- **Section 3: solidity does not separate the three populations.** Real single holes go down to 0.59 and joined pairs to 0.70. Size does, where the shape asks for a split: spurious blobs hold at most 1.08 holes and joined pairs at least 1.80.
+  - Entry 78 section 2 is built on that: an elongated blob too small for two holes and at least 2.2 long is refused as residue.
+  - Without a calibre, it still cannot act on a sheet with fewer than five holes.
+- **Section 4:** recorded where the ratio is defined.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 81".
+
+Section 1 answers question 17 and disagrees with the recommendation attached to it. Section 2 is a test that fills the gap the answer depends on. Section 3 is a discriminator nobody has tried that the data already suggests.
+
+### 1. Adopt 1.80 everywhere, now
+
+Claude Code recommends 1.80 only when a calibre is named, and everywhere once a real merged pair has been measured. **I think it should go in everywhere immediately**, for four reasons, the last of which is the strongest.
+
+**The real holes veto, and that was the rule.** Entry 80 section 2 set it: synthetic material for coverage, real holes with the veto. **1.45 splits two real holes in two. 1.80 misclassifies none.** On the evidence that has authority under the rule we agreed, 1.45 is simply wrong and is shipping.
+
+**The two failure modes are not symmetric, and the quiet one is the one 1.45 causes.** Splitting a real hole invents a shot that was never fired. It raises the count, it inflated sigma from 0.390 to 0.607 on the one sheet where this was measured, and **two ordinary-looking marks on a torn hole give a person nothing to notice.** Failing to split a genuinely merged pair loses a shot and leaves one mark of roughly double area, which is the thing the size check exists to report. **A loud failure is worth several quiet ones.**
+
+**The case for 1.45 rests on five synthetic pairs, on the population entry 80 just disqualified**, and on a mechanism that "almost never separates overlapping pairs by shape at any setting". Five pairs from a method that does not work on that case is not evidence against a threshold that no real hole disputes.
+
+**And splitting the rule by whether a calibre is named would create two detectors.** Entry 80 section 5 made the calibre a provenance field precisely because it already changes the answer. **Adding a second mechanism that also changes the answer, keyed off the same field, compounds exactly the problem that field was added to disclose.** One sheet would give different shot counts depending on whether somebody typed .308, for two unrelated reasons at once. One threshold, always.
+
+**On the committed synthetic records: re-record them.** A gate record that encodes a threshold known to cut real holes in half is not worth preserving, and `PHASE1-RESULTS.md` should say in one line why the synthetic figures moved.
+
+### 2. The gap this answer rests on, and how to close it this week
+
+My second reason assumes a merged pair is reported as oversized. **Claude Code says plainly that this is not scored, so I am leaning on an unverified property**, which is the error I have made repeatedly this week. It needs measuring rather than assuming.
+
+**There is no real merged pair in the corpus and one does not need to be shot.** Composite one from real holes: take two real hole images from the scans, at their real scale and texture, and overlay them at a range of centre separations from touching to heavily overlapped. **That is synthetic geometry with real texture, which is much closer to the truth than the synthetic holes entry 80 disqualified**, and it is honest as a bridge rather than as a substitute.
+
+Score two things across that range:
+
+1. **Does 1.80 leave the pair as one mark**, and from what separation onwards.
+2. **Is that mark flagged oversized**, which is the whole basis for calling this the loud failure.
+
+**If merged pairs are not reliably flagged, that is what to fix**, and not by reverting the threshold, because reverting reinstates a defect that is measured against real holes in exchange for one that is not.
+
+### 3. Solidity separates better than elongation and is not being used
+
+Entry 78 section 2's photograph numbers:
+
+| | Elongation, median | Solidity, median |
+|---|---|---|
+| Spurious blobs | 4.6 | **0.65** |
+| Real holes | 1.17, at most 1.67 | **0.95** |
+
+**The proposed fix uses elongation and size. It does not use solidity, and solidity is the cleaner signal here.** A real hole is a hole: near convex, 0.95. A split fragment is a crescent or a sliver, 0.65.
+
+**Elongation has a known trap that solidity may not share.** Two real holes joined by the closing step reach about 2.6, which is why a plain elongation cap could silently drop them, and that is the reason the proposal has to add a size veto at all. **A pair of joined round holes is still a reasonably convex shape**, so solidity may not fall for them the way elongation does.
+
+**Measure it before believing it.** Report the full distributions, not medians, of elongation and solidity for three populations: spurious split halves, real single holes, and real pairs joined by closing. **Then pick whichever gives a clean gap**, or both. If solidity separates all three cleanly, the fix is simpler than the proposal and does not need the size veto to carry it.
+
+### 4. The two-sheet ratio is good enough for this job and not for the next one
+
+Alan's sheet 0.952, the friend's 0.934, pooled 0.944, and two sheets cannot settle it.
+
+**That limitation does not block anything here**, and it is worth saying so before it becomes a reason to wait. **The ratio is being used to tell one hole from two, which is a factor-of-two judgement.** An error of a few percent in 0.944 cannot flip it. Two sheets is ample.
+
+**It would not be ample for anything that needs the absolute size**, such as reporting a measured calibre back to the person or comparing hole sizes between loads. **Record the distinction where the ratio is defined**, so that the next use of it does not inherit a precision that was never established.
+
+---
+
 ## 2026-09-17, entry 80: the split fix lands on truth, and the sweep about to set its thresholds is running on the wrong population
 
 **Status: actioned 2026-09-17, with the split threshold put to planning as question 17.**
