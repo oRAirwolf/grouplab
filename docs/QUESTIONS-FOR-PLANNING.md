@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-17, question 16: the printed name cannot go on the caption line without hiding holes on sheets already printed
 
-**Status: open.** Blocks entry 76 section 4's printed name, and the print-note exclusion described in section 4 below. Nothing else waits.
+**Status: answered 2026-09-17**, by NOTES-FROM-PLANNING.md entry 77 section 5. The name goes outside the analysed region, so it needs no exclusion box; a sheet with no such place carries no name. No box is added over the print note.
 
 ### 1. What entry 76 section 4 asked
 

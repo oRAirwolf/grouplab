@@ -3029,6 +3029,188 @@ Each frame's 25 scoring bulls are shown under both models. Error is in thousandt
 
 ---
 
+## Entry 77. What the zones swallow, a standing check on printed artwork, and one test for three symptoms
+
+`docs/NOTES-FROM-PLANNING.md` entry 77, in the order Alan set:
+- section 3, both items;
+- section 4's test, with no symptom fixed on its own;
+- section 5's decisions;
+- section 2 recorded.
+
+### Section 3 item 1: the count of what the zones swallow
+
+**What changed.** A blob refused only because it lies inside an exclusion zone now carries that zone's name. It has passed every size, compactness and shape filter a hole must pass. `RenderDifferenceResult.InsideZones` lists these blobs.
+
+**Where the count shows.**
+- **The S5-S8 stage** records the count as a metric, and its line always states it: "15 holes inside the registered sheet, 32 candidates rejected, 0 of them hole-sized inside exclusion zones". A detail line names each zone and how many it took.
+- **The marking screen's summary** adds the count whenever it is not zero.
+- **The stage record** also gains `split halves` and `oversized` metrics, which the standing check below reads.
+
+**What the corpus shows.**
+- **Clean 300 and 600 DPI scans:** 0.
+- **Clean Phase 0 photographs:** 1 to 18.
+- **The friend's scan:** 2. Both are inside the top right code at (7.869, 0.626) and (7.544, 0.783) in. A crop shows no hole there, only code residue.
+- **Alan's scan:** 0.
+- **The six mounted frames:** 1, 1, 6, 6, 7, and 0 for `IMG_5823`.
+
+**What it would have said about entry 76's caption change.** The change was re-applied on a scratch basis and then removed again.
+- **Holes:** 15 → 13.
+- **Hole-sized candidates inside zones:** 0 → 1.
+- **Split halves:** 2 → 0.
+
+**One swallowed blob held both lost detections.** They were the halves of a single blob: the real sighter hole at (3.070, 10.573) in, joined to the print note's residue at (2.909, 10.784) in. The count would have announced that as a number.
+
+### Section 3 item 2: the corpus comparison is now a standing check
+
+**`grouplab corpus counts [--local <manifest>] [--write]`** runs every corpus image through the automatic path. For each image it prints:
+- holes;
+- rejected candidates;
+- candidates inside zones;
+- split halves;
+- oversized holes.
+
+**It compares them with a record, `before->after` wherever they differ.** It exits 1 when anything differs, until the change is recorded with `--write`.
+
+**What makes it standing.**
+- **Every record carries the artwork it was measured against.** That is `ArtworkFingerprint`: a SHA-256 of each definition's PDF, with and without the actual-size sentence, over every file under `targets/`, frozen ones included.
+- **`ArtworkFingerprintTests` fails** as soon as the renderer prints something the record was not measured against. Its message says to run the command, compare the counts, and record them.
+- **So artwork cannot change** without the comparison being run.
+
+**The committed corpus is `scans/phase1/measurements/detection-counts.json`.** It holds the 37 Phase 0 images, sheets printed before any change since, and 18 punched runs.
+- **The punched runs need explaining.** The Phase 0 sheets have no holes, so on their own they could not see the caption change: every count stayed the same.
+- **How a scan is punched.** Each 300 DPI letter scan is punched through its own registration by `SyntheticSheet.Punch`, with synthetic holes 150 dmm apart over the whole page, printed matter included.
+- **Why three grids.** One grid did not cross the caption either. So each scan is punched three times, from 25, 75 and 125 dmm, which puts a row every 50 dmm across the three without crowding any one.
+- **With the caption change re-applied, the committed corpus alone now catches it.**
+  - Six punched runs change. Hole-sized candidates inside zones rise by 2 on each letter sheet and by 4 on each load-block sheet.
+  - One run loses two holes, 163 → 161.
+
+**A local corpus stays outside the repository.** It is a manifest of images that cannot be committed, `C:\Dev\grouplab-local\corpus.json` here.
+- **What it lists:** Alan's scan, the six mounted frames, and the friend's scan and photograph.
+- **Where its record goes:** it is written beside the manifest, with images named by label rather than by path.
+- **Definitions:** `IMG_5823` and the friend's photograph have codes that cannot be read, so their definition is named.
+
+**This check ran on section 5's name change,** reported below.
+
+### Section 4: the three symptoms do not rise together, and there are two mechanisms, not one
+
+**The harness is `grouplab holes ink-proximity [--local <manifest>] [-v]`.** For every detection it measures how far the centre is from the nearest printed edge. There are two kinds of edge:
+- **Artwork:** the ink-to-paper edges of the expected render, at 1 px per dmm.
+- **Text,** which the expected render does not draw: bull numbers, the identifier and the print note. For text the distance is to each run's glyph box.
+
+**Truth.**
+- **Clean Phase 0 images:** no holes, so every detection is spurious.
+- **The 18 punched runs:** the holes are known.
+- **Alan's sheet and the friend's sheet:** 14 and 13 holes, verified by hand against crops.
+  - The scan and the six mounted frames are one sheet.
+  - A hole seen twice is entered once.
+  - Both sheets carry the print note.
+
+**The outcome definitions.**
+- **Spurious:** no true hole within 0.15 in.
+- **Split:** the same true hole is also another detection's nearest.
+- **Oversized,** measured three ways:
+  - the detector's diameter against the image's own clear holes, at 1.25 times;
+  - the detector's own flag;
+  - the marking screen's size check, `HoleSize`'s apparent extent. That is what entry 73 section 2 saw. On the real sheets it is compared with a .308 hole plus allowance, 0.441 in. On punched holes it is normalised by clear holes.
+
+**The committed rows are in `scans/phase1/measurements/ink-proximity.json`.**
+
+| Distance to nearest printed edge (in) | Punched: detections | spurious | split | oversized | size check | Real: detections | spurious | split | oversized | size check |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 to 0.02 | 500 | 0% | 1% | 2% | 78% | 27 | 44% | 4% | 0% | 100% |
+| 0.02 to 0.05 | 358 | 1% | 1% | 1% | 53% | 21 | 29% | 5% | 0% | 92% |
+| 0.05 to 0.10 | 636 | 0% | 2% | 2% | 56% | 33 | 0% | 12% | 13% | 94% |
+| 0.10 to 0.20 | 867 | 1% | 1% | 1% | 14% | 28 | 0% | 18% | 0% | 0% |
+| 0.20 and over | 450 | 0% | 2% | 4% | 2% | 24 | 8% | 4% | 0% | 0% |
+
+**The clean photographs' 64 detections all lie within 0.1 in of a printed edge:** 34, 14 and 16 in the first three bins. The detector's own flag stays between 3% and 7% in every bin.
+
+**A hole about 0.3 in across overlaps ink well before its centre reaches the ink,** so the same detections were also split by whether their own extent overlaps printed ink.
+
+| | Punched, overlapping ink | Punched, clear | Real, overlapping ink | Real, clear |
+|---|---|---|---|---|
+| Detections | 2147 | 664 | 93 | 40 |
+| Spurious | 1% | 1% | 19% | 5% |
+| Split | 1% | 2% | 6% | 15% |
+| Oversized, detector diameter | 3% | 0% | 4% | 0% |
+| Oversized, detector flag | 7% | 1% | 1% | 0% |
+| Oversized, size check | 41% | 2% | 86% | 0% |
+
+**The answer: spurious detections rise toward printed ink, and splits do not.** The detector's own diameter barely moves. The screen's size check rises steeply. So the three are not one defect in the difference stage.
+
+**What they do share is sharper than proximity.**
+- **Every spurious detection in the corpus is a split half.** That is 101 of 101: 64 on clean photographs, 20 on real sheets and 17 punched. They are halves of a blob that stage S8's merged-neighbour split cut in two.
+- **So is every real hole detected twice:** 12 of 12 halves on the real sheets.
+- **How the split path lets them through.** It exempts a blob from the size and aspect filters once its elongation reaches 1.45. Elongated residue therefore becomes two holes instead of being refused: a printed edge's sliver in a photograph, text the expected render does not draw, or a hole joined to either.
+- **How often the split is right.** Across the corpus it cut 109 pairs, and was right on 25:
+
+| Where | Pairs | Two real neighbours | One hole twice | One hole and residue | No hole at all |
+|---|---|---|---|---|---|
+| Punched | 60 | 25 | 18 | 17 | 0 |
+| Real | 17 | 0 | 6 | 2 | 9 |
+| Clean photographs | 32 | 0 | 0 | 0 | 32 |
+
+- **Why spurious detections still correlate with distance.** Residue lives on printed edges, so the split halves do too: 48 of 64 on clean photographs and 20 of 34 on real sheets are within 0.05 in.
+
+**The screen's oversize warnings are a second mechanism, in the size check rather than the detector.**
+- **The cause.** `HoleSize` measures the dark region connected to the hole, and printed ink touching a hole is dark and connected. The extent therefore includes the ring.
+- **The contrast.** On the same detections the difference stage's own diameter is close to flat, 3% against 0%. The size check is 41% against 2%, and 86% against 0% on real sheets.
+- **How this fits entry 73 section 3.** Ink does not move centres there, and here it does not inflate the detector's segmentation either. It inflates the screen's measurement.
+
+**Conclusion: two defects, not one and not three.**
+- **The first is the split path:** spurious detections and holes found twice. The friend's σ of 0.607 in against 0.390 in comes from it.
+- **The second is the size check reading printed ink as hole:** the oversize warnings.
+
+**Nothing was fixed**, as section 4 asked.
+
+**Limits of the test.**
+- **Distance is measured from a detection's centre,** and to text by glyph box rather than glyph.
+- **The punched holes are synthetic,** on scans only.
+- **The real truth comes from two sheets,** 27 holes in all.
+- **The committed Phase 0 images carry no print note,** so text there is bull numbers and the identifier only.
+
+**A separate finding.** `IMG_5823` registers with its definition named, and then finds 2 detections, both spurious, where the sheet has 14 holes. It is the most oblique of the six frames. Every one of its holes is missed, which this test does not count.
+
+### Section 5: the decisions
+
+**The printed name is outside the analysed region, and it needs no box.**
+- **The shared rule.** `BullCells`, now shared by the detector and the renderer, is the one region render-and-difference looks for holes in.
+- **Where the name goes.** It reads name, middle dot, identifier, centred in the top margin, its glyph box starting at the codes' 136 dmm margin, at 25 dmm. It shrinks to no less than 12 dmm.
+- **When it is left off.** It is drawn only where it stays 60 dmm from every cell and 30 dmm from everything else printed, and nowhere else.
+- **The 60 dmm clearance.** A hole centred on a cell's edge reaches about 40 dmm past it, and the closing joins residue within about 28 dmm.
+- **The result on the built-in sheets.** Every sheet carries the name at 25 dmm except the tiles, the four built-in tile files and the frozen Phase 0 tile, whose cells cover the page; they print none.
+- **What stays where it was.** The identifier caption at the bottom and the print note are unchanged, and no exclusion zone was added or widened.
+
+**What the standing check said about it.**
+- **Committed corpus:** 55 of 55 images unchanged.
+- **Local corpus:** all 9 unchanged in every count.
+- **Artwork:** 25 definitions changed, as expected.
+- **Its own test.** `PrintedNameTests` prints Letter both ways through PDFium, so the text is on the paper, and punches both identically, with a hole inside each top-row cell under the name. Render-and-difference finds every hole, at the same places with the name as without, and swallows nothing more.
+- **Recorded in:** `docs/SPEC-ERRATA.md` C6.
+
+**The print note has no new box.** The Alan's scan case above shows why: the note's residue and a real hole were one blob. A box would have hidden the residue in the same way the caption box hid the hole.
+
+**Split holes are section 4's third row,** investigated there with the other two.
+
+**Hand-placed shots keep the calibre ring,** as accepted.
+
+**Cancel now names its worst case.**
+- **What it says.** Pressing it disables the button and reads "Cancelling. The step in progress finishes first, which can take up to about 6 seconds on a 600 DPI scan."
+- **Where the 6 seconds comes from.** The longest stage measured is hole detection on Alan's 35 megapixel scan, at 5.6 s.
+
+### Section 2, recorded: the angled frames are focus-limited, and the gate is still unexplained
+
+**Entry 76 section 3 here said the cause is optical and meeting the gate becomes a photography instruction. That holds for the angled frames only.**
+- **The angled frames.** Entry 77 section 1's depth of field arithmetic explains them: at about 310 mm, 26 mm of sharpness cannot cover the 148 mm an A4 sheet at 30 degrees spans.
+- **The square-on frames.** `IMG_5820` at 0.0053 in and `IMG_5819` at 0.0059 in are the two closest to the 0.005 in gate. A square-on sheet has almost no depth range, so focus is not what holds them outside it.
+- **What limits them is not identified.**
+- **The instruction, stated honestly, is a distance, not an angle.** `DESIGN.md`'s photograph gate is deliberately off-axis.
+- **The prediction to check.** An off-axis frame taken from about 750 mm comes inside the gate where the same angle at 310 mm cannot. That needs one more photograph session with Alan's sheet.
+
+**Tests:** Core 808 passing, App 42 passing, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -3189,3 +3371,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 76 section 1: the aspect's null integrated exactly, over a simulated table.** The density has a closed form for every n, so there is no table to extend or to seed.
 - **Entry 76 section 2: the two split detections merged at their midpoints for the re-run, over the pipeline's figures or hand-picked positions.** The pipeline's figures count one hole twice, and the midpoint uses only what the pipeline found, which is the question entry 76 asked.
 - **Entry 75: a shot with no bull named "unassigned, at x, y" in the list, over "unassigned" alone.** Two such shots would otherwise read the same, and the position is a fact the screen has, not an order.
+- **Entry 77 section 3 item 1: a blob counted as swallowed only when it passed every shape filter, over every blob centred in a zone.** Printed matter leaves residue that the size and shape filters refuse anyway, and counting it would bury the one number that means a hole may have been lost.
+- **Entry 77 section 3 item 2: the check made standing by an artwork fingerprint test, over running the corpus inside the test suite.** The corpus takes minutes and its counts differ by platform. The fingerprint is fast and exact on every platform, and it forces the comparison to be run where it can be.
+- **Entry 77 section 3 item 2: the committed corpus punched with synthetic holes on three offset grids, over committing a real shot sheet.** No shot sheet has consent to be committed, and the Phase 0 scans are real print made before every change since.
+- **Entry 77 section 4: oversize measured three ways, over the detector's diameter alone.** Entry 73's warnings came from the screen's size check, which is a different measurement, and the test had to see the one that was reported.
+- **Entry 77 section 5: a sheet with no clear place prints no name, over shrinking the name further or trying another margin.** Section 5 states the rule. One place with one clearance is also what the placement test can check on every sheet.
+- **Entry 77 section 5: the identifier caption left at the bottom beside the new name line, over moving it.** It is C6's recovery path, and its zone is what every sheet already printed is read with.

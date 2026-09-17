@@ -15,6 +15,118 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-17, entry 77: depth of field explains the angled frames and does not explain the gate, and the exclusion box nearly ate a real shot
+
+**Status: actioned 2026-09-17.**
+- **Section 3 item 1:** a blob refused only for lying inside an exclusion zone is counted, and the S5-S8 stage line always states the count. It would have shown entry 76's caption change as one swallowed blob that held both lost detections.
+- **Section 3 item 2:** `grouplab corpus counts` compares detection counts with a record that carries each definition's artwork fingerprint, and a test fails whenever the printed artwork no longer matches.
+  - The committed corpus is the Phase 0 set plus 18 runs of its 300 DPI letter scans punched with synthetic holes. On its own it now catches the caption change.
+  - A local manifest holds the real shot sheets outside the repository.
+- **Section 4: the three do not rise together.**
+  - **The first mechanism is S8's merged-neighbour split.** Every spurious detection in the corpus, 101 of 101, is a split half, and so is every real hole detected twice. Spurious detections rise toward ink because the residue lives there; splits do not rise.
+  - **The second is the marking screen's size check,** which reads printed ink joined to a hole. The detector's own diameter barely moves. Nothing was fixed.
+- **Section 5:**
+  - The name reads name, middle dot, identifier, in the top margin, only where it is 60 dmm from every cell and 30 dmm from everything printed. The tiles carry none.
+  - The standing check showed every count unchanged.
+  - No box was added over the print note.
+  - Cancel names its worst case, about 6 seconds on a 600 DPI scan.
+- **Section 2:** recorded. The angled frames are focus-limited; the square-on frames are not, and the gate is still unexplained.
+
+Reported in `docs/PHASE1-RESULTS.md` "Entry 77".
+
+Section 1 is a measurement that turns "meeting the gate is a photography instruction" into an instruction with numbers, and then takes most of it back. Section 2 is a near-miss that should change how printed artwork is changed. Section 4 answers question 16 and the other decisions.
+
+### 1. The out-of-focus corner is forced by the optics, and I can say by how much
+
+The far corner being soft is not bad luck. **At the distance these were shot from, it could not have been sharp.**
+
+Measured from `IMG_5820` itself rather than assumed: the sheet spans 3647 of 5712 pixels, which at a 35 mm equivalent of 24 mm puts the camera at **about 310 mm from the paper**, giving **312 pixels per inch**.
+
+**Depth of field at that distance, for the iPhone 17 Pro main camera at f/1.78:**
+
+| Distance | Depth of field, 2-pixel criterion |
+|---|---|
+| **310 mm, as shot** | **26 mm** |
+| 500 mm | 67 mm |
+| 750 mm | 150 mm |
+| 1000 mm | 266 mm |
+
+**And the depth an angled sheet occupies:**
+
+| A4 tilted | Depth range across the sheet |
+|---|---|
+| 15 degrees | 77 mm |
+| **30 degrees** | **148 mm** |
+| 45 degrees | 210 mm |
+
+**At 310 mm and 30 degrees, 26 mm of sharpness has to cover 148 mm of sheet.** About a sixth of the paper can be in focus. The far corner's markers failing to decode is the arithmetic, not an accident.
+
+**The distance that fixes it is about 750 mm**, roughly 30 inches, where depth of field just covers a 30 degree tilt. **Resolution there falls to 129 pixels per inch**, which is still comfortably above anything the markers need.
+
+Assumptions, because they matter: a 2-pixel circle of confusion, chosen because this is corner localisation rather than a pleasing picture, and sensor dimensions inferred from the 24 mm equivalent and the 6.765 mm actual focal length rather than measured. **A pictorial criterion would be two and a half times more generous and would still not save 310 mm at 30 degrees.**
+
+### 2. And none of that explains the gate, which is the part I want to be careful about
+
+Claude Code's conclusion was that the cause is optical and meeting the gate becomes a photography instruction. **That is right for the angled frames and it is not right for the gate.**
+
+**The two square-on frames are the ones closest to passing, at 0.0053 and 0.0059 in.** A square-on sheet has almost no depth range, so depth of field is not what limits them. **Whatever is holding the best frame 6 percent outside 0.005 in, it is not focus.**
+
+So the picture splits in two and the halves need different work:
+
+- **The angled frames are focus-limited**, quantified above, and that is now a shooting instruction rather than an open question.
+- **The square-on frames are limited by something unidentified**, and they are the ones at the gate.
+
+**There is also a tension worth stating rather than stepping around.** `DESIGN.md`'s photograph gate is deliberately an **off-axis** photograph, because that is what a shooter actually takes. "Shoot square" removes the problem by removing the test. **The honest form of the instruction is a distance, not an angle**, and the prediction to check is that an off-axis frame taken from about 750 mm comes inside the gate where the same angle at 310 mm cannot.
+
+**That is one more photograph session and it would settle a question the corpus has never been able to answer.** It also needs no new shooter: the sheet is still in Alan's hands.
+
+### 3. The exclusion box swallowed a real hole, and the next one will too
+
+Adding the printed name widened the exclusion box over the caption, and on the existing scan **the wider box hid a real sighter hole: 15 detections became 13.** It was caught, reverted, and it should not be filed as a near-miss and forgotten.
+
+**An exclusion box does not solve a detection problem, it converts it into a blindness problem.** Anything inside is invisible, and a shot that lands there is dropped from every statistic with nothing on screen to say so. That is the worst failure this pipeline can have, because a missing shot is silent and a wrong shot is not.
+
+**So the proposal to add another box over the "Print at actual size" sentence is the wrong reflex**, even though it would remove the false detection. It is the same mechanism that just lost a real hole, applied a second time.
+
+**Two things regardless of what else is decided:**
+
+1. **Report what the boxes swallow.** The pipeline should count candidate blobs falling inside exclusion regions and say so. A swallowed hole then appears as a number rather than as nothing, and the near-miss above would have announced itself instead of needing to be noticed.
+2. **Make the accident into a standing check.** Any change to printed artwork re-runs the corpus and compares detection counts before and after. Claude Code ran that test by chance and it is the only reason the change was reverted.
+
+### 4. Three symptoms on printed ink, and a single test that would say whether they are one thing
+
+Three separate findings this week all sit on printed ink:
+
+| Symptom | Where |
+|---|---|
+| Marks reading 0.5 to 0.6 in against a 0.441 in bullet hole | entry 73 section 2, five shots, all touching ring lines |
+| A false detection with no hole under it | the "Print at actual size" sentence |
+| **One hole detected twice**, giving sigma 0.607 in where the truth is 0.390 in | bulls 3 and 10 on the friend's earlier sheet |
+
+**That last one is a 55 percent error in the headline statistic**, which makes it the most serious detector defect currently known.
+
+**Entry 73 section 3 already told us something precise about the shape of this.** Flagged marks sit 0.017 in from their hole's own centre against 0.019 in for unflagged ones. **So ink does not move centres. It breaks segmentation**: sizes, splits, and spurious blobs. That is one mechanism, not three, and it narrows the search a great deal.
+
+**The test, on data already in hand:** over the whole corpus, measure each detection's distance to the nearest printed edge in the expected artwork, and plot oversize, split and spurious rates against it. **If all three rise together as that distance goes to zero, they are one defect in the difference stage** and the fix is there rather than in three places. If they do not, they are three defects and each needs its own.
+
+**Do this before fixing any of them individually.** Three separate fixes to one cause is how a detector becomes untunable.
+
+### 5. Question 16 and the remaining decisions
+
+**The printed name: outside the analysed region entirely, not in a larger box.** Claude Code's margin recommendation is right and the reason is stronger than stated. A name inside the region needs an exclusion box, an exclusion box is what section 3 just described, and the margin removes the need for one. **If the name cannot go somewhere no box is required, it does not go on the sheet.** Name first and identifier second on that line, as entry 76 section 4 said.
+
+**Every sheet already printed still reads correctly**, which is the property that makes the margin the answer rather than a compromise.
+
+**The print-note false detection: no new box.** Section 4's test first. If the residue turns out to be general, the box would have hidden one instance of a problem that is on every sheet.
+
+**Split holes: yes, its own entry, and it is section 4's third row.** It should be investigated with the other two rather than alone.
+
+**Hand-placed shots keeping the calibre ring: accept, and it is correct rather than a limitation.** A hand-placed mark makes no measurement, so it should make no size claim, and the calibre ring says what a bullet of that calibre would measure. That is the right thing to draw.
+
+**Cancel taking effect between stages: accept.** Name the worst-case wait in the progress text so a person watching a long stage knows the button worked. A Cancel that looks ignored is worse than a slow one.
+
+---
+
 ## 2026-09-17, entry 76: the ellipse aspect needs its null, entry 56 lost its only real corroboration, and five decisions
 
 **Status: actioned 2026-09-17, except section 4's printed name, which is question 16.**
