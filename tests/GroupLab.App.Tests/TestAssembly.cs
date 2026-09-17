@@ -4,3 +4,18 @@
 // named the wrong action on one CI platform or another (NOTES-FROM-PLANNING.md entry 41 section 5). The Avalonia tests were already
 // serialised on the UI thread, so this costs little.
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
+
+namespace GroupLab.App.Tests
+{
+    using System.Runtime.CompilerServices;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: the window detects on opening an image, which in a test would load marks behind the test's
+    /// back. Off unless a test turns it on for its own window.
+    /// </summary>
+    internal static class TestDefaults
+    {
+        [ModuleInitializer]
+        internal static void Initialise() => GroupLab.App.MainWindow.DetectOnOpenByDefault = false;
+    }
+}

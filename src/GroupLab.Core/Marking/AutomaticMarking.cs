@@ -40,11 +40,17 @@ public static class AutomaticMarking
     /// Where each stage records what it did (DESIGN.md section 19 [r3]); registration's stages come from <see cref="SheetMeasurer"/>,
     /// and the hole detection and assignment stages are recorded here.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null)
+    /// <param name="cancellation">
+    /// Checked between the stages, so a screen can stop a detection it started on its own (NOTES-FROM-PLANNING.md entry 76 section 4). A stage
+    /// already running finishes first.
+    /// </param>
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(definition);
+        cancellation.ThrowIfCancellationRequested();
         trace ??= new Trace.TraceRecorder();
         var measurement = SheetMeasurer.Measure(grey, metadata, definition, new MeasureOptions(), backend, trace);
+        cancellation.ThrowIfCancellationRequested();
         var fiducials = measurement.Fiducials;
         string markers = fiducials is null ? "no markers" : string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found");
         if (measurement.Registration is not { } registration || fiducials is null)
@@ -97,6 +103,7 @@ public static class AutomaticMarking
         var bullPages = definition.Bulls.Select(b => new PointD(b.X, b.Y)).ToList();
         var shotPages = holes.Holes.Select(h => mapping.ToPage(new PointD(h.X, h.Y))).ToList();
         ShotAssignmentResult assignment;
+        cancellation.ThrowIfCancellationRequested();
         using (var stage = trace.Begin("S9.assign"))
         {
             // Entry 73 section 1: sighter and scoring bulls are matched as separate pools, so a sighter's hole never lands on a scoring bull.

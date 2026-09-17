@@ -342,6 +342,91 @@ public class MarkingScreenTests
         }
     }
 
+    /// <summary>Waits for the window's detection, pumping the UI thread its continuations run on.</summary>
+    private static void Pump(MainWindow window)
+    {
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        while (window.DetectionTask is { IsCompleted: false } && clock.Elapsed < TimeSpan.FromSeconds(120))
+        {
+            Dispatcher.UIThread.RunJobs();
+            Thread.Sleep(10);
+        }
+
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(window.DetectionTask is { IsCompleted: true }, "the detection did not finish");
+    }
+
+    /// <summary>A rendered GL-CF25-LTR, written as an image file, for the tests that need a sheet the application recognises.</summary>
+    private static string RenderedSheet()
+    {
+        var definition = GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Path.Combine(AppContext.BaseDirectory, "targets", "GL-CF25-LTR.gltd.json")).Definition!;
+        var sheet = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0], 300);
+        string path = Path.Combine(Path.GetTempPath(), $"grouplab-sheet-{Guid.NewGuid():N}.png");
+        using var mat = Mat.FromPixelData(sheet.Height, sheet.Width, MatType.CV_8UC1, sheet.Pixels);
+        Cv2.ImWrite(path, mat);
+        return path;
+    }
+
+    private static MainWindow DetectingWindow()
+    {
+        var window = NewWindow();
+        window.DetectOnOpen = true;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        return window;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: opening a GroupLab sheet detects on it without anybody asking, and opening an image that is not
+    /// one does nothing and says so, with no definition asked for.
+    /// </summary>
+    [AvaloniaFact]
+    public void OpeningARecognisedSheetDetectsAndAnythingElseSaysItWasNotDetected()
+    {
+        string sheet = RenderedSheet();
+        string plain = SyntheticTarget([(300, 300)]);
+        try
+        {
+            var window = DetectingWindow();
+            window.OpenImage(sheet);
+            Pump(window);
+            Assert.IsType<SheetReference>(window.Session.State.Scale);
+            Assert.NotNull(window.Session.State.RegistrationSummary);
+
+            window.OpenImage(plain);
+            Pump(window);
+            Assert.Null(window.Session.State.Scale);
+            Assert.Contains("not a GroupLab sheet GroupLab recognises", window.StatusText, StringComparison.Ordinal);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(sheet);
+            File.Delete(plain);
+        }
+    }
+
+    /// <summary>Entry 76 section 4: a detection started on opening can be cancelled, and then nothing of it is applied.</summary>
+    [AvaloniaFact]
+    public void ADetectionStartedOnOpeningCanBeCancelled()
+    {
+        string sheet = RenderedSheet();
+        try
+        {
+            var window = DetectingWindow();
+            window.OpenImage(sheet);
+            window.CancelDetection();
+            Pump(window);
+            Assert.Null(window.Session.State.Scale);
+            Assert.StartsWith("Detection cancelled", window.StatusText, StringComparison.Ordinal);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(sheet);
+        }
+    }
+
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 76 section 4: a detected shot's ring is the diameter the detector measured, in sheet units at any zoom, with
     /// the calibre's hole drawn beside it once a calibre is set; a shot placed by hand, which has no measurement, keeps the calibre ring, and

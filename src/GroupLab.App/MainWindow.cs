@@ -45,6 +45,11 @@ public sealed class MainWindow : Window
     private readonly MarkingCanvas canvas = new();
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
     private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+    // NOTES-FROM-PLANNING.md entry 76 section 4: a detection the window starts on its own shows that it is running and can be stopped.
+    private readonly ProgressBar detectionProgress = new() { IsIndeterminate = true, Width = 120, VerticalAlignment = VerticalAlignment.Center, IsVisible = false };
+    private readonly Button cancelDetection = new() { Content = "Cancel detection", Margin = new Thickness(Tokens.Space8, 2), IsVisible = false };
+    private CancellationTokenSource? detection;
+
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
     private readonly StackPanel statistics = new() { Spacing = 4 };
 
@@ -121,7 +126,7 @@ public sealed class MainWindow : Window
         var toolbar = new WrapPanel { Margin = new Thickness(Tokens.Space8, Tokens.Space6), Orientation = Orientation.Horizontal };
         toolbar.Children.Add(Button("Open image", async () => await OpenImageDialog()));
         toolbar.Children.Add(Button("Open marking", async () => await OpenMarkingDialog()));
-        toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await DetectDialog()));
+        toolbar.Children.Add(Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false)));
         toolbar.Children.Add(Button("Print a target", () => new PrintWindow().Show()));
         toolbar.Children.Add(new Separator { Width = 12 });
         foreach (var (tool, label) in new[] { (MarkingTool.Pan, "Pan (P)"), (MarkingTool.Length, "Scale: length (L)"), (MarkingTool.Rectangle, "Scale: rectangle (R)"), (MarkingTool.Aim, "Point of aim (A)"), (MarkingTool.Impact, "Impact (I)"), (MarkingTool.Select, "Select (V)") })
@@ -206,7 +211,13 @@ public sealed class MainWindow : Window
         // Entry 42 section 4: the bar across the top, a right column 372 wide, and a status line, each separated by one pixel of line.
         var bar = new Border { Child = toolbar, Classes = { AppStyles.Bar } };
         var side = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = panel }, Classes = { AppStyles.Side } };
-        var statusBar = new Border { Child = status, Classes = { AppStyles.StatusBar } };
+        cancelDetection.Click += (_, _) => CancelDetection();
+        var statusLine = new DockPanel();
+        var running = new StackPanel { Orientation = Orientation.Horizontal, Children = { detectionProgress, cancelDetection } };
+        DockPanel.SetDock(running, Dock.Right);
+        statusLine.Children.Add(running);
+        statusLine.Children.Add(status);
+        var statusBar = new Border { Child = statusLine, Classes = { AppStyles.StatusBar } };
         var dock = new DockPanel();
         DockPanel.SetDock(bar, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
@@ -434,7 +445,22 @@ public sealed class MainWindow : Window
         }
 
         Refresh();
+        if (DetectOnOpen)
+        {
+            DetectionTask = Detect(automatic: true);
+        }
     }
+
+    /// <summary>Whether opening an image runs detection on it, NOTES-FROM-PLANNING.md entry 76 section 4. The headless tests turn it off by default.</summary>
+    internal static bool DetectOnOpenByDefault { get; set; } = true;
+
+    internal bool DetectOnOpen { get; set; } = DetectOnOpenByDefault;
+
+    /// <summary>The detection started last, for the headless tests to wait on.</summary>
+    internal Task? DetectionTask { get; private set; }
+
+    /// <summary>Stops the detection in progress at its next stage; what it had not yet applied is dropped.</summary>
+    internal void CancelDetection() => detection?.Cancel();
 
     /// <summary>
     /// Reopens a saved marking: its image, its marks, and the view turned the way it was left (NOTES-FROM-PLANNING.md entry 26 point 4).
@@ -541,11 +567,16 @@ public sealed class MainWindow : Window
     }
 
     /// <summary>
-    /// The automatic path for a GroupLab sheet: choose the sheet's definition, then register, detect and assign on a background thread,
-    /// and load the result as ordinary marks the user can correct. A failure is shown as a prominent message, never only in the trace
-    /// (DESIGN.md section 19).
+    /// The automatic path for a GroupLab sheet: the sheet names its definition, then registration, detection and assignment run on a
+    /// background thread, and the result loads as ordinary marks the user can correct. A failure is shown as a prominent message, never only
+    /// in the trace (DESIGN.md section 19).
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: opening an image runs this on its own. When the image is not a sheet GroupLab recognises it
+    /// does nothing and says so, rather than asking for a definition; the button runs it again and still asks. While it runs the status line
+    /// shows it and it can be cancelled. Opening another image cancels it, and a result for an image no longer open is never applied.
+    /// </para>
     /// </summary>
-    private async Task DetectDialog()
+    private async Task Detect(bool automatic)
     {
         if (grey is null || valueImage is null || metadata is null)
         {
@@ -553,27 +584,56 @@ public sealed class MainWindow : Window
             return;
         }
 
-        status.Text = "Reading the sheet's codes…";
+        detection?.Cancel();
+        using var cancel = new CancellationTokenSource();
+        detection = cancel;
+        var token = cancel.Token;
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
-
-        // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
-        CrashReporter.InFlight = trace;
-        SheetIdentity identity;
+        detectionProgress.IsVisible = cancelDetection.IsVisible = true;
         try
         {
-            identity = await Task.Run(() => SheetIdentification.Identify(g, ShippedDefinitions(), new OpenCvSharpBackend(), trace));
+            await Detect(automatic, g, v, m, trace, clock, token);
+        }
+        catch (OperationCanceledException)
+        {
+            DiagnosticLog.Info("detect.cancel", ("automatic", automatic));
+            if (ReferenceEquals(g, grey))
+            {
+                status.Text = "Detection cancelled. Choose Detect on a GroupLab sheet to run it again.";
+            }
         }
         finally
         {
             CrashReporter.InFlight = null;
+            if (ReferenceEquals(detection, cancel))
+            {
+                detection = null;
+                detectionProgress.IsVisible = cancelDetection.IsVisible = false;
+            }
         }
+    }
 
-        DiagnosticLog.Info("detect.identify", ("definition", identity.DefinitionId), ("tile", identity.TileIndex), ("codes", identity.CodesRead), ("failure", identity.Failure));
+    private async Task Detect(bool automatic, GrayImage g, GrayImage v, ImageMetadata m, TraceRecorder trace, System.Diagnostics.Stopwatch clock, CancellationToken token)
+    {
+        status.Text = "Reading the sheet's codes…";
+
+        // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
+        CrashReporter.InFlight = trace;
+        var identity = await Task.Run(() => SheetIdentification.Identify(g, ShippedDefinitions(), new OpenCvSharpBackend(), trace, token), token);
+        CrashReporter.InFlight = null;
+        token.ThrowIfCancellationRequested();
+        DiagnosticLog.Info("detect.identify", ("definition", identity.DefinitionId), ("tile", identity.TileIndex), ("codes", identity.CodesRead), ("failure", identity.Failure), ("automatic", automatic));
 
         // Entry 35 section 6 item 3: the sheet names its own definition, and only when its codes cannot is the user asked for one.
-        if (identity.Definition is not { } definition)
+        if (identity.Definition is null && automatic)
+        {
+            status.Text = $"Nothing detected: this image is not a GroupLab sheet GroupLab recognises ({identity.Failure}). Set a scale and mark it by hand, or choose Detect on a GroupLab sheet if it is one.";
+            return;
+        }
+
+        if (identity.Definition is not { } named)
         {
             status.Text = $"The sheet's codes did not give its definition: {identity.Failure}. Choose the definition.";
             DiagnosticLog.Info("dialog.open", ("dialog", "definition"));
@@ -595,23 +655,19 @@ public sealed class MainWindow : Window
                 return;
             }
 
-            definition = chosen;
+            named = chosen;
         }
 
-        status.Text = "Registering and detecting…";
+        status.Text = automatic ? $"Recognised {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
-        AutomaticResult result;
-        try
-        {
-            result = await Task.Run(() => AutomaticMarking.Run(g, v, m, definition, new OpenCvSharpBackend(), trace));
-        }
-        finally
-        {
-            CrashReporter.InFlight = null;
-        }
-
+        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token), token);
+        CrashReporter.InFlight = null;
+        token.ThrowIfCancellationRequested();
         LogDetection(result, trace, clock.ElapsedMilliseconds);
-        ApplyDetection(result);
+        if (ReferenceEquals(g, grey))
+        {
+            ApplyDetection(result);
+        }
     }
 
     /// <summary>

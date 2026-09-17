@@ -43,7 +43,8 @@ public static class SheetIdentification
     /// </summary>
     public const int MaximumWorkingSide = 8000;
 
-    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace)
+    /// <param name="cancellation">Checked before each resolution is read, so a screen can stop a long identification (NOTES-FROM-PLANNING.md entry 76 section 4).</param>
+    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
@@ -56,6 +57,7 @@ public static class SheetIdentification
         int read = 0;
         foreach (double scale in Scales)
         {
+            cancellation.ThrowIfCancellationRequested();
             if (Math.Max(image.Width, image.Height) * scale > MaximumWorkingSide)
             {
                 stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: skipped, which would make the image longer than {MaximumWorkingSide} px"));
