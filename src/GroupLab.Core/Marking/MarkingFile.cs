@@ -65,6 +65,7 @@ public static class MarkingFile
                 s.NotAShot,
                 s.Bull,
                 s.BullChosen,
+                s.MeasuredDiameterInches,
             }),
             report,
         };
@@ -132,7 +133,8 @@ public static class MarkingFile
             (string?)s["exclusion"] is { } reason ? Enum.Parse<ExclusionReason>(reason) : null,
             (bool?)s["notAShot"] ?? false,
             (int?)s["bull"],
-            (bool?)s["bullChosen"] ?? false)).ToImmutableList();
+            (bool?)s["bullChosen"] ?? false,
+            (double?)s["measuredDiameterInches"])).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,

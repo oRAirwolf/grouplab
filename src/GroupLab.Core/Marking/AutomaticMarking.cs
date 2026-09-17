@@ -113,7 +113,7 @@ public static class AutomaticMarking
                 $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
         }
 
-        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i])).ToList();
+        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,

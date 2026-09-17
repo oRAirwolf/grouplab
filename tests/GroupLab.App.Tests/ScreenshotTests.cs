@@ -119,7 +119,7 @@ public class ScreenshotTests
             var rings = new List<string>();
             foreach (var shot in window.Session.State.Shots)
             {
-                var (impact, oversize) = window.Canvas.RingDiametersInches(shot.Id);
+                var (impact, _, oversize) = window.Canvas.RingDiametersInches(shot.Id);
                 Assert.Equal(0.308, impact, 6);
                 if (window.Canvas.FlaggedShots.TryGetValue(shot.Id, out double apparent))
                 {

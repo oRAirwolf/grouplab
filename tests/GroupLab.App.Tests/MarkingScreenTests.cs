@@ -343,6 +343,52 @@ public class MarkingScreenTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: a detected shot's ring is the diameter the detector measured, in sheet units at any zoom, with
+    /// the calibre's hole drawn beside it once a calibre is set; a shot placed by hand, which has no measurement, keeps the calibre ring, and
+    /// moving a detected shot drops the measurement.
+    /// </summary>
+    [AvaloniaFact]
+    public void ADetectedShotIsDrawnAtItsMeasuredDiameterWithTheCalibreBesideIt()
+    {
+        (int X, int Y)[] holes = [(200, 200)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            var session = window.Session;
+            var scale = new LengthReference(new PointD(100, 100), new PointD(300, 100), 2);
+            var assigned = new GroupLab.Core.Detection.AssignedShot(0, 0, 0, 0, 0, double.PositiveInfinity, false);
+            session.LoadDetections(scale, [new BullAim(0, "1", new PointD(215, 205))], [new DetectedShot(new PointD(200, 200), assigned, 0.52)], null, [], "test");
+            int detected = session.State.Shots.Single().Id;
+            int hand = session.AddShot(new PointD(260, 240));
+
+            foreach (double factor in new[] { 1.0, 4.0 })
+            {
+                window.Canvas.ZoomBy(factor);
+                var (impact, expected, _) = window.Canvas.RingDiametersInches(detected);
+                Assert.Equal(0.52, impact, 6);
+                Assert.Null(expected);
+            }
+
+            session.SetCalibre(new Calibre(".308", 0.308));
+            var (measured, calibre, _) = window.Canvas.RingDiametersInches(detected);
+            Assert.Equal((0.52, 0.308), (Math.Round(measured, 6), Math.Round(calibre!.Value, 6)));
+            var (byHand, noExpected, _) = window.Canvas.RingDiametersInches(hand);
+            Assert.Equal(0.308, byHand, 6);
+            Assert.Null(noExpected);
+
+            session.MoveShot(detected, new PointD(205, 200));
+            Assert.Null(session.State.Find(detected)!.MeasuredDiameterInches);
+            Assert.Equal(0.308, window.Canvas.RingDiametersInches(detected).Impact, 6);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 73 section 7 and DESIGN.md section 19: the headline figures stay in the panel, the reference figures are
     /// one click away, closed until opened, and a window opened later remembers that they were.
     /// </summary>

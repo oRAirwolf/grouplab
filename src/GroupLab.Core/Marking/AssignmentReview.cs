@@ -4,8 +4,11 @@ using GroupLab.Core.Imaging;
 
 namespace GroupLab.Core.Marking;
 
-/// <summary>A shot as the automatic path found it: its position in image pixels and how stage S9 assigned it (NOTES-FROM-PLANNING.md entry 70 section 4).</summary>
-public sealed record DetectedShot(PointD Image, AssignedShot Assignment);
+/// <summary>
+/// A shot as the automatic path found it: its position in image pixels, how stage S9 assigned it (NOTES-FROM-PLANNING.md entry 70 section
+/// 4), and the diameter the detector measured, which the canvas draws (entry 76 section 4).
+/// </summary>
+public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double? DiameterInches = null);
 
 /// <summary>
 /// A candidate the hole detector refused: where it was in image pixels, how large it read, and why. The concept's review queue shows two
