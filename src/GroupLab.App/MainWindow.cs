@@ -542,6 +542,15 @@ public sealed class MainWindow : Window
     private PointD AsDisplayed(PointD vector) =>
         session.State.Scale?.AxesFollowImage == true ? ViewRotation.VectorToDisplay(vector, session.State.ViewQuarterTurns) : vector;
 
+    /// <summary>A probability as a person says it, "one time in forty", for the aspect line of NOTES-FROM-PLANNING.md entry 76 section 1.</summary>
+    internal static string HowOften(double probability) => probability switch
+    {
+        < 0.001 => "less than one time in a thousand",
+        < 0.5 => string.Create(CultureInfo.InvariantCulture, $"one time in {Math.Round(1 / probability):0}"),
+        < 0.995 => string.Create(CultureInfo.InvariantCulture, $"{Math.Round(probability * 100):0} times in a hundred"),
+        _ => "almost always",
+    };
+
     /// <summary>An axis angle, degrees from x toward y, as the screen shows it, in [0, 180).</summary>
     private double DisplayedAngle(double degrees)
     {
@@ -902,7 +911,7 @@ public sealed class MainWindow : Window
                 }
 
                 moreFigures.Children.Add(Line(all.AspectRatio is { } aspect
-                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees")
+                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees; {all.Shots} circular shots give about {all.CircularMedianAspect:0.0} and exceed {aspect:0.00} {HowOften(all.CircularAspectExceedance ?? 1)} (STATISTICS.md section 7).")
                     : $"Error ellipse: {all.AspectRatioUnavailable}."));
                 if (all.WorstShotInMeanRadii is { } worst)
                 {

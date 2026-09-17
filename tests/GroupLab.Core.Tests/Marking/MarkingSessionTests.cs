@@ -159,6 +159,10 @@ public class MarkingSessionTests
         Assert.True(five.MeanRadius.Coverage < 0.95);
         Assert.Equal(0.95, five.ExtremeSpread!.Coverage);
         Assert.Equal(SampleSize.SigmaIntervalMultiples(5).Upper, five.TrueSizeRange!.Upper, 15);
+
+        // Entry 76 section 1: the aspect is printed beside what five circular shots give, and how often they give more.
+        Assert.Equal(CircularAspect.Median(5), five.CircularMedianAspect!.Value, 15);
+        Assert.Equal(CircularAspect.ProbabilityAbove(5, five.AspectRatio!.Value), five.CircularAspectExceedance!.Value, 15);
     }
 
     /// <summary>
@@ -194,6 +198,8 @@ public class MarkingSessionTests
         Assert.Equal(JsonValueKind.Number, lineFigures.GetProperty("meanRadius").GetProperty("value").ValueKind);
         Assert.Equal(JsonValueKind.Null, lineFigures.GetProperty("aspectRatio").ValueKind);
         Assert.Contains("line", lineFigures.GetProperty("aspectRatioUnavailable").GetString(), StringComparison.Ordinal);
+        Assert.Equal(JsonValueKind.Null, lineFigures.GetProperty("circularAspectExceedance").ValueKind);
+        Assert.Contains("line", lineFigures.GetProperty("circularAspectExceedanceUnavailable").GetString(), StringComparison.Ordinal);
     }
 
     [Fact]

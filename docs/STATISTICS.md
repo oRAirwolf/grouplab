@@ -270,6 +270,23 @@ A 25-shot group has roughly 49 percent power against 1.5 times stringing. **Half
 
 Also report, always, and without a test attached: the **error-ellipse aspect ratio** and its orientation. It is descriptive, it needs no assumption, and for most users it is the more useful output.
 
+**Beside it, what a circular group of that size gives** (NOTES-FROM-PLANNING.md entry 76 section 1, the pattern of section 10). A descriptive aspect read alone misleads at small `n`, because sampling alone elongates a circular group. The aspect is `√(l₁/l₂)`, with `l₁ ≥ l₂` the eigenvalues of the centred sums of squares. For `n` circular shots those follow a 2 by 2 Wishart distribution on `m = n − 1` degrees of freedom. Integrating out the scale leaves, for `u = 1/aspect` on (0, 1),
+
+```
+f(u) ∝ u^(m−2) · (1 − u²) / (1 + u²)^m
+```
+
+which is exact. The table prints its values. Entry 76's simulated quantiles at 10 and 12 shots agree with them within simulation noise, the largest difference being 0.01 at the tail, and a seeded simulation agrees as well (`CircularAspectTests`).
+
+| n | median | 75th | 90th | 95th | 99th percentile |
+|---|---|---|---|---|---|
+| 5 | 2.03 | 2.82 | 4.06 | 5.24 | 9.17 |
+| 10 | 1.53 | 1.83 | 2.22 | 2.51 | 3.25 |
+| 12 | 1.46 | 1.71 | 2.02 | 2.26 | 2.81 |
+| 25 | 1.28 | 1.42 | 1.58 | 1.68 | 1.92 |
+
+The report carries the median and the probability that circular shots exceed the measured aspect, and the screen reads, for example, "aspect 2.82; ten circular shots give about 1.5 and exceed 2.82 one time in forty". This is still not the test for circularity above. It is a reference, so the reader can see whether an elongation is unusual for the count, and it carries no verdict.
+
 ---
 
 ## 8. Comparing two loads
@@ -360,6 +377,39 @@ The correct interface behaviour is not to refuse the comparison. It is to run it
 **A design consequence worth stating.** These numbers make the pooled and virtual groups of section 11 the most important feature in the statistics layer, not a convenience. A shooter who fires 25 rounds of a load per session over eight sessions has 200 shots, which is a usable sample. The same shooter looking at eight separate 25-shot groups has nothing. Pooling is what makes the arithmetic survivable.
 
 ---
+
+### 9.3 How finely a multi-bull sheet can be spaced for a given group
+
+(NOTES-FROM-PLANNING.md entries 56 and 76.) On a square lattice of spacing `s`, each shot is assigned to its nearest bull. A shot is assigned correctly while it stays inside its own bull's cell, a square of side `s`. For shots centred on the aim with per-axis sigma `σ`, the misassignment rate is therefore closed form:
+
+```
+P(misassigned) = 1 − (Φ(s/2σ) − Φ(−s/2σ))²
+```
+
+For a centre offset `(μx, μy)`, each axis term becomes `Φ((s/2 − μ)/σ) − Φ((−s/2 − μ)/σ)`.
+
+| Spacing / σ | Misassigned per shot |
+|---|---|
+| 3 | 24.9% |
+| 4 | 8.9% |
+| 5 | 2.5% |
+| **6** | **0.54%** |
+| 7 | 0.09% |
+| 8 | 0.013% |
+
+**The rule:** bull spacing wants to be at least 6 σ at the shooting distance, and 7 σ is comfortable. For the 1.5 in spacing of `GL-CF25-LTR`, that means σ at or under 0.25 in on the paper.
+
+**What the table rests on.**
+
+- **Simulation.** Entry 56 checked it against 400,000 simulated shots at three ratios, and the two agree to three decimals.
+- **Real paper: one sheet corroborates it, and only as a count of two.** That sheet is the friend's `GL-CF25-LTR` of entry 56.
+  - Entry 76 section 2 suspected that sheet's figures were inflated by the sighter pooling defect, since fixed, so it was re-run through the fixed pipeline.
+  - They were not. That sheet's sighters were never pooled: planning's hand analysis left them out, and so does the pipeline.
+  - Its ten scoring holes give σ 0.390 in, against entry 56's 0.386 in. That is a spacing ratio of 3.84, where the table expects 1.1 misassigned shots in ten centred on the aim, or 2.1 at the group's measured offset of 0.23 in across and 0.29 in vertically.
+  - **Observed: 2 of 10.**
+- **The second real sheet**, Alan's scan of entry 72, sits at a ratio of 5.5 with 0 of 10 misassigned. The table expects 0.12 of a shot there, so that sheet agrees with the table but cannot test it.
+
+**The table is corroborated on real paper by one sheet of ten shots, whose count agrees with it.** Two misassigned shots out of ten cannot distinguish 10 percent from 30 percent. So the corroboration is weak, and the table's authority is the closed form and the simulation.
 
 ## 10. Flyer handling
 

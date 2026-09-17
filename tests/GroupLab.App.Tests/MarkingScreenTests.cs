@@ -496,7 +496,7 @@ public class MarkingScreenTests
             string[] reference = [.. window.MoreFigures.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")];
             Assert.Contains(window.StatisticsText, t => t == "Mean radius");
             Assert.DoesNotContain(reference, t => t == "Mean radius");
-            Assert.Contains(reference, t => t.StartsWith("Error ellipse", StringComparison.Ordinal));
+            Assert.Contains(reference, t => t.StartsWith("Error ellipse", StringComparison.Ordinal) && t.Contains("circular shots give about", StringComparison.Ordinal));
             Assert.False(window.MoreFigures.IsExpanded);
             Assert.False(store.LoadMoreFigures());
 
