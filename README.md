@@ -112,7 +112,7 @@ flowchart TB
 
 ## Status
 
-**Phase 0a and Phase 0 are complete. Phase 1 is largely built.**
+**Where the work stands is in Planned below, phase by phase, with the state of every feature and the gate each phase is measured against.**
 
 What exists and is tested:
 
@@ -130,19 +130,87 @@ What exists and is tested:
 
 What does not exist yet: the full analysis screen shown above, load comparison, the chronograph and ballistic work, and any mobile build.
 
-Each phase has a gate and is not complete until the gate passes. The gates and their measured results are in `DESIGN.md` section 21 and `docs/PHASE1-RESULTS.md`.
-
 ## Planned
 
-| Phase | What it adds |
+Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not done until its gate passes, and the gates' measured results are in `docs/PHASE0-RESULTS.md` and `docs/PHASE1-RESULTS.md`.
+
+**The four states.**
+
+| State | Means |
 |---|---|
-| **2. Core and statistics** | Data model and statistics engine. *Gate: matches `shotGroups` to numerical tolerance.* |
-| **3. Editor** | Manual editing and hole-to-bull assignment, built against real detections including bad ones. *Gate: a 25-shot target with several misassignments corrected in under two minutes.* |
-| **4. Windows application** | Library, generation, printing, analysis, reporting, session records. |
-| **5. Chronograph, solver, comparison** | Garmin Xero import and reconciliation, a ballistic solver validated against an independent implementation, load-versus-load significance testing, velocity regression, predicted against measured vertical. |
-| **6. Android** | Camera capture, lens distortion fitted on the device. |
-| **7. Synchronisation** | Cloud provider adapters, three-tier storage. |
-| **8. iOS** | Built and signed on CI. Waits on the licence permission under Licence for distribution, not for development. |
+| **Not started** | no code |
+| **In progress** | being built, not usable |
+| **Built, not proven** | the code exists and works, and its gate has not been met or cannot yet be run |
+| **Done** | its gate has been met and recorded |
+
+**"Built, not proven" carries its weight here.** The assignment editor works and its gate needs a 25-shot target that nobody has shot yet. Calling that done would make this page untrue, and calling it in progress would be untrue the other way.
+
+| Phase | State | Gate |
+|---|---|---|
+| **0a. Format and renderer** | **Done** | conformance test 43: a rendered definition analysed as a scan recovers every bull centre within 0.001 in |
+| **0. Registration spike** | **Built, not proven** | worst bull centre within 0.005 in on a 600 DPI scan of a printed sheet, and on an off-axis photograph of a sheet held flat |
+| **1. Detection spike** | **Built, not proven** | at least 99 percent of holes found with no false positives, matched at 0.15 in, and the mounted photograph gate at 0.005 in |
+| **2. Core and statistics** | **Built, not proven** | statistical output matches the R package `shotGroups` to numerical tolerance on shared test data |
+| **3. Editor** | **Built, not proven** | a full 25-shot target with several misassignments corrected in under two minutes |
+| **4. Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application |
+| **5. Chronograph, solver, and comparison** | **Not started** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
+| **6. Android** | **Not started** | camera capture and lens distortion fitted on the device |
+| **7. Synchronisation** | **Not started** | cloud provider adapters over three-tier storage |
+| **8. iOS** | **Not started** | built and signed on CI |
+
+### What each phase holds
+
+**Phase 0a. Format and renderer.**
+- **Done.** The GLTD definition format, in JSON and as a binary QR payload.
+- **Done.** A validator, and <!--count:sheets-->22<!--/count--> built-in target sheets.
+- **Done.** A PDF renderer, with the printed name and identifier on every sheet.
+
+**Phase 0. Registration spike.**
+- **Done.** Registration from a scan of a printed sheet.
+- **Built, not proven.** Registration from an off-axis photograph of a sheet held flat.
+- **Built, not proven.** A developable-surface model for paper that is not flat, for the mounted case.
+- **Done.** A sheet that names its own definition from its printed codes.
+
+**Phase 1. Detection spike.**
+- **Built, not proven.** Render-and-difference hole detection, with one size check that the review queue counts.
+- **Done.** Hole-to-bull assignment by one-to-one matching, with sighter and scoring bulls as separate pools.
+- **Done.** An end-to-end `analyze` command, from photograph to group.
+- **Done.** A standing check that compares the corpus's detection counts whenever printed artwork changes.
+
+**Phase 2. Core and statistics.**
+- **Built, not proven.** The statistics engine, checked key for key against `shotGroups`.
+- **Done.** Every figure with the interval it actually has, and the reference a figure needs to be read against.
+- **Done.** Composite groups, pooled groups and load comparison in the engine.
+
+**Phase 3. Editor.**
+- **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
+- **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, and not a shot.
+- **Done.** Marking by hand on any photograph, with a reference length or rectangle for scale.
+- **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
+- **Not started.** The concept screen's appearance: the tool strip, the breadcrumb, the left rail and the paper-coloured sheet.
+
+**Phase 4. Windows application.**
+- **Done.** A print screen that renders any built-in sheet to PDF at actual size.
+- **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
+- **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
+- **In progress.** The analysis screen shown above.
+- **Not started.** A target library, session records and reporting.
+
+**Phase 5. Chronograph, solver, and comparison.**
+- **Not started.** Garmin Xero import and reconciliation against marked shots.
+- **Not started.** A ballistic solver, validated against an independent implementation.
+- **Not started.** Load against load, velocity regression, and predicted against measured vertical.
+
+**Phase 6. Android.**
+- **Not started.** The camera capture path, with lens distortion fitted on the device.
+
+**Phase 7. Synchronisation.**
+- **Not started.** Cloud provider adapters over three-tier storage.
+
+**Phase 8. iOS.**
+- **Not started.** A CI build, signed. It waits on the licence permission under Licence, for distribution rather than for development.
+
+A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree.
 
 ### Platforms
 

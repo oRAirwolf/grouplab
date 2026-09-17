@@ -127,26 +127,19 @@ public class ArtworkAndAssignmentTests
         Assert.Equal(Snapping.ToDarkCentroid(value, new PointD(125, 100), 15), Snapping.ToHole(value, new PointD(125, 100), 15, null).At);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 87 section 1, keeping the evidence for why the screen's own size check was removed: the dark region under a
+    /// mark takes in the printed line it touches, so a point on a ring reads far wider than a hole of the same size beside one. The extent is
+    /// still measured, as a measurement; nothing judges a mark by it any more.
+    /// </summary>
     [Fact]
-    public void AnOversizedRegionOnArtworkSaysWhereItSitsAndNamesEveryExplanationRatherThanOne()
+    public void TheDarkRegionUnderAMarkOnAPrintedLineReadsFarWiderThanAHoleBesideOne()
     {
-        var (value, artwork) = Sheet();
-        var session = new MarkingSession();
-        session.SetScale(Scale);
-        session.SetCalibre(new Calibre(".338", 0.338));
-        int ring = session.AddShot(new PointD(125, 100));
+        var (value, _) = Sheet();
 
-        var onArtwork = Assert.Single(HoleSize.Check(session.State, value, artwork));
-        Assert.Equal(ring, onArtwork.ShotId);
-        Assert.True(onArtwork.OnArtwork);
-        Assert.Contains("sits on the printed target", onArtwork.Problem, StringComparison.Ordinal);
-        Assert.Contains("Printed ink under the mark, two holes read as one, or a hole on a printed line", onArtwork.Problem, StringComparison.Ordinal);
-        Assert.DoesNotContain("rather than a hole", onArtwork.Problem, StringComparison.Ordinal);
+        double onRing = HoleSize.ApparentExtentPixels(value, new PointD(125, 100), 70)!.Value;
+        double beside = HoleSize.ApparentExtentPixels(value, new PointD(170, 100), 70)!.Value;
 
-        var unknown = Assert.Single(HoleSize.Check(session.State, value));
-        Assert.False(unknown.OnArtwork);
-        Assert.Equal(
-            $"reads {unknown.ApparentInches:0.000} in across, larger than one 0.338 in bullet hole ({unknown.LargestExpectedInches:0.000} in). Two holes marked as one, or a tap that snapped to the printed target rather than a hole.",
-            unknown.Problem);
+        Assert.True(onRing > 3 * beside, $"on the ring {onRing:0.0} px, beside it {beside:0.0} px");
     }
 }

@@ -75,10 +75,13 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// A hole found by render-and-difference, image pixels: the intensity-weighted centroid of its residual, its hull diameter,
 /// whether it sits on printed ink, its rim closure, the fraction of 360 rays from the centre that meet residual, the ratio of
 /// the principal standard deviations of that residual, and whether it is one of two holes split from a single blob.
+/// <see cref="InkFraction"/> is how much of the expected printed artwork lies inside the detection's own footprint, the mean ink coverage
+/// over its hull: the quantity NOTES-FROM-PLANNING.md entry 86 section 3 asks for, which tells a hole centred on a ring from one beside it
+/// where the distance to the nearest edge cannot.
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
-    double? SizeHoles = null, bool OversizeTentative = false);
+    double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -274,7 +277,7 @@ public static class RenderDifferenceHoleDetector
             }
 
             // A blob the size says holds two or more holes, and whose shape gives no split, is reported as it is rather than cut to agree.
-            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles));
+            holes.Add(new RenderDifferenceHole(cx, cy, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, InkFraction: moments.Ink));
         }
 
         // S8, the split, decided once the size of a single hole is known (NOTES-FROM-PLANNING.md entries 78, 81 and 82). An elongated blob
@@ -295,13 +298,13 @@ public static class RenderDifferenceHoleDetector
 
             if (vetoed)
             {
-                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true));
+                holes.Add(new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, CalibreHoles: calibreHoles, SplitVetoed: true, InkFraction: moments.Ink));
                 continue;
             }
 
             foreach (var (mx, my) in Split(residual, width, blob, moments))
             {
-                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles));
+                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink));
             }
         }
 

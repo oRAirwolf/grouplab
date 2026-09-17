@@ -49,7 +49,6 @@ public class CalibreTests
         Assert.Null(figures.ExtremeSpreadEdgeToEdge);
         Assert.Equal("needs the group's calibre", figures.ExtremeSpreadEdgeToEdgeUnavailable);
         Assert.Null(HoleSize.SnapRadiusPixels(session.State, new PointD(50, 50)));
-        Assert.Empty(HoleSize.Check(session.State, Paper()));
     }
 
     [Fact]
@@ -64,11 +63,12 @@ public class CalibreTests
     }
 
     /// <summary>
-    /// A single .308 hole at 0.92 of calibre, docs/SCAN-MEASUREMENTS.md section 3.5's pooled ratio, is not flagged; two such holes
-    /// touching and marked as one are; and a mark on a large printed disc, where no hole size can be read, is not.
+    /// The apparent extent of the dark region under a mark, docs/SCAN-MEASUREMENTS.md section 3.5's pooled ratio: one .308 hole reads about the
+    /// calibre, two touching holes marked as one read about twice it, and a mark on a large printed disc reads nothing at all, because the
+    /// region runs to the edge of the search circle. It is a measurement and judges nothing (NOTES-FROM-PLANNING.md entry 87 section 1).
     /// </summary>
     [Fact]
-    public void AHoleTooLargeForTheCalibreIsFlaggedAndASingleHoleOrInkIsNot()
+    public void TheApparentExtentReadsOneHoleTwoHolesAndNothingOnInk()
     {
         var image = Paper();
         Disc(image, 60, 60, 14);
@@ -83,12 +83,10 @@ public class CalibreTests
         int ink = session.AddShot(new PointD(90, 170));
         session.SetCalibre(new Calibre(".308", 0.308));
 
-        Assert.InRange(HoleSize.ApparentExtentPixels(image, new PointD(60, 60), 61.6)!.Value, 28, 31);
-        var flags = HoleSize.Check(session.State, image);
-        var flag = Assert.Single(flags);
-        Assert.Equal(pair, flag.ShotId);
-        Assert.InRange(flag.ApparentInches, 0.53, 0.56);
-        Assert.DoesNotContain(flags, f => f.ShotId == single || f.ShotId == ink);
+        double radius = HoleSize.CheckRadiusInDiameters * 0.308 * 100;
+        Assert.InRange(HoleSize.ApparentExtentPixels(image, session.State.Find(single)!.Image, radius)!.Value / 100, 0.28, 0.31);
+        Assert.InRange(HoleSize.ApparentExtentPixels(image, session.State.Find(pair)!.Image, radius)!.Value / 100, 0.53, 0.56);
+        Assert.Null(HoleSize.ApparentExtentPixels(image, session.State.Find(ink)!.Image, radius));
     }
 
     private static MarkingSession FiveShots()

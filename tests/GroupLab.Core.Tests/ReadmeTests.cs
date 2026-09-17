@@ -95,6 +95,81 @@ public partial class ReadmeTests
         Assert.True(lines.Count == 0, $"README.md has an em dash on line(s) {string.Join(", ", lines)}. CONTRIBUTING.md rules them out; use a comma, a colon or two sentences.");
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 87 section 2: the Planned section's states are hand-kept, and a hand-kept status list goes stale. So it is
+    /// tied to DESIGN.md section 21: every phase there is a row here with exactly one of the four states and a gate beside it, every phase row
+    /// has a feature list, and every feature carries a state of its own. A phase in one document and not the other fails this test.
+    /// <para>
+    /// It also keeps three things out of the section, following entry 60: no test counts, no percentages of progress and no dates, because all
+    /// three go stale within days. A gate's own threshold, such as 99 percent of holes, is the gate and is spelled in words.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void EveryPhaseOfTheBuildPlanCarriesOneStateAndItsFeaturesDoToo()
+    {
+        string[] states = ["Not started", "In progress", "Built, not proven", "Done"];
+        var planned = Section("## Planned", "## What GroupLab is not");
+        var design = File.ReadAllLines(Repo.PathTo("DESIGN.md"));
+
+        var inDesign = design.Select(l => DesignPhase().Match(l)).Where(m => m.Success)
+            .ToDictionary(m => m.Groups["id"].Value, m => m.Groups["name"].Value.Trim(), StringComparer.OrdinalIgnoreCase);
+        Assert.NotEmpty(inDesign);
+
+        var rows = planned.Select(l => PhaseRow().Match(l)).Where(m => m.Success).ToList();
+        var inReadme = rows.ToDictionary(m => m.Groups["id"].Value, m => m.Groups["name"].Value.Trim(), StringComparer.OrdinalIgnoreCase);
+        Assert.Equal(inDesign.Keys.Order(), inReadme.Keys.Order());
+        foreach (var (id, name) in inDesign)
+        {
+            Assert.Equal(name, inReadme[id], ignoreCase: true);
+        }
+
+        foreach (var row in rows)
+        {
+            Assert.Contains(row.Groups["state"].Value, states);
+            Assert.True(row.Groups["gate"].Value.Trim().Length > 20, $"phase {row.Groups["id"].Value} has no gate beside its state");
+        }
+
+        // Every phase has a feature list under "What each phase holds", and every feature carries a state.
+        var headings = planned.Select(l => FeatureHeading().Match(l)).Where(m => m.Success).Select(m => m.Groups["id"].Value).ToList();
+        Assert.Equal(inDesign.Keys.Order(), headings.Order());
+        var features = planned.Select(l => Feature().Match(l)).Where(m => m.Success).ToList();
+        Assert.True(features.Count >= inDesign.Count, $"only {features.Count} features carry a state");
+        foreach (var feature in features)
+        {
+            Assert.Contains(feature.Groups["state"].Value, states);
+        }
+
+        foreach (string line in planned)
+        {
+            Assert.DoesNotContain("%", line, StringComparison.Ordinal);
+            Assert.False(Stale().IsMatch(line), $"the Planned section carries a date or a count that will go stale: {line}");
+        }
+    }
+
+    /// <summary>The lines of one README section, from its heading to the next one named.</summary>
+    private static string[] Section(string heading, string next)
+    {
+        int from = Array.FindIndex(Lines, l => l.StartsWith(heading, StringComparison.Ordinal));
+        int to = Array.FindIndex(Lines, l => l.StartsWith(next, StringComparison.Ordinal));
+        Assert.True(from >= 0 && to > from, $"README has no {heading} section before {next}");
+        return [.. Lines[from..to]];
+    }
+
+    [GeneratedRegex(@"^\*\*Phase (?<id>[0-9]+a?): (?<name>[^.*]+)\.\*\*")]
+    private static partial Regex DesignPhase();
+
+    [GeneratedRegex(@"^\| \*\*(?<id>[0-9]+a?)\. (?<name>[^*|]+?)\*\* \| \*\*(?<state>[^*|]+)\*\* \|(?<gate>[^|]+)\|")]
+    private static partial Regex PhaseRow();
+
+    [GeneratedRegex(@"^\*\*Phase (?<id>[0-9]+a?)\. [^*]+\.\*\*$")]
+    private static partial Regex FeatureHeading();
+
+    [GeneratedRegex(@"^- \*\*(?<state>[^*.]+)\.\*\* ")]
+    private static partial Regex Feature();
+
+    [GeneratedRegex(@"\b(19|20)\d\d\b|\b\d+ (tests?|passing|complete)\b")]
+    private static partial Regex Stale();
+
     [GeneratedRegex(@"(?<bang>!)?\[[^\]]*\]\((?<target>[^)\s]+)\)")]
     private static partial Regex Link();
 

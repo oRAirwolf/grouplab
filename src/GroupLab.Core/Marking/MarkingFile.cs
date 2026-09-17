@@ -27,11 +27,11 @@ public static class MarkingFile
     private const string FrameDescription = "x right and y down, in pixels, from the top left of the image file's stored pixel grid, with EXIF orientation not applied";
 
     /// <summary>
-    /// Writes the marking, with the hole-size flags the screen measured when there are any (entry 24 section 5 point 3), and the units the
-    /// screen showed. Every value is canonical, lengths and the shot distance in inches, whatever the units; the units are recorded
+    /// Writes the marking and the units the screen showed. It no longer carries the screen's own hole-size flags: that check is gone, and the
+    /// detector's flag rides on each shot as <see cref="MarkedShot.Oversize"/> (NOTES-FROM-PLANNING.md entry 87 section 1). Every value is canonical, lengths and the shot distance in inches, whatever the units; the units are recorded
     /// beside them so a reader can reproduce what was on screen (entry 25 section 1), and reading a file never changes them.
     /// </summary>
-    public static string Write(MarkingState state, IReadOnlyList<HoleSizeFlag>? holeSizeFlags = null, UnitSettings? displayUnits = null)
+    public static string Write(MarkingState state, UnitSettings? displayUnits = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         var report = GroupAnalysis.Analyse(state);
@@ -56,7 +56,6 @@ public static class MarkingFile
                     description = detection.Describe(),
                 }
                 : null,
-            holeSizeFlags = holeSizeFlags ?? [],
             shotDistanceInches = state.ShotDistanceInches,
             displayUnits = displayUnits is { } units ? new { linear = units.Linear.ToString(), angular = units.Angular.ToString(), distance = units.Distance.ToString() } : null,
             scale = ScaleDocument(state.Scale),

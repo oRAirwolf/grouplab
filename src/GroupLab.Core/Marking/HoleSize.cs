@@ -3,15 +3,15 @@ using GroupLab.Core.Imaging;
 namespace GroupLab.Core.Marking;
 
 /// <summary>
-/// A marked shot whose dark region looks too large for the group's calibre, with what was measured, and whether that region is mostly
-/// the sheet's printed artwork, known only on a registered GroupLab sheet (NOTES-FROM-PLANNING.md entry 40 section 1).
-/// </summary>
-public sealed record HoleSizeFlag(int ShotId, double ApparentInches, double LargestExpectedInches, string Problem, bool OnArtwork = false);
-
-/// <summary>
-/// What the calibre does for marking, NOTES-FROM-PLANNING.md entry 24 section 5 points 2 and 3: a snap radius sized to the hole, and
-/// a flag on a hole that reads too large for the calibre, which is how two overlapping holes marked as one look, the failure
-/// docs/PHASE1-RESULTS.md M2.2 found reported silently. Neither gates anything.
+/// What the calibre does for marking, NOTES-FROM-PLANNING.md entry 24 section 5 point 2: a snap radius sized to the hole, and the apparent
+/// extent of the dark region under a point, which is a measurement and not a judgement.
+/// <para>
+/// It used to judge as well, flagging a mark whose dark region read larger than one hole of the calibre. That check is gone, entry 87
+/// section 1: printed ink is dark and connected to a hole that touches it, so on Alan's 600 DPI scan it read five single holes at 0.51 to
+/// 0.61 in against 0.441 and called every one possibly two holes, while the detector's own flag, the one the review queue counts, fired once
+/// on the same image. Two size checks disagreeing five to one is one too many, and the surviving one is the detector's, whose false-flag rate
+/// is measured frame by frame (entry 83 section 2). Nothing prints a size opinion the queue has not counted.
+/// </para>
 /// </summary>
 public static class HoleSize
 {
@@ -154,48 +154,5 @@ public static class HoleSize
         bool useArtwork = artwork is not null && artwork.Width == value.Width && artwork.Height == value.Height;
         double printed = useArtwork ? region.Count(p => artwork!.Pixels[(p.Y * value.Width) + p.X] < Snapping.ArtworkPaper) / (double)region.Count : 0;
         return (largest, printed);
-    }
-
-    /// <summary>
-    /// The sentence for a flag, in whatever units <paramref name="length"/> writes, NOTES-FROM-PLANNING.md entry 40 section 1. An oversized
-    /// dark region is two holes marked as one or a mark on the printed target, and both are named. Where the artwork is known and the
-    /// region touches it, the sentence says so and still names every explanation, entry 73 section 2: a real hole on a printed ring reads
-    /// exactly as ink under a mark does, the software cannot tell them apart, and naming one cause in red would be a confident wrong answer.
-    /// </summary>
-    public static string Describe(HoleSizeFlag flag, double calibreInches, Func<double, string> length)
-    {
-        ArgumentNullException.ThrowIfNull(flag);
-        ArgumentNullException.ThrowIfNull(length);
-        string size = $"reads {length(flag.ApparentInches)} across, larger than one {length(calibreInches)} bullet hole ({length(flag.LargestExpectedInches)})";
-        return flag.OnArtwork
-            ? size + ", and it sits on the printed target. Printed ink under the mark, two holes read as one, or a hole on a printed line merging with the ink would each read this way."
-            : size + ". Two holes marked as one, or a tap that snapped to the printed target rather than a hole.";
-    }
-
-    /// <summary>
-    /// Every counted shot whose hole reads larger than a single hole of the group's calibre can, once a calibre and a scale are set. With
-    /// the sheet's expected artwork in image pixels, each flag says whether the region is mostly printed (entry 40 section 1).
-    /// </summary>
-    public static IReadOnlyList<HoleSizeFlag> Check(MarkingState state, GrayImage value, GrayImage? artwork = null)
-    {
-        ArgumentNullException.ThrowIfNull(state);
-        if (state.Calibre is not { } calibre || state.Scale is not { } scale)
-        {
-            return [];
-        }
-
-        double largestExpected = calibre.DiameterInches + AllowanceInches;
-        var flags = new List<HoleSizeFlag>();
-        foreach (var shot in state.Shots.Where(s => s.IsShot))
-        {
-            double pixelsPerInch = PixelsPerInch(scale, shot.Image);
-            if (Measure(value, shot.Image, CheckRadiusInDiameters * calibre.DiameterInches * pixelsPerInch, artwork) is { } measured && measured.Extent / pixelsPerInch > largestExpected)
-            {
-                var flag = new HoleSizeFlag(shot.Id, measured.Extent / pixelsPerInch, largestExpected, "", measured.ArtworkFraction >= 0.5);
-                flags.Add(flag with { Problem = Describe(flag, calibre.DiameterInches, inches => string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{inches:0.000} in")) });
-            }
-        }
-
-        return flags;
     }
 }

@@ -20,6 +20,8 @@ namespace GroupLab.Cli.Spike;
 /// nearest printed edge, and the three rates are read against that distance. If all three rise together as the distance goes to zero, they
 /// are one defect in the difference stage.
 /// <list type="bullet">
+/// <item><b>Ink inside the footprint</b>, NOTES-FROM-PLANNING.md entry 86 section 3: how much of the expected artwork lies inside each
+/// detection's own hull, which separates a hole centred on a ring from one beside it where a distance cannot.</item>
 /// <item><b>Printed edges</b> are of two kinds, measured apart. <b>Artwork</b> is what the expected image draws: rings, dots, markers, codes
 /// and rules, whose edges are the ink-to-paper transitions of <see cref="SceneRasterizer"/>'s render at 1 px per dmm. <b>Text</b> is what
 /// the expected image does not draw, bull numbers, the identifier and the print note, measured as the distance to each run's glyph box
@@ -47,7 +49,7 @@ public static class InkProximity
     public static IReadOnlyList<double> BinEdges { get; } = [0, 0.02, 0.05, 0.1, 0.2, double.PositiveInfinity];
 
     public sealed record Detection(string Image, string Corpus, double XIn, double YIn, double DiameterIn, double ArtworkIn, double TextIn, bool Spurious, bool Split, bool Oversized,
-        bool OversizeFlag, bool PossibleMerge, double? SizeRatio, double? ApparentIn = null, bool? SizeCheckOversized = null);
+        bool OversizeFlag, bool PossibleMerge, double? SizeRatio, double? ApparentIn = null, bool? SizeCheckOversized = null, double InkInside = 0);
 
     /// <summary>The real sheets' calibre, .308, for the size check.</summary>
     public const double RealCalibreInches = 0.308;
@@ -243,7 +245,7 @@ public static class InkProximity
             double? ratio = nearest[i] >= 0 && !h.PossibleMerge && reference is { } r ? raw[i] / r : null;
             return new Detection(item.Name, item.Corpus, RawMeasurements.R(pages[i].X / DmmPerInch), RawMeasurements.R(pages[i].Y / DmmPerInch), RawMeasurements.R(h.DiameterInches),
                 RawMeasurements.R(edges[i].Artwork), RawMeasurements.R(edges[i].Text), nearest[i] < 0, split[i], ratio >= OversizeRatio, h.Oversized, h.PossibleMerge,
-                ratio is { } v ? RawMeasurements.R(v) : null, apparent[i] is { } a ? RawMeasurements.R(a) : null, SizeCheck(i));
+                ratio is { } v ? RawMeasurements.R(v) : null, apparent[i] is { } a ? RawMeasurements.R(a) : null, SizeCheck(i), RawMeasurements.R(h.InkFraction));
         })];
     }
 

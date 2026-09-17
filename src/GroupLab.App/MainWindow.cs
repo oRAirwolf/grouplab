@@ -75,7 +75,6 @@ public sealed class MainWindow : Window
     private GrayImage? grey;
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
-    private IReadOnlyList<HoleSizeFlag> holeFlags = [];
 
     // The sheet's printed artwork in image pixels, from the last detection on this image, so the snap and the size check can tell printed
     // ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Null on any image not detected as a GroupLab sheet.
@@ -801,7 +800,7 @@ public sealed class MainWindow : Window
         DiagnosticLog.Info("dialog.result", ("dialog", "export"), ("chosen", file is not null));
         if (file?.TryGetLocalPath() is { } path)
         {
-            await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, holeFlags, units));
+            await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, units));
             status.Text = "Exported to " + path;
             DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", session.State.Shots.Count)]);
         }
@@ -913,8 +912,6 @@ public sealed class MainWindow : Window
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, units.Distance).ToString("0.###", CultureInfo.InvariantCulture) : "";
         }
 
-        holeFlags = valueImage is null ? [] : HoleSize.Check(state, valueImage, artwork);
-        canvas.FlaggedShots = holeFlags.ToDictionary(f => f.ShotId, f => f.ApparentInches);
         canvas.DetectorFlags = state.Shots.Where(s => s.IsShot && s.Oversize is not null).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
 
         if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
@@ -992,8 +989,9 @@ public sealed class MainWindow : Window
                 }
             }
 
-            // Entry 82 section 6: the detector's flag on a mark that covers about two holes, in the panel as well as on the canvas.
-            foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null && !holeFlags.Any(f => f.ShotId == s.Id)))
+            // Entry 82 section 6: the detector's flag on a mark that covers about two holes, in the panel as well as on the canvas. It is the
+            // only size opinion the screen carries, and the review queue counts every one of them (entry 87 section 1).
+            foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null))
             {
                 statistics.Children.Add(new TextBlock
                 {
@@ -1001,17 +999,6 @@ public sealed class MainWindow : Window
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = Tokens.SecondarySize,
                     Classes = { shot.Oversize.Tentative ? AppStyles.Secondary : AppStyles.Alert },
-                });
-            }
-
-            foreach (var flag in holeFlags)
-            {
-                statistics.Children.Add(new TextBlock
-                {
-                    Text = $"Shot {ShotLabel(flag.ShotId)} {HoleSize.Describe(flag, state.Calibre!.DiameterInches, units.Length)}",
-                    TextWrapping = TextWrapping.Wrap,
-                    FontSize = Tokens.SecondarySize,
-                    Classes = { AppStyles.Alert },
                 });
             }
 

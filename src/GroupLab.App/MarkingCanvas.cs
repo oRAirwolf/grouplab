@@ -116,7 +116,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// inches. Each is ringed again in alert at that measured size, so an oversized hole looks oversized on the image and not only in the
     /// text (NOTES-FROM-PLANNING.md entry 46 section 1).
     /// </summary>
-    public IReadOnlyDictionary<int, double> FlaggedShots { get; set; } = new Dictionary<int, double>();
+    /// <summary>How far outside a mark the detector's alert ring is drawn, screen pixels.</summary>
+    private const double AlertRingGap = 4;
 
     /// <summary>
     /// The shots the detector flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6, with whether the flag is tentative: an alert ring
@@ -356,14 +357,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 // visible rather than only described.
                 Marks.Ring(context, Marks.Faint, c, expected, dash: Marks.Dashed);
             }
-            if (FlaggedShots.TryGetValue(shot.Id, out double apparent))
-            {
-                Marks.Ring(context, Marks.Alert, c, OversizeRadius(state, at, radius, apparent), dash: Marks.Dashed);
-            }
-
             if (DetectorFlags.TryGetValue(shot.Id, out bool tentative))
             {
-                Marks.Ring(context, tentative ? Marks.Faint : Marks.Alert, c, radius + 4, tentative ? 1 : Tokens.MarkCoreWidth, Marks.Dashed);
+                Marks.Ring(context, tentative ? Marks.Faint : Marks.Alert, c, radius + AlertRingGap, tentative ? 1 : Tokens.MarkCoreWidth, Marks.Dashed);
             }
 
             Marks.Dot(context, colour, c, 1);
@@ -406,15 +402,6 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             ? Math.Max(MinimumImpactRadius, calibre.DiameterInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
             : null;
 
-    /// <summary>
-    /// The alert ring's radius on screen for a hole that reads too large: half the extent it was measured at, at the image's local scale, so
-    /// its size against the calibre ring is the size of the disagreement (NOTES-FROM-PLANNING.md entry 46 section 1). Never closer than six
-    /// pixels outside the impact ring, so the two stay apart where the measured size is only a little larger.
-    /// </summary>
-    private double OversizeRadius(MarkingState state, PointD image, double impactRadius, double apparentInches) => state.Scale is { } scale
-        ? Math.Max(impactRadius + 6, apparentInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
-        : impactRadius + 6;
-
     /// <summary>The drawn diameters in inches of a shot's impact ring, its expected calibre ring when there is one, and its alert ring when it is flagged; for the tests.</summary>
     internal (double Impact, double? Expected, double? Oversize) RingDiametersInches(int shotId)
     {
@@ -427,7 +414,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         double inchesPerScreenPixel = 1 / (HoleSize.PixelsPerInch(scale, shot.Image) * zoom);
         double impact = ImpactRadius(state, shot.Image, shot.MeasuredDiameterInches);
         double? expected = ExpectedRadius(state, shot.Image, shot.MeasuredDiameterInches);
-        double? oversize = FlaggedShots.TryGetValue(shotId, out double apparent) ? OversizeRadius(state, shot.Image, impact, apparent) : null;
+        double? oversize = DetectorFlags.ContainsKey(shotId) ? impact + AlertRingGap : null;
         return (2 * impact * inchesPerScreenPixel, expected * 2 * inchesPerScreenPixel, oversize * 2 * inchesPerScreenPixel);
     }
 

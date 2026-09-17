@@ -121,12 +121,7 @@ public class ScreenshotTests
             {
                 var (impact, _, oversize) = window.Canvas.RingDiametersInches(shot.Id);
                 Assert.Equal(0.308, impact, 6);
-                if (window.Canvas.FlaggedShots.TryGetValue(shot.Id, out double apparent))
-                {
-                    Assert.Equal(apparent, oversize!.Value, 6);
-                }
-
-                rings.Add(FormattableString.Invariant($"shot {shot.Id}: impact ring {impact:0.000} in, alert ring {(oversize is { } o ? $"{o:0.000} in, reads {apparent:0.000} in" : "none")}"));
+                rings.Add(FormattableString.Invariant($"shot {shot.Id}: impact ring {impact:0.000} in, alert ring {(oversize is { } o ? $"{o:0.000} in" : "none")}"));
             }
 
             File.WriteAllLines(Path.Combine(output, "marks-closeup-rings.txt"), rings);
