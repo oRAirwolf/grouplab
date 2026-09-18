@@ -527,12 +527,12 @@ What the changes did:
 
 | Gate | Photograph | Whole sheet | Cylinder | General | Selected | Scoring bulls over the gate | Gate |
 |---|---|---|---|---|---|---|---|
-| flat | `main_flat1.jpg` | 0.00343 / 0.00661 | 0.00443 / 0.00654 | 0.09425 / 0.00507 | 0.09425 / 0.00507 | 0 / 0 / 16 / 16 | fail / fail / fail / fail |
-| flat | `main_flat2.jpg` | 0.00566 / 0.01016 | 0.01780 / 0.01134 | 0.04278 / 0.02184 | 0.07760 / 0.05044 | 2 / 5 / 25 / 8 | fail / fail / fail / fail |
-| flat | `main_flat3.jpg` | 0.01183 / 0.00496 | 0.02581 / 0.00648 | 0.06230 / 0.05640 | 0.06230 / 0.05640 | 6 / 9 / 21 / 21 | fail / fail / fail / fail |
-| mounted | `main1.jpg` | 0.01824 / 0.05183 | 0.01177 / 0.00620 | 0.02783 / 0.07217 | 0.02783 / 0.07217 | 8 / 8 / 11 / 11 | fail / fail / fail / fail |
-| mounted | `main2.jpg` | 0.08900 / 0.06950 | 0.05971 / 0.01856 | 0.05537 / 0.07244 | 0.05537 / 0.07244 | 22 / 19 / 24 / 24 | fail / fail / fail / fail |
-| mounted | `main3.jpg` | 0.06540 / 0.11379 | 0.04522 / 0.00508 | 0.05446 / 0.01612 | 0.05116 / NaN | 20 / 7 / 23 / 13 | fail / fail / fail / fail |
+| flat | `main_flat1.jpg` | 0.00343 / 0.00661 | 0.00443 / 0.00654 | 0.09427 / 0.00496 | 0.09427 / 0.00496 | 0 / 0 / 16 / 16 | fail / fail / fail / fail |
+| flat | `main_flat2.jpg` | 0.00566 / 0.01016 | 0.01780 / 0.01134 | 0.04277 / 0.02178 | 0.07760 / 0.05044 | 2 / 5 / 25 / 8 | fail / fail / fail / fail |
+| flat | `main_flat3.jpg` | 0.01183 / 0.00496 | 0.02581 / 0.00648 | 0.06210 / 0.05572 | 0.06210 / 0.05572 | 6 / 9 / 21 / 21 | fail / fail / fail / fail |
+| mounted | `main1.jpg` | 0.01824 / 0.05183 | 0.01177 / 0.00620 | 0.02770 / 0.05150 | 0.02770 / 0.05150 | 8 / 8 / 11 / 11 | fail / fail / fail / fail |
+| mounted | `main2.jpg` | 0.08900 / 0.06950 | 0.05971 / 0.01856 | 0.05505 / 0.07232 | 0.05505 / 0.07232 | 22 / 19 / 24 / 24 | fail / fail / fail / fail |
+| mounted | `main3.jpg` | 0.06540 / 0.11379 | 0.04522 / 0.00508 | 0.05452 / 0.01617 | 0.05116 / NaN | 20 / 7 / 23 / 13 | fail / fail / fail / fail |
 | mounted | `telephoto2.jpg` | 0.04584 / 0.09626 | 0.02241 / 0.01371 | 0.02330 / 0.01102 | 0.02330 / 0.01102 | 21 / 8 / 8 / 8 | fail / fail / fail / fail |
 | mounted | `ultrawide1.jpg` | 0.03902 / 0.07450 | 0.01682 / 0.04843 | 0.05385 / NaN | 0.05385 / NaN | 14 / 17 / 9 / 9 | fail / fail / fail / fail |
 | mounted | `ultrawide2.jpg` | 0.08305 / 0.07438 | 0.03367 / 0.01675 | 0.03467 / 0.04004 | 0.05184 / 0.04464 | 19 / 11 / 23 / 21 | fail / fail / fail / fail |
@@ -2439,13 +2439,13 @@ The surface fit starts from the whole-sheet homography, so it inherits the reord
 
 | Frame | Gate | Orders | Distinct outcomes | Corners kept, min / median / max | Scoring bulls over the gate, min / median / max | Worst scoring bull (in), min / median / max | Largest leave-one-out shift of a bull (in) | Bulls with a point near the rejection limit |
 |---|---|---|---|---|---|---|---|---|
-| `ultrawide1.jpg` | mounted | 200 | 70 | 60 / 69 / 76 of 136 | 10 / 13 / 15 of 25 | 0.02785 / 0.03590 / 0.05062 | 0.00004 at 21, 651 of 651 points used | 4 of 25 |
+| `ultrawide1.jpg` | mounted | 200 | 69 | 60 / 69 / 76 of 136 | 10 / 13 / 15 of 25 | 0.02785 / 0.03590 / 0.05062 | 0.00004 at 21, 651 of 651 points used | 4 of 25 |
 | `ultrawide2.jpg` | mounted | 200 | 67 | 36 / 50 / 61 of 136 | 14 / 20 / 23 of 25 | 0.03020 / 0.06819 / 0.09631 | 0.00006 at 5, 313 of 313 points used | 8 of 25 |
 | `ultrawide3.jpg` | mounted | 200 | 67 | 34 / 48 / 57 of 128 | 18 / 21 / 23 of 25 | 0.05938 / 0.10299 / 0.11680 | 0.00008 at 21, 214 of 214 points used | 3 of 25 |
 | `main1.jpg` | mounted | 200 | 25 | 85 / 88 / 95 of 136 | 7 / 11 / 14 of 25 | 0.01342 / 0.01463 / 0.02373 | 0.00003 at 21, 749 of 749 points used | 3 of 25 |
-| `main2.jpg` | mounted | 200 | 51 | 22 / 32 / 57 of 104 | 16 / 21 / 23 of 25 | 0.03651 / 0.05826 / 0.09253 | 0.00021 at 5, 106 of 106 points used | 6 of 25 |
+| `main2.jpg` | mounted | 200 | 49 | 22 / 32 / 57 of 104 | 16 / 21 / 23 of 25 | 0.03651 / 0.05826 / 0.09253 | 0.00021 at 5, 106 of 106 points used | 6 of 25 |
 | `main3.jpg` | mounted | 200 | 15 | 34 / 58 / 67 of 108 | 12 / 20 / 23 of 25 | 0.03616 / 0.06540 / 0.08938 | 0.00010 at 21, 374 of 374 points used | 2 of 25 |
-| `telephoto2.jpg` | mounted | 200 | 46 | 16 / 38 / 45 of 132 | 20 / 22 / 25 of 25 | 0.03122 / 0.04012 / 0.05376 | 0.00004 at 21, 670 of 670 points used | 1 of 25 |
+| `telephoto2.jpg` | mounted | 200 | 48 | 16 / 38 / 45 of 132 | 20 / 22 / 25 of 25 | 0.03122 / 0.04012 / 0.05376 | 0.00004 at 21, 670 of 670 points used | 1 of 25 |
 | `main_flat1.jpg` | flat | 200 | 1 | 136 / 136 / 136 of 136 | 0 / 0 / 0 of 25 | 0.00343 / 0.00343 / 0.00343 | 0.00002 at 11, 900 of 900 points used | 10 of 25 |
 | `main_flat2.jpg` | flat | 200 | 1 | 100 / 100 / 100 of 100 | 2 / 2 / 2 of 25 | 0.00566 / 0.00566 / 0.00566 | 0.00002 at 4, 777 of 777 points used | 7 of 25 |
 | `main_flat3.jpg` | flat | 200 | 2 | 89 / 91 / 91 of 92 | 3 / 6 / 6 of 25 | 0.00832 / 0.01183 / 0.01183 | 0.00003 at 4, 596 of 596 points used | 3 of 25 |
@@ -2453,7 +2453,7 @@ The surface fit starts from the whole-sheet homography, so it inherits the reord
 
 **The hypothesis holds.**
 - **Flat frames:** `main_flat1` and `main_flat2` give one result in 200 orders. `main_flat3` gives two: 89 or 91 corners kept, and a worst scoring bull of 0.00832 or 0.01183 in. Lost markers do not explain the difference, since `main_flat2` decoded 25 of 34 and `main_flat3` 23, and `main_flat2` gives one.
-- **Mounted frames:** every one gives 15 to 70 distinct results. The worst scoring bull spans 0.030 to 0.096 in on `ultrawide2`, 0.037 to 0.093 on `main2` and 0.059 to 0.117 on `ultrawide3`. Scoring bulls over the gate span 12 to 23 on `main3`, and corners kept span 16 to 45 of 132 on `telephoto2`.
+- **Mounted frames:** every one gives 15 to 69 distinct results. The worst scoring bull spans 0.030 to 0.096 in on `ultrawide2`, 0.037 to 0.093 on `main2` and 0.059 to 0.117 on `ultrawide3`. Scoring bulls over the gate span 12 to 23 on `main3`, and corners kept span 16 to 45 of 132 on `telephoto2`.
 - **What it means:** the instability comes with the model's mismatch to a curved sheet. It is not a tuning problem in the sampler, and sorting the markers made it repeatable without making it smaller.
 
 **The consequence for the mounted gate, as stated beforehand.**
@@ -4429,6 +4429,90 @@ On the clean bulls 11 to 25, where no hole disturbs either locator, **the edge f
 
 ---
 
+## Entry 101. The macOS gate record made portable, the warning's whole percentage, the canvas's rule, and the gallery named
+
+`docs/NOTES-FROM-PLANNING.md` entry 101, in the order its covering message set: section 4, section 3, section 5, then the macOS gate record, which the entry says has been deferred twice. Sections 2 and 1 record rather than ask.
+
+### Sections 4, 3 and 5
+
+- **Section 4: the spacing warning says "about 27 percent".** The rate is rounded to a whole percentage, and under 1 percent it says so. A test refuses a decimal percentage in the sentence. The rate comes from a sigma estimated from one stated group, known to about a third either way.
+- **Section 3: the rule is written where the canvas's lengths are.** `MarkingCanvas` states it above its constants: a target the person aims at is measured on the paper, and a minimum the person has to see is measured on the screen. It also says which constant is which. The hit radius is a whole reach only for the scale-reference handles, which have no size on paper, and a floor everywhere else.
+- **Section 5: the README does not call the stage timeline done.** Its entry is in progress. It names what exists, a gallery of each stage's picture when the analysis finishes, and what does not, the live run `DESIGN.md` section 19 describes.
+
+### The macOS gate record: four native steps moved to managed code
+
+**Where it stood.** Entry 48 found the gated tables already identical on macOS, with the differences in measurement 1 and measurement 2. The rerun from Windows' corners (entry 49 section 2) placed them in three native steps:
+- **the synthetic scan's perspective warp**, which made a different image before anything was detected;
+- **sub-pixel corner refinement**, which moved corners on byte-identical images;
+- **the homography's final refinement**, which moved the last printed digit on identical corners and inliers.
+
+Turning OpenCV's optimised paths off changed nothing on macOS and broke a line on Linux, so the difference is in the native arithmetic itself rather than in a path that can be switched off.
+
+**What changed.** `PortableImaging`, in `src/GroupLab.Core/Imaging/`, does each floating-point step in scalar managed arithmetic, in a fixed order, with no call into a platform's maths library. IEEE 754 rounds those operations identically on x64 and arm64.
+
+| Step | Now | Kept native |
+|---|---|---|
+| Perspective warp | Inverse map, bilinear, border of paper, as `warpPerspective` | |
+| Sub-pixel refinement | A port of `cornerSubPix`: single-precision window and weights, double-precision sums, the Gaussian weight's exponential as a series | Finding and decoding the candidates |
+| The homography's final fit | A normalised linear estimate, then Levenberg-Marquardt to convergence, over the inliers RANSAC chose | RANSAC's choice of inliers |
+| Contour refinement | The side lines fitted and crossed in double precision | Finding each marker's contour again: the same thresholds, contours and polygon test |
+
+The native steps kept are integer work, and every gate record run has shown them identical on all three platforms.
+
+**How each was checked.**
+- **The first three, on all three platforms.** A gate record run on a branch carrying only them printed Linux identical to Windows in all eight tables. macOS differed in 3 lines, all of them contour rows of measurement 2.
+- **Contour refinement, against the native step on Windows.** OpenCV does not return the contour a marker was found on, so the managed step finds it again the way the detector does and keeps the first candidate whose corners are the marker's. The check put OpenCV's own single-precision normal equations and elimination back into the managed fit. It then reproduced the native corners to within one single-precision step, 0.0005 px at coordinates near 5000 px, on all 136 corners of each of the eight sheet images at 600 and 300 DPI. **Every contour recovered is the one OpenCV used.** Without that emulation the managed fit differs from native by up to 0.09 px. That is how far OpenCV's single-precision solve sits from the least-squares line, and it is also where clang's fused multiply-adds on arm64 change its answer.
+- **Unit tests.** `PortableImagingTests` has five: the series exponential against the library's, the warp's identity and a translation, a corner found between pixels, the contour fit's corners on a known square, and a known homography recovered with an outlier excluded.
+- **The confirmation is this commit's gate record run** on all three platforms, against the regenerated Windows tables.
+
+**No gate verdict changed.**
+- **Paper gate:** ten of ten. Worst 0.00319 in on tile 3, where it was 0.00340 on the 96.2 percent sheet.
+- **Print-scale detection:** 0.96200 at 600 DPI, where it was 0.96195, and 0.96201 at 300, unchanged.
+- **Photograph gates:** flat fails three of three and mounted seven of seven, and not one bull figure moved.
+- **Conformance test 43:** passes.
+
+**What moved, and why.** The largest movements come from the final fit.
+- **What OpenCV does.** `findHomography` refits linearly on RANSAC's inliers, runs at most ten Levenberg-Marquardt iterations, and then reclassifies the inliers.
+- **What the managed fit does.** It iterates to convergence over the inliers returned.
+- **The evidence it is the difference:** on the scans, the photographs, measurement 2's paper rows and measurements 3 and 4, the corner residual RMS is equal or lower in every row, as a least-squares fit carried to convergence should be. The rows with no refinement at all, where the corners are identical by construction, move too, so the fit alone moves figures.
+- **The exception:** measurement 1's four-marker subsets, whose median residual rises on sheet 1 and falls on sheets 2 and 3. With four markers, the inliers OpenCV refits on and the ones it returns after reclassifying can differ, and the managed fit uses the second.
+- **Corroboration:** M1.5's scan table already carried GroupLab's own converged plane fit beside the homography, and on the four scans where they disagreed it read 0.00260, 0.00267, 0.00319 and 0.00314 in. The managed homography now gives exactly those.
+
+| Figure | Before | After |
+|---|---|---|
+| Worst edge-fit bull, `gl-cf25-ltr-96.2-600-dpi.png` | 0.00340 | 0.00260 |
+| Homography alone, RMS, `main_flat3.jpg` | 0.01107 | 0.00945 |
+| Measurement 1, sheet 1, four markers, worst bull at the 90th percentile | 0.07296 | 0.04192 |
+| Measurement 2, 600 DPI, no refinement, worst bull | 0.00291 | 0.00279 |
+| Measurement 2, 600 DPI, 1.5-module window, worst bull | **0.00517, over the gate** | **0.00290** |
+| Measurement 2, synthetic 600 DPI, no refinement, corner error | 0.632 px | 0.641 px |
+| Measurement 4, `gl-cf25-ltr-3-600`, libapriltag as returned, worst bull | 0.00245 | 0.00280 |
+
+**One finding changed:** the 1.5-module refinement window no longer puts a sheet over the paper gate. Its corner error against truth is 2.326 px where it was 2.327, so the corners are as broken as before, and the bull breaks at 2 modules instead. The synthetic rows move because the warp builds a slightly different synthetic image. Measurement 4's conclusion holds with the half pixel removed, now within 0.00015 in rather than 0.00014.
+
+**Elsewhere.**
+- **The surface fits:** they iterate to their own convergence from the homography, so they move in the eighth significant digit. The exception is the joint general-surface fit, which M1.10 records does not converge: its worst sighter on `main1.jpg` goes from 0.07217 to 0.05150 in, and every verdict stays fail.
+- **Stability:** three mounted frames give one or two more or fewer distinct outcomes in 200 orders, and no range moved.
+- **Corpus counts:** 27 values move, on `telephoto3.jpg`, the excluded four-marker frame, which now gives 6 detections where it gave none, and on six punched 300 DPI runs. The ink-proximity rows follow `telephoto3.jpg`.
+- **Detection time:** managed sub-pixel refinement adds 10 to 16 ms per 600 DPI sheet wherever markers are found.
+
+**What was stale before this change, separated as entry 52 separated it.** Each record was regenerated from the previous commit's code before being compared with this change. `holes-synthetic.json` and `holes-synthetic-held-out.json` differ from their committed versions only there, and so do 18 of `detection-counts.json`'s values. All of them are entry 94's area-based oversize flag, which no one regenerated them after. Every other record was current, so everything above is this change.
+
+**What was regenerated.** Every record a command writes, the eight committed Windows tables the gate record workflow compares against, and the documents that print them:
+- `docs/PHASE0-RESULTS.md`: every table, and the prose that reads them. Its section 1 had quoted 0.00325 in since before entry 52 moved the 96.2 percent sheet to 0.00340.
+- M1.10's joint-fit rows, and the stability table in "Entry 52 sections 3 and 4".
+- **Left as measured, as entry 52 left them:** M1.5's tables, and `docs/FIDUCIAL-DECISION.md` measurement 8.
+- **Not regenerated:** `mounted-pair.json`, whose command reads a directory no longer in the repository.
+
+### Sections 2 and 1: recorded
+
+- **Section 2:** the excess sits in the middle rows, which favours the sheet not lying flat over the printer. Alan is rescanning the friend's sheet with a weight on the lid. When the scan arrives, the comparison is the one entry 98 section 3 ran, the same split with the same control, so a drop in bulls 11 to 25 reads directly against the three unshot sheets.
+- **Section 1:** a comparison between two halves can say they differ, not which one is abnormal. Naming the abnormal half needs a sheet where nothing is wrong. The control in entry 98 section 3 was that sheet.
+
+**Tests:** Core 867 and App 62 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4647,3 +4731,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 99: the editor ports the library's solver rather than calling it.** `tools/` is planning's and Python is not shipped; the port is held to the original by rebuilding ten sheets exactly.
 - **Entry 99: the fewest markers allowed is 9, the fewest any built-in sheet carries.** It is the one figure the project has shown registration holding at, on GL-LR300-T's tile, and choosing a lower one would be a guess.
 - **Entry 98 section 5: only the residual is kept.** The markers, corners and rejections were already in the result, so the interactive run's extra cost is one image.
+- **Entry 101: the homography's final fit carried to convergence, over stopping at OpenCV's ten iterations.** A fixed iteration count reproduces the native figures only as far as every other detail of its solver does, and convergence is a definition every platform reaches the same way.
+- **Entry 101: native code kept for the integer steps.** Candidate detection, decoding and RANSAC's inlier choice were identical on every platform in every gate record run; porting them would add risk to steps that already agree.
+- **Entry 101: the contour lines fitted in double precision, over emulating OpenCV's single precision.** The emulation reproduces native and proves the contours are the same, but its answer is up to 0.09 px from the least-squares line it sets out to compute.

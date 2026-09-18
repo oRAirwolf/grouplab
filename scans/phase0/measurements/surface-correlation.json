@@ -10,11 +10,11 @@
         "markers": 34,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 104,
-        "neighbour": 0.15279375335445503,
+        "neighbour": 0.15279376161935423,
         "neighbourP": 0.001999000499750125,
         "farPairs": 219,
-        "far": 0.008681499831863854,
-        "rmsResidualDmm": 2.0736340640594713
+        "far": 0.008681492948536084,
+        "rmsResidualDmm": 2.0736340899305508
       },
       "markers": [
         {
@@ -230,11 +230,11 @@
         "markers": 32,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 97,
-        "neighbour": 0.1568052416494357,
+        "neighbour": 0.15680524128847015,
         "neighbourP": 0.0024987506246876563,
         "farPairs": 183,
-        "far": -0.09654877031507782,
-        "rmsResidualDmm": 2.426232439901763
+        "far": -0.09654876974974759,
+        "rmsResidualDmm": 2.4262324456270377
       },
       "markers": [
         {
@@ -438,11 +438,11 @@
         "markers": 30,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 89,
-        "neighbour": 0.18480827985852274,
+        "neighbour": 0.18480828185576847,
         "neighbourP": 0.0004997501249375312,
         "farPairs": 149,
-        "far": -0.1421372367799424,
-        "rmsResidualDmm": 3.0191341817919453
+        "far": -0.1421372364074283,
+        "rmsResidualDmm": 3.0191341653911357
       },
       "markers": [
         {
@@ -634,11 +634,11 @@
         "markers": 34,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 104,
-        "neighbour": 0.05630877935227871,
+        "neighbour": 0.05630878352939274,
         "neighbourP": 0.0814592703648176,
         "farPairs": 219,
-        "far": 0.008058389558765809,
-        "rmsResidualDmm": 1.3174897233125342
+        "far": 0.008058388056577192,
+        "rmsResidualDmm": 1.3174897198205566
       },
       "markers": [
         {
@@ -854,11 +854,11 @@
         "markers": 24,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 68,
-        "neighbour": 0.2932454177395961,
+        "neighbour": 0.2932454168044194,
         "neighbourP": 0.0004997501249375312,
         "farPairs": 118,
-        "far": -0.17523978596391032,
-        "rmsResidualDmm": 2.179292335247807
+        "far": -0.17523978543804022,
+        "rmsResidualDmm": 2.1792923381391773
       },
       "markers": [
         {
@@ -1014,11 +1014,11 @@
         "markers": 27,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 76,
-        "neighbour": 0.07656630462033116,
+        "neighbour": 0.0765657357225536,
         "neighbourP": 0.06796601699150424,
         "farPairs": 113,
-        "far": -0.04178481228234793,
-        "rmsResidualDmm": 1.8017692820153255
+        "far": -0.04178485240952759,
+        "rmsResidualDmm": 1.8017691715526976
       },
       "markers": [
         {
@@ -1192,11 +1192,11 @@
         "markers": 33,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 96,
-        "neighbour": 0.15306392792075954,
+        "neighbour": 0.1530639277875942,
         "neighbourP": 0.01249375312343828,
         "farPairs": 210,
-        "far": 0.045805465595614644,
-        "rmsResidualDmm": 2.652801801255074
+        "far": 0.04580546553476348,
+        "rmsResidualDmm": 2.6528017984694316
       },
       "markers": [
         {
@@ -1406,18 +1406,18 @@
         "markers": 34,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 104,
-        "neighbour": 0.08861847047548518,
+        "neighbour": 0.08861900793957113,
         "neighbourP": 0.03798100949525238,
         "farPairs": 219,
-        "far": -0.10475479617155015,
-        "rmsResidualDmm": 0.5970393032560649
+        "far": -0.10475450317114574,
+        "rmsResidualDmm": 0.5970394281035972
       },
       "markers": [
         {
           "centreX": 510,
           "centreY": 349,
           "dx": 0.0723,
-          "dy": 0.0611
+          "dy": 0.061
         },
         {
           "centreX": 890,
@@ -1626,11 +1626,11 @@
         "markers": 25,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 70,
-        "neighbour": 0.2189138468010694,
+        "neighbour": 0.21891393629770592,
         "neighbourP": 0.0009995002498750624,
         "farPairs": 86,
-        "far": -0.17170854370698208,
-        "rmsResidualDmm": 0.6959834071884207
+        "far": -0.1717087002485871,
+        "rmsResidualDmm": 0.6959834031134428
       },
       "markers": [
         {
@@ -1792,11 +1792,11 @@
         "markers": 23,
         "neighbourDistanceDmm": 570,
         "neighbourPairs": 63,
-        "neighbour": -0.008617852940083751,
+        "neighbour": -0.008616936470622762,
         "neighbourP": 0.31084457771114443,
         "farPairs": 69,
-        "far": 0.020785028450688654,
-        "rmsResidualDmm": 0.7508209639055691
+        "far": 0.020785112075181418,
+        "rmsResidualDmm": 0.7508206903413646
       },
       "markers": [
         {
@@ -1814,7 +1814,7 @@
         {
           "centreX": 510,
           "centreY": 1109,
-          "dx": -0.1368,
+          "dx": -0.1367,
           "dy": -0.139
         },
         {

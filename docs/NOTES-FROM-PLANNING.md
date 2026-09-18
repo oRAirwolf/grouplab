@@ -15,6 +15,74 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 101: the control is what answered it, the error's location names its cause, and a warning claims four digits it does not have
+
+**Status: actioned 2026-09-18.**
+- **Section 4: "about 27 percent".** The spacing warning rounds its rate to a whole percentage, and a test refuses a decimal one.
+- **Section 3: the rule is written above the canvas's constants**, with which constant falls under which half of it.
+- **Section 5: the README calls the stage timeline in progress**, a gallery at the end, with the live run of `DESIGN.md` section 19 not built.
+- **The macOS gate record:** the synthetic warp, both corner refinements and the homography's final fit are managed code, so every platform computes them the same way. Before this commit, a run carrying the first three printed Linux identical and macOS different only in the three contour rows, and the managed contour step reproduces the native one on Windows once OpenCV's single precision is put back. Every gate verdict is unchanged; the records, the Windows tables and the documents that print them are regenerated. `docs/PHASE1-RESULTS.md` "Entry 101".
+- **Sections 2 and 1: recorded.** The rescan with a weight on the lid is compared the way entry 98 section 3 was, with the same control.
+
+Section 2 has a two-minute test Alan can run without printing or shooting anything. Section 4 is a small correction to user-facing prose that matters because people will act on it.
+
+### 1. I asked for a comparison and it needed a control
+
+I asked for the scan's residual on the holed bulls against the clean ones. **Claude Code ran that and added three unshot Phase 0 sheets as a control, and the control is the only reason the result means anything.**
+
+| rms, in | Holed half | Clean half |
+|---|---|---|
+| Alan's sheet | 0.0019 | **0.0030** |
+| Unshot Phase 0 sheets | 0.0019 to 0.0021 | **0.0010 to 0.0013** |
+
+**Without the control, 0.0019 against 0.0020 reads as "the holes are not the cause" and stops there.** That conclusion is correct and it is half the answer. **With the control it becomes "the lower middle of a sheet is always the worse half, Alan's matches everyone's, and his excess is entirely in the clean bulls"**, which locates the problem instead of merely acquitting a suspect.
+
+**The rule: a comparison between two halves cannot say which half is abnormal.** It can only say they differ. **Naming the abnormal one needs a sheet where nothing is wrong**, and I should have asked for that rather than being handed it.
+
+This is the same shape as entry 82's lesson about proposing a discriminator from medians. **Both times the missing thing was a reference distribution, and both times it was supplied by somebody else.**
+
+### 2. The location favours lift over the printer, and there is a test that takes two minutes
+
+**The excess is in bulls 11 to 25, which are rows three, four and five: the middle of the page.** Not the bottom, not the edges.
+
+**That is what a sheet which will not lie flat does on a flatbed.** The lid presses the edges and the middle stands off the glass, so the middle of the page is imaged at a slightly wrong magnification. **Alan's sheet was taped at four corners to bowed cardboard, shot, and peeled off. The Phase 0 sheets were never mounted.**
+
+**A printer error would not choose the middle.** A 0.43 percent vertical stretch is monotonic down the page and would show at the bottom, which is where the error is not.
+
+**So Claude Code's own alternative is the better one and the location argues for it specifically.**
+
+**The test needs no printing, shooting or photographing.** **Scan the friend's sheet again with a heavy flat weight on the lid**, a large book, and compare the middle rows. **If the excess drops, it was lift.** If it does not, it is the printer and the weekend's clean-sheet scan becomes a confirmation rather than the experiment.
+
+**Two minutes, a sheet Alan already has, and it decides a question that has been open since entry 96.**
+
+### 3. Interaction is physical, legibility is screen-space, and that distinction should be written down
+
+The tap snap is now a hole's width on the paper plus four screen pixels for aim. Selecting a shot reaches its drawn ring. Clicking a bull covers half the distance to its neighbour. **And drawing minimums and gaps stayed in pixels.**
+
+**That split is exactly right and it is a rule worth stating rather than leaving as three decisions.**
+
+> **A target the person is aiming at is measured on the paper. A minimum the person has to see is measured on the screen.**
+
+The first must not change when a window resizes. The second must not shrink below what an eye can resolve. **Anything measured in the wrong one of those two will break the first time a layout moves**, which is precisely how this was found.
+
+### 4. The spacing warning claims four significant figures it does not have
+
+> 1.00 in between bulls is 2.9 sigma: about one shot in 4 (26.58 percent) would land nearer a neighbouring bull than its own.
+
+**"About one shot in 4" is right. "26.58 percent" is not.** That figure comes from a simulation, and its input is a sigma the person has estimated or that came from a group with an interval of roughly plus or minus a third. **Two decimal places on it is a precision the number does not have**, and this project has caught itself doing that before.
+
+**Cut it to "about one shot in four", or if a percentage is wanted, "about 27 percent".** The sentence is otherwise very good: it gives the number, says what it means, and leaves the decision alone.
+
+### 5. The stage pictures are a gallery, not yet the thing the design describes
+
+Claude Code says plainly that the pictures appear when the analysis finishes rather than stage by stage. `DESIGN.md` section 19 [r3] describes a live run where "the markers light up, the residual map settles, the artwork vanishes and the holes emerge".
+
+**A gallery at the end is most of the value and none of the theatre.** Record the difference rather than letting the feature read as done.
+
+**It goes below the macOS gate record**, which is the last open red in CI and has now been deferred twice.
+
+---
+
 ## 2026-09-18, entry 100: a form needs token roles the concept never showed, and the rehearsal ceiling applies to screens that are not the editor
 
 **Status: actioned 2026-09-18.**

@@ -77,17 +77,17 @@
         "centreXPx": 1499.5,
         "centreYPx": 1999.5,
         "scalePx": 2000,
-        "k1": -0.051158705910173255,
-        "k2": 0.06758110134401198,
+        "k1": -0.051158708443564876,
+        "k2": 0.06758110602052304,
         "normalisedToPage": [
-          2000.268736951269,
-          -116.52707475682264,
-          1079.4913299237776,
-          -0.05006549038095038,
-          1869.003523470335,
-          1397.0374261655936,
-          -4.3041129369544784E-05,
-          -0.1079430021873167,
+          2000.2687249307355,
+          -116.52707542141248,
+          1079.4913276086793,
+          -0.05008718019036612,
+          1869.0035239887281,
+          1397.0374261636157,
+          -4.305281374978193E-05,
+          -0.1079430022377189,
           1
         ],
         "form": "page = normalisedToPage(u (1 \u002B k1 r^2 \u002B k2 r^4)), u = (image - centre) / scale"
@@ -730,7 +730,7 @@
           "imageYPx": 1727.7661,
           "pageX": 2010,
           "pageY": 1129,
-          "error": 0.1628,
+          "error": 0.1629,
           "inlier": true
         },
         {
@@ -950,7 +950,7 @@
           "imageYPx": 2071.3264,
           "pageX": 2050,
           "pageY": 1469,
-          "error": 0.2615,
+          "error": 0.2614,
           "inlier": true
         },
         {
@@ -1845,9 +1845,9 @@
           "declaredX": 1840,
           "declaredY": 2059,
           "recoveredX": 1839.9876,
-          "recoveredY": 2058.9823,
+          "recoveredY": 2058.9824,
           "dx": -0.0124,
-          "dy": -0.0177,
+          "dy": -0.0176,
           "error": 0.0216,
           "inkSpread": -0.003,
           "threshold": null,
@@ -1978,22 +1978,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 3.103950129523627,
+          "rulingAngle": 3.103950182868014,
           "bend": [
             0,
-            -0.0023457792402288248,
-            -0.0013971168852711447,
-            0.0046688070016276525
+            -0.0023457792523830082,
+            -0.0013971169608162923,
+            0.004668807148000776
           ],
-          "rotationX": 0.13890966877879943,
-          "rotationY": -2.21816511791155E-05,
-          "rotationZ": -2.0110378732518326E-06,
-          "translationX": 0.006036605708722642,
-          "translationY": -0.05770233242924995,
-          "translationZ": 2595.4950329371245,
-          "focal": 1.2974949544690282,
-          "k1": -0.05101169446657021,
-          "k2": 0.06730396718409366,
+          "rotationX": 0.1389096687196069,
+          "rotationY": -2.2181687896825978E-05,
+          "rotationZ": -2.0110396642075635E-06,
+          "translationX": 0.006036607751699127,
+          "translationY": -0.057702331625681245,
+          "translationZ": 2595.4950320333355,
+          "focal": 1.2974949540052265,
+          "k1": -0.0510116945379919,
+          "k2": 0.06730396731357188,
           "centreX": 1499.5,
           "centreY": 1999.5,
           "scale": 2000,
@@ -2001,7 +2001,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2594.9899089380565
+          "focalPixels": 2594.989908010453
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -3892,17 +3892,17 @@
         "centreXPx": 1499.5,
         "centreYPx": 1999.5,
         "scalePx": 2000,
-        "k1": 0.17704888916069286,
-        "k2": -0.7591589109537399,
+        "k1": 0.17704869563724435,
+        "k2": -0.7591572367971777,
         "normalisedToPage": [
-          1988.276902914036,
-          -128.9570244378217,
-          1079.4049707438762,
-          -0.5068487652535887,
-          1837.6480738227967,
-          1399.0117768166353,
-          -0.0004699962400578727,
-          -0.11867655786585339,
+          1988.276918708045,
+          -128.9570461576227,
+          1079.4049716341067,
+          -0.506839224438146,
+          1837.6480510991605,
+          1399.0117766467258,
+          -0.00046998906956077964,
+          -0.11867657800002036,
           1
         ],
         "form": "page = normalisedToPage(u (1 \u002B k1 r^2 \u002B k2 r^4)), u = (image - centre) / scale"
@@ -3915,7 +3915,7 @@
           "imageYPx": 872.9731,
           "pageX": 490,
           "pageY": 329,
-          "error": 78.988,
+          "error": 78.9878,
           "inlier": false
         },
         {
@@ -3925,7 +3925,7 @@
           "imageYPx": 872.2163,
           "pageX": 530,
           "pageY": 329,
-          "error": 70.9124,
+          "error": 70.9121,
           "inlier": false
         },
         {
@@ -3935,7 +3935,7 @@
           "imageYPx": 916.4072,
           "pageX": 530,
           "pageY": 369,
-          "error": 57.0621,
+          "error": 57.0619,
           "inlier": false
         },
         {
@@ -3945,7 +3945,7 @@
           "imageYPx": 917.252,
           "pageX": 490,
           "pageY": 369,
-          "error": 64.4429,
+          "error": 64.4427,
           "inlier": false
         },
         {
@@ -3955,7 +3955,7 @@
           "imageYPx": 868.0535,
           "pageX": 870,
           "pageY": 329,
-          "error": 33.3865,
+          "error": 33.3864,
           "inlier": false
         },
         {
@@ -3965,7 +3965,7 @@
           "imageYPx": 867.7621,
           "pageX": 910,
           "pageY": 329,
-          "error": 31.5951,
+          "error": 31.595,
           "inlier": false
         },
         {
@@ -3975,7 +3975,7 @@
           "imageYPx": 912.532,
           "pageX": 910,
           "pageY": 369,
-          "error": 22.8909,
+          "error": 22.8908,
           "inlier": false
         },
         {
@@ -3985,7 +3985,7 @@
           "imageYPx": 912.8034,
           "pageX": 870,
           "pageY": 369,
-          "error": 24.4687,
+          "error": 24.4686,
           "inlier": false
         },
         {
@@ -3995,7 +3995,7 @@
           "imageYPx": 867.7811,
           "pageX": 1250,
           "pageY": 329,
-          "error": 31.4843,
+          "error": 31.4842,
           "inlier": false
         },
         {
@@ -4005,7 +4005,7 @@
           "imageYPx": 868.0615,
           "pageX": 1290,
           "pageY": 329,
-          "error": 33.2485,
+          "error": 33.2483,
           "inlier": false
         },
         {
@@ -4015,7 +4015,7 @@
           "imageYPx": 912.7811,
           "pageX": 1290,
           "pageY": 369,
-          "error": 24.2855,
+          "error": 24.2854,
           "inlier": false
         },
         {
@@ -4025,7 +4025,7 @@
           "imageYPx": 912.5576,
           "pageX": 1250,
           "pageY": 369,
-          "error": 22.7978,
+          "error": 22.7977,
           "inlier": false
         },
         {
@@ -4035,7 +4035,7 @@
           "imageYPx": 872.2351,
           "pageX": 1630,
           "pageY": 329,
-          "error": 70.5971,
+          "error": 70.5969,
           "inlier": false
         },
         {
@@ -4045,7 +4045,7 @@
           "imageYPx": 873.0093,
           "pageX": 1670,
           "pageY": 329,
-          "error": 78.6727,
+          "error": 78.6725,
           "inlier": false
         },
         {
@@ -4055,7 +4055,7 @@
           "imageYPx": 917.2722,
           "pageX": 1670,
           "pageY": 369,
-          "error": 64.1008,
+          "error": 64.1006,
           "inlier": false
         },
         {
@@ -4065,7 +4065,7 @@
           "imageYPx": 916.3995,
           "pageX": 1630,
           "pageY": 369,
-          "error": 56.7253,
+          "error": 56.7251,
           "inlier": false
         },
         {
@@ -4075,7 +4075,7 @@
           "imageYPx": 1292.2977,
           "pageX": 110,
           "pageY": 709,
-          "error": 67.2553,
+          "error": 67.2551,
           "inlier": false
         },
         {
@@ -4085,7 +4085,7 @@
           "imageYPx": 1291.7299,
           "pageX": 150,
           "pageY": 709,
-          "error": 55.8526,
+          "error": 55.8525,
           "inlier": false
         },
         {
@@ -4095,7 +4095,7 @@
           "imageYPx": 1333.8213,
           "pageX": 150,
           "pageY": 749,
-          "error": 48.8011,
+          "error": 48.801,
           "inlier": false
         },
         {
@@ -4105,7 +4105,7 @@
           "imageYPx": 1334.1031,
           "pageX": 110,
           "pageY": 749,
-          "error": 59.331,
+          "error": 59.3309,
           "inlier": false
         },
         {
@@ -4245,7 +4245,7 @@
           "imageYPx": 1289.2379,
           "pageX": 1670,
           "pageY": 709,
-          "error": 7.0968,
+          "error": 7.0967,
           "inlier": false
         },
         {
@@ -4275,7 +4275,7 @@
           "imageYPx": 1291.7469,
           "pageX": 2010,
           "pageY": 709,
-          "error": 55.3941,
+          "error": 55.3939,
           "inlier": false
         },
         {
@@ -4285,7 +4285,7 @@
           "imageYPx": 1292.3102,
           "pageX": 2050,
           "pageY": 709,
-          "error": 66.7655,
+          "error": 66.7653,
           "inlier": false
         },
         {
@@ -4295,7 +4295,7 @@
           "imageYPx": 1334.2351,
           "pageX": 2050,
           "pageY": 749,
-          "error": 58.8465,
+          "error": 58.8463,
           "inlier": false
         },
         {
@@ -4305,7 +4305,7 @@
           "imageYPx": 1333.7634,
           "pageX": 2010,
           "pageY": 749,
-          "error": 48.3077,
+          "error": 48.3076,
           "inlier": false
         },
         {
@@ -4315,7 +4315,7 @@
           "imageYPx": 1685.6929,
           "pageX": 110,
           "pageY": 1089,
-          "error": 25.2303,
+          "error": 25.2302,
           "inlier": false
         },
         {
@@ -4325,7 +4325,7 @@
           "imageYPx": 1686.0363,
           "pageX": 150,
           "pageY": 1089,
-          "error": 19.158,
+          "error": 19.1579,
           "inlier": false
         },
         {
@@ -4345,7 +4345,7 @@
           "imageYPx": 1725.8418,
           "pageX": 110,
           "pageY": 1129,
-          "error": 23.4766,
+          "error": 23.4765,
           "inlier": false
         },
         {
@@ -4385,7 +4385,7 @@
           "imageYPx": 1728.1187,
           "pageX": 490,
           "pageY": 1129,
-          "error": 0.4392,
+          "error": 0.4391,
           "inlier": true
         },
         {
@@ -4515,7 +4515,7 @@
           "imageYPx": 1685.7928,
           "pageX": 2010,
           "pageY": 1089,
-          "error": 19.085,
+          "error": 19.0849,
           "inlier": false
         },
         {
@@ -4535,7 +4535,7 @@
           "imageYPx": 1725.7816,
           "pageX": 2050,
           "pageY": 1129,
-          "error": 23.105,
+          "error": 23.1049,
           "inlier": false
         },
         {
@@ -4555,7 +4555,7 @@
           "imageYPx": 2062.6523,
           "pageX": 110,
           "pageY": 1469,
-          "error": 18.6753,
+          "error": 18.6752,
           "inlier": false
         },
         {
@@ -4575,7 +4575,7 @@
           "imageYPx": 2102.0632,
           "pageX": 150,
           "pageY": 1509,
-          "error": 14.1734,
+          "error": 14.1733,
           "inlier": false
         },
         {
@@ -4765,7 +4765,7 @@
           "imageYPx": 2062.7122,
           "pageX": 2050,
           "pageY": 1469,
-          "error": 18.4626,
+          "error": 18.4625,
           "inlier": false
         },
         {
@@ -4795,7 +4795,7 @@
           "imageYPx": 2425.5586,
           "pageX": 110,
           "pageY": 1849,
-          "error": 26.3179,
+          "error": 26.3178,
           "inlier": false
         },
         {
@@ -4805,7 +4805,7 @@
           "imageYPx": 2426.7065,
           "pageX": 150,
           "pageY": 1849,
-          "error": 19.7638,
+          "error": 19.7637,
           "inlier": false
         },
         {
@@ -4825,7 +4825,7 @@
           "imageYPx": 2462.186,
           "pageX": 110,
           "pageY": 1889,
-          "error": 28.869,
+          "error": 28.8689,
           "inlier": false
         },
         {
@@ -4995,7 +4995,7 @@
           "imageYPx": 2426.7271,
           "pageX": 2010,
           "pageY": 1849,
-          "error": 19.7144,
+          "error": 19.7143,
           "inlier": false
         },
         {
@@ -5005,7 +5005,7 @@
           "imageYPx": 2425.4358,
           "pageX": 2050,
           "pageY": 1849,
-          "error": 26.2667,
+          "error": 26.2666,
           "inlier": false
         },
         {
@@ -5015,7 +5015,7 @@
           "imageYPx": 2462.4587,
           "pageX": 2050,
           "pageY": 1889,
-          "error": 28.6304,
+          "error": 28.6303,
           "inlier": false
         },
         {
@@ -5025,7 +5025,7 @@
           "imageYPx": 2463.4045,
           "pageX": 2010,
           "pageY": 1889,
-          "error": 22.1724,
+          "error": 22.1723,
           "inlier": false
         },
         {
@@ -5035,7 +5035,7 @@
           "imageYPx": 2774.6182,
           "pageX": 110,
           "pageY": 2229,
-          "error": 66.0763,
+          "error": 66.0761,
           "inlier": false
         },
         {
@@ -5045,7 +5045,7 @@
           "imageYPx": 2776.3777,
           "pageX": 150,
           "pageY": 2229,
-          "error": 54.8829,
+          "error": 54.8827,
           "inlier": false
         },
         {
@@ -5055,7 +5055,7 @@
           "imageYPx": 2812.3081,
           "pageX": 150,
           "pageY": 2269,
-          "error": 62.3465,
+          "error": 62.3463,
           "inlier": false
         },
         {
@@ -5065,7 +5065,7 @@
           "imageYPx": 2810.3501,
           "pageX": 110,
           "pageY": 2269,
-          "error": 74.2418,
+          "error": 74.2416,
           "inlier": false
         },
         {
@@ -5075,7 +5075,7 @@
           "imageYPx": 2787.0906,
           "pageX": 490,
           "pageY": 2229,
-          "error": 2.7077,
+          "error": 2.7076,
           "inlier": false
         },
         {
@@ -5095,7 +5095,7 @@
           "imageYPx": 2824.2812,
           "pageX": 530,
           "pageY": 2269,
-          "error": 2.3443,
+          "error": 2.3442,
           "inlier": false
         },
         {
@@ -5105,7 +5105,7 @@
           "imageYPx": 2823.1558,
           "pageX": 490,
           "pageY": 2269,
-          "error": 5.6829,
+          "error": 5.6828,
           "inlier": false
         },
         {
@@ -5115,7 +5115,7 @@
           "imageYPx": 2792.6836,
           "pageX": 870,
           "pageY": 2229,
-          "error": 11.5697,
+          "error": 11.5698,
           "inlier": false
         },
         {
@@ -5125,7 +5125,7 @@
           "imageYPx": 2793.1228,
           "pageX": 910,
           "pageY": 2229,
-          "error": 12.2554,
+          "error": 12.2555,
           "inlier": false
         },
         {
@@ -5145,7 +5145,7 @@
           "imageYPx": 2829.1472,
           "pageX": 870,
           "pageY": 2269,
-          "error": 11.0116,
+          "error": 11.0117,
           "inlier": false
         },
         {
@@ -5175,7 +5175,7 @@
           "imageYPx": 2829.3079,
           "pageX": 1290,
           "pageY": 2269,
-          "error": 11.1391,
+          "error": 11.1392,
           "inlier": false
         },
         {
@@ -5205,7 +5205,7 @@
           "imageYPx": 2786.8708,
           "pageX": 1670,
           "pageY": 2229,
-          "error": 2.8433,
+          "error": 2.8432,
           "inlier": false
         },
         {
@@ -5215,7 +5215,7 @@
           "imageYPx": 2823.3801,
           "pageX": 1670,
           "pageY": 2269,
-          "error": 5.4595,
+          "error": 5.4594,
           "inlier": false
         },
         {
@@ -5235,7 +5235,7 @@
           "imageYPx": 2776.3586,
           "pageX": 2010,
           "pageY": 2229,
-          "error": 55.1583,
+          "error": 55.1581,
           "inlier": false
         },
         {
@@ -5245,7 +5245,7 @@
           "imageYPx": 2774.562,
           "pageX": 2050,
           "pageY": 2229,
-          "error": 66.2699,
+          "error": 66.2697,
           "inlier": false
         },
         {
@@ -5255,7 +5255,7 @@
           "imageYPx": 2810.3049,
           "pageX": 2050,
           "pageY": 2269,
-          "error": 74.5891,
+          "error": 74.5888,
           "inlier": false
         },
         {
@@ -5265,7 +5265,7 @@
           "imageYPx": 2812.2422,
           "pageX": 2010,
           "pageY": 2269,
-          "error": 62.5807,
+          "error": 62.5805,
           "inlier": false
         }
       ],
@@ -5295,7 +5295,7 @@
           "recoveredY": 542.6333,
           "dx": 0.6064,
           "dy": 3.6333,
-          "error": 3.6836,
+          "error": 3.6835,
           "inkSpread": -0.0331,
           "threshold": null,
           "iterations": 7,
@@ -5579,9 +5579,9 @@
           "scoring": true,
           "declaredX": 1840,
           "declaredY": 1679,
-          "recoveredX": 1839.4685,
+          "recoveredX": 1839.4686,
           "recoveredY": 1676.2033,
-          "dx": -0.5315,
+          "dx": -0.5314,
           "dy": -2.7967,
           "error": 2.8467,
           "inkSpread": -0.0894,
@@ -5612,9 +5612,9 @@
           "declaredX": 700,
           "declaredY": 2059,
           "recoveredX": 695.9617,
-          "recoveredY": 2065.2232,
+          "recoveredY": 2065.2233,
           "dx": -4.0383,
-          "dy": 6.2232,
+          "dy": 6.2233,
           "error": 7.4187,
           "inkSpread": 0.0314,
           "threshold": null,
@@ -5659,9 +5659,9 @@
           "scoring": true,
           "declaredX": 1840,
           "declaredY": 2059,
-          "recoveredX": 1838.4951,
+          "recoveredX": 1838.4952,
           "recoveredY": 2054.1708,
-          "dx": -1.5049,
+          "dx": -1.5048,
           "dy": -4.8292,
           "error": 5.0582,
           "inkSpread": 0.0053,
@@ -5676,9 +5676,9 @@
           "declaredX": 700,
           "declaredY": 2515,
           "recoveredX": 699.6797,
-          "recoveredY": 2515.5689,
+          "recoveredY": 2515.569,
           "dx": -0.3203,
-          "dy": 0.5689,
+          "dy": 0.569,
           "error": 0.6529,
           "inkSpread": -0.1383,
           "threshold": null,
@@ -5692,10 +5692,10 @@
           "declaredX": 1080,
           "declaredY": 2515,
           "recoveredX": 1079.4397,
-          "recoveredY": 2514.3078,
+          "recoveredY": 2514.3079,
           "dx": -0.5603,
-          "dy": -0.6922,
-          "error": 0.8906,
+          "dy": -0.6921,
+          "error": 0.8905,
           "inkSpread": -0.4144,
           "threshold": null,
           "iterations": 5,
@@ -5707,10 +5707,10 @@
           "scoring": false,
           "declaredX": 1460,
           "declaredY": 2515,
-          "recoveredX": 1459.2892,
-          "recoveredY": 2515.7152,
-          "dx": -0.7108,
-          "dy": 0.7152,
+          "recoveredX": 1459.2893,
+          "recoveredY": 2515.7153,
+          "dx": -0.7107,
+          "dy": 0.7153,
           "error": 1.0083,
           "inkSpread": -0.146,
           "threshold": null,
@@ -5793,22 +5793,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.570668001689067,
+          "rulingAngle": 1.5706680016863526,
           "bend": [
             0,
-            0.10810123117453685,
-            0.0007729532152894509,
-            0.002142161180301367
+            0.10810123109425224,
+            0.0007729532402213282,
+            0.0021421612382013623
           ],
-          "rotationX": 0.13933071189979185,
-          "rotationY": -0.0001818715170654656,
-          "rotationZ": -2.3280949000249712E-05,
-          "translationX": 0.016684927950720782,
-          "translationY": -0.019713562057349004,
-          "translationZ": 2597.161043965914,
-          "focal": 1.2985269436522422,
-          "k1": -0.05044401585287595,
-          "k2": 0.06633386463558982,
+          "rotationX": 0.13933071185573562,
+          "rotationY": -0.00018187152528151946,
+          "rotationZ": -2.3280949472898935E-05,
+          "translationX": 0.016684928291522187,
+          "translationY": -0.01971356410456185,
+          "translationZ": 2597.1610430741134,
+          "focal": 1.2985269431927127,
+          "k1": -0.050444015909496195,
+          "k2": 0.06633386476922243,
           "centreX": 1499.5,
           "centreY": 1999.5,
           "scale": 2000,
@@ -5816,7 +5816,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2597.0538873044843
+          "focalPixels": 2597.0538863854254
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -7707,17 +7707,17 @@
         "centreXPx": 1499.5,
         "centreYPx": 1999.5,
         "scalePx": 2000,
-        "k1": -0.02760465667528715,
-        "k2": 0.03345136006345387,
+        "k1": -0.027604650908526245,
+        "k2": 0.03345134443253882,
         "normalisedToPage": [
-          1953.8640664172742,
-          -119.63801949726773,
-          1080.402755698338,
-          -70.12670792826307,
-          1874.9932757075042,
-          1399.4920795273479,
-          -0.06848825562865643,
-          -0.11109601175393825,
+          1953.8640643307901,
+          -119.63801900220828,
+          1080.4027556313529,
+          -70.12670925648682,
+          1874.9932752985314,
+          1399.492079527779,
+          -0.06848825657109232,
+          -0.1110960112947228,
           1
         ],
         "form": "page = normalisedToPage(u (1 \u002B k1 r^2 \u002B k2 r^4)), u = (image - centre) / scale"
@@ -9608,22 +9608,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.5709789486064274,
+          "rulingAngle": 1.5709789486017247,
           "bend": [
             0,
-            0.4433396782159592,
-            -0.003616176222562331,
-            0.004960634118740557
+            0.4433396782205367,
+            -0.0036161762175472047,
+            0.0049606340709041205
           ],
-          "rotationX": 0.13945824115563957,
-          "rotationY": 0.00039966942446284395,
-          "rotationZ": 2.5504922380724383E-05,
-          "translationX": 0.0015757960882247213,
-          "translationY": -0.02289903136739775,
-          "translationZ": 2598.865821362335,
-          "focal": 1.299408566505389,
-          "k1": -0.050292450657652026,
-          "k2": 0.06653723415789732,
+          "rotationX": 0.13945824114719255,
+          "rotationY": 0.00039966942378482826,
+          "rotationZ": 2.5504922377181465E-05,
+          "translationX": 0.0015757961509221935,
+          "translationY": -0.022899032165915365,
+          "translationZ": 2598.8658212923397,
+          "focal": 1.2994085664763424,
+          "k1": -0.05029245059317754,
+          "k2": 0.06653723400127637,
           "centreX": 1499.5,
           "centreY": 1999.5,
           "scale": 2000,
@@ -9631,7 +9631,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2598.817133010778
+          "focalPixels": 2598.817132952685
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -11522,17 +11522,17 @@
         "centreXPx": 1499.5,
         "centreYPx": 1999.5,
         "scalePx": 2000,
-        "k1": 0.044507743054378206,
-        "k2": -0.0447113549604873,
+        "k1": 0.04450774419710319,
+        "k2": -0.04471135965904492,
         "normalisedToPage": [
-          2005.710790290717,
-          182.54982851788614,
-          1080.7413613301148,
-          16.71804981607444,
-          2258.91574535501,
-          1392.3407380218198,
-          0.007355604367532558,
-          0.1655182594214613,
+          2005.7107886306642,
+          182.5498272948794,
+          1080.7413609889604,
+          16.7180455708905,
+          2258.9157453215503,
+          1392.3407379584485,
+          0.007355602305472266,
+          0.16551825908077183,
           1
         ],
         "form": "page = normalisedToPage(u (1 \u002B k1 r^2 \u002B k2 r^4)), u = (image - centre) / scale"
@@ -13423,22 +13423,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.5716000011596316,
+          "rulingAngle": 1.5716000011894402,
           "bend": [
             0,
-            0.10849680181303759,
-            0.0004076842250233316,
-            0.0010842758356014136
+            0.10849680179342744,
+            0.00040768424999949957,
+            0.0010842758486907611
           ],
-          "rotationX": -0.22216245463279857,
-          "rotationY": -0.00011527992867323406,
-          "rotationZ": -1.2268162011736022E-06,
-          "translationX": -0.0034399643109006375,
-          "translationY": -0.036563231981260255,
-          "translationZ": 2594.9980810386874,
-          "focal": 1.297426682239975,
-          "k1": -0.05036551906097967,
-          "k2": 0.06567232719746169,
+          "rotationX": -0.22216245462175924,
+          "rotationY": -0.00011527993699516056,
+          "rotationZ": -1.2268155818269468E-06,
+          "translationX": -0.003439963892642682,
+          "translationY": -0.036563231316050375,
+          "translationZ": 2594.9980809054077,
+          "focal": 1.2974266821760845,
+          "k1": -0.05036551902499469,
+          "k2": 0.06567232713349355,
           "centreX": 1499.5,
           "centreY": 1999.5,
           "scale": 2000,
@@ -13446,7 +13446,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2594.85336447995
+          "focalPixels": 2594.853364352169
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -15337,17 +15337,17 @@
         "centreXPx": 1499.5,
         "centreYPx": 1999.5,
         "scalePx": 2000,
-        "k1": 0.06718177570967511,
-        "k2": -0.1260788091615273,
+        "k1": 0.06718162451511744,
+        "k2": -0.12607838777271776,
         "normalisedToPage": [
-          1998.2808230611347,
-          -117.75722074431762,
-          1079.7164150996437,
-          1.7839988297786813,
-          1855.0222208693683,
-          1399.0837113688028,
-          0.0019356667490842139,
-          -0.10557684952344686,
+          1998.2808199058602,
+          -117.7572134025156,
+          1079.7164137639843,
+          1.783973039534196,
+          1855.0222461965668,
+          1399.0837110994994,
+          0.0019356478887017836,
+          -0.10557684499315172,
           1
         ],
         "form": "page = normalisedToPage(u (1 \u002B k1 r^2 \u002B k2 r^4)), u = (image - centre) / scale"
@@ -15400,7 +15400,7 @@
           "imageYPx": 866.8122,
           "pageX": 870,
           "pageY": 329,
-          "error": 8.8385,
+          "error": 8.8386,
           "inlier": false
         },
         {
@@ -15520,7 +15520,7 @@
           "imageYPx": 1290.8472,
           "pageX": 110,
           "pageY": 709,
-          "error": 2.5516,
+          "error": 2.5515,
           "inlier": false
         },
         {
@@ -15720,7 +15720,7 @@
           "imageYPx": 1293.1238,
           "pageX": 2010,
           "pageY": 709,
-          "error": 7.3476,
+          "error": 7.3475,
           "inlier": false
         },
         {
@@ -16180,7 +16180,7 @@
           "imageYPx": 2106.5625,
           "pageX": 1670,
           "pageY": 1509,
-          "error": 2.1057,
+          "error": 2.1056,
           "inlier": true
         },
         {
@@ -16250,7 +16250,7 @@
           "imageYPx": 2424.7437,
           "pageX": 150,
           "pageY": 1849,
-          "error": 10.6918,
+          "error": 10.6919,
           "inlier": false
         },
         {
@@ -16690,7 +16690,7 @@
           "imageYPx": 2780.4756,
           "pageX": 2050,
           "pageY": 2229,
-          "error": 9.6574,
+          "error": 9.6573,
           "inlier": false
         },
         {
@@ -17076,7 +17076,7 @@
           "recoveredY": 2061.8817,
           "dx": -0.992,
           "dy": 2.8817,
-          "error": 3.0477,
+          "error": 3.0476,
           "inkSpread": 0.0568,
           "threshold": null,
           "iterations": 6,
@@ -17104,9 +17104,9 @@
           "scoring": true,
           "declaredX": 1840,
           "declaredY": 2059,
-          "recoveredX": 1841.6705,
+          "recoveredX": 1841.6706,
           "recoveredY": 2056.5533,
-          "dx": 1.6705,
+          "dx": 1.6706,
           "dy": -2.4467,
           "error": 2.9626,
           "inkSpread": -0.018,
@@ -17238,22 +17238,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.4321315276830517,
+          "rulingAngle": 1.432131527633531,
           "bend": [
             0,
-            0.11465774820722283,
-            -0.0008071720538962234,
-            -0.0045119382156200245
+            0.1146577480155796,
+            -0.0008071720649784164,
+            -0.004511938113733658
           ],
-          "rotationX": 0.13952512243196924,
-          "rotationY": 0.0003069328861878126,
-          "rotationZ": 6.401188898184415E-05,
-          "translationX": -0.017909569600729803,
-          "translationY": 0.06886914680462404,
-          "translationZ": 2601.5822125865484,
-          "focal": 1.3008944471617847,
-          "k1": -0.05162561563138815,
-          "k2": 0.06614412111113695,
+          "rotationX": 0.13952512231853548,
+          "rotationY": 0.0003069328939595669,
+          "rotationZ": 6.40118891379496E-05,
+          "translationX": -0.01790957045799445,
+          "translationY": 0.06886914183851421,
+          "translationZ": 2601.582210228547,
+          "focal": 1.3008944459584346,
+          "k1": -0.05162561570213109,
+          "k2": 0.0661441213100853,
           "centreX": 1499.5,
           "centreY": 1999.5,
           "scale": 2000,
@@ -17261,7 +17261,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2601.7888943235694
+          "focalPixels": 2601.788891916869
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },

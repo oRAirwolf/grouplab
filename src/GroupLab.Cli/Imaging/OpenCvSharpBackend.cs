@@ -82,12 +82,9 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             MinDistanceToBorder = 3,
             MinMarkerDistanceRate = 0.125,
             MinGroupDistance = 0.21f,
-            CornerRefinementMethod = options.Refinement switch
-            {
-                CornerRefinement.None => CornerRefineMethod.None,
-                CornerRefinement.Contour => CornerRefineMethod.Contour,
-                _ => CornerRefineMethod.Subpix,
-            },
+            // Entry 101: both refinements are done in managed code below, on the unrefined corners, because the native build refines
+            // differently on each platform.
+            CornerRefinementMethod = CornerRefineMethod.None,
             CornerRefinementWinSize = refineWindow,
             RelativeCornerRefinmentWinSize = refineRelative,
             CornerRefinementMaxIterations = 100,
@@ -115,6 +112,14 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         using var dictionary = CvAruco.GetPredefinedDictionary(PredefinedDictionaryType.DictAprilTag_36h11);
         using var detector = new ArucoDetector(dictionary, parameters, new RefineParameters());
         detector.DetectMarkers(input, out Point2f[][] corners, out int[] ids, out Point2f[][] notDecoded);
+        if (options.Refinement == CornerRefinement.Subpixel)
+        {
+            corners = RefineSubPixel(input, corners, refineWindow, refineRelative);
+        }
+        else if (options.Refinement == CornerRefinement.Contour)
+        {
+            corners = RefineOnContours(input, corners, parameters);
+        }
 
         // FIDUCIAL-DECISION.md section 11: OpenCV's DICT_APRILTAG_36h11 holds each code turned 180 degrees from the
         // official orientation GroupLab prints, so its first corner is the printed bottom-right. The corners are turned
@@ -141,6 +146,121 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         PointD Full(Point2f p) => new(((p.X + 0.5) * scaleX) - 0.5, ((p.Y + 0.5) * scaleY) - 0.5);
     }
 
+    /// <summary>
+    /// OpenCV ArUco's sub-pixel step, in managed code (entry 101): each marker's window is its module size times the relative window, at
+    /// least 2 and at most the configured window, as <c>ArucoDetector</c> sizes it, then <see cref="PortableImaging.CornerSubPix"/> with
+    /// OpenCV's 100 iterations and 0.001 px.
+    /// </summary>
+    private static Point2f[][] RefineSubPixel(Mat input, Point2f[][] corners, int window, float relative)
+    {
+        input.GetArray(out byte[] pixels);
+        var image = new GrayImage(input.Width, input.Height, pixels);
+        var refined = new Point2f[corners.Length][];
+        for (int m = 0; m < corners.Length; m++)
+        {
+            var c = corners[m];
+            double perimeter = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                double dx = c[(i + 1) % 4].X - c[i].X, dy = c[(i + 1) % 4].Y - c[i].Y;
+                perimeter += Math.Sqrt((dx * dx) + (dy * dy));
+            }
+
+            // getAverageModuleSize: the mean side over the marker's 6 bits plus a border bit each side.
+            float cell = (float)(perimeter / 4 / 8);
+            int size = relative > 0 ? Math.Min(Math.Max((int)Math.Round(relative * cell, MidpointRounding.ToEven), 2), window) : window;
+            var moved = PortableImaging.CornerSubPix(image, [.. c.Select(p => new PointD(p.X, p.Y))], size, 100, 0.001);
+            refined[m] = [.. moved.Select(p => new Point2f((float)p.X, (float)p.Y))];
+        }
+
+        return refined;
+    }
+
+    /// <summary>
+    /// OpenCV ArUco's contour refinement, with the line fitting in managed code (entry 101). OpenCV does not return the contour each marker
+    /// was found on, so it is found again the way <c>ArucoDetector</c> finds it: the same adaptive thresholds, contours and polygon test
+    /// over the same windows, which are integer work and identical on every platform; the candidates in the same order, largest perimeter
+    /// first and otherwise in the order found; and the first whose four corners are the marker's unrefined corners, which is the one a group
+    /// of near-identical candidates keeps. <see cref="PortableImaging.RefineOnContour"/> then fits the sides.
+    /// </summary>
+    private static Point2f[][] RefineOnContours(Mat input, Point2f[][] corners, DetectorParameters p)
+    {
+        int longest = Math.Max(input.Width, input.Height);
+        uint maxPerimeter = (uint)(p.MaxMarkerPerimeterRate * longest);
+
+        // _findMarkerContours takes minSideLengthCanonicalImg as its minimum side whenever it is set, as it is here.
+        uint minPerimeter = p.MinSideLengthCanonicalImg != 0 ? (uint)(4 * p.MinSideLengthCanonicalImg) : (uint)(p.MinMarkerPerimeterRate * longest);
+        var candidates = new List<(Point[] Contour, Point2f[] Corners, float Perimeter)>();
+        int scales = ((p.AdaptiveThreshWinSizeMax - p.AdaptiveThreshWinSizeMin) / p.AdaptiveThreshWinSizeStep) + 1;
+        using var thresholded = new Mat();
+        for (int s = 0; s < scales; s++)
+        {
+            int window = p.AdaptiveThreshWinSizeMin + (s * p.AdaptiveThreshWinSizeStep);
+            Cv2.AdaptiveThreshold(input, thresholded, 255, AdaptiveThresholdTypes.MeanC, ThresholdTypes.BinaryInv, window | 1, p.AdaptiveThreshConstant);
+            Cv2.FindContours(thresholded, out Point[][] contours, out _, RetrievalModes.List, ContourApproximationModes.ApproxNone);
+            foreach (var contour in contours)
+            {
+                if (contour.Length < minPerimeter || contour.Length > maxPerimeter)
+                {
+                    continue;
+                }
+
+                var polygon = Cv2.ApproxPolyDP(contour, contour.Length * p.PolygonalApproxAccuracyRate, true);
+                if (polygon.Length != 4 || !Cv2.IsContourConvex(polygon))
+                {
+                    continue;
+                }
+
+                double minSideSquared = (double)longest * longest;
+                for (int j = 0; j < 4; j++)
+                {
+                    double dx = polygon[j].X - polygon[(j + 1) % 4].X, dy = polygon[j].Y - polygon[(j + 1) % 4].Y;
+                    minSideSquared = Math.Min(minSideSquared, (dx * dx) + (dy * dy));
+                }
+
+                double minCorner = contour.Length * p.MinCornerDistanceRate;
+                if (minSideSquared < minCorner * minCorner)
+                {
+                    continue;
+                }
+
+                Point2f[] c = [.. polygon.Select(q => new Point2f(q.X, q.Y))];
+                double cross = ((c[1].X - c[0].X) * (c[2].Y - c[0].Y)) - ((c[1].Y - c[0].Y) * (c[2].X - c[0].X));
+                if (cross < 0)
+                {
+                    (c[1], c[3]) = (c[3], c[1]);
+                }
+
+                float perimeter = 0;
+                for (int j = 0; j < 4; j++)
+                {
+                    float dx = c[j].X - c[(j + 1) % 4].X, dy = c[j].Y - c[(j + 1) % 4].Y;
+                    perimeter += MathF.Sqrt((dx * dx) + (dy * dy));
+                }
+
+                candidates.Add((contour, c, perimeter));
+            }
+        }
+
+        // std::stable_sort, largest perimeter first.
+        var ordered = candidates.Select((c, i) => (c, i)).OrderByDescending(x => x.c.Perimeter).ThenBy(x => x.i).Select(x => x.c).ToList();
+        var refined = new Point2f[corners.Length][];
+        for (int m = 0; m < corners.Length; m++)
+        {
+            var marker = corners[m];
+            var match = ordered.FirstOrDefault(c => marker.All(q => c.Corners.Contains(q)));
+            if (match.Contour is null)
+            {
+                throw new InvalidOperationException("A detected marker's contour was not found again.");
+            }
+
+            var moved = PortableImaging.RefineOnContour([.. match.Contour.Select(q => (q.X, q.Y))], [.. marker.Select(q => new PointD(q.X, q.Y))]);
+            refined[m] = [.. moved.Select(q => new Point2f((float)q.X, (float)q.Y))];
+        }
+
+        return refined;
+    }
+
     public HomographyFit FindHomography(IReadOnlyList<PointD> source, IReadOnlyList<PointD> destination, double ransacThreshold)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -161,7 +281,11 @@ public sealed class OpenCvSharpBackend : IImagingBackend
 
         h.GetArray(out double[] values);
         mask.GetArray(out byte[] inliers);
-        return new HomographyFit(new Homography(values), [.. inliers.Select(b => b != 0)]);
+        bool[] use = [.. inliers.Select(b => b != 0)];
+
+        // Entry 101: RANSAC chooses the inliers, which the record shows is the same on every platform; the final fit over them is managed,
+        // because the native refinement's arithmetic differs by platform in the last printed digit.
+        return new HomographyFit(PortableImaging.RefineHomography(source, destination, use) ?? new Homography(values), use);
     }
 
     /// <summary>Resamples bilinearly, with <paramref name="transform"/> taking source pixels to destination pixels, and paper beyond the source.</summary>
@@ -169,12 +293,8 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(transform);
-        double[] values = [.. Enumerable.Range(0, 9).Select(i => transform[i / 3, i % 3])];
-        using var source = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
-        using var matrix = Mat.FromPixelData(3, 3, MatType.CV_64FC1, values);
-        using var result = new Mat();
-        Cv2.WarpPerspective(source, result, matrix, new Size(width, height), InterpolationFlags.Linear, BorderTypes.Constant, new Scalar(255));
-        return Copy(result);
+        // Entry 101: managed, because the native warp made a different synthetic image on each platform before anything was detected.
+        return PortableImaging.WarpPerspective(image, transform, width, height);
     }
 
     /// <summary>Copies a single-channel 8-bit OpenCV image into a <see cref="GrayImage"/>.</summary>

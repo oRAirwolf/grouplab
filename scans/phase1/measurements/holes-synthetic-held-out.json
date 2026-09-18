@@ -116,7 +116,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 3,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -321,7 +321,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 17,
+      "oversized": 9,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -519,7 +519,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 15,
+      "oversized": 9,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -817,7 +817,7 @@
       ],
       "splitHalves": 20,
       "splitHalvesMatched": 20,
-      "oversized": 15,
+      "oversized": 9,
       "oversizedOverTwo": 3,
       "mergedUnflagged": 0
     },
@@ -1310,9 +1310,9 @@
       ],
       "splitHalves": 6,
       "splitHalvesMatched": 6,
-      "oversized": 18,
-      "oversizedOverTwo": 3,
-      "mergedUnflagged": 0
+      "oversized": 9,
+      "oversizedOverTwo": 2,
+      "mergedUnflagged": 1
     },
     {
       "group": "main",
@@ -1739,7 +1739,7 @@
       ],
       "splitHalves": 10,
       "splitHalvesMatched": 10,
-      "oversized": 20,
+      "oversized": 13,
       "oversizedOverTwo": 4,
       "mergedUnflagged": 0
     },
@@ -2090,7 +2090,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 11,
+      "oversized": 4,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2301,7 +2301,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 10,
+      "oversized": 6,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2506,7 +2506,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 11,
+      "oversized": 7,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -2830,7 +2830,7 @@
       ],
       "splitHalves": 6,
       "splitHalvesMatched": 6,
-      "oversized": 26,
+      "oversized": 10,
       "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
@@ -3263,7 +3263,7 @@
       ],
       "splitHalves": 8,
       "splitHalvesMatched": 8,
-      "oversized": 19,
+      "oversized": 5,
       "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
@@ -3679,7 +3679,7 @@
       ],
       "splitHalves": 16,
       "splitHalvesMatched": 16,
-      "oversized": 17,
+      "oversized": 8,
       "oversizedOverTwo": 1,
       "mergedUnflagged": 0
     },
@@ -3989,7 +3989,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 15,
+      "oversized": 5,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4208,7 +4208,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 14,
+      "oversized": 3,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4426,7 +4426,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 10,
+      "oversized": 7,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4644,7 +4644,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 16,
+      "oversized": 4,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -4848,7 +4848,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 7,
+      "oversized": 2,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5066,7 +5066,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 18,
+      "oversized": 9,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5257,7 +5257,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 4,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5469,7 +5469,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 5,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5667,7 +5667,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 6,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -5851,7 +5851,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 16,
+      "oversized": 8,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6067,7 +6067,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 15,
+      "oversized": 10,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6286,7 +6286,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 15,
+      "oversized": 6,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6491,7 +6491,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 12,
+      "oversized": 4,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -6703,7 +6703,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 10,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -7148,9 +7148,9 @@
       ],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 5,
-      "oversizedOverTwo": 5,
-      "mergedUnflagged": 20
+      "oversized": 0,
+      "oversizedOverTwo": 0,
+      "mergedUnflagged": 25
     },
     {
       "group": "hard",
@@ -7795,9 +7795,9 @@
       ],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 11,
-      "oversizedOverTwo": 11,
-      "mergedUnflagged": 17
+      "oversized": 1,
+      "oversizedOverTwo": 1,
+      "mergedUnflagged": 27
     },
     {
       "group": "hard",
@@ -8207,7 +8207,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 12,
+      "oversized": 5,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -8404,7 +8404,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 6,
+      "oversized": 1,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9322,7 +9322,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 15,
+      "oversized": 7,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9527,7 +9527,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 6,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9739,7 +9739,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 10,
+      "oversized": 5,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -9921,7 +9921,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 13,
+      "oversized": 3,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -10097,7 +10097,7 @@
       "pairElongations": [],
       "splitHalves": 0,
       "splitHalvesMatched": 0,
-      "oversized": 14,
+      "oversized": 5,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },
@@ -10285,7 +10285,7 @@
       "pairElongations": [],
       "splitHalves": 2,
       "splitHalvesMatched": 2,
-      "oversized": 8,
+      "oversized": 3,
       "oversizedOverTwo": 0,
       "mergedUnflagged": 0
     },

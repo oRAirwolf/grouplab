@@ -362,10 +362,10 @@
     {
       "name": "telephoto3.jpg",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
-      "holes": 0,
-      "rejected": 109,
-      "insideZones": 18,
-      "splitHalves": 0,
+      "holes": 6,
+      "rejected": 102,
+      "insideZones": 10,
+      "splitHalves": 4,
       "oversized": 0,
       "failure": null
     },
@@ -403,10 +403,10 @@
       "name": "gl-cf25-ltr-1-300-dpi.png, punched from 25 dmm",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
       "holes": 160,
-      "rejected": 140,
-      "insideZones": 21,
+      "rejected": 136,
+      "insideZones": 20,
       "splitHalves": 6,
-      "oversized": 65,
+      "oversized": 23,
       "failure": null
     },
     {
@@ -416,7 +416,7 @@
       "rejected": 104,
       "insideZones": 28,
       "splitHalves": 4,
-      "oversized": 72,
+      "oversized": 38,
       "failure": null
     },
     {
@@ -426,7 +426,7 @@
       "rejected": 110,
       "insideZones": 40,
       "splitHalves": 2,
-      "oversized": 63,
+      "oversized": 28,
       "failure": null
     },
     {
@@ -436,7 +436,7 @@
       "rejected": 146,
       "insideZones": 20,
       "splitHalves": 0,
-      "oversized": 67,
+      "oversized": 24,
       "failure": null
     },
     {
@@ -446,7 +446,7 @@
       "rejected": 105,
       "insideZones": 28,
       "splitHalves": 4,
-      "oversized": 70,
+      "oversized": 38,
       "failure": null
     },
     {
@@ -456,37 +456,37 @@
       "rejected": 107,
       "insideZones": 40,
       "splitHalves": 2,
-      "oversized": 62,
+      "oversized": 27,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-3-300-dpi.png, punched from 25 dmm",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 285 holes punched",
-      "holes": 161,
-      "rejected": 139,
-      "insideZones": 21,
-      "splitHalves": 6,
-      "oversized": 66,
+      "holes": 157,
+      "rejected": 147,
+      "insideZones": 23,
+      "splitHalves": 0,
+      "oversized": 24,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-3-300-dpi.png, punched from 75 dmm",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 266 holes punched",
       "holes": 153,
-      "rejected": 103,
-      "insideZones": 27,
+      "rejected": 102,
+      "insideZones": 26,
       "splitHalves": 4,
-      "oversized": 70,
+      "oversized": 36,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-3-300-dpi.png, punched from 125 dmm",
       "definition": "GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json, 252 holes punched",
       "holes": 166,
-      "rejected": 109,
-      "insideZones": 39,
+      "rejected": 106,
+      "insideZones": 40,
       "splitHalves": 2,
-      "oversized": 64,
+      "oversized": 28,
       "failure": null
     },
     {
@@ -496,7 +496,7 @@
       "rejected": 129,
       "insideZones": 19,
       "splitHalves": 2,
-      "oversized": 66,
+      "oversized": 23,
       "failure": null
     },
     {
@@ -506,7 +506,7 @@
       "rejected": 105,
       "insideZones": 32,
       "splitHalves": 6,
-      "oversized": 69,
+      "oversized": 33,
       "failure": null
     },
     {
@@ -516,27 +516,27 @@
       "rejected": 92,
       "insideZones": 40,
       "splitHalves": 0,
-      "oversized": 67,
+      "oversized": 26,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-d-blank-300-dpi.png, punched from 25 dmm",
       "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 285 holes punched",
       "holes": 162,
-      "rejected": 135,
+      "rejected": 133,
       "insideZones": 32,
       "splitHalves": 4,
-      "oversized": 66,
+      "oversized": 27,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-d-blank-300-dpi.png, punched from 75 dmm",
       "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 266 holes punched",
-      "holes": 136,
-      "rejected": 118,
+      "holes": 134,
+      "rejected": 119,
       "insideZones": 45,
-      "splitHalves": 6,
-      "oversized": 55,
+      "splitHalves": 4,
+      "oversized": 31,
       "failure": null
     },
     {
@@ -546,7 +546,7 @@
       "rejected": 131,
       "insideZones": 49,
       "splitHalves": 2,
-      "oversized": 56,
+      "oversized": 21,
       "failure": null
     },
     {
@@ -556,17 +556,17 @@
       "rejected": 133,
       "insideZones": 26,
       "splitHalves": 4,
-      "oversized": 65,
+      "oversized": 21,
       "failure": null
     },
     {
       "name": "gl-cf25-ltr-d-filled-300-dpi.png, punched from 75 dmm",
       "definition": "GL-R0T0-384Z-HRBE-M0EW.gltd.json, 266 holes punched",
-      "holes": 131,
+      "holes": 135,
       "rejected": 109,
-      "insideZones": 28,
+      "insideZones": 30,
       "splitHalves": 4,
-      "oversized": 54,
+      "oversized": 31,
       "failure": null
     },
     {
@@ -576,7 +576,7 @@
       "rejected": 125,
       "insideZones": 45,
       "splitHalves": 2,
-      "oversized": 57,
+      "oversized": 21,
       "failure": null
     }
   ]

@@ -17,15 +17,15 @@
             0,
             0
           ],
-          "rotationX": -0.057221456209043134,
-          "rotationY": 0.05403071922595578,
-          "rotationZ": -1.578566766653195,
-          "translationX": -23.23077092957399,
-          "translationY": 2.1434531326754094,
-          "translationZ": 2666.1099564520105,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.05722146192962331,
+          "rotationY": 0.05403070471874081,
+          "rotationZ": -1.5785667690154725,
+          "translationX": -23.230772282571454,
+          "translationY": 2.143451157099867,
+          "translationZ": 2666.1098742656013,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -33,7 +33,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -1175,7 +1175,7 @@
           "imageYPx": 2472.1914,
           "pageX": 150,
           "pageY": 2229,
-          "error": 1.0337,
+          "error": 1.0338,
           "kept": true
         },
         {
@@ -1361,11 +1361,11 @@
         {
           "markerId": 33,
           "corner": 0,
-          "imageXPx": 2836.0554,
+          "imageXPx": 2836.0552,
           "imageYPx": 519.3616,
           "pageX": 2010,
           "pageY": 2229,
-          "error": 2.0055,
+          "error": 2.0057,
           "kept": true
         },
         {
@@ -1399,7 +1399,7 @@
           "kept": true
         }
       ],
-      "rmsKeptIn": 0.0039050093784071473
+      "rmsKeptIn": 0.003905019888150285
     },
     {
       "file": "main_flat2.jpg",
@@ -1415,15 +1415,15 @@
             0,
             0
           ],
-          "rotationX": -0.3238431420940678,
-          "rotationY": -0.1900636572174596,
-          "rotationZ": -1.5238990867200601,
-          "translationX": -111.9115338053507,
-          "translationY": -116.67313744197003,
-          "translationZ": 2427.9854293485882,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.323843134432542,
+          "rotationY": -0.19006365833331437,
+          "rotationZ": -1.523899087587307,
+          "translationX": -111.91153418318841,
+          "translationY": -116.6731382244213,
+          "translationZ": 2427.9853525092717,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -1431,7 +1431,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -2263,7 +2263,7 @@
           "imageYPx": 790.7999,
           "pageX": 1670,
           "pageY": 1889,
-          "error": 1.6356,
+          "error": 1.6357,
           "kept": true
         },
         {
@@ -2437,7 +2437,7 @@
           "kept": true
         }
       ],
-      "rmsKeptIn": 0.004237792967173936
+      "rmsKeptIn": 0.004237795363155055
     },
     {
       "file": "main_flat3.jpg",
@@ -2453,15 +2453,15 @@
             0,
             0
           ],
-          "rotationX": -0.4023150821066617,
-          "rotationY": 0.40423989643472996,
-          "rotationZ": -1.5305271604788262,
-          "translationX": -236.77365765434934,
-          "translationY": -15.18843970506325,
-          "translationZ": 2674.718066512592,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.40231507677686906,
+          "rotationY": 0.40423989942494626,
+          "rotationZ": -1.5305271578215058,
+          "translationX": -236.77365845502422,
+          "translationY": -15.18844226379247,
+          "translationZ": 2674.7179894101687,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -2469,7 +2469,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -2558,7 +2558,7 @@
           "markerId": 11,
           "corner": 0,
           "imageXPx": 1511.0618,
-          "imageYPx": 2052.5686,
+          "imageYPx": 2052.5684,
           "pageX": 490,
           "pageY": 1089,
           "error": 0.5617,
@@ -2591,7 +2591,7 @@
           "imageYPx": 2055.3701,
           "pageX": 490,
           "pageY": 1129,
-          "error": 1.1471,
+          "error": 1.147,
           "kept": true
         },
         {
@@ -2621,7 +2621,7 @@
           "imageYPx": 1647.8701,
           "pageX": 910,
           "pageY": 1129,
-          "error": 0.6492,
+          "error": 0.6491,
           "kept": true
         },
         {
@@ -3121,7 +3121,7 @@
           "imageYPx": 445.5787,
           "pageX": 2010,
           "pageY": 1849,
-          "error": 2.0558,
+          "error": 2.0559,
           "kept": true
         },
         {
@@ -3395,7 +3395,7 @@
           "kept": true
         }
       ],
-      "rmsKeptIn": 0.004589583406240635
+      "rmsKeptIn": 0.004589579818781385
     },
     {
       "file": "main_flat1.jpg",
@@ -3405,22 +3405,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.221811286254359,
+          "rulingAngle": 1.2218099452740077,
           "bend": [
             0,
-            -0.01291869979659719,
-            0.003125105021988591,
-            0.005776441564273571
+            -0.012918702556165042,
+            0.0031251375652759064,
+            0.005776426526856806
           ],
-          "rotationX": -0.058306105078204586,
-          "rotationY": 0.05317418627077617,
-          "rotationZ": -1.578545694905003,
-          "translationX": -23.045159808808805,
-          "translationY": 2.0564589785288794,
-          "translationZ": 2680.564024815509,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": -0.05830612622684593,
+          "rotationY": 0.05317417115514162,
+          "rotationZ": -1.5785456968564409,
+          "translationX": -23.04516139316988,
+          "translationY": 2.0564565283257754,
+          "translationZ": 2680.5640169746566,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -3428,7 +3428,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -3630,7 +3630,7 @@
           "imageYPx": 2487.4258,
           "pageX": 110,
           "pageY": 749,
-          "error": 0.4433,
+          "error": 0.4432,
           "kept": true
         },
         {
@@ -4550,7 +4550,7 @@
           "imageYPx": 530.4999,
           "pageX": 2010,
           "pageY": 1889,
-          "error": 0.9175,
+          "error": 0.9174,
           "kept": true
         },
         {
@@ -4740,7 +4740,7 @@
           "imageYPx": 874.6365,
           "pageX": 1670,
           "pageY": 2269,
-          "error": 0.1537,
+          "error": 0.1536,
           "kept": true
         },
         {
@@ -4756,11 +4756,11 @@
         {
           "markerId": 33,
           "corner": 0,
-          "imageXPx": 2836.0554,
+          "imageXPx": 2836.0552,
           "imageYPx": 519.3616,
           "pageX": 2010,
           "pageY": 2229,
-          "error": 1.1843,
+          "error": 1.1845,
           "kept": true
         },
         {
@@ -4795,20 +4795,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 64.1415908706808,
-        "surfaceSumSquares": 76.96062364226778,
-        "f": -10.74351499034963,
+        "planarSumSquares": 64.14176888200872,
+        "surfaceSumSquares": 76.96106051812886,
+        "f": -10.74367095467686,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": 0.32294596234578643,
-        "saddleDmm": 0.11657535340207172,
-        "alongT": 1.6667348357448604,
-        "saddleT": 0.34955245078001346,
-        "f": 1.394537806121241,
-        "cornerOffsetDmm": 0.8083279233478131,
-        "varianceExplained": 0.010224293645127558,
+        "alongDmm": 0.3229479091596266,
+        "saddleDmm": 0.11657569483447433,
+        "alongT": 1.666740560670474,
+        "saddleT": 0.34955218670125054,
+        "f": 1.3945472009623834,
+        "cornerOffsetDmm": 0.8083343014427571,
+        "varianceExplained": 0.01022436182076747,
         "corners": 136
       },
       "bulls": {
@@ -5380,9 +5380,9 @@
             "scoring": true,
             "declaredX": 1080,
             "declaredY": 919,
-            "recoveredX": 1079.9675,
+            "recoveredX": 1079.9674,
             "recoveredY": 919.1006,
-            "dx": -0.0325,
+            "dx": -0.0326,
             "dy": 0.1006,
             "error": 0.1057,
             "inkSpread": 0.1674,
@@ -5684,9 +5684,9 @@
             "scoring": false,
             "declaredX": 1080,
             "declaredY": 2515,
-            "recoveredX": 1079.9337,
+            "recoveredX": 1079.9336,
             "recoveredY": 2516.0447,
-            "dx": -0.0663,
+            "dx": -0.0664,
             "dy": 1.0447,
             "error": 1.0468,
             "inkSpread": 0.1952,
@@ -5722,22 +5722,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.1968373290761876,
+          "rulingAngle": 1.1968361432663992,
           "bend": [
             0,
-            -0.013148089156019123,
-            0.0037397292098769624,
-            0.007247826448377489
+            -0.013148090114348471,
+            0.003739759163070464,
+            0.0072478075501621044
           ],
-          "rotationX": -0.058624144812695865,
-          "rotationY": 0.05320638326947482,
-          "rotationZ": -1.5785358888023302,
-          "translationX": -23.058702309424337,
-          "translationY": 2.0524601942218506,
-          "translationZ": 2681.6273481146973,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.05862415748204477,
+          "rotationY": 0.05320636153090957,
+          "rotationZ": -1.5785358909730887,
+          "translationX": -23.058703973692367,
+          "translationY": 2.052457776603953,
+          "translationZ": 2681.6269618258107,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -5745,7 +5745,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -5967,7 +5967,7 @@
           "imageYPx": 2060.6125,
           "pageX": 530,
           "pageY": 709,
-          "error": 0.6885,
+          "error": 0.6886,
           "kept": true
         },
         {
@@ -6537,7 +6537,7 @@
           "imageYPx": 1286.6381,
           "pageX": 1290,
           "pageY": 1509,
-          "error": 0.6746,
+          "error": 0.6747,
           "kept": true
         },
         {
@@ -6547,7 +6547,7 @@
           "imageYPx": 1327.4264,
           "pageX": 1250,
           "pageY": 1509,
-          "error": 0.618,
+          "error": 0.6181,
           "kept": true
         },
         {
@@ -6827,7 +6827,7 @@
           "imageYPx": 927.0424,
           "pageX": 1630,
           "pageY": 1889,
-          "error": 0.5848,
+          "error": 0.5847,
           "kept": true
         },
         {
@@ -7073,11 +7073,11 @@
         {
           "markerId": 33,
           "corner": 0,
-          "imageXPx": 2836.0554,
+          "imageXPx": 2836.0552,
           "imageYPx": 519.3616,
           "pageX": 2010,
           "pageY": 2229,
-          "error": 1.3499,
+          "error": 1.3501,
           "kept": true
         },
         {
@@ -7087,7 +7087,7 @@
           "imageYPx": 476.7573,
           "pageX": 2050,
           "pageY": 2229,
-          "error": 0.7982,
+          "error": 0.7981,
           "kept": true
         },
         {
@@ -7112,20 +7112,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 64.71392866878193,
-        "surfaceSumSquares": 81.19001903859964,
-        "f": -13.190609963140894,
+        "planarSumSquares": 64.71410917588814,
+        "surfaceSumSquares": 81.19051270490894,
+        "f": -13.190780470605393,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": 0.46736814481587996,
-        "saddleDmm": 0.19308407377934816,
-        "alongT": 2.3706568680448084,
-        "saddleT": 0.5581276553988266,
-        "f": 2.8316342903344376,
-        "cornerOffsetDmm": 1.1805973368802856,
-        "varianceExplained": 0.020544153778005447,
+        "alongDmm": 0.46737059013490356,
+        "saddleDmm": 0.19308433441965567,
+        "alongT": 2.3706629360369216,
+        "saddleT": 0.5581263607291648,
+        "f": 2.831648169340476,
+        "cornerOffsetDmm": 1.1806056729070893,
+        "varianceExplained": 0.020544252404654517,
         "corners": 136
       },
       "bulls": {
@@ -7391,9 +7391,9 @@
             "scoring": true,
             "declaredX": 700,
             "declaredY": 1679,
-            "recoveredX": 700.0254,
+            "recoveredX": 700.0253,
             "recoveredY": 1679.4825,
-            "dx": 0.0254,
+            "dx": 0.0253,
             "dy": 0.4825,
             "error": 0.4832,
             "inkSpread": 0.1585,
@@ -7970,9 +7970,9 @@
             "declaredX": 1840,
             "declaredY": 2059,
             "recoveredX": 1839.5785,
-            "recoveredY": 2059.2202,
+            "recoveredY": 2059.2203,
             "dx": -0.4215,
-            "dy": 0.2202,
+            "dy": 0.2203,
             "error": 0.4756,
             "inkSpread": 0.0621,
             "threshold": null,
@@ -7989,7 +7989,7 @@
             "recoveredY": 2516.753,
             "dx": -0.0473,
             "dy": 1.753,
-            "error": 1.7536,
+            "error": 1.7537,
             "inkSpread": 0.1641,
             "threshold": null,
             "iterations": 7,
@@ -8039,22 +8039,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.1993217170609356,
+          "rulingAngle": 1.1993204778203355,
           "bend": [
             0,
-            -0.013199090073520025,
-            0.0037813906160991447,
-            0.00731377906603386
+            -0.013199095365945024,
+            0.003781418098434045,
+            0.007313765325427868
           ],
-          "rotationX": -0.0583645430781959,
-          "rotationY": 0.05294602779505468,
-          "rotationZ": -1.5785423825552112,
-          "translationX": -23.060682810107725,
-          "translationY": 2.0521446493699185,
-          "translationZ": 2668.695484141995,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.058364561314586616,
+          "rotationY": 0.05294601220609561,
+          "rotationZ": -1.5785423845913154,
+          "translationX": -23.06068437154698,
+          "translationY": 2.0521422360357615,
+          "translationZ": 2668.6954034458804,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -8062,7 +8062,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -9344,7 +9344,7 @@
           "imageYPx": 1315.7361,
           "pageX": 1250,
           "pageY": 2269,
-          "error": 0.7105,
+          "error": 0.7106,
           "kept": true
         },
         {
@@ -9390,11 +9390,11 @@
         {
           "markerId": 33,
           "corner": 0,
-          "imageXPx": 2836.0554,
+          "imageXPx": 2836.0552,
           "imageYPx": 519.3616,
           "pageX": 2010,
           "pageY": 2229,
-          "error": 1.3555,
+          "error": 1.3557,
           "kept": true
         },
         {
@@ -9429,20 +9429,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 64.71392866878193,
-        "surfaceSumSquares": 81.71492089530031,
-        "f": -13.57542454457818,
+        "planarSumSquares": 64.71410917588814,
+        "surfaceSumSquares": 81.7154078368791,
+        "f": -13.575588337564467,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": 0.46989094504096596,
-        "saddleDmm": 0.19554683445491358,
-        "alongT": 2.3850378688894978,
-        "saddleT": 0.5669128376885111,
-        "f": 2.867062767562157,
-        "cornerOffsetDmm": 1.1825402488193966,
-        "varianceExplained": 0.020795850074762923,
+        "alongDmm": 0.46989292508933195,
+        "saddleDmm": 0.1955470806182236,
+        "alongT": 2.385041422613243,
+        "saddleT": 0.5669114154205083,
+        "f": 2.8670707764197534,
+        "cornerOffsetDmm": 1.1825473384805085,
+        "varianceExplained": 0.020795906957864596,
         "corners": 136
       },
       "bulls": {
@@ -10287,9 +10287,9 @@
             "declaredX": 1840,
             "declaredY": 2059,
             "recoveredX": 1839.5785,
-            "recoveredY": 2059.2202,
+            "recoveredY": 2059.2203,
             "dx": -0.4215,
-            "dy": 0.2202,
+            "dy": 0.2203,
             "error": 0.4756,
             "inkSpread": 0.0621,
             "threshold": null,
@@ -10306,7 +10306,7 @@
             "recoveredY": 2516.753,
             "dx": -0.0473,
             "dy": 1.753,
-            "error": 1.7536,
+            "error": 1.7537,
             "inkSpread": 0.1641,
             "threshold": null,
             "iterations": 7,
@@ -10356,22 +10356,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.9423167319338641,
+          "rulingAngle": 1.9423169062441805,
           "bend": [
             0,
-            0.00417532419810793,
-            0.004239011485754795,
-            -0.030167286847358536
+            0.004175316940141823,
+            0.004238992138428353,
+            -0.030167262026237377
           ],
-          "rotationX": -0.3237203892932159,
-          "rotationY": -0.18968577547851792,
-          "rotationZ": -1.5240958182836077,
-          "translationX": -111.7439174491259,
-          "translationY": -116.41203903005827,
-          "translationZ": 2438.621711419868,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": -0.32372038668865566,
+          "rotationY": -0.18968577422371258,
+          "rotationZ": -1.5240958189728682,
+          "translationX": -111.74391744130116,
+          "translationY": -116.4120389071488,
+          "translationZ": 2438.6216989824743,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -10379,7 +10379,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -11387,19 +11387,19 @@
       ],
       "choice": {
         "planarSumSquares": 63.88422755433573,
-        "surfaceSumSquares": 81.15618199351826,
-        "f": -9.89629947705195,
+        "surfaceSumSquares": 81.15620302619513,
+        "f": -9.896308963373102,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": -0.24773927677903163,
-        "saddleDmm": 0.21379683659535056,
-        "alongT": -1.2081864112574552,
-        "saddleT": 0.4584565925952035,
-        "f": 0.9767492688973127,
-        "cornerOffsetDmm": -0.5300040183864092,
-        "varianceExplained": 0.009769764230583733,
+        "alongDmm": -0.24773989493535226,
+        "saddleDmm": 0.2137955636839568,
+        "alongT": -1.2081892003275412,
+        "saddleT": 0.45845374978777453,
+        "f": 0.9767511650466556,
+        "cornerOffsetDmm": -0.5300070370491432,
+        "varianceExplained": 0.009769783011194133,
         "corners": 100
       },
       "bulls": {
@@ -12313,22 +12313,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.9164503810841709,
+          "rulingAngle": 1.916440623302043,
           "bend": [
             0,
-            0.005285875486651752,
-            0.00698979019541239,
-            -0.03399419398314243
+            0.005285266378194728,
+            0.006988703437865677,
+            -0.03399270528519399
           ],
-          "rotationX": -0.32400672424354054,
-          "rotationY": -0.18977719510620406,
-          "rotationZ": -1.5240143064330576,
-          "translationX": -111.74961368613171,
-          "translationY": -116.44304798456731,
-          "translationZ": 2439.636455623816,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.32400660325920105,
+          "rotationY": -0.18977705377990445,
+          "rotationZ": -1.5240143393255143,
+          "translationX": -111.74961030349999,
+          "translationY": -116.44304209936446,
+          "translationZ": 2439.636154526643,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -12336,7 +12336,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -12498,7 +12498,7 @@
           "imageYPx": 2494.3721,
           "pageX": 110,
           "pageY": 749,
-          "error": 0.4205,
+          "error": 0.4204,
           "kept": true
         },
         {
@@ -12628,7 +12628,7 @@
           "imageYPx": 2515.5903,
           "pageX": 110,
           "pageY": 1089,
-          "error": 0.8038,
+          "error": 0.8037,
           "kept": true
         },
         {
@@ -12698,7 +12698,7 @@
           "imageYPx": 2027.0156,
           "pageX": 490,
           "pageY": 1129,
-          "error": 0.9187,
+          "error": 0.9188,
           "kept": true
         },
         {
@@ -12708,7 +12708,7 @@
           "imageYPx": 1587.4032,
           "pageX": 870,
           "pageY": 1089,
-          "error": 0.4751,
+          "error": 0.4752,
           "kept": true
         },
         {
@@ -12968,7 +12968,7 @@
           "imageYPx": 795.2052,
           "pageX": 1670,
           "pageY": 1509,
-          "error": 0.6485,
+          "error": 0.6486,
           "kept": true
         },
         {
@@ -12978,7 +12978,7 @@
           "imageYPx": 830.9464,
           "pageX": 1630,
           "pageY": 1509,
-          "error": 0.9152,
+          "error": 0.9151,
           "kept": true
         },
         {
@@ -12988,7 +12988,7 @@
           "imageYPx": 2562.325,
           "pageX": 110,
           "pageY": 1849,
-          "error": 1.2034,
+          "error": 1.2035,
           "kept": true
         },
         {
@@ -13008,7 +13008,7 @@
           "imageYPx": 2509.3572,
           "pageX": 150,
           "pageY": 1889,
-          "error": 0.8063,
+          "error": 0.8064,
           "kept": true
         },
         {
@@ -13228,7 +13228,7 @@
           "imageYPx": 2072.2576,
           "pageX": 490,
           "pageY": 2229,
-          "error": 1.0637,
+          "error": 1.0636,
           "kept": true
         },
         {
@@ -13343,20 +13343,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 65.08989654756013,
-        "surfaceSumSquares": 79.79731248355907,
-        "f": -8.662554257505484,
+        "planarSumSquares": 65.08990788845604,
+        "surfaceSumSquares": 79.79752617846839,
+        "f": -8.662650244126255,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": -0.1415032175648477,
-        "saddleDmm": 0.42676847574104504,
-        "alongT": -0.7017723588320774,
-        "saddleT": 0.939457213973102,
-        "f": 0.8180031643371611,
-        "cornerOffsetDmm": -0.7301380824423959,
-        "varianceExplained": 0.008194946186114604,
+        "alongDmm": -0.14150495826273374,
+        "saddleDmm": 0.42676794891259984,
+        "alongT": -0.701782206021499,
+        "saddleT": 0.9394614465476151,
+        "f": 0.8180069397444347,
+        "cornerOffsetDmm": -0.7301482902885512,
+        "varianceExplained": 0.008194983699065683,
         "corners": 100
       },
       "bulls": {
@@ -13366,9 +13366,9 @@
             "scoring": true,
             "declaredX": 320,
             "declaredY": 539,
-            "recoveredX": 318.8278,
+            "recoveredX": 318.8277,
             "recoveredY": 540.2194,
-            "dx": -1.1722,
+            "dx": -1.1723,
             "dy": 1.2194,
             "error": 1.6915,
             "inkSpread": 0.0167,
@@ -13430,11 +13430,11 @@
             "scoring": true,
             "declaredX": 1840,
             "declaredY": 539,
-            "recoveredX": 1839.9006,
-            "recoveredY": 540.2333,
-            "dx": -0.0994,
-            "dy": 1.2333,
-            "error": 1.2373,
+            "recoveredX": 1839.9005,
+            "recoveredY": 540.2334,
+            "dx": -0.0995,
+            "dy": 1.2334,
+            "error": 1.2374,
             "inkSpread": 0.0422,
             "threshold": null,
             "iterations": 8,
@@ -13510,9 +13510,9 @@
             "scoring": true,
             "declaredX": 1840,
             "declaredY": 919,
-            "recoveredX": 1839.8943,
+            "recoveredX": 1839.8942,
             "recoveredY": 920.0802,
-            "dx": -0.1057,
+            "dx": -0.1058,
             "dy": 1.0802,
             "error": 1.0854,
             "inkSpread": 0.0177,
@@ -13590,11 +13590,11 @@
             "scoring": true,
             "declaredX": 1840,
             "declaredY": 1299,
-            "recoveredX": 1839.5618,
-            "recoveredY": 1299.9951,
-            "dx": -0.4382,
-            "dy": 0.9951,
-            "error": 1.0873,
+            "recoveredX": 1839.5617,
+            "recoveredY": 1299.9952,
+            "dx": -0.4383,
+            "dy": 0.9952,
+            "error": 1.0874,
             "inkSpread": -0.045,
             "threshold": null,
             "iterations": 8,
@@ -13703,9 +13703,9 @@
             "declaredX": 700,
             "declaredY": 2059,
             "recoveredX": 700.3358,
-            "recoveredY": 2059.5785,
+            "recoveredY": 2059.5786,
             "dx": 0.3358,
-            "dy": 0.5785,
+            "dy": 0.5786,
             "error": 0.6689,
             "inkSpread": 0.115,
             "threshold": null,
@@ -13750,11 +13750,11 @@
             "scoring": true,
             "declaredX": 1840,
             "declaredY": 2059,
-            "recoveredX": 1835.0321,
-            "recoveredY": 2058.3522,
-            "dx": -4.9679,
-            "dy": -0.6478,
-            "error": 5.0099,
+            "recoveredX": 1835.0324,
+            "recoveredY": 2058.3523,
+            "dx": -4.9676,
+            "dy": -0.6477,
+            "error": 5.0097,
             "inkSpread": -0.0666,
             "threshold": null,
             "iterations": 8,
@@ -13798,11 +13798,11 @@
             "scoring": false,
             "declaredX": 1460,
             "declaredY": 2515,
-            "recoveredX": 1459.0885,
-            "recoveredY": 2514.399,
-            "dx": -0.9115,
-            "dy": -0.601,
-            "error": 1.0918,
+            "recoveredX": 1459.0886,
+            "recoveredY": 2514.3991,
+            "dx": -0.9114,
+            "dy": -0.6009,
+            "error": 1.0917,
             "inkSpread": 0.1179,
             "threshold": null,
             "iterations": 6,
@@ -14270,22 +14270,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.9363451581792739,
+          "rulingAngle": -1.2052462072568806,
           "bend": [
             0,
-            0.0040216268489013125,
-            0.004931216231862008,
-            -0.03049522182725458
+            0.004021565678370226,
+            -0.0049311664748637705,
+            -0.030495061702508288
           ],
-          "rotationX": -0.3227367396910409,
-          "rotationY": -0.189131014938478,
-          "rotationZ": -1.5242200815137497,
-          "translationX": -111.79948445753259,
-          "translationY": -116.5412555216744,
-          "translationZ": 2428.5808319852767,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.3227367285027157,
+          "rotationY": -0.18913100633942978,
+          "rotationZ": -1.524220084090433,
+          "translationX": -111.79948455649883,
+          "translationY": -116.54125488707693,
+          "translationZ": 2428.5807596549207,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -14293,7 +14293,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -14745,7 +14745,7 @@
           "imageYPx": 2538.6064,
           "pageX": 110,
           "pageY": 1469,
-          "error": 0.8068,
+          "error": 0.8069,
           "kept": true
         },
         {
@@ -15300,20 +15300,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 65.08989654756013,
-        "surfaceSumSquares": 90.90808806419135,
-        "f": -13.41915307139043,
+        "planarSumSquares": 65.08990788845604,
+        "surfaceSumSquares": 90.90818052470794,
+        "f": -13.419181585438752,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": -0.14733897767664939,
-        "saddleDmm": 0.4498820876043762,
-        "alongT": -0.6809041103584523,
-        "saddleT": 0.9163733135011224,
-        "f": 0.7936089759884889,
-        "cornerOffsetDmm": -0.7475466113883614,
-        "varianceExplained": 0.00795250301228645,
+        "alongDmm": -0.1473402427586536,
+        "saddleDmm": 0.4498753380574796,
+        "alongT": -0.6809092534546678,
+        "saddleT": 0.9163581991006342,
+        "f": 0.7935984935691595,
+        "cornerOffsetDmm": -0.7475369765705847,
+        "varianceExplained": 0.007952398806625904,
         "corners": 100
       },
       "bulls": {
@@ -16227,22 +16227,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.398556854183188,
+          "rulingAngle": 1.3985579663730447,
           "bend": [
             0,
-            -0.0059074006947051946,
-            -0.0029429199495308246,
-            -0.001618546012707817
+            -0.005907397670940092,
+            -0.002942960183810488,
+            -0.0016185528402883169
           ],
-          "rotationX": -0.4005112011357563,
-          "rotationY": 0.4051804379763221,
-          "rotationZ": -1.5308963958566102,
-          "translationX": -236.11013949176325,
-          "translationY": -15.260356063584798,
-          "translationZ": 2687.031918294375,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": -0.4005111898163683,
+          "rotationY": 0.4051804521475361,
+          "rotationZ": -1.5308963939172933,
+          "translationX": -236.11013871688112,
+          "translationY": -15.260358625682041,
+          "translationZ": 2687.0319100848765,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -16250,7 +16250,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -16272,7 +16272,7 @@
           "imageYPx": 2326.7954,
           "pageX": 150,
           "pageY": 709,
-          "error": 1.69,
+          "error": 1.6899,
           "kept": true
         },
         {
@@ -16339,7 +16339,7 @@
           "markerId": 11,
           "corner": 0,
           "imageXPx": 1511.0618,
-          "imageYPx": 2052.5686,
+          "imageYPx": 2052.5684,
           "pageX": 490,
           "pageY": 1089,
           "error": 1.0621,
@@ -16422,7 +16422,7 @@
           "imageYPx": 1319.9905,
           "pageX": 1250,
           "pageY": 1089,
-          "error": 1.2013,
+          "error": 1.2012,
           "kept": true
         },
         {
@@ -17177,20 +17177,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 83.35247440454353,
-        "surfaceSumSquares": 107.02205843250037,
-        "f": -9.067784336799154,
+        "planarSumSquares": 83.35197157907906,
+        "surfaceSumSquares": 107.0219416231911,
+        "f": -9.067942116257568,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": -0.15840932724833187,
-        "saddleDmm": 0.6531410329819671,
-        "alongT": -0.32971339480021383,
-        "saddleT": 1.3593780074981712,
-        "f": 2.133438834048402,
-        "cornerOffsetDmm": -1.2265645309018178,
-        "varianceExplained": 0.022907334473603047,
+        "alongDmm": -0.15840953221660117,
+        "saddleDmm": 0.6531425906709492,
+        "alongT": -0.3297140178317907,
+        "saddleT": 1.359383919582903,
+        "f": 2.133448921374125,
+        "cornerOffsetDmm": -1.226567858982993,
+        "varianceExplained": 0.022907440302949,
         "corners": 92
       },
       "bulls": {
@@ -17220,7 +17220,7 @@
             "recoveredY": 539.7831,
             "dx": 1.0065,
             "dy": 0.7831,
-            "error": 1.2753,
+            "error": 1.2752,
             "inkSpread": -0.0147,
             "threshold": null,
             "iterations": 8,
@@ -17265,9 +17265,9 @@
             "declaredX": 1840,
             "declaredY": 539,
             "recoveredX": 1835.4615,
-            "recoveredY": 543.7312,
+            "recoveredY": 543.7311,
             "dx": -4.5385,
-            "dy": 4.7312,
+            "dy": 4.7311,
             "error": 6.556,
             "inkSpread": -0.0838,
             "threshold": null,
@@ -17650,9 +17650,9 @@
             "scoring": true,
             "declaredX": 320,
             "declaredY": 539,
-            "recoveredX": 320.9578,
+            "recoveredX": 320.9577,
             "recoveredY": 541.6454,
-            "dx": 0.9578,
+            "dx": 0.9577,
             "dy": 2.6454,
             "error": 2.8134,
             "inkSpread": 0.0983,
@@ -17666,10 +17666,10 @@
             "scoring": true,
             "declaredX": 700,
             "declaredY": 539,
-            "recoveredX": 700.0577,
-            "recoveredY": 540.2763,
-            "dx": 0.0577,
-            "dy": 1.2763,
+            "recoveredX": 700.0576,
+            "recoveredY": 540.2762,
+            "dx": 0.0576,
+            "dy": 1.2762,
             "error": 1.2776,
             "inkSpread": 0.0015,
             "threshold": null,
@@ -17698,9 +17698,9 @@
             "scoring": true,
             "declaredX": 1460,
             "declaredY": 539,
-            "recoveredX": 1458.6854,
+            "recoveredX": 1458.6853,
             "recoveredY": 540.802,
-            "dx": -1.3146,
+            "dx": -1.3147,
             "dy": 1.802,
             "error": 2.2306,
             "inkSpread": -0.0401,
@@ -17714,9 +17714,9 @@
             "scoring": true,
             "declaredX": 1840,
             "declaredY": 539,
-            "recoveredX": 1837.7212,
+            "recoveredX": 1837.7211,
             "recoveredY": 540.1706,
-            "dx": -2.2788,
+            "dx": -2.2789,
             "dy": 1.1706,
             "error": 2.5619,
             "inkSpread": -0.0308,
@@ -17875,9 +17875,9 @@
             "declaredX": 1840,
             "declaredY": 1299,
             "recoveredX": 1839.6153,
-            "recoveredY": 1298.8589,
+            "recoveredY": 1298.859,
             "dx": -0.3847,
-            "dy": -0.1411,
+            "dy": -0.141,
             "error": 0.4098,
             "inkSpread": -0.0256,
             "threshold": null,
@@ -18022,7 +18022,7 @@
             "recoveredY": 2060.0408,
             "dx": 0.559,
             "dy": 1.0408,
-            "error": 1.1814,
+            "error": 1.1815,
             "inkSpread": 0.2042,
             "threshold": null,
             "iterations": 3,
@@ -18104,22 +18104,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.3760597180388074,
+          "rulingAngle": 1.3760610314574833,
           "bend": [
             0,
-            -0.006180292982515165,
-            -0.0032570995934993194,
-            -0.0008068625054024334
+            -0.0061803059316128854,
+            -0.003257118918855508,
+            -0.0008068524709772639
           ],
-          "rotationX": -0.40026817797375874,
-          "rotationY": 0.405115438834956,
-          "rotationZ": -1.5309562671410053,
-          "translationX": -236.13215756133926,
-          "translationY": -15.260443267754992,
-          "translationZ": 2688.065664481321,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.4002681634733731,
+          "rotationY": 0.4051154288458803,
+          "rotationZ": -1.5309562688394975,
+          "translationX": -236.13216195456533,
+          "translationY": -15.260444336460687,
+          "translationZ": 2688.0653099616834,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -18127,7 +18127,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -18169,7 +18169,7 @@
           "imageYPx": 2367.5317,
           "pageX": 110,
           "pageY": 749,
-          "error": 3.4182,
+          "error": 3.4181,
           "kept": false
         },
         {
@@ -18216,7 +18216,7 @@
           "markerId": 11,
           "corner": 0,
           "imageXPx": 1511.0618,
-          "imageYPx": 2052.5686,
+          "imageYPx": 2052.5684,
           "pageX": 490,
           "pageY": 1089,
           "error": 1.0812,
@@ -18229,7 +18229,7 @@
           "imageYPx": 2013.1331,
           "pageX": 530,
           "pageY": 1089,
-          "error": 0.8366,
+          "error": 0.8365,
           "kept": true
         },
         {
@@ -19054,20 +19054,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 103.88866472415165,
-        "surfaceSumSquares": 108.06730965701765,
-        "f": -1.6046829079424352,
+        "planarSumSquares": 103.88826693338308,
+        "surfaceSumSquares": 108.06633671352161,
+        "f": -1.6044764831382856,
         "criticalF": 4.61675,
         "preferSurface": false
       },
       "twist": {
-        "alongDmm": -0.07210759976926909,
-        "saddleDmm": 0.6228175568173637,
-        "alongT": -0.1494271657116146,
-        "saddleT": 1.254397379383336,
-        "f": 1.645142401122256,
-        "cornerOffsetDmm": -0.9558261587722273,
-        "varianceExplained": 0.017757459900048955,
+        "alongDmm": -0.07211411766885865,
+        "saddleDmm": 0.6228172254800255,
+        "alongT": -0.14944131896291507,
+        "saddleT": 1.254404300744392,
+        "f": 1.6451782622080915,
+        "cornerOffsetDmm": -0.9558433025362885,
+        "varianceExplained": 0.017757840106387812,
         "corners": 92
       },
       "bulls": {
@@ -19142,9 +19142,9 @@
             "declaredX": 1840,
             "declaredY": 539,
             "recoveredX": 1835.3855,
-            "recoveredY": 544.1221,
+            "recoveredY": 544.122,
             "dx": -4.6145,
-            "dy": 5.1221,
+            "dy": 5.122,
             "error": 6.8941,
             "inkSpread": -0.096,
             "threshold": null,
@@ -19157,9 +19157,9 @@
             "scoring": true,
             "declaredX": 320,
             "declaredY": 919,
-            "recoveredX": 321.2833,
+            "recoveredX": 321.2832,
             "recoveredY": 919.4794,
-            "dx": 1.2833,
+            "dx": 1.2832,
             "dy": 0.4794,
             "error": 1.3699,
             "inkSpread": 0.0616,
@@ -19735,9 +19735,9 @@
             "scoring": true,
             "declaredX": 1460,
             "declaredY": 1299,
-            "recoveredX": 1459.3185,
+            "recoveredX": 1459.3184,
             "recoveredY": 1299.4253,
-            "dx": -0.6815,
+            "dx": -0.6816,
             "dy": 0.4253,
             "error": 0.8034,
             "inkSpread": -0.0153,
@@ -19981,22 +19981,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 1.4292827630726017,
+          "rulingAngle": 1.429283990628595,
           "bend": [
             0,
-            -0.007502763349922148,
-            -0.003606257839782639,
-            0.001264762799208042
+            -0.007502758570072925,
+            -0.0036062929044070467,
+            0.0012647467044574572
           ],
-          "rotationX": -0.40003587635219995,
-          "rotationY": 0.4043110919593071,
-          "rotationZ": -1.53112435886939,
-          "translationX": -236.29156742879383,
-          "translationY": -15.185227648700401,
-          "translationZ": 2676.3871446216626,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.4000358648488191,
+          "rotationY": 0.4043111015079035,
+          "rotationZ": -1.5311243578032911,
+          "translationX": -236.2915678015877,
+          "translationY": -15.185229776248558,
+          "translationZ": 2676.3870686966497,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -20004,7 +20004,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -20076,7 +20076,7 @@
           "imageYPx": 2388.4744,
           "pageX": 150,
           "pageY": 1129,
-          "error": 1.1361,
+          "error": 1.136,
           "kept": true
         },
         {
@@ -20093,10 +20093,10 @@
           "markerId": 11,
           "corner": 0,
           "imageXPx": 1511.0618,
-          "imageYPx": 2052.5686,
+          "imageYPx": 2052.5684,
           "pageX": 490,
           "pageY": 1089,
-          "error": 0.9296,
+          "error": 0.9295,
           "kept": true
         },
         {
@@ -20276,7 +20276,7 @@
           "imageYPx": 2054.1653,
           "pageX": 530,
           "pageY": 1509,
-          "error": 0.2489,
+          "error": 0.2488,
           "kept": true
         },
         {
@@ -20526,7 +20526,7 @@
           "imageYPx": 2144.4365,
           "pageX": 490,
           "pageY": 1889,
-          "error": 1.1114,
+          "error": 1.1115,
           "kept": true
         },
         {
@@ -20931,20 +20931,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 123.091128830059,
-        "surfaceSumSquares": 93.78814109601869,
-        "f": 13.356728377287356,
+        "planarSumSquares": 123.09080632544243,
+        "surfaceSumSquares": 93.78781399176266,
+        "f": 13.356777058209657,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -0.2118262920449869,
-        "saddleDmm": 0.2675687091175115,
-        "alongT": -0.49776499413927194,
-        "saddleT": 0.6525309018916261,
-        "f": 0.8331093528442204,
-        "cornerOffsetDmm": -0.8573783648244732,
-        "varianceExplained": 0.009071993300839076,
+        "alongDmm": -0.21182727834148873,
+        "saddleDmm": 0.2675694649089346,
+        "alongT": -0.49776827303228727,
+        "saddleT": 0.6525349081997729,
+        "f": 0.8331165546391617,
+        "cornerOffsetDmm": -0.8573815297528184,
+        "varianceExplained": 0.009072071012024008,
         "corners": 92
       },
       "bulls": {
@@ -20958,7 +20958,7 @@
             "recoveredY": 541.6053,
             "dx": 2.1523,
             "dy": 2.6053,
-            "error": 3.3794,
+            "error": 3.3793,
             "inkSpread": 0.0886,
             "threshold": null,
             "iterations": 8,
@@ -21408,7 +21408,7 @@
             "recoveredY": 541.6053,
             "dx": 2.1523,
             "dy": 2.6053,
-            "error": 3.3794,
+            "error": 3.3793,
             "inkSpread": 0.0886,
             "threshold": null,
             "iterations": 8,
@@ -21858,22 +21858,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.44782212367087676,
+          "rulingAngle": 0.4478221017589186,
           "bend": [
             0,
-            -0.04680026330663832,
-            -0.04155786017829068,
-            -0.006965013178459809
+            -0.04680025895305021,
+            -0.0415578632473392,
+            -0.006965026655200259
           ],
-          "rotationX": 0.06117920883940307,
-          "rotationY": -0.0899799877206143,
-          "rotationZ": -1.566221656022109,
-          "translationX": -25.241064831731208,
-          "translationY": 33.799800644036615,
-          "translationZ": 2701.4240087050775,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": 0.06117920949475407,
+          "rotationY": -0.0899799881902817,
+          "rotationZ": -1.5662216559943396,
+          "translationX": -25.24106479074043,
+          "translationY": 33.79980065860955,
+          "translationZ": 2701.423994638977,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -21881,7 +21881,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -23249,19 +23249,19 @@
       ],
       "choice": {
         "planarSumSquares": 958.7248588237165,
-        "surfaceSumSquares": 153.22334066604338,
-        "f": 297.02286595552886,
+        "surfaceSumSquares": 153.22335996052638,
+        "f": 297.0228214385509,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -3.000780907191538,
-        "saddleDmm": 4.972713964393589,
-        "alongT": -6.157244597741995,
-        "saddleT": 5.048466170786601,
-        "f": 25.284596169553122,
-        "cornerOffsetDmm": -3.567705121886452,
-        "varianceExplained": 0.1577481353405067,
+        "alongDmm": -3.000781865600799,
+        "saddleDmm": 4.972713612832893,
+        "alongT": -6.157246253849305,
+        "saddleT": 5.048465644478401,
+        "f": 25.284602603885862,
+        "cornerOffsetDmm": -3.567705421990639,
+        "varianceExplained": 0.15774816915117007,
         "corners": 136
       },
       "bulls": {
@@ -24175,22 +24175,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.46091719718530433,
+          "rulingAngle": 0.46091721636702265,
           "bend": [
             0,
-            -0.052524879200477555,
-            -0.041737135368993344,
-            0.0017074947945309672
+            -0.0525248548894355,
+            -0.041737130574370514,
+            0.0017074680302377162
           ],
-          "rotationX": 0.061842447602157305,
-          "rotationY": -0.08948893591002091,
-          "rotationZ": -1.566193298621099,
-          "translationX": -25.271176033565037,
-          "translationY": 33.826679701629494,
-          "translationZ": 2703.071403455282,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": 0.061842437879586765,
+          "rotationY": -0.0894889240187559,
+          "rotationZ": -1.5661932991166259,
+          "translationX": -25.271175796044503,
+          "translationY": 33.8266794952669,
+          "translationZ": 2703.0710069433794,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -24198,7 +24198,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -24370,7 +24370,7 @@
           "imageYPx": 2558.7217,
           "pageX": 110,
           "pageY": 709,
-          "error": 8.1816,
+          "error": 8.1817,
           "kept": false
         },
         {
@@ -25565,20 +25565,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 1442.484446397853,
-        "surfaceSumSquares": 142.1053054795997,
-        "f": 517.0209600121417,
+        "planarSumSquares": 1442.4847104132389,
+        "surfaceSumSquares": 142.10537192684217,
+        "f": 517.0207968091842,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.8639890015070133,
-        "saddleDmm": 4.783501340077445,
-        "alongT": -5.825341114473076,
-        "saddleT": 4.753168105489311,
-        "f": 22.649687791664253,
-        "cornerOffsetDmm": -3.2033230318689148,
-        "varianceExplained": 0.14367099680905204,
+        "alongDmm": -2.8639891215508,
+        "saddleDmm": 4.783502020022433,
+        "alongT": -5.825341197546216,
+        "saddleT": 4.753168616217727,
+        "f": 22.64968999168889,
+        "cornerOffsetDmm": -3.2033231231202683,
+        "varianceExplained": 0.14367100875924943,
         "corners": 136
       },
       "bulls": {
@@ -25624,7 +25624,7 @@
             "recoveredY": 541.6231,
             "dx": -0.3395,
             "dy": 2.6231,
-            "error": 2.6449,
+            "error": 2.645,
             "inkSpread": 0.0489,
             "threshold": null,
             "iterations": 5,
@@ -26074,7 +26074,7 @@
             "recoveredY": 541.6231,
             "dx": -0.3395,
             "dy": 2.6231,
-            "error": 2.6449,
+            "error": 2.645,
             "inkSpread": 0.0489,
             "threshold": null,
             "iterations": 5,
@@ -26492,22 +26492,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.4605220046652274,
+          "rulingAngle": 0.4605219713874041,
           "bend": [
             0,
-            -0.049604245068269784,
-            -0.04110277195471477,
-            -0.0011533069203454671
+            -0.04960423140082439,
+            -0.0411027760276173,
+            -0.0011533318941819501
           ],
-          "rotationX": 0.06119826005533582,
-          "rotationY": -0.08931304440519357,
-          "rotationZ": -1.566218197169918,
-          "translationX": -25.240476628567894,
-          "translationY": 33.80400567841136,
-          "translationZ": 2689.6342317347235,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": 0.06119825927616008,
+          "rotationY": -0.08931304315986308,
+          "rotationZ": -1.566218197212706,
+          "translationX": -25.240476488199334,
+          "translationY": 33.80400562675823,
+          "translationZ": 2689.6341430777366,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -26515,7 +26515,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -27882,20 +27882,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 1452.591298195796,
-        "surfaceSumSquares": 150.64918904118173,
-        "f": 494.7665913337663,
+        "planarSumSquares": 1452.5915641812942,
+        "surfaceSumSquares": 150.6492018253678,
+        "f": 494.7666455696126,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.7138000382440794,
-        "saddleDmm": 4.859508125763735,
-        "alongT": -5.563319877354917,
-        "saddleT": 4.872188524152386,
-        "f": 21.819628610915643,
-        "cornerOffsetDmm": -3.2376715734878143,
-        "varianceExplained": 0.13913837702710163,
+        "alongDmm": -2.7138007504833013,
+        "saddleDmm": 4.8595079972764,
+        "alongT": -5.563321137841106,
+        "saddleT": 4.87218837283674,
+        "f": 21.819633556662193,
+        "cornerOffsetDmm": -3.2376721553801335,
+        "varianceExplained": 0.13913840417678514,
         "corners": 136
       },
       "bulls": {
@@ -28809,22 +28809,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.3414350812509507,
+          "rulingAngle": 0.34143506867873735,
           "bend": [
             0,
-            -0.050646265969647324,
-            -0.04599273894403064,
-            0.0012370765792844144
+            -0.050646263537941355,
+            -0.04599273609872556,
+            0.0012370688943778125
           ],
-          "rotationX": -0.24080388428689176,
-          "rotationY": -0.3826160698382014,
-          "rotationZ": -1.5640441971428671,
-          "translationX": -27.80502516848262,
-          "translationY": -283.48035371103526,
-          "translationZ": 2701.4962270200444,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": -0.24080388482318021,
+          "rotationY": -0.38261606989865743,
+          "rotationZ": -1.5640441972946637,
+          "translationX": -27.805025181227624,
+          "translationY": -283.4803538043689,
+          "translationZ": 2701.496214409731,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -28832,7 +28832,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -29880,19 +29880,19 @@
       ],
       "choice": {
         "planarSumSquares": 1241.6963234168204,
-        "surfaceSumSquares": 115.89919461418006,
-        "f": 286.55087216295965,
+        "surfaceSumSquares": 115.89919106388733,
+        "f": 286.5508818444173,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.7601019929720088,
-        "saddleDmm": 3.4467977472224063,
-        "alongT": -2.037530762055138,
-        "saddleT": 2.5665724391724845,
-        "f": 4.027633028312621,
-        "cornerOffsetDmm": -4.010476339954065,
-        "varianceExplained": 0.04067180952574212,
+        "alongDmm": -2.7601026804363986,
+        "saddleDmm": 3.446797997773576,
+        "alongT": -2.03753131032373,
+        "saddleT": 2.5665726887326663,
+        "f": 4.027634323329501,
+        "cornerOffsetDmm": -4.010476951315154,
+        "varianceExplained": 0.0406718220711918,
         "corners": 96
       },
       "bulls": {
@@ -30806,22 +30806,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.3459400441809217,
+          "rulingAngle": 0.3459399697129927,
           "bend": [
             0,
-            -0.050172799236805704,
-            -0.046824093493055795,
-            0.0017758756895049409
+            -0.05017280095745485,
+            -0.04682407177653075,
+            0.0017758671930521522
           ],
-          "rotationX": -0.24040900846373248,
-          "rotationY": -0.382422652084579,
-          "rotationZ": -1.5640805685106014,
-          "translationX": -27.834886957756275,
-          "translationY": -283.5596730618184,
-          "translationZ": 2702.1706271113717,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.2404090034981884,
+          "rotationY": -0.382422636812666,
+          "rotationZ": -1.5640805719751234,
+          "translationX": -27.834886784976728,
+          "translationY": -283.55967747869295,
+          "translationZ": 2702.1702552972197,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -30829,7 +30829,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -30871,7 +30871,7 @@
           "imageYPx": 1792.6377,
           "pageX": 490,
           "pageY": 369,
-          "error": 4.8611,
+          "error": 4.8612,
           "kept": false
         },
         {
@@ -30951,7 +30951,7 @@
           "imageYPx": 1038.9684,
           "pageX": 1250,
           "pageY": 369,
-          "error": 2.1005,
+          "error": 2.1004,
           "kept": true
         },
         {
@@ -31161,7 +31161,7 @@
           "imageYPx": 429.7025,
           "pageX": 2010,
           "pageY": 709,
-          "error": 21.2524,
+          "error": 21.2525,
           "kept": false
         },
         {
@@ -31581,7 +31581,7 @@
           "imageYPx": 2155.8843,
           "pageX": 150,
           "pageY": 1889,
-          "error": 1.4696,
+          "error": 1.4695,
           "kept": true
         },
         {
@@ -31821,7 +31821,7 @@
           "imageYPx": 1358.4131,
           "pageX": 910,
           "pageY": 2269,
-          "error": 0.5589,
+          "error": 0.5588,
           "kept": true
         },
         {
@@ -31876,20 +31876,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 1429.8714745862135,
-        "surfaceSumSquares": 121.91341094645989,
-        "f": 327.2217603568813,
+        "planarSumSquares": 1429.8715152348245,
+        "surfaceSumSquares": 121.91315035948008,
+        "f": 327.2225351495554,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.5669055724249628,
-        "saddleDmm": 3.2762699607768724,
-        "alongT": -1.8971868748355285,
-        "saddleT": 2.437761460918694,
-        "f": 3.5675872045257493,
-        "cornerOffsetDmm": -3.736558993786747,
-        "varianceExplained": 0.03619432417598978,
+        "alongDmm": -2.566910483325915,
+        "saddleDmm": 3.276278248222926,
+        "alongT": -1.8971898646326473,
+        "saddleT": 2.4377669902595924,
+        "f": 3.5676020811388587,
+        "cornerOffsetDmm": -3.736568946287891,
+        "varianceExplained": 0.03619446964127304,
         "corners": 96
       },
       "bulls": {
@@ -32111,7 +32111,7 @@
             "recoveredY": 1295.7474,
             "dx": 2.1237,
             "dy": -3.2526,
-            "error": 3.8845,
+            "error": 3.8846,
             "inkSpread": -0.016,
             "threshold": null,
             "iterations": 8,
@@ -32124,9 +32124,9 @@
             "declaredX": 1840,
             "declaredY": 1299,
             "recoveredX": 1844.6361,
-            "recoveredY": 1294.9485,
+            "recoveredY": 1294.9484,
             "dx": 4.6361,
-            "dy": -4.0515,
+            "dy": -4.0516,
             "error": 6.157,
             "inkSpread": -0.0037,
             "threshold": null,
@@ -32235,9 +32235,9 @@
             "scoring": true,
             "declaredX": 700,
             "declaredY": 2059,
-            "recoveredX": 700.3806,
+            "recoveredX": 700.3805,
             "recoveredY": 2059.5621,
-            "dx": 0.3806,
+            "dx": 0.3805,
             "dy": 0.5621,
             "error": 0.6788,
             "inkSpread": 0.1544,
@@ -32271,7 +32271,7 @@
             "recoveredY": 2057.1983,
             "dx": 3.3278,
             "dy": -1.8017,
-            "error": 3.7843,
+            "error": 3.7842,
             "inkSpread": 0.0526,
             "threshold": null,
             "iterations": 8,
@@ -32284,9 +32284,9 @@
             "declaredX": 1840,
             "declaredY": 2059,
             "recoveredX": 1844.7913,
-            "recoveredY": 2055.9522,
+            "recoveredY": 2055.9523,
             "dx": 4.7913,
-            "dy": -3.0478,
+            "dy": -3.0477,
             "error": 5.6785,
             "inkSpread": 0.0653,
             "threshold": null,
@@ -32561,7 +32561,7 @@
             "recoveredY": 1295.7474,
             "dx": 2.1237,
             "dy": -3.2526,
-            "error": 3.8845,
+            "error": 3.8846,
             "inkSpread": -0.016,
             "threshold": null,
             "iterations": 8,
@@ -32574,9 +32574,9 @@
             "declaredX": 1840,
             "declaredY": 1299,
             "recoveredX": 1844.6361,
-            "recoveredY": 1294.9485,
+            "recoveredY": 1294.9484,
             "dx": 4.6361,
-            "dy": -4.0515,
+            "dy": -4.0516,
             "error": 6.157,
             "inkSpread": -0.0037,
             "threshold": null,
@@ -32685,9 +32685,9 @@
             "scoring": true,
             "declaredX": 700,
             "declaredY": 2059,
-            "recoveredX": 700.3806,
+            "recoveredX": 700.3805,
             "recoveredY": 2059.5621,
-            "dx": 0.3806,
+            "dx": 0.3805,
             "dy": 0.5621,
             "error": 0.6788,
             "inkSpread": 0.1544,
@@ -32721,7 +32721,7 @@
             "recoveredY": 2057.1983,
             "dx": 3.3278,
             "dy": -1.8017,
-            "error": 3.7843,
+            "error": 3.7842,
             "inkSpread": 0.0526,
             "threshold": null,
             "iterations": 8,
@@ -32734,9 +32734,9 @@
             "declaredX": 1840,
             "declaredY": 2059,
             "recoveredX": 1844.7913,
-            "recoveredY": 2055.9522,
+            "recoveredY": 2055.9523,
             "dx": 4.7913,
-            "dy": -3.0478,
+            "dy": -3.0477,
             "error": 5.6785,
             "inkSpread": 0.0653,
             "threshold": null,
@@ -32803,22 +32803,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.344543278923891,
+          "rulingAngle": 0.3445432567287914,
           "bend": [
             0,
-            -0.04980331502122681,
-            -0.04580945986282199,
-            0.0010213522543105415
+            -0.049803313481485485,
+            -0.045809452711710295,
+            0.0010213449625680858
           ],
-          "rotationX": -0.2401420533068284,
-          "rotationY": -0.381855221147177,
-          "rotationZ": -1.564294602553016,
-          "translationX": -27.86329583233407,
-          "translationY": -283.74853483676054,
-          "translationZ": 2689.97387075535,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": -0.24014205282190743,
+          "rotationY": -0.3818552178345798,
+          "rotationZ": -1.5642946033419654,
+          "translationX": -27.863295745402862,
+          "translationY": -283.7485357923348,
+          "translationZ": 2689.9737883509206,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -32826,7 +32826,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -33158,7 +33158,7 @@
           "imageYPx": 429.7025,
           "pageX": 2010,
           "pageY": 709,
-          "error": 21.6987,
+          "error": 21.6988,
           "kept": false
         },
         {
@@ -33873,20 +33873,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 1473.6804223739339,
-        "surfaceSumSquares": 121.23692623986875,
-        "f": 348.60549970204596,
+        "planarSumSquares": 1473.680461300677,
+        "surfaceSumSquares": 121.23687331082937,
+        "f": 348.60567557137387,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.8087180852165754,
-        "saddleDmm": 3.378902118723637,
-        "alongT": -2.058110128345906,
-        "saddleT": 2.4974110742966316,
-        "f": 3.8940631518656073,
-        "cornerOffsetDmm": -3.920082726834002,
-        "varianceExplained": 0.03937610638856781,
+        "alongDmm": -2.8087195635454454,
+        "saddleDmm": 3.378903986918915,
+        "alongT": -2.058111044264343,
+        "saddleT": 2.4974122956755673,
+        "f": 3.894066928213021,
+        "cornerOffsetDmm": -3.9200851754423276,
+        "varianceExplained": 0.039376143070743774,
         "corners": 96
       },
       "bulls": {
@@ -34800,22 +34800,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 3.6439417734533257,
+          "rulingAngle": 3.643941741965777,
           "bend": [
             0,
-            -0.04692594188374981,
-            0.023668894184523212,
-            -0.013284414268450112
+            -0.04692594272784499,
+            0.0236689096273915,
+            -0.013284411954669974
           ],
-          "rotationX": 0.3845803926506647,
-          "rotationY": 0.23652955720307703,
-          "rotationZ": -1.5437822972902255,
-          "translationX": 45.935511628659015,
-          "translationY": 166.5955885360496,
-          "translationZ": 2550.0557156622117,
-          "focal": 1.362277238051269,
-          "k1": -0.047414340364684456,
-          "k2": 0.061131222463240195,
+          "rotationX": 0.3845803981369744,
+          "rotationY": 0.23652955561930775,
+          "rotationZ": -1.5437822966737953,
+          "translationX": 45.9355104628519,
+          "translationY": 166.595588915476,
+          "translationZ": 2550.0556997043036,
+          "focal": 1.3622772316541247,
+          "k1": -0.04741434227435704,
+          "k2": 0.06113123647358333,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -34823,7 +34823,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2724.554476102538
+          "focalPixels": 2724.5544633082495
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -35051,11 +35051,11 @@
         {
           "markerId": 6,
           "corner": 2,
-          "imageXPx": 1351.1873,
+          "imageXPx": 1351.1871,
           "imageYPx": 1859.3796,
           "pageX": 910,
           "pageY": 749,
-          "error": 1.4136,
+          "error": 1.4137,
           "kept": true
         },
         {
@@ -35445,7 +35445,7 @@
           "imageYPx": 1467.5673,
           "pageX": 1290,
           "pageY": 1469,
-          "error": 1.2622,
+          "error": 1.2621,
           "kept": true
         },
         {
@@ -35910,20 +35910,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 1598.8297690714635,
-        "surfaceSumSquares": 131.18580817259104,
-        "f": 509.0321975456697,
+        "planarSumSquares": 1598.8297098359835,
+        "surfaceSumSquares": 131.18608880778868,
+        "f": 509.0309907373212,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -4.619075666045916,
-        "saddleDmm": -2.8746037468191665,
-        "alongT": -6.31600413761946,
-        "saddleT": -2.2246793094284976,
-        "f": 76.76979386902235,
-        "cornerOffsetDmm": -15.382788040674772,
-        "varianceExplained": 0.4177497958328138,
+        "alongDmm": -4.619075054664211,
+        "saddleDmm": -2.8746018558785944,
+        "alongT": -6.316002205144852,
+        "saddleT": -2.224677562536693,
+        "f": 76.7697310980441,
+        "cornerOffsetDmm": -15.382784142141132,
+        "varianceExplained": 0.4177495969512315,
         "corners": 108
       },
       "bulls": {
@@ -36837,22 +36837,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.49907060991418656,
+          "rulingAngle": 0.4990705587433532,
           "bend": [
             0,
-            -0.04656586247399113,
-            -0.02336529324454559,
-            -0.013258156142345599
+            -0.04656589211547993,
+            -0.023365319104395973,
+            -0.013258125378723697
           ],
-          "rotationX": 0.38439620048350426,
-          "rotationY": 0.23616223851674312,
-          "rotationZ": -1.5437835123750905,
-          "translationX": 45.94051505380955,
-          "translationY": 166.6011878876455,
-          "translationZ": 2551.012985054842,
-          "focal": 1.3625585945114902,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": 0.3843961844982316,
+          "rotationY": 0.23616222528886407,
+          "rotationZ": -1.543783515317816,
+          "translationX": 45.940515816805885,
+          "translationY": 166.60119238460288,
+          "translationZ": 2551.012635385791,
+          "focal": 1.36255839377439,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -36860,7 +36860,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2725.1171890229803
+          "focalPixels": 2725.11678754878
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -37088,11 +37088,11 @@
         {
           "markerId": 6,
           "corner": 2,
-          "imageXPx": 1351.1873,
+          "imageXPx": 1351.1871,
           "imageYPx": 1859.3796,
           "pageX": 910,
           "pageY": 749,
-          "error": 1.4255,
+          "error": 1.4256,
           "kept": true
         },
         {
@@ -37832,7 +37832,7 @@
           "imageYPx": 1500.3887,
           "pageX": 1250,
           "pageY": 2229,
-          "error": 0.6726,
+          "error": 0.6727,
           "kept": true
         },
         {
@@ -37947,20 +37947,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 2145.915462346816,
-        "surfaceSumSquares": 134.76392614938803,
-        "f": 686.4817114524368,
+        "planarSumSquares": 2145.9150041845573,
+        "surfaceSumSquares": 134.7647944037396,
+        "f": 686.4768358771782,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -4.451653651969116,
-        "saddleDmm": -2.5838664406420238,
-        "alongT": -6.20546607920705,
-        "saddleT": -2.048689267852065,
-        "f": 72.11456730064864,
-        "cornerOffsetDmm": -14.596975778735004,
-        "varianceExplained": 0.402616986364947,
+        "alongDmm": -4.451658907797312,
+        "saddleDmm": -2.583861466832576,
+        "alongT": -6.205463710046647,
+        "saddleT": -2.0486822763695205,
+        "f": 72.11442159180572,
+        "cornerOffsetDmm": -14.596983559827562,
+        "varianceExplained": 0.40261650039633035,
         "corners": 108
       },
       "bulls": {
@@ -37987,9 +37987,9 @@
             "declaredX": 700,
             "declaredY": 539,
             "recoveredX": 697.1443,
-            "recoveredY": 537.2045,
+            "recoveredY": 537.2044,
             "dx": -2.8557,
-            "dy": -1.7955,
+            "dy": -1.7956,
             "error": 3.3733,
             "inkSpread": 0.0957,
             "threshold": null,
@@ -38022,7 +38022,7 @@
             "recoveredY": 539.221,
             "dx": 0.2822,
             "dy": 0.221,
-            "error": 0.3584,
+            "error": 0.3585,
             "inkSpread": 0.0608,
             "threshold": null,
             "iterations": 3,
@@ -38437,9 +38437,9 @@
             "declaredX": 700,
             "declaredY": 539,
             "recoveredX": 697.1443,
-            "recoveredY": 537.2045,
+            "recoveredY": 537.2044,
             "dx": -2.8557,
-            "dy": -1.7955,
+            "dy": -1.7956,
             "error": 3.3733,
             "inkSpread": 0.0957,
             "threshold": null,
@@ -38472,7 +38472,7 @@
             "recoveredY": 539.221,
             "dx": 0.2822,
             "dy": 0.221,
-            "error": 0.3584,
+            "error": 0.3585,
             "inkSpread": 0.0608,
             "threshold": null,
             "iterations": 3,
@@ -38874,22 +38874,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 3.6350155588661925,
+          "rulingAngle": 3.6350155595980778,
           "bend": [
             0,
-            -0.04918034256769364,
-            0.025084196585222325,
-            -0.010147961902800855
+            -0.04918035016561251,
+            0.025084213949610298,
+            -0.010147950064059701
           ],
-          "rotationX": 0.38421467406785464,
-          "rotationY": 0.23551550606789512,
-          "rotationZ": -1.5438038567913714,
-          "translationX": 45.976340692668764,
-          "translationY": 166.56623369374404,
-          "translationZ": 2539.4623008935732,
-          "focal": 1.3559625316767172,
-          "k1": -0.04803919298137901,
-          "k2": 0.0603408306191781,
+          "rotationX": 0.3842146760976366,
+          "rotationY": 0.2355155027582305,
+          "rotationZ": -1.5438038567008172,
+          "translationX": 45.97633974680876,
+          "translationY": 166.5662348082073,
+          "translationZ": 2539.4622188807425,
+          "focal": 1.355962486348087,
+          "k1": -0.04803920510212698,
+          "k2": 0.06034086404924264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -38897,7 +38897,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 2711.9250633534343
+          "focalPixels": 2711.924972696174
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -39049,7 +39049,7 @@
           "imageYPx": 1061.0469,
           "pageX": 1670,
           "pageY": 369,
-          "error": 1.6666,
+          "error": 1.6667,
           "kept": true
         },
         {
@@ -39125,11 +39125,11 @@
         {
           "markerId": 6,
           "corner": 2,
-          "imageXPx": 1351.1873,
+          "imageXPx": 1351.1871,
           "imageYPx": 1859.3796,
           "pageX": 910,
           "pageY": 749,
-          "error": 1.5325,
+          "error": 1.5326,
           "kept": true
         },
         {
@@ -39719,7 +39719,7 @@
           "imageYPx": 1462.1849,
           "pageX": 1290,
           "pageY": 1849,
-          "error": 0.8339,
+          "error": 0.834,
           "kept": true
         },
         {
@@ -39984,20 +39984,20 @@
         }
       ],
       "choice": {
-        "planarSumSquares": 2121.3382494810194,
-        "surfaceSumSquares": 118.80670873372222,
-        "f": 737.4226240376165,
+        "planarSumSquares": 2121.3377567863404,
+        "surfaceSumSquares": 118.80713767361604,
+        "f": 737.4196222693591,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -4.721900741068415,
-        "saddleDmm": -2.038221637031703,
-        "alongT": -6.2872374474495585,
-        "saddleT": -1.5569882910125419,
-        "f": 66.40753276708921,
-        "cornerOffsetDmm": -14.6395315072716,
-        "varianceExplained": 0.38295644778179216,
+        "alongDmm": -4.7219012245109955,
+        "saddleDmm": -2.0382197140535894,
+        "alongT": -6.287234954043776,
+        "saddleT": -1.5569860381889307,
+        "f": 66.40745623444062,
+        "cornerOffsetDmm": -14.639530539515738,
+        "varianceExplained": 0.3829561754522258,
         "corners": 108
       },
       "bulls": {
@@ -40911,22 +40911,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 3.5011541278033715,
+          "rulingAngle": 3.5011541272573607,
           "bend": [
             0,
-            -0.050333673476667486,
-            0.0322801748512135,
-            -0.010728094458601626
+            -0.05033367347215787,
+            0.032280174815823924,
+            -0.010728094466755246
           ],
-          "rotationX": 0.49928147553293317,
-          "rotationY": 0.2955196710834476,
-          "rotationZ": -1.5193262896774342,
-          "translationX": -92.66218317309391,
-          "translationY": -43.84060287773593,
-          "translationZ": 7077.586770630391,
-          "focal": 3.9618665243360054,
-          "k1": 0.07980367856409633,
-          "k2": -0.10115262116319632,
+          "rotationX": 0.4992814755152139,
+          "rotationY": 0.29551967107520305,
+          "rotationZ": -1.5193262896789967,
+          "translationX": -92.66218317376655,
+          "translationY": -43.840602880424726,
+          "translationZ": 7077.586771848948,
+          "focal": 3.961866524847526,
+          "k1": 0.07980367824128827,
+          "k2": -0.10115262067575737,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -40934,7 +40934,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 7923.733048672011
+          "focalPixels": 7923.733049695052
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -42262,19 +42262,19 @@
       ],
       "choice": {
         "planarSumSquares": 2582.4456745178954,
-        "surfaceSumSquares": 130.4769623108079,
-        "f": 920.825138555476,
+        "surfaceSumSquares": 130.47696231487353,
+        "f": 920.8251385252563,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -3.11295667134668,
-        "saddleDmm": 0.40202426777166533,
-        "alongT": -6.383901438693218,
-        "saddleT": 0.5093145537234172,
-        "f": 20.464146427532174,
-        "cornerOffsetDmm": -6.4627719638246,
-        "varianceExplained": 0.13600679572783336,
+        "alongDmm": -3.112956660872033,
+        "saddleDmm": 0.4020242766041575,
+        "alongT": -6.383901419238878,
+        "saddleT": 0.5093145652862601,
+        "f": 20.464146296662143,
+        "cornerOffsetDmm": -6.462771922840263,
+        "varianceExplained": 0.13600679497635326,
         "corners": 131
       },
       "bulls": {
@@ -43188,22 +43188,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 2.2839077551027143,
+          "rulingAngle": -0.8576848944907344,
           "bend": [
             0,
-            0.0501407085101388,
-            -0.021576917155194487,
-            -0.02981476135545801
+            0.05014070798613448,
+            0.02157691613079461,
+            -0.029814760389280208
           ],
-          "rotationX": 0.0330613733030989,
-          "rotationY": -0.021344136330389913,
-          "rotationZ": -1.5779668371548259,
-          "translationX": -129.1464891701327,
-          "translationY": 83.43832912768583,
-          "translationZ": 1521.9352999228893,
-          "focal": 0.816543318882255,
-          "k1": -0.015650786892425734,
-          "k2": -0.048589580837124204,
+          "rotationX": 0.03306137323822638,
+          "rotationY": -0.02134413666043001,
+          "rotationZ": -1.5779668371624835,
+          "translationX": -129.14648916846332,
+          "translationY": 83.43832911689181,
+          "translationZ": 1521.9353003382307,
+          "focal": 0.8165433190875163,
+          "k1": -0.015650786473714085,
+          "k2": -0.04858958188375264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -43211,7 +43211,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 1633.08663776451
+          "focalPixels": 1633.0866381750327
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -44579,19 +44579,19 @@
       ],
       "choice": {
         "planarSumSquares": 673.3349604691608,
-        "surfaceSumSquares": 173.45165133025264,
-        "f": 116.71998430028607,
+        "surfaceSumSquares": 173.45165026660442,
+        "f": 116.7199852643977,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -2.9895244472832476,
-        "saddleDmm": -0.0032180870471773316,
-        "alongT": -7.312886133300007,
-        "saddleT": -0.0039001373501730526,
-        "f": 26.752411052990322,
-        "cornerOffsetDmm": -9.289196060198885,
-        "varianceExplained": 0.16851656535824566,
+        "alongDmm": -2.989524438289397,
+        "saddleDmm": -0.003218007270704447,
+        "alongT": -7.3128860726038045,
+        "saddleT": -0.003900040644692083,
+        "f": 26.752410627628937,
+        "cornerOffsetDmm": -9.289196041810452,
+        "varianceExplained": 0.168516563130368,
         "corners": 133
       },
       "bulls": {
@@ -45505,22 +45505,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 0.495372219074073,
+          "rulingAngle": 0.49537222153791294,
           "bend": [
             0,
-            -0.0688780904606477,
-            -0.06932487543830985,
-            0.07548333590828557
+            -0.06887809075766951,
+            -0.06932487530673355,
+            0.07548333647725311
           ],
-          "rotationX": -0.23590646893977607,
-          "rotationY": -0.3127304103600963,
-          "rotationZ": -1.579773800452512,
-          "translationX": -103.62309657775965,
-          "translationY": -240.32204451312623,
-          "translationZ": 1644.4961045537723,
-          "focal": 0.816543318882255,
-          "k1": -0.015650786892425734,
-          "k2": -0.048589580837124204,
+          "rotationX": -0.2359064690392894,
+          "rotationY": -0.3127304103600187,
+          "rotationZ": -1.5797738004519546,
+          "translationX": -103.62309658431845,
+          "translationY": -240.3220445023994,
+          "translationZ": 1644.4961049023366,
+          "focal": 0.8165433190875163,
+          "k1": -0.015650786473714085,
+          "k2": -0.04858958188375264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -45528,7 +45528,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 1633.08663776451
+          "focalPixels": 1633.0866381750327
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -46896,19 +46896,19 @@
       ],
       "choice": {
         "planarSumSquares": 1318.7583759863728,
-        "surfaceSumSquares": 166.65688389053278,
-        "f": 311.0856625542482,
+        "surfaceSumSquares": 166.6568835690051,
+        "f": 311.08566324123694,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": 0.08380426864756312,
-        "saddleDmm": 6.020821208995605,
-        "alongT": 0.19925423083449945,
-        "saddleT": 6.283580654399276,
-        "f": 22.46537844647556,
-        "cornerOffsetDmm": 7.174466856097814,
-        "varianceExplained": 0.15338354145369126,
+        "alongDmm": 0.08380428018477669,
+        "saddleDmm": 6.020821210875856,
+        "alongT": 0.19925425816892606,
+        "saddleT": 6.283580639789435,
+        "f": 22.465378370637243,
+        "cornerOffsetDmm": 7.1744668577634885,
+        "varianceExplained": 0.1533835410153217,
         "corners": 125
       },
       "bulls": {
@@ -47255,9 +47255,9 @@
             "declaredX": 700,
             "declaredY": 2059,
             "recoveredX": 698.6386,
-            "recoveredY": 2059.9391,
+            "recoveredY": 2059.939,
             "dx": -1.3614,
-            "dy": 0.9391,
+            "dy": 0.939,
             "error": 1.6539,
             "inkSpread": 0.2813,
             "threshold": null,
@@ -47705,9 +47705,9 @@
             "declaredX": 700,
             "declaredY": 2059,
             "recoveredX": 698.6386,
-            "recoveredY": 2059.9391,
+            "recoveredY": 2059.939,
             "dx": -1.3614,
-            "dy": 0.9391,
+            "dy": 0.939,
             "error": 1.6539,
             "inkSpread": 0.2813,
             "threshold": null,
@@ -47822,22 +47822,22 @@
         "model": "generalised cylinder through a camera with radial distortion",
         "parameters": {
           "projection": "perspective",
-          "rulingAngle": 3.6914290079095453,
+          "rulingAngle": 3.6914290919423194,
           "bend": [
             0,
-            -0.04706754419605024,
-            0.02421123430005577,
-            -0.02154965475109926
+            -0.04706755187504779,
+            0.02421124638578954,
+            -0.021549637332397863
           ],
-          "rotationX": 0.41402866495904966,
-          "rotationY": 0.2877425626487496,
-          "rotationZ": -1.5309632207373636,
-          "translationX": -8.890931604099515,
-          "translationY": 372.6990780571601,
-          "translationZ": 1757.4414430799097,
-          "focal": 0.816543318882255,
-          "k1": -0.015650786892425734,
-          "k2": -0.048589580837124204,
+          "rotationX": 0.4140286662871801,
+          "rotationY": 0.2877425632893093,
+          "rotationZ": -1.530963220638261,
+          "translationX": -8.890931647803031,
+          "translationY": 372.6990779911075,
+          "translationZ": 1757.4414432053109,
+          "focal": 0.8165433190875163,
+          "k1": -0.015650786473714085,
+          "k2": -0.04858958188375264,
           "centreX": 1999.5,
           "centreY": 1499.5,
           "scale": 2000,
@@ -47845,7 +47845,7 @@
           "pageCentreY": 1397,
           "family": "cylinder",
           "turn": null,
-          "focalPixels": 1633.08663776451
+          "focalPixels": 1633.0866381750327
         },
         "form": "sheet = along-ruling * (cos a, sin a, 0) \u002B X(t) * (-sin a, cos a, 0) \u002B Z(t) * (0, 0, 1), where (X, Z) integrates (cos, sin) of the tangent angle sum bend[k] (t / 1000)^k along arc length t across the rulings; image = distort(project(R sheet \u002B T))"
       },
@@ -47977,7 +47977,7 @@
           "imageYPx": 1381.9174,
           "pageX": 1630,
           "pageY": 329,
-          "error": 10.41,
+          "error": 10.4099,
           "kept": false
         },
         {
@@ -48927,7 +48927,7 @@
           "imageYPx": 2442.3389,
           "pageX": 110,
           "pageY": 2269,
-          "error": 26.7367,
+          "error": 26.7368,
           "kept": false
         },
         {
@@ -49133,19 +49133,19 @@
       ],
       "choice": {
         "planarSumSquares": 1227.2490278961639,
-        "surfaceSumSquares": 121.31234809836859,
-        "f": 346.42470029711166,
+        "surfaceSumSquares": 121.31235911967778,
+        "f": 346.4246653718698,
         "criticalF": 4.61675,
         "preferSurface": true
       },
       "twist": {
-        "alongDmm": -0.029357024082277333,
-        "saddleDmm": 2.686914551591887,
-        "alongT": -0.046467063714471284,
-        "saddleT": 2.1746958525041897,
-        "f": 3.09073706124344,
-        "cornerOffsetDmm": 2.700471412866149,
-        "varianceExplained": 0.02531508233661539,
+        "alongDmm": -0.029357150109414754,
+        "saddleDmm": 2.686911998628606,
+        "alongT": -0.04646727029977407,
+        "saddleT": 2.1746939748116505,
+        "f": 3.0907312167714363,
+        "cornerOffsetDmm": 2.7004678964325266,
+        "varianceExplained": 0.025315035678538655,
         "corners": 120
       },
       "bulls": {
@@ -49495,7 +49495,7 @@
             "recoveredY": 2056.8687,
             "dx": 1.1183,
             "dy": -2.1313,
-            "error": 2.4068,
+            "error": 2.4069,
             "inkSpread": 0.1422,
             "threshold": null,
             "iterations": 6,
@@ -49945,7 +49945,7 @@
             "recoveredY": 2056.8687,
             "dx": 1.1183,
             "dy": -2.1313,
-            "error": 2.4068,
+            "error": 2.4069,
             "inkSpread": 0.1422,
             "threshold": null,
             "iterations": 6,
