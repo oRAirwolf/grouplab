@@ -79,13 +79,15 @@ public static class AutomaticMarking
     /// </param>
     /// <param name="artefacts">
     /// Keep each stage's picture for the timeline, DESIGN.md section 19 [r3]: on for one interactive analysis and off for batch, so the theatre
-    /// never slows the pipeline down. Off by default; only the marking screen turns it on.
+    /// never slows the pipeline down. Off by default; only the marking screen turns it on. It sets <see cref="TraceRecorder.KeepArtefacts"/>,
+    /// so each stage's record carries its picture as it files and a live run shows it as the stage lands.
     /// </param>
     public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
         trace ??= new Trace.TraceRecorder();
+        trace.KeepArtefacts |= artefacts;
         var measurement = SheetMeasurer.Measure(grey, metadata, definition, new MeasureOptions(), backend, trace);
         cancellation.ThrowIfCancellationRequested();
         var fiducials = measurement.Fiducials;
@@ -105,7 +107,7 @@ public static class AutomaticMarking
             try
             {
                 detection = new DetectionRecord(calibre, calibre?.DiameterInches * HoleToCalibre);
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre, KeepResidual: artefacts));
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre, KeepResidual: trace.KeepArtefacts));
             }
             catch (InvalidOperationException ex)
             {
@@ -153,6 +155,7 @@ public static class AutomaticMarking
             stage.Metric("residue refused", residue, "count");
             stage.Metric("split halves", merges, "count");
             stage.Metric("oversized", oversized, "count");
+            stage.Artefact(() => holes.Residual is { } residual ? new ResidualArtefact(residual) : null);
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
                 $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by their size" : "")}{(residue > 0 ? $", {residue} refused as residue" : "")}"));
         }

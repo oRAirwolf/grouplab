@@ -250,6 +250,7 @@ public static class SheetMeasurer
         int notFound = printed.Count - matches.Count;
         string summary = string.Create(inv, $"{printed.Count} markers sought, {matches.Count} decoded, {notFound} not found")
             + (unexpected > 0 ? string.Create(inv, $", {unexpected} unexpected") : "");
+        s2.Artefact(() => new MarkerArtefact([.. matches.Select(m => m.ImageCorners)]));
         s2.Done(matches.Count < 4 ? StageStatus.Failed : notFound > 0 ? StageStatus.Degraded : StageStatus.Ok, summary);
         return new FiducialResult(tile, tiles, printed.Count, matches, unexpected, detection.Rejected.Count, detection.CandidatesNotDecoded, pixelsPerDmm,
             f.MarkerSize, [.. unmatched.Values.OrderBy(m => m.Id)], detection.Undecoded);
@@ -431,6 +432,7 @@ public static class SheetMeasurer
 
         stage.Detail(string.Create(inv, $"residual rms {rms / 254:0.00000} in, max {max / 254:0.00000} in")
             + (homographyRms is { } hr ? string.Create(inv, $"; homography alone {hr / 254:0.00000} in rms") : ""));
+        stage.Artefact(() => new CornerArtefact(corners, mapping));
         stage.Done(StageStatus.Ok, string.Create(inv, $"{mapping.Model}, {matches.Count} markers, {count} of {imagePoints.Count} corners inliers"));
         return new RegistrationFit(mapping, corners, rms, max, homographyRms);
     }

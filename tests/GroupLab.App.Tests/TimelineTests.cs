@@ -91,8 +91,10 @@ public class TimelineTests
         var definition = Definition();
         var image = Sheet(definition);
         var metadata = ImageMetadata.ForScan(image.Width, image.Height, 300);
-        var batch = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend());
+        var batchTrace = new TraceRecorder();
+        var batch = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend(), batchTrace);
         Assert.Null(batch.Difference!.Residual);
+        Assert.All(batchTrace.Records, r => Assert.Null(r.Artefact));
 
         var trace = new TraceRecorder();
         var result = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend(), trace, artefacts: true);
@@ -114,6 +116,38 @@ public class TimelineTests
         Assert.Equal("corners", PictureAt("S3"));
         Assert.Equal("residual", PictureAt("S5"));
         Assert.Equal("none", PictureAt("S9"));
+        window.Close();
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 101 section 5 and DESIGN.md section 19 [r3]'s live run: each stage's picture appears as the stage lands,
+    /// not when the analysis finishes. The window is never given the finished result here, so every picture it shows came with its stage's
+    /// record, and each is read at the moment that stage filed.
+    /// </summary>
+    [AvaloniaFact]
+    public void EachPictureAppearsAsItsStageLands()
+    {
+        var definition = Definition();
+        var image = Sheet(definition);
+        var window = NewWindow();
+        window.Show();
+        var trace = new TraceRecorder();
+        var seen = new List<(string Stage, string Picture)>();
+        trace.Filed += record =>
+        {
+            window.AddStage(record);
+            Dispatcher.UIThread.RunJobs();
+            seen.Add((record.Stage, window.StagePicture));
+        };
+
+        var result = AutomaticMarking.Run(image, image, ImageMetadata.ForScan(image.Width, image.Height, 300), definition, new OpenCvSharpBackend(), trace, artefacts: true);
+        Assert.Null(result.Failure);
+
+        string At(string stage) => seen.Single(s => s.Stage.StartsWith(stage, StringComparison.Ordinal)).Picture;
+        Assert.Equal("markers", At("S2"));
+        Assert.Equal("corners", At("S3"));
+        Assert.Equal("residual", At("S5"));
+        Assert.Equal("none", At("S9"));
         window.Close();
     }
 

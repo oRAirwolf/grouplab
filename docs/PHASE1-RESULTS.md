@@ -4513,6 +4513,41 @@ The native steps kept are integer work, and every gate record run has shown them
 
 ---
 
+## Entry 102, and entry 101 section 5's remaining half. The experiment branches retired, and the live run
+
+`docs/NOTES-FROM-PLANNING.md` entry 102 answers whether to keep three platforms and asks for no code. Its section 6 retires the two experiment branches after a check. The covering message then takes the half of the stage timeline entry 101 section 5 recorded as not built.
+
+### Entry 102 section 6: nothing on the branches was missing from `main` or from the record
+
+- **`experiment/opencv-unoptimized`:** one commit, three lines, turning OpenCV's optimised paths off. Its result, no change on macOS and a line broken on Linux, is in "Entry 101" and in `PortableImaging`'s own comment.
+- **`experiment/portable-imaging`:** one commit with the warp, the sub-pixel port and the managed final fit. `main` carries all of it, with contour refinement added. The only lines on the branch that are not on `main` are comments describing three steps where there are now four, and a backend comment saying contour refinement was still native.
+- **The record:** "Entry 101" carries the method, the four ported steps with what each keeps native, and the check that the contour port reproduces OpenCV's corners on all 136 corners of each of the eight sheet images once OpenCV's single-precision arithmetic is imitated.
+- **Both branches are deleted** from the remote and locally.
+
+### The live run: each stage's picture arrives with its record
+
+**Before:** each stage's record already landed on the timeline as it filed, but its picture was read from the finished analysis. So the pictures appeared only when the analysis finished: a gallery at the end.
+
+**Now the picture travels on the record.**
+- **Which stages carry one:** the fiducial stage attaches the markers it matched, the registration its corners with their residuals and the fit, and the difference stage its residual.
+- **When:** each is attached before the stage files, so the timeline's handler, which already moved to each stage as it landed, now draws its picture at that moment. The markers light up, the corners are ringed, and the photograph gives way to the residual while the analysis is still running.
+- **Where they come from:** the timeline no longer reads the finished result at all.
+
+**Batch pays nothing.**
+- **The switch:** a trace keeps pictures only when asked, and only the marking screen asks.
+- **What a stage does:** it passes its picture as a function the trace calls only when pictures are kept, so a batch run never builds one.
+- **The residual:** as before, the only picture that costs an image, and kept only on the same switch.
+
+**Tests.**
+- **The new one:** runs the analysis with the window subscribed to the trace and never gives it the finished result. It reads the picture at the moment each stage files: markers at S2, corners at S3, residual at S5, and none at S9. Before this change it could not pass, because every picture came from the finished result.
+- **The existing picture test:** now also requires that no record of a batch run carries a picture.
+
+**The README** marks the timeline done: it has no gate of its own, and every part of it `DESIGN.md` section 19 [r3] names is built and tested.
+
+**Tests:** Core 867 and App 63 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4734,3 +4769,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 101: the homography's final fit carried to convergence, over stopping at OpenCV's ten iterations.** A fixed iteration count reproduces the native figures only as far as every other detail of its solver does, and convergence is a definition every platform reaches the same way.
 - **Entry 101: native code kept for the integer steps.** Candidate detection, decoding and RANSAC's inlier choice were identical on every platform in every gate record run; porting them would add risk to steps that already agree.
 - **Entry 101: the contour lines fitted in double precision, over emulating OpenCV's single precision.** The emulation reproduces native and proves the contours are the same, but its answer is up to 0.09 px from the least-squares line it sets out to compute.
+- **Entry 101 section 5: the picture carried on the stage record, over a separate artefact channel.** The record already reached the timeline live, so attaching the picture to it makes the two arrive together, and a trace put on the timeline after its run draws its pictures by the same path.

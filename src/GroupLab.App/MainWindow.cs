@@ -66,8 +66,6 @@ public sealed class MainWindow : Window
 
     private bool showingStage;
 
-    /// <summary>The last analysis put on the screen, whose stage pictures the timeline draws.</summary>
-    private AutomaticResult? analysed;
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
     private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     // NOTES-FROM-PLANNING.md entry 76 section 4: a detection the window starts on its own shows that it is running and can be stopped.
@@ -930,7 +928,6 @@ public sealed class MainWindow : Window
     internal void ApplyDetection(AutomaticResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
-        analysed = result;
         if (result.Failure is not null || result.Scale is null)
         {
             problem.Text = "Detection failed: " + (result.Failure ?? "no registration") + ". Mark this image by hand with a reference length or rectangle.";
@@ -1578,6 +1575,10 @@ public sealed class MainWindow : Window
     /// A stage's own picture, entry 98 section 5: the markers light up at the fiducial stage, each corner is ringed by its residual at the
     /// registration, twenty times true size so a tenth of a millimetre can be seen, and at the difference stage the photograph gives way to
     /// the residual, where the printed artwork has vanished and the holes emerge. Stages with no picture show the photograph.
+    /// <para>
+    /// The picture comes from the stage's own record, which carries it when it files (entry 101 section 5), so during a live run each picture
+    /// appears as its stage lands rather than when the analysis finishes. A batch run's records carry none.
+    /// </para>
     /// </summary>
     private void ShowStagePicture(StageRecord record)
     {
@@ -1585,20 +1586,16 @@ public sealed class MainWindow : Window
         canvas.StageImage = null;
         canvas.StageMarkers = [];
         canvas.StageCorners = [];
-        if (analysed is not { } result)
+        if (record.Artefact is MarkerArtefact markers)
         {
-            return;
+            canvas.StageMarkers = [.. markers.Markers];
         }
-
-        if (record.Stage.StartsWith("S2", StringComparison.Ordinal) && result.Measurement.Fiducials is { } fiducials)
+        else if (record.Artefact is CornerArtefact corners)
         {
-            canvas.StageMarkers = [.. fiducials.Matches.Select(m => m.ImageCorners)];
+            var scale = new SheetReference(corners.Mapping, "");
+            canvas.StageCorners = [.. corners.Corners.Select(c => (c.Image, 20 * c.Error / 254 * HoleSize.PixelsPerInch(scale, c.Image), c.Inlier))];
         }
-        else if (record.Stage.StartsWith("S3", StringComparison.Ordinal) && result.Measurement.Registration is { } registration && result.Scale is { } scale)
-        {
-            canvas.StageCorners = [.. registration.Corners.Select(c => (c.Image, 20 * c.Error / 254 * HoleSize.PixelsPerInch(scale, c.Image), c.Inlier))];
-        }
-        else if (record.Stage.StartsWith("S5", StringComparison.Ordinal) && result.Difference?.Residual is { } residual)
+        else if (record.Artefact is ResidualArtefact { Residual: var residual })
         {
             // Shown as paper and ink: no difference is white, a strong one dark, so the holes emerge on a blank sheet.
             var inverted = residual.Pixels.Select(v => (byte)(255 - v)).ToArray();

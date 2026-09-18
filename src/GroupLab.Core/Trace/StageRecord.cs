@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Measurement;
+using GroupLab.Core.Registration;
 
 namespace GroupLab.Core.Trace;
 
@@ -28,8 +31,23 @@ public sealed record Decision(string What, string Chosen, IReadOnlyList<string> 
 public sealed record Rejection(string What, double? XInches, double? YInches, string Why);
 
 /// <summary>
-/// One stage's record, DETECTION-PIPELINE.md section 6.1. Phase 0 produces no raster artefacts, so the record carries
-/// none; <see cref="Details"/> holds the continuation lines of the console form of section 6.3.
+/// What a stage shows on the timeline, DESIGN.md section 19 [r3]: the stage's own picture, carried on its record so that a live run shows it
+/// the moment the stage lands rather than when the analysis finishes. Only a trace that asks for pictures gets them (<see cref="TraceRecorder.KeepArtefacts"/>).
+/// </summary>
+public abstract record StageArtefact;
+
+/// <summary>The fiducial stage's picture: the image corners of every marker it matched, which light up.</summary>
+public sealed record MarkerArtefact(IReadOnlyList<IReadOnlyList<PointD>> Markers) : StageArtefact;
+
+/// <summary>The registration's picture: every corner with how far the fit left it, and the fit, which sizes each ring on the image.</summary>
+public sealed record CornerArtefact(IReadOnlyList<CornerResidual> Corners, IPageMapping Mapping) : StageArtefact;
+
+/// <summary>The difference stage's picture: the residual, where the printed artwork has vanished and the holes are what is left.</summary>
+public sealed record ResidualArtefact(GrayImage Residual) : StageArtefact;
+
+/// <summary>
+/// One stage's record, DETECTION-PIPELINE.md section 6.1. <see cref="Details"/> holds the continuation lines of the console form of
+/// section 6.3, and <see cref="Artefact"/> the stage's picture when the trace keeps them.
 /// </summary>
 public sealed class StageRecord
 {
@@ -68,6 +86,9 @@ public sealed class StageRecord
 
     public IReadOnlyList<NamedParameter> Parameters => _parameters;
 
+    /// <summary>The stage's picture, set before the record is filed, or null in a trace that does not keep them or a stage that has none.</summary>
+    public StageArtefact? Artefact { get; internal set; }
+
     internal void AddDetail(string line) => _details.Add(line);
 
     internal void AddMetric(NamedQuantity metric) => _metrics.Add(metric);
@@ -86,6 +107,12 @@ public sealed class TraceRecorder
     private int _sequence;
 
     public IReadOnlyList<StageRecord> Records => _records;
+
+    /// <summary>
+    /// Whether stages attach their pictures, DESIGN.md section 19 [r3]: on for one interactive analysis, off for batch, where no picture is
+    /// ever built, so the theatre never slows the pipeline down.
+    /// </summary>
+    public bool KeepArtefacts { get; set; }
 
     public StageScope Begin(string stage) => new(this, new StageRecord(stage, ++_sequence, DateTime.UtcNow));
 
@@ -133,6 +160,19 @@ public sealed class StageScope : IDisposable
         Record.AddRejection(new Rejection(what, at?.X, at?.Y, why));
 
     public void Detail(string line) => Record.AddDetail(line);
+
+    /// <summary>
+    /// Attaches the stage's picture, built only when the trace keeps pictures, so a batch run never pays for it. Called before the stage
+    /// files, so a live run shows the picture with the record.
+    /// </summary>
+    public void Artefact(Func<StageArtefact?> make)
+    {
+        ArgumentNullException.ThrowIfNull(make);
+        if (_recorder.KeepArtefacts)
+        {
+            Record.Artefact = make();
+        }
+    }
 
     public void Done(StageStatus status, string summary)
     {

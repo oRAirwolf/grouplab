@@ -15,6 +15,66 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 102: what cross-platform has cost, and why the run that just finished is the argument for keeping it
+
+**Status: actioned 2026-09-18.**
+- **Sections 1 to 5: recorded.** All three platforms stay, and the three-platform gate record stays the guard on the four routines entry 101 ported. Nothing asked for code.
+- **Section 6: both experiment branches deleted after the check.** Nothing on either was absent from `main` or unrecorded: "Entry 101" in `docs/PHASE1-RESULTS.md` carries the method, the four steps, and the contour port reproducing OpenCV's corners on all 136 corners of each of the eight sheet images once its arithmetic is imitated. `docs/PHASE1-RESULTS.md` "Entry 102".
+
+Alan asked how much time and how many tokens would be saved by developing Windows alone. **This answers it with the evidence, and the answer runs against the question.**
+
+### 1. The cost so far, honestly counted
+
+Cross-platform work has been substantially the subject of roughly **five entries out of about a hundred**, and about **three Claude Code sessions**: the OpenCV build failure of entries 47 and 48, the macOS rerun of entry 49, the Linux VM and tarball of entries 61 and 63, the print path of entry 77, and the macOS numerical port that just landed.
+
+**Call it eight to ten percent of everything spent so far.** That is a real number and it is not nothing.
+
+**Going forward it is close to zero.** CI on three platforms costs no attention while it is green, and as of this run it is green on all three for the first time. **The expensive part has just been paid.**
+
+### 2. The bill arrived and it bought something that is not about macOS
+
+Four floating-point steps now run in GroupLab's own code rather than OpenCV's. **The reason that matters has nothing to do with Apple.**
+
+**It found a real numerical defect in the measurement core.** OpenCV stops the homography's final fit after ten iterations. Ours runs to convergence. The consequences, on Windows as much as anywhere:
+
+| | Before | After |
+|---|---|---|
+| Paper gate, worst bull | 0.00340 in | **0.00319 in** |
+| Print-scale detection | 0.96195 | 0.96200 |
+| 1.5-module refinement window | **0.00517 in, over the gate** | **0.00290 in, inside it** |
+
+**A Phase 0 finding reversed.** A refinement window this project had recorded as failing the paper gate does not fail it, and the reason it looked like failing was a truncated fit.
+
+**None of that would have been found by a Windows-only project**, because there would have been nothing to disagree with. **Two implementations disagreeing is the oldest correctness test there is**, and three platforms have been running one continuously without anybody calling it that.
+
+**The cost is 10 to 16 milliseconds per sheet.** For a defect found in the number the entire application exists to produce, that is cheap.
+
+### 3. Dropping platforms now would remove the guard on what the platforms just bought
+
+**GroupLab now owns four numerical routines that used to be OpenCV's.** That is a real maintenance liability, and the thing protecting it is the gate record reproducing on three platforms.
+
+**Cut to one platform and that guard goes**, on code that is four days old and was written precisely because platforms disagreed. **The moment to stop paying for a test is not the moment after it caught something.**
+
+### 4. What dropping would actually save, and what it would cost later
+
+**Save:** CI minutes, which are not Alan's tokens and not his wall clock while green. Occasional platform-specific defects like the print path, which was a real bug on a platform GroupLab intends to ship to.
+
+**Cost:** `DESIGN.md` and the README both now say in public that all three are held correct continuously so that neither becomes a port later. **Entry 60 made that argument and the page states it.** Resuming after a gap means paying the port, and a port is what these four numerical routines would have been discovered during, at a much worse moment.
+
+### 5. The recommendation
+
+**Keep all three.** Not out of loyalty to the plan, and not because the README says so. **Because the practice just found a bug in the Windows numbers and is now the only thing guarding the code written to fix it.**
+
+**If the cost ever needs cutting, cut the right thing.** The gate record on three platforms is the valuable half and it is cheap. **The Linux VM, the tarball and the packaging are the discretionary half**, and entry 61 already argued for keeping those minimal: one format, no store accounts, no review queues, and nothing added until somebody asks by name. That restraint is where the savings are, and it is already in force.
+
+### 6. The two experiment branches
+
+`experiment/opencv-unoptimized` and `experiment/portable-imaging` should be deleted **after one check**: that nothing in either is absent from `main` and unrecorded.
+
+**The diagnosis is worth more than the branches.** What matters is that `PHASE1-RESULTS.md` under "Entry 101" carries the method, the four steps, and the verification that the contour port reproduces OpenCV's corners on every corner of all eight sheet images once OpenCV's arithmetic is imitated. **If that is all written down, the branches are scaffolding and should go.** If any of it lives only in a branch, move it first.
+
+---
+
 ## 2026-09-18, entry 101: the control is what answered it, the error's location names its cause, and a warning claims four digits it does not have
 
 **Status: actioned 2026-09-18.**
