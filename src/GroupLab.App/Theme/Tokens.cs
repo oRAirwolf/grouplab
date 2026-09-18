@@ -22,13 +22,26 @@ public sealed record Palette(
     Color AmberTint,
     Color AmberTintBorder,
     Color TealTint,
-    Color TealTintBorder)
+    Color TealTintBorder,
+    Color FieldBg,
+    Color FieldBorder,
+    Color FocusRing,
+    Color Disabled,
+    Color WarningText,
+    Color ErrorText)
 {
     /// <summary>The colours text is set in.</summary>
-    public IReadOnlyList<(string Role, Color Colour)> TextColours => [("text", Text), ("dim", Dim), ("faint", Faint), ("amber", Amber), ("teal", Teal), ("alert", Alert)];
+    public IReadOnlyList<(string Role, Color Colour)> TextColours => [("text", Text), ("dim", Dim), ("faint", Faint), ("amber", Amber), ("teal", Teal), ("alert", Alert), ("warning", WarningText), ("error", ErrorText)];
+
+    /// <summary>
+    /// The form roles, NOTES-FROM-PLANNING.md entry 100 section 1: the concept shows no form, so the parametric editor needed roles the token
+    /// set had never had to produce. Each is here in every palette rather than chosen on the one screen that first needed it. Warning text
+    /// is amber and error text red, the meanings entry 93 fixed: a warning is a decision for the person, a refusal is something wrong.
+    /// </summary>
+    public IReadOnlyList<(string Role, Color Colour)> FormEdges => [("field border", FieldBorder), ("focus ring", FocusRing)];
 
     /// <summary>The surfaces text is set on: the window, the panels, and raised surfaces such as buttons. The sunk image area carries marks, not text.</summary>
-    public IReadOnlyList<(string Role, Color Colour)> TextSurfaces => [("bg", Bg), ("panel", Panel), ("panel2", Panel2)];
+    public IReadOnlyList<(string Role, Color Colour)> TextSurfaces => [("bg", Bg), ("panel", Panel), ("panel2", Panel2), ("field", FieldBg)];
 }
 
 /// <summary>
@@ -63,7 +76,13 @@ public static class Tokens
         AmberTint: Hex(0x221c12),
         AmberTintBorder: Hex(0x3a2d18),
         TealTint: Hex(0x141f1c),
-        TealTintBorder: Hex(0x2c463f));
+        TealTintBorder: Hex(0x2c463f),
+        FieldBg: Hex(0x15171b),
+        FieldBorder: Hex(0x6f757e),
+        FocusRing: Hex(0xe0912f),
+        Disabled: Hex(0x7c828b),
+        WarningText: Hex(0xe0912f),
+        ErrorText: Hex(0xe1634d));
 
     public static Palette Light { get; } = new(
         Bg: Hex(0xf4f3f0),
@@ -82,7 +101,13 @@ public static class Tokens
         AmberTint: Hex(0xf4efe7),
         AmberTintBorder: Hex(0xd0b694),
         TealTint: Hex(0xebf1ef),
-        TealTintBorder: Hex(0xa5c0b8));
+        TealTintBorder: Hex(0xa5c0b8),
+        FieldBg: Hex(0xffffff),
+        FieldBorder: Hex(0x80858c),
+        FocusRing: Hex(0x965d12),
+        Disabled: Hex(0x868b92),
+        WarningText: Hex(0x965d12),
+        ErrorText: Hex(0xb8422f));
 
     /// <summary>
     /// High contrast, NOTES-FROM-PLANNING.md entry 93 section 3. It is not a fourth set of hand-picked values: it is <see cref="Dark"/> put
@@ -98,6 +123,13 @@ public static class Tokens
 
     /// <summary>What every text colour must reach against its surfaces in the high contrast theme: WCAG's AAA ratio for body text.</summary>
     public const double HighContrastRatio = 7.0;
+
+    /// <summary>
+    /// What a control's edge must reach against what it sits on: WCAG's 3:1 for user-interface components, and 4.5:1 in high contrast, which
+    /// has no AAA figure for edges and takes the next step up. A disabled control's text is held to the same floor, because WCAG exempts it
+    /// from contrast and a control nobody can see is not disabled, it is missing.
+    /// </summary>
+    public const double EdgeRatio = 3.0, HighContrastEdgeRatio = 4.5;
 
     /// <summary>The theme variant the high contrast palette answers to. It inherits from dark, so any control Avalonia styles itself stays dark rather than turning light.</summary>
     public static ThemeVariant HighContrastVariant { get; } = new("GroupLabHighContrast", ThemeVariant.Dark);
@@ -136,6 +168,12 @@ public static class Tokens
             AmberTintBorder = Lift(p.Amber),
             TealTint = bg,
             TealTintBorder = Lift(p.Teal),
+            FieldBg = bg,
+            FieldBorder = Toward(p.FieldBorder, Hex(0xffffff), [bg, panel, panel2], HighContrastEdgeRatio),
+            FocusRing = Lift(p.FocusRing),
+            Disabled = Toward(p.Disabled, Hex(0xffffff), [bg, panel, panel2], HighContrastEdgeRatio),
+            WarningText = Lift(p.WarningText),
+            ErrorText = Lift(p.ErrorText),
         };
     }
 

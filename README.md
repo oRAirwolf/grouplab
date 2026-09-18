@@ -197,13 +197,14 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
+- **Done.** The parametric target editor: page, rows and columns, spacing, ring, sighters and load block, laid out by the rule the library was, with a layout that cannot register or fit refused and a spacing tight for your rifle's group warned with its misassignment rate.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
 - **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
 - **In progress.** The analysis screen shown above.
 - **Not started.** A target library, session records and reporting.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
-- **In progress.** The stage timeline that shows the analysis doing its work: scrubbable, each stage landing as it files during a live run, and a rejection clicked to find it on the image are in. Each stage's intermediate images, the markers lighting up and the artwork vanishing, are not.
+- **Done.** The stage timeline that shows the analysis doing its work: each stage lands as it files during a live run, scrubs by slider or button, shows its own picture (the markers lighting up, the registration's corners ringed by their residual, the photograph giving way to the residual with the artwork gone), and a rejection clicked is found on the image. The pictures are kept only for an interactive run and appear when it finishes rather than stage by stage.
 - **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
 - **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
 - **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once, and in the scope's own clicks with what rounding leaves once the marking names a rifle.
@@ -228,7 +229,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Two promises in `DESIGN.md` section 3 carry no phase on purpose.** A deferral means the promise still stands, nobody is working on it, and the reason is written down. It is not a quiet drop, and it is checked: a scope bullet with neither a phase nor a deferral fails a test.
 
-- **Deferred: the parametric target editor and the full visual designer.** The format is ready for them, and a fully custom sheet of forty arbitrarily placed bulls fits inside a QR payload with room to spare. What is missing is a specification of the authoring screen, and one is being written with the shooter who asked for it rather than guessed at from a picture.
+- **Deferred: the full visual designer.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for, and it is revisited when somebody asks for a layout the form cannot express.
 - **Deferred: assisted hole placement on a target with no definition.** The detector renders the target's definition and differences the image against it. A store-bought target or a sheet of blank paper has no definition, so the method as built has nothing to difference, and whether anything weaker is worth having is an open question in `docs/QUESTIONS-FOR-PLANNING.md` rather than a phase.
 
 A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.

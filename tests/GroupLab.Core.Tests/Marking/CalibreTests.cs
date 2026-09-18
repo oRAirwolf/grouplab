@@ -48,7 +48,11 @@ public class CalibreTests
         Assert.NotNull(figures.MeanRadius);
         Assert.Null(figures.ExtremeSpreadEdgeToEdge);
         Assert.Equal("needs the group's calibre", figures.ExtremeSpreadEdgeToEdgeUnavailable);
-        Assert.Null(HoleSize.SnapRadiusPixels(session.State, new PointD(50, 50)));
+
+        // NOTES-FROM-PLANNING.md entry 98 section 2: without a calibre the snap is still sized in sheet units, to a nominal .30 hole, so no zoom
+        // or layout can move it; before, it fell back to screen pixels.
+        var at = new PointD(50, 50);
+        Assert.Equal(HoleSize.NominalHoleInches * HoleSize.PixelsPerInch(session.State.Scale!, at), HoleSize.SnapRadiusPixels(session.State, at)!.Value, 9);
     }
 
     [Fact]

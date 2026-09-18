@@ -15,6 +15,160 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 100: a form needs token roles the concept never showed, and the rehearsal ceiling applies to screens that are not the editor
+
+**Status: actioned 2026-09-18.**
+- **Section 1: six roles, three palettes, one change.** Field background, field border, focus ring, disabled, warning text and error text, with high contrast derived like the rest, and the contrast tests extended to cover them: text at 4.5:1 on fields too, edges and disabled at 3:1, high contrast a step higher. Warning is amber and error red in every theme, held by a test. The application's fields now use these roles.
+- **Section 2: the window rehearsal ran after the editor**, and after everything else in the batch: 10 presses, no taps.
+- **Section 3: the spacing warning reads like the flyer line.** "... 1.00 in between bulls is 2.9 sigma: about one shot in 4 (26.58 percent) would land nearer a neighbouring bull than its own. Six sigma is where that falls to one in 185." A test checks it carries no should.
+
+Short, and it lands before the parametric editor is built rather than after.
+
+### 1. The concept has no form on it, so the form will invent its own colours
+
+The approved concept shows a review card, readouts, a queue and a tool strip. **It shows no text field, no dropdown, no validation state and no warning.**
+
+**The parametric editor is a form**, and a form needs roles the token set has never had to produce: a field background, a field border, a focus ring, a disabled control, warning text and error text.
+
+**Those roles will be needed on the spot, and the easy thing is to pick a colour that looks right on the one screen being built.** That is how a token set quietly becomes a dark theme with names, which entry 93 section 3 was written to prevent.
+
+**So: add the new roles to the token set, not to the screen.** Every one gets its light and high-contrast values in the same change, and the existing contrast tests extend to cover them. **If a role cannot be given all three values, it is not a role.**
+
+**One role deserves naming now because the project already has a meaning for it.** Entry 93 fixed amber as "this needs a decision" and red as "this is wrong". **A form's validation warning is a decision and its refusal is an error**, so the spacing warning in entry 99 section 4 is amber and a layout that cannot register is red. That mapping is already established and the form should inherit it rather than choose again.
+
+### 2. The rehearsal ceiling is not about the editor screen
+
+The window rehearsal holds the working loop at 10 key presses. **A new screen elsewhere in the application can still move that number**, by taking focus, by adding a tab stop in the wrong place, or by changing what has keyboard focus when the marking screen opens.
+
+**Run it after the parametric editor lands too.** It is the guard for the application, not for one screen, and the bug it already caught was exactly a focus problem.
+
+### 3. The warnings are prose and the project has a voice for it
+
+Entry 99 section 4's spacing warning is a sentence a person reads while deciding something, and this project has two good models already in the application:
+
+> a group of 12 is expected to put its worst at 1.95, so a shot there is not a flyer by that measure alone
+
+> Print at actual size, 100 percent. Never fit to page: a sheet printed at any other scale measures wrong.
+
+**Both give the number, say what it means, and leave the decision with the reader.** The spacing warning should read the same way: what the chosen spacing is against the stated dispersion, what proportion of shots that puts nearest the wrong bull, and nothing about whether to proceed.
+
+---
+
+## 2026-09-18, entry 99: Jeff's answer is not coming, which blocks nothing, and the parametric editor should be built while the visual designer stays deferred
+
+**Status: actioned 2026-09-18.**
+- **Section 1: recorded**, and the deferral that rested on it is gone from `DESIGN.md` section 3 and the README.
+- **Section 3: the parametric editor is built**, in the print screen, and it places sheets by the library's own rule: a test rebuilds ten built-in sheets from their parameters and gets back every bull and marker exactly, including the two that needed the library's fallbacks for the sighter gap and the codes. **The visual designer stays deferred** with your reason and your citation, and the scope-to-phase test passes.
+- **Section 4: all three checks.** Page fit and validation refuse in red, with the shortfall; fewer than 9 markers is refused and fewer than 16 warned; a spacing tight for the stated group is an amber warning with entry 56's rate, computed from its closed form, and no verdict.
+
+Section 1 is my error. Section 3 is the work this releases.
+
+Jeff cannot remember the conversation, so the specification entries 89 and 90 were waiting for does not exist.
+
+### 1. I tied the designer to an answer that was never going to decide it
+
+Entry 89 deferred the parametric editor and the visual designer because "Jeff's is coming", and entry 90 recorded that deferral as the reason both sit outside every phase.
+
+**Jeff's question was about subgroups on a sheet. The designer is about authoring a sheet. I ran two separate things together and made the second wait on the first.** The designer was always Alan's to specify, and the deferral has been resting on a citation that will not arrive.
+
+### 2. Nothing is actually blocked, and the work already done covers it
+
+**The subgroup capability is built.** Bulls map to load names in the session and the marking file, each subgroup reports its own figures, and they are compared by Fligner-Killeen and MANOVA. **That happened without Jeff's answer and does not need it.**
+
+**Thirty and thirty-six bull sheets already exist** as `GL-CF30-LTR`, `GL-LR30-TAB` and `GL-RF36-LTR`.
+
+**And the 30-against-25 argument stands on its own**, from entry 89 section 3: the precision gain is ten percent and not worth a sheet redesign, while 30 divides as 5 by 6, 6 by 5, 3 by 10 and 2 by 15 where 25 divides only as 5 by 5. **That is a property of the number and needed no testimony.**
+
+**So the only thing lost is a corroborating anecdote**, and the deferral it was propping up should be re-decided on its merits.
+
+### 3. Build the parametric editor. Keep the visual designer deferred
+
+`DESIGN.md` section 3 names them as two things and they are two sizes of job. **The parametric editor is a form. The visual designer is a canvas.**
+
+**The evidence that a form covers the space is the library itself.** Section 9 [r3] records that parametric mode stores a grid rather than a bull list, and that the 25-bull reference sheet and the 36-bull rimfire sheet both encode to 55 bytes. **Every one of the twenty-two built-in sheets is parametric.** A person wanting a layout the library does not carry almost certainly wants a different grid, spacing, ring set or page size, not arbitrarily placed bulls.
+
+**What it exposes:** page size, grid rows and columns, bull spacing, the ring set, whether there is a sighter row and how many, and whether there is a load block. **That set produces every sheet in the library and a great many that are not in it**, including a 6 by 5 at a spacing nobody has printed.
+
+**The visual designer stays deferred, now with an honest reason rather than a borrowed one:** nothing downstream needs arbitrary bull placement, the format already carries it when something does, and a canvas is a large screen to build for a case nobody has asked for. **Revisit it when somebody asks for a layout the form cannot express.**
+
+### 4. A custom target can be a bad target, and the editor already has the measurements to say so
+
+This is the part worth getting right, because **a form that lets a person build a sheet that cannot be analysed is worse than no form at all.**
+
+**Three checks, and all three use work already measured:**
+
+1. **Spacing against dispersion.** Entry 56's table gives the misassignment rate by spacing over sigma, verified against 400,000 simulated shots: 24.9 percent at three, 8.9 at four, 0.54 at six. **The editor should say, in words, what a chosen spacing means for a shooter of a given dispersion at a given distance.** A person setting 25 mm spacing for a rifle that shoots an inch should be told one shot in four will land nearest the wrong bull, before they print fifty copies.
+2. **Marker coverage.** `IMG_5823` failed outright because too few markers decoded. **A layout that leaves too little room for markers, or spreads them too thinly, fails registration and should be refused rather than printed.**
+3. **Page fit and actual size.** The sheet already refuses to measure correctly when printed at any other scale, and a layout that does not fit its page is the same failure earlier.
+
+**Refuse the third, warn on the first two with the numbers.** The project's whole character is telling people what a number means rather than deciding for them, and a spacing warning that quotes entry 56's measured rate is exactly that.
+
+### 5. Where this leaves Alan's queue
+
+**The weekend session is now the only outstanding thing that needs a person**, and it needs only him. No Jeff, no friend, no weather beyond his own printer and his own cardboard.
+
+---
+
+## 2026-09-18, entry 98: the snap radius is in the wrong units, a test that bypasses its surface protects nothing, and a discriminating test for the leftover scan error
+
+**Status: actioned 2026-09-18**, except section 5's second item, the macOS divergence, which gets its own turn next.
+- **Section 1: recorded.** Both rehearsals stay, the window one is the guard, and 10 presses is its ceiling. It held through everything below.
+- **Section 2: fixed at the cause.** The snap's reach is one hole in sheet units (the calibre, else the sheet's own measured holes, else a nominal .30) plus four screen pixels of pointing tolerance, and a test shows zooming in by four moves it by less than that. The audit found two more: clicking a shot now reaches its drawn ring, which a fixed 18 pixels did not once zoomed in, and clicking a bull uses half the distance to its neighbour rather than 54 screen pixels.
+- **Section 3: answered, and not the way the hypothesis predicted.** After the warp the holed half reads 0.0019 in and the clean half 0.0020. The control settles it: on the unshot Phase 0 sheets the "holed" half is already the worse half, and Alan's reads like theirs; his excess is all in the clean bulls 11 to 25, 0.0030 against 0.0010 to 0.0013. The holes are ruled out; the lower middle of the sheet, where the scan's drift ran, is where it lives. The clean-sheet scan stays the experiment.
+- **Section 4: recorded.**
+- **Section 5, first item: done.** Each stage shows its own picture: markers lit at the fiducial stage, corners ringed by their residual at registration, and the residual with the artwork gone at the difference stage. Only an interactive run keeps it, and a test shows a batch run carries none.
+
+Section 2 is a defect whose symptom was fixed. Section 3 is a test on data in hand that would settle something the warp result left open.
+
+### 1. The window rehearsal earned itself on its first run, and the reason generalises
+
+It caught a real bug immediately: after detection the first item's shot was not selected, so typing a bull number went nowhere. **The keyboard path advertised on the card did not work, and nobody would have found it except by using the application.**
+
+**The existing rehearsal could never have caught it**, because it drove the review queue directly and never touched the window.
+
+**The rule worth keeping: a test that bypasses the surface it is meant to protect protects nothing.** The queue rehearsal tests the queue, which is right and was never the risk. **The risk was always the window**, and for three batches there was a guard in place that could not see it.
+
+**Both rehearsals should stay**, with the window one as the guard entry 97 section 5 asked for, and 10 presses as the ceiling it now enforces.
+
+### 2. The snap radius is in screen pixels and should not be
+
+Claude Code found that taking height from the image made taps snap to neighbouring holes, and fixed it by keeping the timeline strip to one row until opened. **That fixes this instance and leaves the cause in place.**
+
+**A radius in screen pixels means the snap covers a different amount of paper at every zoom level and every window size.** Zoom out and it reaches across neighbouring bulls. Zoom in and it stops reaching the hole under the cursor. **Every future layout change is one more chance to move it silently**, which is exactly the note Claude Code ended on.
+
+**The right decomposition is two terms, and only one of them is in pixels:**
+
+- **The hole's own extent, in sheet units.** A tap inside a hole is on that hole, at any zoom, and the detector already reports each mark's size.
+- **A small pointing tolerance, in screen pixels**, because a person's aim with a finger or a mouse really is a screen-space quantity and does not shrink when they zoom in.
+
+**With the physical term dominant, a layout change cannot move the behaviour**, and the pointing tolerance stays where it belongs.
+
+**This is the same class as entry 73's marks not scaling with zoom**, which was also a screen-space quantity standing in for a physical one, and it is worth checking whether anything else on that canvas is measured in pixels that should not be.
+
+### 3. The leftover scan error has a testable cause and the data is already here
+
+After a degree-four warp the sheet still sits at 0.0020 in against 0.0009 to 0.0013 for a good sheet, and **the photographs do not show that leftover error.** Claude Code's suggestion is that the scan happened after the sheet was mounted, shot and handled, which the clean-sheet scan at the weekend would settle.
+
+**There is a test that does not wait for the weekend, and it uses the sheet already scanned.** If the leftover error comes from shooting and handling rather than from printing, **it should be worse where the holes are.** Bulls 1 to 10 and the three sighters carry holes. **Bulls 11 to 25 are clean paper.**
+
+**Compare the scan's post-warp residual on the holed bulls against the clean ones.** A bullet stretches paper locally, and fourteen holes through a sheet that was then unstapled and fed through a scanner is a plausible source of exactly this kind of local, non-smooth error.
+
+**If the clean half is at 0.0012 and the holed half is at 0.0028, the question is answered today** and the weekend's clean-sheet scan becomes a confirmation rather than the experiment.
+
+### 4. Declining the warp was right and deserves saying so
+
+The degree-four warp brings `IMG_5819` inside the gate and makes `IMG_5820` worse, and **Claude Code recorded it and did not adopt it, because it was tried on the frames being gated.**
+
+**That is entry 17's rule applied without being asked**, on a change that would have produced a passing number. It is the most valuable thing in the report and it is the kind of thing that never appears in a feature list.
+
+### 5. Two things to schedule rather than leave floating
+
+**The per-stage images are the half of the timeline that makes it worth having.** A list of stages is a log; markers lighting up and the artwork vanishing is the thing `DESIGN.md` section 19 describes. The detector currently discards those images, so the increment is keeping them for interactive runs only, with batch paying nothing, which is the constraint already honoured.
+
+**The macOS divergence needs a slot, not a gap.** Entry 97 put it in "any gap" and the report says plainly that nothing blocked long enough to leave one. **A task assigned to spare time never runs when there is no spare time.** It is the last open red in CI and it should be given its own turn rather than waiting for one that will not come.
+
+---
+
 ## 2026-09-18, entry 97: what to build while nothing can be printed, shot or photographed
 
 **Status: actioned 2026-09-18.**

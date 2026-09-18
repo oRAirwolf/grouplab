@@ -116,21 +116,29 @@ public static class AppStyles
             yield return ($"ToggleButtonBackgroundChecked{state}", Brush(p.AmberTint));
             yield return ($"ToggleButtonForegroundChecked{state}", Brush(p.Amber));
             yield return ($"ToggleButtonBorderBrushChecked{state}", Brush(p.AmberTintBorder));
-            yield return ($"ComboBoxBackground{state}", Brush(p.Panel2));
+            yield return ($"ComboBoxBackground{state}", Brush(p.FieldBg));
             yield return ($"ComboBoxForeground{state}", Brush(p.Text));
-            yield return ($"ComboBoxBorderBrush{state}", Brush(state == "" ? p.Line2 : p.Faint));
+            yield return ($"ComboBoxBorderBrush{state}", Brush(state == "" ? p.FieldBorder : p.FocusRing));
         }
 
         foreach (string state in new[] { "", "PointerOver", "Focused" })
         {
-            yield return ($"TextControlBackground{state}", Brush(state == "Focused" ? p.Panel : p.Panel2));
+            yield return ($"TextControlBackground{state}", Brush(p.FieldBg));
             yield return ($"TextControlForeground{state}", Brush(p.Text));
-            yield return ($"TextControlBorderBrush{state}", Brush(state == "Focused" ? p.Amber : p.Line2));
+            yield return ($"TextControlBorderBrush{state}", Brush(state == "Focused" ? p.FocusRing : p.FieldBorder));
         }
     }
 
+    /// <summary>Form text: a warning is amber, a refusal red, the meanings entry 93 fixed (entry 100 section 1).</summary>
+    public const string FormWarning = "form-warning";
+
+    public const string FormError = "form-error";
+
     private static GroupLabStyles Build(Palette p) =>
     [
+        Rule(x => x.OfType<TextBlock>().Class(FormWarning), (TextBlock.ForegroundProperty, Brush(p.WarningText))),
+        Rule(x => x.OfType<TextBlock>().Class(FormError), (TextBlock.ForegroundProperty, Brush(p.ErrorText))),
+        Rule(x => x.OfType<TextBox>().Class(":disabled"), (TemplatedControl.ForegroundProperty, Brush(p.Disabled))),
         Rule(x => x.OfType<Window>(), (TemplatedControl.BackgroundProperty, Brush(p.Bg)), (TemplatedControl.ForegroundProperty, Brush(p.Text)), (TemplatedControl.FontFamilyProperty, Tokens.Sans), (TemplatedControl.FontSizeProperty, Tokens.BodySize)),
         Rule(x => x.OfType<TextBlock>().Class(Section), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Secondary), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Dim))),

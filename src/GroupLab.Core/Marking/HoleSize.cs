@@ -44,7 +44,36 @@ public static class HoleSize
     public static double? SnapRadiusPixels(MarkingState state, PointD at)
     {
         ArgumentNullException.ThrowIfNull(state);
-        return state.Calibre is { } calibre && state.Scale is { } scale ? SnapRadiusInDiameters * calibre.DiameterInches * PixelsPerInch(scale, at) : null;
+        return state.Scale is { } scale && HoleDiameterInches(state) is { } diameter ? SnapRadiusInDiameters * diameter * PixelsPerInch(scale, at) : null;
+    }
+
+    /// <summary>
+    /// The nominal hole the snap is sized to when nothing better is known: a .30 calibre hole, about the middle of what the corpus carries.
+    /// </summary>
+    public const double NominalHoleInches = 0.30;
+
+    /// <summary>
+    /// The diameter of one hole on this sheet, in inches, for sizing the snap, NOTES-FROM-PLANNING.md entry 98 section 2: the calibre where
+    /// one is named, otherwise the median of what the detector measured the sheet's own holes at, otherwise <see cref="NominalHoleInches"/>.
+    /// Null only without a scale, where there are no sheet units to size anything in. The snap used to be sized in screen pixels when no
+    /// calibre was named, so it covered a different amount of paper at every zoom and every window size, and a timeline strip taking height
+    /// from the image was enough to pull taps onto the neighbouring hole.
+    /// </summary>
+    public static double? HoleDiameterInches(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        if (state.Scale is null)
+        {
+            return null;
+        }
+
+        if (state.Calibre is { } calibre)
+        {
+            return calibre.DiameterInches;
+        }
+
+        var measured = state.Shots.Where(s => s.IsShot && s.MeasuredDiameterInches is > 0).Select(s => s.MeasuredDiameterInches!.Value).Order().ToList();
+        return measured.Count > 0 ? measured[measured.Count / 2] : NominalHoleInches;
     }
 
     /// <summary>

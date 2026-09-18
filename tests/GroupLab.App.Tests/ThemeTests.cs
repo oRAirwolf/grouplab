@@ -66,6 +66,36 @@ public partial class ThemeTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 100 section 1: the form roles hold in every palette. A field's border and the focus ring reach WCAG's 3:1
+    /// for user-interface edges against the field and the panel it sits on, 4.5:1 in high contrast; a disabled control's text reaches the
+    /// same floor; and warning and error text are held to the text ratios by the test above, on fields as well as panels. Warning is amber
+    /// and error is red in every theme, the meanings entry 93 fixed.
+    /// </summary>
+    [Fact]
+    public void EveryFormRoleHoldsItsRatioAndItsMeaningInEveryTheme()
+    {
+        var failures = new List<string>();
+        foreach (var (name, palette, ratio) in new[] { ("dark", Tokens.Dark, Tokens.EdgeRatio), ("light", Tokens.Light, Tokens.EdgeRatio), ("high contrast", Tokens.HighContrast, Tokens.HighContrastEdgeRatio) })
+        {
+            foreach (var (role, colour) in palette.FormEdges.Append(("disabled", palette.Disabled)))
+            {
+                foreach (var (surface, background) in new[] { ("field", palette.FieldBg), ("panel", palette.Panel) })
+                {
+                    if (Contrast(colour, background) < ratio)
+                    {
+                        failures.Add($"{name} {role} on {surface}: {Contrast(colour, background):0.00}, wanted {ratio:0.0}");
+                    }
+                }
+            }
+
+            Assert.True(palette.WarningText.R > palette.WarningText.B && palette.WarningText.G > palette.WarningText.B, $"{name}: warning text is not amber");
+            Assert.True(palette.ErrorText.R > palette.ErrorText.G && palette.ErrorText.R > palette.ErrorText.B, $"{name}: error text is not red");
+        }
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    /// <summary>
     /// Entry 93 section 3's guard as a test: the light and high contrast themes are the same roles as the dark one rather than separate
     /// inventions, and the accents keep their own hues, so "teal is what the software found and amber is what needs a person" survives a
     /// theme change. If a token set cannot produce the other themes, it is not a token set, it is a dark theme with names on it.

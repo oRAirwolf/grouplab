@@ -77,7 +77,11 @@ public static class AutomaticMarking
     /// The bullet, when the person has named one: segmentation reads it so a blob too small to be two holes is never split in two
     /// (NOTES-FROM-PLANNING.md entry 78 section 4). Optional, and detection without it is what it always was.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null)
+    /// <param name="artefacts">
+    /// Keep each stage's picture for the timeline, DESIGN.md section 19 [r3]: on for one interactive analysis and off for batch, so the theatre
+    /// never slows the pipeline down. Off by default; only the marking screen turns it on.
+    /// </param>
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
@@ -101,7 +105,7 @@ public static class AutomaticMarking
             try
             {
                 detection = new DetectionRecord(calibre, calibre?.DiameterInches * HoleToCalibre);
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre));
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre, KeepResidual: artefacts));
             }
             catch (InvalidOperationException ex)
             {

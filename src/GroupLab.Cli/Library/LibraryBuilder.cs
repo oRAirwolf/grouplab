@@ -18,7 +18,7 @@ public static class LibraryBuilder
 {
     public const string Created = "2026-09-13";
 
-    private static readonly Dictionary<int, int[]> Stacks = new()
+    internal static readonly Dictionary<int, int[]> Stacks = new()
     {
         [254] = [254, 238, 127, 115, 25],
         [222] = [222, 208, 111, 101, 25],
@@ -67,7 +67,7 @@ public static class LibraryBuilder
         ["GL-LR300-TA4 (3x2)"] = "GroupLab 300 yd Tile, A4, 3x2 Assembly",
     };
 
-    private static readonly Ink[] Inks =
+    internal static readonly Ink[] Inks =
     [
         new("black", "#000000", InkRole.Artwork),
         new("paper", "#FFFFFF", InkRole.Paper),
@@ -76,7 +76,7 @@ public static class LibraryBuilder
         new("text", "#000000", InkRole.Text),
     ];
 
-    private static readonly PrintSettings Print = new(PrintScaling.None, 300, ColourMode.Mono, null, "GroupLab 0.1.0",
+    internal static readonly PrintSettings Print = new(PrintScaling.None, 300, ColourMode.Mono, null, "GroupLab 0.1.0",
         "Print at 100 percent. Do not use fit to page.");
 
     /// <summary>In <c>check.py</c>'s order: the sixteen multi-bull sheets, the four zeroing sheets, then the 3 by 2 tile presets.</summary>
@@ -201,7 +201,7 @@ public static class LibraryBuilder
         return Finish(name, name, definition);
     }
 
-    private static BuiltInTarget Finish(string name, string fileStem, TargetDefinition definition)
+    internal static BuiltInTarget Finish(string name, string fileStem, TargetDefinition definition)
     {
         definition = FiducialDerivation.WithDerivedMarkers(definition);
         var encoded = GltdBinary.Encode(definition);
@@ -213,11 +213,11 @@ public static class LibraryBuilder
         return new BuiltInTarget(name, $"{fileStem}.gltd.json", definition with { Id = encoded.Encoding.DefinitionId });
     }
 
-    private static Codes Codes(int width, int height, int dataBlockHeight, int count) =>
+    internal static Codes Codes(int width, int height, int dataBlockHeight, int count) =>
         new(count, Projection.CodeVersion, EcLevel.H, 4, Projection.CodeQuietZone, CodePlacement.Corners1, true,
             Corners1.Positions(width, height, dataBlockHeight, count, 4));
 
-    private static List<Disc> Discs(int outer) =>
+    internal static List<Disc> Discs(int outer) =>
         Stacks.TryGetValue(outer, out var stack)
             ? [.. stack.Select((diameter, i) => new Disc(diameter, i % 2 == 0 ? "black" : "paper"))]
             : throw new InvalidOperationException($"No documented disc stack for a {outer} dmm ring.");

@@ -4366,6 +4366,69 @@ On the clean bulls 11 to 25, where no hole disturbs either locator, **the edge f
 
 ---
 
+## Entries 98, 99 and 100. The leftover scan error is not the holes, the snap in sheet units, the parametric editor, and each stage's picture
+
+`docs/NOTES-FROM-PLANNING.md` entry 98 in the order its covering message set, with entries 99 and 100, which arrived during it, after its section 2. Entry 98 section 5's second item, the macOS gate record divergence, gets its own turn next, as the entry asks.
+
+### Entry 98 section 3: the leftover is not where the holes are
+
+**The test as entry 98 sets it:** after the warp, compare the flatbed scan's holed bulls, 1 to 10 and the three sighters, against the clean bulls 11 to 25. **With a control the entry did not ask for and which turned out to decide it:** the same split on the three unshot Phase 0 sheets, where "holed" is only a position on the page.
+
+| Scoring and sighter bulls, rms (in) | Surface fit, 1-10 and sighters | Surface fit, 11-25 | Degree 4, 1-10 and sighters | Degree 4, 11-25 |
+|---|---|---|---|---|
+| **Alan's sheet, shot** | **0.0019** | **0.0030** | **0.0019** | **0.0020** |
+| Phase 0 sheet 1, unshot | 0.0019 | 0.0011 | 0.0023 | 0.0009 |
+| Phase 0 sheet 2, unshot | 0.0021 | 0.0013 | 0.0021 | 0.0012 |
+| Phase 0 sheet 3, unshot | 0.0021 | 0.0010 | 0.0016 | 0.0008 |
+
+**The holed half is not worse. On an unshot sheet the same half, the top row and the sighter row at the foot, is already the worse half, and Alan's holed half reads what an unshot sheet's does.** His excess is entirely in the clean bulls 11 to 25: 0.0030 against 0.0010 to 0.0013 under the surface fit, 0.0020 against 0.0008 to 0.0012 after the warp.
+
+**So shooting and handling around the holes is ruled out as the cause of the leftover.** What is left sits in the lower middle of the sheet, where there are no holes, which is where the scan's smooth vertical drift ran, dy rising to +0.0046 in on the fourth row. Printer feed and a sheet not lying flat on the platen across its lower half both fit; the holes do not. **The weekend's scan of the clean sheet stays the experiment, not a confirmation**: if it reads like a Phase 0 sheet the cause was the shot sheet's shape on the platen, and if it reads like this one it is the printer.
+
+### Entry 98 section 2: the snap is sized in sheet units
+
+**The snap's reach is now two terms, as the entry specifies.** One hole's extent in sheet units: the calibre's diameter where one is named, otherwise the median diameter the detector measured the sheet's own holes at, otherwise a nominal .30 hole. And a pointing tolerance of four screen pixels on top, because a finger misses by pixels whatever the zoom. Only with no scale at all, where there are no sheet units, does it fall back to screen pixels. **A test zooms in by four and the reach moves by less than the pointing tolerance**, where a screen-pixel reach would have shrunk to a quarter.
+
+**What else on the canvas was in the wrong units, as entry 98 asks:**
+
+| Quantity | Was | Now |
+|---|---|---|
+| The snap's reach | screen pixels without a calibre | one hole in sheet units plus 4 screen pixels |
+| Clicking a shot to select it | within 18 screen pixels | within the drawn ring, which is true size, or 18 pixels when the ring is small on screen. Zoomed in, a click on a hole's rim missed it |
+| Clicking a bull to reassign to it | within 54 screen pixels | within half the distance to its nearest bull, the bull's own share of the sheet |
+| Drawing minimums, the alert ring's gap, a mark's stroke | screen pixels | unchanged: legibility on screen is a screen quantity |
+
+### Entry 99: the parametric editor, and the visual designer deferred on its merits
+
+**The editor is in the print screen, behind "Design your own sheet"**, because designing a sheet is for printing it. It takes the page, columns and rows, the spacing, the ring, the sighters and a load block, and a design that passes its checks becomes the selected sheet, so the preview, Save PDF and Print are the library's own.
+
+**It places a sheet by the rule the library was laid out with**, `tools/layout/layout.py`'s solver ported to C#, and finishes it with the code that finishes a built-in sheet. **The proof is a test that rebuilds ten built-in sheets from their parameters alone and gets back every bull and every marker exactly**: the letter, A4, tabloid and A3 multi-bull sheets, with and without sighters and load blocks. Two of them needed the library's own fallbacks, now written into the editor rather than rediscovered: GL-CF25-LTR declares a sighter gap of 454 dmm because the conventional 456 drops the marker line below the sighters off the page, and GL-CF25-LTR-D carries its two codes at the top because four leave no room above a load block. The editor tries the conventional gap first and closes it a step at a time until the sheet validates, declaring the gap it used, and with a load block tries two codes when four do not fit.
+
+**The three checks of entry 99 section 4, in entry 100 section 3's voice:**
+- **Page fit and the format's own validation refuse**, in red, with the reason: "9 rows 1.50 in apart with a sighter row and a load block need 7.19 in more height than a letter page has. Fewer rows, a closer spacing or a larger page would fit."
+- **Markers:** fewer than 9, the fewest any built-in sheet carries, is refused; fewer than 16 is a warning with the count and what an oblique photograph leaves of it.
+- **Spacing against the stated group is a warning, never a refusal**, from entry 56's closed form, which a test reproduces from the formula: "A rifle shooting 1 MOA five-shot groups at 100 yd has a sigma of about 0.34 in, so 1.00 in between bulls is 2.9 sigma: about one shot in 4 (26.58 percent) would land nearer a neighbouring bull than its own. Six sigma is where that falls to one in 185." The number, what it means, and nothing about whether to proceed.
+
+**The visual designer stays deferred**, now for its own reason: every built-in sheet is a grid, the format already carries arbitrarily placed bulls for the day something needs them, and a canvas is a large screen for a case nobody has asked for. `DESIGN.md` section 3 and the README carry it with entry 99's citation, and the scope-to-phase test passes.
+
+### Entry 100: the form's colours are token roles
+
+**Six new roles in every palette, added before the form was built:** field background, field border, focus ring, disabled, warning text and error text. Dark and light have their values; high contrast derives them from the dark ones like everything else in it. **Warning text is amber and error text red in all three**, the meanings entry 93 fixed, and a test holds them to those hues.
+
+**The contrast tests cover them.** Every text colour, warning and error included, reaches 4.5:1 on fields as well as panels, 7:1 in high contrast. Field borders, the focus ring and disabled text reach WCAG's 3:1 for interface edges against the field and the panel, 4.5:1 in high contrast. The text boxes and dropdowns across the application now take their colours from these roles rather than borrowing the panel's.
+
+**The window rehearsal ran after the editor landed and after every other change here, and it holds at 10 presses and no taps.** The Core rehearsal holds at 15 and none.
+
+### Entry 98 section 5, first item: each stage's picture
+
+**The timeline now shows each stage's own picture, as `DESIGN.md` section 19 describes.** At the fiducial stage the markers it found light up, outlined in teal. At registration each corner is ringed by how far the fit left it, twenty times true size so a tenth of a millimetre can be seen, red where the fit threw the corner out. **At the difference stage the photograph gives way to the residual**, drawn as paper and ink, so the printed artwork has vanished and the holes are what is left.
+
+**Only the residual needed keeping; the rest was already in the analysis's result.** The detector keeps it only when asked, and only the marking screen asks. **A test runs the same sheet both ways: the batch run carries no residual, the interactive one does.** The pictures appear when the analysis finishes rather than stage by stage while it runs; each stage's record still lands live.
+
+**Tests:** Core and App suites both pass, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4579,3 +4642,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 97 section 2: a barrel's count grows only on a person's step.** Counting automatically on detection would count a reopened sheet twice.
 - **Entry 97 section 3: the per-stage rasters left for the next batch.** The records land live and cost nothing; the rasters would need keeping images the detector currently throws away, which section 19 allows for one interactive analysis and which deserves its own measurement of cost.
 - **Entry 97 section 5: the window rehearsal pinned at 10 presses.** It is its own baseline at 300 DPI, and a ceiling the next batch must not raise.
+- **Entry 98 section 3: a control added that the entry did not ask for.** The holed half and the clean half are different places on the page, and without the same split on unshot sheets a positional difference would have read as hole damage.
+- **Entry 98 section 2: the nominal hole is .30 when nothing better is known.** It is the middle of what the corpus carries, and the sheet's own measured holes replace it as soon as the detector has run.
+- **Entry 99: the editor ports the library's solver rather than calling it.** `tools/` is planning's and Python is not shipped; the port is held to the original by rebuilding ten sheets exactly.
+- **Entry 99: the fewest markers allowed is 9, the fewest any built-in sheet carries.** It is the one figure the project has shown registration holding at, on GL-LR300-T's tile, and choosing a lower one would be a guess.
+- **Entry 98 section 5: only the residual is kept.** The markers, corners and rejections were already in the result, so the interactive run's extra cost is one image.

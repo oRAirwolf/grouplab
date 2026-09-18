@@ -44,7 +44,8 @@ public sealed record RenderDifferenceOptions(
     double SmallestHoleInches = 0.16,
     double LargestHoleInches = 0.60,
     int MarksForSheetSize = 12,
-    int MarksForTentativeSize = 5);
+    int MarksForTentativeSize = 5,
+    bool KeepResidual = false);
 
 /// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
 public enum HoleSizeSource
@@ -102,7 +103,7 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 /// expected artwork in image pixels after that alignment, which is where the printed rings, numerals and markers are. The marking
 /// screen's snap and size check read it to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
-public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null)
+public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null, GrayImage? Residual = null)
 {
     /// <summary>
     /// The candidates an exclusion zone swallowed, NOTES-FROM-PLANNING.md entry 77 section 3 item 1: each passed every size, compactness and
@@ -355,7 +356,9 @@ public static class RenderDifferenceHoleDetector
             }
         }
 
-        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference);
+        // DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 98 section 5: the residual is the stage's own picture, the printed artwork
+        // gone and the holes left, and it is kept only when an interactive analysis asks, so a batch run pays nothing for it.
+        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
     }
 
     /// <summary>Image pixels per page inch at an image point, from the registration's local area scale.</summary>

@@ -56,6 +56,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 {
     private const double MarkRadius = 11, HitRadius = 18, EndRadius = 4, MinimumImpactRadius = 3;
 
+    /// <summary>
+    /// How far a person's aim is off, in screen pixels, NOTES-FROM-PLANNING.md entry 98 section 2. It is the one part of the snap that is a
+    /// screen quantity, because a finger or a mouse misses by pixels whatever the zoom; the hole's own extent, in sheet units, is the rest.
+    /// </summary>
+    private const double PointingTolerance = 4;
+
     private Bitmap? bitmap;
     private GrayImage? value;
 
@@ -140,6 +146,17 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     public IReadOnlyList<PointD> StageRejections { get; set; } = [];
 
     public PointD? Highlight { get; set; }
+
+    /// <summary>
+    /// The picture of the stage the timeline is on, DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 98 section 5, drawn in the
+    /// image's own pixels: the residual of the difference stage in place of the photograph, where the printed artwork has vanished and the
+    /// holes are what is left; the markers the fiducial stage found, outlined; and each registration corner ringed by how far the fit left it.
+    /// </summary>
+    public Avalonia.Media.Imaging.Bitmap? StageImage { get; set; }
+
+    public IReadOnlyList<IReadOnlyList<PointD>> StageMarkers { get; set; } = [];
+
+    public IReadOnlyList<(PointD Image, double RadiusPixels, bool Inlier)> StageCorners { get; set; } = [];
 
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
@@ -318,7 +335,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             var mount = new Rect(-margin, -margin, imageWidth + (2 * margin), imageHeight + (2 * margin));
             context.FillRectangle(paper, mount);
             context.DrawRectangle(new Pen(paperEdge.Brush, 1 / Math.Max(zoom, 1e-6)), mount);
-            context.DrawImage(bitmap, new Rect(0, 0, imageWidth, imageHeight));
+            context.DrawImage(StageImage ?? bitmap, new Rect(0, 0, imageWidth, imageHeight));
         }
 
         if (Session is not { } session)
@@ -327,6 +344,19 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
 
         var state = session.State;
+        foreach (var quad in StageMarkers)
+        {
+            for (int i = 0; i < quad.Count; i++)
+            {
+                Marks.Line(context, Marks.Found, ToControl(quad[i]), ToControl(quad[(i + 1) % quad.Count]));
+            }
+        }
+
+        foreach (var (at, radius, inlier) in StageCorners)
+        {
+            Marks.Ring(context, inlier ? Marks.Found : Marks.Alert, ToControl(at), Math.Max(2, radius * zoom), 1);
+        }
+
         foreach (var rejected in StageRejections)
         {
             Marks.Saltire(context, Marks.Faint, ToControl(rejected), 5);
@@ -521,7 +551,36 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// </summary>
     private SnapResult Snap(MarkingSession session, PointD image) => value is null
         ? new SnapResult(image, null)
-        : Snapping.ToHole(value, image, HoleSize.SnapRadiusPixels(session.State, image) ?? (2 * HitRadius / zoom), Artwork);
+        : Snapping.ToHole(value, image, SnapRadius(session.State, image), Artwork);
+
+    /// <summary>
+    /// The snap's reach in image pixels, entry 98 section 2: one hole's extent in sheet units, which no zoom or layout can move, plus the
+    /// pointing tolerance in screen pixels. Without a scale there are no sheet units, and the screen-pixel reach is all there is.
+    /// </summary>
+    internal double SnapRadius(MarkingState state, PointD image) =>
+        HoleSize.SnapRadiusPixels(state, image) is { } physical ? physical + (PointingTolerance / zoom) : 2 * HitRadius / zoom;
+
+    /// <summary>
+    /// Whether a click is on a shot: within the ring drawn for it, which is its true size and grows with zoom, or within the pointing reach
+    /// when the ring is small on screen. A fixed screen radius stopped reaching the rim of a hole once it was zoomed in (entry 98 section 2).
+    /// </summary>
+    private double ShotReach(MarkingState state, MarkedShot shot) => Math.Max(HitRadius, ImpactRadius(state, shot.Image, shot.MeasuredDiameterInches) + PointingTolerance);
+
+    /// <summary>
+    /// Whether a click is on a bull, for click-a-hole-then-a-bull: within half the distance to its nearest neighbour, which is the bull's own
+    /// share of the sheet at any zoom, rather than a screen radius that covered several bulls zoomed out and part of one zoomed in.
+    /// </summary>
+    private BullAim? BullAt(MarkingState state, Point position)
+    {
+        var nearest = state.Bulls.MinBy(b => Distance(ToControl(b.Image), position));
+        if (nearest is null)
+        {
+            return null;
+        }
+
+        double spacing = state.Bulls.Where(b => b.Index != nearest.Index).Select(b => Distance(ToControl(b.Image), ToControl(nearest.Image))).DefaultIfEmpty(6 * HitRadius).Min();
+        return Distance(ToControl(nearest.Image), position) <= spacing / 2 ? nearest : null;
+    }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
@@ -579,7 +638,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 break;
 
             case MarkingTool.Select:
-                var hit = session.State.Shots.Where(s => Distance(ToControl(s.Image), point.Position) <= HitRadius).MinBy(s => Distance(ToControl(s.Image), point.Position));
+                var hit = session.State.Shots.Where(s => Distance(ToControl(s.Image), point.Position) <= ShotReach(session.State, s)).MinBy(s => Distance(ToControl(s.Image), point.Position));
                 if (hit is not null)
                 {
                     Selected = hit.Id;
@@ -591,7 +650,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 {
                     StartHandle(session, end, e);
                 }
-                else if (Selected is { } selected && session.State.Bulls.FirstOrDefault(b => Distance(ToControl(b.Image), point.Position) <= 3 * HitRadius) is { } bull)
+                else if (Selected is { } selected && BullAt(session.State, point.Position) is { } bull)
                 {
                     // Click a hole, then click a bull: DESIGN.md section 13's reassignment.
                     session.AssignBull(selected, bull.Index);

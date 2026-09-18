@@ -9,6 +9,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
+using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
@@ -56,6 +57,37 @@ public sealed class PrintWindow : Window
     private LibrarySheet? selected;
     private int page;
 
+    /// <summary>
+    /// The parametric editor, NOTES-FROM-PLANNING.md entry 99 section 3: a form, because every sheet in the library is parametric. It sits in
+    /// the print screen because designing a sheet is for printing it, and a design that passes its checks becomes the selected sheet, so the
+    /// preview, Save PDF and Print are the ones the library already uses.
+    /// </summary>
+    private readonly StackPanel designer = new() { Spacing = 8, IsVisible = false };
+
+    private readonly TextBox designName = new() { Width = 260, Text = "My sheet" };
+
+    private readonly ComboBox designPage = new() { ItemsSource = ParametricSheet.Pages.Select(p => p.ToUpperInvariant() == "A4" || p.ToUpperInvariant() == "A3" ? p.ToUpperInvariant() : char.ToUpperInvariant(p[0]) + p[1..]).ToList(), SelectedIndex = 0, MinWidth = 120 };
+
+    private readonly NumericUpDown designColumns = new() { Minimum = 1, Maximum = 12, Value = 5, Increment = 1, FormatString = "0", Width = 120 };
+
+    private readonly NumericUpDown designRows = new() { Minimum = 1, Maximum = 12, Value = 5, Increment = 1, FormatString = "0", Width = 120 };
+
+    private readonly TextBox designSpacing = new() { Width = 120, Text = "1.50" };
+
+    private readonly ComboBox designRing = new() { ItemsSource = ParametricSheet.RingSizes.Select(r => string.Create(CultureInfo.InvariantCulture, $"{r / 254.0:0.00} in")).ToList(), MinWidth = 120 };
+
+    private readonly NumericUpDown designSighters = new() { Minimum = 0, Maximum = 8, Value = 3, Increment = 1, FormatString = "0", Width = 120 };
+
+    private readonly CheckBox designLoadBlock = new() { Content = "A load block along the bottom" };
+
+    private readonly TextBox designGroup = new() { Width = 120, PlaceholderText = "MOA" };
+
+    private readonly TextBox designDistance = new() { Width = 120, Text = "100" };
+
+    private readonly StackPanel designChecks = new() { Spacing = 4 };
+
+    private bool designing;
+
     public PrintWindow()
         : this(TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets")))
     {
@@ -80,14 +112,17 @@ public sealed class PrintWindow : Window
         {
             if (list.SelectedIndex >= 0)
             {
+                ShowDesigner(false);
                 Show(sheets[list.SelectedIndex]);
             }
         };
 
+        BuildDesigner();
         blank.Click += (_, _) => ShowFields();
         filled.Click += (_, _) => ShowFields();
 
         var details = new StackPanel { Margin = new Thickness(16), Spacing = 10 };
+        details.Children.Add(designer);
         details.Children.Add(title);
         details.Children.Add(summary);
         details.Children.Add(loadBlock);
@@ -100,7 +135,13 @@ public sealed class PrintWindow : Window
         details.Children.Add(preview);
 
         var dock = new DockPanel();
-        var left = new ScrollViewer { Content = list, Width = 420 };
+        var leftPanel = new DockPanel();
+        var design = Button("Design your own sheet", () => ShowDesigner(true));
+        design.Margin = new Thickness(8);
+        DockPanel.SetDock(design, Dock.Top);
+        leftPanel.Children.Add(design);
+        leftPanel.Children.Add(new ScrollViewer { Content = list });
+        var left = new Border { Child = leftPanel, Width = 420 };
         DockPanel.SetDock(left, Dock.Left);
         dock.Children.Add(left);
         dock.Children.Add(new ScrollViewer { Content = details });
@@ -115,6 +156,147 @@ public sealed class PrintWindow : Window
             SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
         }
     }
+
+    /// <summary>The designer's checks as they read, for the headless tests.</summary>
+    internal IReadOnlyList<(string Text, string Kind)> DesignChecks =>
+        [.. designChecks.Children.OfType<TextBlock>().Select(t => (t.Text ?? "", t.Classes.Contains(AppStyles.FormError) ? "error" : t.Classes.Contains(AppStyles.FormWarning) ? "warning" : "fine"))];
+
+    /// <summary>The sheet the designer made, or null while it refuses one.</summary>
+    internal LibrarySheet? Designed => designing ? selected : null;
+
+    /// <summary>Sets the form, for the headless tests; each field is set as a person would, and the design follows.</summary>
+    internal void SetDesign(string pageName, int columns, int rows, string spacing, int ringDmm, int sighters, bool loadBlock, string? group = null, string? distance = null)
+    {
+        ShowDesigner(true);
+        designPage.SelectedIndex = ParametricSheet.Pages.ToList().IndexOf(pageName);
+        designColumns.Value = columns;
+        designRows.Value = rows;
+        designSpacing.Text = spacing;
+        designRing.SelectedIndex = ParametricSheet.RingSizes.ToList().IndexOf(ringDmm);
+        designSighters.Value = sighters;
+        designLoadBlock.IsChecked = loadBlock;
+        designGroup.Text = group ?? "";
+        designDistance.Text = distance ?? "100";
+        Redesign();
+    }
+
+    private void BuildDesigner()
+    {
+        designRing.SelectedIndex = ParametricSheet.RingSizes.ToList().IndexOf(254);
+        TextBlock Label(string text) => new() { Text = text, Width = 190, VerticalAlignment = VerticalAlignment.Center };
+        designer.Children.Add(new TextBlock { Text = "Design your own sheet", FontSize = 18, FontWeight = FontWeight.SemiBold });
+        designer.Children.Add(new TextBlock
+        {
+            Text = "Every sheet in the library is a grid of bulls, so a grid is what this designs: the page, the rows and columns, the spacing, the ring, a sighter row and a load block. The sheet is laid out by the same rule the library was.",
+            TextWrapping = TextWrapping.Wrap,
+            Classes = { AppStyles.Secondary },
+        });
+        designer.Children.Add(Row(Label("Name"), designName));
+        designer.Children.Add(Row(Label("Page"), designPage));
+        designer.Children.Add(Row(Label("Columns and rows"), designColumns, designRows));
+        designer.Children.Add(Row(Label("Spacing between bulls, in"), designSpacing));
+        designer.Children.Add(Row(Label("Ring"), designRing));
+        designer.Children.Add(Row(Label("Sighters"), designSighters));
+        designer.Children.Add(designLoadBlock);
+        designer.Children.Add(Row(Label("Your five-shot group, MOA"), designGroup, new TextBlock { Text = "at", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0) }, designDistance, new TextBlock { Text = "yd", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
+        designer.Children.Add(new TextBlock { Text = "Optional: with it, the designer says what the spacing means for your rifle.", FontSize = 12, Classes = { AppStyles.Secondary } });
+        designer.Children.Add(designChecks);
+
+        foreach (var box in new[] { designName, designSpacing, designGroup, designDistance })
+        {
+            box.TextChanged += (_, _) => Redesign();
+        }
+
+        foreach (var combo in new[] { designPage, designRing })
+        {
+            combo.SelectionChanged += (_, _) => Redesign();
+        }
+
+        foreach (var number in new[] { designColumns, designRows, designSighters })
+        {
+            number.ValueChanged += (_, _) => Redesign();
+        }
+
+        designLoadBlock.IsCheckedChanged += (_, _) => Redesign();
+    }
+
+    private void ShowDesigner(bool on)
+    {
+        if (designing == on)
+        {
+            return;
+        }
+
+        designing = on;
+        designer.IsVisible = on;
+        if (on)
+        {
+            list.SelectedIndex = -1;
+            Redesign();
+        }
+    }
+
+    /// <summary>
+    /// Designs the sheet the form describes and shows every check: a refusal in red and a warning in amber, the meanings entry 93 fixed
+    /// (entry 100 section 1), each a sentence with the number in it. A refused design leaves nothing to print; one that passes becomes the
+    /// selected sheet, and the preview follows.
+    /// </summary>
+    private void Redesign()
+    {
+        if (!designing)
+        {
+            return;
+        }
+
+        designChecks.Children.Clear();
+        if (!double.TryParse(designSpacing.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double spacing) || spacing <= 0)
+        {
+            Check(CheckLevel.Refusal, "Enter the spacing between bulls in inches, such as 1.50.");
+            selected = null;
+            preview.Source = null;
+            return;
+        }
+
+        var spec = new SheetSpec(designName.Text ?? "", ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)], (int)(designColumns.Value ?? 5), (int)(designRows.Value ?? 5),
+            spacing, ParametricSheet.RingSizes[Math.Max(0, designRing.SelectedIndex)], (int)(designSighters.Value ?? 0), designLoadBlock.IsChecked == true);
+        var design = ParametricSheet.Design(spec);
+        foreach (var check in design.Checks)
+        {
+            Check(check.Level, check.Sentence);
+        }
+
+        if (double.TryParse(designGroup.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double group) && group > 0
+            && double.TryParse(designDistance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double distance) && distance > 0)
+        {
+            var spacingCheck = ParametricSheet.Spacing(spacing, group, distance);
+            Check(spacingCheck.Level, spacingCheck.Sentence);
+        }
+
+        if (design.Printable)
+        {
+            selected = new LibrarySheet("custom.gltd.json", "Your own sheet", null, design.Definition!);
+            page = 0;
+            title.Text = design.Definition!.Name;
+            summary.Text = design.Definition.Description;
+            loadBlock.Children.Clear();
+            fieldBoxes.Clear();
+            ShowPreview();
+        }
+        else
+        {
+            selected = null;
+            preview.Source = null;
+            title.Text = "";
+            summary.Text = "";
+        }
+    }
+
+    private void Check(CheckLevel level, string sentence) => designChecks.Children.Add(new TextBlock
+    {
+        Text = sentence,
+        TextWrapping = TextWrapping.Wrap,
+        Classes = { level switch { CheckLevel.Refusal => AppStyles.FormError, CheckLevel.Warning => AppStyles.FormWarning, _ => AppStyles.Secondary } },
+    });
 
     /// <summary>The sheets listed, for the headless tests.</summary>
     internal IReadOnlyList<LibrarySheet> Sheets => sheets;

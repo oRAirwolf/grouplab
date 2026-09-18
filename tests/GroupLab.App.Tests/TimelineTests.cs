@@ -81,6 +81,43 @@ public class TimelineTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 98 section 5: each stage shows its own picture. The markers light up at the fiducial stage, the corners are
+    /// ringed at registration, and at the difference stage the photograph gives way to the residual with the artwork gone. The residual is
+    /// kept only when an interactive run asks for it; a batch run, which does not, pays nothing.
+    /// </summary>
+    [AvaloniaFact]
+    public void EachStageShowsItsOwnPictureAndOnlyAnInteractiveRunKeepsThem()
+    {
+        var definition = Definition();
+        var image = Sheet(definition);
+        var metadata = ImageMetadata.ForScan(image.Width, image.Height, 300);
+        var batch = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend());
+        Assert.Null(batch.Difference!.Residual);
+
+        var trace = new TraceRecorder();
+        var result = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend(), trace, artefacts: true);
+        Assert.NotNull(result.Difference!.Residual);
+
+        var window = NewWindow();
+        window.Show();
+        window.ApplyDetection(result);
+        window.ShowTrace(trace.Records);
+        Dispatcher.UIThread.RunJobs();
+        string PictureAt(string stage)
+        {
+            window.ShowStage(window.Stages.ToList().FindIndex(r => r.Stage.StartsWith(stage, StringComparison.Ordinal)));
+            Dispatcher.UIThread.RunJobs();
+            return window.StagePicture;
+        }
+
+        Assert.Equal("markers", PictureAt("S2"));
+        Assert.Equal("corners", PictureAt("S3"));
+        Assert.Equal("residual", PictureAt("S5"));
+        Assert.Equal("none", PictureAt("S9"));
+        window.Close();
+    }
+
+    /// <summary>
     /// Section 19's first constraint: the trace is never the only place an error appears. A blank page fails registration; the panel says so in
     /// the normal way, and the failed stage is on the timeline as the detail behind it.
     /// </summary>

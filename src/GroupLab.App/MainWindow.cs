@@ -65,6 +65,9 @@ public sealed class MainWindow : Window
     private readonly StackPanel stageDetail = new() { Spacing = 2 };
 
     private bool showingStage;
+
+    /// <summary>The last analysis put on the screen, whose stage pictures the timeline draws.</summary>
+    private AutomaticResult? analysed;
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
     private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     // NOTES-FROM-PLANNING.md entry 76 section 4: a detection the window starts on its own shows that it is running and can be stopped.
@@ -890,7 +893,8 @@ public sealed class MainWindow : Window
         status.Text = automatic ? $"Recognised {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
         var calibre = session.State.Calibre;
-        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre), token);
+        // An interactive run keeps each stage's picture for the timeline; a batch run never asks, so it pays nothing (DESIGN.md section 19).
+        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true), token);
         CrashReporter.InFlight = null;
         token.ThrowIfCancellationRequested();
         LogDetection(result, trace, clock.ElapsedMilliseconds);
@@ -926,6 +930,7 @@ public sealed class MainWindow : Window
     internal void ApplyDetection(AutomaticResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
+        analysed = result;
         if (result.Failure is not null || result.Scale is null)
         {
             problem.Text = "Detection failed: " + (result.Failure ?? "no registration") + ". Mark this image by hand with a reference length or rectangle.";
@@ -1565,8 +1570,47 @@ public sealed class MainWindow : Window
 
         canvas.StageRejections = placed;
         canvas.Highlight = null;
+        ShowStagePicture(record);
         canvas.InvalidateVisual();
     }
+
+    /// <summary>
+    /// A stage's own picture, entry 98 section 5: the markers light up at the fiducial stage, each corner is ringed by its residual at the
+    /// registration, twenty times true size so a tenth of a millimetre can be seen, and at the difference stage the photograph gives way to
+    /// the residual, where the printed artwork has vanished and the holes emerge. Stages with no picture show the photograph.
+    /// </summary>
+    private void ShowStagePicture(StageRecord record)
+    {
+        (canvas.StageImage as IDisposable)?.Dispose();
+        canvas.StageImage = null;
+        canvas.StageMarkers = [];
+        canvas.StageCorners = [];
+        if (analysed is not { } result)
+        {
+            return;
+        }
+
+        if (record.Stage.StartsWith("S2", StringComparison.Ordinal) && result.Measurement.Fiducials is { } fiducials)
+        {
+            canvas.StageMarkers = [.. fiducials.Matches.Select(m => m.ImageCorners)];
+        }
+        else if (record.Stage.StartsWith("S3", StringComparison.Ordinal) && result.Measurement.Registration is { } registration && result.Scale is { } scale)
+        {
+            canvas.StageCorners = [.. registration.Corners.Select(c => (c.Image, 20 * c.Error / 254 * HoleSize.PixelsPerInch(scale, c.Image), c.Inlier))];
+        }
+        else if (record.Stage.StartsWith("S5", StringComparison.Ordinal) && result.Difference?.Residual is { } residual)
+        {
+            // Shown as paper and ink: no difference is white, a strong one dark, so the holes emerge on a blank sheet.
+            var inverted = residual.Pixels.Select(v => (byte)(255 - v)).ToArray();
+            using var mat = OpenCvSharp.Mat.FromPixelData(residual.Height, residual.Width, OpenCvSharp.MatType.CV_8UC1, inverted);
+            OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
+            using var stream = new MemoryStream(png);
+            canvas.StageImage = new Avalonia.Media.Imaging.Bitmap(stream);
+        }
+    }
+
+    /// <summary>The picture the timeline is showing, for the headless tests: which of the three a stage drew, if any.</summary>
+    internal string StagePicture => canvas.StageImage is not null ? "residual" : canvas.StageMarkers.Count > 0 ? "markers" : canvas.StageCorners.Count > 0 ? "corners" : "none";
 
     /// <summary>Where a rejection sits on the image, through the sheet's own registration, or null where it has no page position or there is no registration.</summary>
     private PointD? ImageOf(Rejection rejection) =>

@@ -289,6 +289,44 @@ public class MarkingScreenTests
     }
 
     /// <summary>A window showing the image at the path, fitted, and a tap that goes through the headless platform's pointer input.</summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 98 section 2: the snap covers the same paper at every zoom. Its reach is one hole's extent in sheet units
+    /// plus a pointing tolerance of a few screen pixels, so zooming in by four changes it by less than that tolerance, where a reach in screen
+    /// pixels alone would have shrunk to a quarter. And a click inside a hole's drawn ring selects it however far the view is zoomed.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheSnapCoversTheSamePaperAtEveryZoomAndTheRingIsClickable()
+    {
+        (int X, int Y)[] holes = [(300, 300)];
+        string path = SyntheticTarget(holes);
+        try
+        {
+            var (window, _) = Opened(path);
+            var canvas = window.Canvas;
+            var session = window.Session;
+            session.SetScale(new LengthReference(new PointD(100, 100), new PointD(300, 100), 2));
+            var at = new PointD(300, 300);
+            double physical = HoleSize.SnapRadiusPixels(session.State, at)!.Value;
+            Assert.Equal(HoleSize.NominalHoleInches * 100, physical, 6);
+
+            double before = canvas.SnapRadius(session.State, at);
+            canvas.ZoomBy(4);
+            double after = canvas.SnapRadius(session.State, at);
+            Assert.True(before - after < 4, $"the reach went from {before:0.0} to {after:0.0} image pixels on zooming in");
+            Assert.True(after >= physical, "the reach is never less than one hole");
+
+            // Once the detector has measured the sheet's holes, their median is the hole the snap is sized to.
+            session.LoadDetections(session.State.Scale!, [new BullAim(0, "1", at)],
+                [new DetectedShot(at, new GroupLab.Core.Detection.AssignedShot(0, 0, 0, 0, 0, double.PositiveInfinity, false), 0.22)], null, [], "test");
+            Assert.Equal(22, HoleSize.SnapRadiusPixels(session.State, at)!.Value, 6);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static (MainWindow Window, Action<PointD> Tap) Opened(string path)
     {
         var window = NewWindow();
