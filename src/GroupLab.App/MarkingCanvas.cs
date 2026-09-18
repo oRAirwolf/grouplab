@@ -54,6 +54,20 @@ public enum MarkingTool
 /// </summary>
 public sealed class MarkingCanvas : Control, ICustomHitTest
 {
+    // The rule every length on this canvas follows, NOTES-FROM-PLANNING.md entries 98 section 2 and 101 section 3:
+    //
+    //   A target the person is aiming at is measured on the paper. A minimum the person has to see is measured on the screen.
+    //
+    // A target is anything a tap or a click has to land on: the snap's reach, a shot's hit area, a bull's click area. It is sized in sheet
+    // units, from the hole, the ring or the bull spacing, so it covers the same paper at every zoom and no change to the window's layout can
+    // move it. The only screen quantity allowed inside a target is the pointing tolerance, because a person's aim misses by screen pixels.
+    // A minimum is anything that has to stay visible: a mark's stroke, its smallest drawn radius, the gap between a ring and its alert ring,
+    // a label's plate. It is in screen pixels, so it never shrinks below what an eye can resolve when the view zooms out.
+    // Anything measured in the wrong one of the two breaks the first time a layout moves: the snap was, and a timeline strip taking height
+    // from the image was enough to pull taps onto the neighbouring hole. The constants below are all minimums or pointing tolerances.
+    // HitRadius is the whole reach only for a target with no size on the paper, a scale reference's end point, where there is nothing but
+    // aim; everywhere else it is a floor under a reach measured on the paper. Without a scale there are no sheet units at all, and the
+    // snap falls back to it until one is set.
     private const double MarkRadius = 11, HitRadius = 18, EndRadius = 4, MinimumImpactRadius = 3;
 
     /// <summary>

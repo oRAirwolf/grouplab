@@ -96,9 +96,14 @@ public static class ParametricSheet
         double groupInches = groupMoa * 1.047 * distanceYards / 100;
         double sigma = RangeStatistics.Sigma(RangeStatistic.ExtremeSpread, groupInches, 5).Value;
         double ratio = pitchInches / sigma, rate = Misassigned(ratio);
+        // NOTES-FROM-PLANNING.md entry 101 section 4: the rate rests on a sigma estimated from one stated group, whose interval is about a third
+        // either way, so it is quoted as "one shot in so many" and a whole percentage, never to two decimal places it does not have.
         string oneIn = rate >= 0.5 ? "about half" : string.Create(CultureInfo.InvariantCulture, $"about one shot in {Math.Max(2, Math.Round(1 / rate)):0}");
+        string percent = 100 * rate >= 1
+            ? string.Create(CultureInfo.InvariantCulture, $"about {Math.Round(100 * rate):0} percent")
+            : "under 1 percent";
         string sentence = string.Create(CultureInfo.InvariantCulture,
-            $"A rifle shooting {groupMoa:0.##} MOA five-shot groups at {distanceYards:0} yd has a sigma of about {sigma:0.00} in, so {pitchInches:0.00} in between bulls is {ratio:0.0} sigma: {oneIn} ({100 * rate:0.##} percent) would land nearer a neighbouring bull than its own. Six sigma is where that falls to one in 185.");
+            $"A rifle shooting {groupMoa:0.##} MOA five-shot groups at {distanceYards:0} yd has a sigma of about {sigma:0.00} in, so {pitchInches:0.00} in between bulls is {ratio:0.0} sigma: {oneIn} ({percent}) would land nearer a neighbouring bull than its own. Six sigma is where that falls to one in 185.");
         return new SheetCheck(ratio < SpacingInSigmas ? CheckLevel.Warning : CheckLevel.Fine, sentence);
     }
 
