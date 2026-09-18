@@ -62,6 +62,15 @@ public static class AppStyles
 
     public const string KeycapText = "keycap-text";
 
+    /// <summary>The review card: amber-tinted, because it is the thing that needs a person (entry 97 section 1).</summary>
+    public const string ReviewCard = "review-card";
+
+    /// <summary>A status word in the review list or on a chip, NOW or NEXT in amber, DONE in teal.</summary>
+    public const string StatusWord = "status-word";
+
+    /// <summary>A provenance chip: automatic in teal, corrected and manual neutral, as the concept's selected-detection panel draws them.</summary>
+    public const string Chip = "chip";
+
     private sealed class GroupLabStyles : Styles
     {
     }
@@ -146,11 +155,16 @@ public static class AppStyles
         // primary action.
         Rule(x => x.OfType<Border>().Class(Rail), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 0, 1, 0))),
         Rule(x => x.OfType<Button>().Class(RailButton), (TemplatedControl.BackgroundProperty, Brush(p.Panel)), (TemplatedControl.BorderBrushProperty, Brush(p.Panel)), (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.FontSizeProperty, 17.0), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space8, Tokens.Space6)), (Layoutable.MarginProperty, new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, 0))),
-        Rule(x => x.OfType<Button>().Class(RailButton).Class(Good), (TemplatedControl.ForegroundProperty, Brush(p.Teal)), (TemplatedControl.BackgroundProperty, Brush(p.TealTint)), (TemplatedControl.BorderBrushProperty, Brush(p.TealTintBorder))),
+        Rule(x => x.OfType<Button>().Class(RailButton).Class(Warn), (TemplatedControl.ForegroundProperty, Brush(p.Amber)), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)), (TemplatedControl.BorderBrushProperty, Brush(p.AmberTintBorder))),
         Rule(x => x.OfType<Border>().Class(Breadcrumb), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space12, Tokens.Space6))),
         Rule(x => x.OfType<Button>().Class(Primary), (TemplatedControl.BackgroundProperty, Brush(p.Amber)), (TemplatedControl.ForegroundProperty, Brush(p.OnAmber)), (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.FontWeightProperty, FontWeight.SemiBold)),
         Rule(x => x.OfType<Border>().Class(Keycap), (Border.BackgroundProperty, Brush(p.Sunk)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4, 0)), (Layoutable.MarginProperty, new Thickness(Tokens.Space6, 0, 0, 0))),
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
+        Rule(x => x.OfType<TextBlock>().Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
+        Rule(x => x.OfType<Border>().Class(ReviewCard), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
+        Rule(x => x.OfType<TextBlock>().Class(StatusWord), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing)),
+        Rule(x => x.OfType<Border>().Class(Chip), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(9)), (Border.PaddingProperty, new Thickness(Tokens.Space8, 1)), (Layoutable.MarginProperty, new Thickness(0, 0, Tokens.Space6, 0))),
+        Rule(x => x.OfType<Border>().Class(Chip).Class(Good), (Border.BorderBrushProperty, Brush(p.TealTintBorder)), (Border.BackgroundProperty, Brush(p.TealTint))),
     ];
 
     /// <summary>Buttons, entry 42 section 4: 12 point at weight 500, padding 6 by 12, radius 4, margin 2.</summary>

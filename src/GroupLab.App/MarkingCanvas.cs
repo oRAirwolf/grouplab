@@ -125,6 +125,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// </summary>
     public IReadOnlyDictionary<int, bool> DetectorFlags { get; set; } = new Dictionary<int, bool>();
 
+    /// <summary>
+    /// The shots the review queue still wants a decision on, drawn amber, and the one the editor is on now, whose line to its bull is drawn
+    /// amber and dashed as the concept draws it (NOTES-FROM-PLANNING.md entry 97 section 1).
+    /// </summary>
+    public IReadOnlySet<int> NeedsPerson { get; set; } = new HashSet<int>();
+
+    public int? ReviewShot { get; set; }
+
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
 
@@ -276,10 +284,17 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     {
         var palette = Tokens.For(ActualThemeVariant);
         context.FillRectangle(new SolidColorBrush(palette.Sunk), new Rect(Bounds.Size));
+        var paper = new SolidColorBrush(Tokens.Paper);
+        var paperEdge = new Pen(new SolidColorBrush(Tokens.PaperEdge), 1);
         if (bitmap is null)
         {
-            var hint = new FormattedText("Open a photograph or scan of a target to start marking.", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.BodySize, new SolidColorBrush(palette.Dim));
-            context.DrawText(hint, new Point(24, 24));
+            // Entry 97 section 1: even empty, the document is a sheet of paper on dark chrome, at a letter page's proportions.
+            double height = Math.Max(0, Bounds.Height - 48), width = Math.Min(Bounds.Width - 48, height * 8.5 / 11);
+            var sheet = new Rect((Bounds.Width - width) / 2, 24, Math.Max(0, width), height);
+            context.FillRectangle(paper, sheet);
+            context.DrawRectangle(paperEdge, sheet);
+            var hint = new FormattedText("Open a photograph or scan of a target to start marking.", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.BodySize, new SolidColorBrush(Tokens.PaperText));
+            context.DrawText(hint, new Point(sheet.X + 24, sheet.Y + 24));
             return;
         }
 
@@ -289,6 +304,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         var (xFromX, xFromY, x0, yFromX, yFromY, y0) = ViewRotation.Affine(turns, imageWidth, imageHeight);
         using (context.PushTransform(new Matrix(xFromX * zoom, yFromX * zoom, xFromY * zoom, yFromY * zoom, (x0 * zoom) + offset.X, (y0 * zoom) + offset.Y)))
         {
+            // Entry 93 section 2 and entry 97 section 1: the document is light and the application is dark, so the image sits on a paper
+            // mount a little larger than itself, edged by one line, rather than straight on the chrome.
+            double margin = 0.015 * Math.Max(imageWidth, imageHeight);
+            var mount = new Rect(-margin, -margin, imageWidth + (2 * margin), imageHeight + (2 * margin));
+            context.FillRectangle(paper, mount);
+            context.DrawRectangle(new Pen(paperEdge.Brush, 1 / Math.Max(zoom, 1e-6)), mount);
             context.DrawImage(bitmap, new Rect(0, 0, imageWidth, imageHeight));
         }
 
@@ -343,11 +364,16 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             bool selected = shot.Id == Selected;
-            IBrush colour = selected ? Marks.Selected : shot.Exclusion is null ? Marks.Impact : Marks.Excluded;
+            IBrush colour = selected ? Marks.Selected
+                : shot.Exclusion is not null ? Marks.Excluded
+                : NeedsPerson.Contains(shot.Id) ? Marks.NeedsPerson
+                : shot.Provenance == ShotProvenance.Automatic ? Marks.Found
+                : Marks.Placed;
             double radius = ImpactRadius(state, at, shot.MeasuredDiameterInches);
             if (shot.Bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } bull)
             {
-                Marks.Line(context, Marks.Faint, c, ToControl(bull.Image), 1, new DashStyle([4, 4], 0));
+                bool now = ReviewShot == shot.Id;
+                Marks.Line(context, now ? Marks.NeedsPerson : Marks.Faint, c, ToControl(bull.Image), now ? Tokens.MarkCoreWidth : 1, new DashStyle([4, 4], 0));
             }
 
             Marks.Ring(context, colour, c, radius, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, shot.Exclusion is null ? null : Marks.Dashed);

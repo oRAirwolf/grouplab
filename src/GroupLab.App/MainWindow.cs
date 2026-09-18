@@ -66,6 +66,11 @@ public sealed class MainWindow : Window
     /// <summary>The breadcrumb header's text: what is open and what is on it, NOTES-FROM-PLANNING.md entry 93 section 2.</summary>
     private readonly TextBlock breadcrumb = new() { VerticalAlignment = VerticalAlignment.Center, FontSize = Tokens.SecondarySize };
 
+    /// <summary>The header's review count, "2 of 26 need review", as the concept puts it beside the actions: amber while anything is open.</summary>
+    private readonly TextBlock reviewCount = new() { Classes = { AppStyles.PillText } };
+
+    private readonly Border reviewPill = new() { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Pill } };
+
     /// <summary>
     /// The zero correction, NOTES-FROM-PLANNING.md entry 92 section 1. It sits above the group statistics and not among them because it
     /// answers a different question at a different moment: what to dial now, read standing at a bench with a turret cap in one hand, where
@@ -175,8 +180,12 @@ public sealed class MainWindow : Window
         toolbar.Children.Add(Button("Zoom in", () => canvas.ZoomBy(1.25)));
         toolbar.Children.Add(Button("Zoom out", () => canvas.ZoomBy(0.8)));
         toolbar.Children.Add(Button("Fit", canvas.FitToView));
-        toolbar.Children.Add(Button("Rotate left ([)", () => session.Rotate(-1)));
-        toolbar.Children.Add(Button("Rotate right (])", () => session.Rotate(1)));
+        foreach (var (glyph, name, key, turns) in new[] { ("↺", "Rotate left", "[", -1), ("↻", "Rotate right", "]", 1) })
+        {
+            var rotate = new Button { Content = ToolContent(glyph, name, key), Margin = new Thickness(Tokens.ControlMargin) };
+            rotate.Click += (_, _) => session.Rotate(turns);
+            toolbar.Children.Add(rotate);
+        }
         toolbar.Children.Add(Button("Export", async () => await ExportDialog()));
         toolbar.Children.Add(Button("Report a problem", () => OpenReport(null)));
 
@@ -258,6 +267,8 @@ public sealed class MainWindow : Window
         // the right, which is where the concept puts them.
         var crumbs = new DockPanel();
         var actions = new StackPanel { Orientation = Orientation.Horizontal };
+        reviewPill.Child = reviewCount;
+        actions.Children.Add(reviewPill);
         var primary = Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false));
         primary.Classes.Add(AppStyles.Primary);
         actions.Children.Add(Button("Open image", async () => await OpenImageDialog()));
@@ -967,6 +978,9 @@ public sealed class MainWindow : Window
         }
 
         canvas.DetectorFlags = state.Shots.Where(s => s.IsShot && s.Oversize is not null).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
+        var open = ReviewQueue.For(state).Where(i => !i.Resolved).ToList();
+        canvas.NeedsPerson = open.Where(i => i.ShotId is not null).Select(i => i.ShotId!.Value).ToHashSet();
+        canvas.ReviewShot = open.FirstOrDefault(i => i.Key == currentReview)?.ShotId ?? open.FirstOrDefault()?.ShotId;
 
         if (canvas.AwaitingTaps.Count == 0 && (scaleInputs.Children.Count == 0 || state.Scale is not null))
         {
@@ -1190,8 +1204,49 @@ public sealed class MainWindow : Window
             return;
         }
 
-        selection.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-            $"Shot {ShotLabel(id)}: {shot.Provenance.ToString().ToLowerInvariant()}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}")));
+        // Entry 97 section 1: the concept's selected-detection panel, label and value rows and the provenance as a chip, teal where the software
+        // found it on its own.
+        selection.Children.Add(Readout("Shot", ShotLabel(id)));
+        if (session.State.Scale is { } scale)
+        {
+            var at = scale.ToTarget(shot.Image);
+            selection.Children.Add(Readout("Position", units.Length(at.X) + ", " + units.Length(at.Y)));
+        }
+
+        if (shot.MeasuredDiameterInches is { } measured)
+        {
+            selection.Children.Add(Readout("Diameter", units.Length(measured)));
+        }
+
+        if (shot.Size is { } size)
+        {
+            selection.Children.Add(Readout("Size", string.Create(CultureInfo.InvariantCulture, $"{size.Holes:0.00} holes")));
+        }
+
+        if (session.State.Assignment?.For(id) is { } detail)
+        {
+            selection.Children.Add(Readout("Margin", units.Length(detail.MarginInches)));
+        }
+
+        var chips = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, Tokens.Space4, 0, 0) };
+        foreach (var provenance in new[] { ShotProvenance.Automatic, ShotProvenance.Corrected, ShotProvenance.Manual })
+        {
+            // The shot list's own words for the three provenances, so the panel and the list never name one thing two ways.
+            string word = provenance switch { ShotProvenance.Automatic => "detected", ShotProvenance.Corrected => "corrected", _ => "by hand" };
+            var chip = new Border { Child = new TextBlock { Text = word, FontSize = Tokens.SectionLabelSize, Classes = { provenance == shot.Provenance ? AppStyles.Good : AppStyles.Dim } }, Classes = { AppStyles.Chip } };
+            if (provenance == shot.Provenance)
+            {
+                chip.Classes.Add(AppStyles.Good);
+            }
+
+            chips.Children.Add(chip);
+        }
+
+        selection.Children.Add(chips);
+        if (shot.Exclusion is { } e)
+        {
+            selection.Children.Add(Line($"Excluded as {e}."));
+        }
         selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
             session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null))));
         selection.Children.Add(Row(
@@ -1224,13 +1279,20 @@ public sealed class MainWindow : Window
         int open = ReviewQueue.Open(ReviewItems);
         var current = ReviewItems.FirstOrDefault(i => i.Key == currentReview && !i.Resolved) ?? ReviewItems.FirstOrDefault(i => !i.Resolved);
         currentReview = current?.Key;
+
+        // Entry 97 section 5's window rehearsal found this: straight after detection the first item was current and its shot was not
+        // selected, so a bull typed for it went nowhere until the person clicked the shot. The item's shot is selected whenever nothing else is.
+        if (canvas.Selected is null && current?.ShotId is { } shotOfItem)
+        {
+            canvas.Selected = shotOfItem;
+        }
         int shots = state.Shots.Count(s => s.IsShot);
         var count = new TextBlock
         {
             Text = ReviewItems.Count == 0 ? (state.Assignment is null ? "Nothing detected to review." : "Nothing needs review.") : $"{open} of {shots} need review",
             FontFamily = Mono,
             VerticalAlignment = VerticalAlignment.Center,
-            Classes = { open > 0 ? AppStyles.Alert : AppStyles.Secondary },
+            Classes = { open > 0 ? AppStyles.Warn : AppStyles.Secondary },
         };
         var header = Row(count);
         if (detectedState is not null && !ReferenceEquals(state, detectedState))
@@ -1245,19 +1307,27 @@ public sealed class MainWindow : Window
         review.Children.Add(header);
         if (current is not null)
         {
+            // Entry 97 section 1: the card is amber because it is the thing that needs a person, and its first choice, the one Enter takes, is
+            // the amber primary button, as the concept draws it. Red stays for what is wrong.
             var card = new StackPanel { Spacing = Tokens.Space6 };
-            card.Children.Add(new TextBlock { Text = ReviewTitle(current.Kind), FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Alert } });
+            card.Children.Add(new TextBlock { Text = ReviewTitle(current.Kind), FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Warn } });
             card.Children.Add(new TextBlock { Text = current.Sentence, TextWrapping = TextWrapping.Wrap });
             var choices = new WrapPanel();
             foreach (var choice in current.Choices)
             {
-                choices.Children.Add(Button(choice.Label, () => Choose(current, choice)));
+                var button = Button(choice.Label, () => Choose(current, choice));
+                if (ReferenceEquals(choice, current.Choices[0]))
+                {
+                    button.Classes.Add(AppStyles.Primary);
+                }
+
+                choices.Children.Add(button);
             }
 
             card.Children.Add(choices);
             card.Children.Add(Line("Enter takes the first choice, Space moves to the next item, a bull's number then Enter reassigns the selected shot, N marks it not a shot."
                 + (current.Choices.Any(c => c.Action == ReviewAction.SplitIntoTwo) ? " T takes this mark as two shots." : "")));
-            review.Children.Add(new Border { Child = card, Padding = new Thickness(Tokens.Space8), BorderThickness = new Thickness(1), BorderBrush = Marks.Alert, CornerRadius = new CornerRadius(4) });
+            review.Children.Add(new Border { Child = card, Classes = { AppStyles.ReviewCard } });
         }
 
         int n = 0;
@@ -1265,10 +1335,16 @@ public sealed class MainWindow : Window
         {
             n++;
             string state_ = item.Resolved ? "DONE" : item.Key == currentReview ? "NOW" : "NEXT";
+            var word = new TextBlock { Text = state_, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.StatusWord, item.Resolved ? AppStyles.Good : AppStyles.Warn } };
+            var row = new DockPanel();
+            DockPanel.SetDock(word, Dock.Right);
+            row.Children.Add(word);
+            row.Children.Add(new TextBlock { Text = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}", TextWrapping = TextWrapping.Wrap });
             var line = new Button
             {
-                Content = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}   {state_}",
+                Content = row,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Margin = new Thickness(0),
                 Opacity = item.Resolved ? 0.6 : 1,
             };
@@ -1625,7 +1701,7 @@ public sealed class MainWindow : Window
         var rail = new StackPanel { Width = 52 };
         var here = Button("\u25c9", () => status.Text = "You are on the analysis screen.");
         here.Classes.Add(AppStyles.RailButton);
-        here.Classes.Add(AppStyles.Good);
+        here.Classes.Add(AppStyles.Warn);
         ToolTip.SetTip(here, "Analyse");
         rail.Children.Add(here);
         foreach (var (glyph, name, phase) in new[]
@@ -1651,6 +1727,15 @@ public sealed class MainWindow : Window
         string document = state.ImagePath is { } path ? Path.GetFileName(path) : "no image open";
         int shots = state.Shots.Count(sh => sh.IsShot);
         int open = ReviewQueue.Open(ReviewQueue.For(state));
+        reviewPill.IsVisible = shots > 0;
+        reviewCount.Text = FormattableString.Invariant($"{open} of {shots} need review");
+        foreach (var (target, classes) in new (Avalonia.StyledElement, Classes)[] { (reviewPill, reviewPill.Classes), (reviewCount, reviewCount.Classes) })
+        {
+            classes.Remove(AppStyles.Warn);
+            classes.Remove(AppStyles.Good);
+            classes.Add(open > 0 ? AppStyles.Warn : AppStyles.Good);
+        }
+
         breadcrumb.Text = shots == 0
             ? $"GroupLab  \u203a  {document}"
             : FormattableString.Invariant($"GroupLab  \u203a  {document}  \u203a  {shots} shots{(open > 0 ? $", {open} to review" : "")}");

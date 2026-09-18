@@ -219,6 +219,24 @@ public static class Tokens
     public static Color MarkFaint { get; } = Hex(0x697079);
     public static Color MarkAlert { get; } = Hex(0xe0604a);
 
+    /// <summary>
+    /// A shot a person placed or corrected, NOTES-FROM-PLANNING.md entry 97 section 1: neither teal, which is what the software found on its
+    /// own, nor amber, which is what still needs a person. The concept's "corrected" and "manual" chips are neutral, and so is the mark.
+    /// </summary>
+    public static Color MarkPlaced { get; } = Hex(0xe6e8ea);
+
+    /// <summary>
+    /// The document's paper, entry 93 section 2 and entry 97 section 1: the document is light and the application is dark. The concept's
+    /// sheet is this warm off-white inset in the dark canvas with a one pixel edge, in every theme, because a sheet of paper does not change
+    /// colour when the application does.
+    /// </summary>
+    public static Color Paper { get; } = Hex(0xf2f1ec);
+
+    public static Color PaperEdge { get; } = Hex(0xcfccc3);
+
+    /// <summary>The empty sheet's hint, dark on the paper.</summary>
+    public static Color PaperText { get; } = Hex(0x5a6068);
+
     /// <summary>A mark label's plate and text: near black at about 80 percent, and the dark theme's text colour, so a label reads on any photograph.</summary>
     public static Color MarkPlate { get; } = Color.FromArgb(200, 0x0b, 0x0c, 0x0e);
 

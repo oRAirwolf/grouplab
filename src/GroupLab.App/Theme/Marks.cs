@@ -18,6 +18,17 @@ public static class Marks
     /// <summary>A bullet hole: a ring at the true hole diameter with a one pixel pip.</summary>
     public static IBrush Impact { get; } = new SolidColorBrush(Tokens.MarkImpact);
 
+    /// <summary>
+    /// The accent rule of NOTES-FROM-PLANNING.md entry 93 section 2, applied to the marks (entry 97 section 1): a shot the software found and
+    /// nobody has had to touch is teal, a shot a person placed or corrected is neutral, and a shot the review queue still wants a decision on
+    /// is amber, as the concept draws it. Red is kept for what is wrong: a missing marker and a mark flagged as two holes.
+    /// </summary>
+    public static IBrush Found { get; } = new SolidColorBrush(Tokens.MarkTeal);
+
+    public static IBrush Placed { get; } = new SolidColorBrush(Tokens.MarkPlaced);
+
+    public static IBrush NeedsPerson { get; } = new SolidColorBrush(Tokens.MarkSelected);
+
     /// <summary>The selected shot, and a shot being placed.</summary>
     public static IBrush Selected { get; } = new SolidColorBrush(Tokens.MarkSelected);
 
