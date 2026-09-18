@@ -15,6 +15,131 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 97: what to build while nothing can be printed, shot or photographed
+
+**Status: actioned 2026-09-18.**
+- **Section 1: the framing is done.** The document is a paper sheet on dark chrome, the accents follow entry 93's rule on the image as well as the panel (teal found, neutral placed, amber needs a person, red wrong), the review card is amber with an amber primary, and the header, list, rail and selected shot match the concept.
+- **Section 2: records built, small.** A rifle's scope click, a barrel's round count, a load's components, in one file beside the settings. The zero correction now says "5 clicks left" with what rounding leaves, where the marking names a rifle and a distance.
+- **Section 3: the timeline is in, the per-stage images are not.** Every stage's record under the image, scrubbed by slider or button, landing live as each stage files, with every positioned rejection a button that finds it on the image. Both of section 19's constraints hold and each has a test. The intermediate rasters are the part left.
+- **Section 4: not picked up**, because no batch blocked.
+- **Section 5: the guard now presses the window's keys**, and on its first run it found the first item after detection had no shot selected, so a typed bull went nowhere. Fixed. Nothing in the three batches cost a key press: the Core rehearsal stays at 15 and 0 taps, the window rehearsal at 10 and 0 taps, and 10 is now its ceiling.
+
+Alan is unavailable for anything physical until the weekend. **This is the order of work until then**, and the reasoning for the order matters as much as the list.
+
+### 1. First: finish the concept's framing
+
+Entry 93 section 5 split the appearance work in two. **The working loop is done**: icon tool strip, keycaps, breadcrumb, primary action, label-value readouts, the rail without its destinations, and three palettes held to their contrast ratios by tests.
+
+**The framing is what is left**, and entry 93 already named it: the paper-coloured sheet on dark chrome, the accent palette applied consistently, and the rest of the concept's surface.
+
+**It goes first because it is approved, specified and started.** The concept is the reference, the tokens exist, and leaving a design half-applied is the state most likely to be re-litigated later.
+
+### 2. Second: rifle, barrel and load records
+
+**Entry 91's zero correction currently stops at MOA and mil**, because turning an angle into clicks needs the scope's click value and no rifle record exists. Entry 90 found that gap: `DESIGN.md` section 3 promises records for rifles, barrels, loads and sessions, and only sessions reached a phase.
+
+**Clicks are what a shooter actually dials.** MOA and mil are usable because every turret is marked in one of them, and **the feature Alan asked for is not finished until it says "twelve clicks right".**
+
+**It is pure data work with no physical dependency**, it is already Phase 4, and it is the shortest path from something he requested to something complete.
+
+**Keep it small.** A rifle with a name and a scope click value, a barrel with a round count, a load with its components. **Not a reloading database.** The records exist to make other features honest, and the temptation to build a whole inventory system should be refused now rather than halfway through.
+
+### 3. Third: the analysis showing its work
+
+`DESIGN.md` section 19 [r3] specifies it in detail and entry 90 found it in no phase: **a stage timeline the user can scrub, clicking a rejection to highlight it on the image, and a live run where each stage's artefact appears as it lands.**
+
+**Every stage already emits a structured record**, which is what gave the Phase 0 and Phase 1 spikes their console output. **The data flows and nothing displays it.**
+
+**It runs on any image already in the corpus**, so it is entirely unblocked, and it is the largest unbuilt interface feature in the design.
+
+**Two constraints the design already states and that should not be rediscovered in review**: the trace must never be the only place an error appears, so a failed stage still produces a normal prominent error with the trace as detail behind it; and artefact generation defaults on for one interactive analysis and off for batch, so the theatre never slows the pipeline.
+
+**It goes third because it is visual**, and building it before the palette in section 1 is settled means styling it twice.
+
+### 4. Alongside, when any of the above is blocked: the macOS gate record
+
+Still the only red in CI, still open with a named cause in corner refinement and one divergence below it, still needing nobody.
+
+**It is not interface work and it has waited a long time**, which makes it the right thing to pick up in any gap rather than the thing to start with.
+
+### 5. The guard, because Alan will not be in the application while this lands
+
+Several days of interface changes will arrive without the person who uses it looking at any of them. **Entry 84's lesson was that a screen built without use goes wrong quietly.**
+
+**The synthetic 25-shot rehearsal is the substitute and it already exists.** It measured 15 key presses and 0 taps on the current build.
+
+**Re-run it after every batch and report the numbers.** If presses or taps rise, the working loop has regressed and it will be visible immediately rather than when Alan next opens the application. **A styling pass that costs the loop three key presses has not improved anything.**
+
+### 6. One thing Alan can still do this week that needs no weather
+
+**Jeff's three questions.** They turn the 30-bull request into a specification, they are a text message, and the target designer stays deferred until they are answered.
+
+---
+
+## 2026-09-18, entry 96: the sheet is part of the instrument, the two numbers do not reconcile, and the gate's statistic contradicts the project's own reasoning
+
+**Status: actioned 2026-09-18.**
+- **Section 1: agreed and adopted as practice.** From here a gate measurement is reported beside the sheet's own print quality, and a sheet is scanned flat before it is shot, which is the measurement this sheet never had.
+- **Section 2: tested, and the answer is part, not most.** Warps of rising degree fitted to the scan's markers take its 0.0027 in to 0.0020 at degree 4, where the Phase 0 sheets go to 0.0008 to 0.0011. About 0.0018 in of the print error is smooth and absorbable; the rest is twice a good sheet's. It still does not reconcile with the photographs, which do not carry it, so part of what the scan reports belongs to a shot and handled sheet on a platen, and the clean-sheet scan separates the two. The same warp brings `IMG_5819` inside the gate and makes `IMG_5820` worse; recorded, not adopted, because it was tried on the frames being gated.
+- **Section 3: recorded, not acted on**, exactly as you frame it. Every frame reported from here carries its rms beside its worst bull.
+- **Section 4: for Alan's session**, fourteen frames and a flatbed scan of the clean sheet first.
+
+Section 1 answers the question Claude Code raised. Section 2 is an arithmetic disagreement inside its own findings that changes what section 1 means. Section 3 is a principle this project already wrote down and did not apply here, raised deliberately without acting on it.
+
+**This is the best investigation in the project so far.** Six causes ruled out with evidence, two left standing, and a test named that separates them. Nothing below detracts from that.
+
+### 1. Yes: a gate measured on a bad print is measuring the printer
+
+Claude Code's line deserves to be the headline. **The friend's sheet was printed 0.43 percent long vertically against 0.06 percent on the Phase 0 printer, and its own flatbed scan averages 0.0027 in against 0.0012 to 0.0015 for the Phase 0 sheets.**
+
+**The sheet is part of the instrument.** A gate on bull-centre recovery measures the whole chain: printer, paper, mounting, lens, registration. **If the print alone eats half the budget, the gate is no longer asking what it was written to ask.**
+
+**Two things follow and neither is a change to the gate.**
+
+1. **Record every sheet's print quality alongside every gate measurement**, as a first-class figure. A flatbed scan of the unshot sheet gives it in one pass, and it should be taken before a sheet is shot rather than reconstructed afterwards.
+2. **Measure the gate on sheets whose print quality is known and good.** The friend's sheet remains excellent for detection, assignment and the editor, and it is the wrong ruler for registration.
+
+**This also explains something that had no explanation.** Entry 71 called the friend's mounting the closest anything had come to the gate. **Part of that closeness was luck and part of the remaining gap was his printer**, and neither was visible until somebody scanned the sheet and looked.
+
+### 2. The two numbers do not reconcile, and the resolution matters
+
+**Point 2 and point 3 of the findings disagree with each other**, and I think the disagreement is informative rather than an error.
+
+If the photograph's error simply contained the print error plus something independent, then with a photograph at 0.0031 rms and a scan at 0.0027:
+
+- the photograph's own contribution would be only **0.0015 in**, and
+- the two error patterns would correlate at about **0.87**.
+
+**The observed correlation is 0.27.** Those cannot both be true, so the print error is not sitting inside the photograph's error as an independent additive term.
+
+**The explanation I would test first: the surface fit absorbs it.** A 0.43 percent vertical stretch is a smooth, low-order distortion, and the photograph's registration has free parameters that will happily take up a smooth stretch into the fitted surface. **A flatbed scan has no such fit**, so it reports the print error in full.
+
+**The test is cheap and uses data in hand: fit the same surface model to the scan and see what its residual becomes.** If 0.0027 falls toward 0.0015 under a low-order warp, the print error is smooth and absorbable, and section 1's concern is real for the scan gate and much smaller for the photograph gate.
+
+**Which would be good news worth having**, because it would mean the mounted gate is not being spoiled by the printer, and the remaining 0.0031 really is the two causes Claude Code has left standing.
+
+### 3. The gate is on the worst of 25, and this project already argued against that
+
+`DESIGN.md` section 21 [r4], on the registration residual:
+
+> RMS is the statistic because a maximum over a point set grows with the number of points for any noise distribution: gating on the maximum would hold a dense sheet to a stricter standard than a sparse one for no physical reason.
+
+**The bull-centre gate is on the worst bull.** The same argument applies to it exactly and was never carried across, and it is now biting: at 0.0031 rms the expected worst of 25 is 0.0059, so a 25-bull sheet is held to a stricter standard than a 9-bull sheet for no physical reason, and **whether a frame passes depends partly on the draw.**
+
+**I am raising this and not acting on it.** Entry 17 fixed the rule that a number chosen after the results is not a gate, and rewriting the gate's statistic while staring at a frame that just failed by six percent is exactly what that rule exists to prevent.
+
+**What to do instead costs nothing and preserves the option.** **Record both numbers for every frame from now on**, the worst bull and the rms, in `PHASE1-RESULTS.md`. If the gate's statistic is ever revisited, the decision will rest on a body of frames rather than on the one that prompted the question, and if it is never revisited the extra column costs a line.
+
+### 4. Two more photographs, in the same session as the twelve
+
+Claude Code's test for separating a camera-side distortion from a fine paper shape is right and free: **the same mounted sheet, square on, photographed twice at the same distance, once with the sheet in the left half of the frame and once in the right.** An error fixed to the camera moves with the sheet's position in the image. An error fixed to the paper stays put.
+
+**Add it to Alan's session, so it is fourteen frames rather than twelve.** He is shooting a clean sheet on cardboard indoors, which serves this test exactly as well as a shot one.
+
+**And take a flatbed scan of that clean sheet before anything else**, per section 1 item 1. It gives the print quality of the sheet the whole session is measured on, from his own printer, which is also the printer every future Phase 1 sheet will come from.
+
+---
+
 ## 2026-09-18, entry 95: I had the turret backwards, the overlapped-pair gap should be accepted, and the inbox is empty for the first time
 
 **Status: actioned 2026-09-18.**

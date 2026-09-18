@@ -71,6 +71,27 @@ public class ZeroSectionTests
         window.Close();
     }
 
+    /// <summary>Entry 97 section 2: with a rifle and the distance, the correction is in the scope's clicks, with what rounding leaves.</summary>
+    [AvaloniaFact]
+    public void WithARifleAndADistanceTheCorrectionIsInClicks()
+    {
+        var window = NewWindow();
+        window.Show();
+        Mark(window, offsetInches: 1.2, sigmaInches: 0.27);
+        Assert.Contains(window.ZeroText, t => t.StartsWith("Angular figures and clicks need the shot distance", StringComparison.Ordinal));
+
+        window.Session.SetShotDistance(3600);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(window.ZeroText, t => t.StartsWith("Choose a rifle to have this in clicks", StringComparison.Ordinal));
+
+        window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa), null, null);
+        Dispatcher.UIThread.RunJobs();
+        var dial = Assert.Single(window.ZeroText, t => t.StartsWith("Dial", StringComparison.Ordinal));
+        Assert.StartsWith("Dial 5 clicks left (", dial, StringComparison.Ordinal);
+        Assert.Contains("leaving", dial, StringComparison.Ordinal);
+        window.Close();
+    }
+
     /// <summary>Entry 93 section 4: the rail is built and its destinations are not, so its other icons say which phase builds them.</summary>
     [AvaloniaFact]
     public void TheRailIsBuiltAndItsOtherDestinationsAreNot()

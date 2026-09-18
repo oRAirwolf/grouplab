@@ -9,7 +9,7 @@ namespace GroupLab.Core.Marking;
 /// offset is larger than the sampling error of the centre at this many shots, and where it is not, <see cref="ShotsToSettle"/> is how many
 /// shots would settle it if the rifle keeps shooting as it has.
 /// </summary>
-public sealed record ZeroAxis(double OffsetInches, double HalfWidthInches, bool Distinguishable, int? ShotsToSettle, string Dial, string Sits);
+public sealed record ZeroAxis(double OffsetInches, double HalfWidthInches, bool Distinguishable, int? ShotsToSettle, string Dial, string Sits, Clicks? Clicks = null);
 
 /// <summary>
 /// The scope correction and its uncertainty, NOTES-FROM-PLANNING.md entries 91 and 53 section 3. It answers a different question from the
@@ -29,8 +29,8 @@ public sealed record ZeroAxis(double OffsetInches, double HalfWidthInches, bool 
 /// <para>
 /// <b>What this is not.</b> It is not a ballistic correction: it puts the impact on the aim at the distance shot, and moving a zero between
 /// distances is the solver's job, which is Phase 5. It is not a click count either, because clicks need the scope's click value, which is a
-/// rifle record, and rifle records are Phase 4 (entry 91 section 4). It stops at a linear and an angular figure, which every turret is
-/// marked in one of.
+/// rifle record (entry 91 section 4). Where the marking names a rifle and the shot distance is set, each axis worth dialling also carries its
+/// <see cref="Clicks"/>, whole clicks and what rounding leaves, which is entry 97 section 2's "twelve clicks right".
 /// </para>
 /// </summary>
 public sealed record ZeroCorrection(
@@ -128,13 +128,20 @@ public static class Zeroing
         {
             double half = t * axisSigma / Math.Sqrt(n);
             bool worth = Math.Abs(offset) > half;
+            string dial = offset >= 0 ? dialPositive : dialNegative;
+
+            // Entry 97 section 2: in clicks, where the rifle and the distance are known, and only for an axis worth dialling.
+            var clicks = worth && state.Rifle is { ClickValue: > 0 } rifle && state.ShotDistanceInches is { } distance and > 0
+                ? Clicks.For(offset, distance, rifle, dial)
+                : null;
             return new ZeroAxis(
                 offset,
                 half,
                 worth,
                 worth ? null : ShotsToSettle(offset, axisSigma, circular, n + 1),
-                offset >= 0 ? dialPositive : dialNegative,
-                offset >= 0 ? sitsPositive : sitsNegative);
+                dial,
+                offset >= 0 ? sitsPositive : sitsNegative,
+                clicks);
         }
 
         // The screen's axes: x to the right, y down the image, so a centre with positive y sits low and is corrected by dialling up.

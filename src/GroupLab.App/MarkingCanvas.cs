@@ -133,6 +133,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
     public int? ReviewShot { get; set; }
 
+    /// <summary>
+    /// The stage the timeline is on: where each thing it rejected was, in image pixels, drawn faint, and the one a person clicked, drawn amber
+    /// and ringed so it can be found (DESIGN.md section 19 [r3]: clicking a rejection highlights it on the image).
+    /// </summary>
+    public IReadOnlyList<PointD> StageRejections { get; set; } = [];
+
+    public PointD? Highlight { get; set; }
+
     /// <summary>Raised when two taps complete a reference length; the window asks for its size.</summary>
     public event EventHandler<IReadOnlyList<PointD>>? LengthTapped;
 
@@ -319,6 +327,18 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
 
         var state = session.State;
+        foreach (var rejected in StageRejections)
+        {
+            Marks.Saltire(context, Marks.Faint, ToControl(rejected), 5);
+        }
+
+        if (Highlight is { } highlighted)
+        {
+            var h = ToControl(highlighted);
+            Marks.Ring(context, Marks.NeedsPerson, h, 14, Tokens.MarkSelectedCoreWidth);
+            Marks.Ring(context, Marks.NeedsPerson, h, 22, 1, Marks.Dashed);
+            Marks.Saltire(context, Marks.NeedsPerson, h, 6, Tokens.MarkSelectedCoreWidth);
+        }
         foreach (var marker in MissingMarkers)
         {
             Marks.Saltire(context, Marks.Alert, ToControl(marker), 9, 2);

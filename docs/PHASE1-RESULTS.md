@@ -4290,6 +4290,82 @@ On the clean bulls 11 to 25, where no hole disturbs either locator, **the edge f
 
 ---
 
+## Entries 97 and 96. The concept's framing, records and clicks, the analysis showing its work, and whether a warp absorbs the print
+
+`docs/NOTES-FROM-PLANNING.md` entry 97 in its own order, with entry 96 section 2 first because it needed no building.
+
+### Entry 96 section 2: a low-order warp absorbs part of the print error, not most of it
+
+**The test as entry 96 asks it:** fit the markers of the flatbed scan with warps of rising freedom and see whether the bull error falls from 0.0027 in toward 0.0015. The warps are image-to-page polynomials fitted by least squares to the marker corners alone, so the bulls are an out-of-sample check.
+
+| Scoring bulls, rms (in) | Surface fit | Degree 2 | Degree 3 | Degree 4 |
+|---|---|---|---|---|
+| **Alan's sheet, flatbed** | **0.0027** | 0.0024 | 0.0022 | **0.0020** |
+| Phase 0 sheet 1, flatbed | 0.0012 | 0.0010 | 0.0010 | 0.0011 |
+| Phase 0 sheet 2 | 0.0014 | 0.0011 | 0.0011 | 0.0013 |
+| Phase 0 sheet 3 | 0.0012 | 0.0010 | 0.0008 | 0.0009 |
+
+**About 0.0018 in of this sheet's error is smooth and a fit can absorb it; about 0.0020 in is not.** The unabsorbed part is still twice what a Phase 0 sheet leaves under the same warp, so entry 96 section 1's concern stands for the scan gate: a warp does not make a poorly printed sheet into a good one.
+
+**The numbers still do not reconcile, and this is why.** If the scan's unabsorbed 0.0020 in were print error, the photographs would carry it too, since a photograph's surface fit is smoother than a degree-4 warp. They correlate with the scan at +0.27 and -0.04. **So at least part of what the scan reports belongs to the scan**: this sheet was scanned after being mounted, shot, taped and handled, and a sheet that no longer lies flat on the platen reports its own shape. The flatbed scan of the clean sheet before it is shot, which entry 96 section 1 asks for, is the measurement that separates the two.
+
+**One more thing the same warp showed, recorded and not acted on.** On `IMG_5819` a degree-3 or degree-4 warp over the markers brings the scoring bulls to **0.0020 and 0.0016 in rms, worst 0.0036 and 0.0034 in**, inside the gate, where the surface model gives 0.0034 rms and 0.0059 worst. On `IMG_5820`, which fills the frame, the same warps are worse than the surface model, 0.0039 in rms. **So on the wide square-on frame the surface model's residual is smooth enough for a generic warp to take up**, which fits section 7's camera-or-paper question without answering it. The warp is not adopted: it was tried on the frames being gated, and a model chosen because it passes them is the thing entry 17 forbids.
+
+### Entry 97 section 1: the concept's framing
+
+- **The document is a paper sheet on dark chrome.** The image sits on a paper mount edged by one line, and an empty canvas shows a blank letter sheet with its hint on it, not text on the chrome.
+- **The accents follow entry 93's rule on the image as well as in the panel.** A shot the software found and nobody has had to touch is teal; one a person placed or corrected is neutral; one the review queue still wants a decision on is amber, and the current one's line to its bull is amber and dashed, as the concept draws it. Red is kept for what is wrong: a missing marker and a mark flagged as two holes.
+- **The review card is amber-tinted**, with its first choice, the one Enter takes, as the amber primary. It had a red border, which put the alert colour on the thing that only needs a person.
+- **The list carries NOW, NEXT and DONE as coloured words**, the header carries the concept's "2 of 3 need review" beside the actions, the rail marks where you are in amber, and the rotate buttons have keycaps like every other tool.
+- **The selected shot reads as label and value rows**, shot, position, diameter, size in holes and margin, with its provenance as a chip in the shot list's own words.
+
+### Entry 97 section 5: the guard, and what it found on its first run
+
+**The Core rehearsal cannot see the window.** It drives the review queue directly, so a styling pass that broke a key or left an item unselected would pass it. **`RehearsalTests` now does the same job through the window**: it builds entry 84's injected 25-shot sheet in memory, detects it, puts the result in the window, and settles every item with the answer truth says is right by pressing the window's own keys.
+
+**Its first run failed, on a real defect.** Straight after detection the first item was current and its shot was not selected, so a bull typed for it went nowhere until a person clicked the shot. The window now selects the current item's shot whenever nothing else is selected.
+
+**Its second finding was layout, not keys.** When the timeline strip first went under the image it took enough height that the fitted zoom fell, and the tap snap, whose radius is set in screen pixels, grew until a tap on one hole was pulled toward the next. The strip is one row while closed. **The snap radius depending on the window's layout is worth knowing**: any chrome that takes height from the image changes how taps snap.
+
+| After | Core rehearsal, 600 DPI | Window rehearsal, 300 DPI |
+|---|---|---|
+| Entry 94, the last figure | 15 presses, 0 taps | did not exist |
+| Batch 1, framing | 15 presses, 0 taps | 10 presses, 0 taps, 7 items |
+| Batch 2, records | 15 presses, 0 taps | 10 presses, 0 taps |
+| Batch 3, timeline | 15 presses, 0 taps | 10 presses, 0 taps |
+
+**Nothing in the three batches cost the loop a key press.** The window rehearsal's 10 is its ceiling in the test, so the next batch that costs one fails.
+
+### Entry 97 section 2: rifle, barrel and load records, and clicks
+
+**Kept small, as asked.** A rifle is a name and its scope's click, a barrel is a name, its rifle and a round count, a load is a name and its components as free text. They live in one `records.json` beside the settings. **Not a reloading database.**
+
+- **The marking says what it was shot with**, and keeps the rifle whole, click value included, so a correction read from a saved marking is the one that was right when it was shot.
+- **The zero correction says clicks** where the marking names a rifle and the shot distance is set, for each axis worth dialling: "Dial 5 clicks left (1.200 in  1.15 MOA, leaving 0.10 MOA)". Whole clicks and what rounding leaves, because a turret has no half positions.
+- **The angle of an offset is the full angle to a point**, atan(offset over distance), not the half-angle form `docs/STATISTICS.md` section 12.5 uses for a size across a group. At zeroing distances the two differ in the fourth figure, and the right one costs nothing.
+- **A barrel's count grows only when a person says so**, with "Add this sheet's shots", so reopening a marking can never count a sheet twice.
+- **Without a rifle or a distance** the panel says which is missing rather than printing a bare angle as if it were the answer.
+
+### Entry 97 section 3: the analysis showing its work
+
+**Every stage's record is on a timeline under the image**, the ones every stage already files. A slider scrubs it; the stage buttons, coloured by outcome, jump to one; its parameters, metrics, decisions and details open beneath; and **every rejection with a page position is a button that finds it on the image**, centred and ringed in amber, with the scrubbed stage's other rejections drawn faint around it.
+
+**A live run shows each stage as it lands.** The trace raises an event as each stage files its record, and the window puts it on the timeline and moves to it while the analysis is still running.
+
+**The design's two constraints hold, and each has a test.**
+- **The trace is never the only place an error appears.** A blank page fails registration; the panel says "Detection failed" in the normal way, and the failed stage is on the timeline as the detail behind it.
+- **The theatre does not slow the pipeline.** The records are the ones every stage files anyway, nothing is computed for the timeline, and a batch run has nobody listening to the event, which then costs nothing.
+
+**What is not done:** the per-stage image artefacts of `DESIGN.md` section 19, the markers lighting up, the residual map settling and the artwork vanishing. What lands live is each stage's record; the image shows a stage's rejections, not its intermediate rasters. Those rasters exist inside the detector and are not kept, and keeping them for an interactive run is the next step, behind section 19's rule that they default on for one analysis and off for a batch.
+
+### Entry 97 section 4: the macOS gate record
+
+**Not picked up.** No batch was blocked, so there was no gap to fill. It remains the only red in CI, with its named cause.
+
+**Tests:** Core and App suites both pass, none skipped.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4497,3 +4573,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 95 section 2: the count item acts on its first candidate only.** Naming three and acting on one keeps it a key press; a person who disagrees with the ranking reaches the right mark through its own item or by selecting it.
 - **Entry 95 section 2: every mark gets a size in holes, measured against the veto's size where no flag size exists.** The ranking needs a size on unflagged marks, which are most of the candidates, and only the flag's own size may raise the flag.
 - **Entry 95 section 3: nothing changed for the mounted gate.** The investigation found where the error lives and what would separate the two explanations left; a change made before that photograph would be tuning against the frames being gated.
+- **Entry 96 section 2: the warp that passes `IMG_5819` not adopted.** It was found on the frames being gated, it makes `IMG_5820` worse, and a model chosen because it passes the frames that prompted it is not a gate result.
+- **Entry 97 section 1: a shot a person placed is neutral, not teal.** Teal means the software found it on its own, and a mark a person put down or moved is not that.
+- **Entry 97 section 2: the marking keeps a copy of the rifle rather than its name.** A correction read from a saved marking must be the one that was right when it was shot, whatever the record book says since.
+- **Entry 97 section 2: a barrel's count grows only on a person's step.** Counting automatically on detection would count a reopened sheet twice.
+- **Entry 97 section 3: the per-stage rasters left for the next batch.** The records land live and cost nothing; the rasters would need keeping images the detector currently throws away, which section 19 allows for one interactive analysis and which deserves its own measurement of cost.
+- **Entry 97 section 5: the window rehearsal pinned at 10 presses.** It is its own baseline at 300 DPI, and a ceiling the next batch must not raise.

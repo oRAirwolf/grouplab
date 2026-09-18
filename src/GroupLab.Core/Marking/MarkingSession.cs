@@ -124,7 +124,10 @@ public sealed record MarkingState(
     DetectionRecord? Detection = null,
     ImmutableHashSet<string>? Dismissed = null,
     SubgroupMap? Subgroups = null,
-    int? ExpectedShots = null)
+    int? ExpectedShots = null,
+    Rifle? Rifle = null,
+    string? Barrel = null,
+    string? Load = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -341,6 +344,20 @@ public sealed class MarkingSession
         if (value != State.ExpectedShots)
         {
             Apply(State with { ExpectedShots = value });
+        }
+    }
+
+    /// <summary>
+    /// Which rifle, barrel and load the sheet was shot with (NOTES-FROM-PLANNING.md entry 97 section 2). The rifle is kept whole, click value
+    /// included, so a correction read from a saved marking is the one that was right when it was shot, whatever the record book says since.
+    /// </summary>
+    public void SetEquipment(Rifle? rifle, string? barrel, string? load)
+    {
+        string? Clean(string? s) => string.IsNullOrWhiteSpace(s) ? null : s.Trim();
+        var next = State with { Rifle = rifle, Barrel = Clean(barrel), Load = Clean(load) };
+        if (next != State)
+        {
+            Apply(next);
         }
     }
 

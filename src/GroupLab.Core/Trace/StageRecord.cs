@@ -89,7 +89,18 @@ public sealed class TraceRecorder
 
     public StageScope Begin(string stage) => new(this, new StageRecord(stage, ++_sequence, DateTime.UtcNow));
 
-    internal void Add(StageRecord record) => _records.Add(record);
+    /// <summary>
+    /// Raised as each stage files its record, on the thread that ran it, DESIGN.md section 19 [r3]: a live run shows each stage as it lands.
+    /// Nothing listens in a batch run, and an event nobody listens to costs nothing, which is the second of section 19's two constraints:
+    /// the theatre must not slow the pipeline down.
+    /// </summary>
+    public event Action<StageRecord>? Filed;
+
+    internal void Add(StageRecord record)
+    {
+        _records.Add(record);
+        Filed?.Invoke(record);
+    }
 }
 
 /// <summary>

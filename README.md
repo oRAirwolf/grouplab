@@ -202,11 +202,11 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
 - **In progress.** The analysis screen shown above.
 - **Not started.** A target library, session records and reporting.
-- **Not started.** Records for rifles, barrels and loads, beside the session records.
-- **Not started.** The stage timeline that shows the analysis doing its work: scrubbable, artefacts appearing as they land, and a rejection clicked to highlight it on the image. Every stage already emits the record it needs; the screen that shows it does not exist.
+- **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
+- **In progress.** The stage timeline that shows the analysis doing its work: scrubbable, each stage landing as it files during a live run, and a rejection clicked to find it on the image are in. Each stage's intermediate images, the markers lighting up and the artwork vanishing, are not.
 - **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
 - **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
-- **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once. Clicks wait on the rifle record above, because a click value is a property of the scope.
+- **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once, and in the scope's own clicks with what rounding leaves once the marking names a rifle.
 - **Not started.** A volunteer print pack: the sheets and the instructions a donor needs to shoot and photograph one.
 
 **Phase 5. Chronograph, solver, and comparison.**

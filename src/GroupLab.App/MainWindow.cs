@@ -43,6 +43,28 @@ public sealed class MainWindow : Window
 
     private readonly MarkingSession session = new();
     private readonly MarkingCanvas canvas = new();
+
+    /// <summary>
+    /// The analysis showing its work, DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 97 section 3: every stage's record on a
+    /// timeline under the image, filed as each stage lands, scrubbed with the slider or the stage buttons, with the chosen stage's parameters,
+    /// decisions and rejections beside it, and a rejection clicked to find it on the image.
+    /// <para>
+    /// The design's two constraints hold. <b>The trace is never the only place an error appears</b>: a failed analysis still says so in the
+    /// panel and the status line, and its failed stage is the detail behind that. <b>The theatre does not slow the pipeline</b>: the records
+    /// are the ones every stage files anyway, nothing extra is computed for them, and a batch run has nobody listening.
+    /// </para>
+    /// </summary>
+    private readonly List<StageRecord> stages = [];
+
+    private readonly Slider stageSlider = new() { Minimum = 0, Maximum = 0, IsSnapToTickEnabled = true, TickFrequency = 1, MinWidth = 240 };
+
+    private readonly WrapPanel stageButtons = new();
+
+    private readonly TextBlock stageSummary = new() { TextWrapping = TextWrapping.Wrap, FontSize = Tokens.SecondarySize };
+
+    private readonly StackPanel stageDetail = new() { Spacing = 2 };
+
+    private bool showingStage;
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
     private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space14, Tokens.Space4), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     // NOTES-FROM-PLANNING.md entry 76 section 4: a detection the window starts on its own shows that it is running and can be stopped.
@@ -105,6 +127,26 @@ public sealed class MainWindow : Window
     private readonly ComboBox angularUnit = new() { ItemsSource = UnitSettings.AngularChoices.Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 90 };
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly TextBox shotDistance = new() { Width = 90 };
+
+    /// <summary>
+    /// The rifle, barrel and load the sheet was shot with, from the person's record book (NOTES-FROM-PLANNING.md entry 97 section 2). The book
+    /// is one small file beside the settings; the marking keeps its own copy of the rifle so its clicks stay right if the book changes.
+    /// </summary>
+    private readonly ComboBox rifleChoice = new() { MinWidth = 200 };
+
+    private readonly ComboBox barrelChoice = new() { MinWidth = 200 };
+
+    private readonly ComboBox loadChoice = new() { MinWidth = 200 };
+
+    private readonly TextBox newName = new() { Width = 150, PlaceholderText = "name" };
+
+    private readonly TextBox newDetail = new() { Width = 150, PlaceholderText = "rounds or components" };
+
+    private readonly ComboBox newClick = new() { ItemsSource = new[] { "0.25 MOA", "0.125 MOA", "0.5 MOA", "0.1 mil", "0.05 mil" }, SelectedIndex = 0, MinWidth = 110 };
+
+    private RecordBook book = RecordBook.Empty;
+
+    private bool showingEquipment;
 
     /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
     private readonly TextBox roundsFired = new() { Width = 90 };
@@ -245,6 +287,22 @@ public sealed class MainWindow : Window
             shotDistance.Text = "";
             session.SetShotDistance(null);
         })));
+        // Entry 97 section 2: which rifle, barrel and load, from a record book kept deliberately small.
+        book = RecordBook.Read(File.Exists(RecordsPath) ? File.ReadAllText(RecordsPath) : null);
+        panel.Children.Add(new TextBlock { Text = "Rifle, barrel and load", FontSize = 12 });
+        panel.Children.Add(Row(rifleChoice));
+        panel.Children.Add(Row(barrelChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
+        panel.Children.Add(Row(loadChoice));
+        foreach (var combo in new[] { rifleChoice, barrelChoice, loadChoice })
+        {
+            combo.SelectionChanged += (_, _) => EquipmentChosen();
+        }
+
+        var adding = new StackPanel { Spacing = Tokens.Space4 };
+        adding.Children.Add(Row(newName, newClick, Button("Add rifle", () => AddRecord("rifle"))));
+        adding.Children.Add(Row(newDetail, Button("Add barrel", () => AddRecord("barrel")), Button("Add load", () => AddRecord("load"))));
+        adding.Children.Add(Line("A rifle needs a name and its scope's click. A barrel's detail is its round count so far, a load's is its components."));
+        panel.Children.Add(new Expander { Header = "New rifle, barrel or load", Content = adding, HorizontalAlignment = HorizontalAlignment.Stretch });
         panel.Children.Add(new TextBlock { Text = "Rounds fired at the group, sighters not counted", FontSize = 12 });
         panel.Children.Add(Row(roundsFired, Button("Set", SetRoundsFiredFromBox), Button("Clear", () =>
         {
@@ -286,14 +344,42 @@ public sealed class MainWindow : Window
         statusLine.Children.Add(running);
         statusLine.Children.Add(status);
         var statusBar = new Border { Child = statusLine, Classes = { AppStyles.StatusBar } };
+        // One row while closed, so the image keeps its height: the slider and the stage it is on. The stages and their work open beneath it.
+        var timelineBody = new StackPanel { Spacing = 0, Margin = new Thickness(Tokens.Space12, 0) };
+        var opened = new StackPanel { Spacing = Tokens.Space4 };
+        opened.Children.Add(stageButtons);
+        opened.Children.Add(new ScrollViewer { Content = stageDetail, MaxHeight = 220 });
+        var scrub = new DockPanel();
+        var label = new TextBlock { Text = "HOW IT WAS ANALYSED", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space12, 0), Classes = { AppStyles.Section } };
+        DockPanel.SetDock(label, Dock.Left);
+        DockPanel.SetDock(stageSlider, Dock.Left);
+        scrub.Children.Add(label);
+        scrub.Children.Add(stageSlider);
+        stageSummary.VerticalAlignment = VerticalAlignment.Center;
+        stageSummary.Margin = new Thickness(Tokens.Space12, 0, 0, 0);
+        stageSummary.TextWrapping = TextWrapping.NoWrap;
+        stageSummary.TextTrimming = TextTrimming.CharacterEllipsis;
+        scrub.Children.Add(stageSummary);
+        timelineBody.Children.Add(new Expander { Header = scrub, Content = opened, HorizontalAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(0) });
+        var timeline = new Border { Child = timelineBody, Classes = { AppStyles.StatusBar } };
+        stageSlider.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == Slider.ValueProperty && !showingStage)
+            {
+                ShowStage((int)Math.Round(stageSlider.Value));
+            }
+        };
+
         var dock = new DockPanel();
         DockPanel.SetDock(header, Dock.Top);
         DockPanel.SetDock(bar, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
+        DockPanel.SetDock(timeline, Dock.Bottom);
         DockPanel.SetDock(side, Dock.Right);
         dock.Children.Add(header);
         dock.Children.Add(bar);
         dock.Children.Add(statusBar);
+        dock.Children.Add(timeline);
         dock.Children.Add(side);
         dock.Children.Add(canvas);
 
@@ -731,6 +817,8 @@ public sealed class MainWindow : Window
         var token = cancel.Token;
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
+        ClearStages();
+        trace.Filed += record => Avalonia.Threading.Dispatcher.UIThread.Post(() => AddStage(record));
         var clock = System.Diagnostics.Stopwatch.StartNew();
         detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
         try
@@ -1008,6 +1096,7 @@ public sealed class MainWindow : Window
         statistics.Children.Clear();
         moreFigures.Children.Clear();
         ShowBreadcrumb(state);
+        ShowEquipment(state);
         ShowZero(state);
         if (report.AllShots is { } all)
         {
@@ -1362,6 +1451,224 @@ public sealed class MainWindow : Window
         ReviewKind.Count => "Count differs from rounds fired",
         _ => "Refused candidate",
     };
+
+    /// <summary>The timeline's records, for the headless tests.</summary>
+    internal IReadOnlyList<StageRecord> Stages => stages;
+
+    /// <summary>The chosen stage's detail lines, for the headless tests.</summary>
+    internal IEnumerable<string> StageText => stageDetail.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    private void ClearStages()
+    {
+        stages.Clear();
+        stageButtons.Children.Clear();
+        stageDetail.Children.Clear();
+        stageSummary.Text = "Stages appear here as each one lands.";
+        canvas.StageRejections = [];
+        canvas.Highlight = null;
+        showingStage = true;
+        stageSlider.Maximum = 0;
+        stageSlider.Value = 0;
+        showingStage = false;
+    }
+
+    /// <summary>Puts a whole analysis on the timeline at once, as a test or a reopened trace does; a live run adds each stage as it lands.</summary>
+    internal void ShowTrace(IEnumerable<StageRecord> records)
+    {
+        ClearStages();
+        foreach (var record in records)
+        {
+            AddStage(record);
+        }
+    }
+
+    /// <summary>One stage lands: its button in the colour of its outcome, and the timeline moves to it, so a live run plays out as it happens.</summary>
+    internal void AddStage(StageRecord record)
+    {
+        stages.Add(record);
+        int index = stages.Count - 1;
+        var word = new TextBlock
+        {
+            Text = record.Stage,
+            FontFamily = Mono,
+            FontSize = Tokens.SecondarySize,
+            Classes = { record.Status switch { StageStatus.Ok => AppStyles.Good, StageStatus.Degraded => AppStyles.Warn, _ => AppStyles.Alert } },
+        };
+        var button = new Button { Content = word };
+        button.Click += (_, _) => ShowStage(index);
+        stageButtons.Children.Add(button);
+        showingStage = true;
+        stageSlider.Maximum = index;
+        showingStage = false;
+        ShowStage(index);
+    }
+
+    /// <summary>
+    /// Scrubs to one stage: its outcome and summary on the timeline, its parameters, decisions and rejections beside it, and its rejections on
+    /// the image where the registration can place them. A rejection with a position is a button that finds it.
+    /// </summary>
+    internal void ShowStage(int index)
+    {
+        if (index < 0 || index >= stages.Count)
+        {
+            return;
+        }
+
+        var record = stages[index];
+        showingStage = true;
+        stageSlider.Value = index;
+        showingStage = false;
+        string outcome = record.Status switch { StageStatus.Ok => "ok", StageStatus.Degraded => "degraded", _ => "FAILED" };
+        stageSummary.Text = string.Create(CultureInfo.InvariantCulture, $"{index + 1} of {stages.Count}: {record.Stage}, {outcome}, {record.DurationMs} ms. {record.Summary}");
+        stageDetail.Children.Clear();
+        foreach (var parameter in record.Parameters)
+        {
+            stageDetail.Children.Add(Readout(parameter.Name, parameter.Value, Tokens.SecondarySize));
+        }
+
+        foreach (var metric in record.Metrics)
+        {
+            stageDetail.Children.Add(Readout(metric.Name, string.Create(CultureInfo.InvariantCulture, $"{metric.Value:0.#####} {metric.Unit}"), Tokens.SecondarySize));
+        }
+
+        foreach (var decision in record.Decisions)
+        {
+            stageDetail.Children.Add(Line($"Decided {decision.What}: {decision.Chosen}, because {decision.Because}{(decision.Alternatives.Count > 0 ? " (not " + string.Join(", ", decision.Alternatives) + ")" : "")}."));
+        }
+
+        foreach (string detail in record.Details)
+        {
+            stageDetail.Children.Add(Detail(detail));
+        }
+
+        var placed = new List<PointD>();
+        foreach (var rejection in record.Rejections)
+        {
+            string text = $"Rejected {rejection.What}: {rejection.Why}";
+            if (ImageOf(rejection) is { } at)
+            {
+                placed.Add(at);
+                var find = new Button { Content = text + ". Find it", HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Left };
+                find.Click += (_, _) => HighlightRejection(at, text);
+                stageDetail.Children.Add(find);
+            }
+            else
+            {
+                stageDetail.Children.Add(Line(text + "."));
+            }
+        }
+
+        if (stageDetail.Children.Count == 0)
+        {
+            stageDetail.Children.Add(Line("This stage recorded no parameters, decisions or rejections."));
+        }
+
+        canvas.StageRejections = placed;
+        canvas.Highlight = null;
+        canvas.InvalidateVisual();
+    }
+
+    /// <summary>Where a rejection sits on the image, through the sheet's own registration, or null where it has no page position or there is no registration.</summary>
+    private PointD? ImageOf(Rejection rejection) =>
+        rejection is { XInches: { } x, YInches: { } y } && session.State.Scale is SheetReference sheet
+            ? sheet.Mapping.ToImage(new PointD(x * 254, y * 254))
+            : null;
+
+    /// <summary>Clicking a rejection finds it on the image: centred, ringed in amber, and named in the status line.</summary>
+    internal void HighlightRejection(PointD image, string text)
+    {
+        canvas.Highlight = image;
+        canvas.CentreOn(image);
+        canvas.InvalidateVisual();
+        status.Text = text + ".";
+    }
+
+    /// <summary>The record book's file, beside the settings file.</summary>
+    private string RecordsPath => Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? ".", "records.json");
+
+    /// <summary>The three pickers, filled from the book and showing what the marking names.</summary>
+    private void ShowEquipment(MarkingState state)
+    {
+        showingEquipment = true;
+        rifleChoice.ItemsSource = new[] { "No rifle" }.Concat(book.Rifles.Select(r => $"{r.Name}, {r.DescribeClick()}")).ToList();
+        barrelChoice.ItemsSource = new[] { "No barrel" }.Concat(book.Barrels.Select(b => string.Create(CultureInfo.InvariantCulture, $"{b.Name}, {b.Rounds} rounds"))).ToList();
+        loadChoice.ItemsSource = new[] { "No load" }.Concat(book.Loads.Select(l => l.Name)).ToList();
+        rifleChoice.SelectedIndex = state.Rifle is { } rifle ? book.Rifles.FindIndex(r => string.Equals(r.Name, rifle.Name, StringComparison.OrdinalIgnoreCase)) + 1 : 0;
+        barrelChoice.SelectedIndex = book.Barrels.FindIndex(b => string.Equals(b.Name, state.Barrel, StringComparison.OrdinalIgnoreCase)) + 1;
+        loadChoice.SelectedIndex = book.Loads.FindIndex(l => string.Equals(l.Name, state.Load, StringComparison.OrdinalIgnoreCase)) + 1;
+        showingEquipment = false;
+    }
+
+    private void EquipmentChosen()
+    {
+        if (showingEquipment)
+        {
+            return;
+        }
+
+        var rifle = rifleChoice.SelectedIndex > 0 ? book.Rifles[rifleChoice.SelectedIndex - 1] : null;
+        var barrel = barrelChoice.SelectedIndex > 0 ? book.Barrels[barrelChoice.SelectedIndex - 1].Name : null;
+        var load = loadChoice.SelectedIndex > 0 ? book.Loads[loadChoice.SelectedIndex - 1].Name : null;
+        session.SetEquipment(rifle, barrel, load);
+    }
+
+    /// <summary>Adds a rifle, barrel or load to the book from the two fields, and keeps the book.</summary>
+    internal void AddRecord(string kind)
+    {
+        string name = newName.Text?.Trim() ?? "";
+        if (name.Length == 0)
+        {
+            status.Text = "Give the " + kind + " a name first.";
+            return;
+        }
+
+        switch (kind)
+        {
+            case "rifle":
+                string click = (string)newClick.SelectedItem!;
+                double value = double.Parse(click.Split(' ')[0], CultureInfo.InvariantCulture);
+                book = book.With(new Rifle(name, value, click.EndsWith("mil", StringComparison.Ordinal) ? AngularUnit.Mrad : AngularUnit.Moa));
+                break;
+            case "barrel":
+                book = book.With(new Barrel(name, session.State.Rifle?.Name, int.TryParse(newDetail.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int rounds) ? Math.Max(0, rounds) : 0));
+                break;
+            default:
+                book = book.With(new Load(name, string.IsNullOrWhiteSpace(newDetail.Text) ? null : newDetail.Text.Trim()));
+                break;
+        }
+
+        SaveBook();
+        status.Text = $"Added the {kind} {name}.";
+        Refresh();
+    }
+
+    /// <summary>A barrel's count grows when a person says so, never on its own, so reopening a marking cannot count a sheet twice.</summary>
+    private void AddSheetToBarrel()
+    {
+        if (session.State.Barrel is not { } barrel)
+        {
+            status.Text = "Choose the barrel first.";
+            return;
+        }
+
+        int shots = session.State.Shots.Count(s => s.IsShot);
+        book = book.Fired(barrel, shots);
+        SaveBook();
+        status.Text = string.Create(CultureInfo.InvariantCulture, $"Added {shots} rounds to {barrel}.");
+        Refresh();
+    }
+
+    private void SaveBook()
+    {
+        try
+        {
+            File.WriteAllText(RecordsPath, book.Write());
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            status.Text = "The records could not be saved to " + RecordsPath + ", so they last until GroupLab closes.";
+        }
+    }
 
     /// <summary>Entry 95 section 2: the rounds fired, which the review queue checks the marks against.</summary>
     internal void SetRoundsFiredFromBox()
@@ -1770,15 +2077,20 @@ public sealed class MainWindow : Window
         zeroPanel.Children.Add(Readout("Group centre, elevation", $"{Both(zero.Elevation.OffsetInches)} {zero.Elevation.Sits}"));
         zeroPanel.Children.Add(Detail($"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent"));
 
+        // Entry 97 section 2: in clicks where the marking names a rifle and the distance is set, with what rounding leaves, and otherwise in
+        // the linear and angular figures, which every turret is marked in one of.
+        string Dial(ZeroAxis axis) => axis.Clicks is { } clicks
+            ? clicks.Describe() + string.Create(CultureInfo.InvariantCulture, $" ({Both(axis.OffsetInches)}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {(clicks.Unit == AngularUnit.Mrad ? "mil" : "MOA")})")
+            : $"{Both(axis.OffsetInches)} {axis.Dial}";
         var dial = new List<string>();
         if (zero.Windage.Distinguishable)
         {
-            dial.Add($"{Both(zero.Windage.OffsetInches)} {zero.Windage.Dial}");
+            dial.Add(Dial(zero.Windage));
         }
 
         if (zero.Elevation.Distinguishable)
         {
-            dial.Add($"{Both(zero.Elevation.OffsetInches)} {zero.Elevation.Dial}");
+            dial.Add(Dial(zero.Elevation));
         }
 
         var verdict = new TextBlock { TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold };
@@ -1800,7 +2112,9 @@ public sealed class MainWindow : Window
             ? $"sigma pooled over both axes on {zero.DegreesOfFreedom} degrees of freedom, the group being circular"
             : $"each axis on its own, {zero.DegreesOfFreedom} degrees of freedom, the group not being circular"));
         zeroPanel.Children.Add(Line(distance is null
-            ? "Angular figures need the shot distance. It corrects the zero at the distance shot; moving a zero between distances needs the solver."
-            : "It corrects the zero at the distance shot. Moving a zero between distances needs the ballistic solver, and clicks need the scope's click value."));
+            ? "Angular figures and clicks need the shot distance. It corrects the zero at the distance shot; moving a zero between distances needs the solver."
+            : state.Rifle is null
+                ? "Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
+                : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver."));
     }
 }

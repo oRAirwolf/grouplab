@@ -67,6 +67,9 @@ public static class MarkingFile
             // NOTES-FROM-PLANNING.md entry 94 section 2: which bulls hold which load. It lives in the session and never in the sheet, so it
             // has to survive here or a reopened marking loses the comparison the sheet was shot for.
             expectedShots = state.ExpectedShots,
+            rifle = state.Rifle is { } rifle ? new { name = rifle.Name, clickValue = rifle.ClickValue, clickUnit = rifle.ClickUnit.ToString() } : null,
+            barrel = state.Barrel,
+            load = state.Load,
             subgroups = state.Subgroups is { } map && !map.ByBull.IsEmpty
                 ? map.ByBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, name = p.Value })
                 : null,
@@ -192,6 +195,11 @@ public static class MarkingFile
                 : null,
             Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
             ExpectedShots: (int?)file["expectedShots"],
+            Rifle: file["rifle"] is JsonObject r && Enum.TryParse<GroupLab.Core.Statistics.AngularUnit>((string?)r["clickUnit"], out var unit)
+                ? new Rifle((string?)r["name"] ?? "", (double?)r["clickValue"] ?? 0.25, unit)
+                : null,
+            Barrel: (string?)file["barrel"],
+            Load: (string?)file["load"],
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
                 : null);
