@@ -8,7 +8,14 @@ namespace GroupLab.Core.Marking;
 /// A shot as the automatic path found it: its position in image pixels, how stage S9 assigned it (NOTES-FROM-PLANNING.md entry 70 section
 /// 4), and the diameter the detector measured, which the canvas draws (entry 76 section 4).
 /// </summary>
-public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double? DiameterInches = null, DetectedOversize? Oversize = null);
+public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double? DiameterInches = null, DetectedOversize? Oversize = null, MarkSize? Size = null);
+
+/// <summary>
+/// How many single holes' area a detected mark holds, and where its two halves would sit if it is two, NOTES-FROM-PLANNING.md entry 95
+/// section 2. It rides on every detected mark rather than only on flagged ones, because when a person says how many rounds they fired and
+/// the count disagrees, the marks nearest the threshold are the ones to look at, and those are mostly below it.
+/// </summary>
+public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? SplitB = null);
 
 /// <summary>
 /// A detection flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6: about how many single holes' area it holds, and whether the

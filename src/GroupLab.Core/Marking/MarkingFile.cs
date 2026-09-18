@@ -66,6 +66,7 @@ public static class MarkingFile
             bulls = state.Bulls.Select(b => new { b.Index, b.Label, image = b.Image, b.Scoring }),
             // NOTES-FROM-PLANNING.md entry 94 section 2: which bulls hold which load. It lives in the session and never in the sheet, so it
             // has to survive here or a reopened marking loses the comparison the sheet was shot for.
+            expectedShots = state.ExpectedShots,
             subgroups = state.Subgroups is { } map && !map.ByBull.IsEmpty
                 ? map.ByBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, name = p.Value })
                 : null,
@@ -82,6 +83,14 @@ public static class MarkingFile
                 s.Bull,
                 s.BullChosen,
                 s.MeasuredDiameterInches,
+                size = s.Size is { } size
+                    ? new
+                    {
+                        holes = size.Holes,
+                        splitA = size.SplitA is { } sa ? new { x = sa.X, y = sa.Y } : null,
+                        splitB = size.SplitB is { } sb ? new { x = sb.X, y = sb.Y } : null,
+                    }
+                    : null,
                 oversize = s.Oversize is { } flag
                     ? new
                     {
@@ -162,7 +171,8 @@ public static class MarkingFile
             (double?)s["measuredDiameterInches"],
             s["oversize"] is JsonObject flag
                 ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]))
-                : null)).ToImmutableList();
+                : null,
+            s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"])) : null)).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,
@@ -181,6 +191,7 @@ public static class MarkingFile
                     (double?)detection["holeSizeInches"])
                 : null,
             Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
+            ExpectedShots: (int?)file["expectedShots"],
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
                 : null);

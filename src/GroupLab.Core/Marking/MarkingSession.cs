@@ -50,7 +50,7 @@ public enum ExclusionReason
 /// the same measurement, entry 82 section 6, and is cleared with it.
 /// </para>
 /// </summary>
-public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null, bool BullChosen = false, double? MeasuredDiameterInches = null, DetectedOversize? Oversize = null)
+public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance, ExclusionReason? Exclusion = null, bool NotAShot = false, int? Bull = null, bool BullChosen = false, double? MeasuredDiameterInches = null, DetectedOversize? Oversize = null, MarkSize? Size = null)
 {
     /// <summary>Counted in the group: not marked as not a shot. Excluded shots are counted in the full figures and left out of the reduced ones.</summary>
     public bool IsShot => !NotAShot;
@@ -123,7 +123,8 @@ public sealed record MarkingState(
     AssignmentReview? Assignment = null,
     DetectionRecord? Detection = null,
     ImmutableHashSet<string>? Dismissed = null,
-    SubgroupMap? Subgroups = null)
+    SubgroupMap? Subgroups = null,
+    int? ExpectedShots = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -255,6 +256,7 @@ public sealed class MarkingSession
         Image = image,
         MeasuredDiameterInches = image == s.Image ? s.MeasuredDiameterInches : null,
         Oversize = image == s.Image ? s.Oversize : null,
+        Size = image == s.Image ? s.Size : null,
         Bull = s.Bull == NearestBull(State, s.Image) ? NearestBull(State, image) : s.Bull,
         Provenance = Touched(s.Provenance),
     });
@@ -328,6 +330,20 @@ public sealed class MarkingSession
         }
     }
 
+    /// <summary>
+    /// How many rounds the person says they fired at the group, sighters not counted, or null to stop checking (NOTES-FROM-PLANNING.md
+    /// entry 95 section 2). The detector can never know this and the shooter always does, so it turns "is this mark two holes", which the
+    /// image cannot answer, into "you fired ten and nine are marked", which arithmetic can.
+    /// </summary>
+    public void SetExpectedShots(int? shots)
+    {
+        int? value = shots is > 0 ? shots : null;
+        if (value != State.ExpectedShots)
+        {
+            Apply(State with { ExpectedShots = value });
+        }
+    }
+
     /// <summary>Takes every bull out of its subgroup.</summary>
     public void ClearSubgroups()
     {
@@ -346,7 +362,7 @@ public sealed class MarkingSession
     public int SplitShot(int id, PointD first, PointD second)
     {
         var shot = State.Find(id) ?? throw new ArgumentOutOfRangeException(nameof(id), id, "no such shot");
-        Update(id, s => s with { Image = first, Oversize = null, MeasuredDiameterInches = null, Provenance = Touched(s.Provenance) });
+        Update(id, s => s with { Image = first, Oversize = null, Size = null, MeasuredDiameterInches = null, Provenance = Touched(s.Provenance) });
         return AddShot(second, shot.Bull);
     }
 
@@ -358,7 +374,7 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null))], summary, null, _ => null);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null, (MarkSize?)null))], summary, null, _ => null);
     }
 
     /// <summary>
@@ -370,18 +386,18 @@ public sealed class MarkingSession
     {
         ArgumentNullException.ThrowIfNull(detections);
         ArgumentNullException.ThrowIfNull(rejected);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize))], summary, detection, firstId => assignment is null
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize, d.Size))], summary, detection, firstId => assignment is null
             ? null
             : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment, d.Assignment.Bull))], [.. rejected], assignment.Method));
     }
 
-    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
     {
         int id = State.NextId;
         var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection };
         var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
         int firstId = id;
-        var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter, Oversize: d.Oversize)).ToList();
+        var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter, Oversize: d.Oversize, Size: d.Size)).ToList();
         Apply(Rematch(registered with
         {
             Shots = [.. kept, .. detected],

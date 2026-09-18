@@ -339,18 +339,19 @@ public static class RenderDifferenceHoleDetector
         // noise rather than a loud failure. The reference size is still a hull diameter, from the sheet's round marks or from the calibre, so
         // a clean hole reads about 0.94 rather than 1.00 of it and the threshold is that much harder to reach; the separation it has to make
         // is a factor of two, and the measured margin after the change is 0.91 for a single hole against 1.40 for a pair barely touching.
-        if (reference.FlagInches is { } flagSize)
+        //
+        // Every mark is given its size in holes, flagged or not, against the flag's size where there is one and otherwise against the veto's,
+        // so that when a person says how many rounds they fired and the marks disagree, the ones nearest two holes can be named (entry 95
+        // section 2). Only the flag's size can raise the flag.
+        bool tentative = reference.Source == HoleSizeSource.SheetTentative;
+        double oneHole = Math.PI * Math.Pow((reference.FlagInches ?? reference.VetoInches) / 2, 2);
+        for (int k = 0; k < holes.Count; k++)
         {
-            bool tentative = reference.Source == HoleSizeSource.SheetTentative;
-            double oneHole = Math.PI * Math.Pow(flagSize / 2, 2);
-            for (int k = 0; k < holes.Count; k++)
+            double holesOf = holes[k].AreaInches / oneHole;
+            holes[k] = holes[k] with { SizeHoles = holesOf };
+            if (reference.FlagInches is not null && !holes[k].PossibleMerge && holesOf >= options.OversizeHoles)
             {
-                double holesOf = holes[k].AreaInches / oneHole;
-                holes[k] = holes[k] with { SizeHoles = holesOf };
-                if (!holes[k].PossibleMerge && holesOf >= options.OversizeHoles)
-                {
-                    holes[k] = holes[k] with { Oversized = true, OversizeTentative = tentative };
-                }
+                holes[k] = holes[k] with { Oversized = true, OversizeTentative = tentative };
             }
         }
 

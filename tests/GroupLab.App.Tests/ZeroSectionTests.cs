@@ -88,6 +88,23 @@ public class ZeroSectionTests
         window.Close();
     }
 
+    /// <summary>Entry 95 section 2: the rounds fired are one field, and a disagreeing count heads the review queue.</summary>
+    [AvaloniaFact]
+    public void RoundsFiredThatDisagreeWithTheMarksHeadTheQueue()
+    {
+        var window = NewWindow();
+        window.Show();
+        Mark(window, offsetInches: 0.1, sigmaInches: 0.27);
+
+        window.Session.SetExpectedShots(11);
+        Dispatcher.UIThread.RunJobs();
+
+        var first = window.ReviewItems.First();
+        Assert.Equal(ReviewKind.Count, first.Kind);
+        Assert.StartsWith("You fired 11 and 10 are marked.", first.Sentence, StringComparison.Ordinal);
+        window.Close();
+    }
+
     /// <summary>Entry 93 section 2: the breadcrumb says what is open and what is on it.</summary>
     [AvaloniaFact]
     public void TheBreadcrumbNamesTheDocumentAndItsCounts()

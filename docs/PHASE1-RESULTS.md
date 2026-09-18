@@ -4185,6 +4185,111 @@ The two that remain are S1b, at 1.37 of the sheet's own single-hole size, and th
 
 ---
 
+## Entry 95. The rounds fired as a check on the count, and why the best square-on frame is six percent outside the mounted gate
+
+`docs/NOTES-FROM-PLANNING.md` entry 95. Section 3 is reported as findings; nothing was changed because of it.
+
+### Section 1: the turret direction, recorded
+
+**The readout keeps where the group sits and what to dial as two labelled things**, and `ZeroingTests` holds them opposite: a group sitting right is dialled left. That shape is now the permanent one.
+
+### Section 2: the rounds fired, and the count checked against them
+
+**The overlapped pair is accepted as a limit of the image, not tuned.** A pair overlapping by two thirds and a torn single hole both hold about 1.3 holes of paper removed, so no size threshold separates them. What a missed second shot costs is the count, not the position.
+
+**The shooter knows the count, so the review queue now asks for it.**
+- **One field, "Rounds fired at the group, sighters not counted"**, kept in the session and the marking file as `MarkingState.ExpectedShots`.
+- **Every detected mark now carries its size in holes**, flagged or not, with the two halves a split would give, as `MarkSize`. Without a calibre it is measured against the veto's size, and only the flag's size can raise the flag.
+- **When the marks disagree with the rounds, the queue's first item says so**, with the candidates ranked:
+  - **too few:** "You fired 10 and 9 are marked. Most likely to be two, closest to two holes' size first: shot 4 at 1.37 holes, ...", with the first candidate's "is two shots" as its keyboard choice;
+  - **too many:** "You fired 10 and 11 are marked. Least like a hole, smallest first: ...", with "is not a shot" as its choice.
+- **The item goes when the count agrees**, and "Leave the count" stops it asking.
+
+### Section 3: why `IMG_5820` reaches 0.00531 in
+
+**Seven images of Alan's sheet, measured afresh:** the scan and all six mounted frames under the surface model, the square-on pair under the homography and the flat-plus-lens model and with the centroid locator, and the four Phase 0 scans of fresh sheets against their frozen definition for comparison. All read in place on this machine; nothing was copied into the repository.
+
+#### 1. The 0.00531 is not one bad bull. It is the ordinary worst of a frame at 0.0031 in rms
+
+| | Scoring bulls, rms | Expected worst of 25 | Chance all 25 are under 0.005 |
+|---|---|---|---|
+| Fresh Phase 0 sheets, flatbed | 0.0012 to 0.0015 | 0.0025 | 1.00 |
+| **Alan's sheet, flatbed** | **0.0027** | **0.0052** | **0.46** |
+| **`IMG_5820`** | **0.0031** | **0.0059** | **0.17** |
+| `IMG_5819` | 0.0034 | 0.0066 | 0.05 |
+
+The worst of 25 circular-normal errors is 2.73 sigma on average. **For the expected worst to be 0.005 in, the rms has to be 0.0026 in.** `IMG_5820` is 18 percent above that, and its measured worst of 0.00531 is, if anything, a lucky draw from its own error level.
+
+**So the question is not "what is wrong with bull 1".** It is why the whole field sits at 0.0031 in rms.
+
+#### 2. The sheet itself uses most of the gate before any camera sees it
+
+**Alan's scan of this sheet is twice as bad as the Phase 0 sheets on the same scanner settings:**
+
+| | Scoring bulls, rms | Worst | Marker corner residual, rms | Printed scale, y |
+|---|---|---|---|---|
+| Phase 0 sheets, four scans | 0.0012 to 0.0015 in | 0.0022 to 0.0032 in | 0.0021 to 0.0023 in | 100.04 to 100.07 percent |
+| **Alan's sheet** | **0.0027 in** | **0.0047 in** | **0.0035 in** | **100.43 percent** |
+
+**A flatbed scan of this sheet passes the 0.005 in paper gate less than half the time by the same arithmetic.** It was printed on a different printer whose paper feed stretched the page 0.43 percent, seven times the Phase 0 printer's, and it has since been mounted, shot and handled. The scan's error runs smoothly down the page, dy from -0.003 in on the top row to +0.0046 in on the fourth, along the scanner's travel.
+
+**This matters for reading the mounted gate on this sheet**: the photograph is being asked to beat a sheet whose own flatbed scan sits at 94 percent of the gate.
+
+#### 3. The photograph's error is not the sheet's
+
+If the photograph's bull errors were the sheet's print error, they would reproduce the scan's pattern. **They do not.**
+
+| Scoring-bull error vectors, means removed | Vector correlation |
+|---|---|
+| `IMG_5820` against the scan | +0.27 |
+| `IMG_5819` against the scan | -0.04 |
+| The other four frames against the scan | +0.20 to +0.35 |
+
+The photograph-minus-scan difference is larger than either image's error on its own. **Whatever sets the photograph's 0.0031 in is something the scan does not see.**
+
+#### 4. It is set by where the camera stood, and it repeats from the same place
+
+**Frames taken from the same position share their error pattern; frames from different positions do not.**
+
+| Scoring-bull error vectors | 5819 | 5820 | 5821 | 5822 | 5823 | 5824 |
+|---|---|---|---|---|---|---|
+| **5819** | 1 | **0.83** | 0.20 | 0.23 | 0.19 | 0.11 |
+| **5821** | 0.20 | 0.39 | 1 | **0.79** | -0.17 | 0.01 |
+| **5823** | 0.19 | 0.16 | -0.17 | -0.15 | 1 | **0.72** |
+
+The marker corners show the same structure in their residual magnitudes: 0.74 between the two square-on frames, 0.66 within each of the other two pairs, **zero to negative between 5821 and 5822, whose far corner was bottom right, and 5823 and 5824, whose far corner was bottom left** (-0.32 at the most), and within 0.25 of zero against the scan everywhere.
+
+**An error that repeats from one camera position and changes with the next is systematic and view-dependent.** It is not random noise, which would not repeat, and it is not fixed to the printed sheet, which would not change.
+
+#### 5. It lives in the registration, not in locating the bulls
+
+On the clean bulls 11 to 25, where no hole disturbs either locator, **the edge fit and the ink centroid share each image's error pattern**: vector correlation +0.55 on `IMG_5820`, +0.83 on `IMG_5819`, +0.65 on the scan. Two locators that work differently agreeing on the error means the error is in where the registration says each bull should be.
+
+**And the registration's own residual is what differs.** The marker corner residual under the surface model is **0.0046 to 0.0047 in rms on the square-on frames against 0.0021 to 0.0023 on a flatbed**, twice as large. If those corner errors were independent, a fit of this size over 136 corners would carry about 0.0015 in to each bull; the observed 0.0031 is what spatially correlated corner errors carry, and section 4's repeatability says they are correlated.
+
+#### 6. What it is not
+
+| Candidate | Test | Result |
+|---|---|---|
+| **The paper's bend** | Flat paper with a lens model against the surface model, same frames | The bend is real and the surface model is doing its job: flat-plus-lens reads worst 0.0127 and 0.0118 in, the surface model 0.0053 and 0.0059 |
+| **Print error** | Correlation with the scan | +0.27 and -0.04: not shared |
+| **Lighting across a bull** | The paper's brightness gradient around each bull, fitted and regressed against its error | Under one grey level per inch across every bull, and removing it changes `IMG_5820` from 0.00306 to 0.00303 in rms: nothing |
+| **Parallax from paper height, or a radial lens residual** | Each bull's error split into the component along the line from the optical axis and across it | Both predict radial error. Radial share of the variance 0.54 on `IMG_5820` and 0.31 on `IMG_5819`, where random would be 0.5, with no trend against distance from the axis |
+| **The bull locator** | Edge fit against centroid on clean bulls | They agree on the pattern (section 5) |
+| **Focus** | Entry 77 section 2 | Already excluded: a square-on sheet has almost no depth range |
+
+#### 7. What is left, and the photograph that would separate it
+
+**Two explanations survive, and the frames in hand cannot choose between them**, because both square-on frames were taken from nearly the same direction with the sheet centred:
+- **the camera:** a distortion the model's radial terms do not represent, such as the residue of the phone's own on-device correction, or corner positions biased by a point spread that changes across the field. Consistent with the corner residual growing toward the image edge on both square-on frames (rank correlation +0.40 and +0.46) and with the pattern changing when the camera moves;
+- **the mounted paper:** a shape finer than the surface model's few parameters, where the sheet bows between its fixings. Consistent with the two square-on frames agreeing in page coordinates.
+
+**The test that separates them is one more square-on pair, from the same session as the twelve photographs already asked for:** the same mounted sheet photographed square-on twice, once with the sheet in the left half of the image and once in the right half, or once and then again with the phone rotated a quarter turn. **An error fixed to the camera moves with the image position; an error fixed to the paper stays with the paper.** One of the two correlations goes to zero and the other stays near 0.8.
+
+**Nothing was changed for any of this.** The findings say what to photograph, and one thing about the gate that is worth planning's attention: **on this sheet the mounted gate is being measured against a print that its own flatbed scan passes less than half the time.**
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4389,3 +4494,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 94 section 2: subgroups keyed by bull rather than by shot.** A shot moves between bulls during review and its load does not; the sheet's layout is what holds the loads.
 - **Entries 91 and 92: the zero correction refuses rather than rounds.** Where the offset is inside the sampling error the panel gives a shot count instead of a number, because a bare figure will be dialled.
 - **Entry 93 section 3: high contrast derived from the dark tokens in code, over a fourth hand-drawn palette.** A palette that cannot be derived is evidence the roles carry values rather than meanings, and deriving it is what proves the concept is a design language rather than one screenshot.
+- **Entry 95 section 2: the count item acts on its first candidate only.** Naming three and acting on one keeps it a key press; a person who disagrees with the ranking reaches the right mark through its own item or by selecting it.
+- **Entry 95 section 2: every mark gets a size in holes, measured against the veto's size where no flag size exists.** The ranking needs a size on unflagged marks, which are most of the candidates, and only the flag's own size may raise the flag.
+- **Entry 95 section 3: nothing changed for the mounted gate.** The investigation found where the error lives and what would separate the two explanations left; a change made before that photograph would be tuning against the frames being gated.

@@ -20,6 +20,9 @@ public enum ReviewKind
 
     /// <summary>A scoring bull with no shot, where the detector refused a candidate.</summary>
     Refused,
+
+    /// <summary>The marks disagree with the number of rounds the person said they fired (NOTES-FROM-PLANNING.md entry 95 section 2).</summary>
+    Count,
 }
 
 /// <summary>
@@ -66,6 +69,9 @@ public static class ReviewQueue
     /// the concept's example has. Candidates refused for their shape are residue far more often than holes, on the corpus's photographs.
     /// </summary>
     public const double RefusedCandidateInches = 0.10;
+
+    /// <summary>How many candidates a count item names, most likely first.</summary>
+    public const int CountCandidates = 3;
 
     public static IReadOnlyList<ReviewItem> For(MarkingState state)
     {
@@ -184,7 +190,63 @@ public static class ReviewQueue
             }
         }
 
+        if (Count(state, labels) is { } count)
+        {
+            items.Insert(0, count);
+        }
+
         return items;
+    }
+
+    /// <summary>
+    /// The count item, NOTES-FROM-PLANNING.md entry 95 section 2: the person said how many rounds they fired and the marks disagree. Too few,
+    /// and the marks most likely to be two are ranked by how close each sits to the size of two holes, largest first, because a pair
+    /// overlapping by two thirds reads about 1.37 holes and a torn single hole reads the same, so the image cannot settle it and the count can.
+    /// Too many, and the marks least like a hole are ranked smallest first. Its choice acts on the first candidate: take it as two shots, or
+    /// mark it not a shot. It goes when the count agrees, and "Leave the count" stops it asking.
+    /// </summary>
+    private static ReviewItem? Count(MarkingState state, IReadOnlyDictionary<int, string> labels)
+    {
+        if (state.ExpectedShots is not { } expected)
+        {
+            return null;
+        }
+
+        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        var shots = state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b))).ToList();
+        int found = shots.Count;
+        if (found == expected)
+        {
+            return null;
+        }
+
+        var inv = CultureInfo.InvariantCulture;
+        bool tooFew = found < expected;
+        var ranked = (tooFew
+                ? shots.Where(s => s.Size is not null).OrderByDescending(s => s.Size!.Holes)
+                : shots.Where(s => s.Size is not null).OrderBy(s => s.Size!.Holes))
+            .Take(CountCandidates)
+            .ToList();
+        string list = ranked.Count == 0
+            ? " No mark carries a measured size, so there is nothing to rank: look at the sheet."
+            : (tooFew ? " Most likely to be two, closest to two holes' size first: " : " Least like a hole, smallest first: ")
+              + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes"))) + ".";
+        string sentence = string.Create(inv, $"You fired {expected} and {found} {(found == 1 ? "is" : "are")} marked.") + list;
+
+        var first = ranked.FirstOrDefault();
+        var choices = new List<ReviewChoice>();
+        if (first is not null && tooFew && first.Size is { SplitA: not null, SplitB: not null })
+        {
+            choices.Add(new ReviewChoice($"Shot {labels[first.Id]} is two shots", ReviewAction.SplitIntoTwo, first.Bull));
+        }
+        else if (first is not null && !tooFew)
+        {
+            choices.Add(new ReviewChoice($"Shot {labels[first.Id]} is not a shot", ReviewAction.NotAShot));
+        }
+
+        choices.Add(new ReviewChoice("Leave the count", ReviewAction.Keep));
+        string key = string.Create(inv, $"count:{expected}:{found}");
+        return new ReviewItem(key, ReviewKind.Count, first?.Id, first?.Bull, first?.Image ?? default, sentence, choices, state.Dismissed?.Contains(key) == true);
     }
 
     /// <summary>How many items still want a decision.</summary>
@@ -207,6 +269,9 @@ public static class ReviewQueue
             case ReviewAction.AddShot:
                 return session.AddShot(item.Image, choice.Bull);
             case ReviewAction.SplitIntoTwo when item.ShotId is { } id && session.State.Find(id)?.Oversize is { SplitA: { } a, SplitB: { } b }:
+                session.SplitShot(id, a, b);
+                return id;
+            case ReviewAction.SplitIntoTwo when item.ShotId is { } id && session.State.Find(id)?.Size is { SplitA: { } a, SplitB: { } b }:
                 session.SplitShot(id, a, b);
                 return id;
             default:

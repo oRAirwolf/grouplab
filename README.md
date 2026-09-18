@@ -190,6 +190,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 **Phase 3. Editor.**
 - **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
+- **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **In progress.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header and the left rail are in; the paper-coloured sheet and the rest of the framing are not.

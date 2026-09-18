@@ -119,6 +119,67 @@ public class SubgroupAndSplitTests
         Assert.DoesNotContain(item.Choices, c => c.Action == ReviewAction.SplitIntoTwo);
     }
 
+    /// <summary>
+    /// Entry 95 section 2, too few: the person fired six and five are marked. The marks nearest two holes' size are named largest first, and
+    /// the first is taken as two shots from the item itself, which makes the count agree and the item go.
+    /// </summary>
+    [Fact]
+    public void TooFewMarksNameTheOnesMostLikelyToBeTwoAndSplitTheFirst()
+    {
+        var session = Sized(new double[] { 0.95, 1.31, 1.02, 0.91, 1.12 });
+        session.SetExpectedShots(6);
+
+        var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+        Assert.StartsWith("You fired 6 and 5 are marked. Most likely to be two, closest to two holes' size first: shot 2 at 1.31 holes, shot 5 at 1.12 holes, shot 3 at 1.02 holes.", item.Sentence, StringComparison.Ordinal);
+        Assert.Equal(3, ReviewQueue.CountCandidates);
+        var two = item.Choices[0];
+        Assert.Equal(ReviewAction.SplitIntoTwo, two.Action);
+
+        ReviewQueue.Apply(session, item, two);
+
+        Assert.Equal(6, session.State.Shots.Count(s => s.IsShot));
+        Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+    }
+
+    /// <summary>Entry 95 section 2, the reverse: more marks than rounds, which nobody was told of before. The smallest mark is named first.</summary>
+    [Fact]
+    public void TooManyMarksNameTheOnesLeastLikeAHole()
+    {
+        var session = Sized(new double[] { 0.95, 0.41, 1.02, 0.91, 1.12 });
+        session.SetExpectedShots(4);
+
+        var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+        Assert.Contains("You fired 4 and 5 are marked. Least like a hole, smallest first: shot 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
+        ReviewQueue.Apply(session, item, item.Choices[0]);
+        Assert.True(session.State.Shots.Single(s => s.Size?.Holes == 0.41).NotAShot);
+        Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+    }
+
+    /// <summary>With no count stated, or one that agrees, there is no item; and the count survives the marking file.</summary>
+    [Fact]
+    public void AnAgreeingOrMissingCountRaisesNothingAndTheCountIsSaved()
+    {
+        var session = Sized(new double[] { 0.95, 1.02 });
+        Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+        session.SetExpectedShots(2);
+        Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+
+        var (read, _) = MarkingFile.Read(MarkingFile.Write(session.State));
+        Assert.Equal(2, read.ExpectedShots);
+        Assert.Equal(1.02, read.Shots[1].Size!.Holes);
+    }
+
+    /// <summary>A row of bulls, one detected shot on each, with the sizes given and two halves either side of each mark.</summary>
+    private static MarkingSession Sized(double[] holes)
+    {
+        var session = Sheet(bulls: holes.Length, perBull: 1);
+        session.Load(session.State with
+        {
+            Shots = [.. session.State.Shots.Select((s, k) => s with { Size = new MarkSize(holes[k], new PointD(s.Image.X - 5, s.Image.Y), new PointD(s.Image.X + 5, s.Image.Y)) })],
+        });
+        return session;
+    }
+
     /// <summary>A sheet of bulls a fixed distance apart, each holding <paramref name="perBull"/> shots a little off centre.</summary>
     private static MarkingSession Sheet(int bulls, int perBull)
     {

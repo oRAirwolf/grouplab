@@ -100,6 +100,9 @@ public sealed class MainWindow : Window
     private readonly ComboBox angularUnit = new() { ItemsSource = UnitSettings.AngularChoices.Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 90 };
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly TextBox shotDistance = new() { Width = 90 };
+
+    /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
+    private readonly TextBox roundsFired = new() { Width = 90 };
     private readonly TextBlock shotDistanceUnit = new() { VerticalAlignment = VerticalAlignment.Center };
     private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light", "High contrast" }, MinWidth = 140 };
     private bool showingTheme;
@@ -232,6 +235,12 @@ public sealed class MainWindow : Window
         {
             shotDistance.Text = "";
             session.SetShotDistance(null);
+        })));
+        panel.Children.Add(new TextBlock { Text = "Rounds fired at the group, sighters not counted", FontSize = 12 });
+        panel.Children.Add(Row(roundsFired, Button("Set", SetRoundsFiredFromBox), Button("Clear", () =>
+        {
+            roundsFired.Text = "";
+            session.SetExpectedShots(null);
         })));
         panel.Children.Add(problem);
         panel.Children.Add(Heading("Zero correction"));
@@ -1274,8 +1283,23 @@ public sealed class MainWindow : Window
         ReviewKind.Oversized => "Possibly two holes",
         ReviewKind.Doubled => "Two shots on one bull",
         ReviewKind.Unassigned => "No bull",
+        ReviewKind.Count => "Count differs from rounds fired",
         _ => "Refused candidate",
     };
+
+    /// <summary>Entry 95 section 2: the rounds fired, which the review queue checks the marks against.</summary>
+    internal void SetRoundsFiredFromBox()
+    {
+        if (int.TryParse(roundsFired.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int rounds) && rounds > 0)
+        {
+            session.SetExpectedShots(rounds);
+            status.Text = $"Checking the marks against {rounds} rounds fired.";
+        }
+        else
+        {
+            status.Text = "Enter the number of rounds fired as a whole number.";
+        }
+    }
 
     private string BullLabel(int index) => session.State.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
 

@@ -15,6 +15,64 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-18, entry 95: I had the turret backwards, the overlapped-pair gap should be accepted, and the inbox is empty for the first time
+
+**Status: actioned 2026-09-18.**
+- **Section 1: recorded.** Where the group sits and what to dial stay two labelled things, and a test holds them opposite.
+- **Section 2: built as asked.** One field for the rounds fired, sighters not counted. Every detected mark now carries its size in holes, and when the count disagrees the queue's first item says so and ranks the candidates: largest first when there are too few, with "is two shots" as its keyboard choice, smallest first when there are too many, with "is not a shot". The overlapped-pair limit is stated, not tuned.
+- **Section 3: chased, and reported as findings, with nothing changed.**
+  - **0.00531 is not one bad bull.** It is the ordinary worst of 25 at 0.0031 in rms, whose expected worst is 0.0059; the gate needs 0.0026 in rms.
+  - **The sheet uses most of the gate on its own.** Alan's flatbed scan of it reads 0.0027 in rms against 0.0012 to 0.0015 on the Phase 0 sheets, printed 0.43 percent long in y against 0.06, and passes the paper gate less than half the time by the same arithmetic.
+  - **The photograph's error is not the sheet's** (correlation with the scan +0.27 and -0.04), **it repeats from the same camera position** (0.83, 0.79 and 0.72 between frames from one place, near zero across places), and **it is in the registration, not the locator**: the marker corner residual is twice a scan's, and edge fit and centroid share the pattern.
+  - **Ruled out:** print error, lighting across a bull (under one grey level per inch, explains nothing), parallax from paper height or a radial lens residual (the error is not radial), the locator, and focus.
+  - **Left, and not separable with these frames:** a camera-side distortion the radial terms miss, or a paper shape finer than the surface model. One square-on pair with the sheet moved across the image separates them: a camera-fixed error moves with the image, a paper-fixed one stays with the paper.
+
+Section 1 is an error of mine that would have hurt somebody. Section 2 accepts a limit rather than chasing it, and names a better lever. Section 3 is where the project now stands.
+
+### 1. I wrote the turret correction backwards
+
+Entry 92 used "dial 0.44 MOA left" for a group sitting left of aim. **A turret moves the point of impact, so a group sitting left is corrected by dialling right.** Claude Code caught it and split the readout into where it sits and what to dial.
+
+**This one deserves more than a note.** Every other wrong thing I have written this week cost time. **A shooter following that sentence would have doubled their error rather than removed it**, and they would have trusted it because it came from software whose whole claim is that it does not give confident wrong answers.
+
+**The split it chose is the right permanent shape.** Keeping "where it sits" and "what to dial" as separate labelled rows makes the reversal visible instead of implicit, so the next person to touch it cannot make my mistake silently.
+
+### 2. The overlapped pair cannot be separated by area either, and that is a limit to state rather than a threshold to tune
+
+With the flag counting the mark, a 0.10 in pair reads 1.30 to 1.41 holes and S1b reads 1.37. **They overlap, so no threshold divides them.**
+
+**That is not a tuning failure, it is the truth about the measurement.** Two holes overlapping by two thirds genuinely contain about 1.37 holes of paper removed, because the overlap is not there twice. A ragged single hole reads the same. **The information needed to tell them apart is not in the image.**
+
+**Claude Code was right to leave 1.35 alone**, and fitting into that gap would be fitting to one mark.
+
+**What the failure actually costs is worth writing down, because it is small and specific.** A missed second shot at 0.10 in separation moves the group centre and sigma barely at all, since the two holes are nearly in the same place. **What it changes is the count**, and the count drives every interval and the shots-needed advice. **So the cost is an interval that is slightly too wide, not a position that is wrong.** That is the mild direction to fail in.
+
+**And there is a lever the detector can never have: the shooter knows how many rounds they fired.**
+
+**Let a person state the expected shot count.** Then the software can say "you fired ten and I found nine, and these are the marks most likely to be two", ranked by how close each sits to the threshold. **That turns an unanswerable image question into an answerable arithmetic one**, it costs one field, and it belongs to the review queue rather than the detector.
+
+**It also fixes the reverse case**, where the detector finds eleven marks for ten rounds and nobody currently gets told.
+
+### 3. The inbox is empty, and everything on the critical path now needs a person
+
+**This has not happened before in this project.** Every entry is actioned and nothing is queued.
+
+What remains outstanding is almost entirely physical:
+
+- **Jeff's three questions**, which turn the 30-bull request into a specification.
+- **Twelve photographs at two distances**, which settle whether the off-axis mounted gate is reachable at all.
+- **A real 25-shot sheet**, which is the only thing that can time the Phase 3 gate.
+- **The attorney**, for the App Store permission.
+
+**Two pieces of software work remain that need nobody**, and one of them has been sitting since entry 77:
+
+1. **Why the best square-on frame is six percent outside the mounted gate.** `IMG_5820` reaches 0.00531 in against 0.005, and a square-on sheet has almost no depth range, so focus is not what limits it. **Entry 77 section 2 named this as unexplained and nothing has chased it since.** Six frames of real data are already in hand. **This is the Phase 1 headline and it is the best use of the next session.**
+2. **The macOS gate record divergence**, open with a named cause in corner refinement and one further divergence below it, and unfixed.
+
+**Item 1 is the one I would take.** The mounted gate is what Phase 1 is for, the data exists, and it is the last question in that phase that can be answered without anybody driving anywhere.
+
+---
+
 ## 2026-09-18, entry 94: the oversize flag measures the hull instead of the mark, and four decisions
 
 **Status: actioned 2026-09-18.**
