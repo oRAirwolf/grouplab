@@ -573,6 +573,8 @@ A deferral is a statement that the promise is still made and is not being worked
 
 **Trademark.** **[r3] Searched.** `docs/TRADEMARK-SEARCH.md` found zero USPTO records for GROUPLAB in any form, exact, wildcard, pseudo-mark or component. The three GROUP LABS marks on file are all dead. The real exposure is common-law: a GroupLab human-computer-interaction research group at the University of Calgary. No AI assurance of availability should be treated as a clearance.
 
+**[r9] Registration's consensus is fragile on a curved sheet.** RANSAC chooses its inliers from random samples, and on a mounted sheet many corners sit near its threshold, so the corners kept, the bulls over the gate and the worst bull move with inputs that should not matter. Sorting the markers (entry 52, question 15 of `docs/QUESTIONS-FOR-PLANNING.md`) made the answer repeatable, not stable: the same correspondences in 200 orders gave 15 to 69 distinct results on each mounted frame and one or two on the flat ones (`docs/PHASE1-RESULTS.md`, "Entry 52 sections 3 and 4"). Entry 101 left the inlier choice native and did not touch it. The answer is question 15's option C, a deterministic robust fit such as an iteratively reweighted homography over all corners, and it is **not scheduled**: it moves the figures again, and the case where the fragility bit hardest is the mounted one, whose gate has no proven material yet. It is weighed once the mounted gate has real frames (`docs/NOTES-FROM-PLANNING.md` entry 104 section 1).
+
 ## 23. Open items
 
 **Closed in revision 3:**

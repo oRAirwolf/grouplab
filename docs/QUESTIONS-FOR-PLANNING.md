@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-18, question 19: entry 103 section 3 asks for a sort that entry 52 already committed
 
-**Status: open.** Blocks entry 103 section 3 only. Sections 1, 2, 4 and 5 went ahead, and so did question 15's status, which was the one thing left undone.
+**Status: answered** by `docs/NOTES-FROM-PLANNING.md` entry 104 section 1: confirmed, nothing to commit and nothing to regenerate. The one surviving item, the option C risk, is in `DESIGN.md` section 22, and `QuestionStatusTests` now fails when a question marked open is one a notes heading says was answered.
 
 ### 1. What entry 103 section 3 asks
 

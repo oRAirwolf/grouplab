@@ -94,6 +94,12 @@ public static class SampleSize
 /// What a group of n shots is expected to do at its worst, docs/STATISTICS.md section 10, stated before a user may exclude a
 /// shot as a flyer.
 /// </summary>
+/// <summary>
+/// A worst shot against simulated circular groups of its size, measured the way the screen measures it: how often those groups put their
+/// worst at least this far out, and where they put it on average, both in the group's own mean radii.
+/// </summary>
+public sealed record WorstShotCalibration(int Shots, double Observed, double PValue, double Expected, int Resamples, ulong Seed);
+
 public static class Flyers
 {
     /// <summary>
@@ -127,12 +133,64 @@ public static class Flyers
 
     /// <summary>
     /// The probability that the worst of n shots lies beyond <paramref name="multiple"/> mean radii, 1 - F(multiple sqrt(pi / 2))^n,
-    /// section 10's table: at 25 shots, beyond twice the mean radius two times in three.
+    /// section 10's table: at 25 shots, beyond twice the mean radius two times in three. The mean radius here is the population's,
+    /// sigma sqrt(pi / 2), and the worst radius is measured from the true centre. It is not the probability for a worst shot measured
+    /// against the group's own mean radius about its own centre, which is what a screen has: <see cref="CalibrateWorst"/> is that one.
     /// </summary>
     public static double ProbabilityWorstBeyond(int n, double multiple)
     {
         double r = multiple * RayleighEstimate.MeanRadiusFactor;
         return -SpecialFunctions.ExpM1(n * SpecialFunctions.Log1P(-Math.Exp(-r * r / 2)));
+    }
+
+    /// <summary>
+    /// The worst shot as the screen measures it: its distance from the group's own centre, in the group's own mean radius, the Rayleigh
+    /// estimate <see cref="GroupStatistics.Rayleigh"/> gives about that centre.
+    /// </summary>
+    public static double WorstInSampleMeanRadii(IReadOnlyList<PointD> shots)
+    {
+        ArgumentNullException.ThrowIfNull(shots);
+        var centre = GroupStatistics.Centre(shots);
+        return GroupStatistics.Radii(shots, centre).Max() / GroupStatistics.Rayleigh(shots).MeanRadius.Value;
+    }
+
+    /// <summary>
+    /// The worst shot judged against circular groups of the same size measured the same way, NOTES-FROM-PLANNING.md entry 104 section 2.
+    /// <see cref="ProbabilityWorstBeyond"/> assumes the true mean radius and the true centre; the screen has the group's own of both, and
+    /// the worst shot inflates the mean radius it is divided by. At five shots the worst can never reach more than sqrt((n - 1) / n) of the
+    /// radii's root sum of squares, about 1.96 of the group's mean radii, so the closed form's five percent line at 2.42 could never be
+    /// crossed. So the reference distribution is simulated: <paramref name="resamples"/> circular groups of <paramref name="shots"/>, each
+    /// measured by <see cref="WorstInSampleMeanRadii"/>, seeded so the same group always reads the same, as the circularity test is
+    /// below twenty shots (docs/STATISTICS.md section 7). The p-value counts the simulated groups at least as extreme, plus one, over the
+    /// resamples plus one; the expectation is their mean.
+    /// </summary>
+    public static WorstShotCalibration CalibrateWorst(int shots, double observed, int resamples = 9999, ulong seed = 20260918)
+    {
+        if (shots < 3)
+        {
+            throw new ArgumentOutOfRangeException(nameof(shots), "a worst shot needs a group of at least three");
+        }
+
+        var random = new StatisticsRandom(seed);
+        var group = new PointD[shots];
+        int atLeast = 0;
+        double sum = 0;
+        for (int r = 0; r < resamples; r++)
+        {
+            for (int i = 0; i < shots; i++)
+            {
+                group[i] = new PointD(random.NextNormal(), random.NextNormal());
+            }
+
+            double worst = WorstInSampleMeanRadii(group);
+            sum += worst;
+            if (worst >= observed)
+            {
+                atLeast++;
+            }
+        }
+
+        return new WorstShotCalibration(shots, observed, (1.0 + atLeast) / (resamples + 1.0), sum / resamples, resamples, seed);
     }
 }
 

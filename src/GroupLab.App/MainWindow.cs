@@ -471,13 +471,15 @@ public sealed class MainWindow : Window
         // The analysis state, as analysis-dark.png lays it out: the shots and what they were fired with on the left, the composite plot in the
         // centre, and the figure stack with the judgement cards on the right.
         var figures = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
+        // Entry 92 put the zero correction above the group statistics, a different question read at a different moment, and entry 104
+        // section 3 found the split had moved it below the cards and the flags, off the bottom of the column.
         figures.Children.Add(unsettled);
+        figures.Children.Add(Heading("Zero correction"));
+        figures.Children.Add(zeroPanel);
         figures.Children.Add(Heading("Group"));
         figures.Children.Add(statistics);
         figures.Children.Add(judgements);
         figures.Children.Add(flags);
-        figures.Children.Add(Heading("Zero correction"));
-        figures.Children.Add(zeroPanel);
         var figureColumn = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = figures }, Classes = { AppStyles.Side } };
         var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         shotsColumn.Children.Add(Heading("Load"));
@@ -1295,14 +1297,27 @@ public sealed class MainWindow : Window
 
             // Entry 82 section 6: the detector's flag on a mark that covers about two holes, in the panel as well as on the canvas. It is the
             // only size opinion the screen carries, and the review queue counts every one of them (entry 87 section 1).
+            // Entry 104 section 4: the flags sit behind one disclosure that counts them, so however many there are the cards stay in view.
+            // Each is a review item as well, which the amber line above counts.
+            var flagged = new StackPanel { Spacing = 4 };
             foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null))
             {
-                flags.Children.Add(new TextBlock
+                flagged.Children.Add(new TextBlock
                 {
                     Text = shot.Oversize!.Describe(ShotLabel(shot.Id)),
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = Tokens.SecondarySize,
                     Classes = { shot.Oversize.Tentative ? AppStyles.Secondary : AppStyles.Alert },
+                });
+            }
+
+            if (flagged.Children.Count > 0)
+            {
+                flags.Children.Add(new Expander
+                {
+                    Header = flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
+                    Content = flagged,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
                 });
             }
 
@@ -1350,12 +1365,14 @@ public sealed class MainWindow : Window
             judgements.Children.Add(Card("shape", "No shape judgement.", $"The shape tests are {why}."));
         }
 
-        if (all.WorstShotInMeanRadii is { } worst && all.ExpectedWorstInMeanRadii is { } expected && WorstShot(state) is { } worstId)
+        // Entry 104 section 2: judged against circular groups measured the way this one is, by its own mean radius about its own centre,
+        // not by section 10's closed form, which assumes the true ones and at five shots could never flag anything.
+        if (all.WorstShot is { } calibrated && WorstShot(state) is { } worstId)
         {
-            double beyond = Flyers.ProbabilityWorstBeyond(n, worst);
+            double beyond = calibrated.PValue;
             string label = ShotLabel(worstId);
             string sits = string.Create(CultureInfo.InvariantCulture,
-                $"It sits at {worst:0.00} mean radii from the centre. A group of {n} is expected to put its worst at {expected:0.00}, and circular groups this size put their worst this far out or farther {HowOften(beyond)}.");
+                $"It sits at {calibrated.Observed:0.00} of the group's own mean radii from its centre. Circular groups of {n}, measured the same way, put their worst at {calibrated.Expected:0.00} on average, and this far out or farther {HowOften(beyond)}, from {calibrated.Resamples} simulated groups.");
             judgements.Children.Add(beyond >= 0.05
                 ? Card("flyer", $"Shot {label} is not a flyer.", sits, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")
                 : Card("flyer", $"Shot {label} is further out than a group of {n} usually puts its worst.", sits,
@@ -1432,7 +1449,9 @@ public sealed class MainWindow : Window
         loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize));
         loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize));
         loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize));
-        loadLines.Children.Add(Readout("Calibre", state.Calibre?.Name ?? "not set", Tokens.SecondarySize));
+        // Entry 104 section 4: a calibre set after detection ran without one would otherwise sit beside a status line saying there was none.
+        loadLines.Children.Add(Readout("Calibre", state.Calibre is null ? "not set"
+            : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize));
 
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
         var shots = GroupShots(state);
@@ -1471,7 +1490,8 @@ public sealed class MainWindow : Window
         offsetTable.Children.Clear();
         offsetTable.Children.Add(new TextBlock { Text = "shot   across    up/down   radius", FontFamily = Mono, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Dim } });
         var centre = plot.Centre;
-        foreach (var shot in plotted)
+        // Entry 104 section 4: a column headed with the shot's number is read as sorted by it, so it is, not in detection order.
+        foreach (var shot in plotted.OrderBy(p => int.TryParse(p.Label, NumberStyles.Integer, CultureInfo.InvariantCulture, out int k) ? k : int.MaxValue).ThenBy(p => p.Label, StringComparer.Ordinal))
         {
             double r = centre is { } c ? Math.Sqrt(Math.Pow(shot.Offset.X - c.X, 2) + Math.Pow(shot.Offset.Y - c.Y, 2)) : 0;
             var shown = AsDisplayed(shot.Offset);
@@ -1504,8 +1524,10 @@ public sealed class MainWindow : Window
             return [];
         }
 
-        var inks = definition.Inks.ToDictionary(i => i.Key, i => Tokens.Ink(i.Srgb));
-        return [.. rings.Discs.Select(d => new PlotDisc(d.Diameter / 254.0, inks.TryGetValue(d.Ink, out var colour) ? colour : Tokens.Paper))];
+        var inks = definition.Inks.ToDictionary(i => i.Key);
+        return [.. rings.Discs.Select(d => inks.TryGetValue(d.Ink, out var ink)
+            ? new PlotDisc(d.Diameter / 254.0, Tokens.Ink(ink.Srgb), ink.Role == GroupLab.Core.Gltd.Model.InkRole.Paper)
+            : new PlotDisc(d.Diameter / 254.0, Tokens.Paper, true))];
     }
 
     /// <summary>A click on the plot or a row of its table: one shot, or the extreme spread's two, picked on the plot and selected on the sheet.</summary>
@@ -1575,6 +1597,10 @@ public sealed class MainWindow : Window
 
     /// <summary>Each judgement card's lines, verdict first, for the headless tests.</summary>
     internal IReadOnlyList<IReadOnlyList<string>> JudgementCards => [.. judgements.Children.OfType<Border>().Select(b => (IReadOnlyList<string>)[.. b.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")])];
+
+    /// <summary>The analysis state's right column's section headings, in order, for the headless tests.</summary>
+    internal IEnumerable<string> FigureColumnHeadings =>
+        analysisBody.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section)).Select(t => t.Text ?? "");
 
     /// <summary>The shots the plot has picked, for the headless tests.</summary>
     internal IReadOnlySet<int> PlotSelection => plotSelection;

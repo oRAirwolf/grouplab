@@ -276,6 +276,12 @@ public static class Tokens
     /// </summary>
     public static Color Ink(string srgb) => Color.TryParse(srgb, out var colour) ? colour : Paper;
 
+    /// <summary>An ink laid over paper at a strength, as one solid colour, so a faded ring does not show the disc beneath it through.</summary>
+    public static Color Faded(Color ink, Color paper, double strength) => Color.FromRgb(
+        (byte)Math.Round((ink.R * strength) + (paper.R * (1 - strength))),
+        (byte)Math.Round((ink.G * strength) + (paper.G * (1 - strength))),
+        (byte)Math.Round((ink.B * strength) + (paper.B * (1 - strength))));
+
     public static Color PaperEdge { get; } = Hex(0xcfccc3);
 
     /// <summary>The empty sheet's hint, dark on the paper.</summary>

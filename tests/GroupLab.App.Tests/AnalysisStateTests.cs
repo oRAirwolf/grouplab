@@ -290,14 +290,35 @@ public class AnalysisStateTests
         Assert.Equal(ring.Discs[0].Diameter / 254.0, window.Plot.Discs[0].DiameterInches, 9);
         Assert.DoesNotContain(window.Plot.Legend, l => l.StartsWith("no bull drawn", StringComparison.Ordinal));
 
-        // The analysis state photographed, beside the marking screen's own photographs, for a person to compare with the concept.
+        // Entry 104 section 3: the fixture carries what the zero correction reads in clicks, a distance and a rifle, so the block Alan asked to
+        // be prominent is exercised, and it stands above the group figures where entry 92 put it.
         window.Session.SetCalibre(new Calibre(".308", 0.308));
+        window.Session.SetShotDistance(3600);
+        window.Session.SetEquipment(new Rifle("Test rifle", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa), null, null);
         Dispatcher.UIThread.RunJobs();
-        Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(window.ZeroText, t => t.StartsWith("In clicks of Test rifle's scope", StringComparison.Ordinal));
+        var headings = window.FigureColumnHeadings.ToList();
+        Assert.True(headings.IndexOf("ZERO CORRECTION") >= 0 && headings.IndexOf("ZERO CORRECTION") < headings.IndexOf("GROUP"), string.Join(" | ", headings));
+
+        // Photographed in each theme the test sets, named after it, as ScreenshotTests does, for a person to compare with the concept.
         string output = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(DefinitionPath())!, "..", "out", "screens"));
         Directory.CreateDirectory(output);
-        window.CaptureRenderedFrame()!.Save(Path.Combine(output, "analysis-state-dark.png"), new Avalonia.Media.Imaging.PngBitmapEncoderOptions());
+        try
+        {
+            foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
+            {
+                window.SetTheme(theme);
+                Dispatcher.UIThread.RunJobs();
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                Dispatcher.UIThread.RunJobs();
+                window.CaptureRenderedFrame()!.Save(Path.Combine(output, $"analysis-state-{name}.png"), new Avalonia.Media.Imaging.PngBitmapEncoderOptions());
+            }
+        }
+        finally
+        {
+            Avalonia.Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Default;
+        }
+
         window.Close();
     }
 }

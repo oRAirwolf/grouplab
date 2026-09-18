@@ -425,6 +425,8 @@ derived from `E[max] = ∫₀^∞ (1 − F(r)ⁿ) dr` with `F(r) = 1 − exp(−
 
 **Compute this with alternating-sign binomial care.** At `n = 25` the terms reach about 5.2 million and alternate in sign, so naive double-precision summation loses most of the significant digits. Sum in log space with sign tracking, or use the equivalent integral form. This is a real numerical trap and it belongs in the code comments.
 
+**MR in this table is the population mean radius, `σ√(π/2)`, and every radius is measured from the true centre.** It describes shots from a gun whose σ and point of impact are known. It is not the reference for a worst shot measured against a group's own mean radius about the group's own centre, which is what a screen has; that case is below the table.
+
 | n | E[worst] / σ | E[worst] / MR | P(worst > 2 × MR) | P(worst > 1.5 × MR) |
 |---|---|---|---|---|
 | 3 | 1.825 | 1.456 | 0.124 | 0.430 |
@@ -436,6 +438,19 @@ derived from `E[max] = ∫₀^∞ (1 − F(r)ⁿ) dr` with `F(r) = 1 − exp(−
 | 30 | 2.794 | 2.229 | 0.734 | 0.996 |
 
 **The dialog text writes itself from the 25-shot row.** In a 25-shot group, the worst shot is *expected* to sit at 2.18 times the mean radius. The probability that it exceeds twice the mean radius is **0.67**, and the probability that it exceeds 1.5 times is **0.99**. A shooter who calls anything beyond twice the mean radius a flyer will discard a perfectly ordinary shot **two times in three**.
+
+**What the screen judges a worst shot by** (NOTES-FROM-PLANNING.md entry 104 section 2). The flyer card measures the worst shot from the group's own centre in the group's own mean radius, the Rayleigh estimate `√(π/2) · σ̂` with σ̂ from section 3.3, fitted to the same shots. The worst shot inflates the mean radius it is divided by, so this ratio is compressed: about its own centre the worst of `n` shots can be at most `√((n−1)/n)` of the root sum of squared radii, which is about 1.96 group mean radii at five shots. The closed form above, fed this ratio, is conservative, and badly so at small `n`. Simulated, 200,000 circular groups a count (seed 7):
+
+| n | closed form's 5 percent line | the screen's statistic, true 5 percent line | closed-form p at the true line | mean of the screen's statistic |
+|---|---|---|---|---|
+| 5 | 2.416 | **1.733** | 0.391 | 1.440 |
+| 10 | 2.592 | 2.204 | 0.199 | 1.783 |
+| 15 | 2.689 | 2.409 | 0.146 | 1.947 |
+| 25 | 2.807 | 2.623 | 0.107 | 2.130 |
+
+**At five shots the closed form's line is past anything a group can produce**, so a card built on it could never flag a shot. The screen therefore does not use the closed form. `Flyers.CalibrateWorst` simulates 9,999 circular groups of the same size, seeded, measures each the way the screen does, and reports the share at least as extreme and the mean; the card reads those. Entry 104's own measurement divided by the arithmetic mean of the radii, a third statistic, whose lines are 2.108, 2.477, 2.621 and 2.774 at the same counts; the screen does not quote that one.
+
+**The table above still stands for what it says**, and so does the dialog text built on it: a shooter who calls anything past twice the true mean radius a flyer discards an ordinary shot two times in three at 25 shots. The calibration sharpens where the card's own line sits; it does not make wide shots rarer.
 
 Per DESIGN.md, exclusion remains permitted, since the legitimate case exists: a called flyer, an obviously bad round, a shot the shooter knows they pulled. It is gated by this statement, it requires a reason from a short list, the reason is recorded, and every report prints the full and reduced figures side by side so an exclusion can never be hidden.
 

@@ -31,7 +31,9 @@ public sealed record TrueSizeRange(double Lower, double Upper);
 /// <para>
 /// NOTES-FROM-PLANNING.md entry 103: CEP at 50, 90 and 95 percent, the group's width and height in target coordinates with the per-axis
 /// standard deviations, and the two shape tests of docs/STATISTICS.md section 7, circularity and vertical stringing, which the analysis
-/// state's judgement cards read. Below the dispersion minimum they are null, and <see cref="DispersionWithheld"/> says why; where the
+/// state's judgement cards read, and the worst shot calibrated against circular groups measured the same way (entry 104 section 2, where
+/// <see cref="ExpectedWorstInMeanRadii"/> is section 10's population figure and <see cref="WorstShot"/> is the one to judge a group's own
+/// worst shot by). Below the dispersion minimum they are null, and <see cref="DispersionWithheld"/> says why; where the
 /// shots lie on a line the tests are null and <see cref="ShapeTestsUnavailable"/> says so.
 /// </para>
 /// </summary>
@@ -71,7 +73,8 @@ public sealed record GroupFigures(
     double? SdY = null,
     CircularityTest? Circularity = null,
     StringingTest? Stringing = null,
-    string? ShapeTestsUnavailable = null);
+    string? ShapeTestsUnavailable = null,
+    WorstShotCalibration? WorstShot = null);
 
 /// <summary>
 /// A marking's report: every figure computed with and without the excluded shots, side by side, so an exclusion can never be
@@ -400,7 +403,8 @@ public static class GroupAnalysis
             SdY: Math.Sqrt(yy),
             Circularity: shapeDefined ? ShapeTests.Circularity(offsets) : null,
             Stringing: shapeDefined ? ShapeTests.VerticalStringing(offsets) : null,
-            ShapeTestsUnavailable: shapeDefined ? null : collinear);
+            ShapeTestsUnavailable: shapeDefined ? null : collinear,
+            WorstShot: double.IsFinite(worst) ? Flyers.CalibrateWorst(n, worst) : null);
     }
 
     private static ReportedEstimate Reported(Estimate e, double coverage, string basis, string? whyNoInterval) =>

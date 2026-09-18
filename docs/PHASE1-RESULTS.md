@@ -4613,6 +4613,73 @@ A card is the verdict in bold and then its evidence. The verdict never appears a
 
 ---
 
+## Entry 104. Question 19 closed, the flyer card calibrated to what the screen measures, and the analysis state seen in dark
+
+`docs/NOTES-FROM-PLANNING.md` entry 104, in its order.
+
+### Section 1: question 19 closed, the option C risk written down, and a guard on status lines
+
+- **Question 19 is answered**: nothing to commit, nothing to regenerate.
+- **`DESIGN.md` section 22 carries the risk.** On a curved sheet, RANSAC's consensus moves the figures with inputs that should not matter. The sort made that repeatable, not stable: 15 to 69 distinct results in 200 orders on the mounted frames. Option C, a deterministic robust fit, is the answer, pointed at question 15 and not scheduled until the mounted gate has real frames.
+- **The guard, `QuestionStatusTests`,** fails when a question marked open in `docs/QUESTIONS-FOR-PLANNING.md` is one a notes heading names as answered. **It was cheap because the headings are regular**: every one that answers questions says "question 15 answered" or "questions 12, 13 and 14 answered". It matches that phrase and nothing looser, and it would miss a heading that answered a question in other words. **Run over the two files as they stood at entry 102, it names question 15 and entry 52's heading**, which is the case it exists for.
+
+### Section 2: the flyer card, calibrated to the screen's own statistic
+
+**The measurement in the entry was right in direction and understated in size, because the screen does not use the mean radius it simulated.**
+- **What the screen divides by:** the worst shot's distance from the group's centre, over the Rayleigh mean radius, `√(π/2)` times sigma estimated from the sum of squared radii with its c4 correction. That is `GroupFigures.MeanRadius`, the figure the screen prints.
+- **What the entry divided by:** the arithmetic mean of the radii. Its lines reproduce exactly: 2.108, 2.477, 2.621 and 2.774 at 5, 10, 15 and 25 shots.
+- **Why the screen's statistic is compressed further:** about its own centre, the worst of `n` shots is at most `√((n−1)/n)` of the root sum of squared radii. That is about 1.96 group mean radii at five shots.
+
+| n | closed form's 5 percent line | the screen's true 5 percent line | closed-form p at that line | mean of the screen's statistic |
+|---|---|---|---|---|
+| 5 | 2.416 | **1.733** | 0.391 | 1.440 |
+| 10 | 2.592 | 2.204 | 0.199 | 1.783 |
+| 15 | 2.689 | 2.409 | 0.146 | 1.947 |
+| 25 | 2.807 | 2.623 | 0.107 | 2.130 |
+
+200,000 simulated circular groups a count, seed 7.
+
+**At five shots the card could never flag anything**: its line was beyond the most extreme group five shots can make. At 25 shots it flagged at a true rate of 1.7 percent where it claimed 5.
+
+**Decided: calibrate at every count, and withhold nowhere.**
+- **What it does:** `Flyers.CalibrateWorst` simulates 9,999 circular groups of the same size and measures each exactly as the screen does. It returns the share at least as extreme, plus one over the resamples plus one, and their mean.
+- **Cost and repeatability:** it is seeded, so the same group always reads the same, as the circularity test is below twenty shots. It costs a few milliseconds at the counts people shoot.
+- **Why nothing is withheld:** the calibration is valid down to the dispersion minimum of five, so there is no count where withholding would be the honest answer.
+- **The card now reads:** "It sits at W of the group's own mean radii from its centre. Circular groups of N, measured the same way, put their worst at E on average, and this far out or farther …, from 9999 simulated groups." It still ends with "by that measure alone".
+- **Tests.** `WorstShotCalibrationTests` holds four things:
+  - the calibration's statistic is the one the report prints;
+  - it puts one group in twenty past the independent simulation's lines at 5 and 25 shots;
+  - five shots cannot reach the closed form's line;
+  - the same group always reads the same.
+
+**`docs/STATISTICS.md` section 10 no longer leaves the mean radius ambiguous.**
+- **The table:** it says its MR is the population value, `σ√(π/2)`, with radii from the true centre.
+- **Beside it:** a second table and paragraph say what the screen judges by and why.
+- **The entry's own figures** are named as a third statistic the screen does not quote.
+- **The dialog sentence stands:** calling anything past twice the true mean radius a flyer discards an ordinary shot two times in three at 25 shots.
+
+### Section 3: the render in both themes, and the zero block
+
+- **Themes.** The test now sets dark and then light and captures each, named after the theme it set, as `ScreenshotTests` does. It restores the theme afterwards.
+- **The zero block had survived the split, and I had moved it.** Entry 92 put it above the group statistics. The split put it below the cards and the size flags, off the bottom of the column, which is why the render showed no zero block. It is back above the figures.
+- **The fixture now carries a 100 yd distance and a rifle with quarter-MOA clicks.** The block shows the offset in inches and MOA, its uncertainty, the refusal with "about 90 shots would settle it", and the clicks line.
+- **A test** reads the clicks line and asserts the ZERO CORRECTION heading comes before GROUP in the analysis column.
+
+### Section 4: the four observations
+
+- **Shot order.** The table is sorted by shot number, not detection order.
+- **The bull recedes: a judgement.** Fading the whole bull turned the paper a dull grey on dark chrome, which lost the concept's paper-on-dark contrast. So only the inked discs are faded, to 35 percent over the paper's own colour, and the paper stays at full strength. The shots now lead, and the sheet still reads as paper.
+- **The calibre.** The load panel reads ".308, set after detection" when detection ran without one, so it no longer contradicts the status line.
+- **Size flags.** They sit behind one disclosure that counts them, "15 marks flagged as possibly two holes", so the cards stay in view however many there are.
+
+**Seen in the dark render, not changed.** At the lead size, mean radius with its MOA figure wraps onto a second line in the 372 px column. That column width is entry 42's, and the wrap is entry 24's rule against clipping, so it is left for a decision rather than altered here.
+
+**Git.** The three lock files planning's inbox commit left, `HEAD.lock`, `index.lock` and `objects/maintenance.lock`, were removed at the start, with no git process running.
+
+**Tests:** Core 881 and App 69 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4839,3 +4906,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 103 section 1: Show work opens the timeline in the editor, over a second timeline in the analysis state.** The timeline already shows the work, and one copy cannot disagree with itself.
 - **Entry 103 section 2: the flyer card says "further out than a group this size usually puts its worst" below one time in twenty, over always saying "not a flyer".** The old line said not a flyer whatever the distance; the card still leaves the call to the shooter.
 - **Entry 103 section 3: held as a question, over running the sweep.** The sort was already committed by entry 52, and regenerating would have reproduced entry 101's records.
+- **Entry 104 section 2: the worst shot calibrated by simulation at every count, over withholding the verdict below some count.** The calibration is valid from the dispersion minimum up and costs milliseconds, so there was no count where withholding was the more honest answer.
+- **Entry 104 section 4: only the inked discs faded, over fading the whole bull.** Fading the paper as well turned it grey on dark chrome, and the paper-on-dark contrast is most of the concept's character.

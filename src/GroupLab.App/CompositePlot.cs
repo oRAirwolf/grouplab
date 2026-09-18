@@ -11,8 +11,8 @@ namespace GroupLab.App;
 /// <summary>One shot on the composite plot: its offset from its own bull's aim point in inches at the target, and whether it is excluded.</summary>
 internal sealed record PlotShot(int Id, string Label, PointD Offset, bool Excluded);
 
-/// <summary>One disc of the bull's artwork, outermost first, at its diameter in inches.</summary>
-internal sealed record PlotDisc(double DiameterInches, Color Colour);
+/// <summary>One disc of the bull's artwork, outermost first, at its diameter in inches, and whether its ink is the paper.</summary>
+internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper = false);
 
 /// <summary>
 /// The composite plot, NOTES-FROM-PLANNING.md entry 103 section 1: the centre of the analysis state. One bull's artwork from the definition,
@@ -32,6 +32,13 @@ internal sealed class CompositePlot : Control
 {
     /// <summary>The margin around the shots, as a share of their extent on each side.</summary>
     private const double FrameMargin = 0.35;
+
+    /// <summary>
+    /// How strongly the bull's inked rings are drawn, entry 104 section 4: they are context for the shots and recede behind them, where at
+    /// full strength the black ring was the heaviest mark on the screen. The paper stays at full strength, because a paper-white document on
+    /// dark chrome is most of the concept's character, and the concept draws the rings lighter too.
+    /// </summary>
+    private const double ArtworkOpacity = 0.35;
 
     /// <summary>The smallest extent the view frames, in inches, so one shot or a tight cluster is not magnified without limit.</summary>
     private const double MinimumExtentInches = 0.25;
@@ -153,10 +160,12 @@ internal sealed class CompositePlot : Control
         var (scale, origin) = Frame(area);
         using (context.PushClip(area))
         {
-            // The bull at true relative scale, centred on the aim point, whether or not it fits.
+            // The bull at true relative scale, centred on the aim point, whether or not it fits: each inked disc faded over the paper, so the
+            // shots lead and the sheet still reads as paper.
             foreach (var disc in Discs)
             {
-                context.DrawEllipse(new SolidColorBrush(disc.Colour), null, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
+                var colour = disc.Paper ? disc.Colour : Tokens.Faded(disc.Colour, Discs.FirstOrDefault(d => d.Paper)?.Colour ?? Tokens.Paper, ArtworkOpacity);
+                context.DrawEllipse(new SolidColorBrush(colour), null, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
             }
 
             Marks.Cross(context, Marks.Faint, origin, 6, 1);
