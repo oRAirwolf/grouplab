@@ -95,6 +95,71 @@ public sealed class MainWindow : Window
     private readonly Border reviewPill = new() { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Pill } };
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 103 section 1: one destination in two states, as the two concept screens behind the rail's first icon show
+    /// it. The editor marks and reviews; the analysis state shows the composite plot, the figures and the judgements. Accept and analyse goes
+    /// forward, and the breadcrumb's sheet crumb comes back with every edit intact.
+    /// </summary>
+    private bool analysing;
+
+    private readonly DockPanel editorBody = new();
+
+    private readonly DockPanel analysisBody = new() { IsVisible = false };
+
+    private readonly StackPanel editorActions = new() { Orientation = Orientation.Horizontal };
+
+    private readonly StackPanel analysisActions = new() { Orientation = Orientation.Horizontal, IsVisible = false };
+
+    private readonly Button acceptButton = new() { Content = "Accept and analyse", Margin = new Thickness(2), Classes = { AppStyles.Primary } };
+
+    private readonly Button discardButton = new() { Content = "Discard edits", Margin = new Thickness(2) };
+
+    /// <summary>Discard edits asks first: this row stands in for the button until the person confirms or keeps the edits.</summary>
+    private readonly StackPanel discardConfirm = new() { Orientation = Orientation.Horizontal, IsVisible = false, VerticalAlignment = VerticalAlignment.Center };
+
+    /// <summary>The analysis state's pill: the registration and its residual, where the editor has the review count.</summary>
+    private readonly TextBlock registrationText = new() { Classes = { AppStyles.PillText } };
+
+    private readonly Border registrationPill = new() { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Pill } };
+
+    /// <summary>The analysis state's breadcrumb: the sheet crumb is a button back to the editor, one click from a figure to the marks behind it.</summary>
+    private readonly StackPanel analysisCrumbs = new() { Orientation = Orientation.Horizontal, IsVisible = false, VerticalAlignment = VerticalAlignment.Center };
+
+    private readonly Button sheetCrumb = new() { Margin = new Thickness(Tokens.Space4, 0), VerticalAlignment = VerticalAlignment.Center };
+
+    /// <summary>
+    /// Entry 103 section 1's rule the concept does not show: a person may accept with items still open, and then every figure inherits the
+    /// decisions not made, so the analysis says how many, in amber, above the figures.
+    /// </summary>
+    private readonly TextBlock unsettled = new() { TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, IsVisible = false, Classes = { AppStyles.Warn } };
+
+    /// <summary>The two judgement cards, entry 103 section 2: whether the group is round, and whether its worst shot is a flyer.</summary>
+    private readonly StackPanel judgements = new() { Spacing = Tokens.Space8 };
+
+    /// <summary>
+    /// The detector's size flags and the reference figures, below the cards. Each flag is also a review item, which the amber line above the
+    /// figures counts, so here they are the detail rather than the first thing read.
+    /// </summary>
+    private readonly StackPanel flags = new() { Spacing = 4 };
+
+    /// <summary>The last detection's registration residual in inches, for the analysis pill; null for a marking scaled by hand or reopened.</summary>
+    private double? registrationResidual;
+
+    private readonly CompositePlot plot = new();
+
+    /// <summary>The shots the plot has picked: one clicked, or the two an extreme spread line joins.</summary>
+    private HashSet<int> plotSelection = [];
+
+    /// <summary>The definition of the sheet last detected on this image, whose bull the composite plot draws. Null for a marking done by hand.</summary>
+    private GroupLab.Core.Gltd.Model.TargetDefinition? plotDefinition;
+
+    /// <summary>The analysis state's shot table: each scoring shot's offset from its own bull, a row that selects it.</summary>
+    private readonly StackPanel offsetTable = new() { Spacing = 0 };
+
+    private readonly StackPanel loadLines = new() { Spacing = 2 };
+
+    private readonly Expander timelineExpander = new() { HorizontalAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(0) };
+
+    /// <summary>
     /// The zero correction, NOTES-FROM-PLANNING.md entry 92 section 1. It sits above the group statistics and not among them because it
     /// answers a different question at a different moment: what to dial now, read standing at a bench with a turret cap in one hand, where
     /// the statistics say how well the rifle shoots, read afterwards sitting down. It also has a different truth condition, being a claim
@@ -311,10 +376,6 @@ public sealed class MainWindow : Window
             session.SetExpectedShots(null);
         })));
         panel.Children.Add(problem);
-        panel.Children.Add(Heading("Zero correction"));
-        panel.Children.Add(zeroPanel);
-        panel.Children.Add(Heading("Group"));
-        panel.Children.Add(statistics);
         panel.Children.Add(Heading("Shots"));
         panel.Children.Add(shotList);
         panel.Children.Add(Heading("Selected shot"));
@@ -324,17 +385,42 @@ public sealed class MainWindow : Window
         // Entry 93 section 2 adds the concept's chrome around them: the breadcrumb header above the tool strip, and the icon rail down the
         // left. The header carries the document's identity and its counts on the left, and one primary action with a secondary beside it on
         // the right, which is where the concept puts them.
+        // Entry 103 section 1: the editor's actions end in Accept and analyse, the amber primary, with Discard edits beside it; the analysis
+        // state's are the registration pill, Show work and Export, where the concept puts them.
         var crumbs = new DockPanel();
         var actions = new StackPanel { Orientation = Orientation.Horizontal };
         reviewPill.Child = reviewCount;
-        actions.Children.Add(reviewPill);
-        var primary = Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false));
-        primary.Classes.Add(AppStyles.Primary);
-        actions.Children.Add(Button("Open image", async () => await OpenImageDialog()));
-        actions.Children.Add(primary);
+        editorActions.Children.Add(reviewPill);
+        editorActions.Children.Add(Button("Open image", async () => await OpenImageDialog()));
+        editorActions.Children.Add(Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false)));
+        discardButton.Click += (_, _) => AskDiscard();
+        editorActions.Children.Add(discardButton);
+        discardConfirm.Children.Add(new TextBlock { Text = "Discard every edit since detection?", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space4, 0), Classes = { AppStyles.Warn } });
+        discardConfirm.Children.Add(Button("Discard", ConfirmDiscard));
+        discardConfirm.Children.Add(Button("Keep them", () =>
+        {
+            discardConfirm.IsVisible = false;
+            Refresh();
+        }));
+        editorActions.Children.Add(discardConfirm);
+        acceptButton.Click += (_, _) => Analyse();
+        editorActions.Children.Add(acceptButton);
+        registrationPill.Child = registrationText;
+        analysisActions.Children.Add(registrationPill);
+        analysisActions.Children.Add(Button("Show work", ShowWork));
+        analysisActions.Children.Add(Button("Export", async () => await ExportDialog()));
+        actions.Children.Add(editorActions);
+        actions.Children.Add(analysisActions);
         DockPanel.SetDock(actions, Dock.Right);
         crumbs.Children.Add(actions);
-        crumbs.Children.Add(breadcrumb);
+        sheetCrumb.Click += (_, _) => BackToEditor();
+        analysisCrumbs.Children.Add(new TextBlock { Text = "GroupLab  \u203a", VerticalAlignment = VerticalAlignment.Center, FontSize = Tokens.SecondarySize });
+        analysisCrumbs.Children.Add(sheetCrumb);
+        analysisCrumbs.Children.Add(new TextBlock { Text = "\u203a  analysis", VerticalAlignment = VerticalAlignment.Center, FontSize = Tokens.SecondarySize });
+        var crumbTexts = new Panel();
+        crumbTexts.Children.Add(breadcrumb);
+        crumbTexts.Children.Add(analysisCrumbs);
+        crumbs.Children.Add(crumbTexts);
         var header = new Border { Child = crumbs, Classes = { AppStyles.Breadcrumb } };
         var bar = new Border { Child = toolbar, Classes = { AppStyles.Bar } };
         var side = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = panel }, Classes = { AppStyles.Side } };
@@ -361,7 +447,9 @@ public sealed class MainWindow : Window
         stageSummary.TextWrapping = TextWrapping.NoWrap;
         stageSummary.TextTrimming = TextTrimming.CharacterEllipsis;
         scrub.Children.Add(stageSummary);
-        timelineBody.Children.Add(new Expander { Header = scrub, Content = opened, HorizontalAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(0) });
+        timelineExpander.Header = scrub;
+        timelineExpander.Content = opened;
+        timelineBody.Children.Add(timelineExpander);
         var timeline = new Border { Child = timelineBody, Classes = { AppStyles.StatusBar } };
         stageSlider.PropertyChanged += (_, e) =>
         {
@@ -371,18 +459,48 @@ public sealed class MainWindow : Window
             }
         };
 
-        var dock = new DockPanel();
-        DockPanel.SetDock(header, Dock.Top);
+        // The editor state: the tool strip, the timeline, the review column and the sheet.
         DockPanel.SetDock(bar, Dock.Top);
-        DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(timeline, Dock.Bottom);
         DockPanel.SetDock(side, Dock.Right);
+        editorBody.Children.Add(bar);
+        editorBody.Children.Add(timeline);
+        editorBody.Children.Add(side);
+        editorBody.Children.Add(canvas);
+
+        // The analysis state, as analysis-dark.png lays it out: the shots and what they were fired with on the left, the composite plot in the
+        // centre, and the figure stack with the judgement cards on the right.
+        var figures = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
+        figures.Children.Add(unsettled);
+        figures.Children.Add(Heading("Group"));
+        figures.Children.Add(statistics);
+        figures.Children.Add(judgements);
+        figures.Children.Add(flags);
+        figures.Children.Add(Heading("Zero correction"));
+        figures.Children.Add(zeroPanel);
+        var figureColumn = new Border { Width = Tokens.RightColumnWidth, Child = new ScrollViewer { Content = figures }, Classes = { AppStyles.Side } };
+        var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
+        shotsColumn.Children.Add(Heading("Load"));
+        shotsColumn.Children.Add(loadLines);
+        shotsColumn.Children.Add(Heading("Shots, from their own bull"));
+        shotsColumn.Children.Add(offsetTable);
+        var leftColumn = new Border { Width = 300, Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
+        DockPanel.SetDock(figureColumn, Dock.Right);
+        DockPanel.SetDock(leftColumn, Dock.Left);
+        analysisBody.Children.Add(figureColumn);
+        analysisBody.Children.Add(leftColumn);
+        analysisBody.Children.Add(plot);
+        plot.ShotsClicked += (_, ids) => PickShots(ids);
+
+        var body = new Panel();
+        body.Children.Add(editorBody);
+        body.Children.Add(analysisBody);
+        var dock = new DockPanel();
+        DockPanel.SetDock(header, Dock.Top);
+        DockPanel.SetDock(statusBar, Dock.Bottom);
         dock.Children.Add(header);
-        dock.Children.Add(bar);
         dock.Children.Add(statusBar);
-        dock.Children.Add(timeline);
-        dock.Children.Add(side);
-        dock.Children.Add(canvas);
+        dock.Children.Add(body);
 
         var whole = new DockPanel();
         var rail = Rail();
@@ -604,6 +722,9 @@ public sealed class MainWindow : Window
         }
 
         detectedState = null;
+        plotDefinition = null;
+        registrationResidual = null;
+        SetAnalysing(false);
         // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
         DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
         canvas.SetImage(new Bitmap(stream), max);
@@ -937,6 +1058,8 @@ public sealed class MainWindow : Window
 
         canvas.MissingMarkers = result.MissingMarkers;
         canvas.Artwork = artwork = result.ExpectedArtwork;
+        plotDefinition = result.Definition;
+        registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
         RememberDetected();
         SetTool(MarkingTool.Select);
@@ -1097,6 +1220,8 @@ public sealed class MainWindow : Window
 
         statistics.Children.Clear();
         moreFigures.Children.Clear();
+        judgements.Children.Clear();
+        flags.Children.Clear();
         ShowBreadcrumb(state);
         ShowEquipment(state);
         ShowZero(state);
@@ -1125,6 +1250,24 @@ public sealed class MainWindow : Window
                 statistics.Children.Add(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadFigureSize, FontWeight.Medium));
                 statistics.Children.Add(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.FigureSize, FontWeight.Medium));
                 statistics.Children.Add(Figure("Extreme spread", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.BodySize, FontWeight.Normal, subordinate: true, interval: false));
+
+                // Entry 103 section 1: the two figures the concept's stack has and the screen lacked, added after the existing ones rather than
+                // reordering them, because mean radius leads by entries 73 and 92 and the concept was drawn before those.
+                if (all.Cep90 is { } cep90 && all.Cep50 is { } cep50 && all.Cep95 is { } cep95)
+                {
+                    var cep = new StackPanel { Spacing = 0 };
+                    cep.Children.Add(Readout("CEP 90", units.Length(cep90.Value), Tokens.BodySize));
+                    cep.Children.Add(Detail($"CEP 50 {units.Length(cep50.Value)}  \u00b7  CEP 95 {units.Length(cep95.Value)}, from sigma under the circular normal model"));
+                    statistics.Children.Add(cep);
+                }
+
+                if (all is { Width: { } width, Height: { } height, SdX: { } sdX, SdY: { } sdY })
+                {
+                    var size = new StackPanel { Spacing = 0 };
+                    size.Children.Add(Readout("Group width \u00d7 height", $"{units.Number(width)} \u00d7 {units.Length(height)}", Tokens.BodySize));
+                    size.Children.Add(Detail($"sd across {units.Length(sdX)}  \u00b7  sd up and down {units.Length(sdY)}"));
+                    statistics.Children.Add(size);
+                }
                 moreFigures.Children.Add(Line(all.ExtremeSpread is { Lower: { } esLower, Upper: { } esUpper, Coverage: { } esCoverage }
                     ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is centre to centre, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
                     : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}."));
@@ -1147,21 +1290,14 @@ public sealed class MainWindow : Window
                         $"From {all.Shots} shots the true group size could be anywhere from {range.Lower:0.00} to {range.Upper:0.00} times what they measure (STATISTICS.md section 9.1).")));
                 }
 
-                moreFigures.Children.Add(Line(all.AspectRatio is { } aspect
-                    ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {aspect:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees; {all.Shots} circular shots give about {all.CircularMedianAspect:0.0} and exceed {aspect:0.00} {HowOften(all.CircularAspectExceedance ?? 1)} (STATISTICS.md section 7).")
-                    : $"Error ellipse: {all.AspectRatioUnavailable}."));
-                if (all.WorstShotInMeanRadii is { } worst)
-                {
-                    moreFigures.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-                        $"Worst shot at {worst:0.00} mean radii; a group of {all.Shots} is expected to put its worst at {all.ExpectedWorstInMeanRadii:0.00}, so a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")));
-                }
+                ShowJudgements(state, all);
             }
 
             // Entry 82 section 6: the detector's flag on a mark that covers about two holes, in the panel as well as on the canvas. It is the
             // only size opinion the screen carries, and the review queue counts every one of them (entry 87 section 1).
             foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null))
             {
-                statistics.Children.Add(new TextBlock
+                flags.Children.Add(new TextBlock
                 {
                     Text = shot.Oversize!.Describe(ShotLabel(shot.Id)),
                     TextWrapping = TextWrapping.Wrap,
@@ -1172,13 +1308,276 @@ public sealed class MainWindow : Window
 
             if (moreFigures.Children.Count > 0)
             {
-                statistics.Children.Add(moreFiguresPanel);
+                flags.Children.Add(moreFiguresPanel);
             }
         }
 
         BuildShotList();
         BuildSelection();
+        ShowAnalysis(state);
     }
+
+    /// <summary>
+    /// The two judgement cards, NOTES-FROM-PLANNING.md entry 103 section 2. A card is a bold verdict and then its evidence, never the verdict
+    /// alone. Two errors in the concept screenshot are not inherited: its round card named Pitman-Morgan, which is the stringing test, where
+    /// the circularity test is the likelihood ratio (docs/STATISTICS.md section 7, "label them differently in the interface, because they answer
+    /// different questions"); and it printed no evidence of stringing without what its shot count could have detected, which the same section
+    /// forbids. The flyer card keeps its hedge, "by that measure alone".
+    /// </summary>
+    private void ShowJudgements(MarkingState state, GroupFigures all)
+    {
+        int n = all.Shots;
+        if (all.Circularity is { } circular && all.Stringing is { } stringing)
+        {
+            string aspect = all.AspectRatio is { } a
+                ? string.Create(CultureInfo.InvariantCulture, $"Error ellipse aspect {a:0.00}, major axis at {DisplayedAngle(all.AngleDegrees ?? 0):0} degrees; {n} circular shots give about {all.CircularMedianAspect:0.0} and exceed {a:0.00} {HowOften(all.CircularAspectExceedance ?? 1)}.")
+                : $"Error ellipse: {all.AspectRatioUnavailable}.";
+            bool round = circular.PValue >= 0.05;
+            string verdict = round ? $"Round, as far as {n} shots can tell." : "Not round.";
+            string test = string.Create(CultureInfo.InvariantCulture, $"Circularity test, {circular.Method}: p = {circular.PValue:0.000}")
+                + (round
+                    ? ", so there is no evidence the group is anything but circular."
+                    : string.Create(CultureInfo.InvariantCulture, $". A circular group of {n} is this far from round {HowOften(circular.PValue)}."));
+            bool strings = stringing.PValueVertical < 0.05;
+            string stringingLine = string.Create(CultureInfo.InvariantCulture, $"Vertical stringing, a separate question, by Pitman-Morgan: p = {stringing.PValueVertical:0.000} one-sided, ")
+                + (strings
+                    ? "so the spread up and down is larger than across beyond what chance gives."
+                    : "so no evidence of vertical stringing. " + ShapeTests.StringingPowerSentence(n) + " No evidence is not evidence of none.");
+            judgements.Children.Add(Card("shape", verdict, test, aspect, stringingLine));
+        }
+        else if (all.ShapeTestsUnavailable is { } why)
+        {
+            judgements.Children.Add(Card("shape", "No shape judgement.", $"The shape tests are {why}."));
+        }
+
+        if (all.WorstShotInMeanRadii is { } worst && all.ExpectedWorstInMeanRadii is { } expected && WorstShot(state) is { } worstId)
+        {
+            double beyond = Flyers.ProbabilityWorstBeyond(n, worst);
+            string label = ShotLabel(worstId);
+            string sits = string.Create(CultureInfo.InvariantCulture,
+                $"It sits at {worst:0.00} mean radii from the centre. A group of {n} is expected to put its worst at {expected:0.00}, and circular groups this size put their worst this far out or farther {HowOften(beyond)}.");
+            judgements.Children.Add(beyond >= 0.05
+                ? Card("flyer", $"Shot {label} is not a flyer.", sits, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10).")
+                : Card("flyer", $"Shot {label} is further out than a group of {n} usually puts its worst.", sits,
+                    "That makes it worth a look, not a flyer by that measure alone: whether it was called or pulled is yours to say, and excluding it shows every figure both ways (STATISTICS.md section 10)."));
+        }
+    }
+
+    /// <summary>One judgement card: the verdict in bold, then each line of its evidence.</summary>
+    private static Border Card(string name, string verdict, params string[] evidence)
+    {
+        var column = new StackPanel { Spacing = Tokens.Space4 };
+        column.Children.Add(new TextBlock { Text = verdict, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+        foreach (string line in evidence)
+        {
+            column.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        }
+
+        return new Border { Child = column, Name = name + "Card", Classes = { AppStyles.JudgementCard } };
+    }
+
+    /// <summary>The group's shots as the figures count them: every shot, sighters left out, excluded ones included.</summary>
+    private static List<MarkedShot> GroupShots(MarkingState state)
+    {
+        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        return [.. state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b)))];
+    }
+
+    /// <summary>The shot furthest from the group's centre, which the flyer card is about.</summary>
+    private static int? WorstShot(MarkingState state)
+    {
+        var shots = GroupShots(state);
+        var offsets = GroupAnalysis.CompositeOffsets(state, shots);
+        if (offsets.Count == 0)
+        {
+            return null;
+        }
+
+        var centre = GroupStatistics.Centre(offsets);
+        return shots[Enumerable.Range(0, offsets.Count).MaxBy(i => Math.Pow(offsets[i].X - centre.X, 2) + Math.Pow(offsets[i].Y - centre.Y, 2))].Id;
+    }
+
+    /// <summary>
+    /// Everything the analysis state shows that is not a figure: the header's pill and crumb, the amber line for decisions left unmade, the
+    /// composite plot, the shot table and the load.
+    /// </summary>
+    private void ShowAnalysis(MarkingState state)
+    {
+        editorActions.IsVisible = breadcrumb.IsVisible = editorBody.IsVisible = !analysing;
+        analysisActions.IsVisible = analysisCrumbs.IsVisible = analysisBody.IsVisible = analysing;
+        sheetCrumb.Content = state.ImagePath is { } path ? Path.GetFileName(path) : "the sheet";
+        ToolTip.SetTip(sheetCrumb, "Back to the sheet, with every edit as you left it");
+        registrationText.Text = state.Scale switch
+        {
+            null => "no scale",
+            SheetReference when registrationResidual is { } residual => "registered, residual " + units.Length(residual),
+            SheetReference => "registered from the sheet's markers",
+            _ => "scale set by hand",
+        };
+        ToolTip.SetTip(registrationPill, state.Scale is null ? null : "From " + state.Scale.Describe(units) + ".");
+        foreach (var classes in new[] { registrationPill.Classes, registrationText.Classes })
+        {
+            classes.Remove(AppStyles.Good);
+            classes.Remove(AppStyles.Warn);
+            classes.Add(state.Scale is SheetReference ? AppStyles.Good : AppStyles.Warn);
+        }
+
+        int open = ReviewQueue.Open(ReviewQueue.For(state));
+        unsettled.IsVisible = open > 0;
+        unsettled.Text = open == 1
+            ? "1 decision was left unmade when this was accepted, and every figure here inherits it. The sheet crumb goes back to it."
+            : $"{open} decisions were left unmade when this was accepted, and every figure here inherits them. The sheet crumb goes back to them.";
+
+        loadLines.Children.Clear();
+        loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize));
+        loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize));
+        loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize));
+        loadLines.Children.Add(Readout("Calibre", state.Calibre?.Name ?? "not set", Tokens.SecondarySize));
+
+        // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
+        var shots = GroupShots(state);
+        var offsets = GroupAnalysis.CompositeOffsets(state, shots);
+        var plotted = offsets.Count == shots.Count
+            ? shots.Select((s, i) => new PlotShot(s.Id, ShotLabel(s.Id), offsets[i], s.Exclusion is not null)).ToList()
+            : [];
+        plot.Shots = plotted;
+        plot.CalibreInches = state.Calibre?.DiameterInches;
+        var kept = plotted.Where(p => !p.Excluded).ToList();
+        plot.Centre = kept.Count > 0 ? GroupStatistics.Centre([.. kept.Select(p => p.Offset)]) : null;
+        if (kept.Count >= GroupAnalysis.MinimumShotsForDispersion)
+        {
+            var rayleigh = GroupStatistics.Rayleigh([.. kept.Select(p => p.Offset)]);
+            plot.Cep50Inches = rayleigh.Cep(0.5).Value;
+            plot.Cep90Inches = rayleigh.Cep(0.9).Value;
+        }
+        else
+        {
+            plot.Cep50Inches = plot.Cep90Inches = null;
+        }
+
+        plot.SpreadPair = kept.Count >= 2 && GroupGeometry.MaximumPairDistance([.. kept.Select(p => p.Offset)]) is var (_, first, second)
+            ? (kept[first].Id, kept[second].Id)
+            : null;
+        plot.Discs = PlotDiscs(state);
+        plotSelection.RemoveWhere(id => plotted.All(p => p.Id != id));
+        if (canvas.Selected is { } selected && !plotSelection.Contains(selected))
+        {
+            plotSelection = [selected];
+        }
+
+        plot.Selected = plotSelection;
+        plot.InvalidateVisual();
+
+        offsetTable.Children.Clear();
+        offsetTable.Children.Add(new TextBlock { Text = "shot   across    up/down   radius", FontFamily = Mono, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Dim } });
+        var centre = plot.Centre;
+        foreach (var shot in plotted)
+        {
+            double r = centre is { } c ? Math.Sqrt(Math.Pow(shot.Offset.X - c.X, 2) + Math.Pow(shot.Offset.Y - c.Y, 2)) : 0;
+            var shown = AsDisplayed(shot.Offset);
+            string text = string.Create(CultureInfo.InvariantCulture, $"{shot.Label,4}  {units.Number(shown.X),8}  {units.Number(-shown.Y),8}  {units.Number(r),8}{(shot.Excluded ? "  excluded" : "")}");
+            var row = new Button
+            {
+                Content = new TextBlock { Text = text, FontFamily = Mono, FontSize = Tokens.SecondarySize, Classes = { shot.Excluded ? AppStyles.Dim : AppStyles.Secondary } },
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(0),
+                FontWeight = plotSelection.Contains(shot.Id) ? FontWeight.SemiBold : FontWeight.Normal,
+            };
+            if (plotSelection.Contains(shot.Id))
+            {
+                row.Classes.Add(AppStyles.Warn);
+            }
+
+            int id = shot.Id;
+            row.Click += (_, _) => PickShots([id]);
+            offsetTable.Children.Add(row);
+        }
+    }
+
+    /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>
+    private IReadOnlyList<PlotDisc> PlotDiscs(MarkingState state)
+    {
+        if (plotDefinition is not { } definition || definition.Bulls.FirstOrDefault(b => b.Scoring) is not { } bull
+            || definition.RingSets.FirstOrDefault(r => r.Key == bull.RingSet) is not { } rings || state.Scale is null)
+        {
+            return [];
+        }
+
+        var inks = definition.Inks.ToDictionary(i => i.Key, i => Tokens.Ink(i.Srgb));
+        return [.. rings.Discs.Select(d => new PlotDisc(d.Diameter / 254.0, inks.TryGetValue(d.Ink, out var colour) ? colour : Tokens.Paper))];
+    }
+
+    /// <summary>A click on the plot or a row of its table: one shot, or the extreme spread's two, picked on the plot and selected on the sheet.</summary>
+    internal void PickShots(IReadOnlyList<int> ids)
+    {
+        plotSelection = [.. ids];
+        canvas.Selected = ids.Count > 0 ? ids[0] : null;
+        status.Text = ids.Count == 2
+            ? $"Shots {ShotLabel(ids[0])} and {ShotLabel(ids[1])}: the extreme spread is the distance between them."
+            : ids.Count == 1 ? $"Shot {ShotLabel(ids[0])}." : status.Text;
+        Refresh();
+    }
+
+    /// <summary>Accept and analyse: the analysis state, whatever is still open, which the amber line then names.</summary>
+    internal void Analyse()
+    {
+        int open = ReviewQueue.Open(ReviewQueue.For(session.State));
+        DiagnosticLog.Info("analysis.accept", ("open", open));
+        SetAnalysing(true);
+    }
+
+    /// <summary>The sheet crumb: back to the editor, every edit as it was left.</summary>
+    internal void BackToEditor() => SetAnalysing(false);
+
+    /// <summary>Show work: the editor with the timeline of how the analysis was done opened.</summary>
+    private void ShowWork()
+    {
+        SetAnalysing(false);
+        timelineExpander.IsExpanded = true;
+    }
+
+    private void SetAnalysing(bool on)
+    {
+        analysing = on;
+        discardConfirm.IsVisible = false;
+        Refresh();
+    }
+
+    /// <summary>Discard edits asks first: the button gives way to a question with the two answers.</summary>
+    private void AskDiscard()
+    {
+        discardConfirm.IsVisible = true;
+        discardButton.IsVisible = false;
+    }
+
+    private void ConfirmDiscard()
+    {
+        discardConfirm.IsVisible = false;
+        if (detectedState is { } detected)
+        {
+            session.Restore(detected);
+            status.Text = "Edits discarded: the marking is as detection left it. Undo brings the edits back.";
+        }
+    }
+
+    /// <summary>Whether the window is in the analysis state, for the headless tests.</summary>
+    internal bool Analysing => analysing;
+
+    /// <summary>The composite plot, for the headless tests.</summary>
+    internal CompositePlot Plot => plot;
+
+    /// <summary>The amber line naming decisions left unmade, or empty when there are none, for the headless tests.</summary>
+    internal string UnsettledText => unsettled.IsVisible ? unsettled.Text ?? "" : "";
+
+    /// <summary>The header pill's text in whichever state is showing, for the headless tests.</summary>
+    internal string PillText => analysing ? registrationText.Text ?? "" : reviewCount.Text ?? "";
+
+    /// <summary>Each judgement card's lines, verdict first, for the headless tests.</summary>
+    internal IReadOnlyList<IReadOnlyList<string>> JudgementCards => [.. judgements.Children.OfType<Border>().Select(b => (IReadOnlyList<string>)[.. b.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")])];
+
+    /// <summary>The shots the plot has picked, for the headless tests.</summary>
+    internal IReadOnlySet<int> PlotSelection => plotSelection;
 
     /// <summary>
     /// Every shot as a row, NOTES-FROM-PLANNING.md entry 39 section 4: its number as the image shows it, its bull, and whether it is
@@ -1385,17 +1784,14 @@ public sealed class MainWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Classes = { open > 0 ? AppStyles.Warn : AppStyles.Secondary },
         };
-        var header = Row(count);
-        if (detectedState is not null && !ReferenceEquals(state, detectedState))
+        // Entry 103 section 1: Discard edits is in the header beside Accept and analyse, and asks first.
+        if (detectedState is null || ReferenceEquals(state, detectedState))
         {
-            header.Children.Add(Button("Discard edits", () =>
-            {
-                session.Restore(detectedState);
-                status.Text = "Edits discarded: the marking is as detection left it. Undo brings the edits back.";
-            }));
+            discardConfirm.IsVisible = false;
         }
 
-        review.Children.Add(header);
+        discardButton.IsVisible = detectedState is not null && !ReferenceEquals(state, detectedState) && !discardConfirm.IsVisible;
+        review.Children.Add(Row(count));
         if (current is not null)
         {
             // Entry 97 section 1: the card is amber because it is the thing that needs a person, and its first choice, the one Enter takes, is
@@ -1947,7 +2343,7 @@ public sealed class MainWindow : Window
     private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
-    internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+    internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
 
     /// <summary>The zero correction section's lines, for the headless tests (NOTES-FROM-PLANNING.md entries 91 and 92).</summary>
     internal IEnumerable<string> ZeroText => zeroPanel.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");

@@ -28,6 +28,12 @@ public sealed record TrueSizeRange(double Lower, double Upper);
 /// Nothing is ever NaN. Every figure that can be undefined is null beside a sibling "Unavailable" field saying why, entry 24
 /// section 3, so a consumer of the export gets a number or a null and never a string where it expects a number.
 /// </para>
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 103: CEP at 50, 90 and 95 percent, the group's width and height in target coordinates with the per-axis
+/// standard deviations, and the two shape tests of docs/STATISTICS.md section 7, circularity and vertical stringing, which the analysis
+/// state's judgement cards read. Below the dispersion minimum they are null, and <see cref="DispersionWithheld"/> says why; where the
+/// shots lie on a line the tests are null and <see cref="ShapeTestsUnavailable"/> says so.
+/// </para>
 /// </summary>
 public sealed record GroupFigures(
     int Shots,
@@ -55,7 +61,17 @@ public sealed record GroupFigures(
     string? WorstShotInMeanRadiiUnavailable,
     double? ExpectedWorstInMeanRadii,
     string? ExpectedWorstInMeanRadiiUnavailable,
-    string? DispersionWithheld);
+    string? DispersionWithheld,
+    ReportedEstimate? Cep50 = null,
+    ReportedEstimate? Cep90 = null,
+    ReportedEstimate? Cep95 = null,
+    double? Width = null,
+    double? Height = null,
+    double? SdX = null,
+    double? SdY = null,
+    CircularityTest? Circularity = null,
+    StringingTest? Stringing = null,
+    string? ShapeTestsUnavailable = null);
 
 /// <summary>
 /// A marking's report: every figure computed with and without the excluded shots, side by side, so an exclusion can never be
@@ -347,6 +363,7 @@ public static class GroupAnalysis
         const string collinear = "undefined: the shots lie on a line";
         double worst = GroupStatistics.Radii(offsets, centre).Max() / rayleigh.MeanRadius.Value;
         var (lower, upper) = SampleSize.SigmaIntervalMultiples(n);
+        double width = offsets.Max(o => o.X) - offsets.Min(o => o.X), height = offsets.Max(o => o.Y) - offsets.Min(o => o.Y);
         return new GroupFigures(
             Shots: n,
             CentreFromAim: centreFromAim,
@@ -373,7 +390,17 @@ public static class GroupAnalysis
             WorstShotInMeanRadiiUnavailable: double.IsFinite(worst) ? null : "undefined: every shot is in the same place",
             ExpectedWorstInMeanRadii: Flyers.ExpectedWorstInMeanRadii(n),
             ExpectedWorstInMeanRadiiUnavailable: null,
-            DispersionWithheld: null);
+            DispersionWithheld: null,
+            Cep50: Reported(rayleigh.Cep(0.5), rayleighCoverage, RayleighBasis, null),
+            Cep90: Reported(rayleigh.Cep(0.9), rayleighCoverage, RayleighBasis, null),
+            Cep95: Reported(rayleigh.Cep(0.95), rayleighCoverage, RayleighBasis, null),
+            Width: width,
+            Height: height,
+            SdX: Math.Sqrt(xx),
+            SdY: Math.Sqrt(yy),
+            Circularity: shapeDefined ? ShapeTests.Circularity(offsets) : null,
+            Stringing: shapeDefined ? ShapeTests.VerticalStringing(offsets) : null,
+            ShapeTestsUnavailable: shapeDefined ? null : collinear);
     }
 
     private static ReportedEstimate Reported(Estimate e, double coverage, string basis, string? whyNoInterval) =>

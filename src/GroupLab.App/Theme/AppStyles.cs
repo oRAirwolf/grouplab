@@ -65,6 +65,12 @@ public static class AppStyles
     /// <summary>The review card: amber-tinted, because it is the thing that needs a person (entry 97 section 1).</summary>
     public const string ReviewCard = "review-card";
 
+    /// <summary>
+    /// A judgement card in the analysis state, NOTES-FROM-PLANNING.md entry 103 section 2: a bold verdict and its evidence, on the raised panel
+    /// with a hairline. Neutral, because amber means something needs a person and a judgement is read, not acted on.
+    /// </summary>
+    public const string JudgementCard = "judgement-card";
+
     /// <summary>A status word in the review list or on a chip, NOW or NEXT in amber, DONE in teal.</summary>
     public const string StatusWord = "status-word";
 
@@ -170,6 +176,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<Border>().Class(ReviewCard), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
+        Rule(x => x.OfType<Border>().Class(JudgementCard), (Border.BackgroundProperty, Brush(p.Panel2)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
         Rule(x => x.OfType<TextBlock>().Class(StatusWord), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing)),
         Rule(x => x.OfType<Border>().Class(Chip), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(9)), (Border.PaddingProperty, new Thickness(Tokens.Space8, 1)), (Layoutable.MarginProperty, new Thickness(0, 0, Tokens.Space6, 0))),
         Rule(x => x.OfType<Border>().Class(Chip).Class(Good), (Border.BorderBrushProperty, Brush(p.TealTintBorder)), (Border.BackgroundProperty, Brush(p.TealTint))),

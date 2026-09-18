@@ -201,6 +201,36 @@ public partial class ReadmeTests
         Assert.True(listed >= deferred, $"DESIGN.md section 3 defers {deferred} promises and the README's Planned section lists {listed}. Add the missing one under \"Deferred, and why\", beginning the line with \"- **Deferred\".");
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 103 section 5: prose drifted while the states were tested. The Concept screens paragraph said there was no
+    /// navigation rail for three commits after the rail was built. So what that paragraph names as not built must be a feature in the Planned
+    /// section whose state is not Done: building one of them without correcting the paragraph fails here, and so does naming something the
+    /// plan does not carry.
+    /// </summary>
+    [Fact]
+    public void WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone()
+    {
+        string paragraph = string.Join(" ", Section("## Concept screens", "## Built with"));
+        var match = NotBuiltYet().Match(paragraph);
+        Assert.True(match.Success, "the Concept screens section no longer says what is not built in one sentence beginning \"Not built yet:\", so this test cannot check it.");
+        var absent = match.Groups["list"].Value.Split([", and ", ", ", " and "], StringSplitOptions.RemoveEmptyEntries)
+            .Select(item => item.Trim())
+            .Select(item => item.StartsWith("the ", StringComparison.Ordinal) ? item[4..] : item)
+            .ToList();
+        Assert.NotEmpty(absent);
+
+        var features = Section("## Planned", "## What GroupLab is not").Where(l => l.StartsWith("- **", StringComparison.Ordinal)).ToList();
+        foreach (string item in absent)
+        {
+            Assert.True(
+                features.Any(f => f.Contains(item, StringComparison.OrdinalIgnoreCase) && !f.StartsWith("- **Done.**", StringComparison.Ordinal)),
+                $"the Concept screens section says \"{item}\" is not built, and no feature in the Planned section that is not Done names it. Correct whichever is out of date.");
+        }
+    }
+
+    [GeneratedRegex(@"Not built yet: (?<list>[^.]+)\.")]
+    private static partial Regex NotBuiltYet();
+
     /// <summary>The lines of one README section, from its heading to the next one named.</summary>
     private static string[] Section(string heading, string next)
     {

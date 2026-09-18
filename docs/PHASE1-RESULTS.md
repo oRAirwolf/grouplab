@@ -4548,6 +4548,71 @@ The native steps kept are integer work, and every gate record run has shown them
 
 ---
 
+## Entry 103. The analysis screen split from the editor, the composite plot, two judgement cards, and questions 15 and 18
+
+`docs/NOTES-FROM-PLANNING.md` entry 103, in the order it sets: sections 1, 2 and 5 are the work, section 4 is documents, and section 3 was to follow in its own commit. **Section 3 is held as question 19**: the sort it asks for was committed by entry 52, which answered question 15, so there was nothing to regenerate.
+
+### Section 1: one destination in two states
+
+**The split.** `MainWindow` keeps one document and shows it two ways, as `docs/figures/screens/assignment-editor.png` and `analysis-dark.png` do behind the rail's first icon.
+
+| | Editor | Analysis |
+|---|---|---|
+| **Body** | the tool strip, the sheet, the review column, the timeline | the shots and the load on the left, the composite plot in the centre, the figures, the cards and the zero correction on the right |
+| **Header actions** | review pill, Open image, Detect, Discard edits, **Accept and analyse** as the amber primary | registration pill, Show work, Export |
+| **Pill** | "2 of 26 need review" | "registered, residual 0.001 in", or "scale set by hand" in amber |
+| **Breadcrumb** | the document and its counts | GroupLab, then the sheet as a button back to the editor, then analysis |
+
+- **Back is one click.** The sheet crumb returns to the editor, and a test holds the marking to the very state it left.
+- **Discard edits asks first.** It stands beside Accept and analyse, and a click turns it into "Discard every edit since detection?" with Discard and Keep them. The existing keyboard test now keeps the edits once and then discards them.
+- **Accepting with items open.** The analysis carries an amber line above the figures, for example "15 decisions were left unmade when this was accepted, and every figure here inherits them. The sheet crumb goes back to them." A test accepts a marking with its items open, reads the count, settles them and sees the line go, then opens one more and reads "1 decision".
+- **Show work** returns to the editor with the stage timeline opened, because the timeline is where the work is shown. **Report** is not built: reporting is Phase 4's and not started.
+
+**The composite plot** (`CompositePlot`).
+- **What it draws:** one scoring bull's discs from the sheet's own definition, at true relative scale behind the shots, centred on the aim point. Every scoring shot sits at its offset from its own bull's aim point.
+- **What it leaves out, by test:** sighter shots, and marks set to not a shot. Excluded shots stay, drawn hollow and dashed, and the legend counts them.
+- **Shots:** circles at the calibre's diameter when one is set, points when it is not, and the legend says which: "25 shots, each drawn at the 0.308 in calibre", or "drawn as points: no calibre is set, so there is no hole size to draw".
+- **The group:** its centre marked, CEP 50 and CEP 90 as dashed circles about it.
+- **Extreme spread is the line between its two shots, not a circle.** A circle that size reads as a region the shots are contained in, and extreme spread is the distance between two particular shots. Clicking the line picks both shots, and the table and the status line name them. The concept draws a circle, so this departs from it on purpose. If the circle is wanted after all it goes back, and this paragraph is the reason on record either way.
+- **Framing:** the view frames the shots with a margin and lets the rings run off the frame, so a small group is not a dot on a large ring.
+- **Selection:** a shot clicked on the plot, or its row in the table, selects it on the sheet as the shot list does.
+- **Without a definition**, for a marking done by hand, no bull is drawn and the legend says the sheet's definition is not known.
+
+**The stack gains two rows after the existing three.** CEP 90, with CEP 50 and 95 beneath, is sigma times its circular multiple, the same model as sigma's interval. Group width by height is each axis's extent, with its standard deviation beneath. Mean radius still leads at the lead size. A test holds the order: mean radius, then CEP, then width by height.
+
+### Section 2: the two judgements as cards
+
+A card is the verdict in bold and then its evidence. The verdict never appears alone.
+
+**The round card takes the circularity verdict and names the circularity test.**
+- **Verdict:** "Round, as far as 25 shots can tell", or "Not round".
+- **Its test:** the Bartlett-corrected likelihood ratio from 20 shots, and the simulation-calibrated likelihood ratio below that, with the p-value. That is `ShapeTests.Circularity`, and the card prints its method.
+- **The error ellipse's reference line** moved out of More figures into this card as evidence, since it is what a reader checks the verdict against.
+- **Stringing is a separate line labelled as such:** "Vertical stringing, a separate question, by Pitman-Morgan".
+- **A negative stringing result carries its power.** Section 7's table gives 19 shots for 2 times, 50 for 1.5 and 155 for 1.25, at 80 percent power, and `ShapeTests.StringingPowerSentence` states what the count could have caught. At 25 shots it reads "From 25 shots this test catches stringing of 2 times or more at least 8 times in 10, and often misses less: 1.5 times needs about 50 shots and 1.25 times needs about 155 shots." The card adds "No evidence is not evidence of none".
+- **The test asserts:** the round card's verdict and test lines never name Pitman-Morgan, and the stringing line starts with "Vertical stringing".
+
+**The flyer card keeps its hedge, and now has a second verdict.**
+- **When the worst shot is ordinary**, it says "Shot 14 is not a flyer.", then where the shot sits in mean radii, where a group of that size is expected to put its worst, and how often circular groups put theirs that far out or farther. It ends "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10)."
+- **What the old line did wrong:** it said "not a flyer by that measure alone" whatever the size of the worst shot.
+- **When the worst shot is unusual**, where circular groups put their worst that far out less than one time in twenty, the card says the shot "is further out than a group of 25 usually puts its worst". It still does not call it a flyer: whether the shot was called or pulled is the shooter's to say.
+
+### Section 5: the README's two false claims
+
+- **macOS reproduces the record.** The Platforms row is yes. The paragraph now says that packaging, and nobody using either platform day to day, is what stands between Linux and macOS and a download. It also keeps the workflow's distinction: printed tables gated and identical, raw records compared and reported, and differences below printed precision not failures.
+- **The rail exists.** The Concept screens paragraph now says what is built: the rail with one destination and four naming their phase, and the editor and analysis as two states behind it. It ends in one sentence, "Not built yet: the target library, session records, reporting, and load against load."
+- **The guard.** `ReadmeTests` now reads that sentence and fails unless each item it names is a feature in the Planned section whose state is not Done. It needs only that the absent items are listed in one sentence beginning "Not built yet:", which the test's own message asks for when it is missing. It is cheap and it is not brittle, so it was built rather than skipped.
+
+### Section 4: question 18's answers in the documents
+
+- **"Assisted" is the snap.** `DESIGN.md` section 3's secondary-mode bullet says so in one sentence, and the README has a Phase 3 feature line for it, Done.
+- **Blank-paper detection is Phase 4, Not started.** It is named in section 21's Phase 4 line and in the README's Phase 4 list. Both say that its gate needs one photograph at a known scale of plain paper with real holes, and that the corpus has none. Entry 103 asks for it to go "on the range list"; no such list exists in the repository, so the material is named in the gate and the feature line instead.
+- **The designer's deferral carries two promises.** Both its entries, in section 3 and in the README's deferral, now say that a traced definition on a bought target is the same canvas, so both arrive together. Section 21's sweep records assisted placement as answered and no longer deferred, with options C and D refused and why.
+
+**Tests:** Core 875 and App 69 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4770,3 +4835,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 101: native code kept for the integer steps.** Candidate detection, decoding and RANSAC's inlier choice were identical on every platform in every gate record run; porting them would add risk to steps that already agree.
 - **Entry 101: the contour lines fitted in double precision, over emulating OpenCV's single precision.** The emulation reproduces native and proves the contours are the same, but its answer is up to 0.09 px from the least-squares line it sets out to compute.
 - **Entry 101 section 5: the picture carried on the stage record, over a separate artefact channel.** The record already reached the timeline live, so attaching the picture to it makes the two arrive together, and a trace put on the timeline after its run draws its pictures by the same path.
+- **Entry 103 section 1: extreme spread drawn as the line between its two shots, over the concept's circle.** A circle that size reads as a region containing the shots; extreme spread is a distance between two of them.
+- **Entry 103 section 1: Show work opens the timeline in the editor, over a second timeline in the analysis state.** The timeline already shows the work, and one copy cannot disagree with itself.
+- **Entry 103 section 2: the flyer card says "further out than a group this size usually puts its worst" below one time in twenty, over always saying "not a flyer".** The old line said not a flyer whatever the distance; the card still leaves the call to the shooter.
+- **Entry 103 section 3: held as a question, over running the sweep.** The sort was already committed by entry 52, and regenerating would have reproduced entry 101's records.

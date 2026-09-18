@@ -41,7 +41,7 @@ The one-shot-per-bull design is what makes the accuracy possible. Holes never ov
 
 ## Concept screens
 
-These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has a marking screen and a print screen. They now carry the palette, the type and the marks these screens are drawn in, and not their layout: there is no navigation rail, no composite plot and no analysis screen yet.
+These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with its first destination built and the other four naming the phase that builds them, and behind that destination the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. A print screen sits beside them. Not built yet: the target library, session records, reporting, and load against load.
 
 ![Analysis screen](docs/figures/screens/analysis-dark.png)
 
@@ -128,7 +128,7 @@ What exists and is tested:
 - an end-to-end `analyze` command, from photograph to report
 - diagnostic logging, crash records and a report package, with no location data in any of them
 
-What does not exist yet: the full analysis screen shown above, load comparison, the chronograph and ballistic work, and any mobile build.
+What does not exist yet: the analysis screen's report, load comparison, the chronograph and ballistic work, and any mobile build.
 
 ## Planned
 
@@ -192,6 +192,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
+- **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a calibre-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Done.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
 
@@ -201,7 +202,8 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
 - **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
-- **In progress.** The analysis screen shown above.
+- **In progress.** The analysis screen shown above. Built: the editor and the analysis as two states of one document, forward by Accept and analyse and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the calibre, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; and the two judgement cards, round and flyer, each naming its test. Not built: the report, the sheet's thumbnail, and the full CEP table and bivariate fit behind a link.
+- **Not started.** Hole detection on blank paper, with no definition to difference against. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
 - **Not started.** A target library, session records and reporting.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
@@ -227,10 +229,9 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 ### Deferred, and why
 
-**Two promises in `DESIGN.md` section 3 carry no phase on purpose.** A deferral means the promise still stands, nobody is working on it, and the reason is written down. It is not a quiet drop, and it is checked: a scope bullet with neither a phase nor a deferral fails a test.
+**One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down. It is not a quiet drop, and it is checked: a scope bullet with neither a phase nor a deferral fails a test.
 
-- **Deferred: the full visual designer.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for, and it is revisited when somebody asks for a layout the form cannot express.
-- **Deferred: assisted hole placement on a target with no definition.** The detector renders the target's definition and differences the image against it. A store-bought target or a sheet of blank paper has no definition, so the method as built has nothing to difference, and whether anything weaker is worth having is an open question in `docs/QUESTIONS-FOR-PLANNING.md` rather than a phase.
+- **Deferred: the full visual designer, and with it the full detector on a bought target.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for. The same canvas is how a person would trace a store-bought target into a definition, and a definition is what the detector needs, so the designer's deferral carries that second promise too: when either is asked for, both arrive together. Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.
 
 A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
 
@@ -244,9 +245,9 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 |---|---|---|---|---|
 | Windows 10 and 11 | every push | the reference | **yes** | yes |
 | Linux | every push | **yes** | not yet | no |
-| macOS | every push | not yet | not yet | no |
+| macOS | every push | **yes** | not yet | no |
 
-**What stands between Linux and macOS and a download is the record, not the build.** Linux reproduces it. macOS differs on a small number of measurement rows, traced to corner refinement inside the native imaging library and to one further divergence below it. That is an open item with a named cause rather than an unknown, and it is tracked in `docs/PHASE1-RESULTS.md`.
+**What stands between Linux and macOS and a download is packaging, and that nobody uses either day to day.** Both reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
 
 **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
@@ -307,7 +308,7 @@ dotnet test
 dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf
 ```
 
-GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. The desktop application is offered as a build for Windows today: before Linux or macOS is offered, the Phase 0 gate record has to reproduce on that platform rather than merely compile, which is tracked in `docs/PHASE1-RESULTS.md`.
+GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. The desktop application is offered as a build for Windows today. The Phase 0 gate record reproduces on all three, so what remains before Linux or macOS is offered is packaging.
 
 ## Licence
 

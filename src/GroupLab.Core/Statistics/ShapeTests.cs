@@ -22,6 +22,35 @@ public sealed record StringingTest(int Shots, double Correlation, double T, doub
 /// </summary>
 public static class ShapeTests
 {
+    /// <summary>
+    /// Section 7's table: shots needed for 80 percent power to detect vertical stringing at 5 percent, by the ratio of vertical to horizontal
+    /// spread, found by simulation. Largest ratio first.
+    /// </summary>
+    public static readonly IReadOnlyList<(double Ratio, int Shots)> StringingShotsForPower = [(2.00, 19), (1.50, 50), (1.25, 155)];
+
+    /// <summary>
+    /// What a stringing test on <paramref name="shots"/> shots could have detected, from section 7's power table, NOTES-FROM-PLANNING.md
+    /// entry 103 section 2: "no significant stringing detected" from a small group means very little, so a negative result is never printed
+    /// without this beside it. It states the smallest stringing the count catches eight times in ten, and what the next smaller one needs.
+    /// </summary>
+    public static string StringingPowerSentence(int shots)
+    {
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        string Times(double ratio) => ratio.ToString("0.##", inv) + " times";
+        string Needs((double Ratio, int Shots) p) => string.Create(inv, $"{Times(p.Ratio)} needs about {p.Shots} shots");
+        var caught = StringingShotsForPower.Where(p => p.Shots <= shots).ToList();
+        var missed = StringingShotsForPower.Where(p => p.Shots > shots).ToList();
+        if (caught.Count == 0)
+        {
+            return string.Create(inv, $"From {shots} shots even stringing of {Times(missed[0].Ratio)} would be missed more than 1 time in 5: catching it 8 times in 10 {Needs(missed[0])[(Times(missed[0].Ratio).Length + 1)..]}, and {string.Join(" and ", missed.Skip(1).Select(Needs))}.");
+        }
+
+        var smallest = caught[^1];
+        return missed.Count == 0
+            ? string.Create(inv, $"From {shots} shots this test catches stringing of {Times(smallest.Ratio)} or more at least 8 times in 10.")
+            : string.Create(inv, $"From {shots} shots this test catches stringing of {Times(smallest.Ratio)} or more at least 8 times in 10, and often misses less: {string.Join(" and ", missed.Select(Needs))}.");
+    }
+
     /// <summary>Section 7: the Bartlett-corrected likelihood-ratio test is used from 20 shots; below that it is calibrated by simulation.</summary>
     public const int AsymptoticMinimumShots = 20;
 

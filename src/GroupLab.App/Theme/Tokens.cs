@@ -270,6 +270,12 @@ public static class Tokens
     /// </summary>
     public static Color Paper { get; } = Hex(0xf2f1ec);
 
+    /// <summary>
+    /// A sheet definition's own ink, as the composite plot draws a bull (NOTES-FROM-PLANNING.md entry 103 section 1). It is data from the
+    /// definition, #RRGGBB, not a colour of the interface, and paper where it does not parse.
+    /// </summary>
+    public static Color Ink(string srgb) => Color.TryParse(srgb, out var colour) ? colour : Paper;
+
     public static Color PaperEdge { get; } = Hex(0xcfccc3);
 
     /// <summary>The empty sheet's hint, dark on the paper.</summary>

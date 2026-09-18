@@ -12,9 +12,40 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-18, question 19: entry 103 section 3 asks for a sort that entry 52 already committed
+
+**Status: open.** Blocks entry 103 section 3 only. Sections 1, 2, 4 and 5 went ahead, and so did question 15's status, which was the one thing left undone.
+
+### 1. What entry 103 section 3 asks
+
+> `docs/QUESTIONS-FOR-PLANNING.md` question 15 asks whether to commit `MarkerDetection.InIdentifierOrder()` when doing so changes every printed table on Windows and no gate verdict. **Option A. Commit the sort and regenerate everything it touches.**
+
+It also asks that `docs/PHASE0-RESULTS.md` section 4.5 be amended "with dated before and after figures", because "`ultrawide3.jpg` goes from 21 to 18".
+
+### 2. What the repository shows
+
+- **The sort is committed**, by the commit titled "Entry 52: sort the markers before use, and regenerate every record and quoted figure with them". `SheetMeasurer.DetectFiducials` takes both detection passes through `InIdentifierOrder()` (`src/GroupLab.Core/Measurement/SheetMeasurer.cs`, lines 183 and 194).
+- **Question 15 was answered by entry 52**, whose heading is "question 15 answered, and the thing underneath it", with its status "actioned 2026-09-15" and its first bullet "the sort is committed with every record regenerated, and no verdict changed". Question 15's own status line was never changed from open, which is what made it look unanswered.
+- **Section 4.5 already carries the before and after figures.** It reads: "Before entry 52 sorted the markers they read 0.015 to 0.091 in, 8 to 21 and 0.014 to 0.060 in. The frames, the markers and the corners are the same; only their order changed". Since entry 101 the figures to beat are 0.018 to 0.113 in and 8 to 22 of 25.
+- **`docs/PHASE1-RESULTS.md` "Entry 52"** has the before and after table for every frame whose figures moved, headed by the sentence entry 52 section 2 asked for.
+
+So there is no sort to commit and no regeneration it would cause. Running the sweep would produce the records entry 101 already committed.
+
+### 3. What is still open in section 3
+
+**The `DESIGN.md` section 22 risk for option C.** Section 22 has no entry for RANSAC's consensus. Entry 52 section 3 and the stability measurement ("Entry 52 sections 3 and 4") established the fragility, and entry 101 left RANSAC's inlier choice native. Adding the risk is documents only and needs no regeneration.
+
+### 4. What I would choose
+
+- **Question 15:** marked answered, pointing at entry 52 as well as entry 103. Done in this commit, because leaving it open is how section 3 came to be written.
+- **Section 3's sort and sweep:** nothing to do. Confirm, and I will close this question.
+- **The section 22 risk for option C:** add it in the next run, alone, as section 3 intended. It is held here only because section 3 as a whole rests on a premise that turned out to be stale, and the instruction was to stop and ask rather than act on part of it.
+
+---
+
 ## 2026-09-18, question 18: assisted hole placement on a target with no definition, which the detector as built cannot do
 
-**Status: open.** Raised by `docs/NOTES-FROM-PLANNING.md` entry 90 section 5, which asks for this one as a design answer rather than a wording fix or a phase.
+**Status: answered** by `docs/NOTES-FROM-PLANNING.md` entry 103 section 4. "Assisted" means the snap, which is built; blank-paper detection is Phase 4 with a gate naming the material it needs; a user-traced definition on a bought target is the visual designer's second promise; option C is refused until somebody asks, and then as research with its own gate; option D is refused.
 
 ### 1. The promise, and why it has no phase
 
@@ -181,7 +212,7 @@ Both hold more than two holes' area, so the size veto cannot see them. Only a hi
 
 ## 2026-09-15, question 15: sorting the markers changes the Phase 0 record on Windows, not only on macOS
 
-**Status: open.** Blocks entry 49 section 2: the sort, and the macOS rerun from Windows' corners, whose order the sort decides. Nothing else waits. Entry 49 section 5, the edge fit's sensitivity, is not blocked and is the next measurement.
+**Status: answered**, option A, by `docs/NOTES-FROM-PLANNING.md` entry 103 section 3, and first by entry 52, which committed the sort and regenerated every record with it. This status line was left open when entry 52 was actioned, which is why entry 103 answered it again; question 19 records that the sort was already in.
 
 ### 1. What entry 49 section 2 asked
 

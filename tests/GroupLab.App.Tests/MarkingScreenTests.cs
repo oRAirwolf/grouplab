@@ -557,8 +557,17 @@ public class MarkingScreenTests
             Press(window, Key.Enter);
             Assert.True(window.ReviewText.Contains("0 of 2 need review"), string.Join(" | ", window.ReviewText));
 
-            var discard = window.GetLogicalDescendants().OfType<Button>().Single(x => Equals(x.Content, "Discard edits"));
-            discard.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            // Entry 103 section 1: Discard edits asks before discarding. Keeping them leaves every edit; confirming puts back what detection found.
+            Button Named(string content) => window.GetLogicalDescendants().OfType<Button>().Single(x => Equals(x.Content, content));
+            Named("Discard edits").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(session.State.Find(contested)!.BullChosen);
+            Named("Keep them").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(session.State.Find(contested)!.BullChosen);
+            Named("Discard edits").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Named("Discard").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.False(session.State.Find(contested)!.BullChosen);
             Assert.True(window.ReviewText.Contains("1 of 2 need review"), string.Join(" | ", window.ReviewText));
@@ -680,7 +689,9 @@ public class MarkingScreenTests
             string[] reference = [.. window.MoreFigures.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")];
             Assert.Contains(window.StatisticsText, t => t == "Mean radius");
             Assert.DoesNotContain(reference, t => t == "Mean radius");
-            Assert.Contains(reference, t => t.StartsWith("Error ellipse", StringComparison.Ordinal) && t.Contains("circular shots give about", StringComparison.Ordinal));
+            // Entry 103 section 2: the ellipse's reference is the round card's evidence now, beside the verdict, not behind the disclosure.
+            Assert.DoesNotContain(reference, t => t.StartsWith("Error ellipse", StringComparison.Ordinal));
+            Assert.Contains(window.JudgementCards, card => card.Any(t => t.StartsWith("Error ellipse", StringComparison.Ordinal) && t.Contains("circular shots give about", StringComparison.Ordinal)));
             Assert.False(window.MoreFigures.IsExpanded);
             Assert.False(store.LoadMoreFigures());
 

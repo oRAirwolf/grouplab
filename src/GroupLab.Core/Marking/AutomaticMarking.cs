@@ -12,7 +12,8 @@ namespace GroupLab.Core.Marking;
 /// shots with their assignment, a one-line summary, the failure when there is one, and the sheet's printed artwork in image pixels, which
 /// the screen's snap and size check read to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Each detection
 /// keeps its whole assignment, margin and nearest bull included, the matching's method and reason travel with them, and the candidates
-/// the detector refused come through too, so the editor has what it shows (entry 70 section 4).
+/// the detector refused come through too, so the editor has what it shows (entry 70 section 4). The definition comes with a result that
+/// registered, so the analysis state can draw one bull's artwork behind the composite plot (entry 103 section 1).
 /// </summary>
 public sealed record AutomaticResult(
     SheetMeasurement Measurement,
@@ -26,7 +27,8 @@ public sealed record AutomaticResult(
     ShotAssignmentResult? Assignment = null,
     IReadOnlyList<RejectedCandidate>? Rejected = null,
     RenderDifferenceResult? Difference = null,
-    DetectionRecord? Detection = null);
+    DetectionRecord? Detection = null,
+    TargetDefinition? Definition = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -192,7 +194,7 @@ public static class AutomaticMarking
 
         string summary = string.Create(CultureInfo.InvariantCulture,
             $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
     }
 }
 
