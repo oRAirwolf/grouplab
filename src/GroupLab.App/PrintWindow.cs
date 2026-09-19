@@ -10,9 +10,11 @@ using Avalonia.Platform.Storage;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Library;
+using GroupLab.Cli.Printing;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Printing;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
 using RenderOptions = GroupLab.Core.Rendering.RenderOptions;
@@ -128,7 +130,7 @@ public sealed class PrintWindow : Window
         details.Children.Add(loadBlock);
         details.Children.Add(note);
         details.Children.Add(new TextBlock { Text = ScaleWords, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
-        details.Children.Add(Row(Button("Save PDF…", async () => await SaveDialog()), Button("Open to print", Print)));
+        details.Children.Add(PrintRow());
         details.Children.Add(status);
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
         details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = 12, Opacity = 0.7 });
@@ -511,7 +513,7 @@ public sealed class PrintWindow : Window
     /// <summary>
     /// Opens the target in the PDF viewer to be printed from there, NOTES-FROM-PLANNING.md entry 105 section 9 and entry 106 section 1. The PDF
     /// is written to a temporary file and opened, and a dialog says what is true: it is open in the viewer, and it must be printed at actual
-    /// size. GroupLab sends nothing to a printer on this path; printing from inside GroupLab is entry 106 section 5's.
+    /// size. GroupLab sends nothing to a printer on this path; on Windows, printing from inside GroupLab is <see cref="PrintHere"/>.
     /// </summary>
     private void Print()
     {
@@ -545,15 +547,67 @@ public sealed class PrintWindow : Window
     }
 
     /// <summary>
+    /// The print buttons, NOTES-FROM-PLANNING.md entry 107 section 2. On Windows "Print…" prints from inside GroupLab and is the primary, the
+    /// amber button, because Alan chose in-app printing so that no sheet can come out at the wrong size; "Open to print" stays beside it as the
+    /// deliberate choice for anyone whose workflow goes through their viewer. Linux and macOS keep the viewer path alone until Windows has
+    /// proved the approach.
+    /// </summary>
+    private StackPanel PrintRow()
+    {
+        var open = Button("Open to print", Print);
+        var save = Button("Save PDF…", async () => await SaveDialog());
+        if (!OperatingSystem.IsWindows())
+        {
+            return Row(save, open);
+        }
+
+        var print = Button("Print…", PrintHere);
+        print.Classes.Add(AppStyles.Primary);
+        return Row(print, open, save);
+    }
+
+    /// <summary>
+    /// Prints from inside GroupLab through the Windows print dialog, entry 107 section 2: the sheet drawn as vector at actual size, or a refusal
+    /// that says why and prints nothing. The confirmation names the printer, the sheet, the page count and "at actual size", and says the job
+    /// was sent to the print queue, never that paper came out.
+    /// </summary>
+    private void PrintHere()
+    {
+        if (!OperatingSystem.IsWindows() || selected is null || Render() is not { } result)
+        {
+            return;
+        }
+
+        string sheet = selected.Definition.Name;
+        DiagnosticLog.Info("dialog.open", ("dialog", "print"), ("sheet", selected.File), ("pages", result.Pages.Count));
+        var outcome = WindowsPrinter.PrintWithDialog(TryGetPlatformHandle()?.Handle ?? IntPtr.Zero, result.Pages, sheet);
+        DiagnosticLog.Info("print.send", ("sheet", selected.File), ("outcome", outcome.Kind.ToString()), ("pages", outcome.Pages));
+        switch (outcome.Kind)
+        {
+            case PrintOutcomeKind.Cancelled:
+                SetStatus(outcome.Message, StatusKind.Information);
+                break;
+            case PrintOutcomeKind.Sent:
+                SetStatus(outcome.Message, StatusKind.Success);
+                Confirm(outcome.Message, "Printed");
+                break;
+            default:
+                SetStatus(outcome.Message, StatusKind.Alert);
+                Confirm(outcome.Message, "Not printed");
+                break;
+        }
+    }
+
+    /// <summary>
     /// The confirmation entry 106 section 1 asks for: a status line was missed, so a dialog says what GroupLab did and what the person must do,
     /// and nothing more, since on this path GroupLab only opened a file.
     /// </summary>
-    private void Confirm(string text)
+    private void Confirm(string text, string heading = "Open to print")
     {
         var ok = new Button { Content = "OK", HorizontalAlignment = HorizontalAlignment.Right, IsDefault = true, Classes = { AppStyles.Primary } };
         var dialog = new Window
         {
-            Title = "Open to print",
+            Title = heading,
             Width = 440,
             SizeToContent = SizeToContent.Height,
             CanResize = false,

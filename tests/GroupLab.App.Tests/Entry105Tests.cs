@@ -230,9 +230,12 @@ public class Entry105Tests
         }
     }
 
-    /// <summary>Item 7 in the window: a name fired as several diameters offers each as a choice and sets none until one is chosen.</summary>
+    /// <summary>
+    /// Entry 107 section 1 in the window: a name is refused with the sentence that says what to type and sets nothing, and a diameter is set and
+    /// shown in both units, as the load panel shows it.
+    /// </summary>
     [AvaloniaFact]
-    public void AnAmbiguousCalibreOffersItsCandidates()
+    public void TheCalibreBoxTakesADiameterAndRefusesAName()
     {
         var (window, _) = NewWindow();
         string path = Marked(window);
@@ -240,16 +243,11 @@ public class Entry105Tests
         {
             window.EnterCalibre("38 Cal.");
             Assert.Null(window.Session.State.Calibre);
-            Assert.Equal(["38 Cal. .357", "38 Cal. .358"], window.CalibreChoices);
-
-            var choice = window.GetLogicalDescendants().OfType<Button>().Single(b => Equals(b.Content, "38 Cal. .358"));
-            choice.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            Dispatcher.UIThread.RunJobs();
-            Assert.Equal(0.358, window.Session.State.Calibre!.DiameterInches, 12);
-            Assert.Empty(window.CalibreChoices);
+            Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == Calibre.Refusal);
 
             window.EnterCalibre(".357");
             Assert.Equal(0.357, window.Session.State.Calibre!.DiameterInches, 12);
+            Assert.Equal(".357 in (9.07 mm)", window.Session.State.Calibre.Name);
             window.Close();
         }
         finally

@@ -15,6 +15,66 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 107: the calibre is a diameter and nothing else, and question 21 answered so printing can be built
+
+**Status: actioned 2026-09-19**, sections 1 and 2. **One test in section 1's list is not met: "9mm" is read as a diameter, not refused**, because the section's own rule reads any number marked mm; that conflict, and a pick list of 37 diameters where the section says 36, are raised as question 22, with the written rule built meanwhile.
+- **Section 1:** the calibre is a diameter and nothing else, recorded as Alan's decision in `Calibre` and in DESIGN.md. Inches, bare below one or marked, and millimetres marked mm; names and bare numbers of one or more refused with the one sentence; the pick list the 37 distinct diameters in both units with .223 gone; the LOAD panel and every other place shows ".308 in (7.82 mm)"; a marking saved under a name loads with its diameter; the name table, the candidates and the ambiguity sentence removed; `docs/CALIBRES.md` and `docs/CALIBRES.pdf` regenerated as the diameters and the rule.
+- **Section 2:** question 21 answered and built. On Windows, "Print…" is the amber primary beside Open to print, through `PrintDlgEx` and GDI, the scene drawn as vector at actual size and shifted by the printer's physical offsets; refused with the reason on the wrong paper or with ink in the margin, the quiet zone not counted; a confirmation after `EndDoc` naming the printer, the sheet, the page count and "at actual size". The geometry is plain functions tested on every platform; a sheet printed to "Microsoft Print to PDF" puts its 38 markers within 0.015 mm of the definition, and the Windows CI job lists its printers.
+- `docs/PHASE1-RESULTS.md` "Entry 107".
+
+Two sections. **Do section 1 first**; it is small. Section 2 is the run Claude Code costed in question 21.
+
+### 1. Alan's decision: the calibre input takes a diameter in inches or millimetres, and no names
+
+**Alan has decided that the application offers the calibre only as a diameter**, in inches or millimetres. No cartridge names and no "30 Cal." style names. **This reverses entry 105 section 7 and entry 106 section 3**, and changes entry 106 section 4's list. Record it as a decision so nobody restores the names later thinking they were lost.
+
+**Why it is the better design, not only a preference.** Every defect entries 105 and 106 fixed came from reading a name as a diameter: 36 of Alan's 44 names read wrong, nine meant more than one diameter, and 300 Blackout read as 0.300. The table fixed the names it knew, and every name it does not know still falls back to a guess. **A diameter has one meaning.** Asking for it removes the whole class of error rather than one more instance of it.
+
+**What the input accepts.**
+- **Inches:** a decimal below one, with or without its leading zero, or any number marked `in` or `"`. So ".308", "0.308" and "0.308 in" all read as 0.308 in.
+- **Millimetres, only when marked:** "7.82 mm" or "7.82mm" reads as 7.82 mm.
+- **Everything else is refused, with one sentence that says what to type:** "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as 7.82 mm."
+
+**A bare number of one or more is refused, not guessed. This matters most.** The old rule read a bare 1 to 14 as millimetres, and that is the calibre-name trap in another form. "7.62" as millimetres is 0.300 in, a diameter no 7.62 bullet has; "6.5" is 0.256 in, and the bullet is .264. **Requiring the unit makes the person state a diameter rather than a name that happens to be a number.** Remove the hundredths and thousandths guesses too, so "308" and "22" are refused rather than read.
+
+**The range check stays:** 0.1 to 1.0 in, however it was entered.
+
+**The pick list becomes diameters.** It holds the distinct diameters in Alan's two lists, 36 of them, from .172 to .510, each shown in both units, for example ".308 in (7.82 mm)", ordered by size. No names beside them. **.223, which came from the old ".22 LR" entry, is not in Alan's list**, so it leaves the pick list. It can still be typed.
+
+**How the calibre is shown everywhere else** is the same form, the diameter in both units. **The analysis screen's LOAD panel currently reads "Calibre .308, 7.62 mm, set after detection"**, which shows a cartridge name's "7.62 mm" beside a .308 in diameter, when .308 in is 7.82 mm. That line becomes ".308 in (7.82 mm), set after detection".
+
+**Saved markings.** A marking that stored a calibre name keeps its diameter. It loads with the diameter shown, and the old name is not displayed. Test it with a marking saved under a name.
+
+**Remove what only the names needed:** the `Cartridges` list, the key matching, the candidates and the ambiguity sentence, and the tests that pinned them. **Keep `grouplab calibres` and its drift test**, now writing `docs/CALIBRES.md` and `docs/CALIBRES.pdf` as the diameter list and the input rule in plain words.
+
+**Tests:**
+- every pick-list diameter reads exactly, in both units;
+- names are refused with the sentence, including "300 Blackout", "6.5 Creedmoor", "30 Cal." and "9mm";
+- a bare "7.62", "308" and "22" are refused;
+- "7.82 mm" and "0.308" read correctly;
+- a marking saved under a name loads with its diameter.
+
+### 2. Question 21 answered: build printing from inside GroupLab, on Windows
+
+**Build it in this run, after section 1, as question 21's plan lays out**: Win32 through P/Invoke, `PrintDlgEx` and GDI, drawn as vector from the scene, shifted by the printer's physical offsets, with the paper and margin refusals and the confirmation after `EndDoc`. The reasoning against `System.Drawing.Printing` and the WinRT manager is sound.
+
+**The three decisions.**
+
+**1. The margin refusal covers inked items only, not the quiet zone.** This is the one place I disagree with the recommendation, and the reason is physical. **A printer's unprintable margin leaves bare paper, and the quiet zone is white by design:** it is the blank paper around a marker, and nothing dark is printed in it. A quiet zone that falls in the margin comes out exactly as it would have printed, white, so refusing on it refuses a sheet that would work. **Refuse when any item drawn in a non-paper ink falls in the margin, wholly or partly**: markers, codes, bull artwork, rules and text. Text is included because the printed name and identifier are part of the sheet's record. **If you know a reason the quiet zone matters that this misses**, such as printers that smudge toner near the edge, say so in the write-up and refuse on it instead. I would rather be corrected than refuse sheets for nothing.
+
+**2. Linux and macOS keep the viewer path.** As you recommend. GroupLab is used on Windows, and a CUPS path is worth building only once Windows proves the approach.
+
+**3. Print sits beside Open to print on Windows, and Print is the primary.** As you recommend: Print is the amber button, and Open to print stays as the secondary for anyone whose workflow goes through their viewer. **Alan chose printing from inside GroupLab so that no sheet can come out at the wrong size**, so Print must be the obvious choice and Open to print the deliberate one.
+
+**The tests.**
+- **The geometry, testable anywhere with no printer:** the physical-offset shift, the paper-size refusal, and the ink-in-margin refusal. Keep this logic as plain functions over the scene and a described printer, so it runs on every platform's CI.
+- **The printed size**, as question 21 describes: print to "Microsoft Print to PDF", rasterise, register, and require the markers within 0.1 mm of their definition coordinates.
+- **Find out whether the runner has the printer rather than guessing.** Add a step to the Windows CI job that lists the installed printers. If "Microsoft Print to PDF" is there, the size test runs on CI. If it is not, the test skips with that reason named, and the write-up gives Alan the one-time manual check step by step: what to click, where the file goes, and the exact `grouplab measure` command to run on it.
+
+**The confirmation wording** follows question 21: the printer, the sheet, the page count and "at actual size", and it says the job was sent to the print queue, never that paper came out.
+
+---
+
 ## 2026-09-19, entry 106: entry 105 section 9 was folded as actioned and not done, question 20 answered, the "300" cartridges still read as 0.300, the full calibre list generated from the code, and printing from inside GroupLab
 
 **Status: actioned 2026-09-19**, sections 1 to 4. **Section 5 is not built: it is scoped and raised as question 21**, with its plan, its cost and the three decisions it needs.

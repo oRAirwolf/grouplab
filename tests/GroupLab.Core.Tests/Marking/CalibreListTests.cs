@@ -19,14 +19,13 @@ public class CalibreListTests
         Assert.True(File.Exists(Repo.PathTo("docs", "CALIBRES.pdf")));
     }
 
-    /// <summary>Every name in the table and every cartridge is in the list, and so is every name that asks.</summary>
+    /// <summary>Every pick-list diameter is in the list in both units, and so is the refusal's sentence.</summary>
     [Fact]
-    public void TheListCarriesEveryNameTheInputKnows()
+    public void TheListCarriesEveryDiameterAndTheRule()
     {
         string list = CalibreList.Markdown();
-        Assert.All(Calibre.TableRows, r => Assert.Contains($"| {r.Calibre.Name} |", list, StringComparison.Ordinal));
-        Assert.All(Calibre.CartridgeNames, c => Assert.Contains($"| {c.Calibre.Name} |", list, StringComparison.Ordinal));
-        Assert.All(Calibre.AmbiguousNames, a => Assert.Contains($"| {a.Key} |", list, StringComparison.Ordinal));
+        Assert.All(Calibre.Diameters, d => Assert.Contains(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"| {d.ToString(".000#", System.Globalization.CultureInfo.InvariantCulture)} | {d * 25.4:0.00} |"), list, StringComparison.Ordinal));
+        Assert.Contains(Calibre.Refusal, list, StringComparison.Ordinal);
         Assert.DoesNotContain("\u2014", list, StringComparison.Ordinal);
     }
 
@@ -35,7 +34,7 @@ public class CalibreListTests
     public void ThePdfKeepsEveryLineOnThePage()
     {
         var pages = CalibreList.Pages(CalibreList.Markdown());
-        Assert.InRange(pages.Count, 2, 6);
+        Assert.InRange(pages.Count, 1, 6);
         foreach (var page in pages)
         {
             Assert.Equal((4318, 5588), (page.Width, page.Height));

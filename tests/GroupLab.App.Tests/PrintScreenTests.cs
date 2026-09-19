@@ -31,18 +31,35 @@ public class PrintScreenTests
         Assert.DoesNotContain("Sent", status, StringComparison.Ordinal);
     }
 
-    /// <summary>Entry 106 section 1: the button says what it does, and no longer ends in an ellipsis that promises a dialog.</summary>
+    /// <summary>
+    /// Entry 106 section 1: the viewer path says what it does, "Open to print", with no ellipsis promising a dialog. NOTES-FROM-PLANNING.md
+    /// entry 107 section 2: on Windows "Print…" opens the real print dialog, so it has the ellipsis, and it is the primary, the amber button,
+    /// first in the row, with Open to print beside it as the deliberate choice. Linux and macOS keep the viewer path alone.
+    /// </summary>
     [AvaloniaFact]
-    public void TheButtonIsNamedForWhatItDoes()
+    public void PrintIsThePrimaryOnWindowsAndOpenToPrintStaysBesideIt()
     {
         var window = new PrintWindow { Width = 1200, Height = 800 };
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.Select("GL-CF25-LTR.gltd.json");
         Dispatcher.UIThread.RunJobs();
-        var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.Button>().Select(b => b.Content as string).ToList();
-        Assert.Contains("Open to print", buttons);
-        Assert.DoesNotContain("Print…", buttons);
+        var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.Button>().ToList();
+        var open = Assert.Single(buttons, b => b.Content as string == "Open to print");
+        Assert.DoesNotContain(GroupLab.App.Theme.AppStyles.Primary, open.Classes);
+        if (OperatingSystem.IsWindows())
+        {
+            var print = Assert.Single(buttons, b => b.Content as string == "Print…");
+            Assert.Contains(GroupLab.App.Theme.AppStyles.Primary, print.Classes);
+            var row = Assert.IsType<Avalonia.Controls.StackPanel>(print.Parent);
+            Assert.Same(print, row.Children[0]);
+            Assert.Same(row, open.Parent);
+        }
+        else
+        {
+            Assert.DoesNotContain(buttons, b => b.Content as string == "Print…");
+        }
+
         window.Close();
     }
 

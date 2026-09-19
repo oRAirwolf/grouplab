@@ -4867,6 +4867,105 @@ Every diameter the entry lists was checked against the standard bullet diameters
 
 ---
 
+## Entry 107. The calibre is a diameter and nothing else, and printing from inside GroupLab on Windows
+
+`docs/NOTES-FROM-PLANNING.md` entry 107, both numbered sections, section 1 first. Two conflicts in section 1 are raised as question 22 and built to the section's written rule meanwhile.
+
+### Section 1: the calibre input takes a diameter and no names
+
+**Recorded as Alan's decision** in `Calibre`'s own comment and in DESIGN.md, so nobody restores the names thinking they were lost. It reverses entry 105 section 7 and entry 106 section 3.
+
+**What the box reads.**
+- **Inches:** a decimal below one, with or without its leading zero, or any number marked `in` or `"`. ".308", "0.308", "0.308 in" and "1 in" all read. So does the pick list's own form, ".308 in (7.82 mm)", so choosing from the list and editing it both work.
+- **Millimetres, only when marked:** "7.82 mm" and "7.82mm".
+- **Everything else is refused with one sentence:** "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as 7.82 mm." That covers every name and every bare number of one or more: "300 Blackout", "6.5 Creedmoor", "30 Cal.", "9mm Luger", "7.62", "6.5", "308" and "22". The old millimetre, hundredths and thousandths guesses are gone.
+- **The range stays** 0.1 to 1 in however the diameter was entered, and says so before the same sentence.
+
+**Shown the same way everywhere,** the diameter in both units: the pick list, the box after a choice, and the analysis screen's LOAD panel, which read "Calibre .308, 7.62 mm, set after detection" and now reads ".308 in (7.82 mm), set after detection".
+
+**The pick list is the 37 distinct diameters** in Alan's rifle and pistol lists, .172 to .510, smallest first, with no names. .223 has left it and can still be typed.
+
+**Saved markings.** A marking that stored a name keeps its diameter and loads showing ".308 in (7.82 mm)", with the old name not displayed.
+
+**Removed:** the name table, the cartridge list, the key matching, the candidates, the ambiguity sentence, and the tests that pinned them.
+
+**`grouplab calibres` and its drift test stay.** `docs/CALIBRES.md` and `docs/CALIBRES.pdf` are now three parts: how to enter a calibre, with the refusal sentence; the 37 diameters in inches and millimetres; and why there are no names. The PDF is one page.
+
+**Tests:**
+- every pick-list diameter reads exactly in every form, in both units;
+- every name and bare number above is refused with the sentence;
+- "7.82 mm" and "0.308" read correctly;
+- a marking saved under ".308, 7.62 mm" loads as 0.308 in, shown ".308 in (7.82 mm)";
+- the committed list equals the generated one.
+
+**Question 22, two conflicts, blocking nothing.**
+- **"9mm" is in the section's list of names to refuse, and the section's own rule reads it.** It is a number marked mm, so it reads as 0.354 in. No syntax tells "9mm" the name from "9mm" the diameter. "7.62mm" reads 0.300 in the same way, which is the trap the section removes for bare numbers. The rule is built as written, a test pins "9mm" at 0.354 in with a pointer to the question, and the question offers refusing the metric designations as the fix.
+- **The section counts 36 diameters, and Alan's lists hold 37.** All 37 are in the pick list.
+
+### Section 2: printing from inside GroupLab, on Windows
+
+Question 21's plan, built with entry 107's three answers.
+
+**On the print screen, on Windows,** the row is "Print…", the amber primary, then "Open to print", then "Save PDF…". Print opens the real Windows print dialog, `PrintDlgEx`, owned by the window:
+- the sheet's paper is chosen in advance when it is Letter, A4, Legal, Tabloid or A3;
+- copies go through the driver;
+- a tiled set offers page ranges.
+
+Linux and macOS show Open to print and Save PDF only, as before.
+
+**How it draws.** GDI through P/Invoke, with no package added.
+- **The scene is drawn as vector,** the same scene the PDF writer draws, in half-dmm through GDI's anisotropic mapping: 508 units to the printer's dots per inch, so one unit of the definition is one unit on the paper.
+- **The origin is shifted by `PHYSICALOFFSETX` and `PHYSICALOFFSETY`,** because GDI's origin is the printable area's corner, not the paper's.
+- **What is drawn:** rectangles for markers, codes and rules; each bull band as two ellipses filled even-odd; text in Arial, the metric match for Helvetica, on its baseline with the same anchor.
+
+**Refused before anything is sent, with the reason, and never scaled.**
+- **The paper.** A paper that is not the sheet's page names both, for example "Test Printer is set to A4 (210 x 297 mm) paper, and this sheet is Letter (215.9 x 279.4 mm)", and says to choose that paper or print the PDF on a printer that takes it.
+- **The margin.** Any inked item that falls in the printer's unprintable margin, wholly or partly: markers, codes, bull artwork, rules and text. The refusal names each edge, the margin there and what reaches into it, and on a tiled set, which sheet.
+
+**The quiet zone is not counted, as entry 107 decides, and I know nothing its reason misses.**
+- **The margin leaves bare paper and the quiet zone is bare paper,** so a quiet zone in the margin prints exactly as intended.
+- **Printers that smudge or smear near the edge** do so where they print, and the driver's margin is what keeps ink out of that band. An item that would be smudged is inked, so it is refused on its own account.
+- **A quiet zone meeting the paper's edge** is a matter of the sheet's layout, not the printer. The layout rules and the validator's edge check govern that, whatever the printer does.
+
+**The confirmation, after `EndDoc` returns, as a dialog and in the status line.** For example: "GroupLab 5x5 Load Development, Letter, 1 page at actual size, was sent to the print queue of Brother MFC-J430W Printer." It says nothing about paper, because GroupLab cannot see it.
+- **A cancel** says nothing was sent.
+- **A refusal or a failure** is an alert and a dialog titled "Not printed".
+- **Every print is logged:** `dialog.open` for the dialog, and `print.send` with the sheet file's name, the outcome and the page count. The log holds no paths.
+
+**Where the code lives.**
+- **`PrintFit`, in Core,** holds everything decided: the mapping, the paper and margin refusals and the confirmation's words. It is plain functions over a scene and a described printer.
+- **`WindowsPrinter`, in the CLI project,** holds only the dialog, the driver queries and the drawing. It sits there because the application and the Core tests already reference that project.
+
+**Tests.**
+- **On every platform, with no printer:**
+  - the offset shift, including unequal resolutions;
+  - the paper refusal, Letter on A4 and Letter landscape;
+  - the margin refusal for a marker, a disc crossing the bottom, text on the right, a code and a rule;
+  - a marker whose quiet zone alone falls in the margin, not refused;
+  - an item exactly on the printable edge, not refused;
+  - a tiled refusal naming its sheet;
+  - every built-in sheet printing where the whole paper is printable;
+  - the confirmation's wording.
+- **The printed size, on Windows with "Microsoft Print to PDF".** GL-CF25-LTR is printed through the same GDI path with no dialog, and the output is rasterised at 600 dpi, where its page is 5100 by 6599 pixels: the driver's page box rounds to one pixel short of Letter's 6600, 0.04 mm. Its markers are then detected and located on the page with no fitting. **All 38 markers lie within 0.1 mm of their definition coordinates; the worst is 0.015 mm** on this machine. Where the printer is absent the test is skipped, with that reason named.
+- **App:** on Windows "Print…" is the primary and first in the row, with Open to print beside it and not primary; elsewhere there is no Print button.
+
+**Alan's own printer, described and not printed to.** The Brother MFC-J430W reports 600 dpi and a 2.96 mm margin on every edge on Letter and A4.
+- **Every built-in sheet on those papers, and on A3 and Tabloid, passes the margin check.**
+- **The three roll sheets are refused on paper,** because neither printer takes their sizes: GL-LR300-R24 at 24 by 28 in, R36 and R42.
+
+**The CI runner.** The Windows job lists the installed printers into the run summary before it builds, and says whether "Microsoft Print to PDF" is there, so the printed-size test either runs or is skipped with its reason. What the runner has is recorded below once the run reports.
+
+**The check by hand, on paper.** The size test covers the PDF printer and runs on this machine. The check that matters on paper is:
+1. In GroupLab, open the print screen, choose "GroupLab 5x5 Load Development, Letter" (GL-CF25-LTR), and click **Print…**.
+2. Choose the Brother, leave the paper at Letter, and click **Print**. The confirmation names the printer and says one page at actual size.
+3. Scan the printed sheet flat at 600 dpi to a PNG or TIFF, for example `C:\Users\<you>\Documents\print-check.png`.
+4. Run `grouplab measure C:\Users\<you>\Documents\print-check.png targets\GL-CF25-LTR.gltd.json -v 3` from the repository. Add `--dpi 600` if the scanner did not record its resolution.
+5. **Read stage S4.** It says "printed at N% of intended size". Within 0.05 percent of 100 is actual size. The bull table below it gives each bull's error from its definition.
+
+`grouplab measure` reads images, not PDFs, which is why the check on the PDF printer is the automated test rather than this command.
+
+**Tests:** Core 905 and App 80 passing, none skipped on this machine, the printed-size test among them.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5102,3 +5201,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 106 section 1: the viewer path on every platform with a confirmation dialog, over keeping the print verb anywhere.** The verb printed silently at the viewer's own scaling on Alan's machine, and GroupLab cannot see what any registered print command does.
 - **Entry 106 section 4: the PDF drawn by the renderer's own writer, over printing the Markdown through a browser.** The other PDFs came from Chromium by hand; a command in the repository keeps the list and its PDF in step with the code, and installs nothing.
 - **Entry 106 section 5: raised as question 21, over building it now.** It is about a run of its own, three decisions are open, and its test needs a PDF printer the CI runner may not have.
+- **Entry 107 section 1: "9mm" read as a diameter, over refusing it.** The section's rule reads any number marked mm, and its test list refuses "9mm"; the rule is built and the conflict is question 22.
+- **Entry 107 section 2: the quiet zone not counted in the margin refusal, over refusing on it.** The margin leaves bare paper and the quiet zone is bare paper, so it prints as intended, and a smudge near the edge lands on ink, which is refused on its own account.
+- **Entry 107 section 2: `WindowsPrinter` in the CLI project, over the application.** The Core tests reach it there to print and measure a real job, and they already reference that project for the imaging backend.
+- **Entry 107 section 2: markers located on the printed page with no fitting, over registering through a homography.** A homography absorbs scale and offset, which are the errors the test exists to catch.

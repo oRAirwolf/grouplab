@@ -475,7 +475,7 @@ public class MarkingScreenTests
             Assert.Contains(window.Session.State.Shots, s => s.Provenance == ShotProvenance.Manual);
 
             window.OpenImage(sheet);
-            Assert.Equal(".223", window.Session.State.Calibre!.Name);
+            Assert.Equal(".223 in (5.66 mm)", window.Session.State.Calibre!.Name);
             Pump(window);
             window.Close();
         }

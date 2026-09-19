@@ -211,7 +211,6 @@ public sealed class MainWindow : Window
     // A sheet size the person who shot it stated, from a provenance record beside the image (NOTES-FROM-PLANNING.md entry 37 section 5).
     private StatedSheetSize? statedSize;
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
-    private readonly WrapPanel calibreChoices = new();
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.85 };
     private readonly AppSettingsStore settingsStore;
     private readonly ComboBox linearUnit = new() { ItemsSource = Enum.GetValues<LinearUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
@@ -374,7 +373,6 @@ public sealed class MainWindow : Window
             session.SetCalibre(null);
         })));
         panel.Children.Add(calibreNote);
-        panel.Children.Add(calibreChoices);
         panel.Children.Add(new TextBlock { Text = "Shot distance", FontSize = 12 });
         panel.Children.Add(Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Clear", () =>
         {
@@ -878,35 +876,14 @@ public sealed class MainWindow : Window
 
     private void SetCalibreFromBox()
     {
-        // Entry 105 section 7: a name fired as several diameters is never resolved to one; its candidates are offered, each with its diameter.
-        var reading = Calibre.Read(calibreBox.Text);
-        calibreChoices.Children.Clear();
-        if (reading.Problem is { } why)
+        // Entry 107 section 1: a diameter in inches, or in millimetres marked mm, and nothing else; anything else is refused with what to type.
+        var calibre = Calibre.Parse(calibreBox.Text, out string? why);
+        if (why is not null)
         {
             calibreNote.Text = why;
             return;
         }
 
-        if (reading.Candidates.Count > 0)
-        {
-            calibreNote.Text = Calibre.Ambiguity(calibreBox.Text?.Trim() ?? "", reading.Candidates);
-            foreach (var candidate in reading.Candidates)
-            {
-                calibreChoices.Children.Add(Button(candidate.Name, () => ChooseCalibre(candidate)));
-            }
-
-            return;
-        }
-
-        ChooseCalibre(reading.Calibre);
-    }
-
-    /// <summary>The ambiguous calibre's candidates as buttons, for the headless tests.</summary>
-    internal IEnumerable<string> CalibreChoices => calibreChoices.Children.OfType<Button>().Select(b => b.Content as string ?? "");
-
-    private void ChooseCalibre(Calibre? calibre)
-    {
-        calibreChoices.Children.Clear();
         if (calibre is not null)
         {
             calibreBox.Text = calibre.Name;

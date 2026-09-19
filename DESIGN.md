@@ -343,6 +343,8 @@ Assignment classifies against the definition's declared bull positions, and offs
 
 **[r9] Sighters are ignored unless a person asks for them, by choice** (`docs/NOTES-FROM-PLANNING.md` entry 105 section 8). Detection and one-to-one matching run over the sighter bulls as over any other, because matching them is what keeps a sighter's hole off the scoring bull above it; ignoring them means everything after matching. With sighters ignored, the review queue raises nothing that concerns only sighter bulls, counts are of scoring shots, and the sheet shows sighter marks faint and unlabelled, found and set aside. **A contest between a sighter bull and a scoring bull is always raised**, because the scoring bull's shot depends on it. The marking still keeps the sighters, so turning "Analyse sighters" on later needs no new detection and loses no edit.
 
+**[r10] The calibre is a bullet diameter and nothing else, by Alan's decision** (`docs/NOTES-FROM-PLANNING.md` entry 107 section 1). It is typed in inches, or in millimetres marked mm, and the pick list is the distinct diameters of Alan's rifle and pistol lists shown in both units. No calibre or cartridge name is accepted, and a bare number of one or more is refused rather than guessed. This reverses entries 105 and 106, which read names through a table: every defect they fixed came from reading a name as a diameter, and every name the table did not know still fell back to a guess. **The names were removed on purpose**, not lost. The calibre drives edge-to-edge extreme spread, the snap and the oversize flag, so a wrong one is wrong everywhere at once.
+
 ## 14. Statistics
 
 ### Baseline

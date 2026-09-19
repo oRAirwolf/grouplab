@@ -27,6 +27,17 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # NOTES-FROM-PLANNING.md entry 107 section 2: find out whether the runner can print to "Microsoft Print to PDF" rather than guess. The
+      # printed-size test runs where it is installed and is skipped with the reason named where it is not; this puts the answer in the summary.
+      - name: Installed printers
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $printers = @(Get-Printer -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+          $printers | ForEach-Object { Write-Output $_ }
+          $pdf = if ($printers -contains 'Microsoft Print to PDF') { 'installed, so the printed-size test runs' } else { 'not installed, so the printed-size test is skipped' }
+          "### installed printers`n`n- $($printers.Count) printers: $($printers -join ', ')`n- Microsoft Print to PDF: $pdf" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+
       - name: Build
         run: dotnet build GroupLab.slnx --configuration Release
 

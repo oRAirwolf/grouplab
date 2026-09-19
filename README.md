@@ -193,14 +193,14 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Sighters found and matched and then set aside unless a person asks for them, and analysed as a group of their own when they do, never pooled with the scoring shots.
-- **Done.** Calibre names read as the bullets they fire, from a table of common rifle and pistol calibres, and a name fired as more than one diameter offers its candidates rather than choosing one.
+- **Done.** The calibre entered as the bullet's diameter and nothing else, in inches or in millimetres marked mm, with the common diameters in a pick list in both units, by decision: a calibre's name is usually not its diameter.
 - **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a calibre-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Done.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
-- **Not started.** Printing from inside GroupLab, with the real print dialog and the size set by GroupLab itself, which question 21 of `docs/QUESTIONS-FOR-PLANNING.md` scopes. Until then Open to print opens the sheet in the PDF viewer and says to print it at actual size.
+- **Done.** Printing from inside GroupLab on Windows: the real print dialog, the sheet drawn at actual size by GroupLab itself, a refusal with its reason when the paper is not the sheet's or ink would fall in the printer's margin, and a confirmation naming the printer and the pages sent. Open to print stays beside it, and is the path on Linux and macOS.
 - **Done.** The parametric target editor: page, rows and columns, spacing, ring, sighters and load block, laid out by the rule the library was, with a layout that cannot register or fit refused and a spacing tight for your rifle's group warned with its misassignment rate.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.

@@ -12,9 +12,46 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 22: entry 107 section 1 asks for "9mm" refused, but its own rule reads it as a diameter; and the pick list is 37 diameters, not 36
+
+**Status: open.** Blocks nothing. Section 1 is built to its written rule meanwhile: millimetres are read whenever they are marked mm, so "9mm" reads as 0.354 in, and a test pins that with a pointer to this question.
+
+### 1. The conflict
+
+Entry 107 section 1 gives the rule:
+
+> **Millimetres, only when marked:** "7.82 mm" or "7.82mm" reads as 7.82 mm.
+
+and, in its tests:
+
+> names are refused with the sentence, including "300 Blackout", "6.5 Creedmoor", "30 Cal." and "9mm";
+
+**"9mm" is a number marked mm, so the rule reads it, and the test says refuse it.** No syntax tells a metric calibre name from a diameter in millimetres: "9mm" and "9.02mm" have the same form. And the trap the section removes for bare numbers comes back for marked ones:
+
+| Typed | Read as | The bullet |
+|---|---|---|
+| 9mm | 0.354 in | .355 in (9.02 mm), 0.03 mm off |
+| 7.62mm | 0.300 in | .308 or .310 in, 0.2 mm off |
+| 6.5mm | 0.256 in | .264 in, 0.2 mm off |
+| 5.56mm | 0.219 in | .224 in, 0.13 mm off |
+
+### 2. The options
+
+- **A. Keep the rule as written.** "9mm" reads 0.354 in, near enough; "7.62mm" and "6.5mm" read 0.2 mm small. Costs nothing, and leaves the name trap open for anyone who adds mm to a metric name.
+- **B. Refuse a millimetre value that is a metric calibre designation**, such as 5.45, 5.56, 5.7, 6, 6.5, 6.8, 7, 7.5, 7.62, 7.65, 8, 9, 9.3, 10 and 12.7, with the same refusal sentence. About twenty lines and a test. It is a short list of numbers, not names, but it is a list that can fall behind, which is what section 1 set out to remove.
+- **C. Require hundredths in millimetres**, since bullet diameters in millimetres are quoted as 7.82, 9.02, 6.71. It refuses "9mm" and "6.5mm" but not "7.62mm" or "5.56mm", so it does not close the trap on its own.
+
+**What I would choose: B**, because 7.62 and 6.5 are the numbers most likely to be typed with mm after them, and a refusal costs the person one retype while a wrong diameter costs a wrong edge-to-edge figure without any sign.
+
+### 3. The count
+
+The section says the pick list holds "the distinct diameters in Alan's two lists, 36 of them, from .172 to .510". Counting the distinct diameters in entry 105 section 7's two lists gives **37**, from .172 to .510 with .223 excluded. All 37 are in the pick list, and `docs/CALIBRES.md` lists them. If one should not be there, name it.
+
+---
+
 ## 2026-09-19, question 21: printing from inside GroupLab, scoped, with the plan, its cost and three decisions it needs
 
-**Status: open.** Blocks entry 106 section 5 only. Meanwhile the print screen's "Open to print" opens the PDF in the viewer with a confirmation, entry 105 section 9's path, and nothing prints silently.
+**Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 107 section 2: build it. The margin refusal covers inked items and not the quiet zone, Linux and macOS keep the viewer path, and Print is the primary beside Open to print on Windows.
 
 ### 1. What entry 106 section 5 asks
 

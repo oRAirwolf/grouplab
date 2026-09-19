@@ -186,11 +186,12 @@ public static class MarkingFile
             (string?)file["registration"],
             turns,
             orientation,
-            file["calibre"] is { } calibre ? new Calibre((string?)calibre["name"] ?? "", (double)calibre["diameterInches"]!) : null,
+            // Entry 107 section 1: a marking saved under a calibre name keeps its diameter and is shown by it; the old name is not displayed.
+            file["calibre"] is { } calibre ? Calibre.Of((double)calibre["diameterInches"]!) : null,
             (double?)file["shotDistanceInches"],
             Detection: file["detection"] is JsonObject detection
                 ? new DetectionRecord(
-                    detection["calibre"] is { } used ? new Calibre((string?)used["name"] ?? "", (double)used["diameterInches"]!) : null,
+                    detection["calibre"] is { } used ? Calibre.Of((double)used["diameterInches"]!) : null,
                     (double?)detection["holeSizeInches"])
                 : null,
             Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
