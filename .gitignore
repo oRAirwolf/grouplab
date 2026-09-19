@@ -1,4 +1,8 @@
-﻿reference/
+﻿reference/*
+# NOTES-FROM-PLANNING.md entry 110: the ballistic solver's references are committed; everything else under reference/ stays local.
+!reference/ballistics-js/
+!reference/ballistics-cases.json
+!reference/py-ballisticcalc/
 bin/
 obj/
 *.user

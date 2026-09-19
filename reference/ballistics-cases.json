@@ -1,0 +1,13 @@
+{
+  "comment": "Flat-fire cases for validating GroupLab's ballistic solver, NOTES-FROM-PLANNING.md entry 110 section 2f. Field names are ballistics.js's own, so its harness passes each case straight to BallisticSolver.solve. docs/BALLISTICS-VALIDATION.md states what each comparison must meet.",
+  "cases": [
+    { "name": "308-175-g7", "bc": 0.243, "dragModel": "G7", "muzzleVelocity": 2700, "bulletWeight": 175, "sightHeight": 1.5, "zeroRange": 100, "tempF": 59, "pressureInHg": 29.92, "humidityPct": 50, "windSpeedMph": 10 },
+    { "name": "65cm-140-g7-warm-high", "bc": 0.326, "dragModel": "G7", "muzzleVelocity": 2710, "bulletWeight": 140, "sightHeight": 1.75, "zeroRange": 100, "tempF": 75, "pressureInHg": 28.5, "humidityPct": 30, "windSpeedMph": 5 },
+    { "name": "223-77-g7-cold-dry", "bc": 0.186, "dragModel": "G7", "muzzleVelocity": 2750, "bulletWeight": 77, "sightHeight": 2.6, "zeroRange": 100, "tempF": 40, "pressureInHg": 30.2, "humidityPct": 0, "windSpeedMph": 10 },
+    { "name": "308-168-g1-dry", "bc": 0.462, "dragModel": "G1", "muzzleVelocity": 2650, "bulletWeight": 168, "sightHeight": 1.5, "zeroRange": 100, "tempF": 59, "pressureInHg": 29.92, "humidityPct": 0, "windSpeedMph": 10 },
+    { "name": "300wm-215-g7-hot-altitude", "bc": 0.337, "dragModel": "G7", "muzzleVelocity": 2900, "bulletWeight": 215, "sightHeight": 1.75, "zeroRange": 200, "tempF": 90, "pressureInHg": 26.0, "humidityPct": 20, "windSpeedMph": 15 },
+    { "name": "6mm-105-g1-cold-humid", "bc": 0.536, "dragModel": "G1", "muzzleVelocity": 3000, "bulletWeight": 105, "sightHeight": 1.5, "zeroRange": 100, "tempF": 20, "pressureInHg": 30.4, "humidityPct": 60, "windSpeedMph": 8 }
+  ],
+  "maxRange": 1000,
+  "rangeStep": 100
+}

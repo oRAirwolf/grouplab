@@ -1,0 +1,41 @@
+# The ballistic solver's two reference sets, docs/BALLISTICS-VALIDATION.md, generated on a runner so nothing is installed on a developer's
+# machine: ballistics.js run under Node, for the transcription check, and py-ballisticcalc, an independent solver, for the Phase 5 gate. Run
+# by hand when the cases change. Both outputs are uploaded as one artifact and committed from there; the Python library is never committed.
+name: ballistic reference tables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: ballistics.js under Node
+        run: |
+          mkdir -p out
+          node reference/ballistics-js/cases.js > out/ballistics-js.json
+          echo "node $(node --version)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: py-ballisticcalc, pinned
+        run: |
+          python -m pip install --disable-pip-version-check py-ballisticcalc==2.3.1
+          python -m pip show py-ballisticcalc | grep -E '^(Name|Version|License)' | tee -a "$GITHUB_STEP_SUMMARY"
+          python reference/py-ballisticcalc/generate.py > /dev/null
+          cp reference/py-ballisticcalc/tables.json out/py-ballisticcalc-tables.json
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: ballistic-reference-tables
+          path: out/
+          retention-days: 30

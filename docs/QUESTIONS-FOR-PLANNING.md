@@ -12,6 +12,42 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 24: ballistics.js's Coriolis vertical term has its sign reversed, and a smaller wind-direction fault beside it
+
+**Status: open.** Blocks only the Coriolis vertical term, which the port leaves out meanwhile. Everything else in entry 110 section 2 is built.
+
+### 1. The conflict
+
+Entry 110 section 2a lists "the Coriolis horizontal and vertical (Eötvös) terms" under **port as it stands**. The vertical term cannot be ported as it stands, because its sign is reversed.
+
+`reference/ballistics-js/ballistics.js`, `coriolisVertical`:
+
+> Firing east increases apparent gravity (bullet drops more), firing west decreases it.
+
+It returns `-0.5 × 2Ω V cos(lat) sin(az) × t²`, which is downward for fire toward the east.
+
+**The physics says the opposite.** In local east, north and up coordinates, the Earth's rotation is Ω(0, cos φ, sin φ). For a bullet moving east at speed V, v = (V, 0, 0). The Coriolis acceleration is −2Ω × v = (0, −2ΩV sin φ, +2ΩV cos φ).
+- **Its vertical component is +2ΩV cos φ, upward.** This is the Eötvös effect: a body moving east is lighter, so fire toward the east strikes high and fire toward the west strikes low.
+- **The size of the term is right:** half of 2ΩV cos φ times t², with V the average speed, is Ω X t cos φ. The fault is only the sign.
+- **The horizontal term is right:** −2ΩV sin φ toward the south is to the right of a shooter facing east, in the northern hemisphere, which is what the file says.
+
+At 45 degrees north, fire due east, 1000 yd and 1.6 s, the term is Ω × 3000 ft × 1.6 s × cos 45°, about 3.0 in. So the file puts the impact about 5.9 in from where the physics does, about 0.6 MOA.
+
+### 2. The options
+
+- **A. Port it with the sign corrected**, and a test that fire toward the east strikes high. About fifteen lines. This is what I would choose: the term is small, and its sign is not in doubt.
+- **B. Leave it out** and say so wherever the solver's output is shown, as for aerodynamic jump.
+
+**Meanwhile it is left out.** `grouplab trajectory` says "The Coriolis vertical (Eötvös) term is not modelled."
+
+### 3. Beside it, not blocking
+
+- **`solveExtended`'s wind direction.** It takes the crosswind as `speed × sin(windDir − azimuth)`, from a wind's from-direction, and adds it to the horizontal total with the sign that means right. So a wind from the east, fired north, drifts the bullet right, when it blows it left. Spin drift and Coriolis both use positive for right, so the total mixes conventions. The port does not carry the mapping over: it takes a signed crosswind, positive from the left, drifting the bullet right. The lag rule itself is ported.
+- **Aerodynamic jump.** Entry 110 section 2c allows either Litz's published fit, checked against the book, or nothing. I have no copy of *Applied Ballistics for Long Range Shooting* to check the coefficients against, so it is left out, and the output says "Aerodynamic jump is not modelled." If you have the book, the fit, its units and its sign convention from the page would let it go in.
+- **The BC's reference atmosphere, section 2e: how I read it.** The drag constant carries ICAO density. A BC stated against Army Standard Metro is flown with the density ratio taken against Army Standard Metro density: the density of 59 °F, 29.5275 inHg and 78 percent humidity, by the same formula. At the same air that is 1.8 percent more drag than the same number read as ICAO, the "percent or two" section 2e names. A test holds the ratio of the two densities at 1.018. If you meant a different convention, say which.
+
+---
+
 ## 2026-09-19, question 23: entry 109, three statements the code does not bear out, and two places where the entry's own limits meet
 
 **Status: open.** Blocks nothing. Entry 109 is built; what was done at each point is below, and sections 2 and 3 need only a yes or a correction.
