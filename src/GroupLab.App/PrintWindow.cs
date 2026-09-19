@@ -44,7 +44,7 @@ public sealed class PrintWindow : Window
 
     private readonly IReadOnlyList<LibrarySheet> sheets;
     private readonly ListBox list = new();
-    private readonly TextBlock title = new() { FontSize = 18, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
+    private readonly TextBlock title = new() { FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock summary = new() { TextWrapping = TextWrapping.Wrap };
     private readonly StackPanel loadBlock = new() { Spacing = 6 };
     private readonly RadioButton blank = new() { Content = "Blank, to write on at the range", GroupName = "loadBlock", IsChecked = true };
@@ -105,9 +105,9 @@ public sealed class PrintWindow : Window
         list.ItemsSource = sheets.Select(s =>
         {
             var item = new StackPanel { Spacing = 1, Margin = new Thickness(2, 4) };
-            item.Children.Add(new TextBlock { Text = s.Family, FontSize = 11, Opacity = 0.7 });
+            item.Children.Add(new TextBlock { Text = s.Family, FontSize = Tokens.DetailSize, Opacity = 0.7 });
             item.Children.Add(new TextBlock { Text = s.Definition.Name, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-            item.Children.Add(new TextBlock { Text = s.Summary, FontSize = 12, TextWrapping = TextWrapping.Wrap });
+            item.Children.Add(new TextBlock { Text = s.Summary, FontSize = Tokens.LabelSize, TextWrapping = TextWrapping.Wrap });
             return item;
         }).ToList();
         list.SelectionChanged += (_, _) =>
@@ -133,7 +133,7 @@ public sealed class PrintWindow : Window
         details.Children.Add(PrintRow());
         details.Children.Add(status);
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
-        details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = 12, Opacity = 0.7 });
+        details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = Tokens.DetailSize, Opacity = 0.7 });
         details.Children.Add(preview);
 
         var dock = new DockPanel();
@@ -186,7 +186,7 @@ public sealed class PrintWindow : Window
     {
         designRing.SelectedIndex = ParametricSheet.RingSizes.ToList().IndexOf(254);
         TextBlock Label(string text) => new() { Text = text, Width = 190, VerticalAlignment = VerticalAlignment.Center };
-        designer.Children.Add(new TextBlock { Text = "Design your own sheet", FontSize = 18, FontWeight = FontWeight.SemiBold });
+        designer.Children.Add(new TextBlock { Text = "Design your own sheet", FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold });
         designer.Children.Add(new TextBlock
         {
             Text = "Every sheet in the library is a grid of bulls, so a grid is what this designs: the page, the rows and columns, the spacing, the ring, a sighter row and a load block. The sheet is laid out by the same rule the library was.",
@@ -201,7 +201,7 @@ public sealed class PrintWindow : Window
         designer.Children.Add(Row(Label("Sighters"), designSighters));
         designer.Children.Add(designLoadBlock);
         designer.Children.Add(Row(Label("Your five-shot group, MOA"), designGroup, new TextBlock { Text = "at", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0) }, designDistance, new TextBlock { Text = "yd", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
-        designer.Children.Add(new TextBlock { Text = "Optional: with it, the designer says what the spacing means for your rifle.", FontSize = 12, Classes = { AppStyles.Secondary } });
+        designer.Children.Add(new TextBlock { Text = "Optional: with it, the designer says what the spacing means for your rifle.", Classes = { AppStyles.Secondary } });
         designer.Children.Add(designChecks);
 
         foreach (var box in new[] { designName, designSpacing, designGroup, designDistance })

@@ -63,7 +63,7 @@ public sealed class ReportWindow : Window
                 CrashReporter.Reveal(saved);
             }
         };
-        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space6 };
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8 };
         buttons.Children.Add(save);
         buttons.Children.Add(reveal);
         send.IsVisible = this.sendUrl.Length > 0;

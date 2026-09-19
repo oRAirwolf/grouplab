@@ -102,10 +102,15 @@ public class ZeroSectionTests
 
         var rail = window.GetLogicalDescendants().OfType<Button>().Where(b => b.Classes.Contains(AppStyles.RailButton)).ToList();
 
-        Assert.Equal(5, rail.Count);
+        // Entry 109 section 2: the marking screen, the library, Print, records and reports, and the gear at the foot.
+        Assert.Equal(6, rail.Count);
         rail[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Dispatcher.UIThread.RunJobs();
         Assert.Contains("not built yet", window.StatusText, StringComparison.Ordinal);
+        rail[^1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Assert.True(window.ShowingSettings);
+        rail[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Assert.False(window.ShowingSettings);
         window.Close();
     }
 

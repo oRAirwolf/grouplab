@@ -95,6 +95,12 @@ public class AutomaticMarkingTests
         var review = session.State.Assignment!;
         Assert.Equal(AssignmentMethod.OneToOne, review.Method);
         Assert.Equal(result.Assignment!.Reason, review.Reason);
+
+        // Entry 109 section 2d: the summary a person reads names the method in words, never the enum, and has no colon with nothing after it.
+        Assert.Contains("assigned by one-to-one matching", result.Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("OneToOne", result.Summary, StringComparison.Ordinal);
+        Assert.False(result.Summary.TrimEnd().EndsWith(':'), result.Summary);
+        Assert.Equal("nearest bull", AssignmentMethod.NearestBull.Words());
         Assert.Equal(result.Detections.Count, review.Shots.Count);
         foreach (var shot in session.State.Shots)
         {

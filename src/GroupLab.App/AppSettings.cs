@@ -115,6 +115,22 @@ public sealed class AppSettingsStore(string path)
 
     public bool SaveShowWork(bool shown) => Save(file => file["showWork"] = shown);
 
+    /// <summary>
+    /// Whether one "why" disclosure is open, NOTES-FROM-PLANNING.md entry 109 section 1: the reasoning behind a figure or a judgement sits one
+    /// click away on the item it explains, and each remembers it was opened, as the More figures panel does.
+    /// </summary>
+    public bool LoadWhyOpen(string item) => Read(file => file["whyOpen"]?[item]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveWhyOpen(string item, bool open) => Save(file =>
+    {
+        if (file["whyOpen"] is not JsonObject opened)
+        {
+            file["whyOpen"] = opened = new JsonObject();
+        }
+
+        opened[item] = open;
+    });
+
     /// <summary>A side column's width as a person dragged it, entry 105 section 1, or null where it was never dragged.</summary>
     public double? LoadColumnWidth(string column) => Read(file => file["columnWidths"]?[column]?.GetValueKind() == JsonValueKind.Number ? (double?)file["columnWidths"]![column]!.GetValue<double>() : null);
 

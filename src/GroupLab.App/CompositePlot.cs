@@ -23,27 +23,34 @@ internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper 
 /// <list type="bullet">
 /// <item>Sighters are never given to it. Marks set to not a shot are absent, because they are not shots. Excluded shots are drawn hollow
 /// and dim, not removed: excluding is a human judgement, and a plot that hid it would make the group look better than the evidence.</item>
-/// <item>A shot is a circle at the calibre's diameter when a calibre is set and a point when it is not, and the key says which. Every shot
-/// has the same outline and a halo, so a mark over the paper and a mark over the dark read as the same thing (entry 105 section 3).</item>
+/// <item>A shot is a solid dot at its centre, the point the statistics use, so shots can be counted and the spread seen (entry 109 section 3).
+/// With a calibre set, its outline at the calibre's diameter is drawn thin and faint behind the dot, on by default and hidden from the plot's
+/// toggle. Every dot has the same halo, so a mark over the paper and a mark over the dark read as the same thing (entry 105 section 3).</item>
 /// <item>The group centre is marked, with CEP 50 and CEP 90 as circles about it, dotted and dashed so the key can tell them apart.</item>
 /// <item>Extreme spread is the line between the two shots that make it, not a circle: a circle that size reads as a region the shots are
 /// contained in, and extreme spread is the distance between two particular shots. Clicking the line picks both.</item>
-/// <item>The view frames the shots with a margin and draws the rings behind them at true relative scale, running off the frame when the group
-/// is much smaller than the bull, because a small group scaled to fit a large ring is a dot.</item>
+/// <item>The view frames the group, not the bull: the shots with their calibre outlines and a narrow margin, entry 103 section 1 and entry 109
+/// section 3, with the rings behind at true relative scale running off the frame when the group is smaller than the bull.</item>
 /// <item>Entry 105 section 3: a key with each mark as drawn beside its name, and a tooltip naming whatever is under the pointer.</item>
 /// </list>
 /// </summary>
 internal sealed class CompositePlot : Control
 {
-    /// <summary>The margin around the shots, as a share of their extent on each side.</summary>
-    private const double FrameMargin = 0.35;
+    /// <summary>
+    /// The margin around the shots, as a share of their extent on each side. It was 0.35, and with the calibre outlines a 25 shot group framed
+    /// the whole bull, so the rings filled the plot and the group sat in its middle half (entry 109 section 3).
+    /// </summary>
+    private const double FrameMargin = 0.1;
 
     /// <summary>
     /// How strongly the bull's inked rings are drawn, entry 104 section 4: they are context for the shots and recede behind them, where at
     /// full strength the black ring was the heaviest mark on the screen. The paper stays at full strength, because a paper-white document on
     /// dark chrome is most of the concept's character, and the concept draws the rings lighter too.
     /// </summary>
-    private const double ArtworkOpacity = 0.35;
+    private const double ArtworkOpacity = 0.18;
+
+    /// <summary>How strongly a calibre outline is drawn behind its dot: context for the dot, never competing with it.</summary>
+    private const double OutlineOpacity = 0.4;
 
     /// <summary>The smallest extent the view frames, in inches, so one shot or a tight cluster is not magnified without limit.</summary>
     private const double MinimumExtentInches = 0.25;
@@ -60,6 +67,9 @@ internal sealed class CompositePlot : Control
     public IReadOnlyList<PlotShot> Shots { get; set; } = [];
 
     public double? CalibreInches { get; set; }
+
+    /// <summary>Whether the calibre outlines are drawn behind the dots, entry 109 section 3: on unless the plot's toggle hides them.</summary>
+    public bool ShowOutlines { get; set; } = true;
 
     public PointD? Centre { get; set; }
 
@@ -208,9 +218,15 @@ internal sealed class CompositePlot : Control
                 }
             }
 
+            // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre.
             foreach (var shot in Shots.OrderBy(s => !s.Excluded))
             {
-                DrawShot(context, shot, scale);
+                DrawOutline(context, shot, scale);
+            }
+
+            foreach (var shot in Shots.OrderBy(s => !s.Excluded))
+            {
+                DrawShot(context, shot);
             }
 
             if (SpreadPair is { } pair && Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b)
@@ -227,20 +243,30 @@ internal sealed class CompositePlot : Control
         DrawKey(context, palette);
     }
 
-    /// <summary>One shot as drawn: the same outline and halo whatever is behind it, a ring at the calibre or a dot, dashed when excluded.</summary>
-    private void DrawShot(DrawingContext context, PlotShot shot, double scale)
+    /// <summary>A shot's calibre outline, thin and faint behind every dot, so twenty-five of them never merge into one mass.</summary>
+    private void DrawOutline(DrawingContext context, PlotShot shot, double scale)
+    {
+        if (CalibreInches is not { } calibre || !ShowOutlines)
+        {
+            return;
+        }
+
+        bool selected = Selected.Contains(shot.Id);
+        var colour = selected ? Tokens.MarkSelected : shot.Excluded ? Tokens.MarkExcluded : Tokens.MarkImpact;
+        var pen = new Pen(new SolidColorBrush(colour, selected ? 0.9 : OutlineOpacity), selected ? Tokens.MarkCoreWidth : 1, shot.Excluded ? Marks.Dashed : null);
+        double radius = Math.Max(2, calibre * scale / 2);
+        context.DrawEllipse(null, pen, ToScreen(shot.Offset), radius, radius);
+    }
+
+    /// <summary>One shot's centre as drawn: a solid dot with a halo, larger when picked, and hollow and dashed when excluded.</summary>
+    private void DrawShot(DrawingContext context, PlotShot shot)
     {
         var at = ToScreen(shot.Offset);
         bool selected = Selected.Contains(shot.Id);
         IBrush brush = selected ? Marks.Selected : shot.Excluded ? Marks.Excluded : Marks.Impact;
-        double core = selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth;
-        if (CalibreInches is { } calibre)
+        if (shot.Excluded)
         {
-            Marks.Ring(context, brush, at, Math.Max(2, calibre * scale / 2), core, shot.Excluded ? Marks.Dashed : null);
-        }
-        else if (shot.Excluded)
-        {
-            Marks.Ring(context, brush, at, 3.5, core, Marks.Dashed);
+            Marks.Ring(context, brush, at, 3.5, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, Marks.Dashed);
         }
         else
         {
@@ -260,13 +286,19 @@ internal sealed class CompositePlot : Control
         int kept = Shots.Count(s => !s.Excluded), excluded = Shots.Count - kept;
         var entries = new List<KeyEntry>
         {
-            CalibreInches is { } calibre
-                ? new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"{kept} shots, each drawn at the {calibre:0.000} in calibre"), (c, p) => Marks.Ring(c, Marks.Impact, p, 5, Tokens.MarkCoreWidth))
-                : new KeyEntry($"{kept} shots, drawn as points: no calibre is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, Marks.Impact, p, 3.5)),
+            CalibreInches is { } calibre && ShowOutlines
+                ? new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"{kept} shots, a dot at each centre, the outline drawn at the {calibre:0.000} in calibre"), (c, p) =>
+                {
+                    c.DrawEllipse(null, new Pen(new SolidColorBrush(Tokens.MarkImpact, OutlineOpacity), 1), p, 6, 6);
+                    Marks.Dot(c, Marks.Impact, p, 3.5);
+                })
+                : CalibreInches is not null
+                    ? new KeyEntry($"{kept} shots, a dot at each centre; the calibre outlines are hidden", (c, p) => Marks.Dot(c, Marks.Impact, p, 3.5))
+                    : new KeyEntry($"{kept} shots, drawn as points: no calibre is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, Marks.Impact, p, 3.5)),
         };
         if (excluded > 0)
         {
-            entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, Marks.Excluded, p, 5, Tokens.MarkCoreWidth, Marks.Dashed)));
+            entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, Marks.Excluded, p, 3.5, Tokens.MarkCoreWidth, Marks.Dashed)));
         }
 
         if (SpreadPair is { } pair)
@@ -312,7 +344,7 @@ internal sealed class CompositePlot : Control
     private PlotShot? ShotAt(Point at)
     {
         var (scale, _) = Frame(new Rect(Bounds.Size));
-        double reach = Math.Max(8, (CalibreInches ?? 0) * scale / 2);
+        double reach = Math.Max(8, ShowOutlines ? (CalibreInches ?? 0) * scale / 2 : 0);
         return Shots
             .Select(s => (Shot: s, Distance: Distance(ToScreen(s.Offset), at)))
             .Where(x => x.Distance <= reach)

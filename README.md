@@ -41,7 +41,7 @@ The one-shot-per-bull design is what makes the accuracy possible. Holes never ov
 
 ## Concept screens
 
-These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with its first destination built and the other four naming the phase that builds them, and behind that destination the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. A print screen sits beside them. Not built yet: the target library, session records, reporting, and load against load.
+These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with its first destination built, its Print slot opening the print screen, the other three naming the phase that builds them, and a settings screen behind the gear at its foot. Behind the first destination are the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. Renders of the build as it stands, every screen in both themes at two sizes, are in `docs/figures/screens/current/` beside these. Not built yet: the target library, session records, reporting, and load against load.
 
 ![Analysis screen](docs/figures/screens/analysis-dark.png)
 
@@ -196,7 +196,8 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** The calibre entered as the bullet's diameter and nothing else, in inches or in millimetres marked mm, with the common diameters in a pick list in both units, by decision: a calibre's name is usually not its diameter, so a designation typed as a number, such as .38 or 7.62 mm, is refused too.
 - **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a calibre-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
-- **Done.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
+- **Done.** The concept screen's appearance: the tool strip as icons, each named with its key, the review's keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
+- **Done.** A layout and readability pass on both screens: five text styles, one row shape for every figure, the reasoning behind each figure and judgement one click away under "why", a header on one line with the document's actions in a menu, the view controls over the canvas, and the units, theme and log on a settings screen of their own.
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.

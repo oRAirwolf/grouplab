@@ -5003,6 +5003,87 @@ The test that pinned "9mm" as 0.354 in is gone.
 
 **Tests:** Core 918 and App 80 passing, none skipped.
 
+## Entry 109. A layout and readability pass on both screens, measured against the concept
+
+`docs/NOTES-FROM-PLANNING.md` entry 109, every numbered section, in the order it asks: the marking screen and the new settings screen, then the analysis screen, in one run. No figure, interval, verdict or refusal changed its meaning. The explanations moved, as they stood, behind a "why" on the item they explain. Three statements in the entry that the code does not bear out, and two places where its limits meet, are question 23.
+
+### Section 1: the principles
+
+- **"Why".** A disclosure on each item it explains, labelled "why" with a chevron beside it.
+  - It is closed by default and remembers whether it was opened, one flag per item in the settings file, as More figures does.
+  - It holds the sentences that were on screen, moved as they stand.
+  - The only visible sentence shortened is the zero correction's verdict. Its two remaining clauses, the smallest callable offset and "Shoot more before touching the turret", are the first line behind its "why".
+
+**Five text styles:**
+
+| Style | Size |
+|---|---|
+| Title | 16 |
+| Heading | 14 semibold, in the text colour and sentence case, not dim capitals |
+| Label | 13 |
+| Value | 18 mono |
+| Detail | 11.5 |
+
+Mean radius keeps its 29 point lead, the one named exception. The older size names now each equal one of the five, so nothing uses a size of its own. **`EveryTextOnTheScreensIsOneOfTheFiveStyles`** walks every text on the marking screen, the analysis with every "why" open, and the settings, and fails on any size off the scale.
+
+- **One row shape.** Every figure is a label left in the label style, a value right in mono, one detail line beneath, and a hairline under the row: shots, centre from aim, mean radius, sigma, extreme spread, CEP 90, and width by height.
+- **The spacing grid.** A base of 4. The scale's 6 and 14 are gone, and paddings are multiples of 4. A control's margin stays 2, so two side by side sit 4 apart.
+- **Sections are divided by a rule and space.** The judgement cards lost their boxes. The review card keeps its amber box, as the concept draws it.
+
+### Section 2: the marking screen
+
+- **The tool strip is one row.**
+  - The six tools are icons alone, each named with its key in a tooltip, "Pan (P)" and so on, the active one lit amber.
+  - Undo and Redo follow as icons.
+  - On the right are the review's keys as keycaps: Space next item, Enter first choice, N not a shot, Ctrl Z undo.
+  - The icons are drawn as geometry, so none depends on a font having the glyph.
+- **The view controls** float over the canvas's bottom right corner: Zoom in, Zoom out, Fit, Rotate left and Rotate right.
+- **The header** is the review pill, Detect on a GroupLab sheet, Show work, Discard edits, Accept and analyse, and one menu. The menu holds Open image, Open marking, Export and Report a problem.
+  - It fits on one line at 1400 pixels.
+  - Before an image is open, the canvas says "Open a photograph or scan of a target" with an Open image button, since opening is now in the menu.
+- **The rail.** Print opens the print screen. The gear at the foot opens **Settings**:
+  - units on three axes;
+  - the theme;
+  - detailed logging and where the log is;
+  - Report a problem;
+  - the crash records not yet dealt with.
+
+  The marking panel still offers a pending crash in its banner, because a notice belongs where the person is.
+- **The panel** is Review, Selected shot and Scale, then the group's inputs and the shots. It no longer holds the units, the theme or the log.
+- **The scale is one line.** For example "Scale from the printed markers, 38 of 38", with a teal tick when every marker was found and an amber mark otherwise. Where it came from sits behind its "why", and the stages are in Show work. The sheet reference now carries the marker counts to make this possible.
+- **The summary's text defect is fixed in Core.** It reads "assigned by one-to-one matching", with no colon when the reason is empty. The stage record's line says the method in words too.
+- **The status line is one line**, trimmed, with the whole text in its tooltip. After detection it reads, for example, "Detected 24 holes on 25 bulls and 3 sighters."
+
+### Section 3: the analysis screen
+
+- **The unmade decisions** are an amber banner at the top, "1 decision left unmade. Review them", the second half a link back to the editor. Entry 103's sentence is behind its "why".
+- **Zero correction.** The two readouts, the uncertainty as one detail line, and the verdict in one line, such as "Not distinguishable from zero at 24 shots. Nothing this rifle can shoot would settle an offset this small." The smallest callable offset, the degrees of freedom and the clicks or solver note are behind "why".
+- **The judgement cards.** The bold verdict, then the test and its p value, then what must stay in view:
+  - **Round:** "Circularity test, Bartlett-corrected likelihood ratio, chi-square on 2 degrees of freedom: p = 0.549". It still names the test, as STATISTICS.md section 7 requires. Its reading and the error ellipse are behind "why".
+  - **The stringing line** stays in view with its power statement, whole. At 372 pixels it wraps to several lines, because shortening it would reword it. That is question 23.
+  - **Flyer:** "Worst shot against N simulated circular groups: p = ...", with the hedge "by that measure alone" in view. Where the shot sits is behind "why".
+- **The composite plot.**
+  - Each shot is a solid dot at its centre, with its calibre outline thin and faint behind it.
+  - A "Calibre outlines" toggle over the plot's corner hides the outlines, and the key says so.
+  - The frame's margin went from 35 to 10 percent of the group's extent, so the group fills the plot and the rings run off it.
+  - The inked rings are drawn at 18 percent over the paper, where they were at 35.
+- **The shot table.**
+  - Plain rows with every other one shaded, no border round each.
+  - One number per shot. A bull column appears only when some shot sits on a bull other than its name, and then shows only those bulls.
+  - The numbers are right-aligned, so their decimal points line up.
+  - An excluded row is struck through and dim.
+- **LOAD** is unchanged.
+- **The crumb** names the image's file, as it already did, or the sheet's name when no image is recorded. The render entry 109 was read from had applied a detection without opening a file. That is question 23 too.
+
+### Section 4: the renders
+
+**`EveryScreenIsPhotographedInBothThemesAtBothSizes`** renders a GL-CF25-LTR scan with a hole on every bull, opened and detected by the real pipeline. It writes 20 frames: the marking screen, the analysis with its disclosures closed and open, the settings, and the print screen, in dark and light, at 1400 by 900 and 1920 by 1080.
+- They always go to `out/screens/current`.
+- With `GROUPLAB_SCREENS_TO_DOCS` set, they also go to `docs/figures/screens/current/`, which is how the committed set was made.
+- No drift test reads them.
+
+**Tests:** Core 918 and App 85 passing, none skipped.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5244,3 +5325,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 107 section 2: markers located on the printed page with no fitting, over registering through a homography.** A homography absorbs scale and offset, which are the errors the test exists to catch.
 - **Entry 108 section 2: designations compared as decimals at the value typed, over matching the text.** ".270" and ".27" are one value, and matching text would let one form through that the other refuses.
 - **Entry 108 section 2: the refused value shown as typed with its unit, over normalising it.** The person sees their own entry named, which is what the refusal is about.
+- **Entry 109 section 1: "why" as a compact disclosure on each item, remembered per item, over one panel of explanations.** An explanation read beside the figure it explains needs no hunting, and closed it is one short line.
+- **Entry 109 section 1: the older size names mapped onto the five, over replacing every use.** Every existing use lands on the scale at once, and the test catches any new size.
+- **Entry 109 section 2: settings as a screen in the main window, over a dialog.** The rail is navigation, and the gear is a destination like Print.
+- **Entry 109 section 3: the flyer card's hedge kept in view, over moving it behind "why".** Without "by that measure alone" the verdict would say more than the test can.
+- **Entry 109 section 3: excluded rows struck through, over a word in the row.** One number per shot leaves no room for a word, and the tooltip says it.

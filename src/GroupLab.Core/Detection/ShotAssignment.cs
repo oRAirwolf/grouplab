@@ -19,6 +19,16 @@ public enum AssignmentMethod
 /// </summary>
 public sealed record AssignedShot(int Shot, int? Bull, double Distance, int NearestBull, double NearestDistance, double Margin, bool Ambiguous);
 
+/// <summary>How an assignment method reads to a person, NOTES-FROM-PLANNING.md entry 109 section 2: never the enum's name.</summary>
+public static class AssignmentMethods
+{
+    public static string Words(this AssignmentMethod method) => method switch
+    {
+        AssignmentMethod.OneToOne => "one-to-one matching",
+        _ => "nearest bull",
+    };
+}
+
 /// <summary>An assignment of shots to bulls, the method used and why.</summary>
 public sealed record ShotAssignmentResult(AssignmentMethod Method, string Reason, IReadOnlyList<AssignedShot> Shots);
 

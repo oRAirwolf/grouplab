@@ -15,6 +15,83 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 109: a layout and readability pass on both screens, measured against the concept
+
+**Status: actioned 2026-09-19**, sections 1 to 4, the marking screen and the settings screen first and then the analysis screen, in one run. Three statements the code does not bear out, and two places where the entry's own limits meet, are raised as question 23, each built meanwhile.
+- **Section 1:** the five text styles as tokens with mean radius's lead the one exception, and a test holding every text on the marking, analysis and settings screens to them; a spacing grid on a base of 4; one row shape for every figure, divided by hairlines; and a "why" disclosure on each item it explains, closed by default and remembered, holding the explanations as they stood.
+- **Section 2:** the tools as icons named with their keys, Undo and Redo at the strip's end and the review's keys on its right; the view controls over the canvas; Open image, Open marking, Export and Report a problem in one header menu; the rail's Print slot opening the print screen; a Settings screen behind a gear with the units, theme, log and crash records; the scale in one line with its detail behind "why"; the summary saying "one-to-one matching" with no colon when there is no reason; and a one-line status.
+- **Section 3:** the unmade decisions as a compact banner with a link back; the zero correction's verdict in one line; the judgement cards as a verdict, the test and its p value, with the stringing power statement in view and the rest behind "why"; the plot's shots as dots with faint calibre outlines and a toggle, framed on the group with the artwork lighter; the shot table as plain shaded rows with one number per shot; and the crumb naming the sheet when no image is recorded.
+- **Section 4:** every screen in dark and light at 1400 by 900 and 1920 by 1080, the analysis with its disclosures closed and open, committed under `docs/figures/screens/current/`.
+- `docs/PHASE1-RESULTS.md` "Entry 109".
+
+**Alan: "I want a lot of UI refinement and layout done. It is still hard to read."** He is right, and it is not one thing. I read the current renders in `out/screens/` at `d22d7fc` side by side with `docs/figures/screens/analysis-dark.png` and `assignment-editor.png`, which Alan approved as the guideline. What follows is what differs and why each difference costs readability.
+
+**What this pass must not change.** No figure, interval, verdict or refusal changes its meaning, and nothing true is deleted. The findings from entries 91 to 108 stay. **What changes is how much of each one is on screen at once.** `DESIGN.md` section 19 already sets the rule, and the screens have drifted from it:
+
+> The primary panel shows the composite group, the headline figures, and the confidence interval on each, because those change decisions and burying them would defeat the project's premise. Reference material, the full CEP table, the bivariate fit, and the comparison machinery live one click away in a panel that remembers it was opened.
+
+**Today the explanation of every figure is on screen beside the figure.** That is the main reason both screens read as walls of text.
+
+### 1. The principles, so each screen is judged the same way
+
+1. **One line per fact on the surface; the reasoning is one click away.** Each figure shows its value, its unit and its interval. Each judgement shows its one-sentence verdict. **The sentences that explain them move behind a disclosure on that item:** a "why" chevron that expands in place and remembers it was opened, as `moreFiguresOpen` already does. Move the wording as it stands; do not rewrite it.
+2. **A type scale of five styles, no more:** screen title, section heading, label, value, and detail. Today there are more sizes and weights than that on each screen, and prose appears in the value style. Define the five as tokens and use nothing else. Section headings need to be readable, not dim capitals: they are the structure.
+3. **One row pattern for every figure.** The label is on the left in the label style. The value is on the right in mono at the value size. One detail line sits beneath for the interval and the other unit. A hairline divides rows. The concept's right column is exactly this, and it reads cleanly because every row has the same shape.
+4. **A spacing grid.** Pick a base unit, 4 or 8 pixels, and use multiples of it for every gap and padding. Sections are separated by space and a rule, not by boxes around everything.
+5. **Settings are not part of the task.** Units, theme and diagnostics do not belong in the marking panel between the review queue and the scale.
+6. **Diagnostics are not the status line.** A detection summary that runs to two lines of technical prose belongs in Show work, not across the bottom of the window.
+
+### 2. The marking screen
+
+**a. Too many buttons, in two wrapped rows of text.** The header has five actions and the review pill. The tool strip below it has seventeen text buttons, from Open marking to Report a problem, and wraps onto a second row at 1400 pixels. The concept's editor has one row: seven icon tools on the left and the keycap hints on the right. Entry 93 marks the icon tool strip as done, but the render shows text labels with small keycaps beside them. **Regroup by what each button is:**
+- **Tools** (Pan, Scale length, Scale rectangle, Point of aim, Impact, Select): icons only, a tooltip naming each with its key, and the active tool highlighted. That is the strip.
+- **Edit** (Undo, Redo): two icons, at the end of the strip, as the concept has them.
+- **View** (Zoom in, Zoom out, Fit, Rotate left, Rotate right): a small cluster floating over the bottom-right corner of the canvas, the usual place for view controls. They act on the view, not the document.
+- **Document actions** (Open image, Open marking, Export): a single menu behind an overflow button in the header, beside Accept and analyse.
+- **Print a target:** the rail already has a Print destination that says it is not built. **The print screen is built, so wire the rail's Print slot to it** and drop the toolbar button.
+- **Report a problem:** into the same overflow menu, and into the Settings screen below.
+- **Detect on a GroupLab sheet** stays a header button, since it is the step after opening an image. **Show work** stays where entry 105 put it.
+
+The header should end up with the pill, Detect, Show work, Discard edits, Accept and analyse, and the overflow button. That fits on one line.
+
+**b. The right panel mixes the task with the settings.** Under the review queue sit UNITS, THEME, DIAGNOSTICS and "Detailed logging", then SCALE. **Move units, theme and logging to a Settings screen**, reached by a gear at the bottom of the rail, the usual place. Crash reporting's controls and "Report a problem" go there too. The panel is then the review queue, the selected detection and the scale, which is what the concept shows.
+
+**c. The SCALE block is a raw diagnostic in mono teal.** It reads: "From the sheet's own printed markers: 34 of 34 markers found, detected without a calibre, so whether a mark was one hole or two was judged by its shape alone, registration RMS 0.0022 in over 34 markers, 0 holes detected, assigned by OneToOne: ." **Show one line**, "Scale from the printed markers, 34 of 34", with a mark for good or bad, and put the rest behind its disclosure and in Show work.
+
+**d. A text defect in the same sentence.** It ends "assigned by OneToOne: ." with nothing after the colon. `AutomaticMarking.cs` line 196 appends `assignment.Reason` unconditionally, and here the reason is empty. **Omit the colon when there is no reason.** Also say "one-to-one matching", not the enum name `OneToOne`, anywhere a person reads it.
+
+**e. The status line** carries the same summary and wraps. **Make it one line** that says what just happened, "Detected 25 holes on 25 bulls", with the detail in Show work.
+
+### 3. The analysis screen
+
+**a. The right column is an essay.** Top to bottom it runs: an amber paragraph about unmade decisions, a zero correction block of six lines including a bold four-line paragraph, the group figures, and two judgement cards of five to eight lines each that run off the bottom. **Apply principle 1 throughout:**
+- **The unmade-decisions line** becomes a compact banner: "15 decisions left unmade. Review them" with the second half as a link back to the editor. It stays amber and it stays at the top.
+- **Zero correction:** the two readouts, the uncertainty in one detail line, and the verdict as one line, "Not distinguishable from zero. About 90 shots would settle it." The degrees of freedom and the ballistic-solver note go behind "why".
+- **The figures:** principle 3's row. Mean radius keeps its lead size, as entries 73 and 92 set.
+- **The two judgement cards:** the bold verdict and one line of evidence, the test name and its p value. The rest goes behind "why". **The stringing power statement is an exception and stays visible**: `STATISTICS.md` section 7 requires it beside the result, not in a footnote. Keep it to one line.
+
+**b. The composite plot is dominated by the bull, and the shots are a tangle.** The white disc and heavy grey ring fill the frame. The group, 0.123 in mean radius, sits in the middle half. Every shot is drawn as a dark red circle at the .308 calibre, and 25 circles each larger than the mean radius overlap into a single mass in which no individual shot can be picked out.
+- **Draw each shot's centre as a solid dot**, the thing the statistics use, and its calibre outline thin and faint behind it. A reader can then count shots and see the spread. **Keep the calibre outlines on by default** but give the key a toggle for them.
+- **Frame the group, not the bull**, as entry 103 section 1 asked: fit the shots, including their calibre outlines, with a margin, and let the rings run off the frame when the group is smaller than the bull.
+- **Draw the bull's artwork lighter**, as the concept does. It is context, and today it is the loudest thing on the screen.
+
+**c. The shot table is 25 boxed rows.** Each row has its own border, which makes the column heavy and slow to scan. **Use plain rows with a hairline or alternate shading, as the concept does.** The shot and bull columns repeat each other, 1 and 1, 2 and 2, because shots are named by their bull. **Show one number** and show the bull only where it differs from the shot's name. Right-align the numeric columns under their headers on the decimal point.
+
+**d. The LOAD block** reads well. Keep it.
+
+**e. The breadcrumb's middle crumb says "the sheet".** Use the sheet's file name, as the editor's breadcrumb does. The crumb is the way back, so it should name what it goes back to.
+
+### 4. How to show the result
+
+**Alan should judge this by looking, and so should I.** The renders in `out/screens/` are how I read the screens between runs, so extend them:
+- **Every screen, in dark and light:** the marking screen, the analysis screen, the print screen and the new Settings screen, at 1400 by 900 and at 1920 by 1080, since Alan's display is wide.
+- **The analysis screen once with its disclosures closed and once with them all open**, so the default state and the full state can both be judged.
+- **Commit the renders under `docs/figures/screens/current/`** so they can be compared with the concept files beside them. Regenerate them in the same run as any UI change, and keep them out of the drift tests, since pixel output varies between machines.
+
+**Split the work across runs if it is too much for one**, in this order: section 2's marking screen and the Settings screen first, then section 3. Say in the status line which parts are done.
+
+---
+
 ## 2026-09-19, entry 108: question 22 answered, calibre designations refused in both units, and two errors of mine in entry 107
 
 **Status: actioned 2026-09-19**, sections 1 and 2.

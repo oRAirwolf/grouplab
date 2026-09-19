@@ -115,7 +115,8 @@ public class AnalysisStateTests
             Dispatcher.UIThread.RunJobs();
             int open = ReviewQueue.Open(ReviewQueue.For(window.Session.State));
             Assert.True(open > 1);
-            Assert.StartsWith($"{open} decisions were left unmade", window.UnsettledText, StringComparison.Ordinal);
+            Assert.StartsWith($"{open} decisions left unmade", window.UnsettledText, StringComparison.Ordinal);
+            Assert.Contains(window.UnsettledLines, l => l.StartsWith($"{open} decisions were left unmade when this was accepted", StringComparison.Ordinal));
 
             foreach (var item in ReviewQueue.For(window.Session.State).Where(i => !i.Resolved))
             {
@@ -128,8 +129,8 @@ public class AnalysisStateTests
             // Twelve rounds fired against ten marks on the scoring bulls: one decision left unmade.
             window.Session.SetExpectedShots(12);
             Dispatcher.UIThread.RunJobs();
-            Assert.StartsWith("1 decision was left unmade", window.UnsettledText, StringComparison.Ordinal);
-            Assert.Contains("every figure here inherits it", window.UnsettledText, StringComparison.Ordinal);
+            Assert.StartsWith("1 decision left unmade", window.UnsettledText, StringComparison.Ordinal);
+            Assert.Contains(window.UnsettledLines, l => l.Contains("every figure here inherits it", StringComparison.Ordinal));
             window.Close();
         }
         finally
@@ -298,7 +299,7 @@ public class AnalysisStateTests
         Dispatcher.UIThread.RunJobs();
         Assert.Contains(window.ZeroText, t => t.StartsWith("In clicks of Test rifle's scope", StringComparison.Ordinal));
         var headings = window.FigureColumnHeadings.ToList();
-        Assert.True(headings.IndexOf("ZERO CORRECTION") >= 0 && headings.IndexOf("ZERO CORRECTION") < headings.IndexOf("GROUP"), string.Join(" | ", headings));
+        Assert.True(headings.IndexOf("Zero correction") >= 0 && headings.IndexOf("Zero correction") < headings.IndexOf("Group"), string.Join(" | ", headings));
 
         // Photographed in each theme the test sets, named after it, as ScreenshotTests does, for a person to compare with the concept.
         string output = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(DefinitionPath())!, "..", "out", "screens"));

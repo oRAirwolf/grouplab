@@ -12,6 +12,27 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 23: entry 109, three statements the code does not bear out, and two places where the entry's own limits meet
+
+**Status: open.** Blocks nothing. Entry 109 is built; what was done at each point is below, and sections 2 and 3 need only a yes or a correction.
+
+### 1. Statements the code does not bear out
+
+- **Section 3e, the crumb.** "The breadcrumb's middle crumb says 'the sheet'. Use the sheet's file name, as the editor's breadcrumb does." It already did: `ShowAnalysis` set the crumb to the image's file name whenever the marking has one, and fell back to "the sheet" only without one. The render entry 109 was read from came from a test that applied a detection without ever opening a file. **Done:** the fallback is now the sheet's own name from its definition, and the new renders open a file, so they show what a person sees.
+- **Section 3b, the framing.** "Frame the group, not the bull, as entry 103 section 1 asked." The plot already framed the shots with their calibre outlines and never the bull. What made it look bull-sized was a margin of 35 percent of the group's extent on each side, which with .308 outlines on a 25-shot group came to about the bull's own size. **Done:** the margin is 10 percent, and the rings now run off the frame.
+- **Section 2a, the tool strip.** "Entry 93 marks the icon tool strip as done, but the render shows text labels." The labels were entry 93's own choice, recorded at the strip: "The name stays beside the icon, because an icon alone is a guess for anyone who has not used the application before." So the strip matched its decision rather than falling short of it. **Done as entry 109 asks:** icons alone, each named with its key in a tooltip. The reason entry 93 gave is now answered by the tooltip, not by the strip.
+
+### 2. Where the entry's own limits meet
+
+- **The stringing power statement "stays visible ... Keep it to one line."** The statement is `ShapeTests.StringingPowerSentence`, one sentence of two or three clauses, for example "From 24 shots this test catches stringing of 2 times or more at least 8 times in 10, and often misses less: 1.5 times needs about 50 shots." At the 372 pixel column it wraps to three or four lines. Shortening it would reword the finding STATISTICS.md section 7 requires beside the result, which the covering message rules out. **Done:** it is kept whole, in view, as the card's one stringing line, and it wraps.
+- **The panel "is then the review queue, the selected detection and the scale."** The panel also holds the group's inputs, the calibre, the shot distance, the rifle, barrel and load and the rounds fired, and the shot list. They are the task, not settings, and the entry names nowhere else for them. **Done:** they stay, below the scale, each section divided by a rule.
+
+### 3. A size outside the five
+
+Principle 2 says five styles and no more, and section 3a says mean radius keeps its lead size. The lead size is a sixth. **Done:** the five are tokens, the lead figure is the one named exception, and a test holds every text on the marking, analysis and settings screens to those six sizes.
+
+---
+
 ## 2026-09-19, question 22: entry 107 section 1 asks for "9mm" refused, but its own rule reads it as a diameter; and the pick list is 37 diameters, not 36
 
 **Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 108: option B, extended to inches. Calibre designations are refused in both units, the real diameters beside them still read, and the count is 37.

@@ -232,32 +232,51 @@ public static class Tokens
 
     public static FontFamily Mono { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Mono, Cascadia Mono, Consolas, Menlo, monospace");
 
-    public const double SectionLabelSize = 10;
+    // The type scale, NOTES-FROM-PLANNING.md entry 109 section 1 principle 2: five styles and no more. A screen title, a section heading, a
+    // label, a value and a detail. Prose is a label or a detail, never the value style. The one size outside the five is mean radius's lead
+    // figure, which entries 73 and 92 set and entry 109 section 3 keeps.
+    public const double TitleSize = 16;
+    public const double HeadingSize = 14;
+    public const double LabelSize = 13;
+    public const double ValueSize = 18;
+    public const double DetailSize = 11.5;
+    public const double LeadValueSize = 29;
+
+    /// <summary>Every size text may take on the marking, analysis and settings screens, which a test holds them to.</summary>
+    public static IReadOnlySet<double> TypeScale { get; } = new HashSet<double> { TitleSize, HeadingSize, LabelSize, ValueSize, DetailSize, LeadValueSize };
+
+    // The older names, each now one of the five, so every use of them lands on the scale.
+    public const double SectionLabelSize = DetailSize;
     public const double SectionLabelSpacing = 0.9;
     public const double ListHeaderSpacing = 0.6;
-    public const double TableRowSize = 11.5;
-    public const double SecondarySize = 11.5;
-    public const double ButtonSize = 12;
-    public const double BodySize = 13;
+    public const double TableRowSize = DetailSize;
+    public const double SecondarySize = DetailSize;
+    public const double ButtonSize = LabelSize;
+    public const double BodySize = LabelSize;
     public const double WordmarkSize = 13;
     public const double WordmarkSpacing = 1.3;
-    public const double FigureSize = 21;
+    public const double FigureSize = ValueSize;
     public const double FigureSpacing = -0.21;
-    public const double LeadFigureSize = 29;
+    public const double LeadFigureSize = LeadValueSize;
 
-    // Layout and spacing, entry 42 section 4: the scale is 4, 6, 8, 12, 14 and 20.
+    // The spacing grid, NOTES-FROM-PLANNING.md entry 109 section 1 principle 4: a base unit of 4 pixels and multiples of it for every gap and
+    // padding, where entry 42 section 4's scale had 6 and 14 between them. A control's margin is half the base, so two side by side are one
+    // base apart.
     public const double Space4 = 4;
-    public const double Space6 = 6;
     public const double Space8 = 8;
     public const double Space12 = 12;
-    public const double Space14 = 14;
+    public const double Space16 = 16;
     public const double Space20 = 20;
+    public const double Space24 = 24;
     public const double ControlMargin = 2;
+
+    /// <summary>No fill at all, for a disclosure's header or a table row, which take the surface they sit on.</summary>
+    public static IBrush Clear { get; } = Brushes.Transparent;
     public const double RightColumnWidth = 372;
-    public static Thickness SectionPadding { get; } = new(Space14, Space12);
-    public static Thickness RowPadding { get; } = new(Space14, 3);
-    public static Thickness ButtonPadding { get; } = new(Space12, Space6);
-    public static Thickness PillPadding { get; } = new(9, Space4);
+    public static Thickness SectionPadding { get; } = new(Space16, Space12);
+    public static Thickness RowPadding { get; } = new(Space16, Space4);
+    public static Thickness ButtonPadding { get; } = new(Space12, Space4);
+    public static Thickness PillPadding { get; } = new(Space8, Space4);
     public static CornerRadius SurfaceRadius { get; } = new(3);
     public static CornerRadius ButtonRadius { get; } = new(4);
 

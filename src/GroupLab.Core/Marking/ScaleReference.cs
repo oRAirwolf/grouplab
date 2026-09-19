@@ -108,6 +108,14 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
 
     public override string Description => "the sheet's own printed markers: " + Summary;
 
+    /// <summary>
+    /// How many of the sheet's markers were found and how many it carries, for the one-line scale readout of NOTES-FROM-PLANNING.md entry 109
+    /// section 2; null for a marking reopened from a file, which keeps only the summary.
+    /// </summary>
+    public int? MarkersFound { get; init; }
+
+    public int? MarkersExpected { get; init; }
+
     public override string Describe(UnitSettings units) => Description;
 
     public override bool AssumesSquareOn => false;

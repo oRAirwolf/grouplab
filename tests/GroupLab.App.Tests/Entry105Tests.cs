@@ -159,7 +159,7 @@ public class Entry105Tests
         {
             Assert.Contains("10 shots", window.BreadcrumbText, StringComparison.Ordinal);
             Assert.Equal(2, window.Canvas.SetAside.Count);
-            Assert.DoesNotContain(window.FigureColumnHeadings, h => h.StartsWith("SIGHTERS", StringComparison.Ordinal));
+            Assert.DoesNotContain(window.FigureColumnHeadings, h => h.StartsWith("Sighters", StringComparison.Ordinal));
 
             var box = window.GetLogicalDescendants().OfType<CheckBox>().Single(c => Equals(c.Content, "Analyse sighters"));
             Assert.True(box.IsVisible);
@@ -167,7 +167,7 @@ public class Entry105Tests
             Dispatcher.UIThread.RunJobs();
             Assert.Contains("12 shots", window.BreadcrumbText, StringComparison.Ordinal);
             Assert.Empty(window.Canvas.SetAside);
-            Assert.Contains(window.FigureColumnHeadings, h => h.StartsWith("SIGHTERS", StringComparison.Ordinal));
+            Assert.Contains(window.FigureColumnHeadings, h => h.StartsWith("Sighters", StringComparison.Ordinal));
             Assert.True(store.LoadAnalyseSighters());
 
             // The scoring group never counts them either way.

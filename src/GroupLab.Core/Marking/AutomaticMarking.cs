@@ -184,7 +184,7 @@ public static class AutomaticMarking
             }
 
             stage.Done(ambiguous > 0 || unassigned > 0 ? StageStatus.Degraded : StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
-                $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
+                $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method.Words()}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
         }
 
         var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches,
@@ -193,8 +193,8 @@ public static class AutomaticMarking
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
-            $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method}: {assignment.Reason}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary), bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
+            $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method.Words()}{(string.IsNullOrWhiteSpace(assignment.Reason) ? "" : ": " + assignment.Reason)}");
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
     }
 }
 
