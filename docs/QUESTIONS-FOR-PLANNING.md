@@ -12,6 +12,47 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 25: ballistics.js's G1 table is not the standard G1 function, so every G1 load fails the independent gate
+
+**Status: open.** Blocks the Phase 5 gate for G1, and matters now for the website, which serves this table to every visitor. G7 passes the gate. Meanwhile the port carries the JavaScript's table as entry 110 section 2a says, and the gate test holds the two G1 cases as named known failures, not by any widening of the tolerance.
+
+### 1. What the comparison found
+
+The tolerance was committed before either reference existed (`docs/BALLISTICS-VALIDATION.md` section 2).
+
+**Against py-ballisticcalc 2.3.1:**
+- **All four G7 cases pass at every range to 1000 yd.** The largest share of any allowance used is 4 percent for drop and wind and 7 percent for time of flight; the .308 case reads 37.51 MOA against 37.49.
+- **Both G1 cases fail from 100 yd on.** At 1000 yd:
+
+| Case | Drop, port | Drop, reference | Time of flight, port against reference |
+|---|---|---|---|
+| .308 168 gr, G1 0.462 | 31.77 MOA | 40.33 MOA | 13.2 percent short |
+| 6mm 105 gr, G1 0.536 | 22.70 MOA | 28.47 MOA | 13.1 percent short |
+
+**The cause is the table, not the solver.** Comparing the two G1 tables point by point, 60 of their 79 shared Mach points differ:
+
+| Mach | ballistics.js | py-ballisticcalc |
+|---|---|---|
+| 0.80 and below | the same | the same |
+| 1.0 | 0.5210 | 0.4805 |
+| 1.4 | 0.5295 | 0.6625, the peak |
+| 2.0 | 0.4139 | 0.5934 |
+| 3.0 | 0.3274 | 0.5133 |
+| 5.0 | 0.2571 | 0.4988 |
+
+The JavaScript's supersonic G1 is a different curve, about 8 percent high near Mach 1 and 30 to 50 percent low above Mach 2. py-ballisticcalc's values are the standard G1 function as it is generally published, 0.4805 at Mach 1.0 and a peak of about 0.66 near Mach 1.4. So a G1 load on the website flies with too little drag, and its drop at 1000 yd reads about 8.6 MOA short for the .308 case.
+
+**The G7 table matches everywhere a rifle bullet flies.** It differs from py-ballisticcalc only at Mach 3.5 and above, 0.192 against 0.1935 at Mach 4.0 and 0.1523 against 0.1618 at Mach 5.0, above any case here.
+
+### 2. The options
+
+- **A. Carry the standard G1 table**, the BRL function as published, from a source you name, such as McCoy's *Modern Exterior Ballistics* or the BRL report itself. The transcription check then lists the table as an intentional difference, and the gate is run again. A few lines and a fixture, once the source is chosen. **What I would choose,** with the source checked against the publication rather than copied from py-ballisticcalc, whose values are its own transcription.
+- **B. Keep the JavaScript's table** and state that GroupLab's G1 is not the standard G1. I see no case for this: every published G1 coefficient is referenced to the standard function.
+
+**Either way, the website's G1 results are affected now,** independently of GroupLab.
+
+---
+
 ## 2026-09-19, question 24: ballistics.js's Coriolis vertical term has its sign reversed, and a smaller wind-direction fault beside it
 
 **Status: open.** Blocks only the Coriolis vertical term, which the port leaves out meanwhile. Everything else in entry 110 section 2 is built.
@@ -50,7 +91,7 @@ At 45 degrees north, fire due east, 1000 yd and 1.6 s, the term is Ω × 3000 ft
 
 ## 2026-09-19, question 23: entry 109, three statements the code does not bear out, and two places where the entry's own limits meet
 
-**Status: open.** Blocks nothing. Entry 109 is built; what was done at each point is below, and sections 2 and 3 need only a yes or a correction.
+**Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 110 section 1: yes to all of it. What was done at each point stands, the stringing power sentence stays whole, the group's inputs stay in the panel, and the lead figure is the one named exception.
 
 ### 1. Statements the code does not bear out
 

@@ -56,6 +56,7 @@ return args switch
     ["intake", var submission, var publicRoot, .. var rest] => GroupLab.Cli.IntakeVerb.Run(submission, publicRoot, rest, Console.Out),
     ["scrub", var input, var output] => GroupLab.Cli.ScrubVerb.Run(input, output, Console.Out),
     ["publish-owner", var source, var target, .. var rest] => GroupLab.Cli.OwnerVerb.Run(source, target, rest, Console.Out),
+    ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
         CorpusCounts.Run("scans/phase0", SampleSet.FrozenDirectory, "targets", rest.SkipWhile(a => a != "--local").Skip(1).FirstOrDefault(), rest.Contains("--write"), Console.Out),
@@ -496,6 +497,9 @@ static int Usage()
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
         grouplab calibres [<directory>]
+        grouplab trajectory --bc <bc> --model G1|G7 --mv <fps> --weight <grains> [--sight <in>] [--zero <yd>] [--max <yd>] [--step <yd>]
+                            [--temp <F>] [--pressure <inHg> | --altitude <ft>] [--humidity <%>] [--wind <mph>] [--angle <degrees>]
+                            [--reference icao|asm] [--twist <in> --diameter <in> --length <in> [--left-twist]] [--latitude <degrees>]
         grouplab icons <mark.svg> <directory>
         grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [--sighters] [-v 1|2|3] [--json <marking.json>]
         grouplab corpus counts [--local <manifest.json>] [--write]

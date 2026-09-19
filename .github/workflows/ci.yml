@@ -38,6 +38,15 @@ jobs:
           $pdf = if ($printers -contains 'Microsoft Print to PDF') { 'installed, so the printed-size test runs' } else { 'not installed, so the printed-size test is skipped' }
           "### installed printers`n`n- $($printers.Count) printers: $($printers -join ', ')`n- Microsoft Print to PDF: $pdf" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
 
+      # NOTES-FROM-PLANNING.md entry 110 section 2f: ballistics.js is run again under Node on every push, and its output must be the fixture the
+      # transcription test reads, so the test is always against the original, unchanged file (docs/BALLISTICS-VALIDATION.md section 1).
+      - name: ballistics.js output unchanged
+        if: runner.os == 'Linux'
+        run: |
+          node --version
+          node reference/ballistics-js/cases.js > "$RUNNER_TEMP/ballistics-js.json"
+          diff -u tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json "$RUNNER_TEMP/ballistics-js.json"
+
       - name: Build
         run: dotnet build GroupLab.slnx --configuration Release
 

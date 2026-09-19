@@ -12,3 +12,7 @@ scans/phase0/measurements/** text eol=lf
 # Generated measurement sheets are compared byte for byte, and a PDF is binary whatever its bytes look like.
 scans/phase1/** text eol=lf
 *.pdf binary
+# NOTES-FROM-PLANNING.md entry 110: the ported JavaScript is kept byte for byte, so its recorded SHA-256 holds on any checkout, and the fixture
+# its Node run produces is compared byte for byte in CI.
+reference/ballistics-js/ballistics.js -text
+tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json -text

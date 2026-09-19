@@ -219,7 +219,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 5. Chronograph, solver, and comparison.**
 - **Not started.** Garmin Xero import and reconciliation against marked shots.
-- **Not started.** A ballistic solver, validated against an independent implementation.
+- **In progress.** A ballistic solver, validated against an independent implementation. Built: the point-mass solver ported from ballistics.js, and `grouplab trajectory`, which prints a table from stated inputs. G7 agrees with py-ballisticcalc well inside tolerances written down beforehand. G1 does not yet, because the G1 table it carries is not the standard function.
 - **Not started.** Load against load, velocity regression, and predicted against measured vertical.
 - **Not started.** Hit probability at a distance other than the one shot, and distance normalisation, both propagated through the solver rather than by scaling a group linearly.
 

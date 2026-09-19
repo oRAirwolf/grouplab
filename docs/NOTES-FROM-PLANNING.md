@@ -15,6 +15,103 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 110: question 23 answered, and the ballistic solver ported from ballistics.js, with two of its functions not carried over
+
+**Status: actioned 2026-09-19**, sections 1 and 2, with three parts of section 2 not done as written:
+- **Section 1:** question 23 set to answered.
+- **Section 2:** the solver ported into `GroupLab.Core`, `grouplab trajectory`, and both validations, with ballistics.js committed unchanged under `reference/ballistics-js/` with its README.
+  - **Not done as written, 2a:** the Coriolis vertical term, which the section lists to port as it stands, has its sign reversed. It is held out pending question 24.
+  - **Not done as written, 2a and 2f:** the G1 table, also listed to port as it stands, is not the standard G1 function above Mach 0.85. The port carries it meanwhile. G1 fails the independent gate, and question 25 asks which table to carry. G7 passes the gate well inside its tolerances.
+  - **2c:** aerodynamic jump is left out, the section's second option, because the publication was not to hand; the output says so.
+- **Section 2g's later work** waits for its own entry, as the section says.
+- `docs/PHASE1-RESULTS.md` "Entry 110".
+
+**Do not start this until entry 109 is committed, pushed and folded.** If entry 109's run is still going when you read this, finish it first. This entry does not touch the screens.
+
+### 1. Question 23 answered: yes to all of it, and the three corrections are mine
+
+**Section 1 of the question.** All three statements were wrong, and for the same reason: I judged from a render rather than reading the code behind it. The crumb fell back only because the test never opened a file. The framing was a 35 percent margin, not the bull. The text labels on the tools were entry 93's recorded decision. **What you did at each point is accepted as done.** The new renders open a real file, so they show what a person sees, and that closes the gap I read wrongly.
+
+**Section 2.** The stringing power sentence stays whole and wraps; `STATISTICS.md` section 7 outranks my "one line". The group's inputs stay in the panel below the scale; they are the task.
+
+**Section 3.** The lead figure as the one named exception to the five styles is right.
+
+Set question 23 to answered, pointing here.
+
+### 2. The ballistic solver: Phase 5 begins
+
+**Alan wants the solver from his website in GroupLab.** `DESIGN.md` section 16 has planned exactly this port since revision 1. The source is delivered beside this entry as `entry-110-ballistics.js`, taken from the pissinhot.com web server on 2026-09-19. Its SHA-256 begins `581fab43209367af`.
+
+**Provenance.** Claude wrote it for Alan in his Pissin Hot Precision project, so it is Alan's code, and he can license it into GroupLab under GPL-3.0 with the section 7 app-store permission. **The G1 and G7 drag tables** are from the US Army Ballistic Research Laboratory and are public domain. **The spin-drift and stability formulas** are Litz's and Miller's published formulas; cite them in the code. **Commit the file** unchanged as `reference/ballistics-js/ballistics.js`, with a short README in that folder giving its source, date, hash and what GroupLab uses it for. It is already served to every visitor of the website, so nothing in it is private.
+
+**I read all of it and ran it under Node before writing this.** Its core is sound and ports directly. Two functions are wrong and must not be carried over as they are.
+
+#### 2a. Port as it stands
+
+- **The G1 and G7 tables** and their linear interpolation in Mach.
+- **The atmosphere:** station pressure from altitude by the ICAO formula, the density ratio with its humidity correction, and the speed of sound with the moist-air correction. `pressureFromAltitude` computes four variables it never uses; leave them out.
+- **The drag deceleration**, `(ρ/ρ₀) × Cd(M) × V² × 0.00020856 / BC`. I checked the constant: π × 0.0764742 / 1152 = 0.00020856, with the BC in lb/in² and ρ₀ as mass density in lb/ft³. It is right.
+- **The point-mass RK4 integration** of downrange and vertical position and velocity.
+- **The zeroing search**, the bisection on launch angle.
+- **Wind drift by the lag-time method**, `Vw × (t − x/V₀)`.
+- **Miller's stability factor, Litz's spin-drift fit, and the Coriolis horizontal and vertical (Eötvös) terms.**
+
+**Its flat-fire output is plausible.** A 175 grain .308 at 2700 fps with a G7 BC of 0.243, zeroed at 100 yd, reads 37.4 MOA at 1000 yd and 105 in of drift in a 10 mph full-value wind. Its drop at the zero range reads 0.01 in.
+
+#### 2b. Shooting angle: broken, and live on the website
+
+**Any non-zero angle gives nonsense.** Run under Node with the case above:
+
+| Angle | 100 yd | 500 yd | 1000 yd |
+|---|---|---|---|
+| 0 | −0.01 MOA | 11.06 | 37.37 |
+| +5 | **−297.6 MOA** | −285.6 | −258.9 |
+| +10 | **−604.4 MOA** | −590.8 | −563.0 |
+| −10 | **+260.8 MOA** | +272.0 | +298.5 |
+
+**The cause:** the angle tilts the launch, but drop is still measured from the horizontal line `y = 0` at horizontal distance `x`. The trajectory is never compared with the inclined line of sight, so the table reports the line of sight's own rise, about 300 MOA per 5 degrees.
+
+**In the port:** measure range along the line of sight and drop perpendicular to it. **Tests:** angle 0 reproduces the flat table exactly. A small angle gives drop close to the flat-fire drop at the same horizontal distance, as the rifleman's rule predicts, within a tolerance you state. Uphill and downhill at the same angle agree closely at short range.
+
+#### 2c. Aerodynamic jump: not physics, so not carried over
+
+`aeroJump` returns `crosswindFps × 0.012 / SG` MOA. Its own comment says "Empirical: ~0.01 MOA per fps ... This is a rough approximation based on published AB data". **The number is not from any published source I can identify, and it runs the wrong way.** It shrinks as stability rises, where Litz's published fit for aerodynamic jump grows with stability. At SG 1.5 and a 10 mph crosswind it gives about 0.12 MOA. Litz's fit, as I recall it, gives about three times that for a typical bullet.
+
+**Do not port it.** Two acceptable outcomes:
+- **Implement Litz's published aerodynamic jump fit, from the source**, with its coefficients, sign convention and units checked against the publication itself and cited in the code. My recollection is MOA per mph of crosswind = 0.01 × SG − 0.0024 × L + 0.032, with L the bullet's length in calibers. **Do not take that from me; take it from the book.**
+- **Or leave aerodynamic jump out** and say so wherever the solver's output is shown: "Aerodynamic jump is not modelled."
+
+**A made-up number presented as a correction is the one outcome that is not acceptable.** It is the same rule GroupLab applies to pseudoscience.
+
+#### 2d. Do not port the dispersion utilities
+
+`velocityDispersion`, `hitProbability` and `combinedGroupSize` estimate dispersion their own way. For example, `hitProbability` takes a group size in MOA and treats half of it as one standard deviation. **GroupLab's statistics engine estimates sigma properly, with its interval, from the marked shots.** Phase 5's hit probability at another distance propagates that sigma through the solver, as `DESIGN.md` section 3 says. Port the trajectory, not these.
+
+#### 2e. Smaller changes for the port
+
+- **Interpolate to the exact range.** The JavaScript records the first integration step at or past each range. That is up to 1.5 ft late at 2700 fps: about 0.04 MOA at 1000 yd, and the reason the zero reads 0.01 in rather than 0.
+- **Use RK4 for the zeroing pass too.** The JavaScript zeroes with a first-order step and then flies the trajectory with RK4. The measured effect is small, but the zero should be found on the same trajectory it is applied to.
+- **Keep full precision and round only for display.** The JavaScript rounds every column as it records it.
+- **Miller's stability factor:** its atmosphere correction here uses temperature only. Miller's correction also scales with pressure; include it.
+- **The BC's reference atmosphere.** The solver's ρ₀ is ICAO, 59 °F, 29.92 inHg, dry. Many published G1 BCs are referenced to Army Standard Metro instead, and using one against the other misstates drag by a percent or two. **Make the reference atmosphere a stated input, defaulting to ICAO**, with Army Standard Metro available. Test the density ratio between the two.
+
+#### 2f. Validation: the gate needs an independent implementation, and the JavaScript is not one
+
+The Phase 5 gate is "a ballistic solver validated against an independent implementation". **ballistics.js has the same author, the same method and the same tables as the port, so matching it proves the transcription, not the physics.** Two checks, therefore:
+
+1. **Against the JavaScript, for the transcription.** Run the original under Node in CI; GitHub's runners have it. Compare flat-fire cases across G1 and G7, several loads, atmospheres and winds, at the JavaScript's own sampled positions so the interpolation change does not blur the comparison. **List every intentional difference** (angle, aerodynamic jump, interpolation, the RK4 zero, the Miller pressure term) with the case that shows it.
+2. **Against an independent solver, for the gate.** Pick an open-source point-mass solver, for example py-ballisticcalc. Check its licence yourself, use it only in a script that generates reference tables, and commit the tables, not the solver. **Write down the tolerance before you run the comparison**, drop and wind deflection in MOA to 1000 yd and time of flight in percent, with the reason for each figure. A tolerance chosen after seeing the numbers is not a gate.
+
+#### 2g. What to build now, and what waits
+
+- **Now:** the solver in `GroupLab.Core`, both validations, and a `grouplab trajectory` command that prints a table from stated inputs, so it can be checked by hand against any calculator.
+- **Waits for its own entry:** the solver in the interface, the zero correction carried to another distance, hit probability at distance, and distance normalisation. Each needs muzzle velocity, BC and sight height on the rifle and load records, and a decision about where they appear.
+- **The README's Phase 5 line** for the solver moves to **In progress**, or to **Built, not proven** once the independent comparison passes. Record the port and the two exclusions in `DESIGN.md` section 16.
+
+**No pseudoscience.** The solver models physics only, as section 16 says. Nothing in ballistics.js touches barrel timing, and nothing in the port should.
+
+---
+
 ## 2026-09-19, entry 109: a layout and readability pass on both screens, measured against the concept
 
 **Status: actioned 2026-09-19**, sections 1 to 4, the marking screen and the settings screen first and then the analysis screen, in one run. Three statements the code does not bear out, and two places where the entry's own limits meet, are raised as question 23, each built meanwhile.

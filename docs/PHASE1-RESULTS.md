@@ -5084,6 +5084,83 @@ Mean radius keeps its 29 point lead, the one named exception. The older size nam
 
 **Tests:** Core 918 and App 85 passing, none skipped.
 
+## Entry 110. Question 23 answered, the ballistic solver ported from ballistics.js, and its two validations
+
+`docs/NOTES-FROM-PLANNING.md` entry 110, both numbered sections. **Three parts of section 2 are not done as written,** and each is a question or the entry's own second option:
+- the Coriolis vertical term is held out (question 24);
+- the G1 table fails the independent gate (question 25);
+- aerodynamic jump is left out.
+
+### Section 1: question 23
+
+Set to answered, pointing at entry 110.
+
+### Section 2: the solver
+
+**Where things are.**
+- **The source,** unchanged, is `reference/ballistics-js/ballistics.js`, SHA-256 `581fab43209367af53f5271b7dbc3256c52aafe9c6b6a20a3bb4db0c24e7aa14`, with a README giving its source, date, licence and what GroupLab takes and does not take from it. `.gitattributes` keeps it byte for byte on any checkout.
+- **`reference/` was ignored as a whole,** to keep local material such as exports out. It is now `reference/*`, with only `ballistics-js/`, `ballistics-cases.json` and `py-ballisticcalc/` un-ignored; everything that was already there stays ignored.
+- **The port** is `src/GroupLab.Core/Ballistics`:
+  - `DragTables`, copied from the JavaScript by a script and not retyped;
+  - `Atmosphere`;
+  - `Stability`, for Miller's factor, Litz's spin drift and the Coriolis horizontal term;
+  - `BallisticSolver`.
+- **`grouplab trajectory`** prints a table from stated inputs. Every assumed input is printed above the table, and below it: "Aerodynamic jump is not modelled." and "The Coriolis vertical (Eötvös) term is not modelled."
+
+**Ported as it stands:**
+- the drag constant, checked: π × 0.0764742 / 1152 = 0.00020856;
+- the RK4 integration and the zeroing search;
+- lag-rule wind;
+- the atmosphere, without `pressureFromAltitude`'s four unused variables;
+- Miller's stability factor;
+- Litz's spin drift;
+- the Coriolis horizontal term.
+
+**Intentional differences from ballistics.js, each with the case that shows it.** The case is the .308, 175 gr, G7 0.243, 2700 fps, zeroed at 100 yd, 59 °F, 29.92 inHg, 50 percent, 10 mph, unless named:
+
+| Difference | What the case shows |
+|---|---|
+| Shooting angle measured along the line of sight, drop perpendicular to it, the rifle zeroed on the flat | At 5 degrees the port reads −0.01, 11.19 and 37.46 MOA at 100, 500 and 1000 yd, where the JavaScript read −297.6, −285.6 and −258.9. The rifleman's rule holds within the stated 5 percent plus 0.25 in to 600 yd at 5 and 10 degrees, and uphill and downhill agree within 0.05 MOA to 300 yd. |
+| The zero by RK4, and rows interpolated to their exact range | The zero angle is 3.8199 MOA against the JavaScript's 3.8342. Drop at the zero range is 0.000 in against 0.012 in. At 1000 yd, 37.508 MOA against 37.497. |
+| Full precision, rounded only for display | The table rounds; the rows do not. |
+| Miller's pressure correction | 10 in twist, 0.308 in, 1.5 in, 215 gr, 2900 fps, 90 °F: SG 2.146 at 26.0 inHg against 1.865 without the pressure term. At 29.92 inHg the two agree exactly, and the transcription check holds that. |
+| The BC's reference atmosphere, ICAO by default, Army Standard Metro available | The Metro density by the solver's own formula is within 0.1 percent of its defined 0.0751265 lb/ft³. The density ratio differs by 1.018, and the case reads 38.10 MOA at 1000 yd against 37.51 with an ICAO coefficient. How section 2e was read is in question 24 section 3. |
+| Aerodynamic jump not modelled | Section 2c's second option. The publication was not to hand to check Litz's fit against, and the output says so. |
+| Coriolis vertical not modelled | Its sign is reversed in the JavaScript (question 24). |
+| The dispersion utilities not ported | Section 2d. |
+| `solveExtended`'s compass wind not ported | It adds a wind from the right as drift to the right. The port takes a signed crosswind (question 24 section 3). |
+
+**Validation 1, against ballistics.js, for the transcription.**
+- ballistics.js ran unchanged under Node on a GitHub runner, and its output is `tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json`.
+- The Linux CI job now runs it again on every push and fails if its output differs.
+- **All 66 rows of the six cases match within the JavaScript's own rounding,** with the port in its JavaScript-compatible mode.
+- The drag tables at every hundredth of Mach to 5.2, the atmosphere at 175 conditions and seven altitudes, Miller's factor, spin drift and the Coriolis horizontal term all match to 1 part in 10^9.
+
+**The entry's own figures for the .308 case were not the file's.** The JavaScript, run on the case as section 2a states it, reads 11.23 MOA at 500 yd and 37.50 at 1000, where the entry has 11.06 and 37.37. Its drop at the zero range, 0.01 in, is as the entry says. The angle fault is the same either way.
+
+**Validation 2, against py-ballisticcalc, for the gate.**
+- The tolerances were committed and pushed before either reference table existed:
+  - drop 0.10 MOA plus 1 percent;
+  - wind 0.05 MOA plus 2 percent;
+  - time of flight 0.5 percent;
+  - each with its reason, in `docs/BALLISTICS-VALIDATION.md`.
+- py-ballisticcalc 2.3.1, LGPL-3.0-only, ran on a runner. Its tables are committed and the library is not.
+- **All four G7 cases pass at every range to 1000 yd.** The largest share of any allowance used is 4 percent for drop and for wind and 7 percent for time of flight.
+- **Both G1 cases fail from 100 yd on:** at 1000 yd, 31.77 MOA against 40.33 and 22.70 against 28.47, with time of flight 13 percent short.
+
+**Why G1 fails: the JavaScript's G1 table is not the standard G1 function.**
+- Compared point by point with py-ballisticcalc's, 60 of 79 shared Mach points differ above Mach 0.85:
+  - 0.5210 against 0.4805 at Mach 1.0;
+  - 0.5295 against 0.6625 at Mach 1.4;
+  - 0.2571 against 0.4988 at Mach 5.0.
+- **The G7 table matches** except at Mach 3.5 and above, where no rifle bullet here flies.
+- The gate test holds the two G1 cases by name as known failures, pointing at question 25, and fails if either starts to pass. **The tolerance was not widened.**
+- **The website serves this table now,** so its G1 results are affected independently of GroupLab.
+
+**The README's Phase 5 solver line is In progress,** not "Built, not proven": the gate is met for G7 and not for G1. DESIGN.md section 16 records the port and what it did not take.
+
+**Tests:** Core 938 and App 85 passing, none skipped.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5330,3 +5407,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 109 section 2: settings as a screen in the main window, over a dialog.** The rail is navigation, and the gear is a destination like Print.
 - **Entry 109 section 3: the flyer card's hedge kept in view, over moving it behind "why".** Without "by that measure alone" the verdict would say more than the test can.
 - **Entry 109 section 3: excluded rows struck through, over a word in the row.** One number per shot leaves no room for a word, and the tooltip says it.
+- **Entry 110 section 2f: the tolerances committed and pushed before the reference tables were generated, over writing them in the same commit.** The history then shows the order, which is the point of stating them first.
+- **Entry 110 section 2f: both references generated on a GitHub runner, over installing Node and py-ballisticcalc here.** Nothing is installed on the development machine, and the same runner re-checks the JavaScript on every push.
+- **Entry 110 section 2f: the G1 cases held as named known failures, over a red check or a wider tolerance.** A red check would block every other change, and a wider tolerance would make the gate mean nothing; the named list fails the day it is no longer true.
+- **Entry 110 section 2a: the Coriolis vertical term held out rather than ported with its sign corrected.** The entry said to port it as it stands, so the conflict is a question, not a quiet fix.
+- **Entry 110 section 2c: aerodynamic jump left out, over Litz's fit from memory.** The entry required the coefficients from the publication, which was not to hand.
+- **Entry 110 section 2b: the rifle zeroed on the flat and then tilted, over zeroing at the shooting angle.** A rifle is zeroed at a range and then carried to the hill.

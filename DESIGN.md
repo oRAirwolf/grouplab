@@ -404,6 +404,23 @@ It is used for hit probability at distance, distance normalisation between group
 
 The solver models physics only. Barrel harmonics, optimal barrel time, velocity nodes, and accuracy nodes are not represented anywhere in GroupLab, because they are not real.
 
+**[r11] The port, and what it did not take** (`docs/NOTES-FROM-PLANNING.md` entry 110 section 2). The solver is `src/GroupLab.Core/Ballistics`, ported from `reference/ballistics-js/ballistics.js`, which is kept unchanged beside it. It ports:
+- the drag deceleration and the RK4 point-mass integration;
+- the zeroing search, now by RK4 on the trajectory it is applied to;
+- the ICAO atmosphere with its humidity corrections;
+- lag-rule wind drift;
+- Miller's stability factor, with his pressure correction added;
+- Litz's spin drift;
+- the Coriolis horizontal term.
+
+Every row is interpolated to its exact range, and the BC's reference atmosphere is a stated input, ICAO by default or Army Standard Metro. **Not carried over, on purpose:**
+- **the shooting angle as written**, which measured drop from the horizontal rather than the line of sight and read hundreds of MOA at any angle; the port measures along and perpendicular to the line of sight;
+- **aerodynamic jump**, whose formula was not a published one and ran the wrong way with stability, so the solver's output says "Aerodynamic jump is not modelled.";
+- **the Coriolis vertical term**, whose sign was reversed, held pending question 24;
+- **the dispersion utilities**, since sigma comes from the statistics engine with its interval.
+
+**The JavaScript is not an independent check,** having the same author, method and tables. So the port is checked against it only for the transcription, and against py-ballisticcalc for the physics, with tolerances written down before the comparison (`docs/BALLISTICS-VALIDATION.md`). **That comparison found the JavaScript's G1 table is not the standard G1 function** above Mach 0.85. G7 passes; G1 fails, pending question 25.
+
 ## 17. Chronograph integration
 
 Garmin Xero first. All chronographs sit behind one import interface, with LabRadar, MagnetoSpeed, Athlon, and Caldwell as follow-ons.
