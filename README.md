@@ -41,7 +41,7 @@ The one-shot-per-bull design is what makes the accuracy possible. Holes never ov
 
 ## Concept screens
 
-These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with its first destination built, its Print slot opening the print screen, the other three naming the phase that builds them, and a settings screen behind the gear at its foot. Behind the first destination are the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. Renders of the build as it stands, every screen in both themes at two sizes, are in `docs/figures/screens/current/` beside these. Not built yet: the target library, session records, reporting, and load against load.
+These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with the analysis, the target library, the print screen and the session records behind it, load comparison behind its chart slot, a Ballistics slot for the solver, and a settings screen behind the gear at its foot. Behind the first destination are the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. Renders of the build as it stands, every screen in both themes at two sizes, are in `docs/figures/screens/current/` beside these. Not built yet: velocity regression.
 
 ![Analysis screen](docs/figures/screens/analysis-dark.png)
 
@@ -128,7 +128,7 @@ What exists and is tested:
 - an end-to-end `analyze` command, from photograph to report
 - diagnostic logging, crash records and a report package, with no location data in any of them
 
-What does not exist yet: the analysis screen's report, load comparison, the chronograph and ballistic work, and any mobile build.
+What does not exist yet: load comparison, the chronograph and ballistic work, and any mobile build.
 
 ## Planned
 
@@ -190,6 +190,8 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 **Phase 3. Editor.**
 - **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
+- **Built, not proven.** Shots per bull for a sheet that breaks one a bull on purpose: every shot to its nearest bull, or two on the bulls named, matched that way. Without it, one-to-one matching pushes each second shot onto an empty neighbour and the review queue raises every one, which a synthetic doubles sheet tests both ways.
+- **Built, not proven.** `grouplab compare-photos`: photographs of a sheet against its flat scan, the scan's corrected marking or its own detection as the truth, saying which. For each photograph it gives the registration model, the bull-centre error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Sighters found and matched and then set aside unless a person asks for them, and analysed as a group of their own when they do, never pooled with the scoring shots.
@@ -206,22 +208,25 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
 - **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
-- **In progress.** The analysis screen shown above. Built: the editor and the analysis as two states of one document, forward by Accept and analyse and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the calibre, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; and the two judgement cards, round and flyer, each naming its test. Not built: the report, the sheet's thumbnail, and the full CEP table and bivariate fit behind a link.
+- **Done.** The analysis screen shown above: the editor and the analysis as two states of one document, forward by Accept and analyse and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the calibre, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; the two judgement cards, round and flyer, each naming its test; the sheet's thumbnail, drawn from its definition with every shot on it, where a click on a bull selects its shots; and the full CEP table and bivariate fit behind one disclosure that remembers it was opened.
 - **Not started.** Hole detection on blank paper, with no definition to difference against. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
-- **Not started.** A target library, session records and reporting.
+- **Built, not proven.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyse saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one.
+- **Built, not proven.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval and without exclusions, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every "why", and the version and identifiers on page 2. Every line on it is one the analysis screen shows.
+- **Built, not proven.** The target library: the built-in sheets, read only, and your own sheets from the designer, saved as GLTD files in the data folder, renamed, duplicated from any sheet, and deleted after asking. The print screen lists both. A session keeps its own copy of the sheet it was analysed against, so deleting a sheet never makes a session unreadable.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
 - **Done.** GroupLab's mark in the header and the rail, and as the application's icon for Windows, Linux and macOS, drawn from one committed source.
 - **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
 - **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
 - **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once, and in the scope's own clicks with what rounding leaves once the marking names a rifle.
-- **Not started.** A volunteer print pack: the sheets and the instructions a donor needs to shoot and photograph one.
+- **Built, not proven.** A volunteer print pack: the print screen's "Print a volunteer pack" gives the sheet and one page of instructions together, generated from `docs/VOLUNTEER-PACK.md` at the sheet's own paper size, with its own distance from bull 1 to bull 5 to measure. Consent is the upload page's, not the pack's.
 
 **Phase 5. Chronograph, solver, and comparison.**
 - **Not started.** Garmin Xero import and reconciliation against marked shots.
-- **Built, not proven.** A ballistic solver, validated against an independent implementation: the point-mass solver ported from ballistics.js and corrected in five places, and `grouplab trajectory`, which prints a table from stated inputs. G1 and G7 agree with py-ballisticcalc well inside tolerances written down before the comparison. It is not yet in the interface, which waits for muzzle velocity, BC and sight height on the rifle and load records.
-- **Not started.** Load against load, velocity regression, and predicted against measured vertical.
-- **Not started.** Hit probability at a distance other than the one shot, and distance normalisation, both propagated through the solver rather than by scaling a group linearly.
+- **Built, not proven.** A ballistic solver, validated against an independent implementation: the point-mass solver ported from ballistics.js and corrected in five places, and `grouplab trajectory`, which prints a table from stated inputs. G1 and G7 agree with py-ballisticcalc well inside tolerances written down before the comparison. On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
+- **Built, not proven.** Load against load on screen: sessions chosen in Session records, or one sheet's subgroups, side by side with their plots, figures and intervals, the tests with their verdicts and what each could have detected, and the shots it would take to resolve a smaller difference. The loads are never ranked by a point estimate, and overlapping intervals are said to leave them unseparated.
+- **Not started.** Velocity regression, and predicted against measured vertical.
+- **Built, not proven.** Hit probability at a distance other than the one shot, and distance normalisation, both propagated through the solver rather than by scaling a group linearly: the load's velocity SD and the crosswind's uncertainty add their own spread at the new distance, the velocity's share at the distance shot is taken out first and refused when it is larger than the group, and the chance of a hit on a circle or a rectangle is given at both ends of the sigma interval as well as its estimate. With neither spread given it is angular scaling, and says so. Every figure is labelled a prediction.
 
 **Phase 6. Android.**
 - **Not started.** The camera capture path, with lens distortion fitted on the device.
@@ -272,6 +277,7 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 
 | Document | Covers |
 |---|---|
+| [docs/USER-GUIDE.md](docs/USER-GUIDE.md) | Using the Windows application, from printing a sheet to comparing loads, with [a PDF](docs/USER-GUIDE.pdf) |
 | [docs/PHASE0-BRIEF.md](docs/PHASE0-BRIEF.md) | The brief for Phases 0a and 0 |
 | [docs/FIDUCIAL-DECISION.md](docs/FIDUCIAL-DECISION.md) | Why the markers are AprilTag `tag36h11`, and the measurements behind it |
 | [docs/DETECTION-PIPELINE.md](docs/DETECTION-PIPELINE.md) | The eleven-stage analysis pipeline |
@@ -279,6 +285,8 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 | [docs/STATISTICS.md](docs/STATISTICS.md) | Estimators, tests, and validation against `shotGroups` |
 | [docs/SCAN-MEASUREMENTS.md](docs/SCAN-MEASUREMENTS.md) | Measurements from the real scans under `scans/` |
 | [docs/SPEC-ERRATA.md](docs/SPEC-ERRATA.md) | Where the implementation had to choose because the specification does not |
+| [docs/SESSION-SCHEMA.md](docs/SESSION-SCHEMA.md) | The session database's schema, its version and its JSON export |
+| [docs/VOLUNTEER-PACK.md](docs/VOLUNTEER-PACK.md) | The one page of instructions in the volunteer print pack |
 
 ## Repository layout
 

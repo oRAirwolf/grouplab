@@ -14,6 +14,21 @@ namespace GroupLab.Core.Marking;
 /// </summary>
 public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit)
 {
+    // What the ballistic solver needs from the rifle, NOTES-FROM-PLANNING.md entry 112 section 4, all optional: a rifle without them simply
+    // cannot use the solver, and the screen says which is missing.
+
+    /// <summary>The height of the sight's axis above the bore, in inches.</summary>
+    public double? SightHeightInches { get; init; }
+
+    /// <summary>The distance the rifle is zeroed at, in yards.</summary>
+    public double? ZeroDistanceYards { get; init; }
+
+    /// <summary>The barrel's twist, inches per turn, for spin drift.</summary>
+    public double? TwistInches { get; init; }
+
+    /// <summary>1 for a right-hand twist, −1 for a left-hand one.</summary>
+    public int? TwistDirection { get; init; }
+
     /// <summary>How the click reads to a person: "0.25 MOA a click", "0.1 mil a click".</summary>
     public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {(ClickUnit == AngularUnit.Mrad ? "mil" : ClickUnit == AngularUnit.Smoa ? "SMOA" : "MOA")} a click");
 }
@@ -25,7 +40,28 @@ public sealed record Barrel(string Name, string? Rifle, int Rounds);
 /// A load: a name and its components as free text, the data block's own fields. Deliberately not a reloading database (entry 97 section 2):
 /// the record exists so a sheet can say which load it carried, and so subgroups can be named by the load rather than by a string typed twice.
 /// </summary>
-public sealed record Load(string Name, string? Components);
+public sealed record Load(string Name, string? Components)
+{
+    // What the ballistic solver needs from the load, entry 112 section 4, all optional.
+
+    public double? MuzzleVelocityFps { get; init; }
+
+    /// <summary>The muzzle velocity's standard deviation, which hit probability at distance propagates (entry 113 section 3).</summary>
+    public double? MuzzleVelocitySdFps { get; init; }
+
+    public double? BallisticCoefficient { get; init; }
+
+    public GroupLab.Core.Ballistics.DragModel? DragModel { get; init; }
+
+    /// <summary>The atmosphere the coefficient is stated against, ICAO unless it says otherwise.</summary>
+    public GroupLab.Core.Ballistics.ReferenceAtmosphere? BcReference { get; init; }
+
+    public double? BulletWeightGrains { get; init; }
+
+    public double? BulletLengthInches { get; init; }
+
+    public double? BulletDiameterInches { get; init; }
+}
 
 /// <summary>
 /// The person's rifles, barrels and loads, DESIGN.md section 3's records, kept in one small file beside the settings. Names are the keys, as

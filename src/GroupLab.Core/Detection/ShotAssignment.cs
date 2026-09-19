@@ -68,17 +68,23 @@ public static class ShotAssignment
     /// Whether each bull is a scoring bull, in the order of <paramref name="bulls"/>. When both kinds are present the two are matched as
     /// separate pools; without it every bull is one pool, as before.
     /// </param>
+    /// <param name="capacity">
+    /// How many shots each bull is expected to hold, in the order of <paramref name="bulls"/>, one where it is not given: a sheet shot with
+    /// two a bull on named bulls, NOTES-FROM-PLANNING.md entry 113 section 4, is matched with each such bull taking two.
+    /// </param>
+    /// <param name="nearestOnly">Every shot to its nearest bull, never matched, because the person said the sheet is to be read that way.</param>
     /// <returns>
     /// Every shot's assignment, with bull indices into <paramref name="bulls"/>. The method is nearest-bull when either pool had more shots
     /// than bulls, and the reason says what happened in each pool.
     /// </returns>
-    public static ShotAssignmentResult Assign(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches = double.PositiveInfinity, IReadOnlyList<bool>? scoring = null)
+    public static ShotAssignmentResult Assign(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches = double.PositiveInfinity, IReadOnlyList<bool>? scoring = null,
+        IReadOnlyList<int>? capacity = null, bool nearestOnly = false)
     {
         ArgumentNullException.ThrowIfNull(shots);
         ArgumentNullException.ThrowIfNull(bulls);
         if (scoring is null || scoring.Distinct().Count() < 2)
         {
-            return AssignPool(shots, bulls, gateInches);
+            return AssignPool(shots, bulls, gateInches, capacity, nearestOnly);
         }
 
         if (scoring.Count != bulls.Count)
@@ -100,7 +106,7 @@ public static class ShotAssignment
                 continue;
             }
 
-            var part = AssignPool([.. poolShots.Select(s => shots[s])], [.. poolBulls.Select(b => bulls[b])], gateInches);
+            var part = AssignPool([.. poolShots.Select(s => shots[s])], [.. poolBulls.Select(b => bulls[b])], gateInches, capacity is null ? null : [.. poolBulls.Select(b => capacity[b])], nearestOnly);
             if (part.Method == AssignmentMethod.NearestBull)
             {
                 method = AssignmentMethod.NearestBull;
@@ -129,7 +135,7 @@ public static class ShotAssignment
     private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
 
     /// <summary>One pool of bulls, every shot competing for it: the matching of the class summary.</summary>
-    private static ShotAssignmentResult AssignPool(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches)
+    private static ShotAssignmentResult AssignPool(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches, IReadOnlyList<int>? capacity = null, bool nearestOnly = false)
     {
         if (bulls.Count == 0)
         {
@@ -152,19 +158,44 @@ public static class ShotAssignment
         }
 
         double margin = AmbiguousMarginInches * DmmPerInch;
-        if (shots.Count <= bulls.Count)
+        double gate = gateInches * DmmPerInch;
+        if (nearestOnly)
         {
-            var matched = Hungarian(cost, shots.Count, bulls.Count);
-            return new ShotAssignmentResult(AssignmentMethod.OneToOne, shots.Count == bulls.Count ? "as many shots as bulls" : "fewer shots than bulls, matched against a subset",
+            // The person's reading of the sheet: nothing is matched, and a shot is flagged only where its bulls are near to equal.
+            return new ShotAssignmentResult(AssignmentMethod.NearestBull, "each shot to its nearest bull, as the marking asks",
                 [.. Enumerable.Range(0, shots.Count).Select(s =>
                 {
                     var (nearest, nearestDistance, gap) = Nearest(s);
-                    int bull = matched[s];
+                    return new AssignedShot(s, nearestDistance <= gate ? nearest : null, nearestDistance, nearest, nearestDistance, gap, gap < margin);
+                })]);
+        }
+
+        // Each bull is as many places in the matching as the shots it is expected to hold, one unless the marking says more.
+        int[] slots = [.. Enumerable.Range(0, bulls.Count).SelectMany(b => Enumerable.Repeat(b, Math.Max(1, capacity?[b] ?? 1)))];
+        if (shots.Count <= slots.Length)
+        {
+            var slotCost = new double[shots.Count, slots.Length];
+            for (int s = 0; s < shots.Count; s++)
+            {
+                for (int j = 0; j < slots.Length; j++)
+                {
+                    slotCost[s, j] = cost[s, slots[j]];
+                }
+            }
+
+            var matched = Hungarian(slotCost, shots.Count, slots.Length);
+            string reason = slots.Length > bulls.Count
+                ? string.Create(System.Globalization.CultureInfo.InvariantCulture, $"matched with the bulls the marking names taking more than one, {slots.Length} places for {shots.Count} shots")
+                : shots.Count == bulls.Count ? "as many shots as bulls" : "fewer shots than bulls, matched against a subset";
+            return new ShotAssignmentResult(AssignmentMethod.OneToOne, reason,
+                [.. Enumerable.Range(0, shots.Count).Select(s =>
+                {
+                    var (nearest, nearestDistance, gap) = Nearest(s);
+                    int bull = slots[matched[s]];
                     return new AssignedShot(s, bull, cost[s, bull], nearest, nearestDistance, gap, gap < margin || bull != nearest);
                 })]);
         }
 
-        double gate = gateInches * DmmPerInch;
         return new ShotAssignmentResult(AssignmentMethod.NearestBull, "more shots than bulls, so no one-to-one matching is forced",
             [.. Enumerable.Range(0, shots.Count).Select(s =>
             {

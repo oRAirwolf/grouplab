@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Registration;
 
 namespace GroupLab.Core.Marking;
 
@@ -70,6 +71,10 @@ public static class MarkingFile
             rifle = state.Rifle is { } rifle ? new { name = rifle.Name, clickValue = rifle.ClickValue, clickUnit = rifle.ClickUnit.ToString() } : null,
             barrel = state.Barrel,
             load = state.Load,
+            // Entry 113 section 4: how the sheet's shots are read against its bulls, when it is not one a bull.
+            assignmentRule = state.Rule is { } rule
+                ? new { nearestBull = rule.NearestOnly, perBull = rule.PerBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, shots = p.Value }) }
+                : null,
             subgroups = state.Subgroups is { } map && !map.ByBull.IsEmpty
                 ? map.ByBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, name = p.Value })
                 : null,
@@ -203,6 +208,9 @@ public static class MarkingFile
             Load: (string?)file["load"],
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
+                : null,
+            Rule: file["assignmentRule"] is JsonObject rule
+                ? new AssignmentRule((bool?)rule["nearestBull"] ?? false, (rule["perBull"] as JsonArray ?? []).ToImmutableDictionary(p => (int)p!["bull"]!, p => (int)p!["shots"]!))
                 : null);
         return (state, notes);
     }
@@ -211,7 +219,43 @@ public static class MarkingFile
     {
         LengthReference length => new { kind = "length", a = length.A, b = length.B, inches = length.Inches },
         RectangleReference rectangle => new { kind = "rectangle", corners = rectangle.Corners, widthInches = rectangle.WidthInches, heightInches = rectangle.HeightInches },
-        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary },
+        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, mapping = MappingDocument(sheet.Mapping) },
+        _ => null,
+    };
+
+    /// <summary>
+    /// A sheet's registration as numbers, NOTES-FROM-PLANNING.md entry 112 section 1: a session must reopen and read with no image, so the
+    /// mapping from image pixels to the page is kept exactly, as the parameters each of the three models is built from. A marking without it,
+    /// from before entry 112, still reads, with the note that the scale must be detected again.
+    /// </summary>
+    private static JsonObject? MappingDocument(IPageMapping mapping) => mapping switch
+    {
+        HomographyMapping h => new JsonObject { ["model"] = "homography", ["h"] = Matrix(h.ImageToPage) },
+        RadialHomographyMapping r => new JsonObject
+        {
+            ["model"] = "radial", ["centreX"] = r.CentreX, ["centreY"] = r.CentreY, ["scale"] = r.Scale, ["k1"] = r.K1, ["k2"] = r.K2, ["h"] = Matrix(r.NormalisedToPage),
+        },
+        SurfaceMapping s => new JsonObject
+        {
+            ["model"] = "surface",
+            ["parameters"] = JsonSerializer.SerializeToNode(s.Parameters, MappingOptions),
+            ["page"] = new JsonArray(s.PageBounds.Left, s.PageBounds.Top, s.PageBounds.Right, s.PageBounds.Bottom),
+        },
+        _ => null,
+    };
+
+    private static readonly JsonSerializerOptions MappingOptions = new() { Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } };
+
+    private static JsonArray Matrix(Homography h) =>
+        new([.. Enumerable.Range(0, 9).Select(i => (JsonNode)JsonValue.Create(h[i / 3, i % 3]))]);
+
+    private static Homography Matrix(JsonNode node) => new([.. node.AsArray().Select(v => (double)v!)]);
+
+    private static IPageMapping? ReadMapping(JsonNode? node) => (string?)node?["model"] switch
+    {
+        "homography" => new HomographyMapping(Matrix(node!["h"]!)),
+        "radial" => new RadialHomographyMapping((double)node!["centreX"]!, (double)node["centreY"]!, (double)node["scale"]!, (double)node["k1"]!, (double)node["k2"]!, Matrix(node["h"]!)),
+        "surface" when node!["page"] is JsonArray page => new SurfaceMapping(node["parameters"].Deserialize<SurfaceModel>(MappingOptions)!, (double)page[0]!, (double)page[1]!, (double)page[2]!, (double)page[3]!),
         _ => null,
     };
 
@@ -225,6 +269,8 @@ public static class MarkingFile
                 return new LengthReference(Point(node!["a"])!.Value, Point(node["b"])!.Value, (double)node["inches"]!);
             case "rectangle":
                 return new RectangleReference([.. node!["corners"]!.AsArray().Select(c => Point(c)!.Value)], (double)node["widthInches"]!, (double)node["heightInches"]!);
+            case "sheet" when ReadMapping(node!["mapping"]) is { } mapping:
+                return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"] };
             case "sheet":
                 notes.Add("The sheet's registration is not stored in the file. Detect on the GroupLab sheet again to restore its scale.");
                 return null;

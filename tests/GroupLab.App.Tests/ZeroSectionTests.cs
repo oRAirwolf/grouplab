@@ -92,9 +92,12 @@ public class ZeroSectionTests
         window.Close();
     }
 
-    /// <summary>Entry 93 section 4: the rail is built and its destinations are not, so its other icons say which phase builds them.</summary>
+    /// <summary>
+    /// Entry 93 section 4: the rail and its destinations. Entry 112 built the library and the report; the Reports slot says a report is written
+    /// from an analysis, where its button is.
+    /// </summary>
     [AvaloniaFact]
-    public void TheRailIsBuiltAndItsOtherDestinationsAreNot()
+    public void TheRailGoesToEachDestination()
     {
         var window = NewWindow();
         window.Show();
@@ -102,11 +105,16 @@ public class ZeroSectionTests
 
         var rail = window.GetLogicalDescendants().OfType<Button>().Where(b => b.Classes.Contains(AppStyles.RailButton)).ToList();
 
-        // Entry 109 section 2: the marking screen, the library, Print, records and reports, and the gear at the foot.
-        Assert.Equal(6, rail.Count);
+        // Entry 109 section 2: the marking screen, the library, Print, records and reports, and the gear at the foot; entry 112 section 4 adds
+        // Ballistics after the records.
+        Assert.Equal(7, rail.Count);
         rail[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Dispatcher.UIThread.RunJobs();
-        Assert.Contains("not built yet", window.StatusText, StringComparison.Ordinal);
+        Assert.True(window.ShowingLibrary);
+        rail[4].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Assert.True(window.ShowingBallistics);
+        rail[5].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Assert.True(window.ShowingCompare);
         rail[^1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Assert.True(window.ShowingSettings);
         rail[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));

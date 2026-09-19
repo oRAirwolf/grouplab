@@ -48,6 +48,9 @@ public static class Icons
 
     public const string Reports = "M1,14 H15 V15.5 H1 Z M2,8 H5 V13 H2 Z M6.5,4 H9.5 V13 H6.5 Z M11,9 H14 V13 H11 Z";
 
+    /// <summary>A trajectory's arc over the ground, for the Ballistics screen.</summary>
+    public const string Ballistics = "M1,5 C6,1.5 11,3 15,11.5 L13.6,12.2 C10.2,4.9 6,3.4 1.6,6.4 Z M1,14 H15 V15.5 H1 Z";
+
     /// <summary>An icon as a control, at 16 pixels, drawn in the foreground of whatever holds it.</summary>
     public static PathIcon Draw(string geometry, double size = 16) => new() { Data = StreamGeometry.Parse(geometry), Width = size, Height = size };
 }

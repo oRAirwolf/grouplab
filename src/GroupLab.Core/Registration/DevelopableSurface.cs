@@ -311,6 +311,9 @@ public static class DevelopableSurface
 /// </summary>
 public sealed class SurfaceMapping : IPageMapping
 {
+    /// <summary>The page the mapping was built over, in dmm, which a saved marking keeps so the same mapping is built again (entry 112 section 1).</summary>
+    public (double Left, double Top, double Right, double Bottom) PageBounds { get; }
+
     private const double TableStep = 1;
 
     private readonly Homography _approximateToPage;
@@ -323,6 +326,7 @@ public sealed class SurfaceMapping : IPageMapping
     {
         ArgumentNullException.ThrowIfNull(parameters);
         Parameters = parameters;
+        PageBounds = (pageLeft, pageTop, pageRight, pageBottom);
         _rotation = DevelopableSurface.Rotation(parameters.RotationX, parameters.RotationY, parameters.RotationZ);
         _folded = parameters.Family == SurfaceFamily.General ? new FoldedSheet(parameters) : null;
         _rulingCos = Math.Cos(parameters.RulingAngle);

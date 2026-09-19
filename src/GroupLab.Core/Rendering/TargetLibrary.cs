@@ -20,7 +20,9 @@ public sealed record LibrarySheet(string File, string Family, string? DesignedFo
         {
             var page = Definition.Page;
             string size = string.Create(CultureInfo.InvariantCulture, $"{page.Width / 10.0:0.#} by {page.Height / 10.0:0.#} mm, {page.Width / 254.0:0.##} by {page.Height / 254.0:0.##} in");
-            return page.Size == PageSize.Custom ? size : $"{page.Size}, {size}";
+            // Entry 113 section 7: a roll by its width in words, never the page size's own name.
+            string name = page.Size switch { PageSize.Roll24 => "24 in roll", PageSize.Roll36 => "36 in roll", PageSize.Roll42 => "42 in roll", _ => page.Size.ToString() };
+            return page.Size == PageSize.Custom ? size : $"{name}, {size}";
         }
     }
 

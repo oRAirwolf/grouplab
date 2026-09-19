@@ -207,6 +207,12 @@ Twenty sheets ship, all geometry-validated, specified in `docs/TARGET-LIBRARY.md
 
 **Zeroing sheets are the documented exception to the 25-bull rule**, because a zeroing sheet answers a different question: where the group centre sits relative to the aiming point, which needs one aiming mark and a printed angular grid, not twenty-five bulls. Four ship, covering MOA and mil at 100 yards and 100 metres, since a turret is calibrated in one and a range is marked in the other and the four combinations do not convert by scaling a printed grid.
 
+### The target library in the application
+
+The rail's target library lists the built-in sheets, read only, and the person's own sheets after them. An own sheet is a canonical GLTD-J file in a `sheets` folder of the application's data, saved from the parametric designer or duplicated from any sheet, and it can be renamed and deleted after asking. The name is not part of the printed codes, so renaming a sheet changes nothing already printed or analysed. The print screen lists both, and an own sheet prints through exactly the refusals a built-in one does.
+
+**A sheet a session used stays readable because the session keeps its own copy of the definition**, which Accept and analyse stores and reopening reads. So deleting an own sheet is allowed, and the question before it says how many sessions were analysed against it and that each keeps its copy. Refusing instead would make a sheet undeletable for as long as any session of it is kept.
+
 ## 10. Image acquisition
 
 ### Formats
@@ -282,6 +288,8 @@ This is the architectural advantage OnTarget cannot have, because it analyses ta
 
 **[r3] No absolute intensity threshold may appear anywhere in this pipeline.** The same naive detector needed three different threshold values across 93, 300 and 600 DPI scans of the same physical targets, because rim contrast falls as each rim is averaged over fewer, larger pixels. Thresholds are expressed as a fraction of the local paper-to-ink dynamic range, and structuring-element radii are expressed in inches and converted through the solved scale. The resolved absolute value is recorded in the trace so it can be checked.
 
+**Photographs against their scan** (entry 113 section 4). `grouplab compare-photos` takes a sheet's flat scan and photographs of the same sheet. The scan is the truth: its marking once a person has corrected it, or its own detection otherwise, and the command says which. Holes are paired nearest first within 0.15 in. Each photograph's row gives the registration model, the bull-centre error worst and median, holes found, missed and false, and the hole-position error median, 95th percentile and worst. The table is read against 0.005 in and 0.15 in and decides neither gate.
+
 **[r3] Declared exclusion zones come before any of this.** The definition names regions that are printed matter by construction: the load-data block, the code squares with their quiet zones, the marker footprints and the identifier text. Candidates inside them are dropped and recorded as such, rather than being classified. Handwriting in a load block is exactly the kind of small dark irregular blob a detector reports as a shot, and a declared rectangle is free and perfectly reliable where classification is neither.
 
 Every detection carries a confidence score. Marginal candidates enter a review queue rather than being silently accepted or silently dropped. Sub-pixel centroids are computed for accepted holes.
@@ -325,6 +333,8 @@ Provenance matters because it keeps the statistics honest about where the number
 **[r3] Nearest-bull is not the assignment rule.** The rule is the globally optimal one-to-one matching between detections and bulls, which encodes the one-shot-per-bull constraint the target was designed around. Measured, nearest-bull is correct on every cross-cell shot in the corpus except one, where a hole 0.627 inches from bull 4 belongs to bull 9 at 1.043 inches because bull 4 already has a closer shot. One-to-one matching gets it right; nearest-bull does not.
 
 **[r3] The method is only valid when the counts match, and that is a measured failure rather than a caveat.** On a file with 27 detections for 25 bulls, forcing a matching manufactures a false cross-cell result. So: equal counts, use matching and report high confidence; fewer detections, match against the subset; **more detections than bulls, do not force a matching** but fall back to nearest-bull within a distance gate, flag every ambiguous case and tell the user the counts disagree. Forcing produces confident wrong answers, which section 2 says the software must never do.
+
+**A sheet that breaks one shot a bull on purpose says so** (entry 113 section 4). The doubles sheet puts two shots into each of bulls 1 to 10 and none into 11 to 25, so one-to-one matching pushes each second shot onto an empty neighbour, and the review queue raises every one. The marking can instead be read by nearest bull, or matched with the bulls it names taking two shots each. The rule is how the sheet is read rather than an edit, so what it assigns becomes the reading later edits are measured from. A bull holding what the rule expects is not raised as doubled. The rule is kept in the marking file.
 
 **[r3] A margin under about 0.15 inches between nearest and second-nearest bull is a review-queue item by construction**, because a 0.05 inch registration error would flip it.
 
@@ -378,7 +388,7 @@ Everything is stored canonically as linear distance at the target plane. Output 
 
 Exclusion is permitted, because the legitimate case exists. It is gated.
 
-When a user marks a shot for exclusion, GroupLab first states what the mathematics expects. In a group of a given size drawn from a given dispersion, the worst shot has a known expected distance from centre, and it is farther out than most shooters believe. The dialog says so plainly. Exclusion then requires a reason selected from a short list, which is recorded. Every report prints both the full and reduced figures side by side, so an exclusion can never be hidden.
+When a user marks a shot for exclusion, GroupLab first states what the mathematics expects. In a group of a given size drawn from a given dispersion, the worst shot has a known expected distance from centre, and it is farther out than most shooters believe. The dialog says so plainly. Exclusion then requires a reason selected from a short list, which is recorded. Every report prints both the full and reduced figures side by side, so an exclusion can never be hidden. The Windows application's session report is a PDF from GroupLab's own writer, and every sentence and figure on it comes from the functions the analysis screen lays out, so the paper cannot be more certain than the screen: the intervals, the without-exclusions lines, the stringing power statement and the refusals come across unchanged, and what the screen keeps behind a "why" is printed on the second page. An excluded shot is drawn hollow on the plot and struck through in the shot table with its reason, never left out.
 
 ### What the intervals do not include
 
@@ -392,7 +402,7 @@ Entities: Rifle, Barrel with round count, Load, Session, Target, Shot, Group, Ch
 
 Critical constraint: **the shot sequence and the chronograph sequence are separate ordered lists that get reconciled, never assumed to align.** Chronographs drop shots, record a neighbour's shot from the adjacent bench, and log the fouling round fired into the berm. Hardcoding shot N to bull N produces numbers that are quietly wrong. The model stores both sequences with an explicit mapping and provides a reconciliation interface for when counts disagree.
 
-Storage is SQLite with a documented schema and full JSON export.
+Storage is SQLite with a documented schema and full JSON export. The database is one file, `grouplab.db`, in the application data folder; its schema and version are in `docs/SESSION-SCHEMA.md`, which a test holds equal to the statements the code runs. The record file from before the database is read in on the first open and kept beside it as `records.pre-database.json`. A session keeps its date, distance, rifle, barrel, load, calibre, the marking with every edit and exclusion, its headline figures, and the sheet's definition, so a sheet deleted or changed later never makes a session unreadable. Chronograph strings and their shot mapping have their own tables now, though import waits for Phase 5.
 
 ## 16. Ballistic solver
 
@@ -427,6 +437,17 @@ Every row is interpolated to its exact range, and the BC's reference atmosphere 
 4. **The Coriolis vertical term's sign.** Fire toward the east strikes high, where the JavaScript had it low.
 5. **The wind direction.** The port takes a signed crosswind, positive from the left and drifting the bullet right. The JavaScript's extended solve added a wind from the right as drift to the right.
 
+**On screen** (entry 112 section 4). The rifle record carries sight height, zero distance and twist; the load record carries muzzle velocity and its standard deviation, BC, drag model, the BC's reference atmosphere, bullet weight, length and diameter. All are optional, and a record missing what the solver needs says which field. The Ballistics screen gives a dope table from them, range, drop and a 10 mph crosswind's wind in the display units and the scope's clicks, with the air as an input and "Aerodynamic jump is not modelled" beside it. The analysis's zero correction carries to a second distance: windage in proportion to range, since drag leaves the sideways share of the velocity unchanged, and elevation by the solver's own linearisation, the ratio of the path's changes at the two distances under a small change of the bore's angle, taken by a central difference of the zero range. The half-width carries by the same factor. An axis that cannot be told from zero at the distance shot is not carried.
+
+**Hit probability at distance and distance normalisation** (entry 113 section 3). At distance d the shots are bivariate normal about the aim plus the zero offset carried to d, with
+
+    sigma_x(d)^2 = (sigma_x,ang d)^2 + (d drift / d wind  sigma_wind)^2
+    sigma_y(d)^2 = (sigma_y,ang d)^2 + (d drop / d V  sigma_V)^2
+
+The partial derivatives come from the solver by finite difference at d: drift per mph from a signed 1 mph wind, and drop per ft/s from a 5 ft/s central difference with the bore's angle held where the load's own velocity zeroes it. The solver's input takes that angle as an optional field for this. The measured sigma already holds the velocity's share at d0, so with sigma_V given that share comes out in quadrature first. If the subtraction goes negative, the sigma_V entered is too large for the group, and it is refused.
+
+The chance of a hit is given at both ends of the sigma interval and at its estimate. A centred circle uses the engine's closed forms, and an off-centre circle integrates the normal. A rectangle is the product of its two axes, which the model's independent axes make exact. With neither spread given, the result is angular scaling exactly, and the screen says so. The group at another distance is always labelled a prediction.
+
 ## 17. Chronograph integration
 
 Garmin Xero first. All chronographs sit behind one import interface, with LabRadar, MagnetoSpeed, Athlon, and Caldwell as follow-ons.
@@ -457,6 +478,8 @@ Geometry is free at any plausible scale. Images are ruinous almost immediately.
 2. **Proof image**, roughly 400 KB at 150 DPI, synchronised by default, sufficient for eyeballing and audit.
 3. **Full resolution original**, local by default, optionally placed in the user's own cloud storage.
 
+In the Windows application today, the geometry is the saved marking, which carries the sheet's registration as numbers so a session reopens with its scale and plot and no image at all; the proof image is a JPEG at 150 dpi, or 1650 pixels on the long side for an image with no scale, kept in the database; and the original is recorded by its path and its SHA-256, never copied. A reopened session uses the original only when it is still where it was with the same hash, and says so when it is not.
+
 ### Provider model
 
 Synchronisation uses the user's own Google Drive, OneDrive, or iCloud rather than project-operated storage. Free tiers of 15 GB, 5 GB, and 5 GB respectively hold hundreds of full scans and effectively unlimited geometry. This costs the project nothing, removes any custody of other people's data, has no scaling cliff, and survives indefinitely without anyone paying a hosting bill.
@@ -476,6 +499,10 @@ A small project-operated service remains useful for distributing the target defi
 **Typography.** A neutral UI sans for chrome and labels, and a monospace with tabular figures for every numeric readout so digits align in columns and values do not jitter as they update. The site's display faces are built for headlines and are poor for dense numeric data.
 
 **Density.** Progressive, with a specific split. The primary panel shows the composite group, the headline figures, and the confidence interval on each, because those change decisions and burying them would defeat the project's premise. Reference material, the full CEP table, the bivariate fit, and the comparison machinery live one click away in a panel that remembers it was opened.
+
+**The analysis screen's last parts and the comparison** (entry 113 sections 1 and 2). The sheet's thumbnail heads the analysis's left column. It is drawn from the definition, as section 18's archived view is, with every shot at its bull's centre plus its offset, and a click on a bull selects the shots on it. The full CEP table and the bivariate fit sit behind one disclosure that remembers it was opened. The table gives the circular estimate with its interval, then the correlated normal and Grubbs-Patnaik estimates, with every shot and again without exclusions. The fit gives the centre and the axis spreads with their intervals, the correlation, and the error ellipse.
+
+Loads are compared on their own screen, the rail's chart slot, from sessions chosen in Session records or the subgroups of one sheet. Each group has its plot and its figures with intervals. The tests carry their verdicts and what each could have detected. The groups stay in the order chosen and are never ranked by a point estimate: when the sigma intervals overlap, the screen says the data do not separate them. Sessions shot at different distances are compared as angles, and the screen says so.
 
 **Themes.** Four, matching the site: dark, light, high contrast, and follow system. **[r7]** Phase 4.
 

@@ -18,6 +18,24 @@ public sealed class AppSettingsStore(string path)
 
     public string Path { get; } = path;
 
+    /// <summary>
+    /// The database beside the settings, NOTES-FROM-PLANNING.md entry 112 section 1: <c>grouplab.db</c> beside <c>settings.json</c>, and for a
+    /// settings file of any other name, that name with <c>.db</c>, so each test's settings have a database of their own.
+    /// </summary>
+    public string DatabasePath => System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path) ?? ".",
+        System.IO.Path.GetFileNameWithoutExtension(Path) == "settings" ? "grouplab.db" : System.IO.Path.GetFileNameWithoutExtension(Path) + ".db");
+
+    /// <summary>The record book from before the database, <c>records.json</c> beside <c>settings.json</c>, named after any other settings file likewise.</summary>
+    public string RecordsPath => System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path) ?? ".",
+        System.IO.Path.GetFileNameWithoutExtension(Path) == "settings" ? "records.json" : System.IO.Path.GetFileNameWithoutExtension(Path) + ".records.json");
+
+    /// <summary>
+    /// The person's own sheets, NOTES-FROM-PLANNING.md entry 112 section 3: a <c>sheets</c> folder beside <c>settings.json</c>, and for a settings
+    /// file of any other name, that name with <c>.sheets</c>.
+    /// </summary>
+    public string SheetsFolder => System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path) ?? ".",
+        System.IO.Path.GetFileNameWithoutExtension(Path) == "settings" ? "sheets" : System.IO.Path.GetFileNameWithoutExtension(Path) + ".sheets");
+
     /// <summary>The remembered units, or on first run the default for the system's region.</summary>
     public UnitSettings LoadUnits()
     {

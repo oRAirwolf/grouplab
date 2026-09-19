@@ -28,7 +28,7 @@ namespace GroupLab.App.Tests;
 /// </summary>
 public class Entry109Tests
 {
-    private static string Repository([CallerFilePath] string here = "") => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", ".."));
+    internal static string Repository([CallerFilePath] string here = "") => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", ".."));
 
     /// <summary>
     /// GL-CF25-LTR rendered at 300 DPI with a hole on every scoring bull, written to a file and opened, and detected by the real pipeline, so
@@ -261,7 +261,14 @@ public class Entry109Tests
                 {
                     window.Session.SetCalibre(Calibre.Of(0.308));
                     window.Session.SetShotDistance(3600);
-                    window.Session.SetEquipment(new Rifle("Test rifle", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa), null, null);
+                    // Entry 112 section 4: a rifle and load carrying what the solver needs, so the Ballistics screen shows its table.
+                    var rifle = new Rifle("Test rifle", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
+                    window.Book = RecordBook.Empty.With(rifle).With(new Load("Test load", null)
+                    {
+                        MuzzleVelocityFps = 2710, MuzzleVelocitySdFps = 10, BallisticCoefficient = 0.326, DragModel = GroupLab.Core.Ballistics.DragModel.G7,
+                        BcReference = GroupLab.Core.Ballistics.ReferenceAtmosphere.Icao, BulletWeightGrains = 140,
+                    });
+                    window.Session.SetEquipment(rifle, null, "Test load");
                     var print = new PrintWindow { Width = width, Height = height };
                     print.Show();
                     print.Select("GL-CF25-LTR.gltd.json");
@@ -281,6 +288,29 @@ public class Entry109Tests
                         window.ShowSettings();
                         Save(window, $"settings-{name}-{size}");
                         window.ShowSettings(false);
+                        window.ShowSessions();
+                        Save(window, $"sessions-{name}-{size}");
+                        window.ShowSessions(false);
+                        window.ShowLibrary();
+                        Save(window, $"library-{name}-{size}");
+                        window.ShowLibrary(false);
+                        window.ShowBallistics();
+                        window.ProjectGroup("600", 0, "4", "4", "2");
+                        Save(window, $"ballistics-{name}-{size}");
+                        window.ShowBallistics(false);
+
+                        // Entry 113 section 2: two sessions of the sheet compared, the second saved as another load the first time round.
+                        if (window.Sessions!.List().Count < 2)
+                        {
+                            long saved = window.CurrentSession!.Value;
+                            long copy = window.Sessions.Save(window.Sessions.Get(saved)! with { Id = 0, CreatedUtc = "2099-01-01T00:00:00Z", ShotDate = "2099-01-01", Load = "Second load" });
+                            window.ChooseSession(saved, true);
+                            window.ChooseSession(copy, true);
+                        }
+
+                        window.CompareChosen();
+                        Save(window, $"compare-{name}-{size}");
+                        window.ShowCompare(false);
                         Save(print, $"print-{name}-{size}");
                     }
 

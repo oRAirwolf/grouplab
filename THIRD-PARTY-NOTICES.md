@@ -62,6 +62,7 @@ They are licensed under the SIL Open Font License, Version 1.1. The full text is
 | Package | Licence | Used by | Purpose |
 |---|---|---|---|
 | Net.Codecrete.QrCodeGenerator | MIT | GroupLab.Core | QR symbols for the definition and instance codes |
+| Microsoft.Data.Sqlite, with SQLitePCLRaw and SQLite | MIT; SQLitePCLRaw Apache-2.0; SQLite public domain | GroupLab.Core | The session and records database of DESIGN.md section 15 (NOTES-FROM-PLANNING.md entry 112 section 1) |
 | OpenCvSharp4 and OpenCvSharp4.runtime.win, with OpenCV | Apache-2.0; OpenCV Apache-2.0 | GroupLab.Cli, and the tests through it | Marker detection, homography fitting and resampling behind `IImagingBackend` |
 | PDFtoImage, with PDFium and SkiaSharp | MIT; PDFium BSD-3-Clause and Apache-2.0; SkiaSharp MIT | tests only | Rasterising rendered PDFs for conformance tests 39, 41, 42 and 43 |
 | xunit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk | Apache-2.0, MIT | tests only | Test framework |

@@ -12,6 +12,71 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 27: a sheet's subgroups can be compared, but nothing on screen assigns bulls to them
+
+**Status: open**
+
+### 1. What entry 113 section 2 asks, and what the code has
+
+Entry 113 section 2: "Pick two or more from the Session records list, or the subgroups of one sheet, and see them side by side."
+
+The subgroups exist in the engine:
+- `MarkingSession.SetSubgroup(bull, name)` sets them.
+- `GroupAnalysis.Subgroups` analyses them.
+- The marking file keeps them.
+
+The README marks this "Built, not proven". But no screen and no command sets a subgroup. A search of `src/GroupLab.App` and `src/GroupLab.Cli` for `SetSubgroup` finds nothing. The only way a sheet carries subgroups today is a marking file written by hand, or by a test.
+
+### 2. What is built
+
+The comparison screen compares a sheet's subgroups whenever the marking open in the analysis names two or more, and a test covers that path. Sessions chosen in Session records are the path a person can use today.
+
+### 3. The options
+
+- **A. A load field in the editor's selected-bull panel.** It names the load for the selected bull, or for a run of bulls chosen together.
+- **B. A small table on the analysis screen.** One row per bull, with its load typed in.
+- **C. Leave subgroups to the marking file** until a sheet needs them. Jeff's thirty bulls, entry 89 section 3, is the case that does.
+
+**I would build A.** It is where a person already selects bulls, and it is a small change. I have not built it, because the entry does not ask for it.
+
+---
+
+## 2026-09-19, question 26: the dope table has no slot in the concept's rail, so it has a seventh one
+
+**Status: open**
+
+### 1. What entry 112 section 4 asks, and where it could go
+
+Entry 112 section 4 asks for "a dope table for a rifle and load: range, drop and wind per 10 mph in the person's units and clicks", and for the solver's fields on the rifle and load records. The concept's rail (`docs/figures/screens/`) has five destinations: the analysis, the target library, print, session records and reports. None of them is a place for a table that belongs to a rifle and load rather than to a sheet.
+
+### 2. What is built
+
+A sixth destination, **Ballistics**, between Session records and Reports, with its own icon, a trajectory's arc. The rail now has seven buttons with the gear. The screen:
+- picks a rifle and a load from the records;
+- edits their solver fields;
+- takes the air;
+- shows the table.
+
+The analysis's zero block carries its correction from the same records and air.
+
+The solver's inputs are in the units the solver and most published load data use:
+- sight height, twist and bullet length and diameter in inches;
+- muzzle velocity in ft/s;
+- bullet weight in grains;
+- temperature in degrees F, pressure in inHg and altitude in feet.
+
+The zero distance and the table's ranges follow the distance unit, and every output follows the unit settings.
+
+### 3. The options
+
+- **A. Keep the seventh slot.** Costs one more icon in a rail the concept drew with five.
+- **B. Put the table under Session records.** Costs mixing a rifle's table into a list of sheets.
+- **C. Put it behind the rifle and load records in the editor's side panel.** The panel is 372 pixels wide, and the table has seven columns.
+
+**I would keep A**, and I would ask separately whether the inputs should follow a metric setting too. Changing either is a small change.
+
+---
+
 ## 2026-09-19, question 25: ballistics.js's G1 table is not the standard G1 function, so every G1 load fails the independent gate
 
 **Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 111 section 1: option A. The standard G1 and G7 tables are carried, the values two independent transcriptions agree on, and G1 now passes the gate under the tolerances as first committed.

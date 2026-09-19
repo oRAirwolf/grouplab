@@ -18,6 +18,7 @@ using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Publication;
+using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
 
@@ -39,7 +40,7 @@ namespace GroupLab.App;
 /// <item>Export the marking and its report as JSON.</item>
 /// </list>
 /// </summary>
-public sealed class MainWindow : Window
+public sealed partial class MainWindow : Window
 {
     private static readonly FontFamily Mono = Tokens.Mono;
 
@@ -148,7 +149,36 @@ public sealed class MainWindow : Window
     /// </summary>
     private readonly Control settingsBody;
 
-    private bool showingSettings;
+    /// <summary>The rail's destination showing, NOTES-FROM-PLANNING.md entry 112: the analysis screen, the session records, the library or the settings.</summary>
+    private Destination destination = Destination.Analyse;
+
+    private bool showingSettings => destination == Destination.Settings;
+
+    /// <summary>
+    /// The sessions and the records, NOTES-FROM-PLANNING.md entry 112 section 1 and DESIGN.md section 15: one SQLite database beside the
+    /// settings. Null only when it could not be opened, which the panel says; the window still works without it.
+    /// </summary>
+    private readonly SessionStore? sessions;
+
+    /// <summary>The session this marking was saved as, so a second Accept and analyse updates it rather than adding another.</summary>
+    private long? currentSession;
+
+    /// <summary>The Session records screen, the rail's destination, entry 112 section 1.</summary>
+    private readonly Control sessionsBody;
+
+    private readonly StackPanel sessionRows = new() { Spacing = 0 };
+
+    private readonly ComboBox sessionRifle = new() { MinWidth = 180 };
+
+    private readonly ComboBox sessionLoad = new() { MinWidth = 180 };
+
+    private bool fillingSessions;
+
+    private Button railSessions = null!;
+    private Button railLibrary = null!;
+    private Button railCompare = null!;
+    private readonly Control libraryBody;
+    private GroupLab.Core.Rendering.OwnSheets ownSheets = null!;
 
     private readonly TextBlock settingsCrumb = new() { Text = "\u203a  Settings", VerticalAlignment = VerticalAlignment.Center, IsVisible = false };
 
@@ -394,7 +424,19 @@ public sealed class MainWindow : Window
             session.SetShotDistance(null);
         })));
         // Entry 97 section 2: which rifle, barrel and load, from a record book kept deliberately small.
-        book = RecordBook.Read(File.Exists(RecordsPath) ? File.ReadAllText(RecordsPath) : null);
+        // Entry 112 section 1: the records live in the database now; the old file is read in on the first open and kept as a backup.
+        try
+        {
+            ownSheets = new GroupLab.Core.Rendering.OwnSheets(settings.SheetsFolder);
+            sessions = SessionStore.Open(settings.DatabasePath, RecordsPath);
+            book = sessions.LoadBook();
+        }
+        catch (Exception ex) when (ex is Microsoft.Data.Sqlite.SqliteException or InvalidDataException or IOException or UnauthorizedAccessException)
+        {
+            sessions = null;
+            problem.Text = "The session database could not be opened (" + ex.Message + "), so sessions and records are not kept this time.";
+            DiagnosticLog.Exception(LogLevel.Warn, "store.open", ex);
+        }
         panel.Children.Add(FieldLabel("Rifle, barrel and load"));
         panel.Children.Add(Row(rifleChoice));
         panel.Children.Add(Row(barrelChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
@@ -431,6 +473,7 @@ public sealed class MainWindow : Window
             roundsFired.Text = "";
             session.SetExpectedShots(null);
         })));
+        BuildShotsPerBull(panel);
         panel.Children.Add(problem);
         panel.Children.Add(Ruled("Shots"));
         panel.Children.Add(shotList);
@@ -465,6 +508,7 @@ public sealed class MainWindow : Window
         {
             toggle.Click += (_, _) => SetShowWork(!workShown);
         }
+        analysisActions.Children.Add(Button("Report", async () => await ReportDialog()));
         analysisActions.Children.Add(Button("Export", async () => await ExportDialog()));
         analysisActions.Children.Add(Overflow());
         actions.Children.Add(editorActions);
@@ -578,6 +622,7 @@ public sealed class MainWindow : Window
         shotsColumn.Children.Add(Ruled("Shots, from their own bull"));
         shotsColumn.Children.Add(offsetTable);
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
+        BuildFigureExtras(shotsColumn, figures);
         outlinesToggle.Child = outlinesBox;
         outlinesBox.IsCheckedChanged += (_, _) =>
         {
@@ -591,10 +636,18 @@ public sealed class MainWindow : Window
         plot.ShotsClicked += (_, ids) => PickShots(ids);
 
         settingsBody = BuildSettings(settings);
+        sessionsBody = BuildSessions();
+        libraryBody = BuildLibrary();
+        ballisticsBody = BuildBallistics();
+        compareBody = BuildCompare();
         var body = new Panel();
         body.Children.Add(editorBody);
         body.Children.Add(analysisBody);
         body.Children.Add(settingsBody);
+        body.Children.Add(sessionsBody);
+        body.Children.Add(libraryBody);
+        body.Children.Add(ballisticsBody);
+        body.Children.Add(compareBody);
         // The work bar sits above the status line in both states, shown by Show work (entry 105 section 6).
         var dock = new DockPanel();
         DockPanel.SetDock(header, Dock.Top);
@@ -781,13 +834,12 @@ public sealed class MainWindow : Window
     /// <summary>The centre from aim as a figure row: the offsets in the length unit as its value, and in the angular unit beneath when there is a distance.</summary>
     private Control CentreRow(PointD centre)
     {
-        double? distance = session.State.ShotDistanceInches;
-        string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
+        var (value, detail) = CentreTexts(centre);
         var row = new StackPanel { Spacing = 0 };
-        row.Children.Add(Readout("Centre from aim", $"{units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}"));
-        if (units.AngleText(Math.Abs(centre.X), distance) is { } x)
+        row.Children.Add(Readout("Centre from aim", value));
+        if (detail is not null)
         {
-            row.Children.Add(Detail($"{x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down}"));
+            row.Children.Add(Detail(detail));
         }
 
         return row;
@@ -1417,42 +1469,35 @@ public sealed class MainWindow : Window
                 statistics.Children.Add(Rowed(Figure("Extreme spread", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.ValueSize, FontWeight.Normal, subordinate: true, interval: false)));
 
                 // Entry 103 section 1: the two figures the concept's stack has and the screen lacked, after the existing ones.
-                if (all.Cep90 is { } cep90 && all.Cep50 is { } cep50 && all.Cep95 is { } cep95)
+                if (all is { Cep90: { } cep90, Cep50: not null, Cep95: not null })
                 {
                     var cep = new StackPanel { Spacing = 0 };
                     cep.Children.Add(Readout("CEP 90", units.Length(cep90.Value), Tokens.ValueSize));
-                    cep.Children.Add(Explained(Detail($"CEP 50 {units.Length(cep50.Value)}  \u00b7  CEP 95 {units.Length(cep95.Value)}"), "cep", "from sigma under the circular normal model"));
+                    var cepLines = CepDetails(all, excluded ? reduced : null);
+                    cep.Children.Add(Explained(Detail(cepLines[0]), "cep", CepWhy));
+                    foreach (string line in cepLines.Skip(1))
+                    {
+                        cep.Children.Add(Detail(line));
+                    }
+
                     statistics.Children.Add(Rowed(cep));
                 }
 
-                if (all is { Width: { } width, Height: { } height, SdX: { } sdX, SdY: { } sdY })
+                if (all is { SdX: not null, SdY: not null } && SizeValue(all) is { } widthByHeight)
                 {
                     var size = new StackPanel { Spacing = 0 };
-                    size.Children.Add(Readout("Group width \u00d7 height", $"{units.Number(width)} \u00d7 {units.Length(height)}", Tokens.ValueSize));
-                    size.Children.Add(Detail($"sd across {units.Length(sdX)}  \u00b7  sd up and down {units.Length(sdY)}"));
+                    size.Children.Add(Readout("Group width \u00d7 height", widthByHeight, Tokens.ValueSize));
+                    foreach (string line in SizeDetails(all, excluded ? reduced : null))
+                    {
+                        size.Children.Add(Detail(line));
+                    }
+
                     statistics.Children.Add(Rowed(size));
                 }
 
-                moreFigures.Children.Add(Line(all.ExtremeSpread is { Lower: { } esLower, Upper: { } esUpper, Coverage: { } esCoverage }
-                    ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is centre to centre, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
-                    : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}."));
-                moreFigures.Children.Add(new TextBlock
+                foreach (string line in MoreFigureLines(state, all))
                 {
-                    Text = all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
-                        ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
-                        : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
-                    TextWrapping = TextWrapping.Wrap,
-                    Classes = { AppStyles.Secondary },
-                });
-                if (state.ShotDistanceInches is null)
-                {
-                    moreFigures.Children.Add(Line("Angular figures need the shot distance."));
-                }
-
-                if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
-                {
-                    moreFigures.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
-                        $"From {all.Shots} shots the true group size could be anywhere from {range.Lower:0.00} to {range.Upper:0.00} times what they measure (STATISTICS.md section 9.1).")));
+                    moreFigures.Children.Add(Line(line));
                 }
 
                 ShowJudgements(state, all);
@@ -1506,6 +1551,18 @@ public sealed class MainWindow : Window
     /// </summary>
     private void ShowJudgements(MarkingState state, GroupFigures all)
     {
+        foreach (var card in JudgementCardsFor(state, all))
+        {
+            judgements.Children.Add(Card(card.Name, card.Verdict, [.. card.Evidence], [.. card.Why]));
+        }
+    }
+
+    /// <summary>A judgement card's words: its name, the verdict, the lines that stay in view, and those behind its "why".</summary>
+    private sealed record JudgementWords(string Name, string Verdict, IReadOnlyList<string> Evidence, IReadOnlyList<string> Why);
+
+    private List<JudgementWords> JudgementCardsFor(MarkingState state, GroupFigures all)
+    {
+        var cards = new List<JudgementWords>();
         int n = all.Shots;
         if (all.Circularity is { } circular && all.Stringing is { } stringing)
         {
@@ -1526,13 +1583,11 @@ public sealed class MainWindow : Window
 
             // Entry 109 section 3: the verdict and one line naming the test with its p value; the stringing line with its power statement stays
             // in view, because STATISTICS.md section 7 requires the power beside the result and not in a footnote.
-            judgements.Children.Add(Card("shape", verdict,
-                [test, stringingLine],
-                [reading, aspect]));
+            cards.Add(new("shape", verdict, [test, stringingLine], [reading, aspect]));
         }
         else if (all.ShapeTestsUnavailable is { } why)
         {
-            judgements.Children.Add(Card("shape", "No shape judgement.", [$"The shape tests are {why}."], []));
+            cards.Add(new("shape", "No shape judgement.", [$"The shape tests are {why}."], []));
         }
 
         // Entry 104 section 2: judged against circular groups measured the way this one is, by its own mean radius about its own centre,
@@ -1545,12 +1600,14 @@ public sealed class MainWindow : Window
                 $"It sits at {calibrated.Observed:0.00} of the group's own mean radii from its centre. Circular groups of {n}, measured the same way, put their worst at {calibrated.Expected:0.00} on average, and this far out or farther {HowOften(beyond)}, from {calibrated.Resamples} simulated groups.");
             string evidence = string.Create(CultureInfo.InvariantCulture, $"Worst shot against {calibrated.Resamples} simulated circular groups: p = {beyond:0.000}");
             // The hedge stays in view with the verdict: without it "not a flyer" would say more than the test can.
-            judgements.Children.Add(beyond >= 0.05
-                ? Card("flyer", $"Shot {label} is not a flyer.", [evidence, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10)."], [sits])
-                : Card("flyer", $"Shot {label} is further out than a group of {n} usually puts its worst.",
+            cards.Add(beyond >= 0.05
+                ? new("flyer", $"Shot {label} is not a flyer.", [evidence, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10)."], [sits])
+                : new("flyer", $"Shot {label} is further out than a group of {n} usually puts its worst.",
                     [evidence, "That makes it worth a look, not a flyer by that measure alone: whether it was called or pulled is yours to say, and excluding it shows every figure both ways (STATISTICS.md section 10)."],
                     [sits]));
         }
+
+        return cards;
     }
 
     /// <summary>
@@ -1598,13 +1655,23 @@ public sealed class MainWindow : Window
     /// </summary>
     private void ShowAnalysis(MarkingState state)
     {
-        bool marking = !analysing && !showingSettings, analysis = analysing && !showingSettings;
+        bool here = destination == Destination.Analyse, marking = !analysing && here, analysis = analysing && here;
         editorActions.IsVisible = breadcrumb.IsVisible = editorBody.IsVisible = marking;
         analysisActions.IsVisible = analysisCrumbs.IsVisible = analysisBody.IsVisible = analysis;
-        settingsBody.IsVisible = settingsCrumb.IsVisible = showingSettings;
-        workBar.IsVisible = workShown && !showingSettings;
-        railHere.Classes.Set(AppStyles.Warn, !showingSettings);
-        railSettings.Classes.Set(AppStyles.Warn, showingSettings);
+        settingsBody.IsVisible = destination == Destination.Settings;
+        sessionsBody.IsVisible = destination == Destination.Sessions;
+        libraryBody.IsVisible = destination == Destination.Library;
+        ballisticsBody.IsVisible = destination == Destination.Ballistics;
+        compareBody.IsVisible = destination == Destination.Compare;
+        settingsCrumb.IsVisible = !here;
+        settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Target library", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", _ => "\u203a  Settings" };
+        workBar.IsVisible = workShown && here;
+        railHere.Classes.Set(AppStyles.Warn, here);
+        railSettings.Classes.Set(AppStyles.Warn, destination == Destination.Settings);
+        railSessions.Classes.Set(AppStyles.Warn, destination == Destination.Sessions);
+        railLibrary.Classes.Set(AppStyles.Warn, destination == Destination.Library);
+        railBallistics.Classes.Set(AppStyles.Warn, destination == Destination.Ballistics);
+        railCompare.Classes.Set(AppStyles.Warn, destination == Destination.Compare);
 
         // Entry 109 section 3e: the crumb is the way back, so it names what it goes back to, the image's file as the editor's crumb does, or
         // the sheet's name for a marking with no image recorded.
@@ -1750,6 +1817,9 @@ public sealed class MainWindow : Window
             row.Click += (_, _) => PickShots([id]);
             offsetTable.Children.Add(row);
         }
+
+        ShowThumbnail(state);
+        ShowFullFigures(state);
     }
 
     /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>
@@ -1784,6 +1854,310 @@ public sealed class MainWindow : Window
         int open = ReviewQueue.Open(ReviewQueue.For(session.State, analyseSighters));
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
+        SaveSession();
+    }
+
+    /// <summary>
+    /// Accept and analyse saves the session, entry 112 section 1: the marking with every edit and exclusion, the figures as computed, the
+    /// definition it was analysed against, a proof image of about 150 dpi, and the original's path and SHA-256, never a copy of it. A second
+    /// Accept on the same marking updates the same session.
+    /// </summary>
+    private void SaveSession()
+    {
+        if (sessions is null || session.State.Shots.Count == 0)
+        {
+            return;
+        }
+
+        var state = session.State;
+        var figures = GroupAnalysis.Analyse(state).AllShots?.MeanRadius;
+        string? path = state.ImagePath is { } p && File.Exists(p) ? p : null;
+        var (proof, proofType) = ProofImage(path, state.Scale);
+        // A second Accept on the same session updates it and keeps the day it was first saved.
+        var existing = currentSession is { } saved ? sessions.Get(saved) : null;
+        var record = new SessionRecord(
+            existing?.Id ?? 0,
+            existing?.CreatedUtc ?? DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
+            existing?.ShotDate ?? DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            plotDefinition?.Name ?? (state.ImagePath is { } named ? Path.GetFileName(named) : "Marked by hand"),
+            plotDefinition is { } d ? GroupLab.Core.Gltd.Binary.GltdBinary.Encode(d).Encoding?.DefinitionId : null,
+            plotDefinition is { } defined ? System.Text.Encoding.UTF8.GetString(CanonicalJsonWriter.Write(defined)) : null,
+            state.ShotDistanceInches,
+            state.Rifle?.Name,
+            state.Barrel,
+            state.Load,
+            state.Calibre?.DiameterInches,
+            MarkingFile.Write(state, units),
+            CountedShots(state),
+            figures?.Value,
+            figures?.Lower,
+            figures?.Upper,
+            state.ImagePath,
+            path is null ? null : Sha256(path),
+            proof,
+            proofType);
+        try
+        {
+            currentSession = sessions.Save(record);
+            DiagnosticLog.Info("session.save", ("session", currentSession), ("shots", record.ShotCount), ("proof", proof?.Length ?? 0));
+        }
+        catch (Microsoft.Data.Sqlite.SqliteException ex)
+        {
+            status.Text = "The session could not be saved: " + ex.Message;
+            DiagnosticLog.Exception(LogLevel.Warn, "session.save", ex);
+        }
+    }
+
+    private static string Sha256(string path)
+    {
+        using var stream = File.OpenRead(path);
+        return Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(stream));
+    }
+
+    /// <summary>
+    /// The proof image of DESIGN.md section 18: the original at about 150 dpi, from the scale where there is one and otherwise at 1650 pixels on
+    /// the long side, as a JPEG of a few hundred kilobytes, enough to eyeball and audit. Null when there is no image to make it from.
+    /// </summary>
+    private static (byte[]? Bytes, string? Type) ProofImage(string? path, ScaleReference? scale)
+    {
+        if (path is null)
+        {
+            return (null, null);
+        }
+
+        using var colour = OpenCvSharp.Cv2.ImRead(path, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
+        if (colour.Empty())
+        {
+            return (null, null);
+        }
+
+        double ppi = scale is null ? double.NaN : HoleSize.PixelsPerInch(scale, new PointD(colour.Width / 2.0, colour.Height / 2.0));
+        double factor = double.IsFinite(ppi) && ppi > 0 ? Math.Min(1, 150 / ppi) : Math.Min(1, 1650.0 / Math.Max(colour.Width, colour.Height));
+        using var small = new OpenCvSharp.Mat();
+        OpenCvSharp.Cv2.Resize(colour, small, new OpenCvSharp.Size(), factor, factor, OpenCvSharp.InterpolationFlags.Area);
+        OpenCvSharp.Cv2.ImEncode(".jpg", small, out byte[] jpeg, new OpenCvSharp.ImageEncodingParam(OpenCvSharp.ImwriteFlags.JpegQuality, 80));
+        return (jpeg, "image/jpeg");
+    }
+
+    /// <summary>
+    /// Reopens a saved session to its analysis, entry 112 section 1: the marking as it was saved, against the definition saved with it. The
+    /// original image is opened when it is still at its path with the same SHA-256; when it is not, nothing needs it, and the screen says so.
+    /// </summary>
+    internal void OpenSession(long id)
+    {
+        if (sessions?.Get(id) is not { } record)
+        {
+            return;
+        }
+
+        MarkingState state;
+        try
+        {
+            (state, _) = MarkingFile.Read(record.MarkingJson);
+        }
+        catch (MarkingFileException ex)
+        {
+            problem.Text = "The session's marking could not be read: " + ex.Message;
+            return;
+        }
+
+        bool original = record.ImagePath is { } image && File.Exists(image) && Sha256(image) == record.ImageSha256;
+        if (original)
+        {
+            bool detect = DetectOnOpen;
+            DetectOnOpen = false;
+            OpenImage(record.ImagePath!);
+            DetectOnOpen = detect;
+        }
+        else
+        {
+            grey = valueImage = artwork = null;
+            metadata = null;
+            canvas.SetImage(null, null);
+            canvas.Artwork = null;
+        }
+
+        plotDefinition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
+        registrationResidual = null;
+        detectedState = null;
+        session.Load(state);
+        currentSession = id;
+        destination = Destination.Analyse;
+        SetAnalysing(true);
+        DiagnosticLog.Info("session.open", ("session", id), ("original", original));
+        status.Text = original
+            ? $"Reopened the session of {record.ShotDate}, {record.SheetName}."
+            : $"Reopened the session of {record.ShotDate}, {record.SheetName}. The original image is not where it was, so everything shown is from the saved marking.";
+    }
+
+    /// <summary>The session this marking was saved as, for the headless tests.</summary>
+    internal long? CurrentSession => currentSession;
+
+    /// <summary>The store, for the headless tests.</summary>
+    internal SessionStore? Sessions => sessions;
+
+    /// <summary>
+    /// The Session records screen, entry 112 section 1: every session newest first, its date, sheet, rifle, load, distance, shot count and mean
+    /// radius with its interval, filtered by rifle and by load. A row opens its session; delete asks first. The concept draws no such screen,
+    /// so it is the shot table's style, with entry 109's rows and hairlines, and nothing new.
+    /// </summary>
+    private Control BuildSessions()
+    {
+        var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12 };
+        column.Children.Add(new TextBlock { Text = "Session records", Classes = { AppStyles.Title } });
+        column.Children.Add(Line("Every sheet saved by Accept and analyse, newest first. A row opens its analysis."));
+        var filters = Row(FieldLabel("Rifle"), sessionRifle, FieldLabel("Load"), sessionLoad);
+        foreach (var combo in new[] { sessionRifle, sessionLoad })
+        {
+            combo.SelectionChanged += (_, _) =>
+            {
+                if (!fillingSessions)
+                {
+                    FillSessions();
+                }
+            };
+        }
+
+        column.Children.Add(filters);
+        // Entry 113 section 2: each row's box chooses it for comparing, and two or more chosen compare side by side.
+        column.Children.Add(Row(Button("Compare the chosen", CompareChosen), new TextBlock { Text = "Tick two or more sessions to compare their loads.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        column.Children.Add(sessionRows);
+        return new ScrollViewer { Content = column, IsVisible = false };
+    }
+
+    private const string SessionColumns = "96,*,150,150,76,56,220,Auto";
+
+    private const double SessionBoxWidth = 32;
+
+    private const double SessionDeleteWidth = 76;
+
+    /// <summary>Fills the Session records list from the store, with the filters as chosen.</summary>
+    private void FillSessions()
+    {
+        sessionRows.Children.Clear();
+        if (sessions is null)
+        {
+            sessionRows.Children.Add(Line("The session database could not be opened, so there are no records to show."));
+            return;
+        }
+
+        fillingSessions = true;
+        string? rifle = sessionRifle.SelectedIndex > 0 ? sessionRifle.SelectedItem as string : null;
+        string? load = sessionLoad.SelectedIndex > 0 ? sessionLoad.SelectedItem as string : null;
+        var all = sessions.List();
+        sessionRifle.ItemsSource = new[] { "Every rifle" }.Concat(all.Select(s => s.Rifle).OfType<string>().Distinct(StringComparer.OrdinalIgnoreCase).Order(StringComparer.OrdinalIgnoreCase)).ToList();
+        sessionLoad.ItemsSource = new[] { "Every load" }.Concat(all.Select(s => s.Load).OfType<string>().Distinct(StringComparer.OrdinalIgnoreCase).Order(StringComparer.OrdinalIgnoreCase)).ToList();
+        sessionRifle.SelectedItem = rifle ?? "Every rifle";
+        sessionLoad.SelectedItem = load ?? "Every load";
+        fillingSessions = false;
+
+        var list = sessions.List(rifle, load);
+        if (list.Count == 0)
+        {
+            sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyse on a marked sheet saves one." : "No session matches the rifle and load chosen."));
+            return;
+        }
+
+        Grid Cells(IEnumerable<string> texts, bool heading)
+        {
+            var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(SessionColumns) };
+            int c = 0;
+            foreach (string text in texts)
+            {
+                var cell = new TextBlock
+                {
+                    Text = text,
+                    FontSize = Tokens.DetailSize,
+                    FontFamily = heading || c is 1 or 2 or 3 ? Tokens.Sans : Mono,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    Margin = new Thickness(0, 0, Tokens.Space8, 0),
+                    HorizontalAlignment = c >= 4 ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+                    Classes = { heading ? AppStyles.Dim : AppStyles.Secondary },
+                };
+                Grid.SetColumn(cell, c++);
+                grid.Children.Add(cell);
+            }
+
+            return grid;
+        }
+
+        // The heading has the rows' shape, a box's width on the left and Delete's on the right, so each heading sits over its column.
+        var head = Cells(["date", "sheet", "rifle", "load", "distance", "shots", "mean radius, interval"], heading: true);
+        head.Margin = new Thickness(Tokens.Space4, 0, Tokens.Space4, Tokens.Space4);
+        var heading = new DockPanel();
+        var boxSpace = new Border { Width = SessionBoxWidth };
+        var deleteSpace = new Border { Width = SessionDeleteWidth };
+        DockPanel.SetDock(boxSpace, Dock.Left);
+        DockPanel.SetDock(deleteSpace, Dock.Right);
+        heading.Children.Add(boxSpace);
+        heading.Children.Add(deleteSpace);
+        heading.Children.Add(head);
+        sessionRows.Children.Add(heading);
+        int index = 0;
+        foreach (var s in list)
+        {
+            string distance = s.DistanceInches is { } d ? string.Create(CultureInfo.InvariantCulture, $"{UnitSettings.DistanceFromInches(d, units.Distance):0} {UnitSettings.Symbol(units.Distance)}") : "";
+            string radius = s.MeanRadiusInches is { } r
+                ? units.Length(r) + (s.MeanRadiusLowerInches is { } lo && s.MeanRadiusUpperInches is { } hi ? $" ({units.Number(lo)} to {units.Number(hi)})" : "")
+                : "";
+            var cells = Cells([s.ShotDate ?? s.CreatedUtc[..10], s.SheetName, s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
+            long id = s.Id;
+            var open = new Button { Content = cells, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch, Classes = { AppStyles.TableRow } };
+            if (index++ % 2 == 1)
+            {
+                open.Classes.Add(AppStyles.Shaded);
+            }
+
+            ToolTip.SetTip(open, $"Open the session of {s.ShotDate}, {s.SheetName}");
+            open.Click += (_, _) => OpenSession(id);
+            var delete = Button("Delete", () => { });
+            delete.Width = SessionDeleteWidth;
+            var row = new DockPanel();
+            var choose = new CheckBox { IsChecked = sessionChosen.Contains(id), VerticalAlignment = VerticalAlignment.Center, Width = SessionBoxWidth };
+            choose.IsCheckedChanged += (_, _) => ChooseSession(id, choose.IsChecked == true);
+            ToolTip.SetTip(choose, "Choose for comparing");
+            Avalonia.Automation.AutomationProperties.SetName(choose, $"Compare the session of {s.ShotDate}, {s.SheetName}");
+            DockPanel.SetDock(choose, Dock.Left);
+            DockPanel.SetDock(delete, Dock.Right);
+            row.Children.Add(choose);
+            row.Children.Add(delete);
+            row.Children.Add(open);
+            // Delete asks first: the button gives way to the question and its two answers.
+            delete.Click += (_, _) =>
+            {
+                row.Children.Remove(delete);
+                var confirm = Row(new TextBlock { Text = "Delete this session?", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } },
+                    Button("Delete", () =>
+                    {
+                        sessions.Delete(id);
+                        DiagnosticLog.Info("session.delete", ("session", id));
+                        if (currentSession == id)
+                        {
+                            currentSession = null;
+                        }
+
+                        FillSessions();
+                    }),
+                    Button("Keep it", FillSessions));
+                DockPanel.SetDock(confirm, Dock.Right);
+                row.Children.Insert(0, confirm);
+            };
+            sessionRows.Children.Add(row);
+        }
+    }
+
+    /// <summary>The Session records rows' texts, for the headless tests.</summary>
+    internal IReadOnlyList<string> SessionRowTexts =>
+        [.. sessionRows.Children.OfType<DockPanel>().Where(r => r.Children.OfType<Button>().Any(b => b.Classes.Contains(AppStyles.TableRow))).Select(r => string.Join(" | ", r.Children.OfType<Button>().Where(b => b.Classes.Contains(AppStyles.TableRow))
+            .SelectMany(b => ((Grid)b.Content!).Children.OfType<TextBlock>()).Select(t => t.Text)))];
+
+    /// <summary>Picks a rifle or load in the Session records filters, for the headless tests.</summary>
+    internal void FilterSessions(string? rifle, string? load)
+    {
+        FillSessions();
+        sessionRifle.SelectedItem = rifle ?? "Every rifle";
+        sessionLoad.SelectedItem = load ?? "Every load";
+        FillSessions();
     }
 
     /// <summary>The sheet crumb: back to the editor, every edit as it was left.</summary>
@@ -1796,7 +2170,7 @@ public sealed class MainWindow : Window
     internal void SetShowWork(bool shown, bool remember = true)
     {
         workShown = shown;
-        workBar.IsVisible = shown && !showingSettings;
+        workBar.IsVisible = shown && destination == Destination.Analyse;
         showWorkEditor.IsChecked = showWorkAnalysis.IsChecked = shown;
         if (remember)
         {
@@ -2381,7 +2755,7 @@ public sealed class MainWindow : Window
     }
 
     /// <summary>The record book's file, beside the settings file.</summary>
-    private string RecordsPath => Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? ".", "records.json");
+    private string RecordsPath => settingsStore.RecordsPath;
 
     /// <summary>The three pickers, filled from the book and showing what the marking names.</summary>
     private void ShowEquipment(MarkingState state)
@@ -2459,11 +2833,17 @@ public sealed class MainWindow : Window
     {
         try
         {
-            File.WriteAllText(RecordsPath, book.Write());
+            if (sessions is null)
+            {
+                status.Text = "The session database could not be opened, so the records last until GroupLab closes.";
+                return;
+            }
+
+            sessions.SaveBook(book);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Microsoft.Data.Sqlite.SqliteException ex)
         {
-            status.Text = "The records could not be saved to " + RecordsPath + ", so they last until GroupLab closes.";
+            status.Text = "The records could not be saved to the database (" + ex.Message + "), so they last until GroupLab closes.";
         }
     }
 
@@ -2729,29 +3109,103 @@ public sealed class MainWindow : Window
     /// </summary>
     private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false, bool interval = true)
     {
+        // Entry 105 section 2: the value alone beside its label, and the angular conversion on the line beneath with the interval. At the lead
+        // size 372 pixels do not hold a number and two units, and the unit wrapped onto a line of its own below the label.
+        var column = new StackPanel { Spacing = 0 };
+        column.Children.Add(Readout(name, units.Length(all.Value), size, weight, subordinate));
+        foreach (string line in FigureDetails(all, reduced, pick, interval))
+        {
+            column.Children.Add(Detail(line));
+        }
+
+        return column;
+    }
+
+    /// <summary>
+    /// The lines beneath a figure: its angular value and its interval, then the figure without exclusions when there are any. The report
+    /// prints these same lines (NOTES-FROM-PLANNING.md entry 112 section 2), so paper can never say more than the screen.
+    /// </summary>
+    private List<string> FigureDetails(ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, bool interval)
+    {
         double? distance = session.State.ShotDistanceInches;
         string Interval(ReportedEstimate e) => e is { Lower: { } lower, Upper: { } upper, Coverage: { } coverage }
             ? string.Create(CultureInfo.InvariantCulture, $"{100 * coverage:0.0}% interval {units.Number(lower)} to {units.Length(upper)}")
             : $"no interval: {e.IntervalUnavailable}";
 
-        // Entry 105 section 2: the value alone beside its label, and the angular conversion on the line beneath with the interval. At the lead
-        // size 372 pixels do not hold a number and two units, and the unit wrapped onto a line of its own below the label.
-        var column = new StackPanel { Spacing = 0 };
-        column.Children.Add(Readout(name, units.Length(all.Value), size, weight, subordinate));
+        var lines = new List<string>();
         string? angle = units.AngleText(all.Value, distance);
         if (interval || angle is not null)
         {
-            column.Children.Add(Detail(string.Join("  \u00b7  ", new[] { angle, interval ? Interval(all) : null }.Where(t => t is not null))));
+            lines.Add(string.Join("  \u00b7  ", new[] { angle, interval ? Interval(all) : null }.Where(t => t is not null)));
         }
 
         if (reduced is not null)
         {
-            column.Children.Add(Detail(pick(reduced) is { } r
+            lines.Add(pick(reduced) is { } r
                 ? $"without exclusions: {units.Length(r.Value)}, {Interval(r)}"
-                : "without exclusions: " + reduced.DispersionWithheld));
+                : "without exclusions: " + reduced.DispersionWithheld);
         }
 
-        return column;
+        return lines;
+    }
+
+    /// <summary>The lines beneath CEP 90: CEP 50 and 95, and all three without exclusions when there are any (STATISTICS.md section 10).</summary>
+    private List<string> CepDetails(GroupFigures all, GroupFigures? reduced)
+    {
+        var lines = new List<string> { $"CEP 50 {units.Length(all.Cep50!.Value)}  \u00b7  CEP 95 {units.Length(all.Cep95!.Value)}" };
+        if (reduced is not null)
+        {
+            lines.Add(reduced is { Cep90: { } r90, Cep50: { } r50, Cep95: { } r95 }
+                ? $"without exclusions: CEP 90 {units.Length(r90.Value)}, CEP 50 {units.Length(r50.Value)}, CEP 95 {units.Length(r95.Value)}"
+                : "without exclusions: " + (reduced.DispersionWithheld ?? "no CEP"));
+        }
+
+        return lines;
+    }
+
+    private const string CepWhy = "from sigma under the circular normal model";
+
+    private string? SizeValue(GroupFigures f) => f is { Width: { } width, Height: { } height } ? $"{units.Number(width)} \u00d7 {units.Length(height)}" : null;
+
+    /// <summary>The lines beneath width by height: the two standard deviations, and the same without exclusions when there are any.</summary>
+    private List<string> SizeDetails(GroupFigures all, GroupFigures? reduced)
+    {
+        string Sd(GroupFigures f) => f is { SdX: { } sdX, SdY: { } sdY } ? $"sd across {units.Length(sdX)}  \u00b7  sd up and down {units.Length(sdY)}" : "";
+        var lines = new List<string> { Sd(all) };
+        if (reduced is not null)
+        {
+            lines.Add(SizeValue(reduced) is { } size
+                ? $"without exclusions: {size}, {Sd(reduced).Replace("  \u00b7  ", ", ", StringComparison.Ordinal)}"
+                : "without exclusions: " + (reduced.DispersionWithheld ?? "no width or height"));
+        }
+
+        return lines;
+    }
+
+    /// <summary>The More figures disclosure's lines, which the report prints with the reasoning on its second page.</summary>
+    private List<string> MoreFigureLines(MarkingState state, GroupFigures all)
+    {
+        var lines = new List<string>
+        {
+            all.ExtremeSpread is { Lower: { } esLower, Upper: { } esUpper, Coverage: { } esCoverage }
+                ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is centre to centre, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
+                : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}.",
+            all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
+                ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
+                : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
+        };
+        if (state.ShotDistanceInches is null)
+        {
+            lines.Add("Angular figures need the shot distance.");
+        }
+
+        if (all.Shots < GroupAnalysis.SmallGroupShots && all.TrueSizeRange is { } range)
+        {
+            lines.Add(string.Create(CultureInfo.InvariantCulture,
+                $"From {all.Shots} shots the true group size could be anywhere from {range.Lower:0.00} to {range.Upper:0.00} times what they measure (STATISTICS.md section 9.1)."));
+        }
+
+        return lines;
     }
 
     /// <summary>
@@ -2806,9 +3260,9 @@ public sealed class MainWindow : Window
         railHere = new Button { Content = new BrandMark { Height = 20, Width = 20 }, Classes = { AppStyles.RailButton } };
         railHere.Click += (_, _) =>
         {
-            if (showingSettings)
+            if (destination != Destination.Analyse)
             {
-                ShowSettings(false);
+                Go(Destination.Analyse);
             }
             else
             {
@@ -2817,28 +3271,37 @@ public sealed class MainWindow : Window
         };
         ToolTip.SetTip(railHere, "Analyse");
         top.Children.Add(railHere);
-        foreach (var (icon, name, phase) in new[]
+        foreach (var (icon, tip, action) in new (string, string, Action)[]
         {
-            (Icons.Library, "Target library", "Phase 4"),
-            (Icons.Print, "Print", null),
-            (Icons.Records, "Session records", "Phase 4"),
-            (Icons.Reports, "Reports", "Phase 4"),
+            (Icons.Library, "Target library", () => Go(destination == Destination.Library ? Destination.Analyse : Destination.Library)),
+            (Icons.Print, "Print a target", () => OpenPrint(null, design: false)),
+            (Icons.Records, "Session records", () => Go(destination == Destination.Sessions ? Destination.Analyse : Destination.Sessions)),
+            // Entry 112 section 4: the dope table and the solver's fields on the records have no place in the concept's rail, so a slot of their own.
+            (Icons.Ballistics, "Ballistics", () => Go(destination == Destination.Ballistics ? Destination.Analyse : Destination.Ballistics)),
+            // Entry 113 section 2: the chart slot is the concept's Compare loads. A report is written from its analysis, by its Report button.
+            (Icons.Reports, "Compare loads", () => Go(destination == Destination.Compare ? Destination.Analyse : Destination.Compare)),
         })
         {
             var button = new Button { Content = Icons.Draw(icon), Classes = { AppStyles.RailButton } };
-            button.Click += (_, _) =>
-            {
-                if (phase is null)
-                {
-                    new PrintWindow().Show();
-                }
-                else
-                {
-                    status.Text = $"{name} is {phase} and is not built yet. The rail shows where it will be.";
-                }
-            };
-            ToolTip.SetTip(button, phase is null ? "Print a target" : $"{name}, {phase}");
+            button.Click += (_, _) => action();
+            ToolTip.SetTip(button, tip);
             top.Children.Add(button);
+            if (icon == Icons.Records)
+            {
+                railSessions = button;
+            }
+            else if (icon == Icons.Library)
+            {
+                railLibrary = button;
+            }
+            else if (icon == Icons.Ballistics)
+            {
+                railBallistics = button;
+            }
+            else if (icon == Icons.Reports)
+            {
+                railCompare = button;
+            }
         }
 
         railSettings = new Button { Content = Icons.Draw(Icons.Settings), Classes = { AppStyles.RailButton } };
@@ -2853,12 +3316,38 @@ public sealed class MainWindow : Window
     }
 
     /// <summary>Shows or leaves the settings screen, entry 109 section 2.</summary>
-    internal void ShowSettings(bool on = true)
+    internal void ShowSettings(bool on = true) => Go(on ? Destination.Settings : Destination.Analyse);
+
+    /// <summary>Shows or leaves the Session records screen, entry 112 section 1.</summary>
+    internal void ShowSessions(bool on = true) => Go(on ? Destination.Sessions : Destination.Analyse);
+
+    /// <summary>Goes to one of the rail's destinations.</summary>
+    private void Go(Destination to)
     {
-        showingSettings = on;
-        DiagnosticLog.Info("settings.show", ("shown", on));
+        destination = to;
+        DiagnosticLog.Info("destination.show", ("destination", to.ToString()));
+        if (to == Destination.Sessions)
+        {
+            FillSessions();
+        }
+        else if (to == Destination.Library)
+        {
+            FillLibrary();
+        }
+        else if (to == Destination.Ballistics)
+        {
+            FillBallistics();
+        }
+        else if (to == Destination.Compare)
+        {
+            FillCompare();
+        }
+
         Refresh();
     }
+
+    /// <summary>Whether the Session records screen is showing, for the headless tests.</summary>
+    internal bool ShowingSessions => destination == Destination.Sessions;
 
     /// <summary>Whether the settings screen is showing, for the headless tests.</summary>
     internal bool ShowingSettings => showingSettings;
@@ -3148,32 +3637,25 @@ public sealed class MainWindow : Window
     private void ShowZero(MarkingState state, StackPanel zeroPanel, string item)
     {
         zeroPanel.Children.Clear();
-        if (Zeroing.For(state) is not { } zero)
+        var view = ZeroFor(state);
+        if (view.Refusal is { } refusal)
         {
-            zeroPanel.Children.Add(Line(state.Scale is null
-                ? "Set a scale, then mark at least five shots, and the correction to dial appears here."
-                : $"Needs at least {GroupAnalysis.MinimumShotsForDispersion} shots on bulls or a point of aim: an offset cannot be told from noise without the group's own spread."));
+            zeroPanel.Children.Add(Line(refusal));
             return;
         }
-
-        double? distance = state.ShotDistanceInches;
-        string Both(double inches) => units.AngleText(Math.Abs(inches), distance) is { } angle
-            ? $"{units.Length(Math.Abs(inches))}  {angle}"
-            : units.Length(Math.Abs(inches));
 
         // Entry 105 section 2: the two readouts in columns, linear under linear and angular under angular, where laid out as text they
         // started at different places; the uncertainty is a sentence, set as one.
         var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto") };
         int row = 0;
-        foreach (var (label, axis) in new[] { ("Group centre, windage", zero.Windage), ("Group centre, elevation", zero.Elevation) })
+        foreach (var (label, linear, angular, sits) in view.Rows)
         {
-            string? angular = units.AngleText(Math.Abs(axis.OffsetInches), distance);
             var cells = new Control[]
             {
                 new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } },
-                ZeroCell(units.Length(Math.Abs(axis.OffsetInches))),
-                ZeroCell(angular ?? ""),
-                ZeroCell(axis.Sits),
+                ZeroCell(linear),
+                ZeroCell(angular),
+                ZeroCell(sits),
             };
             for (int c = 0; c < cells.Length; c++)
             {
@@ -3186,7 +3668,53 @@ public sealed class MainWindow : Window
         }
 
         zeroPanel.Children.Add(readouts);
-        zeroPanel.Children.Add(Note($"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent"));
+        zeroPanel.Children.Add(Note(view.Note!));
+
+        // The block's finding, at the label size and full strength: the line that matters. Entry 109 section 3a: one line in view, "Not
+        // distinguishable from zero at 25 shots. About 90 shots would settle it.", and the rest of it, the degrees of freedom and the solver,
+        // behind its "why".
+        var verdict = new TextBlock { Text = view.Verdict, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
+        if (view.Dial)
+        {
+            verdict.Classes.Add(AppStyles.Good);
+        }
+
+        zeroPanel.Children.Add(Explained(verdict, item, [.. view.Why]));
+        if (item == "zero")
+        {
+            ShowCarry(state, zeroPanel);
+        }
+    }
+
+    /// <summary>
+    /// The zero correction in words, which the screen lays out and the report prints unchanged: a refusal when there is nothing to correct
+    /// from, or the two readouts, the uncertainty, the verdict (a correction to dial or the refusal with the shots that would settle it) and
+    /// the reasoning behind its "why".
+    /// </summary>
+    private sealed record ZeroView(string? Refusal, IReadOnlyList<(string Label, string Linear, string Angular, string Sits)> Rows, string? Note, string Verdict, bool Dial, IReadOnlyList<string> Why);
+
+    private ZeroView ZeroFor(MarkingState state)
+    {
+        if (Zeroing.For(state) is not { } zero)
+        {
+            string refusal = state.Scale is null
+                ? "Set a scale, then mark at least five shots, and the correction to dial appears here."
+                : $"Needs at least {GroupAnalysis.MinimumShotsForDispersion} shots on bulls or a point of aim: an offset cannot be told from noise without the group's own spread.";
+            return new ZeroView(refusal, [], null, refusal, false, []);
+        }
+
+        double? distance = state.ShotDistanceInches;
+        string Both(double inches) => units.AngleText(Math.Abs(inches), distance) is { } angle
+            ? $"{units.Length(Math.Abs(inches))}  {angle}"
+            : units.Length(Math.Abs(inches));
+
+        var rows = new List<(string, string, string, string)>();
+        foreach (var (label, axis) in new[] { ("Group centre, windage", zero.Windage), ("Group centre, elevation", zero.Elevation) })
+        {
+            rows.Add((label, units.Length(Math.Abs(axis.OffsetInches)), units.AngleText(Math.Abs(axis.OffsetInches), distance) ?? "", axis.Sits));
+        }
+
+        string note = $"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent";
 
         // Entry 97 section 2: in clicks where the marking names a rifle and the distance is set, with what rounding leaves, and otherwise in
         // the linear and angular figures, which every turret is marked in one of.
@@ -3204,20 +3732,16 @@ public sealed class MainWindow : Window
             dial.Add(Dial(zero.Elevation));
         }
 
-        // The block's finding, at the label size and full strength: the line that matters. Entry 109 section 3a: one line in view, "Not
-        // distinguishable from zero at 25 shots. About 90 shots would settle it.", and the rest of it, the degrees of freedom and the solver,
-        // behind its "why".
-        var verdict = new TextBlock { TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
+        string verdict;
         var why = new List<string>();
         if (dial.Count > 0)
         {
-            verdict.Text = "Dial " + string.Join(" and ", dial) + ".";
-            verdict.Classes.Add(AppStyles.Good);
+            verdict = "Dial " + string.Join(" and ", dial) + ".";
         }
         else
         {
             int? settle = zero.Windage.ShotsToSettle is { } w && zero.Elevation.ShotsToSettle is { } e ? Math.Min(w, e) : zero.Windage.ShotsToSettle ?? zero.Elevation.ShotsToSettle;
-            verdict.Text = FormattableString.Invariant($"Not distinguishable from zero at {zero.Shots} shots.")
+            verdict = FormattableString.Invariant($"Not distinguishable from zero at {zero.Shots} shots.")
                 + (settle is { } more ? FormattableString.Invariant($" About {more} shots would settle it.") : " Nothing this rifle can shoot would settle an offset this small.");
             why.Add(FormattableString.Invariant($"The smallest offset these shots can call is {Both(zero.DetectableInches)}.") + (settle is not null ? " Shoot more before touching the turret." : ""));
         }
@@ -3230,6 +3754,17 @@ public sealed class MainWindow : Window
             : state.Rifle is null
                 ? "Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
-        zeroPanel.Children.Add(Explained(verdict, item, [.. why]));
+        return new ZeroView(null, rows, note, verdict, dial.Count > 0, why);
     }
+}
+
+/// <summary>The rail's destinations that open in the main window.</summary>
+internal enum Destination
+{
+    Analyse,
+    Sessions,
+    Library,
+    Ballistics,
+    Compare,
+    Settings,
 }

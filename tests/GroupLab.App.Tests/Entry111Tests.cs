@@ -80,9 +80,31 @@ public partial class Entry111Tests
             Check("analysis");
             window.ShowSettings();
             Check("settings");
+
+            // Entry 113 section 7: every screen entries 112 and 113 added, and the report's pages.
+            window.ShowSessions();
+            Check("session records");
+            window.ShowLibrary();
+            Check("target library");
+            window.ShowBallistics();
+            Check("ballistics");
+            long saved = window.CurrentSession!.Value;
+            long copy = window.Sessions!.Save(window.Sessions.Get(saved)! with { Id = 0, CreatedUtc = "2099-01-01T00:00:00Z", Load = "Second load" });
+            window.ChooseSession(saved, true);
+            window.ChooseSession(copy, true);
+            window.CompareChosen();
+            Check("compare loads");
+            foreach (var page in GroupLab.Core.Reporting.ReportWriter.Pages(window.BuildReport()))
+            {
+                foreach (string text in page.Items.OfType<GroupLab.Core.Rendering.TextRun>().Select(t => t.Text))
+                {
+                    found.AddRange(names.Where(n => Regex.IsMatch(text, $@"\b{n}\b")).Select(n => $"report: \"{n}\" in \"{text}\""));
+                }
+            }
+
             Assert.True(found.Count == 0, string.Join(Environment.NewLine, found.Distinct()));
 
-            window.ShowSettings(false);
+            window.ShowCompare(false);
             window.BackToEditor();
             Dispatcher.UIThread.RunJobs();
             Assert.Contains(Words(window), t => t.Contains("excluded as called flyer", StringComparison.Ordinal));

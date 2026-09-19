@@ -24,8 +24,12 @@ public sealed record BallisticInput(
     double? BulletDiameterInches = null,
     double? BulletLengthInches = null,
     double? LatitudeDegrees = null,
-    double AzimuthDegrees = 0)
+    double AzimuthDegrees = 0,
+    double? LaunchAngleMoa = null)
 {
+    // LaunchAngleMoa, NOTES-FROM-PLANNING.md entry 113 section 3: the bore's angle above the line of sight held as given instead of found from the
+    // zero range, so a change of muzzle velocity can be flown with the sight left where it was. Null, the default, zeroes as before.
+
     /// <summary>Station pressure: as stated, or from the altitude by the ICAO troposphere.</summary>
     public double StationPressureInHg => PressureInHg ?? Atmosphere.PressureFromAltitude(AltitudeFt);
 }
@@ -232,7 +236,7 @@ public static class BallisticSolver
     /// </summary>
     private static List<TrajectoryPoint> Exact(BallisticInput input, Air air, double maxRangeYards, double stepYards, out double zero)
     {
-        zero = Zero(input, air);
+        zero = input.LaunchAngleMoa is { } launch ? launch / MoaPerRadian : Zero(input, air);
         double angle = input.AngleDegrees * Math.PI / 180, cos = Math.Cos(angle), sin = Math.Sin(angle);
         double sight = input.SightHeightInches / 12, v0 = input.MuzzleVelocityFps, windFps = input.CrosswindMph * 5280 / 3600;
         var s = (X: sight * sin, Y: -sight * cos, Vx: v0 * Math.Cos(zero + angle), Vy: v0 * Math.Sin(zero + angle));

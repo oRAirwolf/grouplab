@@ -124,9 +124,10 @@ public class ViewRotationTests
         Assert.Equal(session.State.Scale!.ToTarget(new PointD(300, 400)), rectangle.ToTarget(new PointD(300, 400)));
 
         session.SetScale(new SheetReference(new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1])), "36 of 38 markers"));
+        // NOTES-FROM-PLANNING.md entry 112 section 1: the sheet's registration is kept, so a session reopens and reads with no image.
         var sheet = MarkingFile.Read(MarkingFile.Write(session.State));
-        Assert.Null(sheet.State.Scale);
-        Assert.Contains(sheet.Notes, n => n.Contains("Detect", StringComparison.Ordinal));
+        Assert.Equal("36 of 38 markers", Assert.IsType<SheetReference>(sheet.State.Scale).Summary);
+        Assert.Empty(sheet.Notes);
     }
 
     [Fact]

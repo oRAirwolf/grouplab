@@ -42,7 +42,9 @@ public sealed class PrintWindow : Window
         "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver, and a sheet " +
         "printed at 97 percent measures 3 percent small.";
 
-    private readonly IReadOnlyList<LibrarySheet> sheets;
+    private readonly List<LibrarySheet> sheets;
+    private readonly OwnSheets? own;
+    private readonly Button saveOwn = new() { Content = "Save to your own sheets", IsVisible = false };
     private readonly ListBox list = new();
     private readonly TextBlock title = new() { FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock summary = new() { TextWrapping = TextWrapping.Wrap };
@@ -91,25 +93,28 @@ public sealed class PrintWindow : Window
     private bool designing;
 
     public PrintWindow()
-        : this(TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets")))
+        : this((OwnSheets?)null)
     {
     }
 
-    internal PrintWindow(IReadOnlyList<LibrarySheet> library)
+    /// <summary>
+    /// The built-in library and, NOTES-FROM-PLANNING.md entry 112 section 3, the person's own sheets after it, each printed exactly as a
+    /// built-in one is, through the same refusals; with somewhere to keep them, the designer can save what it makes.
+    /// </summary>
+    internal PrintWindow(OwnSheets? own)
+        : this([.. BuiltIn(), .. own?.List() ?? []], own)
     {
-        sheets = library;
+    }
+
+    internal PrintWindow(IReadOnlyList<LibrarySheet> library, OwnSheets? own = null)
+    {
+        sheets = [.. library];
+        this.own = own;
         Title = "GroupLab: print a target";
         Width = 1200;
         Height = 860;
 
-        list.ItemsSource = sheets.Select(s =>
-        {
-            var item = new StackPanel { Spacing = 1, Margin = new Thickness(2, 4) };
-            item.Children.Add(new TextBlock { Text = s.Family, FontSize = Tokens.DetailSize, Opacity = 0.7 });
-            item.Children.Add(new TextBlock { Text = s.Definition.Name, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-            item.Children.Add(new TextBlock { Text = s.Summary, FontSize = Tokens.LabelSize, TextWrapping = TextWrapping.Wrap });
-            return item;
-        }).ToList();
+        FillList();
         list.SelectionChanged += (_, _) =>
         {
             if (list.SelectedIndex >= 0)
@@ -131,6 +136,8 @@ public sealed class PrintWindow : Window
         details.Children.Add(note);
         details.Children.Add(new TextBlock { Text = ScaleWords, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
         details.Children.Add(PrintRow());
+        // Entry 113 section 5: the sheet and its one page of instructions together, for a volunteer.
+        details.Children.Add(Row(Button("Print a volunteer pack", PrintPack), new TextBlock { Text = "The sheet and one page telling a volunteer how to shoot, photograph and send it.", VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } }));
         details.Children.Add(status);
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
         details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = Tokens.DetailSize, Opacity = 0.7 });
@@ -158,6 +165,51 @@ public sealed class PrintWindow : Window
             SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
         }
     }
+
+    /// <summary>The built-in library beside the application.</summary>
+    internal static IReadOnlyList<LibrarySheet> BuiltIn() => TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets"));
+
+    /// <summary>Raised when the designer saves a sheet into the person's own, so the target library can show it.</summary>
+    internal event Action? SheetsChanged;
+
+    /// <summary>The list, each sheet under its family, the person's own last.</summary>
+    private void FillList()
+    {
+        list.ItemsSource = sheets.Select(s =>
+        {
+            var item = new StackPanel { Spacing = 1, Margin = new Thickness(2, 4) };
+            item.Children.Add(new TextBlock { Text = s.Family, FontSize = Tokens.DetailSize, Opacity = 0.7 });
+            item.Children.Add(new TextBlock { Text = s.Definition.Name, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+            item.Children.Add(new TextBlock { Text = s.Summary, FontSize = Tokens.LabelSize, TextWrapping = TextWrapping.Wrap });
+            return item;
+        }).ToList();
+    }
+
+    /// <summary>
+    /// Keeps the design the designer shows as one of the person's own sheets, entry 112 section 3, and selects it in the list, where it prints
+    /// as any other sheet does.
+    /// </summary>
+    internal LibrarySheet? SaveDesign()
+    {
+        if (own is null || Designed is not { } design)
+        {
+            return null;
+        }
+
+        var saved = own.Save(design.Definition);
+        DiagnosticLog.Info("sheet.save", ("sheet", saved.File));
+        sheets.RemoveAll(s => s.Family == OwnSheets.Family);
+        sheets.AddRange(own.List());
+        FillList();
+        ShowDesigner(false);
+        Select(saved.File);
+        SetStatus($"Saved as {saved.Definition.Name} in your own sheets.", StatusKind.Success);
+        SheetsChanged?.Invoke();
+        return saved;
+    }
+
+    /// <summary>Opens the designer, as the target library's Design your own sheet does.</summary>
+    internal void Design() => ShowDesigner(true);
 
     /// <summary>The designer's checks as they read, for the headless tests.</summary>
     internal IReadOnlyList<(string Text, string Kind)> DesignChecks =>
@@ -203,6 +255,8 @@ public sealed class PrintWindow : Window
         designer.Children.Add(Row(Label("Your five-shot group, MOA"), designGroup, new TextBlock { Text = "at", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0) }, designDistance, new TextBlock { Text = "yd", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
         designer.Children.Add(new TextBlock { Text = "Optional: with it, the designer says what the spacing means for your rifle.", Classes = { AppStyles.Secondary } });
         designer.Children.Add(designChecks);
+        saveOwn.Click += (_, _) => SaveDesign();
+        designer.Children.Add(saveOwn);
 
         foreach (var box in new[] { designName, designSpacing, designGroup, designDistance })
         {
@@ -274,6 +328,7 @@ public sealed class PrintWindow : Window
             Check(spacingCheck.Level, spacingCheck.Sentence);
         }
 
+        saveOwn.IsVisible = design.Printable && own is not null;
         if (design.Printable)
         {
             selected = new LibrarySheet("custom.gltd.json", "Your own sheet", null, design.Definition!);
@@ -471,11 +526,18 @@ public sealed class PrintWindow : Window
             return;
         }
 
-        var scenes = SceneBuilder.Build(selected.Definition, new RenderOptions(TileIndex: page));
+        (preview.Source as IDisposable)?.Dispose();
+        preview.Source = Preview(selected.Definition, page);
+        pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
+    }
+
+    /// <summary>One sheet's artwork as a bitmap with its longer side near 900 pixels, or null when it has none.</summary>
+    internal static Bitmap? Preview(TargetDefinition definition, int tile = 0)
+    {
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: tile));
         if (scenes.Pages.Count == 0)
         {
-            preview.Source = null;
-            return;
+            return null;
         }
 
         var scene = scenes.Pages[0];
@@ -484,9 +546,7 @@ public sealed class PrintWindow : Window
         using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
         OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
         using var stream = new MemoryStream(png);
-        (preview.Source as IDisposable)?.Dispose();
-        preview.Source = new Bitmap(stream);
-        pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
+        return new Bitmap(stream);
     }
 
     private async Task SaveDialog()
@@ -542,6 +602,65 @@ public sealed class PrintWindow : Window
 
         // Entry 105 section 9: a launch that worked leaves a trace too, which is what was missing when the print verb printed silently.
         DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true)]);
+        SetStatus(opened, kind);
+        Confirm(opened);
+    }
+
+    /// <summary>
+    /// Writes the volunteer pack, NOTES-FROM-PLANNING.md entry 113 section 5: every page of the sheet as the print screen renders it, blank or
+    /// filled as chosen, then the instruction page at the same paper size. False with the reason in the message line.
+    /// </summary>
+    internal bool SaveVolunteerPack(string path)
+    {
+        if (selected is null || Render() is not { } result)
+        {
+            return false;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
+            File.WriteAllBytes(path, GroupLab.Core.Reporting.VolunteerPack.Write(selected.Definition, result.Pages));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            SetStatus("The pack could not be written: " + ex.Message, StatusKind.Alert);
+            DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(path), ("kind", "pack")]);
+            return false;
+        }
+
+        DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "pack"), ("sheet", selected.File), ("pages", result.Pages.Count + 1)]);
+        SetStatus($"Saved the volunteer pack, {result.Pages.Count + 1} pages, to {path}.", StatusKind.Success);
+        return true;
+    }
+
+    /// <summary>Opens the volunteer pack in the PDF viewer to print, with the actual-size reminder, as Open to print does for a sheet.</summary>
+    private void PrintPack()
+    {
+        if (selected is null)
+        {
+            return;
+        }
+
+        string path = Path.Combine(Path.GetTempPath(), "GroupLab", selected.File.Replace(".gltd.json", " volunteer pack.pdf", StringComparison.Ordinal));
+        if (!SaveVolunteerPack(path))
+        {
+            return;
+        }
+
+        var (start, opened, kind) = PrintLaunch(path);
+        try
+        {
+            Process.Start(start)?.Dispose();
+        }
+        catch (Win32Exception ex)
+        {
+            SetStatus("No application could open the pack (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
+            DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved pack"));
+            return;
+        }
+
+        DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true), ("kind", "pack")]);
         SetStatus(opened, kind);
         Confirm(opened);
     }

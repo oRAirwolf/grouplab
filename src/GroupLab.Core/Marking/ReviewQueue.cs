@@ -155,7 +155,9 @@ public static class ReviewQueue
             items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]), choices, Dismissed(key)));
         }
 
-        foreach (var group in shots.Where(s => s.Bull is { } b && bulls.TryGetValue(b, out var bull) && bull.Scoring).GroupBy(s => s.Bull!.Value).Where(g => g.Count() > 1))
+        // Entry 113 section 4: a bull the marking says holds more than one, or a sheet read by nearest bull, is not doubled by holding them.
+        foreach (var group in shots.Where(s => s.Bull is { } b && bulls.TryGetValue(b, out var bull) && bull.Scoring).GroupBy(s => s.Bull!.Value)
+            .Where(g => g.Count() > (state.Rule is { NearestOnly: true } ? int.MaxValue : state.Rule?.For(g.Key) ?? 1)))
         {
             string key = $"doubled:{group.Key}:{string.Join(',', group.Select(s => s.Id).Order())}";
             items.Add(new ReviewItem(key, ReviewKind.Doubled, group.First().Id, group.Key, group.First().Image,

@@ -55,6 +55,14 @@ public sealed record RectFill(SceneLayer Layer, Rgb Colour, long X, long Y, long
 public sealed record TextRun(SceneLayer Layer, Rgb Colour, long X, long Baseline, long FontSize, string Text, TextAnchor Anchor)
     : SceneItem(Layer, Colour);
 
+/// <summary>
+/// A JPEG placed on the page, its top-left corner at (<see cref="X"/>, <see cref="Y"/>) and <see cref="Width"/> by <see cref="Height"/> across,
+/// NOTES-FROM-PLANNING.md entry 113 section 6: the user guide is illustrated with the committed renders. The JPEG's bytes go into the PDF as
+/// they are, so nothing is re-encoded there. No target sheet carries one.
+/// </summary>
+public sealed record ImageBox(SceneLayer Layer, long X, long Y, long Width, long Height, byte[] Jpeg, int PixelWidth, int PixelHeight)
+    : SceneItem(Layer, new Rgb(0, 0, 0));
+
 /// <summary>One printed sheet, in half-dmm from its top-left corner. A tiled definition has one scene per tile.</summary>
 public sealed record Scene(long Width, long Height, int TileIndex, IReadOnlyList<SceneItem> Items)
 {

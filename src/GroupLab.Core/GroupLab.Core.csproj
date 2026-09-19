@@ -3,6 +3,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Gltd\Schema\gltd-1.schema.json" LogicalName="GroupLab.Core.Gltd.Schema.gltd-1.schema.json" />
     <EmbeddedResource Include="Statistics\RangeStatistics.csv" LogicalName="GroupLab.Core.Statistics.RangeStatistics.csv" />
+    <EmbeddedResource Include="..\..\docs\VOLUNTEER-PACK.md" LogicalName="GroupLab.Core.Reporting.VolunteerPack.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -10,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
     <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="3.2.1" />
   </ItemGroup>
 

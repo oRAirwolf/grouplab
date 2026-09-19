@@ -38,15 +38,28 @@ public static class PdfWriter
             "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
         };
 
+        // Images, entry 113 section 6, are objects after every page's two, numbered in the order the pages carry them.
+        var images = new List<string>();
         for (int i = 0; i < pages.Count; i++)
         {
             var page = pages[i];
             string content = Content(page, scale);
+            var names = new StringBuilder();
+            int k = 0;
+            foreach (var image in page.Items.OfType<ImageBox>())
+            {
+                names.Append(CultureInfo.InvariantCulture, $"/Im{k++} {4 + (2 * pages.Count) + images.Count} 0 R ");
+                images.Add($"<< /Type /XObject /Subtype /Image /Width {image.PixelWidth} /Height {image.PixelHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length {image.Jpeg.Length} >>\nstream\n{Encoding.Latin1.GetString(image.Jpeg)}\nendstream");
+            }
+
+            string xobjects = k > 0 ? $" /XObject << {names}>>" : "";
             objects.Add(
                 $"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {Number(page.Width * PointsPerUnit)} {Number(page.Height * PointsPerUnit)}] " +
-                $"/Resources << /Font << /F1 3 0 R >> >> /Contents {5 + (2 * i)} 0 R >>");
+                $"/Resources << /Font << /F1 3 0 R >>{xobjects} >> /Contents {5 + (2 * i)} 0 R >>");
             objects.Add($"<< /Length {Encoding.Latin1.GetByteCount(content)} >>\nstream\n{content}\nendstream");
         }
+
+        objects.AddRange(images);
 
         var pdf = new StringBuilder("%PDF-1.7\n%âãÏÓ\n");
         var offsets = new List<int>();
@@ -80,8 +93,22 @@ public static class PdfWriter
 
         Gltd.Binary.Rgb? colour = null;
         bool pendingRects = false;
+        int imageIndex = 0;
         foreach (var item in page.Items)
         {
+            if (item is ImageBox image)
+            {
+                if (pendingRects)
+                {
+                    s.Append("f\n");
+                    pendingRects = false;
+                }
+
+                // The unit square to the box, flipped back upright, since the page's own transform runs y down.
+                s.Append(CultureInfo.InvariantCulture, $"q {image.Width} 0 0 {-image.Height} {image.X} {image.Y + image.Height} cm /Im{imageIndex++} Do Q\n");
+                continue;
+            }
+
             if (item is not RectFill && pendingRects)
             {
                 s.Append("f\n");

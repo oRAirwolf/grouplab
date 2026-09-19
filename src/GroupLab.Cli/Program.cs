@@ -58,6 +58,9 @@ return args switch
     ["publish-owner", var source, var target, .. var rest] => GroupLab.Cli.OwnerVerb.Run(source, target, rest, Console.Out),
     ["analyze-folder", var folder, .. var rest] => GroupLab.Cli.FolderVerbs.AnalyzeFolder(folder, rest, Console.Out, Console.Error),
     ["timing", var log] => GroupLab.Cli.FolderVerbs.Timing(log, Console.Out, Console.Error),
+    ["compare-photos", .. var rest] => GroupLab.Cli.PhotoVerb.Run(rest, Console.Out, Console.Error),
+    ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
+    ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
@@ -506,6 +509,8 @@ static int Usage()
         grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [--sighters] [-v 1|2|3] [--json <marking.json>]
         grouplab analyze-folder <directory> [--library <directory>]... [--calibre <diameter>] [--markings <directory>]
         grouplab timing <grouplab-log-file>
+        grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
+        grouplab user-guide [<docs directory>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]

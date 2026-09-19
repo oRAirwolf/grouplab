@@ -68,6 +68,9 @@ internal sealed class CompositePlot : Control
 
     public double? CalibreInches { get; set; }
 
+    /// <summary>Whether the key is drawn; the comparison's small plots leave it off and say what the marks are once, beneath them (entry 113 section 2).</summary>
+    public bool ShowKey { get; set; } = true;
+
     /// <summary>Whether the calibre outlines are drawn behind the dots, entry 109 section 3: on unless the plot's toggle hides them.</summary>
     public bool ShowOutlines { get; set; } = true;
 
@@ -240,7 +243,10 @@ internal sealed class CompositePlot : Control
             }
         }
 
-        DrawKey(context, palette);
+        if (ShowKey)
+        {
+            DrawKey(context, palette);
+        }
     }
 
     /// <summary>A shot's calibre outline, thin and faint behind every dot, so twenty-five of them never merge into one mass.</summary>

@@ -106,6 +106,20 @@ public sealed record SubgroupMap(ImmutableDictionary<int, string> ByBull)
 }
 
 /// <summary>
+/// How a sheet's shots are to be read against its bulls when it breaks one shot a bull on purpose, NOTES-FROM-PLANNING.md entry 113 section 4:
+/// every shot to its nearest bull, never matched; or matched with the named bulls each taking the number of shots given. The doubles sheet,
+/// two shots into each of bulls 1 to 10 and none into 11 to 25, is read either way; without either, one-to-one matching pushes each second
+/// shot onto an empty neighbour, and the review queue raises every one of them.
+/// </summary>
+public sealed record AssignmentRule(bool NearestOnly, ImmutableDictionary<int, int> PerBull)
+{
+    public static AssignmentRule Nearest { get; } = new(true, ImmutableDictionary<int, int>.Empty);
+
+    /// <summary>The shots a bull is expected to hold under this rule: its named number, or one.</summary>
+    public int For(int bull) => PerBull.TryGetValue(bull, out int shots) ? shots : 1;
+}
+
+/// <summary>
 /// What a marking's detection was run with, NOTES-FROM-PLANNING.md entry 80 section 5: the calibre named, or none, and the size its holes were
 /// taken to measure. The same image detects differently with a calibre and without, so two markings are comparable only when these agree.
 /// </summary>
@@ -145,7 +159,8 @@ public sealed record MarkingState(
     int? ExpectedShots = null,
     Rifle? Rifle = null,
     string? Barrel = null,
-    string? Load = null)
+    string? Load = null,
+    AssignmentRule? Rule = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -352,6 +367,21 @@ public sealed class MarkingSession
     }
 
     /// <summary>
+    /// How the sheet's shots are read against its bulls, NOTES-FROM-PLANNING.md entry 113 section 4: by nearest bull, or matched with named
+    /// bulls taking more than one, or null for the default one-to-one matching. Every shot whose bull nobody chose is matched again under it.
+    /// </summary>
+    public void SetAssignmentRule(AssignmentRule? rule)
+    {
+        if (rule != State.Rule)
+        {
+            // The rule is how the sheet is read, not an edit: what it assigns becomes the reading edits are measured from, so no shot it
+            // places is flagged as moved by an edit.
+            var next = Rematch(State with { Rule = rule });
+            Apply(next.Assignment is { } review ? next with { Assignment = review with { Shots = [.. review.Shots.Select(d => d with { DetectedBull = d.Bull })] } } : next);
+        }
+    }
+
+    /// <summary>
     /// How many rounds the person says they fired at the group, sighters not counted, or null to stop checking (NOTES-FROM-PLANNING.md
     /// entry 95 section 2). The detector can never know this and the shooter always does, so it turns "is this mark two holes", which the
     /// image cannot answer, into "you fired ten and nine are marked", which arithmetic can.
@@ -467,10 +497,15 @@ public sealed class MarkingSession
             return state;
         }
 
-        var taken = state.Shots.Where(s => s.IsShot && s.BullChosen && s.Bull is not null).Select(s => s.Bull!.Value).ToHashSet();
+        // A bull a person's choice holds is full once it holds what the rule expects of it, one unless the rule names more (entry 113 section 4).
+        var held = state.Shots.Where(s => s.IsShot && s.BullChosen && s.Bull is not null).GroupBy(s => s.Bull!.Value).ToDictionary(g => g.Key, g => g.Count());
+        var rule = state.Rule;
+        int Room(int bull) => (rule?.For(bull) ?? 1) - held.GetValueOrDefault(bull);
+        var taken = held.Keys.ToHashSet();
         var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).ToList();
-        var open = state.Bulls.Where(b => !taken.Contains(b.Index)).ToList();
-        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)]);
+        var open = state.Bulls.Where(b => rule is { NearestOnly: true } || Room(b.Index) > 0).ToList();
+        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)],
+            capacity: rule is null ? null : [.. open.Select(b => Math.Max(1, Room(b.Index)))], nearestOnly: rule?.NearestOnly == true);
         int? Index(int? position) => position is { } p && p >= 0 ? open[p].Index : null;
 
         var bulls = new Dictionary<int, int?>();
