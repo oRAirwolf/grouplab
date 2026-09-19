@@ -58,9 +58,14 @@ for case in spec["cases"]:
     result = calc.fire(shot, trajectory_range=Distance.Yard(spec["maxRange"]), trajectory_step=Distance.Yard(spec["rangeStep"]))
 
     rows = []
-    for row in result.samples:
+    # 2.3.1's scheduled rows are result.trajectory; later versions call them result.samples. Only rows at a scheduled range are kept.
+    scheduled = getattr(result, "samples", None) or result.trajectory
+    for row in scheduled:
+        range_yd = row.distance >> Distance.Yard
+        if abs(range_yd - round(range_yd / spec["rangeStep"]) * spec["rangeStep"]) > 1e-6:
+            continue
         rows.append({
-            "rangeYd": row.distance >> Distance.Yard,
+            "rangeYd": range_yd,
             "heightIn": row.height >> Distance.Inch,
             "windageIn": row.windage >> Distance.Inch,
             "tof": row.time,
