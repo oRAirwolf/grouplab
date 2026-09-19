@@ -12,6 +12,8 @@
       invariant globalization hides. Every number is still formatted and parsed with the invariant culture.
     -->
     <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- Entry 105 section 5: the executable's icon, drawn from the mark by `grouplab icons`, never exported by hand. -->
+    <ApplicationIcon>Assets\icons\grouplab.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +37,9 @@
   -->
   <ItemGroup>
     <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <!-- GroupLab's mark and lockup, entry 105 section 4: the committed SVGs are the source, drawn by BrandMark. -->
+    <AvaloniaResource Include="Assets\grouplab-*.svg" />
+    <AvaloniaResource Include="Assets\icons\grouplab.ico" />
     <None Include="Assets\Fonts\LICENSE.txt" Link="IBM-Plex-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

@@ -192,6 +192,8 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
+- **Done.** Sighters found and matched and then set aside unless a person asks for them, and analysed as a group of their own when they do, never pooled with the scoring shots.
+- **Done.** Calibre names read as the bullets they fire, from a table of common rifle and pistol calibres, and a name fired as more than one diameter offers its candidates rather than choosing one.
 - **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a calibre-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Done.** The concept screen's appearance: the icon tool strip with its keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
@@ -207,6 +209,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Not started.** A target library, session records and reporting.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
+- **Done.** GroupLab's mark in the header and the rail, and as the application's icon for Windows, Linux and macOS, drawn from one committed source.
 - **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
 - **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
 - **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once, and in the scope's own clicks with what rounding leaves once the marking names a rifle.

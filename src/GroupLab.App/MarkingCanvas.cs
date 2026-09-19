@@ -128,6 +128,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>The selected shot, if any.</summary>
     public int? Selected { get; set; }
 
+    /// <summary>Marks found and set aside, sighters that are not being analysed (entry 105 section 8): drawn faint and unlabelled.</summary>
+    public IReadOnlySet<int> SetAside { get; set; } = new HashSet<int>();
+
     /// <summary>Printed markers the registration expected and did not find, image pixels, drawn so the user sees what is missing.</summary>
     public IReadOnlyList<PointD> MissingMarkers { get; set; } = [];
 
@@ -424,6 +427,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             if (shot.NotAShot)
             {
                 Marks.Saltire(context, Marks.Faint, c, 6);
+                continue;
+            }
+
+            // NOTES-FROM-PLANNING.md entry 105 section 8: a sighter's mark while sighters are not analysed is found and set aside, drawn faint
+            // and unlabelled so it does not read as work. It is still a mark, and selecting it still works.
+            if (SetAside.Contains(shot.Id) && shot.Id != Selected)
+            {
+                Marks.Ring(context, Marks.Faint, c, ImpactRadius(state, at, shot.MeasuredDiameterInches), 1, Marks.Dashed);
                 continue;
             }
 

@@ -31,6 +31,7 @@ public static class AnalyzeVerb
         Calibre? calibre = null;
         var libraries = new List<string>();
         int verbosity = 1;
+        bool sighters = false;
         for (int i = 0; i < rest.Length; i++)
         {
             switch (rest[i])
@@ -49,6 +50,10 @@ public static class AnalyzeVerb
                         return 2;
                     }
 
+                    break;
+                case "--sighters":
+                    // NOTES-FROM-PLANNING.md entry 105 section 8: sighters are set aside unless asked for, as the window does.
+                    sighters = true;
                     break;
                 case "--json" when i + 1 < rest.Length:
                     json = rest[++i];
@@ -86,15 +91,27 @@ public static class AnalyzeVerb
         output.WriteLine("shot        bull   page x, y (in)      offset from bull x, y (in)");
         // NOTES-FROM-PLANNING.md entry 75: a shot is named by its bull, in the sheet's order, and never by the order detection emitted it.
         var byId = result.Shots.ToDictionary(s => s.Id);
-        foreach (var label in ShotLabels.For(result.Marking!).Where(l => byId.ContainsKey(l.ShotId)))
+        int setAside = result.Shots.Count(s => s.Sighter);
+        foreach (var label in ShotLabels.For(result.Marking!).Where(l => byId.ContainsKey(l.ShotId) && (sighters || !byId[l.ShotId].Sighter)))
         {
             var s = byId[label.ShotId];
             output.WriteLine(string.Create(CultureInfo.InvariantCulture,
                 $"{label.Text ?? "",-10}  {s.BullLabel ?? "none",-5}  {s.PageInches.X,7:0.000}, {s.PageInches.Y,7:0.000}   {(s.OffsetInches is { } o ? $"{o.X,+8:+0.000;-0.000}, {o.Y,+8:+0.000;-0.000}" : "no bull")}{(s.Sighter ? "   sighter, not in the group" : "")}{(result.Marking!.Find(s.Id)?.Oversize is { } flag ? string.Create(CultureInfo.InvariantCulture, $"   {(flag.Tentative ? "may be two holes" : "oversized")}, about {flag.Holes:0.0} holes' area") : "")}"));
         }
 
+        if (!sighters && setAside > 0)
+        {
+            output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"{setAside} sighter shot{(setAside == 1 ? "" : "s")} found and set aside; --sighters analyses them as a group of their own"));
+        }
+
         output.WriteLine();
         WriteGroup(output, result.Report!);
+        if (sighters && GroupAnalysis.HasSighters(result.Marking!))
+        {
+            output.WriteLine();
+            output.WriteLine("sighters, their own group:");
+            WriteGroup(output, GroupAnalysis.Analyse(GroupAnalysis.Sighters(result.Marking!)));
+        }
         if (json is not null)
         {
             File.WriteAllText(json, MarkingFile.Write(result.Marking!));

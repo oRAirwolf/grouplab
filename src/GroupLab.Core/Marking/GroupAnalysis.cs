@@ -268,6 +268,41 @@ public static class GroupAnalysis
         })];
     }
 
+    /// <summary>Whether the sheet has sighter bulls, which is when "analyse sighters" means anything (NOTES-FROM-PLANNING.md entry 105 section 8).</summary>
+    public static bool HasSighters(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        return state.Bulls.Any(b => !b.Scoring);
+    }
+
+    /// <summary>Whether a shot sits on a sighter bull, and so is set aside unless sighters are analysed.</summary>
+    public static bool OnSighter(MarkingState state, MarkedShot shot)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shot);
+        return shot.Bull is { } b && state.Bulls.Any(x => x.Index == b && !x.Scoring);
+    }
+
+    /// <summary>
+    /// The sighters as a group of their own, NOTES-FROM-PLANNING.md entry 105 section 8: the same marking with only the shots on sighter bulls
+    /// and the sighter bulls counted as the ones scored. Everything that measures a group then measures the sighters, <see cref="Analyse"/>
+    /// and the zero correction alike, and they can never be pooled with the scoring shots, which is entry 73 section 1's rule in both modes.
+    /// The zero readout is the useful part: sighters are fired to confirm zero, and three or four of them get the zero correction's own
+    /// answer for a group too small to call.
+    /// </summary>
+    public static MarkingState Sighters(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        return state with
+        {
+            Bulls = [.. state.Bulls.Select(b => b with { Scoring = !b.Scoring })],
+            Shots = [.. state.Shots.Where(s => s.Bull is { } b && sighters.Contains(b))],
+            ExpectedShots = null,
+            Subgroups = null,
+        };
+    }
+
     /// <summary>Whether there is anything to measure an offset from: a point of aim, or shots on bulls.</summary>
     public static bool HasOrigin(MarkingState state, IReadOnlyList<MarkedShot> shots)
     {

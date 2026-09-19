@@ -73,9 +73,18 @@ public static class ReviewQueue
     /// <summary>How many candidates a count item names, most likely first.</summary>
     public const int CountCandidates = 3;
 
-    public static IReadOnlyList<ReviewItem> For(MarkingState state)
+    /// <param name="analyseSighters">
+    /// NOTES-FROM-PLANNING.md entry 105 section 8: sighters are ignored unless the person asks for them. Ignored, nothing that concerns only
+    /// sighter bulls is an item: no size flag on a sighter's mark and no contest between two sighters. A contest that involves a scoring bull
+    /// is still an item, because the scoring bull's shot depends on it. Detection and one-to-one matching ran over the sighters either way,
+    /// which is what keeps a sighter's hole off the scoring bulls above it.
+    /// </param>
+    public static IReadOnlyList<ReviewItem> For(MarkingState state, bool analyseSighters = false)
     {
         ArgumentNullException.ThrowIfNull(state);
+        var sighterBulls = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        bool OnlySighters(params int?[] involved) =>
+            !analyseSighters && involved.Any(b => b is not null) && involved.All(b => b is null || sighterBulls.Contains(b.Value));
         var inv = CultureInfo.InvariantCulture;
         var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
         var bulls = state.Bulls.ToDictionary(b => b.Index);
@@ -94,7 +103,7 @@ public static class ReviewQueue
 
             bool overridden = detail.Bull is { } held && held != detail.NearestBull;
             bool moved = detail.Bull != detail.DetectedBull;
-            if (!detail.Ambiguous && !overridden && !moved)
+            if ((!detail.Ambiguous && !overridden && !moved) || OnlySighters(shot.Bull, detail.Bull, detail.NearestBull, detail.DetectedBull))
             {
                 continue;
             }
@@ -130,7 +139,7 @@ public static class ReviewQueue
             items.Add(new ReviewItem(key, ReviewKind.Contested, shot.Id, shot.Bull, shot.Image, sentence, choices, shot.BullChosen || Dismissed(key)));
         }
 
-        foreach (var shot in shots.Where(s => s.Oversize is not null))
+        foreach (var shot in shots.Where(s => s.Oversize is not null && !OnlySighters(s.Bull)))
         {
             string key = $"oversized:{shot.Id}";
             var choices = new List<ReviewChoice> { new("One shot", ReviewAction.Keep) };

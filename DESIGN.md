@@ -341,6 +341,8 @@ Provenance matters because it keeps the statistics honest about where the number
 
 Assignment classifies against the definition's declared bull positions, and offsets are measured from the located ones. The two are kept apart on purpose: registration and printing error are a few thousandths of an inch against a 0.15 inch margin, so the choice cannot flip an assignment that was not already flagged, and the shooter aimed at the bull as printed.
 
+**[r9] Sighters are ignored unless a person asks for them, by choice** (`docs/NOTES-FROM-PLANNING.md` entry 105 section 8). Detection and one-to-one matching run over the sighter bulls as over any other, because matching them is what keeps a sighter's hole off the scoring bull above it; ignoring them means everything after matching. With sighters ignored, the review queue raises nothing that concerns only sighter bulls, counts are of scoring shots, and the sheet shows sighter marks faint and unlabelled, found and set aside. **A contest between a sighter bull and a scoring bull is always raised**, because the scoring bull's shot depends on it. The marking still keeps the sighters, so turning "Analyse sighters" on later needs no new detection and loses no edit.
+
 ## 14. Statistics
 
 ### Baseline
@@ -379,6 +381,8 @@ When a user marks a shot for exclusion, GroupLab first states what the mathemati
 ### What the intervals do not include
 
 Every interval describes shot-to-shot dispersion and takes the measured coordinates as exact. The measurement's own instability is not in them yet: a sheet that is not flat registers differently when nothing but the order of its markers changes, and a bull seen by few edge points moves when one point is left out. Both are measured, and recorded as a known source of uncertainty, in `docs/STATISTICS.md` section 2 (`docs/NOTES-FROM-PLANNING.md` entry 52 section 4).
+
+**[r9] Sighters are never pooled with the scoring shots** (entry 73 section 1), in either mode of section 13. Analysed, they are a group of their own, measured on a view of the marking that holds only them, and their zero readout is the useful part: sighters are fired to confirm zero, and three or four of them get the zero correction's own answer for a group too small to call.
 
 ## 15. Data model
 

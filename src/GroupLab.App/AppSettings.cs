@@ -100,6 +100,35 @@ public sealed class AppSettingsStore(string path)
     public bool SaveMoreFigures(bool open) => Save(file => file["moreFiguresOpen"] = open);
 
     /// <summary>
+    /// Whether sighters are analysed, NOTES-FROM-PLANNING.md entry 105 section 8: off unless a person turns it on. Off, they are found and
+    /// matched and then set aside; on, they are a group of their own with their own zero readout and review items.
+    /// </summary>
+    public bool LoadAnalyseSighters() => Read(file => file["analyseSighters"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveAnalyseSighters(bool on) => Save(file => file["analyseSighters"] = on);
+
+    /// <summary>
+    /// Whether the work bar, the stage timeline, is shown, entry 105 section 6. Hidden unless a person showed it: a failed stage is still a
+    /// prominent error without it, and Show work lights when a stage has failed or degraded.
+    /// </summary>
+    public bool LoadShowWork() => Read(file => file["showWork"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveShowWork(bool shown) => Save(file => file["showWork"] = shown);
+
+    /// <summary>A side column's width as a person dragged it, entry 105 section 1, or null where it was never dragged.</summary>
+    public double? LoadColumnWidth(string column) => Read(file => file["columnWidths"]?[column]?.GetValueKind() == JsonValueKind.Number ? (double?)file["columnWidths"]![column]!.GetValue<double>() : null);
+
+    public bool SaveColumnWidth(string column, double width) => Save(file =>
+    {
+        if (file["columnWidths"] is not JsonObject widths)
+        {
+            file["columnWidths"] = widths = new JsonObject();
+        }
+
+        widths[column] = Math.Round(width);
+    });
+
+    /// <summary>
     /// Where a crash report is sent, entry 41 section 7. Empty unless configured, so a fork of GroupLab never posts to anybody's server and
     /// the Send button stays hidden; saving a report to disk works either way.
     /// </summary>

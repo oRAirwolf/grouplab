@@ -59,6 +59,7 @@ return args switch
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
         CorpusCounts.Run("scans/phase0", SampleSet.FrozenDirectory, "targets", rest.SkipWhile(a => a != "--local").Skip(1).FirstOrDefault(), rest.Contains("--write"), Console.Out),
+    ["icons", var svg, var directory] => GroupLab.Cli.IconSet.Write(svg, directory, Console.Out),
     ["identify", "sweep"] => IdentifySweep.Run("scans/phase0", "targets", Console.Out),
     ["stats", "coverage"] => StatsCoverage.Run(Console.Out),
     ["stats", "range-table"] => StatsRangeTable.Run(StatsRangeTable.DefaultTable, 2, 100, 10_000_000, Console.Out),
@@ -480,7 +481,8 @@ static int Usage()
         grouplab intake <submission-directory> <public-directory> [--accept <file>]... [--submissions <directory>]
         grouplab scrub <input-image> <output-image>
         grouplab publish-owner <source-directory> <public-directory> --taken-by <name> --statement <text> [--hold <file> <reason>]...
-        grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [-v 1|2|3] [--json <marking.json>]
+        grouplab icons <mark.svg> <directory>
+        grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [--sighters] [-v 1|2|3] [--json <marking.json>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]

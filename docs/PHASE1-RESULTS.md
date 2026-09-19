@@ -4680,6 +4680,113 @@ A card is the verdict in bold and then its evidence. The verdict never appears a
 
 ---
 
+## Entry 105. The columns fit and resize, the figure panel set by its own rules, the plot keyed and described, the mark, the work bar on a toggle, calibre names read as bullets, and sighters set aside
+
+`docs/NOTES-FROM-PLANNING.md` entry 105, all eight items. One conflict with the code is question 20. The stale `index.lock` the planning session's shell left was removed at the start, with no git process running.
+
+### Item 1: the column's own overflow first, then splitters
+
+- **The defect.** The new-record form put a 150 px name field, a 110 px click list and a button on one row, wider than the 372 px column, and the button was clipped to "Add rif" on a first run. Each field now has the column's width with its buttons beneath it.
+- **Every row wraps.** `Row()` is a wrapping panel now, so no row in either column can run past its edge whatever it holds.
+- **The test:** it expands the form at the default width and holds every button's right edge inside the column, which it failed before.
+- **Splitters.** Both states' bodies are grids now. The editor has a splitter between the sheet and the review column; the analysis state has one on each side of the plot.
+  - Each splitter shows the resize cursor.
+  - Each side column has a minimum of 260 px and a maximum of 760, and the centre keeps 320.
+  - Each column opens at the width a person last dragged it to, remembered in `AppSettingsStore` beside the other settings.
+
+### Item 2: the figure panel set by the rules the project already wrote
+
+No finding is reworded; only type, alignment and grouping changed.
+- **Sentences in the UI sans.** `Note()` sets a sentence in the sans at the secondary size, and `Detail()` keeps the mono for readouts only. The zero block's uncertainty, its degrees-of-freedom note and its instruction about the rifle are notes now. So is the CEP row's "from sigma under the circular normal model".
+- **One shape for all five figure rows.** Label on the left, value alone on the right, and a mono line beneath carrying the angular value first and then the interval. The lead figures no longer wrap their unit onto a line below the label.
+- **The zero block by kind.**
+  - The two readouts are cells in columns, linear under linear, angular under angular, direction under direction.
+  - The uncertainty is a note beneath them.
+  - The verdict is at body size and full strength, no longer dimmed.
+  - The two notes after it are quieter than the verdict.
+- **Headings.** Section headings are drawn in the dim colour rather than faint, and in the figure column each has a hairline above it.
+
+### Item 3: the plot says what the cursor is over, and keys its marks
+
+- **Every shot carries its bull,** in the plot and in the offset table. Shots are already named by their bull's number (entry 75), so the column mostly repeats the label; it tells a doubled bull's "14a" or a shot with no bull apart.
+- **`CompositePlot.Describe(Point)`** resolves in the order `Pick` does and then goes further:
+  - **a shot:** "Shot 3, bull 3. 0.070 in left and 0.036 in low of its bull's aim point, 0.103 in from the group centre.", plus "Excluded" when it is;
+  - **the extreme spread's line:** a distance between two shots, "not a region the group sits inside";
+  - **the group centre;**
+  - **the CEP circles near their stroke,** each by what it means, "half the time" and "nine times in ten";
+  - **the aim point, then the bull's rings,** and nothing on empty background.
+  - The tooltip updates as the pointer moves.
+- **One look for every shot.** The translucent fill was what made a shot pink over the paper and maroon over the dark. Shots are now rings only, at one weight, with the halo the marking canvas uses.
+- **A key, not a caption.** It is a panel at the plot's top left with each mark drawn as it is on the plot, then its name. CEP 50 is dotted and CEP 90 dashed, so the key can tell them apart.
+
+### Item 4: the mark
+
+- **The files.** The four SVGs are committed in `src/GroupLab.App/Assets/` under the names the entry gives, as delivered, including their content-credentials metadata.
+- **`BrandMark`** reads a committed file and draws it: circles and filled paths, the only elements the files use, with no new package.
+  - The header carries the lockup at 26 pixels, in place of the plain title, and the crumbs continue after it without repeating the name.
+  - The rail's top slot carries the mark.
+  - The dark file is drawn in the dark and high-contrast themes and the light file in the light theme.
+- **Question 20:** the entry says the colours are tokens, and they are not. The light theme's amber token is `#965d12`, not the file's `#a9660f`, and no token holds any of the four greys. Until that is decided, the mark is drawn in the file's own colours, exactly as chosen.
+
+### Item 5: the executable's icon
+
+- **The source.** `grouplab icons <mark.svg> <directory>` draws the committed mark at each size, eight times over and averaged down to that size, so each size is drawn at its size rather than shrunk from the largest. It writes:
+  - `grouplab.ico` at 16, 24, 32, 48, 64 and 256 px;
+  - a Linux PNG set from 16 to 512 px;
+  - `grouplab.icns` from 16 to 1024 px.
+- **The build.** `ApplicationIcon` is set in the csproj and the window sets its own `Icon`.
+- **The test** holds the files present and the icon file's six sizes.
+
+### Item 6: the work bar on a toggle
+
+- **Show work** is a toggle in both states' headers now. It shows and hides the bar in place, the two toggles always agree, and the choice is remembered.
+- **Defaulted closed.** Alan asked for the strip off the screen, and nothing depends on it being open:
+  - the stage pictures still play on the sheet as each stage lands;
+  - a failure is still a prominent error in the panel and the status line, as `DESIGN.md` section 19 requires;
+  - Show work itself turns red and reads "Show work: 1 stage failed", or amber for a degraded stage, whenever the bar is hidden and a stage did not end well.
+- **The test** runs a blank page, whose registration fails, with the bar hidden. It holds the "Detection failed" error effectively visible, and Show work saying a stage failed.
+
+### Item 7: calibre names read as the bullets they fire
+
+- **`Calibre.Table`** is Alan's 44 rows, 42 distinct pairs, and the pick list shows every pair as its name with its diameter, "35 Cal. .357". The twelve cartridge names the list carried before resolve as they did.
+- **`Calibre.Read`** resolves in this order:
+  1. **A typed diameter wins,** a decimal below one or a number marked in inches, and reads exactly as before.
+  2. **A pick-list entry** is itself.
+  3. **A name is matched tolerantly:** case, a space before "mm", "Cal" with or without its stop, a leading point.
+  4. **Then the name's leading number on its own,** so "6.5 Creedmoor" is the 6.5mm row and "30-06" is 30 Cal.
+  5. **Then the old leading-number rule** as the fallback, where a wildcat still lands.
+- **Ambiguous names never pick one.** A name fired as more than one diameter returns its candidates. The window shows them as buttons and the command line lists them. The nine are 30, 303, 32, 35, 38, 45, 50, 9mm and 7.62.
+- **Tests:** every one of the 44 rows by name and by diameter, each ambiguous name returning its candidates in the forms a shooter types, and a chosen candidate reading as itself.
+- **Readings the old tests pinned and this item called wrong:**
+
+| Typed | Old reading | Now |
+|---|---|---|
+| "6.5 Creedmoor" | 0.256 | 0.264 |
+| "22" | 0.220 | 0.224 |
+| "17 HMR" | 0.170 | 0.172 |
+| "9mm" | 0.354 | candidates .355 and .356 |
+| "7.62 mm" | 0.300 | candidates .308 and .310 |
+| "30-06" | 0.300 | candidates .308 and .309 |
+
+  "300 Win Mag" still reads 0.300, because 300 is a leading number and not a name in the table, and it says what it read.
+
+### Item 8: sighters set aside unless analysed
+
+- **What ignoring does not touch.** Detection and one-to-one matching run over the sighter bulls exactly as before.
+- **`ReviewQueue.For(state, analyseSighters)`**, off by default, raises nothing that concerns only sighter bulls: no size flag on a sighter's mark and no contest between two sighters.
+- **A contest between a sighter bull and a scoring bull is always raised.** The test checks both ways round, a sighter's hole nearest a scoring bull and a scoring shot nearest a sighter, in both modes.
+- **In the window.**
+  - Counts are of scoring shots.
+  - Sighter marks are drawn faint, dashed and unlabelled, and can still be selected.
+  - "Analyse sighters", remembered, appears only on a sheet that has sighter bulls.
+- **Analysed,** the sighters are a group of their own on a view of the marking that holds only them. Their section shows their centre from aim and their own zero readout, and they are never pooled with the scoring shots.
+- **The command line** follows the same default: `analyze` sets sighters aside and says how many, and `--sighters` prints them and their own group.
+- **The decision is in `DESIGN.md`** sections 13 and 14.
+
+**Tests:** Core 987 and App 77 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -4908,3 +5015,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 103 section 3: held as a question, over running the sweep.** The sort was already committed by entry 52, and regenerating would have reproduced entry 101's records.
 - **Entry 104 section 2: the worst shot calibrated by simulation at every count, over withholding the verdict below some count.** The calibration is valid from the dispersion minimum up and costs milliseconds, so there was no count where withholding was the more honest answer.
 - **Entry 104 section 4: only the inked discs faded, over fading the whole bull.** Fading the paper as well turned it grey on dark chrome, and the paper-on-dark contrast is most of the concept's character.
+- **Entry 105 section 6: the work bar defaulted closed, over open.** Alan asked for the strip off the screen; a failure stays a prominent error without it, and Show work turns red and says so when a stage fails.
+- **Entry 105 section 7: a name read by its leading number only after the table, over the table alone.** "6.5 Creedmoor" and "30-06" are what shooters type, and their leading number is the table's name; a wildcat still falls through to the old rule and says what it read.
+- **Entry 105 section 4: the mark drawn in the files' own colours until question 20 is answered, over recolouring it to the nearest tokens.** Recolouring would change a mark Alan chose to a set of colours nobody chose.
+- **Entry 105 section 5: the icons drawn by a command from the committed mark, over a script outside the build.** The CLI already carries the imaging library, and nothing new is installed.

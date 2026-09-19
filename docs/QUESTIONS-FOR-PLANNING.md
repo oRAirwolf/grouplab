@@ -12,6 +12,39 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 20: the mark's light amber and its grey are not the tokens entry 105 section 4 says they are
+
+**Status: open.** Blocks nothing: the mark is drawn as chosen meanwhile. Only which set of colours moves is open.
+
+### 1. What entry 105 section 4 says
+
+> **The light variant** is the same geometry with the rings at `#8f8b83` and the holes at `#a9660f`, the light theme's amber.
+
+> **The colours are tokens**, not literals: the grey is the rail and ring grey and the amber is `Tokens.Amber` in each theme, so the in-app mark follows the theme.
+
+### 2. What the tokens are
+
+In `src/GroupLab.App/Theme/Tokens.cs`:
+- **Dark `Amber` is `#e0912f`.** It matches the dark mark.
+- **Light `Amber` is `#965d12`, not `#a9660f`.** It was set for text contrast on the light panel, and `ThemeTests` holds it to that.
+- **No token is `#6b727b`, `#8f8b83`, `#8a9199` or `#6f6b64`.** The nearest grey, `MarkFaint`, is `#697079`. The rail's icons are drawn in the text colours, not in a grey of their own.
+
+So "the amber is `Tokens.Amber` in each theme" and "the light variant's holes are `#a9660f`" cannot both hold. The same goes for "the grey is the rail and ring grey" and a ring grey that no token has.
+
+### 3. What I did meanwhile
+
+The in-app mark and lockup are drawn from the committed SVG for the theme showing: the dark file in dark and high contrast, the light file in light. Each is drawn with the colours in the file, exactly as chosen. You named the files the source of truth, and redrawing the mark in colours nobody chose would be a guess. The icons use the dark file, as the entry says.
+
+### 4. The options
+
+- **A. The mark keeps its colours, as a fixed brand asset.** The files stay the source; the mark does not follow the theme beyond choosing its file. Nothing else changes.
+- **B. The tokens gain the mark's colours as brand roles**, a ring grey, a word grey and a mark amber in each palette, set to the files' values. The mark is drawn from the tokens, and a test holds the files and the tokens to each other.
+- **C. The mark takes the existing tokens.** Light amber becomes `#965d12` in the mark, and a grey is chosen from the palette. That changes a mark Alan chose.
+
+**I would choose B.** It keeps what Alan chose, and it makes "the colours are tokens" true, so the mark follows a future palette change instead of silently diverging from it.
+
+---
+
 ## 2026-09-18, question 19: entry 103 section 3 asks for a sort that entry 52 already committed
 
 **Status: answered** by `docs/NOTES-FROM-PLANNING.md` entry 104 section 1: confirmed, nothing to commit and nothing to regenerate. The one surviving item, the option C risk, is in `DESIGN.md` section 22, and `QuestionStatusTests` now fails when a question marked open is one a notes heading says was answered.

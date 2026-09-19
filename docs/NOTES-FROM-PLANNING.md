@@ -15,6 +15,278 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 105: the side columns resizeable, the figure panel made readable, the plot's marks identified on hover, the work bar on a toggle, an application mark, the calibre names read as their real diameters, sighters ignored unless asked for, and a Print button that cannot promise a dialog
+
+**Status: actioned 2026-09-19.** All eight items, with one conflict raised as question 20.
+- **Item 1:** the form fits 372 px on its own, every row wraps, and both states have splitters with a resize cursor, limits and remembered widths.
+- **Item 2:** sentences in the sans, one shape for all five figure rows with the angle beneath, the zero readouts in aligned columns with the verdict at full strength, and ruled headings. No finding reworded.
+- **Item 3:** the plot names what is under the pointer and each shot's bull, in the plot and the table; every shot has one outline and a halo; the legend is a key with swatches, CEP 50 dotted and CEP 90 dashed.
+- **Item 4:** the four SVGs are in `src/GroupLab.App/Assets/`, drawn as committed, the lockup in the header and the mark in the rail. Question 20: the light amber and the four greys are not tokens, so the mark keeps the files' colours until you choose.
+- **Item 5:** `grouplab icons` draws the `.ico`, the Linux PNGs and the `.icns` from the mark at each size; the csproj and the window set the icon.
+- **Item 6:** Show work toggles the bar in both states and is remembered, defaulted closed. A failed stage stays a prominent error and turns Show work red.
+- **Item 7:** the calibre table, every row tested by name and by diameter; nine ambiguous names return candidates and never one.
+- **Item 8:** sighters are set aside unless analysed; a sighter-to-scoring contest is always raised; analysed, they are their own group. `DESIGN.md` sections 13 and 14 record it.
+- `docs/PHASE1-RESULTS.md` "Entry 105".
+
+
+Nine things, from Alan running the build at `c2bed06` and sending two screenshots. **Items 1, 6, 7, 8 and 9 are defects or near enough. Item 2 is the one he asked for most directly. Item 5 waits on item 4, which waits on him.**
+
+**I am not committing this file.** My shell cannot delete, so every commit I made left `index.lock`, `HEAD.lock` and `maintenance.lock` behind for you to clear, and one of them got pushed by accident. From here the planning session writes the inbox file and nothing else, which is what `docs/notes/inbox/README.md` says anyway.
+
+### 1. The right column clips its own contents, and both side columns should be draggable
+
+**The defect first, because a splitter alone does not fix it.** On the marking screen, expanding **New rifle, barrel or load** cuts off the right edge: the button reads "Add rif". `Tokens.RightColumnWidth` is 372 and the expander's form is wider than that. **A person who never touches a splitter still sees a clipped button on first run**, so the form has to fit 372 first: wrap the rows, or stack the name field above its buttons, or shorten the row. Fix that on its own terms.
+
+**Then make both side columns draggable**, as Alan asked: a `GridSplitter` between each side column and the centre, a visible cursor change on hover, a sensible minimum on each side so neither can be dragged shut by accident, and the widths remembered. `AppSettingsStore` already has the pattern to copy in `LoadMoreFigures` and `SaveMoreFigures`.
+
+**This applies to both states.** `analysisBody` and `editorBody` both use a `DockPanel` with fixed-width `Border`s, the left at 300 and the right at `Tokens.RightColumnWidth`. Both become a `Grid`.
+
+**The space is already there.** In the analysis screenshot the composite plot sits in a very wide area with several hundred pixels of empty background on each side, while the figure column is cramped at 372 and wrapping its own numbers. The screen is not short of room; the room is allocated wrong, and a splitter lets Alan settle that himself rather than us guessing a constant.
+
+### 2. The figure panel is hard to read, and most of it is fixable by rules the project already wrote down
+
+Alan says the information on the right needs more structure, formatting and clear labelling. He is right, and here is what the screenshot actually shows, worst first.
+
+**a. Prose is being set in monospace, against `DESIGN.md` section 19.** The rule is:
+
+> A neutral UI sans for chrome and labels, and a monospace with tabular figures for every numeric readout so digits align in columns and values do not jitter as they update.
+
+These are sentences, not readouts, and every one of them is in mono in the screenshot:
+
+> give or take 0.234 in 0.89 MOA across and 0.142 in 0.54 MOA up and down, at 95 percent
+
+> each axis on its own, 9 degrees of freedom, the group not being circular
+
+> Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver.
+
+**Mono prose at the secondary size in a 372 pixel column is the single largest readability cost on that panel.** Sentences go in the UI sans. Where a sentence contains a figure, either set the figure in a mono run inside it or accept the sans, but the sentence does not become a readout because it has a number in it. `Detail()` is where this lives, and it is used for both jobs.
+
+**b. The two lead figures break their own layout.** Mean radius renders as `0.344 in` on one line with `MOA` alone on the next, and the label "Mean radius" sits *below* its own number. At the lead figure size, 372 pixels does not hold a number plus two units. **Put the angular value on the detail line beneath with the interval, not beside the lead number**, and put the label above or left of the number, the same way every time.
+
+**c. Five figure rows, three different shapes.** Mean radius and Sigma put the number on a line of its own; Extreme spread, CEP 90 and Group width by height put the label left and the number right. Pick one pattern and apply it to all five. The concept's stack is the guideline here and it uses one.
+
+**d. The zero correction block is five kinds of thing in one voice.** It holds two readouts, an uncertainty, a finding in bold, a statistical note about degrees of freedom, and an instruction about choosing a rifle. Separate them by what they are: the readouts as readouts, the finding as the block's verdict, and the two notes quieter or behind a disclosure. The finding is the line that matters and it is currently the same size as the note beneath it.
+
+**e. The section headings are the only structure and the least visible thing on the panel.** `ZERO CORRECTION` and `GROUP` are small dim capitals. They are carrying the whole hierarchy. Give them enough weight, or a rule above them, to actually divide the column.
+
+**f. The two zero readouts do not align.** `0.097 in  0.37 MOA left` over `0.060 in  0.23 MOA high`: the linear and angular values start at different x positions because the line is laid out as text. These are exactly the tabular figures section 19 asks for, in columns.
+
+**None of this changes a number or a word of the statistics.** It is typography, alignment and grouping. Do not take it as licence to reword the findings, which are the product of entries 91, 92, 103 and 104.
+
+### 3. The composite plot should say what the cursor is over
+
+Alan wants a tooltip naming what is under the pointer: which shot and which bull it came from, what the dashed circle is, and so on. **Most of what this needs is already in `CompositePlot`.** `Pick(Point)` resolves a shot within its drawn circle and the extreme-spread line within six pixels; `PlotDisc`, `Cep50Inches`, `Cep90Inches`, `Centre` and `SpreadPair` are all held on the control.
+
+**What to add.**
+- **A `Describe(Point)` beside `Pick`**, resolving in the same priority order and then continuing past it: a shot, then the extreme-spread line, then the group centre, then the CEP 50 and CEP 90 circles within a few pixels of the stroke, then the bull's rings, and nothing when the pointer is on empty paper. Update `ToolTip` on pointer move.
+- **`PlotShot` does not carry the bull, and Alan asked for it by name.** It is `(Id, Label, Offset, Excluded)`. Add the bull so the tooltip can read, for example, "Shot 3, bull 14. 0.591 in across, 0.303 in down, 0.778 in from the group centre." **The offset table on the left has the same gap**: its columns are shot, across, up/down, radius, and a reader cannot get from a row back to a bull on the sheet. Add the bull there too.
+- **Say what a thing is, not only its value.** "CEP 90: half of a very large number of shots from this rifle would land inside this circle nine times in ten" is the sort of line that earns a tooltip. The figure is already in the stack; the tooltip's job is to connect the ring on the screen to it.
+- **An excluded shot says so in its tooltip**, since it is drawn differently and the difference needs a name.
+
+**Two things the screenshot shows that a tooltip does not fix.**
+- **The same shot mark reads as two different objects depending on what is behind it.** Shots over the bull's white disc render light pink; the two outside it render dark maroon on the dark background. They are the same kind of thing and must look it. Give every shot the same outline weight and colour and a halo behind it, the way `Marks.MarkHalo` already does on the marking canvas.
+- **The legend is text with no swatches**, set small and dim, centred at the bottom of a wide empty area, far from anything it names. A reader cannot tell which of the two dashed circles is CEP 50. Make it a key: the mark as drawn, then its name, beside the plot rather than stranded under it. **A tooltip helps the person who already suspects there is something to hover over. The key is what tells them.**
+
+### 4. The application mark: Alan chose A
+
+**Decided.** Two concentric rings in the neutral grey and three overlapping amber holes sitting up and to the right of centre, overlapping enough that the middle of the group is solid. It was chosen from eight candidates and then six combinations, each drawn large, at 32 and 16 pixels, and on both themes. **The off-centre group is the idea**: GroupLab exists to show where a rifle actually hits against where it was aimed.
+
+**The source, exactly as chosen.** Commit it as `src/GroupLab.App/Assets/grouplab-mark.svg`, and the light variant beside it:
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>GroupLab</title>
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#6b727b" stroke-width="6"/>
+  <circle cx="50" cy="50" r="21" fill="none" stroke="#6b727b" stroke-width="6"/>
+  <circle cx="61.94" cy="32.75" r="11" fill="#e0912f"/>
+  <circle cx="52.75" cy="41.94" r="11" fill="#e0912f"/>
+  <circle cx="65.31" cy="45.31" r="11" fill="#e0912f"/>
+</svg>
+```
+
+**The light variant** is the same geometry with the rings at `#8f8b83` and the holes at `#a9660f`, the light theme's amber.
+
+**The wordmark: GROUP in grey, LAB in amber, beside the mark.** Alan chose this after seeing other treatments. It is set in Poppins Bold, **converted to outlines**, so the lockup needs no font at runtime and nothing new is bundled. Poppins is under the SIL Open Font License, which permits that. Its cap height is 44 percent of the mark's height, centred on it.
+
+- **Dark theme:** rings `#6b727b`, holes and LAB `#e0912f`, GROUP `#8a9199`. **GROUP is deliberately lighter than the rings.** At the ring grey, the word measures about 3.5:1 on the panel colour, which holds for large bold text and turns faint at header size. This was a choice made while drawing it, not something Alan asked for, so it can go back to the ring grey if he prefers one grey.
+- **Light theme:** rings `#8f8b83`, holes and LAB `#a9660f`, GROUP `#6f6b64`, darker than the rings for the same reason in reverse.
+
+**Four files are delivered beside this entry in the inbox**, and they are the source of truth. Move them into `src/GroupLab.App/Assets/` and delete them from the inbox with the entry:
+
+| Inbox file | Becomes |
+|---|---|
+| `entry-105-grouplab-mark-dark.svg` | `grouplab-mark.svg` |
+| `entry-105-grouplab-mark-light.svg` | `grouplab-mark-light.svg` |
+| `entry-105-grouplab-lockup-dark.svg` | `grouplab-lockup.svg` |
+| `entry-105-grouplab-lockup-light.svg` | `grouplab-lockup-light.svg` |
+
+**The header uses the lockup**, at about 26 pixels tall, in place of the plain GroupLab crumb, and the breadcrumb continues after it. **The icon uses the mark alone**, since a word cannot survive at 16 pixels.
+
+**Where it goes in the application.**
+- **The header**, as the lockup above, taking the place of the amber "GL" and plain title the concept shows.
+- **The rail's top slot**, where `\u25c9` stands in today.
+- **The window icon**, per item 5.
+- **The colours are tokens**, not literals: the grey is the rail and ring grey and the amber is `Tokens.Amber` in each theme, so the in-app mark follows the theme. The icon files cannot follow a theme and use the dark variant, whose grey and amber both hold contrast on a light taskbar as well as a dark one.
+
+**`DESIGN.md` section 19's identity rule holds**: the mark is GroupLab's own, not a Pissin Hot Precision mark.
+
+### 5. The executable has no icon at all
+
+There is no `.ico` in the repository and no `ApplicationIcon` in `GroupLab.App.csproj`, so the build ships the default. Once item 4 lands:
+
+- **Windows:** an `.ico` carrying 16, 24, 32, 48, 64 and 256 pixel images, each one drawn at its size rather than downsampled from the largest, because the 16 pixel image is the one Windows shows in the taskbar and the title bar. Set `ApplicationIcon` in the csproj and the window's own `Icon`.
+- **The other two platforms, since CI builds them:** a PNG set for Linux and an `.icns` for macOS, from the same SVG.
+- **The source of truth is the SVG**, committed, with the raster sets generated from it by a script in the repository rather than hand-exported, so the mark can be changed in one place.
+- **A test that the icon files exist and that the window sets one**, in the manner of the other App tests.
+
+### 6. The work bar should be on a toggle, not always present
+
+The stage timeline is docked at the bottom permanently and takes a strip of vertical space on both screens. Alan wants it shown and hidden by a button in the top bar. **The button already exists**: the analysis state's header carries **Show work**, which is exactly the right control and currently does something else or nothing.
+
+- **Show work toggles the bar**, the button shows which state it is in, and the choice is remembered in `AppSettingsStore` alongside `moreFiguresOpen`.
+- **Give the editor state the same control.** The first screenshot is the marking screen and the bar is there too.
+- **One rule from `DESIGN.md` section 19 must survive this**, and it is the reason to be careful:
+
+> the trace must never be the only place an error appears, so a failed stage produces a normal prominent error with the trace as the detail behind it
+
+**So a hidden bar must never hide a failure.** When a stage fails while the bar is collapsed, the error appears where errors appear, and the bar should draw attention to itself rather than stay silent. Test that a failed stage is visible with the bar hidden.
+
+**Default it open or closed as you judge**, but say which you chose and why in the write-up.
+
+### 7. The calibre input reads 36 of 44 common calibre names as the wrong diameter
+
+**Alan sent two lists of bullet diameters and asked that every one be accepted by the calibre input:** 31 rifle and 13 pistol, 44 rows in all, 42 distinct name and diameter pairs once the two shared rows are counted once. They are in the table at the end of this section.
+
+**I ran every row through a transcription of `Calibre.Parse` as it stands at `c2bed06`.** Typed as a diameter, all 44 read correctly: the numeric path is sound. **Typed as the name a shooter would type, 36 of 44 read wrong.** The pick list has twelve entries, so almost everything falls through to the leading-number rule, and that rule reads a calibre name as if it were a diameter, which it usually is not.
+
+| Typed | Reads as | Actually | Error, in |
+|---|---|---|---|
+| 38 Cal. | 0.380 | 0.357 or 0.358 | **+0.023** |
+| 32 Cal. (pistol) | 0.320 | 0.312 | +0.008 |
+| 44 Cal. | 0.440 | 0.430 | +0.010 |
+| 7.62mm | 0.300 | 0.310 | −0.010 |
+| 400 Cal. | 0.400 | 0.410 | −0.010 |
+| 50 Cal. (rifle) | 0.500 | 0.510 | −0.010 |
+| 6.5mm | 0.2559 | 0.264 | −0.0081 |
+| 30 Cal. | 0.300 | 0.308 | −0.008 |
+| 270 Cal. | 0.270 | 0.277 | −0.007 |
+
+and so on through the list; only 338, 9.3mm, 375, 416, 423, 505, 41 and pistol 50 happen to come out right.
+
+**This is not cosmetic.** The calibre drives three things (entry 24 section 5): edge-to-edge extreme spread, which adds one diameter, the snap radius, and the flag on a hole too large for the calibre. **Somebody who types "38" gets an edge-to-edge figure 0.023 in too large and an oversize threshold set for a bullet that does not exist.** The input does tell them what it read, "Read as a 0.380 in bullet diameter", which is honest, but a shooter who typed their calibre has no reason to doubt it.
+
+**Eight names mean more than one diameter, so no parser can get them right from the name alone:**
+
+| Name | Diameters |
+|---|---|
+| 30 Cal. | 0.308, 0.309 |
+| 303 Cal. | 0.3105, 0.312 |
+| 32 Cal. | 0.312, 0.321 |
+| 35 Cal. | 0.355, 0.357, 0.358 |
+| 38 Cal. | 0.357, 0.358 |
+| 45 Cal. | 0.451, 0.452, 0.454, 0.458 |
+| 50 Cal. | 0.500, 0.510 |
+| 9mm | 0.355, 0.356 |
+
+**And one the existing pick list already disagrees with.** `Common` has `".308, 7.62 mm"` at 0.308, which is right for 7.62x51. Alan's list has `7.62mm` at 0.310, which is right for 7.62x39. Both are real, so **7.62 is a ninth ambiguous name** once both are in the table.
+
+**What to build.**
+- **The pick list becomes the full table**, every pair below, each shown as its name and its diameter together, "35 Cal. .357", because the diameter is the only thing that tells two 35s apart. Rifle and pistol can be grouped or merged; the diameter is what matters.
+- **Keep the existing cartridge entries** (".17 HMR", ".22 LR", ".223 Rem, 5.56 NATO", ".270 Win" and the rest) as names that resolve to the same diameters. Nobody should lose a name they already use.
+- **A name that means one diameter resolves to it.** "270", "6.5mm", "6.5 mm", "8mm", "10mm", "9.3mm", "5.45" should all land on the table's diameter. Match tolerantly: case, a space before "mm", "Cal" with or without the full stop, a leading point.
+- **A name that means several diameters does not pick one.** It shows the candidates with their diameters and asks. Silently choosing the commonest is exactly the error this section exists to remove, just rarer.
+- **A typed diameter always wins**, read exactly as now. All 44 already read correctly that way.
+- **The leading-number rule stays as the fallback** for text that matches nothing, which is where the wildcats entry 24 section 5 cared about will land, and it keeps saying what it read.
+- **Tests: every one of the 44 rows**, once typed as its name and once as its diameter, and each of the nine ambiguous names returning candidates rather than a calibre. `CalibreTests.cs` is where these go.
+
+**The table**, from Alan's two lists, diameters in inches:
+
+| Rifle | | | Pistol | |
+|---|---|---|---|---|
+| 17 Cal. | .172 | | 30 Cal. | .309 |
+| 20 Cal. | .204 | | 32 Cal. | .312 |
+| 5.45 Cal. | .2215 | | 9mm | .355 |
+| 22 Cal. | .224 | | 9mm | .356 |
+| 6mm | .243 | | 38 Cal. | .357 |
+| 25 Cal. | .257 | | 38 Cal. | .358 |
+| 6.5mm | .264 | | 10mm | .400 |
+| 270 Cal. | .277 | | 41 Cal. | .410 |
+| 7mm | .284 | | 44 Cal. | .430 |
+| 30 Cal. | .308 | | 45 Cal. | .451 |
+| 7.62mm | .310 | | 45 Cal. | .452 |
+| 303 Cal. | .3105 | | 45 Cal. | .454 |
+| 303 Cal. | .312 | | 50 Cal. | .500 |
+| 32 Cal. | .321 | | | |
+| 8mm | .323 | | | |
+| 338 Cal. | .338 | | | |
+| 35 Cal. | .355 | | | |
+| 35 Cal. | .357 | | | |
+| 35 Cal. | .358 | | | |
+| 9.3mm | .366 | | | |
+| 375 Cal. | .375 | | | |
+| 400 Cal. | .410 | | | |
+| 405 Cal. | .411 | | | |
+| 416 Cal. | .416 | | | |
+| 423 Cal. | .423 | | | |
+| 44 Cal. | .430 | | | |
+| 45 Cal. | .452 | | | |
+| 45 Cal. | .458 | | | |
+| 470 Cal. | .474 | | | |
+| 505 Cal. | .505 | | | |
+| 50 Cal. | .510 | | | |
+
+### 8. Sighters ignored by default, analysed only when asked for
+
+**Alan's decision:** sighter targets are optional. **By default they are ignored entirely**, and there is an option to analyse them as well.
+
+**Where it stands at `c2bed06`.** Sighters are already kept out of the figures and the plot: `CompositePlot` says "Sighters are never given to it", and the figure count in `MainWindow` leaves them out. **But they are not ignored.** They still generate work and noise everywhere else, which is what Alan has been reporting since his first complaint about "a lot of warnings for the sighter bulls at the bottom":
+- **Review items.** `ReviewQueue`'s contested and oversize passes run over every shot. The analysis screenshot shows the result: "1 mark flagged as possibly two holes: Shot S1b covers about 1.4 holes' area", a review item about a shot that affects no figure on the screen.
+- **Counts.** The marking screen's header reads "14 shots" and "0 of 14 need review" for a sheet with 10 scoring shots and 4 sighters.
+- **The canvas** draws S1a, S1b, S2 and S3 with the same marks and labels as the scoring shots.
+
+**The one thing "ignored" must not mean: do not stop detecting or assigning them.** Sighter holes still have to be found and matched to the sighter bulls, because that is what keeps them out of the scoring bulls. The sighter row sits directly under bulls 21 to 25 on the standard sheets, and the sighter-pooling defect was exactly a sighter shot ending up in the wrong pool. **Drop the sighter pool and a hole under S2 becomes a candidate for bull 22.** So detection and one-to-one matching run over the whole sheet as now, and "ignored" is everything after that.
+
+**By default, with sighters ignored.**
+- **No review item that concerns only sighter bulls**: no oversize flag on a sighter mark, no count question, no contested item between two sighters.
+- **A contested item between a sighter bull and a scoring bull still appears**, because the scoring bull's shot depends on it. This is the case to test hardest.
+- **Counts are scoring shots only**, in the breadcrumb, the review pill and anywhere else a shot count is shown.
+- **The canvas shows sighter marks faint and unlabelled, or not at all**, your judgement. They should read as "found and set aside", not as work.
+- **The marking still stores them.** Because detection ran, turning the option on later needs no new detection and loses no edits.
+
+**With sighters analysed.**
+- **They become their own group with their own figures and are never pooled with the scoring shots.** That is the rule entry 73 section 1's sighter fix established and it holds in both modes.
+- **Their own zero readout is the useful part.** Sighters are usually fired to confirm zero before the group, so the offset from aim is what a shooter wants from them. With three or four sighters, `MinimumShotsForDispersion` withholds the dispersion figures, and the zero block's existing "not distinguishable from zero at N shots" answer is the honest result. Nothing new is needed for that.
+- **Their review items return**, since they now affect figures on screen.
+
+**The control.**
+- **One toggle, "Analyse sighters", off by default**, remembered in `AppSettingsStore` the way `moreFiguresOpen` is.
+- **The CLI `analyze` verb follows the same default** with a flag to include them, so the command line and the window agree.
+- **A sheet with no sighter bulls shows no toggle**, or shows it disabled with the reason.
+
+**Tests.** With sighters ignored: no review items and no oversize flags from sighter marks, counts that exclude them, and a contested sighter-to-scoring item that still appears. With them analysed: a separate group, never pooled. And turning the option on after marking restores their items without a new detection.
+
+**Record the decision in `DESIGN.md`**, section 13 on assignment and section 14 on statistics, so a later reader knows sighters are ignored by choice and not by oversight.
+
+### 9. The Print button reports a print dialog it cannot guarantee, and on Alan's machine none appeared
+
+**What happened.** On the print screen, with "GroupLab Zeroing Grid, mil at 100 yd" selected, Alan pressed **Print...**. The status line turned green and read "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%." **No print dialog opened.**
+
+**What the code does.** `PrintLaunch` on Windows starts the saved PDF with `UseShellExecute = true, Verb = "print"`, and `Process.Start` returning without an exception is taken as success: the green status is set and nothing is logged. The fallback, opening the PDF in the viewer, runs only when Windows reports that no print verb is registered. **Here a print verb was registered, it ran, and the screen said a dialog would follow.**
+
+**Why that cannot be relied on.** The `print` verb is whatever command the default PDF application registered for it. GroupLab cannot see what that command does. Depending on the application it can show a print dialog, show one behind GroupLab's window or on another monitor while the application itself stays hidden, **print straight to the default printer at the application's own default scaling**, or appear to do nothing. No Windows shell verb means "show the print dialog", and `printto` is no better. **The status line promises a dialog the code has no way to know about.** The worst of those outcomes is the one the print screen exists to prevent: a sheet printed with nobody choosing Actual size, possibly at a shrink-to-fit scale. The screen's own warning says a sheet printed at 97 percent measures 3 percent small.
+
+**What to do.**
+- **Stop using the print verb.** The button opens the PDF in the default viewer, `UseShellExecute = true` with no verb, on every platform. The status says what is true: "The target is open in your PDF viewer. Print it from there, choosing Actual size or 100 percent, never Fit." This is what the fallback already does, so the path is proven. It becomes the only path.
+- **Name the button for what it does.** "Open to print" or similar, not "Print...". A label that ends in an ellipsis says a dialog is coming.
+- **Log the launch on success, not only on failure:** the path, the verb or its absence, and that it returned. Today a successful launch leaves no trace, which is why this report cannot be diagnosed from the log.
+- **`PrintLaunch`'s comment and its tests** change with it. The comment documents the verb at length, and entry 61 section 3 and the correction to it recorded in entry 65 both shaped this code, so read them before rewriting it.
+
+**Not now: printing from inside GroupLab.** A print path GroupLab owns would let it set actual size itself, which is the real fix for the 97 percent problem. Avalonia has no printing API, though, so this means Windows' own print APIs and rasterising the PDF at the printer's resolution. **That is a separate decision with a real cost.** If it looks cheaper than I expect, raise it as a question. Do not build it under this item.
+
+**Test:** the launch uses no verb on any platform, and the status line no longer mentions a print dialog.
+
+---
+
 ## 2026-09-18, entry 104: question 19 confirmed and my error behind it, the flyer card's exceedance measured, and the render that was never made dark
 
 **Status: actioned 2026-09-18.**

@@ -63,6 +63,9 @@ public static class AppStyles
     public const string KeycapText = "keycap-text";
 
     /// <summary>The review card: amber-tinted, because it is the thing that needs a person (entry 97 section 1).</summary>
+    /// <summary>A heading with a hairline above it, entry 105 section 2.</summary>
+    public const string Ruled = "ruled";
+
     public const string ReviewCard = "review-card";
 
     /// <summary>
@@ -146,7 +149,8 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(FormError), (TextBlock.ForegroundProperty, Brush(p.ErrorText))),
         Rule(x => x.OfType<TextBox>().Class(":disabled"), (TemplatedControl.ForegroundProperty, Brush(p.Disabled))),
         Rule(x => x.OfType<Window>(), (TemplatedControl.BackgroundProperty, Brush(p.Bg)), (TemplatedControl.ForegroundProperty, Brush(p.Text)), (TemplatedControl.FontFamilyProperty, Tokens.Sans), (TemplatedControl.FontSizeProperty, Tokens.BodySize)),
-        Rule(x => x.OfType<TextBlock>().Class(Section), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing), (TextBlock.ForegroundProperty, Brush(p.Faint))),
+        Rule(x => x.OfType<TextBlock>().Class(Section), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing), (TextBlock.ForegroundProperty, Brush(p.Dim))),
+        Rule(x => x.OfType<Border>().Class(Ruled), (Border.BorderBrushProperty, Brush(p.Line2))),
         Rule(x => x.OfType<TextBlock>().Class(Secondary), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),

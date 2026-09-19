@@ -110,7 +110,8 @@ public class MarkingScreenTests
             window.Session.SetShotDistance(UnitSettings.DistanceToInches(100, DistanceUnit.Metre));
             string mil = UnitSettings.Metric.AngleText(meanRadius, window.Session.State.ShotDistanceInches)!;
             Assert.EndsWith(" mil", mil, StringComparison.Ordinal);
-            Assert.Contains(window.StatisticsText, t => t.EndsWith(mil, StringComparison.Ordinal));
+            // Entry 105 section 2: the angular value leads the line beneath its figure, with the interval after it.
+            Assert.Contains(window.StatisticsText, t => t.StartsWith(mil, StringComparison.Ordinal));
             string written = MarkingFile.Write(window.Session.State);
 
             window.SetUnits(UnitSettings.Imperial);
