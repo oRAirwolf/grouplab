@@ -4953,7 +4953,7 @@ Linux and macOS show Open to print and Save PDF only, as before.
 - **Every built-in sheet on those papers, and on A3 and Tabloid, passes the margin check.**
 - **The three roll sheets are refused on paper,** because neither printer takes their sizes: GL-LR300-R24 at 24 by 28 in, R36 and R42.
 
-**The CI runner.** The Windows job lists the installed printers into the run summary before it builds, and says whether "Microsoft Print to PDF" is there, so the printed-size test either runs or is skipped with its reason. What the runner has is recorded below once the run reports.
+**The CI runner.** The Windows job lists the installed printers into the run summary before it builds, and says whether "Microsoft Print to PDF" is there, so the printed-size test either runs or is skipped with its reason. **The first run answered it: `windows-latest` has one printer, "Microsoft Print to PDF", so the printed-size test runs and passes on CI**, Core 905 with none skipped. Linux and macOS skip that one test with its reason, Core 904 and one skipped, and App 80 on all three.
 
 **The check by hand, on paper.** The size test covers the PDF printer and runs on this machine. The check that matters on paper is:
 1. In GroupLab, open the print screen, choose "GroupLab 5x5 Load Development, Letter" (GL-CF25-LTR), and click **Print…**.
