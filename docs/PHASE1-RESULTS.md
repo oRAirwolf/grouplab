@@ -5161,6 +5161,68 @@ Set to answered, pointing at entry 110.
 
 **Tests:** Core 938 and App 85 passing, none skipped.
 
+## Entry 111. Questions 24 and 25 answered, four small screen fixes, and the paths ready for the range material
+
+`docs/NOTES-FROM-PLANNING.md` entry 111, every numbered section. Nothing from the range material was processed, as section 4 says.
+
+### Section 1: the standard G1 and G7 tables
+
+**The second transcription.** The rule needs one that is not a copy of py-ballisticcalc's. py-ballisticcalc's own README gives its lineage: Nikolay Gekht's C# port of JBM Ballistics' C code. So anything in that line, including the gehtsoft ports and projects copied from them, would not do. I searched for tables with another lineage:
+- **poncelet**, MIT, carries G1 and G7 as it took them from JBM's published `mcg1.txt` and `mcg7.txt`, attributed there to McCoy's *Modern Exterior Ballistics* appendix A. It reached JBM's tables through JBM's text files, not its code, and not through py-ballisticcalc.
+- **W. J. Jurens's naval tables,** in `master_exterior_ballistics`, have another lineage again, but carry only artillery functions, no G1 or G7.
+
+**The two agree at every point:** 79 of 79 in G1 and 84 of 84 in G7, Mach and Cd, to the four decimals both publish. None disagreed, so none had to be listed.
+- **Committed:** both, as the strings they print, in `reference/drag-tables`, each with its source file, commit and licence. The carried tables were generated from them.
+- **`DragTableSourceTests`** holds the carried tables to both, point by point.
+- **Named** in the code and in `docs/BALLISTICS-VALIDATION.md` section 3, which says plainly that both trace to McCoy through JBM, by different routes.
+
+**What changed against ballistics.js:**
+- **G1:** 60 of 79 points differ above Mach 0.85.
+- **G7:** it agreed below Mach 3.5; the standard carries 84 points to its 73 and differs at Mach 3.5, 4.0 and 5.0.
+- **The JavaScript's own tables** stay only for the transcription check's compatible mode, which still matches all 66 rows. The standard tables are listed there as an intentional difference.
+
+**The gate, rerun with the tolerances committed before the first run, unchanged: every case passes.**
+
+| Case at 1000 yd | Drop, port | Drop, py-ballisticcalc | Before the change |
+|---|---|---|---|
+| .308 168 gr G1 | 40.327 MOA | 40.333 MOA | 31.770 MOA |
+| 6mm 105 gr G1 | 28.470 MOA | 28.474 MOA | 22.696 MOA |
+
+The largest share of any allowance used across all six cases is 4 percent for drop and wind and 7 percent for time of flight. **The two known-failure markers are removed**, and the gate test holds every case. The README's Phase 5 solver line is now **Built, not proven**: it is validated, and not yet in the interface.
+
+### Section 2: the Coriolis vertical term
+
+**Ported with the sign corrected:** half of 2ΩV cos(latitude) sin(azimuth) times t², positive up, with V the average horizontal speed. `BallisticInput` gains the azimuth, and `grouplab trajectory` gains `--azimuth` and a column for the term.
+- **Tests:** due east rises and due west falls by the same amount, north and south give zero, and 45 degrees north, east, 1000 yd and 1.6 s gives +2.97 in. Through the solver the same holds, with the rise above 2.5 in at 1000 yd for the .308 case.
+- **"Aerodynamic jump is not modelled."** is now the only sentence under the solver's output.
+- **DESIGN.md section 16** records the five corrections, so no later reader restores the JavaScript's behaviour: the G1 table, the shooting angle, aerodynamic jump left out, the Coriolis vertical sign, and the wind direction.
+
+### Section 3: four things on the screens
+
+- **Enum names.** The exclusion reasons read "Called flyer", "Bad round" and "Pulled shot", in the list and in "excluded as called flyer". The saved marking keeps the enum's name, which is a file format.
+  - **`NoEnumNameReachesAPerson`** walks every screen and fails on any compound enum name anywhere a person reads: the marking screen with a shot excluded and selected, every stage of the timeline, the analysis with every "why" open, and the settings.
+  - **It found a second leak on its first run:** the assignment stage's decision in Show work read "Decided assignment: OneToOne". It now reads "one-to-one matching".
+  - Two older tests had pinned "excluded as CalledFlyer" and now expect the words.
+- **Each "why" takes no row of its own.** It is a small "why ▸" set beside the last line of the item it explains, in room the line leaves for it, and it opens the explanation beneath the item.
+  - It is a plain button rather than a toggle, because the theme paints a checked toggle amber, and amber means something needs a person.
+  - A test checks each sits in its item's row.
+- **The Load block.** Each label sits at the top of its row, so "Calibre" is beside the first line of ".308 in (7.82 mm), set after detection", not under the last.
+- **The shot count once.** The "Shots 24" row is gone; the sentence "24 shots: 24 detected." stays, since it also says how the shots were placed.
+
+The renders under `docs/figures/screens/current/` are regenerated.
+
+### Section 4: the paths for the range material
+
+**Nothing from `C:\Dev\grouplab-range-2026-09-20\` was read or processed.** Its photographs carry location data, so they go through the intake tool first, under the next entry.
+
+| Path | Before this entry | Now |
+|---|---|---|
+| The Phase 1 detection gate over a folder of new scans, one command | Did not exist. `grouplab analyze` takes one image, and the gate records run over the fixed corpus folders | **Built:** `grouplab analyze-folder <directory> [--markings <directory>]`. One line per image: the definition its codes named, markers found of expected, holes detected, review items open, registration residual and time. With `--markings`, each result is saved as a marking file, which once corrected in the screen is that sheet's truth pass. |
+| The Phase 3 timing on one sheet, one command | Did not exist. Entry 84's rehearsal measured only the software's share | **Built:** `grouplab timing <log file>`. It reads the log GroupLab already writes, and for each image opened prints the seconds from the marks appearing to Accept and analyse, the seconds from opening, the review choices made and the items left open. The gate is two minutes by a person, so this reports the time and judges nothing. |
+| The blank-paper route | Not started, and its gate names the material it needs | **Not built**, as the entry says. The blank sheet shot at a marker dot, photographed with a tape measure across it, is the material the gate names. |
+
+**Tests:** Core 944 and App 87 passing, none skipped.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5413,3 +5475,8 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 110 section 2a: the Coriolis vertical term held out rather than ported with its sign corrected.** The entry said to port it as it stands, so the conflict is a question, not a quiet fix.
 - **Entry 110 section 2c: aerodynamic jump left out, over Litz's fit from memory.** The entry required the coefficients from the publication, which was not to hand.
 - **Entry 110 section 2b: the rifle zeroed on the flat and then tilted, over zeroing at the shooting angle.** A rifle is zeroed at a range and then carried to the hill.
+- **Entry 111 section 1: poncelet as the second transcription, over the gehtsoft ports.** Those are py-ballisticcalc's own ancestry, so agreeing with them would prove nothing; poncelet reached JBM's McCoy tables through JBM's files.
+- **Entry 111 section 1: the JavaScript's tables kept only for the compatible mode, over deleting them.** The transcription check compares the port with the file as it is, and that needs the file's tables.
+- **Entry 111 section 3: "why" as a plain button beside the item's last line, over a toggle.** The theme paints a checked toggle amber, and an open explanation needs no one's attention.
+- **Entry 111 section 3: the count kept in the placement sentence, over the "Shots" row.** The sentence carries the count and how the shots were placed; the row carried the count alone.
+- **Entry 111 section 4: the timing read from the log, over a stopwatch in the window.** The log already records every step with its time and no path, so the measurement needed no change to the application.

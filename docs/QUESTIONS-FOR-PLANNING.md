@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-19, question 25: ballistics.js's G1 table is not the standard G1 function, so every G1 load fails the independent gate
 
-**Status: open.** Blocks the Phase 5 gate for G1, and matters now for the website, which serves this table to every visitor. G7 passes the gate. Meanwhile the port carries the JavaScript's table as entry 110 section 2a says, and the gate test holds the two G1 cases as named known failures, not by any widening of the tolerance.
+**Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 111 section 1: option A. The standard G1 and G7 tables are carried, the values two independent transcriptions agree on, and G1 now passes the gate under the tolerances as first committed.
 
 ### 1. What the comparison found
 
@@ -55,7 +55,7 @@ The JavaScript's supersonic G1 is a different curve, about 8 percent high near M
 
 ## 2026-09-19, question 24: ballistics.js's Coriolis vertical term has its sign reversed, and a smaller wind-direction fault beside it
 
-**Status: open.** Blocks only the Coriolis vertical term, which the port leaves out meanwhile. Everything else in entry 110 section 2 is built.
+**Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 111 section 2: option A. The Coriolis vertical term is ported with its sign corrected. The signed crosswind and the reading of the BC reference atmosphere are accepted, and aerodynamic jump stays out until the fit is checked against its page.
 
 ### 1. The conflict
 

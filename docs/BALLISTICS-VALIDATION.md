@@ -8,10 +8,11 @@ The cases are in `reference/ballistics-cases.json`: six flat-fire loads across G
 
 **What it proves.** That the port does what the JavaScript does. It says nothing about whether either is right, because the two share an author, a method and tables.
 
-**How.** The JavaScript, unchanged at `reference/ballistics-js/ballistics.js`, is run under Node on GitHub's runners by `reference/ballistics-js/cases.js`, and its output is committed as `tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json`. The CI job for Linux runs it again and fails if the output differs from the committed file. The port is run in its JavaScript-compatible mode for this check, which reproduces the three places where it deliberately differs on a flat trajectory:
+**How.** The JavaScript, unchanged at `reference/ballistics-js/ballistics.js`, is run under Node on GitHub's runners by `reference/ballistics-js/cases.js`, and its output is committed as `tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json`. The CI job for Linux runs it again and fails if the output differs from the committed file. The port is run in its JavaScript-compatible mode for this check, which reproduces the four places where it deliberately differs on a flat trajectory:
 - it records the first integration step at or past each range;
 - it finds the zero with first-order steps;
-- it does not interpolate.
+- it does not interpolate;
+- it flies the JavaScript's own drag tables, where the solver flies the standard ones (section 3).
 
 So the comparison is made at the JavaScript's own sampled positions.
 
@@ -49,6 +50,26 @@ The allowance is one rounding unit, not half of one, because a value lying on a 
 
 **These apply at every range from 100 to 1000 yd in every case, supersonic or not.** If a case fails, it is reported as failing, with its numbers. The tolerance is not widened after the fact.
 
-## 3. What the port deliberately does differently from ballistics.js
+## 3. The drag tables, and where their values come from
 
-`docs/PHASE1-RESULTS.md` "Entry 110" lists each difference with the case that shows it.
+`docs/NOTES-FROM-PLANNING.md` entry 111 section 1 sets the rule. ballistics.js's G1 table is not the standard G1 function above Mach 0.85, which is why both G1 cases failed the gate on the first run.
+
+**Neither McCoy's *Modern Exterior Ballistics* nor the BRL report was to hand.** So the tables carried are the values two independent transcriptions of the standard functions agree on, and a test holds the carried tables to both, point by point, at the four decimals they publish. Both transcriptions are committed in `reference/drag-tables`, as the strings they print:
+- **py-ballisticcalc 2.3.1,** `py_ballisticcalc/drag_tables.py`, `TableG1` and `TableG7`. Its route to the tables is Nikolay Gekht's C# port of JBM Ballistics' C code.
+- **poncelet,** `src/drag_tables.cpp` at commit `f076563e`, `kG1` and `kG7`. It attributes its tables to the BRL and McCoy tabulations that JBM Ballistics distributes as `mcg1.txt` and `mcg7.txt`, McCoy's appendix A. It reached them through JBM's published text files.
+
+**Neither is a copy of the other.** Both trace back to McCoy's tables through JBM, one through JBM's code and one through JBM's files, so they share a source but not a transcription.
+
+**They agree at every point:** all 79 of G1 and all 84 of G7, Mach and Cd alike. No point disagreed, so there was nothing to stop on.
+
+**Against the standard tables:**
+- **ballistics.js's G1** differs at 60 of the 79 points above Mach 0.85.
+- **Its G7** agrees wherever it has a point below Mach 3.5, but has 73 points to the standard's 84 and differs at Mach 3.5, 4.0 and 5.0.
+
+The solver carries the standard 79 and 84, and the transcription check flies the JavaScript's own for its own comparison.
+
+**The gate after the change.** Rerun with the tolerances of section 2, as committed before the first run and unchanged, every case passes, G1 as well as G7. The largest share of any allowance used is 4 percent for drop and wind and 7 percent for time of flight. The .308 G1 case reads 40.33 MOA at 1000 yd against the reference's 40.33, where it read 31.77 on the JavaScript's table. The two known-failure markers that held the G1 cases were removed.
+
+## 4. What the port deliberately does differently from ballistics.js
+
+`docs/PHASE1-RESULTS.md` "Entry 110" lists each difference with the case that shows it, and "Entry 111" adds the drag tables and the Coriolis vertical term.

@@ -82,7 +82,10 @@ public class BallisticsTranscriptionTests
         }
     }
 
-    /// <summary>The drag tables, as the JavaScript interpolates them, at every hundredth of Mach from 0 to 5.2, including past the tables' end.</summary>
+    /// <summary>
+    /// The JavaScript's own drag tables, which the compatible mode flies, as it interpolates them, at every hundredth of Mach from 0 to 5.2. The
+    /// solver itself flies the standard tables, an intentional difference (NOTES-FROM-PLANNING.md entry 111 section 1).
+    /// </summary>
     [Fact]
     public void TheDragTablesInterpolateAsTheJavaScriptDoes()
     {
@@ -92,7 +95,7 @@ public class BallisticsTranscriptionTests
             foreach (var pair in Fixture().GetProperty("tables").GetProperty(name).EnumerateArray())
             {
                 double mach = pair[0].GetDouble();
-                Same(failures, $"{name} at Mach {mach}", pair[1].GetDouble(), DragTables.Cd(mach, model));
+                Same(failures, $"{name} at Mach {mach}", pair[1].GetDouble(), DragTables.Cd(mach, model, javaScript: true));
             }
         }
 

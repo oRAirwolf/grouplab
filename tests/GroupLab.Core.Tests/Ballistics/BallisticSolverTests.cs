@@ -142,8 +142,8 @@ public class BallisticSolverTests
         Assert.Null(plain.Stability);
         Assert.All(plain.Points, p => Assert.Null(p.SpinDriftInches));
         Assert.All(plain.Points, p => Assert.Null(p.CoriolisInches));
-        Assert.Contains("Aerodynamic jump is not modelled.", plain.NotModelled);
-        Assert.Contains("The Coriolis vertical (Eötvös) term is not modelled.", plain.NotModelled);
+        Assert.Equal(["Aerodynamic jump is not modelled."], plain.NotModelled);
+        Assert.All(plain.Points, p => Assert.Null(p.CoriolisVerticalInches));
 
         var spun = BallisticSolver.Solve(Case with { TwistInches = 10, BulletDiameterInches = 0.308, BulletLengthInches = 1.24, LatitudeDegrees = 45 }, 1000, 500);
         Assert.NotNull(spun.Stability);
@@ -168,10 +168,31 @@ public class BallisticSolverTests
         Assert.Contains("59 F, 29.92 inHg, 50% humidity, crosswind 10 mph from the left, angle 0 degrees", text, StringComparison.Ordinal);
         Assert.Contains("   1000 ", text, StringComparison.Ordinal);
         Assert.Contains("Aerodynamic jump is not modelled.", text, StringComparison.Ordinal);
-        Assert.Contains("The Coriolis vertical (Eötvös) term is not modelled.", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("Coriolis vertical", text, StringComparison.Ordinal);
 
         Assert.Equal(2, GroupLab.Cli.TrajectoryVerb.Run(["--bc", "0.243"], new StringWriter(), error));
         Assert.Contains("--bc, --model, --mv and --weight are required", error.ToString(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 111 section 2, answering question 24: the Coriolis vertical term with its sign corrected. Fire due east
+    /// strikes high, due west low, north and south not at all, and at 45 degrees north, east, 1000 yd and 1.6 s it is about +3.0 in.
+    /// </summary>
+    [Fact]
+    public void TheCoriolisVerticalTermLiftsFireTowardTheEast()
+    {
+        double east = Stability.CoriolisVerticalInches(45, 90, 3000 / 1.6, 1.6);
+        Assert.Equal(3.0, east, 1);
+        Assert.Equal(7.2921e-5 * 3000 * 1.6 * Math.Cos(Math.PI / 4) * 12, east, 9);
+        Assert.Equal(-east, Stability.CoriolisVerticalInches(45, 270, 3000 / 1.6, 1.6), 9);
+        Assert.Equal(0, Stability.CoriolisVerticalInches(45, 0, 3000 / 1.6, 1.6), 9);
+        Assert.Equal(0, Stability.CoriolisVerticalInches(45, 180, 3000 / 1.6, 1.6), 9);
+
+        // Through the solver: fire toward the east rises, toward the west falls, by the same amount, and north not at all.
+        double Rise(double azimuth) => BallisticSolver.Solve(Case with { LatitudeDegrees = 45, AzimuthDegrees = azimuth }, 1000, 500).Points[^1].CoriolisVerticalInches!.Value;
+        Assert.True(Rise(90) > 2.5, $"east {Rise(90):0.00} in");
+        Assert.Equal(-Rise(90), Rise(270), 9);
+        Assert.Equal(0, Rise(0), 9);
     }
 
     [Fact]

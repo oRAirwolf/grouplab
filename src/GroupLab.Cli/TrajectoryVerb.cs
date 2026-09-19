@@ -14,7 +14,7 @@ public static class TrajectoryVerb
         grouplab trajectory --bc <bc> --model G1|G7 --mv <fps> --weight <grains> [--sight <in>] [--zero <yd>] [--max <yd>] [--step <yd>]
                             [--temp <F>] [--pressure <inHg> | --altitude <ft>] [--humidity <%>] [--wind <mph, + from the left>]
                             [--angle <degrees>] [--reference icao|asm] [--twist <in> --diameter <in> --length <in> [--left-twist]]
-                            [--latitude <degrees>]
+                            [--latitude <degrees> [--azimuth <degrees, 0 north, 90 east>]]
         """;
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
@@ -29,6 +29,7 @@ public static class TrajectoryVerb
         }
 
         double? bc = null, mv = null, weight = null, pressure = null, twist = null, diameter = null, length = null, latitude = null;
+        double azimuth = 0;
         DragModel? model = null;
         double sight = 1.5, zero = 100, max = 1000, step = 100, temp = 59, altitude = 0, humidity = 50, wind = 0, angle = 0;
         var reference = ReferenceAtmosphere.Icao;
@@ -63,6 +64,7 @@ public static class TrajectoryVerb
                     case "--diameter": diameter = Next(); break;
                     case "--length": length = Next(); break;
                     case "--latitude": latitude = Next(); break;
+                    case "--azimuth": azimuth = Next(); break;
                     case "--left-twist": direction = -1; break;
                     case "--reference":
                         reference = i + 1 < args.Length ? args[++i].ToLowerInvariant() switch
@@ -89,7 +91,7 @@ public static class TrajectoryVerb
         }
 
         var input = new BallisticInput(bc.Value, model.Value, mv.Value, weight.Value, sight, zero, temp, pressure, altitude, humidity, wind, angle, reference,
-            twist, direction, diameter, length, latitude);
+            twist, direction, diameter, length, latitude, azimuth);
         Trajectory trajectory;
         try
         {
@@ -111,14 +113,19 @@ public static class TrajectoryVerb
 
         bool spin = trajectory.Stability is not null, coriolis = latitude is not null;
         output.WriteLine();
-        output.WriteLine("  Range    Vel   Energy    Drop   Drop  Drop   Wind   Wind   TOF    Mach" + (spin ? "   Spin" : "") + (coriolis ? "  Coriolis" : ""));
-        output.WriteLine("     yd    fps    ft-lb      in    MOA   mil     in    MOA     s        " + (spin ? "     in" : "") + (coriolis ? "        in" : ""));
+        if (coriolis)
+        {
+            output.WriteLine(string.Create(inv, $"Coriolis at {latitude:0.#} degrees latitude, firing at azimuth {azimuth:0.#} degrees"));
+        }
+
+        output.WriteLine("  Range    Vel   Energy    Drop   Drop  Drop   Wind   Wind   TOF    Mach" + (spin ? "   Spin" : "") + (coriolis ? "  Coriolis  Coriolis" : ""));
+        output.WriteLine("     yd    fps    ft-lb      in    MOA   mil     in    MOA     s        " + (spin ? "     in" : "") + (coriolis ? "   right in     up in" : ""));
         foreach (var p in trajectory.Points)
         {
             output.WriteLine(string.Create(inv,
                 $"{p.RangeYards,7:0} {p.VelocityFps,6:0} {p.EnergyFtLb,8:0} {p.DropInches,7:0.00} {p.DropMoa,6:0.00} {p.DropMil,5:0.00} {p.WindInches,6:0.00} {p.WindMoa,6:0.00} {p.TimeOfFlight,5:0.000} {p.Mach,7:0.000}")
                 + (spin ? string.Create(inv, $" {p.SpinDriftInches ?? 0,6:0.00}") : "")
-                + (coriolis ? string.Create(inv, $" {p.CoriolisInches ?? 0,9:0.00}") : ""));
+                + (coriolis ? string.Create(inv, $" {p.CoriolisInches ?? 0,10:0.00} {p.CoriolisVerticalInches ?? 0,9:0.00}") : ""));
         }
 
         output.WriteLine();

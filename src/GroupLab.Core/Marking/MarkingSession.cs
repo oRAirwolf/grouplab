@@ -36,6 +36,24 @@ public enum ExclusionReason
 }
 
 /// <summary>
+/// An exclusion reason as a person reads it, NOTES-FROM-PLANNING.md entry 111 section 3: "Called flyer", never the enum's name "CalledFlyer".
+/// The saved marking keeps the enum's name, which is a file format, not something a person reads.
+/// </summary>
+public static class ExclusionReasons
+{
+    /// <summary>The reason as it starts a line or fills a list: "Called flyer".</summary>
+    public static string Words(this ExclusionReason reason) => reason switch
+    {
+        ExclusionReason.CalledFlyer => "Called flyer",
+        ExclusionReason.BadRound => "Bad round",
+        _ => "Pulled shot",
+    };
+
+    /// <summary>The reason inside a sentence: "excluded as called flyer".</summary>
+    public static string InSentence(this ExclusionReason reason) => reason.Words().ToLowerInvariant();
+}
+
+/// <summary>
 /// One impact on the image: its position in image pixels, where that came from, whether it is excluded and why, whether it has
 /// been marked as not a shot at all (a detection that was handwriting, a staple, a tear), and the bull it is assigned to, if any.
 /// <para>

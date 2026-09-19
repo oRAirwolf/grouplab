@@ -2,7 +2,8 @@ namespace GroupLab.Core.Ballistics;
 
 /// <summary>
 /// What a trajectory is computed from: the load, the sight, the zero, the air and the shot. Lengths are in inches, ranges in yards, speeds in
-/// ft/s, weights in grains, and the crosswind is signed, positive from the shooter's left, drifting the bullet to the right.
+/// ft/s, weights in grains, and the crosswind is signed, positive from the shooter's left, drifting the bullet to the right. The azimuth is the
+/// direction of fire, 0 north and 90 east, which only the Coriolis vertical term needs.
 /// </summary>
 public sealed record BallisticInput(
     double BallisticCoefficient,
@@ -22,7 +23,8 @@ public sealed record BallisticInput(
     int TwistDirection = 1,
     double? BulletDiameterInches = null,
     double? BulletLengthInches = null,
-    double? LatitudeDegrees = null)
+    double? LatitudeDegrees = null,
+    double AzimuthDegrees = 0)
 {
     /// <summary>Station pressure: as stated, or from the altitude by the ICAO troposphere.</summary>
     public double StationPressureInHg => PressureInHg ?? Atmosphere.PressureFromAltitude(AltitudeFt);
@@ -31,7 +33,7 @@ public sealed record BallisticInput(
 /// <summary>
 /// One row of a trajectory, at a range along the line of sight. Drop is the height of the bullet above the line of sight, negative below it,
 /// and its angle is positive when the bullet is low, the elevation to dial. Wind is the crosswind's drift, positive to the right. Spin drift and
-/// the Coriolis horizontal term are present only when their inputs are.
+/// the two Coriolis terms are present only when their inputs are; the vertical term is positive up.
 /// </summary>
 public sealed record TrajectoryPoint(
     double RangeYards,
@@ -46,7 +48,8 @@ public sealed record TrajectoryPoint(
     double WindMil,
     double Mach,
     double? SpinDriftInches = null,
-    double? CoriolisInches = null);
+    double? CoriolisInches = null,
+    double? CoriolisVerticalInches = null);
 
 /// <summary>A trajectory: its rows, the stability factor where the bullet is described, the zero's launch angle, and what is not modelled.</summary>
 public sealed record Trajectory(IReadOnlyList<TrajectoryPoint> Points, double? Stability, double ZeroAngleMoa, IReadOnlyList<string> NotModelled);
@@ -64,8 +67,11 @@ public sealed record Trajectory(IReadOnlyList<TrajectoryPoint> Points, double? S
 /// reported the line of sight's own rise, about 300 MOA per 5 degrees. Here range is measured along the line of sight and drop perpendicular to
 /// it, and the rifle is zeroed on the flat, as it is at a range.</item>
 /// <item><b>Aerodynamic jump is not modelled.</b> The JavaScript's term was not a published formula and ran the wrong way with stability.</item>
-/// <item><b>The Coriolis vertical term is not modelled</b> meanwhile: the JavaScript's sign is reversed (docs/QUESTIONS-FOR-PLANNING.md
-/// question 24).</item>
+/// <item><b>The Coriolis vertical term with its sign corrected</b>: fire toward the east strikes high, where the JavaScript had it low
+/// (docs/QUESTIONS-FOR-PLANNING.md question 24, answered by entry 111 section 2).</item>
+/// <item><b>The standard G1 table</b>, where the JavaScript's was not the standard function above Mach 0.85 (question 25, answered by entry 111
+/// section 1), and the standard G7 table's full 84 points.</item>
+/// <item><b>A signed crosswind</b>, where the JavaScript's extended solve added a wind from the right as drift to the right.</item>
 /// <item><b>Exact ranges.</b> Each row is interpolated to its range, where the JavaScript recorded the first step at or past it, up to 1.5 ft
 /// late.</item>
 /// <item><b>The zero by RK4</b>, on the same trajectory it is applied to, where the JavaScript zeroed with first-order steps.</item>
@@ -85,16 +91,18 @@ public static class BallisticSolver
     public const double MoaPerRadian = 180 / Math.PI * 60;
     public const double MilPerMoa = 0.290888;
 
-    /// <summary>The sentences every display of the solver's output carries, entry 110 section 2c and question 24.</summary>
+    /// <summary>
+    /// The sentence every display of the solver's output carries, entry 110 section 2c: aerodynamic jump stays out until its fit is checked
+    /// against the page it is published on (entry 111 section 2).
+    /// </summary>
     public static IReadOnlyList<string> NotModelled { get; } =
     [
         "Aerodynamic jump is not modelled.",
-        "The Coriolis vertical (Eötvös) term is not modelled.",
     ];
 
     /// <summary>The drag deceleration in ft/s² at a speed, Mach number and density ratio.</summary>
-    public static double DragDeceleration(double velocity, double mach, double ballisticCoefficient, DragModel model, double densityRatio) =>
-        densityRatio * DragTables.Cd(mach, model) * velocity * velocity * DragConstant / ballisticCoefficient;
+    public static double DragDeceleration(double velocity, double mach, double ballisticCoefficient, DragModel model, double densityRatio, bool javaScriptTables = false) =>
+        densityRatio * DragTables.Cd(mach, model, javaScriptTables) * velocity * velocity * DragConstant / ballisticCoefficient;
 
     /// <summary>
     /// The trajectory to <paramref name="maxRangeYards"/>, a row every <paramref name="stepYards"/> from the muzzle, range 0, onward.
@@ -112,7 +120,7 @@ public static class BallisticSolver
             throw new ArgumentException("The step must be positive and the range not negative.", nameof(stepYards));
         }
 
-        var air = new Air(input);
+        var air = new Air(input, javaScriptCompatible);
         var points = javaScriptCompatible ? Legacy(input, air, maxRangeYards, stepYards, out double zero) : Exact(input, air, maxRangeYards, stepYards, out zero);
         double? stability = input is { TwistInches: { } twist, BulletDiameterInches: { } diameter, BulletLengthInches: { } length }
             ? Stability.MillerStability(twist, diameter, length, input.BulletWeightGrains, input.MuzzleVelocityFps, input.TemperatureF, javaScriptCompatible ? 29.92 : input.StationPressureInHg)
@@ -123,15 +131,20 @@ public static class BallisticSolver
             {
                 SpinDriftInches = stability is { } sg ? Stability.SpinDriftInches(sg, p.TimeOfFlight, input.TwistDirection) : null,
                 CoriolisInches = input.LatitudeDegrees is { } latitude ? Stability.CoriolisHorizontalInches(latitude, p.RangeYards * 3, p.TimeOfFlight) : null,
+                CoriolisVerticalInches = input.LatitudeDegrees is { } lat && !javaScriptCompatible
+                    ? Stability.CoriolisVerticalInches(lat, input.AzimuthDegrees, p.TimeOfFlight > 0 ? p.RangeYards * 3 / p.TimeOfFlight : input.MuzzleVelocityFps, p.TimeOfFlight)
+                    : null,
             })];
         }
 
         return new Trajectory(points, stability, zero * MoaPerRadian, NotModelled);
     }
 
-    /// <summary>The air the bullet flies through: its density against the coefficient's reference, and its speed of sound.</summary>
-    private sealed class Air(BallisticInput input)
+    /// <summary>The air the bullet flies through, its density against the coefficient's reference and its speed of sound, and which tables it is flown on.</summary>
+    private sealed class Air(BallisticInput input, bool javaScriptTables)
     {
+        public bool JavaScriptTables { get; } = javaScriptTables;
+
         public double DensityRatio { get; } = Atmosphere.DensityRatio(input.TemperatureF, input.StationPressureInHg, input.HumidityPct, input.Reference);
 
         public double SpeedOfSound { get; } = Atmosphere.SpeedOfSound(input.TemperatureF, input.StationPressureInHg, input.HumidityPct);
@@ -146,7 +159,7 @@ public static class BallisticSolver
             return (0, 0, 0, -Gravity);
         }
 
-        double drag = DragDeceleration(v, v / air.SpeedOfSound, input.BallisticCoefficient, input.Model, air.DensityRatio);
+        double drag = DragDeceleration(v, v / air.SpeedOfSound, input.BallisticCoefficient, input.Model, air.DensityRatio, air.JavaScriptTables);
         return (vx, vy, -drag * (vx / v), (-drag * (vy / v)) - Gravity);
     }
 
@@ -276,7 +289,7 @@ public static class BallisticSolver
             while (x < target && t < 10)
             {
                 double v = Math.Sqrt((vx * vx) + (vy * vy));
-                double drag = DragDeceleration(v, v / air.SpeedOfSound, input.BallisticCoefficient, input.Model, air.DensityRatio);
+                double drag = DragDeceleration(v, v / air.SpeedOfSound, input.BallisticCoefficient, input.Model, air.DensityRatio, air.JavaScriptTables);
                 vx += -drag * (vx / v) * TimeStep;
                 vy += ((-drag * (vy / v)) - Gravity) * TimeStep;
                 x += vx * TimeStep;

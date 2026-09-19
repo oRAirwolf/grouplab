@@ -15,6 +15,68 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 111: questions 24 and 25 answered, four small screen fixes, and the range material that arrives next
+
+**Status: actioned 2026-09-19**, sections 1 to 4. Section 4 asked for nothing to be processed, and nothing was; its blank-paper route is reported and not built, as it says.
+- **Section 1:** the standard G1 and G7 tables carried. They are the values py-ballisticcalc 2.3.1 and poncelet, from JBM's McCoy tables, agree on at every point, both committed in `reference/drag-tables`, with a test holding the carried tables to both. G1 now passes the gate under the tolerances as first committed, and the known-failure markers are removed. Question 25 is set to answered.
+- **Section 2:** the Coriolis vertical term ported with its sign corrected and tested east, west, north, south and at +3.0 in. The five corrections are recorded in DESIGN.md section 16. Question 24 is set to answered.
+- **Section 3:** the exclusion reasons in words, with a test over every compound enum name on every screen, which found a second one, "OneToOne" in the assignment stage's decision; each "why" beside its item's last line; the Load labels at the top of their rows; the shot count once; the renders regenerated.
+- **Section 4:** `grouplab analyze-folder` and `grouplab timing` built for the first two paths; the blank-paper route is reported as not started.
+- `docs/PHASE1-RESULTS.md` "Entry 111".
+
+### 1. Question 25 answered: A, carry the standard G1 table
+
+**The G1 table in ballistics.js is wrong above Mach 0.85, and the error is mine: I wrote that file, and entry 110 section 2a told you to port it as it stands.** Your comparison found it. A G1 load flies with too little drag, 8.6 MOA short at 1000 yd for the .308 case, and the website serves that table to every visitor today.
+
+**Carry the standard G1 function.** Neither of us has McCoy's *Modern Exterior Ballistics* or the BRL report to hand, so the source rule is this:
+- **Take the values where two independent transcriptions agree.** py-ballisticcalc is one. The second must have its own transcription, not a copy of py-ballisticcalc's: another open-source exterior-ballistics library, or a published table from a named source. Name both in the code and in `docs/BALLISTICS-VALIDATION.md`.
+- **A test holds the committed table to both transcriptions**, point by point, at the precision they publish.
+- **Where the two disagree, stop and list the points.** Do not pick one.
+- **Rerun the independent gate for G1** with the tolerances as committed before the first run, unchanged. Remove the two known-failure markers only if the cases pass. The transcription check lists the G1 table as an intentional difference from ballistics.js.
+- **Check the G7 table the same way while you are there.** The comparison found it differs from py-ballisticcalc only at Mach 3.5 and above. Hold it to the same two-transcription rule, and carry the agreed values.
+
+### 2. Question 24 answered: A, the Coriolis vertical term with its sign corrected
+
+**Your physics is right.** For fire toward the east the Coriolis acceleration's vertical component is +2ΩV cos φ, so the bullet strikes high. The file's comment and sign are both backwards. Port the term with the corrected sign. **Tests:** fire due east strikes high, fire due west strikes low, north and south give zero, and 45 degrees north, east, 1000 yd, 1.6 s gives about +3.0 in.
+
+**Section 3 of the question.**
+- **Wind direction:** a signed crosswind, positive from the left, drifting the bullet right. Accepted.
+- **Aerodynamic jump:** stays out until someone has the page. Alan may own *Applied Ballistics for Long Range Shooting*. If he sends a photograph of the page with the fit, a later entry will carry it.
+- **The BC reference atmosphere:** your reading is the one I meant. A BC stated against Army Standard Metro is flown with the density ratio taken against Army Standard Metro density, and the test holding the ratio at 1.018 stays.
+
+**Record in `DESIGN.md` section 16** that the port corrected ballistics.js in five places: the G1 table, shooting angle, aerodynamic jump left out, the Coriolis vertical sign, and the wind-direction convention. A later reader should not restore the JavaScript's behaviour thinking the port drifted from its source.
+
+### 3. Four small things on the screens
+
+From the renders under `docs/figures/screens/current/` at `44b34e0`. Alan's own notes on the screens come after he has used the build with real scans; these four are the ones I can see now.
+- **The exclusion reason shows the enum name "CalledFlyer"** in the marking screen's dropdown. Show "Called flyer", and do the same for every other reason. **Check every place an enum name reaches a person**, as "OneToOne" did before entry 109. A test over the enums shown in the interface would stop the next one.
+- **Each "why" takes a full row** with its arrow at the far right. There are four of them on the analysis screen. Put a small "why" with its arrow directly under, or beside, the item it explains, so it takes no row of its own.
+- **The Calibre line in the Load block wraps**, and the label sits below the value it names. Let the value wrap under itself with the label at the top of the row, or give the value its own line under the label.
+- **The Group section states the shot count twice:** "Shots 24", then "24 shots: 24 detected." Keep one.
+
+Regenerate the renders after these, as entry 109 section 4 set up.
+
+### 4. What arrives next, so nothing waits on it
+
+**Alan is at the range on 20 September** with a one-page plan. The plan is at `C:\Dev\grouplab-range-2026-09-20\grouplab-range-day-2026-09-20.pdf`, outside the repository. He is shooting:
+- **four 25-shot sheets** of `GL-CF25-LTR-D`, the load-block version, possibly a different rifle on each, three at 100 yd and one at 200 yd if the range allows;
+- **a doubles sheet**, two shots into each of bulls 1 to 10;
+- **a blank sheet**, 10 shots at a marker dot, photographed with a tape measure across it;
+- **four photographs of each sheet as it hangs**, at about 2.5 ft square on, 30 degrees left and right, and about 5 ft;
+- **600 dpi flat scans of every sheet** afterwards at home;
+- **Garmin Xero sessions**, if he has the unit, one per sheet, with shots fired in bull order so shot number equals bull number.
+
+**The material lands in `C:\Dev\grouplab-range-2026-09-20\`**, one folder per sheet. **Do not process it under this entry.** The next entry will say how it enters the corpus. It carries location data in its photographs, so it goes through the intake tool like every donated image: nothing from that folder is committed directly.
+
+**What would help, if this entry's work leaves time:** make sure the paths it will need are ready.
+- Running the Phase 1 detection gate over a folder of new scans, from one command.
+- The Phase 3 timing measurement on one sheet, from one command.
+- The blank-paper route: its gate names the material, and the feature is still Not started.
+
+**Say which of these exist and which do not.** Build nothing for the blank paper yet.
+
+---
+
 ## 2026-09-19, entry 110: question 23 answered, and the ballistic solver ported from ballistics.js, with two of its functions not carried over
 
 **Status: actioned 2026-09-19**, sections 1 and 2, with three parts of section 2 not done as written:

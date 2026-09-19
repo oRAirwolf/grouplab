@@ -34,10 +34,13 @@ public static class AppStyles
     public const string Title = "title";
 
     /// <summary>
-    /// A "why" disclosure, entry 109 section 1 principle 1: the sentences that explain a figure or a judgement, one click away on the item they
-    /// explain, and remembered. Compact and quiet, so a closed one is a single short line.
+    /// A "why", entry 109 section 1 principle 1 and entry 111 section 3: a small quiet button beside the last line of the item it explains, which
+    /// opens the sentences that explain it beneath the item, and is remembered. It takes no row of its own.
     /// </summary>
     public const string Why = "why";
+
+    /// <summary>The explanation a "why" opens, beneath the item it explains; shown only while it is open.</summary>
+    public const string WhyBody = "why-body";
 
     /// <summary>A row of a plain table, entry 109 section 3: no border of its own; every other row carries <see cref="Shaded"/>.</summary>
     public const string TableRow = "table-row";
@@ -187,9 +190,7 @@ public static class AppStyles
         Rule(x => x.OfType<Button>().Class(Link), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.PaddingProperty, new Thickness(0)), (Layoutable.MarginProperty, new Thickness(0)), (TemplatedControl.ForegroundProperty, Brush(p.Amber)), (TemplatedControl.FontWeightProperty, FontWeight.SemiBold), (Layoutable.MinHeightProperty, 0.0)),
         Rule(x => x.OfType<Border>().Class(Divider), (Border.BackgroundProperty, Brush(p.Line2))),
         Rule(x => x.OfType<TextBlock>().Class(Title), (TextBlock.FontSizeProperty, Tokens.TitleSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.ForegroundProperty, Brush(p.Text))),
-        Rule(x => x.OfType<Expander>().Class(Why), (TemplatedControl.PaddingProperty, new Thickness(0, Tokens.Space4, 0, 0)), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize), (Layoutable.MinHeightProperty, 0.0)),
-        Rule(x => x.OfType<Expander>().Class(Why).Template().OfType<ToggleButton>(), (TemplatedControl.PaddingProperty, new Thickness(0)), (Layoutable.MinHeightProperty, 0.0), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize)),
-        Rule(x => x.OfType<Expander>().Class(Why).Template().OfType<Border>().Name("ExpanderContent"), (Border.BorderThicknessProperty, new Thickness(0)), (Border.BackgroundProperty, Tokens.Clear), (Border.PaddingProperty, new Thickness(0, Tokens.Space4, 0, 0))),
+        Rule(x => x.OfType<Button>().Class(Why), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.PaddingProperty, new Thickness(0)), (Layoutable.MarginProperty, new Thickness(0)), (Layoutable.MinHeightProperty, 0.0), (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize), (TemplatedControl.FontWeightProperty, FontWeight.Normal)),
         Rule(x => x.OfType<Button>().Class(TableRow), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.CornerRadiusProperty, new CornerRadius(0)), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space4, 2)), (Layoutable.MarginProperty, new Thickness(0)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize)),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Shaded), (TemplatedControl.BackgroundProperty, Brush(p.Panel2))),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Warn), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint))),

@@ -2,8 +2,8 @@ namespace GroupLab.Core.Ballistics;
 
 /// <summary>
 /// The spin and Earth-rotation terms of reference/ballistics-js/ballistics.js that entry 110 section 2a ports: Miller's stability factor,
-/// Litz's spin drift and the Coriolis horizontal term. Two of the file's terms are not here: aerodynamic jump, which is not a published formula
-/// (section 2c), and the Coriolis vertical term, whose sign is reversed (docs/QUESTIONS-FOR-PLANNING.md question 24).
+/// Litz's spin drift and the Coriolis horizontal term, and the Coriolis vertical term with its sign corrected (entry 111 section 2). Aerodynamic
+/// jump is not here: the file's formula is not a published one (entry 110 section 2c).
 /// </summary>
 public static class Stability
 {
@@ -48,4 +48,13 @@ public static class Stability
     /// </summary>
     public static double CoriolisHorizontalInches(double latitudeDegrees, double rangeFt, double timeOfFlight) =>
         EarthRotation * Math.Sin(latitudeDegrees * Math.PI / 180) * rangeFt * timeOfFlight * 12;
+
+    /// <summary>
+    /// The Coriolis vertical deflection, the Eötvös effect, in inches, positive up: half of 2ΩV cos(latitude) sin(azimuth) times t², V the
+    /// average horizontal speed. In local east, north and up coordinates the Earth's rotation is Ω(0, cos φ, sin φ), and for a bullet moving
+    /// east at speed V the Coriolis acceleration −2Ω × v has vertical component +2ΩV cos φ. So fire toward the east strikes high, toward the west
+    /// low, and north or south not at all. ballistics.js had the sign reversed (docs/QUESTIONS-FOR-PLANNING.md question 24, entry 111 section 2).
+    /// </summary>
+    public static double CoriolisVerticalInches(double latitudeDegrees, double azimuthDegrees, double averageVelocityFps, double timeOfFlight) =>
+        0.5 * 2 * EarthRotation * averageVelocityFps * Math.Cos(latitudeDegrees * Math.PI / 180) * Math.Sin(azimuthDegrees * Math.PI / 180) * timeOfFlight * timeOfFlight * 12;
 }

@@ -140,6 +140,8 @@ public sealed class MainWindow : Window
     /// </summary>
     private readonly StackPanel unsettledBanner = new() { Spacing = 0, IsVisible = false };
 
+    private readonly WrapPanel bannerLine = new() { Orientation = Orientation.Horizontal, ItemSpacing = Tokens.Space4 };
+
     /// <summary>
     /// The settings screen, NOTES-FROM-PLANNING.md entry 109 section 2: units, theme, the log and crash records, reached by the gear at the foot of
     /// the rail. They are not part of the task, so they no longer sit in the marking panel between the review queue and the scale.
@@ -237,7 +239,11 @@ public sealed class MainWindow : Window
     private readonly StackPanel shotList = new() { Spacing = 2 };
     private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space8, IsVisible = false };
     private readonly StackPanel scaleInputs = new() { Spacing = 6 };
-    private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetNames<ExclusionReason>(), SelectedIndex = 0, MinWidth = 140 };
+    // Entry 111 section 3: the reasons in words, "Called flyer", not the enum's names; the list is in the enum's order, so its index is the reason.
+    private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetValues<ExclusionReason>().Select(r => r.Words()).ToList(), SelectedIndex = 0, MinWidth = 140 };
+
+    /// <summary>The reason chosen in the list.</summary>
+    private ExclusionReason ChosenReason => Enum.GetValues<ExclusionReason>()[Math.Max(0, exclusionReason.SelectedIndex)];
     private GrayImage? grey;
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
@@ -555,11 +561,8 @@ public sealed class MainWindow : Window
         // Entry 92 put the zero correction above the group statistics, a different question read at a different moment, and entry 104
         // section 3 found the split had moved it below the cards and the flags, off the bottom of the column.
         // Entry 105 section 2: the headings carry the column's hierarchy, so each has a rule above it.
-        var reviewLink = Link("Review them", BackToEditor);
-        var bannerLine = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = Tokens.Space4 };
         bannerLine.Children.Add(unsettled);
-        bannerLine.Children.Add(reviewLink);
-        unsettledBanner.Children.Add(bannerLine);
+        bannerLine.Children.Add(Link("Review them", BackToEditor));
         figures.Children.Add(unsettledBanner);
         figures.Children.Add(Ruled("Zero correction"));
         figures.Children.Add(zeroPanel);
@@ -1336,11 +1339,12 @@ public sealed class MainWindow : Window
             LengthReference => ("Scale from a reference length, set by hand", false),
             _ => ("Scale from a reference rectangle, set by hand", false),
         };
-        var line = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8 };
-        line.Children.Add(new TextBlock { Text = good ? "\u2713" : "!", FontWeight = FontWeight.SemiBold, Classes = { good ? AppStyles.Good : AppStyles.Warn } });
+        var line = new DockPanel();
+        var mark = new TextBlock { Text = good ? "\u2713" : "!", FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { good ? AppStyles.Good : AppStyles.Warn } };
+        DockPanel.SetDock(mark, Dock.Left);
+        line.Children.Add(mark);
         line.Children.Add(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap });
-        column.Children.Add(line);
-        column.Children.Add(Why("scale", "From " + scale.Describe(units) + "."));
+        column.Children.Add(Explained(line, "scale", "From " + scale.Describe(units) + "."));
         return column;
     }
 
@@ -1391,11 +1395,9 @@ public sealed class MainWindow : Window
             bool excluded = report.Excluded > 0;
             // Entry 46 section 3: where a human judgement entered the measurement, as the first row's detail. Entry 109 section 3: every figure
             // is one row of one shape, the label left, the value right in mono, one detail line beneath and a hairline under it.
-            var counted = new StackPanel { Spacing = 0 };
-            counted.Children.Add(Readout("Shots", all.Shots.ToString(CultureInfo.InvariantCulture)));
-            counted.Children.Add(Line(PlacedLine(all.Shots, report.Automatic, report.Corrected, report.Manual)
-                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}.")));
-            statistics.Children.Add(Rowed(counted));
+            // Entry 111 section 3: the count once, in the sentence that also says how the shots were placed.
+            statistics.Children.Add(Rowed(Line(PlacedLine(all.Shots, report.Automatic, report.Corrected, report.Manual)
+                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}."))));
             statistics.Children.Add(Rowed(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
                 ? CentreRow(centre)
                 : Line($"Centre from aim: {all.CentreFromAimUnavailable}.")));
@@ -1419,8 +1421,7 @@ public sealed class MainWindow : Window
                 {
                     var cep = new StackPanel { Spacing = 0 };
                     cep.Children.Add(Readout("CEP 90", units.Length(cep90.Value), Tokens.ValueSize));
-                    cep.Children.Add(Detail($"CEP 50 {units.Length(cep50.Value)}  \u00b7  CEP 95 {units.Length(cep95.Value)}"));
-                    cep.Children.Add(Why("cep", "from sigma under the circular normal model"));
+                    cep.Children.Add(Explained(Detail($"CEP 50 {units.Length(cep50.Value)}  \u00b7  CEP 95 {units.Length(cep95.Value)}"), "cep", "from sigma under the circular normal model"));
                     statistics.Children.Add(Rowed(cep));
                 }
 
@@ -1560,14 +1561,11 @@ public sealed class MainWindow : Window
     {
         var column = new StackPanel { Spacing = Tokens.Space4 };
         column.Children.Add(new TextBlock { Text = verdict, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-        foreach (string line in evidence)
+        for (int i = 0; i < evidence.Length; i++)
         {
-            column.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
-        }
-
-        if (why.Length > 0)
-        {
-            column.Children.Add(Why(name, why));
+            var line = new TextBlock { Text = evidence[i], TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+            // The card's "why" sits beside its last line in view.
+            column.Children.Add(i == evidence.Length - 1 && why.Length > 0 ? Explained(line, name, why) : line);
         }
 
         return new Border { Child = column, Name = name + "Card", Classes = { AppStyles.JudgementCard } };
@@ -1631,22 +1629,18 @@ public sealed class MainWindow : Window
         int open = ReviewQueue.Open(ReviewQueue.For(state, analyseSighters));
         unsettledBanner.IsVisible = open > 0;
         unsettled.Text = open == 1 ? "1 decision left unmade." : $"{open} decisions left unmade.";
-        while (unsettledBanner.Children.Count > 1)
-        {
-            unsettledBanner.Children.RemoveAt(1);
-        }
-
-        unsettledBanner.Children.Add(Why("unsettled", open == 1
+        unsettledBanner.Children.Clear();
+        unsettledBanner.Children.Add(Explained(bannerLine, "unsettled", open == 1
             ? "1 decision was left unmade when this was accepted, and every figure here inherits it. The sheet crumb goes back to it."
             : $"{open} decisions were left unmade when this was accepted, and every figure here inherits them. The sheet crumb goes back to them."));
 
         loadLines.Children.Clear();
-        loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize));
-        loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize));
-        loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize));
+        loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
+        loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
+        loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         // Entry 104 section 4: a calibre set after detection ran without one would otherwise sit beside a status line saying there was none.
         loadLines.Children.Add(Readout("Calibre", state.Calibre is null ? "not set"
-            : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize));
+            : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
 
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
         var shots = GroupShots(state);
@@ -1969,7 +1963,7 @@ public sealed class MainWindow : Window
                 : shot.NotAShot || shot.Bull is null ? $"{named}, {WhereOnTarget(state, shot.Image)}"
                 : named;
 
-            string text = string.Create(CultureInfo.InvariantCulture, $"{name}{(shot.Exclusion is { } e ? $", excluded as {e}" : "")}");
+            string text = string.Create(CultureInfo.InvariantCulture, $"{name}{(shot.Exclusion is { } e ? $", excluded as {e.InSentence()}" : "")}");
             var select = new Button
             {
                 Content = new TextBlock
@@ -2000,7 +1994,7 @@ public sealed class MainWindow : Window
             if (!shot.NotAShot)
             {
                 AddCell(row, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-                    session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null)), 2);
+                    session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null)), 2);
             }
 
             AddCell(row, Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)), 3);
@@ -2099,10 +2093,10 @@ public sealed class MainWindow : Window
         selection.Children.Add(chips);
         if (shot.Exclusion is { } e)
         {
-            selection.Children.Add(Line($"Excluded as {e}."));
+            selection.Children.Add(Line($"Excluded as {e.InSentence()}."));
         }
         selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-            session.SetExclusion(id, shot.Exclusion is null ? Enum.Parse<ExclusionReason>((string)exclusionReason.SelectedItem!) : null))));
+            session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null))));
         selection.Children.Add(Row(
             Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)),
             Button("Unassign", () => session.AssignBull(id, null)),
@@ -2765,9 +2759,10 @@ public sealed class MainWindow : Window
     /// the concept's selected-detection panel has it. Three headline figures with two lines of interval each was nine lines of prose before
     /// a reader reached anything else.
     /// </summary>
-    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false)
+    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false, bool labelAtTop = false)
     {
-        var name = new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.Label } };
+        // Entry 111 section 3: where a value can wrap, its label sits at the top of the row, beside the value's first line, not under its last.
+        var name = new TextBlock { Text = label, VerticalAlignment = labelAtTop ? VerticalAlignment.Top : VerticalAlignment.Bottom, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Label } };
         var figure = new TextBlock
         {
             Text = value,
@@ -2983,28 +2978,52 @@ public sealed class MainWindow : Window
     private static TextBlock FieldLabel(string text) => new() { Text = text, Classes = { AppStyles.Label } };
 
     /// <summary>
-    /// A "why" disclosure, NOTES-FROM-PLANNING.md entry 109 section 1 principle 1: the sentences that explain an item, moved as they stand, one
-    /// click away on the item they explain. Each remembers whether it was opened, by the name of what it explains.
+    /// An item with its "why", NOTES-FROM-PLANNING.md entry 109 section 1 principle 1 and entry 111 section 3: the sentences that explain the
+    /// item, moved as they stand, one click away. The small "why" sits beside the item's last line, in space the line leaves for it, so it takes
+    /// no row of its own; the explanation opens beneath the item. Each remembers whether it was opened, by the name of what it explains. It is a
+    /// plain button rather than a toggle, because the theme paints a checked toggle amber, and amber means something needs a person.
     /// </summary>
-    private Expander Why(string item, params string[] lines)
+    private StackPanel Explained(Control line, string item, params string[] lines)
     {
-        var body = new StackPanel { Spacing = Tokens.Space4 };
-        foreach (string line in lines)
+        var body = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, Tokens.Space4, 0, 0), Classes = { AppStyles.WhyBody } };
+        foreach (string text in lines)
         {
-            body.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+            body.Children.Add(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
         }
 
-        var why = new Expander { Header = "why", Content = body, IsExpanded = whyOverride ?? WhyOpen(item), HorizontalAlignment = HorizontalAlignment.Left, Classes = { AppStyles.Why } };
-        why.PropertyChanged += (_, e) =>
+        bool open = whyOverride ?? WhyOpen(item);
+        var why = new Button { HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.Why } };
+        void Show()
         {
-            if (e.Property == Expander.IsExpandedProperty && whyOverride is null)
-            {
-                whyOpen[item] = why.IsExpanded;
-                settingsStore.SaveWhyOpen(item, why.IsExpanded);
-            }
+            body.IsVisible = open;
+            why.Content = open ? "why \u25be" : "why \u25b8";
+            ToolTip.SetTip(why, open ? "Hide the reasoning" : "Show the reasoning behind this");
+        }
+
+        why.Click += (_, _) =>
+        {
+            open = !open;
+            whyOpen[item] = open;
+            settingsStore.SaveWhyOpen(item, open);
+            Show();
         };
-        return why;
+        Show();
+
+        // The line leaves room at its right for the "why", which sits beside its last line.
+        line.Margin = new Thickness(line.Margin.Left, line.Margin.Top, Math.Max(line.Margin.Right, WhyWidth), line.Margin.Bottom);
+        var row = new Grid();
+        if (line.Parent is Panel previous)
+        {
+            previous.Children.Remove(line);
+        }
+
+        row.Children.Add(line);
+        row.Children.Add(why);
+        return new StackPanel { Spacing = 0, Children = { row, body } };
     }
+
+    /// <summary>The room an item leaves at its right for its "why".</summary>
+    private const double WhyWidth = 44;
 
     private bool WhyOpen(string item)
     {
@@ -3203,7 +3222,6 @@ public sealed class MainWindow : Window
             why.Add(FormattableString.Invariant($"The smallest offset these shots can call is {Both(zero.DetectableInches)}.") + (settle is not null ? " Shoot more before touching the turret." : ""));
         }
 
-        zeroPanel.Children.Add(verdict);
         why.Add(zero.Circular
             ? $"sigma pooled over both axes on {zero.DegreesOfFreedom} degrees of freedom, the group being circular"
             : $"each axis on its own, {zero.DegreesOfFreedom} degrees of freedom, the group not being circular");
@@ -3212,6 +3230,6 @@ public sealed class MainWindow : Window
             : state.Rifle is null
                 ? "Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
-        zeroPanel.Children.Add(Why(item, [.. why]));
+        zeroPanel.Children.Add(Explained(verdict, item, [.. why]));
     }
 }

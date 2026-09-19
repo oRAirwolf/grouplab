@@ -176,7 +176,7 @@ public static class AutomaticMarking
             // Entry 73 section 1: sighter and scoring bulls are matched as separate pools, so a sighter's hole never lands on a scoring bull.
             assignment = ShotAssignment.Assign(shotPages, bullPages, scoring: [.. definition.Bulls.Select(b => b.Scoring)]);
             int ambiguous = assignment.Shots.Count(s => s.Ambiguous), unassigned = assignment.Shots.Count(s => s.Bull is null);
-            stage.Decide("assignment", assignment.Method.ToString(), assignment.Reason);
+            stage.Decide("assignment", assignment.Method.Words(), assignment.Reason);
             foreach (var s in assignment.Shots.Where(s => s.Ambiguous))
             {
                 stage.Detail(string.Create(CultureInfo.InvariantCulture,

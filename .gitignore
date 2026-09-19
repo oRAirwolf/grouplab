@@ -3,6 +3,7 @@
 !reference/ballistics-js/
 !reference/ballistics-cases.json
 !reference/py-ballisticcalc/
+!reference/drag-tables/
 bin/
 obj/
 *.user

@@ -416,10 +416,16 @@ The solver models physics only. Barrel harmonics, optimal barrel time, velocity 
 Every row is interpolated to its exact range, and the BC's reference atmosphere is a stated input, ICAO by default or Army Standard Metro. **Not carried over, on purpose:**
 - **the shooting angle as written**, which measured drop from the horizontal rather than the line of sight and read hundreds of MOA at any angle; the port measures along and perpendicular to the line of sight;
 - **aerodynamic jump**, whose formula was not a published one and ran the wrong way with stability, so the solver's output says "Aerodynamic jump is not modelled.";
-- **the Coriolis vertical term**, whose sign was reversed, held pending question 24;
 - **the dispersion utilities**, since sigma comes from the statistics engine with its interval.
 
-**The JavaScript is not an independent check,** having the same author, method and tables. So the port is checked against it only for the transcription, and against py-ballisticcalc for the physics, with tolerances written down before the comparison (`docs/BALLISTICS-VALIDATION.md`). **That comparison found the JavaScript's G1 table is not the standard G1 function** above Mach 0.85. G7 passes; G1 fails, pending question 25.
+**The JavaScript is not an independent check,** having the same author, method and tables. So the port is checked against it only for the transcription, and against py-ballisticcalc for the physics, with tolerances written down before the comparison (`docs/BALLISTICS-VALIDATION.md`).
+
+**The port corrects ballistics.js in five places, on purpose** (entry 111 section 2). A later reader should not restore the JavaScript's behaviour thinking the port drifted from its source:
+1. **The G1 table.** The JavaScript's is not the standard G1 function above Mach 0.85. The port carries the standard G1 and G7 functions, the values two independent transcriptions agree on (`docs/BALLISTICS-VALIDATION.md` section 3).
+2. **Shooting angle.** The JavaScript measured drop from the horizontal. The port measures along and perpendicular to the line of sight.
+3. **Aerodynamic jump is left out.** The JavaScript's formula is not a published one, and Litz's fit goes in only when it is checked against its page.
+4. **The Coriolis vertical term's sign.** Fire toward the east strikes high, where the JavaScript had it low.
+5. **The wind direction.** The port takes a signed crosswind, positive from the left and drifting the bullet right. The JavaScript's extended solve added a wind from the right as drift to the right.
 
 ## 17. Chronograph integration
 

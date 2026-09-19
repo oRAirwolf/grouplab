@@ -740,7 +740,7 @@ public class MarkingScreenTests
             // Entry 75: three shots on bull 22 are 22a, 22b and 22c, top to bottom, and no row carries a bare index.
             Grid RowOf(int id) => window.ShotList.Children.OfType<Grid>().Single(r => r.Children.OfType<Button>().Any(b => b.Tag is int t && t == id));
             string TextOf(Grid row) => ((TextBlock)row.Children.OfType<Button>().Single(b => b.Tag is int).Content!).Text!;
-            Assert.Equal(["22a", "22b, excluded as CalledFlyer", "22c"], rows.Select(TextOf));
+            Assert.Equal(["22a", "22b, excluded as called flyer", "22c"], rows.Select(TextOf));
 
             var target = window.Session.State.Shots[1];
             RowOf(target.Id).Children.OfType<Button>().Single(b => (b.Content as string) == "Not a shot").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -914,7 +914,7 @@ public class MarkingScreenTests
 
             window.ShotList.GetLogicalDescendants().OfType<Button>().Where(b => (b.Content as string) == "Exclude").ElementAt(2).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.Equal(ExclusionReason.CalledFlyer, window.Session.State.Find(ids[2])!.Exclusion);
-            Assert.EndsWith(", excluded as CalledFlyer", ((TextBlock)Rows()[2].Content!).Text, StringComparison.Ordinal);
+            Assert.EndsWith(", excluded as called flyer", ((TextBlock)Rows()[2].Content!).Text, StringComparison.Ordinal);
             window.Close();
         }
         finally

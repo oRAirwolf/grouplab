@@ -34,7 +34,7 @@ public class Entry109Tests
     /// GL-CF25-LTR rendered at 300 DPI with a hole on every scoring bull, written to a file and opened, and detected by the real pipeline, so
     /// every screen shows what a person would see after opening a scan.
     /// </summary>
-    private static (MainWindow Window, string Path, AutomaticResult Result) Sheet(int width = 1400, int height = 900)
+    internal static (MainWindow Window, string Path, AutomaticResult Result) Sheet(int width = 1400, int height = 900)
     {
         var definition = GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", "GL-CF25-LTR.gltd.json")).Definition!;
         const double dpi = 300;
@@ -69,7 +69,7 @@ public class Entry109Tests
     }
 
     /// <summary>Whether a control is showing: it and every logical ancestor visible, which holds before a hidden panel's template is applied.</summary>
-    private static bool Shown(Control control) => control.GetSelfAndLogicalAncestors().OfType<Control>().All(c => c.IsVisible);
+    internal static bool Shown(Control control) => control.GetSelfAndLogicalAncestors().OfType<Control>().All(c => c.IsVisible);
 
     /// <summary>Every text in the window's logical tree, with the size it is drawn at.</summary>
     private static IEnumerable<TextBlock> Texts(Visual root) => root.GetLogicalDescendants().OfType<TextBlock>();
@@ -186,13 +186,15 @@ public class Entry109Tests
             window.Session.SetShotDistance(3600);
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
-            var whys = window.GetLogicalDescendants().OfType<Expander>().Where(e => e.Classes.Contains(AppStyles.Why) && Shown(e)).ToList();
-            Assert.NotEmpty(whys);
-            Assert.All(whys, w => Assert.False(w.IsExpanded));
+            // Entry 111 section 3: each "why" is a small button beside its item, and what it opens is hidden until it is opened.
+            var bodies = window.GetLogicalDescendants().OfType<StackPanel>().Where(b => b.Classes.Contains(AppStyles.WhyBody) && Shown((Control)b.Parent!)).ToList();
+            Assert.NotEmpty(bodies);
+            Assert.All(bodies, b => Assert.False(b.IsVisible));
 
             var shape = window.JudgementCards[0];
-            var shown = window.GetLogicalDescendants().OfType<Border>().Single(b => b.Name == "shapeCard").GetLogicalChildren().OfType<StackPanel>().Single()
-                .Children.OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
+            // The lines in view, the verdict first: every text in the card that is not inside a "why".
+            var shown = window.GetLogicalDescendants().OfType<Border>().Single(b => b.Name == "shapeCard").GetLogicalDescendants().OfType<TextBlock>()
+                .Where(t => !t.GetLogicalAncestors().OfType<StackPanel>().Any(a => a.Classes.Contains(AppStyles.WhyBody))).Select(t => t.Text ?? "").ToList();
             Assert.StartsWith("Circularity test, ", shown[1], StringComparison.Ordinal);
             Assert.Contains(": p = ", shown[1], StringComparison.Ordinal);
             Assert.StartsWith("Vertical stringing", shown[2], StringComparison.Ordinal);
@@ -208,7 +210,7 @@ public class Entry109Tests
             Assert.Contains(window.Plot.Legend, l => l.Contains("outlines are hidden", StringComparison.Ordinal));
 
             window.SetEveryWhy(true);
-            Assert.All(window.GetLogicalDescendants().OfType<Expander>().Where(e => e.Classes.Contains(AppStyles.Why)), w => Assert.True(w.IsExpanded));
+            Assert.All(window.GetLogicalDescendants().OfType<StackPanel>().Where(b => b.Classes.Contains(AppStyles.WhyBody)), b => Assert.True(b.IsVisible));
             window.Close();
         }
         finally
