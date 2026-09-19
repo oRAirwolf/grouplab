@@ -15,6 +15,207 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 113: the queue after entry 112, for a long unattended run
+
+**Status: actioned 2026-09-19**, sections 1 to 8, after entry 112. Two questions were raised and not waited on: 26, the Ballistics screen's rail slot, and 27, nothing on screen assigning bulls to subgroups.
+- **Section 1:** the sheet's thumbnail from its definition, where a click on a bull selects its shots, and the full CEP table and bivariate fit behind a remembered disclosure. The renders are regenerated and the README's analysis line is Done.
+- **Section 2:** load comparison on the rail's chart slot, from sessions chosen in Session records or a sheet's subgroups. It shows plots, figures with intervals, and tests with verdicts and what each could have detected. It never ranks by point estimate, and says the data do not separate loads whose intervals overlap.
+- **Section 3:** hit probability at distance and distance normalisation as specified, with the entry's four tests. On screen it is labelled a prediction.
+- **Section 4:** `grouplab compare-photos`, tested on a synthetic scan and photograph. The doubles sheet: the queue raises every pushed shot, and a Shots per bull setting now reads it by nearest bull or with two on named bulls, both paths tested. The blank sheet stays Not started.
+- **Section 5:** the volunteer pack, the sheet and one page generated from `docs/VOLUNTEER-PACK.md`, from "Print a volunteer pack" on the print screen.
+- **Section 6:** `docs/USER-GUIDE.md` and its PDF, illustrated with the renders, with a test that every screenshot it names exists.
+- **Section 7:** the enum-name test extended to every new screen and the report; a theme and keyboard test over every new screen in all four themes; renders of every new screen.
+- **Section 8:** this record. `docs/PHASE1-RESULTS.md` "Entry 112" and "Entry 113".
+
+**Alan is asleep and then at the range.** Nobody will answer a question for about twelve hours. **Do entry 112 completely first, then this entry, in the order of its sections.** The rule for the whole run: when a design question comes up that neither entry answers, write it in `docs/QUESTIONS-FOR-PLANNING.md`, build everything that does not depend on the answer, and move to the next section. **Do not stop the run for a question.** Commit and push at every clean point, so a stop at any hour leaves main green and nothing half-built.
+
+### 1. The analysis screen's three unbuilt parts
+
+The README lists them as not built: the sheet's thumbnail, and the full CEP table and bivariate fit behind a link.
+- **The thumbnail** is the concept's top-left panel: the sheet drawn small from its definition, every shot on it, and a click on a bull selects its shot. It is drawn from the definition, not the photograph, as `DESIGN.md` section 18's archived view is.
+- **The full CEP table and bivariate fit** go behind the link `DESIGN.md` section 19 describes, "one click away in a panel that remembers it was opened". Everything in it already exists in the engine. It is layout, not new statistics.
+- **Regenerate the renders**, and move the README line to Done if nothing on it remains.
+
+### 2. Comparing loads
+
+`docs/figures/screens/compare-loads.png` is the concept. `GroupComparison` already holds the rank and dispersion tests, MANOVA and the dispersion ratio with its interval. The README marks load comparison as built in the engine.
+- **A comparison screen over sessions or subgroups.** Pick two or more from the Session records list, or the subgroups of one sheet, and see them side by side. Show the composite plots, the headline figures with intervals, the tests, and each test's verdict.
+- **Every negative result carries what it could have detected**, as the stringing card does. "No significant difference" between two ten-shot groups means very little, and `docs/STATISTICS.md` gives the power figures.
+- **Never rank loads by point estimate alone.** When the intervals overlap, the screen says the data do not separate them. That sentence matters more than any chart on the screen.
+
+### 3. Hit probability at distance, and distance normalisation
+
+`DESIGN.md` section 3 promises both "propagated through the solver rather than by scaling a group linearly". Entry 112 section 4 deferred them for want of a specification. **This is it.**
+
+**Inputs:**
+- the session's sigma and its interval, from the engine, at the distance shot, d₀;
+- the rifle and load's solver fields;
+- **the muzzle velocity standard deviation**, a new optional field on the load;
+- **the crosswind uncertainty in mph**, optional, entered at the time;
+- the target's size and shape, a circle or a rectangle;
+- the distance d.
+
+**Model.** At distance d, shots are bivariate normal about the aim point plus the zero offset carried to d, from entry 112 section 4.
+- σ_x(d)² = (σ_x,ang × d)² + ((∂drift/∂wind) × σ_wind)²
+- σ_y(d)² = (σ_y,ang × d)² + ((∂drop/∂V) × σ_V)²
+- **The partial derivatives come from the solver** by finite difference, at d.
+- **The measured angular sigma already contains the velocity contribution at d₀.** When σ_V is given, subtract that contribution in quadrature before propagating. If the subtraction goes negative, the entered σ_V is too large for the group measured: refuse, and say that.
+- **With neither σ_V nor σ_wind given, the result reduces exactly to angular scaling, and the screen says that is all it is.**
+
+**Output:**
+- **P(hit) at each end of the sigma interval, as well as at the point estimate.** It is a range, not a single number.
+- A circle uses the engine's existing estimators. A rectangle uses the product of normal distributions when its axes align with the dispersion, and otherwise numerical integration.
+- **Distance normalisation** shows a group as its solver-propagated equivalent at another distance. It is labelled as a prediction, never as a measurement.
+
+**Tests:**
+- with σ_V and σ_wind zero, the result equals angular scaling exactly;
+- with σ_V positive, vertical sigma grows faster than linearly with distance;
+- a centred circle with equal axes matches the Rayleigh closed form;
+- the quadrature subtraction refuses when it should.
+
+### 4. Tooling for the range material, without reading it
+
+Entry 111 section 4 built `analyze-folder` and `timing`. Two things are still missing before Alan's material can be used, and both can be built against committed test data.
+
+**A photograph-against-scan comparison.** Tomorrow gives, for each sheet, a flat 600 dpi scan and four photographs of the same sheet as it hung. **The scan is the truth for the photographs**: same holes, measured flat.
+- **A command** that takes a sheet's scan and its photographs.
+- It uses the scan's marking as truth once the person has corrected it, or the scan's detection otherwise, and says which.
+- For each photograph it reports: the registration model used; bull-centre error against the scan, worst and median; holes found, missed and false against the scan's holes; and the hole-position error, median, 95th percentile and worst.
+- **It reports against the gates' thresholds, 0.005 in for bulls and 0.15 in for hole matching, and does not decide the gate.** Planning reads the table.
+- Test it on committed images, a synthetic photograph of a committed scan if nothing better exists.
+
+**The doubles sheet breaks one shot per bull on purpose.** Two shots go into each of bulls 1 to 10 and none into 11 to 25. One-to-one matching will push the second shot of a bull onto an empty neighbour.
+- **Make sure the way to say so exists**, so that a sheet can be marked as expecting two shots on named bulls, or analysed by nearest bull.
+- **Confirm the review queue raises the doubled bulls** when it is analysed without that setting. That is the queue's job, and this sheet tests it.
+- Build the setting if it is missing, and test both paths on a synthetic sheet.
+
+**The blank sheet stays Not started.** Nothing for it yet.
+
+### 5. The volunteer print pack
+
+**The README's Phase 4 line, Not started.** A person who wants to contribute a target needs the sheet and one page of instructions.
+- **A one-page instruction PDF generated by GroupLab**, from a Markdown source in the repository, alongside the sheet. Its content:
+  - print at actual size through Print, and measure bull 1 to bull 5;
+  - mount flat;
+  - one shot per bull, in order;
+  - write only in the load block;
+  - the four photographs at about 2.5 ft on the main camera;
+  - no cropping or messaging apps;
+  - a flat 600 dpi scan if they have a scanner;
+  - how to submit at `https://pissinhot.com/targets`.
+- **Consent is not in the pack.** The upload page collects consent. The pack says that submitting means following that page's terms.
+- **The print screen offers "Print a volunteer pack"**, the sheet and the page together.
+
+### 6. A user guide
+
+**`docs/USER-GUIDE.md`, and a PDF of it**, the project's rule for documents meant for reading. It walks through:
+- printing a sheet;
+- shooting it;
+- photographing or scanning it;
+- marking it and settling the review queue;
+- reading the analysis screen, including what each "why" says in plain words;
+- sessions and the report;
+- comparing loads;
+- the zero correction and the dope table.
+
+**Illustrate it with the committed renders** under `docs/figures/screens/current/`, and describe only what the build actually does. **A test that every screenshot the guide references exists** keeps the two from drifting. No pseudoscience anywhere in it, as everywhere.
+
+### 7. Housekeeping on everything built in entries 112 and 113
+
+- **Keyboard:** every new screen fully usable without the mouse, as the marking screen is.
+- **Themes:** every new screen passes the contrast tests in all four themes.
+- **Enum names:** extend the test from entry 111 to every new screen.
+- **Renders:** every new screen photographed in dark and light at both sizes, committed under `docs/figures/screens/current/`.
+
+### 8. When the run ends
+
+Whatever is done, record it in `docs/PHASE1-RESULTS.md` and fold both entries into the notes log with status lines that name every section not done. Delete an inbox file only when its entry is complete. Leave a short summary at the top of your final report: what was built, which questions were raised, and what CI says on the final commit.
+
+---
+
+## 2026-09-19, entry 112: session records, the report, the target library, and the solver on screen
+
+**Status: actioned 2026-09-19**, sections 1 to 5. Every section is built; section 5's three things were not done, as it says.
+- **Section 1:** session records in one SQLite database, `grouplab.db`, with the schema and its version in `docs/SESSION-SCHEMA.md`, held by a test. The old record file is migrated once and kept. Full JSON export and import round-trip byte for byte. The chronograph has its tables. A session keeps its marking, figures, definition, a 150 dpi proof image, and the original by path and hash. The marking file now keeps the sheet's registration, so no image is needed to reopen. Session records lists sessions newest first, filters by rifle and load, opens one to its analysis, and asks before deleting.
+- **Section 2:** the report PDF from GroupLab's own writer, two pages as the entry lists. Every line on it is one the screen shows, with figures given with and without exclusions, and the stringing power statement kept. It is tested with an exclusion and without.
+- **Section 3:** the target library on the rail. The built-in sheets are read only, and your own are saved as GLTD in the data folder, to rename, duplicate and delete after asking. The print screen lists both. A sheet a session used stays readable because the session keeps its own copy of the definition, so deleting is allowed and the question says so.
+- **Section 4:** the solver's fields on the records, the zero correction carried to a second distance with its uncertainty and its refusal kept, and a dope table on a new Ballistics screen. The screen's rail slot is question 26.
+- `docs/PHASE1-RESULTS.md` "Entry 112".
+
+**Alan is at the range on 20 September, and nothing here waits on what he brings back.** This is the largest stretch of Phase 4 still marked Not started, plus the payoff of Phase 5's solver. **It is more than one run.** Work in the order of the sections, finish each one to a clean state with its tests, and say in the status line where you stopped. If a section raises a design question this entry does not answer, raise it in `docs/QUESTIONS-FOR-PLANNING.md`, build what does not depend on the answer, and move on.
+
+### 1. Session records, and the storage `DESIGN.md` section 15 names
+
+**Today an analysis lives only as a marking file the person saves somewhere, and nothing lists them.** The rail's Session records destination still says it is not built.
+
+**Storage.** `DESIGN.md` section 15 says: "Storage is SQLite with a documented schema and full JSON export." Nothing uses SQLite yet, and the rifles, barrels and loads live in a JSON file beside the settings. **This is the moment to follow section 15**, before sessions start accumulating in some other form:
+- **One SQLite database in the application's data folder**, holding sessions and the rifle, barrel and load records. The existing record file migrates into it on first run and is kept as a backup, not deleted.
+- **A documented schema**, as a document in `docs/`, with its version number. A test holds the document to the schema the code creates.
+- **Full JSON export** of everything, and import of that export, with a test that the two round-trip exactly.
+- **Section 18's three tiers.** Geometry is always kept. A proof image of about 150 dpi is kept by default. The full-resolution original stays where the person has it, and the session stores its path and its hash, not a copy. No image is ever required to reopen and read a session, because the sheet re-renders from its definition.
+- **Section 15's chronograph rule is the reason the schema matters now:** "the shot sequence and the chronograph sequence are separate ordered lists that get reconciled, never assumed to align." **Leave room for both lists and a mapping between them in the schema now**, even though Xero import is Phase 5, so adding it does not require a migration of every session.
+- **The library:** `Microsoft.Data.Sqlite` is MIT and SQLite itself is public domain. Note both in `THIRD-PARTY-NOTICES.md`. If you prefer a different binding, say why.
+
+**What a session is.** One analysed sheet with its date, distance, rifle, barrel, load and calibre, the marking with every edit and exclusion, the figures as computed, and the proof image. **Accept and analyse saves it.** Reopening it returns to the analysis state exactly as it was.
+
+**The Session records screen**, the rail's destination. A list, newest first: date, sheet name, rifle, load, distance, shot count, mean radius with its interval. Filter by rifle and by load. Open one to its analysis. Delete asks first. The concept images do not draw this screen, so follow the concept's language: the table style of the shot list, the row and hairline pattern from entry 109, and no new visual devices.
+
+### 2. The report
+
+**The Report button on the analysis screen is in the concept and not built.** A report is a PDF of one session, drawn by GroupLab's own PDF writer, for printing or sending to someone.
+
+**Page one, the result:**
+- sheet, date, distance, rifle, barrel, load and calibre;
+- the composite plot;
+- the headline figures, **each with its interval**;
+- the zero correction and its verdict;
+- the two judgement cards, verdict and test.
+
+**Page two, the evidence:**
+- the shot table with bulls;
+- every exclusion **with its reason**;
+- any decision left unmade, stated as the analysis screen states it;
+- the registration's quality;
+- the "why" text of each figure and card, which fits on paper where it did not fit on screen;
+- GroupLab's version and the sheet's identifier.
+
+**Two rules the report must keep:**
+- **Exclusions are never hidden.** `docs/STATISTICS.md` section 10: "every report prints the full and reduced figures side by side so an exclusion can never be hidden." When anything is excluded, every figure appears twice, with and without. Test it.
+- **Nothing on paper is more certain than the screen.** Every interval, hedge and power statement the screen carries goes into the report. The stringing power statement in particular stays beside its result.
+
+**A test** renders a report for a session with an exclusion and one without, and checks that the text it contains is what the rules require.
+
+### 3. The target library
+
+**The rail's Target library destination.** `docs/figures/screens/library-and-print.png` is the concept.
+- The built-in sheets, read only, and the person's own sheets from the parametric editor, saved as GLTD files in the application's data folder.
+- A person's sheet can be renamed, duplicated as the start of a new one, and deleted after asking.
+- The print screen lists both, and a person's sheet prints exactly as a built-in one does, through the same refusals.
+- **A sheet a session was analysed against must stay readable.** Deleting a person's sheet that a session uses either refuses with the reason or keeps the definition inside the session. Say which you chose and why.
+
+### 4. The solver on screen
+
+**Phase 5's solver is validated and invisible.** `DESIGN.md` section 3 and entry 110 section 2g name what it is for. The first two uses are ready now:
+- **The records gain what the solver needs**, all optional:
+  - on the rifle: sight height and zero distance;
+  - on the load: muzzle velocity, BC, drag model G1 or G7, the BC's reference atmosphere, and bullet weight;
+  - twist rate, bullet length and bullet diameter, for spin drift.
+  
+  A record missing any of these simply cannot use the solver, and the screen says which field is missing.
+- **The zero correction carried to another distance.** The analysis screen's zero block already says "moving a zero between distances needs the ballistic solver." When the rifle and load carry what it needs, give the correction at a second distance the person chooses, with the uncertainty carried through, not dropped. Keep the existing refusal when the offset cannot be told from zero: a correction at 500 yd derived from an offset nobody can distinguish from zero is still nothing.
+- **A dope table** for a rifle and load: range, drop and wind per 10 mph in the person's units and clicks, from `grouplab trajectory`'s engine, with the atmosphere as an input. Show "Aerodynamic jump is not modelled" beside it, as the command does.
+- **Hit probability at distance and distance normalisation wait.** They need the propagation of the group's sigma through the solver to be specified, which is its own entry.
+
+**The README's states and `DESIGN.md` move with each section.**
+
+### 5. Things not to do in this entry
+
+- **Do not touch anything from `C:\Dev\grouplab-range-2026-09-20\`.** It arrives with its own entry.
+- **Do not start Garmin Xero import.** It needs a real export file, and none is in the repository. The schema leaves room for it, as section 1 says.
+- **Do not start Android.** Alan wants the Windows application right first.
+
+---
+
 ## 2026-09-19, entry 111: questions 24 and 25 answered, four small screen fixes, and the range material that arrives next
 
 **Status: actioned 2026-09-19**, sections 1 to 4. Section 4 asked for nothing to be processed, and nothing was; its blank-paper route is reported and not built, as it says.

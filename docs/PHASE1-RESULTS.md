@@ -5223,6 +5223,160 @@ The renders under `docs/figures/screens/current/` are regenerated.
 
 **Tests:** Core 944 and App 87 passing, none skipped.
 
+## Entry 112. Session records, the report, the target library and the solver on screen
+
+`docs/NOTES-FROM-PLANNING.md` entry 112, every numbered section. Nothing under `C:\Dev\grouplab-range-2026-09-20\` was read. Garmin Xero import and Android were not started.
+
+### Section 1: session records in SQLite
+
+**One database, `grouplab.db`, beside the settings in the application data folder,** through Microsoft.Data.Sqlite, which THIRD-PARTY-NOTICES.md now lists with SQLitePCLRaw and SQLite.
+- **The schema is documented** in `docs/SESSION-SCHEMA.md` with its version, 1. A test holds the document, the statements the code runs, and the schema SQLite keeps to one another.
+- **The old `records.json` is read in** on the first open and kept beside the database as `records.pre-database.json`. A second open leaves it alone.
+- **Full JSON export and import.** An export read into an empty database exports again byte for byte the same.
+- **The chronograph has room.** Its strings are their own ordered list, with an explicit shot-to-reading mapping, in tables of their own. Deleting a session takes its strings with it. Import is Phase 5 and is not built.
+
+**What a session keeps:**
+- the date, distance, rifle, barrel, load and calibre;
+- the marking with every edit and exclusion;
+- the mean radius with its interval;
+- the sheet's definition;
+- a proof image;
+- the original image by its path and SHA-256, never copied.
+
+**Section 18's three tiers:**
+- **The geometry** is the marking itself.
+- **The proof image** is a JPEG at 150 dpi, or 1650 pixels on the long side where there is no scale. It is about 200 KB on the test sheet.
+- **The original** is referenced and never copied.
+
+**No image is needed to reopen.** The marking file now keeps the sheet's registration as numbers, for each of the three models: the homography's nine values, the radial model's centre, scale and two coefficients, and the surface model's parameters and page. So a reopened session has its scale and plot without the photograph. A marking from before this still reads, with its old note to detect again. A reopened session uses the original image only where it is still where it was with the same hash, and it says so when it is not.
+
+**Accept and analyse saves the session.** A second Accept on the same marking updates it and keeps the day it was first saved. The Session records screen, on the rail:
+- lists every session newest first: date, sheet, rifle, load, distance, shot count, and mean radius with its interval;
+- filters by rifle and by load;
+- opens a session back to its analysis from its row;
+- asks before deleting one.
+
+### Section 2: the report
+
+**The analysis's Report button saves a PDF from GroupLab's own writer.**
+- **Page 1:** the particulars; the composite plot, drawn as dots in the bullet's outline, excluded ones hollow, with the centre and the CEP 50 and CEP 90 circles; every figure with its interval; the zero correction with its verdict; and the two cards.
+- **Page 2:** the shot table, with every bull and each shot's standing, an excluded one struck through with its reason; the exclusions with their reasons; the decisions left unmade; the registration; every "why"; and the version and identifiers.
+- A report longer than that continues on a further page rather than being cut, and every page is numbered with the sheet and the date.
+
+**Nothing on paper is more certain than the screen.** The report takes every sentence from the functions the screen lays out: the figure lines, the cards, the zero block and the "why" texts were moved into shared functions for it. A test holds every figure and card line on paper to the screen's text.
+- **Every figure is given with and without exclusions.** CEP 90 and width by height had no without-exclusions line on screen, and gained one there too.
+- **The stringing power statement stays** with the negative on page 1.
+- The test covers the same session with an exclusion and without.
+
+### Section 3: the target library
+
+**The rail's library slot opens it.** It lists the built-in sheets by family, read only, and the person's own sheets after them. An own sheet is saved as canonical GLTD-J in a `sheets` folder of the data folder.
+- **An own sheet can be renamed, duplicated and deleted after asking.** Duplicate also works on a built-in sheet, as the start of an own one.
+- **The designer saves** into the own sheets.
+- **The print screen lists both,** and an own sheet prints through exactly the refusals a built-in one does.
+- **The name is not in the printed codes,** so a rename changes no definition identifier. A test checks that.
+
+**A sheet a session used stays readable because the session keeps its own copy of the definition.** Deleting is therefore allowed, and the question before it says how many sessions were analysed against the sheet and that each keeps its copy. The alternative, refusing, would make a sheet undeletable for as long as any session of it is kept. A test deletes a sheet a session used and reopens the session.
+
+### Section 4: the solver on screen
+
+- **The records gain the solver's fields,** all optional:
+  - the rifle: sight height, zero distance and twist;
+  - the load: muzzle velocity and its SD, BC, drag model, the BC's reference atmosphere, and bullet weight, length and diameter.
+  A record missing what the solver needs says which field, both on the analysis and on the new Ballistics screen.
+- **The zero correction carried to a second distance,** beneath the zero block's verdict:
+  - Windage carries in proportion to range, since drag leaves the sideways share of the velocity unchanged.
+  - Elevation carries by the solver's own linearisation: the ratio of the path's changes at the two distances under a small change of the bore's angle, by a central difference of the zero range. A test holds it within 1 percent of a directly flown change.
+  - The half-width carries by the same factor.
+  - An axis that could not be told from zero is not carried, and it says so.
+- **A dope table on the Ballistics screen:** range, drop, the elevation and its clicks, and a 10 mph crosswind's wind with its windage and clicks, in the display units, with the air as an input. It shows "Aerodynamic jump is not modelled." beneath it, and says whether spin drift is available. A test holds its rows to the solver's own.
+- **The screen has no slot in the concept's rail,** so it has a seventh one. That is question 26.
+
+## Entry 113. The analysis finished, load comparison, hit probability, the range tooling, the volunteer pack and the user guide
+
+`docs/NOTES-FROM-PLANNING.md` entry 113, every numbered section, after entry 112. Nothing under `C:\Dev\grouplab-range-2026-09-20\` was read.
+
+### Section 1: the analysis screen's unbuilt parts
+
+- **The sheet's thumbnail** heads the analysis's left column. It is drawn from the definition, not the photograph, and every shot sits at its bull's centre plus its offset. A click on a bull selects its shots on the plot, the table and the sheet.
+- **The full CEP table and bivariate fit** sit behind one disclosure that remembers it was opened.
+  - The table gives CEP 50, 90, 95 and 99 three ways: the circular estimate with its interval, the correlated normal, and Grubbs-Patnaik.
+  - The fit gives the centre and each axis's spread with their intervals, the correlation, the error ellipse, and the ellipse holding 95 percent of shots.
+  - Both are given with every shot and again without exclusions.
+- **The renders are regenerated,** and the README's analysis line is **Done**.
+
+### Section 2: comparing loads
+
+**The rail's chart slot is the concept's Compare loads.** Two or more sessions are ticked in Session records, or a sheet's subgroups are chosen, and they appear side by side. Each has its plot and figures with intervals: sigma, mean radius, and the subordinate extreme spread. Below them are the tests with their verdicts:
+- **Two loads:** the sigma ratio's F test and Hotelling's T squared.
+- **More than two:** Fligner-Killeen and MANOVA, with every pair's ratio and its Holm-adjusted p.
+
+**Every negative carries what it could have detected.**
+- The dispersion test gives the smallest difference its shot counts detect with 80 percent power.
+- The centre test gives the smallest shift it detects, from the large-sample noncentrality of a 2-degree test.
+
+**Nothing is ranked by point estimate.** The groups stay in the order chosen, and when the sigma intervals overlap, the headline says the data do not separate them. The planning table gives the shots per load for 10, 25 and 50 percent. Sessions at different distances are compared as angles, and the screen says so.
+
+**Subgroups can be compared, but nothing on screen assigns them.** That is question 27.
+
+### Section 3: hit probability at distance, and distance normalisation
+
+Built as specified.
+- **The partial derivatives come from the solver:** drift per mph, and drop per ft/s with the bore's angle held. For that, the solver's input gained an optional fixed launch angle; without it, nothing changes.
+- **The velocity's share at the distance shot comes out in quadrature first,** and is refused when larger than the group.
+- **P(hit) at both ends of the sigma interval and at its estimate,** for a circle or a rectangle about the aim plus the carried zero offset.
+- **Everything is labelled a prediction.** With neither spread, it says it is angular scaling and nothing more.
+
+**The entry's four tests pass:**
+- with no spread, it is angular scaling exactly;
+- with a velocity SD, vertical grows faster than distance;
+- a centred circle with equal axes is the Rayleigh closed form, by the closed form and by the integration;
+- the refusal happens when it should.
+
+The screen is a section of the Ballistics screen, carrying the group open in the analysis.
+
+### Section 4: tooling for the range material, without reading it
+
+**`grouplab compare-photos <scan> <photograph>... [--truth <marking>]`.**
+- It uses the scan's corrected marking as truth when given, or its own detection otherwise, and says which on its first line.
+- **For each photograph it reports:** the registration model; bull-centre error, worst and median; holes found, missed and false; and hole-position error, median, 95th percentile and worst.
+- **Holes are paired nearest first within 0.15 in.**
+- **The table is read against 0.005 in and 0.15 in and decides neither gate.**
+- **Tested on synthetic data:** a synthetic scan of GL-CF25-LTR, and a photograph of the same holes turned 1.5 degrees at 280 dpi. The truth is checked both ways, with a corrected marking missing one hole giving one false.
+
+**The doubles sheet.**
+- **Without a rule,** one-to-one matching pushes each second shot onto an empty bull, and the review queue raises every pushed shot as contested, naming the bull that already holds a shot. The matching can chain, so more than ten shots can be pushed, and every one is raised.
+- **The setting was missing and is built:** Shots per bull, in the editor's side panel. It offers one a bull, matched; nearest bull, however many; or two on the bulls named.
+- **The rule is how the sheet is read, not an edit,** so it re-baselines the detected reading and nothing it places is flagged as moved.
+- **A bull holding what the rule expects is not raised as doubled.** The rule is kept in the marking file.
+- **Both paths are tested** on a synthetic doubles sheet.
+- **The blank sheet stays Not started.**
+
+### Section 5: the volunteer print pack
+
+**"Print a volunteer pack", on the print screen,** gives the sheet and one page of instructions in one PDF, opened to print at actual size.
+- **The page is generated from `docs/VOLUNTEER-PACK.md`,** which is embedded so the two cannot drift, at the sheet's own paper size.
+- **It carries everything the entry lists,** including the sheet's own distance from bull 1 to bull 5: 5.98 in (152.0 mm) on the Letter 5x5 sheet, whose pitch is 38.0 mm.
+- **It points to `https://pissinhot.com/targets`,** where submitting means following that page's terms.
+- **Consent is not in the pack.**
+- A test holds all of that, and refuses a pack that runs past one page.
+
+### Section 6: the user guide
+
+**`docs/USER-GUIDE.md` and `docs/USER-GUIDE.pdf`.** The guide walks through printing, shooting, photographing and scanning, marking and the review queue, reading the analysis, sessions and the report, comparing loads, and the dope table. It says what each "why" says in plain words, and it is illustrated with the committed renders.
+- **The PDF comes from GroupLab's own writer,** which gained JPEG pictures for it. `grouplab user-guide` scales each render to 1400 pixels across.
+- **A test fails if a screenshot the guide names does not exist.**
+
+### Section 7: housekeeping
+
+- **Enum names.** `NoEnumNameReachesAPerson` now also walks Session records, the target library, Ballistics, Compare loads and the report's pages.
+  - It found nothing new.
+  - The roll sheets' "Roll24" in the print screen's and library's paper was found by looking, and now reads "24 in roll".
+- **Themes and keyboard.** A test walks every new screen in all four themes and requires every visible text colour to be one of that theme's text roles, which `ThemeTests` holds to their ratios on every surface. Every control a person operates there takes the keyboard's focus.
+- **Renders:** every new screen in dark and light at both sizes, under `docs/figures/screens/current/`: sessions, library, ballistics and compare.
+
+**Tests:** Core 973 and App 98 passing, none skipped. Questions 26 and 27 are raised and nothing waited on them.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5480,3 +5634,15 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 111 section 3: "why" as a plain button beside the item's last line, over a toggle.** The theme paints a checked toggle amber, and an open explanation needs no one's attention.
 - **Entry 111 section 3: the count kept in the placement sentence, over the "Shots" row.** The sentence carries the count and how the shots were placed; the row carried the count alone.
 - **Entry 111 section 4: the timing read from the log, over a stopwatch in the window.** The log already records every step with its time and no path, so the measurement needed no change to the application.
+- **Entry 112 section 1: the sheet's registration kept in the marking file, over re-detecting on reopen.** Section 18 says no image is ever needed to reopen, and without the mapping a session reopened from its marking had no scale.
+- **Entry 112 section 1: the proof image as a JPEG in the database, over a file beside it.** One file is the whole record, and the export carries it.
+- **Entry 112 section 2: the report's words from the screen's own functions, over a second wording.** Two wordings drift, and the rule is that paper says nothing the screen does not.
+- **Entry 112 section 3: deleting a sheet a session used allowed, over refusing.** Every session keeps its own copy of the definition, and refusing would make a sheet undeletable while any session of it is kept.
+- **Entry 112 section 4: elevation carried by a central difference of the zero range, over a new solver input.** It needed no change to the validated solver, and a test holds it to a directly flown change within 1 percent.
+- **Entry 112 section 4: the dope table on a Ballistics screen with its own rail slot, over a panel in the analysis.** The analysis column is 372 pixels, and the table has seven columns; question 26 asks.
+- **Entry 113 section 2: the chart slot as Compare loads, over Reports.** The concept's chart icon is Compare loads, and a report is written from its analysis.
+- **Entry 113 section 2: sessions at different distances compared as angles, over refusing.** Dispersion scales with distance, and the screen says it compared them as angles.
+- **Entry 113 section 3: an optional fixed launch angle on the solver's input, over a zero-range difference for velocity.** A change of velocity with the zero kept would move the bore; the angle must be held, and without the field nothing changes.
+- **Entry 113 section 4: the rule re-baselines the detected reading, over counting its moves as edits.** A rule is how the sheet is read, and flagging every shot it placed as moved would raise the doubles again.
+- **Entry 113 section 6: JPEG pictures in GroupLab's own PDF writer, over another PDF tool.** The project's reading documents already come from that writer, and a JPEG goes in as it is.
+- **Entry 113 section 7: the new screens held to their themes' tested text roles, over pixel contrast measurement.** The roles are what ThemeTests holds to their ratios, and a render's pixels vary between machines.
