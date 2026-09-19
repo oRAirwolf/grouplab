@@ -200,6 +200,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
+- **Not started.** Printing from inside GroupLab, with the real print dialog and the size set by GroupLab itself, which question 21 of `docs/QUESTIONS-FOR-PLANNING.md` scopes. Until then Open to print opens the sheet in the PDF viewer and says to print it at actual size.
 - **Done.** The parametric target editor: page, rows and columns, spacing, ring, sighters and load block, laid out by the rule the library was, with a layout that cannot register or fit refused and a spacing tight for your rifle's group warned with its misassignment rate.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.

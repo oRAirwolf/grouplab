@@ -28,8 +28,19 @@ public sealed record Palette(
     Color FocusRing,
     Color Disabled,
     Color WarningText,
-    Color ErrorText)
+    Color ErrorText,
+    Color MarkRing,
+    Color MarkAmber,
+    Color MarkWord)
 {
+    /// <summary>
+    /// The mark's brand roles, question 20 answered by NOTES-FROM-PLANNING.md entry 106 section 2: the rings, the holes with LAB, and GROUP,
+    /// at the values of the committed mark files, which <c>ThemeTests</c> holds them to. They exist for the mark and nothing else, and are held
+    /// to 3:1 for a graphic at header size, not to the body-text ratio; light <see cref="Amber"/>, tuned for text, differs from the mark's
+    /// amber on purpose.
+    /// </summary>
+    public IReadOnlyList<(string Role, Color Colour)> MarkColours => [("mark ring", MarkRing), ("mark amber", MarkAmber), ("mark word", MarkWord)];
+
     /// <summary>The colours text is set in.</summary>
     public IReadOnlyList<(string Role, Color Colour)> TextColours => [("text", Text), ("dim", Dim), ("faint", Faint), ("amber", Amber), ("teal", Teal), ("alert", Alert), ("warning", WarningText), ("error", ErrorText)];
 
@@ -82,7 +93,10 @@ public static class Tokens
         FocusRing: Hex(0xe0912f),
         Disabled: Hex(0x7c828b),
         WarningText: Hex(0xe0912f),
-        ErrorText: Hex(0xe1634d));
+        ErrorText: Hex(0xe1634d),
+        MarkRing: Hex(0x6b727b),
+        MarkAmber: Hex(0xe0912f),
+        MarkWord: Hex(0x8a9199));
 
     public static Palette Light { get; } = new(
         Bg: Hex(0xf4f3f0),
@@ -107,7 +121,10 @@ public static class Tokens
         FocusRing: Hex(0x965d12),
         Disabled: Hex(0x868b92),
         WarningText: Hex(0x965d12),
-        ErrorText: Hex(0xb8422f));
+        ErrorText: Hex(0xb8422f),
+        MarkRing: Hex(0x8f8b83),
+        MarkAmber: Hex(0xa9660f),
+        MarkWord: Hex(0x6f6b64));
 
     /// <summary>
     /// High contrast, NOTES-FROM-PLANNING.md entry 93 section 3. It is not a fourth set of hand-picked values: it is <see cref="Dark"/> put

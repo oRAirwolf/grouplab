@@ -14,9 +14,11 @@ namespace GroupLab.App;
 /// the idea, since GroupLab exists to show where a rifle hits against where it was aimed. <see cref="Lockup"/> adds the wordmark, GROUP in
 /// grey and LAB in amber, as outlines, so no font is needed at runtime.
 /// <para>
-/// The committed SVG files are the source of truth, and this draws them rather than a copy of their geometry: the dark file in the dark
-/// and high-contrast themes, the light file in the light theme, each in its own colours (question 20 of docs/QUESTIONS-FOR-PLANNING.md asks
-/// whether those colours become tokens). It reads only what the files use: circles and filled paths, with fill, stroke and stroke width.
+/// The committed SVG files are the source of the geometry, and this draws them rather than a copy: the dark file in the dark and
+/// high-contrast themes, the light file in the light theme. Its colours are the palette's brand roles, question 20 answered by entry 106
+/// section 2: each colour in a file is the role it matches in that file's own palette, drawn in the role's colour for the theme showing, so
+/// the mark follows the theme and <c>ThemeTests</c> holds files and roles to each other. It reads only what the files use: circles and
+/// filled paths, with fill, stroke and stroke width.
 /// </para>
 /// </summary>
 internal sealed class BrandMark : Control
@@ -43,13 +45,16 @@ internal sealed class BrandMark : Control
     {
         ArgumentNullException.ThrowIfNull(context);
         var art = Art;
+        var file = ActualThemeVariant == ThemeVariant.Light ? Tokens.Light : Tokens.Dark;
+        var now = Tokens.For(ActualThemeVariant);
+        Color Role(Color c) => c == file.MarkRing ? now.MarkRing : c == file.MarkAmber ? now.MarkAmber : c == file.MarkWord ? now.MarkWord : c;
         double scale = Math.Min(Bounds.Width / art.ViewBox.Width, Bounds.Height / art.ViewBox.Height);
         using (context.PushTransform(Matrix.CreateTranslation(-art.ViewBox.X, -art.ViewBox.Y) * Matrix.CreateScale(scale, scale)))
         {
             foreach (var shape in art.Shapes)
             {
-                IBrush? fill = shape.Fill is { } f ? new SolidColorBrush(f) : null;
-                IPen? pen = shape.Stroke is { } s ? new Pen(new SolidColorBrush(s), shape.StrokeWidth) : null;
+                IBrush? fill = shape.Fill is { } f ? new SolidColorBrush(Role(f)) : null;
+                IPen? pen = shape.Stroke is { } s ? new Pen(new SolidColorBrush(Role(s)), shape.StrokeWidth) : null;
                 context.DrawGeometry(fill, pen, shape.Geometry);
             }
         }

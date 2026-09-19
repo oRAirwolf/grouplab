@@ -25,53 +25,57 @@ public sealed partial record Calibre(string Name, double DiameterInches)
 {
     /// <summary>
     /// The bullet diameters of entry 105 section 7, from Alan's rifle and pistol lists: 44 rows, 42 distinct pairs, each a name and the
-    /// diameter it fires. Nine names appear with more than one diameter and are ambiguous by name alone.
+    /// diameter it fires, and whether it came from the rifle list, the pistol list or both. Nine names appear with more than one diameter and are
+    /// ambiguous by name alone.
     /// </summary>
-    public static IReadOnlyList<Calibre> Table { get; } =
+    public static IReadOnlyList<(Calibre Calibre, string From)> TableRows { get; } =
     [
-        new("17 Cal.", 0.172),
-        new("20 Cal.", 0.204),
-        new("5.45 Cal.", 0.2215),
-        new("22 Cal.", 0.224),
-        new("6mm", 0.243),
-        new("25 Cal.", 0.257),
-        new("6.5mm", 0.264),
-        new("270 Cal.", 0.277),
-        new("7mm", 0.284),
-        new("30 Cal.", 0.308),
-        new("30 Cal.", 0.309),
-        new("7.62mm", 0.310),
-        new("303 Cal.", 0.3105),
-        new("303 Cal.", 0.312),
-        new("32 Cal.", 0.312),
-        new("32 Cal.", 0.321),
-        new("8mm", 0.323),
-        new("338 Cal.", 0.338),
-        new("35 Cal.", 0.355),
-        new("35 Cal.", 0.357),
-        new("35 Cal.", 0.358),
-        new("9mm", 0.355),
-        new("9mm", 0.356),
-        new("38 Cal.", 0.357),
-        new("38 Cal.", 0.358),
-        new("9.3mm", 0.366),
-        new("375 Cal.", 0.375),
-        new("10mm", 0.400),
-        new("400 Cal.", 0.410),
-        new("41 Cal.", 0.410),
-        new("405 Cal.", 0.411),
-        new("416 Cal.", 0.416),
-        new("423 Cal.", 0.423),
-        new("44 Cal.", 0.430),
-        new("45 Cal.", 0.451),
-        new("45 Cal.", 0.452),
-        new("45 Cal.", 0.454),
-        new("45 Cal.", 0.458),
-        new("470 Cal.", 0.474),
-        new("50 Cal.", 0.500),
-        new("505 Cal.", 0.505),
-        new("50 Cal.", 0.510),
+        (new("17 Cal.", 0.172), "rifle"),
+        (new("20 Cal.", 0.204), "rifle"),
+        (new("5.45 Cal.", 0.2215), "rifle"),
+        (new("22 Cal.", 0.224), "rifle"),
+        (new("6mm", 0.243), "rifle"),
+        (new("25 Cal.", 0.257), "rifle"),
+        (new("6.5mm", 0.264), "rifle"),
+        (new("270 Cal.", 0.277), "rifle"),
+        (new("7mm", 0.284), "rifle"),
+        (new("30 Cal.", 0.308), "rifle"),
+        (new("30 Cal.", 0.309), "pistol"),
+        (new("7.62mm", 0.310), "rifle"),
+        (new("303 Cal.", 0.3105), "rifle"),
+        (new("303 Cal.", 0.312), "rifle"),
+        (new("32 Cal.", 0.312), "pistol"),
+        (new("32 Cal.", 0.321), "rifle"),
+        (new("8mm", 0.323), "rifle"),
+        (new("338 Cal.", 0.338), "rifle"),
+        (new("35 Cal.", 0.355), "rifle"),
+        (new("35 Cal.", 0.357), "rifle"),
+        (new("35 Cal.", 0.358), "rifle"),
+        (new("9mm", 0.355), "pistol"),
+        (new("9mm", 0.356), "pistol"),
+        (new("38 Cal.", 0.357), "pistol"),
+        (new("38 Cal.", 0.358), "pistol"),
+        (new("9.3mm", 0.366), "rifle"),
+        (new("375 Cal.", 0.375), "rifle"),
+        (new("10mm", 0.400), "pistol"),
+        (new("400 Cal.", 0.410), "rifle"),
+        (new("41 Cal.", 0.410), "pistol"),
+        (new("405 Cal.", 0.411), "rifle"),
+        (new("416 Cal.", 0.416), "rifle"),
+        (new("423 Cal.", 0.423), "rifle"),
+        (new("44 Cal.", 0.430), "both"),
+        (new("45 Cal.", 0.451), "pistol"),
+        (new("45 Cal.", 0.452), "both"),
+        (new("45 Cal.", 0.454), "pistol"),
+        (new("45 Cal.", 0.458), "rifle"),
+        (new("470 Cal.", 0.474), "rifle"),
+        (new("50 Cal.", 0.500), "pistol"),
+        (new("505 Cal.", 0.505), "rifle"),
+        (new("50 Cal.", 0.510), "rifle"),
     ];
+
+    /// <summary>The table's calibres, without which of Alan's two lists each came from.</summary>
+    public static IReadOnlyList<Calibre> Table { get; } = [.. TableRows.Select(r => r.Calibre)];
 
     /// <summary>
     /// The cartridge names the pick list carried before entry 105, kept so nobody loses a name they already use. Each resolves to its own
@@ -92,7 +96,32 @@ public sealed partial record Calibre(string Name, double DiameterInches)
         (new("9 mm", 0.355), ["9mm"]),
         (new(".375", 0.375), ["375"]),
         (new(".45", 0.452), ["45"]),
+
+        // Entry 106 section 3: cartridges whose names are not their bullets and that still fell to the leading-number guess. Every .300 in
+        // common use fires a .308 bullet, so "300" and any name beginning with it is .308; the 280s, 28 Nosler and 7mm Rem Mag are .284;
+        // 26 Nosler is .264; the hyphenated .30s are .308 where a bare "30" stays ambiguous; 50 BMG is .510, 45-70 is .458, and 7.62x51 and
+        // 7.62x39 are .308 and .310 where a bare "7.62" stays ambiguous.
+        (new("300 Blackout, 300 Win Mag and the other .300s", 0.308),
+            ["300", "300blackout", "300blk", "300aac", "300winmag", "300wm", "300wsm", "300prc", "300norma", "300wby", "300weatherby", "300h&h", "300rum", "300savage"]),
+        (new("280 Rem, 280 Ackley", 0.284), ["280", "280rem", "280ackley", "280ai"]),
+        (new("28 Nosler", 0.284), ["28nosler"]),
+        (new("7mm Rem Mag", 0.284), ["7mmremmag", "7mmrm"]),
+        (new("26 Nosler", 0.264), ["26nosler"]),
+        (new("30-06 Springfield", 0.308), ["30-06", "3006", "30-06springfield"]),
+        (new("30-30 Win", 0.308), ["30-30", "3030", "30-30win"]),
+        (new("30-40 Krag", 0.308), ["30-40", "30-40krag"]),
+        (new("50 BMG", 0.510), ["50bmg"]),
+        (new("45-70 Government", 0.458), ["45-70", "4570", "45-70govt"]),
+        (new("7.62x51 NATO", 0.308), ["7.62x51", "7.62x51mm", "7.62x51nato"]),
+        (new("7.62x39", 0.310), ["7.62x39", "7.62x39mm"]),
     ];
+
+    /// <summary>The cartridge names with every short key that reaches each, for the generated list of what the calibre input knows.</summary>
+    public static IReadOnlyList<(Calibre Calibre, IReadOnlyList<string> Keys)> CartridgeNames => [.. Cartridges.Select(c => (c.Calibre, (IReadOnlyList<string>)c.Keys))];
+
+    /// <summary>Every name that reaches more than one diameter, with its candidates, for the generated list.</summary>
+    public static IReadOnlyList<(string Key, IReadOnlyList<double> Diameters)> AmbiguousNames =>
+        [.. ByKey.Value.Where(k => k.Value.Count > 1).OrderBy(k => k.Key, StringComparer.Ordinal).Select(k => (k.Key, (IReadOnlyList<double>)[.. k.Value.Select(c => c.DiameterInches).Order()]))];
 
     /// <summary>The pick list: every table pair and every cartridge name, each shown with its diameter, which is what tells two 35s apart.</summary>
     public static IReadOnlyList<Calibre> Common { get; } =

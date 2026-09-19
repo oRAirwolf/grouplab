@@ -15,9 +15,122 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 106: entry 105 section 9 was folded as actioned and not done, question 20 answered, the "300" cartridges still read as 0.300, the full calibre list generated from the code, and printing from inside GroupLab
+
+**Status: actioned 2026-09-19**, sections 1 to 4. **Section 5 is not built: it is scoped and raised as question 21**, with its plan, its cost and the three decisions it needs.
+- **Section 1:** entry 105 section 9 built: Open to print opens the PDF in the viewer on every platform with no print verb, a confirmation dialog says to print at actual size, and the launch is logged. Entry 105's status line is corrected, and `NotesStatusTests` checks any "all N sections" claim against the entry.
+- **Section 2:** question 20 answered, option B: three brand roles in each palette at the files' values, the mark drawn from them, files and roles held to each other and to 3:1, the tightest light rings on the light background at 3.06:1.
+- **Section 3:** every diameter checked and correct; the .300s, 280s, Noslers, 7mm Rem Mag, the hyphenated .30s, 50 BMG, 45-70, 7.62x51 and 7.62x39 read as their bullets, and the bare 30, 7.62 and 50 still ask.
+- **Section 4:** `grouplab calibres` writes `docs/CALIBRES.md` and `docs/CALIBRES.pdf` from the code, and a test holds the committed list to it.
+- `docs/PHASE1-RESULTS.md` "Entry 106".
+
+
+### 1. Entry 105 section 9 is in the log, marked actioned, and not built
+
+**The log's status line for entry 105 reads "All eight items, with one conflict raised as question 20."** The entry has nine sections. Section 9, the Print button, was folded into the log with the rest, and `PrintWindow.PrintLaunch` still starts the PDF with `Verb = "print"` at line 574. **So the log says a defect is dealt with that is still in the build.** That is the same class of error as question 15's status line, the one `QuestionStatusTests` now guards against, one file over.
+
+**The cause is mine.** I appended section 9 to the inbox file after writing a covering command that listed the sections by number and said "all eight". The command and the entry disagreed, and the command won. **From here my covering commands do not enumerate sections; they say to action every numbered section of the entry, and the entry is the only list.**
+
+**What to do.**
+- **Action entry 105 section 9 now, as written there.** Its text is in the log. The short version: stop using the shell print verb on every platform, open the PDF in the viewer, say in the status line to print from there at Actual size, rename the button for what it does, and log the launch on success. **Do not build an in-app print path under it.**
+- **Correct entry 105's status line** to say that section 9 was not actioned with the rest and was actioned under entry 106. Leave the rest of the entry as it is.
+- **A guard, if it is cheap:** when an entry is folded as actioned, its status line either says every section was done or names the ones that were not. A test can count an entry's numbered `###` sections and fail when an actioned status line quotes a smaller number. **If status lines are too free-form for that to hold, say so and skip it.** The real fix is the covering command, which is now mine to get right.
+
+**It did print, silently.** After this section was written, Alan reported that the sheets he tried to print came out of his printer, with no dialog and nothing on screen to say they had been sent. **That is the worst outcome section 9 described:** a target printed with nobody choosing Actual size, at whatever scaling his PDF program uses by default, and the screen's green line claiming a dialog would follow. He is measuring those sheets before shooting any of them.
+
+**Two changes to section 9 as written, from Alan:**
+- **He wants a confirmation when something is sent.** On the viewer path GroupLab only opens a file, so the honest confirmation is a dialog saying exactly that: "The target is open in your PDF viewer. Print it from there, choosing Actual size or 100 percent, never Fit." The status line alone is not enough; he missed it.
+- **This path is the interim, not the end state.** Section 5 is the print path he chose. Build section 9's viewer path now anyway, because it stops silent printing today.
+
+**Why it matters before the weekend.** Alan is about to print sheets for a measurement session. Until this lands he has been told to use Save PDF and print from his viewer.
+
+### 2. Question 20 answered: B, and the error was mine
+
+**B.** The tokens gain the mark's colours as brand roles in each palette, set to the committed files' values, the mark is drawn from them, and a test holds the files and the tokens to each other.
+
+**How the conflict arose.** Entry 105 section 4 called `#a9660f` "the light theme's amber" and said the greys were existing tokens. I had read the dark palette in `Tokens.cs` and not the light one, and I never checked the greys at all. Drawing the mark from the committed files' own colours until this was answered was the right call.
+
+**The roles**, names at your discretion:
+
+| Role | Dark, also high contrast | Light |
+|---|---|---|
+| Mark rings | `#6b727b` | `#8f8b83` |
+| Mark holes and LAB | `#e0912f` | `#a9660f` |
+| GROUP | `#8a9199` | `#6f6b64` |
+
+**The contrast rule that applies to them is not the body-text rule.** `ThemeTests` holds the text tokens to body-text contrast, which is why light `Amber` moved to `#965d12`. The mark is only ever drawn at header size and larger, and the rings are a graphic, so hold the brand roles to 3:1 against the panel each theme puts behind them. **By my arithmetic they all clear it**, the tightest being the light rings on the light background at about 3.1:1. The test should compute this rather than trust my figure.
+
+**Keep the brand roles out of general use.** They exist for the mark. If `Amber` and the mark's amber ever drift apart in the light theme, that is intended: one is tuned for text, the other is the logo.
+
+### 3. The "300" cartridges, and a few others, still fall through to the old guess
+
+**Entry 105 section 7 is done as specified, and I specified too little.** A name that matches no table row or cartridge key still reaches the leading-number rule, and that rule reads a cartridge name as a diameter. I traced `Calibre.Read` at `471f91c` by hand for common names:
+
+| Typed | Reads as | Bullet |
+|---|---|---|
+| **300 Blackout** | 0.300 | **.308** |
+| 300 Win Mag, 300 PRC, 300 WSM, 300 Norma | 0.300 | .308 |
+| 280 Rem, 280 Ackley | 0.280 | .284 |
+| 28 Nosler | 0.280 | .284 |
+| 26 Nosler | 0.260 | .264 |
+| 30-06, 30-30 | asks: .308 or .309 | .308 |
+| 50 BMG | asks: .500 or .510 | .510 |
+
+**The first row is the cartridge Alan's friend shot on the sheet the whole analysis screen has been built against:** 300 Blackout, 220 grain subsonic. Typed by name, it gets an edge-to-edge extreme spread 0.008 in short and a snap radius and oversize threshold for a bullet that does not exist. `Calibre.cs` already says in its own comment that ".300 Win Mag fires a .308 bullet"; the table just does not act on it.
+
+**Add cartridge keys for these, as the `Cartridges` list already does for .223 and .270:**
+- **Any name beginning "300"** resolves to .308. Every .300 cartridge in common use fires a .308 bullet: Blackout, AAC, Win Mag, WSM, PRC, Norma, Weatherby, H&H, RUM, Savage.
+- **"280"** resolves to .284, and so do **"28 Nosler"** and **"7mm Rem Mag"**.
+- **"26 Nosler"** resolves to .264.
+- **"30-06", "30-30" and "30-40"** resolve to .308. The hyphenated name is the cartridge; a bare "30" stays ambiguous as now.
+- **"50 BMG"** resolves to .510, and **"45-70"** to .458.
+- **"7.62x51"** resolves to .308 and **"7.62x39"** to .310, Alan's table value for 7.62mm. A bare "7.62" stays ambiguous as now.
+
+**Check each diameter before committing it.** These are standard bullet diameters as I know them. The principle matters more than my list: a cartridge name is not its bullet diameter, and where the name is common, the table should know that rather than guess.
+
+**Tests:** each name above reads as its diameter, and "30", "7.62" and "50" alone still return candidates.
+
+### 4. A complete list of every calibre and cartridge GroupLab knows, generated from the code
+
+**Alan wants to see the whole list**: every name the calibre input recognises and the diameter it gives. **Build this after section 3**, so the list includes the names section 3 adds.
+
+**Generate it; do not write it by hand.** A hand-written list is out of date the first time someone edits `Calibre.cs`. Follow the pattern `grouplab icons` just set:
+- **A command, `grouplab calibres`**, prints the list from `Calibre.Table` and the cartridge keys as `Calibre.Read` actually resolves them, and writes it to `docs/CALIBRES.md`.
+- **A test fails when the committed `docs/CALIBRES.md` differs from what the command produces**, the way the gate record's tables are held to their committed copies. The list then cannot drift from the code.
+
+**What the document holds**, in this order:
+1. **Every table row:** the name, the diameter in inches to four places, the diameter in millimetres, and whether Alan's list gave it as rifle, pistol or both.
+2. **Every cartridge name and every short key that reaches it**, with the diameter each resolves to. For example: "300 Blackout, 300 BLK, 300 AAC: .308".
+3. **Every ambiguous name with its candidates**, so a reader can see which names will ask them to choose. For example: "45: .451, .452, .454, .458".
+4. **One paragraph on how typed text is read**, in plain words: a typed diameter always wins, a known name gives its diameter, an ambiguous name asks, and anything else falls to the leading-number guess, which says what it read.
+
+**Also produce it as a PDF**, `docs/CALIBRES.pdf`, since the project rule is that documents meant for reading ship as docx or PDF as well as Markdown. **The Markdown is the source; generate the PDF from it** in whatever way the repository already produces its other PDFs.
+
+**Paste the list into your report as well**, or at least its first two parts, so Alan can read it without opening the repository.
+
+### 5. Printing from inside GroupLab, which Alan chose
+
+**Alan's decision:** the Print button prints from inside GroupLab. GroupLab shows the real print dialog, sets actual size itself so no sheet can come out shrunk, and confirms when the job has been sent. I offered this beside the viewer path and a popup on the current silent print. **He chose it knowing it is the larger job.**
+
+**Why it is the right end state and not only a nicer button.** Every other path hands scaling to a program GroupLab cannot see, and the print screen's warning exists because that goes wrong: a sheet printed at 97 percent measures 3 percent small. **Printing it ourselves is the only way GroupLab can guarantee the size.**
+
+**Scope it first, then decide.** If the plan is clear, has no open design decision and fits one run with its tests, build it. Otherwise raise it as a question with the plan and its cost, and leave section 9's viewer path in place meanwhile. Either way, say which.
+
+**What it must do.**
+- **Draw from the target definition with the existing renderer, at the printer's resolution, as vector.** Do not rasterise the PDF. One dmm in the definition is one dmm on the paper, and the renderer already draws in those units.
+- **Place the sheet on true page coordinates.** A printer's drawing origin is its printable area, not the paper's edge, so offset by the printer's hard margins. **If any artwork, marker or code falls inside the unprintable margin, refuse with the reason** rather than print a sheet that cannot register.
+- **Never scale.** Do not offer a scaling choice. If the paper size in the dialog is not the sheet's page size, for example a Letter sheet on A4, say so and refuse rather than fit.
+- **The real print dialog**, for the printer, copies and pages. Candidates on Windows: `System.Drawing.Printing`, which is Windows-only and would sit behind an OS check; Win32 `PrintDlgEx` with GDI through P/Invoke; or the WinRT print manager through its desktop interop. Weigh them and say why you chose one.
+- **Confirm honestly after the job is spooled.** A dialog naming the printer, the sheet, the page count and "at actual size". GroupLab can know the job reached the print queue. It cannot know the paper came out, so do not say it did.
+- **Linux and macOS:** printing through CUPS with scaling disabled, or keep the viewer path there. Your call, stated in the write-up.
+
+**The test that matters:** print a sheet through the new path to a PDF printer, "Microsoft Print to PDF" if the Windows CI runner has one, and check that the markers in the output sit at their definition coordinates to within 0.1 mm. **That checks the size is right, not merely that a job was sent.** If no runner has a PDF printer, say so and describe how Alan can run the same check once by hand.
+
+---
+
 ## 2026-09-19, entry 105: the side columns resizeable, the figure panel made readable, the plot's marks identified on hover, the work bar on a toggle, an application mark, the calibre names read as their real diameters, sighters ignored unless asked for, and a Print button that cannot promise a dialog
 
-**Status: actioned 2026-09-19.** All eight items, with one conflict raised as question 20.
+**Status: actioned 2026-09-19**, sections 1 to 8, with one conflict raised as question 20. **Section 9 was not actioned with the rest**: it was added to the inbox file after the file was read, and this line counted eight items where the entry has nine. It was actioned under entry 106 section 1.
 - **Item 1:** the form fits 372 px on its own, every row wraps, and both states have splitters with a resize cursor, limits and remembered widths.
 - **Item 2:** sentences in the sans, one shape for all five figure rows with the angle beneath, the zero readouts in aligned columns with the verdict at full strength, and ruled headings. No finding reworded.
 - **Item 3:** the plot names what is under the pointer and each shot's bull, in the plot and the table; every shot has one outline and a halo; the legend is a key with swatches, CEP 50 dotted and CEP 90 dashed.

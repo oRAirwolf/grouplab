@@ -12,9 +12,51 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-19, question 21: printing from inside GroupLab, scoped, with the plan, its cost and three decisions it needs
+
+**Status: open.** Blocks entry 106 section 5 only. Meanwhile the print screen's "Open to print" opens the PDF in the viewer with a confirmation, entry 105 section 9's path, and nothing prints silently.
+
+### 1. What entry 106 section 5 asks
+
+> Scope it first. If the plan is clear, has no open design decision and fits one run with its tests, build it. Otherwise raise it as a question with the plan and its cost.
+
+**It is raised, for three reasons.** It does not fit one run beside the rest of entry 106. Three design decisions in section 4 below are open. And the test the entry calls the one that matters depends on a printer the CI runner may not have, which I cannot check from here.
+
+### 2. The plan
+
+- **Windows, through Win32 by P/Invoke:** `PrintDlgEx` for the real dialog (printer, copies, pages), then GDI (`StartDoc`, `StartPage`, `EndPage`, `EndDoc`) to draw.
+  - **Against `System.Drawing.Printing`:** it needs the `System.Drawing.Common` package, a new dependency, and it is Windows-only anyway, so it buys nothing over the Win32 calls it wraps.
+  - **Against the WinRT print manager:** it needs a print document source built for its preview model, which is more machinery for the same result.
+- **Drawn as vector from the scene, never a rasterised PDF.** The renderer's scene is in half-dmm. GDI can be set to a mapping mode with those units, so one unit of the definition is one unit on the paper. The scene's items are:
+  - **Bull bands:** GDI paths from two ellipses, even-odd filled.
+  - **Rectangles:** markers, codes and rules, each a GDI rectangle.
+  - **Text:** set in Arial, the metric match of the Helvetica the PDF names.
+- **True page coordinates.** `GetDeviceCaps` gives the printer's physical offsets, `PHYSICALOFFSETX` and `PHYSICALOFFSETY`, and every item is shifted by them, because GDI's origin is the printable area, not the paper's edge.
+- **Refusals.**
+  - **The paper:** a paper size in the dialog that is not the sheet's page, such as a Letter sheet on A4, is refused with both sizes named. Nothing is ever scaled and no scaling is offered.
+  - **The margin:** any marker, code or bull that falls in the printer's unprintable margin is refused with the item and the margin named.
+- **The confirmation, after `EndDoc` returns:** the printer, the sheet, the page count and "at actual size". It says the job was sent to the print queue, never that the paper came out.
+- **Linux and macOS:** the viewer path stays, because a CUPS path needs its own dialog and its own margin query. That is the smaller half of the value and worth doing only once Windows proves the approach.
+
+### 3. The cost
+
+- **About one full run.** Roughly 300 lines of P/Invoke declarations and dialog handling, 200 of scene drawing and margin checks, the confirmation, and the tests.
+- **The test the entry names:** print a sheet to a PDF printer and check that the markers in the output sit at their definition coordinates within 0.1 mm. It would print to "Microsoft Print to PDF" with an output file named in the job, bypassing the dialog, then rasterise the output with the test project's existing PDF rasteriser and run the registration on it.
+- **The risk in that test:** whether `windows-latest` has "Microsoft Print to PDF" installed. It is an optional Windows feature on the server editions. If it is absent, the test skips on CI and the same check is run once by hand on Alan's machine: print the sheet to "Microsoft Print to PDF", then `grouplab measure` the saved file.
+
+### 4. The three decisions it needs
+
+1. **The margin rule's reach.** Refuse when a marker's quiet zone falls in the unprintable margin, or only when the marker itself does? The quiet zone is part of what makes a marker decode, so I would refuse on the quiet zone too.
+2. **Linux and macOS.** Keep the viewer path there, as above, or build CUPS printing in the same work?
+3. **Whether it replaces "Open to print" or sits beside it.** I would put Print beside it on Windows and keep Open to print everywhere, since a person with a colour-managed viewer workflow may still prefer it.
+
+**What I would choose:** refuse on the quiet zone, keep the viewer path on Linux and macOS for now, and put Print beside Open to print on Windows. Given those answers, it is one run.
+
+---
+
 ## 2026-09-19, question 20: the mark's light amber and its grey are not the tokens entry 105 section 4 says they are
 
-**Status: open.** Blocks nothing: the mark is drawn as chosen meanwhile. Only which set of colours moves is open.
+**Status: answered** by `docs/NOTES-FROM-PLANNING.md` entry 106 section 2: option B. The palettes gain the mark's brand roles at the files' values, the mark is drawn from them, and `ThemeTests` holds the files and the roles to each other and the roles to 3:1.
 
 ### 1. What entry 105 section 4 says
 

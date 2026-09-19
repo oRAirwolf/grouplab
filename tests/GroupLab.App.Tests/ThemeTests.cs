@@ -113,6 +113,55 @@ public partial class ThemeTests
             Assert.NotEqual(Tokens.Dark.Text, palette.Text);
         }
     }
+    /// <summary>
+    /// Question 20, answered by NOTES-FROM-PLANNING.md entry 106 section 2: the mark's colours are brand roles, and the committed files and the
+    /// roles are held to each other. Every colour in a mark file is one of its palette's three roles, and every role is in the lockup.
+    /// </summary>
+    [Fact]
+    public void TheMarkFilesAreDrawnInThePalettesBrandRoles()
+    {
+        string assets = Path.Combine(Repository(), "src", "GroupLab.App", "Assets");
+        foreach (var (file, palette) in new[] { ("grouplab-mark.svg", Tokens.Dark), ("grouplab-lockup.svg", Tokens.Dark), ("grouplab-mark-light.svg", Tokens.Light), ("grouplab-lockup-light.svg", Tokens.Light) })
+        {
+            var used = System.Xml.Linq.XDocument.Load(Path.Combine(assets, file)).Root!.Elements()
+                .SelectMany(e => new[] { (string?)e.Attribute("fill"), (string?)e.Attribute("stroke") })
+                .Where(c => c is not null && c != "none")
+                .Select(c => Tokens.Ink(c!))
+                .ToHashSet();
+            var roles = palette.MarkColours.Select(r => r.Colour).ToHashSet();
+            Assert.True(used.IsSubsetOf(roles), $"{file} uses a colour that is not one of its palette's mark roles");
+            if (file.Contains("lockup", StringComparison.Ordinal))
+            {
+                Assert.True(roles.SetEquals(used), $"{file} does not use every mark role");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Entry 106 section 2: the mark is a graphic drawn at header size and larger, so its roles are held to 3:1 against the surfaces behind it,
+    /// the panel the header and rail are drawn on and the window's background, in every theme. The ratio is computed here, not taken on trust.
+    /// </summary>
+    [Fact]
+    public void TheMarkRolesClearThreeToOneOnTheSurfacesBehindThem()
+    {
+        var failures = new List<string>();
+        foreach (var (name, palette) in new[] { ("dark", Tokens.Dark), ("light", Tokens.Light), ("high contrast", Tokens.HighContrast) })
+        {
+            foreach (var (role, colour) in palette.MarkColours)
+            {
+                foreach (var (surface, background) in new[] { ("panel", palette.Panel), ("bg", palette.Bg) })
+                {
+                    if (Contrast(colour, background) < 3)
+                    {
+                        failures.Add($"{name} {role} on {surface}: {Contrast(colour, background):0.00}");
+                    }
+                }
+            }
+        }
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
     /// <summary>Entry 42 section 6: a crude test that saves the light theme from dying by a thousand hard coded greys.</summary>
     [Fact]
     public void NoColourLiteralAppearsOutsideTheTokens()

@@ -22,7 +22,7 @@ public class CalibreTests
     [InlineData("308", 0.308)]
     [InlineData("22", 0.224)]
     [InlineData("17 HMR", 0.172)]
-    [InlineData("300 Win Mag", 0.300)]
+    [InlineData("300 Win Mag", 0.308)]
     [InlineData("6.5 mm", 0.264)]
     [InlineData("6.5MM", 0.264)]
     [InlineData("8mm", 0.323)]
@@ -115,7 +115,6 @@ public class CalibreTests
     [InlineData("50", new[] { 0.500, 0.510 })]
     [InlineData("9mm", new[] { 0.355, 0.356 })]
     [InlineData("7.62 mm", new[] { 0.308, 0.310 })]
-    [InlineData("30-06", new[] { 0.308, 0.309 })]
     public void AnAmbiguousNameOffersItsCandidatesAndChoosesNone(string typed, double[] diameters)
     {
         var reading = Calibre.Read(typed);
@@ -128,6 +127,48 @@ public class CalibreTests
             Assert.Equal(candidate.DiameterInches, Calibre.Read(candidate.Name).Calibre!.DiameterInches, 12);
         }
     }
+
+    /// <summary>
+    /// Entry 106 section 3: cartridges whose names are not their bullets, which read by the leading-number guess before, "300 Blackout" as
+    /// 0.300 on the very sheet the analysis screen was built against. Each now reads as the bullet it fires.
+    /// </summary>
+    [Theory]
+    [InlineData("300 Blackout", 0.308)]
+    [InlineData("300 BLK", 0.308)]
+    [InlineData("300 AAC", 0.308)]
+    [InlineData("300 Win Mag", 0.308)]
+    [InlineData("300 WSM", 0.308)]
+    [InlineData("300 PRC", 0.308)]
+    [InlineData("300 Norma", 0.308)]
+    [InlineData("300 Weatherby", 0.308)]
+    [InlineData("300 H&H", 0.308)]
+    [InlineData("300 RUM", 0.308)]
+    [InlineData("300 Savage", 0.308)]
+    [InlineData("280 Rem", 0.284)]
+    [InlineData("280 Ackley", 0.284)]
+    [InlineData("28 Nosler", 0.284)]
+    [InlineData("7mm Rem Mag", 0.284)]
+    [InlineData("26 Nosler", 0.264)]
+    [InlineData("30-06", 0.308)]
+    [InlineData("30-30", 0.308)]
+    [InlineData("30-40 Krag", 0.308)]
+    [InlineData("50 BMG", 0.510)]
+    [InlineData("45-70", 0.458)]
+    [InlineData("7.62x51", 0.308)]
+    [InlineData("7.62x39", 0.310)]
+    public void CartridgeNamesReadAsTheBulletsTheyFire(string typed, double inches)
+    {
+        var reading = Calibre.Read(typed);
+        Assert.Empty(reading.Candidates);
+        Assert.Equal(inches, reading.Calibre!.DiameterInches, 12);
+    }
+
+    /// <summary>The bare names stay ambiguous: a hyphen or a case length is what makes a cartridge of them.</summary>
+    [Theory]
+    [InlineData("30")]
+    [InlineData("7.62")]
+    [InlineData("50")]
+    public void TheBareNamesStillAsk(string typed) => Assert.True(Calibre.Read(typed).Candidates.Count > 1);
 
     [Theory]
     [InlineData("wildcat")]

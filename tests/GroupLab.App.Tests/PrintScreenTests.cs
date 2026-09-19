@@ -13,30 +13,37 @@ namespace GroupLab.App.Tests;
 public class PrintScreenTests
 {
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 61 section 3: Windows gets the shell print verb, and Linux and macOS are not asked for one. .NET
-    /// refuses any verb but open there, throwing Win32Exception(ERROR_NO_ASSOCIATION), so asking would throw on every press, log a
-    /// warning, and then blame the PDF viewer for a platform fact. The words shown differ with the platform for the same reason.
+    /// NOTES-FROM-PLANNING.md entry 105 section 9: the launch uses no verb on any platform, since Windows' print verb printed Alan's sheets
+    /// silently at his viewer's own scaling, and the words say the file is open in the viewer and never promise a print dialog.
     /// </summary>
     [Fact]
-    public void ThePrintLaunchAsksWindowsForAPrintVerbAndAsksTheOthersOnlyToOpenTheFile()
+    public void ThePrintLaunchOpensThePdfWithNoVerbAndPromisesNoDialog()
     {
         string path = Path.Combine(Path.GetTempPath(), "grouplab-print-launch.pdf");
+        var (start, status, kind) = PrintWindow.PrintLaunch(path);
+        Assert.Equal(string.Empty, start.Verb);
+        Assert.True(start.UseShellExecute);
+        Assert.Equal(path, start.FileName);
+        Assert.Equal(StatusKind.Information, kind);
+        Assert.Contains("open in your PDF viewer", status, StringComparison.Ordinal);
+        Assert.Contains("Actual size", status, StringComparison.Ordinal);
+        Assert.DoesNotContain("dialog", status, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Sent", status, StringComparison.Ordinal);
+    }
 
-        var (onWindows, windowsStatus, windowsKind) = PrintWindow.PrintLaunch(path, windows: true);
-        Assert.Equal(StatusKind.Success, windowsKind);
-        Assert.Equal("print", onWindows.Verb);
-        Assert.True(onWindows.UseShellExecute);
-        Assert.Equal(path, onWindows.FileName);
-        Assert.Contains("print command", windowsStatus, StringComparison.Ordinal);
-
-        var (elsewhere, elsewhereStatus, elsewhereKind) = PrintWindow.PrintLaunch(path, windows: false);
-        Assert.Equal(StatusKind.Information, elsewhereKind);
-        Assert.Equal(string.Empty, elsewhere.Verb);
-        Assert.True(elsewhere.UseShellExecute);
-        Assert.Equal(path, elsewhere.FileName);
-        Assert.Contains("GroupLab cannot send this to a printer", elsewhereStatus, StringComparison.Ordinal);
-        Assert.DoesNotContain("system has no", elsewhereStatus, StringComparison.Ordinal);
-        Assert.Contains("open in your viewer", elsewhereStatus, StringComparison.Ordinal);
+    /// <summary>Entry 106 section 1: the button says what it does, and no longer ends in an ellipsis that promises a dialog.</summary>
+    [AvaloniaFact]
+    public void TheButtonIsNamedForWhatItDoes()
+    {
+        var window = new PrintWindow { Width = 1200, Height = 800 };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.Select("GL-CF25-LTR.gltd.json");
+        Dispatcher.UIThread.RunJobs();
+        var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.Button>().Select(b => b.Content as string).ToList();
+        Assert.Contains("Open to print", buttons);
+        Assert.DoesNotContain("Print…", buttons);
+        window.Close();
     }
 
     /// <summary>

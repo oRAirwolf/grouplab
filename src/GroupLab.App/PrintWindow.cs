@@ -128,7 +128,7 @@ public sealed class PrintWindow : Window
         details.Children.Add(loadBlock);
         details.Children.Add(note);
         details.Children.Add(new TextBlock { Text = ScaleWords, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
-        details.Children.Add(Row(Button("Save PDF…", async () => await SaveDialog()), Button("Print…", Print)));
+        details.Children.Add(Row(Button("Save PDF…", async () => await SaveDialog()), Button("Open to print", Print)));
         details.Children.Add(status);
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
         details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = 12, Opacity = 0.7 });
@@ -509,9 +509,9 @@ public sealed class PrintWindow : Window
     }
 
     /// <summary>
-    /// Prints through the system: the PDF is written to a temporary file and handed to the print command of whatever opens PDFs. GroupLab
-    /// cannot reach the driver's scaling from there, which is what the plain words beside the button are for. Where no print command is
-    /// registered, the PDF is opened instead.
+    /// Opens the target in the PDF viewer to be printed from there, NOTES-FROM-PLANNING.md entry 105 section 9 and entry 106 section 1. The PDF
+    /// is written to a temporary file and opened, and a dialog says what is true: it is open in the viewer, and it must be printed at actual
+    /// size. GroupLab sends nothing to a printer on this path; printing from inside GroupLab is entry 106 section 5's.
     /// </summary>
     private void Print()
     {
@@ -526,55 +526,68 @@ public sealed class PrintWindow : Window
             return;
         }
 
-        bool windows = OperatingSystem.IsWindows();
-        var (start, sent, sentKind) = PrintLaunch(path, windows);
+        var (start, opened, kind) = PrintLaunch(path);
         try
         {
             Process.Start(start)?.Dispose();
-            SetStatus(sent, sentKind);
-            return;
-        }
-        catch (Win32Exception printing) when (windows)
-        {
-            DiagnosticLog.Exception(LogLevel.Warn, "print.command", printing, ("fallback", "open the PDF"));
-        }
-        catch (Win32Exception opening)
-        {
-            SetStatus("No application could open the PDF (" + opening.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
-            DiagnosticLog.Exception(LogLevel.Warn, "print.open", opening, ("fallback", "the saved PDF"));
-            return;
-        }
-
-        try
-        {
-            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
-            SetStatus("Your PDF viewer has no print command GroupLab can call, so the PDF is open in it. Print from there at Actual size, or 100%.", StatusKind.Information);
         }
         catch (Win32Exception ex)
         {
             SetStatus("No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
             DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
+            return;
         }
+
+        // Entry 105 section 9: a launch that worked leaves a trace too, which is what was missing when the print verb printed silently.
+        DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true)]);
+        SetStatus(opened, kind);
+        Confirm(opened);
     }
 
     /// <summary>
-    /// How the PDF is handed to the system, and what to tell the person, NOTES-FROM-PLANNING.md entry 61 section 3.
+    /// The confirmation entry 106 section 1 asks for: a status line was missed, so a dialog says what GroupLab did and what the person must do,
+    /// and nothing more, since on this path GroupLab only opened a file.
+    /// </summary>
+    private void Confirm(string text)
+    {
+        var ok = new Button { Content = "OK", HorizontalAlignment = HorizontalAlignment.Right, IsDefault = true, Classes = { AppStyles.Primary } };
+        var dialog = new Window
+        {
+            Title = "Open to print",
+            Width = 440,
+            SizeToContent = SizeToContent.Height,
+            CanResize = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new StackPanel
+            {
+                Margin = new Thickness(Tokens.Space12),
+                Spacing = Tokens.Space12,
+                Children = { new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap }, ok },
+            },
+        };
+        ok.Click += (_, _) => dialog.Close();
+        Confirmation = dialog;
+        _ = dialog.ShowDialog(this);
+    }
+
+    /// <summary>The last confirmation shown, for the headless tests.</summary>
+    internal Window? Confirmation { get; private set; }
+
+    /// <summary>
+    /// How the PDF is handed to the system, and what to tell the person. It is opened, on every platform, with no verb.
     /// <para>
-    /// <b>Windows</b> has a shell "print" verb, which hands the file to the print command its PDF viewer registered, and a viewer that
-    /// registered none raises <see cref="Win32Exception"/> so the caller can open the file instead.
-    /// </para>
-    /// <para>
-    /// <b>Linux and macOS have no such verb at all.</b> .NET implements <c>UseShellExecute</c> there by running the desktop's own opener,
-    /// and refuses any verb but "open": <c>SafeProcessHandle.Unix.cs</c> throws <c>Win32Exception(ERROR_NO_ASSOCIATION)</c> for anything
-    /// else. Asking for one would throw on every press, log a warning, and then blame the person's PDF viewer for a platform fact, so
-    /// nothing asks. The PDF is opened and the words say so.
+    /// <b>Why no print verb, entry 105 section 9.</b> Windows' "print" verb runs whatever command the default PDF program registered for it,
+    /// and GroupLab cannot see what that does: it can show a dialog, show one out of sight, or print straight to the default printer at the
+    /// program's own scaling. On Alan's machine it printed silently while the screen promised a dialog, which is the outcome the print screen
+    /// exists to prevent. <b>Linux and macOS never had a verb</b> (entry 61 section 3 and its correction in entry 65): .NET refuses any verb
+    /// but open there. So every platform now does the one thing that is the same everywhere and can be described truthfully.
     /// </para>
     /// </summary>
-    internal static (ProcessStartInfo Start, string Status, StatusKind Kind) PrintLaunch(string path, bool windows) => windows
-        ? (new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" },
-            "Sent to your PDF viewer's print command. In its print dialog choose Actual size, or 100%.", StatusKind.Success)
-        : (new ProcessStartInfo(path) { UseShellExecute = true },
-            "GroupLab cannot send this to a printer itself here, so the PDF is open in your viewer. Print from there at Actual size, or 100%.", StatusKind.Information);
+    internal static (ProcessStartInfo Start, string Status, StatusKind Kind) PrintLaunch(string path) =>
+        (new ProcessStartInfo(path) { UseShellExecute = true }, OpenedText, StatusKind.Information);
+
+    /// <summary>What the person is told once the PDF is open, in the status line and in the confirmation.</summary>
+    internal const string OpenedText = "The target is open in your PDF viewer. Print it from there, choosing Actual size or 100 percent, never Fit.";
 
     /// <summary>
     /// A control shown again in a rebuilt row, taken out of the row it was last in. The serial box and the load block's field boxes

@@ -4787,6 +4787,86 @@ No finding is reworded; only type, alignment and grouping changed.
 
 ---
 
+## Entry 106. Nothing prints silently, the mark's colours are tokens, the .300s read as .308, the calibre list generated, and printing from inside GroupLab scoped
+
+`docs/NOTES-FROM-PLANNING.md` entry 106, every numbered section. Section 5 is raised as question 21 rather than built.
+
+### Section 1: entry 105 section 9, built, and its status line corrected
+
+**How it was missed.** Section 9 was added to entry 105's inbox file after the file was read, so the work and the fold covered the eight sections that were there, and the status line counted eight. The log now says section 9 was not actioned with the rest and was actioned here.
+
+**The print screen no longer asks any program to print.**
+- **No print verb on any platform.** Windows' "print" verb ran whatever the default PDF program registered, and on Alan's machine that printed the sheet straight to the printer at the program's own scaling, with no dialog, while the screen said a dialog would follow. The button now opens the PDF in the viewer, `UseShellExecute` with no verb, on every platform.
+- **Named for what it does:** "Open to print", not "Print…".
+- **A confirmation, not only a status line,** because Alan missed the status line: a dialog reading "The target is open in your PDF viewer. Print it from there, choosing Actual size or 100 percent, never Fit." GroupLab only opened a file, and the dialog says no more than that.
+- **Logged when it works:** the launch writes `print.open` with the file's name and hash, no verb, and that it returned. A silent success is no longer invisible in the log.
+- **Tests:** the launch carries no verb and its words promise no dialog, and the button is named "Open to print".
+
+**The guard.** `NotesStatusTests` checks an actioned status line that says "all N items" or "all N sections" against the entry's numbered sections. It failed on entry 105's old line, nine sections and "eight", and passes on the corrected one. It checks only that claim, because status lines are otherwise free prose. The fix that matters is a covering command that no longer counts sections.
+
+### Section 2: question 20 answered, option B
+
+- **The palettes gain three brand roles,** `MarkRing`, `MarkAmber` and `MarkWord`, at the committed files' values. High contrast takes the dark values.
+- **`BrandMark` draws from them.** Each colour in a file is the role it matches in that file's palette, drawn in that role's colour for the theme showing.
+- **`ThemeTests` holds files and roles to each other.** Every colour in a mark file is one of its palette's roles, and the lockups use all three.
+- **Held to 3:1 for a graphic, computed, against the panel and the window background in every theme.** The tightest is the light rings on the light background at 3.06:1:
+
+| Theme | Rings | Amber | GROUP |
+|---|---|---|---|
+| Dark | 3.51 / 3.79 | 6.71 / 7.25 | 5.35 / 5.78 |
+| Light | 3.39 / 3.06 | 4.57 / 4.12 | 5.30 / 4.78 |
+| High contrast | 4.07 / 4.32 | 7.79 / 8.26 | 6.22 / 6.59 |
+
+Each cell is on the panel, then on the window background.
+
+- **Light `Amber`, tuned for text, stays `#965d12`.** The mark's amber, `#a9660f`, differs from it on purpose.
+
+### Section 3: the cartridges that fell to the leading-number guess
+
+Every diameter the entry lists was checked against the standard bullet diameters and is right:
+- **.308:** every .300 in common use (Blackout, AAC, Win Mag, WSM, PRC, Norma, Weatherby, H&H, RUM, Savage); 30-06, 30-30 and 30-40 Krag; and 7.62x51.
+- **.284:** the 280s, 28 Nosler and 7mm Rem Mag.
+- **.264:** 26 Nosler.
+- **.510:** 50 BMG.
+- **.458:** 45-70.
+- **.310:** 7.62x39, the value Alan's table gives 7.62mm.
+
+**How the names reach them.**
+- **Any name beginning "300" reaches .308** by its leading number, "300 Weatherby Magnum" included.
+- **The bare "30", "7.62" and "50" still ask.** The hyphen or the case length is what makes a cartridge of them.
+- **"300 Blackout" reads .308,** where it read 0.300 on the very sheet the analysis screen was built against. Entry 105's test had pinned "300 Win Mag" at 0.300 as a known limit, and it is .308 now.
+
+**Tests:** every name above reads as its diameter, and the three bare names return candidates.
+
+### Section 4: the whole list, generated from the code
+
+- **`grouplab calibres`** prints the list and writes `docs/CALIBRES.md` and `docs/CALIBRES.pdf`, from `Calibre.TableRows`, the cartridge names and their keys, and the ambiguous keys as `Calibre.Read` resolves them.
+- **The document's order:** the table rows with inches, millimetres and which of Alan's lists each came from; every cartridge name with the short names that reach it; every ambiguous name with its candidates; and one paragraph on how typed text is read.
+- **The PDF is drawn from the Markdown** by the renderer's own PDF writer, in Helvetica on Letter pages, with the widest table column wrapped where a table is wider than the page. The repository's other PDFs were printed from Chromium by hand, with no script behind them, so this follows the `grouplab icons` pattern instead: a command in the repository, and nothing installed.
+- **`CalibreListTests` holds three things:**
+  - the committed Markdown equals what the code produces;
+  - every table row, cartridge and ambiguous name is in it;
+  - every line and rule of the PDF lies inside its page's margins.
+
+### Section 5: printing from inside GroupLab, scoped and raised as question 21
+
+**The plan.**
+- **The dialog and the drawing:** Win32 `PrintDlgEx` and GDI through P/Invoke, drawing the renderer's scene as vector in half-dmm units.
+- **The page:** placed on true page coordinates from the printer's physical offsets.
+- **Refusals:** a sheet on the wrong paper size, and any marker, code or bull in the unprintable margin, each refused with the reason.
+- **The confirmation:** the printer, the sheet, the page count and "at actual size", saying the job reached the queue and nothing more.
+
+**Why question 21 rather than building it now:**
+- It is about one full run, which this one could not also hold.
+- Three decisions are open: whether the margin rule reaches a marker's quiet zone, Linux and macOS, and whether it replaces Open to print or sits beside it.
+- The test that checks the printed size needs "Microsoft Print to PDF" on the CI runner, which I cannot confirm from here.
+
+**Meanwhile** Open to print is the path, and the README lists in-app printing as not started.
+
+**Tests:** Core 1016 and App 80 passing, none skipped, the window rehearsal among them.
+
+---
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5019,3 +5099,6 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 105 section 7: a name read by its leading number only after the table, over the table alone.** "6.5 Creedmoor" and "30-06" are what shooters type, and their leading number is the table's name; a wildcat still falls through to the old rule and says what it read.
 - **Entry 105 section 4: the mark drawn in the files' own colours until question 20 is answered, over recolouring it to the nearest tokens.** Recolouring would change a mark Alan chose to a set of colours nobody chose.
 - **Entry 105 section 5: the icons drawn by a command from the committed mark, over a script outside the build.** The CLI already carries the imaging library, and nothing new is installed.
+- **Entry 106 section 1: the viewer path on every platform with a confirmation dialog, over keeping the print verb anywhere.** The verb printed silently at the viewer's own scaling on Alan's machine, and GroupLab cannot see what any registered print command does.
+- **Entry 106 section 4: the PDF drawn by the renderer's own writer, over printing the Markdown through a browser.** The other PDFs came from Chromium by hand; a command in the repository keeps the list and its PDF in step with the code, and installs nothing.
+- **Entry 106 section 5: raised as question 21, over building it now.** It is about a run of its own, three decisions are open, and its test needs a PDF printer the CI runner may not have.
