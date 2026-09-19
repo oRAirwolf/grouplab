@@ -4966,6 +4966,43 @@ Linux and macOS show Open to print and Save PDF only, as before.
 
 **Tests:** Core 905 and App 80 passing, none skipped on this machine, the printed-size test among them.
 
+## Entry 108. Question 22 answered: calibre designations refused in both units, and the count is 37
+
+`docs/NOTES-FROM-PLANNING.md` entry 108, both numbered sections.
+
+### Section 1: the count
+
+**37, not 36:** entry 107 left out .356. The only place 36 stood as the pick list's count was entry 107's own text in the notes log, and it now reads 37 with a note that entry 108 corrected it. DESIGN.md, the README and `docs/CALIBRES.md` never carried it. The "36 of Alan's 44 names read wrong" in `Calibre`'s comment is a different fact and stays.
+
+### Section 2: designations refused, in inches as well as millimetres
+
+**The lists, in `Calibre`,** numbers that only refuse and are never read:
+- **Inches:** .17, .20, .22, .25, .27, .28, .30, .303, .32, .35, .38, .44 and .45.
+- **Millimetres:** 5.45, 5.56, 6, 6.5, 6.8, 7, 7.5, 7.62, 7.65, 8, 9 and 10.
+
+**How a value is compared.** It is compared as a decimal, at the value typed, so ".270", "0.270" and ".27" are one value and all refused. "7.620 mm" and "7.62mm" are refused the same way.
+
+**Left off on purpose,** because each is a real diameter: .40, .41 and .50 in, .308, .338, .375 and .416, and 9.3 and 12.7 mm.
+
+**The refusal names the problem and guesses no bullet.** Two examples:
+- "7.62 mm is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308."
+- ".38 in is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308."
+
+The value is shown as typed, with its unit.
+
+**Checked before building, and held by a test.** None of the 25 refused values equals any of the 37 pick-list diameters: in inches exactly, and in millimetres to the hundredth, the pick list's own display. None of the values the entry says to keep is on either list. `NoRefusedValueIsAPickListDiameter` fails the day a diameter is added that collides with a designation, and every diameter still reads in three forms: its displayed form, its inches and its millimetres.
+
+**Tests:**
+- every refused value in both lists is refused with the sentence, in its short, long, zero-led and unit-marked forms, "9mm", "7.62mm", ".38" and ".270" among them;
+- ".357", ".452", "0.308", "7.82 mm", "9.3 mm" and "12.7 mm" read, and so do .40, .41, .50, .338, .375 and .416;
+- the lists never meet the pick list.
+
+The test that pinned "9mm" as 0.354 in is gone.
+
+**`docs/CALIBRES.md` and `.pdf`** now list both sets of refused values and the example refusal, generated from the lists themselves, and the drift test holds them. DESIGN.md's decision paragraph and the README's Phase 3 line say designations are refused.
+
+**Tests:** Core 918 and App 80 passing, none skipped.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5205,3 +5242,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 107 section 2: the quiet zone not counted in the margin refusal, over refusing on it.** The margin leaves bare paper and the quiet zone is bare paper, so it prints as intended, and a smudge near the edge lands on ink, which is refused on its own account.
 - **Entry 107 section 2: `WindowsPrinter` in the CLI project, over the application.** The Core tests reach it there to print and measure a real job, and they already reference that project for the imaging backend.
 - **Entry 107 section 2: markers located on the printed page with no fitting, over registering through a homography.** A homography absorbs scale and offset, which are the errors the test exists to catch.
+- **Entry 108 section 2: designations compared as decimals at the value typed, over matching the text.** ".270" and ".27" are one value, and matching text would let one form through that the other refuses.
+- **Entry 108 section 2: the refused value shown as typed with its unit, over normalising it.** The person sees their own entry named, which is what the refusal is about.

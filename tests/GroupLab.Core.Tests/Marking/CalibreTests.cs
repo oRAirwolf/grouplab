@@ -1,3 +1,4 @@
+using System.Globalization;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
@@ -68,12 +69,82 @@ public class CalibreTests
     }
 
     /// <summary>
-    /// "9mm" is a number marked mm, so under entry 107 section 1's rule it reads as 9 mm, 0.354 in, although the entry's own test list says it
-    /// should be refused. No syntax tells a metric calibre name from a diameter in millimetres, so which one wins is question 22 of
-    /// docs/QUESTIONS-FOR-PLANNING.md; this pins the rule as written until it is answered.
+    /// NOTES-FROM-PLANNING.md entry 108 section 2, answering question 22: a calibre designation is refused in either unit, with a sentence
+    /// that names the problem and guesses no bullet. Every value on both lists is tried as typed, with and without its leading zero, with more
+    /// digits, and with its unit mark.
     /// </summary>
     [Fact]
-    public void NineMillimetresMarkedMmIsADiameter() => Assert.Equal(9 / 25.4, Calibre.Parse("9mm", out _)!.DiameterInches, 12);
+    public void EveryDesignationIsRefusedInBothUnits()
+    {
+        var typed = new List<(string Text, string Shown)>();
+        foreach (decimal v in Calibre.InchDesignations)
+        {
+            string two = v.ToString(".00", CultureInfo.InvariantCulture), three = v.ToString(".000", CultureInfo.InvariantCulture);
+            typed.Add((two, two + " in"));
+            typed.Add(("0" + three, "0" + three + " in"));
+            typed.Add((three + " in", three + " in"));
+            typed.Add((two + "\"", two + " in"));
+        }
+
+        foreach (decimal v in Calibre.MillimetreDesignations)
+        {
+            string shown = v.ToString("0.##", CultureInfo.InvariantCulture);
+            typed.Add((shown + "mm", shown + " mm"));
+            typed.Add((shown + " mm", shown + " mm"));
+            typed.Add((v.ToString("0.00", CultureInfo.InvariantCulture) + " mm", v.ToString("0.00", CultureInfo.InvariantCulture) + " mm"));
+        }
+
+        foreach (var (text, shown) in typed)
+        {
+            Assert.True(Calibre.Parse(text, out string? problem) is null, $"{text} was read");
+            Assert.Equal(Calibre.DesignationRefusal(shown), problem);
+        }
+
+        foreach (string text in new[] { "9mm", "7.62mm", ".38", ".270", ".300", ".22", ".45", "5.56 mm" })
+        {
+            Assert.Null(Calibre.Parse(text, out string? problem));
+            Assert.Contains("is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", problem, StringComparison.Ordinal);
+        }
+
+        Assert.Equal("7.62 mm is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", Calibre.DesignationRefusal("7.62 mm"));
+    }
+
+    /// <summary>Entry 108 section 2: the real diameters beside the designations still read, including those deliberately left off the lists.</summary>
+    [Theory]
+    [InlineData(".357", 0.357)]
+    [InlineData(".452", 0.452)]
+    [InlineData("0.308", 0.308)]
+    [InlineData("7.82 mm", 7.82 / 25.4)]
+    [InlineData("9.3 mm", 9.3 / 25.4)]
+    [InlineData("12.7 mm", 12.7 / 25.4)]
+    [InlineData(".40", 0.40)]
+    [InlineData(".41", 0.41)]
+    [InlineData(".50", 0.50)]
+    [InlineData(".338", 0.338)]
+    [InlineData(".375", 0.375)]
+    [InlineData(".416", 0.416)]
+    public void TheDiametersBesideTheDesignationsStillRead(string text, double inches) => Assert.Equal(inches, Calibre.Parse(text, out _)!.DiameterInches, 12);
+
+    /// <summary>
+    /// Entry 108 section 2: the refused lists and the pick list never overlap, in either unit, at the precision each is typed: a designation
+    /// against a diameter in inches exactly, and a millimetre designation against each diameter's millimetres to the hundredth, the pick
+    /// list's own display. A diameter added later that collides with a designation fails here rather than being silently refused.
+    /// </summary>
+    [Fact]
+    public void NoRefusedValueIsAPickListDiameter()
+    {
+        foreach (double d in Calibre.Diameters)
+        {
+            decimal inches = (decimal)d, millimetres = Math.Round((decimal)d * 25.4m, 2);
+            Assert.DoesNotContain(inches, Calibre.InchDesignations);
+            Assert.DoesNotContain(millimetres, Calibre.MillimetreDesignations);
+            Assert.NotNull(Calibre.Parse(Calibre.Shown(d), out _));
+            Assert.NotNull(Calibre.Parse(d.ToString("0.000#", CultureInfo.InvariantCulture), out _));
+            Assert.NotNull(Calibre.Parse(millimetres.ToString("0.00", CultureInfo.InvariantCulture) + " mm", out _));
+        }
+
+        Assert.Equal(37, Calibre.Diameters.Count);
+    }
 
     /// <summary>A marking saved under a calibre name before entry 107 loads with its diameter, shown in both units; the old name is not displayed.</summary>
     [Fact]

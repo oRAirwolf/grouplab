@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-19, question 22: entry 107 section 1 asks for "9mm" refused, but its own rule reads it as a diameter; and the pick list is 37 diameters, not 36
 
-**Status: open.** Blocks nothing. Section 1 is built to its written rule meanwhile: millimetres are read whenever they are marked mm, so "9mm" reads as 0.354 in, and a test pins that with a pointer to this question.
+**Status: answered 2026-09-19** by `docs/NOTES-FROM-PLANNING.md` entry 108: option B, extended to inches. Calibre designations are refused in both units, the real diameters beside them still read, and the count is 37.
 
 ### 1. The conflict
 

@@ -15,6 +15,44 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-19, entry 108: question 22 answered, calibre designations refused in both units, and two errors of mine in entry 107
+
+**Status: actioned 2026-09-19**, sections 1 and 2.
+- **Section 1:** the count corrected to 37 in entry 107's own text below, the one place 36 stood as the pick list's count; DESIGN.md, the README and `docs/CALIBRES.md` never carried it.
+- **Section 2:** question 22 answered. The designations are refused in inches and in millimetres with the sentence that names the problem, the real diameters beside them still read, a test holds both lists apart from the 37 diameters in both units, and the test that pinned "9mm" as read is replaced. `docs/CALIBRES.md` and `.pdf` list the refused values.
+- `docs/PHASE1-RESULTS.md` "Entry 108".
+
+### 1. Question 22 is right on both counts, and both errors are mine
+
+**The contradiction.** Entry 107 section 1 said a number marked mm is read as millimetres, and then listed "9mm" among the names to refuse. Those cannot both hold. Building the rule as written and pinning "9mm" with a pointer to the question was correct.
+
+**The count.** Alan's two lists hold **37** distinct diameters, not 36. I left .356 out when I counted. All 37 in the pick list is correct. If the number 36 appears anywhere in `DESIGN.md`, the README, `docs/CALIBRES.md` or the notes, correct it.
+
+### 2. The answer: refuse calibre designations, in inches as well as millimetres
+
+**Your recommendation is right, and the same trap exists in inches, which question 22 does not mention.** The accepting pattern takes any decimal below one, so ".38" reads as 0.380 in when a .38 bullet is .357 or .358. ".45" reads as 0.450 against .451 to .458, ".22" as 0.220 against .223 or .224, ".30" as 0.300 against .308, and ".270" as 0.270 against .277. **These are designations, as "7.62 mm" is.** A shooter who types the calibre they know, with a decimal point in front of it, gets a diameter that no bullet has.
+
+**The rule:** a typed value that equals a common calibre designation, and is not itself a bullet diameter, is refused.
+- **Inches:** 0.17, 0.20, 0.22, 0.25, 0.27, 0.28, 0.30, 0.303, 0.32, 0.35, 0.38, 0.44, 0.45. This covers ".270", ".280" and ".300" typed with three digits, since they are the same values.
+- **Millimetres:** 5.45, 5.56, 6, 6.5, 6.8, 7, 7.5, 7.62, 7.65, 8, 9, 10.
+
+**Deliberately not refused**, because each is also a real bullet diameter: .40 and .41 (.400 and .410), .50 (.500), .308, .338, .375, .416, 9.3 mm (.366) and 12.7 mm (.500).
+
+**The refusal names the problem without naming a cartridge**, in keeping with Alan's decision: "7.62 mm is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308." The example stays generic; the message does not try to guess which bullet was meant.
+
+**This is not the name table returning.** It is a short list of numbers that are refused, not matched to anything. Nothing is ever read from it, and it cannot produce a diameter.
+
+**A test holds the two lists apart.** No refused value may equal any of the 37 pick-list diameters, in either unit, at the precision it is typed. If a future diameter is added that collides with a designation, the test says so rather than the input silently refusing a real bullet.
+
+**Tests:**
+- every refused value in both lists, including "9mm", "7.62mm", ".38" and ".270", is refused with the sentence;
+- ".357", ".452", "0.308", "7.82 mm" and "9.3 mm" read correctly;
+- every pick-list diameter still reads.
+
+**Set question 22 to answered**, pointing here, and replace the test that pins "9mm" as read.
+
+---
+
 ## 2026-09-19, entry 107: the calibre is a diameter and nothing else, and question 21 answered so printing can be built
 
 **Status: actioned 2026-09-19**, sections 1 and 2. **One test in section 1's list is not met: "9mm" is read as a diameter, not refused**, because the section's own rule reads any number marked mm; that conflict, and a pick list of 37 diameters where the section says 36, are raised as question 22, with the written rule built meanwhile.
@@ -39,7 +77,7 @@ Two sections. **Do section 1 first**; it is small. Section 2 is the run Claude C
 
 **The range check stays:** 0.1 to 1.0 in, however it was entered.
 
-**The pick list becomes diameters.** It holds the distinct diameters in Alan's two lists, 36 of them, from .172 to .510, each shown in both units, for example ".308 in (7.82 mm)", ordered by size. No names beside them. **.223, which came from the old ".22 LR" entry, is not in Alan's list**, so it leaves the pick list. It can still be typed.
+**The pick list becomes diameters.** It holds the distinct diameters in Alan's two lists, 37 of them (written as 36 here and corrected by entry 108 section 1), from .172 to .510, each shown in both units, for example ".308 in (7.82 mm)", ordered by size. No names beside them. **.223, which came from the old ".22 LR" entry, is not in Alan's list**, so it leaves the pick list. It can still be typed.
 
 **How the calibre is shown everywhere else** is the same form, the diameter in both units. **The analysis screen's LOAD panel currently reads "Calibre .308, 7.62 mm, set after detection"**, which shows a cartridge name's "7.62 mm" beside a .308 in diameter, when .308 in is 7.82 mm. That line becomes ".308 in (7.82 mm), set after detection".
 

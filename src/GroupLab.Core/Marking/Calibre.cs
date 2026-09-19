@@ -34,6 +34,24 @@ public sealed partial record Calibre(string Name, double DiameterInches)
     /// <summary>The pick list as calibres, each shown in both units, smallest first.</summary>
     public static IReadOnlyList<Calibre> Common { get; } = [.. Diameters.Order().Select(Of)];
 
+    /// <summary>
+    /// Calibre designations in inches that are not themselves bullet diameters, refused rather than read, NOTES-FROM-PLANNING.md entry 108
+    /// section 2: ".38" would read as 0.380 in when a .38 bullet is .357 or .358, and ".270" as 0.270 against .277. A value typed with more
+    /// digits is the same value, so ".300" and ".280" are refused with ".30" and ".28". This is a list of numbers refused, never matched to
+    /// anything: nothing is read from it and it cannot produce a diameter, so it is not the name table returning. .40, .41 and .50 are
+    /// deliberately absent, because each is also a real diameter.
+    /// </summary>
+    public static IReadOnlyList<decimal> InchDesignations { get; } = [0.17m, 0.20m, 0.22m, 0.25m, 0.27m, 0.28m, 0.30m, 0.303m, 0.32m, 0.35m, 0.38m, 0.44m, 0.45m];
+
+    /// <summary>
+    /// Calibre designations in millimetres that are not bullet diameters, refused for the same reason: "7.62 mm" would read as 0.300 in, a
+    /// diameter no 7.62 bullet has. 9.3 and 12.7 are deliberately absent, because they are real diameters, .366 and .500.
+    /// </summary>
+    public static IReadOnlyList<decimal> MillimetreDesignations { get; } = [5.45m, 5.56m, 6m, 6.5m, 6.8m, 7m, 7.5m, 7.62m, 7.65m, 8m, 9m, 10m];
+
+    /// <summary>The refusal of a designation, entry 108 section 2: it names the problem and never guesses which bullet was meant.</summary>
+    public static string DesignationRefusal(string typed) => typed + " is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.";
+
     /// <summary>The one sentence a refusal gives, entry 107 section 1: what to type, not what was wrong with what was typed.</summary>
     public const string Refusal = "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as 7.82 mm.";
 
@@ -47,7 +65,8 @@ public sealed partial record Calibre(string Name, double DiameterInches)
     /// Reads what a person typed, entry 107 section 1. Inches: a decimal below one with or without its leading zero, or any number marked
     /// "in" or with an inch mark, and the pick list's own form, ".308 in (7.82 mm)". Millimetres only when marked mm, "7.82 mm" or "7.82mm".
     /// <b>A bare number of one or more is refused, not guessed:</b> read as millimetres "7.62" is 0.300 in, which no 7.62 bullet is, so the
-    /// unit is what makes it a diameter rather than a name that happens to be a number. Every diameter must lie from 0.1 to 1 in, however it was
+    /// unit is what makes it a diameter rather than a name that happens to be a number. <b>A calibre designation is refused in either unit</b>,
+    /// entry 108: ".38", ".270", "9mm" and "7.62 mm" are names written as numbers (<see cref="InchDesignations"/>, <see cref="MillimetreDesignations"/>). Every diameter must lie from 0.1 to 1 in, however it was
     /// entered. Returns null for empty text, and null with <paramref name="problem"/> for anything else it cannot read.
     /// </summary>
     public static Calibre? Parse(string? text, out string? problem)
@@ -62,11 +81,25 @@ public sealed partial record Calibre(string Name, double DiameterInches)
         double inches;
         if (Inches().Match(typed) is { Success: true } i)
         {
-            inches = Number(i.Groups["number"].Value);
+            string number = i.Groups["number"].Value;
+            if (InchDesignations.Contains(decimal.Parse(number, NumberStyles.Float, CultureInfo.InvariantCulture)))
+            {
+                problem = DesignationRefusal(number + " in");
+                return null;
+            }
+
+            inches = Number(number);
         }
         else if (Millimetres().Match(typed) is { Success: true } m)
         {
-            inches = Number(m.Groups["number"].Value) / 25.4;
+            string number = m.Groups["number"].Value;
+            if (MillimetreDesignations.Contains(decimal.Parse(number, NumberStyles.Float, CultureInfo.InvariantCulture)))
+            {
+                problem = DesignationRefusal(number + " mm");
+                return null;
+            }
+
+            inches = Number(number) / 25.4;
         }
         else
         {

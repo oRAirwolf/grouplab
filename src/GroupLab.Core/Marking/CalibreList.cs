@@ -26,7 +26,15 @@ public static class CalibreList
         Line();
         Line("## 1. How to enter a calibre");
         Line();
-        Line("Type the bullet diameter in inches, such as .308 or 0.308, or in millimetres with mm, such as 7.82 mm. A number marked in or with an inch mark is inches too. A bare number of one or more, such as 7.62, 308 or 22, is refused rather than guessed, because a calibre's name is usually not its bullet's diameter: read as millimetres, 7.62 would be 0.300 in, which no 7.62 bullet is. Names such as 300 Blackout, 6.5 Creedmoor, 30 Cal. or 9mm are refused for the same reason. Every diameter must lie between 0.1 and 1 in.");
+        Line("Type the bullet diameter in inches, such as .308 or 0.308, or in millimetres with mm, such as 7.82 mm. A number marked in or with an inch mark is inches too. A bare number of one or more, such as 7.62, 308 or 22, is refused rather than guessed, because a calibre's name is usually not its bullet's diameter: read as millimetres, 7.62 would be 0.300 in, which no 7.62 bullet is. Names such as 300 Blackout, 6.5 Creedmoor or 30 Cal. are refused for the same reason. Every diameter must lie between 0.1 and 1 in.");
+        Line();
+        Line("A calibre's designation is refused in either unit, because it is a name written as a number: typed as a diameter, .38 would be 0.380 in when a .38 bullet is .357 or .358, and 7.62 mm would be 0.300 in. A value typed with more digits is the same value, so .270 is refused with .27. The designations refused are, in inches, "
+            + Join(Calibre.InchDesignations, v => v.ToString(".00#", CultureInfo.InvariantCulture))
+            + ", and in millimetres, "
+            + Join(Calibre.MillimetreDesignations, v => v.ToString("0.##", CultureInfo.InvariantCulture) + " mm")
+            + ". Those that are also real diameters are not refused: .40, .41 and .50 in, and 9.3 and 12.7 mm. Nothing is read from these lists; they only refuse.");
+        Line();
+        Line("A designation's refusal names the problem, for example: \"" + Calibre.DesignationRefusal("7.62 mm") + "\"");
         Line();
         Line("A refusal says what to type: \"" + Calibre.Refusal + "\"");
         Line();
@@ -44,8 +52,14 @@ public static class CalibreList
         Line();
         Line("## 3. Why there are no names");
         Line();
-        Line("Alan decided that the calibre is a diameter and nothing else (`docs/NOTES-FROM-PLANNING.md` entry 107 section 1), reversing entries 105 and 106, which read names through a table. Every defect those entries fixed came from reading a name as a diameter, and every name the table did not know still fell back to a guess. A diameter has one meaning.");
+        Line("Alan decided that the calibre is a diameter and nothing else (`docs/NOTES-FROM-PLANNING.md` entry 107 section 1), reversing entries 105 and 106, which read names through a table. Every defect those entries fixed came from reading a name as a diameter, and every name the table did not know still fell back to a guess. A diameter has one meaning. Entry 108 refused the designations above, which a person might type as a diameter with a decimal point or mm after it.");
         return md.ToString();
+    }
+
+    private static string Join(IEnumerable<decimal> values, Func<decimal, string> format)
+    {
+        var shown = values.Select(format).ToList();
+        return string.Join(", ", shown.Take(shown.Count - 1)) + " and " + shown[^1];
     }
 
     // The PDF's page and type in the renderer's units, half-dmm, which are 0.05 mm (PdfWriter.PointsPerUnit): a Letter page, 18 mm margins,

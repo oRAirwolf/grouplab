@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 3891 >>
+<< /Length 4290 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -26,60 +26,52 @@ BT /F1 99 Tf 1 0 0 -1 360 1160 Tm (1. How to enter a calibre) Tj ET
 BT /F1 70 Tf 1 0 0 -1 360 1302 Tm (Type the bullet diameter in inches, such as .308 or 0.308, or in millimetres with mm, such as 7.82 mm. A number) Tj ET
 BT /F1 70 Tf 1 0 0 -1 360 1408 Tm (marked in or with an inch mark is inches too. A bare number of one or more, such as 7.62, 308 or 22, is refused) Tj ET
 BT /F1 70 Tf 1 0 0 -1 360 1514 Tm (rather than guessed, because a calibre's name is usually not its bullet's diameter: read as millimetres, 7.62 would be) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1620 Tm (0.300 in, which no 7.62 bullet is. Names such as 300 Blackout, 6.5 Creedmoor, 30 Cal. or 9mm are refused for the) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1726 Tm (same reason. Every diameter must lie between 0.1 and 1 in.) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1868 Tm (A refusal says what to type: "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1974 Tm (7.82 mm.") Tj ET
-BT /F1 99 Tf 1 0 0 -1 360 2217 Tm (2. The diameters in the pick list) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2359 Tm (Every distinct bullet diameter in Alan's rifle and pistol lists, smallest first. Any other diameter in range can be typed.) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2501 Tm (Inches) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2501 Tm (Millimetres) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1620 Tm (0.300 in, which no 7.62 bullet is. Names such as 300 Blackout, 6.5 Creedmoor or 30 Cal. are refused for the same) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1726 Tm (reason. Every diameter must lie between 0.1 and 1 in.) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1868 Tm (A calibre's designation is refused in either unit, because it is a name written as a number: typed as a diameter, .38) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1974 Tm (would be 0.380 in when a .38 bullet is .357 or .358, and 7.62 mm would be 0.300 in. A value typed with more digits) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2080 Tm (is the same value, so .270 is refused with .27. The designations refused are, in inches, .17, .20, .22, .25, .27, .28,) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2186 Tm (.30, .303, .32, .35, .38, .44 and .45, and in millimetres, 5.45 mm, 5.56 mm, 6 mm, 6.5 mm, 6.8 mm, 7 mm, 7.5 mm,) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2292 Tm (7.62 mm, 7.65 mm, 8 mm, 9 mm and 10 mm. Those that are also real diameters are not refused: .40, .41 and .50 in,) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2398 Tm (and 9.3 and 12.7 mm. Nothing is read from these lists; they only refuse.) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2540 Tm (A designation's refusal names the problem, for example: "7.62 mm is a calibre's name, not the bullet's diameter.) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2646 Tm (Enter the bullet's diameter, such as 7.82 mm or 0.308.") Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2788 Tm (A refusal says what to type: "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2894 Tm (7.82 mm.") Tj ET
+BT /F1 99 Tf 1 0 0 -1 360 3137 Tm (2. The diameters in the pick list) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3279 Tm (Every distinct bullet diameter in Alan's rifle and pistol lists, smallest first. Any other diameter in range can be typed.) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3421 Tm (Inches) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3421 Tm (Millimetres) Tj ET
 0.741176 0.72549 0.690196 rg
-360 2537 642 4 re
+360 3457 642 4 re
 f
 0.101961 0.109804 0.12549 rg
-BT /F1 70 Tf 1 0 0 -1 360 2625 Tm (.172) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2625 Tm (4.37) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2749 Tm (.204) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2749 Tm (5.18) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2873 Tm (.2215) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2873 Tm (5.63) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2997 Tm (.224) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2997 Tm (5.69) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3121 Tm (.243) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3121 Tm (6.17) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3245 Tm (.257) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3245 Tm (6.53) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3369 Tm (.264) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3369 Tm (6.71) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3493 Tm (.277) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3493 Tm (7.04) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3617 Tm (.284) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3617 Tm (7.21) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3741 Tm (.308) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3741 Tm (7.82) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3865 Tm (.309) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3865 Tm (7.85) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3989 Tm (.310) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 3989 Tm (7.87) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4113 Tm (.3105) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4113 Tm (7.89) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4237 Tm (.312) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4237 Tm (7.92) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4361 Tm (.321) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4361 Tm (8.15) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4485 Tm (.323) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4485 Tm (8.20) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4609 Tm (.338) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4609 Tm (8.59) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4733 Tm (.355) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4733 Tm (9.02) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4857 Tm (.356) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4857 Tm (9.04) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 4981 Tm (.357) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 4981 Tm (9.07) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 5105 Tm (.358) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 5105 Tm (9.09) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3545 Tm (.172) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3545 Tm (4.37) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3669 Tm (.204) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3669 Tm (5.18) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3793 Tm (.2215) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3793 Tm (5.63) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3917 Tm (.224) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3917 Tm (5.69) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4041 Tm (.243) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4041 Tm (6.17) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4165 Tm (.257) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4165 Tm (6.53) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4289 Tm (.264) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4289 Tm (6.71) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4413 Tm (.277) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4413 Tm (7.04) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4537 Tm (.284) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4537 Tm (7.21) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4661 Tm (.308) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4661 Tm (7.82) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4785 Tm (.309) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4785 Tm (7.85) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4909 Tm (.310) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 4909 Tm (7.87) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 5033 Tm (.3105) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 5033 Tm (7.89) Tj ET
 Q
 endstream
 endobj
@@ -87,48 +79,65 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 2154 >>
+<< /Length 3067 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.101961 0.109804 0.12549 rg
-BT /F1 70 Tf 1 0 0 -1 360 470 Tm (.366) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 470 Tm (9.30) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 594 Tm (.375) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 594 Tm (9.53) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 718 Tm (.400) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 718 Tm (10.16) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 842 Tm (.410) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 842 Tm (10.41) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 966 Tm (.411) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 966 Tm (10.44) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1090 Tm (.416) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1090 Tm (10.57) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1214 Tm (.423) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1214 Tm (10.74) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1338 Tm (.430) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1338 Tm (10.92) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1462 Tm (.451) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1462 Tm (11.46) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1586 Tm (.452) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1586 Tm (11.48) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1710 Tm (.454) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1710 Tm (11.53) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1834 Tm (.458) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1834 Tm (11.63) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 1958 Tm (.474) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 1958 Tm (12.04) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2082 Tm (.500) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2082 Tm (12.70) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2206 Tm (.505) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2206 Tm (12.83) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2330 Tm (.510) Tj ET
-BT /F1 70 Tf 1 0 0 -1 667 2330 Tm (12.95) Tj ET
-BT /F1 99 Tf 1 0 0 -1 360 2591 Tm (3. Why there are no names) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2733 Tm (Alan decided that the calibre is a diameter and nothing else \(docs/NOTES-FROM-PLANNING.md entry 107 section) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2839 Tm (1\), reversing entries 105 and 106, which read names through a table. Every defect those entries fixed came from) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 2945 Tm (reading a name as a diameter, and every name the table did not know still fell back to a guess. A diameter has one) Tj ET
-BT /F1 70 Tf 1 0 0 -1 360 3051 Tm (meaning.) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 470 Tm (.312) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 470 Tm (7.92) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 594 Tm (.321) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 594 Tm (8.15) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 718 Tm (.323) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 718 Tm (8.20) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 842 Tm (.338) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 842 Tm (8.59) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 966 Tm (.355) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 966 Tm (9.02) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1090 Tm (.356) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1090 Tm (9.04) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1214 Tm (.357) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1214 Tm (9.07) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1338 Tm (.358) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1338 Tm (9.09) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1462 Tm (.366) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1462 Tm (9.30) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1586 Tm (.375) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1586 Tm (9.53) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1710 Tm (.400) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1710 Tm (10.16) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1834 Tm (.410) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1834 Tm (10.41) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 1958 Tm (.411) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 1958 Tm (10.44) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2082 Tm (.416) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2082 Tm (10.57) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2206 Tm (.423) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2206 Tm (10.74) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2330 Tm (.430) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2330 Tm (10.92) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2454 Tm (.451) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2454 Tm (11.46) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2578 Tm (.452) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2578 Tm (11.48) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2702 Tm (.454) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2702 Tm (11.53) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2826 Tm (.458) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2826 Tm (11.63) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 2950 Tm (.474) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 2950 Tm (12.04) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3074 Tm (.500) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3074 Tm (12.70) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3198 Tm (.505) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3198 Tm (12.83) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3322 Tm (.510) Tj ET
+BT /F1 70 Tf 1 0 0 -1 667 3322 Tm (12.95) Tj ET
+BT /F1 99 Tf 1 0 0 -1 360 3583 Tm (3. Why there are no names) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3725 Tm (Alan decided that the calibre is a diameter and nothing else \(docs/NOTES-FROM-PLANNING.md entry 107 section) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3831 Tm (1\), reversing entries 105 and 106, which read names through a table. Every defect those entries fixed came from) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 3937 Tm (reading a name as a diameter, and every name the table did not know still fell back to a guess. A diameter has one) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4043 Tm (meaning. Entry 108 refused the designations above, which a person might type as a diameter with a decimal point) Tj ET
+BT /F1 70 Tf 1 0 0 -1 360 4149 Tm (or mm after it.) Tj ET
 Q
 endstream
 endobj
@@ -140,10 +149,10 @@ xref
 0000000172 00000 n 
 0000000269 00000 n 
 0000000395 00000 n 
-0000004338 00000 n 
-0000004464 00000 n 
+0000004737 00000 n 
+0000004863 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-6670
+7982
 %%EOF
