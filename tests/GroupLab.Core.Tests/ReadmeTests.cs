@@ -261,6 +261,81 @@ public partial class ReadmeTests
     [GeneratedRegex(@"^\*\*Phase (?<id>[0-9]+a?)\. [^*]+\.\*\*$")]
     private static partial Regex FeatureHeading();
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 118: the README is long, so it carries a contents list, and a contents list that can go stale is worse
+    /// than none. This holds the list to the headings themselves: one entry per <c>##</c> heading in the order they appear, with Planned's
+    /// three <c>###</c> children indented beneath it, because that section is a third of the page.
+    /// <para>
+    /// The anchors are derived here from the heading text by GitHub's own rule, lower case with punctuation dropped and spaces hyphenated,
+    /// rather than copied from the list, so a renamed heading fails this test instead of leaving a link that scrolls nowhere.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void TheContentsListIsTheHeadings()
+    {
+        var headings = new List<(string Text, bool Child)>();
+        bool inPlanned = false;
+        foreach (string line in Lines)
+        {
+            if (line.StartsWith("## ", StringComparison.Ordinal))
+            {
+                string text = line[3..].Trim();
+                inPlanned = text == "Planned";
+                headings.Add((text, false));
+            }
+            else if (inPlanned && line.StartsWith("### ", StringComparison.Ordinal))
+            {
+                headings.Add((line[4..].Trim(), true));
+            }
+        }
+
+        Assert.NotEmpty(headings);
+
+        // Two headings with the same anchor would need GitHub's own numbering, which is not worth guessing at: say so instead.
+        var clashes = headings.GroupBy(h => Anchor(h.Text), StringComparer.Ordinal).Where(g => g.Count() > 1).ToList();
+        Assert.True(clashes.Count == 0,
+            "two headings would generate the same anchor, and this test will not guess at GitHub's numbering: "
+            + string.Join("; ", clashes.Select(g => g.Key + " from " + string.Join(" and ", g.Select(h => h.Text)))));
+
+        int start = Array.FindIndex(Lines, l => l.StartsWith("**On this page.**", StringComparison.Ordinal));
+        Assert.True(start >= 0, "README.md has no contents list. It goes after the Download section, under a line reading **On this page.**");
+
+        // The list is where entry 118 puts it: after Download, and before the first section it names.
+        int download = Array.FindIndex(Lines, l => l == "## Download");
+        int first = Array.FindIndex(Lines, l => l.StartsWith("## " + headings.First(h => h.Text != "Download").Text, StringComparison.Ordinal));
+        Assert.True(download >= 0 && download < start && start < first,
+            "the contents list must sit after the Download section and before the section that follows it, so somebody who came to get the program does not read past it");
+
+        var listed = new List<(string Text, string Anchor, bool Child)>();
+        for (int i = start + 1; i < Lines.Length; i++)
+        {
+            var entry = ContentsEntry().Match(Lines[i]);
+            if (entry.Success)
+            {
+                listed.Add((entry.Groups["text"].Value, entry.Groups["anchor"].Value, entry.Groups["indent"].Value.Length > 0));
+            }
+            else if (listed.Count > 0 && Lines[i].Trim().Length > 0)
+            {
+                break;
+            }
+        }
+
+        // Same headings, same order, same nesting. A heading missing from the list, an entry naming no heading, or the two in a different
+        // order, all land here as one difference.
+        Assert.Equal(
+            headings.Select(h => (h.Child ? "  " : "") + h.Text),
+            listed.Select(l => (l.Child ? "  " : "") + l.Text));
+
+        var wrong = listed.Zip(headings).Where(pair => pair.First.Anchor != Anchor(pair.Second.Text)).ToList();
+        Assert.True(wrong.Count == 0,
+            "these contents entries link to an anchor GitHub will not generate for their heading: "
+            + string.Join("; ", wrong.Select(w => w.First.Text + " links to #" + w.First.Anchor + ", and the heading gives #" + Anchor(w.Second.Text))));
+    }
+
+    /// <summary>GitHub's anchor for a heading: lower case, punctuation dropped, spaces hyphenated.</summary>
+    private static string Anchor(string heading) =>
+        NotAnchorable().Replace(heading.Trim().ToLowerInvariant(), "").Replace(' ', '-');
+
     [GeneratedRegex(@"^- \*\*(?<state>[^*.]+)\.\*\* ")]
     private static partial Regex Feature();
 
@@ -284,4 +359,10 @@ public partial class ReadmeTests
 
     [GeneratedRegex(@"os:\s*\[(?<os>[^\]]+)\]")]
     private static partial Regex CiMatrix();
+
+    [GeneratedRegex(@"^(?<indent> *)- \[(?<text>[^\]]+)\]\(#(?<anchor>[^)]+)\)$")]
+    private static partial Regex ContentsEntry();
+
+    [GeneratedRegex(@"[^\w \-]", RegexOptions.None)]
+    private static partial Regex NotAnchorable();
 }

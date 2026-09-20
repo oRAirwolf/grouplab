@@ -5645,6 +5645,35 @@ He says it is "somewhat slow running" and has not said where. Nothing here guess
 - **Saving a session is mostly writing the marking as JSON**, not the database write.
 - **The first trajectory costs about twenty times the next**, so something in the solver is built on first use and a person waiting for a dope table pays it.
 
+## Entry 118. A contents list on the README, held to the headings by a test
+
+`docs/NOTES-FROM-PLANNING.md` entry 118, both numbered sections, and section 3's candidates named without moving anything.
+
+### Section 1: what was added
+
+**A plain bulleted list under a short bold line, "On this page."**, placed after the Download section and before "The problem GroupLab exists to solve". Download stays first: somebody who came to get the program does not read past a contents list to find it.
+
+One level, the `##` headings, in the order they appear, each linking to its anchor. **The single exception is Planned**, whose three `###` children are listed indented beneath it, because that section is 140 of the page's 380 lines. No heading of its own, so the list does not have to contain itself.
+
+### Section 2: it cannot go stale
+
+**`ReadmeTests.TheContentsListIsTheHeadings`** reads the README's own headings and its contents list and fails when they differ: a heading missing from the list, an entry naming no heading, or the two in a different order all land as one difference. It also holds the list where the entry puts it, after Download and before the section that follows it.
+
+**The anchors are derived in the test from the heading text** by GitHub's rule, lower case with punctuation dropped and spaces hyphenated, rather than read from the list, so a renamed heading fails the test instead of leaving a link that scrolls nowhere. **Two headings that would generate the same anchor fail with both names**, rather than the test guessing at GitHub's numbering.
+
+**Checked by breaking it.** One entry was deleted from the list and the test failed with the difference; the entry was put back and it passed.
+
+### Section 3: what looks like a document of its own
+
+**Nothing was moved and no section's content was touched.** Named as candidates, with their share of the page:
+
+- **Planned, 140 lines of 380.** It is the authority on states, `ReadmeTests` holds it to `DESIGN.md` section 21, and the planning session reads it. It is a document by any measure, and moving it is the only change that would shorten the page materially. It is also the one with the most attached to it, so it is a decision rather than a tidy.
+- **Architecture, 39 lines.** The projects, the layering and the imaging backend. `DESIGN.md` already carries the reasoning; this is the map, and a map belongs beside the reasoning rather than on the front page.
+- **Repository layout, Test data and Building, 35 lines together.** Three sections that are one thing: what a person who has cloned the repository needs. They read as a contributor's page, and the front page could keep a line pointing at it.
+- **Concept screens, 20 lines.** A gallery of six renders. It sells the idea well, so it earns its place; it is named here only because it is the next largest.
+
+**The contents list treats the symptom**, as the entry says. The length is the complaint, and the list makes the length navigable rather than smaller.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5933,3 +5962,5 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 117 section 3a: coverage checked by reflection over what does work, over a list of cases.** A hand list rots the moment a feature is added; this one named 25 gaps the first time it ran.
 - **Entry 117 section 3b: the interface benchmark lives in the test project, over the command line.** Timing a control needs a windowing platform, and shipping a headless one inside the application to measure it would be a cost carried by every person to serve a benchmark.
 - **Entry 117 section 3b: a dropdown measured by choosing from it, over opening its popup.** Choosing is the work; opening a popup headlessly crashes in the toolkit, and it would have been measuring the platform rather than GroupLab.
+- **Entry 118: the anchors derived in the test from the heading text, over read from the list.** A renamed heading then fails the test rather than leaving a link that scrolls nowhere, which is the failure a reader cannot see.
+- **Entry 118: the contents list after the Download section, over at the top.** Somebody who came to get the program should not have to read past a contents list to find it.

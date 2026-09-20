@@ -24,6 +24,26 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **macOS** is built and tested on every push, and nobody has ever run it, so it is not offered here.
 
+**On this page.**
+
+- [Download](#download)
+- [The problem GroupLab exists to solve](#the-problem-grouplab-exists-to-solve)
+- [How it works](#how-it-works)
+- [Concept screens](#concept-screens)
+- [Built with](#built-with)
+- [Architecture](#architecture)
+- [Status](#status)
+- [Planned](#planned)
+  - [What each phase holds](#what-each-phase-holds)
+  - [Deferred, and why](#deferred-and-why)
+  - [Platforms](#platforms)
+- [What GroupLab is not](#what-grouplab-is-not)
+- [Where to start](#where-to-start)
+- [Repository layout](#repository-layout)
+- [Test data](#test-data)
+- [Building](#building)
+- [Licence](#licence)
+
 ---
 
 ## The problem GroupLab exists to solve

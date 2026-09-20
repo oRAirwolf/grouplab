@@ -15,6 +15,38 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-20, entry 118: a table of contents on the README, held to the headings by a test
+
+**Status: actioned 2026-09-20**, sections 1 to 3. Nothing was moved.
+- **Section 1:** a plain bulleted list under "On this page.", after the Download section and before the first section it names, one level except Planned, whose three children are indented beneath it.
+- **Section 2:** `ReadmeTests.TheContentsListIsTheHeadings` reads the headings and the list and fails when they differ by content, by order or by nesting, derives every anchor from the heading text by GitHub's rule rather than reading it from the list, and names both headings when two would generate the same anchor. Checked by deleting an entry and watching it fail.
+- **Section 3:** named and not moved: Planned at 140 lines of 380, Architecture at 39, and Repository layout, Test data and Building at 35 together, which read as one contributor's page.
+- `docs/PHASE1-RESULTS.md` "Entry 118". Small. Fit it in wherever it lands.
+
+**Alan: the README is getting long.** It is 354 lines with thirteen top-level sections, and the Planned section alone runs from line 153 to line 286.
+
+### 1. What to add
+
+- **A contents list**, placed **after the Download section and before "The problem GroupLab exists to solve"**. Download stays first: somebody who came to get the program should not have to read past a contents list to find it.
+- **One level only, the `##` headings**, in the order they appear, each linking to its anchor.
+- **The single exception is Planned**, whose three `###` children are listed indented beneath it, because that section is a third of the page.
+- **A plain bulleted list, not a table.** It is navigation, not data.
+- **No "Table of contents" heading of its own** if that would make it a section the list must then contain. A short bold line above it is enough.
+
+### 2. It must not be able to go stale
+
+The README already fails its tests when a phase and its state disagree with `DESIGN.md`, and when the download links do not match the release assets. **The contents list gets the same treatment.**
+
+- **A test reads the README's headings and its contents list and fails when they differ**: a heading missing from the list, a list entry naming no heading, or the two in a different order.
+- **The anchors must be the ones GitHub generates**, lowercase with spaces as hyphens and punctuation dropped. **Derive them in the test from the heading text rather than copying them by hand**, so a renamed heading fails the test rather than leaving a link that scrolls nowhere.
+- **If any two headings would generate the same anchor**, say so rather than guessing at GitHub's numbering.
+
+### 3. While you are in there
+
+**Only if it is obvious and quick.** The README's own length is the real complaint, and a contents list treats the symptom. If any section is plainly a document of its own rather than part of a front page, name it in your report as a candidate to move into `docs/` with a link left behind. **Do not move anything in this entry**, and do not rewrite any section's content: the states and figures in it are checked by tests and by planning.
+
+---
+
 ## 2026-09-20, entry 117: a performance phase, its method, and the baseline it starts from
 
 **Status: actioned 2026-09-20**, sections 1 to 5. Nothing was optimised. Everything wasteful noticed while measuring is a candidate in `docs/PERFORMANCE.md` with its measurement beside it.
