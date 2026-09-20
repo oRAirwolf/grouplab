@@ -5377,6 +5377,73 @@ The screen is a section of the Ballistics screen, carrying the group open in the
 
 **Tests:** Core 973 and App 98 passing, none skipped. Questions 26 and 27 are raised and nothing waited on them.
 
+## Entry 114. The in-app print path dropped every rectangle, and the hole that is not detected
+
+`docs/NOTES-FROM-PLANNING.md` entry 114. Section 1 is done. Section 2 could not be started: the scan is not on this machine, and the entry says to stop in that case. Section 3 is a record and needs nothing built.
+
+### Section 1: what the fault was
+
+**Every filled rectangle was drawn with `FillRect`, which is a pattern blit rather than a drawing call.** `WindowsPrinter.Draw` drew the disc bands as closed paths filled with `FillPath`, and the text with `TextOut`, but the rectangles, which are every AprilTag marker, both QR codes and the load block's rules, went through the USER32 `FillRect`. That is a blit of a brush pattern, and a driver is free to handle it differently from a path. Microsoft Print to PDF honoured it. **The Brother MFC-J430W driver dropped every one of them**, which is exactly the pattern Alan photographed: rings, dots and text present, markers, codes and rules gone.
+
+**The capability bits do not tell the two drivers apart.** Asked through `GetDeviceCaps`, both report the same `RASTERCAPS` of 0x6E99, blits included, and the same curve, line, polygon and text capabilities:
+
+| Driver | TECHNOLOGY | RASTERCAPS | RC_BITBLT |
+|---|---|---|---|
+| Microsoft Print to PDF | 2, a raster printer | 0x6E99 | claimed |
+| Brother MFC-J430W | 2, a raster printer | 0x6E99 | claimed |
+
+So a capability check would not have caught it, and neither would "it works on my printer".
+
+### Section 1: the measurement that proved it, with no paper used
+
+A job printed with `DOCINFO.lpszOutput` set goes to a file instead of the port, so a driver can be exercised without printing. The sheet was printed twice through each driver, once as it is and once with every `RectFill` removed, and the jobs compared:
+
+| Driver | The sheet, 4,329 rectangles | The same sheet with every rectangle removed | Verdict |
+|---|---|---|---|
+| Microsoft Print to PDF | 145,666 bytes | 92,076 bytes | the rectangles reach it |
+| **Brother MFC-J430W** | **612,632 bytes** | **612,632 bytes** | **every rectangle dropped** |
+
+Byte for byte the same job, with and without 4,329 marks on the page.
+
+### Section 1: the fix, and the same measurement after it
+
+**Every filled shape is now a closed path.** A rectangle is `BeginPath`, `Polygon` over its four corners, `EndPath`, `FillPath`, which is what the disc bands always did and what every driver honours.
+
+| Driver | The sheet | Without its rectangles |
+|---|---|---|
+| Microsoft Print to PDF | 145,934 bytes | 92,076 bytes |
+| **Brother MFC-J430W** | **919,905 bytes** | **612,632 bytes** |
+
+**A page the driver will not draw in full is no longer committed.** Every drawing call's answer is now read. If any item fails, the document is aborted and the message names how many of the sheet's marks were refused, because a sheet with a marker missing looks normal and cannot be measured.
+
+### Section 1: the comparison as a permanent test
+
+`PrintedItemsTests`, two tests, neither needing paper:
+- **Every built-in sheet, item by item.** Each sheet is printed through the in-app path to "Microsoft Print to PDF", rasterised at 200 dpi, and compared with the same sheet from Save PDF rasterised the same way. Every marker, code module, ring band, load block rule and text item must carry its ink in the same place, to half of what the reference has there. **19 sheets, 104,317 items**; 3 sheets are refused by that driver's paper and margins before anything is drawn, which is `PrintFit`'s own test.
+- **Every driver that writes a file silently.** The sheet is printed with its rectangles and without them, and a driver that keeps them must write a larger job.
+
+**The tests were checked against the fault.** With the rectangle fill put back to what it was, both fail, and they name what Alan saw:
+- "Brother MFC-J430W Printer wrote 612632 bytes for the sheet and 612632 for the same sheet with every rectangle taken out: its driver is dropping them";
+- "GroupLab 5x5 Load Development with Load Block, Letter page 1: 642 of 642 markers are missing from the printed sheet", with its 1,696 code modules and 44 load block rules beside it.
+
+**Which printers the tests may use.** A fixed list: "Microsoft Print to PDF", "Microsoft XPS Document Writer", and anything named in `GROUPLAB_PRINT_DRIVERS`. **Nothing enumerates the machine's printers**, because a driver can open an application when it is printed to, as the OneNote one does. The Brother figures above were measured by naming it in that variable. Where fewer than two of those printers are installed, the driver comparison skips with its reason, which is what CI does.
+
+### Section 1: the Print button
+
+**Demoted, not disabled, and the screen says why.** "Open to print" is now the amber primary and comes first; "Print" stays beside it, because hiding it would leave a person who wants it with no path and no explanation. Above the buttons, in the warning role:
+
+> Print from inside GroupLab lost every marker and code on a Brother printer on 19 September. The drawing is fixed, and two drivers are held to it by a test, but no sheet from the fixed version has been looked at on paper yet, so Open to print is the safer path today.
+
+That sentence comes out when a sheet from the fixed path has been checked on paper.
+
+### Section 2: the hole that is not detected
+
+**Not started, and nothing was changed.** The entry says the scan will be at `C:\Dev\grouplab-range-2026-09-20\sheet1\sheet1-scan.png` and to stop if it is not there. That folder holds one file, `grouplab-range-day-2026-09-20.pdf`, and no `sheet1` folder. Nothing was read from it, nothing was added to the corpus, and no threshold was touched. The measurement the entry asks for, which stage drops the hole, waits for the scan.
+
+### Section 3: what yesterday produced
+
+Recorded as the entry states it: one sheet, nine shots, scanned flat, no photographs. **The mounted photograph gate, the 25-shot editor gate and the blank-paper gate have nothing.**
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5646,3 +5713,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 113 section 4: the rule re-baselines the detected reading, over counting its moves as edits.** A rule is how the sheet is read, and flagging every shot it placed as moved would raise the doubles again.
 - **Entry 113 section 6: JPEG pictures in GroupLab's own PDF writer, over another PDF tool.** The project's reading documents already come from that writer, and a JPEG goes in as it is.
 - **Entry 113 section 7: the new screens held to their themes' tested text roles, over pixel contrast measurement.** The roles are what ThemeTests holds to their ratios, and a render's pixels vary between machines.
+- **Entry 114 section 1: every filled shape drawn as a closed path, over keeping `FillRect` with a capability check.** Both drivers report the same RASTERCAPS, so a capability check cannot tell them apart; a path is honoured by every driver.
+- **Entry 114 section 1: the page aborted when a drawing call fails, over printing what did draw.** A sheet with a marker missing looks normal and cannot be measured, and the fault is found only when it comes back from the range.
+- **Entry 114 section 1: the in-app Print button demoted, over disabling it.** Hiding it would leave a person who wants it with no path and no reason; the screen now says what was wrong and what is safer today.
+- **Entry 114 section 1: the drivers the tests print through are a fixed list, over enumerating the machine's printers.** A driver can open an application when it is printed to, as the OneNote one does.
