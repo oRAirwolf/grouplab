@@ -4,37 +4,44 @@ using OpenCvSharp;
 namespace GroupLab.Cli;
 
 /// <summary>
-/// <c>grouplab user-guide</c>, NOTES-FROM-PLANNING.md entry 113 section 6: docs/USER-GUIDE.pdf from docs/USER-GUIDE.md, the Markdown the
-/// source, with every picture it names read from the committed renders, scaled to at most 1400 pixels across and set as JPEG. Run it after the
-/// renders are regenerated, and commit both files.
+/// <c>grouplab user-guide</c>, NOTES-FROM-PLANNING.md entry 113 section 6 and entry 116 section 5: docs/USER-GUIDE.pdf and
+/// docs/TESTING-GUIDE.pdf from their Markdown, which is the source, with every picture they name read from the committed renders, scaled to at
+/// most 1400 pixels across and set as JPEG. Run it after the renders are regenerated, and commit the PDFs with them.
 /// </summary>
 public static class GuideVerb
 {
     public const string Usage = "grouplab user-guide [<docs directory>]";
 
+    /// <summary>The documents that ship as a PDF beside their Markdown.</summary>
+    public static IReadOnlyList<string> Guides { get; } = ["USER-GUIDE", "TESTING-GUIDE"];
+
     public static int Run(string docs, TextWriter output, TextWriter error)
     {
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
-        string source = Path.Combine(docs, "USER-GUIDE.md");
-        if (!File.Exists(source))
+        foreach (string guide in Guides)
         {
-            error.WriteLine($"user-guide: there is no {source}");
-            return 2;
+            string source = Path.Combine(docs, guide + ".md");
+            if (!File.Exists(source))
+            {
+                error.WriteLine($"user-guide: there is no {source}");
+                return 2;
+            }
+
+            string markdown = File.ReadAllText(source);
+            var missing = DocumentPdf.Pictures(markdown).Where(p => !File.Exists(Path.Combine(docs, p))).ToList();
+            if (missing.Count > 0)
+            {
+                error.WriteLine($"user-guide: {guide}.md names pictures that are not there: {string.Join(", ", missing)}");
+                return 1;
+            }
+
+            byte[] pdf = DocumentPdf.Write(markdown, path => Picture(Path.Combine(docs, path)));
+            string target = Path.Combine(docs, guide + ".pdf");
+            File.WriteAllBytes(target, pdf);
+            output.WriteLine($"Wrote {target}, {pdf.Length / 1024} KB.");
         }
 
-        string markdown = File.ReadAllText(source);
-        var missing = DocumentPdf.Pictures(markdown).Where(p => !File.Exists(Path.Combine(docs, p))).ToList();
-        if (missing.Count > 0)
-        {
-            error.WriteLine($"user-guide: the guide names pictures that are not there: {string.Join(", ", missing)}");
-            return 1;
-        }
-
-        byte[] pdf = DocumentPdf.Write(markdown, path => Picture(Path.Combine(docs, path)));
-        string target = Path.Combine(docs, "USER-GUIDE.pdf");
-        File.WriteAllBytes(target, pdf);
-        output.WriteLine($"Wrote {target}, {pdf.Length / 1024} KB.");
         return 0;
     }
 

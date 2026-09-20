@@ -94,6 +94,47 @@ jobs:
   #
   # The application reads the system region on first run (InvariantGlobalization is false, see src/GroupLab.App/GroupLab.App.csproj), so the
   # machine that unpacks this needs ICU. Every desktop Ubuntu has it; a minimal container may not.
+  # NOTES-FROM-PLANNING.md entry 116 section 1: the zip is what the automated checks produce, so it is built on every push and kept as an
+  # artifact for 30 days, beside the Linux tarball. The packaging script checks the package carries its own runtime and its OpenCV native
+  # library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse fails the build rather than a person.
+  windows-package:
+    name: windows package
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build the package
+        shell: pwsh
+        run: ./scripts/package-windows.ps1
+
+      - name: Say what it is
+        shell: bash
+        run: |
+          {
+            echo "### windows package"
+            echo
+            for f in out/package/*.zip out/package/*.exe; do
+              [ -f "$f" ] && echo "- $(basename "$f"), $(du -h "$f" | cut -f1)"
+            done
+            echo
+            echo "the package analysed its own sample with its own grouplab.exe:"
+            echo
+            grep -E "mean radius|sigma " out/package/check-analysis.txt | sed 's/^/    /'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: grouplab-win-x64
+          path: |
+            out/package/*.zip
+            out/package/*.exe
+          retention-days: 30
+
   tarball:
     name: linux tarball
     runs-on: ubuntu-latest

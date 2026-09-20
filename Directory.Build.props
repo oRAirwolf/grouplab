@@ -1,6 +1,9 @@
 <Project>
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <!-- NOTES-FROM-PLANNING.md entry 116 section 1: the version a package is named by and the application reports. Phase 1 is unreleased, so
+         it is 0.1.0 rather than the 1.0.0 the SDK assumes; the build stamps the commit after it. -->
+    <Version>0.1.0</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

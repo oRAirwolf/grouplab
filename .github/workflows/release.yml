@@ -1,0 +1,144 @@
+# A release anybody can download, NOTES-FROM-PLANNING.md entry 116 section 3. A GitHub release is a plain download link: no account, no
+# sign-in, which is the answer to "no GitHub". The workflow runs on a tag, and by hand from the Actions tab, where it makes a draft release
+# so a test build can be looked at before anyone sees it.
+#
+# Every asset is attached twice: once under a name carrying the version and the commit, so a bug report names a build, and once under a stable
+# name, so https://github.com/oRAirwolf/grouplab/releases/latest/download/<stable name> keeps working without anyone editing the README after a
+# release. ReleaseAssetTests holds the README's links to the names below.
+#
+# The macOS build stays out until somebody can run it: the gate record passes there, and nobody has opened the application on a Mac.
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to name the assets by, such as 0.1.0'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: windows package
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version and the commit
+        id: name
+        shell: bash
+        run: |
+          version="${{ inputs.version }}"
+          if [ -z "$version" ] && [ "${GITHUB_REF_TYPE}" = "tag" ]; then version="${GITHUB_REF_NAME#v}"; fi
+          if [ -z "$version" ]; then version=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2); fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      # The zip and, where Inno Setup is on the runner, the installer. The script checks the package carries its own runtime and the OpenCV
+      # native library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse never reaches a release.
+      - name: Build the package
+        shell: pwsh
+        run: ./scripts/package-windows.ps1 -Version '${{ steps.name.outputs.version }}' -Commit '${{ steps.name.outputs.commit }}' -RequireInstaller
+
+      - name: Say what it is
+        shell: bash
+        run: |
+          {
+            echo "### windows package"
+            echo
+            for f in out/package/*.zip out/package/*.exe; do
+              [ -f "$f" ] && echo "- $(basename "$f"), $(du -h "$f" | cut -f1)"
+            done
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-package
+          path: |
+            out/package/*.zip
+            out/package/*.exe
+          retention-days: 30
+
+  linux:
+    name: linux tarball
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version and the commit
+        id: name
+        run: |
+          version="${{ inputs.version }}"
+          if [ -z "$version" ] && [ "${GITHUB_REF_TYPE}" = "tag" ]; then version="${GITHUB_REF_NAME#v}"; fi
+          if [ -z "$version" ]; then version=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2); fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish and pack
+        run: |
+          set -o pipefail
+          dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab
+          cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
+          mkdir -p out/package
+          tar -czf "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" -C publish grouplab
+          cp "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" out/package/grouplab-linux-x64.tar.gz
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: linux-package
+          path: out/package/*.tar.gz
+          retention-days: 30
+
+  release:
+    name: release
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v6
+        with:
+          path: assets
+
+      - name: Gather the assets
+        run: |
+          mkdir -p release
+          find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          ls -la release
+
+      # A run by hand makes a draft, so a test build is looked at before anyone sees it; a tag publishes.
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}-draft', inputs.version || '0.1.0') }}
+          name: ${{ github.ref_type == 'tag' && github.ref_name || format('GroupLab {0}, draft', inputs.version || '0.1.0') }}
+          draft: ${{ github.ref_type != 'tag' }}
+          files: release/*
+          body: |
+            An unsigned test build of GroupLab, from commit ${{ github.sha }}.
+
+            **Windows:** download `grouplab-setup-win-x64.exe` for an installer, or `grouplab-win-x64.zip` to unzip and run. Windows will say
+            "Windows protected your PC", because the build is not signed: click More info, then Run anyway. The README.txt inside says where
+            GroupLab keeps your sessions and how to remove it.
+
+            **Linux:** `grouplab-linux-x64.tar.gz`, self-contained, built on the runner's Ubuntu, which is the oldest release it runs on.
+
+            **macOS** is built and tested but nobody has run it, so it is not offered here.
+
+            What is done and what is not is in the repository's README, which is the authority on states.

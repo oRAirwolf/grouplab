@@ -15,6 +15,73 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+## 2026-09-20, entry 116: an installer and a zip somebody else can download and run, with no GitHub account and no .NET
+
+**Status: actioned 2026-09-20**, sections 1 to 5. **Section 2a's installer is built and has never been built or run**, because Inno Setup is not installed on this machine and nothing was installed on it to find out; the release workflow requires it and fails without it. Question 29 was raised and nothing waited on it.
+- **Section 1:** `scripts/package-windows.ps1` publishes GroupLab self-contained for win-x64 as a folder rather than a single file, so the OpenCV native library sits where the loader expects it and nothing unpacks itself on first run. 120 MB zipped, 311 MB and 270 files unpacked, named by version and commit and again under a stable name. Tested with no .NET: `dotnet` off `PATH` and `DOTNET_ROOT` pointed at an empty folder, the package's own `grouplab.exe` analysed the sample it generates. The script makes that check itself, and CI runs the script on every push.
+- **Section 2:** two samples, both allowed. Alan's own unshot 300 dpi scan, already public here, and a 25 shot sheet generated at packaging time by the new `grouplab sample`. Nothing donated, nothing without a consent record, and a test holds the script to the one image it may copy. The repository has no shot sheet that may be published, which is question 29.
+- **Section 2a:** an Inno Setup script, per user, no administrator rights, Start menu, Add or remove programs, an uninstall that leaves `%APPDATA%\GroupLab` alone and says so. Built, not proven: `ISCC.exe` was never run here, and `-RequireInstaller` makes a release fail rather than ship without it.
+- **Section 3:** `.github/workflows/release.yml`, on a tag and by hand, where a run by hand makes a draft. Every asset twice, versioned and stable, so the README's links keep working with nobody editing the README. A test holds those links to the names the workflow and the script write.
+- **Section 4:** the SmartScreen wording, the antivirus warning, where GroupLab writes, how to remove it and how to report a problem, in the same plain words in `README.txt` and in the README's Download section, each held by a test.
+- **Section 5:** `docs/TESTING-GUIDE.md` and its PDF, one page for somebody who has never seen GroupLab, with what is not done taken from the README's Planned section. Nothing holds the two together, which is named in the results.
+- `docs/PHASE1-RESULTS.md` "Entry 116". After entries 114 and 115.
+
+**Alan wants other people to try GroupLab.** Today nobody can, unless he builds it himself and hands them a file. CI builds a Linux tarball as a workflow artifact, which only a signed-in GitHub user can download and which expires in 30 days. **There is no Windows package at all, and the audience is Windows shooters.**
+
+### 1. A Windows package that runs on a machine with nothing installed
+
+- **Self-contained, win-x64**, so no .NET runtime is needed. **Check the native OpenCV libraries survive** whatever packaging is chosen: `GroupLab.Cli` carries the OpenCV native runtime, and a single-file publish needs `IncludeNativeLibrariesForSelfExtract` or it fails at the first analysis rather than at start-up. **Test the package on a machine, or a container, with no .NET installed**, and say how you tested it.
+- **A zip** holding the executable, `LICENSE`, `THIRD-PARTY-NOTICES.md`, and a short `README.txt`. A single loose executable is worse: people lose the licence and the instructions.
+- **Name it with the version and the commit**, for example `grouplab-0.1.0-win-x64-<short sha>.zip`, so a bug report names a build.
+- **GPL-3.0 section 4 travels with it.** The zip carries the licence, and `README.txt` names the exact commit and the public repository it was built from.
+
+### 2. Samples in the zip, so a tester can do something in the first minute
+
+A tester with no printer, no scanner and no rifle should still be able to open GroupLab, analyse a sheet and read the figures.
+- **A `samples` folder** with one or two scans **already committed in the public repository**, so nothing new is published, and the sheet definitions they belong to.
+- **Nothing from `scans/` that is not already public, and nothing donated.** The friend's scan has no consent record and must not be in it.
+- **`README.txt` says which sample to open and what to press.**
+
+### 2a. An installer as well as the zip
+
+**Alan asked whether people will be able to download a Windows installer. The zip alone is not that**, so add one.
+- **An installer that a shooter recognises:** a `setup.exe` that installs into the user's own profile with no administrator rights, puts GroupLab in the Start menu, and appears in Add or remove programs with a working uninstall. **Inno Setup** builds this, is free, and runs on the Windows CI runner; if you prefer WiX or another tool, say why. **The build tool's own licence does not touch GroupLab's**, since nothing of it is linked into the application.
+- **The uninstall removes the program and leaves the person's data alone**, and says so: sessions, settings and logs stay in AppData until the person deletes them. Name that folder in the finish page or the README.
+- **Both assets ship:** the installer for people who want one, and the zip for people who would rather unzip and run. **The zip stays the one this project tests**, because it is what the automated checks produce.
+- **Unsigned either way.** An installer does not remove the SmartScreen warning; it moves it to the setup file. Say that in the same plain words section 4 uses. **The only real fix is a signed build**, which `DESIGN.md` section 20 already plans through the Microsoft Store's one-off fee, and that is not this entry.
+
+### 3. Releases anyone can download
+
+- **A release workflow**, triggered by a tag **and runnable by hand from the Actions tab**, that builds the Windows zip, the installer and the Linux tarball, and attaches all three to a GitHub release. A run by hand makes a draft release, so a test build can be checked before anyone sees it. **A GitHub release is a plain download link: no account, no sign-in.** That is the answer to "no GitHub".
+- **The macOS build stays out** until somebody can run it: the gate record passes there, but nobody has opened the application on a Mac.
+- **The README gains a Download section** at the top, and **its links must keep working without anyone editing the README after a release.** GitHub serves a fixed address for the newest release's assets, `https://github.com/oRAirwolf/grouplab/releases/latest/download/<asset name>`, so:
+  - **every release attaches a copy of each asset under a stable name** with no version or commit in it, for example `grouplab-setup-win-x64.exe`, `grouplab-win-x64.zip` and `grouplab-linux-x64.tar.gz`, beside the versioned copies section 1 names;
+  - **the README links to those stable addresses**, plus one link to the releases page for older builds;
+  - **a test holds the README's links to the asset names the workflow attaches**, so renaming an asset fails the build rather than leaving a dead link on the front page. That is the same rule the README's other tests already follow.
+  - **The Download section says what the build is:** an unsigned test build, what Windows will say, what to click, and that the newest one is whatever the link gives, with the releases page for the rest.
+- **Keep the 30-day CI artifact as it is**, for Alan's own testing between releases.
+
+### 4. What a tester will hit, and what to say about it
+
+- **SmartScreen.** The executable is unsigned, so Windows says "Windows protected your PC". The person clicks "More info" and then "Run anyway". Say so plainly in `README.txt` and in the README's Download section, **with no reassurance beyond what is true**: it is unsigned because signing costs money the project has not spent, and the source is public at the named commit.
+- **Antivirus** may quarantine an unsigned single-file executable. Mention it.
+- **Where GroupLab writes:** its settings, database and logs under the user's own AppData, and nothing else. Say where, so somebody can remove it cleanly. **Include an uninstall paragraph**: delete the folder, delete that AppData folder.
+- **What to send back when something is wrong:** the report package the Diagnostics screen already produces, which carries no location data.
+
+### 5. A one-page tester's sheet
+
+**`docs/TESTING-GUIDE.md`, and its PDF**, alongside the user guide, aimed at somebody who has never seen GroupLab:
+- what it is, in three sentences;
+- download, unzip, run, and the SmartScreen step;
+- open a sample and read the analysis;
+- print a sheet and shoot it, in short, pointing at the volunteer pack for the detail;
+- what is unfinished today, honestly: the gates not yet met, and that Linux and macOS are built but unused;
+- how to report a problem.
+
+**Do not overstate what works.** The README's Planned section is the authority on states, and this page must not contradict it.
+
+---
+
 ## 2026-09-20, entry 115: questions 26 and 27 answered, chronograph strings by hand, and the paths a real sheet takes when something is wrong
 
 **Status: actioned 2026-09-20**, sections 1 to 7. Questions 28 and 29 were raised and nothing waited on them.

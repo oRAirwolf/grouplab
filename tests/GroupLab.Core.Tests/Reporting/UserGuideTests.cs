@@ -10,17 +10,22 @@ namespace GroupLab.Core.Tests.Reporting;
 public class UserGuideTests
 {
     [Fact]
-    public void EveryScreenshotTheGuideNamesExists()
+    public void EveryScreenshotTheGuidesNameExists()
     {
-        string guide = File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"));
-        var pictures = DocumentPdf.Pictures(guide);
-        Assert.True(pictures.Count >= 8, $"{pictures.Count} pictures");
-        Assert.All(pictures, p =>
+        // Entry 116 section 5: the tester's page ships the same way, so both are held to their pictures and to their PDFs.
+        foreach (string guide in new[] { "USER-GUIDE", "TESTING-GUIDE" })
         {
-            Assert.StartsWith("figures/screens/current/", p, StringComparison.Ordinal);
-            Assert.True(File.Exists(Repo.PathTo(["docs", .. p.Split('/')])), $"docs/{p} is named by the guide and is not there");
-        });
-        Assert.True(File.Exists(Repo.PathTo("docs", "USER-GUIDE.pdf")), "docs/USER-GUIDE.pdf is missing: run `grouplab user-guide` and commit it.");
+            var pictures = DocumentPdf.Pictures(File.ReadAllText(Repo.PathTo("docs", guide + ".md")));
+            Assert.True(pictures.Count >= 1, $"{guide}.md names {pictures.Count} pictures");
+            Assert.All(pictures, p =>
+            {
+                Assert.StartsWith("figures/screens/current/", p, StringComparison.Ordinal);
+                Assert.True(File.Exists(Repo.PathTo(["docs", .. p.Split('/')])), $"docs/{p} is named by {guide}.md and is not there");
+            });
+            Assert.True(File.Exists(Repo.PathTo("docs", guide + ".pdf")), $"docs/{guide}.pdf is missing: run `grouplab user-guide` and commit it.");
+        }
+
+        Assert.True(DocumentPdf.Pictures(File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"))).Count >= 8);
     }
 
     [Fact]

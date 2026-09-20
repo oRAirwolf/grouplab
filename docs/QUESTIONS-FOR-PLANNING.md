@@ -12,6 +12,43 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-20, question 29: the repository has no shot GroupLab sheet that may be published, so the package's sample is generated
+
+**Status: open**
+
+### 1. What entry 116 section 2 asks for
+
+"A `samples` folder with one or two scans **already committed in the public repository**, so nothing new is published, and the sheet definitions they belong to. **Nothing from `scans/` that is not already public, and nothing donated.**"
+
+### 2. What is in the repository
+
+- **`scans/phase0/gl-cf25-ltr-*.png`** are Alan's own printed GroupLab sheets, scanned at 300 and 600 dpi. **They have no shots in them**: they are print-quality references. Analysed, they give "24 markers found, 0 holes".
+- **`scans/phase0/20260913_*.jpg`** are Alan's own photographs of the same unshot sheets.
+- **`scans/phase1/*.jpg`** are donated or collected from elsewhere, and are the ones the entry excludes.
+- **Yesterday's sheet**, the one real shot GroupLab sheet, is not in the repository: entry 114 section 2's scan is not on this machine.
+
+So a sample that lets a tester "open GroupLab, analyse a sheet and read the figures" cannot come from the repository's public, undonated images, because none of them has a hole in it.
+
+### 3. What is built
+
+The package carries two samples:
+- **`samples/gl-cf25-ltr-300-dpi.png`**, copied from `scans/phase0`, which is Alan's own unshot sheet. It shows registration on real paper through a real printer and scanner.
+- **`samples/sample-25-shots.png`**, **generated at packaging time** by `grouplab sample`, which renders GroupLab's own sheet and shoots at it with a seeded random number generator. It carries nobody's data, needs nobody's consent, and is not a photograph of anything; it is the sample the README.txt tells a tester to open, and it is not committed to the repository.
+
+A test holds the packaging script to that: the only image it copies from the repository is the unshot sheet.
+
+### 4. The question
+
+**Is a generated sample acceptable in the package?** It is new in the sense that it did not exist before, which the entry's "so nothing new is published" may rule out, and it is not new in the sense the rule is for: it is not anyone's target, and no consent question can arise.
+
+- **A.** Keep it, as built.
+- **B.** Ship only the unshot scan, and let a tester see registration but no figures until they shoot a sheet.
+- **C.** Wait for a real shot sheet of Alan's own, with its provenance record, and ship that instead.
+
+**I would keep A** and replace it with C when a real sheet exists, because a tester who cannot see the figures in the first minute has not seen GroupLab at all.
+
+---
+
 ## 2026-09-20, question 28: the support link needs an address
 
 **Status: open**

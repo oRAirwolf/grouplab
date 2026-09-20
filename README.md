@@ -6,6 +6,26 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 
 ---
 
+## Download
+
+**A test build, for Windows.** It is unsigned, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
+
+| | |
+|---|---|
+| **[Installer](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs |
+| **[Zip](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe` |
+| **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day |
+
+**Those links always give the newest release.** [All releases](https://github.com/oRAirwolf/grouplab/releases) has the older ones, each naming its version and commit.
+
+- **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
+- **It brings two sample sheets**, one with shots on it, so there is something to open in the first minute.
+- **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing anywhere.
+- **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
+- **macOS** is built and tested on every push, and nobody has ever run it, so it is not offered here.
+
+---
+
 ## The problem GroupLab exists to solve
 
 A shooter fires five rounds, measures three quarters of an inch between the two widest holes, and concludes the rifle shoots three quarters of an inch. Then they change one thing, fire five more, measure six tenths, and conclude the change worked.
@@ -254,11 +274,11 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 
 | Platform | Built and tested | Reproduces the Phase 0 record | Offered as a download | Used day to day |
 |---|---|---|---|---|
-| Windows 10 and 11 | every push | the reference | **yes** | yes |
-| Linux | every push | **yes** | not yet | no |
+| Windows 10 and 11 | every push | the reference | **yes**, an installer and a zip | yes |
+| Linux | every push | **yes** | **yes**, a tarball | no |
 | macOS | every push | **yes** | not yet | no |
 
-**What stands between Linux and macOS and a download is packaging, and that nobody uses either day to day.** Both reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
+**What stands between macOS and a download is that nobody has run it.** The Linux tarball is attached to every release; the macOS build is not offered until somebody opens the application on a Mac. Both reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
 
 **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
@@ -279,6 +299,7 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 | Document | Covers |
 |---|---|
 | [docs/USER-GUIDE.md](docs/USER-GUIDE.md) | Using the Windows application, from printing a sheet to comparing loads, with [a PDF](docs/USER-GUIDE.pdf) |
+| [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) | One page for somebody trying GroupLab for the first time, with [a PDF](docs/TESTING-GUIDE.pdf) |
 | [docs/PHASE0-BRIEF.md](docs/PHASE0-BRIEF.md) | The brief for Phases 0a and 0 |
 | [docs/FIDUCIAL-DECISION.md](docs/FIDUCIAL-DECISION.md) | Why the markers are AprilTag `tag36h11`, and the measurements behind it |
 | [docs/DETECTION-PIPELINE.md](docs/DETECTION-PIPELINE.md) | The eleven-stage analysis pipeline |

@@ -5533,6 +5533,62 @@ Question 27 is set to answered.
 - **Found in passing and recorded, not changed:** identification's cost at 600 dpi, above.
 - **An older instruction superseded, named here rather than worked around.** Entry 76 section 4 said an image that is not a GroupLab sheet "does nothing and says so, with no definition asked for", and three window tests pinned that. Section 4 of this entry asks for the opposite, and is newer: the screen now asks which sheet it is, by name. The three tests were rewritten to the new behaviour rather than the new behaviour bent to them, and two of those tests also pinned the words "Detection failed", which section 4 replaced with what to do next.
 
+## Entry 116. A Windows package, an installer, a release anybody can download, and a page for a tester
+
+`docs/NOTES-FROM-PLANNING.md` entry 116, every numbered section, after entries 114 and 115.
+
+### Section 1: a Windows package that runs on a machine with nothing installed
+
+**`scripts/package-windows.ps1`**, one command, which publishes GroupLab self-contained for win-x64, puts the licence, the notices, a read me and the samples beside it, checks the package with itself, and zips it.
+
+| What the package is | |
+|---|---|
+| Zip | 120 MB |
+| Unpacked | 311 MB, 270 files |
+| Named | `grouplab-0.1.0-win-x64-<short commit>.zip`, and again as `grouplab-win-x64.zip` |
+| Carries | `GroupLab.App.exe`, `grouplab.exe`, the .NET runtime, `OpenCvSharpExtern.dll`, the twenty sheets, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `README.txt`, two samples |
+
+**Not a single-file publish.** The entry warns that a single file needs `IncludeNativeLibrariesForSelfExtract` or it fails at the first analysis. A folder publish avoids the question: the native library sits beside the executable where the loader expects it, nothing is extracted to a temporary directory on first run, and an antivirus has one ordinary folder to look at rather than a self-extracting executable, which is the shape that gets quarantined.
+
+**How it was tested with no .NET installed.** Not by hoping: `dotnet` was taken off `PATH` and `DOTNET_ROOT` pointed at an empty folder, and the package's own `grouplab.exe` was run from the package to analyse the sample it generates. It found the sheet, registered it and printed the figures, which exercises the runtime it carries and the OpenCV native library both. The packaging script does that check itself on every run, so a package that cannot analyse fails the build rather than a tester. CI's new `windows package` job runs the same script on every push and keeps the zip for 30 days.
+
+**GPL-3.0 section 4 travels with it.** `README.txt` names the version, the exact commit and the public repository the build came from.
+
+### Section 2: samples in the zip
+
+- **`samples/gl-cf25-ltr-300-dpi.png`**, Alan's own printed sheet scanned at 300 dpi, copied from `scans/phase0`, already public in this repository.
+- **`samples/sample-25-shots.png`**, generated at packaging time by the new `grouplab sample`, which renders GroupLab's own sheet and shoots at it with a seeded random number generator.
+
+**Nothing donated and nothing without a consent record is in it.** `ReleaseAssetTests` holds the script to that: the only image it copies from the repository is the unshot sheet, and the test fails if a second path into `scans/` appears.
+
+**Why a generated sample at all.** The repository holds no shot GroupLab sheet that may be published: the `scans/phase0` images are print-quality references with no holes in them, and `scans/phase1` is the donated material the entry excludes. A tester who opens the unshot scan sees registration and no figures. That is question 29, raised rather than decided.
+
+### Section 2a: the installer
+
+**Inno Setup**, as the entry suggests, in `packaging/windows/grouplab.iss`: a per-user install with `PrivilegesRequired=lowest`, so no administrator rights, a Start menu entry, an entry in Add or remove programs, and an uninstaller. The uninstall removes the program and leaves `%APPDATA%\GroupLab` alone, and the finish page and `README.txt` both say so by name.
+
+**Built, not proven here.** Inno Setup is not installed on this machine, so `ISCC.exe` was never run: the script warns and builds the zip alone. That is right for a working copy and wrong for a release, so `-RequireInstaller` makes it fail instead, and the release workflow passes it. **Nothing was installed on this machine to check it**, and the installer has not been run by anybody yet. Until it has, the zip is the asset this project stands behind, which is what the entry asks for anyway.
+
+### Section 3: a release anybody can download
+
+**`.github/workflows/release.yml`**, on a tag and by hand from the Actions tab. A run by hand makes a draft, so a test build is looked at before anyone sees it; a tag publishes.
+
+Every asset is attached twice: once under a name carrying the version and the commit, and once under a stable name, so `https://github.com/oRAirwolf/grouplab/releases/latest/download/<name>` keeps working with nobody editing the README after a release. **`ReleaseAssetTests` holds the README's three download links to the names the workflow and the packaging script actually write**, so renaming an asset fails the build rather than leaving a dead link on the front page.
+
+The macOS build stays out. The 30-day CI artifact stays as it is.
+
+### Section 4: what a tester will hit
+
+`README.txt` in the package and the README's Download section say the same things in the same words: the build is unsigned because signing costs money the project has not spent, Windows will say "Windows protected your PC", the way through is More info and then Run anyway, antivirus may quarantine it and the file it takes is named, GroupLab writes to `%APPDATA%\GroupLab` and nowhere else, uninstalling leaves that folder until the person deletes it, and a problem comes back as the report package the Diagnostics screen already produces, which carries no location data. A test holds `README.txt` to each of those.
+
+### Section 5: the tester's page
+
+**`docs/TESTING-GUIDE.md`** and its PDF, one page: what GroupLab is in three sentences, getting it and the SmartScreen step, the first minute with no rifle, reading what it shows, printing a sheet and shooting it, what is not done yet, and how to report a problem. `grouplab user-guide` now writes both guides, and the guide test holds each to its PDF.
+
+**What is not done yet is taken from the README's Planned section rather than written afresh**, so the page does not contradict the authority on states: the in-app print path is named as fixed but unproven on paper, blank-paper detection and the Xero import as not built, and the gates with no material yet as exactly that.
+
+**Held by a test, and not held by a test.** Both guides are held to their pictures and to their PDFs. Nothing holds the tester's page's "what is not done yet" to the README's Planned section, so the two can drift apart; that is a gap, named here rather than left unsaid.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5812,3 +5868,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 115 section 4: a sheet read as the wrong definition warned about, over refused.** A damaged or marked-up sheet looks the same to the evidence, and the person can see the sheet.
 - **Entry 115 section 4: the low-resolution threshold measured, over assumed.** The detector reads a sheet at 96 dpi and fails at 60, so the message is keyed at 120 rather than at the 150 that seemed obvious.
 - **Entry 115 section 6: the corrected JavaScript generated from the original by a script, over edited by hand.** Every change is then exactly the five, and the file can be regenerated when the original changes.
+- **Entry 116 section 1: a folder publish, over a single file.** The native OpenCV library then sits beside the executable where the loader expects it, nothing unpacks itself into a temporary folder on first run, and an antivirus sees an ordinary folder rather than the self-extracting shape it distrusts.
+- **Entry 116 section 2: the shot sample generated by GroupLab, over shipping no shot sheet.** The repository holds no shot sheet that may be published, and a tester who cannot see the figures in the first minute has not seen GroupLab. It is question 29 all the same.
+- **Entry 116 section 2a: the packaging script warns about a missing Inno Setup locally and refuses in a release.** A working copy should still build a zip on a machine with no installer tooling; a release that quietly shipped one asset of two would be worse than a failed release.
+- **Entry 116 section 3: every asset attached twice, versioned and stable.** A bug report then names a build, and the README's front-page links keep working with nobody editing the README after a release.
