@@ -169,7 +169,8 @@ public class TimelineTests
         window.ShowTrace(trace.Records);
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => (t.Text ?? "").StartsWith("Detection failed", StringComparison.Ordinal));
+        // Entry 115 section 4 changed the words from what failed to what to do next; the panel still carries them, and still offers the way out.
+        Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => (t.Text ?? "").Contains("mark this image by hand", StringComparison.Ordinal));
         Assert.Contains(window.Stages, r => r.Status != StageStatus.Ok);
         window.Close();
     }

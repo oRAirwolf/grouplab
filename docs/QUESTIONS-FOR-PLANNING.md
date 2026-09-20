@@ -12,6 +12,26 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-20, question 28: the support link needs an address
+
+**Status: open**
+
+### 1. What is asked for
+
+`DESIGN.md` section 20 and the README's Phase 4 list promise "an unobtrusive support link, one menu item opening a browser, with no payment handled inside the application". Entry 115 section 7 says it needs a page address that has not been given, so nothing is built.
+
+### 2. What is needed to build it
+
+- **The address**, exactly as it should be opened, for example `https://pissinhot.com/support` or a Ko-fi or GitHub Sponsors page.
+- **What the item should say.** "Support GroupLab" is the obvious wording; anything else is Alan's to choose.
+- **Where it belongs:** the settings screen, beside Report a problem, is the unobtrusive place. The header's menu is the other candidate and is busier.
+
+### 3. What is built
+
+Nothing, as the entry says. It is one menu item and a browser launch once the address exists, and the launch path already exists for the print screen's Open to print.
+
+---
+
 ## 2026-09-19, question 27: a sheet's subgroups can be compared, but nothing on screen assigns bulls to them
 
 **Status: answered 2026-09-20** by `docs/NOTES-FROM-PLANNING.md` entry 115 section 2: option A, a load field in the editor's panel, with the addition that several bulls are set at once. Built: with the select tool, shift and click chooses bulls on the sheet, and the load field sets them all, from the loads the records carry. A bull with no load belongs to no subgroup, and the panel says how many those are.

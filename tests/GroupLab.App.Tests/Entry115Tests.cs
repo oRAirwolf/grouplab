@@ -182,4 +182,67 @@ public class Entry115Tests
             Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
         }
     }
+
+    /// <summary>
+    /// Entry 115 section 4: a sheet whose codes never printed, which is what Alan's sheets may be today. GroupLab cannot name it, so the screen
+    /// asks which sheet it is, by name, from the library and the person's own sheets; choosing it registers off the markers and detects as
+    /// usual. Marking it by hand stays beside it.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task ASheetWithNoCodesIsOfferedByNameRatherThanRefused()
+    {
+        var definition = GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Path.Combine(Entry109Tests.Repository(), "targets", "GL-CF25-LTR.gltd.json")).Definition!;
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0];
+        var codeless = page with { Items = [.. page.Items.Where(i => i.Layer != GroupLab.Core.Rendering.SceneLayer.Codes)] };
+        const double dpi = 300;
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(codeless, dpi);
+        var random = new Random(1154);
+        var holes = definition.Bulls.Where(b => b.Scoring)
+            .Select(b => GroupLab.Core.Detection.SyntheticSheet.SampleHole(random, b.X + random.Next(-40, 41), b.Y + random.Next(-40, 41), onInk: false, GroupLab.Core.Detection.HoleBacking.ScannerLid, 0.871))
+            .ToList();
+        double s = 254 / dpi;
+        var truth = new GroupLab.Core.Registration.HomographyMapping(new GroupLab.Core.Imaging.Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var image = GroupLab.Core.Detection.SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, [], random);
+
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-nocodes-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "sheet-without-codes.png");
+        using (var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels))
+        {
+            OpenCvSharp.Cv2.ImWrite(path, mat);
+        }
+
+        var store = new AppSettingsStore(Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json"));
+        store.SaveUnits(UnitSettings.Imperial);
+        var window = new MainWindow(store) { Width = 1400, Height = 900, DetectOnOpen = true };
+        try
+        {
+            window.Show();
+            window.OpenImage(path);
+            await window.DetectionTask!;
+            Settle();
+
+            // It asks which sheet, by name, and says why, rather than stopping with the identity as the reason.
+            Assert.True(window.AskingWhichSheet);
+            Assert.Equal("GroupLab could not read this sheet's codes. Which sheet is it?", window.StatusText);
+            var texts = window.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
+            Assert.Contains(texts, t => t == "Which sheet is this?");
+            Assert.Contains(texts, t => t.Contains("still registers from its markers", StringComparison.Ordinal));
+            var choice = window.GetLogicalDescendants().OfType<ComboBox>().First(c => c.ItemsSource is IEnumerable<string> names && names.Contains(definition.Name));
+            Assert.Contains("GroupLab 6x6 Rimfire, Letter", choice.ItemsSource!.Cast<string>());
+
+            // Choosing it registers off the markers and detects as any other sheet does.
+            await window.ChooseTheSheet(definition.Name);
+            Settle();
+            Assert.False(window.AskingWhichSheet);
+            Assert.True(window.Session.State.Shots.Count(s => s.IsShot) >= 20, $"{window.Session.State.Shots.Count} marks");
+            Assert.NotNull(window.Session.State.Scale);
+            Assert.StartsWith("Detected ", window.StatusText, StringComparison.Ordinal);
+            window.Close();
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
 }

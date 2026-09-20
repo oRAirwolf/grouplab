@@ -132,7 +132,8 @@ public class Entry105Tests
         Dispatcher.UIThread.RunJobs();
 
         Assert.False(window.WorkBar.Shown);
-        var error = window.GetLogicalDescendants().OfType<TextBlock>().Single(t => (t.Text ?? "").StartsWith("Detection failed", StringComparison.Ordinal));
+        // Entry 115 section 4 changed the words from what failed to what to do next; the panel still carries them where the bar is hidden.
+        var error = window.GetLogicalDescendants().OfType<TextBlock>().Single(t => (t.Text ?? "").Contains("mark this image by hand", StringComparison.Ordinal));
         Assert.True(error.IsEffectivelyVisible);
         Assert.Contains("failed", window.WorkBar.Label, StringComparison.Ordinal);
 

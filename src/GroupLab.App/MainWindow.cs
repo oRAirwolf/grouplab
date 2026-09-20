@@ -278,6 +278,21 @@ public sealed partial class MainWindow : Window
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
 
+    /// <summary>The metadata of the image detection last ran on, which the advice of entry 115 section 4 reads.</summary>
+    private ImageMetadata? detectionMetadata;
+
+    /// <summary>The image waiting for a person to say which sheet it is (entry 115 section 4).</summary>
+    private (GrayImage Grey, GrayImage Value, ImageMetadata Metadata)? pendingDetection;
+
+    private IReadOnlyList<GroupLab.Core.Gltd.Model.TargetDefinition> pendingSheets = [];
+
+    private readonly ComboBox sheetChoice = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
+
+    private readonly StackPanel sheetChooser = new() { Spacing = Tokens.Space4, IsVisible = false };
+
+    /// <summary>What the print scale says, when a sheet did not print at its own size (entry 115 section 4).</summary>
+    private readonly TextBlock printScale = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.FormWarning } };
+
     // The sheet's printed artwork in image pixels, from the last detection on this image, so the snap and the size check can tell printed
     // ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1). Null on any image not detected as a GroupLab sheet.
     private GrayImage? artwork;
@@ -475,6 +490,16 @@ public sealed partial class MainWindow : Window
         })));
         BuildShotsPerBull(panel);
         BuildBullLoads(panel);
+        sheetChooser.Children.Add(FieldLabel("Which sheet is this?"));
+        sheetChooser.Children.Add(sheetChoice);
+        sheetChooser.Children.Add(Row(Button("Detect with this sheet", async () => await DetectAsTheChosenSheet()), Button("Mark it by hand", () =>
+        {
+            sheetChooser.IsVisible = false;
+            pendingDetection = null;
+            status.Text = "Mark it by hand: set a scale with a length or a rectangle, then place the shots.";
+        })));
+        panel.Children.Add(sheetChooser);
+        panel.Children.Add(printScale);
         panel.Children.Add(problem);
         panel.Children.Add(Ruled("Shots"));
         panel.Children.Add(shotList);
@@ -1160,41 +1185,18 @@ public sealed partial class MainWindow : Window
 
         // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
         CrashReporter.InFlight = trace;
+        detectionMetadata = m;
         var identity = await Task.Run(() => SheetIdentification.Identify(g, ShippedDefinitions(), new OpenCvSharpBackend(), trace, token), token);
         CrashReporter.InFlight = null;
         token.ThrowIfCancellationRequested();
         DiagnosticLog.Info("detect.identify", ("definition", identity.DefinitionId), ("tile", identity.TileIndex), ("codes", identity.CodesRead), ("failure", identity.Failure), ("automatic", automatic));
 
-        // Entry 35 section 6 item 3: the sheet names its own definition, and only when its codes cannot is the user asked for one.
-        if (identity.Definition is null && automatic)
-        {
-            status.Text = $"Nothing detected: this image is not a GroupLab sheet GroupLab recognises ({identity.Failure}). Set a scale and mark it by hand, or choose Detect on a GroupLab sheet if it is one.";
-            return;
-        }
-
+        // Entry 35 section 6 item 3: the sheet names its own definition. Entry 115 section 4: when its codes cannot, because they did not
+        // print or the picture cut them off, the screen asks which sheet it is by name, rather than stopping with the identity as the reason.
         if (identity.Definition is not { } named)
         {
-            status.Text = $"The sheet's codes did not give its definition: {identity.Failure}. Choose the definition.";
-            DiagnosticLog.Info("dialog.open", ("dialog", "definition"));
-            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-            {
-                Title = "Choose the sheet's definition",
-                AllowMultiple = false,
-                FileTypeFilter = [new FilePickerFileType("GroupLab definitions") { Patterns = ["*.gltd.json"] }],
-            });
-            DiagnosticLog.Info("dialog.result", ("dialog", "definition"), ("chosen", files.Count > 0));
-            if (files.Count == 0 || files[0].TryGetLocalPath() is not { } path)
-            {
-                return;
-            }
-
-            if (GltdJsonReader.ReadFile(path).Definition is not { } chosen)
-            {
-                problem.Text = "That file is not a readable GroupLab definition.";
-                return;
-            }
-
-            named = chosen;
+            OfferTheSheet(g, v, m, identity.Failure);
+            return;
         }
 
         status.Text = automatic ? $"Recognised {named.Name}. Registering and detecting…" : "Registering and detecting…";
@@ -1210,6 +1212,56 @@ public sealed partial class MainWindow : Window
             ApplyDetection(result);
         }
     }
+
+    /// <summary>
+    /// Entry 115 section 4: the sheet's codes could not be read, so the screen asks which sheet it is, by name, from the library and the
+    /// person's own sheets. A sheet with no codes registers off its markers exactly as any other does. Marking it by hand stays beside it.
+    /// </summary>
+    private void OfferTheSheet(GrayImage g, GrayImage v, ImageMetadata m, string? why)
+    {
+        pendingDetection = (g, v, m);
+        var sheets = ShippedDefinitions().Concat(ownSheets.List().Select(s => s.Definition))
+            .GroupBy(d => d.Name, StringComparer.Ordinal).Select(group => group.First()).OrderBy(d => d.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+        pendingSheets = sheets;
+        sheetChoice.ItemsSource = sheets.Select(d => d.Name).ToList();
+        sheetChoice.SelectedIndex = sheets.Count > 0 ? 0 : -1;
+        sheetChooser.IsVisible = true;
+        status.Text = "GroupLab could not read this sheet's codes. Which sheet is it?";
+        problem.Text = $"The codes did not give the sheet's definition ({why}). A sheet whose codes did not print, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand.";
+        DiagnosticLog.Info("detect.offer", ("sheets", sheets.Count), ("failure", why));
+    }
+
+    /// <summary>Detects the image waiting for a sheet, with the sheet the person chose.</summary>
+    internal async Task DetectAsTheChosenSheet()
+    {
+        if (pendingDetection is not { } waiting || sheetChoice.SelectedIndex < 0 || pendingSheets.Count == 0)
+        {
+            return;
+        }
+
+        var chosen = pendingSheets[Math.Min(sheetChoice.SelectedIndex, pendingSheets.Count - 1)];
+        sheetChooser.IsVisible = false;
+        pendingDetection = null;
+        problem.Text = "";
+        status.Text = $"Registering and detecting as {chosen.Name}…";
+        var trace = new TraceRecorder();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var calibre = session.State.Calibre;
+        detectionMetadata = waiting.Metadata;
+        var result = await Task.Run(() => AutomaticMarking.Run(waiting.Grey, waiting.Value, waiting.Metadata, chosen, new OpenCvSharpBackend(), trace, CancellationToken.None, calibre, artefacts: true));
+        LogDetection(result, trace, clock.ElapsedMilliseconds);
+        ApplyDetection(result);
+    }
+
+    /// <summary>Chooses the sheet by name and detects with it, as the panel's button does, for the headless tests.</summary>
+    internal async Task ChooseTheSheet(string name)
+    {
+        sheetChoice.SelectedIndex = Math.Max(0, pendingSheets.ToList().FindIndex(d => d.Name == name));
+        await DetectAsTheChosenSheet();
+    }
+
+    /// <summary>Whether the screen is asking which sheet this is, for the headless tests.</summary>
+    internal bool AskingWhichSheet => sheetChooser.IsVisible;
 
     /// <summary>
     /// The definitions shipped beside the application, the built-in library with the frozen Phase 0 definitions below it, which a sheet's
@@ -1239,8 +1291,12 @@ public sealed partial class MainWindow : Window
         ArgumentNullException.ThrowIfNull(result);
         if (result.Failure is not null || result.Scale is null)
         {
-            problem.Text = "Detection failed: " + (result.Failure ?? "no registration") + ". Mark this image by hand with a reference length or rectangle.";
-            status.Text = "The sheet could not be detected. Why is in the panel, and each stage is in Show work.";
+            // Entry 115 section 4: what to do next, not what failed. Marking it by hand is the way out of every one of them.
+            string advice = detectionMetadata is { } read && result.Definition is { } sheet
+                ? DetectionAdvice.Failure(result.Measurement, read, sheet) ?? result.Failure ?? "no registration"
+                : result.Failure ?? "no registration";
+            problem.Text = advice + " You can mark this image by hand instead, against a reference length or rectangle.";
+            status.Text = "The sheet could not be read. What to do next is in the panel, and each stage is in Show work.";
             return;
         }
 
@@ -1251,6 +1307,11 @@ public sealed partial class MainWindow : Window
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
         RememberDetected();
         SetTool(MarkingTool.Select);
+        // Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, rather than analysed silently.
+        printScale.Text = DetectionAdvice.PrintScale(result.Measurement) ?? "";
+        printScale.IsVisible = printScale.Text.Length > 0;
+        // Entry 115 section 4: a sheet whose evidence says it may be another sheet is doubted out loud, rather than measured silently.
+        problem.Text = result.Definition is { } against ? DetectionAdvice.Suspect(result.Measurement, against) ?? "" : "";
         status.Text = DetectedLine(result);
     }
 

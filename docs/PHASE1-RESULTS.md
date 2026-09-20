@@ -5444,6 +5444,95 @@ That sentence comes out when a sheet from the fixed path has been checked on pap
 
 Recorded as the entry states it: one sheet, nine shots, scanned flat, no photographs. **The mounted photograph gate, the 25-shot editor gate and the blank-paper gate have nothing.**
 
+## Entry 115. Questions 26 and 27 answered, chronograph strings by hand, and the paths a real sheet takes
+
+`docs/NOTES-FROM-PLANNING.md` entry 115, every numbered section, after entry 114.
+
+### Section 1: question 26, the Ballistics slot
+
+**Answered and nothing changed.** The slot stays, and the rail has seven buttons with the gear. Question 26 is set to answered.
+
+### Section 2: question 27, a load per bull
+
+**Built as recommended, with the addition the entry asks for.**
+- **With the select tool, shift and click chooses a bull**, and clicking again takes it back; the chosen bulls are ringed on the sheet.
+- **Shift and click, rather than a plain click, because every bull on a shot sheet has a hole on it.** A plain click there selects the hole, which is what the editor has always done, and a ladder sheet would be unusable if that changed.
+- **One field sets the load on all of them**, from the loads the records carry, so a load named twice is not two loads.
+- **The bulls sharing a load are a subgroup.** The panel lists each load with its bull count, and says how many bulls carry no load and so belong to no subgroup.
+- **It is kept in the marking**, so a session carries its subgroups, a reopened session still has them, and the comparison screen takes them.
+
+Question 27 is set to answered.
+
+### Section 3: chronograph strings by hand, and the reconciliation
+
+**Built on the Ballistics screen, for the session open in the analysis.** A string is pasted or typed with its source and date; a list that is not velocities is refused by naming the first thing that is not one.
+
+**The reconciliation is `DESIGN.md` section 15's, not a pairing by position.**
+- With the counts equal, the in-order pairing is offered as a proposal, with the sentence that the counts agree and that a chronograph can miss a shot and record a neighbour's.
+- A reading that belongs to no shot, the fouling round fired into the berm, is marked and left out, and the rest pair in order.
+- A shot the chronograph missed is marked and keeps no reading.
+- What is accepted is kept on the session with its mapping. A reading of no shot stays in the string, because it was recorded; it simply belongs to no shot.
+
+**The spread is fed in rather than typed.** The readings kept give their own mean and standard deviation, and the load's velocity SD is set from them with a note of where it came from, which the Ballistics screen shows beside the field: "24 readings, Garmin Xero C1, 2026-09-20". That is the input the hit probability of entry 113 section 3 takes.
+
+**The schema goes to version 2** for that note, with an upgrade that runs when an older database is opened, in one transaction with the version. `docs/SESSION-SCHEMA.md` carries the statement and the table of upgrades, and a test opens a version 1 database, checks it comes up to version 2, and checks its records are still there.
+
+**Tests:** the entry's four cases in the engine, equal counts, a missing reading, an extra reading and no string at all, and the same four on screen.
+
+### Section 4: what happens when the sheet is not perfect
+
+**A sheet with no codes is offered by name.** Where the codes cannot be read, which is what a sheet printed before the entry 114 fix looks like, the screen asks "Which sheet is this?" with the library and the person's own sheets in a list, and says that a sheet whose codes did not print still registers from its markers. Choosing it detects as any other sheet does. Marking it by hand stays beside it. It used to open a file picker for a `.gltd.json`, or, on the automatic path, stop with the identification failure as the reason.
+
+**A scan turned any way round reads the same.** Tested at 90, 180 and 270 degrees on a synthetic GL-CF25-LTR: every hole lands within 0.02 in of where it lands upright, against the 0.15 in the gate matches holes by.
+
+**The messages, each driven by an image that provokes it.**
+
+| What is wrong | What GroupLab now says |
+|---|---|
+| Too few pixels | "This image is about 60 pixels to the inch at the sheet, and the detector needs 120. Scan it at 300 dpi, or photograph it closer so the sheet fills the frame." |
+| Too few markers | "6 of the sheet's 38 markers were found, and registering needs 4..." with what to do |
+| Not the sheet chosen | "This may not be GroupLab 6x6 Rimfire, Letter: only 21 of its 40 bulls were found where it puts them. Check the sheet, and choose the one this image really is; the figures mean nothing if it is another sheet." |
+| Printed at the wrong scale | "This sheet was printed at 97.0 percent of its intended size. The measurements are corrected for it, and the figures are right; print at actual size, 100 percent, to keep the sheet's own spacing." |
+
+**Two things the measurement found along the way.**
+- **The detector copes further down in resolution than expected.** On a synthetic sheet: 300 and 150 dpi find every marker and every hole; 96 dpi finds 31 of 38 markers and 24 of 25 holes; 75 dpi finds 15 markers and the same 24 holes; at 60 dpi nothing is found. So the low-resolution message is keyed at 120 dpi, and the figure is recorded in the code rather than guessed.
+- **Reading a sheet as the wrong definition used to give numbers with nothing said.** Its markers are the same family, so it registers and then measures the wrong bulls. Measured, reading a GL-CF25-LTR scan as four other sheets: as the 6x6 rimfire, 38 of 54 markers and 21 of 40 bulls; as the 5x6, all 38 markers but a fit of 1.63 dmm against its own sheet's 0.14; as the zeroing grid, 14 markers that grid does not have; as the A4 5x5, 17 of 28 bulls and **15 holes detected**. Each of those is now doubted out loud.
+
+### Section 5: how long an analysis takes
+
+**Measured on this machine**, a Windows 11 workstation, with `AnalyzeVerb.Analyze` end to end, twice each, on images already in the corpus. Times are wall clock for the whole analysis, and the stages are the trace's own.
+
+| Image | Total | The slowest stages |
+|---|---|---|
+| `gl-cf25-ltr-1-600-dpi.png`, a 600 dpi Letter scan | 17.7 s and 22.8 s | identify 9.7 to 13.7 s, holes 4.1 to 4.9 s, bulls 3.0 s, decode 0.7 to 0.9 s |
+| `gl-cf25-ltr-1-300-dpi.png`, the same sheet at 300 dpi | 2.6 s both runs | holes 1.0 s, bulls 0.9 s, identify 0.5 s, decode 0.2 s |
+| `20260913_130543.jpg`, a phone photograph | 4.4 s and 4.2 s | holes 1.6 s, identify 1.3 s, bulls 1.2 s, fiducials 0.11 s |
+
+**The figure worth keeping:** identification is over half the time of a 600 dpi scan, and it grows about twentyfold between 300 and 600 dpi while the image grows fourfold. Nothing was changed: entry 117 is where candidates are recorded with their measurements.
+
+### Section 6: a corrected ballistics.js
+
+**`reference/ballistics-js/ballistics.corrected.js`**, generated from the file the website serves with the five faults put right and nothing else changed: the same names, call signature and returned fields. Each change is marked `CORRECTED` in the file, and `reference/ballistics-js/CORRECTIONS.md` says what each one is in plain words.
+
+| The fault | What the corrected file does |
+|---|---|
+| The G1 table is not the standard function above Mach 0.85 | Carries the standard table, the values two transcriptions agree on at all 79 points |
+| Drop measured from the horizontal, so an angle reported the line of sight's own rise | Zeroes on the flat, then measures range along the line of sight and drop perpendicular to it |
+| Aerodynamic jump from a formula that is not published and runs the wrong way with stability | Returns zero, with the fields left in place so anything reading them still works |
+| The Coriolis vertical term's sign | Firing east strikes high |
+| A wind from the right added as drift to the right | The bullet drifts away from the wind |
+
+**The check.** `cases.corrected.js` runs it under Node on the six cases, and `CorrectedJavaScriptTests` holds every row to GroupLab's own solver under the tolerances of `docs/BALLISTICS-VALIDATION.md` section 2, plus the rounding the JavaScript applies to its printed rows. **This machine has no Node**, so the comparison could not be run here; CI runs it before the tests on every push, and the test fails rather than skips when it is missing there.
+
+**Nothing was sent anywhere.** The file is for Alan to upload or not.
+
+### Section 7: the rest
+
+- **The support link** is question 28: it needs an address, and nothing was built.
+- **Found in passing and fixed:** a sheet read as the wrong definition gave numbers silently, which section 4 now says out loud.
+- **Found in passing and recorded, not changed:** identification's cost at 600 dpi, above.
+- **An older instruction superseded, named here rather than worked around.** Entry 76 section 4 said an image that is not a GroupLab sheet "does nothing and says so, with no definition asked for", and three window tests pinned that. Section 4 of this entry asks for the opposite, and is newer: the screen now asks which sheet it is, by name. The three tests were rewritten to the new behaviour rather than the new behaviour bent to them, and two of those tests also pinned the words "Detection failed", which section 4 replaced with what to do next.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -5717,3 +5806,9 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 114 section 1: the page aborted when a drawing call fails, over printing what did draw.** A sheet with a marker missing looks normal and cannot be measured, and the fault is found only when it comes back from the range.
 - **Entry 114 section 1: the in-app Print button demoted, over disabling it.** Hiding it would leave a person who wants it with no path and no reason; the screen now says what was wrong and what is safer today.
 - **Entry 114 section 1: the drivers the tests print through are a fixed list, over enumerating the machine's printers.** A driver can open an application when it is printed to, as the OneNote one does.
+- **Entry 115 section 2: bulls chosen with shift and click, over a plain click.** Every bull on a shot sheet has a hole on it, and a plain click there is the hole, which is what the editor has always done with it.
+- **Entry 115 section 3: the velocity SD written to the load record with its provenance, over showing it on screen alone.** A figure that looks typed and a figure that was measured are different things, and the record is where the solver reads it.
+- **Entry 115 section 3: the schema upgraded in place on open, over refusing an older database.** A person's sessions are not something to make them re-create, and the upgrade is one statement in one transaction.
+- **Entry 115 section 4: a sheet read as the wrong definition warned about, over refused.** A damaged or marked-up sheet looks the same to the evidence, and the person can see the sheet.
+- **Entry 115 section 4: the low-resolution threshold measured, over assumed.** The detector reads a sheet at 96 dpi and fails at 60, so the message is keyed at 120 rather than at the 150 that seemed obvious.
+- **Entry 115 section 6: the corrected JavaScript generated from the original by a script, over edited by hand.** Every change is then exactly the five, and the file can be regenerated when the original changes.

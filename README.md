@@ -184,7 +184,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** Every figure with the interval it actually has, and the reference a figure needs to be read against.
 - **Done.** Composite groups, pooled groups and load comparison in the engine.
 - **Done.** Calibre-aware edge-to-edge extreme spread, with the reason printed in place of the figure when no calibre is set.
-- **Built, not proven.** Subgroups within one sheet: bulls mapped to loads in the session, each subgroup with its own figures, compared by dispersion and by centre, so one sheet can carry six charge weights.
+- **Built, not proven.** Subgroups within one sheet: on the marking screen, shift and click chooses bulls and one field puts a load on all of them, so a ladder sheet is set five bulls at a time. Each subgroup has its own figures and they are compared by dispersion and by centre, so one sheet can carry six charge weights.
 - **Done.** The zero correction: the group centre's offset from the point of aim with its uncertainty, and, where the offset is smaller than the shots can resolve, the number of shots that would settle it instead of a correction.
 
 **Phase 3. Editor.**
@@ -203,7 +203,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
-- **Done.** Printing from inside GroupLab on Windows: the real print dialog, the sheet drawn at actual size by GroupLab itself, a refusal with its reason when the paper is not the sheet's or ink would fall in the printer's margin, and a confirmation naming the printer and the pages sent. Open to print stays beside it, and is the path on Linux and macOS.
+- **Built, not proven.** Printing from inside GroupLab on Windows: the real print dialog, the sheet drawn at actual size by GroupLab itself, a refusal with its reason when the paper is not the sheet's or ink would fall in the printer's margin, and a confirmation naming the printer and the pages sent. Its drawing dropped every filled rectangle on a Brother driver, so those sheets printed with no markers or codes at all; that is fixed, and a test now prints every sheet through more than one driver and compares each item against Save PDF. **Open to print is the primary until a sheet from the fixed path has been checked on paper**, and the screen says why.
 - **Done.** The parametric target editor: page, rows and columns, spacing, ring, sighters and load block, laid out by the rule the library was, with a layout that cannot register or fit refused and a spacing tight for your rifle's group warned with its misassignment rate.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
@@ -222,7 +222,8 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** A volunteer print pack: the print screen's "Print a volunteer pack" gives the sheet and one page of instructions together, generated from `docs/VOLUNTEER-PACK.md` at the sheet's own paper size, with its own distance from bull 1 to bull 5 to measure. Consent is the upload page's, not the pack's.
 
 **Phase 5. Chronograph, solver, and comparison.**
-- **Not started.** Garmin Xero import and reconciliation against marked shots.
+- **Built, not proven.** Chronograph strings entered by hand, with the reconciliation `DESIGN.md` section 15 requires: the readings are never assumed to line up with the shots, the in-order pairing is a proposal, a reading that belongs to no shot or a shot the chronograph missed is marked, and what is accepted is kept on the session. The readings' own spread becomes the load's velocity SD, with a note of where it came from.
+- **Not started.** Garmin Xero import, which waits for a sample export file; the reader produces the same list of numbers as the box that is built.
 - **Built, not proven.** A ballistic solver, validated against an independent implementation: the point-mass solver ported from ballistics.js and corrected in five places, and `grouplab trajectory`, which prints a table from stated inputs. G1 and G7 agree with py-ballisticcalc well inside tolerances written down before the comparison. On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
 - **Built, not proven.** Load against load on screen: sessions chosen in Session records, or one sheet's subgroups, side by side with their plots, figures and intervals, the tests with their verdicts and what each could have detected, and the shots it would take to resolve a smaller difference. The loads are never ranked by a point estimate, and overlapping intervals are said to leave them unseparated.
 - **Not started.** Velocity regression, and predicted against measured vertical.

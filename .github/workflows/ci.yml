@@ -47,6 +47,14 @@ jobs:
           node reference/ballistics-js/cases.js > "$RUNNER_TEMP/ballistics-js.json"
           diff -u tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json "$RUNNER_TEMP/ballistics-js.json"
 
+      # NOTES-FROM-PLANNING.md entry 115 section 6: the corrected ballistics.js is run under Node and held to GroupLab's own solver by
+      # CorrectedJavaScriptTests, which reads this file. It is written here rather than committed, so the check is always against the
+      # JavaScript as it stands rather than a stale copy of its output.
+      - name: corrected ballistics.js rows
+        run: |
+          node --version
+          node reference/ballistics-js/cases.corrected.js > tests/GroupLab.Core.Tests/Fixtures/ballistics-js-corrected.json
+
       - name: Build
         run: dotnet build GroupLab.slnx --configuration Release
 

@@ -416,11 +416,11 @@ public class MarkingScreenTests
     }
 
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 76 section 4: opening a GroupLab sheet detects on it without anybody asking, and opening an image that is not
-    /// one does nothing and says so, with no definition asked for.
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: opening a GroupLab sheet detects on it without anybody asking. Entry 115 section 4: an image
+    /// whose codes cannot be read is not refused any more. Nothing is measured, and the screen asks which sheet it is, by name, from the library.
     /// </summary>
     [AvaloniaFact]
-    public void OpeningARecognisedSheetDetectsAndAnythingElseSaysItWasNotDetected()
+    public void OpeningARecognisedSheetDetectsAndAnythingElseIsAskedAboutByName()
     {
         string sheet = RenderedSheet();
         string plain = SyntheticTarget([(300, 300)]);
@@ -435,7 +435,8 @@ public class MarkingScreenTests
             window.OpenImage(plain);
             Pump(window);
             Assert.Null(window.Session.State.Scale);
-            Assert.Contains("not a GroupLab sheet GroupLab recognises", window.StatusText, StringComparison.Ordinal);
+            Assert.True(window.AskingWhichSheet);
+            Assert.Contains("Which sheet is it?", window.StatusText, StringComparison.Ordinal);
             window.Close();
         }
         finally
