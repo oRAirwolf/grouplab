@@ -49,6 +49,12 @@ public sealed record Load(string Name, string? Components)
     /// <summary>The muzzle velocity's standard deviation, which hit probability at distance propagates (entry 113 section 3).</summary>
     public double? MuzzleVelocitySdFps { get; init; }
 
+    /// <summary>
+    /// Where <see cref="MuzzleVelocitySdFps"/> came from, in words, when GroupLab worked it out: "24 readings, 20 September 2026". Null where
+    /// a person typed it (NOTES-FROM-PLANNING.md entry 115 section 3).
+    /// </summary>
+    public string? MuzzleVelocitySdFrom { get; init; }
+
     public double? BallisticCoefficient { get; init; }
 
     public GroupLab.Core.Ballistics.DragModel? DragModel { get; init; }

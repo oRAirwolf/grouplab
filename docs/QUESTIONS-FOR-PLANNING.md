@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-19, question 27: a sheet's subgroups can be compared, but nothing on screen assigns bulls to them
 
-**Status: open**
+**Status: answered 2026-09-20** by `docs/NOTES-FROM-PLANNING.md` entry 115 section 2: option A, a load field in the editor's panel, with the addition that several bulls are set at once. Built: with the select tool, shift and click chooses bulls on the sheet, and the load field sets them all, from the loads the records carry. A bull with no load belongs to no subgroup, and the panel says how many those are.
 
 ### 1. What entry 113 section 2 asks, and what the code has
 
@@ -43,7 +43,7 @@ The comparison screen compares a sheet's subgroups whenever the marking open in 
 
 ## 2026-09-19, question 26: the dope table has no slot in the concept's rail, so it has a seventh one
 
-**Status: open**
+**Status: answered 2026-09-20** by `docs/NOTES-FROM-PLANNING.md` entry 115 section 1: option A, the Ballistics slot stays. Seven buttons including the gear is not a crowded rail, and a dope table belongs to a rifle and a load rather than to a sheet. Nothing changed.
 
 ### 1. What entry 112 section 4 asks, and where it could go
 

@@ -474,6 +474,7 @@ public sealed partial class MainWindow : Window
             session.SetExpectedShots(null);
         })));
         BuildShotsPerBull(panel);
+        BuildBullLoads(panel);
         panel.Children.Add(problem);
         panel.Children.Add(Ruled("Shots"));
         panel.Children.Add(shotList);
@@ -1820,6 +1821,7 @@ public sealed partial class MainWindow : Window
 
         ShowThumbnail(state);
         ShowFullFigures(state);
+        ShowBullLoads(state);
     }
 
     /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>

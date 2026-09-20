@@ -50,6 +50,7 @@ public sealed partial class MainWindow
     private readonly TextBox targetHeight = Field("2");
     private readonly TextBox windSd = Field();
     private readonly StackPanel projectionLines = new() { Spacing = Tokens.Space4 };
+    private readonly TextBlock sdFrom = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Secondary } };
     private readonly Control ballisticsBody;
     private Button railBallistics = null!;
     private double? carryYards;
@@ -82,6 +83,7 @@ public sealed partial class MainWindow
         column.Children.Add(Row(FieldLabel("Twist, in per turn"), twist, twistDirection));
         column.Children.Add(Heading("The load"));
         column.Children.Add(Row(FieldLabel("Muzzle velocity, ft/s"), muzzleVelocity, FieldLabel("Its standard deviation, ft/s"), muzzleVelocitySd));
+        column.Children.Add(sdFrom);
         column.Children.Add(Row(FieldLabel("BC"), ballisticCoefficient, FieldLabel("Drag model"), dragModel, FieldLabel("Its reference atmosphere"), bcReference));
         column.Children.Add(Row(FieldLabel("Bullet weight, gr"), bulletWeight, FieldLabel("Length, in"), bulletLength, FieldLabel("Diameter, in"), bulletDiameter));
         column.Children.Add(Row(Button("Keep these on the records", KeepBallistics)));
@@ -98,6 +100,7 @@ public sealed partial class MainWindow
         column.Children.Add(Row(FieldLabel("At, " + UnitSettings.Symbol(units.Distance)), projectTo, FieldLabel("Crosswind uncertainty, mph"), windSd));
         column.Children.Add(Row(FieldLabel("Target"), targetShape, FieldLabel("Size, " + UnitSettings.Symbol(units.Linear)), targetWidth, targetHeight, Button("Work it out", FillProjection)));
         column.Children.Add(projectionLines);
+        BuildChronograph(column);
         return new ScrollViewer { Content = column, IsVisible = false };
     }
 
@@ -117,6 +120,7 @@ public sealed partial class MainWindow
         fillingBallistics = false;
         ShowBallisticRecords();
         FillProjection();
+        FillChronograph();
     }
 
     private static string Text(double? value) => value is { } v ? v.ToString("0.####", CultureInfo.InvariantCulture) : "";
@@ -125,6 +129,9 @@ public sealed partial class MainWindow
     {
         var rifle = ChosenRifle;
         var load = ChosenLoad;
+        // Entry 115 section 3: a velocity SD GroupLab worked out says where it came from, beside the field it is in.
+        sdFrom.Text = load?.MuzzleVelocitySdFrom is { } from ? "The velocity SD is from " + from + "." : "";
+        sdFrom.IsVisible = load?.MuzzleVelocitySdFrom is not null;
         sightHeight.Text = Text(rifle?.SightHeightInches);
         zeroDistance.Text = Text(rifle?.ZeroDistanceYards is { } yards ? UnitSettings.DistanceFromInches(yards * 36, units.Distance) : null);
         twist.Text = Text(rifle?.TwistInches);

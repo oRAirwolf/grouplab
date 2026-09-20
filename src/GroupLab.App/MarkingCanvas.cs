@@ -128,6 +128,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>The selected shot, if any.</summary>
     public int? Selected { get; set; }
 
+    /// <summary>
+    /// The bulls a person has chosen, NOTES-FROM-PLANNING.md entry 115 section 2, so a load can be set on a row of them at once. It is the
+    /// window's, since the load field beside the canvas reads it.
+    /// </summary>
+    public IReadOnlySet<int> SelectedBulls { get; set; } = new HashSet<int>();
+
+    /// <summary>Raised when the select tool picks a bull with no shot held: the bull's index, and whether it joins the chosen ones.</summary>
+    public event EventHandler<(int Bull, bool Add)>? BullClicked;
+
     /// <summary>Marks found and set aside, sighters that are not being analysed (entry 105 section 8): drawn faint and unlabelled.</summary>
     public IReadOnlySet<int> SetAside { get; set; } = new HashSet<int>();
 
@@ -394,8 +403,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         foreach (var bull in state.Bulls)
         {
             var c = ToControl(bull.Image);
-            Marks.Cross(context, Marks.Faint, c, 8);
-            Marks.Label(context, bull.Label, Marks.Faint, c + new Vector(8, 6));
+            // Entry 115 section 2: a chosen bull is ringed, so a row picked for a load can be seen as one.
+            bool chosen = SelectedBulls.Contains(bull.Index);
+            Marks.Cross(context, chosen ? Marks.Selected : Marks.Faint, c, 8);
+            if (chosen)
+            {
+                Marks.Ring(context, Marks.Selected, c, 13, Tokens.MarkSelectedCoreWidth);
+            }
+
+            Marks.Label(context, bull.Label, chosen ? Marks.Selected : Marks.Faint, c + new Vector(8, 6));
         }
 
         // The scale: the reference in use, one complete and waiting for its size, and one being made, each a teal line with a filled circle at
@@ -662,6 +678,16 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 e.Pointer.Capture(this);
                 break;
 
+            case MarkingTool.Select when e.KeyModifiers.HasFlag(KeyModifiers.Shift) || e.KeyModifiers.HasFlag(KeyModifiers.Control):
+                // Entry 115 section 2: shift or control with the select tool chooses bulls, for the load field, and never a hole. On a shot
+                // sheet every bull has a hole on it, so a plain click there is the hole, which is what the editor has always done with it.
+                if (BullAt(session.State, point.Position) is { } picked)
+                {
+                    BullClicked?.Invoke(this, (picked.Index, true));
+                }
+
+                break;
+
             case MarkingTool.Select:
                 var hit = session.State.Shots.Where(s => Distance(ToControl(s.Image), point.Position) <= ShotReach(session.State, s)).MinBy(s => Distance(ToControl(s.Image), point.Position));
                 if (hit is not null)
@@ -679,6 +705,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 {
                     // Click a hole, then click a bull: DESIGN.md section 13's reassignment.
                     session.AssignBull(selected, bull.Index);
+                }
+                else if (BullAt(session.State, point.Position) is { } chosen)
+                {
+                    // A bull with no hole on it and no hole held: chosen on its own, for the load field (entry 115 section 2).
+                    BullClicked?.Invoke(this, (chosen.Index, false));
                 }
                 else
                 {

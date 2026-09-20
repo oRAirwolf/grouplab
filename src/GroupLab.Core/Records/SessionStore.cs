@@ -72,7 +72,16 @@ public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int
 public sealed class SessionStore
 {
     /// <summary>The schema's version, stored in the meta table and in every export.</summary>
-    public const int SchemaVersion = 1;
+    public const int SchemaVersion = 2;
+
+    /// <summary>
+    /// What each version before this one needs to become this one, oldest first, NOTES-FROM-PLANNING.md entry 115 section 3. Version 2 adds
+    /// where a load's muzzle velocity SD came from, so a figure measured from a chronograph string says so rather than looking typed.
+    /// </summary>
+    public static IReadOnlyList<(int From, string Statement)> Upgrades { get; } =
+    [
+        (1, "ALTER TABLE loads ADD COLUMN muzzle_velocity_sd_from TEXT"),
+    ];
 
     /// <summary>Every statement that creates the schema, in order, exactly as docs/SESSION-SCHEMA.md gives them.</summary>
     public static IReadOnlyList<string> Schema { get; } =
@@ -80,7 +89,7 @@ public sealed class SessionStore
         "CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
         "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER)",
         "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL)",
-        "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL)",
+        "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT)",
         "CREATE TABLE sessions (id INTEGER PRIMARY KEY, created_utc TEXT NOT NULL, shot_date TEXT, sheet_name TEXT NOT NULL, definition_id TEXT, definition_json TEXT, distance_in REAL, rifle TEXT, barrel TEXT, load TEXT, calibre_in REAL, marking_json TEXT NOT NULL, shot_count INTEGER NOT NULL, mean_radius_in REAL, mean_radius_lower_in REAL, mean_radius_upper_in REAL, image_path TEXT, image_sha256 TEXT, proof_image BLOB, proof_image_type TEXT)",
         "CREATE TABLE chronograph_strings (id INTEGER PRIMARY KEY, session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE, source TEXT NOT NULL, recorded_utc TEXT)",
         "CREATE TABLE chronograph_shots (string_id INTEGER NOT NULL REFERENCES chronograph_strings(id) ON DELETE CASCADE, ordinal INTEGER NOT NULL, velocity_fps REAL NOT NULL, PRIMARY KEY (string_id, ordinal))",
@@ -123,7 +132,22 @@ public sealed class SessionStore
             create.Commit();
         }
 
+        // A database written by an older GroupLab is brought up to this schema, oldest step first; a newer one is refused, since this
+        // GroupLab cannot know what it holds (entry 115 section 3).
         string? version = Scalar(db, "SELECT value FROM meta WHERE key = 'schema_version'") as string;
+        if (int.TryParse(version, NumberStyles.Integer, CultureInfo.InvariantCulture, out int had) && had < SchemaVersion)
+        {
+            using var upgrade = db.BeginTransaction();
+            foreach (var (from, statement) in Upgrades.Where(u => u.From >= had).OrderBy(u => u.From))
+            {
+                Execute(db, statement);
+            }
+
+            Execute(db, "UPDATE meta SET value = $v WHERE key = 'schema_version'", ("$v", SchemaVersion.ToString(CultureInfo.InvariantCulture)));
+            upgrade.Commit();
+            version = SchemaVersion.ToString(CultureInfo.InvariantCulture);
+        }
+
         if (version != SchemaVersion.ToString(CultureInfo.InvariantCulture))
         {
             throw new InvalidDataException($"{path} has schema version {version}, and this GroupLab reads version {SchemaVersion}.");
@@ -219,7 +243,7 @@ public sealed class SessionStore
         }
 
         var loads = new List<Load>();
-        using (var command = Command(db, "SELECT name, components, muzzle_velocity_fps, muzzle_velocity_sd_fps, ballistic_coefficient, drag_model, bc_reference, bullet_weight_gr, bullet_length_in, bullet_diameter_in FROM loads ORDER BY name", []))
+        using (var command = Command(db, "SELECT name, components, muzzle_velocity_fps, muzzle_velocity_sd_fps, ballistic_coefficient, drag_model, bc_reference, bullet_weight_gr, bullet_length_in, bullet_diameter_in, muzzle_velocity_sd_from FROM loads ORDER BY name", []))
         using (var r = command.ExecuteReader())
         {
             while (r.Read())
@@ -234,6 +258,7 @@ public sealed class SessionStore
                     BulletWeightGrains = Real(r, 7),
                     BulletLengthInches = Real(r, 8),
                     BulletDiameterInches = Real(r, 9),
+                    MuzzleVelocitySdFrom = Text(r, 10),
                 });
             }
         }
@@ -269,9 +294,10 @@ public sealed class SessionStore
 
         foreach (var load in book.Loads)
         {
-            Execute(db, "INSERT INTO loads VALUES ($n, $c, $v, $sd, $bc, $m, $ref, $w, $l, $d)", ("$n", load.Name), ("$c", load.Components),
+            Execute(db, "INSERT INTO loads VALUES ($n, $c, $v, $sd, $bc, $m, $ref, $w, $l, $d, $from)", ("$n", load.Name), ("$c", load.Components),
                 ("$v", load.MuzzleVelocityFps), ("$sd", load.MuzzleVelocitySdFps), ("$bc", load.BallisticCoefficient), ("$m", load.DragModel?.ToString()),
-                ("$ref", load.BcReference?.ToString()), ("$w", load.BulletWeightGrains), ("$l", load.BulletLengthInches), ("$d", load.BulletDiameterInches));
+                ("$ref", load.BcReference?.ToString()), ("$w", load.BulletWeightGrains), ("$l", load.BulletLengthInches), ("$d", load.BulletDiameterInches),
+                ("$from", load.MuzzleVelocitySdFrom));
         }
     }
 
@@ -482,6 +508,7 @@ public sealed class SessionStore
             ["loads"] = new JsonArray([.. book.Loads.Select(x => (JsonNode)new JsonObject
             {
                 ["name"] = x.Name, ["components"] = x.Components, ["muzzleVelocityFps"] = x.MuzzleVelocityFps, ["muzzleVelocitySdFps"] = x.MuzzleVelocitySdFps,
+                ["muzzleVelocitySdFrom"] = x.MuzzleVelocitySdFrom,
                 ["ballisticCoefficient"] = x.BallisticCoefficient, ["dragModel"] = x.DragModel?.ToString(), ["bcReference"] = x.BcReference?.ToString(),
                 ["bulletWeightGrains"] = x.BulletWeightGrains, ["bulletLengthInches"] = x.BulletLengthInches, ["bulletDiameterInches"] = x.BulletDiameterInches,
             })]),
@@ -534,6 +561,7 @@ public sealed class SessionStore
             [.. (root["loads"] as JsonArray ?? []).Select(x => new Load((string)x!["name"]!, (string?)x["components"])
             {
                 MuzzleVelocityFps = (double?)x["muzzleVelocityFps"], MuzzleVelocitySdFps = (double?)x["muzzleVelocitySdFps"],
+                MuzzleVelocitySdFrom = (string?)x["muzzleVelocitySdFrom"],
                 BallisticCoefficient = (double?)x["ballisticCoefficient"],
                 DragModel = (string?)x["dragModel"] is { } model ? Enum.Parse<DragModel>(model) : null,
                 BcReference = (string?)x["bcReference"] is { } reference ? Enum.Parse<ReferenceAtmosphere>(reference) : null,

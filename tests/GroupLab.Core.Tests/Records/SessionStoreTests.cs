@@ -114,7 +114,8 @@ public sealed partial class SessionStoreTests : IDisposable
         copy.Import(export);
         Assert.Equal(export, copy.Export());
         Assert.Throws<InvalidOperationException>(() => copy.Import(export));
-        Assert.Throws<InvalidDataException>(() => New("other.db").Import(export.Replace("\"schemaVersion\": 1", "\"schemaVersion\": 2", StringComparison.Ordinal)));
+        string newer = export.Replace($"\"schemaVersion\": {SessionStore.SchemaVersion}", $"\"schemaVersion\": {SessionStore.SchemaVersion + 1}", StringComparison.Ordinal);
+        Assert.Throws<InvalidDataException>(() => New("other.db").Import(newer));
     }
 
     /// <summary>The record file from before the database is read in on the first open and kept, renamed, as a backup; the second open leaves it alone.</summary>
@@ -131,6 +132,39 @@ public sealed partial class SessionStoreTests : IDisposable
         store.SaveBook(RecordBook.Empty);
         File.WriteAllText(legacy, RecordBook.Empty.With(new Rifle("Stray", 1, AngularUnit.Moa)).Write());
         Assert.Empty(New(legacy: legacy).LoadBook().Rifles);
+    }
+
+    /// <summary>
+    /// Entry 115 section 3: a database written by the GroupLab before this one is brought up to this schema when it is opened, in one
+    /// transaction with its version, and everything in it is still there. A database of a newer version is refused with its number.
+    /// </summary>
+    [Fact]
+    public void ADatabaseOfTheVersionBeforeIsBroughtUpToThisOne()
+    {
+        // Version 1's schema is this one without the column version 2 adds.
+        string path = Path.Combine(folder, "old.db");
+        using (var db = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={path};Pooling=false"))
+        {
+            db.Open();
+            foreach (string statement in SessionStore.Schema.Select(s => s.Replace(", muzzle_velocity_sd_from TEXT)", ")", StringComparison.Ordinal))
+                .Append("INSERT INTO meta (key, value) VALUES ('schema_version', '1')")
+                .Append("INSERT INTO loads (name, muzzle_velocity_fps) VALUES ('H4350 41.5', 2710)"))
+            {
+                using var command = db.CreateCommand();
+                command.CommandText = statement;
+                command.ExecuteNonQuery();
+            }
+        }
+
+        var store = SessionStore.Open(path);
+        var load = Assert.Single(store.LoadBook().Loads);
+        Assert.Equal(("H4350 41.5", 2710.0), (load.Name, load.MuzzleVelocityFps));
+        Assert.Null(load.MuzzleVelocitySdFrom);
+        Assert.Equal(SessionStore.Schema.Select(Normal), store.CreatedSchema().Select(Normal));
+
+        // The new column holds what it is for, and the version is this one now.
+        store.SaveBook(RecordBook.Empty.With(load with { MuzzleVelocitySdFps = 9.5, MuzzleVelocitySdFrom = "24 readings, 20 September 2026" }));
+        Assert.Equal("24 readings, 20 September 2026", SessionStore.Open(path).LoadBook().Loads.Single().MuzzleVelocitySdFrom);
     }
 
     [GeneratedRegex(@"\s+")]
