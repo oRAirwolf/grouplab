@@ -37,6 +37,14 @@ namespace GroupLab.App;
 public sealed class PrintWindow : Window
 {
     /// <summary>What GroupLab cannot do for the user, said plainly beside the buttons.</summary>
+    /// <summary>
+    /// Entry 114 section 1: what the print screen says about the in-app path until a sheet printed through the fixed drawing has been checked
+    /// on paper. The fault dropped every filled rectangle on one driver, which is every marker, both codes and the load block's rules.
+    /// </summary>
+    internal const string UnconfirmedWords =
+        "Print from inside GroupLab lost every marker and code on a Brother printer on 19 September. The drawing is fixed, and two drivers are "
+        + "held to it by a test, but no sheet from the fixed version has been looked at on paper yet, so Open to print is the safer path today.";
+
     internal const string ScaleWords =
         "Print at actual size. In the print dialog choose \"Actual size\" or \"100%\", never \"Fit\", \"Shrink oversized pages\" or " +
         "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver, and a sheet " +
@@ -135,6 +143,12 @@ public sealed class PrintWindow : Window
         details.Children.Add(loadBlock);
         details.Children.Add(note);
         details.Children.Add(new TextBlock { Text = ScaleWords, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
+        if (OperatingSystem.IsWindows())
+        {
+            // Entry 114 section 1: until a sheet from the fixed path has been checked on paper, the viewer is the path to reach for.
+            details.Children.Add(new TextBlock { Text = UnconfirmedWords, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.FormWarning } });
+        }
+
         details.Children.Add(PrintRow());
         // Entry 113 section 5: the sheet and its one page of instructions together, for a volunteer.
         details.Children.Add(Row(Button("Print a volunteer pack", PrintPack), new TextBlock { Text = "The sheet and one page telling a volunteer how to shoot, photograph and send it.", VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } }));
@@ -666,10 +680,11 @@ public sealed class PrintWindow : Window
     }
 
     /// <summary>
-    /// The print buttons, NOTES-FROM-PLANNING.md entry 107 section 2. On Windows "Print…" prints from inside GroupLab and is the primary, the
-    /// amber button, because Alan chose in-app printing so that no sheet can come out at the wrong size; "Open to print" stays beside it as the
-    /// deliberate choice for anyone whose workflow goes through their viewer. Linux and macOS keep the viewer path alone until Windows has
-    /// proved the approach.
+    /// The print buttons, NOTES-FROM-PLANNING.md entry 107 section 2, and entry 114 section 1. On Windows "Print…" prints from inside
+    /// GroupLab, and it was the primary until its rectangles were found missing from every sheet a Brother MFC-J430W printed: no markers, no
+    /// codes and no load block, on paper that looks normal until it comes back from the range. The drawing is fixed and held by a test on two
+    /// drivers, but <b>no sheet from the fixed path has been checked on paper yet</b>, so "Open to print" is the primary until one has been,
+    /// and the line above the buttons says so. Nothing is hidden: a person who wants the in-app path still has it.
     /// </summary>
     private StackPanel PrintRow()
     {
@@ -680,9 +695,8 @@ public sealed class PrintWindow : Window
             return Row(save, open);
         }
 
-        var print = Button("Print…", PrintHere);
-        print.Classes.Add(AppStyles.Primary);
-        return Row(print, open, save);
+        open.Classes.Add(AppStyles.Primary);
+        return Row(open, save, Button("Print…", PrintHere));
     }
 
     /// <summary>

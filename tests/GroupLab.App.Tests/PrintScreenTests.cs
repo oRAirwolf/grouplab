@@ -33,11 +33,13 @@ public class PrintScreenTests
 
     /// <summary>
     /// Entry 106 section 1: the viewer path says what it does, "Open to print", with no ellipsis promising a dialog. NOTES-FROM-PLANNING.md
-    /// entry 107 section 2: on Windows "Print…" opens the real print dialog, so it has the ellipsis, and it is the primary, the amber button,
-    /// first in the row, with Open to print beside it as the deliberate choice. Linux and macOS keep the viewer path alone.
+    /// entry 107 section 2: on Windows "Print…" opens the real print dialog, so it has the ellipsis. <b>Entry 114 section 1 moves which one
+    /// is the primary:</b> the in-app path printed sheets with every marker and code missing on a Brother driver, and until a sheet from the
+    /// fixed drawing has been checked on paper, Open to print is the amber button and comes first, with the reason on the screen above it.
+    /// Print stays, because nothing is hidden. Linux and macOS keep the viewer path alone.
     /// </summary>
     [AvaloniaFact]
-    public void PrintIsThePrimaryOnWindowsAndOpenToPrintStaysBesideIt()
+    public void OpenToPrintIsThePrimaryUntilTheInAppPathIsCheckedOnPaper()
     {
         var window = new PrintWindow { Width = 1200, Height = 800 };
         window.Show();
@@ -46,17 +48,24 @@ public class PrintScreenTests
         Dispatcher.UIThread.RunJobs();
         var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.Button>().ToList();
         var open = Assert.Single(buttons, b => b.Content as string == "Open to print");
-        Assert.DoesNotContain(GroupLab.App.Theme.AppStyles.Primary, open.Classes);
         if (OperatingSystem.IsWindows())
         {
+            Assert.Contains(GroupLab.App.Theme.AppStyles.Primary, open.Classes);
             var print = Assert.Single(buttons, b => b.Content as string == "Print…");
-            Assert.Contains(GroupLab.App.Theme.AppStyles.Primary, print.Classes);
+            Assert.DoesNotContain(GroupLab.App.Theme.AppStyles.Primary, print.Classes);
             var row = Assert.IsType<Avalonia.Controls.StackPanel>(print.Parent);
-            Assert.Same(print, row.Children[0]);
+            Assert.Same(open, row.Children[0]);
             Assert.Same(row, open.Parent);
+
+            // The screen says why, in the warning role, naming what was lost and where the safe path is.
+            var texts = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.TextBlock>().ToList();
+            var warning = Assert.Single(texts, t => t.Text == PrintWindow.UnconfirmedWords);
+            Assert.Contains(GroupLab.App.Theme.AppStyles.FormWarning, warning.Classes);
+            Assert.Contains("Open to print", warning.Text, StringComparison.Ordinal);
         }
         else
         {
+            Assert.DoesNotContain(GroupLab.App.Theme.AppStyles.Primary, open.Classes);
             Assert.DoesNotContain(buttons, b => b.Content as string == "Print…");
         }
 

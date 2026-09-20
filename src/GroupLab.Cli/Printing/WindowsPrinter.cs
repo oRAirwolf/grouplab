@@ -231,7 +231,17 @@ public static class WindowsPrinter
                     return Failure(printer, pages.Count, "a page could not be started");
                 }
 
-                Draw(dc, mapping, page, fonts);
+                // Entry 114 section 1: a page the driver would not draw in full is never committed. A sheet with a marker missing looks
+                // normal and cannot be measured, and that is found only when it comes back from the range.
+                int failed = Draw(dc, mapping, page, fonts);
+                if (failed > 0)
+                {
+                    AbortDoc(dc);
+                    return new PrintOutcome(PrintOutcomeKind.Failed,
+                        $"{printer} would not draw {failed} of the sheet's {page.Items.Count} marks, so nothing was printed: a sheet missing any of them cannot be measured. Use Save PDF and print from your viewer.",
+                        printer, pages.Count);
+                }
+
                 if (EndPage(dc) <= 0)
                 {
                     AbortDoc(dc);
@@ -265,11 +275,18 @@ public static class WindowsPrinter
         $"{printer} refused the job: {what} ({new Win32Exception(Marshal.GetLastPInvokeError()).Message}). Nothing may have printed; check the print queue.", printer, pages);
 
     /// <summary>
-    /// One page, every item in scene order as the PDF writer draws it: rectangles filled, disc bands as two ellipses filled even-odd, text in
-    /// Arial, the metric match of the Helvetica the PDF names, set on its baseline with the same anchor. The mapping is set after StartPage,
-    /// since a driver may reset the device context there.
+    /// One page, every item in scene order as the PDF writer draws it: rectangles and disc bands filled as closed paths, text in Arial, the
+    /// metric match of the Helvetica the PDF names, set on its baseline with the same anchor. The mapping is set after StartPage, since a
+    /// driver may reset the device context there. It returns how many items the driver would not draw, which is zero on a good page.
+    /// <para>
+    /// <b>Every filled shape is a path, NOTES-FROM-PLANNING.md entry 114 section 1.</b> The rectangles were drawn with <c>FillRect</c>, which is
+    /// a pattern blit rather than a drawing call. Microsoft Print to PDF honoured it; the Brother MFC-J430W driver dropped every one, so its
+    /// sheets printed with no markers, no codes and no load block rules, and could not be measured at all. Both drivers report the same
+    /// <c>RASTERCAPS</c>, blits included, so the capability bits do not tell the two apart. A closed path filled with <c>FillPath</c> is what
+    /// every driver honours, and it is what the disc bands always used, which is why the rings printed while the rectangles did not.
+    /// </para>
     /// </summary>
-    private static void Draw(IntPtr dc, GdiMapping mapping, Scene page, Dictionary<long, IntPtr> fonts)
+    private static int Draw(IntPtr dc, GdiMapping mapping, Scene page, Dictionary<long, IntPtr> fonts)
     {
         SetGraphicsMode(dc, GmAdvanced);
         SetMapMode(dc, MmAnisotropic);
@@ -281,6 +298,7 @@ public static class WindowsPrinter
         SelectObject(dc, GetStockObject(NullPen));
         SetPolyFillMode(dc, Alternate);
         SetBkMode(dc, Transparent);
+        int failed = 0;
         foreach (var item in page.Items)
         {
             uint colour = ColourRef(item.Colour);
@@ -288,20 +306,27 @@ public static class WindowsPrinter
             {
                 case RectFill r:
                     SetDCBrushColor(dc, colour);
-                    var rect = new Rect { Left = (int)r.X, Top = (int)r.Y, Right = (int)(r.X + r.Width), Bottom = (int)(r.Y + r.Height) };
-                    FillRect(dc, ref rect, brush);
+                    int left = (int)r.X, top = (int)r.Y, right = (int)(r.X + r.Width), bottom = (int)(r.Y + r.Height);
+                    var corners = new[] { new PointL(left, top), new PointL(right, top), new PointL(right, bottom), new PointL(left, bottom) };
+                    bool drawn = BeginPath(dc) && Polygon(dc, corners, corners.Length) && EndPath(dc) && FillPath(dc);
+                    if (!drawn)
+                    {
+                        failed++;
+                    }
+
                     break;
                 case DiscBand d:
                     SetDCBrushColor(dc, colour);
-                    BeginPath(dc);
-                    Ellipse(dc, (int)(d.CentreX - d.OuterRadius), (int)(d.CentreY - d.OuterRadius), (int)(d.CentreX + d.OuterRadius), (int)(d.CentreY + d.OuterRadius));
-                    if (d.InnerRadius > 0)
+                    bool band = BeginPath(dc)
+                        && Ellipse(dc, (int)(d.CentreX - d.OuterRadius), (int)(d.CentreY - d.OuterRadius), (int)(d.CentreX + d.OuterRadius), (int)(d.CentreY + d.OuterRadius))
+                        && (d.InnerRadius <= 0 || Ellipse(dc, (int)(d.CentreX - d.InnerRadius), (int)(d.CentreY - d.InnerRadius), (int)(d.CentreX + d.InnerRadius), (int)(d.CentreY + d.InnerRadius)))
+                        && EndPath(dc)
+                        && FillPath(dc);
+                    if (!band)
                     {
-                        Ellipse(dc, (int)(d.CentreX - d.InnerRadius), (int)(d.CentreY - d.InnerRadius), (int)(d.CentreX + d.InnerRadius), (int)(d.CentreY + d.InnerRadius));
+                        failed++;
                     }
 
-                    EndPath(dc);
-                    FillPath(dc);
                     break;
                 case TextRun t:
                     if (!fonts.TryGetValue(t.FontSize, out IntPtr font))
@@ -314,10 +339,16 @@ public static class WindowsPrinter
                     SelectObject(dc, font);
                     SetTextColor(dc, colour);
                     SetTextAlign(dc, TaBaseline | t.Anchor switch { TextAnchor.Centre => TaCenter, TextAnchor.Right => TaRight, _ => TaLeft });
-                    TextOutW(dc, (int)t.X, (int)t.Baseline, t.Text, t.Text.Length);
+                    if (!TextOutW(dc, (int)t.X, (int)t.Baseline, t.Text, t.Text.Length))
+                    {
+                        failed++;
+                    }
+
                     break;
             }
         }
+
+        return failed;
     }
 
     private static uint ColourRef(Rgb c) => c.R | ((uint)c.G << 8) | ((uint)c.B << 16);
@@ -415,12 +446,10 @@ public static class WindowsPrinter
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct Rect
+    private readonly struct PointL(int x, int y)
     {
-        public int Left;
-        public int Top;
-        public int Right;
-        public int Bottom;
+        public readonly int X = x;
+        public readonly int Y = y;
     }
 
     [DllImport("comdlg32.dll", ExactSpelling = true)]
@@ -429,6 +458,7 @@ public static class WindowsPrinter
     [DllImport("winspool.drv", CharSet = CharSet.Unicode, ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool OpenPrinterW(string name, out IntPtr printer, IntPtr defaults);
+
 
     [DllImport("winspool.drv", ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -493,8 +523,9 @@ public static class WindowsPrinter
     [DllImport("gdi32.dll", ExactSpelling = true)]
     private static extern uint SetDCBrushColor(IntPtr dc, uint colour);
 
-    [DllImport("user32.dll", ExactSpelling = true)]
-    private static extern int FillRect(IntPtr dc, ref Rect rect, IntPtr brush);
+    [DllImport("gdi32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool Polygon(IntPtr dc, PointL[] points, int count);
 
     [DllImport("gdi32.dll", ExactSpelling = true)]
     private static extern int SetPolyFillMode(IntPtr dc, int mode);
