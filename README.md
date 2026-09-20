@@ -335,6 +335,7 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 | [docs/SPEC-ERRATA.md](docs/SPEC-ERRATA.md) | Where the implementation had to choose because the specification does not |
 | [docs/SESSION-SCHEMA.md](docs/SESSION-SCHEMA.md) | The session database's schema, its version and its JSON export |
 | [docs/VOLUNTEER-PACK.md](docs/VOLUNTEER-PACK.md) | The one page of instructions in the volunteer print pack |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | What every part of GroupLab costs today, how the record is made, and what is wasteful and not yet changed |
 
 ## Repository layout
 
