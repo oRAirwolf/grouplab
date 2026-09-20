@@ -67,6 +67,25 @@ jobs:
           done
           exit $status
 
+      # NOTES-FROM-PLANNING.md entry 117 section 3: CI reports the benchmark and does not gate it, because runner speed varies between runs
+      # and between machines. The committed record in docs/PERFORMANCE.md is measured on Alan's own desktop; this figure is for information,
+      # exactly as the raw gate records are. One run of each case, on Linux only, so a push pays for it once.
+      - name: Benchmark, reported and not gated
+        if: runner.os == 'Linux'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- bench --runs 1 | tee bench.txt
+          {
+            echo "### benchmark on this runner, for information"
+            echo
+            echo "Not a gate. The committed record is measured on one desktop; this says what a runner does with the same cases."
+            echo
+            echo '```'
+            tail -n +4 bench.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Test counts
         if: always()
         run: |

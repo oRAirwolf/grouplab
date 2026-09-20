@@ -177,6 +177,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **6. Android** | **Not started** | camera capture and lens distortion fitted on the device |
 | **7. Synchronisation** | **Not started** | cloud provider adapters over three-tier storage |
 | **8. iOS** | **Not started** | built and signed on CI |
+| **9. Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
 
 ### What each phase holds
 
@@ -257,6 +258,11 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 8. iOS.**
 - **Not started.** A CI build, signed. It waits on the licence permission under Licence, for distribution rather than for development.
+
+**Phase 9. Performance.**
+- **Not started.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. It starts only when the application works as intended, because a fast wrong answer is worthless.
+- **Built, not proven.** `grouplab bench`, which measures GroupLab against material it generates itself and needs nothing from anybody, and the interface benchmark that walks every screen and times every control from the click to the moment nothing further is coming. [docs/PERFORMANCE.md](docs/PERFORMANCE.md) holds the first record, the method, and the wasteful things found while measuring.
+- **Not started.** The gate, which is written from that baseline rather than guessed, and the optimisations themselves. Nothing has been optimised.
 
 ### Deferred, and why
 

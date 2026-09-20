@@ -60,6 +60,7 @@ return args switch
     ["timing", var log] => GroupLab.Cli.FolderVerbs.Timing(log, Console.Out, Console.Error),
     ["compare-photos", .. var rest] => GroupLab.Cli.PhotoVerb.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),
+    ["bench", .. var rest] => GroupLab.Cli.BenchVerb.Run(rest, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
@@ -513,6 +514,7 @@ static int Usage()
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab user-guide [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
+        grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]
