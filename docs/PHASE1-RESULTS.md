@@ -5526,6 +5526,12 @@ Question 27 is set to answered.
 
 **Nothing was sent anywhere.** The file is for Alan to upload or not.
 
+**A sixth fault, found by the check on its first real run.** This machine has no Node, so the comparison first ran on CI, and it failed: at 100 yards the corrected JavaScript gave 0.99 MOA of wind drift where GroupLab gave 0.91, and a time of flight half a percent long. The cause is not physics. The JavaScript's table loop recorded at the first integration step whose range had passed the next range in the table, and printed that state under the range it had passed, so every row was the bullet a fraction of a step further on. At 1000 yards that overshoot is a small share of a long flight and vanishes into the printed rounding; at 100 yards it is a tenth of the drift, which is why reading the file did not show it and running it did.
+
+**It was confirmed here without Node.** GroupLab's own solver keeps a JavaScript-compatible mode for the transcription check, which reproduces the original's sampling, and it gives the JavaScript's figures to the digit: 1.040 inches of drift at 100 yards on the .223 case against the 0.956 its exact sampling gives, which are 0.993 and 0.913 MOA, the two numbers CI printed. **The corrected file now interpolates each row to the range it is labelled with**, and prints the time of flight to four places, since three cannot hold a tenth-second flight to half a percent. `CORRECTIONS.md` carries six changes.
+
+**GroupLab's own port never had this fault**, and the five corrections recorded in `DESIGN.md` section 16 are unchanged: they are corrections of physics, and this one is a fault in how the JavaScript fills its table.
+
 ### Section 7: the rest
 
 - **The support link** is question 28: it needs an address, and nothing was built.

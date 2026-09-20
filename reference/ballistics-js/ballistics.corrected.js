@@ -1,8 +1,8 @@
-// ballistics.corrected.js: ballistics.js with the five faults GroupLab found put right, and nothing else changed.
+// ballistics.corrected.js: ballistics.js with the six faults GroupLab found put right, and nothing else changed.
 //
 // Same names, same call signature, same returned fields, so the pages that use it keep working untouched. Every change is
 // marked CORRECTED below, and CORRECTIONS.md says what each one is in plain words. GroupLab's own solver carries the same
-// five corrections and is validated against py-ballisticcalc, an independent implementation
+// corrections of physics and is validated against py-ballisticcalc, an independent implementation
 // (docs/BALLISTICS-VALIDATION.md).
 //
 // Generated from ballistics.js by the script in NOTES-FROM-PLANNING.md entry 115 section 6. Nothing here reaches any
@@ -449,6 +449,10 @@ const BallisticSolver = (() => {
     let nextRangeYd = 0;
     let nextRangeFt = 0;
 
+    // CORRECTED: the state at the end of the last step before each range, so the row can be interpolated to the range itself
+    // rather than reported from the first step past it.
+    let px = x, py = y, pvx = vx, pvy = vy, pt = t;
+
     // Also track wind drift via the "lag time" method:
     // drift = windSpeed × (tof - range/muzzleVelocity)
     // This is a standard approximation for point-mass with constant crosswind.
@@ -458,11 +462,24 @@ const BallisticSolver = (() => {
       // reports the line of sight's own rise (about 300 MOA per 5 degrees).
       const rangeYd = (x * cosA + y * sinA) / FT_PER_YD;
 
-      // Record data at each range step
-      if (rangeYd >= nextRangeYd - 0.01) {
-        const v = Math.sqrt(vx * vx + vy * vy);
+      // Record data at each range step.
+      // CORRECTED: the row is interpolated to the range it is labelled with. The loop used to report the first step that had passed
+      // the range and label it with the range, so every figure was that of a bullet a fraction of a step further on. At 100 yards
+      // that overstated the wind drift by about a tenth and the time of flight by about half a percent; the further the range, the
+      // smaller the share, which is why it hid at the bottom of a table and showed at the top.
+      let recorded = false;
+      while (rangeYd >= nextRangeYd) {
+        const prevRangeYd = (px * cosA + py * sinA) / FT_PER_YD;
+        const span = rangeYd - prevRangeYd;
+        const f = span > 1e-12 ? (nextRangeYd - prevRangeYd) / span : 0;
+        const ix = px + f * (x - px);
+        const iy = py + f * (y - py);
+        const ivx = pvx + f * (vx - pvx);
+        const ivy = pvy + f * (vy - pvy);
+        const it = pt + f * (t - pt);
+        const v = Math.sqrt(ivx * ivx + ivy * ivy);
         const energy = (bulletWeight * v * v) / 450240;
-        const dropIn = ((y * cosA) - (x * sinA)) * IN_PER_FT;  // CORRECTED: perpendicular to the line of sight
+        const dropIn = ((iy * cosA) - (ix * sinA)) * IN_PER_FT;  // CORRECTED: perpendicular to the line of sight
 
         // Angular drop from line of sight
         const rangeIn = nextRangeYd * FT_PER_YD * IN_PER_FT;
@@ -473,7 +490,7 @@ const BallisticSolver = (() => {
         }
 
         // Wind drift (lag time method)
-        const lagTime = nextRangeYd > 0 ? (t - (nextRangeYd * FT_PER_YD) / muzzleVelocity) : 0;
+        const lagTime = nextRangeYd > 0 ? (it - (nextRangeYd * FT_PER_YD) / muzzleVelocity) : 0;
         const driftIn = windFps * lagTime * IN_PER_FT;  // wind drift in inches
         let windMOA = 0, windMil = 0;
         if (nextRangeYd > 0) {
@@ -488,7 +505,7 @@ const BallisticSolver = (() => {
           drop:      Math.round(dropIn * 100) / 100,
           dropMOA:   Math.round(dropMOA * 100) / 100,
           dropMil:   Math.round(dropMil * 100) / 100,
-          tof:       Math.round(t * 1000) / 1000,
+          tof:       Math.round(it * 10000) / 10000,  // CORRECTED: four places, since three cannot hold a short flight to half a percent
           windDrift: Math.round(driftIn * 100) / 100,
           windMOA:   Math.round(windMOA * 100) / 100,
           windMil:   Math.round(windMil * 100) / 100,
@@ -499,8 +516,12 @@ const BallisticSolver = (() => {
         nextRangeYd += rangeStep;
         nextRangeFt = nextRangeYd * FT_PER_YD;
 
-        if (nextRangeYd > maxRange) break;
+        if (nextRangeYd > maxRange) { recorded = true; break; }
       }
+
+      if (recorded) break;
+
+      px = x; py = y; pvx = vx; pvy = vy; pt = t;
 
       // RK4 integration step
       const state = [x, y, vx, vy];

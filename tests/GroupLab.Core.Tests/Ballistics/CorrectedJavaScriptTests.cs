@@ -69,7 +69,8 @@ public class CorrectedJavaScriptTests(ITestOutputHelper output)
                 double rounding = 0.005 / inches * BallisticSolver.MoaPerRadian;
                 double dropAllowed = BallisticsIndependentTests.DropAbsoluteMoa + (BallisticsIndependentTests.DropShare * Math.Abs(jsDrop)) + rounding;
                 double windAllowed = BallisticsIndependentTests.WindAbsoluteMoa + (BallisticsIndependentTests.WindShare * Math.Abs(jsWind)) + rounding;
-                double timeShare = Math.Abs(p.TimeOfFlight - jsTime) / Math.Max(jsTime, 1e-9);
+                // The JavaScript rounds the time of flight to four places, so that rounding is allowed for as the inches are.
+                double timeShare = Math.Max(0, Math.Abs(p.TimeOfFlight - jsTime) - 0.00005) / Math.Max(jsTime, 1e-9);
                 worstDrop = Math.Max(worstDrop, Math.Abs(drop - jsDrop) / dropAllowed);
                 worstWind = Math.Max(worstWind, Math.Abs(wind - jsWind) / windAllowed);
                 worstTime = Math.Max(worstTime, timeShare / BallisticsIndependentTests.TimeShare);
