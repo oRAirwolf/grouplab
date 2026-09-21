@@ -6626,6 +6626,14 @@ Entry 129 was folded with an honest status: almost none of it can be done withou
 
 **Why the rest was not built.** Three nights running, the queue ahead of it was defects that mislead a shooter today. And this entry's own sections 7 and 8 need SSH, which was forbidden on each of those nights. The parts that do not need SSH are a receiver, a worker and a page that only mean anything once there is a server to run them on; building them untested against the real nginx and PHP setup is how a receiver goes out with a typo in it.
 
+## The Turnstile secret is not a morning step, and it should not be
+
+Entry 129 section 2.2 asks for a script Alan runs himself, once, to put the Cloudflare Turnstile secret on the server, and for the exact command to be in the report. The script is written and sits in `website/server/grouplab-set-turnstile-secret`.
+
+**It is not installed by anything, and it should not be run yet.** `install.py` installs the sync script, its two systemd units and the public key; it does not install the Turnstile script, because entry 129 section 7.1 scopes that to entry 129's own server work, and that work is not built. Nor is the receiver that would read the secret, nor is PHP enabled for grouplab.org.
+
+So putting the secret on the server in the morning would be putting a credential somewhere nothing can use it, on a host where the folder it belongs in does not exist and the permissions it needs cannot yet be set correctly. **The right order is the reverse**: build and install the receivers, then set the secret, then send a real submission through the page. That keeps the secret's life on the server as short as it can be before it is doing something.
+
 ## The end of the night, proved rather than asserted
 
 A self-contained win-x64 package published from the last commit of the night, carrying every change in it, read the published sample scan:
