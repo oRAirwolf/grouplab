@@ -6648,6 +6648,29 @@ mean radius 0.232 in, 94.9% interval 0.193 to 0.289 in
 
 **Identical to the figure this sheet has read all along**, after a night that took 128 MB of debug symbols out of the package, 423 MB of native libraries out of every build, rewired how holes are assigned to bulls, and added four marks to a shot. That is the point of measuring it from the package rather than from a test: the tests say the code is right, and this says the thing a person would download is the same thing.
 
+## Entry 134. The installer carries the GroupLab icon
+
+`grouplab-setup-win-x64.exe` showed Inno Setup's default icon: the one file a person downloads and double-clicks before they have ever seen GroupLab was the one file that did not look like GroupLab.
+
+`SetupIconFile` now points at `src/GroupLab.App/Assets/icons/grouplab.ico`, by a path relative to the script, which is the same file the application uses. One mark, one file, no second copy to drift.
+
+**The icon needed no regeneration, which was checked rather than assumed.** It already holds every size Windows asks for, as 32-bit PNG frames:
+
+| 16 | 24 | 32 | 48 | 64 | 256 |
+|---|---|---|---|---|---|
+| 890 B | 1532 B | 2155 B | 3382 B | 4528 B | 18739 B |
+
+![The mark at every size the installer needs](figures/installer-icon.png)
+
+The wizard pages carry the mark too, at 55 and 110 pixels. Inno Setup takes only BMP there, so `packaging/windows/make-wizard-images.py` generates them from that same icon rather than anybody drawing again. `UninstallDisplayIcon` already pointed at `GroupLab.App.exe`, so Add or remove programs was already right.
+
+**How it is held.** Two checks, because they catch different failures.
+
+1. `InstallerIconTests` fails if the setting is missing, if its path rots, if it stops being the application's own icon, if a size Windows asks for goes missing, or if a wizard image is absent or is not a BMP. That runs everywhere the tests run.
+2. A CI step on the windows package job reads the icon back out of the setup executable **that was actually built**, and prints its size beside the source icon's sizes in the run summary. The first check proves the intent; this one proves the artefact.
+
+**Why it is worth a test at all.** Nothing breaks when `SetupIconFile` goes missing. The installer still builds, still installs, and still works; it just quietly goes back to Inno Setup's icon. That is the kind of fault nobody reports and nobody notices for months.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

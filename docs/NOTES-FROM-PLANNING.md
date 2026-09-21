@@ -76,6 +76,26 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 ---
 
+# 2026-09-21, entry 134: the installer carries the GroupLab icon
+
+**Status: actioned 2026-09-22. Every section done.**
+- **Section 1, done.** `SetupIconFile` points at `src/GroupLab.App/Assets/icons/grouplab.ico` by a path relative to the script, so the installer and the application carry one file and there is no second copy to drift.
+- **Section 2, nothing to do, and checked rather than assumed.** The icon already holds all six sizes as 32-bit PNG frames: 16, 24, 32, 48, 64 and 256. Nothing was regenerated, so mark A is untouched.
+- **Section 3, done.** `WizardSmallImageFile` carries the mark at 55 and 110 pixels. Inno Setup takes only BMP there, so `packaging/windows/make-wizard-images.py` generates them from that same icon rather than anybody drawing again. `UninstallDisplayIcon` already pointed at `GroupLab.App.exe` and still does.
+- **Section 4, done.** `InstallerIconTests` fails if the setting is missing, if it points at a file that is not there, if it stops being the application's own icon, if a size Windows asks for goes missing, or if a wizard image is absent or is not a BMP.
+- **Section 5, done.** A CI step on the windows package job reads the icon back out of the setup executable that was actually built, which is the artefact a person downloads, and prints its size beside the source icon's sizes in the run summary. The figure is `docs/figures/installer-icon.png`.
+- `docs/PHASE1-RESULTS.md` "Entry 134".
+
+Alan asked for the installer executable to show the GroupLab icon. Today `packaging/windows/grouplab.iss` sets no `SetupIconFile`, so `grouplab-setup-win-x64.exe` shows Inno Setup's default icon, while the application itself already uses `src/GroupLab.App/Assets/icons/grouplab.ico`.
+
+1. Set `SetupIconFile` to that same `.ico`, by a path relative to the script, so the setup executable shows the GroupLab mark in Explorer, the Downloads list and the taskbar while it runs.
+2. Check the `.ico` holds the sizes Windows asks for (16, 24, 32, 48, 64 and 256 pixels); if any are missing, regenerate it from the approved mark A (`src/GroupLab.App/Assets/grouplab-mark.svg`) without changing the design.
+3. While there: give the installer's wizard the GroupLab look where Inno Setup allows it without a new design (`WizardSmallImageFile` with the mark on the pages the silent update never shows, using the existing assets), and confirm the uninstall entry in Add or remove programs shows the icon (it already points at `GroupLab.App.exe`).
+4. Add a CI check that fails if `SetupIconFile` is missing or points at a file that does not exist.
+5. Report how you checked the icon on the built installer (for example by extracting the executable's icon resources in CI), and include a small image of the result in the results.
+
+---
+
 # 2026-09-21, entry 129: the target upload page and the crash reports move to grouplab.org, and the server keeps nothing once it has been read
 
 **Status: not actioned 2026-09-22, and almost none of it can be without the server.** Nothing of sections 1 to 8 was built, so nothing is half built.

@@ -41,6 +41,20 @@ public sealed record RenderDifferenceOptions(
     double SplitMinimumHoles = 1.5,
     double OversizeHoles = 1.35,
     double ResidueElongation = 2.2,
+    /// <summary>
+    /// The most area, in single holes, a long mark may have and still be called residue at <see cref="ResidueElongation"/>.
+    /// <para>
+    /// Entry 130 section 2b.6. Residue is a sliver, and a sliver is smaller than a hole; being too small to be two holes is not the same as
+    /// being too small to be one, and this rule read as though it were. Scan 4's torn hole has 1.25 holes' own area at an elongation of 3.38
+    /// and was refused for length alone, which is how a sheet of twenty three read twenty two.
+    /// </para>
+    /// </summary>
+    double ResidueAtMostHoles = 1.0,
+    /// <summary>
+    /// The length at which a mark is residue whatever its area. The slivers this rule exists to refuse measure 16 to 18 times longer than
+    /// wide, a clean hole reaches 1.72 and the one torn hole measured reached 3.38, so the gap between them is wide enough to sit in.
+    /// </summary>
+    double AlwaysResidueElongation = 6.0,
     double SmallestHoleInches = 0.16,
     double LargestHoleInches = 0.60,
     int MarksForSheetSize = 12,
@@ -264,11 +278,6 @@ public static class RenderDifferenceHoleDetector
             var moments = tooSmall ? default : Moments(residual, expected, width, blob);
             double? calibreHoles = options.CalibreInches is { } calibre ? markAreaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
             bool elongated = moments.Elongation >= options.SplitElongation && areaIn <= 2 * largestSquareInches;
-            string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in, under {smallestHole:0.000} in")
-                : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
-                : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
-                : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
-                : null;
             // Entry 130 section 2b.4: a mark off the bull grid is still a shot if it is near the grid. The prior that refused everything
             // outside a cell is narrowed rather than dropped, because it is what removed every false positive the survey's baselines made,
             // and an invented hole is worse than a missed one: the shooter can see a shot that is missing and cannot see one that is not
@@ -276,6 +285,21 @@ public static class RenderDifferenceHoleDetector
             bool insideACell = cells.Any(c => Math.Abs(page.X - c.X) <= c.HalfWidth && Math.Abs(page.Y - c.Y) <= c.HalfHeight);
             bool nearTheGrid = insideACell || OutsideTheGrid.NearEnoughToBeAMissedShot(
                 page.X, page.Y, [.. cells.Select(c => (c.X, c.Y, c.HalfWidth, c.HalfHeight))]);
+
+            // Entry 130 section 2b.1: the hole on scan 1 bull 2 was seen and refused for hull solidity 0.54 against a floor of 0.55. A torn
+            // hole is ragged; so is handwriting. What separates them is being the calibre's size and sitting on a bull, so that is what the
+            // rescue asks for, and it asks for a stated calibre because without one there is no size to judge against.
+            // The cells are page dmm, like everything else in this stage, and the gate reasons in inches.
+            double fromCellCentre = cells.Count == 0
+                ? double.PositiveInfinity
+                : cells.Min(c => Math.Sqrt(((page.X - c.X) * (page.X - c.X)) + ((page.Y - c.Y) * (page.Y - c.Y)))) / 254.0;
+            bool torn = TornHole.Rescues(solidity, options.MinimumSolidity, diameterIn, options.CalibreInches, insideACell, fromCellCentre);
+
+            string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in, under {smallestHole:0.000} in")
+                : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
+                : solidity < options.MinimumSolidity && !torn ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
+                : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
+                : null;
 
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
@@ -319,9 +343,19 @@ public static class RenderDifferenceHoleDetector
         var reference = SizeReference([.. holes.Select(h => h.DiameterInches)], options);
         foreach (var (blob, moments, areaIn, markAreaIn, hx, hy, diameterIn, solidity, closure, calibreHoles) in elongatedBlobs)
         {
-            double sizeHoles = areaIn / (Math.PI * Math.Pow(reference.VetoInches / 2, 2));
+            // Entry 130 section 2b.6: the mark's own area, not its convex hull's. This line used the hull, and the comment below the oversize
+            // flag says in as many words why the hull cannot do this job: a torn single hole reads about 2.1 holes of hull and a genuinely
+            // merged pair about 2.2, while their own areas are about 1 and about 2. Scan 4 had a torn hole of 1.25 holes' own area and 2.1 of
+            // hull; the hull carried it over the veto and it was cut into two shots, which is the twenty fourth hole on a sheet of twenty
+            // three. Entry 94 section 1 made this same correction for the oversize flag and the veto was left behind.
+            double sizeHoles = markAreaIn / (Math.PI * Math.Pow(reference.VetoInches / 2, 2));
             bool vetoed = sizeHoles < options.SplitMinimumHoles;
-            if (vetoed && moments.Elongation >= options.ResidueElongation)
+            // Residue is either something so long that its area no longer matters, or a sliver: long and smaller than a single hole. A torn
+            // hole is long and bigger than a hole, and it is neither of those. The first test does not ask whether the split was vetoed,
+            // because a mark sixteen times longer than it is wide is not two holes either.
+            bool residue = moments.Elongation >= options.AlwaysResidueElongation
+                || (vetoed && moments.Elongation >= options.ResidueElongation && sizeHoles < options.ResidueAtMostHoles);
+            if (residue)
             {
                 rejected.Add(new RejectedBlob(hx, hy, diameterIn,
                     FormattableString.Invariant($"residue: elongation {moments.Elongation:0.00} with the area of {sizeHoles:0.00} holes, too small to be two and longer than a hole")));

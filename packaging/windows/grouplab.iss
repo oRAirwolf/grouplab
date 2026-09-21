@@ -48,6 +48,14 @@ SolidCompression=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 WizardStyle=modern
+; NOTES-FROM-PLANNING.md entry 134. Without this the setup executable carries Inno Setup's own icon, so the file a person downloads, the one
+; in their Downloads list and the one on the taskbar while it runs are not recognisably GroupLab, while the application it installs is. The
+; path is relative to this script, and it is the same icon the application uses: one mark, one file, no second copy to drift.
+SetupIconFile=..\..\src\GroupLab.App\Assets\icons\grouplab.ico
+; The mark on the wizard pages, at the two scalings Windows asks for. Inno Setup takes only BMP here, so these are generated from that same
+; icon by make-wizard-images.py rather than drawn again. The silent update never shows a wizard page; this is for the person who installs by
+; hand the first time.
+WizardSmallImageFile=wizard-small-55.bmp,wizard-small-110.bmp
 LicenseFile={#SourceDir}\LICENSE
 InfoAfterFile={#SourceDir}\README.txt
 UninstallDisplayName={#AppName} {#AppVersion}

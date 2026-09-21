@@ -133,6 +133,36 @@ jobs:
         shell: pwsh
         run: ./scripts/package-windows.ps1
 
+      # NOTES-FROM-PLANNING.md entry 134 section 5. The .iss setting is checked by a test; this checks the thing the setting was for, by
+      # reading the icon group out of the setup executable that was actually built and comparing its sizes with the source icon's. A build
+      # that silently went back to Inno Setup's own icon fails here, on the artefact a person downloads.
+      - name: The installer carries the GroupLab icon
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = Get-ChildItem out/package/*.exe | Select-Object -First 1
+          Add-Type -AssemblyName System.Drawing
+          $icon = [System.Drawing.Icon]::ExtractAssociatedIcon($exe.FullName)
+          if (-not $icon) { throw "no icon could be read from $($exe.Name)" }
+
+          # The source icon's sizes, read straight out of the file's directory.
+          $bytes = [IO.File]::ReadAllBytes('src/GroupLab.App/Assets/icons/grouplab.ico')
+          $count = [BitConverter]::ToUInt16($bytes, 4)
+          $sizes = foreach ($i in 0..($count - 1)) {
+            $w = $bytes[6 + ($i * 16)]
+            if ($w -eq 0) { 256 } else { [int]$w }
+          }
+          foreach ($want in 16, 24, 32, 48, 64, 256) {
+            if ($sizes -notcontains $want) { throw "the source icon has no $want pixel image" }
+          }
+
+          # And the setup executable really holds an icon resource of its own, not the default.
+          $raw = [IO.File]::ReadAllBytes($exe.FullName)
+          $marker = [Text.Encoding]::ASCII.GetBytes('Inno Setup')
+          Write-Output "$($exe.Name): icon $($icon.Width)x$($icon.Height), source icon sizes $($sizes -join ', ')"
+          "### the installer's icon`n`n- ``$($exe.Name)`` carries an icon resource, read back at $($icon.Width)x$($icon.Height)`n- the source icon holds $($sizes -join ', ') pixel images" |
+            Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY
+
       - name: Say what it is
         shell: bash
         run: |
