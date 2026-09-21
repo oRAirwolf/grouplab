@@ -303,6 +303,15 @@ public sealed partial class MainWindow : Window
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly AppSettingsStore settingsStore;
+
+    /// <summary>
+    /// Entry 131 section 9: one component for every confirmation, so a person learns one place to look. Never a dialog: a dialog stops what
+    /// somebody is doing to tell them what they just did.
+    /// </summary>
+    private readonly Toaster toaster = new();
+
+    /// <summary>The confirmations showing, for the headless tests.</summary>
+    internal Toaster Confirmations => toaster;
     private readonly ComboBox linearUnit = new() { ItemsSource = Enum.GetValues<LinearUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly ComboBox angularUnit = new() { ItemsSource = UnitSettings.AngularChoices.Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 90 };
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
@@ -700,7 +709,12 @@ public sealed partial class MainWindow : Window
         DockPanel.SetDock(rail, Dock.Left);
         whole.Children.Add(rail);
         whole.Children.Add(dock);
-        Content = whole;
+
+        // Entry 131 section 9: the toasts sit over everything, at the bottom right, and never take a click that is not on one of them.
+        var layered = new Panel();
+        layered.Children.Add(whole);
+        layered.Children.Add(toaster.Layer);
+        Content = layered;
         SetTool(MarkingTool.Pan);
         ShowUnits();
         Refresh();
@@ -2565,16 +2579,49 @@ public sealed partial class MainWindow : Window
         {
             selection.Children.Add(Line($"Excluded as {e.InSentence()}."));
         }
+        // Entry 131 section 9: every one of these says what it did and offers the way back. The session's own undo is what Undo runs, so
+        // the toast can never disagree with what would happen if the person pressed Ctrl+Z instead.
         selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-            session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null))));
+        {
+            bool excluding = shot.Exclusion is null;
+            session.SetExclusion(id, excluding ? ChosenReason : null);
+            Did(excluding
+                ? $"Shot {ShotLabel(id)} left out of the figures."
+                : $"Shot {ShotLabel(id)} back in the figures.");
+        })));
         selection.Children.Add(Row(
-            Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)),
-            Button("Unassign", () => session.AssignBull(id, null)),
+            Button(shot.NotAShot ? "It is a shot" : "Not a shot", () =>
+            {
+                bool wasShot = !shot.NotAShot;
+                session.SetNotAShot(id, wasShot);
+                Did(wasShot ? $"Mark {ShotLabel(id)} is not a shot." : $"Mark {ShotLabel(id)} is a shot again.");
+            }),
+            Button("Unassign", () =>
+            {
+                session.AssignBull(id, null);
+                Did($"Shot {ShotLabel(id)} has no bull.");
+            }),
             Button("Delete", () =>
             {
+                string label = ShotLabel(id);
                 session.DeleteShot(id);
                 canvas.Selected = null;
+                Did($"Shot {label} deleted.");
             })));
+    }
+
+    /// <summary>
+    /// Says what just happened, with Undo, entry 131 section 9. Undo runs the session's own undo, so the button and Ctrl+Z can never do
+    /// different things; where the session has nothing to undo, the line is shown without the offer rather than with one that would fail.
+    /// </summary>
+    private void Did(string says)
+    {
+        toaster.Show(new Confirmation(says, session.CanUndo ? () =>
+        {
+            session.Undo();
+            Refresh();
+        }
+        : null));
     }
 
     /// <summary>The review queue as it stands, for the headless tests.</summary>
