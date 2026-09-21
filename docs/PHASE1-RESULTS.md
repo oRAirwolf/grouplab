@@ -6139,6 +6139,71 @@ The signature is now over compact JSON, which has no line break to differ over. 
 
 That is the plainest possible argument for entry 123 section 2.7 existing at all. Three nightlies were published, each one passing a green workflow, and not one of them could have updated itself.
 
+## Entry 123 section 2.7. The real update, done
+
+`v0.2.0-nightly.25` to `v0.2.0-nightly.26`, on Alan's machine, driven through UI Automation so every press was a real click on the real window rather than a harness standing in for one.
+
+### 1. What happened, step by step
+
+| time | what was seen |
+|---|---|
+| 11:46:23 | `GroupLab 0.2.0-nightly.25` starts, installed silently 12.3 s earlier with no window and no elevation prompt |
+| 11:46:24 | `update.check result=Offered refusal=None`. **It found the newer build on its own, on launch, with nobody asking.** |
+| | The bar reads: **"GroupLab 0.2.0-nightly.26 is ready to install."** with Update now, What changed, Later, Skip this version |
+| 11:48:05 | **Update now** pressed |
+| 11:48:20 | 97.3 MB downloaded into GroupLab's own folder and checked against the manifest's SHA-256. **Under 15 seconds.** The bar reads "GroupLab 0.2.0-nightly.26 is downloaded and checked." |
+| 11:49:07 | **Install and restart** pressed |
+| 11:49:09 | the old process is gone, 2 seconds later |
+| 11:49:17 | GroupLab is back, as a new process |
+| 11:49:18 | `update.arrived from=0.2.0-nightly.25 to=0.2.0-nightly.26` |
+
+**No installer window and no elevation prompt appeared at any point.** That was watched for explicitly, by polling every visible top-level window for a title matching Setup, Install or User Account Control throughout, rather than assumed from the absence of a complaint.
+
+### 2. What survived
+
+| | before | after |
+|---|---|---|
+| sessions database | 561152 bytes | **561152 bytes, byte identical** |
+| settings file | present | present |
+| Add or remove programs | `GroupLab 0.2.0-nightly.25` | `GroupLab 0.2.0-nightly.26` |
+| installed assembly stamp | `nightly`, `0.2.0-nightly.25` | `nightly`, `0.2.0-nightly.26` |
+
+### 3. The rolling manifest verifies from a Windows build
+
+This is what entry 130 section 1 asked to be confirmed separately, and it is the fix from entry 123 proved on the live file:
+
+```
+0.2.0-nightly.26 on the nightly train, commit b089122, published 2026-09-21T11:45:38Z
+The signature verifies against the key given.
+```
+
+`v0.2.0-nightly.16` refused the same file with `BadSignature`. Nightly 25 and 26 accept it.
+
+### 4. And it found a third defect
+
+The real test has now found three faults that no unit test could, and this is the third.
+
+The launch after an update ran the ordinary update check. It found nothing newer, said so silently, and **in saying so hid the "updated from A to B" line that had been put there a moment earlier**. The log proved the line had been set; the screen no longer showed it. The one launch where that message matters was the one launch that threw it away.
+
+The launch after an update no longer checks again. It has just installed the newest build, so there is nothing to find, and the message survives. A test holds it.
+
+The three, together, are the argument for this test existing:
+
+| found by the real test | why no unit test caught it |
+|---|---|
+| the published nightly called itself a development build | a working copy is a development build anyway, so both sides agreed while both were wrong |
+| every manifest was refused on Windows | a test signs and verifies on one machine, where the two agree however wrong they are |
+| the after-update line was wiped by the next check | both steps worked; only their order was wrong, and only on a real second launch |
+
+### 5. What testers should do
+
+**`v0.2.0-nightly.25` is the first build that can update itself.** Everything before it has to be replaced by hand, once:
+
+- `.12` and `.14` call themselves development builds and never offer anything (entry 125).
+- `.16` and `.18` name their train correctly but refuse every manifest as `BadSignature` (entry 123 section 2.7).
+
+From 25 onwards the updater works, and no further manual install should ever be needed.
+
 ## Entry 130. The overnight queue
 
 Eight of the queue's items were finished, and the rest are named below with why. Three of them were defects that could mislead a shooter, and those are worth reading first.
