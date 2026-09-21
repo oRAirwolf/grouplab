@@ -30,6 +30,14 @@ The request carries a User-Agent naming GroupLab and its version, and nothing el
 
 Offline, or GitHub unreachable, means **no message at all**, only a line in the diagnostic log. A program that nags about the network when you are at the range is a program you turn off.
 
+## What is signed, exactly
+
+**The signature is over compact JSON, not the file as it is written.** The file is indented so a person can read it; the bytes that are signed have no line breaks at all.
+
+That is not tidiness. Indented JSON is not the same on every machine: from .NET 9 the JSON writer's newline follows `Environment.NewLine`, so the same manifest serialises with a carriage return on Windows and without one on Linux. The nightly is signed on a Linux runner and verified on a Windows desktop, so for as long as the signed bytes were indented, **every published manifest was refused as BadSignature and no update could ever install**. It shipped that way in `v0.2.0-nightly.16` and was found by installing a nightly and watching it refuse its own train.
+
+Compact JSON has no line break to differ over. `SignableBytesTests` holds the exact bytes for a known manifest, so changing them is a deliberate act rather than an accident: every manifest signed before such a change is refused by every build after it, and the other way round.
+
 ## What a build is signed with
 
 Each build publishes `update-manifest.json`: its version, its train, its commit, when it was published, the release notes, and for every file its name, its size and its SHA-256. The manifest is signed, and **the application refuses a manifest whose signature does not verify, and any download whose SHA-256 does not match the manifest**, saying so in plain words rather than failing quietly.
