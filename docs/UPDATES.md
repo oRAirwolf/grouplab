@@ -75,11 +75,49 @@ Rotate when the private half may have been seen by anybody else, and at no other
 4. **Update now is silent.** GroupLab downloads the file, checks its SHA-256 against the manifest, verifies the manifest's signature, and installs with no installer windows and no administrator prompt, because the installer is a per-user one. If it has to close to finish, it **saves everything first**, says in one line that it will close and reopen, and comes back on the screen you were on.
 5. **The zip and the Linux tarball cannot replace themselves.** They check and notify in the same way, and Update now opens the download page instead.
 
+## The mechanism, and why it is this one
+
+**GroupLab updates itself by running its own Inno Setup installer silently.** It downloads the installer the signed manifest names, checks its SHA-256, saves your work, starts the installer with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /relaunch=yes`, closes, and the installer puts the new build in place and starts it again.
+
+The alternative was a maintained updater framework, and it was not taken for one plain reason: **this repository has no NuGet source configured**, so no package can be added to it at all. That is a fact about the machine and the build, not a judgement about the frameworks. Against that:
+
+- The installer already exists, is built by the same workflow on every commit, and is the file a tester downloads by hand anyway. One artefact, one code path, one thing to keep working.
+- It is a per-user install (`PrivilegesRequired=lowest`), so nothing asks for administrator rights, which was a requirement rather than a preference.
+- Its silent switches are documented and stable, and `/relaunch=yes` is read by a five-line `[Code]` function in `packaging/windows/grouplab.iss`, so GroupLab comes back up rather than leaving the person staring at a closed window.
+- Nothing new has to be trusted. A framework would be one more thing between a signed manifest and the files on disk.
+
+What it costs is written below under "If a new build will not start".
+
+**Only Windows can do this.** The zip and the Linux tarball were unpacked wherever their owner chose, and GroupLab does not write over a folder it did not make. On those platforms the bar says a newer build exists and points at the download, and the person installs it the way they installed the first one.
+
+### If a new build will not start
+
+**This cannot be guaranteed, and pretending otherwise would be worse than saying so.** The installer replaces the program folder in place; the previous build's files are gone once it has run. There is no second copy kept aside and no automatic roll back.
+
+What is true, and what you do:
+
+1. **Your work is never at risk.** Everything you care about lives in `%APPDATA%\GroupLab`: the settings, the sessions database, your own sheets and the log. No installer and no uninstaller touches that folder. A bad build cannot lose a session.
+2. **Every nightly keeps its own release.** The workflow publishes `v<version>` alongside the rolling `nightly` tag and keeps the newest thirty. So the build you were on yesterday still exists at its own address.
+3. **To go back:** download the previous build's installer from its own release page and run it. It installs over the broken one, and your things are exactly where you left them.
+
+Keeping the previous install folder aside so a failed start could roll itself back is a real option and a real cost; it is question 33 for the planning session rather than something decided here.
+
 ## What a tester will see, honestly
 
 - **SmartScreen.** No code signing certificate exists, so Windows may warn on a freshly downloaded installer: "Windows protected your PC", then More info and Run anyway. Nothing here works around that, and nothing should: the fix is a signed build, which costs money the project has not spent.
 - **A nightly may be broken.** Passing the tests is not the same as somebody having used it.
 - **An update is a new build, not a patch.** The whole application is replaced.
+
+## What the workflow needs from the repository
+
+The nightly publishes with `GITHUB_TOKEN`, and `nightly.yml` asks for `permissions: contents: write`. That is not sufficient on its own. **Settings, Actions, General, Workflow permissions must be set to "Read and write permissions".**
+
+This was established rather than assumed. With the repository default left at read-only, the publish step failed with `HTTP 403: Resource not accessible by integration` on `POST /repos/oRAirwolf/grouplab/releases`, although the job log printed `Contents: write` in its own token summary. After the setting was changed and nothing else, the same workflow on the same commit published `v0.2.0-nightly.12` and moved the rolling `nightly` release without any other change:
+
+- refused, default read-only: <https://github.com/oRAirwolf/grouplab/actions/runs/35572294871>
+- published, default read and write: <https://github.com/oRAirwolf/grouplab/actions/runs/35573031594>
+
+The reason the workflow-level `permissions:` block is not enough is that it can only narrow what the repository default already allows; it cannot raise it. A workflow asking for more than the default gets the default, and the log prints what was asked for rather than what was granted, which is what made the first diagnosis a guess until it was tested.
 
 ## Where your things are
 

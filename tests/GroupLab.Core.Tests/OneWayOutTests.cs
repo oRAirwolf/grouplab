@@ -49,7 +49,7 @@ public partial class OneWayOutTests
     [Fact]
     public void TheOneWayOutCanBeReplacedByARecorder()
     {
-        string text = File.ReadAllText(Repo.PathTo("src", "GroupLab.App", TheOneWayOut));
+        string text = File.ReadAllText(Repo.PathTo("src", "GroupLab.Core", "Updates", TheOneWayOut));
         Assert.Contains("interface IOutsideWorld", text, StringComparison.Ordinal);
         Assert.Contains("class TheOutsideWorld", text, StringComparison.Ordinal);
         Assert.Contains("class RecordedOutsideWorld", text, StringComparison.Ordinal);

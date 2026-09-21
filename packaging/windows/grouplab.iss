@@ -69,7 +69,17 @@ Name: "{autodesktop}\GroupLab"; Filename: "{app}\GroupLab.App.exe"; Tasks: deskt
 
 [Run]
 Filename: "{app}\GroupLab.App.exe"; Description: "Open GroupLab"; Flags: nowait postinstall skipifsilent
+; Entry 123 section 2.3: GroupLab updating itself runs this installer silently and passes /relaunch=yes, so the new version comes straight
+; back up on the screen the person was on. An ordinary silent install, which is what a deployment script runs, starts nothing: only a person
+; pressing Install and restart inside GroupLab asks for this.
+Filename: "{app}\GroupLab.App.exe"; Flags: nowait; Check: WantsRelaunch
 
 [Messages]
 ; Said in the same plain words the README uses: what the person will see, and what is true about it.
 FinishedLabel=GroupLab {#AppVersion} is installed, from commit {#AppCommit}.%n%nIt is an unsigned test build, so Windows may warn about it the first time you run it: click More info, then Run anyway.%n%nGroupLab keeps your sessions, settings and log in %%APPDATA%%\GroupLab. Uninstalling leaves that folder alone; delete it yourself when you want it gone.
+
+[Code]
+function WantsRelaunch(): Boolean;
+begin
+  Result := CompareText(ExpandConstant('{param:relaunch|no}'), 'yes') = 0;
+end;

@@ -678,9 +678,13 @@ public sealed partial class MainWindow : Window
         // The work bar sits above the status line in both states, shown by Show work (entry 105 section 6).
         var dock = new DockPanel();
         DockPanel.SetDock(header, Dock.Top);
+        // Entry 123 section 2: the update bar sits under the header, above the work, so it is seen without covering anything.
+        var updateLine = BuildUpdateBar();
+        DockPanel.SetDock(updateLine, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(workBar, Dock.Bottom);
         dock.Children.Add(header);
+        dock.Children.Add(updateLine);
         dock.Children.Add(statusBar);
         dock.Children.Add(workBar);
         dock.Children.Add(body);
@@ -696,6 +700,18 @@ public sealed partial class MainWindow : Window
         ShowUnits();
         Refresh();
         ShowPendingCrashes();
+
+        // Entry 123 section 2.4: if the last thing this machine did was update, the new version says so, once, and goes back to the screen
+        // the person was on. It is read and cleared here, before anything can look for another update.
+        updates = settingsStore.LoadUpdatePreferences(OwnTrain);
+        SayIfUpdated();
+
+        // Entry 119 sections 4.1 and 4.2: it looks as often as the person asked, on every launch unless they said otherwise, and a check
+        // that finds nothing says nothing. It is not awaited, so a slow or unreachable train never holds the window closed.
+        if (CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
+        {
+            _ = CheckForUpdatesAsync(byHand: false);
+        }
     }
 
     /// <summary>The icon the window and the executable carry, entry 105 section 5.</summary>
@@ -3158,6 +3174,9 @@ public sealed partial class MainWindow : Window
     /// <summary>What a person follows and how often, entry 119 sections 4.2 and 4.5. Kept in memory until the settings file carries it.</summary>
     private UpdatePreferences updates = UpdatePreferences.Default(AppInfo.Build.Train == UpdateTrain.Development ? UpdateTrain.Nightly : AppInfo.Build.Train);
 
+    /// <summary>The train a build with no train of its own follows: nightly, which is the only one with builds on it.</summary>
+    private static UpdateTrain OwnTrain => AppInfo.Build.Train == UpdateTrain.Development ? UpdateTrain.Nightly : AppInfo.Build.Train;
+
     private readonly TextBlock updateState = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>The one line above the train choice, which says what this build is on and what the other trains are.</summary>
@@ -3167,30 +3186,6 @@ public sealed partial class MainWindow : Window
             : "Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken.";
 
     private static string TrainLabel(UpdateTrain train) => train.IsAvailable() ? train.Words() : train.Words() + " (" + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ")";
-
-    /// <summary>
-    /// Looks for a newer build, entry 119 sections 4.1 and 4.2. It is the only thing here that reaches the network, and it says what it
-    /// found either way. A build with no key compiled in says so rather than pretending to check.
-    /// </summary>
-    internal void CheckForUpdates()
-    {
-        updates = updates with { LastCheckUtc = DateTimeOffset.UtcNow };
-        if (AppInfo.Build.IsDevelopment)
-        {
-            updateState.Text = "This is a development build, so there is nothing to update it to.";
-            return;
-        }
-
-        if (!UpdateKeys.Trusts)
-        {
-            updateState.Text = UpdateSignature.Refusal.NoKey.Words();
-            DiagnosticLog.Info("update.check", ("result", "no key"));
-            return;
-        }
-
-        updateState.Text = "Looking for a newer build\u2026";
-        DiagnosticLog.Info("update.check", ("train", updates.Train.Words()));
-    }
 
     /// <summary>What the settings page is showing about updates, for the headless tests.</summary>
     internal string UpdateStateText => updateState.Text ?? "";

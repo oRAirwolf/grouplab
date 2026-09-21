@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GroupLab.App;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App.Tests;
 

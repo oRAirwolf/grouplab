@@ -20,13 +20,20 @@ namespace GroupLab.App.Tests
         /// entry 117 clicks every control it finds, and one of them opened tabs on Alan's machine. The recorder takes the real one's place
         /// for the whole run, and <c>OutsideWorldTests</c> reads what it was asked for.
         /// </summary>
-        internal static readonly GroupLab.App.RecordedOutsideWorld Outside = new();
+        internal static readonly GroupLab.Core.Updates.RecordedOutsideWorld Outside = new();
 
         [ModuleInitializer]
         internal static void Initialise()
         {
             GroupLab.App.MainWindow.DetectOnOpenByDefault = false;
-            GroupLab.App.TheOutsideWorld.Current = Outside;
+            GroupLab.Core.Updates.TheOutsideWorld.Current = Outside;
+
+            // Entry 123 section 2.6: an update downloads into a folder GroupLab owns, so a test run is pointed at one of its own rather than
+            // at the folder the installed application uses on the machine the tests are running on.
+            GroupLab.App.MainWindow.UpdateFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "grouplab-test-updates");
+
+            // And a window opened by a test does not go looking for an update of its own accord; the tests that care ask for one.
+            GroupLab.App.MainWindow.CheckOnLaunchByDefault = false;
         }
     }
 }

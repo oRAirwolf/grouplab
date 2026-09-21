@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App;
 
@@ -167,6 +168,51 @@ public sealed class AppSettingsStore(string path)
     /// the Send button stays hidden; saving a report to disk works either way.
     /// </summary>
     public string LoadCrashReportUrl() => Read(file => (string?)file["crashReportUrl"]) ?? "";
+
+    /// <summary>
+    /// What a person has decided about updating, entry 119 sections 4.2 and 4.5, now kept in the settings file rather than in memory: an
+    /// update that closes the application would otherwise forget the train and the skipped version at the moment it matters most.
+    /// </summary>
+    public UpdatePreferences LoadUpdatePreferences(UpdateTrain fallback) => Read(file =>
+    {
+        var updates = file["updates"] as JsonObject;
+        var train = Enum.TryParse((string?)updates?["train"], out UpdateTrain chosen) && Enum.IsDefined(chosen) ? chosen : fallback;
+        var interval = Enum.TryParse((string?)updates?["interval"], out UpdateCheckInterval often) && Enum.IsDefined(often) ? often : UpdateCheckInterval.EveryLaunch;
+        var last = DateTimeOffset.TryParse((string?)updates?["lastCheckUtc"], CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var when) ? when : (DateTimeOffset?)null;
+        return new UpdatePreferences(train, interval, (string?)updates?["skipped"], last);
+    }) ?? UpdatePreferences.Default(fallback);
+
+    public bool SaveUpdatePreferences(UpdatePreferences preferences)
+    {
+        ArgumentNullException.ThrowIfNull(preferences);
+        return Save(file =>
+        {
+            if (file["updates"] is not JsonObject updates)
+            {
+                file["updates"] = updates = new JsonObject();
+            }
+
+            updates["train"] = preferences.Train.ToString();
+            updates["interval"] = preferences.Interval.ToString();
+            updates["skipped"] = preferences.SkippedVersion;
+            updates["lastCheckUtc"] = preferences.LastCheckUtc?.UtcDateTime.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
+        });
+    }
+
+    /// <summary>
+    /// What one version leaves for the next across an update, entry 123 sections 2.3 and 2.4: the version it was, and the screen the person
+    /// was on. The new version says one line about it, goes back to that screen, and clears it, so it is said once and never again.
+    /// </summary>
+    public (string From, string Screen)? LoadHandover() => Read(file =>
+        file["afterUpdate"] is JsonObject after && (string?)after["from"] is { Length: > 0 } from
+            ? ((string From, string Screen)?)(from, (string?)after["screen"] ?? nameof(Destination.Analyse))
+            : null);
+
+    public bool SaveHandover(string from, string screen) => Save(file =>
+        file["afterUpdate"] = new JsonObject { ["from"] = from, ["screen"] = screen });
+
+    /// <summary>Forgets the handover, which the new version does as soon as it has said its line.</summary>
+    public bool ClearHandover() => Save(file => file.Remove("afterUpdate"));
 
     /// <summary>Reads one setting, or null when the file is missing or unreadable.</summary>
     private T? Read<T>(Func<JsonObject, T?> get)

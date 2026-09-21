@@ -18,6 +18,7 @@ using GroupLab.Core.Printing;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
 using RenderOptions = GroupLab.Core.Rendering.RenderOptions;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App;
 

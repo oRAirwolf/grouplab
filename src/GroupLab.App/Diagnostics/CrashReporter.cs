@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Avalonia.Threading;
 using GroupLab.Core.Trace;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App.Diagnostics;
 
