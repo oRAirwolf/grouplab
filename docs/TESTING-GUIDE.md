@@ -21,6 +21,12 @@ The installer's copy updates itself. It looks for a newer nightly when it starts
 
 The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them. They tell you a newer build exists and point you at the download.
 
+### One reinstall by hand, once
+
+**`v0.2.0-nightly.25` is the first build that can update itself.** If you are on anything earlier, the update will not work and it is not your machine's fault: the signature those builds check was written differently on the machine that made them, so they reject a perfectly good update. Download the installer from the nightly release once, run it over the top, and self-updating works from then on. Nothing of yours is touched.
+
+The update from `nightly.25` to `nightly.26` was then run end to end on a real machine, with real clicks: 97 MB downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back on the screen it was on.
+
 ### If a new build will not start
 
 **Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\GroupLab`: the settings, your sessions, any sheet you designed and the log. No installer and no uninstaller touches that folder, so a bad build cannot lose a session.
@@ -38,6 +44,10 @@ Both packages bring a `samples` folder.
 3. GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and puts each on its bull. Watch the status line.
 4. Settle anything the review queue raises in the side panel, then press **Accept and analyse**.
 
+**Tell it the calibre.** It is the most useful thing you can give it. On one test scan naming the calibre is the difference between nineteen holes found and twenty-four, and on another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in paper is a good deal smaller than the bullet that made it.
+
+**Then click a hole.** A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by hand, leave a note, or mark it a sighter, a flyer or not a shot. A flyer is called out and stays in the group; leaving a shot out of the figures is a separate, deliberate choice that needs a reason. Everything you do shows a message with **Undo** on it, and Ctrl+Z works everywhere.
+
 ## Reading what it shows you
 
 ![The analysis](figures/screens/current/analysis-light-1400x900.png)
@@ -46,7 +56,9 @@ Both packages bring a `samples` folder.
 - **Every figure carries its interval:** the range the true value is likely to lie in. That interval is the point of the software. A five-shot group's mean radius could easily be half or double what it measures.
 - **The zero correction** says what to dial, in your scope's clicks, and refuses when the group's centre is too close to the aim to tell from chance, saying how many shots would settle it.
 - **The two cards** judge the group's shape and its worst shot, each naming the test it used and what that test could have detected.
-- **Every "why"** opens the reasoning behind a figure.
+- **Every "why"** opens the reasoning behind a figure, and there is now a **?** beside every single figure giving two or three plain sentences, including what the number of shots does to it.
+- **The zero correction is given in MOA, mils, inches and centimetres at once**, with your scope's own unit leading and the clicks spelled out where the rifle records a click value. The clicks are never guessed.
+- **Holes between bulls and off the grid are kept**, counted and offered to you rather than dropped. Where GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries the doubt until you settle it.
 
 ## Printing a sheet and shooting it
 
@@ -65,6 +77,8 @@ The repository's README is the authority on what works; this is the short versio
 - **Printing from inside GroupLab** lost every marker and code on one printer, which made those sheets unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed version has been checked on paper yet, so use **Open to print**.
 - **Hole detection on plain paper**, with no sheet definition, is not built.
 - **Garmin Xero import** is not built. Chronograph readings are typed in, and reconciled with the shots rather than assumed to line up with them.
+- **The Equipment screen is not built.** Rifles, barrels and loads are added from a cramped box on the marking screen that shares one field between a barrel's round count and a load's components. It is confusing and it is being replaced.
+- **Sending in sheets** is coming. `grouplab.org/upload` is written and its address is reserved, but the server is not installed yet, so the link does not work.
 - **Several of the project's own gates have no material yet**: no mounted photograph set, no 25-shot editor timing, no blank-paper photograph. So GroupLab is careful software that has not yet been proved against a large body of real targets.
 - **Linux and macOS** are built and tested on every push. Nobody uses either day to day, and the macOS build is not offered for download.
 

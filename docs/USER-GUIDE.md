@@ -45,6 +45,8 @@ Some sheets break one shot a bull on purpose, such as two shots into each of bul
 
 **A flat scan at 600 dpi is the best record of a sheet.**
 
+GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers win, because they were printed at a known size and the file's number is only what the scanner meant to do.
+
 For photographs:
 - stand about 2.5 ft (75 cm) from the sheet;
 - use the phone's main camera, not its wide or zoom lens;
@@ -70,6 +72,11 @@ The pill in the header counts the marks that need you. The review queue in the s
 - **No bull.**
 - **Count differs from rounds fired:** raised when you have said how many rounds you fired.
 - **Refused candidate:** something the detector saw and did not take as a hole.
+- **Bulls with nothing on them:** when you have said how many rounds you fired and GroupLab finds fewer, it names the bulls that are empty. **A shortfall is never allowed to pass as a clean result.**
+
+**Name the calibre.** It is the single most useful thing you can tell GroupLab about a sheet. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the calibre the detector has only the shape of a mark to go on.
+
+**Holes between bulls, and marks off the grid.** A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.**
 
 The queue works from the keyboard:
 - **Space** goes to the next item.
@@ -101,9 +108,23 @@ The analysis has three columns:
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 
+**Click a hole to edit it.** A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:
+- **Sighter**, which sets it aside from the group, as a shot on a sighter bull already is;
+- **Flyer**, which calls it out on the sheet and in the list and **changes no figure**;
+- **Leave out of the figures**, which does change them, and needs a reason;
+- **Not a shot**, for a staple, a tear or a pen mark.
+
+Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are two different decisions, and GroupLab will not quietly make the second one for you because you made the first.
+
+Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, and the Undo on the message is the same undo.
+
+**A ? beside every figure.** Two or three plain sentences saying what the figure means, what it is good for, and what the number of shots does to it, with **More** going to the glossary. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
+
 **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers. When you have excluded a shot, each figure is also given without the exclusion, so an exclusion is never hidden.
 
-**The zero correction** says what to dial, in the scope's clicks when the rifle is chosen, when the group's centre is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialling an offset nobody can distinguish from zero only chases noise.
+**The zero correction** is given in MOA, mils, inches and centimetres at once. Where your rifle records its scope's units, that unit leads and the correction is also spelled out in clicks: "Up 8 clicks at 0.1 mil". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches every figure between inches with MOA and centimetres with mils, and changes nothing that is stored.
+
+It says what to dial when the group's centre is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialling an offset nobody can distinguish from zero only chases noise.
 
 **The two cards:**
 - **Shape** says whether the group is round, as far as its shots can tell. It also says whether it strings vertically, and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is not evidence of none.
@@ -162,7 +183,27 @@ The ballistics screen also carries the analysed group to another distance, and g
 - The chance is given as a range across the group's sigma interval.
 - With neither a velocity spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
 
-## 9. Settings
+## 9. Keeping GroupLab up to date
+
+GroupLab checks for a new build when it starts and about once a day after that, and tells you in a bar across the top of the window when one is ready. Nothing is downloaded until you ask for it and nothing is installed without you pressing the button.
+
+When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows. The installer is per-user: it never asks for an administrator, it installs under your own account, and it closes and reopens GroupLab around the update. After it comes back, the same bar tells you which version you are now on.
+
+If an update ever fails, the build you had is still installed and still works. Nothing is removed until the new one is in place.
+
+## 10. Comparing several sheets at once
+
+Where several sheets were shot with the same load, GroupLab can read them as one group. It is not a matter of adding the numbers up: several sheets have several centres, and what a pooled figure means depends on which centre you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.
+
+## 11. If something goes wrong
+
+**Report a problem** is in the settings. It opens the support page, which takes a description and, if you attach one, a report package: your log, the crash record and the marking you were working on. Nothing is sent until you press send, and you can see what is in the package before you do.
+
+Crash records are written to your own machine whether or not you ever send them. They name the version, the build train and the line it happened on, and they never contain a photograph, a location or anything read out of one.
+
+**Sending in sheets.** The upload page at `grouplab.org/upload` takes scans and photographs that help GroupLab get better at reading them. It is coming: the address is reserved and the page is written, but the server it runs on is not installed yet, so the link will not work until it is.
+
+## 12. Settings
 
 The gear opens the settings:
 - **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown.
