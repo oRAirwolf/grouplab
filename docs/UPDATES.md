@@ -38,6 +38,17 @@ That is not tidiness. Indented JSON is not the same on every machine: from .NET 
 
 Compact JSON has no line break to differ over. `SignableBytesTests` holds the exact bytes for a known manifest, so changing them is a deliberate act rather than an accident: every manifest signed before such a change is refused by every build after it, and the other way round.
 
+## The order builds are compared in
+
+**Strict SemVer 2.0.0 precedence.** A pre-release sorts below the release it is named for, so `0.2.0-nightly.16` is older than `0.2.0`, and pre-release identifiers are compared one at a time, numbers as numbers and anything else as text.
+
+Question 30 asked whether a train should rank above the version instead. It should not, and the reason is that the updater never needs it to. A train takes builds from itself and from steadier trains only: nightly accepts nightly, beta and release; beta accepts beta and release; release accepts release. So two builds are only ever compared when one is already allowed to replace the other, and plain version order is enough to say which is newer.
+
+**If a third train is ever added**, the two ranks it needs are these, written down here rather than built, because a rank nothing uses is a rank nothing tests:
+
+1. Trains are ranked by steadiness: release above beta above nightly. A build from a steadier train may replace one from a less steady train.
+2. Within what a train accepts, SemVer precedence decides, and nothing else.
+
 ## What a build is signed with
 
 Each build publishes `update-manifest.json`: its version, its train, its commit, when it was published, the release notes, and for every file its name, its size and its SHA-256. The manifest is signed, and **the application refuses a manifest whose signature does not verify, and any download whose SHA-256 does not match the manifest**, saying so in plain words rather than failing quietly.

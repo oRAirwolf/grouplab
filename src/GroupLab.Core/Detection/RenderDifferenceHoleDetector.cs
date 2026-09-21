@@ -254,14 +254,17 @@ public static class RenderDifferenceHoleDetector
             double diameter = 2 * Math.Sqrt(area / Math.PI), solidity = blob.Area / area;
             double ppi = LocalPixelsPerInch(registration, new PointD(hx, hy));
             double diameterIn = diameter / ppi, areaIn = area / (ppi * ppi), markAreaIn = blob.Area / (ppi * ppi);
-            bool tooSmall = diameterIn < options.MinimumDiameterInches;
+            // Entry 130 section 2b.3: the floor follows the calibre the shooter named, because a hole in paper is reliably narrower than
+            // the bullet that made it. A fixed floor refused five real .22 LR holes on scan 4.
+            double smallestHole = HoleSizeGate.MinimumDiameter(options.CalibreInches, options.MinimumDiameterInches);
+            bool tooSmall = diameterIn < smallestHole;
             double aspect = BoxAspect(blob);
             var page = registration.ToPage(new PointD(hx, hy));
             var zone = zones.FirstOrDefault(z => page.X >= z.Left && page.X <= z.Right && page.Y >= z.Top && page.Y <= z.Bottom);
             var moments = tooSmall ? default : Moments(residual, expected, width, blob);
             double? calibreHoles = options.CalibreInches is { } calibre ? markAreaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
             bool elongated = moments.Elongation >= options.SplitElongation && areaIn <= 2 * largestSquareInches;
-            string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in")
+            string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in, under {smallestHole:0.000} in")
                 : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")

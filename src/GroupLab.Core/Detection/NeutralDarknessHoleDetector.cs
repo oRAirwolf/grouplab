@@ -13,7 +13,11 @@ public sealed record HoleDetectionOptions(
     double MinimumDiameterInches = 0.15,
     double MaximumDiameterInches = 0.60,
     double MinimumSolidity = 0.55,
-    double MaximumAspect = 2.2);
+    double MaximumAspect = 2.2,
+
+    // Entry 130 section 2b.3: the bullet the shooter named, where they have. A hole in paper is reliably narrower than the bullet that made
+    // it, so the smallest acceptable hole follows the calibre rather than a constant. Null keeps the constant above.
+    double? CalibreInches = null);
 
 /// <summary>
 /// A detected hole, image pixels: the convex hull's centroid and equivalent diameter, the blob's pixel count over the
@@ -80,7 +84,8 @@ public static class NeutralDarknessHoleDetector
 
         int closeRadius = Math.Max(3, (int)Math.Round(options.CloseRadiusInches * dpi, MidpointRounding.ToEven));
         var closed = backend.Morphology(new GrayImage(maxChannel.Width, maxChannel.Height, binary), MorphologyOperation.Close, closeRadius);
-        double smallest = Math.PI * Math.Pow(options.MinimumDiameterInches * dpi / 2, 2);
+        double smallestHole = HoleSizeGate.MinimumDiameter(options.CalibreInches, options.MinimumDiameterInches);
+        double smallest = Math.PI * Math.Pow(smallestHole * dpi / 2, 2);
         double largest = Math.PI * Math.Pow(options.MaximumDiameterInches * dpi / 2, 2);
 
         var holes = new List<DetectedHole>();
@@ -96,7 +101,7 @@ public static class NeutralDarknessHoleDetector
             double diameter = 2 * Math.Sqrt(area / Math.PI);
             double solidity = blob.Area / area;
             double aspect = Math.Max(blob.Width, blob.Height) / Math.Max(1.0, Math.Min(blob.Width, blob.Height));
-            string? why = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in")
+            string? why = area < smallest ? FormattableString.Invariant($"too small, {diameter / dpi:0.000} in, under {smallestHole:0.000} in")
                 : area > largest ? FormattableString.Invariant($"too large, {diameter / dpi:0.000} in")
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")

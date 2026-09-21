@@ -107,7 +107,7 @@ The three deductions are the same number of pixels at both sizes, because none o
 
 ## 2026-09-21, question 31: the update manifest is signed with ECDSA P-256, not the Ed25519 entry 119 asks for
 
-**Status: open**
+**Status: answered 2026-09-21** by `docs/NOTES-FROM-PLANNING.md` entry 130 section 5: option A. ECDSA P-256 with SHA-256 stays, and every manifest names the algorithm it was signed with, in its own `algorithm` field, which the application checks before it checks the signature. .NET 10 has no Ed25519, this repository has no NuGet source so none can be added, and a signature scheme nobody can verify is worse than a different one everybody can. The name in the manifest is what makes a later change possible: a build that meets an algorithm it does not know refuses it by name rather than guessing.
 
 ### 1. Why not Ed25519
 
@@ -134,7 +134,7 @@ Entry 119 section 3.2 says "Generate an Ed25519 key pair". Two things stand in t
 
 ## 2026-09-21, question 30: the ordering entry 119 asks for is not the SemVer ordering it cites
 
-**Status: open**
+**Status: answered 2026-09-21** by `docs/NOTES-FROM-PLANNING.md` entry 130 section 5: option A. Strict SemVer 2.0.0 precedence, so a pre-release sorts below the release it is named for and `0.2.0-nightly.16` is older than `0.2.0`. The two ranks a third train would need are written down in `docs/UPDATES.md` rather than built, because a rank that nothing uses is a rank nothing tests. What the updater actually relies on is narrower and safer than any ranking: a train takes builds from itself and from steadier trains only, so ordering never has to decide between two trains that both have a claim.
 
 ### 1. The conflict
 

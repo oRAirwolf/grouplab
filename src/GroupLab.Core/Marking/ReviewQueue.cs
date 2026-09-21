@@ -218,7 +218,7 @@ public static class ReviewQueue
     /// </summary>
     private static ReviewItem? Count(MarkingState state, IReadOnlyDictionary<int, string> labels)
     {
-        if (state.ExpectedShots is not { } expected)
+        if (Expected(state) is not { } expected)
         {
             return null;
         }
@@ -242,7 +242,8 @@ public static class ReviewQueue
             ? " No mark carries a measured size, so there is nothing to rank: look at the sheet."
             : (tooFew ? " Most likely to be two, closest to two holes' size first: " : " Least like a hole, smallest first: ")
               + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes"))) + ".";
-        string sentence = string.Create(inv, $"You fired {expected} and {found} {(found == 1 ? "is" : "are")} marked.") + list;
+        string sentence = string.Create(inv, $"You fired {expected} and {found} {(found == 1 ? "is" : "are")} marked.")
+            + (tooFew ? Empty(state, labels) : "") + list;
 
         var first = ranked.FirstOrDefault();
         var choices = new List<ReviewChoice>();
@@ -258,6 +259,56 @@ public static class ReviewQueue
         choices.Add(new ReviewChoice("Leave the count", ReviewAction.Keep));
         string key = string.Create(inv, $"count:{expected}:{found}");
         return new ReviewItem(key, ReviewKind.Count, first?.Id, first?.Bull, first?.Image ?? default, sentence, choices, state.Dismissed?.Contains(key) == true);
+    }
+
+    /// <summary>
+    /// How many shots the sheet says were fired: the number the person typed, or, failing that, what the shots-per-bull rule and the
+    /// scoring bulls already say between them.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 130 section 2b.2, and it is the fix for a real harm. On scan 1 of the second range day a shooter fired
+    /// fifteen, GroupLab found fourteen, and <b>said nothing at all</b>: the review queue was empty because nobody had typed a count, even
+    /// though the sheet was being analysed one shot to a bull across fifteen scoring bulls, which is a count. A shortfall that passes as a
+    /// clean result is the worst way to be wrong, because the shooter has no reason to look.
+    /// </para>
+    /// </summary>
+    internal static int? Expected(MarkingState state)
+    {
+        if (state.ExpectedShots is { } typed)
+        {
+            return typed;
+        }
+
+        // Nearest-bull means the person has said they are not counting, so there is nothing to hold the marks against.
+        if (state.Rule is { NearestOnly: true })
+        {
+            return null;
+        }
+
+        var scoring = state.Bulls.Where(b => b.Scoring).ToList();
+        if (scoring.Count == 0)
+        {
+            return null;
+        }
+
+        return state.Rule is { } rule ? scoring.Sum(b => rule.For(b.Index)) : scoring.Count;
+    }
+
+    /// <summary>The scoring bulls with nothing on them, named, because that is where a missing shot is.</summary>
+    private static string Empty(MarkingState state, IReadOnlyDictionary<int, string> labels)
+    {
+        var taken = state.Shots.Where(s => s.IsShot && s.Bull is not null).Select(s => s.Bull!.Value).ToHashSet();
+        var empty = state.Bulls.Where(b => b.Scoring && !taken.Contains(b.Index)).Select(b => b.Label).ToList();
+        if (empty.Count == 0)
+        {
+            return " Every bull has a shot on it, so a mark may be two.";
+        }
+
+        string which = empty.Count <= 8
+            ? string.Join(", ", empty)
+            : string.Join(", ", empty.Take(8)) + " and " + (empty.Count - 8).ToString(CultureInfo.InvariantCulture) + " more";
+        return empty.Count == 1
+            ? $" Nothing is marked on bull {which}."
+            : $" Nothing is marked on bulls {which}.";
     }
 
     /// <summary>How many items still want a decision.</summary>

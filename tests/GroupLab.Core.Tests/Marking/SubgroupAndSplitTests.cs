@@ -130,7 +130,9 @@ public class SubgroupAndSplitTests
         session.SetExpectedShots(6);
 
         var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
-        Assert.StartsWith("You fired 6 and 5 are marked. Most likely to be two, closest to two holes' size first: shot 2 at 1.31 holes, shot 5 at 1.12 holes, shot 3 at 1.02 holes.", item.Sentence, StringComparison.Ordinal);
+        // Entry 130 section 2b.2 put a sentence between the count and the ranking, saying where the missing shot is not. Here every bull has
+        // something on it, which is the useful thing to know: the shot that is missing is inside a mark rather than on an empty bull.
+        Assert.StartsWith("You fired 6 and 5 are marked. Every bull has a shot on it, so a mark may be two. Most likely to be two, closest to two holes' size first: shot 2 at 1.31 holes, shot 5 at 1.12 holes, shot 3 at 1.02 holes.", item.Sentence, StringComparison.Ordinal);
         Assert.Equal(3, ReviewQueue.CountCandidates);
         var two = item.Choices[0];
         Assert.Equal(ReviewAction.SplitIntoTwo, two.Action);
