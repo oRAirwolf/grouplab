@@ -6551,6 +6551,24 @@ Read only, nothing committed, on this machine, through the command line so the f
 
 **The one thing to take from this table** is that naming the calibre is now worth a great deal: it is the difference between 19 and 24 on scan 4 and between 9 and 10 on scan 6. That is an argument for entry 131 section 6.3, the calibre confirmation before Accept, which is still not built.
 
+## Entry 130 section 3.5. Scans 4, 5 and 6 assigned, and why the offset solver did not help them
+
+Read only, with the calibre named, so the hole counts are the best ones GroupLab can reach today.
+
+**The sheet-wide offset solver of section 3.1 is built, tested and not connected.** `ImpactOffsets.Solve` is called by nothing in the assignment path; the only caller anywhere is `AssignmentCertainty.Of`, which reports offsets it is handed rather than finding them. So these three scans are assigned exactly as entry 120 found them: one shot to one bull, nearest first. Section 3.2 was the item that would have wired it in, and it was not done.
+
+What that costs, scan by scan:
+
+**Scan 6, ten shots into bulls 1 to 10.** GroupLab puts them on bulls 1 to 5 and 12 to 15, with one on 21. The first five sit about half an inch low on their own bulls; the next four are a whole row down from where they were fired, because a shot that lands low enough is nearer the bull beneath than the one aimed at. The tenth, the shot far from everything, lands on bull 21 with an offset of 1.216 in.
+
+**Scan 5, twenty shots into bulls 2 to 5 of each row.** GroupLab puts shots on bulls 1, 6, 11, 16 and 21, none of which was fired at. One is 4.666 in from the bull it was given.
+
+> **And the figures follow the assignment.** Scan 5 reads a mean radius of **1.120 in** with an extreme spread of 5.304 in. Those are not this sheet's numbers: they are the numbers of a group measured from the wrong centres. Twenty shots that were tight around their own bulls are reported as a group over five inches across.
+
+**Scan 4, twenty-three shots with two offsets split at a row.** 24 holes found, assigned across bulls 2 to 25 with bull 1 empty, and offsets running from 0.013 in to 2.076 in. The mean radius reads 0.731 in.
+
+**This is the clearest argument yet for finishing section 3.2.** The solver exists, it is tested, and it is the difference between a figure a shooter can use and a figure that is simply wrong. Until it is wired in, a sheet shot deliberately at fewer bulls than it carries, or a sheet whose group sits low, produces figures that look ordinary and are not, with nothing on the screen to say so. The uncertain marking of section 3.3 does travel with these figures, which is the one thing standing between this and a silently wrong answer, but a marking is not a correction.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
