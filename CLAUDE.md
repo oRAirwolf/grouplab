@@ -19,9 +19,13 @@ A design question never stops the run. Record it as a question, build what does 
 
 ## Waiting
 
-**Do not end a turn to wait for something you can wait for yourself.** A CI run, a test suite, a nightly publishing, a download: poll it in the same run, a sleep and a check repeated, and carry on when it finishes.
+**Waiting for CI or a nightly is never a reason to end a turn.** NOTES-FROM-PLANNING.md entry 131 section 0, and it replaces the earlier rule about an hour.
 
-Ending a turn while something is still running is allowed only when the wait is longer than an hour, or when it needs something only Alan can do.
+A background watcher does not wake me. When I end a turn everything stops until Alan types, and Alan is often asleep. Four turns ended one night with "waiting, not finished" while three entries were full of work that needed nothing from anybody.
+
+So: start the wait, then **work on the next queued item**. Check the wait between items with a quick `gh run list`. If there is genuinely nothing else to do, poll in the foreground, a sleep of a few minutes inside a command, repeated. Never by ending the turn.
+
+**A turn ends only when** every queue is empty, or something needs Alan and nothing else can proceed without it. Even then, everything that does not need him is finished first.
 
 ## How every turn ends
 
