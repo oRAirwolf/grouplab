@@ -4,6 +4,8 @@
 
 Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and may change.
 
+**<https://grouplab.org>** is the website: what GroupLab is, how to use it, and where to download it. The same builds are linked below.
+
 ---
 
 ## Download

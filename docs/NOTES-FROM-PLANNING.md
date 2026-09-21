@@ -15,6 +15,78 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 127: every message you end on says plainly whether you are done, waiting, or need Alan
+
+**Status: actioned 2026-09-21**, sections 1 to 3.
+- **Section 1:** `CLAUDE.md` at the repository root, which Claude Code reads at the start of every session. It carries the three status lines, the rule about not stopping to wait, where the work comes from and what actioning an entry means, and the standing constraints that were previously only in this log. No em dashes, no secrets.
+- **Section 2:** the rules are written there in full. The one that changes behaviour most is the first: a CI run, a test suite, a nightly publishing or a download is waited for in the same run, by polling, and only a wait longer than an hour or one needing Alan may end a turn.
+- **Section 3:** applied from the next message that ends a turn. Which status line was used, and why, is in `docs/PHASE1-RESULTS.md` under "Entry 127".
+
+Alan often cannot tell whether you have finished, are waiting on something that will finish on its own, or have stopped and need him. Several recent runs ended with "I'll hold here" while CI or a test suite was still running: from Alan's side that looks the same as being finished, and nothing continues until he sends a message. Fix this for good, as a standing rule, not as a habit.
+
+## 1. A standing rule in CLAUDE.md
+
+Create `CLAUDE.md` at the repository root (Claude Code reads it at the start of every session), containing the rules below in your own words, plus a pointer to `docs/NOTES-FROM-PLANNING.md` and the inbox workflow. Keep it short. It is a public file: no em dashes, no secrets, nothing private.
+
+## 2. The rules
+
+1. **Do not stop to wait for things you can wait for yourself.** CI runs, test suites, a nightly publishing, a download: poll them yourself in the same run (a sleep and a check, repeated), and carry on when they finish. Ending your turn while waiting is only allowed when the wait is longer than 60 minutes or needs something from Alan.
+2. **The first line of every message you end a turn on is one of exactly three status lines**, on its own, before anything else:
+   - `STATUS: DONE`: everything asked for is finished, nothing of yours is still running, and nothing is waiting.
+   - `STATUS: WAITING, NOT FINISHED`: something is still running or pending. On the next line say what it is, roughly how long it will take, and that **nothing will continue until Alan sends a message**, followed by the exact message to send when it is time (in a code block, so he can copy it).
+   - `STATUS: NEEDS YOU`: you cannot go on without Alan. On the next lines say exactly what he must do, step by step, then the exact message to send you afterwards, in a code block.
+3. **Directly under the status line, a short "What Alan needs to do" block**: the single next action, or "Nothing." Then the detailed report as before.
+4. **Never write "I'll hold here", "waiting for", "will continue when" or similar anywhere else** in a message that ends a turn. If you are not continuing, the status line says so.
+5. **Before you use `STATUS: DONE`, check**: every section asked for is done or explicitly reported as not done with its reason, the inbox is empty, everything is committed and pushed, CI is green on the last commit, and any nightly the work should produce has published. If any of that is not true, it is not `DONE`.
+
+## 3. Apply it now
+
+Your very next message that ends a turn uses these rules. Report which status line you ended the entry 126 and entry 127 work on and why.
+
+---
+
+# 2026-09-21, entry 126: grouplab.org is live, so the support link gets its address
+
+**Status: actioned 2026-09-21**, sections 1 to 4.
+- **Section 1.1:** `SupportLink.Address` is `https://grouplab.org/support/`, still the one place an address may be written, still opened through `IOutsideWorld`. The note under the button changed from "There is no support address yet. When there is one it will open here, and GroupLab will never take a payment inside the application." to "This opens the support page at grouplab.org, which says how to help and how to get in touch. GroupLab will never take a payment inside the application."
+- **Section 1.2:** the report dialog now ends with where to send what it wrote: an issue at the repository, or `support@grouplab.org`, either way with the build line from the settings page, because a report that names no build names nothing.
+- **Section 1.3:** `SupportLinkTests` held "no support address anywhere"; it now holds exactly the two, in three tests. One: the address is written in `SupportLink` and no other source file. Two: nothing a person receives carries any other support address, by shape, by donation host, or by an address at another domain. Three: **the only GroupLab domain named anywhere is grouplab.org**, which was added because the site is built from this repository, so a wrong domain here would be published. `OutsideWorldTests` now expects the support button to ask for that one address instead of nothing.
+- **Section 1.4:** question 28 closed.
+- **Section 2:** the README names <https://grouplab.org> in one line near the top, above the unchanged download table. `docs/TESTING-GUIDE.md` names the support page and address where it tells a tester how to report, and in the "If a new build will not start" section. `docs/UPDATES.md` gains a fourth step there naming both. Entry 118's contents list and `ReleaseAssetTests` are unaffected: no heading moved.
+- **Section 3.1:** nothing was renamed or moved. `docs/figures/screens/current/`, `docs/USER-GUIDE.md` and `docs/TESTING-GUIDE.md` are where they were.
+- **Section 3.2:** `docs/figures/screens/current/SOURCES.md` records what each of the 40 published images was made from, and `PublishedRendersTests` holds four things: every image has a line, every line names one of four allowed sources, only three named test files may write into the folder, and none of those three may read an image from outside this repository. The last two matter more than the manifest: a manifest alone is a promise about the past, and the harm here would arrive as a new test nobody read closely.
+- **Section 3.3:** `C:\Dev\grouplab-site` was never read, written or run. It is now a standing rule in `CLAUDE.md`.
+- **Section 4:** in `docs/PHASE1-RESULTS.md` under "Entry 126", with the renders at both sizes.
+
+Alan's website chat has put grouplab.org live. The support page is **https://grouplab.org/support/** and **support@grouplab.org** is a working address (it forwards to Alan). The site's status is in the project doc `claude/grouplab-website-status.md`; the parts that matter here are below. This answers question 28 for good.
+
+## 1. The support link
+
+1. Replace the placeholder from entry 120 section 9 with `https://grouplab.org/support/`, still one constant in one place, opened through `IOutsideWorld` (entry 122). The "Support GroupLab" button opens it; its note under the button changes from "There is no support address yet..." to one sentence saying it opens the support page, and keeps "GroupLab will never take a payment inside the application".
+2. Where the application tells a person how to send a report package (after "Report a problem..." writes one), name both ways the support page names: open an issue on GitHub, or email the package to support@grouplab.org, with the build line from the settings page.
+3. Change the test that held "no other support address anywhere in the repository" so it now holds exactly these two, `https://grouplab.org/support/` and `support@grouplab.org`, and fails on any other support address or domain. The recorder test from entry 122 section 3 now expects the support button to ask for that one address instead of nothing.
+4. Close question 28.
+
+## 2. The repository points at the site
+
+1. The README gets one line near the top naming the website, https://grouplab.org, as the place to download and read about GroupLab. The single nightly download table stays as it is (entry 119 section 7); the site links to the same nightly addresses.
+2. `docs/TESTING-GUIDE.md` and `docs/UPDATES.md` ("If a new build will not start") name the support page and the support address where they tell a tester where to report or ask.
+3. Keep entry 118's contents list and `ReleaseAssetTests` in step.
+
+## 3. What the site reads from this repository
+
+The site is built from this repository by a separate build (`C:\Dev\grouplab-site\build\build.py`, read only here). It reads the user guide and testing guide Markdown, and the screenshots in `docs/figures/screens/current/`. So:
+
+1. Do not rename or move `docs/figures/screens/current/`, the user guide or `docs/TESTING-GUIDE.md` without saying so in your report, because the site would silently lose them.
+2. Everything in `docs/figures/screens/current/` is published on the site. It must only ever show synthetic material (the Entry109Tests sheet, generated sheets, scan 3 under its consent record). Add a test that fails if any image in that folder was rendered from anything else, however you can best prove it (for example a manifest of what each render was made from, checked against the allowed sources).
+3. Never read, write or run anything in `C:\Dev\grouplab-site`. It belongs to the website chat.
+
+## 4. Report
+
+The support button's before and after text, the test changes, and the renders of the settings page after the change.
+
+---
+
 # 2026-09-21, entry 125: the published nightly calls itself a development build
 
 **Status: actioned 2026-09-21**, sections 1 to 4 and the SmartScreen note.

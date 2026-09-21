@@ -99,6 +99,7 @@ What is true, and what you do:
 1. **Your work is never at risk.** Everything you care about lives in `%APPDATA%\GroupLab`: the settings, the sessions database, your own sheets and the log. No installer and no uninstaller touches that folder. A bad build cannot lose a session.
 2. **Every nightly keeps its own release.** The workflow publishes `v<version>` alongside the rolling `nightly` tag and keeps the newest thirty. So the build you were on yesterday still exists at its own address.
 3. **To go back:** download the previous build's installer from its own release page and run it. It installs over the broken one, and your things are exactly where you left them.
+4. **If that does not work**, say so: the support page at <https://grouplab.org/support/> says how to report it, and support@grouplab.org reaches Alan directly. Include the build line from the settings page.
 
 **When this changes.** Keeping the previous install beside the new one, with a "Roll back to <version>" shortcut, is built at the first of these two things happening, and not before:
 

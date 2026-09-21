@@ -3635,8 +3635,8 @@ public sealed partial class MainWindow : Window
             : "Logging is off: " + DiagnosticLog.Current.DisabledReason + "."));
         column.Children.Add(Row(Button("Report a problem\u2026", () => OpenReport(null))));
 
-        // Entry 120 section 9, question 28 answered: there is no support address yet, so the item says that rather than opening anything.
-        // The address lives in SupportLink and nowhere else, and SupportLinkTests fails if one appears somewhere else in the application.
+        // Entry 126 section 1: grouplab.org is live, so the placeholder entry 120 section 9 left here has an address. It still lives in
+        // SupportLink and nowhere else, and SupportLinkTests fails if any other support address appears in anything a person receives.
         column.Children.Add(Row(Button(SupportLink.Label, () =>
         {
             if (SupportLink.Address is { } address)
@@ -3648,7 +3648,7 @@ public sealed partial class MainWindow : Window
                 status.Text = SupportLink.NoAddressYet;
             }
         })));
-        column.Children.Add(Line(SupportLink.Exists ? "Opens a page in your browser. GroupLab takes no payment itself." : SupportLink.NoAddressYet));
+        column.Children.Add(Line(SupportLink.Exists ? SupportLink.OpensTheSupportPage : SupportLink.NoAddressYet));
 
         // Entry 41 sections 5 and 6: the crash records not yet dealt with, which the marking panel's banner also offers until they are.
         column.Children.Add(Ruled("Crash records"));

@@ -27,7 +27,7 @@ The zip and the Linux tarball cannot replace themselves, because they were unpac
 
 **Going back is a download, not a repair.** The update replaces the program in place, so there is no previous copy on the machine to return to. The build you were on still exists at its own address: open the [releases list](https://github.com/oRAirwolf/grouplab/releases), find the `v<version>` release you were on, download its installer and run it. It installs over the broken one, and your things are exactly where you left them.
 
-If that happens, say so in a report. It is the kind of thing that should be rare enough to be worth hearing about every time.
+If that happens, say so in a report. It is the kind of thing that should be rare enough to be worth hearing about every time. The support page at <https://grouplab.org/support/> says how, and support@grouplab.org reaches Alan directly.
 
 ## The first minute, with no rifle
 
@@ -70,6 +70,6 @@ The repository's README is the authority on what works; this is the short versio
 
 ## Telling somebody when it is wrong
 
-The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** there writes a report package: a zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them. Send it with a line about what you were doing.
+The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** there writes a report package: a zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them. Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to support@grouplab.org. Either way, add a line about what you were doing. The support page at <https://grouplab.org/support/> says the same and is easier to find again.
 
 GroupLab keeps everything in `%APPDATA%\GroupLab`: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you want the data gone.

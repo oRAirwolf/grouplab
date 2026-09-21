@@ -58,15 +58,19 @@ public class OutsideWorldTests
     }
 
     [AvaloniaFact]
-    public void TheSupportPlaceholderOpensNothingAtAll()
+    public void TheSupportButtonAsksForTheSupportPageAndOpensNothing()
     {
         var window = Settings();
         int before = TestDefaults.Outside.Asked.Count;
         Click(window, SupportLink.Label);
 
-        // Entry 120 section 9: there is no address, so the item says so and asks for nothing.
-        Assert.Empty(TestDefaults.Outside.Asked.Skip(before));
-        Assert.Equal(SupportLink.NoAddressYet, window.StatusText);
+        // Entry 126 section 1.3: grouplab.org is live, so the button that asked for nothing now asks for exactly one address, and still
+        // opens nothing here because the recorder is in its place.
+        var asked = TestDefaults.Outside.Asked.Skip(before).ToList();
+        var one = Assert.Single(asked);
+        Assert.Equal("address", one.What);
+        Assert.Equal("https://grouplab.org/support/", one.Target);
+        Assert.Equal(SupportLink.Address, one.Target);
         window.Close();
     }
 

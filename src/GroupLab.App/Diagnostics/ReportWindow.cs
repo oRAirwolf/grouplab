@@ -71,8 +71,23 @@ public sealed class ReportWindow : Window
         buttons.Children.Add(send);
         panel.Children.Add(buttons);
         panel.Children.Add(status);
+
+        // Entry 126 section 1.2: once the package is written, a person has to know where to send it. Both ways the support page names are
+        // named here, so nobody has to go and look for them, and the build line is asked for because a report without it names no build.
+        panel.Children.Add(new TextBlock { Text = WhereToSendIt, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
         Content = new ScrollViewer { Content = panel };
     }
+
+    /// <summary>
+    /// Where a written report goes, entry 126 section 1.2: the two ways the support page at grouplab.org names, and the one thing a report
+    /// is useless without. The address lives in <see cref="SupportLink"/> and is written nowhere else.
+    /// </summary>
+    internal static string WhereToSendIt =>
+        "When it is saved, send it either way: open an issue at " + Repository + ", or email it to " + SupportLink.Email
+        + ". Either way, include the build line from the settings page, because a test build changes whenever the code does.";
+
+    /// <summary>Where issues go. The same address the settings page's link to the project opens.</summary>
+    internal const string Repository = "https://github.com/oRAirwolf/grouplab";
 
     /// <summary>The entries the report will hold, as the user is shown them before anything is written.</summary>
     internal IReadOnlyList<string> PlannedEntries =>

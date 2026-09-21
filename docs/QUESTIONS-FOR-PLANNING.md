@@ -200,7 +200,7 @@ A test holds the packaging script to that: the only image it copies from the rep
 
 ## 2026-09-20, question 28: the support link needs an address
 
-**Status: answered 2026-09-21**, by `docs/NOTES-FROM-PLANNING.md` entry 120 section 9. There is no address yet and Alan may register a domain later, so the item is a placeholder that invents nothing: one constant in `src/GroupLab.App/SupportLink.cs`, and the item on the settings screen says there is no support address yet rather than opening anything. `SupportLinkTests` fails if an address appears anywhere a person receives it.
+**Status: answered 2026-09-21**, twice, and closed for good by `docs/NOTES-FROM-PLANNING.md` entry 126 section 1. Entry 120 section 9 answered it first with a placeholder, because there was no address and inventing one would have sent somebody who wanted to help the project to a stranger's website. grouplab.org then went live, so `SupportLink.Address` is now `https://grouplab.org/support/` and `SupportLink.Email` is `support@grouplab.org`. It is still one constant in `src/GroupLab.App/SupportLink.cs` and still opened through `IOutsideWorld`. `SupportLinkTests` no longer holds that there is no address: it holds that these two are the only ones anywhere a person receives, and that grouplab.org is the only GroupLab domain named at all, because the website is built from this repository and a wrong domain here would be published.
 
 ### 1. What is asked for
 

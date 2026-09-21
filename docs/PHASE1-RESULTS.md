@@ -6093,6 +6093,76 @@ What they confirm: the build line names a nightly as a nightly; Train and Check 
 
 None of the three is a defect the entry raised, and none was changed without being asked.
 
+## Entry 127. Saying plainly whether the work is done
+
+Alan could not tell the difference between finished, waiting, and stuck. Several runs ended with a line like "I'll hold here" while CI was still going, which from his side is indistinguishable from being finished, and nothing continued until he sent a message. That is a real cost: a run that was fifteen minutes from done sat idle until he happened to look.
+
+`CLAUDE.md` now exists at the repository root, which Claude Code reads at the start of every session. It carries:
+
+1. **Do not stop to wait for what can be waited for.** A CI run, a test suite, a nightly publishing, a download: poll it in the same run and carry on. Only a wait longer than an hour, or one needing Alan, may end a turn. This is the rule that changes behaviour most, and it is first for that reason.
+2. **Three status lines**, one of which begins the last message of every turn: `STATUS: DONE`, `STATUS: WAITING, NOT FINISHED`, `STATUS: NEEDS YOU`. The last two carry the exact message for Alan to send back, in a code block, so he does not have to compose one.
+3. **A "What Alan needs to do" block** directly under it: one action, or "Nothing."
+4. **No hedging anywhere else.** If the work is not continuing, the status line is what says so.
+5. **A checklist for `DONE`**: every section finished or reported as not done with its reason, the inbox empty, everything committed and pushed, CI green on the last commit, and any nightly the work should produce published.
+
+It also carries what was previously only in this log: where work comes from, what actioning an entry means, and the standing constraints (`tools/` is read only, never touch `C:\Dev\grouplab-site`, no GPS or metadata in logs, no `v*` tags by hand, no repository settings, CI on three platforms, everything outward through `IOutsideWorld`, no em dashes).
+
+## Entry 126. The support link gets its address
+
+### 1. The support button, before and after
+
+| | |
+|---|---|
+| **before** | "There is no support address yet. When there is one it will open here, and GroupLab will never take a payment inside the application." The button asked for nothing and opened nothing. |
+| **after** | "This opens the support page at grouplab.org, which says how to help and how to get in touch. GroupLab will never take a payment inside the application." The button asks for `https://grouplab.org/support/` through `IOutsideWorld`. |
+
+The address is still written in exactly one place, `SupportLink.Address`, with `SupportLink.Email` beside it. Nothing else in the source may write either.
+
+### 2. Where to send a report
+
+The report dialog now ends with the two ways the support page names: open an issue at the repository, or email the package to `support@grouplab.org`, either way with the build line from the settings page. That last part is not decoration: a report that does not name its build names nothing, because a nightly changes whenever the code does.
+
+### 3. The test changed from "none" to "exactly these two"
+
+`SupportLinkTests` held that **no** support address appeared anywhere, because there was none and a made-up one would have sent somebody who wanted to help the project to a stranger's website. That risk did not disappear when the domain went live; it changed shape. A stale address, a typo, or a second address somewhere nobody looks is the same harm. So it is now three tests:
+
+1. **The address is written in one place.** `SupportLink.cs` has both constants, and no other source file contains either string.
+2. **Nothing a person receives carries any other support address.** By donation host, by URL shape (`support`, `donate`, `sponsor`), and by email at any other domain.
+3. **grouplab.org is the only GroupLab domain named anywhere.** This one was not asked for and is the most useful of the three: the website is built from this repository, so a wrong domain written here would be published on it.
+
+The third test needed care. Matching `grouplab\.[a-z]+` case-insensitively matches `GroupLab.Core`, `GroupLab.App` and `grouplab.db` several hundred times. It matches case-sensitively against a list of real extensions instead, because that is exactly the line between `grouplab.com` and `grouplab.json`.
+
+`OutsideWorldTests` was the entry 122 recorder test that held the button asking for nothing; it now holds it asking for that one address, and still opening nothing, because the recorder is in its place.
+
+Question 28 is closed, having been answered twice: once with a placeholder, once with the address.
+
+### 4. Only synthetic material is published
+
+Everything in `docs/figures/screens/current/` is published on grouplab.org by the site build. That folder is the one place the project's standing rule about photographs could be broken by accident rather than on purpose: a test opens an image, photographs the window, and the picture goes to a website. Nobody would catch it reading the diff, because a PNG diff shows nothing.
+
+`SOURCES.md` in that folder records what each of the 40 images was made from, against four allowed sources: the Entry109Tests synthetic sheet, a built-in library sheet, no sheet at all, or scan 3 under its consent record. All 40 today are the first three; nothing uses scan 3.
+
+`PublishedRendersTests` holds four things:
+
+| what | why |
+|---|---|
+| every published image has a line in `SOURCES.md` | otherwise nobody can tell what a picture shows |
+| every line names an allowed source | the list is a list and not a pattern, so adding to it is a decision |
+| only three named test files may write into the folder | **a manifest alone is a promise about the past** |
+| none of those three may read an image from outside this repository | a range folder or a submission by absolute path is exactly how a photograph would arrive |
+
+The last two are the ones that matter. The harm here would not arrive as somebody editing `SOURCES.md` dishonestly; it would arrive as a new test that nobody read closely, rendering something it should not, with a plausible line added to the manifest afterwards.
+
+Writing that guard turned up two things worth naming. `UserGuideTests` reads the folder path to check the guide's links, so naming the path is not publishing into it: the guard looks for a file that both names the folder and saves a rendered frame. And this guard names both itself, so it excludes itself by name, as `OneWayOutTests` does.
+
+### 5. What the site reads, unmoved
+
+Nothing was renamed or moved. `docs/figures/screens/current/`, `docs/USER-GUIDE.md` and `docs/TESTING-GUIDE.md` are where they were, and entry 118's contents list and `ReleaseAssetTests` are untouched because no heading moved. `C:\Dev\grouplab-site` was never read, written or run, and that is now a standing rule in `CLAUDE.md` rather than something to remember.
+
+### 6. The renders
+
+`settings-light-1280x720.png` and `settings-light-2560x1440.png` were made again after the change and looked at. The support note reads as above. At 1280 by 720 the support section is below the fold and the page scrolls to it; at 2560 by 1440 the whole page is visible, which is where the note was read.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
