@@ -29,12 +29,44 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     /// <summary>1 for a right-hand twist, −1 for a left-hand one.</summary>
     public int? TwistDirection { get; init; }
 
+    // NOTES-FROM-PLANNING.md entry 131 section 7.2: what a person would write on a card beside the rifle. Every one is optional, because a
+    // rifle with only a name and a click value is still enough to read a zero correction from, and a form that demands more before it will
+    // save anything is a form people work around.
+
+    public string? Manufacturer { get; init; }
+
+    public string? Cartridge { get; init; }
+
+    public double? BarrelLengthInches { get; init; }
+
+    public string? Scope { get; init; }
+
+    public string? Stock { get; init; }
+
+    public string? Notes { get; init; }
+
     /// <summary>How the click reads to a person: "0.25 MOA a click", "0.1 mil a click".</summary>
     public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {(ClickUnit == AngularUnit.Mrad ? "mil" : ClickUnit == AngularUnit.Smoa ? "SMOA" : "MOA")} a click");
 }
 
 /// <summary>A barrel: a name, the rifle it is on, and how many rounds it has fired, which is what a barrel's life is counted in.</summary>
-public sealed record Barrel(string Name, string? Rifle, int Rounds);
+public sealed record Barrel(string Name, string? Rifle, int Rounds)
+{
+    // NOTES-FROM-PLANNING.md entry 131 section 7.3, all optional. A rifle has several barrels over its life, which is why the round count
+    // lives here and not on the rifle.
+
+    public double? LengthInches { get; init; }
+
+    public double? TwistInches { get; init; }
+
+    /// <summary>1 for a right-hand twist, −1 for a left-hand one.</summary>
+    public int? TwistDirection { get; init; }
+
+    /// <summary>When the barrel went on, as a date with no time, because nobody records the hour they fitted a barrel.</summary>
+    public DateOnly? Installed { get; init; }
+
+    public string? Notes { get; init; }
+}
 
 /// <summary>
 /// A load: a name and its components as free text, the data block's own fields. Deliberately not a reloading database (entry 97 section 2):
@@ -67,6 +99,29 @@ public sealed record Load(string Name, string? Components)
     public double? BulletLengthInches { get; init; }
 
     public double? BulletDiameterInches { get; init; }
+
+    // NOTES-FROM-PLANNING.md entry 131 section 7.4: the rest of what a reloader writes on the box. A load is kept apart from a rifle because
+    // one load is shot in several rifles, and the fields below are the load's own, not any rifle's.
+
+    public string? BulletName { get; init; }
+
+    public string? BrassManufacturer { get; init; }
+
+    public string? BrassCartridge { get; init; }
+
+    public string? Powder { get; init; }
+
+    public double? PowderChargeGrains { get; init; }
+
+    /// <summary>Cartridge overall length, in inches.</summary>
+    public double? OverallLengthInches { get; init; }
+
+    /// <summary>Cartridge base to ogive, in inches, which is the measurement that actually repeats between lots of brass.</summary>
+    public double? BaseToOgiveInches { get; init; }
+
+    public string? Primer { get; init; }
+
+    public string? Notes { get; init; }
 }
 
 /// <summary>
@@ -95,11 +150,68 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
     public RecordBook Fired(string barrel, int rounds) =>
         FindBarrel(barrel) is { } b ? With(b with { Rounds = b.Rounds + Math.Max(0, rounds) }) : this;
 
+    /// <summary>
+    /// Writes the book, every field of it.
+    /// <para>
+    /// <b>It did not, before NOTES-FROM-PLANNING.md entry 131 section 7.</b> This wrote a rifle's name, click value and click unit and
+    /// nothing else, so the sight height, zero distance and twist a person typed into the ballistics page, and every one of a load's
+    /// muzzle velocity, ballistic coefficient and bullet figures, were dropped the moment the book was saved and gone at the next start.
+    /// Nothing failed and nothing said so: the page simply asked for them again. Every field is written now, and a test reads a book back
+    /// and requires it to equal what was written, which is what would have caught it.
+    /// </para>
+    /// </summary>
     public string Write() => JsonSerializer.Serialize(new
     {
-        rifles = Rifles.Select(r => new { r.Name, r.ClickValue, clickUnit = r.ClickUnit.ToString() }),
-        barrels = Barrels.Select(b => new { b.Name, b.Rifle, b.Rounds }),
-        loads = Loads.Select(l => new { l.Name, l.Components }),
+        rifles = Rifles.Select(r => new
+        {
+            r.Name,
+            r.ClickValue,
+            clickUnit = r.ClickUnit.ToString(),
+            r.SightHeightInches,
+            r.ZeroDistanceYards,
+            r.TwistInches,
+            r.TwistDirection,
+            r.Manufacturer,
+            r.Cartridge,
+            r.BarrelLengthInches,
+            r.Scope,
+            r.Stock,
+            r.Notes,
+        }),
+        barrels = Barrels.Select(b => new
+        {
+            b.Name,
+            b.Rifle,
+            b.Rounds,
+            b.LengthInches,
+            b.TwistInches,
+            b.TwistDirection,
+            installed = b.Installed?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            b.Notes,
+        }),
+        loads = Loads.Select(l => new
+        {
+            l.Name,
+            l.Components,
+            l.MuzzleVelocityFps,
+            l.MuzzleVelocitySdFps,
+            l.MuzzleVelocitySdFrom,
+            l.BallisticCoefficient,
+            dragModel = l.DragModel?.ToString(),
+            bcReference = l.BcReference?.ToString(),
+            l.BulletWeightGrains,
+            l.BulletLengthInches,
+            l.BulletDiameterInches,
+            l.BulletName,
+            l.BrassManufacturer,
+            l.BrassCartridge,
+            l.Powder,
+            l.PowderChargeGrains,
+            l.OverallLengthInches,
+            l.BaseToOgiveInches,
+            l.Primer,
+            l.Notes,
+        }),
     }, Options);
 
     /// <summary>Reads a record book, or returns an empty one for a file that is not one, so a damaged file loses the records and not the application.</summary>
@@ -113,9 +225,48 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
             }
 
             return new RecordBook(
-                [.. (root["rifles"] as JsonArray ?? []).Select(r => new Rifle((string)r!["name"]!, (double)r["clickValue"]!, Enum.Parse<AngularUnit>((string)r["clickUnit"]!)))],
-                [.. (root["barrels"] as JsonArray ?? []).Select(b => new Barrel((string)b!["name"]!, (string?)b["rifle"], (int?)b["rounds"] ?? 0))],
-                [.. (root["loads"] as JsonArray ?? []).Select(l => new Load((string)l!["name"]!, (string?)l["components"]))]);
+                [.. (root["rifles"] as JsonArray ?? []).Select(r => new Rifle((string)r!["name"]!, (double)r["clickValue"]!, Enum.Parse<AngularUnit>((string)r["clickUnit"]!))
+                {
+                    SightHeightInches = (double?)r["sightHeightInches"],
+                    ZeroDistanceYards = (double?)r["zeroDistanceYards"],
+                    TwistInches = (double?)r["twistInches"],
+                    TwistDirection = (int?)r["twistDirection"],
+                    Manufacturer = (string?)r["manufacturer"],
+                    Cartridge = (string?)r["cartridge"],
+                    BarrelLengthInches = (double?)r["barrelLengthInches"],
+                    Scope = (string?)r["scope"],
+                    Stock = (string?)r["stock"],
+                    Notes = (string?)r["notes"],
+                })],
+                [.. (root["barrels"] as JsonArray ?? []).Select(b => new Barrel((string)b!["name"]!, (string?)b["rifle"], (int?)b["rounds"] ?? 0)
+                {
+                    LengthInches = (double?)b["lengthInches"],
+                    TwistInches = (double?)b["twistInches"],
+                    TwistDirection = (int?)b["twistDirection"],
+                    Installed = (string?)b["installed"] is { } day && DateOnly.TryParse(day, CultureInfo.InvariantCulture, out var date) ? date : null,
+                    Notes = (string?)b["notes"],
+                })],
+                [.. (root["loads"] as JsonArray ?? []).Select(l => new Load((string)l!["name"]!, (string?)l["components"])
+                {
+                    MuzzleVelocityFps = (double?)l["muzzleVelocityFps"],
+                    MuzzleVelocitySdFps = (double?)l["muzzleVelocitySdFps"],
+                    MuzzleVelocitySdFrom = (string?)l["muzzleVelocitySdFrom"],
+                    BallisticCoefficient = (double?)l["ballisticCoefficient"],
+                    DragModel = (string?)l["dragModel"] is { } drag ? Enum.Parse<GroupLab.Core.Ballistics.DragModel>(drag) : null,
+                    BcReference = (string?)l["bcReference"] is { } air ? Enum.Parse<GroupLab.Core.Ballistics.ReferenceAtmosphere>(air) : null,
+                    BulletWeightGrains = (double?)l["bulletWeightGrains"],
+                    BulletLengthInches = (double?)l["bulletLengthInches"],
+                    BulletDiameterInches = (double?)l["bulletDiameterInches"],
+                    BulletName = (string?)l["bulletName"],
+                    BrassManufacturer = (string?)l["brassManufacturer"],
+                    BrassCartridge = (string?)l["brassCartridge"],
+                    Powder = (string?)l["powder"],
+                    PowderChargeGrains = (double?)l["powderChargeGrains"],
+                    OverallLengthInches = (double?)l["overallLengthInches"],
+                    BaseToOgiveInches = (double?)l["baseToOgiveInches"],
+                    Primer = (string?)l["primer"],
+                    Notes = (string?)l["notes"],
+                })]);
         }
         catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException or ArgumentException or NullReferenceException)
         {
