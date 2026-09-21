@@ -238,4 +238,36 @@ public class UpdateBarTests : IDisposable
         Assert.False(later.ShowingUpdateBar);
         later.Close();
     }
+
+    /// <summary>
+    /// The launch after an update must not check for another one, and this is not tidiness: the real update test of entry 123 section 2.7
+    /// on Alan's machine found that it did, found nothing newer, said so silently, and in saying so hid the "updated from A to B" line put
+    /// there a moment earlier. The one launch where that message matters was the one launch that threw it away.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task TheLaunchAfterAnUpdateDoesNotCheckAgainAndWipeItsOwnMessage()
+    {
+        var window = Open();
+        window.CloseForUpdate = () => { };
+        await window.CheckForUpdatesAsync(byHand: true);
+        await window.StartUpdateAsync();
+        Click(window, "Install and restart");
+        window.Close();
+
+        // The newer build starts, with the train still answering and a manifest it would happily read again.
+        MainWindow.ThisBuild = BuildIdentity.Read("0.2.0-nightly.13+def5678", "nightly");
+        TestDefaults.Outside.Forget();
+        TestDefaults.Outside.Text[UpdateTrain.Nightly.ManifestAddress()!] = Signed().ToJson();
+
+        int asked = TestDefaults.Outside.Asked.Count;
+        var after = Open();
+
+        // It says what it updated from, and it is still saying it.
+        Assert.True(after.ShowingUpdateBar);
+        Assert.Equal(MainWindow.UpdatedLine("0.2.0-nightly.12", "0.2.0-nightly.13"), after.UpdateNow.Says);
+
+        // And it did not go looking again, which is what used to overwrite the line.
+        Assert.DoesNotContain(TestDefaults.Outside.Asked.Skip(asked), a => a.What == "get");
+        after.Close();
+    }
 }

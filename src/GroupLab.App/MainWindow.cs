@@ -708,11 +708,16 @@ public sealed partial class MainWindow : Window
 
         // Entry 123 section 2.4: if the last thing this machine did was update, the new version says so, once, and goes back to the screen
         // the person was on. It is read and cleared here, before anything can look for another update.
-        SayIfUpdated();
+        bool justUpdated = SayIfUpdated();
 
         // Entry 119 sections 4.1 and 4.2: it looks as often as the person asked, on every launch unless they said otherwise, and a check
         // that finds nothing says nothing. It is not awaited, so a slow or unreachable train never holds the window closed.
-        if (CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
+        //
+        // Not on the launch straight after an update, which the real test of entry 123 section 2.7 caught on this machine: the check found
+        // nothing newer, said so silently, and in doing that hid the "updated from A to B" line put there a moment earlier. The one launch
+        // where the message matters was the one launch that threw it away. Checking again having just installed the newest build is
+        // pointless in any case.
+        if (!justUpdated && CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
         {
             _ = CheckForUpdatesAsync(byHand: false);
         }

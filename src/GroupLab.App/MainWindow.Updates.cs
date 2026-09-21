@@ -263,12 +263,15 @@ public partial class MainWindow
     /// <summary>
     /// The first launch after an update, entry 123 section 2.4: one line saying what it updated from and to, with a way to read what changed,
     /// said once. It is the same bar, so nothing new appears on the screen and nothing has to be dismissed before working.
+    /// <para>
+    /// Returns whether it said anything, because a launch check running afterwards would otherwise wipe what it said.
+    /// </para>
     /// </summary>
-    private void SayIfUpdated()
+    private bool SayIfUpdated()
     {
         if (settingsStore.LoadHandover() is not { } handover)
         {
-            return;
+            return false;
         }
 
         settingsStore.ClearHandover();
@@ -280,7 +283,7 @@ public partial class MainWindow
         if (string.Equals(handover.From, ThisBuild.Version.Number, StringComparison.Ordinal))
         {
             // The installer ran but this is the same version: say nothing rather than claim an update that did not happen.
-            return;
+            return false;
         }
 
         DiagnosticLog.Info("update.arrived", ("from", handover.From), ("to", ThisBuild.Version.Number));
@@ -289,6 +292,7 @@ public partial class MainWindow
         updateButtons.Children.Clear();
         updateButtons.Children.Add(Button("What changed", () => OpenInTheBrowser("https://github.com/oRAirwolf/grouplab/releases/tag/v" + ThisBuild.Version.Number)));
         updateButtons.Children.Add(Button("Hide", () => updateBar.IsVisible = false));
+        return true;
     }
 
     /// <summary>
