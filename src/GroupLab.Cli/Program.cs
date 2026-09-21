@@ -67,6 +67,8 @@ return args switch
     ["update-check", var manifest, var publicKey] => GroupLab.Cli.UpdateVerbs.Check(manifest, publicKey, Console.Out, Console.Error),
     ["build-stamp", var assembly] => GroupLab.Cli.BuildStampVerb.Run(assembly, null, Console.Out, Console.Error),
     ["build-stamp", var assembly, "--expect", var train] => GroupLab.Cli.BuildStampVerb.Run(assembly, train, Console.Out, Console.Error),
+    ["glossary"] => GroupLab.Cli.GlossaryVerb.Run("docs", Console.Out, Console.Error),
+    ["glossary", var docs] => GroupLab.Cli.GlossaryVerb.Run(docs, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
@@ -519,6 +521,7 @@ static int Usage()
         grouplab timing <grouplab-log-file>
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab user-guide [<docs directory>]
+        grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
         grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>]
         grouplab update-key
