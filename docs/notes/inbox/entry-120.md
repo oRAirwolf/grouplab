@@ -53,12 +53,35 @@ Scan 2 is a blank letter sheet with a hand-drawn aiming mark. Run it through the
 
 ## 5. Photographs against scans
 
-Use the compare-photos tool from entry 113 to pair each burst with the scan of the same sheet and report the pairing, how each photograph fared (identified, holes found, agreement with the scan in inches), and which photographs were refused and why. Expect hard cases, and report them, do not work around them:
+I have looked at all 59 photographs. What each burst contains, with my pairing to the scans, which your compare-photos tool must confirm or contradict on its own evidence (report every disagreement with me):
 
-1. `20260920_110616.jpg` is an unshot sheet printed from inside GroupLab before the entry 114 fix: the codes and markers are missing. It must take the by-name path and must not crash or guess.
-2. The 14:14 and 15:33 bursts show two or three sheets side by side on the backer board, some cut off at the frame edge, with holes in the board around them. Say whether GroupLab picks one sheet, asks which, or fails.
-3. The 16:14 and 16:56 bursts show the blank sheet before and after, with a 5x5 sheet partly in frame.
-4. The 18:59 burst is a commercial printed target (an orange 100-yard grid with diamonds) that GroupLab has no definition for. This is a private hard test only: GroupLab must say it does not recognise the sheet and offer the blank-sheet path, never match it to a GroupLab definition. Never commit it, its name, or any render of it.
+| Burst | Photos | What they show | Pairs with |
+|---|---|---|---|
+| 11:06 | 1 | An unshot sheet on a table, printed from inside GroupLab before the entry 114 fix: no codes, no markers | nothing (no scan) |
+| 14:14 to 14:15 | 17 | Four unshot LTR-D sheets on the backer board, before shooting, from many angles: square on, strongly oblique, close, wide, some cut off at the frame edge, the board's old holes all around them | nothing: no holes on the paper |
+| 15:33 | 10 | The same sheets after shooting, load blocks still blank. The 22LR sheet (153325, 153356) and the 6 ARC sheet (153340, 153344, 153347) square on; the 6.5 Creedmoor 25-shot sheet at the left of 153309 and 153336; 153318 the whole board | scans 4, 5 and 3 |
+| 16:14 to 16:15 | 9 | The blank zero sheet and the orange commercial target, both unshot. 161541 and 161547 show a tape measure held across the blank sheet, horizontally and vertically | nothing (unshot) |
+| 16:56 | 13 | The zero sheet after shooting (165611 to 165620, 165627); a 5x5 sheet with rows 1 to 3 shot, one hole per bull (165624, 165634, 165637); the orange target with a group in its centre (165641 to 165649) | scans 2 and 1 |
+| 18:59 to 19:00 | 9 | The orange target finished, whole and in close-ups of each corner diamond | nothing (no scan; private hard test) |
+
+The scan 6 sheet (6mm Creedmoor) was photographed on a second phone and came in through the upload page: submission `C:\Dev\grouplab-submissions\2026-09-21_86926341` (10 photographs, 6mm Creedmoor, 100 yards, corrugated plastic, staples; consent agreed, not excluded from the public dataset). Alan confirmed these are the scan 6 photographs. What they show:
+
+- 001 to 006 (14:13 to 14:14): a different board, several unshot GroupLab sheets, one of them stapled over another printed target so that target's grid and lines show around and behind it, and a sheet cut off at the frame edge in several.
+- 007 (14:35): the shot sheet, wide, with a tape measure held against it.
+- 008 (14:35): the shot sheet square on and close. Row 1 holes sit just below bulls 1 to 5; the BR-4 holes sit on row 3; row 2 is empty. This is the best photograph of the set.
+- 009 and 010: the same sheet, oblique.
+
+Pair 007 to 010 with scan 6 and score them against its ground truth in the table above. Read the photographs from the submission folder in place; do not copy, rename or alter anything in it, and do not run it through intake or publish anything from it in this entry.
+
+The load blocks were filled in after the range, so the photographs cannot be paired by what is written on them. Pair by hole pattern, and use the capture time only to order a burst, never as evidence of which sheet it is.
+
+For each pairing report: identified or not and how, holes found, agreement with the scan hole by hole in inches, and which photographs were refused and why. Then these cases specifically, reported and not worked around:
+
+1. `20260920_110616.jpg`, codes and markers missing, must take the by-name path and must not crash or guess.
+2. The 14:14 burst is the best material GroupLab has yet for identification under perspective: the same unshot sheets at many angles. Report, per photograph, whether each sheet in frame was identified, and where it fails (angle, distance, sheet cut off, several sheets in frame). The board's own holes around the sheets must never be counted as holes on a sheet.
+3. Several sheets in one frame (153309, 153318, 153336, much of the 14:14 burst): say whether GroupLab picks one sheet, asks which, or fails.
+4. The tape measure in 161541 and 161547 is a scale reference the shooter put in on purpose. Report what the blank-sheet path makes of those two photographs, and propose, without building it, whether a visible ruler or tape should be offered as a way to set scale on a blank sheet.
+5. The orange commercial target (16:15, 16:56 and 18:59 bursts) has no GroupLab definition. It is a private hard test only: GroupLab must say it does not recognise the sheet and offer the blank-sheet path, never match it to a GroupLab definition. Never commit it, its name, or any render of it.
 
 ## 6. Timing
 
@@ -83,3 +106,19 @@ You wrote that the Inno Setup installer has never been built. It has: Alan ran t
 
 1. **Question 28, support link:** no address yet; he may register a domain later. Leave a clearly marked placeholder: one constant in one place, and the menu item says there is no support address yet rather than opening anything. Do not invent a domain. A test holds that no other support address appears anywhere in the repository.
 2. **Question 29, published sample:** use scan 3, `C:\Dev\grouplab-range-2026-09-20\scans\3-600-dpi09202026.png` (SHA-256 prefix 93140a6a37777667), as the sample. Alan wrote to me: "Use scan 3 as the sample scan. I dont care about my load data being shared." That sentence, the date 2026-09-21, the file name, its SHA-256 and the fact that it was given in the planning session go into a consent record in the repository, beside the existing sample records, before the file is committed. No consent record, no publication, as always. The PNG carries no metadata beyond its resolution (I checked: every text chunk is empty), but strip all ancillary chunks except the resolution anyway. You may recompress it losslessly to save space, provided the decoded pixels are identical to the original; record both file hashes and the pixel hash. It replaces the generated sample in the package and in the README where the generated one is described, and its ground truth (25 shots, one per bull, load as corrected above) becomes the expected result for the package's self-test in the `windows package` job. This consent covers scan 3 only; the other scans and every photograph stay private.
+
+## 10. The target library uses the whole window
+
+Alan's screenshot of the target library at 2000 by 1125 shows the page using about a third of the window, with the rest empty:
+
+1. The sheet list is a fixed narrow column, so names are cut off ("GroupLab 5x5 Load Development with Lo...", "GroupLab 5x5 Load Development, Let..."). Worse, on the first row the name runs into the size column: "100 m, A4A4 · 25 + 3". That overlap is a plain defect.
+2. The preview is a small fixed box (about 330 by 420) beside the list, with blank space to its right and below it.
+3. The status bar says "Drag to move the image. Zoom with the wheel or the buttons." There are no zoom buttons on the screen.
+
+Make the library fill the window:
+
+1. The list column is wide enough for the longest built-in sheet name and its paper-and-bulls column at the current font size, with no truncation at the minimum window size the application supports. The column is resizable with the same splitter behaviour as entry 105, and its width is remembered. If a name still cannot fit at the minimum window size, wrap it to a second line rather than cut it, and never let the name and the size column overlap.
+2. The detail area takes all the remaining width and height: title, description and buttons at the top, and the preview filling everything below, scaled to fit the page whole by default, keeping its aspect ratio, growing as the window grows.
+3. Either add the zoom buttons the status bar promises (zoom in, zoom out, fit) or change the status bar text to say what is actually there. Adding them is preferred, matching whatever the analysis screen already uses.
+4. Tests: a layout test that renders the library at 1280 by 720 and at 2560 by 1440 and asserts that no list item's text is truncated or overlapping, and that the preview's area is at least half the window's. Save renders at both sizes under `docs/figures/screens/current/` as entry 109 set out, and look at them yourself before reporting.
+
