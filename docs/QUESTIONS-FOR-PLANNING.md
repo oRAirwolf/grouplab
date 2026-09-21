@@ -12,6 +12,39 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 37: the point-of-impact correction works, and there is no way for a shooter to switch it on
+
+**Status: open**
+
+### 1. What happened
+
+Entry 130 section 3.1 asked for the sheet's point of impact to be found before assignment and the holes assigned in that shifted frame. The solver was built last night. Tonight it turned out to be **connected to nothing**: `ImpactOffsets.Solve` was called by no part of the assignment path, so scans 4, 5 and 6 still assigned exactly as entry 120 found them, and scan 5 still reported a mean radius of 1.120 in from a group measured against bulls it was never fired at.
+
+It is connected now, and it works: on a synthetic sheet shot at the second to fifth bull of every row with the whole group landing a bull to the left, all twenty shots find the bull they were fired at.
+
+### 2. The problem
+
+**It only runs where the shooter has said which bulls they aimed at, and there is no control anywhere that says so.**
+
+The restraint is deliberate and I would keep it. A sheet of twenty five bulls with ten shot has a translation that explains the holes for almost any reading, so solving over every bull would have GroupLab choosing between readings on a margin it cannot justify, on exactly the sheets where being wrong is quietest. Where the shooter names the bulls, the question stops being "where might these have been aimed" and becomes "how far from there did they land", which is arithmetic.
+
+But today the only way to name them is `AssignmentRule.PerBull`, which exists for the doubles sheet of entry 113 and is reached from no screen for this purpose. **So the fix for the worst defect this project has found is in the build and out of reach.**
+
+### 3. The question
+
+**How should a shooter say which bulls they aimed at?**
+
+- **A. On the sheet itself, by clicking.** Before or during marking, click the bulls you shot at; they light up; everything else is left empty. Clear, and it is the same gesture as the rest of the marking screen.
+- **B. As a pattern, chosen from a short list.** "Every bull", "the first N", "columns 2 to 5 of each row", "these rows". Fast for the regular cases and useless for an irregular one.
+- **C. From the rounds fired.** The shooter already enters how many rounds they fired. Take the N bulls the shots best fit and let them correct it. Needs no new control at all and guesses, which is the thing this project does not do.
+- **D. Ask only when it would change the answer.** Assign as today, and when a certain offset exists that would move shots, say so in the review queue and offer to apply it.
+
+**I would build A and D together.** A is the honest control and belongs on the marking screen with the other bull interactions; it is also what entry 131's editing popover already needs, since clicking a bull is one of its gestures. D is what makes A discoverable: nobody will use a control they have no reason to look for, and the review queue is where GroupLab already says "this needs you". C I would not build: it turns a fact the shooter knows into a guess the software makes, on the one question where guessing wrong is invisible.
+
+**Until one of them exists, the note in the release should not claim this is fixed for anybody who has not read the code.** I have worded tonight's release note as "once you tell GroupLab which those were" for that reason.
+
+---
+
 ## 2026-09-22, question 36: a light installer, measured, and why shrinking the one we have beat it
 
 **Status: open**
