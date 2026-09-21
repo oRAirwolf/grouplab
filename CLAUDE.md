@@ -109,6 +109,14 @@ A commit with nothing a person would notice carries no trailer: a notes fold, a 
 
 Writing the trailer is part of writing the change, not a step afterwards. If I cannot say what a commit changes for somebody using GroupLab, either it changes nothing they can see, in which case it carries no trailer, or I do not yet understand what I have done.
 
+**A note promises what a person can actually reach.** Nightly 27 told people GroupLab "now works out where your group actually landed before deciding which bull each shot belongs to". The code to do it existed and was wired to nothing, so the sentence was untrue on the day it was published, and nobody reading it could have known. A note describes what somebody can do after installing the build, not what is in the repository: if the working part cannot be reached from any screen, the note says so in the same breath or there is no note. A published release is never edited to cover this up; the correction goes in the next one.
+
+## Two suites at once is a flake, not a failure
+
+Running the Core and App suites at the same time on Alan's machine produces failures that are nothing to do with the code: a file in `%TEMP%` that cannot be opened or deleted at that moment, because something outside the test is holding a newly written file. Three different tests did it in one night, and every one passed alone straight afterwards. It has never happened in CI, where the suites run in separate jobs.
+
+So: **run them one after the other**, and when a test fails on a temp file, re-run that test alone before believing it. Time spent chasing one of these is time taken from the queue.
+
 ## Standing constraints
 
 - `tools/` is read only.
