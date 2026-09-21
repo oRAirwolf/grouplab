@@ -76,6 +76,97 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 ---
 
+# 2026-09-21, entry 137: open an image by dropping or pasting it
+
+**Status: not actioned 2026-09-22.** Nothing of it was started, so nothing is half built. The entry places itself after the entry 135 queue and entry 136, and the entry 135 queue is the interface, which is what tonight went to.
+- **What it needs when it is next picked up:** drop and paste through `IOutsideWorld` so no test touches the real clipboard, pasted data written under `%LOCALAPPDATA%\GroupLab` and never beside the person's files, the same type and size checks and refusal wording Open already uses, and the empty start screen offering all three ways in.
+
+Alan would like to bring an image into GroupLab by **dragging it onto the main window** or **pasting it** (Ctrl+V), not only through Open. Build it after the entry 135 queue and entry 136, as part of the same run.
+
+1. **Drag and drop**: dropping one image file anywhere on the main window opens it exactly as Open would, with the same checks and messages. While a file is dragged over the window, show a clear drop target ("Drop to open this image"). Dropping several files: open the first and say how many were ignored, or offer the same choice Open gives for several, whichever the application already has.
+2. **Paste**: Ctrl+V on the main window (when no text box has focus) opens an image from the clipboard, whether the clipboard holds an image file copied in File Explorer or image data copied from another program (a screenshot, a browser image). Image data has no file name and no metadata, so GroupLab says so where that matters (for example, no stated resolution for scale on a blank sheet).
+3. **Where it lives**: pasted image data is written to GroupLab's own folder under `%LOCALAPPDATA%\GroupLab`, never beside the user's files, and is treated like any opened file from then on. Reading the clipboard only ever happens on an explicit Ctrl+V or a Paste menu item, never on its own.
+4. **What is accepted**: the same types and size limits as Open. Anything else is refused with the same plain message Open gives. The same image safety applies (pixel cap, decode with a time limit) as for any file.
+5. **Where it is offered**: mention both on the empty start screen ("Open an image, drop one here, or paste with Ctrl+V") and add Paste to the Open menu.
+6. **Tests**: drop and paste driven through the application's own handlers with generated images, including a refused type and an oversized image; the interface benchmark covers the new menu item; the clipboard is read only through `IOutsideWorld`, so no test touches the real clipboard.
+7. A plain `Release-note:` trailer.
+
+---
+
+# 2026-09-21, entry 136: a release notes page on grouplab.org
+
+**Status: not actioned 2026-09-22.** Nothing of it was started, so nothing is half built.
+- **Why:** entry 135, which arrived with it, makes tonight the interface night and forbids SSH and server changes. This entry ends in a site publish, and the site cannot deploy until the entry 128 install has run on the server, which tonight's rules put out of reach. Writing the page and the history without being able to publish or confirm it would be writing it blind.
+- **What it needs when it is next picked up:** `docs/RELEASE-NOTES.md` written by hand from v0.1.0 and every published nightly, the builder turning it into `/releases/`, the update bar's "Show all" pointing at the newest anchor through `IOutsideWorld`, a test that the file has not fallen behind the tags, and the publishing rule in `CLAUDE.md` gaining the step that brings the file up to date first.
+
+Alan wants a **Release notes** page on the website, with each version's notes expanding and collapsing, starting from the first build that was made available and covering every version since.
+
+## 1. The page
+
+1. `https://grouplab.org/releases/`, linked from the site's navigation and from the Download page ("What changed in each build").
+2. One block per version, **newest first**, each a collapsible section (HTML `<details>` and `<summary>`, so it works without JavaScript). The newest is open; the rest are closed. An "Expand all / Collapse all" control is a nice addition if it costs little.
+3. Each block's heading shows the version, its train (release, beta, nightly), the date, and the short commit. Inside: the notes grouped under New, Fixed and Changed, in plain words with the entry reference in brackets, then a link to that version's own downloads on GitHub (`releases/tag/v<version>`), and any known issue for that build.
+4. Each block has an anchor (`#v0-2-0-nightly-31` or similar) so a link can open one version. The application's update bar "Show all" (entry 119 section 4.3) links to the newest version's anchor on this page, through `IOutsideWorld`.
+5. The approved design, the site's checks (no em dash, banned terms, no addresses) and fingerprinted assets, as for every other page.
+
+## 2. Where the notes come from
+
+1. **The source of truth is a file in the repository**, `docs/RELEASE-NOTES.md`, which also reads well on GitHub. The website builder turns it into the page; the build never fetches anything from the network.
+2. **Write the history by hand now**, from the commits, `docs/NOTES-FROM-PLANNING.md` and `docs/PHASE1-RESULTS.md`, in the plain `Release-note:` style of entry 132:
+   - **v0.1.0**, 2026-09-21, from commit 5a4cd07: the first build anyone could download (the Windows installer and zip, and the Linux tarball, with no .NET needed). Say it was published as a release by mistake, is now marked a pre-release, and cannot update itself.
+   - **Every published nightly since**: 0.2.0-nightly.12, .14, .16, .18, .25 onward to the newest. Say plainly why the numbers skip (runs cancelled or skipped before publishing, fixed on 2026-09-21), and give each build's known issues: 12 and 14 call themselves development builds and cannot update themselves; 16 and 18 refuse their own update signature and cannot update themselves; 25 and later update themselves.
+   - Do not list the hand-made draft that was deleted, and do not edit any published GitHub release.
+3. **From now on**, every nightly's notes come from its `Release-note:` trailers (entry 132). When you publish the site, first bring `docs/RELEASE-NOTES.md` up to date with every nightly published since the last entry, from those trailers, so the page is complete. The nightly workflow must not commit to the repository or publish the site; this stays a step you take when you publish (add this to the publishing rule in `CLAUDE.md`).
+4. A test fails if a published nightly newer than the file's newest entry exists when the site is being published (check by the tags in the repository, not the network), so the page cannot quietly fall behind.
+
+## 3. Publish
+
+Publish the site with the new page when this is done, following the rule in `CLAUDE.md`, and confirm `https://grouplab.org/releases/` is live with its build stamp.
+
+---
+
+# 2026-09-21, entry 135: tonight's overnight queue, interface first, run under /loop
+
+**Status: actioned 2026-09-22, in progress.** The live state is `docs/OVERNIGHT-2026-09-21.md`, which this entry section 0.1 asks for and which is updated and committed after every item.
+
+Alan was disappointed that last night produced little he can see. Tonight is for the interface. Alan starts you with Claude Code's `/loop` command, so if a turn ends you are woken again and continue; every wake-up receives the same short prompt, so this entry and a progress file carry the state between wake-ups.
+
+## 0. How each wake-up works
+
+1. **Keep a progress file**, `docs/OVERNIGHT-2026-09-21.md`: the queue below as a checklist, each item marked not started, in progress (with where you got to) or done (with the commit), and a short "next step" line at the top. Update it and commit it after every item.
+2. **On every wake-up**: read the progress file, check CI and the nightly, and continue with the first unfinished item. Never start an item over that is already done.
+3. **Do not end a turn while any item is unfinished and workable.** Waiting for CI or a nightly is not a reason; work on the next item meanwhile. When the whole queue is done, write the morning report (section 3) at the top of the progress file and in your final message, and tell `/loop` to stop.
+4. **Rules for tonight**: no SSH or SCP, no server changes, no repository settings, no `v*` tags other than the nightly workflow's, and do not delete anything in Alan's folders. You may publish the website once at the very end if the guides or screenshots changed, following the rule in `CLAUDE.md`. Push in batches; never push while a nightly you need is running; keep main green; the gate record stays identical. Every user-visible change has a plain `Release-note:` trailer. Questions become questions with your recommendation, and you move on.
+
+## 1. The queue, in this order
+
+**The interface first: this is what Alan wants to see in the morning.**
+
+1. **Entry 131 section 1 for every screen**: before and after renders at 1280 by 720 and 2560 by 1440, dark and light, checked against the section 1 checklist, and fixed where they fail. Start with the analysis page, the screen Alan uses most. Use Claude Design through `/design` if you have it; otherwise design by rendering.
+2. **Entry 131 section 6.2**: the zero-offset picture.
+3. **Entry 131 section 7**: the Equipment screen (rifles, barrels, loads, autocomplete), with the old "rounds or components" box gone and old records moved over.
+4. **Entry 131 section 8**: the ballistics page, rebuilt with grouped inputs, the trajectory graph and the dope table.
+5. **Entry 131 section 10**: Compare loads, rebuilt with charts.
+6. **Question 37's control**: saying which bulls were aimed at, and where a sight change happened, on the sheet itself (click bulls, row presets), if it is not already built.
+7. **Anything from entry 131 sections 2 to 9 not finished**, and a final pass over every screen against the section 1 checklist.
+
+**Then the remaining fixes, if not already done today:**
+
+8. Entry 134, the installer icon.
+9. Entry 130 section 2b.1 (scan 1, bull 2) and the extra hole on scan 4.
+10. Entry 130 section 2c (photographs against scans) and section 6b (the mounted photograph gate on today's photos).
+11. Entry 130 section 6 (performance), then section 7 (guides and screenshots current).
+
+## 2. Morning handover
+
+Before stopping, make sure the newest nightly carries tonight's interface work, so Alan's installed GroupLab (nightly 31 or later, which updates itself) offers it as an update in the morning.
+
+## 3. The morning report
+
+At the top of the progress file and in your last message, under the `CLAUDE.md` status rules: first what Alan must do (ideally only: open GroupLab and accept the update); then, screen by screen, what changed, with the paths of the before and after renders; then every other item, done or not and why; then open questions with your recommendations.
+
+---
+
 # 2026-09-21, entry 134: the installer carries the GroupLab icon
 
 **Status: actioned 2026-09-22. Every section done.**
