@@ -1,0 +1,15 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 129 section 3.5 and 3.7. Every two minutes, so an upload waits a short time
+# rather than an hour, and quarantine is swept long before anything in it reaches the hour it is allowed.
+Description=Rebuild quarantined GroupLab uploads every two minutes
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=2min
+AccuracySec=30s
+Persistent=true
+Unit=grouplab-intake-worker.service
+
+[Install]
+WantedBy=timers.target

@@ -268,6 +268,66 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Contains("/home/airwolf/web/grouplab.org/public_html", text, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 129 section 3.5.1: the worker that decodes a stranger's photograph has no network and cannot write
+    /// outside the three folders it moves files between.
+    /// <para>
+    /// Decoding somebody else's file is the moment this machine is most exposed. If a decoder is ever made to run something, this is what
+    /// decides whether it can reach anything: no network at all, everything read only but its own folders, and caps on memory, processor and
+    /// time so that a decompression bomb cannot take the web server down with it.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void TheRebuildWorkerHasNoNetworkAndCannotWriteOutsideItsOwnFolders()
+    {
+        string unit = File.ReadAllText(Repo.PathTo("website", "server", "grouplab-intake-worker.service"));
+
+        foreach (string wanted in new[]
+        {
+            "PrivateNetwork=yes", "IPAddressDeny=any", "ProtectSystem=strict", "NoNewPrivileges=yes",
+            "MemoryMax=", "RuntimeMaxSec=", "CPUQuota=",
+        })
+        {
+            Assert.Contains(wanted, unit, StringComparison.Ordinal);
+        }
+
+        // It is not the web user and not root: the thing that answers the internet and the thing that decodes what arrives are separate.
+        Assert.Contains("User=airwolf", unit, StringComparison.Ordinal);
+
+        var writable = unit.ReplaceLineEndings("\n").Split('\n')
+            .Where(l => l.StartsWith("ReadWritePaths=", StringComparison.Ordinal))
+            .Select(l => l["ReadWritePaths=".Length..].Trim())
+            .ToList();
+
+        Assert.NotEmpty(writable);
+        foreach (string path in writable)
+        {
+            Assert.True(
+                path.Contains("/private/quarantine", StringComparison.Ordinal)
+                || path.Contains("/private/ready", StringComparison.Ordinal)
+                || path.Contains("/private/refused", StringComparison.Ordinal)
+                || path == "/home/airwolf/logs",
+                $"the worker may write to {path}, which is not one of the folders it moves files between");
+        }
+
+        // And never into the site itself: a rebuilt photograph must not be able to land in a web root.
+        Assert.DoesNotContain("public_html", unit, StringComparison.Ordinal);
+    }
+
+    /// <summary>The worker keeps nothing of the original file, which is the whole of its protection.</summary>
+    [Fact]
+    public void TheRebuildWorkerDeletesTheOriginalBytes()
+    {
+        string worker = CodeOnly(File.ReadAllText(Repo.PathTo("website", "server", "grouplab-intake-worker.py")));
+
+        // The original is unlinked after the rebuild, and the rebuilt file is what moves on.
+        Assert.Contains("original.unlink()", worker, StringComparison.Ordinal);
+
+        // Nothing copies the original into the output: no shutil.copy of the uploaded file, and no exif carried across as bytes.
+        Assert.DoesNotContain("copy2(original", worker, StringComparison.Ordinal);
+        Assert.DoesNotContain("info[\"exif\"]", worker, StringComparison.Ordinal);
+    }
+
     /// <summary>A python file with its comments and its triple quoted blocks taken out, so a guard reads what runs.</summary>
     private static string CodeOnly(string python)
     {

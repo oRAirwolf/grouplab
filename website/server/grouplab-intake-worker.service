@@ -1,0 +1,51 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 129 section 3.5. Takes each upload out of quarantine, rebuilds it from its
+# pixels, and deletes the original bytes.
+#
+# It is its own service on purpose. It is not PHP, and it is not the web user: the thing that decodes a
+# stranger's file should not be the thing that answers the internet, and neither should be able to do what
+# the other does.
+Description=Rebuild quarantined GroupLab uploads from their pixels
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-intake-worker.py
+User=airwolf
+Group=airwolf
+
+# **No network at all.** Decoding somebody else's file is the moment this machine is most exposed, and
+# there is nothing this needs to reach. If a decoder is ever made to run something, it runs it with no way
+# out.
+PrivateNetwork=yes
+IPAddressDeny=any
+
+# Everything read only except the three folders it moves files between, and its log.
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/quarantine
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/ready
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/refused
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+
+# A decompression bomb is a small file that asks for an enormous amount of memory and time. The worker caps
+# the pixel count itself; these are the belt to that brace, and they are what stops a bad file taking the
+# web server down with it.
+MemoryMax=1G
+CPUQuota=80%
+RuntimeMaxSec=900
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
