@@ -1,0 +1,42 @@
+{
+  "format": "grouplab-sample-1",
+  "file": "gl-cf25-ltr-d-25-shots-600-dpi.png",
+  "why": "The only shot GroupLab sheet published in this repository. It ships in the Windows package so a tester can open a real sheet and see an analysis, and the package's self-test analyses it. PROVENANCE.md beside this file is the consent record; no consent record, no publication.",
+  "consent": {
+    "givenBy": "Alan Hayes",
+    "role": "shot the sheet, scanned it, owns the copyright in the scan",
+    "givenOn": "2026-09-21",
+    "givenHow": "in writing to the planning session, recorded in docs/NOTES-FROM-PLANNING.md entry 120 section 9",
+    "statement": "Use scan 3 as the sample scan. I dont care about my load data being shared.",
+    "covers": "this file only; every other scan and photograph from that range day stays private",
+    "licence": "GPL-3.0, as the rest of this repository"
+  },
+  "source": {
+    "name": "3-600-dpi09202026.png",
+    "bytes": 16830839,
+    "sha256": "93140a6a37777667d0c47d61a3a9c53e7ba9c7fb5c4e67038e3e4206ed8ededa"
+  },
+  "published": {
+    "bytes": 16022838,
+    "sha256": "3327d091e82cf968fa38e4681ffce5c7dce2eed7e2ce37b9d57ba18a544848ce"
+  },
+  "pixels": {
+    "sha256": "56a37e2bea4db689a623e918893d619932ac8a4b532f798466ac6856f668ff5d",
+    "how": "SHA-256 of the decoded 8-bit BGR pixel buffer as OpenCV reads it, 4958 by 6458 by 3 bytes",
+    "identicalInBoth": true
+  },
+  "image": { "width": 4958, "height": 6458, "bitsPerChannel": 8, "colourType": "RGB", "interlaced": false, "dpi": 600 },
+  "chunksKept": ["IHDR", "pHYs", "IDAT", "IEND"],
+  "chunksDropped": ["tIME", "tEXt x10, every value empty"],
+  "locationData": "none: a flatbed scanner records none, and the text chunks were empty before they were dropped",
+  "sheet": "GL-CF25-LTR-D, GroupLab's own 5 by 5 load development sheet with a load block",
+  "groundTruth": {
+    "shots": 25,
+    "aimedAt": "one shot at each of bulls 1 to 25",
+    "shotOn": "2026-09-20",
+    "distanceYards": 100,
+    "loadBlockAsWritten": "9/20/26, 100 y, 6.5 Creedmoor, 153.5 LRHT, 42.4 H4350, Alpha SRP brass, primer GM205MAR, 2.874",
+    "loadBlockCorrection": "the primer was 7.5BR, not the GM205MAR written on the sheet; the sheet is published as it is and the correction is recorded here",
+    "expectedOfGroupLab": "25 holes on 25 bulls, one each, registering from the sheet's own printed markers"
+  }
+}
