@@ -14,6 +14,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Trace;
+using GroupLab.Core.Updates;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
@@ -3154,6 +3155,49 @@ public sealed partial class MainWindow : Window
     /// <summary>A section heading, entry 109 section 1 principle 2: the heading style, in sentence case, where entry 42 set dim capitals.</summary>
     private static TextBlock Heading(string text) => new() { Text = text, Margin = new Thickness(0, Tokens.Space8, 0, 0), Classes = { AppStyles.Section } };
 
+    /// <summary>What a person follows and how often, entry 119 sections 4.2 and 4.5. Kept in memory until the settings file carries it.</summary>
+    private UpdatePreferences updates = UpdatePreferences.Default(AppInfo.Build.Train == UpdateTrain.Development ? UpdateTrain.Nightly : AppInfo.Build.Train);
+
+    private readonly TextBlock updateState = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+
+    /// <summary>The one line above the train choice, which says what this build is on and what the other trains are.</summary>
+    private static string UpdateTrainHelp() =>
+        AppInfo.Build.IsDevelopment
+            ? "This is a development build, so it does not update itself. A build from the nightly train does."
+            : "Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken.";
+
+    private static string TrainLabel(UpdateTrain train) => train.IsAvailable() ? train.Words() : train.Words() + " (" + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ")";
+
+    /// <summary>
+    /// Looks for a newer build, entry 119 sections 4.1 and 4.2. It is the only thing here that reaches the network, and it says what it
+    /// found either way. A build with no key compiled in says so rather than pretending to check.
+    /// </summary>
+    internal void CheckForUpdates()
+    {
+        updates = updates with { LastCheckUtc = DateTimeOffset.UtcNow };
+        if (AppInfo.Build.IsDevelopment)
+        {
+            updateState.Text = "This is a development build, so there is nothing to update it to.";
+            return;
+        }
+
+        if (!UpdateKeys.Trusts)
+        {
+            updateState.Text = UpdateSignature.Refusal.NoKey.Words();
+            DiagnosticLog.Info("update.check", ("result", "no key"));
+            return;
+        }
+
+        updateState.Text = "Looking for a newer build\u2026";
+        DiagnosticLog.Info("update.check", ("train", updates.Train.Words()));
+    }
+
+    /// <summary>What the settings page is showing about updates, for the headless tests.</summary>
+    internal string UpdateStateText => updateState.Text ?? "";
+
+    /// <summary>What a person has chosen about updates, for the headless tests.</summary>
+    internal UpdatePreferences UpdatePreferencesNow => updates;
+
     /// <summary>Opens a page in whatever the system uses for one. Nothing in GroupLab handles a payment or shows a page of its own.</summary>
     private void OpenInTheBrowser(string address)
     {
@@ -3489,6 +3533,38 @@ public sealed partial class MainWindow : Window
             Classes = { AppStyles.Secondary },
         });
         column.Children.Add(Line("Copy that line into a bug report: it names the commit this build was made from."));
+        column.Children.Add(Row(Button("The project on GitHub", () => OpenInTheBrowser("https://github.com/oRAirwolf/grouplab"))));
+
+        // Entry 119 section 6.2: the train, how often to look, what happened last time, and what a check sends. Nothing here reaches the
+        // network by itself; Check now is the only button that would, and it says what it found in the line below it.
+        column.Children.Add(Ruled("Updates"));
+        column.Children.Add(Line(UpdateTrainHelp()));
+        var train = new ComboBox { ItemsSource = UpdateTrains.Choosable.Select(TrainLabel).ToList(), SelectedIndex = UpdateTrains.Choosable.ToList().IndexOf(updates.Train) };
+        train.SelectionChanged += (_, _) =>
+        {
+            var chosen = UpdateTrains.Choosable[Math.Max(0, train.SelectedIndex)];
+            if (!chosen.IsAvailable())
+            {
+                // Entry 119 section 4.5: the other trains are shown so a person knows they are coming, and cannot be chosen yet.
+                train.SelectedIndex = UpdateTrains.Choosable.ToList().IndexOf(updates.Train);
+                updateState.Text = chosen.Words() + ": " + UpdateTrains.NotAvailableYet + ". Nightly is the only train with builds on it.";
+                return;
+            }
+
+            updates = updates with { Train = chosen };
+            updateState.Text = "Following the " + chosen.Words().ToLowerInvariant() + " train.";
+        };
+        column.Children.Add(Row(FieldLabel("Train"), train));
+
+        var often = new ComboBox { ItemsSource = UpdateCheckIntervals.All.Select(i => i.Words()).ToList(), SelectedIndex = UpdateCheckIntervals.All.ToList().IndexOf(updates.Interval) };
+        often.SelectionChanged += (_, _) =>
+        {
+            updates = updates with { Interval = UpdateCheckIntervals.All[Math.Max(0, often.SelectedIndex)] };
+            updateState.Text = "GroupLab will look " + updates.Interval.Words().ToLowerInvariant() + ".";
+        };
+        column.Children.Add(Row(FieldLabel("Check"), often, Button("Check now", CheckForUpdates)));
+        column.Children.Add(updateState);
+        column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));

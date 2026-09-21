@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
@@ -76,7 +77,7 @@ public sealed partial class MainWindow
         librarySplit.ColumnDefinitions[2].MinWidth = 320;
 
         var listScroll = new ScrollViewer { Content = libraryList, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
-        var splitter = new GridSplitter { Width = Tokens.Space8, Background = Avalonia.Media.Brushes.Transparent, ResizeDirection = GridResizeDirection.Columns };
+        var splitter = new GridSplitter { Width = Tokens.Space8, ResizeDirection = GridResizeDirection.Columns, Cursor = new Cursor(StandardCursorType.SizeWestEast) };
         Grid.SetColumn(splitter, 1);
         splitter.DragCompleted += (_, _) => settingsStore.SaveColumnWidth("library", librarySplit.ColumnDefinitions[0].ActualWidth);
 
@@ -373,7 +374,7 @@ public sealed partial class MainWindow
         [.. libraryList.Children.Select(c => c switch
         {
             TextBlock heading => "# " + heading.Text,
-            Button row => ((DockPanel)row.Content!).Children.OfType<TextBlock>().Last().Text ?? "",
+            Button row => ((Panel)row.Content!).Children.OfType<TextBlock>().First().Text ?? "",
             _ => "",
         })];
 

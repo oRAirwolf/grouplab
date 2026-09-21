@@ -15,6 +15,273 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 121: v0.1.0 was published as a release, so nightly starts at 0.2.0
+
+**Status: actioned 2026-09-21**, sections 1, 2 and 3 done; **section 4 in part.**
+- **Section 2.1:** the version is 0.2.0, and `VersionTests` holds it above every non-pre-release tag in the repository so a nightly can never sort below something already published.
+- **Section 2.2:** `v0.1.0` is left alone, outside every train, with no manifest and nothing pointing at it.
+- **Section 2.3:** release and beta stay greyed out.
+- **Section 2.4:** the README links only to the rolling nightly release, and a test fails if `releases/latest` or `v0.1.0` appears.
+- **Section 2.5:** no `0.1.0-nightly.N` was ever published, because the nightly train has published nothing at all: the signing secret does not exist.
+- **Section 2.6:** the workflow built for entry 119's earlier draft was named "test build"; it is now `nightly.yml` and is the only one of its kind.
+- **Section 3:** the red run on `main` was mine, from the commit before it: a regex reading a workflow's name with `.` rather than `[^\r\n]` captured the carriage return of a CRLF checkout, so a test looked for a workflow named "build and test\r". Windows alone has CRLF in a checkout, which is why that platform alone failed. Fixed, with the reason in the comment.
+- **Section 4, in part:** no nightly exists to report a version for, and the updater cannot be shown refusing `v0.1.0` because nothing has been published for it to check against. `releases/latest` still returns `v0.1.0`, as Alan has not yet marked it a pre-release.
+- `docs/PHASE1-RESULTS.md` "Entry 121".
+
+Before entry 119 reached you, Alan had already followed my earlier advice and pushed the tag `v0.1.0`. `release.yml` ran on it and published a full release: the GitHub API shows release `v0.1.0`, not a draft, not a pre-release, six assets, published 2026-09-21T03:35:15Z, and it is what `releases/latest` returns. That advice was mine and it is now wrong for the plan in entry 119. This entry puts it right.
+
+## 1. The problem
+
+Under SemVer, `0.1.0-nightly.N` sorts **below** `0.1.0`. With `<Version>` still 0.1.0, every nightly would be older than the published release: a nightly user's updater would offer 0.1.0 as newer (entry 119 section 4.5 lets nightly users take a newer release), which is a downgrade to older code, and the nightly train would never look newer than anything already public.
+
+## 2. What to do
+
+1. Set `<Version>` in `Directory.Build.props` to `0.2.0`, so nightly builds are `0.2.0-nightly.N`, which sorts above `0.1.0`. Add a test that the version in `Directory.Build.props` is greater than every non-nightly `v*` tag in the repository, so this cannot happen again.
+2. Treat `v0.1.0` as history, outside every train. It has no update manifest, so the updater cannot see it; keep it that way. Never publish a manifest for it and never point a train at it. Do not delete the tag or the release; Alan will mark it as a pre-release himself on GitHub so that `releases/latest` stops pointing at it.
+3. The release and beta trains stay greyed out as entry 119 says. The existence of `v0.1.0` does not make the release train available.
+4. The README links only to the rolling `nightly` release (entry 119 section 7). Nothing in the repository links to `v0.1.0` or to `releases/latest`; extend `ReleaseAssetTests` to fail if either appears.
+5. If you already published any `0.1.0-nightly.N` builds, leave them; the next nightly will be `0.2.0-nightly.N` and sorts above them. Say in your report which versions exist.
+6. If the workflow you built for entry 119 is named anything other than `nightly` (the Actions list showed a workflow named "test build" at 04:46 UTC), rename it to `nightly` and make sure only one such workflow exists.
+
+## 3. CI on main
+
+The Actions list at about 04:50 UTC showed "build and test" on `main` completed with **failure** for the run created at 04:18:25 UTC, while the same commit's run on `phase-1` was still in progress. Find out why, fix it, and say what it was. A nightly must never be built from a commit whose CI failed.
+
+## 4. Prove it
+
+Report the version of the newest nightly, confirm with the API that `releases/latest` no longer returns `v0.1.0` after Alan changes it (or that it still does if he has not yet, and say so), and confirm the updater on a 0.2.0 nightly does not offer `v0.1.0`.
+
+---
+
+# 2026-09-21, entry 120: the second range day, run through GroupLab
+
+**Status: actioned 2026-09-21**, sections 1, 2, 3, 4, 6, 7, 9 and 10 done; **section 5 in part.**
+- **Not done, named plainly.** Section 5's per-photograph pairing tables, the agreement in inches against each scan, the 14:14 burst's angle-by-angle identification report, and what the blank-sheet path makes of the two frames with a tape measure in them. One frame from each of the six bursts was run and is reported.
+- **Section 1:** all six scans through the application by the ordinary Open path, scored against Alan's ground truth. Scan 3 is exact: 25 holes on 25 bulls. Scan 1 misses one, scan 4 misses four with five refusals named, scan 5 misses two, scan 6 misses the shot that landed at the sheet's edge. No handwriting, ink, dust or paper edge became a hole on any sheet.
+- **Section 2:** one-to-one matching puts scan 5's shots on the bulls they landed nearest rather than the ones aimed at, and the figures that follow carry no doubt. The sheet-wide offset is proposed, not built, and tested on paper against all three sheets: right for scan 5, wrong for scan 4 without the two windage groups, wrong for scan 6 where two loads have different points of impact.
+- **Section 3:** scan 3 has no holes outside the grid; the marks in the margin are the shots for bulls 11 and 16. A hole near no bull is kept, counted unassigned and raised in the review queue, never dropped.
+- **Section 4:** the blank sheet takes the by-name path and asks for a scale rather than taking one. It does not offer the scan's stated 600 dpi, although the file says so; proposed, not built. A defect was found and fixed: a sheet chosen by name that failed to register showed the pipeline's words rather than the advice written for that case.
+- **Section 6:** the six scans timed beside the earlier figures. Identification is 15 to 20 percent here against 55 to 60 in entry 115, because these codes read at full resolution first time; hole detection is half to three quarters of every one. The application is two to three times slower than the command line on the same scan.
+- **Section 7:** scan 6's primers compared with the loads set per bull: centres differ at p 0.001, dispersions do not at p 0.434, and the four-shot mean radius is withheld. The BR-4 shots are measured from the bulls they landed on, so the shift is real and understated. Scans 1 and 3 cannot be pooled as one load today; proposed.
+- **Section 9:** the installer status is corrected, and questions 28 and 29 are answered: a support placeholder that invents no address, and scan 3 published as the sample under its consent record.
+- **Section 10:** the library fills the window, with the list, the preview, the zoom buttons and the status line all put right, and renders at both sizes. Section 10.4's own measure cannot be met by a portrait page in a landscape window: question 32.
+- `docs/PHASE1-RESULTS.md` "Entry 120".
+
+Alan went back to the range on 2026-09-20 and shot five 5x5 load-block sheets (GL-CF25-LTR-D), one blank zero sheet, and one commercial target. The files are on his machine outside the repository:
+
+- `C:\Dev\grouplab-range-2026-09-20\scans\` : six 600 dpi scans, `1-600-dpi09202026.png` to `6-600-dpi09202026.png` (SHA-256 prefixes 44c377d5120a75bf, 859715cbb9f2def6, 93140a6a37777667, a2e04ebf34e857dc, dabd4bedafe41c7e, d1aff0b4d6b55f39).
+- `C:\Dev\grouplab-range-2026-09-20\photos\` : 59 phone photographs, `20260920_HHMMSS.jpg`, taken in six bursts (11:06, 14:14, 15:33, 16:14, 16:56, 18:59).
+
+These are real photographs from a phone. **Do not read, print or log any GPS or location metadata in them. Nothing from this folder is committed, with one exception: scan 3 becomes the published sample under section 9, after its consent record is in place.** Any figure or crop you commit must be re-encoded from pixels with no metadata, and only with Alan's say-so in a later command. The folder `C:\Dev\grouplab-range-2026-09-20\sheet1\` named in entry 114 never existed: the 9-shot sheet from the first visit is not in this set, and scan 1 is a different sheet (Alan confirmed).
+
+What I see in the scans, from reading them at reduced size. Treat it as a description to check, not as ground truth:
+
+| Scan | Sheet | Load block as written | What is on it |
+|---|---|---|---|
+| 1 | LTR-D | 9/20/26, 100 y, 6.5 Creed, 153.5 LRHT, 42.4 H4350, Alpha SRP brass, primer 7.5BR, 2.874, notes 28" Seekins | Shots on bulls 1 to 15 only, rows 4 and 5 unshot |
+| 2 | blank letter sheet | none | Hand-drawn circle and cross in blue, one tight group through it. Alan: zero group, 6.5 Creedmoor, 100 yards |
+| 3 | LTR-D | same load as scan 1 but primer written as GM205MAR, no notes. **The primer is written wrongly: Alan says it was 7.5BR, the same as scan 1** | Shots on all 25 bulls, plus a few holes in the left margin beside bulls 11 and 16 |
+| 4 | LTR-D | 100 y, 22LR, 40 gr SK, SK, Std+, 1.000, 20" CZ | Wide dispersion, many holes between bulls rather than on them |
+| 5 | LTR-D | 100 y, 6 ARC, 108 ELDM, 27 N140, Starline, GM205MAR, 2.250, 18" RTR | Wide dispersion, holes between bulls, one hole near the top left QR code |
+| 6 | LTR-D | 100 y, 6mm Creedmoor, 120 gr LRHT, 39.0 N550, Lapua SRP, GM205MAR-BR4, 2.810, AI AXSR (written lighter, in pencil or thin pen) | Shots on rows 1 to 3 |
+
+Scans 1 and 3 are therefore the same load, same rifle, same day: 40 shots. Scan 6 is the real primer comparison (section 7).
+
+### Ground truth from Alan
+
+This is what the shooter says happened. Score GroupLab against it, and keep it in the report beside every count GroupLab produces.
+
+| Scan | Shots | Aimed at | Notes |
+|---|---|---|---|
+| 1 | 15 | one shot at each of bulls 1 to 15 | |
+| 2 | zero group, 6.5 Creedmoor, 100 y | the drawn cross | shot count is GroupLab's to find; report it |
+| 3 | 25 | one shot at each of bulls 1 to 25 | primer 7.5BR, not the GM205MAR written on the sheet |
+| 4 | 23 | row 1: bulls 1 to 4; row 2: bulls 6 to 9; row 3: bulls 11 to 15; row 4: bulls 16 to 20; row 5: bulls 21 to 25 | 22LR at 100 y in a strong, variable crosswind. Windage was changed after row 2, so rows 1 and 2 share one point of impact and rows 3 to 5 another. Scatter is real, not a detection fault |
+| 5 | 20 | bulls 2, 3, 4 and 5 of every row | a load the rifle is not zeroed for, so every shot is high and left of its aim point; many holes will sit nearer another bull than the one aimed at |
+| 6 | 10 | bulls 1 to 5 with GM205MAR primers; bulls 6 to 10 with CCI BR-4 primers | the BR-4 shots impacted low, landing on row 3. Shot 6, aimed at bull 6, landed left of bull 21, much lower than the rest, cause unknown. It is a real shot, not a flyer to delete, and it belongs to bull 6 and the BR-4 load |
+
+Where a count below says "holes", it is GroupLab's reading; where it says "shots", it is this table.
+
+## 1. Every scan through the application as a user would
+
+Open each scan in the built application, by the ordinary Open path, and record for each: which definition was identified and how (codes, markers, or by name), the time from open to first result and to final result, holes found, holes assigned to each bull, holes left unassigned or flagged, whether the load block was offered for reading or entry, and every message shown. Save a render of each result under a scratch folder outside the repository and look at each one against the scan yourself, hole by hole. Report any hole you can see in the scan that GroupLab missed, and any detection that is not a hole (handwriting in the load block, the blue ink on scan 2, scanner dust, the paper edge). The handwriting on these sheets is thick marker and crosses the load block rules; nothing in it may become a hole.
+
+## 2. Holes between bulls
+
+Scans 4 and 5 are the case the matching has not met: shots that land between bulls, or nearer a neighbouring bull than the one aimed at. Show what GroupLab does with them today, and say whether nearest-bull assignment is producing groups that are wrong. Then propose, in the report and not yet in code, how GroupLab should handle a sheet where assignment is uncertain: at minimum it must say so on screen and let the shooter move a hole to another bull by hand, and it must never present a group statistic built on an assignment it is unsure of as if it were sure. If you think a sheet-wide assignment (one common point-of-impact offset for the whole sheet, with each bull taking its nearest shots after that offset is removed) is sound, describe it with its failure cases and what the shooter must tell GroupLab for it to work, such as shots per bull. Test any such idea on paper against the ground truth: scan 5 (one common offset, bulls 2 to 5 of each row), scan 4 (two offsets, rows 1 to 2 and rows 3 to 5, plus real wind scatter) and scan 6 (the BR-4 shots landing a whole row low, and shot 6 far from everything). Say plainly which of these a sheet-wide assignment would get right, which it would get wrong, and what the shooter would have to enter for it to work.
+
+## 3. The margin holes on scan 3 and the sighters
+
+Scan 3 has holes outside the bull grid, beside bulls 11 and 16. This sheet has no sighter bulls. Report how GroupLab treats a hole that is on the sheet but not near any bull, and make sure it is shown, counted as unassigned, and never silently dropped or pulled into a bull's group.
+
+## 4. The blank zero sheet
+
+Scan 2 is a blank letter sheet with a hand-drawn aiming mark. Run it through the blank-sheet path from entry 115. Note that the scanner crops to 8.26 x 10.76 in (4958 x 6458 at 600 dpi), so the paper edges may not all be in the image; say what scale GroupLab used (scan resolution or paper edges) and whether it asked. The group centre relative to the drawn cross is only as good as the drawing, and GroupLab must not claim otherwise.
+
+## 5. Photographs against scans
+
+I have looked at all 59 photographs. What each burst contains, with my pairing to the scans, which your compare-photos tool must confirm or contradict on its own evidence (report every disagreement with me):
+
+| Burst | Photos | What they show | Pairs with |
+|---|---|---|---|
+| 11:06 | 1 | An unshot sheet on a table, printed from inside GroupLab before the entry 114 fix: no codes, no markers | nothing (no scan) |
+| 14:14 to 14:15 | 17 | Four unshot LTR-D sheets on the backer board, before shooting, from many angles: square on, strongly oblique, close, wide, some cut off at the frame edge, the board's old holes all around them | nothing: no holes on the paper |
+| 15:33 | 10 | The same sheets after shooting, load blocks still blank. The 22LR sheet (153325, 153356) and the 6 ARC sheet (153340, 153344, 153347) square on; the 6.5 Creedmoor 25-shot sheet at the left of 153309 and 153336; 153318 the whole board | scans 4, 5 and 3 |
+| 16:14 to 16:15 | 9 | The blank zero sheet and the orange commercial target, both unshot. 161541 and 161547 show a tape measure held across the blank sheet, horizontally and vertically | nothing (unshot) |
+| 16:56 | 13 | The zero sheet after shooting (165611 to 165620, 165627); a 5x5 sheet with rows 1 to 3 shot, one hole per bull (165624, 165634, 165637); the orange target with a group in its centre (165641 to 165649) | scans 2 and 1 |
+| 18:59 to 19:00 | 9 | The orange target finished, whole and in close-ups of each corner diamond | nothing (no scan; private hard test) |
+
+The scan 6 sheet (6mm Creedmoor) was photographed on a second phone and came in through the upload page: submission `C:\Dev\grouplab-submissions\2026-09-21_86926341` (10 photographs, 6mm Creedmoor, 100 yards, corrugated plastic, staples; consent agreed, not excluded from the public dataset). Alan confirmed these are the scan 6 photographs. What they show:
+
+- 001 to 006 (14:13 to 14:14): a different board, several unshot GroupLab sheets, one of them stapled over another printed target so that target's grid and lines show around and behind it, and a sheet cut off at the frame edge in several.
+- 007 (14:35): the shot sheet, wide, with a tape measure held against it.
+- 008 (14:35): the shot sheet square on and close. Row 1 holes sit just below bulls 1 to 5; the BR-4 holes sit on row 3; row 2 is empty. This is the best photograph of the set.
+- 009 and 010: the same sheet, oblique.
+
+Pair 007 to 010 with scan 6 and score them against its ground truth in the table above. Read the photographs from the submission folder in place; do not copy, rename or alter anything in it, and do not run it through intake or publish anything from it in this entry.
+
+The load blocks were filled in after the range, so the photographs cannot be paired by what is written on them. Pair by hole pattern, and use the capture time only to order a burst, never as evidence of which sheet it is.
+
+For each pairing report: identified or not and how, holes found, agreement with the scan hole by hole in inches, and which photographs were refused and why. Then these cases specifically, reported and not worked around:
+
+1. `20260920_110616.jpg`, codes and markers missing, must take the by-name path and must not crash or guess.
+2. The 14:14 burst is the best material GroupLab has yet for identification under perspective: the same unshot sheets at many angles. Report, per photograph, whether each sheet in frame was identified, and where it fails (angle, distance, sheet cut off, several sheets in frame). The board's own holes around the sheets must never be counted as holes on a sheet.
+3. Several sheets in one frame (153309, 153318, 153336, much of the 14:14 burst): say whether GroupLab picks one sheet, asks which, or fails.
+4. The tape measure in 161541 and 161547 is a scale reference the shooter put in on purpose. Report what the blank-sheet path makes of those two photographs, and propose, without building it, whether a visible ruler or tape should be offered as a way to set scale on a blank sheet.
+5. The orange commercial target (16:15, 16:56 and 18:59 bursts) has no GroupLab definition. It is a private hard test only: GroupLab must say it does not recognise the sheet and offer the blank-sheet path, never match it to a GroupLab definition. Never commit it, its name, or any render of it.
+
+## 6. Timing
+
+Add these six scans to the timing measurement from entry 115 section 7 (open to first result, open to final result, identification share), on this machine, and put the figures beside the earlier ones in your report. Do not optimise anything in this entry; the performance phase is where that happens.
+
+## 7. Compare loads
+
+Two runs:
+
+1. Scan 6, bulls 1 to 5 (GM205MAR) against bulls 6 to 10 (CCI BR-4), with the load set per bull as entry 115 question 27 allows. The BR-4 holes sit on row 3, so first say whether GroupLab assigns them to bulls 6 to 10 or to row 3's bulls, and what the shooter must do to put them right. Then report what compare-loads shows, including the power statement: five shots against five, one of them far out, say plainly what the comparison can and cannot tell, and do not let the screen suggest a difference the numbers cannot support. The point-of-impact shift between the primers is visible to the eye and is a legitimate thing to report; a precision difference from five shots is not.
+2. Scans 1 and 3 as one load across two sheets (40 shots). Report whether GroupLab can pool two sheets of the same load today, and if not, note it as a proposal.
+
+The wrong primer written on scan 3 is a case to report too: say whether the shooter can correct a load block reading after the fact, and whether the correction is kept with the session.
+
+## 8. Report
+
+One report for this entry in your summary: a table per scan, the photograph pairing table, every missed or false hole with its location, the between-bull findings and your proposal from section 2, the timings, and a short list of what should change, each item marked as a defect or as a proposal. Fix outright only plain defects (a crash, a hole silently dropped, handwriting read as holes, a message that says nothing useful), each with a test built from generated material, never from these files. Anything that changes behaviour a shooter would notice waits for my answer.
+
+## 9. On the report from your last run
+
+You wrote that the Inno Setup installer has never been built. It has: Alan ran the release workflow by hand after your run, and the draft release "GroupLab 0.1.0, draft" from commit 5a4cd07 carries `grouplab-setup-win-x64.exe` and its versioned copy, identical by SHA-256. It was built on the GitHub Windows runner, where Inno Setup is installed. Alan is installing it now. Correct the status line and any document that says otherwise. Alan has answered questions 28 and 29:
+
+1. **Question 28, support link:** no address yet; he may register a domain later. Leave a clearly marked placeholder: one constant in one place, and the menu item says there is no support address yet rather than opening anything. Do not invent a domain. A test holds that no other support address appears anywhere in the repository.
+2. **Question 29, published sample:** use scan 3, `C:\Dev\grouplab-range-2026-09-20\scans\3-600-dpi09202026.png` (SHA-256 prefix 93140a6a37777667), as the sample. Alan wrote to me: "Use scan 3 as the sample scan. I dont care about my load data being shared." That sentence, the date 2026-09-21, the file name, its SHA-256 and the fact that it was given in the planning session go into a consent record in the repository, beside the existing sample records, before the file is committed. No consent record, no publication, as always. The PNG carries no metadata beyond its resolution (I checked: every text chunk is empty), but strip all ancillary chunks except the resolution anyway. You may recompress it losslessly to save space, provided the decoded pixels are identical to the original; record both file hashes and the pixel hash. It replaces the generated sample in the package and in the README where the generated one is described, and its ground truth (25 shots, one per bull, load as corrected above) becomes the expected result for the package's self-test in the `windows package` job. This consent covers scan 3 only; the other scans and every photograph stay private.
+
+## 10. The target library uses the whole window
+
+Alan's screenshot of the target library at 2000 by 1125 shows the page using about a third of the window, with the rest empty:
+
+1. The sheet list is a fixed narrow column, so names are cut off ("GroupLab 5x5 Load Development with Lo...", "GroupLab 5x5 Load Development, Let..."). Worse, on the first row the name runs into the size column: "100 m, A4A4 · 25 + 3". That overlap is a plain defect.
+2. The preview is a small fixed box (about 330 by 420) beside the list, with blank space to its right and below it.
+3. The status bar says "Drag to move the image. Zoom with the wheel or the buttons." There are no zoom buttons on the screen.
+
+Make the library fill the window:
+
+1. The list column is wide enough for the longest built-in sheet name and its paper-and-bulls column at the current font size, with no truncation at the minimum window size the application supports. The column is resizable with the same splitter behaviour as entry 105, and its width is remembered. If a name still cannot fit at the minimum window size, wrap it to a second line rather than cut it, and never let the name and the size column overlap.
+2. The detail area takes all the remaining width and height: title, description and buttons at the top, and the preview filling everything below, scaled to fit the page whole by default, keeping its aspect ratio, growing as the window grows.
+3. Either add the zoom buttons the status bar promises (zoom in, zoom out, fit) or change the status bar text to say what is actually there. Adding them is preferred, matching whatever the analysis screen already uses.
+4. Tests: a layout test that renders the library at 1280 by 720 and at 2560 by 1440 and asserts that no list item's text is truncated or overlapping, and that the preview's area is at least half the window's. Save renders at both sizes under `docs/figures/screens/current/` as entry 109 set out, and look at them yourself before reporting.
+
+---
+
+# 2026-09-21, entry 119: nightly builds that publish themselves, an updater with three trains, and one download link
+
+**Status: actioned 2026-09-21**, sections 1, 2, 3, 5, 7, 8 and 9 built; section 6 in part; **section 4's mechanism is not built and section 10 could not be run.**
+- **Not done, named plainly.** Section 4.4 and 4.6's mechanism: downloading in the background, running the installer silently, closing and reopening on the screen the person was on, and the test that an open session survives it. The rules around it are built and tested; nothing in the application installs anything today. Section 6.4's renders of the settings page. Section 9's save, close, install, reopen test, which would drive the mechanism that does not exist. Section 10, because the signing secret does not exist: `gh secret list` returns nothing, so nothing was published, which is what section 10.6 says to do.
+- **Section 1:** version, train and commit stamped in at build time; a development build says so and never offers to update itself. The ordering the entry gives is not SemVer's, which sorts beta below nightly as text; `UpdateOrder` ranks the trains and `SemanticVersion` stays strictly SemVer. Question 30.
+- **Section 2:** `nightly.yml`, following `build and test`, publishing only from a run that succeeded, building the commit that passed, two pre-releases per build, the newest thirty kept, and packaging shared with `release.yml` so they cannot drift.
+- **Section 3:** a signed `update-manifest.json` per build at one fixed address per train, and no key, no publishing, in three places. ECDSA P-256 rather than Ed25519, because .NET 10 has none and this machine has no NuGet source: question 31.
+- **Section 5:** notes written from the commits since the previous nightly by a rule in the script, checked against the repository's own rules before anything is published.
+- **Section 6:** the settings page names the build and offers the train, the interval, Check now and the privacy note. Release and Beta are shown and refused with "Not available yet".
+- **Section 7:** one download table, linking only to the rolling nightly release.
+- **Section 8:** nothing pushes a `v*` tag but the nightly workflow, for its own pre-releases.
+- **Section 9:** twelve rules tested without the network, each against a manifest the test signed with a key the test made.
+- `docs/PHASE1-RESULTS.md` "Entry 119".
+
+This entry replaces an earlier draft of entry 119 that was never sent. Alan asked two things. First, whether new versions reach the Releases page on their own. Today they do not: `release.yml` runs only on a pushed `v*` tag or a manual run (which makes a draft), so the README's download links stay on whatever was last tagged, and until the first tag exists they return 404. Second, he wants GroupLab to update itself. His requirements, in his words where it matters, are in section 4 and they are not to be traded away.
+
+Terms used throughout. A **train** is a stream of builds a user can follow: **release**, **beta**, **nightly**. For now only nightly exists. Release and beta are built into the updater and the settings page but shown greyed out, with the words "Not available yet", until Alan asks for the first beta or release.
+
+## 1. Versions
+
+1. Every build has a unique, ordered SemVer version. Nightly: `<Version>-nightly.<N>`, where `<Version>` is the value in `Directory.Build.props` (0.1.0 today) and `<N>` is a build number that only ever increases (the GitHub run number of the nightly workflow is acceptable; say what you used). Beta, later: `<Version>-beta.<N>`. Release, later: `<Version>`.
+2. The running application knows its full version, its train and its short commit, all stamped in at build time. A local developer build says so ("development build") and never offers to update itself.
+3. Ordering follows SemVer precedence, so `0.1.0-nightly.12 < 0.1.0-beta.1 < 0.1.0 < 0.2.0-nightly.1`. Write that ordering as tests.
+
+## 2. A nightly build after every green push
+
+Add a workflow, `nightly.yml`:
+
+1. Trigger it with `workflow_run` on the `ci` workflow, `types: [completed]`, limited to the branches `phase-1` and `main`, and run only when `github.event.workflow_run.conclusion == 'success'`. A push that fails CI on any of the three operating systems publishes nothing. Pull requests and other branches publish nothing. Add `concurrency: { group: nightly, cancel-in-progress: true }`.
+2. Check out and build exactly `github.event.workflow_run.head_sha`, never the branch head.
+3. Build the same packages `release.yml` builds, by the same steps. Move those steps into a reusable workflow (`workflow_call`) or composite action that both `release.yml` and `nightly.yml` call, so the two cannot drift.
+4. Publish a GitHub pre-release per build, tag `v<version>` (for example `v0.1.0-nightly.14`), `prerelease: true`, `make_latest: false`, carrying the versioned assets, the update manifest from section 3, and release notes from section 5 as its body. Keep the newest 30 nightly releases and delete older nightly releases together with their tags; never delete a beta or release, and never delete anything not created by this workflow.
+5. Also maintain one rolling pre-release with the fixed tag `nightly`, moved to the newest nightly commit each time, carrying the stable asset names (`grouplab-setup-win-x64.exe`, `grouplab-win-x64.zip`, `grouplab-linux-x64.tar.gz`) and the same notes. Its download addresses never change: `https://github.com/oRAirwolf/grouplab/releases/download/nightly/<stable name>`. This is what the README links to.
+6. Nothing new goes into the packages beyond what entry 120 section 9 allows (scan 3 as the sample, with its consent record). The friend's earlier scan never.
+
+## 3. The update manifest
+
+1. Each build publishes `update-manifest.json` as a release asset: version, train, commit, publish time, and for each platform the asset file name, its size and SHA-256, and the release notes as Markdown.
+2. The manifest is signed. Generate an Ed25519 key pair; the private key lives only as a GitHub Actions secret (tell Alan the exact secret name and the exact steps to create it, since you cannot set secrets yourself; the workflow must fail loudly, not publish unsigned, when the secret is missing). The public key is compiled into the application. The application refuses any manifest whose signature does not verify, and any download whose SHA-256 does not match the manifest, and says so in plain words. Write down in `docs/UPDATES.md` how the key is rotated.
+3. The application finds the newest build on each train through one fixed address per train that GitHub serves without the API (for nightly: the `nightly` rolling release's `update-manifest.json`), so a check costs one small HTTPS request and cannot run into the API's unauthenticated rate limit.
+4. An update check sends nothing about the user or their data. It is a plain GET with a User-Agent naming GroupLab and its version, nothing else. Say this in `docs/UPDATES.md` and in the settings page's help text.
+
+## 4. The updater in the application
+
+Alan's requirements:
+
+1. **Checks by default on every launch**, and notifies the user when a newer version exists on their train. The check runs in the background after the main window is up and never slows or blocks startup. Offline, or GitHub unreachable, means no message at all, only a line in the diagnostic log.
+2. **How often it checks is configurable**: On every launch (default), Once a day, Once a week, Never (manual only). Plus a "Check now" button that always works.
+3. **The notification** is a non-modal bar or toast in the main window, not a dialog, naming the new version and showing its release notes (collapsed to a few lines with "Show all"). Three choices: **Update now**, **Later**, **Skip this version**. "Later" asks again at the next check; "Skip" stays silent until a newer version than the skipped one appears.
+4. **If the user chooses to update, it happens silently in the background**: download, verify signature and hash, install with no installer windows or prompts. If installing requires GroupLab to close, GroupLab first saves everything it holds (the session store and any open work), tells the user in one line that it will close and reopen to finish updating, closes, lets the installer run silently, and reopens on the screen the user was on. Nothing the user entered is ever lost to an update; write a test that proves an open session survives it.
+5. **Trains**: a choice of Release, Beta, Nightly on the settings page. Release and Beta are greyed out with "Not available yet"; Nightly is selected and is the only choice for now. When the other trains exist, a user on a less stable train also receives newer builds from a more stable one (nightly users get a beta or release if it is newer), never the reverse. Moving to a more stable train never downgrades automatically; it waits for that train to pass the installed version, and says so.
+6. **Mechanism**: the installer is per user with no administrator rights (entry 116), so no elevation prompt may ever appear. Choose the mechanism and justify it in your report: either the Inno Setup installer run with its silent switches (`/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS` and a relaunch), or a maintained .NET update framework such as Velopack if it meets every requirement here, its licence is compatible with GPL-3.0, and it does not require administrator rights. Do not write your own installer. If you switch installers, the stable asset names and the README link must keep working.
+7. **The zip and the Linux tarball** cannot update themselves: they check and notify the same way, and "Update now" opens the download page for that train instead. Say so on the settings page for those builds.
+8. **No code signing certificate exists.** Windows SmartScreen may warn on a freshly downloaded installer. Do not try to work around SmartScreen; record the limitation in `docs/UPDATES.md` and in the testing guide, with what a tester will see.
+
+## 5. Release notes for every build, automatically
+
+1. The workflow writes the notes for each build from the commits since the previous build on the same train: the first line of each commit message, grouped under plain headings (new, fixed, changed, other) by a rule you state, skipping merge commits and commits that only fold planning notes. Attribution trailers and session links are removed.
+2. The notes go into the GitHub release body, into `update-manifest.json`, and are what the in-application notification shows.
+3. Before publishing, the workflow checks the notes against the same rules as the public repository: no em dash characters (replace with a comma or colon), nothing from the private range folder or any submission, no GPS coordinates, no server address. A failed check fails the build rather than publishing.
+
+## 6. The settings page
+
+1. **About**: the full version (for example `0.1.0-nightly.14`), the train, the short commit, and a link to `https://github.com/oRAirwolf/grouplab` that opens in the browser. The version text is selectable so a tester can copy it into a bug report.
+2. **Updates**: the train choice (section 4.5), how often to check (4.2), Check now, the time of the last check and its result, and the one-sentence privacy note (3.4).
+3. **Support**: the placeholder from entry 120 section 9.
+4. Render the settings page at 1280 by 720 and 2560 by 1440 into `docs/figures/screens/current/` and look at both yourself.
+
+## 7. The README: one download link
+
+Replace the Download section with a single table for the latest nightly build: the installer, the zip and the Linux tarball, all linking to `releases/download/nightly/<stable name>`, with one sentence saying it is rebuilt automatically after every change that passes the tests, may be broken, and updates itself (the installer build). No release table, no mention of `releases/latest`, until Alan asks for the first full release; at that point the README gets a Release table and a Latest build table, and not before. Update `ReleaseAssetTests` to hold exactly this, and keep the entry 118 contents list in step.
+
+## 8. Tagged releases stay deliberate
+
+Do not push a `v*` tag other than the nightly tags the workflow creates, ever. A beta or release happens only when Alan asks for one in a command, naming the version. The manual draft path from the Actions tab may stay for testing, but its drafts must never become the target of any README link. The draft "GroupLab 0.1.0, draft" made by hand on 2026-09-21 is superseded by the nightly train; leave it for Alan to delete.
+
+## 9. Tests without the network
+
+The updater's logic is tested without touching GitHub: version ordering, train rules (section 4.5), check-interval rules, skip and later, signature rejection, hash rejection, a truncated download, offline, a manifest from the wrong train, a development build never offering to update, and the save, close, install, reopen sequence driven by a fake installer. The real end-to-end check is section 10.
+
+## 10. Prove it
+
+1. After pushing, confirm with the GitHub API that CI passed on the commit, that `nightly.yml` followed and succeeded, and that both the per-build pre-release and the rolling `nightly` release exist, are pre-releases, point at that commit, carry every asset and a manifest whose signature verifies with the public key compiled into the application.
+2. Download `https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe` over HTTP (no browser), check its SHA-256 against the manifest and against the versioned copy.
+3. On this machine: install the previous nightly with the installer, run it, let it find the newer nightly, choose Update now, and confirm it updates silently, closes, reopens on the same screen, reports the new version on the settings page, and kept an open session intact. If only one nightly exists yet, push a second trivial commit to get two, and say so.
+4. Confirm the README has exactly one download table and every link in it resolves.
+5. Report the run URLs, versions, hashes and what you saw in step 3.
+6. If the Ed25519 secret is not yet set, stop after building the workflow and the application side, report the exact steps for Alan to create the secret, and leave publishing to the next run.
+
+---
+
 ## 2026-09-20, entry 118: a table of contents on the README, held to the headings by a test
 
 **Status: actioned 2026-09-20**, sections 1 to 3. Nothing was moved.

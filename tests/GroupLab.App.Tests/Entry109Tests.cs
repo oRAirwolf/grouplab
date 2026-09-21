@@ -115,7 +115,9 @@ public class Entry109Tests
         try
         {
             Assert.Equal(["Open image…", "Open marking…", "Export…", "Report a problem…"], window.MenuItems);
-            var words = window.GetLogicalDescendants().OfType<Button>().Select(b => b.Content as string).Where(c => c is not null).ToList();
+            // Only what is on this screen: the library has worded Zoom in, Zoom out and Fit buttons of its own (entry 120 section 10.3),
+            // and they are in the window's tree whichever screen is showing.
+            var words = window.GetLogicalDescendants().OfType<Button>().Where(Shown).Select(b => b.Content as string).Where(c => c is not null).ToList();
             foreach (string gone in new[] { "Open image", "Open marking", "Print a target", "Report a problem", "Zoom in", "Zoom out", "Fit", "Undo", "Redo" })
             {
                 Assert.DoesNotContain(gone, words);
@@ -163,7 +165,7 @@ public class Entry109Tests
             Dispatcher.UIThread.RunJobs();
             var settings = window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section) && Shown(t)).Select(t => t.Text).ToList();
             // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
-            Assert.Equal(["Units", "Theme", "This build", "Diagnostics", "Crash records"], settings);
+            Assert.Equal(["Units", "Theme", "This build", "Updates", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }

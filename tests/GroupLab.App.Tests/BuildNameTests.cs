@@ -5,6 +5,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App.Tests;
 
@@ -27,7 +28,10 @@ public class BuildNameTests
         var lines = window.GetLogicalDescendants().OfType<SelectableTextBlock>().Select(t => t.Text ?? "").ToList();
         string line = Assert.Single(lines, t => t.StartsWith("GroupLab ", StringComparison.Ordinal));
         Assert.Equal(MainWindow.BuildLine(), line);
-        Assert.Contains(AppInfo.Channel, line, StringComparison.Ordinal);
+
+        // Entry 119 section 1.2: the line names the train, because that is what a person on a nightly has to report. A build nobody
+        // published says so instead.
+        Assert.Contains(AppInfo.Build.IsDevelopment ? "development build" : AppInfo.Build.Train.Words().ToLowerInvariant() + " build", line, StringComparison.Ordinal);
 
         // The version on screen is the assembly's, without the commit the informational version carries after a plus sign, and the commit
         // is beside it in the short form a person can read back.
