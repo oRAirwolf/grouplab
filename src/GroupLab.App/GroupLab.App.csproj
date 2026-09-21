@@ -51,4 +51,19 @@
     <None Include="..\..\targets\frozen\**\*.gltd.json" Link="targets\frozen\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!--
+    NOTES-FROM-PLANNING.md entry 132 section 2 and entry 133: the published build carried 100.7 MB of debug symbols, and 100 MB of that was
+    two files, libSkiaSharp.pdb at 80.1 MB and libHarfBuzzSharp.pdb at 19.9 MB. Those are native symbols for Skia and HarfBuzz. Nothing at
+    runtime reads them, no crash report this project writes can use them, and no user of GroupLab will ever open them in a debugger.
+
+    They were a third of the installed size and a large part of the 97 MB download, for nothing at all. GroupLab's own symbols stay, because
+    a crash record naming a line in GroupLab is worth having and they cost a few hundred kilobytes between them.
+  -->
+  <Target Name="LeaveOutNativeDebugSymbols" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+                             Condition="'%(Extension)' == '.pdb' and !$([System.String]::Copy('%(Filename)').StartsWith('GroupLab'))" />
+    </ItemGroup>
+  </Target>
+
 </Project>
