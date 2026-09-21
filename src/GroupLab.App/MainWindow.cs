@@ -3417,6 +3417,9 @@ public sealed partial class MainWindow : Window
         else if (to == Destination.Library)
         {
             FillLibrary();
+
+            // Entry 120 section 10.3: the status line used to carry the marking screen's words about buttons this screen does not have.
+            status.Text = LibraryStatus;
         }
         else if (to == Destination.Ballistics)
         {

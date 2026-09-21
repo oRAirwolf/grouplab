@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
@@ -25,24 +26,154 @@ public sealed partial class MainWindow
 {
     private readonly StackPanel libraryList = new() { Spacing = 0 };
     private readonly StackPanel libraryDetail = new() { Spacing = Tokens.Space8 };
-    private readonly Image libraryPreview = new() { Stretch = Stretch.Uniform, MaxHeight = 540, HorizontalAlignment = HorizontalAlignment.Left };
+
+    // Entry 120 section 10.2: the preview fills everything under the detail, keeping its aspect, and grows with the window. Stretch rather
+    // than a fixed box, and no MaxHeight, because a fixed box left two thirds of the window empty.
+    private readonly Image libraryPreview = new()
+    {
+        Stretch = Stretch.Uniform,
+        StretchDirection = StretchDirection.Both,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Stretch,
+    };
+
+    private readonly ScrollViewer libraryPreviewHost = new()
+    {
+        HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+    };
+
+    private readonly Panel libraryPreviewFrame = new();
+    private readonly Grid libraryPreviewArea = new();
+    private readonly Grid librarySplit = new();
+    private double libraryZoom;
     private LibrarySheet? librarySelected;
     private IReadOnlyList<LibrarySheet>? builtInSheets;
 
+    /// <summary>
+    /// The narrowest the list column may be, entry 120 section 10.1: wide enough for the longest built-in name beside its paper and bulls at
+    /// the current font, so nothing is cut at the smallest window the application supports. A name longer than this wraps to a second line.
+    /// </summary>
+    internal const double LibraryListWidth = 520;
+
+    /// <summary>What the status line says on the library screen. It used to say the marking screen's words about zooming with buttons that were not there.</summary>
+    internal const string LibraryStatus = "The built-in sheets and your own. Choose one on the left to see it whole; the buttons under it zoom the preview.";
+
+    /// <summary>
+    /// The library screen, entry 120 section 10: it fills the window. A heading and one line at the top, then the list and the sheet side by
+    /// side, with a splitter between them whose width is remembered, and the preview taking everything left over.
+    /// </summary>
     private Control BuildLibrary()
     {
-        var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12 };
-        column.Children.Add(new TextBlock { Text = "Target library", Classes = { AppStyles.Title } });
-        column.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Print opens the print screen on the sheet chosen, where every sheet prints the same way."));
-        column.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true))));
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("340,*") };
-        libraryList.Margin = new Thickness(0, 0, Tokens.Space24, 0);
-        Grid.SetColumn(libraryDetail, 1);
-        grid.Children.Add(libraryList);
-        grid.Children.Add(libraryDetail);
-        column.Children.Add(grid);
-        return new ScrollViewer { Content = column, IsVisible = false };
+        var head = new StackPanel { Spacing = Tokens.Space12 };
+        head.Children.Add(new TextBlock { Text = "Target library", Classes = { AppStyles.Title } });
+        head.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Print opens the print screen on the sheet chosen, where every sheet prints the same way."));
+        head.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true))));
+
+        double width = Math.Max(LibraryListWidth, settingsStore.LoadColumnWidth("library") ?? LibraryListWidth);
+        librarySplit.ColumnDefinitions = new ColumnDefinitions(string.Create(CultureInfo.InvariantCulture, $"{width},Auto,*"));
+        librarySplit.ColumnDefinitions[0].MinWidth = LibraryListWidth;
+        librarySplit.ColumnDefinitions[2].MinWidth = 320;
+
+        var listScroll = new ScrollViewer { Content = libraryList, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
+        var splitter = new GridSplitter { Width = Tokens.Space8, Background = Avalonia.Media.Brushes.Transparent, ResizeDirection = GridResizeDirection.Columns };
+        Grid.SetColumn(splitter, 1);
+        splitter.DragCompleted += (_, _) => settingsStore.SaveColumnWidth("library", librarySplit.ColumnDefinitions[0].ActualWidth);
+
+        // The sheet: what it is and what can be done with it at the top, the preview filling everything below.
+        var detail = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
+        detail.Children.Add(libraryDetail);
+
+
+        var preview = libraryPreviewArea;
+        preview.RowDefinitions = new RowDefinitions("*,Auto");
+        preview.Children.Add(libraryPreview);
+        var zoom = Row(
+            Button("Zoom in", () => SetLibraryZoom(libraryZoom <= 0 ? 1.25 : libraryZoom * 1.25)),
+            Button("Zoom out", () => SetLibraryZoom(libraryZoom <= 0 ? 0.8 : libraryZoom * 0.8)),
+            Button("Fit", () => SetLibraryZoom(0)));
+        zoom.Margin = new Thickness(0, Tokens.Space8, 0, 0);
+        Grid.SetRow(zoom, 1);
+        preview.Children.Add(zoom);
+        Grid.SetRow(preview, 1);
+        detail.Children.Add(preview);
+
+        Grid.SetColumn(detail, 2);
+        librarySplit.Children.Add(listScroll);
+        librarySplit.Children.Add(splitter);
+        librarySplit.Children.Add(detail);
+
+        var whole = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Margin = new Thickness(Tokens.Space24, Tokens.Space20) };
+        whole.Children.Add(head);
+        Grid.SetRow(librarySplit, 1);
+        librarySplit.Margin = new Thickness(0, Tokens.Space12, 0, 0);
+        whole.Children.Add(librarySplit);
+        whole.IsVisible = false;
+        return whole;
     }
+
+    /// <summary>
+    /// Zooms the preview, entry 120 section 10.3, which is what the status line promises. Zero means fit the page whole, which is where it
+    /// starts and where Fit puts it back.
+    /// </summary>
+    private void SetLibraryZoom(double scale)
+    {
+        libraryZoom = scale <= 0 ? 0 : Math.Clamp(scale, 0.2, 8);
+        // Fitting: the image sits straight in the grid row, whose height and width come down the chain of stars from the window, so it
+        // fills whatever room there is. Inside a scroll viewer it measured its own natural size instead and left the window two thirds
+        // empty, which is what entry 120 section 10.2 is about.
+        if (libraryZoom <= 0)
+        {
+            Reparent(libraryPreview, libraryPreviewArea);
+            libraryPreviewHost.IsVisible = false;
+            libraryPreview.Width = double.NaN;
+            libraryPreview.Height = double.NaN;
+            libraryPreview.Stretch = Stretch.Uniform;
+            return;
+        }
+
+        // Zoomed: the image goes into the scroll viewer at its chosen size, so it can be panned as well as magnified.
+        if (libraryPreview.Source is { } source)
+        {
+            Reparent(libraryPreview, libraryPreviewFrame);
+            libraryPreviewHost.Content = libraryPreviewFrame;
+            libraryPreviewHost.IsVisible = true;
+            if (!libraryPreviewArea.Children.Contains(libraryPreviewHost))
+            {
+                libraryPreviewArea.Children.Add(libraryPreviewHost);
+            }
+
+            libraryPreview.Stretch = Stretch.Uniform;
+            libraryPreview.Width = source.Size.Width * libraryZoom;
+            libraryPreview.Height = source.Size.Height * libraryZoom;
+            libraryPreviewFrame.Width = libraryPreview.Width;
+            libraryPreviewFrame.Height = libraryPreview.Height;
+        }
+    }
+
+    /// <summary>Moves the preview between the grid row that fits it and the scroll viewer that pans it.</summary>
+    private static void Reparent(Control child, Panel into)
+    {
+        if (child.Parent == into)
+        {
+            return;
+        }
+
+        (child.Parent as Panel)?.Children.Remove(child);
+        into.Children.Add(child);
+    }
+
+    /// <summary>The list column's width, for the layout test.</summary>
+    internal double LibraryListActualWidth => librarySplit.ColumnDefinitions.Count > 0 ? librarySplit.ColumnDefinitions[0].ActualWidth : 0;
+
+    /// <summary>The preview as it is drawn, for the layout test.</summary>
+    internal Rect LibraryPreviewBounds => libraryPreview.Bounds;
+
+    /// <summary>The room the preview has, for the layout test.</summary>
+    internal Rect LibraryPreviewArea => libraryPreviewArea.Bounds;
+
+    /// <summary>The split between the list and the sheet, for the layout test.</summary>
+    internal Rect LibrarySplitBounds => librarySplit.Bounds;
 
     /// <summary>Every sheet the library lists: the built-in ones in the catalogue's order, then the person's own by name.</summary>
     private IReadOnlyList<LibrarySheet> LibrarySheets()
@@ -64,11 +195,21 @@ public sealed partial class MainWindow
             int index = 0;
             foreach (var sheet in family)
             {
-                var cells = new DockPanel();
-                var detail = new TextBlock { Text = ShortPaper(sheet), FontFamily = Mono, FontSize = Tokens.DetailSize, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Dim } };
-                DockPanel.SetDock(detail, Dock.Right);
+                // Entry 120 section 10.1: a grid rather than a dock, so the name has its own column and wraps inside it. A dock let the
+                // name's own width run under the paper and bulls, which read as "100 m, A4A4 . 25 + 3" on one row.
+                var cells = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+                var detail = new TextBlock
+                {
+                    Text = ShortPaper(sheet),
+                    FontFamily = Mono,
+                    FontSize = Tokens.DetailSize,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(Tokens.Space12, 0, 0, 0),
+                    Classes = { AppStyles.Dim },
+                };
+                Grid.SetColumn(detail, 1);
+                cells.Children.Add(new TextBlock { Text = sheet.Definition.Name, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center });
                 cells.Children.Add(detail);
-                cells.Children.Add(new TextBlock { Text = sheet.Definition.Name, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center });
                 var row = new Button
                 {
                     Content = cells,
@@ -151,7 +292,7 @@ public sealed partial class MainWindow
         }
 
         libraryPreview.Source = PrintWindow.Preview(sheet.Definition);
-        libraryDetail.Children.Add(libraryPreview);
+        SetLibraryZoom(libraryZoom);
     }
 
     /// <summary>The question before a delete, which says how many sessions used the sheet and that each keeps its own copy.</summary>

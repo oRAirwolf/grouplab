@@ -12,6 +12,66 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-21, question 32: a portrait page cannot fill half a landscape window, so the library's acceptance test measures something else
+
+**Status: open**
+
+### 1. What was asked for
+
+Entry 120 section 10.4: "a layout test that renders the library at 1280 by 720 and at 2560 by 1440 and asserts that no list item's text is truncated or overlapping, and that the preview's area is at least half the window's".
+
+### 2. Why the second half cannot be met
+
+The preview is a page, and a page is portrait: 8.5 by 11, an aspect of 0.77. A window is landscape: 1280 by 720 is 1.78. Fitted to the full height of a 1280 by 720 window the page is about 240 by 340 pixels at the scale the preview renders, which is 9 percent of the window's area, and no layout can do better without cutting the page off or stretching it out of shape. At 2560 by 1440 it is 22 percent. **The measure is unreachable at any window shape a person actually uses.**
+
+### 3. What is built and what is held instead
+
+The layout does what section 10.2 asks: the list column is wide enough for the longest name and its paper and bulls with nothing cut or overlapping, the sheet takes everything the list does not, and the preview fills that room to its full height and grows with the window. The test holds:
+
+- no name trimmed, wrapped rather than cut, and never drawn into the size column;
+- the size column inside the list column, which caught a second cut the first render had;
+- the preview at least 95 percent of the height it is given, so it is filling its room rather than sitting at its own size;
+- the sheet wider than the list at every size, and taking all the width left over.
+
+### 4. The question
+
+**Is that the right measure?** If half the window's area is wanted literally, the preview would have to be cropped to the window's aspect, or shown two pages side by side, or the sheet rotated; each is a different screen and none is obviously better.
+
+- **A.** Keep the measures above, which say "it fills the room it has" rather than "it is half the window".
+- **B.** Name a different number, such as the preview filling at least 90 percent of the height it is given, which is what A already holds.
+- **C.** Change the screen so a page can fill more of a landscape window.
+
+**I would keep A.**
+
+---
+
+## 2026-09-21, question 31: the update manifest is signed with ECDSA P-256, not the Ed25519 entry 119 asks for
+
+**Status: open**
+
+### 1. Why not Ed25519
+
+Entry 119 section 3.2 says "Generate an Ed25519 key pair". Two things stand in the way, and neither is a preference:
+
+- **.NET 10 has no Ed25519.** Its cryptography has ML-DSA and SLH-DSA, the post-quantum signatures, and ECDSA and RSA, and no Ed25519.
+- **No package can be added.** This machine has no NuGet source configured at all: `dotnet nuget list source` reports none, and a restore uses only what is already in the local cache. Adding BouncyCastle or NSec for Ed25519 fails at restore, here and on any machine set up the same way.
+
+### 2. What is built
+
+**ECDSA over P-256 with SHA-256**, which is in .NET on every platform GroupLab builds for, and which OpenSSL on the build runner can also produce. Everything else is as the entry describes: the private half lives only as the repository secret `GROUPLAB_UPDATE_SIGNING_KEY`, the public half is compiled into the application, the workflow fails loudly rather than publishing unsigned, and a build with no key installs nothing.
+
+**Every signed manifest names its algorithm**, and the application refuses one whose algorithm it does not know. So changing to Ed25519 later is a manifest older builds refuse by name rather than a silent substitution, which is the property that matters.
+
+### 3. The question
+
+- **A.** Keep ECDSA P-256, and say so in `docs/UPDATES.md`, which it does.
+- **B.** Use ML-DSA, which is also in the box and is post-quantum, at the cost of a much larger signature and a much less familiar algorithm.
+- **C.** Add a NuGet source to the build machine so a package can be restored, and use Ed25519 after all. That is a change to the machine rather than to the code, and it is Alan's to make.
+
+**I would keep A** until somebody has a reason to prefer another, since what protects a person here is that the key is secret and the algorithm is named, not which curve it is.
+
+---
+
 ## 2026-09-21, question 30: the ordering entry 119 asks for is not the SemVer ordering it cites
 
 **Status: open**
