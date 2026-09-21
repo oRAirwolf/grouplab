@@ -1,0 +1,119 @@
+# The packages themselves, in one place, NOTES-FROM-PLANNING.md entry 119 section 1 item 3: "do not copy the steps by hand into a second
+# file". Both release.yml and test-build.yml call this, so a numbered release and a rolling test build are built by the same steps from the
+# same script and cannot drift apart.
+#
+# It builds what a person downloads: the Windows installer, the Windows zip and the Linux tarball, each under two names, once carrying the
+# version and the commit so a bug report names a build, and once under a stable name so a fixed address keeps working.
+#
+# Nothing new goes into a package. Entry 116's rule stands: the samples are already-public images with a consent record, and the friend's
+# scan never.
+name: package
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'The commit to build. Never a branch name: a package must be the commit that passed.'
+        required: true
+        type: string
+      version:
+        description: 'The version to name the assets by. Empty takes the one in Directory.Build.props.'
+        required: false
+        default: ''
+        type: string
+    outputs:
+      version:
+        description: 'The version the assets are named by.'
+        value: ${{ jobs.windows.outputs.version }}
+      commit:
+        description: 'The short commit the assets are named by.'
+        value: ${{ jobs.windows.outputs.commit }}
+
+jobs:
+  windows:
+    name: windows package
+    runs-on: windows-latest
+    timeout-minutes: 60
+    outputs:
+      version: ${{ steps.name.outputs.version }}
+      commit: ${{ steps.name.outputs.commit }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version and the commit
+        id: name
+        shell: bash
+        run: |
+          version="${{ inputs.version }}"
+          if [ -z "$version" ]; then version=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2); fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      # The script checks the package carries its own runtime and the OpenCV native library by analysing its own generated sample with its
+      # own grouplab.exe, so a package that cannot analyse never reaches a download. -RequireInstaller fails the build rather than shipping
+      # one asset of the two, since Inno Setup is installed on this runner.
+      - name: Build the package
+        shell: pwsh
+        run: ./scripts/package-windows.ps1 -Version '${{ steps.name.outputs.version }}' -Commit '${{ steps.name.outputs.commit }}' -RequireInstaller
+
+      - name: Say what it is
+        shell: bash
+        run: |
+          {
+            echo "### windows package"
+            echo
+            for f in out/package/*.zip out/package/*.exe; do
+              [ -f "$f" ] && echo "- $(basename "$f"), $(du -h "$f" | cut -f1)"
+            done
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-package
+          path: |
+            out/package/*.zip
+            out/package/*.exe
+          retention-days: 30
+
+  linux:
+    name: linux tarball
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version and the commit
+        id: name
+        run: |
+          version="${{ inputs.version }}"
+          if [ -z "$version" ]; then version=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2); fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      # Built on Linux rather than cross-published, because the OpenCV native package is the build host's own (ci.yml's tarball job says why).
+      - name: Publish and pack
+        run: |
+          set -o pipefail
+          dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab
+          cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
+          mkdir -p out/package
+          tar -czf "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" -C publish grouplab
+          cp "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" out/package/grouplab-linux-x64.tar.gz
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: linux-package
+          path: out/package/*.tar.gz
+          retention-days: 30

@@ -114,7 +114,9 @@ jobs:
   # The application reads the system region on first run (InvariantGlobalization is false, see src/GroupLab.App/GroupLab.App.csproj), so the
   # machine that unpacks this needs ICU. Every desktop Ubuntu has it; a minimal container may not.
   # NOTES-FROM-PLANNING.md entry 116 section 1: the zip is what the automated checks produce, so it is built on every push and kept as an
-  # artifact for 30 days, beside the Linux tarball. The packaging script checks the package carries its own runtime and its OpenCV native
+  # artifact for 30 days, beside the Linux tarball. This job publishes nothing and exists to fail the build when packaging breaks, which is
+  # why it is here and not in package.yml: entry 119's test-build.yml runs after this workflow succeeds, so a packaging fault caught here is
+  # caught before anything reaches a download. The packaging script checks the package carries its own runtime and its OpenCV native
   # library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse fails the build rather than a person.
   windows-package:
     name: windows package

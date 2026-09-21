@@ -8,19 +8,30 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 
 ## Download
 
-**A test build, for Windows.** It is unsigned, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
+**Every build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
+
+**The test build.** Rebuilt automatically from the newest change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing. **This is the one to use for testing and for bug reports**, because it is the one the code says it is; it is also untested by hand and may be broken.
 
 | | |
 |---|---|
-| **[Installer](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs |
-| **[Zip](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe` |
-| **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day |
+| **[Installer](https://github.com/oRAirwolf/grouplab/releases/download/test-build/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs |
+| **[Zip](https://github.com/oRAirwolf/grouplab/releases/download/test-build/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe` |
+| **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/test-build/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day |
 
-**Those links always give the newest release.** [All releases](https://github.com/oRAirwolf/grouplab/releases) has the older ones, each naming its version and commit.
+**The latest release.** A numbered version somebody chose to release, which changes only when one is made.
+
+| | |
+|---|---|
+| **[Installer](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe` |
+| **[Zip](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-win-x64.zip)** | `grouplab-win-x64.zip` |
+| **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/latest/download/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz` |
+
+**Both sets of links keep working on their own.** [All releases](https://github.com/oRAirwolf/grouplab/releases) has every numbered version, each naming its version and commit, and the [test build](https://github.com/oRAirwolf/grouplab/releases/tag/test-build) says which commit it came from and what changed.
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - **It brings two sample sheets**, one with shots on it, so there is something to open in the first minute.
 - **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing anywhere.
+- **Which build you have:** the Settings screen names the version and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **macOS** is built and tested on every push, and nobody has ever run it, so it is not offered here.
 

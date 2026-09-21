@@ -3155,6 +3155,21 @@ public sealed partial class MainWindow : Window
 
     private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
+    /// <summary>
+    /// What this build is, in one line a tester can select and paste: the version, the commit it was made from, and the configuration.
+    /// NOTES-FROM-PLANNING.md entry 119 section 4. A build made outside a repository has no commit, and says so rather than inventing one.
+    /// </summary>
+    internal static string BuildLine() =>
+        "GroupLab " + Version() + ", " + (AppInfo.Commit is { } commit ? "commit " + commit : "no commit recorded") + ", " + AppInfo.Channel + " build";
+
+    /// <summary>The version without the commit that the informational version carries after a plus sign.</summary>
+    private static string Version()
+    {
+        string version = AppInfo.Version;
+        int plus = version.IndexOf('+', StringComparison.Ordinal);
+        return plus < 0 ? version : version[..plus];
+    }
+
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
     internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
 
@@ -3454,6 +3469,17 @@ public sealed partial class MainWindow : Window
                 SetTheme((ThemeChoice)themeChoice.SelectedIndex);
             }
         };
+
+        // Entry 119 section 4: the build says what it is, where a tester can read it and select it, so a report from a rolling test build
+        // names the exact commit rather than "the latest one". The same string is the first line of every log and of every crash record.
+        column.Children.Add(Ruled("This build"));
+        column.Children.Add(new SelectableTextBlock
+        {
+            Text = BuildLine(),
+            TextWrapping = TextWrapping.Wrap,
+            Classes = { AppStyles.Secondary },
+        });
+        column.Children.Add(Line("Copy that line into a bug report: it names the commit this build was made from."));
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));

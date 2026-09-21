@@ -1,0 +1,134 @@
+# A test build that publishes itself after every green push, NOTES-FROM-PLANNING.md entry 119 section 1. Alan asked whether new versions reach
+# the Releases page on their own; they did not, so until somebody tagged a version the README's download links returned 404, and after one they
+# pointed at whatever was last tagged. This publishes the newest tested build under one fixed tag, test-build, so a tester always has something
+# current to download and nobody has to remember to release it.
+#
+# It publishes only what passed. The trigger is the completion of "build and test", and the jobs run only when that run succeeded, so a commit
+# that fails on any of the three operating systems publishes nothing. It builds the workflow run's own head commit rather than the branch head,
+# so the thing published is the thing that was tested.
+#
+# It is a pre-release, so GitHub's releases/latest keeps pointing at the newest numbered version and the README's two download tables mean two
+# different things. The test build has a fixed address of its own that never changes:
+# https://github.com/oRAirwolf/grouplab/releases/download/test-build/<stable name>
+#
+# The packages are package.yml, which release.yml calls too, so the rolling build and a numbered release cannot drift apart.
+name: test build
+
+on:
+  workflow_run:
+    workflows: ["build and test"]
+    types: [completed]
+    branches: [phase-1, main]
+
+permissions:
+  contents: write
+
+# Two quick pushes must not interleave their uploads: the newest one wins and the older is cancelled where it has not finished.
+concurrency:
+  group: test-build
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: package
+    if: github.event.workflow_run.conclusion == 'success'
+    uses: ./.github/workflows/package.yml
+    with:
+      ref: ${{ github.event.workflow_run.head_sha }}
+
+  publish:
+    name: publish the test build
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # The whole history, so the body can say what has changed since the last test build.
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v6
+        with:
+          path: assets
+
+      - name: Gather the assets
+        run: |
+          mkdir -p release
+          find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          ls -la release
+          test "$(find release -type f | wc -l)" -eq 6
+
+      # What has changed since the last test build, read before the tag is moved, because moving it is what loses the answer.
+      - name: What has changed
+        id: changes
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          git fetch --quiet origin 'refs/tags/test-build:refs/tags/previous-test-build' 2>/dev/null || true
+          previous=$(git rev-parse -q --verify refs/tags/previous-test-build || true)
+          {
+            if [ -n "$previous" ] && [ "$previous" != "$SHA" ]; then
+              echo "**What has changed since the last test build**"
+              echo
+              git log --format='- %s' "$previous..$SHA" | head -40
+            else
+              echo "**The newest commits**"
+              echo
+              git log --format='- %s' -n 10 "$SHA"
+            fi
+          } > changes.md
+          cat changes.md
+
+      - name: Write the body
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          VERSION: ${{ needs.package.outputs.version }}
+          COMMIT: ${{ needs.package.outputs.commit }}
+        run: |
+          {
+            echo "The newest build that passed the tests, from commit \`$SHA\`, built $(date -u '+%Y-%m-%d %H:%M UTC')."
+            echo
+            echo "**Windows:** \`grouplab-setup-win-x64.exe\` to install, or \`grouplab-win-x64.zip\` to unzip and run. Windows will say"
+            echo "\"Windows protected your PC\", because the build is not signed: click More info, then Run anyway."
+            echo
+            echo "**Linux:** \`grouplab-linux-x64.tar.gz\`, self-contained."
+            echo
+            cat changes.md
+            echo
+            echo "**This build is untested by hand and may be broken.** It is published automatically after every change that passes the"
+            echo "automated tests, which is not the same as somebody having used it. For a version somebody chose to release, see the"
+            echo "[newest release](https://github.com/oRAirwolf/grouplab/releases/latest)."
+          } > body.md
+          cat body.md
+
+      # The tag moves to the tested commit and the old assets go with the old release, so the fixed address never serves a stale file.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          VERSION: ${{ needs.package.outputs.version }}
+          COMMIT: ${{ needs.package.outputs.commit }}
+        run: |
+          gh release delete test-build --yes --cleanup-tag || true
+          gh release create test-build \
+            --title "GroupLab test build $VERSION-$COMMIT" \
+            --notes-file body.md \
+            --prerelease \
+            --target "$SHA" \
+            release/*
+
+      - name: Say what it is
+        env:
+          VERSION: ${{ needs.package.outputs.version }}
+          COMMIT: ${{ needs.package.outputs.commit }}
+        run: |
+          {
+            echo "### test build $VERSION-$COMMIT"
+            echo
+            echo "https://github.com/oRAirwolf/grouplab/releases/tag/test-build"
+            echo
+            for f in release/*; do
+              echo "- $(basename "$f"), $(du -h "$f" | cut -f1)"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

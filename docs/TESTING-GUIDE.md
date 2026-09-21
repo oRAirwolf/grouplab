@@ -8,7 +8,7 @@ This page is for somebody who has never seen it. It is an unfinished test build,
 
 ## Getting it
 
-1. Download the **installer** or the **zip** from the [newest release](https://github.com/oRAirwolf/grouplab/releases/latest).
+1. Download the **installer** or the **zip** from the [test build](https://github.com/oRAirwolf/grouplab/releases/tag/test-build). That build is rebuilt automatically from the newest change that passes the tests, so it is the one to test and the one to name in a bug report. The [newest numbered release](https://github.com/oRAirwolf/grouplab/releases/latest) is beside it, and changes only when somebody makes one.
 2. Windows will say **"Windows protected your PC"**. Click **More info**, then **Run anyway**. GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
 3. Your antivirus may quarantine it, for the same reason. If it does, the file it took is `GroupLab.App.exe`.
 4. The installer puts GroupLab in the Start menu and in Add or remove programs. The zip needs no installing: unzip it and run `GroupLab.App.exe`.
@@ -56,6 +56,6 @@ The repository's README is the authority on what works; this is the short versio
 
 ## Telling somebody when it is wrong
 
-The gear at the bottom left opens the settings, and **Report a problem** there writes a report package: a zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them. Send it with a line about what you were doing.
+The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** there writes a report package: a zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them. Send it with a line about what you were doing.
 
 GroupLab keeps everything in `%APPDATA%\GroupLab`: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you want the data gone.

@@ -162,7 +162,8 @@ public class Entry109Tests
             window.ShowSettings();
             Dispatcher.UIThread.RunJobs();
             var settings = window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section) && Shown(t)).Select(t => t.Text).ToList();
-            Assert.Equal(["Units", "Theme", "Diagnostics", "Crash records"], settings);
+            // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
+            Assert.Equal(["Units", "Theme", "This build", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }
