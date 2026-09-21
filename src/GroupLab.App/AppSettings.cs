@@ -200,6 +200,23 @@ public sealed class AppSettingsStore(string path)
     }
 
     /// <summary>
+    /// What the last update check found, entry 119 section 6.2, in the words the settings page showed at the time. It sits beside the time
+    /// of that check in <see cref="LoadUpdatePreferences"/>, so the page can say what happened last time on a fresh launch rather than
+    /// holding an empty line open until somebody presses Check now.
+    /// </summary>
+    public string? LoadLastUpdateResult() => Read(file => (string?)(file["updates"]?["lastResult"]));
+
+    public bool SaveLastUpdateResult(string? said) => Save(file =>
+    {
+        if (file["updates"] is not JsonObject updates)
+        {
+            file["updates"] = updates = new JsonObject();
+        }
+
+        updates["lastResult"] = said;
+    });
+
+    /// <summary>
     /// What one version leaves for the next across an update, entry 123 sections 2.3 and 2.4: the version it was, and the screen the person
     /// was on. The new version says one line about it, goes back to that screen, and clears it, so it is said once and never again.
     /// </summary>

@@ -345,6 +345,11 @@ public sealed partial class MainWindow : Window
     internal MainWindow(AppSettingsStore settings)
     {
         settingsStore = settings;
+
+        // Before anything is built. The settings page reads these to fill the train and the interval and to say what the last check found,
+        // and entry 125 section 3 found it showing the defaults and an empty line because they were loaded after it was built. This is the
+        // same shape of fault as entry 125 section 1: a thing read before the thing it depends on was ready.
+        updates = settings.LoadUpdatePreferences(OwnTrain);
         units = settings.LoadUnits();
         moreFiguresPanel.Content = moreFigures;
         moreFiguresPanel.IsExpanded = settings.LoadMoreFigures();
@@ -703,7 +708,6 @@ public sealed partial class MainWindow : Window
 
         // Entry 123 section 2.4: if the last thing this machine did was update, the new version says so, once, and goes back to the screen
         // the person was on. It is read and cleared here, before anything can look for another update.
-        updates = settingsStore.LoadUpdatePreferences(OwnTrain);
         SayIfUpdated();
 
         // Entry 119 sections 4.1 and 4.2: it looks as often as the person asked, on every launch unless they said otherwise, and a check
@@ -1371,17 +1375,23 @@ public sealed partial class MainWindow : Window
             button.IsChecked = t == tool;
         }
 
-        status.Text = tool switch
-        {
-            MarkingTool.Pan => "Drag to move the image. Zoom with the wheel or the buttons.",
-            MarkingTool.Length => "Tap two points a known distance apart. The line is drawn as you make it; drag either end onto its mark, then enter the distance. The ends stay draggable afterwards.",
-            MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. Drag any corner onto its mark. This removes perspective.",
-            MarkingTool.Aim => "Tap the point of aim.",
-            MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull.",
-            MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it. Drag an end of the scale to adjust it.",
-            _ => status.Text,
-        };
+        status.Text = ToolStatus(tool);
     }
+
+    /// <summary>
+    /// What the marking screen says with a tool in hand. It is the marking screen's whole status line, which is why leaving that screen and
+    /// coming back can put it straight back rather than leaving another screen's words behind (entry 125 section 2).
+    /// </summary>
+    private string ToolStatus(MarkingTool tool) => tool switch
+    {
+        MarkingTool.Pan => "Drag to move the image. Zoom with the wheel or the buttons.",
+        MarkingTool.Length => "Tap two points a known distance apart. The line is drawn as you make it; drag either end onto its mark, then enter the distance. The ends stay draggable afterwards.",
+        MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. Drag any corner onto its mark. This removes perspective.",
+        MarkingTool.Aim => "Tap the point of aim.",
+        MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull.",
+        MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it. Drag an end of the scale to adjust it.",
+        _ => status.Text ?? "",
+    };
 
     /// <summary>
     /// Asks for the size of a reference length. The ends are read from the canvas when the length is used, not when it was tapped, so
@@ -3172,16 +3182,16 @@ public sealed partial class MainWindow : Window
     private static TextBlock Heading(string text) => new() { Text = text, Margin = new Thickness(0, Tokens.Space8, 0, 0), Classes = { AppStyles.Section } };
 
     /// <summary>What a person follows and how often, entry 119 sections 4.2 and 4.5. Kept in memory until the settings file carries it.</summary>
-    private UpdatePreferences updates = UpdatePreferences.Default(AppInfo.Build.Train == UpdateTrain.Development ? UpdateTrain.Nightly : AppInfo.Build.Train);
+    private UpdatePreferences updates = UpdatePreferences.Default(ThisBuild.Train == UpdateTrain.Development ? UpdateTrain.Nightly : ThisBuild.Train);
 
     /// <summary>The train a build with no train of its own follows: nightly, which is the only one with builds on it.</summary>
-    private static UpdateTrain OwnTrain => AppInfo.Build.Train == UpdateTrain.Development ? UpdateTrain.Nightly : AppInfo.Build.Train;
+    private static UpdateTrain OwnTrain => ThisBuild.Train == UpdateTrain.Development ? UpdateTrain.Nightly : ThisBuild.Train;
 
     private readonly TextBlock updateState = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>The one line above the train choice, which says what this build is on and what the other trains are.</summary>
     private static string UpdateTrainHelp() =>
-        AppInfo.Build.IsDevelopment
+        ThisBuild.IsDevelopment
             ? "This is a development build, so it does not update itself. A build from the nightly train does."
             : "Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken.";
 
@@ -3189,6 +3199,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>What the settings page is showing about updates, for the headless tests.</summary>
     internal string UpdateStateText => updateState.Text ?? "";
+
+    /// <summary>Whether the line about the last check is showing at all, for the headless tests (entry 125 section 3).</summary>
+    internal bool ShowingUpdateState => updateState.IsVisible;
 
     /// <summary>What a person has chosen about updates, for the headless tests.</summary>
     internal UpdatePreferences UpdatePreferencesNow => updates;
@@ -3215,7 +3228,7 @@ public sealed partial class MainWindow : Window
     /// What this build is, in one line a tester can select and paste: the version, the commit it was made from, and the configuration.
     /// NOTES-FROM-PLANNING.md entry 119 section 4. A build made outside a repository has no commit, and says so rather than inventing one.
     /// </summary>
-    internal static string BuildLine() => AppInfo.Build.Line;
+    internal static string BuildLine() => ThisBuild.Line;
 
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
     internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
@@ -3458,9 +3471,6 @@ public sealed partial class MainWindow : Window
         else if (to == Destination.Library)
         {
             FillLibrary();
-
-            // Entry 120 section 10.3: the status line used to carry the marking screen's words about buttons this screen does not have.
-            status.Text = LibraryStatus;
         }
         else if (to == Destination.Ballistics)
         {
@@ -3471,8 +3481,35 @@ public sealed partial class MainWindow : Window
             FillCompare();
         }
 
+        // Entry 125 section 2: every screen says its own words. The settings page was showing "Drag to move the image", which belongs to the
+        // marking screen and names a tool this screen does not have. Entry 120 section 10.3 fixed this for the library alone; a screen added
+        // later would have inherited the same fault, so it is now done for all of them in the one place a screen is arrived at.
+        status.Text = StatusFor(to);
         Refresh();
     }
+
+    /// <summary>
+    /// What the status line says on each screen. The marking screen is the exception and says nothing here, because its line belongs to the
+    /// tool in hand and <see cref="SetTool"/> has already set it.
+    /// </summary>
+    internal string StatusFor(Destination to) => to switch
+    {
+        Destination.Library => LibraryStatus,
+        Destination.Sessions => "Every analysis you have accepted, newest first. Open one to see it again, or compare two of them.",
+        Destination.Ballistics => "Work out a trajectory from a load and a zero. Nothing here changes a marking or an analysis.",
+        Destination.Compare => "Two sessions side by side, with the difference between them and what it is worth saying about.",
+        Destination.Settings => "Units, theme, updates and the log. Every choice here is remembered.",
+
+        // The marking screen's line belongs to the tool in hand, so coming back to it says what that tool says, not what the screen being
+        // left said. A test goes to the settings page and back and holds this.
+        _ => ToolStatus(canvas.Tool),
+    };
+
+    /// <summary>Which screen is showing, for the headless tests.</summary>
+    internal Destination Where => destination;
+
+    /// <summary>Goes to a screen, for the headless tests, by the same path the rail uses.</summary>
+    internal void GoTo(Destination to) => Go(to);
 
     /// <summary>Whether the Session records screen is showing, for the headless tests.</summary>
     internal bool ShowingSessions => destination == Destination.Sessions;
@@ -3544,22 +3581,43 @@ public sealed partial class MainWindow : Window
             {
                 // Entry 119 section 4.5: the other trains are shown so a person knows they are coming, and cannot be chosen yet.
                 train.SelectedIndex = UpdateTrains.Choosable.ToList().IndexOf(updates.Train);
-                updateState.Text = chosen.Words() + ": " + UpdateTrains.NotAvailableYet + ". Nightly is the only train with builds on it.";
+                Says(chosen.Words() + ": " + UpdateTrains.NotAvailableYet + ". Nightly is the only train with builds on it.");
                 return;
             }
 
             updates = updates with { Train = chosen };
-            updateState.Text = "Following the " + chosen.Words().ToLowerInvariant() + " train.";
+            settingsStore.SaveUpdatePreferences(updates);
+            Says("Following the " + chosen.Words().ToLowerInvariant() + " train.");
         };
-        column.Children.Add(Row(FieldLabel("Train"), train));
 
         var often = new ComboBox { ItemsSource = UpdateCheckIntervals.All.Select(i => i.Words()).ToList(), SelectedIndex = UpdateCheckIntervals.All.ToList().IndexOf(updates.Interval) };
         often.SelectionChanged += (_, _) =>
         {
             updates = updates with { Interval = UpdateCheckIntervals.All[Math.Max(0, often.SelectedIndex)] };
-            updateState.Text = "GroupLab will look " + updates.Interval.Words().ToLowerInvariant() + ".";
+            settingsStore.SaveUpdatePreferences(updates);
+            Says("GroupLab will look " + updates.Interval.Words().ToLowerInvariant() + ".");
         };
-        column.Children.Add(Row(FieldLabel("Check"), often, Button("Check now", CheckForUpdates)));
+
+        // Entry 125 section 3: laid out the way the Units rows above are, in a grid with the label centred against its control. As two
+        // wrapping rows the labels sat above the middle of the boxes beside them, which is what Alan's screenshot shows.
+        var updateGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("160,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto"), RowSpacing = Tokens.Space8 };
+        foreach (var (name, control, line) in new (string Name, Control Control, int Line)[] { ("Train", train, 0), ("Check", Row(often, Button("Check now", CheckForUpdates)), 1) })
+        {
+            var label = FieldLabel(name);
+            label.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetRow(label, line);
+            Grid.SetRow(control, line);
+            Grid.SetColumn(control, 1);
+            updateGrid.Children.Add(label);
+            updateGrid.Children.Add(control);
+        }
+
+        column.Children.Add(updateGrid);
+
+        // Entry 119 section 6.2 and entry 125 section 3: what happened last time. It was an empty line holding a gap open, because nothing
+        // ever put anything in it until a check ran. It now starts with the last check this installation made, and is hidden when there is
+        // nothing to say, so the gap goes rather than sitting there meaning nothing.
+        Says(LastCheckLine());
         column.Children.Add(updateState);
         column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
 

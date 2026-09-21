@@ -67,6 +67,17 @@ jobs:
         shell: pwsh
         run: ./scripts/package-windows.ps1 -Version '${{ steps.name.outputs.version }}' -Commit '${{ steps.name.outputs.commit }}' -Train '${{ inputs.train }}' -RequireInstaller
 
+
+      # NOTES-FROM-PLANNING.md entry 125 section 1: v0.2.0-nightly.12 was published with its train missing, so it called itself a development
+      # build and would never have updated itself. The cause is fixed, but this is where the claim can be checked against the thing actually
+      # being shipped. It reads the metadata out of the file rather than running it, so it works for any platform on any runner.
+      - name: The build must be stamped for the train it was packaged for
+        if: inputs.train != ''
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet run --project src/GroupLab.Cli -- build-stamp "out/package/grouplab/GroupLab.App.dll" --expect "${{ inputs.train }}"
+
       - name: Say what it is
         shell: bash
         run: |
@@ -117,6 +128,17 @@ jobs:
           mkdir -p out/package
           tar -czf "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" -C publish grouplab
           cp "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" out/package/grouplab-linux-x64.tar.gz
+
+
+      # NOTES-FROM-PLANNING.md entry 125 section 1: v0.2.0-nightly.12 was published with its train missing, so it called itself a development
+      # build and would never have updated itself. The cause is fixed, but this is where the claim can be checked against the thing actually
+      # being shipped. It reads the metadata out of the file rather than running it, so it works for any platform on any runner.
+      - name: The build must be stamped for the train it was packaged for
+        if: inputs.train != ''
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet run --project src/GroupLab.Cli -- build-stamp "publish/grouplab/GroupLab.App.dll" --expect "${{ inputs.train }}"
 
       - uses: actions/upload-artifact@v6
         with:

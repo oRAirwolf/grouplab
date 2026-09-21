@@ -86,28 +86,28 @@ public partial class MainWindow
 
         if (ThisBuild.IsDevelopment)
         {
-            updateState.Text = "This is a development build, so there is nothing to update it to.";
+            Found("This is a development build, so there is nothing to update it to.");
             return;
         }
 
         if (TrustedKey.Length == 0)
         {
-            updateState.Text = UpdateSignature.Refusal.NoKey.Words();
+            Found(UpdateSignature.Refusal.NoKey.Words());
             DiagnosticLog.Info("update.check", ("result", "no key"));
             return;
         }
 
-        updateState.Text = "Looking for a newer build…";
+        Says("Looking for a newer build…");
         DiagnosticLog.Info("update.check", ("train", updates.Train.Words()));
 
         // Somebody who pressed Check now is told it is happening. A check on launch stays silent, because a bar that appears to say it is
         // looking, and then that it found nothing, is two interruptions for no news.
-        Show(new UpdateState(UpdateStage.Checking, updateState.Text), byHand);
+        Show(new UpdateState(UpdateStage.Checking, UpdateStateText), byHand);
 
         var run = new UpdateRun(TheOutsideWorld.Current, ThisBuild, UpdateFolder);
         var (state, decision) = await run.CheckAsync(updates, TrustedKey, token).ConfigureAwait(true);
         updateRun = state.Stage == UpdateStage.Offered ? run : null;
-        updateState.Text = state.Says;
+        Found(state.Says);
         DiagnosticLog.Info("update.check", ("result", state.Stage.ToString()), ("refusal", decision?.Refusal.ToString() ?? "none"));
 
         // Entry 119 section 4.1: a check that finds nothing is silent unless a person asked for it.
@@ -162,7 +162,7 @@ public partial class MainWindow
         }
 
         updateBar.IsVisible = visible && state.Says.Length > 0;
-        updateState.Text = state.Says;
+        Says(state.Says);
     }
 
     private static Button Primary(string label, Action action)
@@ -289,6 +289,39 @@ public partial class MainWindow
         updateButtons.Children.Clear();
         updateButtons.Children.Add(Button("What changed", () => OpenInTheBrowser("https://github.com/oRAirwolf/grouplab/releases/tag/v" + ThisBuild.Version.Number)));
         updateButtons.Children.Add(Button("Hide", () => updateBar.IsVisible = false));
+    }
+
+    /// <summary>
+    /// What the settings page says about the last check, entry 119 section 6.2: when it happened and what it found, in the words it used at
+    /// the time. Empty before a check has ever run, and the line hides itself rather than holding a gap open.
+    /// </summary>
+    internal string LastCheckLine()
+    {
+        if (updates.LastCheckUtc is not { } when)
+        {
+            return "";
+        }
+
+        string said = settingsStore.LoadLastUpdateResult() ?? "";
+        string at = when.ToLocalTime().ToString("d MMMM yyyy 'at' HH:mm", CultureInfo.InvariantCulture);
+        return said.Length > 0 ? $"Checked {at}: {said}" : $"Checked {at}.";
+    }
+
+    /// <summary>Says what a check found, now and on the next launch.</summary>
+    private void Found(string said)
+    {
+        Says(said);
+        settingsStore.SaveLastUpdateResult(said);
+    }
+
+    /// <summary>
+    /// Puts one line on the settings page, and hides the line when there is nothing to say. Entry 125 section 3: this was an empty text block
+    /// holding a gap open between the Check row and the privacy note, on a page where every other gap means something.
+    /// </summary>
+    private void Says(string said)
+    {
+        updateState.Text = said;
+        updateState.IsVisible = !string.IsNullOrWhiteSpace(said);
     }
 
     /// <summary>The line the new version says about itself, kept here so a test reads the same words the window shows.</summary>

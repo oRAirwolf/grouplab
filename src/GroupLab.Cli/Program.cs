@@ -65,6 +65,8 @@ return args switch
     ["update-manifest", .. var rest] => GroupLab.Cli.UpdateVerbs.Manifest(rest, Console.Out, Console.Error),
     ["update-check", var manifest] => GroupLab.Cli.UpdateVerbs.Check(manifest, null, Console.Out, Console.Error),
     ["update-check", var manifest, var publicKey] => GroupLab.Cli.UpdateVerbs.Check(manifest, publicKey, Console.Out, Console.Error),
+    ["build-stamp", var assembly] => GroupLab.Cli.BuildStampVerb.Run(assembly, null, Console.Out, Console.Error),
+    ["build-stamp", var assembly, "--expect", var train] => GroupLab.Cli.BuildStampVerb.Run(assembly, train, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
@@ -523,6 +525,7 @@ static int Usage()
         grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json>
                                  [--asset <platform> <kind> <file> <url>]...
         grouplab update-check <manifest.json> [<public key>]
+        grouplab build-stamp <assembly.dll> [--expect <train>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]

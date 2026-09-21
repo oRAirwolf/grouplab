@@ -5991,6 +5991,108 @@ The last one is entry 123 section 2.6's sequence end to end: it drives the windo
 
 The window gained two seams for this, `MainWindow.ThisBuild` and `MainWindow.TrustedKey`, because a working copy is a development build that trusts Alan's key and so would refuse every manifest a test could sign. Nothing in the application writes to them.
 
+## Entry 124. Two questions closed, and a stale download link found while closing one
+
+### 1. Question 33, rollback: A now, B on a named trigger, C never
+
+Entry 124 section 2 took the recommendation. `docs/UPDATES.md` now carries the trigger under "When this changes": the previous install is kept beside the new one, with a "Roll back to <version>" shortcut, at the first of the beta train opening or Alan saying a second person is testing. Proving the new build starts before the old one is removed is recorded as not to be built.
+
+The "If a new build will not start" paragraph is now also in `docs/TESTING-GUIDE.md`, under a new "It keeps itself up to date" section, because that is where a tester looks rather than in a document about how updating works.
+
+**Found while writing it:** the testing guide's download step still sent people to `https://github.com/oRAirwolf/grouplab/releases/tag/test-build`. That tag was replaced by the nightly train in entry 119 and does not exist, so the guide's first instruction led to a 404. It now points at the nightly release and says that every nightly also keeps a `v<version>` release of its own, so a build named in a report still exists later.
+
+### 2. Question 32, the library preview: the figure was real, and so was the test
+
+Entry 124 section 3 offered two possibilities: either the preview really renders at 240 by 340 and the 95 percent test should be failing, or the figure is a slip in the question's text. **It is neither.** Measured by `LibraryLayoutTests`, which prints these on every run:
+
+| | 1280 by 720 | 2560 by 1440 |
+|---|---|---|
+| preview drawn | 242 by 342 | 750 by 1062 |
+| room it was given | 337 | 1057 |
+| share of the window | 9 percent | 22 percent |
+
+So the figure is right, and the 95 percent test is passing correctly, because it asks whether the preview fills **the room it is given**, not whether it fills the window. 342 in 337 of room is a preview doing everything it can.
+
+The 450 to 550 pixels entry 124 expected would need the page to get most of the window's height after chrome. It gets 342 of 720, because a fixed 378 goes elsewhere and none of it grows:
+
+| | at both sizes |
+|---|---|
+| everything above and below the split: header, status line, the screen's heading block, margins | 210 |
+| the chosen sheet's detail block: name, summary, identifier and file, the read-only line, Print and Duplicate | 129 |
+| the zoom row under the preview | 39 |
+
+378 of 720 is 53 percent of a small window and 26 percent of a large one, which is the whole of why the page looks right on one and cramped on the other. Nothing was changed on the strength of it: making the page bigger at 720 means taking room from one of the two blocks of prose, and which of those a person needs less is a design question, not a measurement. The budget is recorded as question 32 section 5 and in the test's own comment, so the next person to ask has the answer without re-deriving it.
+
+## Entry 125. A nightly that called itself a development build
+
+### 1. The cause, in one sentence
+
+`AppInfo.Build` was a static field initialiser written above `AppInfo.Train`, and C# runs static initialisers in the order they appear, so it read the train while it was still null and every published build called itself a development build.
+
+### 2. What was not the cause
+
+The MSBuild chain was suspected and is innocent. Built locally with `-p:GroupLabTrain=nightly`, the application assembly reads:
+
+```
+train: nightly
+version: 0.2.0-nightly.99+d2334e826b2ea4016f3f75c155f573db629eec88
+```
+
+So `nightly.yml` to `package.yml` to `package-windows.ps1` to `Directory.Build.props` was carrying the value correctly the whole time. The value was always stamped in, and always read too early. This matters beyond the fix: had the chain been "fixed" on suspicion, the defect would have survived and the workflow would have grown a change it never needed.
+
+**What it cost.** `v0.2.0-nightly.12` is installed on at least two machines and will never offer an update, because a development build refuses every manifest before it asks anything. Those copies have to be replaced by hand once a stamped nightly exists. Nothing else was affected: the version, the commit and the signing were all correct, so the build is sound in every way except the one that matters for updating itself.
+
+### 3. The fix, and the guard that stops it returning
+
+`AppInfo.Build` is worked out on first use rather than in a field initialiser, so no declaration order can bring it back.
+
+That fixes one place. The claim can only really be checked on the thing being shipped, so `grouplab build-stamp <assembly> [--expect <train>]` reads the train and the informational version straight out of a built assembly using `System.Reflection.Metadata`, which is in the shared framework and needs no package. It never loads or runs the assembly, so a Linux build is checked from a Windows runner and an architecture the runner cannot execute is checked all the same.
+
+`package.yml` runs it on the published tree for the Windows package and for the Linux tarball, before either is packed. It is there rather than in `nightly.yml` for two reasons: `nightly.yml`'s publish job needs `package`, so a failure stops the publish anyway, and `release.yml` calls the same reusable workflow and had exactly the same exposure. A check in one caller would have been a check somebody had to remember to copy.
+
+Four tests hold the checker and three hold the rule underneath it. A checker that passed everything would be worse than no checker, because it would be believed.
+
+### 4. Every screen says its own words
+
+`Go` now sets the status line for whatever screen is being arrived at, rather than the library alone as entry 120 section 10.3 left it. That is why the fault came back somewhere else: it was fixed one screen at a time, so the next screen inherited it.
+
+`ScreenStatusTests` visits all five screens and fails if any shows the marking screen's words, if any leaves the bar empty, or if two screens say the same thing. **It caught a second case while being written:** coming back **to** the marking screen kept the settings page's line, because the marking screen's words belong to the tool in hand and nothing restored them. `ToolStatus` is now separate from `SetTool`, so arriving at the marking screen says what the tool in hand says.
+
+### 5. The Updates rows, and two more faults behind them
+
+Train and Check were two wrapping rows; Lengths, Angles and Distances were a grid with the label centred against its control. That is the whole of the misalignment. They are now the same grid, and measured at both sizes every label on the page sits within half a pixel of its control's centre:
+
+```
+1280x720  Lengths: label centre 183.5, control centre 183.0
+1280x720  Angles:  label centre 223.5, control centre 223.0
+1280x720  Distances: label centre 263.5, control centre 263.0
+1280x720  Train:   label centre 609.5, control centre 609.0
+1280x720  Check:   label centre 649.5, control centre 649.0
+```
+
+The gap below the Check row was an empty text block waiting for a check to run. It now carries what the last check found, remembered across launches in `settings.json`, and hides itself when there is nothing to say, so a fresh installation has no gap rather than an empty one.
+
+**Two further faults were found while fixing that**, both worth more than the one that was asked about:
+
+1. **The settings page was built before the saved update preferences were loaded.** So the Train and Check boxes always showed their defaults rather than what had been chosen, and the last check could never have appeared however well it was written. Preferences are now loaded before anything is built.
+2. **Nothing saved the preferences at all.** Entry 119 left them in memory with a note to move them to the settings file later; an update that closes the application would have forgotten the train and the skipped version at the moment they matter most. They are saved now, by every control that changes them.
+
+Fault 1 is the same shape as section 1's: a thing read before the thing it depends on was ready. Two of them in one screen in one day is worth naming as a pattern rather than two accidents.
+
+### 6. The renders, looked at
+
+`docs/figures/screens/current/settings-light-1280x720.png` and `settings-light-2560x1440.png`, rendered as `0.2.0-nightly.14, nightly build, commit 9db6500`. They also close entry 119 section 6.4, which had been outstanding since that entry.
+
+What they confirm: the build line names a nightly as a nightly; Train and Check line up with the Units rows above them; there is no gap under the Check row; the status bar reads "Units, theme, updates and the log. Every choice here is remembered." rather than the marking screen's words.
+
+**Three things they show that nobody asked about**, reported rather than changed:
+
+1. **At 2560 by 1440 the page sits in a column about 545 pixels wide with the rest of the window empty.** It is readable and nothing is cut, but roughly three quarters of a large screen is blank. The column is deliberate, because settings prose should not run to 2000 pixels a line, but nothing else uses the room either.
+2. **Theme has no label beside its box**, where Units and Updates both do. It is the only control on the page without one.
+3. **At 1280 by 720 the privacy note is clipped mid-sentence** by the status bar. The page scrolls, so nothing is lost, but the cut lands inside a sentence rather than between items.
+
+None of the three is a defect the entry raised, and none was changed without being asked.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

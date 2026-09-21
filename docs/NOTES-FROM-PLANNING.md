@@ -15,6 +15,115 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 125: the published nightly calls itself a development build
+
+**Status: actioned 2026-09-21**, sections 1 to 4 and the SmartScreen note.
+- **The cause, in one sentence:** `AppInfo.Build` was a static field initialiser written above `AppInfo.Train`, and C# runs static initialisers in the order they appear, so it read the train while it was still null and every published build called itself a development build. The MSBuild chain was never at fault: `build-stamp` on a build made with `-p:GroupLabTrain=nightly` reads `train: nightly`, so the value was always stamped in, and always read too early. `Build` is now worked out on first use, which no declaration order can break.
+- **Section 1.1 and 1.3:** `grouplab build-stamp <assembly> [--expect <train>]` reads the train and the informational version straight out of a built assembly with `System.Reflection.Metadata`, without loading or running it, so a Linux assembly can be checked from a Windows runner. `BuildStampTests` (App) holds the checker, including that it refuses a build stamped for the wrong train and says why, and `BuildTrainTests` (Core) holds the rule underneath it, against the exact version that was published wrong.
+- **Section 1.2:** the check runs in `package.yml`, for the Windows package and the Linux tarball, on the published tree before either is packed. It is in `package.yml` rather than `nightly.yml` because `nightly.yml`'s publish job needs `package`, so a failure there stops the publish, and putting it there covers `release.yml` too, which has the same exposure and was never going to be remembered separately.
+- **Section 2:** every screen sets its own status line in `Go`, rather than the library alone as entry 120 section 10.3 had it. `ScreenStatusTests` visits all five and fails if any shows the marking screen's words, if any leaves the bar empty, or if two screens say the same thing. It caught a second case as it was written: coming **back** to the marking screen kept the settings page's line, so the tool's own words are now restored on the way in.
+- **Section 3:** Train and Check are laid out in a grid with the label centred against its control, the way Lengths, Angles and Distances already were; measured, every label on the page now sits within half a pixel of its control's centre at both sizes. The gap was an empty text block: it now carries what the last check found, remembered across launches, and hides itself when there is nothing to say. **Two further faults were found while fixing it:** the settings page was built before the saved update preferences were loaded, so the train and the interval always showed their defaults rather than what had been chosen, and the last check could never have shown. That is the same shape as section 1's fault and is fixed the same way, by loading before building.
+- **Section 4:** `docs/figures/screens/current/settings-light-1280x720.png` and `settings-light-2560x1440.png`, rendered as a nightly build and looked at. They also close entry 119 section 6.4. What they show, and three things they show that nobody asked about, are in `docs/PHASE1-RESULTS.md` under "Entry 125".
+- **The SmartScreen note:** recorded in `docs/TESTING-GUIDE.md` as observed on two machines on 2026-09-21, with no promise either way.
+- `docs/PHASE1-RESULTS.md` "Entry 125".
+
+Alan downloaded `grouplab-setup-win-x64.exe` from the README, installed it and opened it; so did a friend. Neither saw a SmartScreen warning. Record that in the testing guide as observed on two machines on 2026-09-21, without promising it for everyone.
+
+His screenshot of the settings page on that install shows a blocking defect and three small ones.
+
+## 1. Blocking: the nightly is stamped as a development build
+
+The page reads: "GroupLab 0.2.0-nightly.12, development build, commit 862aab2", and under Updates: "This is a development build, so it does not update itself. A build from the nightly train does."
+
+So the version and the commit were stamped into the published build, but the train was not. As long as that is true, no nightly will ever offer or install an update, and entry 123 section 2.7 cannot pass. The nightly workflow passes `train: nightly` to `package.yml`, which passes `-Train` to `scripts/package-windows.ps1`, which passes `-p:GroupLabTrain=$Train` to `dotnet publish`, and `Directory.Build.props` defaults it to `development` when empty. Somewhere in that chain the value is lost or not read. Find where, fix it, and prove it:
+
+1. A test that builds or inspects a packaged build (or the publish step's output) and fails unless the App assembly's `GroupLabTrain` metadata is `nightly` when packaged for the nightly train.
+2. A check in `nightly.yml`, after packaging and before publishing, that runs the packaged application's own build description (or reads the assembly metadata of the packaged `GroupLab.App.dll`) and fails the run unless it says nightly. A nightly that would call itself a development build must never be published again.
+3. Also check the Linux tarball the same way.
+4. Report the cause in one sentence.
+
+## 2. The status bar on the settings page
+
+The settings page's status bar reads "Drag to move the image. Zoom with the wheel or the buttons.", which belongs to another screen. Each screen sets its own status text on arrival, or clears it. Add a test that visits every screen and checks the status text belongs to it.
+
+## 3. The labels in the Updates section
+
+"Train" and "Check" sit higher than the controls beside them. Align each label with its control's text the way the Units rows above already do (Lengths, Angles, Distances). There is also an empty gap between the Check row and the privacy note; remove it unless it holds something (the last check time and result from entry 119 section 6.2 belong there: if they are meant to be there and are not showing, that is the defect).
+
+## 4. Report
+
+The cause from section 1, and a new settings page render at 1280 by 720 and 2560 by 1440 under `docs/figures/screens/current/`, looked at yourself, showing a nightly build's description.
+
+---
+
+# 2026-09-21, entry 124: questions 32 and 33 answered, and carry on with the real update
+
+**Status: actioned 2026-09-21**, sections 1 to 4, with section 3's answer being neither of the two the section offered.
+- **Section 1:** nothing to do. The evidence is in `docs/UPDATES.md` under "What the workflow needs from the repository", with both run URLs.
+- **Section 2:** question 33 closed as answered. Option A stands; option C is recorded as not to be built; option B's trigger, the first of the beta train opening or a second person testing, is written into `docs/UPDATES.md` under "When this changes". The "If a new build will not start" paragraph is now also in `docs/TESTING-GUIDE.md`, under a new "It keeps itself up to date" section, which is where a tester looks. That section also fixed a stale link: the guide still sent testers to `releases/tag/test-build`, a tag the nightly train replaced, so the download it offered did not exist.
+- **Section 3:** question 32 closed as answered, keeping the measures. **The 240 by 340 figure is neither a slip nor a failing test.** Measured, the preview is 242 by 342 at 1280 by 720 and 750 by 1062 at 2560 by 1440. The 95 percent test passes correctly because it measures the preview against the room it is given, 337 pixels, not against the window. The page is not the 450 to 550 pixels expected because only 342 of the window's 720 ever reaches the preview: a fixed 378 goes to the header, the status line, the screen's heading block, the chosen sheet's detail block and the zoom row, none of which grows with the window. The budget at both sizes is question 32 section 5, and the same numbers are in the test's own comment. Nothing was changed on the strength of it: making the page bigger at 720 means taking room from one of the two blocks of prose, which is a design question rather than a measurement.
+- **Section 4:** carried out; the walkthrough is entry 123 section 2.7, reported in `docs/PHASE1-RESULTS.md` under "Entry 123" section 6.
+- `docs/PHASE1-RESULTS.md` "Entry 124".
+
+## 1. The 403: you were right and I was wrong
+
+Entry 123 section 1 doubted your diagnosis on the grounds that a workflow's `permissions:` block raises the token above the repository default. Your two runs on the same commit, 403 under the read default and success under write, show it does not. Thank you for recording the evidence in `docs/UPDATES.md` rather than taking my word.
+
+## 2. Question 33, rollback: option A now, option B when anyone else installs GroupLab
+
+Agreed with your recommendation. Keep A: `docs/UPDATES.md`'s "If a new build will not start" paragraph is the answer for the nightly train, and it must also appear in the testing guide where a tester will look for it. Do not build C. Build B, the previous install kept beside the new one with a "Roll back to <version>" shortcut, at the first of: the beta train opening, or Alan saying a second person is testing. Record that trigger in `docs/UPDATES.md` and close question 33.
+
+## 3. Question 32, the library preview's area
+
+Agreed: a portrait page cannot fill half a landscape window, and my criterion was wrong. The tests you hold instead (nothing truncated or overlapping, the preview at least 95 percent of the height it is given, the sheet taking all the width the list does not) are the right ones. Close question 32.
+
+One figure in it to check: fitted to the full height of a 1280 by 720 window, a letter page should be roughly 450 to 550 pixels tall after the window's own chrome, not 240 by 340. If the preview really renders at 240 by 340 at that size, it is not filling its height and the 95 percent test should be failing; if the 240 by 340 figure is a slip in the question's text, correct the text. Say which.
+
+## 4. Carry on with entry 123 section 2.7
+
+`v0.2.0-nightly.12` and the rolling `nightly` release are published and the README installer link now returns the file (about 102 MB). When CI on 9db6500 is green and its nightly publishes (the first carrying the update mechanism), make the second nightly with a small follow-up commit, then do the real update on this machine exactly as entry 123 section 2.7 says, and report what you saw at each step.
+
+---
+
+# 2026-09-21, entry 123: the updater's missing half, and the 403 checked rather than assumed
+
+**Status: actioned 2026-09-21**, sections 1 to 3, with section 2.7's scope named below.
+- **Section 1:** the diagnosis held. The same commit, 862aab2, refused the release with `HTTP 403: Resource not accessible by integration` under the read-only default (<https://github.com/oRAirwolf/grouplab/actions/runs/35572294871>) and published `v0.2.0-nightly.12` and the rolling `nightly` after the setting changed and nothing else did (<https://github.com/oRAirwolf/grouplab/actions/runs/35573031594>). A workflow's `permissions:` block can only narrow the repository default, never raise it, and the job log prints what was asked for rather than what was granted, which is what made the first answer a guess. Recorded in `docs/UPDATES.md` under "What the workflow needs from the repository". Step 3's ruleset and `GH_DEBUG=api` evidence was not gathered, because step 3 is conditional on the publish still failing. No other setting or permission was touched.
+- **Section 2.1:** the Inno Setup installer run silently. The framework option could not be taken at all: this repository has no NuGet source configured, so no package can be added to it. The reasons it is also the right answer on its own merits are in `docs/UPDATES.md` under "The mechanism, and why it is this one".
+- **Sections 2.2, 2.3 and 2.5:** `UpdateRun` in Core takes an update from a check to a verified file and the switches to run it with, and never starts anything itself. The bar under the header shows the offer, the share downloaded and a Stop. Install and restart saves the session, says one line, starts the installer through `IOutsideWorld` with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /relaunch=yes`, and closes. A file that does not match its manifest is deleted and said so; a stopped or dropped download leaves nothing behind. The check's request goes through `IOutsideWorld` too, which closes the gap entry 122 named.
+- **Section 2.4:** the new build says "GroupLab updated from A to B" once, with a link to the notes, on the screen the person was on. **The rollback half is a "cannot", said plainly:** the installer writes over `{app}`, so the previous build is gone. `%APPDATA%\GroupLab` is never touched and every nightly keeps its own release, so going back means installing the previous nightly over the broken one. Whether to keep the previous install aside is **question 33**.
+- **Section 2.6:** 15 tests, 9 in `UpdateRunTests` and 6 in `UpdateBarTests`, all four the entry names and the save, close, install, reopen sequence, with no network and no installer.
+- **Section 2.7:** the real update on this machine, reported in `docs/PHASE1-RESULTS.md` under "Entry 123" section 6.
+- `docs/PHASE1-RESULTS.md` "Entry 123".
+
+Your report on entries 119 and 122 was clear and the signing chain is proven. Two things follow from it.
+
+## 1. The 403: verify the cause after Alan changes the setting
+
+Alan is changing Settings, Actions, General, Workflow permissions to "Read and write permissions" as you suggested. I am not certain it is the cause, so treat the next nightly as the test of your diagnosis, not as the fix:
+
+1. A workflow-level `permissions: contents: write` normally raises the token above a read-only repository default, and your own log printed `Contents: write`. `release.yml` also created a release successfully under the same read-only default. So the default may not be what refused the POST.
+2. After the setting change, on the next green push, check whether "Publish this build" succeeds. If it does, record in `docs/UPDATES.md` that the setting is required and why.
+3. If it still returns 403, look further before touching anything else, and report what you find: repository and account rulesets on tags (`gh api repos/oRAirwolf/grouplab/rulesets`, and any rule matching `v*` or `nightly`), tag protection, whether `gh release create --target <sha>` is creating a tag on a commit the token may not tag, and the exact request and response from a run with `GH_DEBUG=api` set on that step. Do not widen any other permission or setting yourself; bring the evidence back.
+
+## 2. Build the updater's mechanism (entry 119 section 4.4 and 4.6)
+
+You were right to say it plainly: the rules exist, the machinery does not. Build it now:
+
+1. **Choose the mechanism** per entry 119 section 4.6 (the Inno Setup installer run silently, or a maintained framework if it meets every requirement and needs no administrator rights), and justify the choice in your report.
+2. **Download** the installer named in the verified manifest to a folder GroupLab owns, in the background, with progress shown in the update bar and a way to cancel. Resume or restart cleanly after a dropped connection. Verify SHA-256 against the manifest before anything runs; a mismatch deletes the file and says so.
+3. **Install silently**: save everything (the session store and any open work), say in one line that GroupLab will close and reopen to finish updating, start the installer silently through `IOutsideWorld` (so tests use the recorder, entry 122), exit, and have the installer relaunch GroupLab on the screen the user was on. No installer window and no elevation prompt may appear.
+4. **After the update**, the first launch of the new version says in one line that it updated from version A to version B, with a link to the notes. If the new version fails to start, the previous install must still be usable; say how that is guaranteed or, if it cannot be with the chosen mechanism, say so and what the user does.
+5. **The update check's request** goes through `IOutsideWorld` too, as entry 122 section 1 required, so no test ever touches the network.
+6. **Tests without the network or a real installer**, as entry 119 section 9 lists, including: hash mismatch, a truncated download, cancel mid-download, and the save, close, install, reopen sequence driven by the recorder.
+7. **The real test, once two nightlies exist** (entry 119 section 10 step 3): install the older nightly on this machine with its installer, open a session in it, let it find the newer one, press Update now, and report exactly what you saw at each step, including whether any window or prompt appeared, how long it took, and that the session survived. If only one nightly exists, push a second small commit to make one.
+
+## 3. Report
+
+The 403 outcome from section 1, the mechanism chosen and why, the section 2.7 walkthrough, and the run URLs and versions.
+
+---
+
 # 2026-09-21, entry 122: the tests open GitHub in Alan's browser
 
 **Status: actioned 2026-09-21**, sections 1 to 4, with section 1's scope named below.

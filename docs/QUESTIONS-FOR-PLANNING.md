@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-21, question 33: an update that will not start cannot roll itself back, and making it able to costs a second copy of the program
 
-**Status: open**
+**Status: answered 2026-09-21** by `docs/NOTES-FROM-PLANNING.md` entry 124 section 2: keep option A now, build option B at the first of the beta train opening or a second person testing, and do not build option C. The trigger is recorded in `docs/UPDATES.md` under "When this changes", and the "If a new build will not start" paragraph now also appears in `docs/TESTING-GUIDE.md`, where a tester will look for it.
 
 ### 1. What was asked for
 
@@ -57,7 +57,7 @@ I would not build C at all. It is the right answer for a product with a support 
 
 ## 2026-09-21, question 32: a portrait page cannot fill half a landscape window, so the library's acceptance test measures something else
 
-**Status: open**
+**Status: answered 2026-09-21** by `docs/NOTES-FROM-PLANNING.md` entry 124 section 3: option A, the measures held below. Entry 124 asked whether the 240 by 340 figure in section 2 was a slip. **It is not: measured, the preview is 242 by 342 at 1280 by 720 and 750 by 1062 at 2560 by 1440.** Nor does it mean the 95 percent test should be failing, because that test measures the preview against the room it is given, not against the window: the preview gets 337 pixels of height and fills 342 of it. The reason the page is not the 450 to 550 pixels entry 124 expected is that only 337 of the window's 720 reach the preview at all. The budget is in section 5 below, added when the question was closed.
 
 ### 1. What was asked for
 
@@ -85,6 +85,23 @@ The layout does what section 10.2 asks: the list column is wide enough for the l
 - **C.** Change the screen so a page can fill more of a landscape window.
 
 **I would keep A.**
+
+### 5. The measured budget, added 2026-09-21 when entry 124 section 3 closed this
+
+Entry 124 expected a letter page fitted to the full height of a 1280 by 720 window to be roughly 450 to 550 pixels tall "after the window's own chrome". It is 342. The difference is not the fit; it is how little of the window reaches the preview. Measured by `LibraryLayoutTests`, which prints these numbers on every run:
+
+| | 1280 by 720 | 2560 by 1440 |
+|---|---|---|
+| window | 720 | 1440 |
+| everything above and below the split: the header, the status line, the screen's heading block and the margins | 210 | 210 |
+| the chosen sheet's detail block: name, summary, identifier and file, the read-only line, Print and Duplicate | 129 | 129 |
+| the zoom row under the preview | 39 | 39 |
+| **left for the page** | **342** | **1062** |
+| page drawn | 242 by 342 | 750 by 1062 |
+
+The three deductions are the same number of pixels at both sizes, because none of them grows with the window: 378 of the height is spent before the page gets any. At 1280 by 720 that is 53 percent of the window; at 2560 by 1440 it is 26 percent. That is the whole of the difference, and it is why the page looks right on a large screen and cramped on a small one.
+
+**Nothing was changed on the strength of this**, because the 342 is exactly the room the preview is given and it is filling it; making the page bigger at 720 means taking room from the heading block or the sheet's detail block, and which of those a person needs less is a design question rather than a measurement. It is recorded here so the numbers are on the record and the next person asking "why is the page small" has the answer without re-deriving it.
 
 ---
 

@@ -8,12 +8,26 @@ This page is for somebody who has never seen it. It is an unfinished test build,
 
 ## Getting it
 
-1. Download the **installer** or the **zip** from the [test build](https://github.com/oRAirwolf/grouplab/releases/tag/test-build). That build is rebuilt automatically from the newest change that passes the tests, so it is the one to test and the one to name in a bug report. The [newest numbered release](https://github.com/oRAirwolf/grouplab/releases/latest) is beside it, and changes only when somebody makes one.
-2. Windows will say **"Windows protected your PC"**. Click **More info**, then **Run anyway**. GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
+1. Download the **installer** or the **zip** from the [nightly build](https://github.com/oRAirwolf/grouplab/releases/tag/nightly). That build is published automatically from the newest change that passes the tests, so it is the one to test and the one to name in a bug report. Its address never changes, and every nightly also keeps a release of its own at `v<version>`, so a build you named in a report still exists later. The [newest numbered release](https://github.com/oRAirwolf/grouplab/releases/latest) is beside it, and changes only when somebody makes one.
+2. Windows may say **"Windows protected your PC"**. Click **More info**, then **Run anyway**. GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public. On 2026-09-21 two machines installed `grouplab-setup-win-x64.exe` from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.
 3. Your antivirus may quarantine it, for the same reason. If it does, the file it took is `GroupLab.App.exe`.
 4. The installer puts GroupLab in the Start menu and in Add or remove programs. The zip needs no installing: unzip it and run `GroupLab.App.exe`.
 
 Nothing else is needed: the download carries its own .NET runtime.
+
+## It keeps itself up to date
+
+The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header naming the version, with **Update now**, **Later** and **Skip this version**. Update now downloads it, checks it against the build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and comes back on the screen you were on. No installer window and no administrator prompt appear at any point. You can change how often it looks, or turn it off, in the settings.
+
+The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them. They tell you a newer build exists and point you at the download.
+
+### If a new build will not start
+
+**Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\GroupLab`: the settings, your sessions, any sheet you designed and the log. No installer and no uninstaller touches that folder, so a bad build cannot lose a session.
+
+**Going back is a download, not a repair.** The update replaces the program in place, so there is no previous copy on the machine to return to. The build you were on still exists at its own address: open the [releases list](https://github.com/oRAirwolf/grouplab/releases), find the `v<version>` release you were on, download its installer and run it. It installs over the broken one, and your things are exactly where you left them.
+
+If that happens, say so in a report. It is the kind of thing that should be rare enough to be worth hearing about every time.
 
 ## The first minute, with no rifle
 

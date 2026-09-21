@@ -33,15 +33,24 @@ public static class AppInfo
         }
     }
 
-    /// <summary>
-    /// What this build is, NOTES-FROM-PLANNING.md entry 119 section 1.2: its version, the train it was published on, and its commit, all
-    /// stamped in at build time. A build made on somebody's own machine has no train and says "development build".
-    /// </summary>
-    public static GroupLab.Core.Updates.BuildIdentity Build { get; } = GroupLab.Core.Updates.BuildIdentity.Read(Version, Train);
-
     /// <summary>The train the build was stamped with, or null for a build nobody published.</summary>
     public static string? Train { get; } =
         typeof(AppInfo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GroupLabTrain")?.Value;
+
+    /// <summary>
+    /// What this build is, NOTES-FROM-PLANNING.md entry 119 section 1.2: its version, the train it was published on, and its commit, all
+    /// stamped in at build time. A build made on somebody's own machine has no train and says "development build".
+    /// <para>
+    /// <b>It is worked out on first use, not in a field initialiser, and that is not a style choice.</b> Entry 125 section 1: this was
+    /// <c>= BuildIdentity.Read(Version, Train)</c> declared above <see cref="Train"/>, and C# runs static initialisers in the order they are
+    /// written, so it read <see cref="Train"/> while it was still null. Every published build called itself a development build and so would
+    /// never have updated itself. Read on demand, no declaration order can bring that back.
+    /// </para>
+    /// </summary>
+    public static GroupLab.Core.Updates.BuildIdentity Build => TheBuild.Value;
+
+    private static readonly Lazy<GroupLab.Core.Updates.BuildIdentity> TheBuild =
+        new(() => GroupLab.Core.Updates.BuildIdentity.Read(Version, Train));
 
     public static string Channel =>
 #if DEBUG

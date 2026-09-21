@@ -100,7 +100,12 @@ What is true, and what you do:
 2. **Every nightly keeps its own release.** The workflow publishes `v<version>` alongside the rolling `nightly` tag and keeps the newest thirty. So the build you were on yesterday still exists at its own address.
 3. **To go back:** download the previous build's installer from its own release page and run it. It installs over the broken one, and your things are exactly where you left them.
 
-Keeping the previous install folder aside so a failed start could roll itself back is a real option and a real cost; it is question 33 for the planning session rather than something decided here.
+**When this changes.** Keeping the previous install beside the new one, with a "Roll back to <version>" shortcut, is built at the first of these two things happening, and not before:
+
+1. the beta train opening, or
+2. Alan saying that a second person is testing GroupLab.
+
+Until then the three steps above are the answer, because the whole argument for keeping a second copy is that somebody who cannot diagnose a broken build is left stuck, and today there is nobody in that position. Proving the new build starts before the old one is removed, which is what the updater frameworks do, is **not** to be built: it is the right answer for a product with a support queue and the wrong one here. This was question 33, answered by entry 124 section 2.
 
 ## What a tester will see, honestly
 

@@ -66,7 +66,9 @@ public class LibraryLayoutTests(ITestOutputHelper output)
         // that however well it fills: fitted to the height of a 1280 by 720 window it is about 240 by 340, which is 9 percent of the window
         // whatever else is done, because a page is taller than it is wide and the window is wider than it is tall. So what is held here is
         // what the section is actually about: the preview fills the room it is given, and the room it is given is most of the window.
-        // Question 32 asks the planning session to confirm the change of measure.
+        // Entry 124 section 3 confirmed the change of measure and closed question 32. The 242 by 342 is real and the preview is filling
+        // its room: of the window's 720, a fixed 378 goes to the header, the status line, the screen's heading, the sheet's detail block and
+        // the zoom row, none of which grows, leaving 342 for the page. Question 32 section 5 has the budget at both sizes.
         var preview = window.LibraryPreviewBounds;
         var area = window.LibraryPreviewArea;
         double share = preview.Width * preview.Height / (width * (double)height);
