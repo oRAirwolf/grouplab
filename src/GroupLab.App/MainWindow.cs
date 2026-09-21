@@ -1624,7 +1624,7 @@ public sealed partial class MainWindow : Window
                 // Entry 92 section 3: one row per figure, label left and value right, with the angular conversion beneath its linear value.
                 // Mean radius keeps its lead size, entries 73 and 92; the others are the value size. Extreme spread is dimmer: present, and
                 // visibly subordinate, its interval behind the More figures disclosure because it changes no decision.
-                statistics.Children.Add(Rowed(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadValueSize, FontWeight.Medium)));
+                statistics.Children.Add(Rowed(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadValueSize, FontWeight.Medium, headline: true)));
                 statistics.Children.Add(Rowed(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
                 statistics.Children.Add(Rowed(Figure("Extreme spread", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.ValueSize, FontWeight.Normal, subordinate: true, interval: false)));
 
@@ -3365,12 +3365,12 @@ public sealed partial class MainWindow : Window
     /// are any. Every line wraps, so the largest type cannot clip at the panel's edge (entry 24 section 2). Extreme spread is drawn
     /// smaller and dimmer: present, and visibly subordinate.
     /// </summary>
-    private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false, bool interval = true)
+    private Control Figure(string name, ReportedEstimate all, GroupFigures? reduced, Func<GroupFigures, ReportedEstimate?> pick, double size, FontWeight weight, bool subordinate = false, bool interval = true, bool headline = false)
     {
         // Entry 105 section 2: the value alone beside its label, and the angular conversion on the line beneath with the interval. At the lead
         // size 372 pixels do not hold a number and two units, and the unit wrapped onto a line of its own below the label.
         var column = new StackPanel { Spacing = 0 };
-        column.Children.Add(Readout(name, units.Length(all.Value), size, weight, subordinate));
+        column.Children.Add(Readout(name, units.Length(all.Value), size, weight, subordinate, headline: headline));
         foreach (string line in FigureDetails(all, reduced, pick, interval))
         {
             column.Children.Add(Detail(line));
@@ -3471,7 +3471,7 @@ public sealed partial class MainWindow : Window
     /// the concept's selected-detection panel has it. Three headline figures with two lines of interval each was nine lines of prose before
     /// a reader reached anything else.
     /// </summary>
-    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false, bool labelAtTop = false)
+    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false, bool labelAtTop = false, bool headline = false)
     {
         // Entry 111 section 3: where a value can wrap, its label sits at the top of the row, beside the value's first line, not under its last.
         var name = new TextBlock { Text = label, VerticalAlignment = labelAtTop ? VerticalAlignment.Top : VerticalAlignment.Bottom, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Label } };
@@ -3489,6 +3489,13 @@ public sealed partial class MainWindow : Window
         if (subordinate)
         {
             figure.Classes.Add(AppStyles.Dim);
+        }
+
+        // Entry 131 sections 1.2 and 5: the one figure a block exists to answer is in the logo's amber, and everything else is neutral, so a
+        // person's eye lands on the answer rather than on whichever number happens to be longest.
+        if (headline)
+        {
+            figure.Classes.Add(AppStyles.HeadlineFigure);
         }
 
         var row = new DockPanel();
@@ -4010,7 +4017,11 @@ public sealed partial class MainWindow : Window
 
         // Entry 105 section 2: the two readouts in columns, linear under linear and angular under angular, where laid out as text they
         // started at different places; the uncertainty is a sentence, set as one.
-        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto") };
+        //
+        // Entry 131 section 1.2: the direction used to be a fourth column, and four columns do not fit the right-hand panel at 1280 by 720.
+        // The word was cut off at the edge, so "0.012 in low" read as "0.012 in lo". It rides with the angular figure now, which is where a
+        // person reads it anyway, and three columns fit.
+        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto") };
         int row = 0;
         foreach (var (label, linear, angular, sits) in view.Rows)
         {
@@ -4018,8 +4029,7 @@ public sealed partial class MainWindow : Window
             {
                 new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } },
                 ZeroCell(linear),
-                ZeroCell(angular),
-                ZeroCell(sits),
+                ZeroCell(string.IsNullOrWhiteSpace(sits) ? angular : angular + " " + sits.Trim()),
             };
             for (int c = 0; c < cells.Length; c++)
             {

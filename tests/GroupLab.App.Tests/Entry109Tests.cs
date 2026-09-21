@@ -259,7 +259,9 @@ public class Entry109Tests
 
         try
         {
-            foreach (var (width, height) in new[] { (1400, 900), (1920, 1080) })
+            // Entry 131 section 1.2 asks for these two sizes: the smallest window a person is likely to use, and a high resolution one where
+            // loose spacing and mixed type sizes show up rather than hiding in a crowd.
+            foreach (var (width, height) in new[] { (1280, 720), (2560, 1440) })
             {
                 var (window, path, _) = Sheet(width, height);
                 try

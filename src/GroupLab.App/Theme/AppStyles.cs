@@ -58,6 +58,13 @@ public static class AppStyles
 
     public const string Dim = "dim";
 
+    /// <summary>
+    /// The one figure of a block that answers the question the block is there to answer, in the logo's amber, NOTES-FROM-PLANNING.md entry 131
+    /// sections 1.2 and 5. There is at most one on a block: two figures in the accent are two headlines, and a panel with five of them is the
+    /// busy panel entry 131 is replacing.
+    /// </summary>
+    public const string HeadlineFigure = "headline-figure";
+
     /// <summary>Quiet text that should read without shouting, such as a shot's provenance in the shot list (NOTES-FROM-PLANNING.md entry 46 section 3).</summary>
     public const string Faint = "faint";
 
@@ -198,6 +205,7 @@ public static class AppStyles
         Rule(x => x.OfType<Border>().Class(Ruled), (Border.BorderBrushProperty, Brush(p.Line2))),
         Rule(x => x.OfType<TextBlock>().Class(Secondary), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.ForegroundProperty, Brush(p.Dim))),
+        Rule(x => x.OfType<TextBlock>().Class(HeadlineFigure), (TextBlock.ForegroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Alert), (TextBlock.ForegroundProperty, Brush(p.Alert))),
         Rule(x => x.OfType<TextBlock>().Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),

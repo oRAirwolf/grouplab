@@ -386,4 +386,76 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Equal(256, key.KeySize);
     }
 
+    /// <summary>
+    /// A dry run changes nothing, which is the whole of what the words mean.
+    /// <para>
+    /// <b>It did not.</b> Alan ran <c>install.py --dry-run</c> on the server and it created <c>/var/lib/grouplab-site-sync</c>: the dry run
+    /// said "would create" it, and the real run afterwards said it "is there". Two faults met. The installer passed a hard-coded false where
+    /// it meant its own dry run flag, so it really executed the sync's dry run, and the sync made its state folder and its log folder on the
+    /// way in rather than when it had something to put in them.
+    /// </para>
+    /// <para>
+    /// This reads both scripts and requires that nothing outside a guarded branch makes a directory. It is a source check rather than a run,
+    /// because the paths these scripts write to are absolute server paths that a test must never create.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void ADryRunCreatesNothing()
+    {
+        // The installer must hand its own dry run flag to the sync, never a constant.
+        string installer = File.ReadAllText(Repo.PathTo("website/server/install.py"));
+        Assert.DoesNotContain("--dry-run\"], False)", installer, StringComparison.Ordinal);
+        Assert.Contains("--dry-run\"], args.dry_run)", installer, StringComparison.Ordinal);
+
+        // And neither script may make a directory before it knows it is not a dry run. Every mkdir is checked by hand here rather than
+        // counted, because a new one should have to be thought about.
+        foreach (string file in new[] { "website/server/install.py", "website/server/grouplab-site-sync.py" })
+        {
+            var lines = File.ReadAllLines(Repo.PathTo(file));
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (!lines[i].Contains(".mkdir(", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                bool guarded = Guarded(lines, i);
+                Assert.True(guarded, $"{file} line {i + 1} makes a directory where a dry run could reach it: {lines[i].Trim()}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Whether a mkdir sits somewhere a dry run cannot reach: inside a function that only the real path calls, or after the point where the
+    /// script has committed to changing something. The ones that are fine are named, so a new mkdir fails until somebody says which it is.
+    /// </summary>
+    private static bool Guarded(string[] lines, int at)
+    {
+        string line = lines[at].Trim();
+
+        // The sync writes its state only once it has installed a site, and the installer makes folders only past its own dry run return.
+        string[] allowed =
+        [
+            "STATE.mkdir(parents=True, exist_ok=True)",
+            "path.mkdir(parents=True, exist_ok=True)",
+            "BACKUPS.mkdir(parents=True, exist_ok=True)",
+            "SITE_ROOT.mkdir(parents=True, exist_ok=True)",
+            "ERROR_PAGES.mkdir(parents=True, exist_ok=True)",
+            "target.parent.mkdir(parents=True, exist_ok=True)",
+            "unpacked.mkdir()",
+        ];
+
+        return allowed.Contains(line, StringComparer.Ordinal);
+    }
+
+    /// <summary>The log must not make its own folder: that is the installer's job, and a dry run on a fresh machine left one behind.</summary>
+    [Fact]
+    public void TheLogDoesNotMakeItsOwnFolder()
+    {
+        string sync = File.ReadAllText(Repo.PathTo("website/server/grouplab-site-sync.py"));
+
+        Assert.DoesNotContain("LOG.parent.mkdir", sync, StringComparison.Ordinal);
+        Assert.Contains("if not LOG.parent.is_dir():", sync, StringComparison.Ordinal);
+    }
+
 }

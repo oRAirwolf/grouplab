@@ -148,8 +148,10 @@ def main() -> int:
     if run(["systemctl", "enable", "--now", "grouplab-site-sync.timer"], args.dry_run) != 0:
         return 1
 
+    # This used to pass False here, so the installer's own dry run really executed the sync. The sync then created its state folder and its
+    # log folder, and a dry run that says "nothing was changed" had changed two things. A dry run runs nothing.
     say("a dry run of the sync itself")
-    run([str(SCRIPT[1]) if not args.dry_run else str(HERE / SCRIPT[0]), "--dry-run"], False)
+    run([str(SCRIPT[1]) if not args.dry_run else str(HERE / SCRIPT[0]), "--dry-run"], args.dry_run)
 
     if not args.dry_run:
         say("and one real run")

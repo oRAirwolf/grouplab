@@ -63,7 +63,10 @@ def log(message: str) -> None:
     line = time.strftime("%Y-%m-%dT%H:%M:%S%z") + " " + message
     print(line)
     try:
-        LOG.parent.mkdir(parents=True, exist_ok=True)
+        # The log folder is the installer's to create. Making it here meant a dry run on a machine that had never had the installer
+        # run left a folder behind, which is the one thing a dry run must not do. The line is still printed either way.
+        if not LOG.parent.is_dir():
+            return
         # Kept from growing without bound: rolled at 2 MB, one old copy kept.
         if LOG.exists() and LOG.stat().st_size > 2 * 1024 * 1024:
             LOG.replace(LOG.with_suffix(".log.1"))
@@ -241,7 +244,7 @@ def verify_signature(archive: Path, signature: Path) -> None:
 
 
 def sync(dry_run: bool) -> int:
-    STATE.mkdir(parents=True, exist_ok=True)
+    # The state folder is made when there is state to write, not on the way in, so a dry run leaves the machine as it found it.
     last = STATE / "deployed.sha256"
 
     with tempfile.TemporaryDirectory(prefix="grouplab-site-sync-") as tmp:
@@ -322,6 +325,7 @@ def sync(dry_run: bool) -> int:
                 log("rolled back: the site did not answer correctly after installing")
             return 1
 
+        STATE.mkdir(parents=True, exist_ok=True)
         last.write_text(wanted + "\n", encoding="utf-8")
         files = sum(1 for p in unpacked.rglob("*") if p.is_file())
         log(f"installed {files} files, commit {(commit or 'unknown')[:12]}, hash {wanted[:12]}")
