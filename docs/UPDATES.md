@@ -73,7 +73,7 @@ Rotate when the private half may have been seen by anybody else, and at no other
 2. **How often is yours to choose:** on every launch, once a day, once a week, or never. "Check now" always works.
 3. **A newer build shows as a bar in the window**, not a dialog, naming the version and showing its notes. Three choices: **Update now**, **Later**, **Skip this version**. Later asks again at the next check. Skip stays quiet until something newer than the skipped build appears.
 4. **Update now is silent.** GroupLab downloads the file, checks its SHA-256 against the manifest, verifies the manifest's signature, and installs with no installer windows and no administrator prompt, because the installer is a per-user one. If it has to close to finish, it **saves everything first**, says in one line that it will close and reopen, and comes back on the screen you were on.
-5. **The zip and the Linux tarball cannot replace themselves.** They check and notify in the same way, and Update now opens the download page instead.
+5. **The zip and the Linux tarball cannot replace themselves.** They check and notify in the same way, and the bar's button reads **Get the download** rather than Update now, because an archive was unpacked wherever its owner chose and GroupLab does not write over a folder it did not make.
 
 ## The mechanism, and why it is this one
 
