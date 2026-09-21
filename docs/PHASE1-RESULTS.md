@@ -6437,6 +6437,70 @@ Nothing was renamed or moved. `docs/figures/screens/current/`, `docs/USER-GUIDE.
 
 `settings-light-1280x720.png` and `settings-light-2560x1440.png` were made again after the change and looked at. The support note reads as above. At 1280 by 720 the support section is below the fold and the page scrolls to it; at 2560 by 1440 the whole page is visible, which is where the note was read.
 
+## Entries 131, 132 and 133
+
+### Entry 132 section 1, release notes a person can read
+
+Alan read the notes for `v0.2.0-nightly.26` and they told him nothing, because they were commit subjects: "Entry 130 item 3.3: doubt travels with the number". That is written for the log.
+
+Notes are now built from `Release-note:` trailers alone, with a kind of new, fixed or changed, and nothing is guessed from a subject line. A commit with nothing a person would notice carries no trailer and appears only in a count, because a notes fold or a test is noise that hides the real notes.
+
+**The script refuses to publish bad notes**, naming the commit each time: a note that is only a reference, begins with "Entry", is under eight words, or uses words that mean nothing to a shooter (folded, gate record, recorder, harness, manifest, and the rest). Checked against seven notes, six deliberately bad and one good, and it refused all six for the right reason.
+
+Nightlies 18 to 26 went out with unreadable notes, so the next nightly opens with ten hand-written lines saying what was actually in them. The published releases are not edited.
+
+### Entry 132 section 2, and the largest single win of the night
+
+Measuring for entry 133 turned up something worth more than what was being measured.
+
+**100.7 MB of the shipped build was debug symbols**, and 100 MB of that was two files: `libSkiaSharp.pdb` at 80.1 MB and `libHarfBuzzSharp.pdb` at 19.9 MB. Native symbols for Skia and HarfBuzz. Nothing at runtime reads them, no crash report this project writes can use them, and no user of GroupLab will ever open them in a debugger.
+
+| | |
+|---|---|
+| installed before | 332.6 MB |
+| installed after | **204.3 MB** |
+| saved | 128.3 MB, a 39 percent cut |
+
+Proved rather than assumed: the trimmed build validates a definition and analyses the 25 shot sample to 25 holes, 25 shots, mean radius 0.232 in, which is what it read before. GroupLab's own symbols stay, 0.4 MB, because a crash record naming a line in GroupLab is worth having.
+
+### Entry 133, the light installer, measured
+
+| | unpacked | zip | installer |
+|---|---|---|---|
+| self-contained, before tonight | 332.6 MB | about 102 MB | 97.3 MB |
+| framework-dependent | 227.9 MB | 78.2 MB | not built |
+| **self-contained, after the symbol fix** | **204.3 MB** | | |
+
+**The self-contained build is now smaller than the framework-dependent one was**, and it carries its own runtime. Of the framework-dependent build, Avalonia and Skia are 121.4 MB and OpenCV 93.6 MB: the runtime was never what made GroupLab large, and leaving it out fixes none of that.
+
+Question 36 recommends **not yet**, with the per-user runtime route judged workable but a new failure surface on somebody's first run, unpatched by anybody afterwards, and doubling the updater's cases in a week when the real update test found three separate defects in the single-package one.
+
+### Entry 131, what was built
+
+The interface overhaul is the largest thing any entry has asked for. Five pieces were built, all at the model level with tests, and the screens that use them are the work still outstanding.
+
+| section | built |
+|---|---|
+| 9, confirmations | `Toaster`: one component, never a dialog, Undo running the session's own undo so the button and Ctrl+Z cannot disagree. Exclude, restore, not a shot, unassign and delete all confirm. |
+| 4, explaining every figure | Ten figures in two or three plain sentences, with `docs/GLOSSARY.md` generated from the same list so the screen and the page cannot drift. |
+| 3.1, four units | MOA, mil, inches and centimetres at once, the scope's unit leading where the rifle records one, and the clicks spelled out. |
+| 3.2, metric toggle | A view of the figures that never touches what is stored. |
+| 6.1, mean radius on a scale | With the marks attributed to the podcast they came from, and a caveat that scales with the shot count. |
+
+Three of those carry a judgement worth stating plainly.
+
+**Undo belongs after the change, not before it.** A confirmation dialog asks whether you are sure about something you cannot yet see. A toast lets you do it, look at what it did, and undo it having seen the result, which is the order a person actually decides in.
+
+**Every explanation says what the sample size does to the figure**, and a test holds that rather than trusting whoever writes the next one. The commonest mistake in group shooting is treating one five shot group as a measurement of a rifle, and a figure shown without that caveat invites it. The extreme spread's explanation says it uses two shots and throws the rest away; the zero correction's says that dialling from a handful of shots can move you further from where you want to be.
+
+**The scale's marks are somebody else's rules of thumb and every path through the code says so.** This project's argument is that a handful of shots does not support a verdict. Handing one down using numbers quoted on a podcast would contradict everything else it says, so the attribution is in the caveat at every shot count, and a five shot group is told the same rifle could land anywhere across several marks.
+
+### What entry 131 did not get
+
+Sections 1, 2, 5, 6.2, 6.3, 7, 8 and 10: the mockups and renders, the editing popover, the rebuilt right-hand panel, the zero offset picture, the calibre confirmation before Accept, the equipment screen, the ballistics page and the comparison screen. None was started, so none is half built.
+
+The editing popover is the one to do first: entry 131 calls it the most important item, and everything else on the analysis page is easier to lay out once editing has a home.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

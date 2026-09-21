@@ -91,6 +91,12 @@ public static class MarkingFile
                 s.Bull,
                 s.BullChosen,
                 s.MeasuredDiameterInches,
+                // NOTES-FROM-PLANNING.md entry 131 section 2's marks, written only where they are set, so a marking made before the editor
+                // existed and one made after it and left alone are the same file.
+                flyer = s.Flyer ? true : (bool?)null,
+                sighter = s.Sighter ? true : (bool?)null,
+                s.ChosenDiameterInches,
+                s.Note,
                 size = s.Size is { } size
                     ? new
                     {
@@ -180,7 +186,13 @@ public static class MarkingFile
             s["oversize"] is JsonObject flag
                 ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]))
                 : null,
-            s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"])) : null)).ToImmutableList();
+            s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"])) : null)
+        {
+            Flyer = (bool?)s["flyer"] ?? false,
+            Sighter = (bool?)s["sighter"] ?? false,
+            ChosenDiameterInches = (double?)s["chosenDiameterInches"],
+            Note = (string?)s["note"],
+        }).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],
             scale,

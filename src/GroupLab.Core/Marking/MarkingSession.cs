@@ -72,6 +72,33 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
 {
     /// <summary>Counted in the group: not marked as not a shot. Excluded shots are counted in the full figures and left out of the reduced ones.</summary>
     public bool IsShot => !NotAShot;
+
+    /// <summary>
+    /// A shot the person called out as a flyer but kept, NOTES-FROM-PLANNING.md entry 131 section 2. It is a mark on the sheet and in the
+    /// list and it changes no figure, which is the whole difference between it and <see cref="Exclusion"/>: pointing at a shot and dropping
+    /// it from the group are two different acts, and a screen that ran them together would quietly shrink a group because somebody wanted a
+    /// shot looked at.
+    /// </summary>
+    public bool Flyer { get; init; }
+
+    /// <summary>
+    /// A sighting shot on a marking whose sheet does not say so, entry 131 section 2. On a GroupLab sheet a sighter is a property of the
+    /// bull, and this stays false there; on a plain group, where there are no bulls to carry it, this is the only place the fact can live.
+    /// </summary>
+    public bool Sighter { get; init; }
+
+    /// <summary>
+    /// The hole's diameter in inches as a person set it, entry 131 section 2's "adjust the diameter ring if the detected size is wrong". It
+    /// is kept apart from <see cref="MeasuredDiameterInches"/> rather than overwriting it, so what the detector measured is still on record
+    /// after somebody disagrees with it.
+    /// </summary>
+    public double? ChosenDiameterInches { get; init; }
+
+    /// <summary>A note the person typed against this shot, entry 131 section 2, or null. Nothing reads it: it is theirs.</summary>
+    public string? Note { get; init; }
+
+    /// <summary>What the hole is taken to measure: what a person set, else what the detector measured, else nothing.</summary>
+    public double? DiameterInches => ChosenDiameterInches ?? MeasuredDiameterInches;
 }
 
 /// <summary>
@@ -344,6 +371,37 @@ public sealed class MarkingSession
 
     /// <summary>Marks a detection as not a shot, or restores it.</summary>
     public void SetNotAShot(int id, bool notAShot) => Update(id, s => s with { NotAShot = notAShot, Provenance = Touched(s.Provenance) });
+
+    /// <summary>
+    /// Calls a shot out as a flyer while keeping it in the group, NOTES-FROM-PLANNING.md entry 131 section 2. No figure changes: to leave a
+    /// shot out of the figures is <see cref="SetExclusion"/>, and it needs a reason, which this deliberately does not.
+    /// </summary>
+    public void SetFlyer(int id, bool flyer) => Update(id, s => s with { Flyer = flyer });
+
+    /// <summary>Marks a shot as a sighting shot, or unmarks it, on a marking whose sheet has no sighter bull to say it.</summary>
+    public void SetSighter(int id, bool sighter) => Update(id, s => s with { Sighter = sighter });
+
+    /// <summary>
+    /// Sets the hole's diameter in inches by hand, or clears it with null and goes back to what the detector measured. It is not a
+    /// correction of the position, so the shot's provenance does not change: the detector still placed it where it is.
+    /// </summary>
+    public void SetHoleDiameter(int id, double? inches) => Update(id, s => s with { ChosenDiameterInches = inches is > 0 ? inches : null });
+
+    /// <summary>Puts a note on a shot, or clears it. Blank is null, so a note emptied leaves nothing behind in the file.</summary>
+    public void SetNote(int id, string? note) => Update(id, s => s with { Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim() });
+
+    /// <summary>
+    /// Moves a shot by one press of an arrow key, <see cref="ShotEditor.Nudged"/>: dx and dy are −1, 0 or 1 on the image's axes, and
+    /// <paramref name="coarse"/> is Shift held. It is <see cref="MoveShot"/> underneath, so a nudged detection becomes corrected and its
+    /// measured diameter is cleared with the move like any other.
+    /// </summary>
+    public void NudgeShot(int id, int dx, int dy, bool coarse)
+    {
+        if (State.Find(id) is { } shot && (dx != 0 || dy != 0))
+        {
+            MoveShot(id, ShotEditor.Nudged(State, shot.Image, dx, dy, coarse));
+        }
+    }
 
     /// <summary>
     /// Assigns a shot to a bull, or to none, DESIGN.md section 13's click a hole then click a bull. It is the one place a person chooses a

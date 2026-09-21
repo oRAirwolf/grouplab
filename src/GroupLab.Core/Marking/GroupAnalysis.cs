@@ -146,10 +146,9 @@ public static class GroupAnalysis
 
         // A shot assigned to a sighter bull is a sighting shot, not part of the group: the first end-to-end run (NOTES-FROM-PLANNING.md
         // entry 33 section 1) pooled a GL-CF25-LTR sheet's three sighters into its 25-shot group. They are counted, and left out.
-        var sighterBulls = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
         var candidates = state.Shots.Where(s => s.IsShot).ToList();
-        int sighterShots = candidates.Count(s => s.Bull is { } b && sighterBulls.Contains(b));
-        var shots = candidates.Where(s => !(s.Bull is { } b && sighterBulls.Contains(b))).ToList();
+        int sighterShots = candidates.Count(s => OnSighter(state, s));
+        var shots = candidates.Where(s => !OnSighter(state, s)).ToList();
         int excluded = shots.Count(s => s.Exclusion is not null);
         int notShots = state.Shots.Count(s => !s.IsShot);
         int automatic = shots.Count(s => s.Provenance == ShotProvenance.Automatic), corrected = shots.Count(s => s.Provenance == ShotProvenance.Corrected), manual = shots.Count(s => s.Provenance == ShotProvenance.Manual);
@@ -275,12 +274,15 @@ public static class GroupAnalysis
         return state.Bulls.Any(b => !b.Scoring);
     }
 
-    /// <summary>Whether a shot sits on a sighter bull, and so is set aside unless sighters are analysed.</summary>
+    /// <summary>
+    /// Whether a shot is a sighting shot, and so is set aside unless sighters are analysed: it sits on a sighter bull, or the person marked
+    /// it as one (NOTES-FROM-PLANNING.md entry 131 section 2), which is the only way to say it on a plain group with no bulls to carry it.
+    /// </summary>
     public static bool OnSighter(MarkingState state, MarkedShot shot)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(shot);
-        return shot.Bull is { } b && state.Bulls.Any(x => x.Index == b && !x.Scoring);
+        return shot.Sighter || (shot.Bull is { } b && state.Bulls.Any(x => x.Index == b && !x.Scoring));
     }
 
     /// <summary>
@@ -293,11 +295,12 @@ public static class GroupAnalysis
     public static MarkingState Sighters(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
         return state with
         {
             Bulls = [.. state.Bulls.Select(b => b with { Scoring = !b.Scoring })],
-            Shots = [.. state.Shots.Where(s => s.Bull is { } b && sighters.Contains(b))],
+            // The sighters are this state's whole group, so the mark that set them aside is cleared on the way in. Left on, a shot marked a
+            // sighter by hand would be set aside from the sighters' own group and the one view built to measure it would show nothing.
+            Shots = [.. state.Shots.Where(s => OnSighter(state, s)).Select(s => s with { Sighter = false })],
             ExpectedShots = null,
             Subgroups = null,
         };

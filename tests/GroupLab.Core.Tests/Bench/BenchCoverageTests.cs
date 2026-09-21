@@ -55,6 +55,7 @@ public class BenchCoverageTests
         ["FigureExplanations"] = "A fixed list of sentences looked up by name. There is nothing in it that takes time.",
         ["FourUnits"] = "Four divisions and a rounding, on one number the analysis has already worked out.",
         ["MeanRadiusScale"] = "One division to put a figure on a scale, and a sentence chosen by the shot count.",
+        ["ShotEditor"] = "It builds the buttons of a popover from the state, looping over the bulls once, and converts an arrow key press through three calls to the scale. It runs under a person's finger like the canvas controls beside it.",
     };
 
     [Fact]
