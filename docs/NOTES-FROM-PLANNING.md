@@ -54,7 +54,7 @@ Say how many real browser openings, network requests and other launches a full t
 - **Section 2.5:** no `0.1.0-nightly.N` was ever published, because the nightly train has published nothing at all: the signing secret does not exist.
 - **Section 2.6:** the workflow built for entry 119's earlier draft was named "test build"; it is now `nightly.yml` and is the only one of its kind.
 - **Section 3:** the red run on `main` was mine, from the commit before it: a regex reading a workflow's name with `.` rather than `[^\r\n]` captured the carriage return of a CRLF checkout, so a test looked for a workflow named "build and test\r". Windows alone has CRLF in a checkout, which is why that platform alone failed. Fixed, with the reason in the comment.
-- **Section 4, in part:** no nightly exists to report a version for, and the updater cannot be shown refusing `v0.1.0` because nothing has been published for it to check against. `releases/latest` still returns `v0.1.0`, as Alan has not yet marked it a pre-release.
+- **Section 4, in part:** no nightly exists to report a version for, and the updater cannot be shown refusing `v0.1.0` because nothing has been published for it to check against. `releases/latest` now returns nothing, because Alan has marked `v0.1.0` a pre-release.
 - `docs/PHASE1-RESULTS.md` "Entry 121".
 
 Before entry 119 reached you, Alan had already followed my earlier advice and pushed the tag `v0.1.0`. `release.yml` ran on it and published a full release: the GitHub API shows release `v0.1.0`, not a draft, not a pre-release, six assets, published 2026-09-21T03:35:15Z, and it is what `releases/latest` returns. That advice was mine and it is now wrong for the plan in entry 119. This entry puts it right.

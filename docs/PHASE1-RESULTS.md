@@ -5722,6 +5722,8 @@ Every build publishes a signed `update-manifest.json`: version, train, commit, p
 
 One table, the latest build, linking only to `releases/download/nightly/<stable name>`. No release table and no mention of `releases/latest` until Alan asks for the first release. `ReleaseAssetTests` holds exactly that, and fails if `releases/latest` or `v0.1.0` appears.
 
+**Those three links return 404 today**, checked over HTTP: the rolling `nightly` release does not exist, because nothing has been published, because the signing secret does not exist. **The front page therefore offers a download nobody can take**, which is worse than the state before this entry in one respect and better in another: before, the links pointed at whatever was last tagged, which was nothing at all until `v0.1.0` and is now a pre-release the trains deliberately ignore. They begin working the moment the first nightly publishes, which is the first green push after the secret is set, and nothing else has to change for that to happen.
+
 ### Section 8: tagged releases stay deliberate
 
 Nothing here pushes a `v*` tag. The nightly workflow tags its own pre-releases and nothing else; `release.yml` is unchanged in that respect, and the draft made by hand on 2026-09-21 is left for Alan.
@@ -5882,7 +5884,7 @@ The expression is now `[^\r\n]+` and the comment says why, because the next pers
 ### Section 4: what can be proved and what cannot
 
 - **The newest nightly: there is none.** Nothing has been published on the nightly train.
-- **`releases/latest` still returns `v0.1.0`**, because Alan has not yet marked it a pre-release. That is his to do and nothing here depends on it: the README links only to the rolling `nightly` release.
+- **`releases/latest` returns nothing at all**, checked with the API at 2026-09-21: Alan has marked `v0.1.0` a pre-release, so there is no release for it to point at, which is what entry 121 section 2.2 asked for. The README links only to the rolling `nightly` release in any case. The draft `v0.1.0-draft` made by hand is still there with its six assets, left for Alan as entry 119 section 8 says.
 - **The updater cannot be shown refusing `v0.1.0`**, because there is no manifest anywhere for it to check against. What can be shown, and is, is that the rule holds in the tests: a build on 0.2.0 offered a 0.1.0 manifest refuses it as not newer.
 
 ## Entry 122. The tests opened GitHub in Alan's browser
