@@ -59,6 +59,13 @@ jobs:
       # POST /releases. That is exactly what happened to v0.2.0-nightly.22 on 2026-09-21: it built 4bd78e7 while main had moved to 0cf5ad1,
       # which added website.yml and changed ci.yml.
       #
+      # GitHub says so itself. With GH_DEBUG=api on, the refused POST /repos/oRAirwolf/grouplab/releases came back with
+      #
+      #     X-Accepted-Github-Permissions: contents=write; contents=write,workflows=write
+      #
+      # That header lists the permission sets the request would be accepted with. The token held contents=write and was still refused, so the
+      # set GitHub wanted was the second one, and no GITHUB_TOKEN can hold workflows=write.
+      #
       # The evidence for that reading, from the five nightlies of that day: the four that published had no workflow file differing from main's
       # head at the time, including v0.2.0-nightly.18, which tagged a commit that was already two pushes behind and succeeded because the
       # workflows matched. Only the one with two differing workflow files was refused.

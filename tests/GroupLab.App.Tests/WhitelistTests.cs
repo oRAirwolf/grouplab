@@ -38,4 +38,52 @@ public class WhitelistTests
         Assert.True(unexplained.Count == 0, "logged, and neither a kept field nor a fact about the file: " + string.Join(", ", unexplained));
         Assert.Equal(ImageScrubber.KeptFieldNames.Order(StringComparer.Ordinal), logged.Where(LoggedAs.ContainsKey).Select(k => LoggedAs[k]).Order(StringComparer.Ordinal));
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 129 section 3.5.2a: the quarantine worker rebuilds an uploaded photograph from its pixels and writes the
+    /// camera facts back in freshly. It needs the same whitelist, and the entry is explicit that there must not be a third copy of that list
+    /// deciding anything.
+    /// <para>
+    /// The worker is python on a server, so it cannot share the constant; what it can do is be held to it. If the two ever drift, the
+    /// failure would be silent and one-way: a field dropped here is a measurement GroupLab can no longer make from a donated photograph, and
+    /// a field added there is something kept from a stranger's file that nobody decided to keep.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void TheQuarantineWorkerKeepsExactlyWhatTheScrubberKeeps()
+    {
+        string worker = File.ReadAllText(Path.Combine(Repository(), "website", "server", "grouplab-intake-worker.py"));
+
+        int from = worker.IndexOf("KEPT = [", StringComparison.Ordinal);
+        Assert.True(from >= 0, "the worker no longer has a KEPT list, so this cannot hold it to anything");
+        int to = worker.IndexOf(']', from);
+
+        var kept = worker[from..to]
+            .Split('"')
+            .Where((_, i) => i % 2 == 1)
+            .ToList();
+
+        Assert.Equal(ImageScrubber.KeptFieldNames.Order(StringComparer.Ordinal), kept.Order(StringComparer.Ordinal));
+    }
+
+    /// <summary>
+    /// And the things that must never survive the rebuild. Named here rather than implied, because the consent text promises that GPS is
+    /// removed, and after entry 129 that promise is kept on the server rather than on Alan's machine.
+    /// </summary>
+    [Fact]
+    public void TheQuarantineWorkerKeepsNothingAboutWhereOrWhenOrWho()
+    {
+        string worker = File.ReadAllText(Path.Combine(Repository(), "website", "server", "grouplab-intake-worker.py"));
+
+        int from = worker.IndexOf("KEPT = [", StringComparison.Ordinal);
+        var kept = worker[from..worker.IndexOf(']', from)].Split('"').Where((_, i) => i % 2 == 1).ToList();
+
+        foreach (string never in new[] { "GPS", "DateTime", "Artist", "Copyright", "Owner", "Serial", "MakerNote", "XMP", "UserComment", "Software" })
+        {
+            Assert.DoesNotContain(kept, k => k.Contains(never, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    private static string Repository([System.Runtime.CompilerServices.CallerFilePath] string here = "") =>
+        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", ".."));
 }
