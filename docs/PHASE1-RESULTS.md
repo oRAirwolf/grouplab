@@ -6139,6 +6139,88 @@ The signature is now over compact JSON, which has no line break to differ over. 
 
 That is the plainest possible argument for entry 123 section 2.7 existing at all. Three nightlies were published, each one passing a green workflow, and not one of them could have updated itself.
 
+## Entry 130. The overnight queue
+
+Eight of the queue's items were finished, and the rest are named below with why. Three of them were defects that could mislead a shooter, and those are worth reading first.
+
+### 1. A shortfall that said nothing at all
+
+Alan fired fifteen at scan 1. GroupLab found fourteen, put nothing in the review queue, and presented the figures as a clean result. He had no reason to look. It was the same bull as the hole missed on his first sheet the day before.
+
+**The cause was narrower than it looked.** The count check worked, and had worked all along; it only ran when somebody had **typed** a number. Nobody had typed one, because the sheet already said it. Analysing one shot to a bull across fifteen scoring bulls is a statement that fifteen were fired, and nothing was reading it.
+
+The count now comes from the sheet's own arithmetic when nobody has typed one, and the shortfall names the bulls with nothing on them, because that is where a missing shot is. Nearest-bull still claims no count: that is the person saying they are not counting, and inventing one there would tell somebody they had lost a shot they never fired.
+
+Eight tests, all from generated sheets.
+
+### 2. Five real holes called too small
+
+Scan 4 refused five .22 LR holes measuring 0.11 to 0.14 in, and naming the calibre did not help, because the gate was a fixed 0.15 in and nothing read the calibre.
+
+**The mistake was assuming a hole is about as wide as the bullet.** It is not. Paper stretches ahead of a bullet and closes behind it, so the hole is reliably narrower than the bullet that made it. The smallest of those five was 0.49 of its calibre, which is not a marginal case but a normal one.
+
+| | |
+|---|---|
+| floor with no calibre named | 0.150 in, unchanged |
+| floor with a .224 in bullet named | 0.101 in |
+| absolute floor, whatever the calibre | 0.060 in |
+
+0.45 of the calibre rather than 0.49, because a gate set exactly at the worst case seen so far refuses the next one slightly worse. The absolute floor is there because a nonsense calibre must not open the gate to everything; at 600 dpi it is 36 pixels across, which no fibre or speck reaches. Seven tests.
+
+### 3. Where the group actually landed
+
+This is the fix for the worst defect this project has found. On scan 5 every shot was measured against a bull it was not aimed at, and **nothing looked wrong**: the group came out tight, it came out centred, and the zero correction said there was nothing to dial. All three were false and a shooter would have believed all three.
+
+`ImpactOffsets` finds one translation per subgroup before any hole is assigned. It works the way a person would: guess that some hole belongs to some bull, shift everything by that much, see which bull each hole is nearest to now, re-centre, repeat until it stops moving. Every hole-to-bull pair is tried as a start, so a group that landed a whole bull away is found as easily as one that landed slightly low.
+
+**Three things took a failing test each to get right, and each is a real trap:**
+
+1. **The median, not the mean.** Scan 6 had one shot far from everything else. A mean lets that one shot pull the point of impact, and a point of impact pulled by one wild shot moves every other shot's measurement with it. One bad shot becomes a whole bad group. The median ignores it.
+2. **Only the bulls the shooter says they aimed at.** Without that constraint a twenty five bull sheet where ten were shot has a translation for almost any answer, and the scan 4 row-split case came out uncertain when it is not.
+3. **Certainty needs a gap in dmm as well as in proportion.** Two readings that both explain the holes perfectly both cost nothing, and nothing is eighty percent of nothing, so a ratio alone called a genuinely ambiguous sheet certain.
+
+Seven tests, all generated arithmetic: scan 5 recreated, scan 4's sight change recreated, scan 6's flyer recreated, a sheet shot where it was aimed, an ambiguous sheet called uncertain, an answer that does not depend on where the search began, and nothing to place.
+
+### 4. Doubt travels with the number
+
+Entry 120's third point was that GroupLab already said an assignment was contested and already let a hole be moved, and then presented the group size, the composite and the zero correction as though none of that had happened. A person reads the figures. They do not read the review queue.
+
+`AssignmentCertainties` says whether an analysis rests on something nobody has confirmed, from two sources: shots that could belong to more than one bull, and a point of impact that did not settle. The second matters on its own, because scan 5 had **no single contested shot** and the whole group was still in the wrong place.
+
+**The zero correction refuses rather than qualifies.** Every other figure is something a person reads; the zero correction is something they act on, by turning a turret. A correction worked out from shots that may belong to other bulls is worse than none.
+
+Seven tests. Wiring it into `GroupFigures` and the screen is the rest of the item and is not done.
+
+### 5. The stated resolution, offered
+
+A scan usually states its own resolution, and on a blank sheet that is a scale. It is offered with the number shown and never applied by itself, because a scale decides what every figure means: get it wrong and a one inch group reads as two with nothing on the screen looking unusual.
+
+A photograph is never offered one, since its stated resolution describes the file rather than the paper. 72 and 96 are not offered, being what a file gets when whatever wrote it had nothing to say. A stretched scan says so instead, because one number cannot describe it and a group measured on one is wrong in a single axis, which is the hardest kind of wrong to notice.
+
+### 6. What was not done, and why
+
+| item | why |
+|---|---|
+| 1, the real update test | needs a nightly that publishes; tonight's 403 was diagnosed and fixed, and the freshness check was proved skipping cleanly on run 35591532352, but no nightly had published by the end of the night |
+| 2, entry 129's receivers and page | the night ran out; the quarantine worker and its units were built earlier and are in |
+| 2b.1, 2b.4, 2b.5, 2b.6 | each needs the real scans read and re-run, which was not reached |
+| 2c, photographs against scans | same |
+| 3.2, row breaks | the solver takes a subgroup and solves it; letting the shooter mark where a sight change happened is interface work that was not reached |
+| 3.5, the three cases run against the real scans | explicitly to be done only after 2b, which is not finished |
+| 4.2, pooling | **deliberately not built: question 34** |
+| 6, performance | not reached |
+| 7, the guides | not reached |
+
+Nothing on that list was started and left half built.
+
+### 7. Question 34, and why pooling was not begun
+
+Pooling two sheets of one load is not plumbing. **A pooled group has no single centre**, and the three defensible choices measure different things: one centre for all forty shots includes the movement between sessions, each sheet centred on itself measures the ammunition alone, and reporting both names that movement as its own quantity.
+
+`docs/STATISTICS.md` says a figure has to say what it is an estimate of. Pooled within-session radii read exactly like a twenty shot group's mean radius and are not an estimate of the same thing, and nothing on the screen would distinguish them. Choosing quietly would put a number in front of somebody that means something other than what they think it means, which is the failure entry 120 section 2 was about.
+
+So nothing was built, because the first thing the code must do is pick a centre, and a pooled figure recorded before the choice would not be comparable with the ones after it. The recommendation is in question 34: report both, with the within-session figure as the headline.
+
 ## Entry 128. grouplab.org moves into the repository
 
 ### 1. The port, and what changed

@@ -12,6 +12,48 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 34: pooling two sheets of one load needs a rule for what a pooled group's centre means
+
+**Status: open**
+
+### 1. What was asked for
+
+Entry 130 section 4.2: "Pool two sheets of one load (scans 1 and 3, 40 shots): let a person combine sessions of the same load into one group for analysis and comparison, keeping each shot's sheet and bull. If this turns out large, build the core and record the rest as a question."
+
+It turned out large, and the reason is not the plumbing.
+
+### 2. The part that is plumbing, and is fine
+
+Keeping each shot's sheet and bull, gathering shots from two sessions, and computing dispersion over the combined set is straightforward. Mean radius, sigma and the shape tests all work on a set of radii from a centre, and forty shots is simply a better estimate than twenty. That part can be built without asking anybody.
+
+### 3. The part that is a decision
+
+**A pooled group has no single centre, and which centre is used changes what the figures mean.**
+
+Two sheets of one load, shot at different times, have two points of impact. They usually differ, because the rifle was picked up and put down, the ammunition warmed, the wind changed, or the shooter's position moved. So there are three defensible things "the pooled group's centre" could be, and they measure different quantities:
+
+- **A. One centre for all forty shots.** The dispersion then includes the movement between the two sessions. This measures what the rifle and shooter together will do over a day, which is what somebody zeroing for a match wants.
+- **B. Each sheet centred on itself, then the radii pooled.** The dispersion is the within-session dispersion only, and the movement between sessions is thrown away. This measures the ammunition and the rifle, which is what somebody comparing two loads wants.
+- **C. Both, reported side by side**, with the difference between them named as the session-to-session movement.
+
+These are not the same number and the gap between them is the interesting part: if A is much larger than B, the rifle is not holding its zero between sessions, and that is a finding in itself.
+
+### 4. Why I am not choosing
+
+`docs/STATISTICS.md` is explicit that a figure has to say what it is an estimate of. B pooled into one mean radius reads exactly like a twenty shot group's mean radius but is not an estimate of the same thing, and nothing on the screen would distinguish them. A is honest but answers a question a load comparison is not asking. Choosing quietly would put a number in front of somebody that means something other than what they think it means, which is the failure mode entry 120 section 2 was about.
+
+### 5. What I would choose, and why
+
+**C, with B as the headline.** A person pooling two sheets of one load is almost always comparing loads, so the within-session dispersion is the figure they want, and it is the one that stays comparable with every other group in the record book. The session-to-session movement is then reported beside it as its own quantity, in inches, rather than being hidden inside a larger mean radius.
+
+It costs one extra line on the screen and answers both questions instead of silently answering one.
+
+### 6. What is built meanwhile
+
+Nothing of the pooling, deliberately. The core of it is inseparable from the choice above: the first thing the code has to do is pick a centre. Building it with a centre chosen by me and changing it later would mean any pooled figure recorded in between is not comparable with the ones after, and the record book keeps figures.
+
+---
+
 ## 2026-09-21, question 33: an update that will not start cannot roll itself back, and making it able to costs a second copy of the program
 
 **Status: answered 2026-09-21** by `docs/NOTES-FROM-PLANNING.md` entry 124 section 2: keep option A now, build option B at the first of the beta train opening or a second person testing, and do not build option C. The trigger is recorded in `docs/UPDATES.md` under "When this changes", and the "If a new build will not start" paragraph now also appears in `docs/TESTING-GUIDE.md`, where a tester will look for it.
