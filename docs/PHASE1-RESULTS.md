@@ -6139,6 +6139,87 @@ The signature is now over compact JSON, which has no line break to differ over. 
 
 That is the plainest possible argument for entry 123 section 2.7 existing at all. Three nightlies were published, each one passing a green workflow, and not one of them could have updated itself.
 
+## Entry 128. grouplab.org moves into the repository
+
+### 1. The port, and what changed
+
+`website/build.py` is the website chat's builder with every path relative to the repository root. It writes to `website/_site/`, which git ignores.
+
+Entry 128 section 1.1 asked for both to be built and the HTML compared. **Seven of the eight pages are byte-identical** once the new fingerprints and the new build tag are set aside. The eighth is `guides/testing-guide/index.html`, and all three of its changes are mine:
+
+| line | what changed |
+|---|---|
+| the download step | a link that had to go, below |
+| the rollback paragraph | entry 126's support page sentence |
+| the reporting paragraph | entry 126's two ways to send a report |
+
+**The link is worth naming.** Entry 121 section 2.4 said nothing in the repository may point at `releases/latest`, and the test written for it checked the README alone. So `docs/TESTING-GUIDE.md` went on sending testers to a page that returns nothing, because no numbered release exists, from then until now. The new builder check caught it on its first run. `ReleaseAssetTests` now covers both guides too, which is where the rule should have been from the start.
+
+### 2. What the build refuses
+
+Every check the builder had is kept: an em dash, a banned term, anything shaped like an address. Two are added, and both are for faults this project has already had:
+
+1. **A link to `releases/latest` or `v0.1.0`.** Neither serves a build.
+2. **Download buttons that do not point at `releases/download/nightly/<stable name>`.** A versioned asset name is correct for about a day.
+
+A third was added while proving the second works: the site may contain no `.php` file that is not one of the two receivers (entry 129 section 3.3), so there is nothing for a misconfigured nginx to execute.
+
+**And proving that one works turned up a fourth thing.** The builder never cleaned its output folder. A page deleted from the builder would have stayed in `website/_site/` and been published in every archive afterwards, and no diff would have shown it, because the diff is of the builder rather than of the output. It starts from nothing now.
+
+### 3. Fingerprints, and the commit in every page
+
+Every asset URL carries a hash of its own contents: screenshots, PDFs and fonts as well as the stylesheet and the script. Cloudflare cannot serve a stale file after a publish. The hand-rolled `ASSET_VERSION` is gone, because nothing is left for it to be out of step with.
+
+Every page carries `<meta name="grouplab-site-build" content="<commit>">`, and the publish workflow fails if any page does not carry the commit being published. The server checks the live page for it afterwards, which is what makes "the new site is up" a measurement rather than an assumption.
+
+### 4. The donor PDFs
+
+Copied to `website/donor/` and checked before committing:
+
+| file | bytes | sha256 |
+|---|---|---|
+| `grouplab-donor-pack.pdf` | 220701 | `7253703eadf421465720bc2c5c6937199fa4c99222f108fefe8db65d82107310` |
+| `grouplab-donor-instructions.pdf` | 52368 | `52348a0187e487fc28bce468c1df6b1f52efbabd6855aa453519b1a55185acbb` |
+| `GL-CF25-LTR-D.pdf` | 67021 | `5a009acc71b33ec28aeb7860bbafbabffaf3df75e3556f8d2c30647560d7ff95` |
+| `GL-CF25-LTR.pdf` | 102340 | `8977fbc903b35a2f194f2d45b4b1e060e997163256f0b15bffee446101a4b460` |
+
+**They carry nothing private.** Read out of the content streams and out of the raw file, including link annotations: no email address, no path, no address, no credential word, and the only URL in any of them is the DejaVu font licence inside the embedded font.
+
+That answers entry 129 section 6.3 early: **the donor instructions PDF does not name the old upload address**, so it does not need regenerating for that reason.
+
+### 5. Publishing, and why only a person does it
+
+`.github/workflows/website.yml` has one trigger, `workflow_dispatch`, with a required `reason` that goes in the release notes.
+
+The reason it is worth a test rather than a comment is that the failure would be silent and public: a site republishing itself on every push would put a half-finished change on the public web the moment it was committed, with nobody deciding. Four tests hold it:
+
+| what | why |
+|---|---|
+| the only trigger is `workflow_dispatch` | read from the `on:` block, not grepped for |
+| no other workflow calls or dispatches it | naming it in a comment is not starting it, so the test looks for `uses:`, `gh workflow run` and `workflow_run` |
+| nothing else writes to the `site` release | |
+| the nightly's cleanup pattern cannot match `site` | **the pattern is run, not read**: it is extracted from `nightly.yml` and tested against `site`, `nightly`, `v0.1.0` and a real nightly tag |
+
+It signs the archive with the key that already exists and **verifies that signature against the public half compiled into `UpdateKeys.cs` before publishing anything**. A key that cannot verify its own signature fails in the workflow, not on the server, where the only symptom would be a site that quietly stopped updating. Given what entry 123 section 2.7 found about signatures that verify on one machine and not another, that check earns its place.
+
+### 6. The server pulls
+
+`website/server/` holds the sync script, a systemd service and timer, and an installer.
+
+Running as root and unpacking an archive off the internet is the most dangerous thing this project does, so most of the script is refusals, in this order: the SHA-256, then the signature, then every member of the archive (absolute paths, `..`, links, devices, pipes, anything not a plain file or directory), then the build itself (the pages that make it a site, the build commit in every page, a file count between 20 and 2000).
+
+Only then is the live site replaced, and it is backed up first. The server then asks **itself**, over TLS, whether `/`, `/download/` and `/support/` return 200 and whether the home page carries the new commit. If not, it restores the backup it just took. The deployed hash is written last, so a failed run tries again rather than believing itself.
+
+A missing release is nothing to do rather than an error, so the timer is quiet until the first publish.
+
+**It cannot reach anything but grouplab.org.** The script never mentions nginx or another domain, which a test holds by reading the code with its comments and docstrings stripped out, and the unit's `ReadWritePaths` are grouplab.org's own folders, its backups, its log and its state.
+
+Nine tests: seven drive the refusals with no network and no root against the script's own functions, including three hostile paths and a symlink; one holds what it must never do; one holds what the unit lets it write to. A whole site is accepted too, so the checks are not passing by refusing everything.
+
+### 7. What is not done, and why
+
+**Sections 5 and 6 need SSH to Alan's server**, which he approves one command at a time, and the first publish only makes sense after the install. `install.py --dry-run` is ready and says exactly what it would do. Nothing was run on the server, and `C:\Dev\grouplab-site` was read for the builder and nothing else.
+
 ## Entry 127. Saying plainly whether the work is done
 
 Alan could not tell the difference between finished, waiting, and stuck. Several runs ended with a line like "I'll hold here" while CI was still going, which from his side is indistinguishable from being finished, and nothing continued until he sent a message. That is a real cost: a run that was fifteen minutes from done sat idle until he happened to look.
