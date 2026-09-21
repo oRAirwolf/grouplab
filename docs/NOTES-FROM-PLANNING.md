@@ -15,6 +15,144 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 132: release notes that say what changed, and smaller builds
+
+**Status: actioned in part 2026-09-22.** Done: section 1. **Not done: section 2**, named below.
+- **Section 1, done, before the next nightly as section 3 requires.** Notes are built from `Release-note:` trailers alone and nothing is guessed from a subject line. A commit with nothing a person would notice carries no trailer and appears only in a count. The script refuses a note that is only a reference, begins with "Entry", is under eight words, or uses words meaning nothing to a shooter, naming the commit each time; checked against seven notes, six bad and one good, and it refuses all six for the right reason. The rule and its three examples are in `CLAUDE.md`.
+- **Section 1.6, done:** nightlies 18 to 26 went out with unreadable notes, so the next nightly opens with a hand written account of what was in them, ten lines in plain words. The published releases are not edited.
+- **Section 2, not done:** the build output work. Nothing was deleted from Alan's folders, and `C:\Dev\DEV-CLEANUP-REPORT-2026-09-21.md` was not read or changed. One thing was done towards it: no new `altN` folder was created after this entry arrived, and the rule belongs in `CLAUDE.md` when the rest is built.
+- `docs/PHASE1-RESULTS.md` "Entry 132".
+
+## 1. Release notes a tester can read
+
+Alan read the notes for `v0.2.0-nightly.26` and they told him nothing. They read, for example, "Entry 130 item 3.3: doubt travels with the number", "Entry 130 folded, with question 34 and the night's write-up" and "Entry 129 section 3.5.1: the worker decodes with no way out". Commit subject lines are written for the log, not for a person deciding whether to install a build. Keep the entry reference, but every note must say **what changed, in plain words, from the user's side**.
+
+1. **Every commit that changes something a person can see or rely on carries a `Release-note:` trailer**: one or two plain sentences saying what is different for someone using GroupLab, ending with the reference in brackets. For example:
+   - `Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)`
+   - `Release-note: For small calibres such as .22 LR, holes are no longer rejected as too small when you have entered the calibre. (Entry 130, 2b.3)`
+   - `Release-note: A blank sheet scanned on a flatbed can now use the scan's own resolution as its scale; GroupLab shows the number and you can refuse it. (Entry 130, 4.1)`
+2. `scripts/release-notes.py` builds the notes **only from these trailers**, grouped under New, Fixed and Changed by a `Release-note-kind:` trailer (new, fixed or changed) rather than by guessing from words. Commits without a trailer (notes folding, write-ups, tests, internal refactors, CI) do not appear, except as one closing line: "Plus N internal changes (tests, documentation, build)."
+3. The script **fails the nightly** if a trailer is only a reference, starts with "Entry", is shorter than eight words, uses internal jargon that means nothing to a shooter (list the words you check: for example "folded", "gate record", "recorder", "harness", "manifest" unless explained), or breaks the existing rules (em dash, private paths, coordinates, server address). A failed check names the commit so it can be fixed.
+4. Add the trailer rule to `CLAUDE.md` in your own words, with the three examples.
+5. The same notes appear in the in-application update bar (entry 119 section 5.2), so they must read well there too.
+6. Write proper notes for **everything since `v0.2.0-nightly.18`** that a tester would notice, as a hand-written list the next nightly's body starts with ("Since nightly 18"), since those builds went out with unreadable notes. Do not edit the published releases.
+
+## 2. Smaller builds, and no more copies
+
+Alan's `C:\Dev\grouplab` folder is about 11 GB, and about 10 GB of it is build output: nine copies of the Core test build (`Debug`, `Release`, `alt` to `alt7`) at about 685 MB each, and in every build about 675 MB of native libraries for some 30 platforms nobody runs (Linux on ARM, RISC-V, s390x, LoongArch, MIPS, WebAssembly, Mac Catalyst and more).
+
+1. **Stop making new `altN` output folders.** If a build needs to avoid a locked file, reuse one alternate folder (for example `bin/alt`) and clear it before reuse. Say in `CLAUDE.md` that no other output folders are created.
+2. **Copy native libraries only for the platforms GroupLab builds and tests on**: Windows x64, Linux x64, macOS (x64 and arm64). Do this in the build (for example restricting runtime identifiers for the test and application projects, or trimming the packages' native assets) without changing the published packages' behaviour, and prove it: CI green on all three platforms, the installer and zip still run with nothing installed, and the Phase 0 gate record unchanged. Report the size of one Core test build before and after.
+3. **Do not delete anything in Alan's folders yourself**, including the old `alt` folders; Alan will clear them himself in the morning with the commands in `C:\Dev\DEV-CLEANUP-REPORT-2026-09-21.md`. Do not read or change that report.
+
+## 3. Order
+
+Section 1 goes before any further nightly is published, so the next nightly already has readable notes. Section 2 fits in after entry 131, within tonight's queue under entry 130 section 0 and entry 131 section 0.
+
+---
+
+# 2026-09-21, entry 131: the interface overhaul, and working through the night without stopping
+
+**Status: actioned in part 2026-09-22.** Done: section 0. **Not done: sections 1 to 10**, named below.
+- **Section 0, done and it is the important one:** `CLAUDE.md` now says that waiting for CI or a nightly is never a reason to end a turn, that a background watcher does not wake the session, and that a turn ends only when every queue is empty or something truly needs Alan. The old one-hour rule is gone.
+- **Sections 1 to 10, not done.** The interface overhaul is the largest single piece of work any entry has asked for: an editing popover, a four-unit zero table, an explanation for every figure with a glossary, a rebuilt right-hand panel, three new pictures of the figures, an equipment screen with three record types and autocomplete, a rebuilt ballistics page, a toast component, and a rebuilt comparison screen. The night went to entry 130's defects, which mislead a shooter today, and to entry 132 section 1, which its own section 3 says must land before the next nightly publishes. Nothing of section 1 to 10 was started, so nothing is half built.
+- **What the next session should know:** section 1's checklist is the part to do first, because every other section is judged against it, and the before renders it asks for do not exist yet for any screen except settings and library.
+- `docs/PHASE1-RESULTS.md` "Entry 131".
+
+Alan used the application tonight and wants a large step up in how it looks and how easy it is to use. This entry is his list, with my specification for each item. Alan is asleep while you work it.
+
+## 0. Stop ending turns while there is work in the queue
+
+Last night's run ended its turn four times with `STATUS: WAITING, NOT FINISHED` while entries 129, 130 and now this one were full of work that needed nothing from anyone. A background watcher does not wake you: when you end a turn, everything stops until Alan types, and Alan is asleep. So, replacing the waiting rule in `CLAUDE.md` for good:
+
+1. **Waiting for CI or a nightly is never a reason to end a turn.** Start the wait, then work on the next queued item. Check the wait between items with a quick `gh run list`. If truly nothing else can be done, poll in the foreground (a `sleep` of a few minutes inside a command, repeated), never by ending the turn.
+2. **A turn ends only when** every queue is empty, or something needs Alan and nothing else can proceed without it. Even then, finish everything that does not need him first.
+3. **Order of work tonight**: entry 130 section 1 (the real update test: keep it moving whenever its nightly is ready) and section 2b (missed holes), then **this entry**, then the rest of entry 130 (sections 2, 2c, 3 to 7, including 6b), then what entry 129 can do without the server. Push in batches; never push while a nightly you need is running; keep main green.
+4. All of entry 130 section 0 still applies: no SSH, no settings, no website publish, no `v*` tags but the nightly's, record questions with a recommendation and move on.
+
+## 1. How to do design work tonight
+
+1. The look is fixed by `DESIGN.md` and the tokens in `Tokens.cs`: dark and light, IBM Plex, the logo's orange as the accent. Everything here works inside that system; you are making it clearer, calmer and more consistent, not changing the brand.
+2. **Before building each screen**, produce a mockup and look at it: if Claude Design is available to you (the `/design` command in Claude Code), use it to explore and choose a layout; if it is not, render the screen as you build it. Either way, save before and after renders of every screen you change, at 1280 by 720 and 2560 by 1440, in dark and light, under `docs/figures/screens/current/`, look at every one yourself against this checklist, and fix what fails:
+   - one type scale (for example 12, 14, 16, 20, 28) and nothing between; labels one size and weight, values one size and weight;
+   - figures in tables or aligned grids, never loose lines of mixed sizes;
+   - **the headline figure of each block in the logo's orange, large and prominent**; everything else in the neutral text colours;
+   - generous, consistent spacing from the token scale; nothing clipped, overlapping or truncated at either window size;
+   - every control's purpose obvious without reading a paragraph.
+3. Tests keep passing, the gate record stays identical, and every new control is covered by the interface benchmark and the recorder (entry 122).
+
+## 2. Editing shots: click a hole, click a bull
+
+This is the most important item here. Editing must be quick and obvious.
+
+1. **Click a detected hole** and a small editor opens beside it (a popover, not a dialog) with:
+   - **Move**: drag the hole, or nudge it with the arrow keys (fine steps, larger with Shift), with a magnifier showing the pixels under it while dragging;
+   - **Delete**;
+   - **Assign to bull**: a list of bulls, plus clicking a bull on the sheet while the editor is open;
+   - **Mark as**: sighter, flyer (kept but called out), or excluded from the group (kept on record, left out of the figures), each clearly shown on the sheet;
+   - **Hole size**: adjust the diameter ring if the detected size is wrong;
+   - a note field.
+2. **Click a bull**: if it has shots, the same editor opens for them (tabs or a list when there are several); if it has none, **Add shot** places one at the click, and **Add several** stays in adding mode so each click adds a shot to that bull until Escape or Done. Also on the bull: its load (from entry 115's load per bull), and "not shot".
+3. **Undo and redo** for every edit (Ctrl+Z, Ctrl+Y), and keyboard shortcuts shown in the popover (Delete, arrows, A for add, Escape).
+4. **The shots list** on the analysis page gets an Edit button (opens the same editor with the hole highlighted on the sheet) and a Delete button on every row, with Undo in the confirmation (section 9).
+5. Every edit updates the figures at once, and the figures carry the "uncertain" marking from entry 130 section 3 until the assignments are reviewed.
+
+## 3. Units on the analysis page
+
+1. **Zero correction in all four units at once**: MOA, mil, inches and centimetres, in a small table (angle and linear, up/down and left/right). If the session's rifle has scope units recorded, that unit is the headline (in orange) and in the scope's click value too ("Up 8 clicks at 0.1 mil"); otherwise MOA is the headline. The others stay visible beneath.
+2. **A metric/imperial toggle** on the analysis page switching every linear and angular figure between inches with MOA and centimetres with mil. It remembers the choice, defaults from the Settings units, and never changes stored data.
+3. **The shot distance's unit** is a dropdown beside the number: yards or metres.
+
+## 4. Explaining every figure
+
+1. A small **?** button beside each figure (zero correction, centre from aim, mean radius, sigma, extreme spread, CEP, the confidence intervals, anything else shown). Hover or click shows a two or three sentence plain explanation with a "More" link.
+2. The "More" link goes to a glossary page on the website, `https://grouplab.org/guides/glossary/#<term>`, which you add to `website/` (built from a new `docs/GLOSSARY.md`, so it also reads on GitHub). The site is not published tonight; the links start working at the first publish after the server install. Until then the application may fall back to the GitHub copy of `docs/GLOSSARY.md`; say which you chose.
+3. The explanations are accurate and plain, with no pseudoscience. Where a figure depends on sample size (every one does), say so in one sentence.
+
+## 5. The analysis page's right-hand panel, redesigned
+
+Today the text is many sizes and busy. Rebuild it as clear blocks, each with a heading, a table of figures and one headline figure in orange:
+
+1. **Group**: shots, mean radius (headline), sigma, extreme spread, CEP, each with its interval where one exists.
+2. **Zero**: the correction (headline, in the scope's units), centre from aim, the four-unit table from section 3.1.
+3. **Shots**: the list with Edit and Delete.
+4. **Load and rifle**: from the equipment records (section 7), with a link to change them.
+5. Consistent spacing and alignment, numbers right-aligned in columns, units in a lighter weight beside them.
+
+## 6. Pictures of the figures
+
+1. **Mean radius on a scale.** A horizontal bar showing the group's mean radius per 100 yards (angular, so it is comparable across distances), with its confidence interval as a band, against reference marks. Alan's reference is what a Hornady podcast has said about mean radius per 100 yards: around 0.3 in is "pretty good", inside about 0.2 in is solid, below 0.2 in "you've really got something", and 0.175 in (0.35 in at 200 yards, over 20 to 30 shots) "really, really good". Label the marks as that source's rules of thumb, attributed, not as GroupLab's verdict; show the group's shot count beside it, and say in the tooltip that with few shots the interval is wide and the comparison weak.
+2. **Zero offset picture.** Clicking the zero block opens a view showing the point of aim (the bull), the group's centre (point of impact) with its uncertainty ellipse, and arrows showing the correction as up/down and left/right in the scope's units and clicks.
+3. **Calibre, best guess, confirmed before Accept.** The analysis page shows GroupLab's best guess at the calibre from the measured hole sizes (as a diameter, following the application's calibre rule), and **Accept cannot proceed until the person confirms or corrects it**, with the stated calibre then used by the size gate (entry 130 section 2b.3).
+
+## 7. Equipment: rifles, barrels and loads, on their own screen
+
+1. A new button on the left rail, **Equipment**, with three lists: Rifles, Barrels, Loads. Each opens a form; every field optional except a name.
+2. **Rifle**: name, manufacturer, cartridge, barrel length, barrel twist (and direction), scope, scope units (MOA or mil) and click value, chassis or stock, notes. A rifle can have several barrels over its life.
+3. **Barrel**: name, rifle, length, twist, round count, installed date, notes.
+4. **Load**, separate from rifles because one load is shot in several rifles: name, bullet calibre (diameter), bullet weight, bullet name, brass manufacturer, brass cartridge, powder, powder charge, primer, cartridge overall length, cartridge base to ogive, velocity (with SD if known), notes. A load can be linked to any number of rifles.
+5. **Autocomplete everywhere**: as a person types in any field, offer earlier values from that field that match, most used first.
+6. The analysis page, the session records and the ballistics page pick rifle, barrel and load from these lists.
+7. **This replaces the confusing "rounds or components" box** (`MainWindow.cs`, the `newDetail` text box shared between a barrel's round count and a load's components, under "New rifle, barrel or load"). Remove it; move existing records into the new forms without losing anything, with a test that old records load.
+
+## 8. The ballistics page, redesigned
+
+It is a mess today. Rebuild it after the layout of Alan's own calculator at `https://www.pissinhot.com/ballistic.html?s=e81e3d9a` (read it for layout only; do not copy its code, whose physics had the six faults entry 115 corrected): inputs grouped in clear sections (projectile, rifle and zero, atmosphere, wind and firing angle, range and step), with rifle and load picked from Equipment to fill them; an imperial/metric toggle; a **trajectory graph** with switchable series (drop, wind drift, velocity, energy) against range; and a **dope table** with range, drop and windage in the scope's units and clicks, velocity and energy, with the zero range marked. Keep "Aerodynamic jump is not modelled" visible, and every other honesty note the solver already carries.
+
+## 9. Confirmations
+
+Every change a person makes (an edit, a delete, a save, a setting) shows a small **toast** at the bottom right that disappears after about three seconds, saying what changed, with **Undo** where the change can be undone. One consistent component used everywhere; never a dialog for a confirmation.
+
+## 10. Compare loads, redesigned
+
+Make it a clear, attractive comparison: side by side group plots on a shared scale, mean radius and sigma with their intervals as bars or dot-and-whisker charts, shot counts, velocity and SD where known, and the verdict lines entry 113 already writes (never ranking on a point estimate). Alan may put reference screenshots in `C:\Dev\grouplab-design-refs\`; if that folder exists, read them for layout and follow them; if not, design it yourself within section 1.
+
+## 11. Report
+
+In the morning report (entry 130 section 8), for this entry: before and after renders of every screen changed, a short list of what was built per section, anything left undone and why, and questions with your recommendation.
+
+---
+
 # 2026-09-21, entry 130: the overnight queue
 
 **Status: actioned in part 2026-09-22.** Done: 2.1, 2b.2, 2b.3, 3.1, 3.3 in Core, 3.4, 4.1, 5. **Not done, each named below with why:** 1, 2 apart from 2.1, 2b.1, 2b.4, 2b.5, 2b.6, 2c, 3.2, 3.5, 4.2, 6, 7.
