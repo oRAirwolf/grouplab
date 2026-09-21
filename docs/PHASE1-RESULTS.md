@@ -6495,11 +6495,61 @@ Three of those carry a judgement worth stating plainly.
 
 **The scale's marks are somebody else's rules of thumb and every path through the code says so.** This project's argument is that a handful of shots does not support a verdict. Handing one down using numbers quoted on a podcast would contradict everything else it says, so the attribution is in the caveat at every shot count, and a five shot group is told the same rifle could land anywhere across several marks.
 
+### Entry 131 sections 2, 5 and 7, built after the first pass
+
+Three more sections landed, all as models in Core with tests, so the screens that draw them have nothing left to decide.
+
+**Section 2, the shot editor.** `ShotEditor` is the popover's contents, its actions, its keyboard map and what each one does to the marking. Three judgements in it are held by tests rather than left to a comment.
+
+- **A flyer and an exclusion are two marks, not one.** Section 2 asks for a flyer "kept but called out" beside a shot left out of the figures, and the whole difference is that pointing at a shot must not shrink the group. A test measures a group before and after a flyer is called and requires every figure to be identical.
+- **A shot marked a sighter by hand leaves the group**, or the mark would be decoration and somebody would think they had set a shot aside when they had not. It leaves the sighters' own view alone: the flag is cleared on the way in, because otherwise the one screen built to measure sighters would set them all aside and show nothing.
+- **An arrow key moves a hundredth of an inch on the paper, not a pixel.** A `ScaleReference` maps pixels to paper and not back, and the three kinds invert quite differently, so the step is converted by sampling the map one pixel each way: exact for a length and a rectangle, right to first order for a registered sheet, and falling back to pixels rather than to a guess where the fit is degenerate.
+
+A hole size set by hand is kept beside what the detector measured rather than over it, because the measurement is evidence about the image and a person disagreeing with it is a second opinion.
+
+**Section 5, the right-hand panel.** `AnalysisPanel` is four blocks, each with a heading, a table of rows and one headline figure. The rule worth having is a test: **no number reaches the panel without an explanation behind its ?**. Section 4.1 asks for that, and a promise like it decays the first time somebody adds a row in a hurry; now a figure with nothing to say about itself fails `EveryFigureCanExplainItself` instead of quietly appearing with no **?**. A figure too small a group to quote keeps its row with the reason in it, so the panel does not change shape as shots are added.
+
+**Section 7, the equipment records, and a defect they turned up.**
+
+The three record types were filled out as section 7 describes them, with one field list that the form, the autocomplete and the tests all read, so a field cannot be added to a record and forgotten on the screen.
+
+Writing the round-trip test found this:
+
+> **The record book saved a rifle's name, click value and click unit, and nothing else.**
+
+A sight height, zero distance and twist typed into the ballistics page, and every one of a load's muzzle velocity, velocity SD, ballistic coefficient, drag model and bullet figures, were dropped the moment the book was saved. Nothing failed and nothing said so. The page simply asked for them again at the next start, which reads as forgetfulness rather than as a bug, and is exactly the kind of thing a person stops reporting. Every field is written and read now, and the test requires a book read back to equal the book written.
+
+A name already in use is now refused with a sentence naming the clash, because `RecordBook.With` replaces by name and saving under a forgotten name would have silently overwritten the record behind it.
+
 ### What entry 131 did not get
 
-Sections 1, 2, 5, 6.2, 6.3, 7, 8 and 10: the mockups and renders, the editing popover, the rebuilt right-hand panel, the zero offset picture, the calibre confirmation before Accept, the equipment screen, the ballistics page and the comparison screen. None was started, so none is half built.
+Sections 1, 3.3, 6.2, 6.3, section 7's screen, 8 and 10: the mockups and the before and after renders, the shot distance unit dropdown, the zero offset picture, the calibre confirmation before Accept, the Equipment screen itself with the removal of the shared "rounds or components" box, the ballistics page and the comparison screen. None was started, so none is half built.
 
-The editing popover is the one to do first: entry 131 calls it the most important item, and everything else on the analysis page is easier to lay out once editing has a home.
+**Every model those screens need now exists and is tested**, so what is left is drawing rather than deciding. Section 1's checklist is still the part to do first, and the before renders it asks for do not exist yet for any screen except settings and library.
+
+## Entry 130 section 2b.6. The six scans re-run, and what the fixes actually recovered
+
+Read only, nothing committed, on this machine, through the command line so the figures are comparable with entry 120 section 1.
+
+| Scan | Shots (Alan) | Entry 120 | Now, no calibre | **Now, calibre named** |
+|---|---|---|---|---|
+| 1 | 15 | 14 | 14 | **14** |
+| 2 | a zero group | 0 | 0, codes still unreadable | — |
+| 3 | 25 | 25 | **25** | **25** |
+| 4 | 23 | 19 | 19 | **24** |
+| 5 | 20 | 18 | **20** | **20** |
+| 6 | 10 | 9 | 9 | **10** |
+
+**Three of the four missed holes are back, and two of them only when the calibre is named.**
+
+- **Scan 5, recovered without a calibre.** The two holes outside the bull grid are found: 18 to 20, which is Alan's own count exactly. That is `OutsideTheGrid`, entry 130 section 2b.4.
+- **Scan 6, recovered with the calibre.** The shot cut by the edge of the scan is detected as a partial hole: 9 to 10, Alan's count exactly. Without a calibre it is still missed, because the hole is judged by shape alone and a rim cut by the crop has less of a shape to judge.
+- **Scan 4, recovered with the calibre, and one too many.** The five .22 LR holes refused as "too small" are admitted: 19 to 24. Alan fired 23. **Going from four short to one over is better but it is not right**, and the extra is now a false hole, a split counted twice, or an error in the count of a sheet nobody has re-examined since. It needs the bull-by-bull comparison against the render that entry 120 did by eye.
+- **Scan 1, not recovered.** Bull 2's clear hole raises no candidate with or without a calibre. Entry 130 section 2b.1 was not done, and this confirms it is not fixed by anything else that landed: it is still the priority, and it is still the same bull as the hole missed on Alan's first sheet on 2026-09-20.
+
+**The gate record is unchanged.** Scan 3, the published sample, reads 25 holes on 25 bulls with a mean radius of 0.232 in, with the calibre named and without it, exactly as before.
+
+**The one thing to take from this table** is that naming the calibre is now worth a great deal: it is the difference between 19 and 24 on scan 4 and between 9 and 10 on scan 6. That is an argument for entry 131 section 6.3, the calibre confirmation before Accept, which is still not built.
 
 ## Decision log
 

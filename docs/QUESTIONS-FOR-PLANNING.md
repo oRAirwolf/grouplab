@@ -109,6 +109,25 @@ So the rule is **narrowed rather than dropped**: a mark within one bull's width 
 
 **I would choose A**, and I would treat running 2b.6 as blocking the next release rather than as tidying up. The change is off by nothing: it is live in the detector now, and until the scans are re-run the claim "no false holes anywhere" is no longer something this project can say truthfully.
 
+### 5. Measured, later the same night
+
+Section 2b.6 was run after all: all six scans, read only. **The narrowed rule did not reintroduce a single false hole.**
+
+| Scan | Shots (Alan) | Entry 120 | Now, no calibre | Now, calibre named |
+|---|---|---|---|---|
+| 1 | 15 | 14 | 14 | 14 |
+| 2 | a zero group | 0 | 0 | — |
+| 3 | 25 | 25 | 25 | 25 |
+| 4 | 23 | 19 | 19 | **24** |
+| 5 | 20 | 18 | **20** | **20** |
+| 6 | 10 | 9 | 9 | **10** |
+
+Scan 5 reads 20 against Alan's 20, which is the two holes this change was made for and nothing else. Scans 1, 2, 3 and 6 are unchanged or better, and none of them is over its ground truth. Scan 3's gate figures are identical: 25 holes on 25 bulls, mean radius 0.232 in.
+
+**So one bull's width is measured as safe on this material, and I would now choose A with more confidence than I had when I wrote it.** The one over-count in the table, scan 4 at 24 against 23, comes from the size gate of section 2b.3 and not from this rule: without a calibre that scan still reads 19, below its ground truth, so no position-refused mark is being admitted there.
+
+**What is still unmeasured** is the survey's own baselines, which is where the false positives were counted in the first place. This table is six real scans, not that survey, and re-running it against the narrowed rule is the honest completion of this question.
+
 I have deliberately not claimed it in the results.
 
 ---
