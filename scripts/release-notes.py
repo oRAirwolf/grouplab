@@ -65,7 +65,7 @@ These builds went out with notes that did not say what changed. In plain words, 
 - Holes from small calibres such as .22 LR are no longer refused as too small when you have entered the calibre.
 - A hole cut off by the edge of the scan is detected instead of being ignored.
 - A shot that landed off the bulls is kept and offered, instead of being dropped.
-- GroupLab now works out where your group actually landed before deciding which bull each shot belongs to, so a sheet shot away from its aim is no longer measured against the wrong bulls.
+- GroupLab can work out where your group actually landed before deciding which bull each shot belongs to, so a sheet shot away from its aim is not measured against the wrong bulls. It needs to be told which bulls you aimed at, and there is not yet a control on any screen that tells it, so this does not reach you yet.
 - Where the shot to bull assignment is not certain, the group figures say so, and the zero correction is withheld rather than being given from shots that may belong elsewhere.
 - A blank sheet scanned on a flatbed can use the scan's own resolution as its scale. GroupLab shows the number and you can refuse it.
 - The Support button opens the support page at grouplab.org, and the report window tells you both ways to send a report.
