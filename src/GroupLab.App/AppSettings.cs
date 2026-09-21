@@ -200,6 +200,18 @@ public sealed class AppSettingsStore(string path)
     }
 
     /// <summary>
+    /// Which units the analysis page is showing, entry 131 section 3.2: "imperial", "metric", or null to follow the Settings units.
+    /// <para>
+    /// It is a view of the figures and never touches what is stored. A marking holds inches because that is what it was measured in, and a
+    /// person switching the page to centimetres is asking to read it differently, not to change it. Keeping the two apart is what lets the
+    /// same session be read either way by two people.
+    /// </para>
+    /// </summary>
+    public string? LoadAnalysisUnits() => Read(file => (string?)file["analysisUnits"]);
+
+    public bool SaveAnalysisUnits(string? which) => Save(file => file["analysisUnits"] = which);
+
+    /// <summary>
     /// What the last update check found, entry 119 section 6.2, in the words the settings page showed at the time. It sits beside the time
     /// of that check in <see cref="LoadUpdatePreferences"/>, so the page can say what happened last time on a fresh launch rather than
     /// holding an empty line open until somebody presses Check now.

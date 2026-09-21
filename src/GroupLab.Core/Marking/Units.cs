@@ -38,6 +38,30 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
     /// <summary>The angular units offered, in the order the screen lists them.</summary>
     public static IReadOnlyList<AngularUnit> AngularChoices { get; } = [AngularUnit.Moa, AngularUnit.Mrad, AngularUnit.Smoa];
 
+    /// <summary>
+    /// The units the analysis page reads in, entry 131 section 3.2: the page's own choice where a person has made one, and the application's
+    /// settings where they have not.
+    /// <para>
+    /// This is a view and never a change to what is stored. A marking holds inches because that is what it was measured in; somebody
+    /// switching the page to centimetres is asking to read it differently. Keeping those apart is what lets one session be read either way
+    /// by two people without either of them altering it.
+    /// </para>
+    /// </summary>
+    public static UnitSettings ForAnalysis(string? chosen, UnitSettings settings) =>
+        chosen?.Trim().ToLowerInvariant() switch
+        {
+            "imperial" => Imperial,
+            "metric" => Metric,
+            _ => settings,
+        };
+
+    /// <summary>What the toggle switches to from here, so pressing it twice returns to where it started.</summary>
+    public static string Other(string? chosen, UnitSettings settings)
+    {
+        var showing = ForAnalysis(chosen, settings);
+        return showing.Linear == LinearUnit.Inch ? "metric" : "imperial";
+    }
+
     /// <summary>The sentence the screen shows where an angular figure would be without a shot distance.</summary>
     public const string AngularNeedsDistance = "angular figures need the shot distance";
 
