@@ -339,7 +339,11 @@ public sealed partial class MainWindow : Window
 
     /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
     private readonly TextBox roundsFired = new() { Width = 90 };
-    private readonly TextBlock shotDistanceUnit = new() { VerticalAlignment = VerticalAlignment.Center };
+    // NOTES-FROM-PLANNING.md entry 131 section 3.3: the shot distance's unit is a dropdown beside the number, yards or metres. It was a label
+    // showing whatever the Settings said, so somebody who works in metres but shoots at a hundred yard range had to change a global setting to
+    // type one number, or convert it in their head. It chooses how the number in the box is read and written; the distance itself is kept in
+    // inches whichever is chosen, so nothing stored moves with it.
+    private readonly ComboBox shotDistanceUnit = new() { Name = "ShotDistanceUnit", ItemsSource = Enum.GetValues<DistanceUnit>().Select(UnitSettings.Symbol).ToList(), MinWidth = 70, VerticalAlignment = VerticalAlignment.Center };
     private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light", "High contrast" }, MinWidth = 140 };
     private bool showingTheme;
     private UnitSettings units;
@@ -448,6 +452,7 @@ public sealed partial class MainWindow : Window
         })));
         panel.Children.Add(calibreNote);
         panel.Children.Add(FieldLabel("Shot distance"));
+        shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
         panel.Children.Add(Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Clear", () =>
         {
             shotDistance.Text = "";
@@ -834,7 +839,10 @@ public sealed partial class MainWindow : Window
         linearUnit.SelectedIndex = (int)units.Linear;
         angularUnit.SelectedIndex = Math.Max(0, UnitSettings.AngularChoices.ToList().IndexOf(units.Angular));
         distanceUnit.SelectedIndex = (int)units.Distance;
-        shotDistanceUnit.Text = UnitSettings.Symbol(units.Distance);
+        if (shotDistanceUnit.SelectedIndex < 0)
+        {
+            shotDistanceUnit.SelectedIndex = (int)units.Distance;
+        }
         showingUnits = false;
     }
 
@@ -876,15 +884,34 @@ public sealed partial class MainWindow : Window
         SetUnits(new UnitSettings((LinearUnit)linearUnit.SelectedIndex, UnitSettings.AngularChoices[angularUnit.SelectedIndex], (DistanceUnit)distanceUnit.SelectedIndex));
     }
 
-    private void SetShotDistanceFromBox()
+    internal void SetShotDistanceFromBox()
     {
+        var unit = ChosenDistanceUnit();
         if (double.TryParse(shotDistance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
         {
-            session.SetShotDistance(UnitSettings.DistanceToInches(d, units.Distance));
+            session.SetShotDistance(UnitSettings.DistanceToInches(d, unit));
         }
         else
         {
-            problem.Text = "Enter the shot distance as a number of " + UnitSettings.Symbol(units.Distance) + ".";
+            problem.Text = "Enter the shot distance as a number of " + UnitSettings.Symbol(unit) + ".";
+        }
+    }
+
+    /// <summary>
+    /// The unit the shot distance box is being typed in, NOTES-FROM-PLANNING.md entry 131 section 3.3: the choice beside the number, falling
+    /// back to the Settings unit before anything has been chosen.
+    /// </summary>
+    private DistanceUnit ChosenDistanceUnit() => shotDistanceUnit.SelectedIndex >= 0 ? (DistanceUnit)shotDistanceUnit.SelectedIndex : units.Distance;
+
+    /// <summary>
+    /// Changing the unit beside the box rewrites the number in the new unit rather than reading the old number as the new one. A person who
+    /// typed 100 yards and then chose metres means the same distance said differently, not a hundred metres, and the marking is not touched.
+    /// </summary>
+    private void ShotDistanceUnitChosen()
+    {
+        if (!showingUnits && session.State.ShotDistanceInches is { } inches)
+        {
+            shotDistance.Text = UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture);
         }
     }
 
@@ -1528,7 +1555,7 @@ public sealed partial class MainWindow : Window
             : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
         if (!shotDistance.IsKeyboardFocusWithin)
         {
-            shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, units.Distance).ToString("0.###", CultureInfo.InvariantCulture) : "";
+            shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";
         }
 
         canvas.DetectorFlags = state.Shots.Where(s => s.IsShot && s.Oversize is not null).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
