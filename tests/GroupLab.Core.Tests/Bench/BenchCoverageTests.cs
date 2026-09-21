@@ -50,6 +50,8 @@ public class BenchCoverageTests
         ["Snapping"] = "It runs under a person's finger on the marking canvas, so it is measured as a control and not here.",
         ["ViewRotation"] = "The same: it is what the rotate buttons do, and those are measured as controls.",
         ["PointInches"] = "A point on the page, carried by the stage records that are already timed.",
+        ["AssignmentCertainties"] = "It reads the review queue that is already in memory and counts two kinds of item. There is nothing in it to measure that the analysis it sits beside does not already dominate.",
+        ["StatedResolutionScale"] = "Two comparisons against a number the image file already carries. It does not read the image.",
     };
 
     [Fact]
