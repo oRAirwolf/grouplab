@@ -38,7 +38,15 @@ from PIL import Image
 SITE_URL = "https://grouplab.org"
 GITHUB = "https://github.com/oRAirwolf/grouplab"
 NIGHTLY = GITHUB + "/releases/download/nightly/"
+# Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
+# the receiver is installed on the server and tested, because a button that leads nowhere is worse
+# than one that leads somewhere old. Entry 129 section 6.2 flips it and redirects the old page.
 UPLOAD_PAGE = "https://pissinhot.com/targets"
+
+# The Turnstile site key is the public half and belongs in the page. The secret half lives only on
+# the server, in a file with mode 600, put there by grouplab-set-turnstile-secret. It is never in
+# this repository.
+TURNSTILE_SITE_KEY = "0x4AAAAAAE-rzvtx_a4nBHHr"
 SUPPORT_EMAIL = "support@grouplab.org"
 # Donations: the Support page carries a section for them, hidden until this
 # is set to a real address, for example "https://github.com/sponsors/...".
@@ -999,12 +1007,29 @@ def link_problems() -> list[str]:
     return problems
 
 
+# Entry 129 section 3.3: PHP runs only for the receivers, and nginx is configured to refuse a .php
+# request anywhere else. This is the other half of that: the built site may not contain a .php file
+# that is not a receiver, so there is nothing else for a misconfiguration to execute.
+RECEIVERS = ["api/upload.php", "api/crash-report.php"]
+
+
+def php_problems() -> list[str]:
+    found = sorted(p.relative_to(OUT).as_posix() for p in OUT.rglob("*.php"))
+    stray = [p for p in found if p not in RECEIVERS]
+    return [f"{p}: a .php file that is not one of the receivers, and nothing else may be executable" for p in stray]
+
+
 # ---------------------------------------------------------------- main
 
 
 def main() -> None:
     for p in [REPO, DONOR]:
         need(p)
+    # Start from nothing. Without this a page that was deleted from the builder stays in the output
+    # folder for ever and is published with every archive after it, which nobody would notice by
+    # reading a diff. Found while proving the stray .php check works.
+    if OUT.exists():
+        shutil.rmtree(OUT)
     OUT.mkdir(parents=True, exist_ok=True)
 
     build_fonts()
@@ -1046,6 +1071,7 @@ def main() -> None:
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
     problems += link_problems()
+    problems += php_problems()
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")
