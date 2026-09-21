@@ -4,20 +4,20 @@ namespace GroupLab.Core.Updates;
 /// The public key this build trusts for update manifests, NOTES-FROM-PLANNING.md entry 119 section 3.2: "the public key is compiled into the
 /// application".
 /// <para>
-/// <b>It is empty, and that is deliberate.</b> The private key lives only as a GitHub Actions secret, which nobody but Alan can create, and
-/// the public key is the half of the pair that goes here. Until he makes one, every update is refused with
-/// <see cref="UpdateSignature.Refusal.NoKey"/> and the settings page says why, which is the safe way round: a build that trusted nothing yet
-/// installs nothing, rather than installing whatever it is handed.
+/// <b>Set 2026-09-21.</b> Alan made the pair with <c>grouplab update-key</c>, put the private half in the repository secret named below,
+/// and gave the public half to the planning session, which is how it reaches this file. The private half is not in this repository, in any
+/// working copy, or in any message; only the half below is, and it is the half that can check a signature and cannot make one.
 /// </para>
 /// <para>
-/// <b>To fill it in:</b> run <c>grouplab update-key</c>, put the private key in the repository secret it names, and paste the public key
-/// here in one commit. <c>docs/UPDATES.md</c> has the steps and how the key is rotated.
+/// <b>An empty key is the safe state, not a broken one.</b> A build with none refuses every update with
+/// <see cref="UpdateSignature.Refusal.NoKey"/> and says why, rather than installing whatever it is handed.
+/// <c>docs/UPDATES.md</c> has the steps and how the key is rotated, which costs every installed build its trust in the old one.
 /// </para>
 /// </summary>
 public static class UpdateKeys
 {
     /// <summary>The trusted public key, base64 SubjectPublicKeyInfo, or empty while there is none.</summary>
-    public const string PublicKey = "";
+    public const string PublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7WkbyK0CR9S+FWQGbiopVRrDOuXsoW5S6yacT03OYVDaxeRHYDWoLQJU9GVqw+n01qewlvQdOMe9tmEBzdqQkw==";
 
     /// <summary>The name of the repository secret holding the private half. The workflow fails loudly when it is missing.</summary>
     public const string SecretName = "GROUPLAB_UPDATE_SIGNING_KEY";
