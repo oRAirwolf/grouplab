@@ -28,8 +28,11 @@ public readonly record struct Offset(double X, double Y)
 /// <param name="Why">What the screen says about it, in words.</param>
 public sealed record ImpactOffset(string Name, IReadOnlyList<int> Bulls, Offset Shift, bool Certain, string Why)
 {
-    /// <summary>Whether the group landed far enough from the aim to matter, which is what makes this worth showing at all.</summary>
-    public bool Moved => Shift.Length > 0.5;
+    /// <summary>
+    /// Whether the group landed far enough from the aim to be worth saying so. A tenth of an inch: below that it is the spread of the group
+    /// talking rather than the rifle, and telling somebody to dial it would be telling them to chase noise.
+    /// </summary>
+    public bool Moved => Shift.Length > 25;
 }
 
 /// <summary>
@@ -64,6 +67,12 @@ public static class ImpactOffsets
     private const int Rounds = 10;
 
     /// <summary>
+    /// How much better, per hole and in page dmm, the best reading has to be than a different one. A tenth of a millimetre a hole: small
+    /// enough that a genuinely better answer clears it easily, and large enough that two answers which both fit exactly do not.
+    /// </summary>
+    private const double MeaningfulGap = 1.0;
+
+    /// <summary>
     /// The translation that best explains where these holes fell, given the bulls they were aimed at.
     /// <para>
     /// It works the way a person would: guess that some hole belongs to some bull, shift everything by that much, see which
@@ -83,11 +92,23 @@ public static class ImpactOffsets
             return new ImpactOffset(name, bullIndexes, Offset.Zero, true, "No shots to place.");
         }
 
-        var settled = new List<(Offset Shift, double Cost)>();
-        foreach (var seed in Seeds(holes, bulls))
+        // Entry 130 section 3.1: where the shooter has said which bulls they aimed at, only those are candidates. It is not a refinement.
+        // A sheet of twenty five bulls where ten were shot has a translation for almost any answer if every bull is allowed to catch a
+        // hole, and the honest reading is the one that puts the shots on the bulls the shooter says they were aiming at.
+        var targets = bullIndexes.Count > 0
+            ? bullIndexes.Where(i => i >= 0 && i < bulls.Count).Select(i => bulls[i]).ToList()
+            : [.. bulls];
+
+        if (targets.Count == 0)
         {
-            var shift = Settle(seed, holes, bulls);
-            settled.Add((shift, Cost(shift, holes, bulls)));
+            targets = [.. bulls];
+        }
+
+        var settled = new List<(Offset Shift, double Cost)>();
+        foreach (var seed in Seeds(holes, targets))
+        {
+            var shift = Settle(seed, holes, targets);
+            settled.Add((shift, Cost(shift, holes, targets)));
         }
 
         settled.Sort((a, b) => a.Cost.CompareTo(b.Cost));
@@ -96,7 +117,12 @@ public static class ImpactOffsets
         // A different answer is one that is not the same translation. Several seeds landing on the same place is agreement,
         // not disagreement, and must not count against certainty.
         var rival = settled.FirstOrDefault(s => s.Shift.Minus(best.Shift).Length > SameOffset);
-        bool certain = rival == default || best.Cost <= rival.Cost * ClearlyBetter;
+
+        // Two readings that both explain the holes perfectly are the case this has to catch, and a ratio alone cannot: nothing is 80 percent
+        // of nothing, so two zero-cost answers would compare as one clearly beating the other. A gap that has to be real in dmm as well as
+        // in proportion says what is true, which is that the sheet could have been shot either way and nobody can tell from the holes.
+        bool certain = rival == default
+            || (best.Cost < rival.Cost * ClearlyBetter && rival.Cost - best.Cost > holes.Count * MeaningfulGap);
 
         string why = certain
             ? Words(best.Shift, holes.Count)
@@ -123,22 +149,31 @@ public static class ImpactOffsets
         }
     }
 
-    /// <summary>Assign, re-centre, repeat, until it stops moving.</summary>
+    /// <summary>
+    /// Assign, re-centre, repeat, until it stops moving.
+    /// <para>
+    /// It re-centres on the <b>median</b> of what the holes imply, not the mean, and that is the whole of entry 130 section 3.4. Scan 6 had
+    /// one shot far from everything else. A mean lets that one shot pull the point of impact, and a point of impact pulled by one wild shot
+    /// moves every other shot's measurement with it, which turns one bad shot into a whole bad group. A median ignores it: one value out of
+    /// eleven cannot move the middle one far, however far out it is.
+    /// </para>
+    /// </summary>
     private static Offset Settle(Offset start, IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls)
     {
         var shift = start;
+        var acrossBuffer = new double[holes.Count];
+        var downBuffer = new double[holes.Count];
+
         for (int round = 0; round < Rounds; round++)
         {
-            double sumX = 0;
-            double sumY = 0;
-            foreach (var hole in holes)
+            for (int i = 0; i < holes.Count; i++)
             {
-                var bull = Nearest(hole.Minus(shift), bulls);
-                sumX += hole.X - bull.X;
-                sumY += hole.Y - bull.Y;
+                var bull = Nearest(holes[i].Minus(shift), bulls);
+                acrossBuffer[i] = holes[i].X - bull.X;
+                downBuffer[i] = holes[i].Y - bull.Y;
             }
 
-            var next = new Offset(sumX / holes.Count, sumY / holes.Count);
+            var next = new Offset(Middle(acrossBuffer), Middle(downBuffer));
             if (next.Minus(shift).Length < 0.01)
             {
                 return next;
@@ -148,6 +183,15 @@ public static class ImpactOffsets
         }
 
         return shift;
+    }
+
+    /// <summary>The middle value, which is what makes one wild shot cost nothing.</summary>
+    private static double Middle(double[] values)
+    {
+        var sorted = (double[])values.Clone();
+        Array.Sort(sorted);
+        int middle = sorted.Length / 2;
+        return sorted.Length % 2 == 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
     }
 
     /// <summary>Total distance from each hole to the bull it would be given, which is what a translation is judged by.</summary>
@@ -182,7 +226,8 @@ public static class ImpactOffsets
 
     private static string Words(Offset shift, int shots)
     {
-        if (shift.Length <= 0.5)
+        // The same tenth of an inch ImpactOffset.Moved uses, so the words and the flag can never disagree.
+        if (shift.Length <= 25)
         {
             return string.Create(CultureInfo.InvariantCulture, $"{shots} shots, landing where they were aimed.");
         }
