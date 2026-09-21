@@ -12,6 +12,69 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 36: a light installer, measured, and why shrinking the one we have beat it
+
+**Status: open**
+
+### 1. What was asked
+
+Entry 133: measure a framework-dependent build, say what a light installer would cost and gain, and recommend. Measure and propose only.
+
+### 2. The figures, measured on this machine tonight
+
+| | unpacked | zip | installer |
+|---|---|---|---|
+| self-contained, as shipped before tonight | 332.6 MB | about 102 MB | 97.3 MB |
+| framework-dependent, no runtime inside | 227.9 MB | 78.2 MB | not built |
+| **self-contained, with tonight's symbol fix** | **204.3 MB** | not built | not built |
+
+What makes up the framework-dependent build, 78 files:
+
+| part | MB |
+|---|---|
+| Avalonia and Skia | 121.4 |
+| OpenCV's native library | 93.6 |
+| everything else | 7.9 |
+| GroupLab itself | 5.0 |
+
+**Measuring this is what found the real problem.** 100.7 MB of the shipped build was debug symbols, and 100 MB of that was two files: `libSkiaSharp.pdb` at 80.1 MB and `libHarfBuzzSharp.pdb` at 19.9 MB. Native symbols for Skia and HarfBuzz, which nothing at runtime reads, no crash report here can use, and no user will ever open in a debugger. They are now left out, which took 332.6 MB to 204.3 MB with the analysis unchanged: 25 holes, 25 shots, mean radius 0.232 in on the sample, exactly as before.
+
+**So the self-contained build is now smaller than the framework-dependent one was**, 204.3 MB against 227.9 MB, and it carries its own runtime.
+
+### 3. Updates
+
+Entry 133 section 2 expected the gain to be in updates rather than first installs, and that was the right instinct, but the arithmetic has moved. An update today downloads the whole installer, about 97 MB, and will now be substantially less. A framework-dependent update would carry perhaps 60 MB of that, since Avalonia, Skia and OpenCV travel either way and they are 215 of the 228 MB. **The runtime is not what makes a GroupLab update large. The drawing and vision libraries are.**
+
+### 4. No administrator prompt, ever
+
+The per-user route does exist: Microsoft's `dotnet-install` script installs into a folder without elevation, and since .NET 9 an application host can be told to look in a private location with `AppHostDotNetSearch` and `AppHostRelativeDotNet`. On a clean Windows user account that works without a prompt.
+
+**But it is a new failure surface on somebody's first run**, and a first run is when a person decides whether to keep the application. The install script must be downloaded and its hash checked, a 70 MB runtime fetched over whatever connection they have, and any of it can fail behind a corporate proxy or an antivirus that objects to a script fetching an executable. The self-contained build has none of those steps: the installer is the application.
+
+Where a suitable runtime is already present, the private copy would be skipped and nothing downloaded, so the light installer would be small and fast for exactly the people who least need it to be.
+
+### 5. Keeping the runtime patched
+
+This is the part I would not want to own. A self-contained build gets .NET security fixes whenever GroupLab is rebuilt, which is every green push. A per-user runtime under `%LOCALAPPDATA%\GroupLab\dotnet` is patched by nobody: Windows Update does not see it, Microsoft's updater does not know about it, and it would fall to GroupLab to notice a CVE, fetch a new runtime and swap it under a running application. That is a real ongoing obligation on a project with one maintainer.
+
+### 6. Cost
+
+Two packages to build, test and support on every release. The updater must keep each install on its own kind for ever, because a light install cannot take a self-contained update or the reverse, which means the train, the manifest and the installer all grow a dimension. Given entry 123 section 2.7 found three separate defects in the single-package updater in one night, doubling its cases is not a small ask.
+
+### 7. Recommendation
+
+**Not yet, and shrink the one we have instead.** The measurement says the light installer solves a smaller problem than it looked: the runtime is about 100 MB of a 332 MB build, and tonight's symbol fix removed 128 MB for no cost, no new failure mode and no second package.
+
+What I would do next, in order:
+
+1. **Done tonight:** leave out the native debug symbols. 128.3 MB, no behaviour change.
+2. **Next, and I would measure before building:** `opencv_videoio_ffmpeg4130_64.dll` is 27.3 MB and GroupLab reads still images. If video capture is genuinely unused, that is 27 MB more for nothing.
+3. **Then consider trimming.** It would reach the managed assemblies, not the 215 MB of native libraries, so the gain is modest. Avalonia uses reflection for styling and data binding, so trimming it risks failures that appear only at runtime on a screen nobody tested, which is the worst kind. I would not trim without a full control walk on all three platforms afterwards.
+
+Revisit the light installer if the download is still thought too large after 1 and 2, because then the remaining weight really is Avalonia, Skia and OpenCV, and none of those is fixed by leaving the runtime out.
+
+---
+
 ## 2026-09-22, question 35: holes off the bull grid are now kept, and that loosens the one rule that removed every false positive
 
 **Status: open**

@@ -15,6 +15,29 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 133: a "light" installer, measured before it is built
+
+**Status: actioned 2026-09-22**, sections 1 to 6. Measured and proposed; nothing was built, as the entry requires.
+- **Section 1, measured on this machine:** framework-dependent is 227.9 MB unpacked and 78.2 MB zipped, against 332.6 MB unpacked and a 97.3 MB installer self-contained. Of the framework-dependent build, Avalonia and Skia are 121.4 MB, OpenCV's native library 93.6 MB, everything else 7.9 MB, and GroupLab itself 5.0 MB.
+- **What the measuring found, which matters more than the answer.** 100.7 MB of the shipped build was debug symbols, 100 MB of it two files: `libSkiaSharp.pdb` at 80.1 MB and `libHarfBuzzSharp.pdb` at 19.9 MB. Nothing reads them at runtime, no crash report here can use them, and no user will open them in a debugger. Leaving them out took the self-contained build from 332.6 MB to 204.3 MB with the analysis unchanged, so **the self-contained build is now smaller than the framework-dependent one was**.
+- **Section 2:** the runtime is not what makes an update large. Avalonia, Skia and OpenCV are 215 of the 228 MB and travel either way.
+- **Section 3:** the per-user route works without elevation, with `dotnet-install` and .NET 9's `AppHostDotNetSearch`. It is also a new failure surface on somebody's first run, which is when they decide whether to keep the application, and it does nothing at all for a machine that already has a runtime.
+- **Section 4:** a per-user runtime is patched by nobody. Windows Update does not see it and Microsoft's updater does not know about it, so it would fall to GroupLab to watch for a CVE and swap a runtime under a running application.
+- **Section 5:** two packages to build, test and support, and the updater keeping each install on its own kind for ever. Entry 123 section 2.7 found three defects in the single-package updater in one night, so doubling its cases is not small.
+- **Section 6: question 36**, recommending not yet, and shrinking the one package instead. The symbol fix is done; dropping OpenCV's 27.3 MB video library is the next thing to measure; trimming is last and would need a full control walk on all three platforms.
+- `docs/PHASE1-RESULTS.md` "Entry 133".
+
+Alan suggested offering a light installer beside the full one: it would install only GroupLab and download the .NET runtime if the machine does not already have it. **Measure and propose only; do not build it.** Put this at the end of tonight's queue, after everything else.
+
+1. **Size.** Publish GroupLab framework-dependent for win-x64 (no runtime inside) and report: unpacked size, zip size, and installer size, beside today's self-contained figures (about 311 MB unpacked, about 97 MB installer). Say which parts make up the rest (Avalonia, OpenCV's native library, fonts, samples).
+2. **Updates.** The biggest gain may be updates rather than first installs: a framework-dependent nightly update would carry only GroupLab, not the runtime each time. Report the size of an update in each model.
+3. **No administrator prompt, ever.** The installer and every update are per user with no elevation (entry 116, entry 119). A machine-wide .NET runtime install needs administrator rights, so that route is out. Check the per-user route instead: the runtime installed into a folder GroupLab owns (for example under `%LOCALAPPDATA%\GroupLab\dotnet` with Microsoft's install script, its download verified by hash), and the application host told to look there (.NET's `AppHostDotNetSearch` / `AppHostRelativeDotNet` settings, available since .NET 9). Say whether it works without elevation on a clean Windows user account, and what happens when the machine already has a suitable runtime.
+4. **Keeping the runtime patched.** A self-contained build gets .NET security fixes with each GroupLab build. Say how a separately installed per-user runtime would be kept patched, and by whom.
+5. **Cost.** Two packages mean two things to build, test and support, and the updater must keep each install on its own kind. Estimate that honestly.
+6. **Recommendation**, as a question in `docs/QUESTIONS-FOR-PLANNING.md` with the figures: build it, or not yet, or instead shrink the single installer (for example by trimming, with what trimming would risk for Avalonia).
+
+---
+
 # 2026-09-21, entry 132: release notes that say what changed, and smaller builds
 
 **Status: actioned in part 2026-09-22.** Done: section 1. **Not done: section 2**, named below.

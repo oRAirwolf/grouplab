@@ -52,6 +52,9 @@ public class BenchCoverageTests
         ["PointInches"] = "A point on the page, carried by the stage records that are already timed.",
         ["AssignmentCertainties"] = "It reads the review queue that is already in memory and counts two kinds of item. There is nothing in it to measure that the analysis it sits beside does not already dominate.",
         ["StatedResolutionScale"] = "Two comparisons against a number the image file already carries. It does not read the image.",
+        ["FigureExplanations"] = "A fixed list of sentences looked up by name. There is nothing in it that takes time.",
+        ["FourUnits"] = "Four divisions and a rounding, on one number the analysis has already worked out.",
+        ["MeanRadiusScale"] = "One division to put a figure on a scale, and a sentence chosen by the shot count.",
     };
 
     [Fact]
