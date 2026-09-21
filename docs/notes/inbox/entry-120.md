@@ -5,7 +5,7 @@ Alan went back to the range on 2026-09-20 and shot five 5x5 load-block sheets (G
 - `C:\Dev\grouplab-range-2026-09-20\scans\` : six 600 dpi scans, `1-600-dpi09202026.png` to `6-600-dpi09202026.png` (SHA-256 prefixes 44c377d5120a75bf, 859715cbb9f2def6, 93140a6a37777667, a2e04ebf34e857dc, dabd4bedafe41c7e, d1aff0b4d6b55f39).
 - `C:\Dev\grouplab-range-2026-09-20\photos\` : 59 phone photographs, `20260920_HHMMSS.jpg`, taken in six bursts (11:06, 14:14, 15:33, 16:14, 16:56, 18:59).
 
-These are real photographs from a phone. **Do not read, print or log any GPS or location metadata in them. Nothing from this folder is committed.** Any figure or crop you commit must be re-encoded from pixels with no metadata, and only with Alan's say-so in a later command. The folder `C:\Dev\grouplab-range-2026-09-20\sheet1\` named in entry 114 never existed: the 9-shot sheet from the first visit is not in this set, and scan 1 is a different sheet (Alan confirmed).
+These are real photographs from a phone. **Do not read, print or log any GPS or location metadata in them. Nothing from this folder is committed, with one exception: scan 3 becomes the published sample under section 9, after its consent record is in place.** Any figure or crop you commit must be re-encoded from pixels with no metadata, and only with Alan's say-so in a later command. The folder `C:\Dev\grouplab-range-2026-09-20\sheet1\` named in entry 114 never existed: the 9-shot sheet from the first visit is not in this set, and scan 1 is a different sheet (Alan confirmed).
 
 What I see in the scans, from reading them at reduced size. Treat it as a description to check, not as ground truth:
 
@@ -13,14 +13,27 @@ What I see in the scans, from reading them at reduced size. Treat it as a descri
 |---|---|---|---|
 | 1 | LTR-D | 9/20/26, 100 y, 6.5 Creed, 153.5 LRHT, 42.4 H4350, Alpha SRP brass, primer 7.5BR, 2.874, notes 28" Seekins | Shots on bulls 1 to 15 only, rows 4 and 5 unshot |
 | 2 | blank letter sheet | none | Hand-drawn circle and cross in blue, one tight group through it. Alan: zero group, 6.5 Creedmoor, 100 yards |
-| 3 | LTR-D | same load as scan 1 but primer GM205MAR, no notes | Shots on all 25 bulls, plus a few holes in the left margin beside bulls 11 and 16 |
+| 3 | LTR-D | same load as scan 1 but primer written as GM205MAR, no notes. **The primer is written wrongly: Alan says it was 7.5BR, the same as scan 1** | Shots on all 25 bulls, plus a few holes in the left margin beside bulls 11 and 16 |
 | 4 | LTR-D | 100 y, 22LR, 40 gr SK, SK, Std+, 1.000, 20" CZ | Wide dispersion, many holes between bulls rather than on them |
 | 5 | LTR-D | 100 y, 6 ARC, 108 ELDM, 27 N140, Starline, GM205MAR, 2.250, 18" RTR | Wide dispersion, holes between bulls, one hole near the top left QR code |
 | 6 | LTR-D | 100 y, 6mm Creedmoor, 120 gr LRHT, 39.0 N550, Lapua SRP, GM205MAR-BR4, 2.810, AI AXSR (written lighter, in pencil or thin pen) | Shots on rows 1 to 3 |
 
-Scans 1 and 3 are the same load with only the primer changed, which is exactly the compare-loads case from entry 113.
+Scans 1 and 3 are therefore the same load, same rifle, same day: 40 shots. Scan 6 is the real primer comparison (section 7).
 
-Alan says the number of shots per bull differs by sheet and will give the per-sheet detail separately. Until he does, do not assume one shot per bull anywhere, and mark every count in your report as GroupLab's reading, not the truth.
+### Ground truth from Alan
+
+This is what the shooter says happened. Score GroupLab against it, and keep it in the report beside every count GroupLab produces.
+
+| Scan | Shots | Aimed at | Notes |
+|---|---|---|---|
+| 1 | 15 | one shot at each of bulls 1 to 15 | |
+| 2 | zero group, 6.5 Creedmoor, 100 y | the drawn cross | shot count is GroupLab's to find; report it |
+| 3 | 25 | one shot at each of bulls 1 to 25 | primer 7.5BR, not the GM205MAR written on the sheet |
+| 4 | 23 | row 1: bulls 1 to 4; row 2: bulls 6 to 9; row 3: bulls 11 to 15; row 4: bulls 16 to 20; row 5: bulls 21 to 25 | 22LR at 100 y in a strong, variable crosswind. Windage was changed after row 2, so rows 1 and 2 share one point of impact and rows 3 to 5 another. Scatter is real, not a detection fault |
+| 5 | 20 | bulls 2, 3, 4 and 5 of every row | a load the rifle is not zeroed for, so every shot is high and left of its aim point; many holes will sit nearer another bull than the one aimed at |
+| 6 | 10 | bulls 1 to 5 with GM205MAR primers; bulls 6 to 10 with CCI BR-4 primers | the BR-4 shots impacted low, landing on row 3. Shot 6, aimed at bull 6, landed left of bull 21, much lower than the rest, cause unknown. It is a real shot, not a flyer to delete, and it belongs to bull 6 and the BR-4 load |
+
+Where a count below says "holes", it is GroupLab's reading; where it says "shots", it is this table.
 
 ## 1. Every scan through the application as a user would
 
@@ -28,7 +41,7 @@ Open each scan in the built application, by the ordinary Open path, and record f
 
 ## 2. Holes between bulls
 
-Scans 4 and 5 are the case the matching has not met: shots that land between bulls, or nearer a neighbouring bull than the one aimed at. Show what GroupLab does with them today, and say whether nearest-bull assignment is producing groups that are wrong. Then propose, in the report and not yet in code, how GroupLab should handle a sheet where assignment is uncertain: at minimum it must say so on screen and let the shooter move a hole to another bull by hand, and it must never present a group statistic built on an assignment it is unsure of as if it were sure. If you think a sheet-wide assignment (one common point-of-impact offset for the whole sheet, with each bull taking its nearest shots after that offset is removed) is sound, describe it with its failure cases and what the shooter must tell GroupLab for it to work, such as shots per bull. Alan's per-sheet answer will say which of these sheets it would apply to.
+Scans 4 and 5 are the case the matching has not met: shots that land between bulls, or nearer a neighbouring bull than the one aimed at. Show what GroupLab does with them today, and say whether nearest-bull assignment is producing groups that are wrong. Then propose, in the report and not yet in code, how GroupLab should handle a sheet where assignment is uncertain: at minimum it must say so on screen and let the shooter move a hole to another bull by hand, and it must never present a group statistic built on an assignment it is unsure of as if it were sure. If you think a sheet-wide assignment (one common point-of-impact offset for the whole sheet, with each bull taking its nearest shots after that offset is removed) is sound, describe it with its failure cases and what the shooter must tell GroupLab for it to work, such as shots per bull. Test any such idea on paper against the ground truth: scan 5 (one common offset, bulls 2 to 5 of each row), scan 4 (two offsets, rows 1 to 2 and rows 3 to 5, plus real wind scatter) and scan 6 (the BR-4 shots landing a whole row low, and shot 6 far from everything). Say plainly which of these a sheet-wide assignment would get right, which it would get wrong, and what the shooter would have to enter for it to work.
 
 ## 3. The margin holes on scan 3 and the sighters
 
@@ -53,7 +66,12 @@ Add these six scans to the timing measurement from entry 115 section 7 (open to 
 
 ## 7. Compare loads
 
-Run the compare-loads view on scans 1 and 3 (same load, primer 7.5BR against GM205MAR). Report what it shows, including the power statement: with the shot counts on these sheets, say plainly whether the comparison can tell the primers apart, and do not let the screen suggest a difference the numbers cannot support.
+Two runs:
+
+1. Scan 6, bulls 1 to 5 (GM205MAR) against bulls 6 to 10 (CCI BR-4), with the load set per bull as entry 115 question 27 allows. The BR-4 holes sit on row 3, so first say whether GroupLab assigns them to bulls 6 to 10 or to row 3's bulls, and what the shooter must do to put them right. Then report what compare-loads shows, including the power statement: five shots against five, one of them far out, say plainly what the comparison can and cannot tell, and do not let the screen suggest a difference the numbers cannot support. The point-of-impact shift between the primers is visible to the eye and is a legitimate thing to report; a precision difference from five shots is not.
+2. Scans 1 and 3 as one load across two sheets (40 shots). Report whether GroupLab can pool two sheets of the same load today, and if not, note it as a proposal.
+
+The wrong primer written on scan 3 is a case to report too: say whether the shooter can correct a load block reading after the fact, and whether the correction is kept with the session.
 
 ## 8. Report
 
@@ -61,4 +79,7 @@ One report for this entry in your summary: a table per scan, the photograph pair
 
 ## 9. On the report from your last run
 
-You wrote that the Inno Setup installer has never been built. It has: Alan ran the release workflow by hand after your run, and the draft release "GroupLab 0.1.0, draft" from commit 5a4cd07 carries `grouplab-setup-win-x64.exe` and its versioned copy, identical by SHA-256. It was built on the GitHub Windows runner, where Inno Setup is installed. Alan is installing it now. Correct the status line and any document that says otherwise. Questions 28 and 29 stay open; Alan will answer them.
+You wrote that the Inno Setup installer has never been built. It has: Alan ran the release workflow by hand after your run, and the draft release "GroupLab 0.1.0, draft" from commit 5a4cd07 carries `grouplab-setup-win-x64.exe` and its versioned copy, identical by SHA-256. It was built on the GitHub Windows runner, where Inno Setup is installed. Alan is installing it now. Correct the status line and any document that says otherwise. Alan has answered questions 28 and 29:
+
+1. **Question 28, support link:** no address yet; he may register a domain later. Leave a clearly marked placeholder: one constant in one place, and the menu item says there is no support address yet rather than opening anything. Do not invent a domain. A test holds that no other support address appears anywhere in the repository.
+2. **Question 29, published sample:** use scan 3, `C:\Dev\grouplab-range-2026-09-20\scans\3-600-dpi09202026.png` (SHA-256 prefix 93140a6a37777667), as the sample. Alan wrote to me: "Use scan 3 as the sample scan. I dont care about my load data being shared." That sentence, the date 2026-09-21, the file name, its SHA-256 and the fact that it was given in the planning session go into a consent record in the repository, beside the existing sample records, before the file is committed. No consent record, no publication, as always. The PNG carries no metadata beyond its resolution (I checked: every text chunk is empty), but strip all ancillary chunks except the resolution anyway. You may recompress it losslessly to save space, provided the decoded pixels are identical to the original; record both file hashes and the pixel hash. It replaces the generated sample in the package and in the README where the generated one is described, and its ground truth (25 shots, one per bull, load as corrected above) becomes the expected result for the package's self-test in the `windows package` job. This consent covers scan 3 only; the other scans and every photograph stay private.
