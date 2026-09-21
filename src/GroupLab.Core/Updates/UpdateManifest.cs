@@ -34,6 +34,25 @@ public sealed record UpdateManifest(
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
+    /// <summary>
+    /// How the signed bytes are written, and why they are not the same options the file is written with.
+    /// <para>
+    /// <b>The signed bytes must not depend on the machine that produced them.</b> Indented JSON does: from .NET 9 the writer's newline
+    /// defaults to <see cref="Environment.NewLine"/>, so the same manifest serialises with a carriage return on Windows and without one on
+    /// Linux. The nightly is signed on a Linux runner and verified on a Windows machine, so every published manifest was refused as
+    /// BadSignature, and no test caught it because a test signs and verifies on one machine.
+    /// </para>
+    /// <para>
+    /// So the signature is over compact JSON, which has no line breaks to differ over. Indentation is for a person reading the file; it has
+    /// no business deciding whether an update installs.
+    /// </para>
+    /// </summary>
+    private static readonly JsonSerializerOptions Signing = new()
+    {
+        WriteIndented = false,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+    };
+
     /// <summary>The version this manifest offers, or null where it does not say a version this application understands.</summary>
     public SemanticVersion? Offered => SemanticVersion.Parse(Version);
 
@@ -51,10 +70,10 @@ public sealed record UpdateManifest(
         Assets?.FirstOrDefault(a => string.Equals(a.Platform, platform, StringComparison.OrdinalIgnoreCase) && string.Equals(a.Kind, kind, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
-    /// The bytes that are signed: the manifest as JSON with its fields in a fixed order and no signature in it, so signing and verifying
-    /// cannot disagree about what was signed.
+    /// The bytes that are signed: the manifest as compact JSON with no signature in it, so signing and verifying cannot disagree about what
+    /// was signed, whatever machine each of them runs on. See <see cref="Signing"/> for why compact rather than indented.
     /// </summary>
-    public byte[] Signable() => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, Options));
+    public byte[] Signable() => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, Signing));
 
     public string ToJson() => JsonSerializer.Serialize(this, Options);
 
