@@ -1,6 +1,6 @@
 # The packages themselves, in one place, NOTES-FROM-PLANNING.md entry 119 section 1 item 3: "do not copy the steps by hand into a second
-# file". Both release.yml and test-build.yml call this, so a numbered release and a rolling test build are built by the same steps from the
-# same script and cannot drift apart.
+# file". Both release.yml and nightly.yml call this, so a numbered release and a nightly are built by the same steps from the same
+# script and cannot drift apart.
 #
 # It builds what a person downloads: the Windows installer, the Windows zip and the Linux tarball, each under two names, once carrying the
 # version and the commit so a bug report names a build, and once under a stable name so a fixed address keeps working.
@@ -20,6 +20,11 @@ on:
         description: 'The version to name the assets by. Empty takes the one in Directory.Build.props.'
         required: false
         default: ''
+        type: string
+      train:
+        description: 'The update train the build belongs to: nightly, beta or release. Empty leaves it a development build.'
+        required: false
+        default: 'development'
         type: string
     outputs:
       version:
@@ -60,7 +65,7 @@ jobs:
       # one asset of the two, since Inno Setup is installed on this runner.
       - name: Build the package
         shell: pwsh
-        run: ./scripts/package-windows.ps1 -Version '${{ steps.name.outputs.version }}' -Commit '${{ steps.name.outputs.commit }}' -RequireInstaller
+        run: ./scripts/package-windows.ps1 -Version '${{ steps.name.outputs.version }}' -Commit '${{ steps.name.outputs.commit }}' -Train '${{ inputs.train }}' -RequireInstaller
 
       - name: Say what it is
         shell: bash
@@ -106,7 +111,8 @@ jobs:
       - name: Publish and pack
         run: |
           set -o pipefail
-          dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab
+          dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab \
+            "-p:Version=${{ steps.name.outputs.version }}" "-p:GroupLabTrain=${{ inputs.train }}"
           cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
           mkdir -p out/package
           tar -czf "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" -C publish grouplab

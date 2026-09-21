@@ -2,8 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!-- NOTES-FROM-PLANNING.md entry 116 section 1: the version a package is named by and the application reports. Phase 1 is unreleased, so
-         it is 0.1.0 rather than the 1.0.0 the SDK assumes; the build stamps the commit after it. -->
-    <Version>0.1.0</Version>
+         it is below 1.0.0 rather than the 1.0.0 the SDK assumes; the build stamps the train and the commit after it.
+         Entry 121: v0.1.0 was published as a release, and 0.1.0-nightly.N sorts below 0.1.0 under SemVer, so a nightly built from 0.1.0
+         would look older than something already public and the updater would offer the release as an upgrade to older code. The version
+         therefore moves to 0.2.0, and VersionTests holds it above every non-nightly tag in the repository. -->
+    <Version>0.2.0</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,5 +14,12 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <Deterministic>true</Deterministic>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- NOTES-FROM-PLANNING.md entry 119 section 1.2: the train is stamped in at build time. Only a publishing workflow sets it; a build
+         made on somebody's own machine keeps "development" and never offers to update itself. -->
+    <GroupLabTrain Condition="'$(GroupLabTrain)' == ''">development</GroupLabTrain>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="GroupLabTrain" Value="$(GroupLabTrain)" />
+  </ItemGroup>
 </Project>

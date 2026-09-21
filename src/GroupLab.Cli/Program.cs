@@ -61,6 +61,10 @@ return args switch
     ["compare-photos", .. var rest] => GroupLab.Cli.PhotoVerb.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),
     ["bench", .. var rest] => GroupLab.Cli.BenchVerb.Run(rest, Console.Out, Console.Error),
+    ["update-key"] => GroupLab.Cli.UpdateVerbs.Key(Console.Out),
+    ["update-manifest", .. var rest] => GroupLab.Cli.UpdateVerbs.Manifest(rest, Console.Out, Console.Error),
+    ["update-check", var manifest] => GroupLab.Cli.UpdateVerbs.Check(manifest, null, Console.Out, Console.Error),
+    ["update-check", var manifest, var publicKey] => GroupLab.Cli.UpdateVerbs.Check(manifest, publicKey, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
@@ -515,6 +519,10 @@ static int Usage()
         grouplab user-guide [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
         grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>]
+        grouplab update-key
+        grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json>
+                                 [--asset <platform> <kind> <file> <url>]...
+        grouplab update-check <manifest.json> [<public key>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]
         grouplab holes split-calibration [--local <manifest.json>]

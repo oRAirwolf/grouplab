@@ -9,6 +9,14 @@ internal static class Repo
 
     public static string PathTo(params string[] parts) => Path.Combine([Root, .. parts]);
 
+    /// <summary>The version in Directory.Build.props, which every package and every build is named by.</summary>
+    public static string Version()
+    {
+        string props = File.ReadAllText(PathTo("Directory.Build.props"));
+        var m = System.Text.RegularExpressions.Regex.Match(props, @"<Version>(?<version>[^<]+)</Version>");
+        return m.Success ? m.Groups["version"].Value : "";
+    }
+
     private static string FindRoot()
     {
         for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)

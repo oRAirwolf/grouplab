@@ -1,0 +1,190 @@
+# A nightly build after every green push, NOTES-FROM-PLANNING.md entry 119 section 2. Alan asked whether new versions reach the Releases page
+# on their own; they did not, so until somebody tagged a version the README's download links returned 404. This publishes the newest tested
+# build on the nightly train, so a tester always has something current and nobody has to remember to release it.
+#
+# It publishes only what passed. The trigger is the completion of "build and test", and the jobs run only when that run succeeded, so a commit
+# that fails on any of the three operating systems publishes nothing. It builds the workflow run's own head commit rather than the branch head,
+# so the thing published is the thing that was tested.
+#
+# Two releases per build:
+#   - v<version>, a pre-release of its own, keeping the versioned assets, so a bug report names a build that still exists;
+#   - nightly, a rolling pre-release moved to the newest build, keeping the stable asset names, which is what the README links to. Its
+#     addresses never change: https://github.com/oRAirwolf/grouplab/releases/download/nightly/<stable name>
+#
+# Both are pre-releases, so GitHub's releases/latest is left for a numbered release, which is a deliberate act (entry 119 section 8).
+#
+# The packages are package.yml, which release.yml calls too, so a nightly and a numbered release cannot drift apart.
+name: nightly
+
+on:
+  workflow_run:
+    workflows: ["build and test"]
+    types: [completed]
+    branches: [phase-1, main]
+
+permissions:
+  contents: write
+
+# Two quick pushes must not interleave: the newest wins and the older is cancelled where it has not finished.
+concurrency:
+  group: nightly
+  cancel-in-progress: true
+
+jobs:
+  # The version is worked out once and both the package and the publish use it, so the assets, the tag and the manifest cannot disagree.
+  name-it:
+    name: name the build
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.name.outputs.version }}
+      commit: ${{ steps.name.outputs.commit }}
+      signing: ${{ steps.key.outputs.present }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      # <N> is this workflow's own run number, which only ever increases, so nightly versions are ordered by when they were built.
+      - name: Work out the version
+        id: name
+        run: |
+          base=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2)
+          echo "version=${base}-nightly.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short ${{ github.event.workflow_run.head_sha }})" >> "$GITHUB_OUTPUT"
+
+      # Entry 119 section 3.2: no key, no publishing. It fails here, before anything is built, so the reason is the first thing in the log.
+      - name: The signing key must be here
+        id: key
+        env:
+          GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
+        run: |
+          if [ -z "$GROUPLAB_UPDATE_SIGNING_KEY" ]; then
+            echo "present=no" >> "$GITHUB_OUTPUT"
+            {
+              echo "### no update signing key, so nothing is published"
+              echo
+              echo "The repository secret \`GROUPLAB_UPDATE_SIGNING_KEY\` does not exist, so this build cannot sign its update manifest."
+              echo "An unsigned manifest is one the application would have to trust without being able to check it, so the nightly train"
+              echo "publishes nothing until the secret is set. \`docs/UPDATES.md\` has the steps."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::the repository secret GROUPLAB_UPDATE_SIGNING_KEY is not set, so this nightly cannot be signed and will not be published. See docs/UPDATES.md."
+            exit 1
+          fi
+          echo "present=yes" >> "$GITHUB_OUTPUT"
+
+  package:
+    name: package
+    needs: name-it
+    uses: ./.github/workflows/package.yml
+    with:
+      ref: ${{ github.event.workflow_run.head_sha }}
+      version: ${{ needs.name-it.outputs.version }}
+      train: nightly
+
+  publish:
+    name: publish the nightly
+    needs: [name-it, package]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SHA: ${{ github.event.workflow_run.head_sha }}
+      VERSION: ${{ needs.name-it.outputs.version }}
+      COMMIT: ${{ needs.name-it.outputs.commit }}
+    steps:
+      # The whole history, so the notes can say what has changed since the previous nightly.
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/download-artifact@v6
+        with:
+          path: assets
+
+      - name: Gather the assets
+        run: |
+          mkdir -p release
+          find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          ls -la release
+          test "$(find release -type f | wc -l)" -eq 6
+
+      # What changed since the previous nightly, read before the rolling tag moves, because moving it is what loses the answer.
+      - name: Write the notes
+        run: |
+          git fetch --quiet origin 'refs/tags/nightly:refs/tags/previous-nightly' 2>/dev/null || true
+          previous=$(git rev-parse -q --verify refs/tags/previous-nightly || true)
+          if [ "$previous" = "$SHA" ]; then previous=""; fi
+          python3 scripts/release-notes.py "$VERSION" "$SHA" "$previous" > notes.md
+          cat notes.md
+
+      # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.
+      - name: Write and sign the manifest
+        env:
+          GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
+        run: |
+          set -o pipefail
+          dotnet build src/GroupLab.Cli --configuration Release
+          base="https://github.com/oRAirwolf/grouplab/releases/download/nightly"
+          dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-manifest \
+            --version "$VERSION" --train nightly --commit "$SHA" --notes notes.md --out release/update-manifest.json \
+            --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
+            --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
+            --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"
+          dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
+
+      # The build's own release, which keeps the versioned assets so a bug report names something that still exists.
+      - name: Publish this build
+        run: |
+          gh release create "v$VERSION" \
+            --title "GroupLab $VERSION" \
+            --notes-file notes.md \
+            --prerelease \
+            --target "$SHA" \
+            release/update-manifest.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz
+
+      # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
+      # address never serves a stale file.
+      - name: Move the nightly release
+        run: |
+          gh release delete nightly --yes --cleanup-tag || true
+          gh release create nightly \
+            --title "GroupLab nightly, $VERSION" \
+            --notes-file notes.md \
+            --prerelease \
+            --target "$SHA" \
+            release/update-manifest.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz
+
+      # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
+      # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.
+      - name: Keep the newest thirty
+        run: |
+          gh release list --limit 200 --json tagName,isPrerelease \
+            | python3 -c "
+          import json, re, subprocess, sys
+          shape = re.compile(r'^v\d+\.\d+\.\d+-nightly\.\d+$')
+          nightlies = [r['tagName'] for r in json.load(sys.stdin) if shape.match(r['tagName']) and r['isPrerelease']]
+          nightlies.sort(key=lambda t: int(t.rsplit('.', 1)[1]), reverse=True)
+          for tag in nightlies[30:]:
+              print('removing ' + tag)
+              subprocess.run(['gh', 'release', 'delete', tag, '--yes', '--cleanup-tag'], check=False)
+          print(str(min(len(nightlies), 30)) + ' nightly releases kept')
+          "
+
+      - name: Say what it is
+        run: |
+          {
+            echo "### nightly $VERSION"
+            echo
+            echo "https://github.com/oRAirwolf/grouplab/releases/tag/nightly"
+            echo
+            for f in release/*; do
+              echo "- $(basename "$f"), $(du -h "$f" | cut -f1)"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

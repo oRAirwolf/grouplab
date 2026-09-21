@@ -2,11 +2,11 @@
 # no sign-in, which is the answer to "no GitHub". The workflow runs on a tag, and by hand from the Actions tab, where it makes a draft release
 # so a test build can be looked at before anyone sees it.
 #
-# Entry 119 section 3: a numbered release is a deliberate act. Nothing pushes a v* tag by itself; Alan asks for a version by name, and only
-# then does the tag go up. The rolling build that follows every green push is test-build.yml, and it is a pre-release, so this one stays what
-# releases/latest points at.
+# Entry 119 section 8: a numbered release is a deliberate act. Nothing here pushes a v* tag by itself except the nightly workflow, which
+# tags its own pre-releases; a beta or a release happens only when Alan asks for one by name. The train that follows every green push is
+# nightly.yml, and its releases are pre-releases, so this one stays what releases/latest points at.
 #
-# The packages themselves are package.yml, which test-build.yml calls too, so the two cannot drift apart.
+# The packages themselves are package.yml, which nightly.yml calls too, so the two cannot drift apart.
 #
 # Every asset is attached twice: once under a name carrying the version and the commit, so a bug report names a build, and once under a stable
 # name, so https://github.com/oRAirwolf/grouplab/releases/latest/download/<stable name> keeps working without anyone editing the README after a
@@ -54,6 +54,7 @@ jobs:
     with:
       ref: ${{ github.sha }}
       version: ${{ needs.work-out-the-version.outputs.version }}
+      train: release
 
   release:
     name: release

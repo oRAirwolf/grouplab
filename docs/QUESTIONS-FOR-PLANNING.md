@@ -12,6 +12,35 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-21, question 30: the ordering entry 119 asks for is not the SemVer ordering it cites
+
+**Status: open**
+
+### 1. The conflict
+
+Entry 119 section 1.3 says: "Ordering follows SemVer precedence, so `0.1.0-nightly.12 < 0.1.0-beta.1 < 0.1.0 < 0.2.0-nightly.1`. Write that ordering as tests."
+
+**SemVer precedence does not give that ordering.** SemVer 2.0.0 rule 11 compares pre-release identifiers that are not numbers "lexically in ASCII sort order". `beta` sorts before `nightly`, so strict SemVer puts `0.1.0-beta.1` **below** `0.1.0-nightly.12`, which is the opposite of the line above. The rest of the entry needs the entry's ordering rather than SemVer's: section 4.5 says a nightly user takes a newer beta or release and never the reverse, which only works if a beta of the same version reads as newer than a nightly of it.
+
+### 2. What is built
+
+Both, in two places, so neither is bent to fit the other.
+
+- **`SemanticVersion` is strictly SemVer**, because it also reads tags and anything else that claims to be a version, and a type called SemanticVersion that is not one would be a trap.
+- **`UpdateOrder` is what the updater uses.** It ranks the trains by how steady they are, nightly below beta below release, and falls back to SemVer's own comparison for anything not on a train. The entry's ordering is a test, and so is the fact that strict SemVer disagrees, so nobody later "fixes" one into the other by accident.
+
+### 3. The question
+
+**Is the train ranking what you meant?** I have assumed yes, because section 4.5 cannot work otherwise.
+
+- **A.** Keep it: the updater ranks trains, and the documentation says where it departs from SemVer and why.
+- **B.** Rename the trains so that SemVer's own ordering is right, for example `alpha` for nightly, since `alpha < beta`. That gives one rule everywhere and costs a rename of the tag and the pre-release identifier. It also makes the version string say "alpha" to a person who was told the train is called nightly.
+- **C.** Something else you have in mind.
+
+**I would keep A** and write B down as the thing to do if a third train ever appears, since two ranks are easy to hold in the head and four are not.
+
+---
+
 ## 2026-09-20, question 29: the repository has no shot GroupLab sheet that may be published, so the package's sample is generated
 
 **Status: answered 2026-09-21**, by `docs/NOTES-FROM-PLANNING.md` entry 120 section 9. Neither A nor B: Alan gave a real sheet instead. Scan 3 from the 2026-09-20 range day is the sample, published under the consent record in `samples/PROVENANCE.md` with his words in it, and its ground truth of 25 shots is what the package's self-test holds the package to. The generated sample is no longer in the package.

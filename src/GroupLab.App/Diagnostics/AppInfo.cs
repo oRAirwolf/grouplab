@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.App.Diagnostics;
 
@@ -32,6 +33,16 @@ public static class AppInfo
         }
     }
 
+    /// <summary>
+    /// What this build is, NOTES-FROM-PLANNING.md entry 119 section 1.2: its version, the train it was published on, and its commit, all
+    /// stamped in at build time. A build made on somebody's own machine has no train and says "development build".
+    /// </summary>
+    public static GroupLab.Core.Updates.BuildIdentity Build { get; } = GroupLab.Core.Updates.BuildIdentity.Read(Version, Train);
+
+    /// <summary>The train the build was stamped with, or null for a build nobody published.</summary>
+    public static string? Train { get; } =
+        typeof(AppInfo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GroupLabTrain")?.Value;
+
     public static string Channel =>
 #if DEBUG
         "debug";
@@ -52,6 +63,7 @@ public static class AppInfo
     public static IReadOnlyList<(string Key, object? Value)> EnvironmentFields() =>
     [
         ("version", Version),
+        ("train", Build.Train.Words().ToLowerInvariant()),
         ("channel", Channel),
         ("os", OperatingSystemName),
         ("framework", Framework),

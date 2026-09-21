@@ -3174,16 +3174,7 @@ public sealed partial class MainWindow : Window
     /// What this build is, in one line a tester can select and paste: the version, the commit it was made from, and the configuration.
     /// NOTES-FROM-PLANNING.md entry 119 section 4. A build made outside a repository has no commit, and says so rather than inventing one.
     /// </summary>
-    internal static string BuildLine() =>
-        "GroupLab " + Version() + ", " + (AppInfo.Commit is { } commit ? "commit " + commit : "no commit recorded") + ", " + AppInfo.Channel + " build";
-
-    /// <summary>The version without the commit that the informational version carries after a plus sign.</summary>
-    private static string Version()
-    {
-        string version = AppInfo.Version;
-        int plus = version.IndexOf('+', StringComparison.Ordinal);
-        return plus < 0 ? version : version[..plus];
-    }
+    internal static string BuildLine() => AppInfo.Build.Line;
 
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
     internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");

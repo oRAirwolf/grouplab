@@ -23,6 +23,10 @@
 .PARAMETER Output
     Where to put the package. The default is out/package.
 
+.PARAMETER Train
+    The update train this build belongs to: nightly, beta or release. The default, development, is what a build made on somebody's own
+    machine is, and such a build never offers to update itself.
+
 .PARAMETER SkipInstaller
     Build the zip only, even where Inno Setup is installed.
 
@@ -33,6 +37,7 @@
 param(
     [string]$Version,
     [string]$Commit,
+    [string]$Train = "development",
     [string]$Output = "out/package",
     [switch]$SkipInstaller,
     [switch]$RequireInstaller
@@ -60,7 +65,7 @@ if (Test-Path $Output) { Remove-Item $Output -Recurse -Force }
 New-Item -ItemType Directory -Path $staging -Force | Out-Null
 
 # The application, self-contained: every .NET file it needs, and the OpenCV native library, travel with it.
-dotnet publish src/GroupLab.App --configuration Release -r win-x64 --self-contained -o $staging
+dotnet publish src/GroupLab.App --configuration Release -r win-x64 --self-contained -o $staging "-p:Version=$Version" "-p:GroupLabTrain=$Train"
 if ($LASTEXITCODE -ne 0) { throw 'The publish failed.' }
 
 # GPL-3.0 section 4: the licence travels with the binary, and the notices say what else is in it.
