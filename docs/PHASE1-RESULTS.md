@@ -6527,6 +6527,8 @@ A name already in use is now refused with a sentence naming the clash, because `
 
 **Section 6.3, the calibre confirmed before Accept.** Tonight's scan re-run is the argument for this, and it is a strong one: naming the calibre is worth five holes on scan 4 and the edge shot on scan 6. GroupLab now reads a calibre from the holes it measured, puts back the 0.0202 in that paper closes behind a bullet, and offers it with a sentence saying what it cannot know. Under three holes it says it has too few rather than answering from one or two marks. **The guess is offered and never applied**, because using it silently would be GroupLab deciding a fact the shooter knows for certain on evidence that is only suggestive, and then measuring everything else against it. Accept is held on a sheet of bulls until the calibre is answered; a plain group marked by hand is not held, because there is nothing for the answer to change.
 
+**And it reached the screen.** The marking panel shows the reading where no calibre is named, and Accept on a sheet of bulls is held until the question is answered. Clearing the box counts as an answer, because somebody marking a photograph of something that is not a GroupLab sheet means "no calibre"; the gate exists to stop Accept on a sheet nobody was asked about, not to force a number out of anyone. **Eight existing tests accepted without answering**, which is the behaviour change working rather than a problem with it.
+
 **Entry 132 section 2.2, native libraries only for the platforms anything runs on.**
 
 | build | before | after |
