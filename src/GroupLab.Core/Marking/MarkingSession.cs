@@ -562,7 +562,18 @@ public sealed class MarkingSession
         var taken = held.Keys.ToHashSet();
         var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).ToList();
         var open = state.Bulls.Where(b => rule is { NearestOnly: true } || Room(b.Index) > 0).ToList();
-        var result = ShotAssignment.Assign([.. free.Select(s => sheet.Mapping.ToPage(s.Image))], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)],
+
+        var placed = free.Select(s => sheet.Mapping.ToPage(s.Image)).ToList();
+        var impact = SheetOffset(state, rule, open, placed);
+        if (impact is { Certain: true, Moved: true })
+        {
+            // Entry 130 section 3.1: assign in the shifted frame. The shots are moved back by the offset so that each one is compared with
+            // the bull it was aimed at rather than the bull it happens to have landed nearest, which is the whole defect. Nothing stored
+            // moves: this is a frame the matching runs in, and the shots keep the positions they were detected at.
+            placed = [.. placed.Select(p => new PointD(p.X - impact.Shift.X, p.Y - impact.Shift.Y))];
+        }
+
+        var result = ShotAssignment.Assign([.. placed], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)],
             capacity: rule is null ? null : [.. open.Select(b => Math.Max(1, Room(b.Index)))], nearestOnly: rule?.NearestOnly == true);
         int? Index(int? position) => position is { } p && p >= 0 ? open[p].Index : null;
 
@@ -585,6 +596,45 @@ public sealed class MarkingSession
             Shots = [.. state.Shots.Select(s => bulls.TryGetValue(s.Id, out int? bull) ? s with { Bull = bull } : s)],
             Assignment = previous with { Method = result.Method, Reason = reason, Shots = [.. details] },
         };
+    }
+
+    /// <summary>
+    /// The sheet's point of impact, NOTES-FROM-PLANNING.md entry 130 section 3.1, or null where it must not be applied.
+    /// <para>
+    /// <b>It is only applied where the shooter has said which bulls they aimed at</b>, which is what <see cref="AssignmentRule.PerBull"/>
+    /// records. That restraint is the whole of the design. A sheet of twenty five bulls where ten were shot has a translation that explains
+    /// the holes for almost any reading, so solving over every bull would let the software choose between them on a margin it cannot
+    /// justify, and it would be choosing on the sheets where being wrong is quietest. Where the shooter has named the bulls, the question
+    /// stops being "where might these have been aimed" and becomes "how far from there did they land", which is arithmetic.
+    /// </para>
+    /// <para>
+    /// The offset has to be both certain and worth more than a tenth of an inch before it moves anything, so an ordinary sheet shot at its
+    /// own bulls is assigned exactly as it was before this existed.
+    /// </para>
+    /// </summary>
+    private static ImpactOffset? SheetOffset(MarkingState state, AssignmentRule? rule, IReadOnlyList<BullAim> open, IReadOnlyList<PointD> placed)
+    {
+        if (rule is null || rule.NearestOnly || rule.PerBull.IsEmpty || placed.Count == 0)
+        {
+            return null;
+        }
+
+        var aimed = new List<int>();
+        for (int i = 0; i < open.Count; i++)
+        {
+            if (rule.PerBull.ContainsKey(open[i].Index))
+            {
+                aimed.Add(i);
+            }
+        }
+
+        return aimed.Count == 0
+            ? null
+            : ImpactOffsets.Solve(
+                "the sheet",
+                [.. placed.Select(p => new Offset(p.X, p.Y))],
+                [.. open.Select(b => new Offset(b.Declared!.Value.X, b.Declared!.Value.Y))],
+                aimed);
     }
 
     private void Update(int id, Func<MarkedShot, MarkedShot> change)
