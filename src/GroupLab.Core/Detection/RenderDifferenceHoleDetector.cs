@@ -269,9 +269,17 @@ public static class RenderDifferenceHoleDetector
                 : solidity < options.MinimumSolidity ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
                 : null;
+            // Entry 130 section 2b.4: a mark off the bull grid is still a shot if it is near the grid. The prior that refused everything
+            // outside a cell is narrowed rather than dropped, because it is what removed every false positive the survey's baselines made,
+            // and an invented hole is worse than a missed one: the shooter can see a shot that is missing and cannot see one that is not
+            // there. Near the grid is kept and left unassigned; far out in the margins is still refused.
+            bool insideACell = cells.Any(c => Math.Abs(page.X - c.X) <= c.HalfWidth && Math.Abs(page.Y - c.Y) <= c.HalfHeight);
+            bool nearTheGrid = insideACell || OutsideTheGrid.NearEnoughToBeAMissedShot(
+                page.X, page.Y, [.. cells.Select(c => (c.X, c.Y, c.HalfWidth, c.HalfHeight))]);
+
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
-                : !cells.Any(c => Math.Abs(page.X - c.X) <= c.HalfWidth && Math.Abs(page.Y - c.Y) <= c.HalfHeight) ? "outside every bull's cell"
+                : !nearTheGrid ? OutsideTheGrid.TooFarOut
                 : null);
             if (why is not null)
             {
