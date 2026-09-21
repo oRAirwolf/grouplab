@@ -100,6 +100,10 @@ public partial class MainWindow
         updateState.Text = "Looking for a newer build…";
         DiagnosticLog.Info("update.check", ("train", updates.Train.Words()));
 
+        // Somebody who pressed Check now is told it is happening. A check on launch stays silent, because a bar that appears to say it is
+        // looking, and then that it found nothing, is two interruptions for no news.
+        Show(new UpdateState(UpdateStage.Checking, updateState.Text), byHand);
+
         var run = new UpdateRun(TheOutsideWorld.Current, ThisBuild, UpdateFolder);
         var (state, decision) = await run.CheckAsync(updates, TrustedKey, token).ConfigureAwait(true);
         updateRun = state.Stage == UpdateStage.Offered ? run : null;
@@ -146,6 +150,9 @@ public partial class MainWindow
                 updateButtons.Children.Add(Button("Later", () => Show(updateNow with { Stage = UpdateStage.Idle }, visible: false)));
                 break;
 
+            // Both of these are over in a moment and neither is worth a button: there is nothing useful to press while GroupLab is looking,
+            // and nothing to press at all once the installer has been started.
+            case UpdateStage.Checking:
             case UpdateStage.Installing:
                 break;
 

@@ -9,18 +9,13 @@ public enum UpdateStage
     Checking,
     Offered,
     Downloading,
-    Verifying,
     ReadyToInstall,
     Installing,
     Refused,
 }
 
 /// <summary>Where an update has got to, in one value the window can draw without knowing how any of it works.</summary>
-public sealed record UpdateState(UpdateStage Stage, string Says, SemanticVersion? Version = null, double Share = 0, string? Notes = null)
-{
-    /// <summary>Whether a person can cancel what is happening.</summary>
-    public bool Cancellable => Stage is UpdateStage.Downloading or UpdateStage.Verifying;
-}
+public sealed record UpdateState(UpdateStage Stage, string Says, SemanticVersion? Version = null, double Share = 0, string? Notes = null);
 
 /// <summary>
 /// One update, from looking to a ready installer, NOTES-FROM-PLANNING.md entry 123 section 2. Everything it does outside the process goes

@@ -12,6 +12,49 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-21, question 33: an update that will not start cannot roll itself back, and making it able to costs a second copy of the program
+
+**Status: open**
+
+### 1. What was asked for
+
+Entry 123 section 2.4: "If the new version fails to start, the previous install must still be usable; say how that is guaranteed or, if it cannot be with the chosen mechanism, say so and what the user does."
+
+### 2. What is true today, and it is the "cannot" half
+
+The mechanism chosen in entry 123 section 2.1 is the Inno Setup installer run silently. `packaging/windows/grouplab.iss` installs with
+
+```
+[Files]
+Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+```
+
+so the new build is written over the old one in `{app}`. Once it has run, the previous build's files are gone. **There is no second copy and nothing to roll back to on disk.** Saying it were otherwise would be a lie in the one place a lie costs most.
+
+What is guaranteed, and what the person actually does, is in `docs/UPDATES.md` under "If a new build will not start":
+
+1. Nothing of theirs is at risk. Everything lives in `%APPDATA%\GroupLab`, which no installer or uninstaller touches. A bad build cannot lose a session.
+2. The build they were on still exists at its own address, because `nightly.yml` publishes `v<version>` beside the rolling `nightly` tag and keeps the newest thirty.
+3. To go back they download that build's installer and run it over the broken one.
+
+That is three steps and a working machine to do them on. It is not nothing, but it is not a roll back either: it needs the person to notice, to know where to look, and to have a browser.
+
+### 3. The options, with their real costs
+
+**A. Leave it as it is.** Cost: nothing new. A build that will not start needs a person to go and fetch the previous one. Every nightly tester is Alan today, so the cost is currently one person's ten minutes, once, if it ever happens.
+
+**B. Keep the previous install beside the new one.** The installer moves `{app}` to `{app}.previous` before writing, and a `Roll back to <version>` shortcut runs the previous copy's own installer. Cost: the install doubles on disk, about 190 MB becomes about 380 MB, for as long as the previous copy is kept; the uninstaller has to learn to remove both; and it is new `[Code]` in the installer, which is the one part of the build nothing tests.
+
+**C. Have GroupLab prove the new build starts before the old one is gone.** The installer would run the new build once with a `--prove-it` switch and put the old one back if it does not report success within some number of seconds. Cost: all of B, plus a timeout to get wrong, plus a mechanism that can itself fail, and a person watching a progress bar for longer. This is what the updater frameworks do, and they do it with years of edge cases behind them.
+
+### 4. What I would choose, and why
+
+**A, for now, and B when there is a second tester.** The whole argument for B is that somebody who is not Alan hits a broken nightly, cannot diagnose it, and gives up; today there is nobody in that position, and the nightly train is explicitly the train where broken builds are expected. When the beta train opens, or when anybody but Alan installs GroupLab, B stops being insurance and starts being necessary, and it is cheaper to build then than to build now and maintain untested installer code in the meantime.
+
+I would not build C at all. It is the right answer for a product with a support queue and the wrong one for a project where the honest fallback is a three-line paragraph in `docs/UPDATES.md`.
+
+---
+
 ## 2026-09-21, question 32: a portrait page cannot fill half a landscape window, so the library's acceptance test measures something else
 
 **Status: open**

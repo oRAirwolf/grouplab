@@ -5918,6 +5918,79 @@ Entry 119 section 6.1 asks for a link to the repository on the settings page. Th
 
 Named rather than implied: the print device, which entry 114 already keeps behind a fixed allowlist of drivers that write a file silently; the update check's HTTPS request, which does not exist yet; and the installer, which is entry 119 section 4's unbuilt mechanism. Each goes behind this interface when it is built.
 
+## Entry 123. The 403 tested rather than assumed, and the updater's missing half
+
+### 1. The 403 was the repository default, and the setting is required
+
+Entry 123 section 1 asked for the next nightly to be treated as the test of the diagnosis rather than the fix. It was, and the diagnosis held.
+
+| | before the setting change | after it |
+|---|---|---|
+| run | <https://github.com/oRAirwolf/grouplab/actions/runs/35572294871> | <https://github.com/oRAirwolf/grouplab/actions/runs/35573031594> |
+| commit | 862aab2 | 862aab2, the same one |
+| `default_workflow_permissions` | `read` | `write` |
+| "Publish this build" | `HTTP 403: Resource not accessible by integration` on `POST /repos/oRAirwolf/grouplab/releases` | success |
+| "Move the nightly release" | never reached | success |
+| published | nothing | `v0.2.0-nightly.12` and the rolling `nightly` |
+
+Nothing else changed between the two runs: same commit, same workflow file, same secret, same assets. That is as close to a controlled experiment as this gets, and it settles the question entry 123 section 1 raised about the workflow-level `permissions: contents: write` block and about `release.yml` having succeeded under the same default.
+
+**Why the workflow block was not enough.** A workflow's `permissions:` can only narrow what the repository default already grants; it cannot raise it. A workflow asking for more than the default is given the default, and the job log's token summary prints **what was asked for**, not what was granted. That is why the first diagnosis could only ever be a guess: the log said `Contents: write` while the token held read. It is recorded in `docs/UPDATES.md` under "What the workflow needs from the repository", with both run URLs, so the next person to see a 403 does not repeat the reasoning.
+
+No ruleset, tag protection or `GH_DEBUG=api` evidence was needed, because section 1 step 3 is conditional on the publish still failing. No other repository setting or permission was touched.
+
+### 2. The mechanism: the Inno Setup installer, run silently
+
+Entry 119 section 4.6 offered two: the existing installer run silently, or a maintained framework that meets every requirement and needs no administrator rights. **The framework was not a choice that could be made: this repository has no NuGet source configured**, so no package can be added to it at all. That is a fact about the build, not a view about any framework, and it is stated that way in `docs/UPDATES.md` rather than dressed up as a preference.
+
+On its own merits the installer is still the right answer here:
+
+- It already exists and is built by `package.yml` on every commit, so it is the same file a tester downloads by hand. One artefact, one code path.
+- `PrivilegesRequired=lowest` means a per-user install, so nothing asks for administrator rights, which was a requirement rather than a preference.
+- Its silent switches are documented and stable. `/relaunch=yes` is read by a five-line `[Code]` function in `packaging/windows/grouplab.iss`, which is the whole of the new installer code.
+- Nothing new has to be trusted between a signed manifest and the files on disk.
+
+**Off Windows it does not apply.** The zip and the tarball were unpacked wherever their owner chose, and GroupLab does not write over a folder it did not make, so `UpdateAssets.CanInstallItself` is false there and the bar points at the download instead of offering to install.
+
+### 3. What was built
+
+**`UpdateRun` (Core) takes an update from a check to a verified file and stops.** It reads the manifest through `IOutsideWorld`, decides with the rules `UpdatePolicy` already held, downloads the asset for this platform with progress, checks SHA-256 and length against the manifest, and hands back the file and the switches. **It never starts anything.** That separation is the reason the whole thing is testable and the reason nothing can install itself behind a person's back.
+
+**The bar (App), under the header, never a dialog.** Update now, Later, Skip this version, What changed; then the share downloaded with a Stop beside it; then Install and restart. Skip silences one version until something newer appears, and is remembered in `settings.json` along with the train and the interval, which entry 119 had left in memory. A check on launch happens by default and says nothing when it finds nothing.
+
+**The install sequence, in this order:** save the session, write down what version this was and what screen the person was on, say in one line that GroupLab will close and reopen, start the installer through `IOutsideWorld` with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /relaunch=yes`, close. The installer's new `[Run]` line brings GroupLab back, and the new build reads the note, says "GroupLab updated from A to B" with a link to the notes, returns to that screen, and clears the note so it is said once.
+
+**A file that does not match is deleted, not kept.** A stopped download and a dropped connection both leave nothing behind, and the next attempt starts from nothing rather than resuming into a part file, because a half file with the right name is exactly what would pass a length check by accident.
+
+**The check goes through `IOutsideWorld`**, which closes the gap entry 122 named and left open: `GetTextAsync`, `DownloadAsync` and `StartInstaller` joined the interface, and `OutsideWorld.cs` moved to `src/GroupLab.Core/Updates/` so Core can reach it. `OneWayOutTests` guards the new path as it guarded the old.
+
+### 4. If a new build will not start
+
+**It cannot roll back, and `docs/UPDATES.md` says so.** The installer writes over `{app}`; the previous build's files are gone once it has run. What is guaranteed is narrower and worth more: `%APPDATA%\GroupLab` is never touched, so no session, sheet, setting or log is at risk; every nightly keeps its own `v<version>` release, the newest thirty; and going back means downloading that build's installer and running it over the broken one.
+
+Keeping the previous install aside so a failed start could roll itself back costs a second copy of the program on disk and new untested installer code. It is **question 33**, with the three options and their costs, rather than a decision taken quietly here.
+
+### 5. The tests, none of which touch a network or start an installer
+
+15 new tests: 9 in `UpdateRunTests` (Core) and 6 in `UpdateBarTests` (App). The recorder answers the check and the download and writes down the installer it was told to start.
+
+| what | where |
+|---|---|
+| a whole update to a checked file and the silent switches | `UpdateRunTests`, `UpdateBarTests` |
+| hash mismatch: deleted, said so, nothing started | both |
+| a download that arrives short | `UpdateRunTests` |
+| stop part way through: nothing kept | both |
+| a dropped connection, then a clean second attempt | `UpdateRunTests` |
+| a manifest signed by a stranger: refused before anything is downloaded | `UpdateRunTests` |
+| a development build asks the train nothing at all | `UpdateRunTests` |
+| a platform with nothing to install is told so | `UpdateRunTests` |
+| Skip silences one version and not the next | `UpdateBarTests` |
+| **save, close, install, reopen on the screen they were on** | `UpdateBarTests` |
+
+The last one is entry 123 section 2.6's sequence end to end: it drives the window to Install and restart, checks the session was saved and the one line said, reads the installer path and switches off the recorder, closes, opens a newer build against the same settings file, and checks it says what it updated from, lands on the library screen the person was on, and says it once and not twice.
+
+The window gained two seams for this, `MainWindow.ThisBuild` and `MainWindow.TrustedKey`, because a working copy is a development build that trusts Alan's key and so would refuse every manifest a test could sign. Nothing in the application writes to them.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
