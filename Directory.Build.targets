@@ -1,0 +1,45 @@
+<Project>
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 132 section 2.2: copy native libraries only for the platforms GroupLab builds and tests on.
+
+    A build with no runtime identifier copies every native asset every package carries, and the imaging and drawing packages carry them for
+    about thirty platforms: WebAssembly, Mac Catalyst, s390x, LoongArch, MIPS, RISC-V, musl variants and the rest. On this repository that is
+    674 MB of a 685 MB test build, against 252 MB for the four platforms anything is ever run on. Nine such folders on Alan's machine is most
+    of the 10 GB of build output entry 132 opens with.
+
+    This only touches a build with no runtime identifier, which is every ordinary build and every test run. A published package names one
+    runtime identifier and is self contained, so the SDK already gives it that one platform's assets; nothing here changes what ships, and
+    the packaging workflow's own checks are what prove it.
+
+    "osx" with no architecture is kept because some packages ship a universal binary under that name rather than per-architecture ones, and
+    dropping it would take macOS support with it. "win", "unix" and "any" are the fallback identifiers a package uses when one managed
+    assembly serves a whole family; none of them is large and dropping one would remove an implementation with no replacement.
+  -->
+
+  <PropertyGroup>
+    <GroupLabPlatformsRun Condition="'$(GroupLabPlatformsRun)' == ''">win-x64;linux-x64;osx;osx-x64;osx-arm64;win;unix;any</GroupLabPlatformsRun>
+  </PropertyGroup>
+
+  <Target Name="LeaveOutPlatformsNobodyRuns"
+          AfterTargets="ResolveAssemblyReferences"
+          Condition="'$(RuntimeIdentifier)' == '' and '$(GroupLabKeepEveryPlatform)' != 'true'">
+    <ItemGroup>
+      <!-- Every native asset resolved from a package's runtimes folder, with the platform it is for as metadata. -->
+      <GroupLabNativeAsset Include="@(ReferenceCopyLocalPaths)"
+                           Condition="$([System.String]::Copy('%(ReferenceCopyLocalPaths.DestinationSubDirectory)').Replace('\','/').StartsWith('runtimes/'))">
+        <Platform>$([System.String]::Copy('%(ReferenceCopyLocalPaths.DestinationSubDirectory)').Replace('\','/').Split('/')[1])</Platform>
+      </GroupLabNativeAsset>
+
+      <!-- Matched between semicolons so one platform's name can never be read as part of another's. -->
+      <GroupLabUnusedPlatform Include="@(GroupLabNativeAsset)"
+                              Condition="!$([System.String]::Copy(';$(GroupLabPlatformsRun);').Contains(';%(GroupLabNativeAsset.Platform);'))" />
+
+      <ReferenceCopyLocalPaths Remove="@(GroupLabUnusedPlatform)" />
+    </ItemGroup>
+
+    <Message Importance="normal"
+             Text="Left out native assets for platforms nobody runs; kept $(GroupLabPlatformsRun)." />
+  </Target>
+
+</Project>
