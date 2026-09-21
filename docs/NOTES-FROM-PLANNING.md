@@ -15,6 +15,35 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-21, entry 122: the tests open GitHub in Alan's browser
+
+**Status: actioned 2026-09-21**, sections 1 to 4, with section 1's scope named below.
+- **Section 1:** `IOutsideWorld` in `src/GroupLab.App/OutsideWorld.cs` is the one way out of the process, with a real implementation the application uses and a recorder the tests put in its place for the whole run. Three call sites went through it: the link to the repository, the crash record's folder, and opening a saved PDF to print. **Not behind it yet, and named rather than implied:** the print device, which entry 114 already keeps behind a fixed allowlist of silent drivers, the update check's HTTPS request, which has no implementation yet, and the installer, which is entry 119 section 4's unbuilt mechanism. Each goes behind this interface when it is built.
+- **Section 2:** `OneWayOutTests` fails if anything outside that one file starts a process with the shell or uses a launcher. It caught a second case while being written: the print screen still described a shell start even though nothing ran it, so `PrintLaunch` now names the file and nothing else.
+- **Section 3:** the buttons are clicked against the recorder rather than excluded by name, and `OutsideWorldTests` checks what each asked for: the repository link asks for that one address, the support placeholder asks for nothing at all, and Check now asks for nothing while there is no key.
+- **Section 4:** before, a full run of the application tests opened one browser tab, from the control walk clicking the settings page's link once on the settings screen; three runs today is three tabs, which is what Alan saw. After, zero, and zero by construction rather than by counting: the recorder is in place for every test in the assembly from the module initialiser, and nothing else in the source can start anything.
+- `docs/PHASE1-RESULTS.md` "Entry 122".
+
+Alan reports that something keeps opening three new browser tabs at `https://github.com/oRAirwolf/grouplab` while you work. The cause is in the code: the settings page's "The project on GitHub" button calls `OpenInTheBrowser` (`MainWindow.cs`), which starts the address with `UseShellExecute = true`, and that label is not in `InterfaceBench.NotClicked`, so the control walk from entry 117 clicks it on every pass and the real default browser opens it. Several walks per test run gives several tabs. This is the same class of fault as the OneNote print in entry 114: a test reaching outside the process into the person's own applications.
+
+## 1. One way out of the process
+
+Every way GroupLab opens something outside itself (a web address, the download page from entry 119 section 4.7, a folder, a file in another application, a print device, a network request such as the update check, starting the installer) goes through one small interface the application owns. Tests and the benchmark replace it with a recorder that logs what would have happened and does nothing. The real implementation is used only by the running application.
+
+## 2. A guard
+
+Add a test that fails if any code outside that one implementation calls `Process.Start` with `UseShellExecute = true`, a launcher API, or an HTTP client directly.
+
+## 3. Measured, not excluded
+
+The control walk clicks these buttons against the recorder, so they are measured rather than excluded by name, and a test asserts the recorder saw the expected request for each: the GitHub link, the support placeholder (which must open nothing), the download page, and Check now.
+
+## 4. Report
+
+Say how many real browser openings, network requests and other launches a full test run made before the fix and after. The answer after must be zero.
+
+---
+
 # 2026-09-21, entry 121: v0.1.0 was published as a release, so nightly starts at 0.2.0
 
 **Status: actioned 2026-09-21**, sections 1, 2 and 3 done; **section 4 in part.**

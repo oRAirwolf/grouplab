@@ -5885,6 +5885,37 @@ The expression is now `[^\r\n]+` and the comment says why, because the next pers
 - **`releases/latest` still returns `v0.1.0`**, because Alan has not yet marked it a pre-release. That is his to do and nothing here depends on it: the README links only to the rolling `nightly` release.
 - **The updater cannot be shown refusing `v0.1.0`**, because there is no manifest anywhere for it to check against. What can be shown, and is, is that the rule holds in the tests: a build on 0.2.0 offered a 0.1.0 manifest refuses it as not newer.
 
+## Entry 122. The tests opened GitHub in Alan's browser
+
+`docs/NOTES-FROM-PLANNING.md` entry 122. **The fault was mine, made in this run**, and it is the same class as entry 114's print to the OneNote driver: a test reaching out of the process and into the person's own applications.
+
+### What happened
+
+Entry 119 section 6.1 asks for a link to the repository on the settings page. The button called a private helper that started the address with `UseShellExecute = true`, which is the real default browser. Entry 117 section 3b's control walk clicks every control it finds on every screen, and the settings screen is one of the screens it walks, so **every run of the interface benchmark opened a tab on whatever machine it ran on**. Three runs today, three tabs.
+
+### What is built
+
+**One way out of the process.** `IOutsideWorld` has three members, opening an address, a file and a folder, and one real implementation. `TheOutsideWorld.Current` is what the application uses; a test replaces it. The application tests install a recorder from the module initialiser, so it is in place for every test in the assembly rather than for the tests that remember.
+
+**Three call sites moved behind it:** the link to the repository, the crash record's "show me the folder", and opening a saved PDF to print.
+
+**A guard.** `OneWayOutTests` reads every source file and fails if anything outside `OutsideWorld.cs` starts a process with the shell or uses a launcher API. It caught a second case as it was written: the print screen's `PrintLaunch` still built a shell start, even though nothing ran it any more, so it now names the file and leaves opening to the one way out. `PrintScreenTests` still holds what a person is told.
+
+**Measured rather than excluded.** The walk clicks these buttons against the recorder, and `OutsideWorldTests` checks what each asked for: the repository link asks for that one address, the support placeholder asks for nothing, and Check now asks for nothing while there is no key.
+
+### The count, before and after
+
+| | Real browser openings | Other launches | Network requests |
+|---|---|---|---|
+| Before | one per full run of the application tests | none | none |
+| After | zero | zero | zero |
+
+**Zero by construction rather than by counting.** The recorder is in place for the whole assembly, and the guard test means no other code path can start anything. The update check has no implementation yet, so it makes no request; when it is built it goes behind the same interface, and that is written down in the entry's status line rather than left to be remembered.
+
+### What is not behind it yet
+
+Named rather than implied: the print device, which entry 114 already keeps behind a fixed allowlist of drivers that write a file silently; the update check's HTTPS request, which does not exist yet; and the installer, which is entry 119 section 4's unbuilt mechanism. Each goes behind this interface when it is built.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -6181,3 +6212,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 120 section 4: the failing result carries its definition, over the screen falling back to the pipeline's words.** The advice written for a sheet that will not register was unreachable in exactly the case it was written for.
 - **Entry 120 section 10: the preview sits in the grid row, over inside the scroll viewer.** Inside one it measured its own natural size and left the window two thirds empty; the scroll viewer is now used only when zoomed, where panning is the point of it.
 - **Entry 121: the version raised to 0.2.0, over renaming what is already published.** v0.1.0 is history and stays where it is; the train moves above it instead.
+- **Entry 122: one interface for everything outside the process, over telling the benchmark not to click that button.** An exclusion list would have fixed this button and left the next one to be found by somebody's browser opening.

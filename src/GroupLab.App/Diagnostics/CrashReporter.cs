@@ -168,7 +168,8 @@ public static class CrashReporter
         ArgumentNullException.ThrowIfNull(file);
         try
         {
-            Process.Start(new ProcessStartInfo(Path.GetDirectoryName(Path.GetFullPath(file))!) { UseShellExecute = true })?.Dispose();
+            // Entry 122: one way out of the process, so a test never opens a file manager on somebody's machine.
+            TheOutsideWorld.Current.OpenFolder(Path.GetDirectoryName(Path.GetFullPath(file))!);
         }
         catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or PlatformNotSupportedException)
         {

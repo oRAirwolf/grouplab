@@ -602,10 +602,12 @@ public sealed class PrintWindow : Window
             return;
         }
 
-        var (start, opened, kind) = PrintLaunch(path);
+        var (opening, opened, kind) = PrintLaunch(path);
         try
         {
-            Process.Start(start)?.Dispose();
+            // Entry 122: one way out of the process, which a test replaces with a recorder rather than opening a PDF viewer on somebody's
+            // machine.
+            TheOutsideWorld.Current.OpenFile(opening);
         }
         catch (Win32Exception ex)
         {
@@ -662,10 +664,12 @@ public sealed class PrintWindow : Window
             return;
         }
 
-        var (start, opened, kind) = PrintLaunch(path);
+        var (opening, opened, kind) = PrintLaunch(path);
         try
         {
-            Process.Start(start)?.Dispose();
+            // Entry 122: one way out of the process, which a test replaces with a recorder rather than opening a PDF viewer on somebody's
+            // machine.
+            TheOutsideWorld.Current.OpenFile(opening);
         }
         catch (Win32Exception ex)
         {
@@ -770,8 +774,12 @@ public sealed class PrintWindow : Window
     /// but open there. So every platform now does the one thing that is the same everywhere and can be described truthfully.
     /// </para>
     /// </summary>
-    internal static (ProcessStartInfo Start, string Status, StatusKind Kind) PrintLaunch(string path) =>
-        (new ProcessStartInfo(path) { UseShellExecute = true }, OpenedText, StatusKind.Information);
+    /// <remarks>
+    /// Entry 122: it names the file and says nothing about how it is opened, because opening is the one way out of the process and belongs
+    /// to <see cref="IOutsideWorld"/>. No verb is possible from here, which is the property the paragraph above is about.
+    /// </remarks>
+    internal static (string Path, string Status, StatusKind Kind) PrintLaunch(string path) =>
+        (path, OpenedText, StatusKind.Information);
 
     /// <summary>What the person is told once the PDF is open, in the status line and in the confirmation.</summary>
     internal const string OpenedText = "The target is open in your PDF viewer. Print it from there, choosing Actual size or 100 percent, never Fit.";

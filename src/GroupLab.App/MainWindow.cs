@@ -3203,8 +3203,10 @@ public sealed partial class MainWindow : Window
     {
         try
         {
-            using var opened = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(address) { UseShellExecute = true });
-            DiagnosticLog.Info("support.open", ("opened", opened is not null));
+            // Entry 122: one way out of the process, which a test replaces with a recorder. This used to start the browser itself, and the
+            // control walk of entry 117 opened tabs on Alan's machine every time it ran.
+            TheOutsideWorld.Current.OpenAddress(address);
+            DiagnosticLog.Info("outside.open", ("what", "address"));
         }
         catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or IOException)
         {

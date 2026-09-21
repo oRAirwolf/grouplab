@@ -15,7 +15,18 @@ namespace GroupLab.App.Tests
     /// </summary>
     internal static class TestDefaults
     {
+        /// <summary>
+        /// Entry 122: nothing in a test run may open a browser, a viewer or a file manager on the machine it runs on. The control walk of
+        /// entry 117 clicks every control it finds, and one of them opened tabs on Alan's machine. The recorder takes the real one's place
+        /// for the whole run, and <c>OutsideWorldTests</c> reads what it was asked for.
+        /// </summary>
+        internal static readonly GroupLab.App.RecordedOutsideWorld Outside = new();
+
         [ModuleInitializer]
-        internal static void Initialise() => GroupLab.App.MainWindow.DetectOnOpenByDefault = false;
+        internal static void Initialise()
+        {
+            GroupLab.App.MainWindow.DetectOnOpenByDefault = false;
+            GroupLab.App.TheOutsideWorld.Current = Outside;
+        }
     }
 }

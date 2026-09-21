@@ -20,10 +20,10 @@ public class PrintScreenTests
     public void ThePrintLaunchOpensThePdfWithNoVerbAndPromisesNoDialog()
     {
         string path = Path.Combine(Path.GetTempPath(), "grouplab-print-launch.pdf");
-        var (start, status, kind) = PrintWindow.PrintLaunch(path);
-        Assert.Equal(string.Empty, start.Verb);
-        Assert.True(start.UseShellExecute);
-        Assert.Equal(path, start.FileName);
+        // Entry 122: opening is the one way out of the process now, so this names the file and nothing else. A verb is not expressible
+        // from here, which is what the paragraph this test is named for is about.
+        var (opening, status, kind) = PrintWindow.PrintLaunch(path);
+        Assert.Equal(path, opening);
         Assert.Equal(StatusKind.Information, kind);
         Assert.Contains("open in your PDF viewer", status, StringComparison.Ordinal);
         Assert.Contains("Actual size", status, StringComparison.Ordinal);
