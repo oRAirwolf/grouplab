@@ -6567,6 +6567,18 @@ What that costs, scan by scan:
 
 **Scan 4, twenty-three shots with two offsets split at a row.** 24 holes found, assigned across bulls 2 to 25 with bull 1 empty, and offsets running from 0.013 in to 2.076 in. The mean radius reads 0.731 in.
 
+### Finished the same night: the solver is connected
+
+The wiring was done after the measurement above, so the table describes the state before it.
+
+**Where the shooter has said which bulls they aimed at, the sheet's point of impact is solved before assignment and the matching runs in that frame.** On a synthetic GL-CF25-LTR shot at the second to fifth bull of every row with the whole group landing one bull to the left, all twenty shots now find the bull they were fired at. Nothing stored moves: the shift is a frame the matching runs in, and every shot keeps the position it was detected at.
+
+**The restraint is as much of the design as the correction.** It runs only where the shooter has named the bulls, because a sheet of twenty five bulls with ten shot has a translation that explains the holes for almost any reading; solving over every bull would have the software choosing between readings on a margin it cannot justify, on exactly the sheets where being wrong is quietest. The offset must also be certain and worth more than a tenth of an inch before it moves anything, so an ordinary sheet shot at its own bulls is assigned exactly as it was before any of this existed, which is its own test. A sheet a person has asked to read by nearest bull is left alone entirely.
+
+**Writing the baseline test turned up the reason this defect is so quiet.** The matching is global rather than nearest-bull: it minimises the total distance over the whole sheet, and on that fixture it already puts fifteen of the twenty shots on the right bull with no help at all. The sheet does not come out scrambled. It comes out mostly right, with a handful of shots measured from the wrong centres, which is the one kind of wrong a person cannot see.
+
+**What is still missing is the way to tell it.** Today the bulls aimed at are named through `AssignmentRule.PerBull`, which the doubles sheet already uses, and there is no control on any screen that sets it for this purpose. Section 3.2's row breaks are also still unbuilt. So the correction works and is tested, and a shooter cannot yet reach it.
+
 **This is the clearest argument yet for finishing section 3.2.** The solver exists, it is tested, and it is the difference between a figure a shooter can use and a figure that is simply wrong. Until it is wired in, a sheet shot deliberately at fewer bulls than it carries, or a sheet whose group sits low, produces figures that look ordinary and are not, with nothing on the screen to say so. The uncertain marking of section 3.3 does travel with these figures, which is the one thing standing between this and a silently wrong answer, but a marking is not a correction.
 
 ## Decision log
