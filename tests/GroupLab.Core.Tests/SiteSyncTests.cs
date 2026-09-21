@@ -361,4 +361,29 @@ with tempfile.TemporaryDirectory() as tmp:
                 $"the service may write to {path}, which is not one of GroupLab's own folders");
         }
     }
+    /// <summary>
+    /// The public key the installer puts on the server is the public half of the key the application already trusts, NOTES-FROM-PLANNING.md
+    /// entry 128 section 3.3: "same key as the update manifest, so no new secret exists". They are in two files, so a test holds them in step;
+    /// were they to drift, the server would refuse every site release it was sent and the only sign would be a log nobody reads.
+    /// </summary>
+    [Fact]
+    public void TheServersPublicKeyIsTheOneTheApplicationTrusts()
+    {
+        string pem = File.ReadAllText(Repo.PathTo("website/server/update-signing.pub"));
+
+        Assert.StartsWith("-----BEGIN PUBLIC KEY-----", pem.Trim(), StringComparison.Ordinal);
+        Assert.EndsWith("-----END PUBLIC KEY-----", pem.Trim(), StringComparison.Ordinal);
+
+        string base64 = string.Concat(pem
+            .Replace("-----BEGIN PUBLIC KEY-----", "", StringComparison.Ordinal)
+            .Replace("-----END PUBLIC KEY-----", "", StringComparison.Ordinal)
+            .Where(c => !char.IsWhiteSpace(c)));
+        Assert.Equal(GroupLab.Core.Updates.UpdateKeys.PublicKey, base64);
+
+        // And it is a key, not a string that looks like one.
+        using var key = System.Security.Cryptography.ECDsa.Create();
+        key.ImportFromPem(pem);
+        Assert.Equal(256, key.KeySize);
+    }
+
 }
