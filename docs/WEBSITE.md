@@ -49,6 +49,8 @@ Each run:
 1. Reads the published `.sha256`. **A missing release is nothing to do, not an error**, so the timer is quiet until the first publish. An unchanged hash is nothing to do as well, which is almost every run.
 2. Downloads the archive and its signature, refusing anything over 200 MB.
 3. Checks the SHA-256, then verifies the signature against `/etc/grouplab-site-sync/update-signing.pub`. Either failing: the live site is kept and the run logs why.
+
+   That key is `website/server/update-signing.pub` in this repository, and it is the public half of the key the application already trusts for its own updates, so no second secret exists. It is public by nature: the same bytes ship inside every build. A test holds the file and the application's copy in step, because if they drifted the server would refuse every release it was sent and the only sign would be a line in a log nobody reads.
 4. Unpacks it, refusing any member that is absolute, contains `..`, is a link, a device or a pipe, or is not a plain file or directory.
 5. Refuses the build unless it has `index.html`, `404.html`, `download/index.html`, `support/index.html` and `assets/css/site.css`, every page carries the build commit, and the file count is between 20 and 2000.
 6. Backs up the live site to `/home/airwolf/backups/grouplab.org/web-<timestamp>.tar.gz`, keeping the newest 10.
@@ -68,7 +70,7 @@ Each run:
 | the 404 page | `/home/airwolf/web/grouplab.org/document_errors/404.html` |
 | the sync script | `/usr/local/sbin/grouplab-site-sync.py` |
 | the units | `/etc/systemd/system/grouplab-site-sync.{service,timer}` |
-| the public key | `/etc/grouplab-site-sync/update-signing.pub` |
+| the public key | `/etc/grouplab-site-sync/update-signing.pub`, installed from `website/server/update-signing.pub` |
 | what is deployed | `/var/lib/grouplab-site-sync/deployed.sha256` |
 | backups | `/home/airwolf/backups/grouplab.org/` |
 | the log | `/home/airwolf/logs/grouplab-site-sync.log` |
