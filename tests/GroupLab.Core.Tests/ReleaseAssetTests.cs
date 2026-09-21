@@ -73,7 +73,10 @@ public partial class ReleaseAssetTests
         Assert.True(name.Success, "ci.yml has no name, and the nightly follows it by name");
         Assert.Contains($"workflows: [\"{name.Groups["name"].Value}\"]", nightly, StringComparison.Ordinal);
         Assert.Contains("github.event.workflow_run.conclusion == 'success'", nightly, StringComparison.Ordinal);
-        Assert.Contains("branches: [phase-1, main]", nightly, StringComparison.Ordinal);
+        // main alone. Every push here pushes phase-1 and main at the same commit, so following both meant two CI runs on the same code, two
+        // nightlies, and the concurrency rule cancelling the first. One nightly per push is what was always wanted.
+        Assert.Contains("branches: [main]", nightly, StringComparison.Ordinal);
+        Assert.DoesNotContain("branches: [phase-1, main]", nightly, StringComparison.Ordinal);
 
         // It builds the commit that was tested, never a branch head that may have moved.
         Assert.Contains("ref: ${{ github.event.workflow_run.head_sha }}", nightly, StringComparison.Ordinal);

@@ -20,7 +20,11 @@ on:
   workflow_run:
     workflows: ["build and test"]
     types: [completed]
-    branches: [phase-1, main]
+    # main only, and that is a fix rather than a narrowing. Every push here pushes phase-1 and main at the same commit, so "build and test"
+    # ran twice on the same code, each run triggered a nightly, and the concurrency rule cancelled the first. Half the nightly runs on
+    # 2026-09-21 were cancellations of a run that was already building the right commit. main is force-set to the tested commit, so one
+    # nightly per push is all that was ever wanted.
+    branches: [main]
 
 permissions:
   contents: write
@@ -143,7 +147,12 @@ jobs:
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
 
       # The build's own release, which keeps the versioned assets so a bug report names something that still exists.
+      # GH_DEBUG=api is here because entry 123 section 1 step 3 asks for the exact request and response when this 403s, and it did again on
+      # 2026-09-21 with the repository default already set to write, no rulesets and no tag protection. It prints headers and status, never
+      # the token, which the runner masks.
       - name: Publish this build
+        env:
+          GH_DEBUG: api
         run: |
           gh release create "v$VERSION" \
             --title "GroupLab $VERSION" \
