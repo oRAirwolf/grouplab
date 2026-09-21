@@ -1,0 +1,17 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 128 section 4: every 15 minutes, and 2 minutes after boot.
+# Fifteen minutes is the longest a publish waits to reach the site, and the shortest interval worth
+# having: the sync exits in under a second when nothing has changed, because it reads one small hash
+# file and stops.
+Description=Pull the published grouplab.org site every fifteen minutes
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+AccuracySec=1min
+Persistent=true
+Unit=grouplab-site-sync.service
+
+[Install]
+WantedBy=timers.target

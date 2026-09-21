@@ -1,0 +1,35 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 128 section 4. Pulls the published grouplab.org site and installs it.
+# A systemd unit rather than a crontab entry: HestiaCP's v-rebuild-user wipes user crontabs, and the
+# existing pih-backup timer on this machine is the model.
+Description=Pull and install the published grouplab.org site
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-site-sync.py
+TimeoutStartSec=600
+
+# Hardened where it costs nothing. It needs root to write the site root and to read its own key,
+# and nothing else on the machine is its business. Anything belonging to pissinhot.com or any
+# other domain is outside every path below, so this cannot touch it even by mistake.
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/public_html
+ReadWritePaths=/home/airwolf/web/grouplab.org/document_errors
+ReadWritePaths=/home/airwolf/backups/grouplab.org
+ReadWritePaths=/home/airwolf/logs
+ReadWritePaths=/var/lib/grouplab-site-sync
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target
