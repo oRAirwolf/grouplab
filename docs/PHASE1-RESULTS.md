@@ -5573,7 +5573,9 @@ Question 27 is set to answered.
 
 **Inno Setup**, as the entry suggests, in `packaging/windows/grouplab.iss`: a per-user install with `PrivilegesRequired=lowest`, so no administrator rights, a Start menu entry, an entry in Add or remove programs, and an uninstaller. The uninstall removes the program and leaves `%APPDATA%\GroupLab` alone, and the finish page and `README.txt` both say so by name.
 
-**Built, not proven here.** Inno Setup is not installed on this machine, so `ISCC.exe` was never run: the script warns and builds the zip alone. That is right for a working copy and wrong for a release, so `-RequireInstaller` makes it fail instead, and the release workflow passes it. **Nothing was installed on this machine to check it**, and the installer has not been run by anybody yet. Until it has, the zip is the asset this project stands behind, which is what the entry asks for anyway.
+**Built, on the runner rather than here.** Inno Setup is not installed on this machine, so `ISCC.exe` was never run locally: the script warns and builds the zip alone. That is right for a working copy and wrong for a release, so `-RequireInstaller` makes it fail instead, and the release workflow passes it.
+
+**Corrected 2026-09-21, entry 120 section 9.** The report from the run that built this said the installer had never been built. It had: Alan ran the release workflow by hand on commit 5a4cd07 and the draft release "GroupLab 0.1.0, draft" carries `grouplab-setup-win-x64.exe` and its versioned copy, identical by SHA-256, built on the GitHub Windows runner where Inno Setup is installed. He is installing it. **"Never built on this machine" and "never built" are different statements**, and the report made the stronger one.
 
 ### Section 3: a release anybody can download
 

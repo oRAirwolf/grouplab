@@ -1295,7 +1295,8 @@ public sealed partial class MainWindow : Window
             string advice = detectionMetadata is { } read && result.Definition is { } sheet
                 ? DetectionAdvice.Failure(result.Measurement, read, sheet) ?? result.Failure ?? "no registration"
                 : result.Failure ?? "no registration";
-            problem.Text = advice + " You can mark this image by hand instead, against a reference length or rectangle.";
+            // Entry 120 section 1: a failure that arrives without a full stop used to run into the next sentence.
+            problem.Text = advice.TrimEnd() + (advice.TrimEnd().EndsWith('.') ? " " : ". ") + "You can mark this image by hand instead, against a reference length or rectangle.";
             status.Text = "The sheet could not be read. What to do next is in the panel, and each stage is in Show work.";
             return;
         }
@@ -3153,6 +3154,20 @@ public sealed partial class MainWindow : Window
     /// <summary>A section heading, entry 109 section 1 principle 2: the heading style, in sentence case, where entry 42 set dim capitals.</summary>
     private static TextBlock Heading(string text) => new() { Text = text, Margin = new Thickness(0, Tokens.Space8, 0, 0), Classes = { AppStyles.Section } };
 
+    /// <summary>Opens a page in whatever the system uses for one. Nothing in GroupLab handles a payment or shows a page of its own.</summary>
+    private void OpenInTheBrowser(string address)
+    {
+        try
+        {
+            using var opened = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(address) { UseShellExecute = true });
+            DiagnosticLog.Info("support.open", ("opened", opened is not null));
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or IOException)
+        {
+            status.Text = "That page could not be opened here: " + address;
+        }
+    }
+
     private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>
@@ -3494,6 +3509,21 @@ public sealed partial class MainWindow : Window
             ? "The log is in " + DiagnosticLog.Current.DescribedDirectory + "."
             : "Logging is off: " + DiagnosticLog.Current.DisabledReason + "."));
         column.Children.Add(Row(Button("Report a problem\u2026", () => OpenReport(null))));
+
+        // Entry 120 section 9, question 28 answered: there is no support address yet, so the item says that rather than opening anything.
+        // The address lives in SupportLink and nowhere else, and SupportLinkTests fails if one appears somewhere else in the application.
+        column.Children.Add(Row(Button(SupportLink.Label, () =>
+        {
+            if (SupportLink.Address is { } address)
+            {
+                OpenInTheBrowser(address);
+            }
+            else
+            {
+                status.Text = SupportLink.NoAddressYet;
+            }
+        })));
+        column.Children.Add(Line(SupportLink.Exists ? "Opens a page in your browser. GroupLab takes no payment itself." : SupportLink.NoAddressYet));
 
         // Entry 41 sections 5 and 6: the crash records not yet dealt with, which the marking panel's banner also offers until they are.
         column.Children.Add(Ruled("Crash records"));

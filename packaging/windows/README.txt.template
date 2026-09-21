@@ -30,9 +30,11 @@ TRY IT WITHOUT A RIFLE
 
 The samples folder has two sheets you can open straight away.
 
-- samples/sample-25-shots.png is a GroupLab sheet with 25 shots on it. Open it
+- samples/gl-cf25-ltr-d-25-shots-600-dpi.png is a real GroupLab sheet, shot at
+  100 yards with 25 rounds, one at each bull, and scanned at 600 dpi. Open it
   and GroupLab reads the sheet's printed codes, registers the page, finds the
-  holes, and gives you the figures.
+  holes, and gives you the figures. samples/PROVENANCE.md says whose sheet it
+  is and what was agreed before it was published.
 
     In GroupLab: the menu at the top right, "Open image", then that file.
     Then press "Accept and analyse".

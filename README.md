@@ -29,7 +29,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 **Both sets of links keep working on their own.** [All releases](https://github.com/oRAirwolf/grouplab/releases) has every numbered version, each naming its version and commit, and the [test build](https://github.com/oRAirwolf/grouplab/releases/tag/test-build) says which commit it came from and what changed.
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
-- **It brings two sample sheets**, one with shots on it, so there is something to open in the first minute.
+- **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
 - **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing anywhere.
 - **Which build you have:** the Settings screen names the version and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
@@ -269,7 +269,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
 - **Done.** GroupLab's mark in the header and the rail, and as the application's icon for Windows, Linux and macOS, drawn from one committed source.
 - **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.
-- **Not started.** An unobtrusive support link, one menu item opening a browser, with no payment handled inside the application.
+- **Built, not proven.** An unobtrusive support link, one menu item with no payment handled inside the application. There is no address yet, so the item on the settings screen says so rather than opening anything, and a test fails if an address appears anywhere else. It becomes one browser launch when Alan has a page.
 - **Done.** Adjust-to-zero turret corrections, in a linear and an angular unit at once, and in the scope's own clicks with what rounding leaves once the marking names a rifle.
 - **Built, not proven.** A volunteer print pack: the print screen's "Print a volunteer pack" gives the sheet and one page of instructions together, generated from `docs/VOLUNTEER-PACK.md` at the sheet's own paper size, with its own distance from bull 1 to bull 5 to measure. Consent is the upload page's, not the pack's.
 

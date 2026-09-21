@@ -96,7 +96,10 @@ public static class AutomaticMarking
         string markers = fiducials is null ? "no markers" : string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found");
         if (measurement.Registration is not { } registration || fiducials is null)
         {
-            return new AutomaticResult(measurement, null, [], [], [], markers, measurement.Failure ?? "registration failed");
+            // NOTES-FROM-PLANNING.md entry 120 section 1: the definition travels with a failure too. Without it the screen cannot say
+            // which sheet it was trying to read, so entry 115 section 4's advice falls back to the raw failure, which is the one case
+            // the advice was written for.
+            return new AutomaticResult(measurement, null, [], [], [], markers, measurement.Failure ?? "registration failed", Definition: definition);
         }
 
         var mapping = registration.Mapping;
@@ -115,7 +118,7 @@ public static class AutomaticMarking
             {
                 // DESIGN.md section 19: the trace is never the only place an error appears, so the failure is returned as well as recorded.
                 stage.Done(StageStatus.Failed, ex.Message);
-                return new AutomaticResult(measurement, null, [], [], missing, markers, "hole detection failed: " + ex.Message);
+                return new AutomaticResult(measurement, null, [], [], missing, markers, "hole detection failed: " + ex.Message, Definition: definition);
             }
 
             if (GroupLab.Core.Gltd.Validation.GltdValidator.Validate(definition).Any(d => d.Severity == GroupLab.Core.Gltd.Severity.Error))

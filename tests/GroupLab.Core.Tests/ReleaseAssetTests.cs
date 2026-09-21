@@ -111,14 +111,25 @@ public partial class ReleaseAssetTests
     public void ThePackageCarriesItsLicenceItsNoticesAndItsSamples()
     {
         string package = File.ReadAllText(Repo.PathTo("scripts", "package-windows.ps1"));
-        foreach (string required in new[] { "LICENSE", "THIRD-PARTY-NOTICES.md", "README.txt", "samples/sample-25-shots.png", "OpenCvSharpExtern.dll", "hostfxr.dll" })
+        foreach (string required in new[] { "LICENSE", "THIRD-PARTY-NOTICES.md", "README.txt", "samples/gl-cf25-ltr-d-25-shots-600-dpi.png", "samples/PROVENANCE.md", "OpenCvSharpExtern.dll", "hostfxr.dll" })
         {
             Assert.Contains(required, package, StringComparison.Ordinal);
         }
 
-        // Nothing donated goes in it: the only image copied from the repository is Alan's own unshot sheet, and the shot one is generated.
-        var copied = CopiedImage().Matches(package).Select(m => m.Value).ToList();
-        Assert.Equal(["scans/phase0/gl-cf25-ltr-1-300-dpi.png"], copied);
+        // Nothing donated goes in it. Both images copied from the repository are Alan's own, and the shot one carries a consent record
+        // beside it (entry 120 section 9). A third path into the repository's images here means something has gone in without one.
+        var copied = CopiedImage().Matches(package).Select(m => m.Groups["image"].Value).ToList();
+        Assert.Equal(["samples/gl-cf25-ltr-d-25-shots-600-dpi.png", "scans/phase0/gl-cf25-ltr-1-300-dpi.png"], copied.Order(StringComparer.Ordinal));
+
+        // The consent record travels with the sample, in the package and in the repository, and names what was agreed.
+        string provenance = File.ReadAllText(Repo.PathTo("samples", "PROVENANCE.md"));
+        Assert.Contains("gl-cf25-ltr-d-25-shots-600-dpi.png", provenance, StringComparison.Ordinal);
+        Assert.Contains("No consent record, no publication", provenance, StringComparison.Ordinal);
+        Assert.Contains("93140a6a37777667", provenance, StringComparison.Ordinal);
+
+        // The package must read the sample as the shooter says it is, or fail rather than reach a tester.
+        Assert.Contains("\"shots\": 25", File.ReadAllText(Repo.PathTo("samples", "sample.json")), StringComparison.Ordinal);
+        Assert.Contains("shots pooled about their own bulls", package, StringComparison.Ordinal);
 
         string readme = File.ReadAllText(Repo.PathTo("packaging", "windows", "README.txt.template"));
         foreach (string said in new[] { "SmartScreen", "antivirus", "%APPDATA%\\GroupLab", "Report a problem", "WHAT IS NOT DONE YET", "General Public License" })
@@ -136,9 +147,11 @@ public partial class ReleaseAssetTests
     [GeneratedRegex(@"releases/download/test-build/(?<asset>[A-Za-z0-9._-]+)")]
     private static partial Regex TestBuildDownload();
 
-    [GeneratedRegex(@"^name: (?<name>.+)$", RegexOptions.Multiline)]
+    // [^\r\n] rather than . : a checkout on Windows has CRLF line endings, and a captured carriage return made this test look for a
+    // workflow name with one in it, which failed on the Windows runner alone (NOTES-FROM-PLANNING.md entry 121 section 3).
+    [GeneratedRegex(@"^name: (?<name>[^\r\n]+)", RegexOptions.Multiline)]
     private static partial Regex WorkflowName();
 
-    [GeneratedRegex(@"scans/[A-Za-z0-9._/-]+\.(?:png|jpg|jpeg)")]
+    [GeneratedRegex(@"Copy-Item '(?<image>[A-Za-z0-9._/-]+\.(?:png|jpg|jpeg))'")]
     private static partial Regex CopiedImage();
 }

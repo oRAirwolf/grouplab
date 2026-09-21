@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-20, question 29: the repository has no shot GroupLab sheet that may be published, so the package's sample is generated
 
-**Status: open**
+**Status: answered 2026-09-21**, by `docs/NOTES-FROM-PLANNING.md` entry 120 section 9. Neither A nor B: Alan gave a real sheet instead. Scan 3 from the 2026-09-20 range day is the sample, published under the consent record in `samples/PROVENANCE.md` with his words in it, and its ground truth of 25 shots is what the package's self-test holds the package to. The generated sample is no longer in the package.
 
 ### 1. What entry 116 section 2 asks for
 
@@ -51,7 +51,7 @@ A test holds the packaging script to that: the only image it copies from the rep
 
 ## 2026-09-20, question 28: the support link needs an address
 
-**Status: open**
+**Status: answered 2026-09-21**, by `docs/NOTES-FROM-PLANNING.md` entry 120 section 9. There is no address yet and Alan may register a domain later, so the item is a placeholder that invents nothing: one constant in `src/GroupLab.App/SupportLink.cs`, and the item on the settings screen says there is no support address yet rather than opening anything. `SupportLinkTests` fails if an address appears anywhere a person receives it.
 
 ### 1. What is asked for
 
