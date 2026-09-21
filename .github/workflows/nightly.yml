@@ -45,10 +45,55 @@ jobs:
       version: ${{ steps.name.outputs.version }}
       commit: ${{ steps.name.outputs.commit }}
       signing: ${{ steps.key.outputs.present }}
+      fresh: ${{ steps.fresh.outputs.fresh }}
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+
+      # A nightly that is no longer the head of main publishes nothing, and says so rather than failing.
+      #
+      # This is not tidiness. GITHUB_TOKEN cannot hold the `workflows` permission, so GitHub refuses to let it create a ref on a commit whose
+      # `.github/workflows` differ from the default branch's. Creating the release tag is creating a ref, so a nightly for a commit that main
+      # has since moved past, over a push that touched a workflow file, is refused with `HTTP 403: Resource not accessible by integration` on
+      # POST /releases. That is exactly what happened to v0.2.0-nightly.22 on 2026-09-21: it built 4bd78e7 while main had moved to 0cf5ad1,
+      # which added website.yml and changed ci.yml.
+      #
+      # The evidence for that reading, from the five nightlies of that day: the four that published had no workflow file differing from main's
+      # head at the time, including v0.2.0-nightly.18, which tagged a commit that was already two pushes behind and succeeded because the
+      # workflows matched. Only the one with two differing workflow files was refused.
+      #
+      # So the condition here is the broader one, and deliberately so: not main's head at all, rather than only a workflow difference. It is
+      # simpler to reason about, it cannot be wrong in the dangerous direction, and nothing is lost, because the push that moved main brings
+      # its own nightly for newer code.
+      - name: Only the newest commit on main is published
+        id: fresh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -o pipefail
+          head=$(gh api "repos/${{ github.repository }}/commits/main" -q .sha)
+          if [ "$head" = "$SHA" ]; then
+            echo "fresh=yes" >> "$GITHUB_OUTPUT"
+            echo "this is the head of main, so it is the build to publish"
+            exit 0
+          fi
+
+          echo "fresh=no" >> "$GITHUB_OUTPUT"
+          {
+            echo "### nothing published: main has moved on"
+            echo
+            echo "This run tested \`${SHA:0:7}\`, and main is now \`${head:0:7}\`."
+            echo
+            echo "A nightly only publishes the newest commit on main. The push that moved main has a nightly of its own, and that one carries"
+            echo "the newer code, so publishing this would put an older build on the nightly train and then immediately replace it."
+            echo
+            echo "It also could not publish if it tried. \`GITHUB_TOKEN\` cannot hold the \`workflows\` permission, so GitHub refuses to let it"
+            echo "create a ref on a commit whose \`.github/workflows\` differ from the default branch. Creating the release tag is creating a ref."
+            echo "See NOTES-FROM-PLANNING.md entry 123 section 1."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::main has moved from ${SHA:0:7} to ${head:0:7}, so this nightly publishes nothing. The newer push brings its own."
 
       # <N> is this workflow's own run number, which only ever increases, so nightly versions are ordered by when they were built.
       - name: Work out the version
@@ -81,6 +126,7 @@ jobs:
   package:
     name: package
     needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes'
     uses: ./.github/workflows/package.yml
     with:
       ref: ${{ github.event.workflow_run.head_sha }}
@@ -90,6 +136,7 @@ jobs:
   publish:
     name: publish the nightly
     needs: [name-it, package]
+    if: needs.name-it.outputs.fresh == 'yes'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

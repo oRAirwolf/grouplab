@@ -105,6 +105,38 @@ public partial class WebsiteWorkflowTests
         Assert.Contains("-verify public.pem", Website, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 123 section 1: a nightly for a commit that main has moved past publishes nothing and says so, rather
+    /// than failing.
+    /// <para>
+    /// The reason is not tidiness. <c>GITHUB_TOKEN</c> cannot hold the <c>workflows</c> permission, so GitHub refuses to let it create a ref
+    /// on a commit whose <c>.github/workflows</c> differ from the default branch. Creating the release tag is creating a ref, so a stale
+    /// nightly over a push that touched a workflow file is refused with a 403 that reads like a misconfiguration and is not one.
+    /// </para>
+    /// <para>
+    /// Without this, the symptom is a red nightly on a perfectly good commit, and the temptation is to widen a permission to fix it. That is
+    /// what makes it worth a test: the wrong response to this failure is a worse repository.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void ANightlyThatMainHasMovedPastPublishesNothing()
+    {
+        string nightly = File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml"));
+
+        // It asks what main's head is, and compares it with the commit that was tested.
+        Assert.Contains("commits/main", nightly, StringComparison.Ordinal);
+        Assert.Contains("fresh=no", nightly, StringComparison.Ordinal);
+        Assert.Contains("fresh=yes", nightly, StringComparison.Ordinal);
+
+        // Both jobs that would publish are guarded by it, so a stale run does not even package.
+        int guards = Guard().Matches(nightly).Count;
+        Assert.True(guards >= 2, $"only {guards} jobs are guarded by the freshness check, and both package and publish must be");
+
+        // And it says so rather than failing: a notice and a summary, no non-zero exit on that path.
+        Assert.Contains("::notice::", nightly, StringComparison.Ordinal);
+        Assert.Contains("publishes nothing", nightly, StringComparison.Ordinal);
+    }
+
     /// <summary>The triggers a workflow declares, read from its <c>on:</c> block.</summary>
     private static List<string> Triggers(string yaml)
     {
@@ -148,4 +180,7 @@ public partial class WebsiteWorkflowTests
 
     [GeneratedRegex(@"shape = re\.compile\(r'(?<pattern>[^']+)'\)")]
     private static partial Regex ShapePattern();
+
+    [GeneratedRegex(@"if:\s*needs\.name-it\.outputs\.fresh == 'yes'")]
+    private static partial Regex Guard();
 }
