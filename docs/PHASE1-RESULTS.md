@@ -6521,6 +6521,23 @@ A sight height, zero distance and twist typed into the ballistics page, and ever
 
 A name already in use is now refused with a sentence naming the clash, because `RecordBook.With` replaces by name and saving under a forgotten name would have silently overwritten the record behind it.
 
+### Entry 131 sections 3.3 and 6.3, and entry 132 section 2.2
+
+**Section 3.3, the shot distance's unit.** It was a label showing whichever unit the Settings held, so somebody who thinks in metres but shoots at a hundred yard range had to change a global setting to type one number, or convert it in their head at the bench. It is a real choice beside the number now, and changing it rewrites the number rather than reading the old one as the new unit. Nothing stored moves: the distance is kept in inches whichever is chosen.
+
+**Section 6.3, the calibre confirmed before Accept.** Tonight's scan re-run is the argument for this, and it is a strong one: naming the calibre is worth five holes on scan 4 and the edge shot on scan 6. GroupLab now reads a calibre from the holes it measured, puts back the 0.0202 in that paper closes behind a bullet, and offers it with a sentence saying what it cannot know. Under three holes it says it has too few rather than answering from one or two marks. **The guess is offered and never applied**, because using it silently would be GroupLab deciding a fact the shooter knows for certain on evidence that is only suggestive, and then measuring everything else against it. Accept is held on a sheet of bulls until the calibre is answered; a plain group marked by hand is not held, because there is nothing for the answer to change.
+
+**Entry 132 section 2.2, native libraries only for the platforms anything runs on.**
+
+| build | before | after |
+|---|---|---|
+| Core tests | 685 MB | **262 MB** |
+| App tests | 705 MB | **278 MB** |
+
+A build with no runtime identifier was copying native assets for about thirty platforms: WebAssembly, Mac Catalyst, s390x, LoongArch, MIPS, RISC-V, the musl variants. That was 674 MB of a 685 MB test build. A little over 420 MB a folder, and entry 132 counts nine such folders on Alan's machine.
+
+**Nothing that ships changes.** A published package names one runtime identifier and is self contained, so the SDK already gives it that one platform's assets: a self-contained win-x64 publish measures 205 MB with and without this, the same figure the symbol fix left it at. CI's Windows package, Linux tarball and macOS jobs are all green on it.
+
 ### What entry 131 did not get
 
 Sections 1, 3.3, 6.2, 6.3, section 7's screen, 8 and 10: the mockups and the before and after renders, the shot distance unit dropdown, the zero offset picture, the calibre confirmation before Accept, the Equipment screen itself with the removal of the shared "rounds or components" box, the ballistics page and the comparison screen. None was started, so none is half built.
