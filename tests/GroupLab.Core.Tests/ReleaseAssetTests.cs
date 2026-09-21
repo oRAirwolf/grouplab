@@ -29,6 +29,15 @@ public partial class ReleaseAssetTests
         Assert.DoesNotContain("v0.1.0", readme, StringComparison.Ordinal);
         Assert.Equal(1, DownloadTableRow().Matches(readme).Count / 3);
 
+        // Entry 128 section 1.2 found this held for the README alone. The guides ship in the package and are published on the website, and
+        // docs/TESTING-GUIDE.md had been sending testers to releases/latest, which returns nothing because no numbered release exists.
+        foreach (string doc in new[] { "USER-GUIDE.md", "TESTING-GUIDE.md" })
+        {
+            string text = File.ReadAllText(Repo.PathTo("docs", doc));
+            Assert.DoesNotContain("releases/latest", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("releases/tag/v0.1.0", text, StringComparison.Ordinal);
+        }
+
         // Every linked asset is one the packaging script or a workflow writes under that exact name.
         foreach (string asset in Stable)
         {

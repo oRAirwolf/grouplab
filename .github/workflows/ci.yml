@@ -156,6 +156,41 @@ jobs:
             out/package/*.exe
           retention-days: 30
 
+  website:
+    name: website builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: The builder's packages
+        run: python -m pip install --quiet markdown Pillow fonttools brotli
+
+      # NOTES-FROM-PLANNING.md entry 128 section 2. This only builds. It never publishes, uploads or touches a release: publishing the site
+      # is website.yml, which a person starts by hand and nothing else may start. Building it here means a change that breaks the site is
+      # caught on the push that broke it rather than the next time somebody tries to publish.
+      #
+      # The builder's own checks run with it: no em dash, no banned term, nothing that looks like an address, no link to releases/latest or
+      # v0.1.0, and the download buttons pointing at the rolling nightly's stable names.
+      - name: Build the site
+        run: python website/build.py
+
+      - name: Say what it made
+        run: |
+          {
+            echo "### website"
+            echo
+            echo "- $(find website/_site -type f | wc -l) files, $(du -sh website/_site | cut -f1)"
+            echo "- built from ${GITHUB_SHA:0:7}, and published by nothing"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
   tarball:
     name: linux tarball
     runs-on: ubuntu-latest

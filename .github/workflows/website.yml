@@ -1,0 +1,130 @@
+# Publishing grouplab.org, NOTES-FROM-PLANNING.md entry 128 section 3.
+#
+# This is the only thing that publishes the website, and **only a person can start it**. The trigger is workflow_dispatch and nothing else:
+# no push, no schedule, no workflow_run, not now and not later. A test fails if this file ever gains another trigger, and another fails if
+# any other workflow starts it or writes to the `site` release. That is deliberate. A site that republishes itself on every push would mean
+# a half-finished change reaching the public web the moment it was committed, and nobody deciding.
+#
+# It does not deploy either. It builds the site, signs it, and puts it in a rolling release. The server pulls from there on its own timer,
+# checks the signature, and installs it (website/server/). So GitHub holds no key, no server address and no password, and the server needs no
+# inbound access at all.
+name: website
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why the site is being published, in one line. It goes in the release notes.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+# One publish at a time, and a later one waits rather than cancelling: the server reads whatever is newest when it looks, and two runs
+# racing to replace the same assets is the one way to serve half a site.
+concurrency:
+  group: website
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: build, sign and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REASON: ${{ inputs.reason }}
+    steps:
+      # main, not the branch this was started from: the site is what has landed, never what is being worked on.
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: The builder's packages
+        run: python -m pip install --quiet markdown Pillow fonttools brotli
+
+      - name: Build the site
+        run: python website/build.py
+
+      # Every page carries the commit it was built from, and the server checks that the page it is serving afterwards carries this one.
+      - name: The commit it was built from must be in every page
+        run: |
+          set -o pipefail
+          short=$(git rev-parse HEAD)
+          missing=0
+          while IFS= read -r page; do
+            if ! grep -q "grouplab-site-build\" content=\"$short\"" "$page"; then
+              echo "::error::$page does not carry the build commit"
+              missing=1
+            fi
+          done < <(find website/_site -name '*.html')
+          test "$missing" -eq 0
+          echo "every page carries $short"
+
+      - name: Pack it
+        run: |
+          set -o pipefail
+          tar -czf grouplab-site.tar.gz -C website/_site .
+          sha256sum grouplab-site.tar.gz | cut -d' ' -f1 > grouplab-site.tar.gz.sha256
+          echo "packed $(du -h grouplab-site.tar.gz | cut -f1), sha256 $(cat grouplab-site.tar.gz.sha256)"
+
+      # Entry 128 section 3.3: the SHA-256 only proves the file arrived whole. The signature proves it came from this project's build, which
+      # is what the server needs before it will unpack anything into a web root. Same key as the update manifest, so no new secret exists.
+      - name: Sign it
+        env:
+          GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
+        run: |
+          set -o pipefail
+          if [ -z "$GROUPLAB_UPDATE_SIGNING_KEY" ]; then
+            echo "::error::the repository secret GROUPLAB_UPDATE_SIGNING_KEY is not set, so this site cannot be signed and will not be published."
+            exit 1
+          fi
+          printf '%s' "$GROUPLAB_UPDATE_SIGNING_KEY" | base64 -d > private.der
+          openssl pkcs8 -inform DER -nocrypt -in private.der -out private.pem
+          openssl dgst -sha256 -sign private.pem -out grouplab-site.tar.gz.sig grouplab-site.tar.gz
+          # Checked here with the public half the application carries, so a key that cannot verify its own signature fails before publishing.
+          python - <<'PY' > public.pem
+          import re
+          text = open('src/GroupLab.Core/Updates/UpdateKeys.cs', encoding='utf-8').read()
+          key = re.search(r'PublicKey\s*=\s*"([A-Za-z0-9+/=]+)"', text).group(1)
+          print('-----BEGIN PUBLIC KEY-----')
+          for i in range(0, len(key), 64):
+              print(key[i:i + 64])
+          print('-----END PUBLIC KEY-----')
+          PY
+          openssl dgst -sha256 -verify public.pem -signature grouplab-site.tar.gz.sig grouplab-site.tar.gz
+          shred -u private.der private.pem
+
+      # A rolling release, replacing its assets each time. It is a pre-release and never latest, so it cannot be mistaken for a build of the
+      # application, and the nightly's "keep the newest thirty" never touches it because its tag is not a version.
+      - name: Publish to the site release
+        run: |
+          set -o pipefail
+          notes=$(printf '%s\n\n%s\n' "Built from $(git rev-parse HEAD)." "Why: $REASON")
+          if gh release view site >/dev/null 2>&1; then
+            gh release edit site --notes "$notes" --prerelease --latest=false
+            gh release upload site grouplab-site.tar.gz grouplab-site.tar.gz.sha256 grouplab-site.tar.gz.sig --clobber
+          else
+            gh release create site \
+              --title "grouplab.org" \
+              --notes "$notes" \
+              --prerelease \
+              --latest=false \
+              grouplab-site.tar.gz grouplab-site.tar.gz.sha256 grouplab-site.tar.gz.sig
+          fi
+
+      - name: Say what it published
+        run: |
+          {
+            echo "### grouplab.org published"
+            echo
+            echo "- commit $(git rev-parse HEAD)"
+            echo "- why: $REASON"
+            echo "- sha256 $(cat grouplab-site.tar.gz.sha256)"
+            echo "- the server pulls it within 15 minutes"
+          } >> "$GITHUB_STEP_SUMMARY"

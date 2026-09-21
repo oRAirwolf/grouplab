@@ -12,3 +12,6 @@ out/
 Claude outputs/
 excluded/
 scans/mounted/
+
+# NOTES-FROM-PLANNING.md entry 128: the site is built into website/_site/, which is never committed.
+website/_site/
