@@ -6093,6 +6093,52 @@ What they confirm: the build line names a nightly as a nightly; Train and Check 
 
 None of the three is a defect the entry raised, and none was changed without being asked.
 
+## Entry 123 section 2.7. The real update test, and what it found
+
+The real test was worth every minute it took. **It found that the updater could not install anything at all, and had already shipped that way.**
+
+### 1. What happened, in order
+
+| step | what was seen |
+|---|---|
+| Install `v0.2.0-nightly.16` on this machine | Silent, 8.5 seconds, exit code 0. **No installer window and no elevation prompt**, as entry 123 section 2.3 requires. It upgraded the existing install in place and registered as `GroupLab 0.2.0-nightly.16` in Add or remove programs. |
+| Check the installed build's stamp | `train: nightly`, `version: 0.2.0-nightly.16+b39b7af`. Entry 125's defect is fixed in a published artefact. |
+| Ask the installed build to read its own train's manifest | **`Refused: BadSignature`.** |
+
+That is where the walkthrough stopped, because there was nothing further to walk through: a build that refuses its train's manifest never offers an update, never downloads one and never installs one.
+
+### 2. Why, and why nothing had caught it
+
+The bytes that get signed were indented JSON. From .NET 9 the JSON writer's newline follows `Environment.NewLine`, so the same manifest serialises with a carriage return on Windows and without one on Linux. Measured on the two files:
+
+| | line breaks in the manifest |
+|---|---|
+| written by the Linux runner, published | `\n` |
+| written by the same code on this Windows machine | `\r\n` |
+
+The nightly is signed on a Linux runner. Every GroupLab on Windows recomputes those bytes to verify, gets different ones, and refuses. So **every manifest the project has ever published was unverifiable by every Windows build of it.**
+
+CI did not catch it because CI signs and verifies on the same Linux runner, where the two agree with each other. No unit test caught it for the same reason: a test signs and verifies in one process on one machine. **Both halves were consistently wrong together**, which is the failure mode a round-trip test cannot see, and the exact reason entry 123 section 2.7 asks for a real install on a real machine.
+
+It is also why the earlier evidence looked so convincing. The nightly workflow's own `update-check` step passed on every run, printing a green tick beside a manifest no user could verify.
+
+### 3. The fix
+
+The signature is now over compact JSON, which has no line break to differ over. The file a person downloads is still indented, and that no longer decides anything.
+
+`SignableBytesTests` holds the bytes rather than the round trip, which is the only kind of test that could have caught this:
+
+1. the signed bytes carry no carriage return and no line feed at all;
+2. they are exactly a recorded string, so changing them is a deliberate act (every manifest signed before such a change is refused after it, and the other way round);
+3. a signature still verifies through the written file;
+4. a manifest verifies whether the file it arrived in has `\n`, `\r\n` or `\r` line endings, which is the case that was broken.
+
+### 4. What it cost, honestly
+
+`v0.2.0-nightly.12`, `.14` and `.16` are installed on at least two machines and none of them can update itself: `.12` and `.14` because they call themselves development builds (entry 125), and `.16` because it refuses the signature. Every one of those copies has to be replaced by hand once a good nightly exists. The fix cannot reach them, because reaching them is the thing that is broken.
+
+That is the plainest possible argument for entry 123 section 2.7 existing at all. Three nightlies were published, each one passing a green workflow, and not one of them could have updated itself.
+
 ## Entry 127. Saying plainly whether the work is done
 
 Alan could not tell the difference between finished, waiting, and stuck. Several runs ended with a line like "I'll hold here" while CI was still going, which from his side is indistinguishable from being finished, and nothing continued until he sent a message. That is a real cost: a run that was fifteen minutes from done sat idle until he happened to look.
