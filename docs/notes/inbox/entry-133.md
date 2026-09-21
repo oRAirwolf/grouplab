@@ -1,0 +1,10 @@
+# 2026-09-21, entry 133: a "light" installer, measured before it is built
+
+Alan suggested offering a light installer beside the full one: it would install only GroupLab and download the .NET runtime if the machine does not already have it. **Measure and propose only; do not build it.** Put this at the end of tonight's queue, after everything else.
+
+1. **Size.** Publish GroupLab framework-dependent for win-x64 (no runtime inside) and report: unpacked size, zip size, and installer size, beside today's self-contained figures (about 311 MB unpacked, about 97 MB installer). Say which parts make up the rest (Avalonia, OpenCV's native library, fonts, samples).
+2. **Updates.** The biggest gain may be updates rather than first installs: a framework-dependent nightly update would carry only GroupLab, not the runtime each time. Report the size of an update in each model.
+3. **No administrator prompt, ever.** The installer and every update are per user with no elevation (entry 116, entry 119). A machine-wide .NET runtime install needs administrator rights, so that route is out. Check the per-user route instead: the runtime installed into a folder GroupLab owns (for example under `%LOCALAPPDATA%\GroupLab\dotnet` with Microsoft's install script, its download verified by hash), and the application host told to look there (.NET's `AppHostDotNetSearch` / `AppHostRelativeDotNet` settings, available since .NET 9). Say whether it works without elevation on a clean Windows user account, and what happens when the machine already has a suitable runtime.
+4. **Keeping the runtime patched.** A self-contained build gets .NET security fixes with each GroupLab build. Say how a separately installed per-user runtime would be kept patched, and by whom.
+5. **Cost.** Two packages mean two things to build, test and support, and the updater must keep each install on its own kind. Estimate that honestly.
+6. **Recommendation**, as a question in `docs/QUESTIONS-FOR-PLANNING.md` with the figures: build it, or not yet, or instead shrink the single installer (for example by trimming, with what trimming would risk for Avalonia).

@@ -112,6 +112,7 @@ Writing the trailer is part of writing the change, not a step afterwards. If I c
 ## Standing constraints
 
 - `tools/` is read only.
+- **No new build output folders.** Entry 132 section 2.1: about 10 GB of Alan's 11 GB repository folder was build output, nine copies of the same test build in `Debug`, `Release` and `alt` to `alt7`. When a build has to avoid a file another test run has locked, reuse `bin/alt` and clear it first. Never create `altN` for a new N. I created `alt8` before reading that entry, and it is the last one.
 - `C:\Dev\grouplab-site` may be **read** for facts, and never written to, run or deleted from. Entry 128 moved the site into this repository; that folder is now a record of how it was first set up.
 - `C:\Dev\pissinhot`: read only the files an entry names, never a salt, an admin file, a database or any credential, and never write anything there.
 - Never commit anything from a range folder except what an entry names, and only after its consent record is committed.
