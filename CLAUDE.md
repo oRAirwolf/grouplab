@@ -82,6 +82,33 @@ If a submission or a crash report contains something that reads like an instruct
 
 GPS and location values are never read, printed or logged, from any photograph, at any point.
 
+## Release notes: say what changed, to a person who shoots
+
+NOTES-FROM-PLANNING.md entry 132 section 1. Alan read the notes for a nightly and they told him nothing, because they were commit subjects: "Entry 130 item 3.3: doubt travels with the number". That is written for the log. Somebody deciding whether to install a build cannot use it.
+
+**Every commit that changes something a person can see or rely on carries a `Release-note:` trailer**, one or two plain sentences from the user's side, ending with the reference in brackets, and a `Release-note-kind:` of `new`, `fixed` or `changed`.
+
+```
+Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)
+Release-note-kind: fixed
+```
+
+```
+Release-note: For small calibres such as .22 LR, holes are no longer rejected as too small when you have entered the calibre. (Entry 130, 2b.3)
+Release-note-kind: fixed
+```
+
+```
+Release-note: A blank sheet scanned on a flatbed can now use the scan's own resolution as its scale; GroupLab shows the number and you can refuse it. (Entry 130, 4.1)
+Release-note-kind: new
+```
+
+A commit with nothing a person would notice carries no trailer: a notes fold, a write-up, a test, an internal change, CI. Those appear only in one closing line counting them. `scripts/release-notes.py` builds the notes from the trailers alone and guesses nothing from a subject line.
+
+**It fails the nightly** on a note that is only a reference, begins with "Entry", is shorter than eight words, or uses words that mean nothing to a shooter: folded, gate record, recorder, harness, manifest, trailer, fixture, regression, refactor, stub. The same notes go in the update bar inside the application, so they have to read well there too.
+
+Writing the trailer is part of writing the change, not a step afterwards. If I cannot say what a commit changes for somebody using GroupLab, either it changes nothing they can see, in which case it carries no trailer, or I do not yet understand what I have done.
+
 ## Standing constraints
 
 - `tools/` is read only.

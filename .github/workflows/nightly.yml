@@ -179,7 +179,9 @@ jobs:
           git fetch --quiet origin 'refs/tags/nightly:refs/tags/previous-nightly' 2>/dev/null || true
           previous=$(git rev-parse -q --verify refs/tags/previous-nightly || true)
           if [ "$previous" = "$SHA" ]; then previous=""; fi
-          python3 scripts/release-notes.py "$VERSION" "$SHA" "$previous" > notes.md
+          # Entry 132 section 1.6: the first nightly with readable notes also carries a hand written account of the builds from
+          # nightly 18 onwards, which went out with notes that said nothing. Drop --since-eighteen once a build after it has published.
+          python3 scripts/release-notes.py "$VERSION" "$SHA" "$previous" --since-eighteen > notes.md
           cat notes.md
 
       # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.
