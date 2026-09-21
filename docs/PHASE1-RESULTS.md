@@ -6598,6 +6598,24 @@ The wiring was done after the measurement above, so the table describes the stat
 
 **This is the clearest argument yet for finishing section 3.2.** The solver exists, it is tested, and it is the difference between a figure a shooter can use and a figure that is simply wrong. Until it is wired in, a sheet shot deliberately at fewer bulls than it carries, or a sheet whose group sits low, produces figures that look ordinary and are not, with nothing on the screen to say so. The uncertain marking of section 3.3 does travel with these figures, which is the one thing standing between this and a silently wrong answer, but a marking is not a correction.
 
+## A flake worth naming: temp files under load on this machine
+
+Three different tests failed tonight, once each, and every one passed on its own immediately afterwards:
+
+| test | what it said |
+|---|---|
+| `FolderVerbsTests.AFolderOfScansIsAnalysedOneLineEach` | failed once in a full run, passed alone |
+| `BenchCoverageTests.EverythingThatCanBeMeasuredHasABenchCase` | `bench-25-shots.png` "used by another process" |
+| `EndToEndTests.AnalyzeRecoversEveryShotPlacedOnARenderedSheetAndPoolsThem` | the same, on deleting `grouplab-end-to-end-<guid>.png` |
+
+**All three happened while both suites were running at once on this machine, and all three are a file in `%TEMP%` that could not be opened or deleted at that moment.** The names carry a GUID, so it is not two tests choosing the same path: it is something outside the test holding a newly written file for a moment, which on Windows is usually the antivirus or the search indexer, and it only shows up when the machine is busy enough for that moment to matter.
+
+It has never happened in CI, where the suites run in separate jobs on quieter machines.
+
+**It is not a defect in GroupLab and it is not worth chasing as one, but it should stop wasting a session's time.** What I would do: give the tests one shared helper that retries a create or delete a few times over a second before giving up, and use it wherever a test writes into `%TEMP%`. That turns a confusing red into nothing at all, and it does not hide a real failure, because a file genuinely held open stays held for much longer than a second.
+
+The counts either side of it: **Core 1193 passed with that one flake, 1184 passed clean on the run before it; App 145 passed clean.**
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
