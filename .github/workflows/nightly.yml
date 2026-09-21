@@ -137,6 +137,9 @@ jobs:
             --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
             --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"
+          # Checked with the key compiled into the build being published, not with the key that signed it: that is the stronger question,
+          # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
+          # was set fails here by design, and the message says NoKey.
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
 
       # The build's own release, which keeps the versioned assets so a bug report names something that still exists.
