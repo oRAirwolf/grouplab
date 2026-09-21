@@ -27,6 +27,7 @@ public class Entry113Tests
         {
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
 
@@ -54,6 +55,7 @@ public class Entry113Tests
 
             window.BackToEditor();
             window.Session.SetExclusion(shot.Id, ExclusionReason.CalledFlyer);
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             Assert.Contains(window.FullFiguresText, t => t.StartsWith("Without exclusions, ", StringComparison.Ordinal));
@@ -84,6 +86,7 @@ public class Entry113Tests
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, AngularUnit.Moa), null, "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long first = window.CurrentSession!.Value;
@@ -152,6 +155,7 @@ public class Entry113Tests
             window.Book = RecordBook.Empty.With(rifle).With(load);
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(rifle, null, "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             window.ShowBallistics();
@@ -260,6 +264,7 @@ public class Entry113Tests
             window.Book = RecordBook.Empty.With(rifle).With(load);
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(rifle, null, "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long first = window.CurrentSession!.Value;

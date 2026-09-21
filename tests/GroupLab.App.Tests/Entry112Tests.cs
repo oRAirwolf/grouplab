@@ -36,6 +36,7 @@ public class Entry112Tests
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, AngularUnit.Moa), "Bartlein 26", "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long id = Assert.IsType<long>(window.CurrentSession);
@@ -55,6 +56,7 @@ public class Entry112Tests
             window.BackToEditor();
             int excluded = window.Session.State.Shots[0].Id;
             window.Session.SetExclusion(excluded, ExclusionReason.PulledShot);
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             Assert.Equal(id, window.CurrentSession);
@@ -99,6 +101,7 @@ public class Entry112Tests
         {
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, AngularUnit.Moa), null, "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             long first = window.CurrentSession!.Value;
             var copy = window.Sessions!.Get(first)! with { Id = 0, CreatedUtc = "2099-01-01T00:00:00Z", ShotDate = "2099-01-01", Rifle = "Old Mauser", Load = "Factory 150" };
@@ -182,6 +185,7 @@ public class Entry112Tests
                 window.BackToEditor();
                 int first = window.Session.State.Shots[0].Id;
                 window.Session.SetExclusion(first, withExclusion ? ExclusionReason.PulledShot : null);
+                window.CalibreAnswered();
                 window.Analyse();
                 Settle();
                 var report = window.BuildReport();
@@ -274,6 +278,7 @@ public class Entry112Tests
         try
         {
             window.Session.SetShotDistance(3600);
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long session = window.CurrentSession!.Value;
@@ -367,6 +372,7 @@ public class Entry112Tests
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
             window.Session.SetEquipment(window.Book.FindRifle("Tikka T3x"), null, "H4350 41.5");
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             Assert.Contains(window.ZeroText, t => t.StartsWith("Carrying it needs the rifle's sight height, the rifle's zero distance, the load's muzzle velocity", StringComparison.Ordinal));

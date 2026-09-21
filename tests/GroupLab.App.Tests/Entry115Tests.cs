@@ -81,6 +81,7 @@ public class Entry115Tests
             Assert.Equal(["41.5 gr", "42.1 gr"], window.Session.State.Subgroups!.Names);
 
             // It is kept in the marking, so a saved session reopens with its subgroups.
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long id = window.CurrentSession!.Value;
@@ -123,6 +124,7 @@ public class Entry115Tests
             Assert.Contains(window.ChronographText, t => t.StartsWith("Accept and analyse a sheet first", StringComparison.Ordinal));
 
             window.ShowBallistics(false);
+            window.CalibreAnswered();
             window.Analyse();
             Settle();
             long id = window.CurrentSession!.Value;

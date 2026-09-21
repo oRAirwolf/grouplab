@@ -91,6 +91,7 @@ public class Entry109Tests
             }
 
             Check("marking");
+            window.CalibreAnswered();
             window.Analyse();
             window.SetEveryWhy(true);
             Check("analysis");
@@ -187,6 +188,7 @@ public class Entry109Tests
         {
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             // Entry 111 section 3: each "why" is a small button beside its item, and what it opens is hidden until it is opened.
@@ -282,6 +284,7 @@ public class Entry109Tests
                         window.BackToEditor();
                         window.Canvas.FitToView();
                         Save(window, $"marking-{name}-{size}");
+                        window.CalibreAnswered();
                         window.Analyse();
                         window.SetEveryWhy(false);
                         Save(window, $"analysis-{name}-{size}");

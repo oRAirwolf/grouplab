@@ -70,4 +70,36 @@ public class Entry131Tests
             Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
         }
     }
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 131 section 6.3: Accept is held on a sheet of bulls until the calibre question is answered. It is the one
+    /// question whose answer changes what GroupLab finds rather than how it shows it, and leaving it blank cost five holes on one of the range
+    /// scans and the shot at the edge of the scan on another, with nothing on the screen ever saying so.
+    /// </summary>
+    [AvaloniaFact]
+    public void AcceptIsHeldUntilTheCalibreIsAnswered()
+    {
+        var (window, path, _) = Entry109Tests.Sheet();
+        try
+        {
+            Settle();
+
+            window.Analyse();
+            Settle();
+
+            Assert.False(window.Analysing, "Accept went ahead with the calibre unanswered");
+            Assert.Contains("Say what you were shooting", window.ProblemText, StringComparison.Ordinal);
+
+            // Answering it, either way, lets it through. Clearing the box is an answer: a photograph of something that is not a GroupLab
+            // sheet has no calibre, and the gate is there to stop Accept on a sheet nobody was asked about.
+            window.CalibreAnswered();
+            window.Analyse();
+            Settle();
+
+            Assert.True(window.Analysing);
+        }
+        finally
+        {
+            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+        }
+    }
 }

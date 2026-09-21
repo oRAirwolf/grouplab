@@ -75,6 +75,7 @@ public partial class Entry111Tests
                 Check($"stage {window.Stages[i].Stage}");
             }
 
+            window.CalibreAnswered();
             window.Analyse();
             window.SetEveryWhy(true);
             Check("analysis");
@@ -129,6 +130,7 @@ public partial class Entry111Tests
         {
             window.Session.SetCalibre(Calibre.Of(0.308));
             window.Session.SetShotDistance(3600);
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             var whys = window.GetLogicalDescendants().OfType<Button>().Where(b => b.Classes.Contains(AppStyles.Why) && Entry109Tests.Shown(b)).ToList();

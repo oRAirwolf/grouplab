@@ -302,6 +302,19 @@ public sealed partial class MainWindow : Window
     private StatedSheetSize? statedSize;
     private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+
+    /// <summary>
+    /// Whether the person has answered the calibre question on this marking, NOTES-FROM-PLANNING.md entry 131 section 6.3. Setting a calibre
+    /// answers it, and so does clearing it, because "no calibre" is a deliberate answer for somebody marking a photograph of something that
+    /// is not a GroupLab sheet. What it stops is Accept on a sheet where nobody has been asked at all.
+    /// </summary>
+    private bool calibreConfirmed;
+
+    /// <summary>
+    /// Records that the calibre question has been answered, NOTES-FROM-PLANNING.md entry 131 section 6.3, without naming a calibre. It is
+    /// what the Clear button does, and what a test whose subject is not the calibre uses so the gate does not stand in its way.
+    /// </summary>
+    internal void CalibreAnswered() => calibreConfirmed = true;
     private readonly AppSettingsStore settingsStore;
 
     /// <summary>
@@ -448,6 +461,9 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(Row(calibreBox, Button("Set", SetCalibreFromBox), Button("Clear", () =>
         {
             calibreBox.Text = "";
+            // Entry 131 section 6.3: clearing it is an answer too. Somebody marking a photograph of something that is not a GroupLab sheet
+            // means "no calibre", and the gate is there to stop Accept on a sheet where nobody was ever asked, not to force a number.
+            calibreConfirmed = true;
             session.SetCalibre(null);
         })));
         panel.Children.Add(calibreNote);
@@ -998,6 +1014,9 @@ public sealed partial class MainWindow : Window
         detectedState = null;
         plotDefinition = null;
         registrationResidual = null;
+        // A new sheet is a new question: entry 131 section 6.3's gate asks again, because the calibre is a property of this group and not of
+        // the session, and a person who answered for the last sheet has said nothing about this one.
+        calibreConfirmed = false;
         SetAnalysing(false);
         // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
         DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
@@ -1109,6 +1128,7 @@ public sealed partial class MainWindow : Window
 
         bool untouched = detectedState is not null && ReferenceEquals(session.State, detectedState);
         bool changed = calibre?.DiameterInches != session.State.Calibre?.DiameterInches;
+        calibreConfirmed = true;
         session.SetCalibre(calibre);
         if (!changed || calibre is null || detectedState is null)
         {
@@ -1550,9 +1570,13 @@ public sealed partial class MainWindow : Window
             calibreBox.Text = state.Calibre?.Name ?? "";
         }
 
+        // NOTES-FROM-PLANNING.md entry 131 section 6.3: with no calibre named, show what the holes themselves suggest, so a person has
+        // something to accept or correct rather than an empty box. Naming it is worth five holes on one of the range scans.
         calibreNote.Text = state.Calibre is { } calibre
             ? $"Read as a {units.Length(calibre.DiameterInches)} bullet diameter. Type the diameter itself if that is not right."
-            : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+            : CalibreConfirmation.Guess(state) is { DiameterInches: not null } guess
+                ? guess.Why
+                : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
         if (!shotDistance.IsKeyboardFocusWithin)
         {
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";
@@ -1985,9 +2009,23 @@ public sealed partial class MainWindow : Window
         Refresh();
     }
 
-    /// <summary>Accept and analyse: the analysis state, whatever is still open, which the amber line then names.</summary>
+    /// <summary>
+    /// Accept and analyse: the analysis state, whatever is still open, which the amber line then names.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 131 section 6.3 puts one gate in front of it: on a sheet of bulls the calibre has to be answered first.
+    /// It is the one question whose answer changes what GroupLab finds rather than how it shows it, and leaving it blank cost five holes on
+    /// one of the range scans and the shot at the edge of the scan on another, with nothing on the screen ever saying so.
+    /// </para>
+    /// </summary>
     internal void Analyse()
     {
+        if (CalibreConfirmation.WhyAcceptIsHeld(session.State, calibreConfirmed) is { } held)
+        {
+            problem.Text = held;
+            calibreBox.Focus();
+            return;
+        }
+
         int open = ReviewQueue.Open(ReviewQueue.For(session.State, analyseSighters));
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
@@ -2425,6 +2463,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>Whether the window is in the analysis state, for the headless tests.</summary>
     internal bool Analysing => analysing;
+
+    /// <summary>The alert line, for tests: what the window is telling the person is wrong.</summary>
+    internal string ProblemText => problem.Text ?? "";
 
     /// <summary>The composite plot, for the headless tests.</summary>
     internal CompositePlot Plot => plot;

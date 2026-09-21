@@ -83,6 +83,8 @@ public class AnalysisStateTests
             window.Session.MoveShot(moved, new PointD(207, 192));
             var edited = window.Session.State;
 
+            // Entry 131 section 6.3 holds Accept until the calibre question is answered; this test is about the crumb, not the calibre.
+            window.CalibreAnswered();
             Named(window, "Accept and analyse").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.True(window.Analysing);
@@ -111,6 +113,7 @@ public class AnalysisStateTests
         try
         {
             // The marking opens with five shots on each of two bulls, two items a person has not looked at, and the line names both.
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             int open = ReviewQueue.Open(ReviewQueue.For(window.Session.State));
@@ -154,6 +157,7 @@ public class AnalysisStateTests
             int excluded = shots[4].Id, notAShot = shots[9].Id;
             window.Session.SetExclusion(excluded, ExclusionReason.PulledShot);
             window.Session.SetNotAShot(notAShot, true);
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
 
@@ -190,6 +194,7 @@ public class AnalysisStateTests
         var (window, path) = Marked();
         try
         {
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             var plot = window.Plot;
@@ -230,6 +235,7 @@ public class AnalysisStateTests
         var (window, path) = Marked();
         try
         {
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             var cards = window.JudgementCards;
@@ -284,6 +290,7 @@ public class AnalysisStateTests
         var window = NewWindow();
         window.Show();
         window.ApplyDetection(result);
+        window.CalibreAnswered();
         window.Analyse();
         Dispatcher.UIThread.RunJobs();
         var ring = definition.RingSets.Single(r => r.Key == definition.Bulls.First(b => b.Scoring).RingSet);

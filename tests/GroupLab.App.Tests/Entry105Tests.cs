@@ -195,6 +195,7 @@ public class Entry105Tests
         {
             var shots = window.Session.State.Shots;
             window.Session.SetExclusion(shots[4].Id, ExclusionReason.PulledShot);
+            window.CalibreAnswered();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             var plot = window.Plot;
