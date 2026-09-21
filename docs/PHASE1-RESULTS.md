@@ -6626,6 +6626,18 @@ Entry 129 was folded with an honest status: almost none of it can be done withou
 
 **Why the rest was not built.** Three nights running, the queue ahead of it was defects that mislead a shooter today. And this entry's own sections 7 and 8 need SSH, which was forbidden on each of those nights. The parts that do not need SSH are a receiver, a worker and a page that only mean anything once there is a server to run them on; building them untested against the real nginx and PHP setup is how a receiver goes out with a typo in it.
 
+## The end of the night, proved rather than asserted
+
+A self-contained win-x64 package published from the last commit of the night, carrying every change in it, read the published sample scan:
+
+```
+25 holes inside the registered sheet, 9 candidates rejected
+25 shots pooled about their own bulls, mean radius 0.232 in
+mean radius 0.232 in, 94.9% interval 0.193 to 0.289 in
+```
+
+**Identical to the figure this sheet has read all along**, after a night that took 128 MB of debug symbols out of the package, 423 MB of native libraries out of every build, rewired how holes are assigned to bulls, and added four marks to a shot. That is the point of measuring it from the package rather than from a test: the tests say the code is right, and this says the thing a person would download is the same thing.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
