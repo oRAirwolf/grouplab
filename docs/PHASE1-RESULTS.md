@@ -7459,6 +7459,84 @@ So this is half a gate record. The half it has is the half that was missing.
 Items 2 and 3 are untouched: the bent-page model fitted with markers held out in turn, and the proposed wording for when GroupLab should tell somebody to flatten the sheet, shoot more squarely, or scan instead. Both want the pairing first, because a candidate model has to be judged on hole positions and those need the right scan.
 
 
+# Each photograph paired with its own scan, and the gate record completed
+
+Entry 130 section 2c items 1 and 2, and entry 130 section 6b item 1's other half. Every photograph was run against all five scans that can be read, and paired with the one whose holes it matches.
+
+## Scan 2 cannot be read at all
+
+`compare-photos` on scan 2: "the scan could not be measured: no code on the sheet could be read".
+
+That is a flatbed scan at 600 dpi, the easiest case there is, and GroupLab cannot identify the sheet. It is the same failure as the 27 photographs, on material where distance, angle and light are not excuses. **Anything shot on scan 2's sheet has no truth to be compared against**, and that is not a photography problem.
+
+## The pairing
+
+| scan | its holes | photographs paired to it | holes matched |
+|---|---|---|---|
+| 1 | 14 | 165624, 165627, 165634, 165637 | 14, 14, 13, 12 |
+| 1 | 14 | 165611, 165617, 161502, partly in frame | 5, 5, 2 |
+| 4 | 19 | 153309, 153325, 153333, 153336, 153356 | 18, 18, 17, 18, 18 |
+| 5 | 20 | 153340, 153344, 153347 | 20, 18, 20 |
+| 3, 6 | | none | |
+| none | | the 14:14 burst, 15 photographs | 0 against every scan |
+
+**The 14:14 burst matches nothing.** Fifteen photographs, every one registering well, with bull-centre medians from 0.0019 to 0.0119 in, and not one hole in common with any readable scan. Several of them find no holes at all and one finds ten. The likeliest reading is that the burst is of scan 2's sheet, whose scan cannot be read, so the pairing that would prove it is the one pairing that cannot be made. That is entry 130 section 2c's "14:14 burst identification" answered, and the answer is that it cannot be identified from this material.
+
+## Hole agreement, the half the earlier record was missing
+
+Over the 15 paired photographs:
+
+| hole-position error, inches on the page | median across them | range |
+|---|---|---|
+| each photograph's median | 0.0316 | 0.0229 to 0.0478 |
+| each photograph's 95th percentile | 0.0695 | 0.0457 to 0.1346 |
+| each photograph's worst | 0.0852 | 0.0457 to 0.1476 |
+
+Read that against the 0.15 in the gate uses for deciding whether a hole in a photograph is the *same hole* as one in the scan. Every photograph clears that comfortably, which is why the matching worked at all.
+
+Now read it against what the number is for. **A hole's position in a photograph is out by about 0.03 in at the median and 0.07 in at the 95th percentile**, against a mean radius of about 0.17 in on scan 6. That is roughly **18 percent of the group's own size at the median**, and 40 percent at the 95th percentile.
+
+## What a photograph can be trusted for
+
+- **Counting shots, and seeing where they are**: yes. Matching found 12 to 20 of 14 to 20 holes on every fully framed photograph.
+- **Measuring a group**: no, not to compare loads. An 18 percent error on each shot's own offset is larger than the differences people are trying to detect.
+- **Zeroing**: probably, since a zero correction is a group centre and averaging 20 shots reduces the error considerably. Not measured here.
+- **A sheet partly out of frame**: the three photographs that located 4 or 5 bulls matched 2 to 5 holes of 14. They register, they look like they worked, and most of the sheet is simply not there.
+
+## What this does not settle
+
+The bent-page model of section 6b item 2 is not tried, and the warning wording of item 3 is not proposed. Both now have what they need: a pairing, and hole errors to judge a candidate model by.
+
+
+# The application was slower than the command line because it decoded the same file three times
+
+Entry 130 section 6 item 1.
+
+## What it was doing
+
+`OpenImage` did this, on the thread that draws:
+
+1. `ImageLoader.Load(path)`: read the file, decode it grey.
+2. `ImageLoader.LoadMaxChannel(path)`: read the file again, decode it in colour again, split, take max(R, G, B).
+3. `Cv2.ImRead(path, Color)`: read the file a third time and decode it in colour a third time, for the picture on screen.
+
+Three reads and three decodes of the same file. On a 600 dpi letter scan that is three passes over about 34 megapixels where the command line makes one. It is enough on its own to explain being two to three times slower without any of the analysis being slower at all.
+
+`LoadForEditor` now reads once and hands back the grey, the max channel and the colour image together.
+
+## The saving I did not take, and why
+
+The obvious further step is to convert the colour image to grey rather than decoding a second time. OpenCV's grayscale decode and its BGR to grey conversion are built on the same coefficients, so they ought to agree.
+
+**They do not.** Measured over the committed screen renders, they differ at about eight percent of pixels, by one level, on every image tested.
+
+One level matters here. Every threshold in the detector is a comparison against a grey level, so a pixel that moves by one can move a hole's edge, and in a marginal case a hole in or out of the result. Entry 130 section 6 item 2 says an optimisation changes no result: same holes, same assignments, same gate record. A grey that differs anywhere is a different image.
+
+So the grey is still decoded as grey, and the saving is one read and one decode out of three rather than two.
+
+**`ImageLoaderSameResultTests` is the reason this is known rather than assumed.** It was written expecting to pass, and it failed on the first run, on all eight images. Without it the conversion would have shipped, every figure would have moved by an amount nobody could predict, and the commit message would have said "no change in results".
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

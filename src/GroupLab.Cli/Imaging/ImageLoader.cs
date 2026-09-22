@@ -87,6 +87,68 @@ public static class ImageLoader
     }
 
     /// <summary>
+    /// Everything the editor needs from one file, from one read and one decode, NOTES-FROM-PLANNING.md entry 130 section 6 item 1.
+    /// <para>
+    /// <b>Why the application was slower than the command line on the same scan.</b> Opening an image read the file three times and decoded
+    /// it three times: once grey through <see cref="Load"/>, once in colour through <see cref="LoadMaxChannel"/>, and once more in colour to
+    /// make the picture on the screen. On a 600 dpi letter scan that is three decodes of a 34 megapixel image where the command line does
+    /// one, and all of it on the thread that draws.
+    /// </para>
+    /// <para>
+    /// <b>The grey is still decoded as grey, and that is a finding rather than a choice.</b> The obvious further saving is to convert the
+    /// colour image to grey instead of decoding a second time, since OpenCV's grayscale decode and its BGR to grey conversion are built on
+    /// the same coefficients. They do not agree. Measured over the screen renders, the two differ at about eight percent of pixels by one
+    /// level, every image, which is `ImageLoaderSameResultTests` doing its job. Entry 130 section 6 item 2 is explicit that an optimisation
+    /// changes no result, and every threshold in the detector is a comparison against a grey level, so one level is enough to move a hole.
+    /// </para>
+    /// <para>
+    /// So this reads once and decodes twice, where opening an image used to read three times and decode three times.
+    /// </para>
+    /// </summary>
+    /// <returns>The grey image, the max(R, G, B) image, the colour image for the screen, and what the file says about itself.</returns>
+    public static (GrayImage Grey, GrayImage MaxChannel, Mat Colour, ImageMetadata Metadata) LoadForEditor(string path)
+    {
+        byte[] bytes = Bytes(path);
+        var metadata = ImageMetadataReader.Read(bytes);
+        var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        if (colour.Empty())
+        {
+            colour.Dispose();
+            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+        }
+
+        try
+        {
+            using var grey = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
+            if (grey.Empty())
+            {
+                throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+            }
+
+            var channels = Cv2.Split(colour);
+            try
+            {
+                using var max = new Mat();
+                Cv2.Max(channels[0], channels[1], max);
+                Cv2.Max(max, channels[2], max);
+                return (OpenCvSharpBackend.Copy(grey), OpenCvSharpBackend.Copy(max), colour, metadata);
+            }
+            finally
+            {
+                foreach (var channel in channels)
+                {
+                    channel.Dispose();
+                }
+            }
+        }
+        catch
+        {
+            colour.Dispose();
+            throw;
+        }
+    }
+
+    /// <summary>
     /// The image in colour reduced two ways, max(R, G, B) and the chroma max(R, G, B) - min(R, G, B), with its metadata. Chroma
     /// separates coloured printed ink from a hole, which is neutral whatever its darkness (docs/DETECTION-PIPELINE.md stage S6).
     /// </summary>

@@ -1175,10 +1175,11 @@ public sealed partial class MainWindow : Window
     /// </summary>
     public void OpenImage(string path)
     {
-        var (image, meta) = ImageLoader.Load(path);
-        var (max, _) = ImageLoader.LoadMaxChannel(path);
-        using var colour = OpenCvSharp.Cv2.ImRead(path, OpenCvSharp.ImreadModes.Color | OpenCvSharp.ImreadModes.IgnoreOrientation);
-        OpenCvSharp.Cv2.ImEncode(".png", colour, out byte[] png);
+        // Entry 130 section 6 item 1: one read and one decode. This used to read the file three times and decode it three times, which on
+        // a 600 dpi letter scan is three passes over 34 megapixels where the command line makes one.
+        var (image, max, colour, meta) = ImageLoader.LoadForEditor(path);
+        using var colourImage = colour;
+        OpenCvSharp.Cv2.ImEncode(".png", colourImage, out byte[] png);
         using var stream = new MemoryStream(png);
         grey = image;
         valueImage = max;
