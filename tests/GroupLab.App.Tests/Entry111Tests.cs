@@ -114,7 +114,7 @@ public partial class Entry111Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -154,7 +154,7 @@ public partial class Entry111Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 

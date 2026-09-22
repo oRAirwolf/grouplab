@@ -17,7 +17,7 @@ public sealed class OwnSheetsTests : IDisposable
     {
         if (Directory.Exists(folder))
         {
-            Directory.Delete(folder, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(folder);
         }
     }
 

@@ -89,7 +89,7 @@ public class PhotoComparisonTests
         }
         finally
         {
-            Directory.Delete(folder, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(folder);
         }
     }
 }

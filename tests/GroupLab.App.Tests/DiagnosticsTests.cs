@@ -121,7 +121,7 @@ public partial class DiagnosticsTests
         {
             DiagnosticLog.Current = previous;
             log.Dispose();
-            Directory.Delete(root, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(root);
         }
     }
 
@@ -146,7 +146,7 @@ public partial class DiagnosticsTests
         }
         finally
         {
-            Directory.Delete(Path.GetFullPath(Path.Combine(directory, "..", "..", "..", "..")), recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetFullPath(Path.Combine(directory, "..", "..", "..", "..")));
         }
     }
 
@@ -175,7 +175,7 @@ public partial class DiagnosticsTests
         }
         finally
         {
-            Directory.Delete(Path.GetFullPath(Path.Combine(directory, "..", "..", "..", "..")), recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetFullPath(Path.Combine(directory, "..", "..", "..", "..")));
         }
     }
 
@@ -199,7 +199,7 @@ public partial class DiagnosticsTests
         }
         finally
         {
-            Directory.Delete(directory, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(directory);
         }
     }
 

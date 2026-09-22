@@ -17,7 +17,7 @@ public sealed partial class SessionStoreTests : IDisposable
 
     public SessionStoreTests() => Directory.CreateDirectory(folder);
 
-    public void Dispose() => Directory.Delete(folder, recursive: true);
+    public void Dispose() => GroupLab.Tests.Support.Temp.Delete(folder);
 
     private SessionStore New(string name = "grouplab.db", string? legacy = null) => SessionStore.Open(Path.Combine(folder, name), legacy);
 

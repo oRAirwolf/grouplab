@@ -28,7 +28,7 @@ public class UpdateRunTests : IDisposable
         {
             if (Directory.Exists(_folder))
             {
-                Directory.Delete(_folder, recursive: true);
+                GroupLab.Tests.Support.Temp.Delete(_folder);
             }
         }
         catch (IOException)

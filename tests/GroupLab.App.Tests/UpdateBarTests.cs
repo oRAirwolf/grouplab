@@ -356,7 +356,7 @@ public class UpdateBarTests : IDisposable
         }
         finally
         {
-            Directory.Delete(logs, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(logs);
         }
     }
 

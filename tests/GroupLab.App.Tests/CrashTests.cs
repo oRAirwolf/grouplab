@@ -61,7 +61,7 @@ public class CrashTests
         {
             DiagnosticLog.Current = previous;
             log.Dispose();
-            Directory.Delete(root, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(root);
         }
     }
 
@@ -122,7 +122,7 @@ public class CrashTests
         {
             DiagnosticLog.Current = previous;
             log.Dispose();
-            Directory.Delete(root, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(root);
         }
     }
 }

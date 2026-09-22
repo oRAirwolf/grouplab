@@ -63,7 +63,7 @@ public class StatedSheetSizeTests
         }
         finally
         {
-            Directory.Delete(directory, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(directory);
         }
     }
 }

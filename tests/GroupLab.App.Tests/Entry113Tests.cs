@@ -68,7 +68,7 @@ public class Entry113Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -149,7 +149,7 @@ public class Entry113Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -201,7 +201,7 @@ public class Entry113Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -233,7 +233,7 @@ public class Entry113Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -335,7 +335,7 @@ public class Entry113Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 }

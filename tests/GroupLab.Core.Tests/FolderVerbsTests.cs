@@ -74,7 +74,7 @@ public class FolderVerbsTests
         }
         finally
         {
-            Directory.Delete(folder, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(folder);
         }
     }
 }

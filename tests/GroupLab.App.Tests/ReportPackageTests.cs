@@ -15,7 +15,7 @@ public sealed class ReportPackageTests : IDisposable
 
     public void Dispose()
     {
-        Directory.Delete(root, recursive: true);
+        GroupLab.Tests.Support.Temp.Delete(root);
         GC.SuppressFinalize(this);
     }
 

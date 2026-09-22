@@ -16,7 +16,7 @@ public sealed class OwnerPublicationTests : IDisposable
     {
         if (Directory.Exists(root))
         {
-            Directory.Delete(root, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(root);
         }
 
         GC.SuppressFinalize(this);

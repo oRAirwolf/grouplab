@@ -19,7 +19,7 @@ public sealed class StatedSheetSizeTests : IDisposable
 
     public void Dispose()
     {
-        Directory.Delete(root, recursive: true);
+        GroupLab.Tests.Support.Temp.Delete(root);
         GC.SuppressFinalize(this);
     }
 

@@ -32,7 +32,7 @@ public class ReleaseNoteRangeTests
                 File.SetAttributes(file, FileAttributes.Normal);
             }
 
-            Directory.Delete(folder, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(folder);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {

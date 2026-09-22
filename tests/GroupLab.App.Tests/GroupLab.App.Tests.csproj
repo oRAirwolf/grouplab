@@ -21,4 +21,9 @@
     <ProjectReference Include="..\..\src\GroupLab.App\GroupLab.App.csproj" />
   </ItemGroup>
 
+  <!-- Shared by both test projects: a cleanup that cannot delete must never fail a test. -->
+  <ItemGroup>
+    <Compile Include="..\Shared\Temp.cs" Link="Support\Temp.cs" />
+  </ItemGroup>
+
 </Project>

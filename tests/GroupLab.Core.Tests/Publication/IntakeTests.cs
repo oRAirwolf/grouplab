@@ -20,7 +20,7 @@ public class IntakeTests : IDisposable
     {
         if (Directory.Exists(root))
         {
-            Directory.Delete(root, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(root);
         }
 
         GC.SuppressFinalize(this);
@@ -167,7 +167,7 @@ public class IntakeTests : IDisposable
             var result = Intake.Run(make(), publicRoot, NoOptOuts, Triage);
             Assert.Contains(why, result.Refused, StringComparison.Ordinal);
             Assert.False(Directory.Exists(publicRoot) && Directory.EnumerateFileSystemEntries(publicRoot).Any(), $"{why}: something was written");
-            Directory.Delete(Path.Combine(root, "incoming"), recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.Combine(root, "incoming"));
         }
     }
 

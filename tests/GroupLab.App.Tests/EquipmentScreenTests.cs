@@ -35,7 +35,7 @@ public class EquipmentScreenTests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -72,7 +72,7 @@ public class EquipmentScreenTests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -95,7 +95,7 @@ public class EquipmentScreenTests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -121,7 +121,7 @@ public class EquipmentScreenTests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -156,7 +156,7 @@ public class EquipmentScreenTests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 }

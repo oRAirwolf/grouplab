@@ -32,7 +32,7 @@ public class Entry131Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 
@@ -67,7 +67,7 @@ public class Entry131Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
     /// <summary>
@@ -99,7 +99,7 @@ public class Entry131Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
     /// <summary>
@@ -130,7 +130,7 @@ public class Entry131Tests
         }
         finally
         {
-            Directory.Delete(Path.GetDirectoryName(path)!, recursive: true);
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
 

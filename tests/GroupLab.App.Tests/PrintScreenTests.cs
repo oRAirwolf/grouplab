@@ -175,7 +175,7 @@ public class PrintScreenTests
         {
             if (Directory.Exists(directory))
             {
-                Directory.Delete(directory, recursive: true);
+                GroupLab.Tests.Support.Temp.Delete(directory);
             }
         }
 
