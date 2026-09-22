@@ -274,6 +274,9 @@ public sealed partial class MainWindow : Window
     /// <summary>What Settings says about an update that installed and did not reopen, empty where the last one came back on its own.</summary>
     private readonly TextBlock settingsRelaunch = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Alert } };
 
+    /// <summary>The two spreads drawn on one scale, entry 141 section 5.2.2.</summary>
+    private readonly SpreadStrips spread = new();
+
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = Tokens.Space8 };
@@ -1788,6 +1791,21 @@ public sealed partial class MainWindow : Window
                     }
 
                     statistics.Children.Add(Rowed(size));
+
+                    // Entry 141 section 5.2.2: the two spreads drawn, so "is my group wider than it is tall" is a picture rather than two
+                    // numbers a person has to hold in their head and compare. The caption is what stops it being a trap: every group is
+                    // lopsided one way or the other, and the strips say whether these shots can tell that from an ordinary round one.
+                    var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+                    var counted = state.Shots.Where(sh => sh.IsShot && sh.Exclusion is null && !(sh.Bull is { } sb && sighters.Contains(sb))).ToList();
+                    spread.Offsets = GroupAnalysis.CompositeOffsets(state, counted);
+                    spread.AcrossSd = all.SdX;
+                    spread.UpDownSd = all.SdY;
+                    spread.RoundPValue = all.Circularity?.PValue;
+                    spread.Length = inches => units.Length(inches);
+                    spread.InvalidateVisual();
+                    statistics.Children.Add(Ruled("Across, and up and down"));
+                    statistics.Children.Add(spread);
+                    statistics.Children.Add(Note(spread.Description));
                 }
 
                 foreach (string line in MoreFigureLines(state, all))

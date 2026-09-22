@@ -7100,6 +7100,21 @@ This is the input that decides what every figure afterwards is about, so a perso
 **The end to end proof against entry 120's ground truth.** Section 5.3.4 asks for scans 4, 5 and 6 to be run with their aimed bulls set and the assignments compared with Alan's table. That needs a registered sheet rather than a hand built one, and it is the test that would show the 6 ARC sheet coming out right. `AimedBullsTests` covers the rule and says plainly that it is not that proof.
 
 
+# Across, and up and down: the spread drawn
+
+Entry 141 section 5.2.2, answering "is my group wider than it is tall".
+
+Two strips under the group figures, sharing one scale, with every shot as a dot and a band for one standard deviation each side of the centre. One scale, because the whole question is which of the two is larger, and two scales would answer it by drawing rather than by measuring.
+
+The dots are the shots themselves rather than a bar, because a spread where one shot is a long way out is a different thing from a spread where they are evenly placed, and a bar cannot tell those apart.
+
+**The caption is the part that matters.** Every group is wider than it is tall or taller than it is wide; none is ever exactly square. A picture of two spreads, on its own, invites a person to read wind, a bipod or a technique into the ordinary lopsidedness of a handful of shots. So the words always carry the answer to the second question:
+
+> Across 0.112 in, up and down 0.097 in. It measures wider than it is tall, but 24 shots cannot tell that from an ordinary round group.
+
+Where the shots **can** separate them it says that instead, and where there were too few shots to run the circularity test it says there is no way to tell. The p value is the analysis's own, so the picture makes no claim the figures do not already make.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
