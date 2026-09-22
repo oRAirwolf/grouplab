@@ -7317,6 +7317,59 @@ Entry 137 section 4 says: *"The same image safety applies (pixel cap, decode wit
 So drop and paste have exactly the safety Open has, which is what the section's first sentence asks for, and the parenthetical describes something that does not exist yet. Raised as question 43 rather than invented tonight, because a cap is a number somebody has to choose and a wrong one refuses a legitimate 60 megapixel scan.
 
 
+# The same newly written file, on the other side of the test
+
+Twice in one night, and the second time it was not cleanup.
+
+`EndToEndTests` writes a PNG and hands the path straight to the analysis. On this machine the analysis could not open it: something outside the process had taken the newly written file, which on Windows is the virus scanner or the search indexer. It passed on its own straight afterwards, which is what CLAUDE.md says these look like.
+
+Cleanup can give up quietly, because the machine will clear a temporary folder. A test that needs to read its own file cannot. So `Temp.Readable` waits for the file to open, five tries at 120 ms, and then lets the failure happen anyway, where at least the message says what was going on.
+
+## And then CI hit it, which changed the answer
+
+I wrote the paragraph above saying this was one machine's virus scanner and not GroupLab's problem. Within the hour, `build and test` went red on `windows-latest`:
+
+```
+System.IO.IOException : The process cannot access the file
+'...\grouplab-bench-262b8699\bench-25-shots.png' because it is being used by another process.
+   at System.IO.File.ReadAllBytes(String path)
+   at GroupLab.Cli.Imaging.ImageLoader.Load(String path)
+   at GroupLab.Cli.Bench.BenchMaterial.Prepare(String root)
+```
+
+A clean hosted runner, with no virus scanner of Alan's on it. **So it is GroupLab's problem after all**, and the same thing happens to a person who opens a scan the moment their scanner finished writing it, or whose targets live in a synchronised folder.
+
+`ImageLoader` now waits for a moment's lock: five tries, 120 ms apart, under a second in total, and almost always one attempt. A file still held after that is a real refusal and is reported as one. A moment's wait is the right answer to a moment's lock, and it is worth saying that I only believed that once a machine I do not own proved it.
+
+
+# Entry 131 section 1's checklist, done by looking, and what looking is worth
+
+Entry 131 section 1 asks for renders of every screen at both sizes in both themes, looked at against a checklist. Every screen now has them, so this was a pass over the set rather than new drawing.
+
+## What looking found
+
+**The Equipment form was the one real failure.** Fourteen fields in a single tall column: at 1280 by 720 seven of them were below the fold, and at 2560 by 1440 the click value, a number like 0.25, had a box 1200 pixels wide while the left half of the screen was empty. It failed three lines of the checklist at once: figures in aligned grids, consistent spacing, and every control's purpose obvious.
+
+It is now a two column grid, and a field's width follows what it holds: a number gets 140 pixels, a name gets its column, and Notes takes the full width because it is the one field somebody really does write a sentence in. Twelve of the fourteen fields are visible at 1280 by 720, and all of them with Save and Cancel at 2560 by 1440.
+
+## What looking got wrong, for the second time
+
+The library's sheet list looked cut off to me at 1280 by 720: the sighter counts sit within a pixel or two of the divider, and "25 + 3" losing its last character reads as "25 + " while "6" losing its only one reads as nothing at all.
+
+**It is not cut off.** I measured rather than trusting the render, and nothing on any screen is.
+
+That is the same mistake as the analysis figures earlier this month, and the same lesson: a figure two pixels inside a panel's edge and a figure two pixels outside it look identical at any scale a person views a render at. So the answer is the same as it was then, a measurement rather than a promise.
+
+## The measurement that was missing
+
+`NothingIsCutOffTests` held every word against the **window's** edge. A word inside a panel that clips its own contents sits well within the window and is still cut in half, and the render just shows a smaller number.
+
+The test now also holds every word against every ancestor that clips, walks five screens rather than the marking one alone, and names the screen and the panel in the failure. Two things had to be got right for it to mean anything:
+
+- **`IsEffectivelyVisible`, not `IsVisible`.** The editor's header stays in the tree while another screen is showing, with its buttons far off to the side. Something nobody can see has not been cut off, and treating it as cut gave four confident false reports on three screens.
+- **It counts what it measured.** If nothing in the window sits inside a panel that clips, the walk proves nothing and would go on passing while saying nothing at all, so it fails in that case too. A test that cannot fail is worse than no test, because it looks like cover.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

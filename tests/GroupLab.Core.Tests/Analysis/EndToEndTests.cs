@@ -59,7 +59,9 @@ public class EndToEndTests(ITestOutputHelper output)
             }
 
             var clock = Stopwatch.StartNew();
-            var result = AnalyzeVerb.Analyze(path, definitionPath, out string? loadFailure);
+            // The PNG was written a line ago, and on Windows something outside this process sometimes has it open for a moment. That is the
+            // machine, not the analysis, so the test waits for its own file rather than reporting a red that means nothing.
+            var result = AnalyzeVerb.Analyze(GroupLab.Tests.Support.Temp.Readable(path), definitionPath, out string? loadFailure);
             clock.Stop();
             Assert.Null(loadFailure);
             Assert.NotNull(result);

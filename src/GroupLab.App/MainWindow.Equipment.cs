@@ -27,6 +27,9 @@ public sealed partial class MainWindow
 
     private readonly StackPanel equipmentForm = new() { Spacing = Tokens.Space8 };
 
+    /// <summary>How wide a numeric field is: enough for a click value, a twist or a barrel length, and no wider.</summary>
+    private const double NumberFieldWidth = 140;
+
     private readonly TextBlock equipmentProblem = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
 
     /// <summary>Which list is being shown and edited.</summary>
@@ -126,10 +129,18 @@ public sealed partial class MainWindow
             Classes = { AppStyles.Section },
         });
 
+        // Entry 131 section 1's checklist, applied by looking at the render: fourteen fields in one tall column ran past the fold at
+        // 1280 by 720 and gave a click value of 0.25 a box 1200 pixels wide at 2560 by 1440. Two columns, and a width that follows what
+        // the field holds, so the form reads as a form rather than as a list of sentences waiting to be written.
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), Margin = new Thickness(0, Tokens.Space8, 0, 0) };
+        int column = 0, row = 0;
+        equipmentForm.Children.Add(grid);
+
         foreach (var field in EquipmentForm.For(equipmentKind))
         {
             string? value = CurrentEquipmentValue(field.Key);
-            equipmentForm.Children.Add(new TextBlock
+            var cell = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, 0, Tokens.Space16, Tokens.Space12) };
+            cell.Children.Add(new TextBlock
             {
                 Text = field.Unit is null ? field.Label : $"{field.Label} ({field.Unit})",
                 Classes = { AppStyles.Label },
@@ -162,9 +173,43 @@ public sealed partial class MainWindow
                 box = text;
             }
 
+            // A number is a few characters, and a box the width of the panel says a sentence is expected. Notes take the whole width,
+            // because they are the one field where somebody really does write one.
+            if (field.Kind == FieldKind.Number)
+            {
+                box.HorizontalAlignment = HorizontalAlignment.Left;
+                box.Width = NumberFieldWidth;
+            }
+
             equipmentFields[field.Key] = box;
-            equipmentForm.Children.Add(box);
-            equipmentForm.Children.Add(new StackPanel { Spacing = Tokens.Space4, Name = "EquipmentHints_" + field.Key });
+            cell.Children.Add(box);
+            cell.Children.Add(new StackPanel { Spacing = Tokens.Space4, Name = "EquipmentHints_" + field.Key });
+
+            bool wide = field.Kind == FieldKind.Lines;
+            if (wide && column != 0)
+            {
+                row++;
+                column = 0;
+            }
+
+            Grid.SetRow(cell, row);
+            Grid.SetColumn(cell, column);
+            Grid.SetColumnSpan(cell, wide ? 2 : 1);
+            while (grid.RowDefinitions.Count <= row)
+            {
+                grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            }
+
+            grid.Children.Add(cell);
+            if (wide || column == 1)
+            {
+                row++;
+                column = 0;
+            }
+            else
+            {
+                column = 1;
+            }
         }
 
         equipmentForm.Children.Add(Row(

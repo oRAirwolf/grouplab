@@ -21,6 +21,37 @@ public static class Temp
 
     public const int WaitMilliseconds = 120;
 
+    /// <summary>
+    /// Waits until a file a test has just written can actually be opened for reading, and returns it.
+    /// <para>
+    /// <b>The other half of the same problem as <see cref="Delete"/>.</b> On 2026-09-22 the end to end test failed on its own assertion,
+    /// not in cleanup: it wrote a PNG and handed the path straight to the analysis, and the analysis could not open it because something
+    /// outside the process had taken the newly written file. On Windows that is the virus scanner or the search indexer, and it is nothing
+    /// to do with the code under test.
+    /// </para>
+    /// <para>
+    /// Unlike a cleanup, this cannot give up quietly: the test really does need the file. So it waits, and if it still cannot be read it
+    /// lets the failure happen, where at least the message says what was going on.
+    /// </para>
+    /// </summary>
+    public static string Readable(string path)
+    {
+        for (int attempt = 1; attempt <= Tries; attempt++)
+        {
+            try
+            {
+                using var open = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                return path;
+            }
+            catch (IOException) when (attempt < Tries)
+            {
+                Thread.Sleep(WaitMilliseconds);
+            }
+        }
+
+        return path;
+    }
+
     /// <summary>A folder in the system's temporary directory, named so its owner can be told from the others.</summary>
     public static string Folder(string what) =>
         Path.Combine(Path.GetTempPath(), $"grouplab-{what}-{Guid.NewGuid():N}");

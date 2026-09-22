@@ -84,4 +84,95 @@ public class NothingIsCutOffTests
         Assert.True(over.Count == 0, $"at {width} by {height}, text is cut off at the window's edge:\n  " + string.Join("\n  ", over.Take(12)));
         window.Close();
     }
+
+    /// <summary>
+    /// And the cut the window's own edge cannot see: a word inside a panel that clips its contents. It sits well within the window and is
+    /// still cut in half, and a render shows a number that simply reads as a smaller number.
+    /// <para>
+    /// The library's sheet list is why this exists. Its sighter counts sit within a pixel or two of the divider, and "25 + 3" losing its
+    /// last character reads as "25 + ", while "6" losing its only one reads as nothing at all. There is no way to tell that from a render,
+    /// which is the whole argument for measuring rather than looking.
+    /// </para>
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(1280, 720)]
+    [InlineData(2560, 1440)]
+    public void NoTextIsCutOffByThePanelItIsIn(int width, int height)
+    {
+        var window = NewWindow(width, height);
+        window.Show();
+        Mark(window);
+        Dispatcher.UIThread.RunJobs();
+        window.Measure(new Size(width, height));
+        window.Arrange(new Rect(0, 0, width, height));
+        Dispatcher.UIThread.RunJobs();
+
+        var cut = new List<string>();
+        int looked = CutInside(window, width, height, cut);
+
+        // Every screen, not only the marking one. The library's sheet list is the tightest thing in the application and it is three clicks
+        // away from anything the marking screen shows.
+        foreach (var (name, show) in Screens(window))
+        {
+            show();
+            Dispatcher.UIThread.RunJobs();
+            window.Measure(new Size(width, height));
+            window.Arrange(new Rect(0, 0, width, height));
+            Dispatcher.UIThread.RunJobs();
+            looked += CutInside(window, width, height, cut, name);
+        }
+
+        // A test that cannot fail is worse than no test. If nothing in the window sits inside a panel that clips, this walk proves nothing,
+        // and the day somebody replaces those panels it would go on passing while saying nothing at all.
+        Assert.True(looked > 0, "nothing in the window sits inside a panel that clips, so this measured nothing");
+
+        Assert.True(cut.Count == 0, $"at {width} by {height}, text is cut off inside a panel:\n  " + string.Join("\n  ", cut.Take(12)));
+        window.Close();
+    }
+
+    /// <summary>The screens a person can reach, each with the way to it, so the walk cannot quietly miss one.</summary>
+    private static IEnumerable<(string Name, Action Show)> Screens(MainWindow window) =>
+    [
+        ("the target library", () => window.ShowLibrary()),
+        ("Session records", () => { window.ShowLibrary(false); window.ShowSessions(); }),
+        ("Ballistics", () => { window.ShowSessions(false); window.ShowBallistics(); }),
+        ("Equipment", () => { window.ShowBallistics(false); window.ShowEquipment(EquipmentKind.Rifle); }),
+        ("Settings", () => { window.BackToEditor(); window.ShowSettings(); }),
+    ];
+
+    /// <summary>Everything the window is showing now that a panel has cut in half, named so the failure says where to look.</summary>
+    /// <returns>How many words were held against a panel that clips, so a walk that measured nothing can say so.</returns>
+    private static int CutInside(MainWindow window, int width, int height, List<string> cut, string? screen = null)
+    {
+        int looked = 0;
+        foreach (var text in window.GetVisualDescendants().OfType<TextBlock>())
+        {
+            // IsEffectivelyVisible, not IsVisible: the editor's own header is still in the tree while another screen is showing, and its
+            // buttons sit far off to the side. Something nobody can see has not been cut off.
+            if (!text.IsEffectivelyVisible || string.IsNullOrWhiteSpace(text.Text) || text.Bounds.Width <= 0)
+            {
+                continue;
+            }
+
+            foreach (var ancestor in text.GetVisualAncestors())
+            {
+                // Only a panel that clips can cut anything. A scroller clips on purpose and scrolls to what it hides, and the window's own
+                // edge is the other test's business.
+                if (ancestor is not Visual v || v is Window || !v.ClipToBounds
+                    || v is Avalonia.Controls.Presenters.ScrollContentPresenter || v.Bounds.Width <= 0)
+                {
+                    continue;
+                }
+
+                looked++;
+                if (text.TranslatePoint(new Point(text.Bounds.Width, 0), v) is { } at && at.X > v.Bounds.Width + 0.5)
+                {
+                    cut.Add($"\"{text.Text}\" is cut {at.X - v.Bounds.Width:0.0} px by the {v.GetType().Name} it is in{(screen is null ? "" : ", on " + screen)}");
+                    break;
+                }
+            }
+        }
+
+        return looked;
+    }
 }

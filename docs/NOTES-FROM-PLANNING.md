@@ -546,7 +546,7 @@ Under the entry 127 status rules: what moved where, the Turnstile setup steps fo
 
 # 2026-09-21, entry 131: the interface overhaul, and working through the night without stopping
 
-**Status: actioned in part 2026-09-22.** Done: sections 0, 2, 3.1, 3.2, 4, 5, 6.1, 7 in part and 9. **Not done: sections 1, 3.3, 6.2, 6.3, 7's screen, 8, 10 and 11's renders.**
+**Status: actioned 2026-09-22.** Done: every section. The status line above said otherwise until 2026-09-22 and was stale: sections 3.3 and 6.3 were already listed as done in the notes below it, and sections 6.2, 7's screen, 8 and 10 were built under entries 135 and 141 without this line being corrected. Section 1's checklist pass over every screen's renders was the last of it, and found one real failure, the Equipment form; see `docs/PHASE1-RESULTS.md` "Entry 131 section 1's checklist".
 - **Section 0, done and it is the important one:** `CLAUDE.md` now says that waiting for CI or a nightly is never a reason to end a turn, that a background watcher does not wake the session, and that a turn ends only when every queue is empty or something truly needs Alan. The old one-hour rule is gone.
 - **Section 9, done.** `Toaster`: one component, never a dialog, at most three showing, with Undo running the session's own undo so the button and Ctrl+Z cannot disagree.
 - **Section 4, done.** Ten figures explained in two or three plain sentences each, every one saying what the shot count does to it, with `docs/GLOSSARY.md` generated from the same list so the screen and the page cannot drift. More links go to the GitHub copy until the site is published.
