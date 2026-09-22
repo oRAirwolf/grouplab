@@ -10,6 +10,50 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.37
+
+**2026-09-22**, commit `e551dbb`. Nightly.
+
+### New
+
+- The ballistics page now draws the trajectory as a curve against range, with drop, wind drift, velocity and energy each on their own, and your zero marked on it.
+- Rifles, barrels and loads now have their own Equipment screen, with a full form for each and earlier values offered as you type, instead of the cramped box with one field that meant two different things.
+
+### Known issues
+
+- **Installs and does not reopen.** Pressing Install and restart updates GroupLab and then leaves it closed, and starting it again by hand reports a crash. The installer was bringing GroupLab back before it had finished writing its files. Fixed in the next build.
+- The notes on the release itself still open with the whole history since nightly 18. Fixed in the next build.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.37)
+
+---
+
+## 0.2.0-nightly.35
+
+**2026-09-22**, commit `5690ded`. Nightly.
+
+### New
+
+- The zero correction can now show you where your group landed against where you aimed, with the uncertainty around it, so you can see whether it is worth dialling.
+- There is now a Release notes page on grouplab.org listing every build and what changed in it, and the update bar can open it at the version being offered.
+
+### Fixed
+
+- The zero correction no longer has its direction cut off at the edge of the panel on a smaller window.
+
+### Changed
+
+- The installer now shows the GroupLab icon instead of a generic one, in your downloads and on the taskbar while it runs.
+
+### Known issues
+
+- **Installs and does not reopen**, as nightly 37 does. Fixed after 37.
+- The notes on the release itself open with the whole history since nightly 18.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.35)
+
+---
+
 ## 0.2.0-nightly.31
 
 **2026-09-21**, commit `85a4ac4`. Nightly.

@@ -70,7 +70,10 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
         var decision = UpdatePolicy.Decide(_build, preferences, signed, publicKey);
         Manifest = decision.Offer ? signed : null;
         return (decision.Offer
-            ? new UpdateState(UpdateStage.Offered, decision.Reason, decision.Version, 0, signed!.Payload.Notes)
+            // Entry 138 section 5: the bar is the one place that combines versions, because everything between the installed build and the
+            // offered one is new to this person. It falls back to the manifest's own notes where a manifest carries no per-version list.
+            ? new UpdateState(UpdateStage.Offered, decision.Reason, decision.Version, 0,
+                SkippedVersions.Combined(signed!.Payload.Versions, _build.Version.Number, signed.Payload.Version, signed.Payload.Notes))
             : new UpdateState(decision.Refusal == UpdateSignature.Refusal.NotNewer ? UpdateStage.Idle : UpdateStage.Refused, decision.Reason, decision.Version), decision);
     }
 
@@ -130,7 +133,8 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
         Downloaded = into;
         return new UpdateState(UpdateStage.ReadyToInstall,
             string.Create(CultureInfo.InvariantCulture, $"GroupLab {Manifest.Payload.Version} is downloaded and checked."),
-            Manifest.Payload.Offered, 1, Manifest.Payload.Notes);
+            Manifest.Payload.Offered, 1,
+            SkippedVersions.Combined(Manifest.Payload.Versions, _build.Version.Number, Manifest.Payload.Version, Manifest.Payload.Notes));
     }
 
     /// <summary>

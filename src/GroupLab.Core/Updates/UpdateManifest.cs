@@ -16,6 +16,11 @@ public sealed record UpdateAsset(string Platform, string Kind, string Name, long
 /// cases saying so in plain words rather than failing quietly. <see cref="UpdateSignature"/> is where that is done.
 /// </para>
 /// </summary>
+/// <summary>One published version's own notes, for the update bar to show a person everything they skipped (entry 138 section 5).</summary>
+public sealed record VersionNotes(
+    [property: JsonPropertyName("version")] string Version,
+    [property: JsonPropertyName("notes")] string Notes);
+
 public sealed record UpdateManifest(
     [property: JsonPropertyName("manifest")] int Manifest,
     [property: JsonPropertyName("version")] string Version,
@@ -23,7 +28,17 @@ public sealed record UpdateManifest(
     [property: JsonPropertyName("commit")] string Commit,
     [property: JsonPropertyName("publishedUtc")] string PublishedUtc,
     [property: JsonPropertyName("notes")] string Notes,
-    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets)
+    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets,
+    /// <summary>
+    /// Every published version from just after some horizon up to this one, newest first, each with its own notes and nothing older
+    /// (NOTES-FROM-PLANNING.md entry 138 section 5). Null on a manifest written before this existed, which is why it is optional and last:
+    /// an older build ignores a field it does not know, and a newer build falls back to <see cref="Notes"/> when it is missing.
+    /// <para>
+    /// It is here so that somebody who skipped five builds is shown what each of them changed rather than only the newest, which is what
+    /// they would want and what no amount of re-reading history on their own machine could give them.
+    /// </para>
+    /// </summary>
+    [property: JsonPropertyName("versions")] IReadOnlyList<VersionNotes>? Versions = null)
 {
     /// <summary>The only manifest version this application reads. A newer one is refused by name rather than half understood.</summary>
     public const int Current = 1;

@@ -17,7 +17,7 @@ public static class UpdateVerbs
     public const string KeyUsage = "grouplab update-key";
 
     public const string ManifestUsage =
-        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--asset <platform> <kind> <file> <url>]...";
+        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--asset <platform> <kind> <file> <url>]... [--version-notes <version> <file>]...";
 
     /// <summary>Makes a key pair and says exactly what to do with each half. It prints; it writes nothing and sends nothing.</summary>
     public static int Key(TextWriter output)
@@ -50,6 +50,10 @@ public static class UpdateVerbs
         ArgumentNullException.ThrowIfNull(error);
         string? version = null, train = null, commit = null, notesFile = null, into = null;
         var assets = new List<UpdateAsset>();
+
+        // Entry 138 section 5: one of these a published build, newest last or in any order, so the update bar can show somebody everything
+        // they skipped rather than only the newest build's notes.
+        var versions = new List<VersionNotes>();
         for (int i = 0; i < args.Length; i++)
         {
             switch (args[i])
@@ -68,6 +72,17 @@ public static class UpdateVerbs
                     break;
                 case "--out" when i + 1 < args.Length:
                     into = args[++i];
+                    break;
+                case "--version-notes" when i + 2 < args.Length:
+                    string past = args[i + 1], pastFile = args[i + 2];
+                    i += 2;
+                    if (!File.Exists(pastFile))
+                    {
+                        error.WriteLine($"update-manifest: there is no {pastFile}");
+                        return 1;
+                    }
+
+                    versions.Add(new VersionNotes(past, File.ReadAllText(pastFile)));
                     break;
                 case "--asset" when i + 4 < args.Length:
                     string platform = args[i + 1], kind = args[i + 2], file = args[i + 3], url = args[i + 4];
@@ -110,7 +125,7 @@ public static class UpdateVerbs
         var manifest = new UpdateManifest(
             UpdateManifest.Current, version, train, commit,
             DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture),
-            notes, assets);
+            notes, assets, versions.Count > 0 ? versions : null);
 
         // Entry 119 section 3.2: no key, no manifest. A build that published an unsigned one would be asking the application to trust it.
         string? key = Environment.GetEnvironmentVariable(UpdateKeys.SecretName);
