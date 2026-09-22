@@ -410,6 +410,29 @@ public sealed class MarkingSession
     public void AssignBull(int id, int? bull) => Update(id, s => s with { Bull = bull, BullChosen = true, Provenance = Touched(s.Provenance) });
 
     /// <summary>
+    /// Assigns several shots to one bull at once, NOTES-FROM-PLANNING.md entry 141 section 5.3.3.
+    /// <para>
+    /// <b>It is one undo step, not one per shot.</b> A person who ticks eight shots and puts them on bull 3 did one thing, and pressing
+    /// Ctrl+Z should undo that one thing rather than seven eighths of it. That is the same rule <see cref="MoveShot"/> follows for a drag,
+    /// however far the mark travelled.
+    /// </para>
+    /// </summary>
+    public void AssignBulls(IReadOnlyList<int> ids, int? bull)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        var shots = State.Shots;
+        foreach (int id in ids.Distinct())
+        {
+            if (State.Find(id) is { } shot)
+            {
+                shots = shots.Replace(shot, shot with { Bull = bull, BullChosen = true, Provenance = Touched(shot.Provenance) });
+            }
+        }
+
+        Apply(Rematch(State with { Shots = shots }));
+    }
+
+    /// <summary>
     /// Puts a bull in a subgroup, or takes it out of one when the name is null or blank (NOTES-FROM-PLANNING.md entry 94 section 2). Nothing
     /// about the sheet changes: this is the session saying which bulls hold which load.
     /// </summary>

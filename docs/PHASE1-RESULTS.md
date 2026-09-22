@@ -7145,6 +7145,135 @@ The caption follows it:
 > It tightened a little, but 8 shots cannot tell that from chance: a group whose order carried nothing looks at least this ordered about 62 percent of the time.
 
 
+# Is this load getting better or worse?
+
+Entry 141 section 5.2.4: mean radius per session for one load, with its uncertainty, on the Session records screen.
+
+## Why no line is drawn
+
+Four sessions of the same load plotted against the date climb or fall. They always do. A shooter looking at that line sees a barrel wearing, or a batch of powder going off, or their own technique improving, and every one of those readings is a story told about four numbers a coin could have produced.
+
+So there is no trend line on the chart at all. The sessions are dots at their dates, each with its own interval, and the caption carries the answer:
+
+> 6 sessions of H4350 41.5, from 0.390 in to 0.550 in mean radius. The sessions go up and down, but 6 of them cannot tell that from chance.
+
+## The test is the shot order test, asked of sessions
+
+`ShotOrderTrend` already answers "do later values in a known order sit higher than earlier ones, more than a shuffle of the same values would". Sessions rather than shots changes nothing about the arithmetic, so it is not written twice: the chart calls the same Spearman rank correlation with the same two-sided permutation test, and the same floor of five values below which nothing is claimed.
+
+Three or four sessions therefore get a picture and no verdict, and the caption says which:
+
+> 3 sessions of H4350 41.5, from 0.400 in to 0.520 in mean radius. 3 sessions cannot show a trend at all; 5 is the fewest that could.
+
+## The strongest thing it can say
+
+Where every session's interval covers every other, that is said outright, because it is the case a table of mean radii hides completely: six different numbers, and nothing at all to choose between them.
+
+> Every session's interval overlaps every other, so these 6 sessions cannot separate them at all.
+
+## Two smaller decisions, both visible in the picture
+
+- **Spaced by date, not evenly.** Sessions a year apart and sessions an hour apart are different evidence, and even spacing would hide that. Sessions all at one moment fall back to even spacing rather than stacking on one pixel.
+- **Zero stays on the axis** wherever including it does not flatten the sessions into one line. An axis starting at 0.40 in makes an ordinary difference between two sessions look enormous.
+
+## It refuses to draw for a mixture of loads
+
+"Is this load getting better or worse" cannot be asked of a list mixing two loads, and a chart drawn over such a list would answer a question nobody asked while looking exactly like one that did. With the load filter on "Every load" the chart is absent and the screen says what to do to get one. `SessionsScreenTrendTests` holds that, and holds that the points are in date order whatever order the records come back in.
+
+
+# The two numbers every chronograph prints, and why both mislead
+
+Entry 141 section 5.2.5: the velocities drawn, with the mean and SD marked on them, and the extreme spread.
+
+## The SD
+
+An SD of 10 ft/s over ten shots is not a rifle that holds 10 ft/s. The chi-squared interval on nine degrees of freedom puts the truth anywhere from **6.9 to 18.3 ft/s**, and nothing about the number 10 says so. At thirty shots, which almost nobody fires for this, it is still 8.0 to 13.4.
+
+So the caption never gives an SD bare:
+
+> 10 readings: mean 2710 ft/s, SD 10.0 ft/s (6.9 ft/s to 18.3 ft/s).
+
+`VelocitySdIntervalTests` draws 2000 strings of ten from a rifle whose SD is truly 12 ft/s and requires the interval to cover 12 between 93 and 97 percent of the time. An interval that does not cover the truth as often as it claims is a decoration, and that is measurable rather than arguable.
+
+## The extreme spread
+
+The extreme spread of ten shots is expected to be larger than that of five from the same rifle, because more shots means more chances at both tails. A shooter who fires more and reports a bigger ES has not found a worse load. So it is given with what it depends on, in the same sentence:
+
+> Extreme spread 34.0 ft/s, which grows with the number of shots on its own, so it can only be compared with another string of 10.
+
+## The picture
+
+The readings as dots on one axis, the mean marked, and a band of one SD each side drawn over them. Dots rather than a bar, because a string where one shot is 34 ft/s off is a different thing from a string spread evenly and the two have the same SD. Only the two ends are labelled, because the extreme spread is the distance between them and a label on every dot would hide it.
+
+It appears in the Ballistics screen's chronograph section, drawn from the string in hand: the list just read where there is one, otherwise the newest string the session has saved. Nothing is pooled across strings, because two strings shot on different days are two measurements and combining them would invent a spread neither has.
+
+`units.SpeedDifference` was added for this: `Speed` rounds a muzzle velocity to whole units, which is right for 2710 ft/s and throws away a tenth of an SD of 10.4.
+
+
+# The charts read as one set
+
+Entry 141 section 5.2.6: bring the compare charts to the same type scale and colours as the rest.
+
+The compare charts were already on the scale, so the work was the other way round: the two charts built tonight had to join them rather than the other way about. `SessionsOverTime` started with faint grey whiskers, which read as a background rule rather than as the measurement's uncertainty, and has been brought onto the compare charts' convention:
+
+- **The interval is teal and heavier than the dot.** It is the thing that decides whether a comparison means anything.
+- **The measurement is the impact colour, and is a dot.** It is only where the measurement happened to land.
+
+`ChartConsistencyTests` reads the source of all six chart controls and holds three things: every dot-and-whisker chart uses those two colours that way round, no chart mixes a colour of its own instead of taking one from the palette, and every chart's text comes from the scale and the application's own faces.
+
+**Why a source test rather than a rendered one.** Two charts in different colours are not wrong on any one screen a test can assert about. They are wrong together, across screens a person visits minutes apart, and by then nothing fails. Somebody who has learnt that the teal bar is the interval on Compare loads should not have to learn it again on Session records, and the only place that decision is visible is the line that draws it.
+
+
+# Entry 141 section 5.3, item by item, against what was already built
+
+Before building anything for section 5.3 I read what the editor already does, because the section reads as a list of new work and most of it is not.
+
+| item | state |
+|---|---|
+| 1. Select a shot; highlighted on the image, in the shots list and in the review queue at once | image and list already; **the review queue was the gap**, and is done |
+| 2. Move by dragging, add by a click in add mode, delete by key or button, all through undo | **already built.** A drag is one undo step however far the mark travelled; Delete works on the selected shot and the selection panel carries a Delete button |
+| 3. Assign by bull picker, by keyboard, by dragging onto the bull; several at once | picker **done**; keyboard already built (type the bull's label, then Enter); several at once **done** by ticking rows; dragging onto a bull is **question 41** |
+| 4. Which bulls were aimed at, with presets | done before this entry, and reported under its own heading |
+| 5. A hand-edited shot is marked, shown differently, and never changed by a later re-detection or re-assignment | marked and shown already; re-assignment already safe through `BullChosen`; **re-detection is not**, and that is question 42 |
+| 6. Every statistic and graphic updates as soon as an edit is made | **already built**: `Refresh` recomputes `GroupAnalysis.Analyse` and rebuilds every figure, judgement and flag on each change, and the session raises one after undo and redo too |
+| 7. A review item opens the shot it is about, selected and ready to edit | **already built**: `FocusReview` selects the item's shot and brings it to the middle of the view |
+
+The two questions are the only places this section cannot be finished by building, and both are behaviour questions rather than bugs. Everything else in section 5.3 is now done.
+
+
+# One selection, and a third way to say which bull
+
+Entry 141 section 5.3, items 1 and 3, as far as they go without an answer to question 41.
+
+## The review queue was the place that did not agree
+
+Selecting a shot already highlighted it on the image and in the shots list. The review queue marked only the item it was working through, so somebody who clicked a hole **because they wanted to know why it had been queried** had no way to see which of the items was about it. That is exactly the moment the question is being asked.
+
+Now every review row whose item is about the selected shot is marked the same way the shots list marks its row. `OneSelectionEverywhereTests` holds both directions: every marked row names the selected shot, the count equals the number of items about it, and selecting another shot moves the mark rather than adding to it.
+
+## A bull picker on each row
+
+There were two ways to say "this shot belongs to that bull": click the hole then click the bull, and type the bull's label then Enter. **Both need the person to have found the hole on the sheet first.** Somebody working down the shots list has the shot's name in front of them and not its position, and on a 25 bull sheet at 1280 by 720 that hunt is the slow part of the job.
+
+Each shots-list row now carries a picker of its own: the bulls by their printed labels, plus "none", starting on the bull the shot is already on. It is one word rather than "no bull" for a measured reason: entry 73 section 6 holds every row inside the right column, and adding a picker beside the two buttons that were already there broke that test by 16 pixels at 1280 by 720. The test is the only reason anybody would have known before somebody saw a cut-off button on their own screen. Choosing one selects the shot, assigns it, and **marks the bull as chosen**, exactly as clicking the bull does, so a later re-assignment leaves it alone. It is one undo step. `BullPickerTests` holds that the mark does not move, that the choice is marked as a person's, and that Undo puts it back.
+
+## What is not done, and why
+
+Section 5.3 item 3 also asks for dragging a shot onto a bull, and for assigning several selected shots at once.
+
+**Dragging onto a bull is question 41**, raised rather than guessed: section 5.3 item 2 makes a drag a move, and a mark's position is a measurement that every figure is computed from. The same gesture cannot safely mean both. What is built is the click-hole-then-click-bull route, which is the same two-target gesture with no risk to the measurement.
+
+## Assigning several shots at once, without moving a gesture people have learnt
+
+The obvious way to select a second shot is control-click or shift-click on the mark, and on the marking canvas both are already taken: entry 115 section 2 gave them to choosing **bulls** for the load field, and says in as many words "never a hole".
+
+So the several-shots answer lives where the one-shot answer already is. Each shots-list row has a tick box, the same control Session records uses to choose sessions for comparing, and once two or more are ticked a bar appears above the list with one bull picker and one button. `MarkingSession.AssignBulls` applies them all in **one** state change.
+
+**One undo step, because it was one action.** Eight shots put on bull 3 as eight separate edits means pressing Ctrl+Z once leaves seven moved and one back: a state nobody asked for, and one nobody can see is wrong by looking at the sheet. `AssignSeveralShotsTests` ticks four shots, assigns them, checks every mark stayed exactly where it was, and then undoes once and requires all four to be back on their old bulls.
+
+The bar is absent with nothing ticked and with one thing ticked, so the list never offers an action that would do nothing.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -12,6 +12,56 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 42: a corrected shot does not survive a second detection
+
+**Status: open.** Entry 141 section 5.3 item 5:
+
+> A shot moved or assigned by hand is marked as manual, shown differently, and **never changed by a later re-detection or re-assignment.**
+
+**Re-assignment is already safe.** `BullChosen` pins a person's bull, and `Rematch` leaves those shots alone.
+
+**Re-detection is not.** `MarkingSession.Load` keeps exactly one kind of shot:
+
+```csharp
+var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual)
+```
+
+So a shot **placed** by hand survives detection, and a detected shot a person **moved or reassigned**, which is `ShotProvenance.Corrected`, is thrown away and replaced by whatever the detector finds this time. The person's correction is gone with no message.
+
+**Why it is written that way, which is not a mistake.** A corrected shot is a detected shot. Keeping it and adding the fresh detection of the same hole would leave two marks on one hole, which is worse than losing the correction and much harder to notice.
+
+**What I would do, and have not done:** match each kept corrected shot to the nearest shot in the new detection within about one hole's width, and where there is one, put the person's position and chosen bull back on it rather than the detector's. Where there is none, keep it as it is, since the detector has stopped finding that hole and the person said it is there. That satisfies section 5.3 item 5 without ever producing two marks for one hole. It needs a distance to be agreed and a test on the range scans.
+
+**The alternative is to say so instead:** if detecting again is meant to be "start over", then the button that does it should say that corrections will be lost and ask first, which is a smaller change and an honest one. I would rather build the matching, but this is a behaviour question rather than a bug, so it is yours.
+
+## 2026-09-22, question 41: dragging a shot onto a bull means two different things
+
+**Status: open.** Entry 141 section 5.3 asks for both of these, one item apart:
+
+> 2. **Move a shot by dragging it**; add one by a click in add mode; delete with the Delete key or a button.
+>
+> 3. **Assign a shot to a bull by dragging it onto the bull**, by a bull picker in the shots list, or by keyboard.
+
+**These are the same gesture with two meanings, and the difference matters.** A mark's position is a measurement: it is where the hole is on the paper, and every figure GroupLab reports is computed from it. Dragging it is how a person corrects a mark the detector put in the wrong place by a few thousandths of an inch. Which bull a shot belongs to is a different fact entirely, and changing it must never move the hole.
+
+If dragging onto a bull reassigns, then a person dragging a mark a long way to correct a badly placed one silently changes its bull as well. If dragging never reassigns, section 5.3 item 3's first route does not exist.
+
+**What is built today**, `MarkingCanvas.OnPointerPressed` and `MarkingSession.AssignBull`:
+
+- Dragging a mark moves it, as one undo step, and the nearest bull is recomputed unless a person has chosen one.
+- **Click the hole, then click the bull** reassigns it, sets `BullChosen`, and never moves the mark. DESIGN.md section 13 calls this the reassignment.
+- Typing a bull's label and pressing Enter does the same for the selected shot.
+
+**What I would do, and have not done:** keep dragging as move only, and read section 5.3 item 3's "dragging it onto the bull" as satisfied by the existing click-hole-then-click-bull, which is the same two-target gesture without the risk. Then add the two routes that are genuinely missing: a bull picker on each shots-list row, and assigning several selected shots at once.
+
+**If you want a real drag-to-assign**, the way that does not destroy a measurement is a drag that starts on the shots-list row rather than on the mark: the row is a name, not a position, so dropping it on a bull can only mean assignment. Say which you want and I will build it.
+
+### And the same section's "select several shots" has a gesture already spoken for
+
+Section 5.3 item 3 ends: *"Select several shots and assign them together."* The obvious gesture for adding a shot to a selection is control-click or shift-click on the mark, and on the marking canvas both are taken: entry 115 section 2 gave them to choosing **bulls** for the load field, and says explicitly "never a hole".
+
+**What I built, and will change if you say otherwise:** a tick box on each shots-list row, the same control Session records already uses to choose sessions for comparing, with one picker above the list that assigns every ticked shot at once, as a single undo step. That needs no gesture at all, so nothing in entry 115 has to move, and it puts the multi-shot answer in the same place as the single-shot one.
+
 ## 2026-09-22, corrections made while importing the research drafts
 
 **Status: recorded, not blocking.** Entry 142 section 3 says to raise a disagreement rather than change a claim silently. These are the changes I made to drafts on import, each with the code that settles it, so nothing was changed quietly.

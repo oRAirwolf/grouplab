@@ -16,6 +16,9 @@ public class TypeScaleTests
 {
     private static readonly string Source = Path.Combine(Root(), "src", "GroupLab.App");
 
+    /// <summary>The application's source folder, shared with <see cref="ChartConsistencyTests"/> so it is found one way only.</summary>
+    internal static string AppSource => Source;
+
     /// <summary>
     /// The repository, found from this file's own path rather than from the build output. The App tests are built into a scratch folder
     /// outside the repository when a test run has to avoid a locked file, and nothing walking up from the output folder finds anything there.

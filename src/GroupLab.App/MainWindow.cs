@@ -289,6 +289,12 @@ public sealed partial class MainWindow : Window
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = Tokens.Space8 };
     private readonly StackPanel shotList = new() { Spacing = Tokens.Space4 };
+
+    /// <summary>Entry 141 section 5.3.3: the shots ticked in the list, to be assigned to one bull together.</summary>
+    private readonly HashSet<int> tickedShots = [];
+
+    /// <summary>The bar's button, kept so its count can follow the ticks without rebuilding the tick box being clicked.</summary>
+    private Button? assignTicked;
     private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space8, IsVisible = false };
     private readonly StackPanel scaleInputs = new() { Spacing = Tokens.Space8 };
     // Entry 111 section 3: the reasons in words, "Called flyer", not the enum's names; the list is in the enum's order, so its index is the reason.
@@ -1139,6 +1145,8 @@ public sealed partial class MainWindow : Window
     /// A shot's name as the image and the list show it, NOTES-FROM-PLANNING.md entry 75: its bull's number, lettered when the bull holds more
     /// than one, or the word unassigned. On a plain group with no bulls there is no printed number, and the shot is named by where it is.
     /// </summary>
+    internal string ShotLabelFor(int id) => ShotLabel(id);
+
     private string ShotLabel(int id)
     {
         var state = session.State;
@@ -1737,6 +1745,9 @@ public sealed partial class MainWindow : Window
         column.Children.Add(Explained(line, "scale", "From " + scale.Describe(units) + "."));
         return column;
     }
+
+    /// <summary>Redraws everything from the marking as it stands, for the headless tests.</summary>
+    internal void RefreshForTests() => Refresh();
 
     /// <summary>Redraws the canvas and rebuilds the panel from the session's current state.</summary>
     private void Refresh()
@@ -2753,8 +2764,16 @@ public sealed partial class MainWindow : Window
         var state = session.State;
         if (state.Shots.Count == 0)
         {
+            tickedShots.Clear();
             shotList.Children.Add(Line("None yet."));
             return;
+        }
+
+        tickedShots.RemoveWhere(id => state.Find(id) is null);
+        assignTicked = null;
+        if (tickedShots.Count >= 2 && state.Bulls.Count > 0)
+        {
+            shotList.Children.Add(AssignTheTicked(state));
         }
 
         // NOTES-FROM-PLANNING.md entry 75: rows in the sheet's order, each named by its bull, with no per-detection index.
@@ -2793,19 +2812,150 @@ public sealed partial class MainWindow : Window
             // NOTES-FROM-PLANNING.md entry 73 section 6: the row fits the column, its text giving way first rather than its buttons being cut
             // off, and a detection that is not a shot can be taken out from here. "Not a shot" keeps the mark and its provenance and can be
             // undone from the same row; deleting stays in the selection panel.
-            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto") };
-            AddCell(row, select, 0);
-            AddCell(row, new TextBlock { Text = ProvenanceWord(shot.Provenance), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } }, 1);
+            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto,Auto") };
+            AddCell(row, Tick(id), 0);
+            AddCell(row, select, 1);
+            AddCell(row, BullPicker(state, shot), 2);
+            AddCell(row, new TextBlock { Text = ProvenanceWord(shot.Provenance), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } }, 3);
             if (!shot.NotAShot)
             {
                 AddCell(row, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-                    session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null)), 2);
+                    session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null)), 4);
             }
 
-            AddCell(row, Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)), 3);
+            AddCell(row, Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)), 5);
             shotList.Children.Add(row);
         }
     }
+
+    /// <summary>
+    /// A shot's tick box, NOTES-FROM-PLANNING.md entry 141 section 5.3.3: "select several shots and assign them together".
+    /// <para>
+    /// <b>Why a tick box rather than control-clicking the marks.</b> On the marking canvas control-click and shift-click already mean
+    /// something: entry 115 section 2 gave them to choosing bulls for the load field, and says "never a hole". Rather than move a gesture
+    /// people have learnt, the several-shots answer lives where the one-shot answer already is, in the list, using the control Session
+    /// records already uses for choosing several of something.
+    /// </para>
+    /// </summary>
+    private Control Tick(int id)
+    {
+        var tick = new CheckBox { IsChecked = tickedShots.Contains(id), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space4, 0) };
+        Avalonia.Automation.AutomationProperties.SetName(tick, $"Choose shot {ShotLabel(id)}");
+        ToolTip.SetTip(tick, "Choose this shot, to assign several at once");
+        tick.IsCheckedChanged += (_, _) =>
+        {
+            bool was = tickedShots.Count >= 2;
+            if (tick.IsChecked == true)
+            {
+                tickedShots.Add(id);
+            }
+            else
+            {
+                tickedShots.Remove(id);
+            }
+
+            // Only rebuild where the bar itself appears or goes, so ticking a fourth shot does not throw away the box being clicked. Where
+            // the bar is already there its count is updated in place, because a button offering to assign two shots when four are ticked
+            // would do the right thing and say the wrong one.
+            if (was != tickedShots.Count >= 2)
+            {
+                BuildShotList();
+            }
+            else if (assignTicked is not null)
+            {
+                assignTicked.Content = AssignTickedLabel;
+            }
+        };
+
+        return tick;
+    }
+
+    /// <summary>
+    /// The bar above the shots list once two or more shots are ticked: one bull, chosen once, for all of them. It is one undo step, because
+    /// a person who ticks eight shots and puts them on bull 3 did one thing.
+    /// </summary>
+    private Control AssignTheTicked(MarkingState state)
+    {
+        var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
+        var picker = new ComboBox { Width = BullPickerWidth, FontSize = Tokens.DetailSize, VerticalAlignment = VerticalAlignment.Center, SelectedIndex = 0 };
+        picker.ItemsSource = new[] { NoBull }.Concat(bulls.Select(b => b.Label)).ToList();
+        Avalonia.Automation.AutomationProperties.SetName(picker, "Bull for the chosen shots");
+
+        var assign = Button(AssignTickedLabel, () =>
+        {
+            var ids = tickedShots.ToList();
+            int? bull = picker.SelectedIndex <= 0 ? null : bulls[picker.SelectedIndex - 1].Index;
+            session.AssignBulls(ids, bull);
+            tickedShots.Clear();
+            status.Text = $"{ids.Count} shots assigned to {(bull is { } b ? "bull " + BullLabel(b) : "no bull")}. Undo puts them all back.";
+            Refresh();
+        });
+
+        var clear = Button("Clear the choice", () =>
+        {
+            tickedShots.Clear();
+            BuildShotList();
+        });
+
+        assignTicked = assign;
+        var bar = Row(picker, assign, clear);
+        bar.Margin = new Thickness(0, 0, 0, Tokens.Space4);
+        return bar;
+    }
+
+    /// <summary>What the bar's button says, which names the number of shots it would assign.</summary>
+    private string AssignTickedLabel => $"Assign the {tickedShots.Count} chosen shots";
+
+    /// <summary>
+    /// The bull picker on a shots-list row, NOTES-FROM-PLANNING.md entry 141 section 5.3.3: the third route to "this shot belongs to that
+    /// bull", beside clicking the bull on the image and typing its label.
+    /// <para>
+    /// <b>It exists because the other two both need the image.</b> Somebody working down the shots list, or reading the review queue, has to
+    /// find the hole on the sheet before they can say anything about which bull it is on, and on a 25 bull sheet at a small window size that
+    /// is a hunt. The row already names the shot; this lets the row answer for it.
+    /// </para>
+    /// <para>
+    /// Choosing here sets the bull as chosen, exactly as clicking the bull does, so a later re-assignment leaves it alone. On a sheet with no
+    /// bulls there is nothing to pick and the cell is empty.
+    /// </para>
+    /// </summary>
+    private Control BullPicker(MarkingState state, MarkedShot shot)
+    {
+        if (state.Bulls.Count == 0 || shot.NotAShot)
+        {
+            return new Border();
+        }
+
+        var picker = new ComboBox { Width = BullPickerWidth, FontSize = Tokens.DetailSize, VerticalAlignment = VerticalAlignment.Center };
+        var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
+        picker.ItemsSource = new[] { NoBull }.Concat(bulls.Select(b => b.Label)).ToList();
+        picker.SelectedIndex = shot.Bull is { } on && bulls.FindIndex(b => b.Index == on) is >= 0 and var at ? at + 1 : 0;
+        ToolTip.SetTip(picker, $"Which bull shot {ShotLabel(shot.Id)} belongs to");
+        Avalonia.Automation.AutomationProperties.SetName(picker, $"Bull for shot {ShotLabel(shot.Id)}");
+
+        int was = picker.SelectedIndex;
+        picker.SelectionChanged += (_, _) =>
+        {
+            if (picker.SelectedIndex == was)
+            {
+                return;
+            }
+
+            was = picker.SelectedIndex;
+            canvas.Selected = shot.Id;
+            session.AssignBull(shot.Id, picker.SelectedIndex <= 0 ? null : bulls[picker.SelectedIndex - 1].Index);
+        };
+
+        return picker;
+    }
+
+    /// <summary>
+    /// What the bull picker calls a shot that belongs to no bull. One word, because entry 73 section 6 holds every shots-list row inside the
+    /// right column and the picker has to fit beside the two buttons that were already there.
+    /// </summary>
+    internal const string NoBull = "none";
+
+    private const double BullPickerWidth = 72;
 
     /// <summary>
     /// The count line, NOTES-FROM-PLANNING.md entry 46 section 3: how many shots, and how many were detected, corrected after detection, or
@@ -2954,6 +3104,21 @@ public sealed partial class MainWindow : Window
     /// <summary>Every line of the review panel, for the headless tests.</summary>
     internal IEnumerable<string> ReviewText => review.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 
+    /// <summary>The review rows drawn as being about the selected shot, for the headless tests. The card's own title is semi-bold, not bold.</summary>
+    internal IReadOnlyList<string> ReviewRowsAboutTheSelectedShot =>
+        [.. review.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.FontWeight == FontWeight.Bold).Select(t => t.Text ?? "")];
+
+    /// <summary>The shots ticked in the list, for the headless tests.</summary>
+    internal IReadOnlySet<int> TickedShots => tickedShots;
+
+    /// <summary>The shots list rows drawn as selected, for the headless tests.</summary>
+    internal IReadOnlyList<string> ShotRowsSelected =>
+        [.. shotList.Children.OfType<Grid>()
+            .SelectMany(g => g.Children.OfType<Button>().Where(b => b.Tag is int))
+            .Select(b => b.Content).OfType<TextBlock>()
+            .Where(t => t.FontWeight == FontWeight.Bold)
+            .Select(t => t.Text ?? "")];
+
     /// <summary>
     /// The review panel: how many items still need a decision, the current one as a card with its choices, and the whole queue in order with
     /// each item's state. Discard edits puts back what detection found, as one step that can be undone.
@@ -3022,7 +3187,15 @@ public sealed partial class MainWindow : Window
             var row = new DockPanel();
             DockPanel.SetDock(word, Dock.Right);
             row.Children.Add(word);
-            row.Children.Add(new TextBlock { Text = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}", TextWrapping = TextWrapping.Wrap });
+            // Entry 141 section 5.3.1: one selection, shown in all three places at once. The shots list bolds its row the same way, so a
+            // person clicking a hole on the image can see immediately whether anything in the queue is about that hole.
+            bool aboutTheSelectedShot = item.ShotId is { } about && about == canvas.Selected;
+            row.Children.Add(new TextBlock
+            {
+                Text = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}",
+                TextWrapping = TextWrapping.Wrap,
+                FontWeight = aboutTheSelectedShot ? FontWeight.Bold : FontWeight.Normal,
+            });
             var line = new Button
             {
                 Content = row,

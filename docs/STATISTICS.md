@@ -559,6 +559,31 @@ A barrel warming, a shooter tiring, a rest settling: all things people believe t
 
 **Where the order comes from.** Only from a chronograph string mapped to the shots. A sheet on its own does not record what order it was shot in, and nothing here invents one.
 
+## 12b. Is this load getting better or worse?
+
+The same question as section 12a, asked of sessions instead of shots: do later sessions of one load measure larger than earlier ones, more than a shuffle of the same sessions would.
+
+**It is the same statistic and the same test**, Spearman's rank correlation with a two-sided permutation p-value, and the same floor of five values below which nothing is claimed. Nothing about the arithmetic changes when the ordered thing is a session rather than a shot, so it is not implemented twice.
+
+**No trend line is drawn.** Four sessions plotted against the date climb or fall; they always do, and a shooter reads a barrel wearing or a batch of powder going off into that line. The sessions are dots with their intervals and the verdict is in words.
+
+**Each session carries its own interval**, because two sessions of five shots are far weaker evidence than two of thirty and nothing else in the picture would show that. Where every interval covers every other, that is said outright.
+
+## 12c. A velocity SD without its own uncertainty is misleading
+
+Every chronograph prints an SD and an extreme spread, and both mislead on their own.
+
+**The SD.** A sample SD of 10 ft/s over ten shots does not mean the rifle holds 10 ft/s. The interval is chi-squared on n minus 1 degrees of freedom:
+
+    lower = s * sqrt((n - 1) / chi2(1 - a/2, n - 1))
+    upper = s * sqrt((n - 1) / chi2(a/2, n - 1))
+
+At ten shots and 95 percent that is **6.9 to 18.3 ft/s** for a measured 10. At thirty shots, which almost nobody fires for this, it is still 8.0 to 13.4. The width is the point, and it is why a load worked up on velocity SD from ten-shot strings is being chosen on noise.
+
+**Calibration.** `VelocitySdIntervalTests` draws 2000 strings of ten shots from a rifle whose velocity SD is truly 12 ft/s and requires the share of intervals covering 12 to fall between 93 and 97 percent.
+
+**The extreme spread** grows with the number of shots on its own, for the same reason as a group's extreme spread (section 4): more shots means more chances at both tails. So it is reported with the count it came from and described as comparable only with another string of the same length.
+
 ## 13. Units
 
 Everything is stored canonically as linear distance at the target plane, per DESIGN.md section 14.

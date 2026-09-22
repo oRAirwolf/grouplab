@@ -4,7 +4,7 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
 
-**Next step:** entry 141 section 5.2, the graphics, and the rest of 5.3, with research batch 2 between items.
+**Next step:** entry 141 section 6, starting with entry 137 (drop and paste), and research batch 2 between items.
 
 ---
 
@@ -23,6 +23,25 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, against the 0.005 in entry 141 section 1.1 asks for. It is not a test that can pass by doing nothing: a definition with no stored markers fails it by name.
 
+## Entry 141 section 5, in detail
+
+| section | state |
+|---|---|
+| 5.1 type and spacing scales | **done**: both held by a source test, eighteen off-scale gaps brought onto the ladder, and a measurement test for text running past the window edge at both sizes |
+| 5.2.1 the group plot | **done before this entry** |
+| 5.2.2 across and up and down | **done**: two strips on one scale, with a caption that never calls a group lopsided without saying whether the shots can tell |
+| 5.2.3 shot order | **done**: distance from the centre against the order fired, a permutation test, and a calibration test for how often it cries trend on random orders. It draws nothing where the order is not known |
+| 5.2.4 sessions over time | **done**: one load's sessions as dots with their intervals and no trend line at all, the same permutation test asked of sessions, and no chart at all for a mixture of loads |
+| 5.2.5 velocity | **done**: the readings drawn, the SD with its own chi-squared interval, the extreme spread with what it depends on, calibrated against 2000 simulated strings |
+| 5.2.6 one set of charts | **done**: one colour convention for every chart, held by a source test rather than by looking |
+| 5.3.1 one selection, three places | **done**: the review queue was the place that did not agree, and now marks every item about the selected shot |
+| 5.3.2 move, add, delete, undo | **already built before this entry** |
+| 5.3.3 assign by picker, keyboard, drag; several at once | picker **done**; keyboard already built; several at once **done** by ticking rows, as one undo step; dragging onto a bull is **question 41** |
+| 5.3.4 which bulls were aimed at | **done**: rows and columns presets, reachable from the shots per bull control. The end to end proof against entry 120's ground truth is **not** done: it needs a registered sheet |
+| 5.3.5 hand edits are never overwritten | done for re-assignment; **re-detection is question 42** |
+| 5.3.6 everything updates on every edit | **already built**: `Refresh` recomputes the analysis and rebuilds every figure on each change |
+| 5.3.7 a review item opens its shot | **already built**: `FocusReview` selects it and centres the view on it |
+
 ## The queue
 
 | # | Item | State |
@@ -32,7 +51,8 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 | 2 | CI: concurrency, a scheduled nightly, push main only | **done bar the proof**: `build and test` cancels an older run on the same branch, `nightly.yml` runs at 12:00 UTC on the newest commit main has passed and does nothing where it already has a nightly, and pushing goes to main alone. Section 2.4 wants a run of each path, which needs the schedule to fire |
 | 3 | Finish what is queued | **done before tonight**: the website republish confirmed live, entry 139 section 5 proved from nightly 44 to 49, and the calibre guess on Alan's lists |
 | 4 | Question 38 approved: the sheet's own marks are the reference | **done**: twelve or more round marks outrank a stated calibre, the quarter-point makes it robust to the doubles it is judging, and the thirteen images now flag 0 or 1 mark each where the photograph Alan met flagged 15 of 15. Question 40 raised where it meets entry 82 section 3 |
-| 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1 done**: both scales held by a source test, eighteen off-scale gaps brought onto the ladder, and a measurement test for text running past the window edge at both sizes. **5.3.4 done**: which bulls you aimed at, with rows and columns presets, reachable from the shots per bull control, saying back what it was told. The end to end proof against entry 120 is not done. **5.2.2 and 5.2.3 done**: the two spreads drawn on one scale with a caption that never claims a group is lopsided without saying whether the shots can tell. Shot order against distance from the centre, with a permutation test and a calibration test for how often it cries trend on random orders; it draws nothing where the order is not known. The rest of 5.2 and of 5.3 not started |
+| 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1, 5.2 and 5.3 are all done**, bar two questions and one proof. See the table below. |
+| - | `docs/RELEASE-NOTES.md` caught up | **done**: nightlies 49 and 66 added from their `Release-note:` trailers. `ReleaseNotesTests` found it, not a person: the file had fallen two published builds behind, and a releases page missing its newest entry looks exactly like one nobody has updated |
 | 6 | Entry 137, the rest of 131, entry 130 2c, 6b and 6, questions 34 and 36, entry 129 prepared | not started |
 | 142 | The Research section: the page, the navigation link, the article format, the build and its checks | **done** |
 | 142 | Research batch 1: articles 1, 3, 5 and 6 | **written and rendered, waiting for Alan's review.** Nothing published. `docs/RESEARCH.md` |
