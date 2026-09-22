@@ -91,6 +91,44 @@ public static class Chronograph
     }
 
     /// <summary>
+    /// How well a handful of shots pins down the rifle's velocity SD, NOTES-FROM-PLANNING.md entry 141 section 5.2.5.
+    /// <para>
+    /// <b>This is the figure the whole chronograph industry reports without it.</b> An SD of 10 ft/s from ten shots is not a rifle that
+    /// holds 10 ft/s: the same rifle measured again could read 7 or 19, and nothing about the number 10 says so. The interval is
+    /// chi-squared on n minus 1 degrees of freedom, which is exact when the velocities are normal, and it is wide at every sample size a
+    /// person actually shoots. That width is the point.
+    /// </para>
+    /// </summary>
+    /// <param name="readings">How many velocities the SD was computed from.</param>
+    /// <param name="sdFps">The sample standard deviation.</param>
+    /// <param name="confidence">The interval's coverage, 0.95 by default.</param>
+    /// <returns>The interval, or null where there are fewer than two readings and the SD means nothing.</returns>
+    public static (double LowerFps, double UpperFps)? SdInterval(int readings, double sdFps, double confidence = 0.95)
+    {
+        if (readings < 2 || !(sdFps >= 0) || !(confidence > 0) || !(confidence < 1))
+        {
+            return null;
+        }
+
+        double df = readings - 1;
+        double tail = (1 - confidence) / 2;
+
+        // The larger chi-squared quantile makes the smaller SD: the interval is built from the variance and turned back at the end.
+        double high = Statistics.Distributions.ChiSquareQuantile(1 - tail, df);
+        double low = Statistics.Distributions.ChiSquareQuantile(tail, df);
+        return low <= 0 || high <= 0
+            ? null
+            : (sdFps * Math.Sqrt(df / high), sdFps * Math.Sqrt(df / low));
+    }
+
+    /// <summary>The largest reading less the smallest, the extreme spread, or null where there are fewer than two readings.</summary>
+    public static double? ExtremeSpreadFps(IReadOnlyList<double> readings)
+    {
+        ArgumentNullException.ThrowIfNull(readings);
+        return readings.Count < 2 ? null : readings.Max() - readings.Min();
+    }
+
+    /// <summary>
     /// A list of velocities as a person pastes it: separated by commas, spaces or new lines, in any mixture. The reason names the first thing
     /// that is not a velocity, rather than dropping it silently.
     /// </summary>

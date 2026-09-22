@@ -135,6 +135,15 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
         (Distance == DistanceUnit.Metre ? feetPerSecond * 0.3048 : feetPerSecond).ToString("0", CultureInfo.InvariantCulture)
         + (Distance == DistanceUnit.Metre ? " m/s" : " ft/s");
 
+    /// <summary>
+    /// A difference between two speeds: a velocity SD or an extreme spread, in the same unit as <see cref="Speed"/> but to one decimal.
+    /// A muzzle velocity of 2710.4 ft/s and one of 2710 are the same shot, so <see cref="Speed"/> rounds; an SD of 10.4 ft/s rounded to 10
+    /// throws away a tenth of the thing being reported.
+    /// </summary>
+    public string SpeedDifference(double feetPerSecond) =>
+        (Distance == DistanceUnit.Metre ? feetPerSecond * 0.3048 : feetPerSecond).ToString("0.0", CultureInfo.InvariantCulture)
+        + (Distance == DistanceUnit.Metre ? " m/s" : " ft/s");
+
     /// <summary>A length at the target as an angle at the shot distance, or null without one.</summary>
     public double? Angle(double inches, double? distanceInches) =>
         distanceInches is { } d && d > 0 ? Statistics.Angular.ToAngle(inches, d, 1, Angular) : null;

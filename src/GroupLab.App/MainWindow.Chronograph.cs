@@ -29,6 +29,11 @@ public sealed partial class MainWindow
     private readonly TextBox chronoReadings = new() { AcceptsReturn = true, Height = 72, HorizontalAlignment = HorizontalAlignment.Stretch, PlaceholderText = "2705, 2711, 2698 ..." };
     private readonly StackPanel chronoRows = new() { Spacing = 0 };
     private readonly StackPanel chronoLines = new() { Spacing = Tokens.Space4 };
+
+    /// <summary>Entry 141 section 5.2.5: the readings drawn, with the mean and one SD marked on them.</summary>
+    private readonly StackPanel chronoPicture = new() { Spacing = Tokens.Space8 };
+
+    private readonly VelocityStrip velocityStrip = new();
     private List<double> chronoValues = [];
     private readonly HashSet<int> chronoShotsWithNoReading = [];
     private readonly HashSet<int> chronoReadingsOfNoShot = [];
@@ -47,6 +52,7 @@ public sealed partial class MainWindow
             FillChronograph();
         })));
         column.Children.Add(chronoLines);
+        column.Children.Add(chronoPicture);
         column.Children.Add(chronoRows);
     }
 
@@ -150,6 +156,7 @@ public sealed partial class MainWindow
     {
         chronoLines.Children.Clear();
         chronoRows.Children.Clear();
+        FillVelocityPicture();
         if (sessions is null || currentSession is not { } id)
         {
             chronoLines.Children.Add(Line("Accept and analyse a sheet first: a chronograph string belongs to a session."));
@@ -224,6 +231,38 @@ public sealed partial class MainWindow
     }
 
     /// <summary>The chronograph section's lines and rows, for the headless tests.</summary>
+    /// <summary>
+    /// The velocity picture, NOTES-FROM-PLANNING.md entry 141 section 5.2.5. It draws the string in hand: the list just read where there is
+    /// one, and otherwise the newest string this session has saved. Nothing is combined across strings, because two strings shot on
+    /// different days are two measurements and pooling them would invent a spread neither of them has.
+    /// </summary>
+    private void FillVelocityPicture()
+    {
+        chronoPicture.Children.Clear();
+        var velocities = chronoValues.Count >= 2
+            ? chronoValues
+            : sessions is not null && currentSession is { } id
+                ? sessions.ChronographStrings(id).LastOrDefault()?.VelocitiesFps ?? []
+                : [];
+
+        if (velocities.Count < 2)
+        {
+            return;
+        }
+
+        velocityStrip.VelocitiesFps = velocities;
+        velocityStrip.Speed = units.Speed;
+        velocityStrip.SpeedDifference = units.SpeedDifference;
+        velocityStrip.InvalidateVisual();
+        chronoPicture.Children.Add(new TextBlock { Text = "How much do these shots vary in velocity?", Classes = { AppStyles.Section } });
+        chronoPicture.Children.Add(velocityStrip);
+        chronoPicture.Children.Add(Line(velocityStrip.Description));
+    }
+
+    /// <summary>What the velocity picture says, for the headless tests.</summary>
+    internal string VelocityPictureText =>
+        string.Join(" ", chronoPicture.Children.OfType<TextBlock>().Select(t => t.Text));
+
     internal IEnumerable<string> ChronographText => chronoLines.GetLogicalDescendants().Concat(chronoRows.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
 
     /// <summary>The pairing as the screen has it, for the headless tests.</summary>
