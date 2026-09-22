@@ -525,6 +525,9 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(Heading("Review"));
         panel.Children.Add(review);
         AddHandler(KeyDownEvent, OnReviewKey, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        // Entry 137: an image dropped on the window or pasted opens exactly as Open does.
+        ListenForDropsAndPastes();
         panel.Children.Add(Ruled("Selected shot"));
         panel.Children.Add(selection);
         panel.Children.Add(Ruled("Scale"));
@@ -723,9 +726,12 @@ public sealed partial class MainWindow : Window
         emptyCanvas.Children.Add(new TextBlock { Text = "Open a photograph or scan of a target", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Title } });
         emptyCanvas.Children.Add(new TextBlock { Text = "A GroupLab sheet is read and its holes found on its own; any other target is marked by hand.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Label } });
         emptyCanvas.Children.Add(openFirst);
+        // Entry 137 section 5: the two ways in that have no button are said here, where somebody with an empty window is looking.
+        emptyCanvas.Children.Add(new TextBlock { Text = "Or drop an image here, or paste one with Ctrl+V.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Secondary } });
         var canvasArea = new Panel();
         canvasArea.Children.Add(canvas);
         canvasArea.Children.Add(emptyCanvas);
+        canvasArea.Children.Add(dropTarget);
         canvasArea.Children.Add(new Border { Child = view, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.ViewCluster } });
 
         // The editor state: the tool strip above the sheet and the review column, with a splitter between them (entry 105 section 1).
@@ -1401,7 +1407,7 @@ public sealed partial class MainWindow : Window
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
             // Entry 140 section 1.4: the sheet that is about to be thrown away asks first, where it holds edits nobody has saved.
-            Leaving(() => OpenImage(path));
+            Leaving(() => OpenImageSafely(path));
         }
     }
 
@@ -3686,6 +3692,10 @@ public sealed partial class MainWindow : Window
             case Key.I:
                 SetTool(MarkingTool.Impact);
                 break;
+            case Key.V when control:
+                // Entry 137 section 2. The guarded case comes before the plain one, so a bare V is still the select tool.
+                _ = PasteImage();
+                break;
             case Key.V:
                 SetTool(MarkingTool.Select);
                 break;
@@ -4260,6 +4270,9 @@ public sealed partial class MainWindow : Window
                 return Task.CompletedTask;
             }),
             ("Open image\u2026", OpenImageDialog),
+            // Entry 137 section 5: Paste is offered here as well as on Ctrl+V, because a way in that only exists as a key is a way in that
+            // only people who already knew about it can use.
+            ("Paste an image (Ctrl+V)", PasteImage),
             ("Open marking\u2026", OpenMarkingDialog),
             ("Export\u2026", ExportDialog),
             ("Report a problem\u2026", () =>
@@ -4279,6 +4292,10 @@ public sealed partial class MainWindow : Window
         Avalonia.Automation.AutomationProperties.SetName(button, "More");
         return button;
     }
+
+    /// <summary>The empty start screen's lines, for the headless tests.</summary>
+    internal IReadOnlyList<string> EmptyCanvasText =>
+        [.. emptyCanvas.Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
 
     /// <summary>The header menu's items, for the headless tests.</summary>
     internal IReadOnlyList<string> MenuItems => [.. editorActions.Children.OfType<Button>().Last().Flyout is MenuFlyout menu ? menu.Items.OfType<MenuItem>().Select(i => i.Header as string ?? "") : []];

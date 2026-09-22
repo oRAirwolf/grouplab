@@ -56,6 +56,45 @@ public partial class OneWayOutTests
         Assert.Contains("static IOutsideWorld Current", text, StringComparison.Ordinal);
     }
 
+    /// <summary>The one file that may touch a real clipboard, NOTES-FROM-PLANNING.md entry 137 section 6.</summary>
+    private const string TheOneClipboard = "MainWindow.DropAndPaste.cs";
+
+    /// <summary>
+    /// The clipboard is the same kind of thing as the browser: it belongs to the person, not to GroupLab. A test that read it would take
+    /// whatever happened to be on the machine at that moment, and one that wrote it would take something away from whoever was working.
+    /// <para>
+    /// So exactly one file reads it, it is reached only through the one way out, and nothing in GroupLab reads it except on an explicit
+    /// Paste. This fails the day a second place learns how.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void NothingButTheOneReaderTouchesARealClipboard()
+    {
+        var found = new List<string>();
+        foreach (string file in Directory.EnumerateFiles(Repo.PathTo("src"), "*.cs", SearchOption.AllDirectories))
+        {
+            if (file.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                || file.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                || Path.GetFileName(file) == TheOneClipboard)
+            {
+                continue;
+            }
+
+            foreach (Match m in Clipboards().Matches(File.ReadAllText(file)))
+            {
+                found.Add($"{Path.GetFileName(file)}: {m.Value}");
+            }
+        }
+
+        Assert.True(found.Count == 0,
+            $"these touch a real clipboard without going through {TheOneClipboard} and IOutsideWorld, so a test could read or overwrite "
+            + $"whatever the person had copied: {string.Join("; ", found)}");
+    }
+
+    /// <summary>Reading or writing a platform clipboard, by any of the names Avalonia gives it.</summary>
+    [GeneratedRegex(@"IClipboard|TopLevel\s*?.\s*?Clipboard|Clipboard\s*?.\s*?(TryGet|Set|Clear)")]
+    private static partial Regex Clipboards();
+
     /// <summary>Starting a process with the shell, or with a launcher, is what reaches a person's own applications.</summary>
     [GeneratedRegex(@"UseShellExecute\s*=\s*true|Launcher\.LaunchUriAsync|Launcher\.LaunchFileAsync|Launcher\.LaunchDirectoryInfoAsync")]
     private static partial Regex Shelling();

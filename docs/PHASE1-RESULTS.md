@@ -7274,6 +7274,49 @@ So the several-shots answer lives where the one-shot answer already is. Each sho
 The bar is absent with nothing ticked and with one thing ticked, so the list never offers an action that would do nothing.
 
 
+# Drop an image on the window, or paste one
+
+Entry 137, the first item of entry 141 section 6.
+
+## Both are Open, with a different way in
+
+A dropped file and a pasted file go through the same call a chosen file does, so the three cannot behave differently. That includes entry 140 section 1.4's question: a sheet with edits nobody has saved asks before a drop replaces it, and Cancel leaves the sheet exactly as it was. `DropAndPasteTests` holds that, because a careless drop onto an afternoon's marking is precisely the accident this feature could cause.
+
+Several files dropped at once opens the first and counts the rest in the status line. It is not a question: the answer is always the first one, and a dialog in the way of a gesture whose whole point is speed would make dropping worse than Open.
+
+## The case with no file behind it
+
+Image data copied from a browser, or a screenshot, has no name, no path and no metadata. It is written into `%LOCALAPPDATA%\GroupLab\pasted`, never beside the person's own files, and is an ordinary opened file from then on.
+
+The one place that costs something is said out loud, because nothing else would say it:
+
+> It was pasted, so it has no file name and no resolution of its own: set the scale by measuring a known distance.
+
+A blank sheet scanned on a flatbed can take its scale from the scan's own resolution (entry 130 section 4.1). Pasted pixels have no resolution to take, and a person who does not know that would wonder why the offer never appeared.
+
+## The clipboard is behind the one way out
+
+Entry 122 put the browser, the file manager and the installer behind `IOutsideWorld` because a test run opened browser tabs on Alan's machine. A clipboard is the same kind of thing and worse: reading it in a test takes whatever happened to be on the machine at that moment, and writing it takes something away from whoever was working.
+
+So `IOutsideWorld` gains `ReadClipboardAsync`, and `OneWayOutTests` gains a second guard beside the one for shelling out: exactly one file in `src/` may touch a real clipboard, and it fails the day a second one learns how. GroupLab reads the clipboard only on an explicit Ctrl+V or the Paste menu item, never on its own.
+
+The reading itself lives in the application, because a clipboard belongs to a window and `GroupLab.Core` has none. `TheOutsideWorld` takes it as an installed function; with nothing installed, as on the command line, the clipboard is empty.
+
+## One refusal message, which there was not one of before
+
+Open's file picker filters to JPEG and PNG, so a file that is not an image almost never reached `OpenImage`, and when it did the decode failure went out through the crash reporter. A drop and a paste have no picker in front of them, so that had to be settled: all three routes now go through one guarded call, and a file that will not decode says
+
+> That file could not be opened as an image. GroupLab opens JPEG and PNG images.
+
+and the sheet that was open stays open.
+
+## Where entry 137 and the code disagree
+
+Entry 137 section 4 says: *"The same image safety applies (pixel cap, decode with a time limit) as for any file."* There is no pixel cap and no decode time limit on the desktop's Open path. They exist on the submission intake, which is server side and reached by a different route entirely.
+
+So drop and paste have exactly the safety Open has, which is what the section's first sentence asks for, and the parenthetical describes something that does not exist yet. Raised as question 43 rather than invented tonight, because a cap is a number somebody has to choose and a wrong one refuses a legitimate 60 megapixel scan.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -4,7 +4,7 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
 
-**Next step:** entry 141 section 6, starting with entry 137 (drop and paste), and research batch 2 between items.
+**Next step:** entry 141 section 6 item 2, the rest of entry 131 sections 2 to 9, and research batch 2 between items.
 
 ---
 
@@ -53,6 +53,6 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 | 4 | Question 38 approved: the sheet's own marks are the reference | **done**: twelve or more round marks outrank a stated calibre, the quarter-point makes it robust to the doubles it is judging, and the thirteen images now flag 0 or 1 mark each where the photograph Alan met flagged 15 of 15. Question 40 raised where it meets entry 82 section 3 |
 | 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1, 5.2 and 5.3 are all done**, bar two questions and one proof. See the table below. |
 | - | `docs/RELEASE-NOTES.md` caught up | **done**: nightlies 49 and 66 added from their `Release-note:` trailers. `ReleaseNotesTests` found it, not a person: the file had fallen two published builds behind, and a releases page missing its newest entry looks exactly like one nobody has updated |
-| 6 | Entry 137, the rest of 131, entry 130 2c, 6b and 6, questions 34 and 36, entry 129 prepared | not started |
+| 6 | Entry 137, the rest of 131, entry 130 2c, 6b and 6, questions 34 and 36, entry 129 prepared | **entry 137 done**: drop an image on the window or paste one, both through the same call Open uses, with the clipboard behind `IOutsideWorld` and a second guard in `OneWayOutTests` so only one file may touch a real one. Question 43 raised where entry 137 names an image safety the desktop does not have. The rest not started |
 | 142 | The Research section: the page, the navigation link, the article format, the build and its checks | **done** |
 | 142 | Research batch 1: articles 1, 3, 5 and 6 | **written and rendered, waiting for Alan's review.** Nothing published. `docs/RESEARCH.md` |

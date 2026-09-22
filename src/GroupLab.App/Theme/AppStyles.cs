@@ -117,6 +117,12 @@ public static class AppStyles
     /// </summary>
     public const string JudgementCard = "judgement-card";
 
+    /// <summary>
+    /// The overlay shown while a file is dragged over the window, NOTES-FROM-PLANNING.md entry 137 section 1. Amber, because it is a thing
+    /// waiting on a person, and over the whole canvas rather than a corner of it, so the target is the window and cannot be missed.
+    /// </summary>
+    public const string DropTarget = "drop-target";
+
     /// <summary>A status word in the review list or on a chip, NOW or NEXT in amber, DONE in teal.</summary>
     public const string StatusWord = "status-word";
 
@@ -235,6 +241,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<Border>().Class(ReviewCard), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
+        Rule(x => x.OfType<Border>().Class(DropTarget), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(3)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.MarginProperty, new Thickness(Tokens.Space16))),
         Rule(x => x.OfType<Border>().Class(JudgementCard), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(0, 1, 0, 0)), (Border.PaddingProperty, new Thickness(0, Tokens.Space12, 0, 0))),
         Rule(x => x.OfType<TextBlock>().Class(StatusWord), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing)),
         Rule(x => x.OfType<Border>().Class(Chip), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(9)), (Border.PaddingProperty, new Thickness(Tokens.Space8, 1)), (Layoutable.MarginProperty, new Thickness(0, 0, Tokens.Space8, 0))),

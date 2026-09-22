@@ -12,6 +12,25 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 43: entry 137 names an image safety the desktop does not have
+
+**Status: open, and nothing is blocked by it.** Entry 137 section 4:
+
+> **What is accepted**: the same types and size limits as Open. Anything else is refused with the same plain message Open gives. **The same image safety applies (pixel cap, decode with a time limit) as for any file.**
+
+**There is no pixel cap and no decode time limit on the desktop's Open path.** `ImageLoader.Load` calls `Cv2.ImDecode` and throws where it cannot decode, and nothing measures the result. The caps that exist are in `GroupLab.Core.Publication.Intake`, which is the submission path on the server and is reached by nothing the desktop does.
+
+**What I built:** exactly the safety Open has, which is what the section's first two sentences ask for. All three routes in now share one guarded call and one refusal sentence, which is an improvement on what was there, since a file that would not decode previously went out through the crash reporter.
+
+**What I did not build, and why not.** A pixel cap is a number somebody has to choose, and the wrong one refuses work people legitimately do: a 1200 dpi flatbed scan of a letter sheet is about 130 megapixels, and Alan's own range scans are large. A decode time limit needs a way to stop OpenCV part way, which it does not offer, so it would mean decoding on a background thread and abandoning it, which changes the shape of opening an image rather than adding a check to it.
+
+**What I would do if you want them:**
+
+1. A cap high enough to be about denial of service rather than taste, for example 400 megapixels, with a message saying the number and what was measured.
+2. The decode moved to a background thread with a timeout, which is worth doing anyway because a large scan makes the window stop responding today.
+
+Both belong to opening an image in general rather than to drop and paste, so they are their own item whenever you want them.
+
 ## 2026-09-22, question 42: a corrected shot does not survive a second detection
 
 **Status: open.** Entry 141 section 5.3 item 5:

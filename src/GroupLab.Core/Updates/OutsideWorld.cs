@@ -11,6 +11,21 @@ namespace GroupLab.Core.Updates;
 /// a test reaching out of the process and into the person's own applications. One way out, and the tests replace it.
 /// </para>
 /// </summary>
+/// <summary>
+/// What the clipboard holds that could be an image, NOTES-FROM-PLANNING.md entry 137 section 2.
+/// </summary>
+/// <param name="Files">Paths of image files copied in a file manager, in the order the clipboard gives them. Empty where there are none.</param>
+/// <param name="Bytes">Image data with no file behind it, such as a screenshot or an image copied from a browser. Null where there is none.</param>
+/// <param name="Extension">The extension the data should be written with, including its dot, such as ".png". Null with no data.</param>
+public sealed record ClipboardContents(IReadOnlyList<string> Files, byte[]? Bytes, string? Extension)
+{
+    /// <summary>Nothing on the clipboard that could be an image.</summary>
+    public static ClipboardContents Nothing { get; } = new([], null, null);
+
+    /// <summary>Whether there is anything here to open at all.</summary>
+    public bool Empty => Files.Count == 0 && (Bytes is null || Bytes.Length == 0);
+}
+
 public interface IOutsideWorld
 {
     /// <summary>Opens a web address in whatever the person uses for one.</summary>
@@ -36,6 +51,16 @@ public interface IOutsideWorld
     /// never opened with the shell's idea of what to do with a file: it is run, with the switches that keep it silent.
     /// </summary>
     void StartInstaller(string path, string arguments);
+
+    /// <summary>
+    /// Reads the clipboard, NOTES-FROM-PLANNING.md entry 137 section 2. It is here for the same reason the browser is: a test that read the
+    /// real clipboard would take whatever happened to be on the machine at that moment, and a test that wrote one would take something away
+    /// from the person running it.
+    /// <para>
+    /// It is only ever called from an explicit Paste. Nothing in GroupLab reads the clipboard on its own.
+    /// </para>
+    /// </summary>
+    Task<ClipboardContents> ReadClipboardAsync(CancellationToken token);
 }
 
 /// <summary>The real one, used by the running application and by nothing else.</summary>
@@ -117,6 +142,15 @@ public sealed class TheOutsideWorld : IOutsideWorld
         }
     }
 
+    /// <summary>
+    /// How the clipboard is actually read. The application installs this at startup, because a clipboard belongs to a window and this
+    /// assembly has none. With nothing installed there is nothing on the clipboard, which is what a command line run should see.
+    /// </summary>
+    public static Func<CancellationToken, Task<ClipboardContents>>? ReadsTheClipboard { get; set; }
+
+    public async Task<ClipboardContents> ReadClipboardAsync(CancellationToken token) =>
+        ReadsTheClipboard is { } read ? await read(token).ConfigureAwait(false) : ClipboardContents.Nothing;
+
     public void StartInstaller(string path, string arguments)
     {
         using var started = Process.Start(new ProcessStartInfo(path, arguments) { UseShellExecute = false });
@@ -155,6 +189,9 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>Written down when an installer is started: the file and its switches.</summary>
     public (string Path, string Arguments)? Installer { get; private set; }
 
+    /// <summary>What the clipboard holds, as a test has set it. Nothing by default, which is what an empty clipboard is.</summary>
+    public ClipboardContents Clipboard { get; set; } = ClipboardContents.Nothing;
+
     /// <summary>
     /// Forgets everything: what was asked for, the answers it was given, and the installer it was told to start. The recorder is in place
     /// for the whole test run, so a test that cares what was asked for during it clears this first rather than counting from an offset.
@@ -166,6 +203,7 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         Download.Clear();
         WhileDownloading = null;
         Installer = null;
+        Clipboard = ClipboardContents.Nothing;
     }
 
     public void OpenAddress(string address) => _asked.Add(("address", address));
@@ -173,6 +211,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     public void OpenFile(string path) => _asked.Add(("file", path));
 
     public void OpenFolder(string path) => _asked.Add(("folder", path));
+
+    public Task<ClipboardContents> ReadClipboardAsync(CancellationToken token)
+    {
+        _asked.Add(("clipboard", Clipboard.Empty ? "empty" : Clipboard.Files.Count > 0 ? "files" : "data"));
+        return Task.FromResult(Clipboard);
+    }
 
     public Task<string?> GetTextAsync(string address, CancellationToken token)
     {
