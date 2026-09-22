@@ -10,7 +10,18 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 
 Alan pressed Install and restart on nightly 31 and GroupLab did not come back; starting it by hand reported a crash.
 
-**The cause, in one sentence:** the silent update passes `/CLOSEAPPLICATIONS`, which makes Inno Setup use the Restart Manager, and the Restart Manager restarts what it closed, so GroupLab was brought back while its files were still being replaced and died on its first line.
+**Proved fixed, nightly 42 to nightly 43 on this machine:**
+
+```
+04:42:44.267  INFO   update.install  version=0.2.0-nightly.43 silent=yes
+04:42:52.564  INFO   app.start       version=0.2.0-nightly.43
+04:42:53.798  INFO   update.arrived  from=0.2.0-nightly.42 to=0.2.0-nightly.43
+04:42:54.026  INFO   app.window      scale=1.5 width=1400 height=900
+```
+
+It came back on its own eight seconds after the installer started, drew its window and stayed up, and no crash record was written.
+
+**The cause, in one sentence:****The cause, in one sentence:** the silent update passes `/CLOSEAPPLICATIONS`, which makes Inno Setup use the Restart Manager, and the Restart Manager restarts what it closed, so GroupLab was brought back while its files were still being replaced and died on its first line.
 
 ```
 01:50:43.910  INFO   update.install version=0.2.0-nightly.35 silent=yes

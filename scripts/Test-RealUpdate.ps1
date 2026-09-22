@@ -69,15 +69,22 @@ $crashesBefore = @(Get-ChildItem $Logs -Filter 'crash-*.json' -ErrorAction Silen
 $versionBefore = (Get-Item $Installed).VersionInfo.ProductVersion
 Write-Output "installed before: $versionBefore"
 
+# Every GroupLab already running, so a window left over from an earlier run is never mistaken for the relaunch. The first version of this
+# script excluded only the process it started, found a stale window from a previous run, and reported that the relaunch had worked when the
+# installed version had not even changed.
+$before = @(Get-Process -Name 'GroupLab.App' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+if ($before.Count -gt 0) { Write-Output "$($before.Count) GroupLab already running; they are excluded" }
+
 $started = Start-Process -FilePath $Installed -PassThru
 $oldPid = $started.Id
+$exclude = @($before + $oldPid)
 Write-Output "started process $oldPid"
 
 # The bar appears on its own once the check has run.
 $window = $null
 for ($i = 0; $i -lt 60 -and -not $window; $i++) {
     Start-Sleep -Milliseconds 500
-    $window = Find-GroupLabWindow -excludeProcessIds @()
+    $window = Find-GroupLabWindow -excludeProcessIds $before
 }
 if (-not $window) { Fail 'the first window never appeared' }
 
@@ -102,7 +109,7 @@ $deadline = (Get-Date).AddSeconds($WindowTimeoutSeconds)
 $newWindow = $null
 while (-not $newWindow -and (Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 500
-    $newWindow = Find-GroupLabWindow -excludeProcessIds @($oldPid)
+    $newWindow = Find-GroupLabWindow -excludeProcessIds $exclude
 }
 
 if (-not $newWindow) {
