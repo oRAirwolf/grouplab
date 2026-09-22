@@ -44,6 +44,7 @@ public class BenchCoverageTests
     private static readonly Dictionary<string, string> NotMeasured = new(StringComparer.Ordinal)
     {
         ["CalibreList"] = "A generated document, written by grouplab calibres at release time and not by anything a person waits for.",
+        ["AimedBulls"] = "It sorts a sheet's bulls into rows and builds a dictionary from them. The matching it feeds is measured; this is the sentence before it.",
         ["CalibreGuessList"] = "Twenty-two numbers and the nearest one to a reading. There is nothing in it whose speed or accuracy a figure could report.",
         ["CanonicalJsonWriter"] = "Writing a definition back out happens in the editor's save, which is measured as a control.",
         ["MarkingFile"] = "Measured as part of saving and reopening a session, which is what writes and reads it.",
