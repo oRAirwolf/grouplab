@@ -6671,6 +6671,126 @@ The wizard pages carry the mark too, at 55 and 110 pixels. Inno Setup takes only
 
 **Why it is worth a test at all.** Nothing breaks when `SetupIconFile` goes missing. The installer still builds, still installs, and still works; it just quietly goes back to Inno Setup's icon. That is the kind of fault nobody reports and nobody notices for months.
 
+# A new image is a new target: the rest of entry 140
+
+Entry 140 sections 1.4, 2, 3 and 4. Section 1's reset and section 1.3's offer landed in `75ff2e8`; this is everything else.
+
+## Leaving a sheet, and starting one on purpose
+
+Section 1's reset is right and is also how ten minutes of correcting marks disappears without anybody being asked. **Every way out of a sheet now goes through one question**: opening an image, opening a marking, opening a saved session, and New target. Where the sheet holds edits that are not in a saved session, a row appears at the top of the panel, beside the crash banner: *This target has edits that are not saved. Save it, discard it, or stay here?* Cancel puts everything back exactly as it was; it is a row rather than a dialog, which is entry 131 section 9's rule.
+
+"Unsaved work" is exact rather than a guess. The window keeps the marking's own file as it stood at the last save and compares: a save followed by an undo and a redo is not unsaved work, and moving one mark is.
+
+**New target (Ctrl+N)** is in the header menu and clears the sheet exactly as opening a new image does, with nothing opened afterwards, and the toast carries Undo, so the sheet that was there comes back whole. The image is not reopened with it, and the toast says so.
+
+## The "possibly two holes" check no longer cries wolf
+
+Section 3.2, and the thing on Alan's screenshot that mattered most. If most of the marks on a sheet read as more than one hole, the assumption is wrong, not the holes. The queue now raises **one** item:
+
+> 15 of the 15 marks on this sheet read as more than one hole, which usually means the calibre is wrong rather than that you fired twice at every bull. Check what you were shooting.
+
+"Most" is three marks at minimum and three fifths of the sheet: three is a pattern and one is a mark, and a person who fired three doubles among fifteen still deserves to be told which three, so a few flagged marks are still raised one by one. Answering the one item settles the lot.
+
+Section 3.1's other half was already true and is now held by a test: with no calibre the size comes from the sheet's own round marks, which is what "about twice its neighbours" means in practice. Section 1 is what stops a calibre nobody confirmed for this sheet reaching it.
+
+Four generated sheets hold it, at 150 dpi on GL-CF25-LTR, with the detector doing the judging:
+
+| sheet | flagged by the detector | review items |
+|---|---|---|
+| 15 single 6.5 mm holes, no calibre | 0 | 0 |
+| the same, calibre stated 0.7 times too small | 15 | **1**, about the calibre |
+| 15 singles with 3 marks flagged by hand | 3 | 3, one each |
+| 14 singles and one merged pair, no calibre | 1 | 1, on the pair |
+
+## "You fired 25" was never said by anybody
+
+Running Alan's own photograph turned up something the entry did not have. The sentence he read as the last sheet's rounds fired following him across, *"You fired 25 and 15 are marked"*, was **the sheet's own arithmetic**: GL-CF25-LTR has twenty five bulls, nothing had been typed anywhere, and `ReviewQueue.Expected` falls back to the bull count. The count was not carried over at all. What was wrong was the wording, which told him he had said something he had not, and his reading of it was the reasonable one.
+
+It now says what it means:
+
+> This sheet takes 25 shots and 15 are marked. Nobody has said how many rounds were fired. Nothing is marked on bulls 16, 17, 18, 19, 20, 21, 22, 23 and 2 more.
+
+A number somebody typed still reads "You fired 25". The shortfall itself is untouched: entry 130 section 2b.2 put it there and it is right.
+
+## Alan's evening, recreated
+
+Section 4's test analyses a generated twenty five shot sheet with a calibre, rounds fired and distance set, then opens and analyses a fifteen shot sheet on top of it, and holds that no count, calibre, distance, review item or mark from the first reaches the second. `NewTargetResetsTests` holds the same rule field by field by reading the state's own properties; this one holds it end to end, because the fault was never in one field.
+
+## The photograph itself, before and after
+
+`20260920_165624.jpg` from the range folder, read only, nothing committed, no metadata read. Registration 34 of 34 markers at RMS 0.0047 in; 15 holes found; mean radius 0.232 in, extreme spread 0.787 in.
+
+| | marks flagged | review items | what the queue says |
+|---|---|---|---|
+| **Before**: the previous sheet's calibre carried over | 15 of 15 | **16** | fifteen "Possibly two holes", plus the count |
+| **After**: no calibre, which is now what happens | 1 of 15 | **2** | the count, and one mark at 1.4 holes worth looking at |
+
+The one remaining flag is shot 15 at 0.457 in, the widest mark on the sheet: a fair thing to raise.
+
+**And a finding that outlives this entry.** Stating the *correct* calibre on this photograph flags all fifteen as well, at 1.42 to 2.61 holes' area. The measured diameters run 0.302 to 0.457 in for a 6.5 mm bullet, one and a half times what `docs/SCAN-MEASUREMENTS.md` measured on scans, and the registration and the group figures say the scale is right, so the holes really do photograph that wide. Entry 82's reference sizes are calibrated on scans with a white lid behind the sheet; a photographed hole leaves a wider residual. That is **question 38**, with the numbers and what I would do about it. Nobody is flooded in the meantime, because one item is raised rather than fifteen.
+
+
+# Sign the bytes that were published: entry 139
+
+## What went wrong, in one sentence
+
+A build verifies its update information by serialising the record it read the file into and checking those bytes against the signature, so a build that meets a field it does not know drops that field, checks different bytes, and refuses the update.
+
+Entry 138 section 5 added one field. Nightly 42 went out with it. Nightly 37 answered:
+
+```
+update.check result=Refused refusal=BadSignature
+```
+
+Every build already installed, unable to update itself at all. The revert is `6545cf2`. This is the fix.
+
+## The second file
+
+Beside `update-manifest.json`, every build now publishes `update-manifest-2.json`:
+
+```json
+{
+  "algorithm": "ecdsa-p256-sha256",
+  "payload": "eyJtYW5pZmVzdCI6MSwidmVyc2lvbiI6IjAuMi4wLW5pZ2h0bHkuNDQiLC ...",
+  "signature": "MEYCIQCVTB3oor8tKbnZzG1C ..."
+}
+```
+
+The payload is the exact bytes that were signed, carried base64. A build decodes them, verifies the signature **over what arrived**, and only then reads them as JSON. A field it has never heard of is a field it ignores, because it was never asked to reproduce anything.
+
+The order is the point: verify, then parse. Nothing between the signing machine and the machine installing the update ever serialises the manifest again.
+
+## The first file is frozen, and cannot be unfrozen by accident
+
+The first format still cannot gain a field while any build that reads only it may be installed. That is now a property of the code rather than a comment asking people to be careful:
+
+- `UpdateManifest.Legacy()` is the shape the first format can carry, and it is the only shape `UpdateSignature.Sign` will sign. Handing it a manifest with the new field produces a first-format file without it.
+- `grouplab update-manifest` refuses to write anything if what it just signed for the first format carries a field it should not.
+- `PublishedManifestTests.TheFirstFormatsSignedBytesAreHeldToARecordedString` holds those bytes to a literal string in the test file. Changing them means editing that string, which means somebody looked.
+
+`docs/UPDATES.md` records when the first file may go: a beta or release published from the second format, every nightly up to 44 aged out of the thirty the workflow keeps, and nothing having asked for `update-manifest.json` in sixty days, which GitHub's per-asset download count on the rolling release answers.
+
+## What the tests hold
+
+| test | what it would catch |
+|---|---|
+| A manifest with four unknown fields verifies and parses, and the same payload refused under the first format | the whole fault, from both sides |
+| A byte changed at six places in the payload, and a signature from another key | a payload that can be edited after signing |
+| The first format's signed bytes against a recorded string | anything that would change what installed builds have to reproduce |
+| Nightly 37's verification, pinned as its own copy, against a manifest generated today | the day a build in the field stops being able to update itself |
+| The second address is asked for first, the first is the fallback | a build published before the second format existed being stranded |
+
+The pinned nightly 37 copy is deliberately a separate record with only the seven fields that build knew, and its own re-serialise-then-verify, because the fault was precisely a build meeting a field it did not know.
+
+## And entry 138 section 5 lands with it
+
+The per-version notes finally have somewhere safe to travel. `scripts/release-notes.py --versions versions.json <version>` writes the last ten published builds' own notes, the nightly passes it to `update-manifest --versions`, and it rides in the second file only. Somebody on nightly 31 offered nightly 40 now reads "9 builds are new to you, newest first" with each build's own changes under its own heading, instead of one build's worth of notes for nine builds of work.
+
+## Not done yet
+
+`scripts/Test-RealUpdate.ps1` runs between two published nightlies. The first nightly carrying this is the one after this commit, so the real update test runs then, not now.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

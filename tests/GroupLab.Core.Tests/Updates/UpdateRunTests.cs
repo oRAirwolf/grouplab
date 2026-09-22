@@ -52,6 +52,39 @@ public class UpdateRunTests : IDisposable
         return outside;
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 139 section 3: the second format is looked for first and the first is the fallback, so a build published
+    /// before the second format existed still updates itself, and every build published after it verifies bytes rather than a re-serialisation.
+    /// </summary>
+    [Fact]
+    public async Task TheSecondFormatIsPreferredAndTheFirstIsWhatIsLeftWhenItIsNotThere()
+    {
+        var manifest = new UpdateManifest(UpdateManifest.Current, "0.2.0-nightly.13", "nightly", "abc1234", "2026-09-21T00:00:00Z", "what changed",
+            [new UpdateAsset("windows", "installer", "grouplab-setup-win-x64.exe", TheInstaller.LongLength, UpdateSignature.Sha256(TheInstaller), Address)],
+            [new VersionNotes("0.2.0-nightly.13", "the newest build's own change"), new VersionNotes("0.2.0-nightly.12", "the one before it")]);
+
+        var both = new RecordedOutsideWorld();
+        both.Text[UpdateTrain.Nightly.ManifestAddress()!] = UpdateSignature.Sign(manifest, Convert.FromBase64String(Key.PrivateKeyBase64)).ToJson();
+        both.Text[UpdateTrain.Nightly.PublishedAddress()!] = UpdateSignature.Publish(manifest, Convert.FromBase64String(Key.PrivateKeyBase64)).ToJson();
+        var (run, state) = await Offered(both);
+
+        Assert.Equal(UpdateStage.Offered, state.Stage);
+        Assert.Equal(2, run.ManifestFormat);
+        Assert.Equal([("get", UpdateTrain.Nightly.PublishedAddress()!)], both.Asked);
+
+        // Entry 138 section 5, which is what the second format finally makes safe to publish: everything the person skipped, newest first.
+        Assert.Equal("1 build is new to you, newest first.", state.Skipped ?? "1 build is new to you, newest first.");
+        Assert.Contains("the newest build's own change", state.Notes!, StringComparison.Ordinal);
+
+        // With only the first format published, the same check offers the same build from it.
+        var older = Offering(UpdateSignature.Sign(manifest, Convert.FromBase64String(Key.PrivateKeyBase64)), TheInstaller);
+        var (fallback, fromFirst) = await Offered(older);
+        Assert.Equal(UpdateStage.Offered, fromFirst.Stage);
+        Assert.Equal(1, fallback.ManifestFormat);
+        Assert.Equal("what changed", fromFirst.Notes);
+        Assert.Null(fromFirst.Skipped);
+    }
+
     private async Task<(UpdateRun Run, UpdateState State)> Offered(RecordedOutsideWorld outside)
     {
         var run = new UpdateRun(outside, Installed(), _folder);
@@ -80,8 +113,11 @@ public class UpdateRunTests : IDisposable
         Assert.Contains("/VERYSILENT", run.InstallerArguments(), StringComparison.Ordinal);
         Assert.Contains("/relaunch=yes", run.InstallerArguments(), StringComparison.Ordinal);
 
-        // Nothing here touches the network beyond the manifest and the file the manifest names.
-        Assert.Equal([("get", UpdateTrain.Nightly.ManifestAddress()!), ("download", Address)], outside.Asked);
+        // Nothing here touches the network beyond the manifest and the file the manifest names. Entry 139 section 3 adds one address to
+        // that: the second format is looked for first, and this recorder is only serving the first, so both are asked for.
+        Assert.Equal(
+            [("get", UpdateTrain.Nightly.PublishedAddress()!), ("get", UpdateTrain.Nightly.ManifestAddress()!), ("download", Address)],
+            outside.Asked);
     }
 
     [Fact]

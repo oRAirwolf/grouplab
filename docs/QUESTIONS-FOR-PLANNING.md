@@ -12,6 +12,50 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 38: on a photograph, every hole measures about half again what the bullet is, so a stated calibre flags the whole sheet
+
+**Status: open**
+
+### 1. What the photograph reads
+
+Entry 140 section 4 asked me to run `20260920_165624.jpg` and report the review queue. The registration is as good as it gets: **34 of 34 markers, RMS 0.0047 in**. The group is sensible too: mean radius 0.232 in, extreme spread 0.787 in over 15 shots. So the scale is right.
+
+The measured hole diameters are not sensible. Fifteen 6.5 mm holes, one on each of bulls 1 to 15:
+
+| | smallest | largest | median |
+| --- | --- | --- | --- |
+| measured across | 0.302 in | 0.457 in | 0.383 in |
+
+A 6.5 mm bullet is 0.264 in, and docs/SCAN-MEASUREMENTS.md measured real scan holes at 0.2099 in across. These read **1.4 to 1.7 times the bullet**, and the detector is measuring them consistently: judged against the sheet's own quarter-point mark, fourteen of the fifteen come in under 1.35 holes and nothing is flagged.
+
+### 2. What it does to the "possibly two holes" check
+
+Against a stated calibre the same fifteen marks read:
+
+| calibre stated | hole taken as | marks flagged | range, holes' area |
+| --- | --- | --- | --- |
+| .224 | 0.212 in | 15 of 15 | 1.98 to 3.62 |
+| 6.5 mm, **the right one** | 0.249 in | 15 of 15 | 1.42 to 2.61 |
+| .308 | 0.291 in | 11 of 15 | 1.36 to 1.92 |
+
+The 6.5 mm row matches Alan's screenshot ("shot 15: 0.412 in, 2.36 holes"; here a mark of 0.416 in reads 2.36 holes). So **the calibre that followed him across was the right calibre for this sheet**, and it still flagged every hole. Entry 140 section 3's suspicion that the previous sheet's calibre was kept is confirmed, but the carry-over was not what made the flags wrong: stating the true calibre does the same thing on this photograph.
+
+Entry 140 section 3.2 is now in, so this is one review item asking about the calibre rather than fifteen, and section 1 means the calibre no longer arrives uninvited. Nobody is flooded any more. But a person who correctly types 6.5 mm on this photograph still gets told the sheet looks like doubles, and that is wrong.
+
+### 3. What I think is happening
+
+Entry 82's reference sizes are calibrated on **scans**: a flatbed's white lid behind the sheet, the core of the hole reading V 192. This is a photograph, with whatever was behind the target and light across the surface. The residual a photographed hole leaves is the hole plus its disturbed rim plus the shadow in it, and the hull thrown round that is wider than the paper that is actually missing. `RenderDifferenceOptions.LargestHoleInches` is 0.60, so 0.46 in is well inside what the detector will accept as one hole; nothing refuses these, they are simply measured large.
+
+### 4. What I would do
+
+**Scale the flag's reference by how the sheet was imaged**, not by changing the calibre a person typed. Concretely: where the marks came from a photograph rather than a scan, take the flag size as the calibre times a photograph factor measured from the corpus, in the same way entry 80 section 2 measured the render-and-difference factor of 0.944 for scans. On this sheet the factor needed is about 1.45, and the fifteen marks would then read near 1.0 holes each while a genuine pair still reads near 2.
+
+I have not built it, because the factor has to be measured rather than guessed, and the only photographs I may read are Alan's range folder, which is one session of one calibre. **What I need is either permission to measure the factor across the range folder's photographs** (read only, nothing committed, no metadata read), **or the number itself.**
+
+Until then the behaviour is safe rather than right: one question instead of fifteen, and no assumed calibre.
+
+---
+
 ## 2026-09-22, question 37: the point-of-impact correction works, and there is no way for a shooter to switch it on
 
 **Status: open**

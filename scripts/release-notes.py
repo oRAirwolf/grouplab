@@ -17,6 +17,7 @@ It then checks each note and fails rather than publishing a build with unreadabl
 "Entry", that is too short to be a sentence, or that uses words meaning nothing to a shooter. And the rules the public repository has always
 had: no em dashes, nothing from the private range folder or a submission, no coordinates, no server address.
 """
+import json
 import re
 import subprocess
 import sys
@@ -29,6 +30,10 @@ HEADINGS = {"new": "**New**", "fixed": "**Fixed**", "changed": "**Changed**"}
 
 # The fewest words that can be a sentence about what changed. A trailer shorter than this is a label, not a note.
 LEAST_WORDS = 8
+
+# How many builds of notes the second manifest format carries, entry 139 section 3. Ten is far more than anybody skips
+# between updates, and the whole list is a few kilobytes.
+VERSIONS_CARRIED = 10
 
 # Words that mean something inside this project and nothing to somebody who shoots. A note may use one only if it explains it in the same
 # sentence, which is why the check looks for the word without an explanation beside it.
@@ -135,11 +140,55 @@ def problems(sha, note):
     return [f"{sha}: {p}" for p in found]
 
 
-def main():
-    version = sys.argv[1] if len(sys.argv) > 1 else "this build"
-    head = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
-    previous = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else previous_published(version)
+def published_below(version):
+    """Every published per-build tag below this version, newest first."""
+    mine = nightly_number(version if version.startswith("v") else "v" + version)
+    if mine is None:
+        return []
+    out = subprocess.run(
+        ["git", "tag", "--list", "v*-nightly.*"], capture_output=True, text=True, check=True
+    ).stdout.split()
+    below = [(n, t) for t in out if (n := nightly_number(t)) is not None and n < mine]
+    return [t for _, t in sorted(below, reverse=True)]
 
+
+def versions_file(out, version, head, count):
+    """The notes of this build and the ones before it, as the second manifest format carries them.
+
+    NOTES-FROM-PLANNING.md entry 139 section 3. Somebody on nightly 31 offered nightly 40 has not seen 32 to 39
+    either, so the update bar shows all of them; the notes were written once when each build was published, and
+    this writes them out again rather than asking the application to work anything out.
+
+    Only the second manifest format carries this. The first cannot gain a field without stopping every installed
+    build from updating itself, which is what entry 138 section 5 found the hard way.
+    """
+    builds = []
+    tags = published_below(version)
+    for tag, older in zip([None] + tags, tags + [""]):
+        this = version if tag is None else tag.lstrip("v")
+        text, wrong = build_notes(this, head if tag is None else tag, older, heading=False)
+        if wrong:
+            print("The notes for " + this + " cannot be published:", file=sys.stderr)
+            for line in wrong:
+                print("  " + line, file=sys.stderr)
+            return 1
+        builds.append({"version": this, "notes": text})
+        if len(builds) >= count:
+            break
+
+    with open(out, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(builds, f, indent=2)
+        f.write("\n")
+    print("Wrote " + out + ": " + str(len(builds)) + " versions of notes, newest first.")
+    return 0
+
+
+def build_notes(version, head, previous, heading=True):
+    """One build's notes as text, and everything wrong with the trailers behind them.
+
+    ``heading`` is off for the per-version notes the second manifest carries, where the update bar writes the
+    version heading itself and a second one inside the text would read as a stutter.
+    """
     notes = {k: [] for k in KINDS}
     silent = 0
     wrong = []
@@ -154,13 +203,9 @@ def main():
         notes[kind].append(note)
 
     if wrong:
-        print("These release notes cannot be published:", file=sys.stderr)
-        for line in wrong:
-            print("  " + line, file=sys.stderr)
-        print("\nFix the Release-note trailer on those commits. See NOTES-FROM-PLANNING.md entry 132 section 1.", file=sys.stderr)
-        return 1
+        return "", wrong
 
-    lines = [f"GroupLab {version}.", ""]
+    lines = [f"GroupLab {version}.", ""] if heading else []
 
     if previous and not any(notes[k] for k in KINDS) and silent:
         lines.append("Nothing in this build changes what you see or do. It carries internal work only.")
@@ -182,10 +227,32 @@ def main():
     text = "\n".join(lines)
     for what, pattern in FORBIDDEN:
         if pattern.search(text):
-            print(f"The notes contain {what}, so this build is not published.", file=sys.stderr)
-            return 1
+            return "", ["the notes contain " + what]
 
-    print(text.rstrip() + "\n")
+    return text.rstrip() + "\n", []
+
+
+def main():
+    if len(sys.argv) > 2 and sys.argv[1] == "--versions":
+        out = sys.argv[2]
+        version = sys.argv[3] if len(sys.argv) > 3 else "this build"
+        head = sys.argv[4] if len(sys.argv) > 4 else "HEAD"
+        count = int(sys.argv[5]) if len(sys.argv) > 5 else VERSIONS_CARRIED
+        return versions_file(out, version, head, count)
+
+    version = sys.argv[1] if len(sys.argv) > 1 else "this build"
+    head = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
+    previous = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else previous_published(version)
+
+    text, wrong = build_notes(version, head, previous)
+    if wrong:
+        print("These release notes cannot be published:", file=sys.stderr)
+        for line in wrong:
+            print("  " + line, file=sys.stderr)
+        print("\nFix the Release-note trailer on those commits. See NOTES-FROM-PLANNING.md entry 132 section 1.", file=sys.stderr)
+        return 1
+
+    print(text)
     return 0
 
 

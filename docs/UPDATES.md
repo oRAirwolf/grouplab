@@ -53,6 +53,29 @@ Question 30 asked whether a train should rank above the version instead. It shou
 
 Each build publishes `update-manifest.json`: its version, its train, its commit, when it was published, the release notes, and for every file its name, its size and its SHA-256. The manifest is signed, and **the application refuses a manifest whose signature does not verify, and any download whose SHA-256 does not match the manifest**, saying so in plain words rather than failing quietly.
 
+### Two files, and when the first one can go
+
+Every build publishes **two** manifests describing the same thing:
+
+| file | what the signature covers | who reads it |
+| --- | --- | --- |
+| `update-manifest.json` | the manifest re-serialised from the record it was read into | every build up to and including nightly 44 |
+| `update-manifest-2.json` | the exact bytes of the payload, carried base64 | nightly 45 and after, which look here first |
+
+**Why there are two.** The first format is verified by serialising the record a build read the manifest into and checking those bytes against the signature. A build that does not know a field drops it on the way back out, so the bytes it checks are not the bytes that were signed, and it refuses the update as `BadSignature`. Entry 138 section 5 added one field, nightly 42 published with it, and nightly 37 answered `update.check result=Refused refusal=BadSignature`: every build already installed was unable to update itself at all. The revert is in `6545cf2`; entry 139 is the fix.
+
+**So the first format is frozen.** It carries exactly the fields it carried on 2026-09-22 and can never carry another. `UpdateManifest.Legacy()` is the only door into it, `UpdateSignature.Sign` goes through that door, and `PublishedManifestTests.TheFirstFormatsSignedBytesAreHeldToARecordedString` holds its signed bytes to a recorded string so a change has to be looked at rather than slipped past.
+
+**When the first file may be retired.** When no installation that reads only it can still be in use. Concretely, all three of these:
+
+1. There is a beta or a release published from the second format, so nobody is on the nightly train by necessity.
+2. Every nightly up to 44 is beyond the thirty the workflow keeps, so none of them can be installed fresh any more.
+3. Nothing has asked for `update-manifest.json` for sixty days.
+
+**How we will know.** GitHub counts asset downloads per release: `gh api repos/oRAirwolf/grouplab/releases/tags/nightly --jq '.assets[] | {name, download_count}'` gives the count for each file on the rolling release, and the rolling release is where every automatic check looks. While `update-manifest.json` keeps climbing, somebody out there is still on a build that reads only it. When it stops moving for sixty days and the two conditions above hold, drop it from the workflow's two `gh release create` lines and from `UpdateTrain.ManifestAddress`, and say so in an entry.
+
+Until then, **the first file is published unchanged with every build**, and the cost of keeping it is one small file.
+
 **The algorithm is ECDSA over the P-256 curve with SHA-256.** Entry 119 asked for Ed25519. .NET 10 has no Ed25519 of its own, and this project cannot add a package for one: the machine GroupLab is built on has no NuGet source configured, so a restore uses only what is already in its cache. P-256 is in the box on every platform GroupLab builds for, and OpenSSL on the build runner signs it with one command. Every signed manifest names its algorithm, so moving to Ed25519 later is a manifest the application can tell apart rather than a silent change. Question 31 records it.
 
 ### The key

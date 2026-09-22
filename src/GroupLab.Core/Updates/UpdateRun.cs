@@ -15,7 +15,10 @@ public enum UpdateStage
 }
 
 /// <summary>Where an update has got to, in one value the window can draw without knowing how any of it works.</summary>
-public sealed record UpdateState(UpdateStage Stage, string Says, SemanticVersion? Version = null, double Share = 0, string? Notes = null);
+/// <param name="Skipped">
+/// How the bar introduces a run of builds a person has not seen, entry 138 section 5, or null where only the offered build is new to them.
+/// </param>
+public sealed record UpdateState(UpdateStage Stage, string Says, SemanticVersion? Version = null, double Share = 0, string? Notes = null, string? Skipped = null);
 
 /// <summary>
 /// One update, from looking to a ready installer, NOTES-FROM-PLANNING.md entry 123 section 2. Everything it does outside the process goes
@@ -38,7 +41,13 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
     public string Folder => _folder;
 
     /// <summary>The manifest this run verified, or null before one has been.</summary>
-    public SignedManifest? Manifest { get; private set; }
+    public UpdateManifest? Manifest { get; private set; }
+
+    /// <summary>
+    /// Which format the manifest that was accepted came in, for the log and for the tests: the second where it was there, and the first where
+    /// the build being updated from was published before the second existed (entry 139 section 3).
+    /// </summary>
+    public int ManifestFormat { get; private set; }
 
     /// <summary>The file that was downloaded and checked, or null.</summary>
     public string? Downloaded { get; private set; }
@@ -59,20 +68,51 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
             return (new UpdateState(UpdateStage.Idle, preferences.Train.Words() + ": " + UpdateTrains.NotAvailableYet + "."), null);
         }
 
-        string? json = await _outside.GetTextAsync(address, token).ConfigureAwait(false);
-        if (json is null)
+        // Entry 139 section 3: the second format first, the first format only where the second is not there. A build published before the
+        // second format existed still updates itself, and a build published after it never has to re-serialise anything to check a signature.
+        UpdateDecision? decision = null;
+        UpdateManifest? manifest = null;
+        int format = 0;
+        bool reached = false;
+
+        if (preferences.Train.PublishedAddress() is { } second
+            && await _outside.GetTextAsync(second, token).ConfigureAwait(false) is { } sealedJson)
         {
-            // Entry 119 section 4.1: offline means no message at all, only a line in the log. The window decides that; this says what it is.
-            return (new UpdateState(UpdateStage.Idle, "GroupLab could not reach the update page. Nothing has changed."), null);
+            reached = true;
+            if (PublishedManifest.Read(sealedJson) is { } published)
+            {
+                decision = UpdatePolicy.Decide(_build, preferences, published, publicKey);
+                manifest = published.Body;
+                format = 2;
+            }
         }
 
-        var signed = SignedManifest.Read(json);
-        var decision = UpdatePolicy.Decide(_build, preferences, signed, publicKey);
-        Manifest = decision.Offer ? signed : null;
+        if (decision is null)
+        {
+            string? json = await _outside.GetTextAsync(address, token).ConfigureAwait(false);
+            if (json is null)
+            {
+                return reached
+                    // The second address answered and the first did not, which is a release missing a file rather than a machine offline.
+                    ? (new UpdateState(UpdateStage.Refused, UpdateSignature.Refusal.UnknownManifest.Words(), null), new UpdateDecision(false, null, UpdateSignature.Refusal.UnknownManifest.Words(), UpdateSignature.Refusal.UnknownManifest))
+                    // Entry 119 section 4.1: offline means no message at all, only a line in the log. The window decides that; this says what it is.
+                    : (new UpdateState(UpdateStage.Idle, "GroupLab could not reach the update page. Nothing has changed."), null);
+            }
+
+            var signed = SignedManifest.Read(json);
+            decision = UpdatePolicy.Decide(_build, preferences, signed, publicKey);
+            manifest = signed?.Payload;
+            format = 1;
+        }
+
+        Manifest = decision.Offer ? manifest : null;
+        ManifestFormat = decision.Offer ? format : 0;
         return (decision.Offer
-            // Entry 138 section 5 wants every version between the installed build and the offered one shown here. The notes for those
-            // versions have nowhere safe to travel yet: see UpdateManifest, where adding a field broke every older build's updater.
-            ? new UpdateState(UpdateStage.Offered, decision.Reason, decision.Version, 0, signed!.Payload.Notes)
+            // Entry 138 section 5: everything between the installed build and the offered one, where the manifest carries it. The second
+            // format is what made that safe to publish; a first-format manifest has only the one set of notes and falls back to them.
+            ? new UpdateState(UpdateStage.Offered, decision.Reason, decision.Version, 0,
+                SkippedVersions.Combined(manifest!.Versions, _build.Version.Number, manifest.Version, manifest.Notes),
+                SkippedVersions.Says(manifest.Versions, _build.Version.Number, manifest.Version))
             : new UpdateState(decision.Refusal == UpdateSignature.Refusal.NotNewer ? UpdateStage.Idle : UpdateStage.Refused, decision.Reason, decision.Version), decision);
     }
 
@@ -82,7 +122,7 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
     /// </summary>
     public async Task<UpdateState> DownloadAsync(string platform, string kind, IProgress<double>? progress, CancellationToken token)
     {
-        if (Manifest?.Payload.For(platform, kind) is not { } asset)
+        if (Manifest?.For(platform, kind) is not { } asset)
         {
             return new UpdateState(UpdateStage.Refused, "This build has nothing to install for " + platform + ".");
         }
@@ -131,8 +171,8 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
 
         Downloaded = into;
         return new UpdateState(UpdateStage.ReadyToInstall,
-            string.Create(CultureInfo.InvariantCulture, $"GroupLab {Manifest.Payload.Version} is downloaded and checked."),
-            Manifest.Payload.Offered, 1, Manifest.Payload.Notes);
+            string.Create(CultureInfo.InvariantCulture, $"GroupLab {Manifest.Version} is downloaded and checked."),
+            Manifest.Offered, 1, Manifest.Notes);
     }
 
     /// <summary>

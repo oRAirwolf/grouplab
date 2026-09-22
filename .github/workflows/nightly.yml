@@ -184,6 +184,9 @@ jobs:
           git fetch --quiet --tags origin 2>/dev/null || true
           python3 scripts/release-notes.py "$VERSION" "$SHA" > notes.md
           cat notes.md
+          # Entry 139 section 3: each recent build's own notes, so the update bar can show somebody everything they skipped. They ride in
+          # the second manifest format only, where a field an older build does not know is a field it ignores.
+          python3 scripts/release-notes.py --versions versions.json "$VERSION" "$SHA"
 
 
       # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.
@@ -195,7 +198,8 @@ jobs:
           dotnet build src/GroupLab.Cli --configuration Release
           base="https://github.com/oRAirwolf/grouplab/releases/download/nightly"
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-manifest \
-            --version "$VERSION" --train nightly --commit "$SHA" --notes notes.md --out release/update-manifest.json \
+            --version "$VERSION" --train nightly --commit "$SHA" --notes notes.md --versions versions.json \
+            --out release/update-manifest.json \
             --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
             --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"
@@ -203,6 +207,7 @@ jobs:
           # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
           # was set fails here by design, and the message says NoKey.
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
+          dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest-2.json
 
       # The build's own release, which keeps the versioned assets so a bug report names something that still exists.
       # GH_DEBUG=api is here because entry 123 section 1 step 3 asks for the exact request and response when this 403s, and it did again on
@@ -217,7 +222,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
@@ -229,7 +234,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz
 
       # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
       # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.

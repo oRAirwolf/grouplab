@@ -29,9 +29,14 @@ public sealed record UpdateManifest(
     [property: JsonPropertyName("commit")] string Commit,
     [property: JsonPropertyName("publishedUtc")] string PublishedUtc,
     [property: JsonPropertyName("notes")] string Notes,
-    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets)
+    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets,
+    [property: JsonPropertyName("versions")] IReadOnlyList<VersionNotes>? Versions = null)
 {
-    // NOTES-FROM-PLANNING.md entry 138 section 5 wanted a list of each recent version's own notes here, and it cannot go here.
+    // NOTES-FROM-PLANNING.md entry 138 section 5 wanted a list of each recent version's own notes here, and it could not go here. Entry 139
+    // gave it somewhere safe: PublishedManifest, whose signature covers the bytes as written, so a build that does not know a field ignores
+    // it rather than refusing the whole manifest. Versions travels there and nowhere else, which is what Legacy() is for.
+    //
+    // What follows is why the first format cannot have it, and it is still true of the first format.
     //
     // **Nothing may be added to this record without breaking every build already installed.** Signable() serialises the record as it was
     // deserialised, so a build that does not know a field drops it on the way back out, the bytes it checks are not the bytes that were
@@ -90,6 +95,16 @@ public sealed record UpdateManifest(
     /// </summary>
     public byte[] Signable() => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, Signing));
 
+    /// <summary>
+    /// This manifest in the shape the first format can carry, which is this manifest with nothing in it the first format did not have.
+    /// <para>
+    /// Every build in the field verifies the first format by re-serialising what it read, so a field it does not know changes the bytes it
+    /// checks and the manifest is refused. The first format therefore cannot gain a field while any of those builds may still be installed.
+    /// Passing everything through here on the way to <see cref="UpdateSignature.Sign"/> makes that impossible to forget.
+    /// </para>
+    /// </summary>
+    public UpdateManifest Legacy() => Versions is null ? this : this with { Versions = null };
+
     public string ToJson() => JsonSerializer.Serialize(this, Options);
 
     /// <summary>Reads a manifest, or null where the text is not one this application understands.</summary>
@@ -121,7 +136,14 @@ public sealed record SignedManifest(
     [property: JsonPropertyName("signature")] string Signature,
     [property: JsonPropertyName("manifest")] UpdateManifest Payload)
 {
-    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
+    // Nulls are left out, so a field the second format added and the first cannot carry does not appear here as "versions": null. It would
+    // verify either way, because the signed bytes leave nulls out too, but a frozen format should not grow a line every time the other one
+    // does: entry 139 section 2.
+    private static readonly JsonSerializerOptions Options = new()
+    {
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+    };
 
     public string ToJson() => JsonSerializer.Serialize(this, Options);
 

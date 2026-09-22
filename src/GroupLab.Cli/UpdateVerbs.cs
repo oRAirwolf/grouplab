@@ -17,7 +17,7 @@ public static class UpdateVerbs
     public const string KeyUsage = "grouplab update-key";
 
     public const string ManifestUsage =
-        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--asset <platform> <kind> <file> <url>]...";
+        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--versions <file>] [--asset <platform> <kind> <file> <url>]...";
 
     /// <summary>Makes a key pair and says exactly what to do with each half. It prints; it writes nothing and sends nothing.</summary>
     public static int Key(TextWriter output)
@@ -48,7 +48,7 @@ public static class UpdateVerbs
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
-        string? version = null, train = null, commit = null, notesFile = null, into = null;
+        string? version = null, train = null, commit = null, notesFile = null, into = null, versionsFile = null;
         var assets = new List<UpdateAsset>();
 
         for (int i = 0; i < args.Length; i++)
@@ -69,6 +69,9 @@ public static class UpdateVerbs
                     break;
                 case "--out" when i + 1 < args.Length:
                     into = args[++i];
+                    break;
+                case "--versions" when i + 1 < args.Length:
+                    versionsFile = args[++i];
                     break;
                 case "--asset" when i + 4 < args.Length:
                     string platform = args[i + 1], kind = args[i + 2], file = args[i + 3], url = args[i + 4];
@@ -108,10 +111,33 @@ public static class UpdateVerbs
         }
 
         string notes = notesFile is not null && File.Exists(notesFile) ? File.ReadAllText(notesFile) : "";
+
+        // Entry 139 section 3: each recent build's own notes, so somebody who skipped five builds sees all five. They travel only in the
+        // second format, where a field a build does not know is a field it ignores.
+        IReadOnlyList<VersionNotes>? versions = null;
+        if (versionsFile is not null)
+        {
+            if (!File.Exists(versionsFile))
+            {
+                error.WriteLine($"update-manifest: there is no {versionsFile}");
+                return 1;
+            }
+
+            try
+            {
+                versions = System.Text.Json.JsonSerializer.Deserialize<List<VersionNotes>>(File.ReadAllText(versionsFile), VersionsJson);
+            }
+            catch (System.Text.Json.JsonException ex)
+            {
+                error.WriteLine($"update-manifest: {versionsFile} is not a list of versions and their notes: {ex.Message}");
+                return 1;
+            }
+        }
+
         var manifest = new UpdateManifest(
             UpdateManifest.Current, version, train, commit,
             DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture),
-            notes, assets);
+            notes, assets, versions is { Count: > 0 } ? versions : null);
 
         // Entry 119 section 3.2: no key, no manifest. A build that published an unsigned one would be asking the application to trust it.
         string? key = Environment.GetEnvironmentVariable(UpdateKeys.SecretName);
@@ -125,9 +151,11 @@ public static class UpdateVerbs
         }
 
         SignedManifest signed;
+        PublishedManifest published;
         try
         {
             signed = UpdateSignature.Sign(manifest, Convert.FromBase64String(key.Trim()));
+            published = UpdateSignature.Publish(manifest, Convert.FromBase64String(key.Trim()));
         }
         catch (Exception ex) when (ex is FormatException or System.Security.Cryptography.CryptographicException)
         {
@@ -140,17 +168,34 @@ public static class UpdateVerbs
         using (var check = System.Security.Cryptography.ECDsa.Create())
         {
             check.ImportPkcs8PrivateKey(Convert.FromBase64String(key.Trim()), out _);
-            var refusal = UpdateSignature.Verify(signed, Convert.ToBase64String(check.ExportSubjectPublicKeyInfo()));
-            if (refusal != UpdateSignature.Refusal.None)
+            string publicKey = Convert.ToBase64String(check.ExportSubjectPublicKeyInfo());
+            foreach (var (which, refusal) in new[]
             {
-                error.WriteLine($"update-manifest: the manifest this tool just signed does not verify ({refusal}). Nothing was written.");
+                ("first", UpdateSignature.Verify(signed, publicKey)),
+                ("second", UpdateSignature.Verify(published, publicKey)),
+            })
+            {
+                if (refusal != UpdateSignature.Refusal.None)
+                {
+                    error.WriteLine($"update-manifest: the {which} format this tool just signed does not verify ({refusal}). Nothing was written.");
+                    return 1;
+                }
+            }
+
+            // Entry 139 section 2: the first format must carry nothing it did not carry before, or every installed build stops updating.
+            if (signed.Payload.Versions is not null)
+            {
+                error.WriteLine("update-manifest: the first format was given a field it cannot carry. Nothing was written.");
                 return 1;
             }
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(into))!);
         File.WriteAllText(into, signed.ToJson());
+        string second = SecondFormatPath(into);
+        File.WriteAllText(second, published.ToJson());
         output.WriteLine($"Wrote {into}: {manifest.Describe()}, {assets.Count} assets, signed with {UpdateSignature.Algorithm}.");
+        output.WriteLine($"Wrote {second}: the same build, signed over the bytes as written, with {versions?.Count ?? 0} versions of notes.");
         foreach (var asset in assets)
         {
             output.WriteLine($"  {asset.Platform} {asset.Kind}: {asset.Name}, {asset.Bytes / 1024 / 1024} MB, sha256 {asset.Sha256}");
@@ -158,6 +203,17 @@ public static class UpdateVerbs
 
         return 0;
     }
+
+    /// <summary>Where the second format goes, beside the first: entry 139 section 1's <c>update-manifest-2.json</c>.</summary>
+    public static string SecondFormatPath(string first)
+    {
+        ArgumentNullException.ThrowIfNull(first);
+        string directory = Path.GetDirectoryName(first) ?? "";
+        string name = Path.GetFileNameWithoutExtension(first) + "-2" + Path.GetExtension(first);
+        return Path.Combine(directory, name);
+    }
+
+    private static readonly System.Text.Json.JsonSerializerOptions VersionsJson = new() { PropertyNameCaseInsensitive = true };
 
     /// <summary>Reads a signed manifest and says whether it verifies against a public key, for the proof step and for a person checking by hand.</summary>
     public static int Check(string path, string? publicKey, TextWriter output, TextWriter error)
@@ -170,22 +226,39 @@ public static class UpdateVerbs
             return 1;
         }
 
-        var signed = SignedManifest.Read(File.ReadAllText(path));
-        if (signed is null)
+        string text = File.ReadAllText(path);
+        string key = publicKey ?? UpdateKeys.PublicKey;
+
+        // Either format, told apart by what is in the file rather than by its name, so a person can check whichever one they have.
+        UpdateManifest? manifest;
+        UpdateSignature.Refusal refusal;
+        int format;
+        if (PublishedManifest.Read(text) is { } published)
+        {
+            (manifest, refusal, format) = (published.Body, UpdateSignature.Verify(published, key), 2);
+        }
+        else if (SignedManifest.Read(text) is { } signed)
+        {
+            (manifest, refusal, format) = (signed.Payload, UpdateSignature.Verify(signed, key), 1);
+        }
+        else
         {
             error.WriteLine($"update-check: {path} is not a signed manifest this build understands.");
             return 1;
         }
 
-        string key = publicKey ?? UpdateKeys.PublicKey;
-        var refusal = UpdateSignature.Verify(signed, key);
-        output.WriteLine(signed.Payload.Describe());
+        output.WriteLine((manifest?.Describe() ?? "a manifest this build cannot read") + $", in format {format}");
         output.WriteLine(refusal == UpdateSignature.Refusal.None
             ? "The signature verifies against the key given."
             : "Refused: " + refusal + ". " + refusal.Words());
-        foreach (var asset in signed.Payload.Assets)
+        foreach (var asset in manifest?.Assets ?? [])
         {
             output.WriteLine($"  {asset.Platform} {asset.Kind}: {asset.Name}, sha256 {asset.Sha256}");
+        }
+
+        if (manifest?.Versions is { Count: > 0 } versions)
+        {
+            output.WriteLine($"  and the notes of {versions.Count} builds, newest first: {string.Join(", ", versions.Select(v => v.Version))}");
         }
 
         return refusal == UpdateSignature.Refusal.None ? 0 : 1;

@@ -83,14 +83,33 @@ public static class UpdatePolicy
             return new UpdateDecision(false, null, "This is a development build, so it does not update itself.");
         }
 
-        var refusal = UpdateSignature.Verify(signed, publicKey);
+        return Decided(build, preferences, UpdateSignature.Verify(signed, publicKey), signed?.Payload);
+    }
+
+    /// <summary>
+    /// The same decision about a manifest in the second format, entry 139 section 3. The rules are the same rules; what differs is that the
+    /// signature was checked over the bytes as they arrived, so the manifest may carry fields this build has never heard of.
+    /// </summary>
+    public static UpdateDecision Decide(BuildIdentity build, UpdatePreferences preferences, PublishedManifest? published, string? publicKey)
+    {
+        ArgumentNullException.ThrowIfNull(build);
+        ArgumentNullException.ThrowIfNull(preferences);
+        if (build.IsDevelopment)
+        {
+            return new UpdateDecision(false, null, "This is a development build, so it does not update itself.");
+        }
+
+        return Decided(build, preferences, UpdateSignature.Verify(published, publicKey), published?.Body);
+    }
+
+    private static UpdateDecision Decided(BuildIdentity build, UpdatePreferences preferences, UpdateSignature.Refusal refusal, UpdateManifest? manifest)
+    {
         if (refusal != UpdateSignature.Refusal.None)
         {
             return new UpdateDecision(false, null, refusal.Words(), refusal);
         }
 
-        var manifest = signed!.Payload;
-        if (manifest.Offered is not { } offered)
+        if (manifest?.Offered is not { } offered)
         {
             return new UpdateDecision(false, null, UpdateSignature.Refusal.UnknownManifest.Words(), UpdateSignature.Refusal.UnknownManifest);
         }

@@ -118,7 +118,10 @@ public partial class MainWindow
     private void Show(UpdateState state, bool visible = true)
     {
         updateNow = state;
-        updateSays.Text = state.Says;
+
+        // Entry 138 section 5: somebody on nightly 31 offered nightly 40 has not seen 32 to 39 either, and the bar says how many are new to
+        // them. It can say so at last because entry 139's second manifest format can carry the notes without stranding older builds.
+        updateSays.Text = state.Skipped is { Length: > 0 } skipped ? state.Says + " " + skipped : state.Says;
         updateProgress.Value = state.Share;
         updateProgress.IsVisible = state.Stage == UpdateStage.Downloading;
         updateSays.Classes.Set(AppStyles.Warn, state.Stage == UpdateStage.Refused);
@@ -186,9 +189,9 @@ public partial class MainWindow
     /// <summary>The notes for the build being offered, on the page they were published to. Nothing is fetched to show them.</summary>
     private void ShowUpdateNotes()
     {
-        if (updateRun?.Manifest is { } signed)
+        if (updateRun?.Manifest is { } manifest)
         {
-            OpenInTheBrowser("https://github.com/oRAirwolf/grouplab/releases/tag/v" + signed.Payload.Version);
+            OpenInTheBrowser("https://github.com/oRAirwolf/grouplab/releases/tag/v" + manifest.Version);
         }
     }
 

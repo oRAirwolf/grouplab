@@ -104,6 +104,13 @@ public partial class ReleaseAssetTests
 
         // Only the nightly may tag, and it tags only its own pre-releases (entry 119 section 8).
         Assert.DoesNotContain("git tag", nightly, StringComparison.Ordinal);
+
+        // Entry 139 sections 1 and 2: both formats go out with every build, to both releases, and both are verified before either is
+        // published. Dropping the first one strands every build up to nightly 44; dropping the second undoes the entry.
+        Assert.Contains("--versions versions.json", nightly, StringComparison.Ordinal);
+        Assert.Contains("update-check release/update-manifest.json", nightly, StringComparison.Ordinal);
+        Assert.Contains("update-check release/update-manifest-2.json", nightly, StringComparison.Ordinal);
+        Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(nightly, @"release/update-manifest\.json release/update-manifest-2\.json").Count);
     }
 
     /// <summary>The package carries the licence, the notices, a read me and the samples, because a loose executable loses all of them.</summary>

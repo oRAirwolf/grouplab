@@ -72,7 +72,7 @@ public static class UpdateTrains
         };
     }
 
-    /// <summary>The address of a train's newest manifest: one fixed URL GitHub serves without its API (entry 119 section 3.3).</summary>
+    /// <summary>The address of a train's newest manifest in the first format: one fixed URL GitHub serves without its API (entry 119 section 3.3).</summary>
     public static string? ManifestAddress(this UpdateTrain train) => train switch
     {
         UpdateTrain.Nightly => "https://github.com/oRAirwolf/grouplab/releases/download/nightly/update-manifest.json",
@@ -80,6 +80,13 @@ public static class UpdateTrains
         UpdateTrain.Release => null,
         _ => null,
     };
+
+    /// <summary>
+    /// The address of the same build's manifest in the second format, entry 139 section 3. A build looks here first and falls back to
+    /// <see cref="ManifestAddress"/> only when this is not there, so a release published before the second format existed still updates.
+    /// </summary>
+    public static string? PublishedAddress(this UpdateTrain train) =>
+        train.ManifestAddress()?.Replace("update-manifest.json", "update-manifest-2.json", StringComparison.Ordinal);
 }
 
 /// <summary>

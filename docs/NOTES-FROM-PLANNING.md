@@ -78,10 +78,13 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 # 2026-09-22, entry 140: a new image is a new target
 
-**Status: actioned in part 2026-09-22.** Section 1's reset and section 1.3's offer are done, with the test section 1.1 asks for. Sections 1.4, 2, 3 and 4 are not.
+**Status: actioned in full 2026-09-22.** Every section is done.
 - **Section 1.1 and 1.2, done.** The calibre no longer follows the last sheet, and neither does anything else: a test walks `MarkingState`'s own properties and fails if a field is left set after opening a new image, so a field added later is caught here rather than by somebody opening their second target of the day. The rounds fired, calibre and distance boxes are emptied with it.
 - **Section 1.3, done.** "Same setup as the last target" copies the rifle, barrel, load, calibre and distance, names what it would copy beside the button, and is offered only where this sheet has none of them.
-- **Not done: 1.4** (the save, discard or cancel question), **2** (New target and Ctrl+N), **3** (the doubles check judged against the sheet's own holes) and **4** (the proof on Alan's own photograph).
+- **Section 1.4, done.** Every way out of a sheet, opening an image, opening a marking, opening a saved session and New target, asks first where the sheet holds edits that are not in a saved session. It is a row rather than a dialog, and cancel leaves everything exactly as it was. Unsaved work is decided by comparing the marking's own file against the one last saved, so a save, an undo and a redo is not unsaved work.
+- **Section 2, done.** New target, in the header menu and on Ctrl+N, clears the sheet exactly as opening an image does, with a toast whose Undo brings the whole sheet back.
+- **Section 3, done.** With no calibre the size comes from the sheet's own marks, which section 1 is what makes reachable. Where most of a sheet would be flagged, one item asks about the calibre instead of one an item a shot: three marks and three fifths of the sheet is "most", so three doubles among fifteen are still raised one by one. Four generated sheets hold it.
+- **Section 4, done, and it found two things the entry did not have.** First: "You fired 25 and 15 are marked" was never carried over. It was the sheet's own twenty five bulls, worded as though Alan had said it; that wording is gone and the shortfall stays. Second: stating the **correct** calibre on that photograph flags all fifteen too, because photographed holes measure about one and a half times what scanned ones do, which is **question 38**.
 
 Alan opened `20260920_165624.jpg` (a sheet with 15 shots, one on each of bulls 1 to 15) straight after working on a 25-shot sheet. GroupLab carried the last sheet's facts over. His screenshot shows:
 
@@ -114,8 +117,12 @@ Recreate Alan's case in a test: analyse a 25-shot generated sheet with a calibre
 
 # 2026-09-22, entry 139: sign the manifest's bytes, not a re-serialised copy
 
-**Status: not actioned 2026-09-22.** Nothing of it was started, so nothing is half built. It is the right fix for the fault my entry 138 section 5 caused, and it is the next thing to do.
-- **What is already true:** the revert is in (`6545cf2`), and a test now names every field in the signed bytes so adding one fails there rather than in somebody's copy of GroupLab. That test also records the sharper trap: `Offered` and `OnTrain` are computed and still land in the signed bytes, so changing what either returns changes every manifest's signature too.
+**Status: actioned 2026-09-22. Sections 1 to 4 and 6 done; section 5 waits for the nightly that carries this.**
+- **Section 1, done.** `update-manifest-2.json` goes out beside the old file with every build: `{ "algorithm", "payload", "signature" }`, the payload being the exact signed bytes, base64. Verification decodes them, checks the signature over what arrived, and only then reads them. Nothing is ever re-serialised.
+- **Section 2, done.** The first format is frozen and cannot gain a field: `UpdateSignature.Sign` signs `UpdateManifest.Legacy()`, so a field added for the second format is dropped before it can reach the first, and a test holds the first format's signed bytes to a recorded string. `docs/UPDATES.md` records when the file may be retired (a beta or release exists, every nightly up to 44 has aged out of the thirty kept, and nothing has asked for it in sixty days) and how we will know (GitHub's per-asset download count on the rolling release).
+- **Section 3, done.** A build reads `update-manifest-2.json` first and falls back to `update-manifest.json`, and the skipped versions' notes from entry 138 section 5 travel in the new file at last. The update bar says "3 builds are new to you, newest first" and lists each one under its own version.
+- **Section 4, done.** A manifest with four fields this build has never heard of verifies and parses, and the same payload under the first format is refused, which is the fault in one test. A changed byte anywhere in the payload is refused. The first format's signed bytes are held to a recorded string. And nightly 37's verification is pinned as its own copy in the test file and run against a manifest generated by today's code, so the day that breaks is the day the test says so rather than the day somebody cannot update.
+- **Not done: section 5.** `scripts/Test-RealUpdate.ps1` has to run between two published nightlies, and the first nightly carrying this is the one that publishes after this commit. It runs next.
 
 Your revert (6545cf2) was the right call, and the finding behind it is important: a build verifies the manifest by re-serialising the record it read and checking those bytes against the signature, so **any new field, or any change to a computed property, makes every older build refuse every future update**. That makes the manifest format frozen forever, and one careless change bricks the updater for everyone who has GroupLab installed. My entry 138 section 5 walked straight into it. Fix the design, without stranding the builds already out there.
 

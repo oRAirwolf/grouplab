@@ -43,14 +43,88 @@ public static class UpdateSignature
         _ => "",
     };
 
-    /// <summary>Signs a manifest with a private key in PKCS#8, which is what the build workflow holds as a secret.</summary>
+    /// <summary>
+    /// Signs a manifest in the first format, with a private key in PKCS#8, which is what the build workflow holds as a secret.
+    /// <para>
+    /// It signs <see cref="UpdateManifest.Legacy"/> rather than what it was handed, so a field added for the second format can never reach
+    /// the first one, where it would stop every installed build updating itself (entry 139 section 2).
+    /// </para>
+    /// </summary>
     public static SignedManifest Sign(UpdateManifest manifest, ReadOnlySpan<byte> privateKeyPkcs8)
     {
         ArgumentNullException.ThrowIfNull(manifest);
+        var legacy = manifest.Legacy();
         using var key = ECDsa.Create();
         key.ImportPkcs8PrivateKey(privateKeyPkcs8, out _);
-        byte[] signature = key.SignData(manifest.Signable(), HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-        return new SignedManifest(Algorithm, Convert.ToBase64String(signature), manifest);
+        byte[] signature = key.SignData(legacy.Signable(), HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+        return new SignedManifest(Algorithm, Convert.ToBase64String(signature), legacy);
+    }
+
+    /// <summary>
+    /// Signs a manifest in the second format, entry 139 section 1: the bytes are written once, signed as they are, and carried as they are.
+    /// Nothing between here and the build that installs the update ever serialises the manifest again.
+    /// </summary>
+    public static PublishedManifest Publish(UpdateManifest manifest, ReadOnlySpan<byte> privateKeyPkcs8)
+    {
+        ArgumentNullException.ThrowIfNull(manifest);
+        return Publish(manifest.Signable(), privateKeyPkcs8);
+    }
+
+    /// <summary>Signs exactly these bytes, for a publisher that has already decided what the payload says.</summary>
+    public static PublishedManifest Publish(byte[] payload, ReadOnlySpan<byte> privateKeyPkcs8)
+    {
+        ArgumentNullException.ThrowIfNull(payload);
+        using var key = ECDsa.Create();
+        key.ImportPkcs8PrivateKey(privateKeyPkcs8, out _);
+        byte[] signature = key.SignData(payload, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+        return new PublishedManifest(Algorithm, Convert.ToBase64String(payload), Convert.ToBase64String(signature));
+    }
+
+    /// <summary>
+    /// Whether a published manifest was signed by the key given, checked over the bytes as they arrived.
+    /// <para>
+    /// The order matters: the signature is checked first, over bytes nothing has interpreted, and only then are those bytes read as JSON. A
+    /// build that does not understand a field in them ignores it, because the field was never part of what it had to reproduce.
+    /// </para>
+    /// </summary>
+    public static Refusal Verify(PublishedManifest? published, string? publicKeyBase64)
+    {
+        if (string.IsNullOrWhiteSpace(publicKeyBase64))
+        {
+            return Refusal.NoKey;
+        }
+
+        if (published is null || string.IsNullOrWhiteSpace(published.Signature) || string.IsNullOrWhiteSpace(published.Payload))
+        {
+            return Refusal.NotSigned;
+        }
+
+        if (!string.Equals(published.Algorithm, Algorithm, StringComparison.Ordinal))
+        {
+            return Refusal.WrongAlgorithm;
+        }
+
+        if (published.Bytes is not { } payload)
+        {
+            return Refusal.NotSigned;
+        }
+
+        try
+        {
+            using var key = ECDsa.Create();
+            key.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKeyBase64), out _);
+            if (!key.VerifyData(payload, Convert.FromBase64String(published.Signature), HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence))
+            {
+                return Refusal.BadSignature;
+            }
+        }
+        catch (Exception ex) when (ex is FormatException or CryptographicException)
+        {
+            return Refusal.BadSignature;
+        }
+
+        // Only now is the payload read, and only to check it is a manifest this build knows the shape of.
+        return published.Body is { } body && body.Manifest == UpdateManifest.Current ? Refusal.None : Refusal.UnknownManifest;
     }
 
     /// <summary>
