@@ -30,7 +30,6 @@ import sys
 from pathlib import Path
 
 import markdown
-import yaml
 from fontTools.ttLib import TTFont
 from PIL import Image
 
@@ -701,6 +700,44 @@ def release_notes_are_current() -> list[str]:
     return []
 
 
+def front_matter(text: str, where: str) -> dict:
+    """The `key: value` and `key:` then `- item` front matter of an article.
+
+    Written out rather than handed to PyYAML because the build runs on a CI runner that has markdown,
+    Pillow and fontTools and nothing else, and a site that cannot build on a fresh checkout is a site
+    nobody else can build. The shape an article uses is small enough to read in twenty lines.
+    """
+    meta: dict = {}
+    key = None
+    for number, line in enumerate(text.splitlines(), start=2):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+
+        if line.startswith((" ", "	")) and line.lstrip().startswith("- "):
+            if key is None:
+                raise SystemExit(f"{where} line {number}: a list item before any field")
+            meta.setdefault(key, []).append(unquote(line.lstrip()[2:].strip()))
+            continue
+
+        if ":" not in line:
+            raise SystemExit(f"{where} line {number}: {line.strip()!r} is neither a field nor a list item")
+
+        key, _, value = line.partition(":")
+        key = key.strip()
+        value = value.strip()
+        meta[key] = unquote(value) if value else []
+
+    return meta
+
+
+def unquote(value: str) -> str:
+    """A front matter value, with one layer of quotes taken off and doubled quotes inside it undone."""
+    for quote in ('"', "'"):
+        if len(value) >= 2 and value.startswith(quote) and value.endswith(quote):
+            return value[1:-1].replace(quote * 2, quote)
+    return value
+
+
 def research_articles() -> list[dict]:
     """Every article, front matter parsed, newest number last. Entry 142 section 2.1.
 
@@ -714,10 +751,7 @@ def research_articles() -> list[dict]:
         if not text.startswith("---"):
             raise SystemExit(f"{path.name}: no front matter")
         _, front, body = text.split("---", 2)
-        try:
-            meta = yaml.safe_load(front) or {}
-        except yaml.YAMLError as bad:
-            raise SystemExit(f"{path.name}: its front matter is not readable: {bad}") from bad
+        meta = front_matter(front, path.name)
         meta["slug"] = path.stem
         meta["body"] = body.strip()
         out.append(meta)
