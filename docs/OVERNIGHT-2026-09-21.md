@@ -4,7 +4,9 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 
 **Next step:** queue item 1, the entry 131 section 1 checklist pass over every screen, starting with the analysis panel rebuild. Then item 6, question 37's control. `scripts/Test-RealUpdate.ps1` runs again once the nightly carrying entry 139 publishes, which is the proof entry 139 section 5 asks for. The website still needs republishing, and the sync's fixed live check still needs Alan to run the installer on the server.
 
-**Stopped at Alan's request after `6c32b1e`,** with queue items 4 and 5 finished. Local suites green alone: Core 1249, App 169. CI is running on `6c32b1e` on both branches.
+**Stopped at Alan's request after `6c32b1e`,** with queue items 4 and 5 finished. Local suites green alone: Core 1249, App 169.
+
+**Then the server, the site and question 38, on Alan's instruction.** The fixed sync went on the server (Alan ran both `sudo` commands, both clean), the website publish is under way, and question 38 is answered by measurement: there is no photograph factor to measure. `docs/PHASE1-RESULTS.md`, "What a hole measures in a photograph".
 
 **One red to know about, and it is not the code.** The `build and test` run on main for `28a3365` failed on `windows-latest` with every step after `setup-dotnet` unfinished: the runner was lost after 52 minutes. The identical tree passed on `windows-latest` on phase-1 in the same minutes, and both local suites are green, so there is nothing to fix. The push of `6c32b1e` re-runs it.
 
@@ -61,6 +63,8 @@ That file is in the installed folder now, so nothing is missing from the package
 
 | Item | State |
 |---|---|
+| The fixed sync on the server | **done 2026-09-22**: five files copied, SHA-256 matched against the repository, and Alan ran the dry run and the install. The old script is kept beside the new one as a timestamped `.bak`, and the timer is enabled and active |
+| Question 38, the photographed hole size | **answered by measuring**: 176 holes, nine photographs, four sheets of known calibre. The ratio runs 0.90 to 1.45 sheet by sheet where the scans of those sheets read 0.76 to 0.95, and it is not resolution and not angle. No constant changed; the recommendation is the sheet's own marks, which every one of the thirteen sheets already produced |
 | Entry 140, a new image is a new target | **done**: every section. `75ff2e8` (the reset and the setup offer), `3ae2de1` (the review queue), `78f6549` (New target and the unsaved question) |
 | Entry 139, signing the bytes as published | **done bar section 5**: `28a3365`. The real update test runs once the nightly carrying it publishes |
 | Entry 123 section 2.7: did the real update pass, and between which nightlies | **done**: yes, nightly 25 to nightly 26, real clicks, no installer window, no elevation prompt, sessions database byte identical |

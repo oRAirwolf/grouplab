@@ -6827,6 +6827,66 @@ Each card in Compare loads now carries what the load was chronographed at, from 
 `NewTargetTests` put its five shots on a straight line, which is degenerate for the shape tests, and the resampling behind them ran for about a hundred seconds a test: five tests took 520 seconds where the same five on an ordinary group take 58. That is worth writing down because the fault is invisible: the test passes either way, and it is only the clock that says anything is wrong. A group in a test is a scatter unless the test is about a line.
 
 
+# What a hole measures in a photograph: question 38 answered by measuring
+
+Alan asked me to measure the photographed hole size factor myself, from `C:\Dev\grouplab-range-2026-09-20`, with his known calibres as ground truth, and to report rather than force one number if it varies. It varies, and the reason it varies means **there is no factor to measure**.
+
+Pixels only. No location, no timestamp and no other metadata was read, printed or logged. Nothing from that folder is committed: what follows is the derived numbers and nothing else.
+
+## The measurement
+
+Nine photographs of four sheets, and the 600 dpi scans of those same four sheets as the control. The ratio is the median measured hole diameter over the bullet diameter Alan says was fired.
+
+| sheet | bullet | scan | photographs | holes |
+|---|---|---|---|---|
+| .22 LR block | 0.224 in | **0.758** | 1.069, 1.077 | 19 scanned, 48 photographed |
+| 6 ARC block | 0.243 in | **0.923** | 1.256, 1.333, 1.360 | 20 scanned, 58 photographed |
+| 6.5 Creedmoor, 25 shots | 0.264 in | **0.949** | 0.898 | 25 scanned, 25 photographed |
+| 6.5 Creedmoor, 15 shots | 0.264 in | **0.937** | 1.452, 1.405, 1.449 | 14 scanned, 45 photographed |
+
+176 holes photographed, 78 scanned. Every sheet registered from its own markers, at 0.0042 to 0.0060 in RMS on the photographs and 0.0023 to 0.0026 in on the scans, so none of this is a registration failure.
+
+**The scans agree with the constant.** `HoleToCalibre` is 0.945; the three centrefire scans read 0.923 to 0.949, and their spread within a sheet is 0.007 to 0.010 in.
+
+**The photographs do not agree with anything.** They run 0.90 to 1.45, a factor of 1.6 between sheets, and their spread within a single photograph is 0.026 to 0.085 in, three to ten times the scans'.
+
+## It is not resolution, and it is not angle
+
+The obvious explanation is that a photograph is lower resolution, so blur inflates the blob. The numbers refuse it:
+
+| photograph | pixels per inch at the sheet | ratio |
+|---|---|---|
+| 6.5 Creedmoor 15-shot, square on and close | 278 | 1.452 |
+| the same sheet, further away | 177 | 1.449 |
+| 6.5 Creedmoor 25-shot | 177 | 0.898 |
+| 6 ARC | 170 | 1.256 |
+| 6 ARC, closer | 291 | 1.360 |
+
+Two photographs of one sheet at 278 and 177 pixels per inch give 1.452 and 1.449. Two photographs of **different** sheets at the same 177 give 0.898 and 1.449. Resolution moves the ratio by about 0.10 at most; the sheet moves it by 0.55.
+
+Nor is it obliqueness: the 15-shot sheet's worst reading, 1.452, is the one photograph in the set with all 34 markers found and the lowest residual, which is the squarest and cleanest of them.
+
+**What it is.** Two 6.5 Creedmoor sheets, same rifle, same load, same day, scanned at 0.949 and 0.937, photograph at 0.898 and 1.45. The difference between them is not the hole; it is the photograph. The 25-shot sheet was photographed at 15:33 and the 15-shot sheet at 16:56, with the sun three hours lower. A hole photographed in low, raking light carries its own shadow, and the dark blob that render-and-difference measures is the hole plus that shadow. A scan has a lamp at a fixed angle and a white lid behind the paper, which is why its numbers are steady.
+
+So the quantity is not "how much larger a hole is in a photograph". It is "how much shadow was in that photograph", and no constant can carry it.
+
+## What the evidence supports instead
+
+**The sheet's own marks, which GroupLab already has.** On every one of the thirteen sheets measured here, photographs and scans alike, the size reference came out as `HoleSizeSource.Sheet`: the quarter-point of the sheet's own round marks. Judged against that, the number of marks flagged "possibly two holes" was:
+
+- **zero on ten of the thirteen**, and **one on the other three**.
+
+Including the photograph Alan met, where a stated calibre flagged all fifteen. The sheet's own marks are self-calibrating: whatever the light did to the holes, it did to all of them.
+
+**So the recommendation is a change of order, not a new constant.** Where a sheet has enough round marks to speak for itself, its own marks should be the flag's reference, and the stated calibre the fallback rather than the first choice. Today `SizeReference` takes the calibre first and the sheet second. On a scan this costs nothing, because the two agree within five percent. On a photograph it is the difference between sixteen review items and one.
+
+The calibre keeps its other two jobs, where it is still the better answer: the smallest-hole gate, and the split veto.
+
+**I have not built it.** Entry 82 is the planning session's design and this reverses its first rule, so it belongs in an entry rather than in a quiet change of my own. Entry 140 section 3.2's one-question guard is the backstop meanwhile, and nobody is flooded.
+
+**And a second finding, smaller but real.** The .22 LR scan reads 0.758 where the three centrefire scans read 0.92 to 0.95. A .22 hole measures proportionally less of its bullet than a centrefire hole does, so the single constant is not calibre-independent either. It was measured on .264, .308 and .338 only, which is why nobody had seen this. It matters for the size gate on small calibres, which entry 130 section 2b.3 has already been round once. I have changed nothing: that needs its own measurement across more small-calibre sheets than the one here.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

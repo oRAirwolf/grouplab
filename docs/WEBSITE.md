@@ -116,6 +116,30 @@ The server's existing backup and offsite scripts (`pih-backup` and the Google Dr
 
 Nothing in this entry changed those scripts. **Nothing here is irreplaceable**: the site is rebuilt from this repository by one command, and the backups above are only there to make a rollback quick.
 
+## The live check waits, because the first publish rolled itself back
+
+The first real publish, on 2026-09-21, installed correctly and then rolled itself back:
+
+```
+the live check failed: the home page is not serving the new commit
+rolled back: the site did not answer correctly after installing
+```
+
+**The safety worked**, and grouplab.org kept serving the site it had. The check was simply reading too early: it ran the instant the directory was replaced and got the page the web server was still holding open, so it saw the old commit and called a good install a failure.
+
+It now asks up to **five times, three seconds apart**, and only calls the install a failure when all five say the same thing. A retry that succeeds is not an error, and the log says which attempt answered.
+
+The same change carried a second fix. `install.py --dry-run` had created `/var/lib/grouplab-site-sync` on a machine that had never run the installer, because the installer passed a hard-coded false where it meant its own dry run flag, and the sync made its folders on the way in rather than when it had something to put in them. A dry run now creates nothing, which is what the words mean, and a test walks both scripts for a `mkdir` a dry run could reach.
+
+Both fixes went on the server on 2026-09-22. Alan runs every `sudo` command himself; the copy is `scp` of the five files `install.py` needs into `~/grouplab-server/`, proved by comparing their SHA-256 against the repository, and then:
+
+```
+sudo python3 ~/grouplab-server/install.py --dry-run
+sudo python3 ~/grouplab-server/install.py
+```
+
+The installer is idempotent and keeps the old script beside the new one as a timestamped `.bak`.
+
 ## If it goes wrong
 
 The workflow failing, or the new commit not being live 30 minutes after a publish, is reported with its evidence rather than retried blindly. The server keeps serving the last good site in the meantime, which is the whole point of checking before recording success.

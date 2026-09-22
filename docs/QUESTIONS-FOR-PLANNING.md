@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-22, question 38: on a photograph, every hole measures about half again what the bullet is, so a stated calibre flags the whole sheet
 
-**Status: open**
+**Status: answered 2026-09-22.** Alan: "yes, measure the photographed hole size factor yourself". Measured, and the answer is that **there is no factor to measure**: it is not a property of the medium. `docs/PHASE1-RESULTS.md`, "What a hole measures in a photograph", has the numbers and the recommendation, which is that a photograph's doubles are judged against the sheet's own marks rather than against any constant. No constant was changed.
 
 ### 1. What the photograph reads
 

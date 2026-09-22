@@ -57,6 +57,15 @@ public static class AutomaticMarking
     /// attached.
     /// </para>
     /// <para>
+    /// <b>A later measurement did separate them, and it says this constant does not describe a photograph at all (question 38, 2026-09-22).</b>
+    /// Measured over 176 holes on nine photographs of four sheets of known calibre, the ratio runs from 0.90 to 1.45, sheet by sheet, while
+    /// the scans of those same four sheets read 0.76, 0.92, 0.94 and 0.95. Photographs of one sheet agree with each other to within about 0.10;
+    /// photographs of different sheets do not agree at all, and the spread within a photograph is three to ten times the spread within a scan.
+    /// So there is no second constant to split off: what a hole measures in a photograph is a property of that photograph's light and paper,
+    /// not of the medium. Nothing here changed, because a change needs evidence about scans and this is evidence about photographs; what a
+    /// photograph needs instead is the sheet's own marks, which <see cref="Detection.HoleSizeSource.Sheet"/> already provides.
+    /// </para>
+    /// <para>
     /// What these figures are good for, entry 81 section 4: telling one hole from two is a factor-of-two judgement, and an error of a few
     /// percent in them cannot flip it, so two sheets are enough for that. They are not enough for anything that needs the absolute size, such
     /// as reporting a measured calibre back to a person or comparing hole sizes between loads. A use of that kind must measure the ratio on
