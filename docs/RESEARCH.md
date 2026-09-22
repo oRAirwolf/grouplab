@@ -6,7 +6,7 @@ NOTES-FROM-PLANNING.md entry 142. Thirty articles for <https://grouplab.org/rese
 
 The Research page, the navigation link, the article format, the build and its checks are in, with **articles 1, 3, 5 and 6 written**. Nothing is on grouplab.org: entry 142 section 4 publishes a batch only after Alan sends "publish research batch 1".
 
-**To review it**, the pages are rendered under `docs/figures/research/`, one narrow and one desktop for each. The site also builds locally with `python website/build.py`, and `website/_site` can be served with `python -m http.server` from inside it.
+**To review it**, the pages are rendered under `docs/figures/research/`, one narrow and one desktop for each. Batch 2's six are rendered there too, as of 2026-09-22. The site also builds locally with `python website/build.py`, and `website/_site` can be served with `python -m http.server` from inside it.
 
 **About those renders.** Entry 142 section 4.1 asks for phone and desktop widths. Chrome's command line screenshot on this machine does not emulate a phone: it lays the page out at about 800 pixels whatever window size it is given and then crops the picture to the size asked for, so a "390 wide" render is a crop of a wider page and shows text running off an edge that is not really there. I checked this against an existing page, `/guides/`, which crops identically. So the narrow renders are taken at 860, the width where the site's own mobile layout begins, which Chrome does honour. A true phone render needs device emulation through the DevTools protocol, which is not set up here.
 
@@ -31,7 +31,7 @@ Each one ends with a list of what to check against the repository before it goes
 | # | Slug | Title | Group | Writer | State |
 |---|---|---|---|---|---|
 | 1 | `photo-hole-size` | Why a photo cannot tell you your bullet's size | Reading targets | Code | **written**, batch 1 |
-| 2 | `hole-is-not-the-bullet` | A bullet hole is not the bullet | Reading targets | Code | not started, batch 2 |
+| 2 | `hole-is-not-the-bullet` | A bullet hole is not the bullet | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
 | 3 | `primer-comparison` | Did the primer matter? A real comparison | Range tests | Code | **written**, batch 1 |
 | 4 | `mean-radius-or-extreme-spread` | Mean radius or extreme spread? | Measuring groups | Planning | **imported, draft**: its three checks verified against the repository |
 | 5 | `how-grouplab-reads-a-target` | How GroupLab reads a target | Reading targets | Code | **written**, batch 1 |
@@ -41,15 +41,15 @@ Each one ends with a list of what to check against the repository before it goes
 | 9 | `scans-against-photos` | Scans against phone photos: how close is close enough? | Reading targets | Code | not started, after entry 130 section 2c |
 | 10 | `safe-updates` | How GroupLab updates itself safely | How GroupLab is built | Code | not started, batch 3 |
 | 11 | `how-many-shots` | How many shots do you need? | Measuring groups | Planning | **imported, draft** |
-| 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | not started, batch 2 |
+| 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
 | 13 | `cep-explained` | CEP 50 and 90 explained | Measuring groups | Planning | **imported, draft**: corrected, the roundness verdict is a test rather than an aspect threshold |
 | 14 | `velocity-sd-small-samples` | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning | **imported, draft** |
 | 15 | `moa-mils-inches` | MOA, mils and inches: one group four ways | Measuring groups | Planning | **imported, draft** |
 | 16 | `when-to-adjust-zero` | Zeroing: when to adjust and when to leave it | Measuring groups | Planning | **imported, draft**: corrected, the zero figures are at 95 percent |
-| 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | not started, batch 2 |
-| 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | not started, batch 2 |
-| 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | not started, batch 2 |
-| 20 | `blank-sheet-zero` | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code | not started, batch 2 |
+| 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
+| 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
+| 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
+| 20 | `blank-sheet-zero` | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
 | 21 | `photographing-targets` | How to photograph a target so it measures well | Guides | Planning | **imported, draft**: it caught an arithmetic error of mine, see the questions file |
 | 22 | `printer-true-size` | Does your printer print at true size? | Guides | Planning | **imported, draft** |
 | 23 | `scanner-traps` | Scanner traps: cropping, DPI and colour | Guides | Planning | **imported, draft** |

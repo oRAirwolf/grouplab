@@ -36,6 +36,8 @@ public class ResearchArticleTests
         var quoted = new (string Phrase, string What, double Value)[]
         {
             ("about 0.94 of the bullet", "the hole to calibre ratio", AutomaticMarking.HoleToCalibre),
+            ("0.945", "the hole to calibre ratio", AutomaticMarking.HoleToCalibre),
+            ("94.5 percent of the bullet", "the hole to calibre ratio", AutomaticMarking.HoleToCalibre),
             ("twelve or more", "how many marks let a sheet outrank a stated calibre", new GroupLab.Core.Detection.RenderDifferenceOptions().MarksToOutrankACalibre),
         };
 
@@ -53,6 +55,8 @@ public class ResearchArticleTests
                 bool still = phrase switch
                 {
                     "about 0.94 of the bullet" => Math.Abs(value - 0.94) < 0.01,
+                    "0.945" => Math.Abs(value - 0.945) < 0.0005,
+                    "94.5 percent of the bullet" => Math.Abs(value - 0.945) < 0.0005,
                     "twelve or more" => Math.Abs(value - 12) < 0.5,
                     _ => false,
                 };
