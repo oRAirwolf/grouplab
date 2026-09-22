@@ -109,16 +109,19 @@ public class ResearchArticleTests
             var samples = Regex.Match(front.Groups[1].Value, @"^samples:\s*(?<it>.+)$", RegexOptions.Multiline);
             string it = samples.Success ? samples.Groups["it"].Value.Trim().Trim('"') : "";
 
-            // A number in digits or in words, or a plain statement that there is nothing to count yet. An article whose test has not been
-            // shot cannot state a sample size, and making it invent one would be worse than letting it say so.
+            // A number in digits or in words, or a plain statement that there is nothing to count. An article whose test has not been shot
+            // cannot state a sample size, and an article about how the software is built has no sample at all; making either invent one
+            // would be worse than letting it say so. The accepted ways of saying it are listed rather than left open, so the rule still
+            // catches an article that simply forgot.
             bool counted = Regex.IsMatch(it, @"\d")
                 || Regex.IsMatch(it, @"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|thirty)\b", RegexOptions.IgnoreCase);
             bool saysThereIsNoneYet = it.Contains("pending", StringComparison.OrdinalIgnoreCase)
-                || it.Contains("see each entry", StringComparison.OrdinalIgnoreCase);
+                || it.Contains("see each entry", StringComparison.OrdinalIgnoreCase)
+                || it.Contains("not a measurement", StringComparison.OrdinalIgnoreCase);
 
             if (it.Length == 0 || (!counted && !saysThereIsNoneYet))
             {
-                wrong.Add($"{name}: its samples line neither names a number nor says the results are not in yet: {it}");
+                wrong.Add($"{name}: its samples line neither names a number nor says plainly that there is nothing to count: {it}");
             }
         }
 

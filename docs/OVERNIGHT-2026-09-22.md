@@ -4,7 +4,7 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
 
-**Next step:** entry 129 prepared, then the rest of entry 142's articles.
+**Next step:** entry 129 prepared, which is the last unbuilt item in the queue and needs Alan awake for every server path in it.
 
 ---
 
@@ -57,4 +57,5 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 | 142 | The Research section: the page, the navigation link, the article format, the build and its checks | **done** |
 | 142 | Research batch 1: articles 1, 3, 5 and 6 | **written and rendered, waiting for Alan's review.** Nothing published. `docs/RESEARCH.md` |
 | 142 | Research batch 2: articles 2, 12, 17, 18, 19 and 20 | **written and rendered 2026-09-22**, waiting with batch 1. Nothing published |
+| 142 | Research batch 3: articles 7, 9, 10, 24, 25, 26, 27 and 28 | **written and rendered 2026-09-22**. Article 9 needed entry 130 section 2c, which is now done, so it carries the real photograph against scan figures. **All eighteen of my own articles are now written**; nothing published |
 | - | Entry 131, all sections | **done 2026-09-22.** Its status line had said eight were undone; six had been built under entries 135 and 141 without it being corrected, and two were already described as done three lines below it |
