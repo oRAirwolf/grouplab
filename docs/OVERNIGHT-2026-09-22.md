@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: read at the start of every wake-up, updated after every commit.
 
-**Next step:** entry 141 section 5, the interface: the type scale first, then the graphics, then editing shots and tying them to bulls.
+**Next step:** the 07:30 Mountain push freeze, then the nightly, then the print verification and the 09:00 report. After that, entry 141 section 5.2 and 5.3, and research batch 2.
 
 ---
 
@@ -32,3 +32,5 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 | 4 | Question 38 approved: the sheet's own marks are the reference | **done**: twelve or more round marks outrank a stated calibre, the quarter-point makes it robust to the doubles it is judging, and the thirteen images now flag 0 or 1 mark each where the photograph Alan met flagged 15 of 15. Question 40 raised where it meets entry 82 section 3 |
 | 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1 done**: both scales held by a source test, eighteen off-scale gaps brought onto the ladder, and a measurement test for text running past the window edge at both sizes. 5.2 and 5.3 not started |
 | 6 | Entry 137, the rest of 131, entry 130 2c, 6b and 6, questions 34 and 36, entry 129 prepared | not started |
+| 142 | The Research section: the page, the navigation link, the article format, the build and its checks | **done** |
+| 142 | Research batch 1: articles 1, 3, 5 and 6 | **written and rendered, waiting for Alan's review.** Nothing published. `docs/RESEARCH.md` |

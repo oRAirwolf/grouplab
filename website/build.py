@@ -30,6 +30,7 @@ import sys
 from pathlib import Path
 
 import markdown
+import yaml
 from fontTools.ttLib import TTFont
 from PIL import Image
 
@@ -181,9 +182,14 @@ NAV = [
     ("Download", "/download/"),
     ("Shoot a target", "/shoot-a-target/"),
     ("Guides", "/guides/"),
+    ("Research", "/research/"),
     ("Release notes", "/releases/"),
     ("Support", "/support/"),
 ]
+
+# NOTES-FROM-PLANNING.md entry 142 section 3: the index is grouped, and the groups read in this order rather than
+# alphabetically, because somebody arriving wants to know what a target says before they want to know how it is built.
+RESEARCH_GROUPS = ["Reading targets", "Measuring groups", "Range tests", "Guides", "How GroupLab is built"]
 
 ICON_GITHUB = '<svg class="ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>'
 ICON_THEME = '<svg class="ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
@@ -695,6 +701,156 @@ def release_notes_are_current() -> list[str]:
     return []
 
 
+def research_articles() -> list[dict]:
+    """Every article, front matter parsed, newest number last. Entry 142 section 2.1.
+
+    A draft is built like any other so it can be looked at locally, and left out of the index and the
+    sitemap, so nothing half written is ever linked from the site.
+    """
+    out = []
+    folder = REPO / "website" / "research"
+    for path in sorted(folder.glob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        if not text.startswith("---"):
+            raise SystemExit(f"{path.name}: no front matter")
+        _, front, body = text.split("---", 2)
+        try:
+            meta = yaml.safe_load(front) or {}
+        except yaml.YAMLError as bad:
+            raise SystemExit(f"{path.name}: its front matter is not readable: {bad}") from bad
+        meta["slug"] = path.stem
+        meta["body"] = body.strip()
+        out.append(meta)
+    return sorted(out, key=lambda m: m.get("number", 0))
+
+
+def research_figure(meta: dict) -> str | None:
+    """The article's lead figure, or None. It is a file beside the article, built by its own script."""
+    folder = REPO / "website" / "research" / meta["slug"] / "figures"
+    for ext in (".svg", ".png"):
+        if (folder / f"lead{ext}").exists():
+            return f"/research/{meta['slug']}/figures/lead{ext}"
+    return None
+
+
+def build_research_figures() -> list[str]:
+    """Runs every article's figure scripts, before the pages that show their output are written.
+
+    Entry 142 section 2.2: a chart is built by a script from data in the repository, so the chart and the
+    number in the text cannot drift apart. Running them on every build is what makes that true rather than
+    a thing somebody remembered to do once.
+    """
+    problems = []
+    for script in sorted((REPO / "website" / "research").glob("*/figures/*.py")):
+        done = subprocess.run([sys.executable, "-B", script.name], cwd=script.parent, capture_output=True, text=True)
+        if done.returncode != 0:
+            tail = done.stderr.strip().splitlines()[-1] if done.stderr.strip() else "no output"
+            problems.append(f"research/{script.parent.parent.name}: {script.name} failed: {tail}")
+    return problems
+
+
+def research_problems() -> list[str]:
+    """Everything wrong with the research articles, entry 142 sections 2.5 and 2.6.
+
+    Front matter complete, every data file it offers actually there, every figure script still runs and
+    still writes the figure the page shows, and no published image carrying metadata. A reader who is
+    given a download link that 404s has been told the data is available when it is not.
+    """
+    required = ["title", "description", "group", "number", "written", "data_date", "samples", "status", "found", "sure"]
+    problems = []
+    for meta in research_articles():
+        where = f"research/{meta['slug']}.md"
+        for key in required:
+            if not str(meta.get(key, "")).strip():
+                problems.append(f"{where}: front matter has no {key}")
+        if meta.get("group") not in RESEARCH_GROUPS:
+            problems.append(f"{where}: group {meta.get('group')!r} is not one of {RESEARCH_GROUPS}")
+        if meta.get("status") not in {"draft", "published"}:
+            problems.append(f"{where}: status is {meta.get('status')!r}, which is neither draft nor published")
+
+        folder = REPO / "website" / "research" / meta["slug"]
+        for data in meta.get("data") or []:
+            if not (folder / data).exists():
+                problems.append(f"{where}: offers {data} for download and it is not there")
+
+        for link in re.findall(r"\]\((/research/[^)\s]+)\)", meta["body"]):
+            if not (OUT / link.lstrip("/")).exists() and not (REPO / "website" / link.lstrip("/")).exists():
+                problems.append(f"{where}: links to {link}, which is not built")
+
+    # Entry 142 section 2.5: nothing published carries metadata. A JPEG or PNG from a camera carries the
+    # time and often the place it was taken, and an article image is the easiest way for that to escape.
+    for image in list(OUT.rglob("*.jpg")) + list(OUT.rglob("*.jpeg")) + list(OUT.rglob("*.png")):
+        raw = image.read_bytes()
+        for marker, what in ((b"Exif", "EXIF"), (b"http://ns.adobe.com/xap/", "XMP"), (b"Photoshop 3.0", "IPTC"), (b"GPS", "GPS")):
+            if marker in raw[:65536]:
+                problems.append(f"{image.relative_to(OUT)}: carries {what} metadata")
+
+    return problems
+
+
+def page_research_index() -> str:
+    published = [m for m in research_articles() if m.get("status") == "published"]
+    groups = []
+    for group in RESEARCH_GROUPS:
+        cards = []
+        for meta in [m for m in published if m.get("group") == group]:
+            figure = research_figure(meta)
+            thumb = (
+                f'<img class="research-thumb" src="{figure}" alt="" width="320" height="200" loading="lazy">'
+                if figure else ""
+            )
+            cards.append(
+                f'<a class="panel pad stack tight research-card plain" href="/research/{meta["slug"]}/">'
+                f"{thumb}"
+                f'<h3 class="h3">{esc(meta["title"])}</h3>'
+                f'<p class="small">{esc(meta["description"])}</p>'
+                "</a>"
+            )
+        if cards:
+            groups.append(f'<h2 class="h2">{esc(group)}</h2><div class="research-grid">{"".join(cards)}</div>')
+
+    body = f"""
+<section class="wrap stack">
+<h1>Research</h1>
+<p class="lead">What we have measured, on real targets, with the numbers and the data behind every claim.</p>
+<p class="small faint">Every figure says how many shots it rests on. Nothing here is called proven that the shots cannot prove, and where we do not know, it says so.</p>
+{"".join(groups) if groups else '<p>The first articles are being written.</p>'}
+</section>
+"""
+    return shell("/research/", "Research", "What GroupLab has measured on real targets, with the data behind it.", body, "Research")
+
+
+def page_research_article(meta: dict) -> str:
+    content = markdown.markdown(meta["body"], extensions=["tables", "sane_lists", "fenced_code"])
+    sources = "".join(f"<li>{markdown.markdown(str(x), extensions=[])[3:-4]}</li>" for x in (meta.get("sources") or []))
+    data = "".join(
+        f'<li><a href="/research/{meta["slug"]}/{d}">{esc(d)}</a></li>' for d in (meta.get("data") or [])
+    )
+    # Entry 142 section 2.4: every article opens with what we found, how sure we are, and where the data is.
+    box = f"""<div class="panel pad stack tight research-box">
+<p class="mono faint small caps">What we found</p>
+<p>{esc(meta["found"])}</p>
+<p class="mono faint small caps">How sure we are</p>
+<p class="small">{esc(meta["sure"])}</p>
+{f'<p class="mono faint small caps">The data</p><ul class="small">{data}</ul>' if data else ""}
+</div>"""
+    draft = '<p class="small warn">This article is a draft and is not linked from the index yet.</p>' if meta.get("status") != "published" else ""
+    body = f"""
+<section class="wrap guide">
+<article class="prose research-article">
+<p class="small faint"><a class="plain" href="/research/">Research</a> &rsaquo; {esc(meta.get("group", ""))}</p>
+<h1>{esc(meta["title"])}</h1>
+<p class="small faint">GroupLab project, tested by Alan Hayes, researched and written with Claude. Written {esc(str(meta["written"]))}; the data is from {esc(str(meta["data_date"]))}.</p>
+{draft}
+{box}
+{content}
+{f'<h2>Sources</h2><ol class="small">{sources}</ol>' if sources else ""}
+</article>
+</section>
+"""
+    return shell(f"/research/{meta['slug']}/", meta["title"], meta["description"], body, "Research")
+
+
 def page_releases() -> str:
     blocks = []
     for i, (anchor, version, notes) in enumerate(releases()):
@@ -936,6 +1092,20 @@ p.text,.text p,.text{color:var(--text)}
 .tab[aria-current="page"]{background:var(--panel2);color:var(--text);font-weight:600}
 .tab:hover{text-decoration:none;color:var(--text)}
 .pdf-link{margin-left:auto;font-size:14px}
+/* Research, entry 142. The cards are a plain grid that collapses to one column on a phone, and the
+   thumbnail is the article's lead chart, so the index reads as a contents page rather than a list. */
+.research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:12px 0 32px}
+.research-card{display:block;transition:border-color .15s ease}
+.research-card:hover{border-color:var(--accent)}
+.research-thumb{width:100%;height:auto;border-radius:4px;background:var(--panel-2,transparent);margin-bottom:8px}
+.research-box{border-left:3px solid var(--accent);margin:20px 0 28px}
+.research-box p{margin:0}
+/* A flex child will not shrink below its content by default, and a four column table is wider than a
+   phone, so the article held the page open and everything ran off the right edge. */
+.research-article{min-width:0;max-width:100%}
+.research-article img{max-width:100%;height:auto}
+.research-article table{font-size:.94em;display:block;overflow-x:auto;max-width:100%}
+.research-article pre{overflow-x:auto}
 .guide{padding-top:32px;padding-bottom:120px;display:flex;gap:64px;align-items:flex-start}
 .toc{position:sticky;top:104px;width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 128px);overflow:auto}
 .toc a{display:block;padding:7px 0 7px 14px;font-size:14px;font-weight:400;color:var(--dim);border-left:2px solid var(--line)}
@@ -1130,6 +1300,14 @@ def main() -> None:
     for g in GUIDES:
         write(f"guides/{g[0]}/index.html", page_guide(*g))
     write("releases/index.html", page_releases())
+    figure_problems = build_research_figures()
+    write("research/index.html", page_research_index())
+    for meta in research_articles():
+        write(f"research/{meta['slug']}/index.html", page_research_article(meta))
+        figures = REPO / "website" / "research" / meta["slug"]
+        for extra in sorted(figures.rglob("*")) if figures.is_dir() else []:
+            if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv"}:
+                copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
     write("404.html", page_404())
 
     pages = ["/", "/download/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]
@@ -1155,6 +1333,7 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
+    problems += figure_problems + research_problems()
     problems += link_problems()
     problems += php_problems()
     if problems:

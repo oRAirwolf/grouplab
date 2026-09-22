@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" role="img" aria-label="Measured hole size as a fraction of the bullet, scans against photographs">
+<rect width="720" height="420" rx="6" fill="#faf8f5"/>
+<line x1="377.5" y1="46" x2="377.5" y2="364" stroke="#8b8781" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="377.5" y="38" fill="#8b8781" font-size="13" font-family="system-ui, sans-serif" text-anchor="middle">the bullet itself</text>
+<line x1="252.5" y1="364" x2="252.5" y2="370" stroke="#d9d4cc" stroke-width="1"/>
+<text x="252.5" y="388" fill="#8b8781" font-size="13" font-family="system-ui, sans-serif" text-anchor="middle">0.8</text>
+<line x1="377.5" y1="364" x2="377.5" y2="370" stroke="#d9d4cc" stroke-width="1"/>
+<text x="377.5" y="388" fill="#8b8781" font-size="13" font-family="system-ui, sans-serif" text-anchor="middle">1</text>
+<line x1="502.5" y1="364" x2="502.5" y2="370" stroke="#d9d4cc" stroke-width="1"/>
+<text x="502.5" y="388" fill="#8b8781" font-size="13" font-family="system-ui, sans-serif" text-anchor="middle">1.2</text>
+<line x1="627.5" y1="364" x2="627.5" y2="370" stroke="#d9d4cc" stroke-width="1"/>
+<text x="627.5" y="388" fill="#8b8781" font-size="13" font-family="system-ui, sans-serif" text-anchor="middle">1.4</text>
+<text x="176" y="97.8" fill="#2b2a28" font-size="14" font-family="system-ui, sans-serif" text-anchor="end">22LR block</text>
+<line x1="190" y1="92.8" x2="690" y2="92.8" stroke="#d9d4cc" stroke-width="1"/>
+<text x="176" y="175.2" fill="#2b2a28" font-size="14" font-family="system-ui, sans-serif" text-anchor="end">6 ARC block</text>
+<line x1="190" y1="170.2" x2="690" y2="170.2" stroke="#d9d4cc" stroke-width="1"/>
+<text x="176" y="252.8" fill="#2b2a28" font-size="14" font-family="system-ui, sans-serif" text-anchor="end">6.5 Creedmoor 25 shot</text>
+<line x1="190" y1="247.8" x2="690" y2="247.8" stroke="#d9d4cc" stroke-width="1"/>
+<text x="176" y="330.2" fill="#2b2a28" font-size="14" font-family="system-ui, sans-serif" text-anchor="end">6.5 Creedmoor 15 shot</text>
+<line x1="190" y1="325.2" x2="690" y2="325.2" stroke="#d9d4cc" stroke-width="1"/>
+<circle cx="226.3" cy="92.8" r="7" fill="#3d7f6f" fill-opacity="1"/>
+<circle cx="420.6" cy="92.8" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="425.6" cy="92.8" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="329.4" cy="170.2" r="7" fill="#3d7f6f" fill-opacity="1"/>
+<circle cx="537.5" cy="170.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="585.6" cy="170.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="602.5" cy="170.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="345.6" cy="247.8" r="7" fill="#3d7f6f" fill-opacity="1"/>
+<circle cx="313.8" cy="247.8" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="338.1" cy="325.2" r="7" fill="#3d7f6f" fill-opacity="1"/>
+<circle cx="660.0" cy="325.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="630.6" cy="325.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="658.1" cy="325.2" r="6" fill="#c8791a" fill-opacity="0.85"/>
+<circle cx="190" cy="404" r="7" fill="#3d7f6f"/>
+<text x="204" y="409" fill="#2b2a28" font-size="13" font-family="system-ui, sans-serif">scanned</text>
+<circle cx="290" cy="404" r="6" fill="#c8791a"/>
+<text x="304" y="409" fill="#2b2a28" font-size="13" font-family="system-ui, sans-serif">photographed</text>
+</svg>
