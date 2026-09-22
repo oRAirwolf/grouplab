@@ -7064,6 +7064,42 @@ Reading the analysis screen's render at 1280 by 720, the figures in the right co
 What is kept is the test. A screenshot is looked at once, on the night it is taken; this runs on every commit at both sizes and fails with the word and how far out it landed.
 
 
+# Telling GroupLab which bulls you aimed at
+
+Entry 141 section 5.3.4, question 37, and queue item 6 of entry 135.
+
+## The fact the sheet cannot hold
+
+Twenty holes on a twenty five bull sheet does not say whether five bulls were missed, five were never fired at, or every shot landed a bull away from where it was aimed. Only the shooter knows, and until now nothing asked them.
+
+Entry 120's 6 ARC sheet is the case that matters: a load the rifle was not zeroed for, so every one of the twenty shots landed high and left by more than the gap between bulls, and **every one is nearer a bull it was not aimed at**. Read by nearest bull it gives a group that is tight, confident and about nothing at all.
+
+## It needed no new machinery
+
+`AssignmentRule.PerBull` already says how many shots a bull is expected to hold, and the matching already treats a bull with no room as closed. **A bull nobody aimed at is a bull expecting zero shots.** So saying which bulls were aimed at is saying which ones expect none, and it flows through the existing matching and the existing sheet-offset solver without either of them changing.
+
+`AimedBulls` builds that rule three ways, because three ways is how people shoot:
+
+| what a person says | what they type |
+|---|---|
+| every bull | leave it empty |
+| whole rows | `rows 1-3` |
+| the same columns of every row | `columns 2-5` |
+| a list of bulls | `1-10, 12` |
+
+The rows come from where the bulls sit on the page, not from their order in the definition, because a person reads rows off the paper and a definition may list its bulls however it likes. The test builds its sheet listed back to front for exactly that reason.
+
+## It says back what it was told
+
+Under the control: **"15 shots at 15 bulls, one shot each, and 10 bulls nobody aimed at."**
+
+This is the input that decides what every figure afterwards is about, so a person has to be able to read it back. An input nobody can check is an input nobody can correct, and a mistyped row would otherwise be invisible.
+
+## What is not done
+
+**The end to end proof against entry 120's ground truth.** Section 5.3.4 asks for scans 4, 5 and 6 to be run with their aimed bulls set and the assignments compared with Alan's table. That needs a registered sheet rather than a hand built one, and it is the test that would show the 6 ARC sheet coming out right. `AimedBullsTests` covers the rule and says plainly that it is not that proof.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

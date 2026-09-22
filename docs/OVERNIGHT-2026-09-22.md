@@ -2,7 +2,9 @@
 
 NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: read at the start of every wake-up, updated after every commit.
 
-**Next step:** the 07:30 Mountain push freeze, then the nightly, then the print verification and the 09:00 report. After that, entry 141 section 5.2 and 5.3, and research batch 2.
+**The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
+
+**Next step:** entry 141 section 5.2, the graphics, and the rest of 5.3, with research batch 2 between items.
 
 ---
 
@@ -30,7 +32,7 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 | 2 | CI: concurrency, a scheduled nightly, push main only | **done bar the proof**: `build and test` cancels an older run on the same branch, `nightly.yml` runs at 12:00 UTC on the newest commit main has passed and does nothing where it already has a nightly, and pushing goes to main alone. Section 2.4 wants a run of each path, which needs the schedule to fire |
 | 3 | Finish what is queued | **done before tonight**: the website republish confirmed live, entry 139 section 5 proved from nightly 44 to 49, and the calibre guess on Alan's lists |
 | 4 | Question 38 approved: the sheet's own marks are the reference | **done**: twelve or more round marks outrank a stated calibre, the quarter-point makes it robust to the doubles it is judging, and the thirteen images now flag 0 or 1 mark each where the photograph Alan met flagged 15 of 15. Question 40 raised where it meets entry 82 section 3 |
-| 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1 done**: both scales held by a source test, eighteen off-scale gaps brought onto the ladder, and a measurement test for text running past the window edge at both sizes. 5.2 and 5.3 not started |
+| 5 | The interface: type scale, graphics, editing shots and tying them to bulls | **5.1 done**: both scales held by a source test, eighteen off-scale gaps brought onto the ladder, and a measurement test for text running past the window edge at both sizes. **5.3.4 done**: which bulls you aimed at, with rows and columns presets, reachable from the shots per bull control, saying back what it was told. The end to end proof against entry 120 is not done. 5.2 and the rest of 5.3 not started |
 | 6 | Entry 137, the rest of 131, entry 130 2c, 6b and 6, questions 34 and 36, entry 129 prepared | not started |
 | 142 | The Research section: the page, the navigation link, the article format, the build and its checks | **done** |
 | 142 | Research batch 1: articles 1, 3, 5 and 6 | **written and rendered, waiting for Alan's review.** Nothing published. `docs/RESEARCH.md` |
