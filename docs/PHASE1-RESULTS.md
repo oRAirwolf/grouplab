@@ -6948,6 +6948,39 @@ Two of four preselect the right calibre, three of four offer it, and every one o
 Question 38 measured photographs of sheets of known calibre at 0.90 to 1.45 times the bullet, sheet by sheet. So from a photograph the confirmation step preselects nothing, offers the list, and says plainly that a hole photographed in low light reads far wider than the same hole scanned.
 
 
+# Printing held by tests that need no printer
+
+Entry 141 section 1.1, and the first thing done tonight because Alan prints his targets before he goes shooting and that cannot slip.
+
+**The two tests that covered printing best both need a real printer driver.** `PrintedItemsTests` prints to "Microsoft Print to PDF" and `PrintedSizeTests` needs it installed, so both skip on CI and both skipped here the moment the feature was off. Printing was therefore held, on the machine that matters, by nothing that runs automatically.
+
+`PrintGateTests` runs anywhere. It renders every sheet in the library through `TargetRenderer.Render`, which is the call `PrintWindow.SavePdf` makes, and then reads the PDF that came out: 88 checks over 22 sheets, in two seconds.
+
+| what it holds | how it holds it |
+|---|---|
+| Every sheet renders with no error, blank **and** filled | the diagnostics, plus one page for every tile |
+| The page is the size the sheet asks for | the `/MediaBox` parsed out of the PDF bytes, letter being 612 by 792 points |
+| The markers, the codes and the bulls are on the page | the scene's own layers, with the codes checked against what the definition declares |
+| **The printed scale is exact** | the two furthest markers the definition itself places, measured back out of the PDF |
+
+## The scale check is the one that matters
+
+A sheet that prints at 96 percent still looks perfect. Every measurement taken from it is then wrong by four percent, and nothing on the paper says so.
+
+So the PDF is rasterised by PDFium at 300 dpi, the markers are found by the same detector that reads a scan, and the distance between the two furthest apart is compared with the distance the definition declares. The two furthest, because a long distance is where a scale error shows and a short one hides it.
+
+Across the library it measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, against the 0.005 in entry 141 section 1.1 asks for:
+
+```
+GL-LR300-T    markers 0 and 16   8.0000 in on the sheet, 8.0000 in in the PDF
+GL-RF36-LTR   markers 0 and 53   8.7633 in on the sheet, 8.7633 in in the PDF
+GL-RF25-A4    markers 0 and 41   7.9625 in on the sheet, 7.9631 in in the PDF
+GL-LR300-TA4  markers 0 and 22  10.1980 in on the sheet, 10.1983 in in the PDF
+```
+
+**It cannot pass by doing nothing.** A definition that stores no markers fails it by name rather than returning quietly, which is the way a measurement test usually rots.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

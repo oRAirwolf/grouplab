@@ -76,6 +76,98 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 ---
 
+# 2026-09-22, entry 141: tonight's work, and printing that must work by morning
+
+**Status: in progress 2026-09-22.** Section 1.1 done, the print path held by tests that need no printer. Section 3 was done before this entry arrived. Sections 1.2 to 1.5, 2, 4, 5 and 6 are not done yet; the progress file is `docs/OVERNIGHT-2026-09-22.md`.
+
+Written by the planning session at 08:25 UTC on 2026-09-22 (02:25 Mountain). Alan has read and approved every decision here.
+
+Work through this in the order given, with `/loop` when Alan starts it, keeping `docs/OVERNIGHT-2026-09-22.md` as the progress file (the same shape as `docs/OVERNIGHT-2026-09-21.md`: a "Next step" line at the top, then a queue table with a state per item, kept current after every commit). Never end a turn to wait for CI; do the next item while it runs. Commit small, with `Release-note:` trailers where a user would notice the change. Every CLAUDE.md rule and every standing security constraint stays in force: no server address in any file, the SSH key by path only and never read, no sudo, no repository settings, no v* tags except the nightly workflow's, nothing from `C:\Dev\grouplab-range-2026-09-20` committed, no GPS, location or timestamp metadata read, and no printing to a real printer or anything that uses paper.
+
+## 1. A hard deadline: printing targets from the newest build, by 09:00 Mountain (15:00 UTC)
+
+Alan is going shooting with a friend on 2026-09-23 and leaves between 12:00 and 13:00 Mountain. He will print his targets from the newest nightly before he leaves. That is the one thing tonight that cannot slip.
+
+1. Early in the night, before the big interface work, make sure the print path is covered by tests that would fail if tonight's changes broke it: for every sheet in the library, and for a designed sheet, render the PDF through the same code `PrintWindow.SavePdf` uses, and check the page count, the page size (letter unless the sheet says otherwise), that the fiducial markers and codes are present, and that the printed scale is exact: a known distance on the sheet measures the same in the PDF to within 0.005 in. Also check the Print dialog path opens and hands off without error through `IOutsideWorld`, never to a real printer.
+2. At 07:30 Mountain (13:30 UTC), stop pushing to main. Let CI finish on main's head and the nightly publish. If CI is red for a real reason, fix only that and push once. If you are mid-item at 07:30, park it on a local branch or leave it uncommitted and list it; do not push half an item.
+3. When that nightly is published, install it with `scripts/Test-RealUpdate.ps1` or the installer, run the print checks from step 1 against the installed build, save a PDF of the GL-CF25-LTR-D sheet and one other sheet to a scratch folder outside the repository, and measure them.
+4. By 09:00 Mountain, stop with a status report. The first line after the status must be: "Print from nightly N", with N the verified build, and the direct download link to that numbered release, not only the rolling one. Say plainly if anything about printing is not right.
+5. After that report you may carry on, but nothing that touches printing, sheet rendering or the library is pushed until Alan says he has printed. The rolling nightly link can move; the numbered link in your report is the one he uses.
+
+## 2. CI: fewer runs, no lost nightlies
+
+Approved by Alan. Workflow files only, no repository settings.
+
+1. Push to main only from now on. Stop pushing phase-1. Say in the report what, if anything, still depends on phase-1.
+2. `build and test`: add a concurrency group per workflow and branch with cancel-in-progress, so a newer push cancels the older run on the same branch.
+3. A guaranteed nightly: add a schedule to `nightly.yml`, once a day at 12:00 UTC, that builds the newest commit on main whose `build and test` succeeded, and does nothing if that commit already has a nightly. The freshness skip stays for the `workflow_run` path. Keep the per-build pre-release, the rolling `nightly` release and the 30-release limit as they are.
+4. Prove it: show a run of each path in the report, including one where the schedule finds nothing to do.
+
+## 3. Finish what is already queued
+
+1. Step A5 of the last command: the website republish confirmed live, with the new build id in the meta tag, /releases/ listing the newest nightly, and no rollback in the sync log.
+2. Entry 139 section 5: the real update test once a nightly carrying 28a3365 exists. Section 1 step 2 will produce one if nothing sooner does.
+3. The calibre best guess snapping to Alan's list. Firearm type on the Equipment screen is rifle or pistol only; Alan does not want shotgun or rimfire now.
+
+## 4. Question 38: approved, build it
+
+Alan approves your recommendation. Where a sheet has enough round single marks to speak for itself, its own marks are the reference for telling one hole from two, and the stated calibre is the fallback. This replaces the first rule of entry 82; say so in `NOTES-FROM-PLANNING.md` beside entry 82.
+
+1. Decide "enough" from the evidence you have (thirteen sheets) and write the number and why in the code comment. Below it, fall back to the stated calibre, and with no calibre, to shape alone as today.
+2. The sheet's reference is robust to the doubles it is judging: take it from the marks that agree with each other, never a plain mean of all marks.
+3. The calibre guess (section 3.3) must use the same reference, and on a photograph it stays rough as already asked.
+4. Tests from generated sheets only, including a sheet where a third of the marks are real doubles. Then re-run the thirteen images from question 38, read only, and report flagged marks per image before and after.
+5. `HoleToCalibre` for scans stays unchanged.
+
+## 5. Alan's priorities for the interface, in his words, and what they mean
+
+Alan's biggest wants right now: "improving the UI looks with better layout for information, more consistent text sizes, more graphs and graphics that help you understand the data", and "changes made to make it easier to edit shots and tie shots to various bulls". This is the bulk of the night. Take before and after renders of every screen you change at 1280 by 720 and 2560 by 1440 under `docs/figures/screens/`, and look at each one yourself before you call it done.
+
+### 5.1 Consistent text sizes and layout
+
+1. One type scale for the whole application, defined once in `AppStyles` (for example: caption, body, label, section heading, page heading, headline figure). Five or six sizes, no more. Every `FontSize` in the application comes from it. Add a test that fails on a literal font size anywhere outside the style file.
+2. One spacing scale the same way (for example 4, 8, 12, 16, 24, 32), and the same margins and gaps on every screen.
+3. Layout for information: on every screen, the most important figure first and largest, related figures grouped under one heading, labels and units aligned, and no text cut off or wrapping mid-number at either size. The analysis panel rebuild from `AnalysisPanel` (queue item 1 of entry 135) is the first screen to do.
+4. The amber stays for the one headline figure on a screen. Everything else uses the existing neutral and accent colours.
+
+### 5.2 More graphs and graphics that explain the data
+
+Every graphic must answer one question, and its caption says that question in plain words. No decoration, no 3D, no pseudoscience. Suggested set, build in this order and stop where the evidence or the data runs out:
+
+1. The group plot: the shots, the group centre, the mean radius circle, the extreme spread line between the two widest shots, and the aim point, each switchable, with a small legend.
+2. Horizontal and vertical spread: two small strips or histograms beside the plot, answering "is my group wider than it is tall".
+3. Shot order: distance from the group centre for each shot in the order fired, where the order is known, answering "did the group open up as I shot". Show nothing when the order is not known rather than inventing one.
+4. Sessions over time: mean radius per session for one load, with its uncertainty, answering "is this load getting better or worse".
+5. Velocity: where velocities are recorded, the shots with the mean and SD marked, and ES; SD shown with its uncertainty for the sample size.
+6. Compare loads already has dot-and-whisker charts; bring them to the same type scale and colours.
+
+### 5.3 Editing shots and tying shots to bulls
+
+This is question 37's control (queue item 6 of entry 135) and the shot editor from entry 131, done together as one piece of work.
+
+1. Select a shot by clicking it; the shot is highlighted on the image, in the shots list and in the review queue at once.
+2. Move a shot by dragging it; add one by a click in add mode; delete with the Delete key or a button. Every edit goes through undo and redo.
+3. Assign a shot to a bull by dragging it onto the bull, by a bull picker in the shots list, or by keyboard (select, then type the bull number). Select several shots and assign them together.
+4. Say which bulls were aimed at: click bulls to mark them aimed or not aimed, with presets for "every bull", "rows", and "bulls 2 to 5 of each row" style patterns, and a shots-per-bull count. Assignment uses this. Scans 4, 5 and 6's ground truth in entry 120 is the test: show that with the aimed bulls set, the assignments match Alan's table.
+5. A shot moved or assigned by hand is marked as manual, shown differently, and never changed by a later re-detection or re-assignment.
+6. Every statistic and graphic updates as soon as an edit is made.
+7. A review queue item opens the shot it is about, selected and ready to edit.
+
+## 6. After that, in this order
+
+1. Entry 137, drag and drop or paste an image into the main window, if it is not finished.
+2. The rest of entry 131 sections 2 to 9 and a final checklist pass.
+3. Entry 130 sections 2c and 6b: photographs against scans, and the mounted gate.
+4. Performance, entry 130 section 6.
+5. Questions 34 and 36 answered with a recommendation.
+6. Entry 129 server side, prepared only: the receivers, the intake worker and the ClamAV step built and tested locally, with `install.py` or its equivalent ready. Stop short of anything that needs sudo, the Turnstile secret or a change on the server, and list exactly what Alan and you will run together when he is awake.
+
+## 7. Reports
+
+The 09:00 Mountain print report in section 1.4 is required whatever else is happening. Otherwise report only when you stop. If you stop for any reason before section 1 is done, the report still starts with the state of printing.
+
+---
+
 # 2026-09-22, entry 140: a new image is a new target
 
 **Status: actioned in full 2026-09-22.** Every section is done.
