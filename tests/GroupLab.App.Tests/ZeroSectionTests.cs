@@ -106,8 +106,8 @@ public class ZeroSectionTests
         var rail = window.GetLogicalDescendants().OfType<Button>().Where(b => b.Classes.Contains(AppStyles.RailButton)).ToList();
 
         // Entry 109 section 2: the marking screen, the library, Print, records and reports, and the gear at the foot; entry 112 section 4 adds
-        // Ballistics after the records.
-        Assert.Equal(7, rail.Count);
+        // Ballistics after the records, and entry 131 section 7 adds Equipment after Compare loads.
+        Assert.Equal(8, rail.Count);
         rail[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Dispatcher.UIThread.RunJobs();
         Assert.True(window.ShowingLibrary);
@@ -115,6 +115,8 @@ public class ZeroSectionTests
         Assert.True(window.ShowingBallistics);
         rail[5].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Assert.True(window.ShowingCompare);
+        rail[6].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Assert.True(window.ShowingEquipment);
         rail[^1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         Assert.True(window.ShowingSettings);
         rail[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));

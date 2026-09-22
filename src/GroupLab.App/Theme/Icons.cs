@@ -49,6 +49,9 @@ public static class Icons
     public const string Reports = "M1,14 H15 V15.5 H1 Z M2,8 H5 V13 H2 Z M6.5,4 H9.5 V13 H6.5 Z M11,9 H14 V13 H11 Z";
 
     /// <summary>A trajectory's arc over the ground, for the Ballistics screen.</summary>
+    /// <summary>Equipment: a rifle's outline, for the screen that holds rifles, barrels and loads (entry 131 section 7).</summary>
+    public const string Equipment = "M1,7 H10 L12,5 H15 V7.5 H12.5 L11,9 H8 V11 H6.5 V9 H5 L3.5,12 H1.8 L3,9 H1 Z";
+
     public const string Ballistics = "M1,5 C6,1.5 11,3 15,11.5 L13.6,12.2 C10.2,4.9 6,3.4 1.6,6.4 Z M1,14 H15 V15.5 H1 Z";
 
     /// <summary>An icon as a control, at 16 pixels, drawn in the foreground of whatever holds it.</summary>

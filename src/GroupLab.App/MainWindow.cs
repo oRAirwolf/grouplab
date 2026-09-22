@@ -167,6 +167,8 @@ public sealed partial class MainWindow : Window
     /// <summary>The Session records screen, the rail's destination, entry 112 section 1.</summary>
     private readonly Control sessionsBody;
 
+    private readonly Control equipmentBody;
+
     private readonly StackPanel sessionRows = new() { Spacing = 0 };
 
     private readonly ComboBox sessionRifle = new() { MinWidth = 180 };
@@ -178,6 +180,8 @@ public sealed partial class MainWindow : Window
     private Button railSessions = null!;
     private Button railLibrary = null!;
     private Button railCompare = null!;
+
+    private Button railEquipment = null!;
     private readonly Control libraryBody;
     private GroupLab.Core.Rendering.OwnSheets ownSheets = null!;
 
@@ -343,12 +347,6 @@ public sealed partial class MainWindow : Window
 
     private readonly ComboBox loadChoice = new() { MinWidth = 200 };
 
-    private readonly TextBox newName = new() { Width = 150, PlaceholderText = "name" };
-
-    private readonly TextBox newDetail = new() { Width = 150, PlaceholderText = "rounds or components" };
-
-    private readonly ComboBox newClick = new() { ItemsSource = new[] { "0.25 MOA", "0.125 MOA", "0.5 MOA", "0.1 mil", "0.05 mil" }, SelectedIndex = 0, MinWidth = 110 };
-
     private RecordBook book = RecordBook.Empty;
 
     private bool showingEquipment;
@@ -500,17 +498,10 @@ public sealed partial class MainWindow : Window
             combo.SelectionChanged += (_, _) => EquipmentChosen();
         }
 
-        // Entry 105 section 1: the form was wider than the 372 pixel column and clipped its own button to "Add rif" on a first run. Each field
-        // now has the column's width and its buttons sit beneath it, and every row wraps rather than running past the edge.
-        var adding = new StackPanel { Spacing = Tokens.Space4 };
-        newName.Width = newDetail.Width = double.NaN;
-        newName.HorizontalAlignment = newDetail.HorizontalAlignment = HorizontalAlignment.Stretch;
-        adding.Children.Add(newName);
-        adding.Children.Add(Row(newClick, Button("Add rifle", () => AddRecord("rifle"))));
-        adding.Children.Add(newDetail);
-        adding.Children.Add(Row(Button("Add barrel", () => AddRecord("barrel")), Button("Add load", () => AddRecord("load"))));
-        adding.Children.Add(Line("A rifle needs a name and its scope's click. A barrel's detail is its round count so far, a load's is its components."));
-        panel.Children.Add(new Expander { Header = "New rifle, barrel or load", Content = adding, HorizontalAlignment = HorizontalAlignment.Stretch });
+        // Entry 131 section 7.7: the box that used to sit here is gone. It had one field shared between a barrel's round count and a load's
+        // components, so the field meant a different thing depending on which of two buttons you pressed after filling it, and nothing on the
+        // screen said which. Records have a screen of their own now, and this is the way to it.
+        panel.Children.Add(Button("Add or edit equipment", () => Go(Destination.Equipment)));
         // Entry 105 section 8: sighters are found and matched and then set aside, unless a person asks for them to be analysed.
         analyseSighters = settings.LoadAnalyseSighters();
         analyseSightersBox.IsChecked = analyseSighters;
@@ -702,6 +693,7 @@ public sealed partial class MainWindow : Window
 
         settingsBody = BuildSettings(settings);
         sessionsBody = BuildSessions();
+        equipmentBody = BuildEquipment();
         libraryBody = BuildLibrary();
         ballisticsBody = BuildBallistics();
         compareBody = BuildCompare();
@@ -710,6 +702,7 @@ public sealed partial class MainWindow : Window
         body.Children.Add(analysisBody);
         body.Children.Add(settingsBody);
         body.Children.Add(sessionsBody);
+        body.Children.Add(equipmentBody);
         body.Children.Add(libraryBody);
         body.Children.Add(ballisticsBody);
         body.Children.Add(compareBody);
@@ -1826,6 +1819,7 @@ public sealed partial class MainWindow : Window
         libraryBody.IsVisible = destination == Destination.Library;
         ballisticsBody.IsVisible = destination == Destination.Ballistics;
         compareBody.IsVisible = destination == Destination.Compare;
+        equipmentBody.IsVisible = destination == Destination.Equipment;
         settingsCrumb.IsVisible = !here;
         settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Target library", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", _ => "\u203a  Settings" };
         workBar.IsVisible = workShown && here;
@@ -1835,6 +1829,7 @@ public sealed partial class MainWindow : Window
         railLibrary.Classes.Set(AppStyles.Warn, destination == Destination.Library);
         railBallistics.Classes.Set(AppStyles.Warn, destination == Destination.Ballistics);
         railCompare.Classes.Set(AppStyles.Warn, destination == Destination.Compare);
+        railEquipment.Classes.Set(AppStyles.Warn, destination == Destination.Equipment);
 
         // Entry 109 section 3e: the crumb is the way back, so it names what it goes back to, the image's file as the editor's crumb does, or
         // the sheet's name for a marking with no image recorded.
@@ -3000,35 +2995,6 @@ public sealed partial class MainWindow : Window
         session.SetEquipment(rifle, barrel, load);
     }
 
-    /// <summary>Adds a rifle, barrel or load to the book from the two fields, and keeps the book.</summary>
-    internal void AddRecord(string kind)
-    {
-        string name = newName.Text?.Trim() ?? "";
-        if (name.Length == 0)
-        {
-            status.Text = "Give the " + kind + " a name first.";
-            return;
-        }
-
-        switch (kind)
-        {
-            case "rifle":
-                string click = (string)newClick.SelectedItem!;
-                double value = double.Parse(click.Split(' ')[0], CultureInfo.InvariantCulture);
-                book = book.With(new Rifle(name, value, click.EndsWith("mil", StringComparison.Ordinal) ? AngularUnit.Mrad : AngularUnit.Moa));
-                break;
-            case "barrel":
-                book = book.With(new Barrel(name, session.State.Rifle?.Name, int.TryParse(newDetail.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int rounds) ? Math.Max(0, rounds) : 0));
-                break;
-            default:
-                book = book.With(new Load(name, string.IsNullOrWhiteSpace(newDetail.Text) ? null : newDetail.Text.Trim()));
-                break;
-        }
-
-        SaveBook();
-        status.Text = $"Added the {kind} {name}.";
-        Refresh();
-    }
 
     /// <summary>A barrel's count grows when a person says so, never on its own, so reopening a marking cannot count a sheet twice.</summary>
     private void AddSheetToBarrel()
@@ -3551,6 +3517,9 @@ public sealed partial class MainWindow : Window
             (Icons.Ballistics, "Ballistics", () => Go(destination == Destination.Ballistics ? Destination.Analyse : Destination.Ballistics)),
             // Entry 113 section 2: the chart slot is the concept's Compare loads. A report is written from its analysis, by its Report button.
             (Icons.Reports, "Compare loads", () => Go(destination == Destination.Compare ? Destination.Analyse : Destination.Compare)),
+            // Entry 131 section 7: rifles, barrels and loads have a screen of their own now, instead of a cramped box on the marking screen
+            // with one field that meant two different things.
+            (Icons.Equipment, "Equipment", () => Go(destination == Destination.Equipment ? Destination.Analyse : Destination.Equipment)),
         })
         {
             var button = new Button { Content = Icons.Draw(icon), Classes = { AppStyles.RailButton } };
@@ -3572,6 +3541,10 @@ public sealed partial class MainWindow : Window
             else if (icon == Icons.Reports)
             {
                 railCompare = button;
+            }
+            else if (icon == Icons.Equipment)
+            {
+                railEquipment = button;
             }
         }
 
@@ -4189,5 +4162,6 @@ internal enum Destination
     Library,
     Ballistics,
     Compare,
+    Equipment,
     Settings,
 }

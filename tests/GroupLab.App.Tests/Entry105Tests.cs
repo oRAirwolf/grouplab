@@ -67,25 +67,30 @@ public class Entry105Tests
     }
 
     /// <summary>
-    /// Item 1's defect: at the default width, with no splitter touched, the new-record form's buttons all sit inside the column. Before, the
-    /// rifle's button ran past the edge and read "Add rif".
+    /// Item 1's defect was that the new-record form was wider than its column, so the rifle's button ran past the edge and read "Add rif".
+    /// <para>
+    /// <b>That form is gone.</b> Entry 131 section 7.7 moved records onto a screen of their own, because one field shared between a barrel's
+    /// round count and a load's components meant two different things depending on which button followed it. What is left in the column is
+    /// the way to that screen, and item 1's guard still applies to it: nothing in this column may run past its edge.
+    /// </para>
     /// </summary>
     [AvaloniaFact]
-    public void TheNewRecordFormFitsTheColumnAtItsDefaultWidth()
+    public void NothingInTheSidePanelRunsPastItsEdge()
     {
         var (window, _) = NewWindow();
-        var expander = window.GetLogicalDescendants().OfType<Expander>().Single(e => Equals(e.Header, "New rifle, barrel or load"));
-        expander.IsExpanded = true;
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
 
-        var buttons = expander.GetVisualDescendants().OfType<Button>().ToList();
-        Assert.Contains(buttons, b => Equals(b.Content, "Add rifle"));
-        foreach (var button in buttons)
-        {
-            var right = button.TranslatePoint(new Avalonia.Point(button.Bounds.Width, 0), expander)!.Value;
-            Assert.True(right.X <= expander.Bounds.Width + 0.5, $"\"{button.Content}\" ends at {right.X:0} px in a {expander.Bounds.Width:0} px column");
-        }
+        var link = window.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b => Equals(b.Content, "Add or edit equipment"));
+        Assert.NotNull(link);
+
+        // The old form is not merely collapsed: it is not there at all.
+        Assert.DoesNotContain(window.GetLogicalDescendants().OfType<Expander>(), e => Equals(e.Header, "New rifle, barrel or load"));
+
+        var column = link!.FindAncestorOfType<ScrollViewer>();
+        Assert.NotNull(column);
+        var right = link.TranslatePoint(new Avalonia.Point(link.Bounds.Width, 0), column!)!.Value;
+        Assert.True(right.X <= column!.Bounds.Width + 0.5, $"the equipment link ends at {right.X:0} px in a {column.Bounds.Width:0} px column");
 
         window.Close();
     }

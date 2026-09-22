@@ -12,7 +12,7 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 |---|---|---|
 | 1 | Entry 131 section 1: before and after renders of every screen, checked against the checklist and fixed where they fail. Analysis page first. | **in progress**: renders now taken at 1280 by 720 and 2560 by 1440, before and after kept under `docs/figures/screens/`. First pass on the analysis page: the mean radius is the one figure in the logo's amber, and the zero correction's direction word no longer runs off the edge. The panel rebuild from `AnalysisPanel` is still to do. |
 | 2 | Entry 131 section 6.2: the zero offset picture | **done**: `ZeroOffsetPicture`, behind a "Where it landed" disclosure on the zero block. The aim as a cross, the group's centre with its uncertainty ellipse, and an arrow an axis pointing the way a shot has to move, with the clicks on it. Where the uncertainty covers the aim there are no arrows, because an arrow is an instruction and there is nothing to instruct. |
-| 3 | Entry 131 section 7: the Equipment screen, with the old "rounds or components" box gone | not started |
+| 3 | Entry 131 section 7: the Equipment screen, with the old "rounds or components" box gone | **done**: a rail slot of its own, three lists, a form generated from the one field list so the screen and the record cannot drift, autocomplete offering earlier values, and a name already used refused rather than silently overwriting. The old box is gone and the column carries a link to the screen instead. |
 | 4 | Entry 131 section 8: the ballistics page rebuilt | not started |
 | 5 | Entry 131 section 10: Compare loads rebuilt | not started |
 | 6 | Question 37's control: saying which bulls were aimed at, on the sheet | not started |
