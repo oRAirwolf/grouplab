@@ -6981,6 +6981,29 @@ GL-LR300-TA4  markers 0 and 22  10.1980 in on the sheet, 10.1983 in in the PDF
 **It cannot pass by doing nothing.** A definition that stores no markers fails it by name rather than returning quietly, which is the way a measurement test usually rots.
 
 
+# Fewer CI runs, and a nightly that cannot be missed
+
+Entry 141 section 2, workflow files only. No repository setting was touched.
+
+## One run per branch, and the newest wins
+
+`build and test` now has a concurrency group of workflow and branch, with cancel in progress. Two pushes a few minutes apart used to build the same code twice over to the end.
+
+It is not only waste. On 2026-09-22 a `windows-latest` runner was lost after 52 minutes on a run that a later push had already made pointless, and the red it left on main had nothing whatever to do with the code: the identical tree passed on the other branch in the same minutes. A cancelled run says "cancelled", which is a word nobody has to investigate.
+
+**And pushing goes to main only from now on.** Every push used to go to `phase-1` and `main` at the same commit, so everything ran twice. Nothing depends on `phase-1` any more: the nightly already listens to main alone, the website workflow runs from main, and `main` is force-set to the tested commit before every push. The branch stays where it is as a record; nothing new goes to it.
+
+## A nightly that a quiet day cannot lose
+
+The `workflow_run` path only fires when a push happens. A day with no push produces no build, and a day whose runs were cancelled produces none either, which is how a nightly quietly stops existing without anybody noticing.
+
+`nightly.yml` now also runs on a schedule at 12:00 UTC. It builds **the newest commit on main that `build and test` passed on**, and it does nothing at all where that commit already carries a per-build tag: a schedule exists to catch a day with no push, not to publish the same code twice. Both cases say so in the run summary rather than failing.
+
+The commit is now worked out once, in a step of its own, and every later job takes it from there. On the `workflow_run` path it is the commit that was tested, exactly as before; on the schedule it is the one the schedule found. The freshness check of entry 123, which stops a nightly publishing a commit main has moved past, stays on the `workflow_run` path where it belongs.
+
+`ReleaseAssetTests` holds all of it: the schedule's cron, that the resolved commit is what packaging and publishing use, that `head_branch` appears nowhere, and the concurrency group on both workflows.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

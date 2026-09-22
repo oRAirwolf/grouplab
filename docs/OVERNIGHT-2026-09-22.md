@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: read at the start of every wake-up, updated after every commit.
 
-**Next step:** entry 141 section 2, the CI changes, then section 4, then the interface work of section 5.
+**Next step:** entry 141 section 4, the sheet's own marks as the size reference, then the interface work of section 5.
 
 ---
 
@@ -27,7 +27,7 @@ The scale check measures 8 to 10 inches and agrees to **0.0000 to 0.0006 in**, a
 |---|---|---|
 | 1.1 | Print path covered by tests that need no printer | **done** |
 | 1.2 to 1.5 | Stop pushing at 07:30 Mountain, verify the nightly, print report by 09:00 | not yet: the times have not come |
-| 2 | CI: concurrency, a scheduled nightly, push main only | not started |
+| 2 | CI: concurrency, a scheduled nightly, push main only | **done bar the proof**: `build and test` cancels an older run on the same branch, `nightly.yml` runs at 12:00 UTC on the newest commit main has passed and does nothing where it already has a nightly, and pushing goes to main alone. Section 2.4 wants a run of each path, which needs the schedule to fire |
 | 3 | Finish what is queued | **done before tonight**: the website republish confirmed live, entry 139 section 5 proved from nightly 44 to 49, and the calibre guess on Alan's lists |
 | 4 | Question 38 approved: the sheet's own marks are the reference | not started |
 | 5 | The interface: type scale, graphics, editing shots and tying them to bulls | not started |

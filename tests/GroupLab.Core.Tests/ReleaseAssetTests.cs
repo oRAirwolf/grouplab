@@ -78,9 +78,23 @@ public partial class ReleaseAssetTests
         Assert.Contains("branches: [main]", nightly, StringComparison.Ordinal);
         Assert.DoesNotContain("branches: [phase-1, main]", nightly, StringComparison.Ordinal);
 
-        // It builds the commit that was tested, never a branch head that may have moved.
-        Assert.Contains("ref: ${{ github.event.workflow_run.head_sha }}", nightly, StringComparison.Ordinal);
-        Assert.DoesNotContain("ref: ${{ github.event.workflow_run.head_branch }}", nightly, StringComparison.Ordinal);
+        // It builds the commit that was tested, never a branch head that may have moved. Entry 141 section 2.3 added a scheduled path, so
+        // the commit is worked out once and every later job takes it from there rather than from the event: on the workflow_run path it is
+        // the commit that was tested, and on the schedule it is the newest commit on main that "build and test" passed on.
+        Assert.Contains("sha: ${{ steps.pick.outputs.sha }}", nightly, StringComparison.Ordinal);
+        Assert.Contains("ref: ${{ needs.name-it.outputs.sha }}", nightly, StringComparison.Ordinal);
+        Assert.Contains("SHA: ${{ needs.name-it.outputs.sha }}", nightly, StringComparison.Ordinal);
+        Assert.Contains("sha=\"${{ github.event.workflow_run.head_sha }}\"", nightly, StringComparison.Ordinal);
+        Assert.DoesNotContain("github.event.workflow_run.head_branch", nightly, StringComparison.Ordinal);
+
+        // The schedule catches a day with no push, and never publishes the same commit twice.
+        Assert.Contains("cron: \"0 12 * * *\"", nightly, StringComparison.Ordinal);
+        Assert.Contains("github.event_name == 'schedule'", nightly, StringComparison.Ordinal);
+        Assert.Contains("refs/tags/v*-nightly.*", nightly, StringComparison.Ordinal);
+
+        // Entry 141 section 2.2: a newer push cancels the older run on the same branch.
+        Assert.Contains("group: ${{ github.workflow }}-${{ github.ref }}", ci, StringComparison.Ordinal);
+        Assert.Contains("cancel-in-progress: true", ci, StringComparison.Ordinal);
 
         // Pre-releases under a fixed rolling tag and a versioned one, so the addresses never change and releases/latest is left alone.
         Assert.Contains("--prerelease", nightly, StringComparison.Ordinal);

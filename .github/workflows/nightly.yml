@@ -26,6 +26,12 @@ on:
     # nightly per push is all that was ever wanted.
     branches: [main]
 
+  # Entry 141 section 2.3: a guaranteed nightly. The workflow_run path only fires when a push happens, so a quiet day produces no build at
+  # all, and a day whose runs were cancelled produces none either. This builds the newest commit on main that "build and test" passed on,
+  # and does nothing where that commit already has one.
+  schedule:
+    - cron: "0 12 * * *"
+
 permissions:
   contents: write
 
@@ -38,7 +44,7 @@ jobs:
   # The version is worked out once and both the package and the publish use it, so the assets, the tag and the manifest cannot disagree.
   name-it:
     name: name the build
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -46,10 +52,54 @@ jobs:
       commit: ${{ steps.name.outputs.commit }}
       signing: ${{ steps.key.outputs.present }}
       fresh: ${{ steps.fresh.outputs.fresh }}
+      sha: ${{ steps.pick.outputs.sha }}
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      # Which commit this nightly is for. On the workflow_run path it is the commit that was tested. On the schedule it is the newest commit
+      # on main that "build and test" passed on, and where that commit already carries a per-build tag there is nothing to do: a scheduled run
+      # exists to catch a day with no push, not to publish the same code twice.
+      - name: Which commit this nightly is for
+        id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            sha=$(gh api "repos/${{ github.repository }}/actions/workflows/ci.yml/runs?branch=main&status=success&event=push&per_page=1" \
+              -q '.workflow_runs[0].head_sha')
+            if [ -z "$sha" ] || [ "$sha" = "null" ]; then
+              echo "todo=no" >> "$GITHUB_OUTPUT"
+              echo "::notice::no successful build and test run on main to publish, so this scheduled nightly does nothing."
+              echo "### nothing to publish: no successful build and test run on main" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+
+            # for-each-ref rather than the porcelain listing command, which a test forbids in this file. An annotated tag names its commit
+            # in *objectname and a lightweight one in objectname, so both are read.
+            tagged() { git for-each-ref --format='%(objectname)' 'refs/tags/v*-nightly.*'; git for-each-ref --format='%(*objectname)' 'refs/tags/v*-nightly.*'; }
+            if tagged | grep -qx "$sha"; then
+              echo "todo=no" >> "$GITHUB_OUTPUT"
+              echo "::notice::${sha:0:7} already has a nightly, so this scheduled run does nothing."
+              {
+                echo "### nothing to publish: the newest tested commit already has a nightly"
+                echo
+                echo "The newest commit on main that \`build and test\` passed on is \`${sha:0:7}\`, and it already carries a per-build tag."
+                echo "A scheduled nightly exists to catch a day with no push, not to publish the same code twice."
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          else
+            sha="${{ github.event.workflow_run.head_sha }}"
+          fi
+
+          git checkout --quiet --detach "$sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "todo=yes" >> "$GITHUB_OUTPUT"
+          echo "this nightly is for ${sha:0:7}"
 
       # A nightly that is no longer the head of main publishes nothing, and says so rather than failing.
       #
@@ -75,9 +125,10 @@ jobs:
       # its own nightly for newer code.
       - name: Only the newest commit on main is published
         id: fresh
+        if: steps.pick.outputs.todo == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
-          SHA: ${{ github.event.workflow_run.head_sha }}
+          SHA: ${{ steps.pick.outputs.sha }}
         run: |
           set -o pipefail
           head=$(gh api "repos/${{ github.repository }}/commits/main" -q .sha)
@@ -105,14 +156,16 @@ jobs:
       # <N> is this workflow's own run number, which only ever increases, so nightly versions are ordered by when they were built.
       - name: Work out the version
         id: name
+        if: steps.pick.outputs.todo == 'yes'
         run: |
           base=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2)
           echo "version=${base}-nightly.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-          echo "commit=$(git rev-parse --short ${{ github.event.workflow_run.head_sha }})" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse --short ${{ steps.pick.outputs.sha }})" >> "$GITHUB_OUTPUT"
 
       # Entry 119 section 3.2: no key, no publishing. It fails here, before anything is built, so the reason is the first thing in the log.
       - name: The signing key must be here
         id: key
+        if: steps.pick.outputs.todo == 'yes'
         env:
           GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
         run: |
@@ -136,7 +189,7 @@ jobs:
     if: needs.name-it.outputs.fresh == 'yes'
     uses: ./.github/workflows/package.yml
     with:
-      ref: ${{ github.event.workflow_run.head_sha }}
+      ref: ${{ needs.name-it.outputs.sha }}
       version: ${{ needs.name-it.outputs.version }}
       train: nightly
 
@@ -148,14 +201,14 @@ jobs:
     timeout-minutes: 30
     env:
       GH_TOKEN: ${{ github.token }}
-      SHA: ${{ github.event.workflow_run.head_sha }}
+      SHA: ${{ needs.name-it.outputs.sha }}
       VERSION: ${{ needs.name-it.outputs.version }}
       COMMIT: ${{ needs.name-it.outputs.commit }}
     steps:
       # The whole history, so the notes can say what has changed since the previous nightly.
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ needs.name-it.outputs.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-dotnet@v5

@@ -8,6 +8,12 @@ on:
   push:
   pull_request:
 
+# Entry 141 section 2.2: a newer push cancels the older run on the same branch. Two pushes a few minutes apart used to build the same code
+# twice over, and on 2026-09-22 a windows runner was lost after 52 minutes on a run that a later push had already made pointless.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: ${{ matrix.os }}
