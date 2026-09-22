@@ -164,6 +164,7 @@ public sealed partial class MainWindow
             return;
         }
 
+        compareCharts.Clear();
         compareColumn.Children.Add(Line($"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (compareFooting is null ? "" : " " + compareFooting)));
 
         // The groups side by side, each with its plot and its figures with intervals.
@@ -197,6 +198,22 @@ public sealed partial class MainWindow
 
         compareColumn.Children.Add(cards);
         compareColumn.Children.Add(Note("Each plot: the dots are the shots about their own bulls, excluded ones left out; the cross is the group's centre, the dotted circle CEP 50 and the dashed circle CEP 90."));
+
+        // Entry 131 section 10: the figures with their intervals, drawn. This is the one picture that makes the project's whole argument
+        // visible. Two loads reading 0.42 in and 0.51 in look like a winner and a loser in a table; drawn with their intervals, anybody can
+        // see in a moment whether these shots can tell them apart at all.
+        foreach (var (title, rows) in new (string, List<IntervalRow>)[]
+        {
+            ("Mean radius", [.. report.Groups.Select(g => new IntervalRow(g.Name, g.MeanRadius.Value, g.MeanRadius.Lower, g.MeanRadius.Upper))]),
+            ("Sigma", [.. report.Groups.Select(g => new IntervalRow(g.Name, g.Rayleigh.Sigma.Value, g.Rayleigh.Sigma.Lower, g.Rayleigh.Sigma.Upper))]),
+        })
+        {
+            var chart = new IntervalChart { Rows = rows, Length = inches => units.Length(inches) };
+            compareCharts[title] = chart;
+            compareColumn.Children.Add(Ruled(title + ", with the range each could really be"));
+            compareColumn.Children.Add(chart);
+            compareColumn.Children.Add(Note(chart.Description));
+        }
 
         // The verdict, which never ranks by point estimate.
         var verdict = new StackPanel { Spacing = Tokens.Space4 };
@@ -245,6 +262,12 @@ public sealed partial class MainWindow
     internal void ShowCompare(bool on = true) => Go(on ? Destination.Compare : Destination.Analyse);
 
     internal bool ShowingCompare => destination == Destination.Compare;
+
+    /// <summary>The interval charts by figure, so a headless test can read what each one says.</summary>
+    private readonly Dictionary<string, IntervalChart> compareCharts = [];
+
+    /// <summary>What the comparison's interval charts say, for the headless tests.</summary>
+    internal IReadOnlyList<string> CompareChartSays => [.. compareCharts.Values.Select(c => c.Description)];
 
     internal LoadComparisonReport? Comparison => comparison;
 
