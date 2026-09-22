@@ -4,6 +4,10 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 
 **Next step:** queue item 1, the entry 131 section 1 checklist pass over every screen, starting with the analysis panel rebuild. Then item 6, question 37's control. `scripts/Test-RealUpdate.ps1` runs again once the nightly carrying entry 139 publishes, which is the proof entry 139 section 5 asks for. The website still needs republishing, and the sync's fixed live check still needs Alan to run the installer on the server.
 
+**Stopped at Alan's request after `6c32b1e`,** with queue items 4 and 5 finished. Local suites green alone: Core 1249, App 169. CI is running on `6c32b1e` on both branches.
+
+**One red to know about, and it is not the code.** The `build and test` run on main for `28a3365` failed on `windows-latest` with every step after `setup-dotnet` unfinished: the runner was lost after 52 minutes. The identical tree passed on `windows-latest` on phase-1 in the same minutes, and both local suites are green, so there is nothing to fix. The push of `6c32b1e` re-runs it.
+
 ---
 
 ## The update that installed and did not reopen
