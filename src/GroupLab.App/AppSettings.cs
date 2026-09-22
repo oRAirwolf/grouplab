@@ -232,13 +232,26 @@ public sealed class AppSettingsStore(string path)
     /// What one version leaves for the next across an update, entry 123 sections 2.3 and 2.4: the version it was, and the screen the person
     /// was on. The new version says one line about it, goes back to that screen, and clears it, so it is said once and never again.
     /// </summary>
-    public (string From, string Screen)? LoadHandover() => Read(file =>
+    public (string From, string Screen, DateTimeOffset? At)? LoadHandover() => Read(file =>
         file["afterUpdate"] is JsonObject after && (string?)after["from"] is { Length: > 0 } from
-            ? ((string From, string Screen)?)(from, (string?)after["screen"] ?? nameof(Destination.Analyse))
+            ? ((string From, string Screen, DateTimeOffset? At)?)(
+                from,
+                (string?)after["screen"] ?? nameof(Destination.Analyse),
+                DateTimeOffset.TryParse((string?)after["at"], System.Globalization.CultureInfo.InvariantCulture, out var at) ? at : null)
             : null);
 
+    /// <summary>
+    /// What one version leaves for the next, with the moment the installer was started. The moment is what lets the new version tell a
+    /// relaunch that happened on its own from one a person had to do by hand minutes later, which is the fault Alan found: the installer
+    /// brought GroupLab back before it had finished writing its files, the new process died, and nothing said so.
+    /// </summary>
     public bool SaveHandover(string from, string screen) => Save(file =>
-        file["afterUpdate"] = new JsonObject { ["from"] = from, ["screen"] = screen });
+        file["afterUpdate"] = new JsonObject
+        {
+            ["from"] = from,
+            ["screen"] = screen,
+            ["at"] = DateTimeOffset.UtcNow.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
+        });
 
     /// <summary>Forgets the handover, which the new version does as soon as it has said its line.</summary>
     public bool ClearHandover() => Save(file => file.Remove("afterUpdate"));

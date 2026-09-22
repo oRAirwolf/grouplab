@@ -272,6 +272,25 @@ public partial class MainWindow
     internal Action CloseForUpdate { get; set; } = () => { };
 
     /// <summary>
+    /// How long after the installer is started a relaunch still counts as the installer's own. An update takes a few seconds to install and
+    /// the relaunch follows it immediately; two minutes is far longer than that and far shorter than the gap before somebody notices
+    /// GroupLab did not come back and starts it themselves.
+    /// </summary>
+    internal static readonly TimeSpan RelaunchWindow = TimeSpan.FromMinutes(2);
+
+    /// <summary>How long after the installer started this GroupLab was started, where that was too long to have been the installer's doing.</summary>
+    private TimeSpan? relaunchMissed;
+
+    /// <summary>
+    /// What Settings says about a relaunch that did not happen, or null where the last update came back on its own. Entry 123's update test
+    /// watched for the window and this is the same question asked of the person's own machine, where no test is watching.
+    /// </summary>
+    internal string? RelaunchMissedSays => relaunchMissed is { } gap
+        ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"The last update installed but GroupLab did not reopen on its own: it was {gap.TotalSeconds:0} seconds before it started again, and that was you starting it. The update itself worked and nothing was lost. If it happens again, the log line to send is update.relaunch.missed.")
+        : null;
+
+    /// <summary>
     /// The first launch after an update, entry 123 section 2.4: one line saying what it updated from and to, with a way to read what changed,
     /// said once. It is the same bar, so nothing new appears on the screen and nothing has to be dismissed before working.
     /// <para>
@@ -286,6 +305,16 @@ public partial class MainWindow
         }
 
         settingsStore.ClearHandover();
+
+        // Alan's fault, found on nightly 31 to 35: the installer brought GroupLab back before it had finished writing its files, the new
+        // process died on its first line, and the only sign was a crash record the next time somebody started it by hand. So the handover
+        // carries the moment the installer was started, and a start long after that moment is a start a person had to make themselves.
+        if (handover.At is { } startedAt && DateTimeOffset.UtcNow - startedAt > RelaunchWindow)
+        {
+            relaunchMissed = DateTimeOffset.UtcNow - startedAt;
+            DiagnosticLog.Warn("update.relaunch.missed", ("after", $"{relaunchMissed.Value.TotalSeconds:0} s"), ("from", handover.From), ("to", ThisBuild.Version.Number));
+        }
+
         if (Enum.TryParse(handover.Screen, out Destination screen) && Enum.IsDefined(screen))
         {
             Go(screen);

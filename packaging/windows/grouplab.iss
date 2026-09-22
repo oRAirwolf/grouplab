@@ -48,6 +48,13 @@ SolidCompression=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 WizardStyle=modern
+; NOTES-FROM-PLANNING.md entry 123 and the relaunch fault Alan found. GroupLab's self-update passes /CLOSEAPPLICATIONS, and with that Inno
+; Setup uses the Restart Manager, which by default restarts the applications it closed. So two different things were bringing GroupLab back:
+; the Restart Manager, and the [Run] entry below. The Restart Manager's restart came while files were still being written, and the new
+; process died on its first line with "Could not load file or assembly 'Avalonia.Themes.Fluent'" because that file was not there yet.
+;
+; Only the [Run] entry may relaunch GroupLab, because that runs after every file is in place.
+RestartApplications=no
 ; NOTES-FROM-PLANNING.md entry 134. Without this the setup executable carries Inno Setup's own icon, so the file a person downloads, the one
 ; in their Downloads list and the one on the taskbar while it runs are not recognisably GroupLab, while the application it installs is. The
 ; path is relative to this script, and it is the same icon the application uses: one mark, one file, no second copy to drift.

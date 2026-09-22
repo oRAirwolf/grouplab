@@ -271,6 +271,9 @@ public sealed partial class MainWindow : Window
     /// <summary>The zero offset pictures by block, entry 131 section 6.2, so a headless test can read what each one is showing.</summary>
     private readonly Dictionary<string, ZeroOffsetPicture> zeroOffsetPictures = [];
 
+    /// <summary>What Settings says about an update that installed and did not reopen, empty where the last one came back on its own.</summary>
+    private readonly TextBlock settingsRelaunch = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Alert } };
+
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = 6 };
@@ -741,6 +744,10 @@ public sealed partial class MainWindow : Window
         // the person was on. It is read and cleared here, before anything can look for another update.
         bool justUpdated = SayIfUpdated();
 
+        // SayIfUpdated is what notices a relaunch that did not happen, and the crash panel above it was built before that ran, so it is
+        // filled again now that the answer is known.
+        ShowPendingCrashes();
+
         // Entry 119 sections 4.1 and 4.2: it looks as often as the person asked, on every launch unless they said otherwise, and a check
         // that finds nothing says nothing. It is not awaited, so a slow or unreachable train never holds the window closed.
         //
@@ -772,6 +779,9 @@ public sealed partial class MainWindow : Window
     {
         crashBanner.Children.Clear();
         settingsCrashes.Children.Clear();
+
+        settingsRelaunch.Text = RelaunchMissedSays ?? "";
+        settingsRelaunch.IsVisible = RelaunchMissedSays is not null;
         var pending = CrashReporter.PendingCrashes(DiagnosticLog.Current.Directory);
         crashBanner.IsVisible = pending.Count > 0;
         if (pending.Count == 0)
@@ -3757,6 +3767,10 @@ public sealed partial class MainWindow : Window
             }
         })));
         column.Children.Add(Line(SupportLink.Exists ? SupportLink.OpensTheSupportPage : SupportLink.NoAddressYet));
+
+        // Alan's relaunch fault: where the last update installed but GroupLab did not come back on its own, this says so. It is in Settings
+        // rather than on the marking screen because it is a fact about the build, not something to settle before working.
+        column.Children.Add(settingsRelaunch);
 
         // Entry 41 sections 5 and 6: the crash records not yet dealt with, which the marking panel's banner also offers until they are.
         column.Children.Add(Ruled("Crash records"));

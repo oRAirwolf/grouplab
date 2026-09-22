@@ -270,4 +270,94 @@ public class UpdateBarTests : IDisposable
         Assert.DoesNotContain(TestDefaults.Outside.Asked.Skip(asked), a => a.What == "get");
         after.Close();
     }
+    /// <summary>
+    /// The relaunch fault Alan found, and the two things that were missing when it happened.
+    /// <para>
+    /// He pressed Install and restart on nightly 31. The installer ran, the new build was brought back before its files were all written,
+    /// and it died on its first line: "Could not load file or assembly 'Avalonia.Themes.Fluent'". The only sign was a crash record the next
+    /// time he started GroupLab himself, several minutes later, and nothing anywhere said the relaunch had not happened.
+    /// </para>
+    /// <para>
+    /// So the handover carries the moment the installer was started, and a start long after that moment is one a person made themselves.
+    /// This is the same question the update test asks by watching for the window, asked on a machine where nothing is watching.
+    /// </para>
+    /// </summary>
+    [AvaloniaFact]
+    public void AnUpdateThatDidNotReopenOnItsOwnIsSaidSoInSettings()
+    {
+        var store = new AppSettingsStore(_settings);
+
+        // An update started two minutes and a half ago, which is longer than a relaunch takes.
+        Assert.True(store.SaveHandover("0.2.0-nightly.31", nameof(Destination.Analyse)));
+        var file = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(_settings))!.AsObject();
+        file["afterUpdate"]!["at"] = DateTimeOffset.UtcNow.Subtract(MainWindow.RelaunchWindow + TimeSpan.FromSeconds(30)).ToString("O");
+        File.WriteAllText(_settings, file.ToJsonString());
+
+        var window = new MainWindow(store) { Width = 1400, Height = 900 };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            string? says = window.RelaunchMissedSays;
+            Assert.NotNull(says);
+            Assert.Contains("did not reopen on its own", says!, StringComparison.Ordinal);
+            Assert.Contains("update.relaunch.missed", says!, StringComparison.Ordinal);
+            Assert.Contains("nothing was lost", says!, StringComparison.Ordinal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>And an update that did come back on its own says nothing, because there is nothing wrong to report.</summary>
+    [AvaloniaFact]
+    public void AnUpdateThatReopenedOnItsOwnSaysNothing()
+    {
+        var store = new AppSettingsStore(_settings);
+        Assert.True(store.SaveHandover("0.2.0-nightly.31", nameof(Destination.Analyse)));
+
+        var window = new MainWindow(store) { Width = 1400, Height = 900 };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Null(window.RelaunchMissedSays);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// An exit GroupLab chose is not a crash. Alan's report raised the possibility that the installer had killed GroupLab mid-save and that
+    /// this was being recorded as a crash; the record showed otherwise, and this holds the reason it could not have been: a crash record is
+    /// written from an unhandled exception and from nothing else, so closing for an update leaves none.
+    /// </summary>
+    [AvaloniaFact]
+    public void ClosingForAnUpdateRecordsNoCrash()
+    {
+        string logs = Path.Combine(Path.GetTempPath(), $"grouplab-logs-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(logs);
+        try
+        {
+            Assert.Empty(GroupLab.App.Diagnostics.CrashReporter.PendingCrashes(logs));
+
+            var window = new MainWindow(new AppSettingsStore(_settings)) { Width = 1400, Height = 900 };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Empty(GroupLab.App.Diagnostics.CrashReporter.PendingCrashes(logs));
+        }
+        finally
+        {
+            Directory.Delete(logs, recursive: true);
+        }
+    }
+
 }
