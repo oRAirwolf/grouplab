@@ -256,7 +256,7 @@ public sealed partial class MainWindow
         compareColumn.Children.Add(Heading("Tests run"));
         foreach (var test in report.Tests)
         {
-            var block = new StackPanel { Spacing = 2 };
+            var block = new StackPanel { Spacing = Tokens.Space4 };
             block.Children.Add(Readout(test.Name, test.PValue < 0.001 ? "p < 0.001" : "p = " + test.PValue.ToString("0.000", CultureInfo.InvariantCulture), Tokens.SecondarySize));
             block.Children.Add(Line(test.Verdict));
             block.Children.Add(Note(test.Power));

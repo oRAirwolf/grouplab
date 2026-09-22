@@ -57,7 +57,7 @@ public sealed class PrintWindow : Window
     private readonly ListBox list = new();
     private readonly TextBlock title = new() { FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock summary = new() { TextWrapping = TextWrapping.Wrap };
-    private readonly StackPanel loadBlock = new() { Spacing = 6 };
+    private readonly StackPanel loadBlock = new() { Spacing = Tokens.Space8 };
     private readonly RadioButton blank = new() { Content = "Blank, to write on at the range", GroupName = "loadBlock", IsChecked = true };
     private readonly RadioButton filled = new() { Content = "Filled in now, from these fields", GroupName = "loadBlock" };
     private readonly StackPanel fields = new() { Spacing = 4 };
@@ -137,7 +137,7 @@ public sealed class PrintWindow : Window
         blank.Click += (_, _) => ShowFields();
         filled.Click += (_, _) => ShowFields();
 
-        var details = new StackPanel { Margin = new Thickness(16), Spacing = 10 };
+        var details = new StackPanel { Margin = new Thickness(16), Spacing = Tokens.Space12 };
         details.Children.Add(designer);
         details.Children.Add(title);
         details.Children.Add(summary);
@@ -192,7 +192,7 @@ public sealed class PrintWindow : Window
     {
         list.ItemsSource = sheets.Select(s =>
         {
-            var item = new StackPanel { Spacing = 1, Margin = new Thickness(2, 4) };
+            var item = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(2, 4) };
             item.Children.Add(new TextBlock { Text = s.Family, FontSize = Tokens.DetailSize, Opacity = 0.7 });
             item.Children.Add(new TextBlock { Text = s.Definition.Name, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
             item.Children.Add(new TextBlock { Text = s.Summary, FontSize = Tokens.LabelSize, TextWrapping = TextWrapping.Wrap });
@@ -803,7 +803,7 @@ public sealed class PrintWindow : Window
 
     private static StackPanel Row(params Control[] children)
     {
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8 };
         foreach (var child in children)
         {
             row.Children.Add(child);

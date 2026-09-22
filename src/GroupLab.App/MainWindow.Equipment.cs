@@ -164,7 +164,7 @@ public sealed partial class MainWindow
 
             equipmentFields[field.Key] = box;
             equipmentForm.Children.Add(box);
-            equipmentForm.Children.Add(new StackPanel { Spacing = 2, Name = "EquipmentHints_" + field.Key });
+            equipmentForm.Children.Add(new StackPanel { Spacing = Tokens.Space4, Name = "EquipmentHints_" + field.Key });
         }
 
         equipmentForm.Children.Add(Row(

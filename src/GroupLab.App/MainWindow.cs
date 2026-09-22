@@ -66,7 +66,7 @@ public sealed partial class MainWindow : Window
 
     private readonly TextBlock stageSummary = new() { TextWrapping = TextWrapping.Wrap, FontSize = Tokens.SecondarySize };
 
-    private readonly StackPanel stageDetail = new() { Spacing = 2 };
+    private readonly StackPanel stageDetail = new() { Spacing = Tokens.Space4 };
 
     private bool showingStage;
 
@@ -231,7 +231,7 @@ public sealed partial class MainWindow : Window
     /// <summary>The analysis state's shot table: each scoring shot's offset from its own bull, a row that selects it.</summary>
     private readonly StackPanel offsetTable = new() { Spacing = 0 };
 
-    private readonly StackPanel loadLines = new() { Spacing = 2 };
+    private readonly StackPanel loadLines = new() { Spacing = Tokens.Space4 };
 
     private readonly Expander timelineExpander = new() { HorizontalAlignment = HorizontalAlignment.Stretch, Padding = new Thickness(0) };
 
@@ -253,7 +253,7 @@ public sealed partial class MainWindow : Window
     private readonly CheckBox analyseSightersBox = new() { Content = "Analyse sighters" };
 
     /// <summary>The sighters' own group, when they are analysed: their zero readout and what their count allows.</summary>
-    private readonly StackPanel sighterPanel = new() { Spacing = 2 };
+    private readonly StackPanel sighterPanel = new() { Spacing = Tokens.Space4 };
 
     /// <summary>Entry 105 section 1: the side columns' limits, so neither can be dragged shut, and the centre keeps room for the sheet or plot.</summary>
     private const double SideMinimum = 260, SideMaximum = 760, CentreMinimum = 320;
@@ -264,7 +264,7 @@ public sealed partial class MainWindow : Window
     /// the statistics say how well the rifle shoots, read afterwards sitting down. It also has a different truth condition, being a claim
     /// about what the rifle will do next rather than a description of the shots on the sheet.
     /// </summary>
-    private readonly StackPanel zeroPanel = new() { Spacing = 2 };
+    private readonly StackPanel zeroPanel = new() { Spacing = Tokens.Space4 };
 
     // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
     // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
@@ -276,10 +276,10 @@ public sealed partial class MainWindow : Window
 
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
-    private readonly StackPanel selection = new() { Spacing = 6 };
-    private readonly StackPanel shotList = new() { Spacing = 2 };
+    private readonly StackPanel selection = new() { Spacing = Tokens.Space8 };
+    private readonly StackPanel shotList = new() { Spacing = Tokens.Space4 };
     private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space8, IsVisible = false };
-    private readonly StackPanel scaleInputs = new() { Spacing = 6 };
+    private readonly StackPanel scaleInputs = new() { Spacing = Tokens.Space8 };
     // Entry 111 section 3: the reasons in words, "Called flyer", not the enum's names; the list is in the enum's order, so its index is the reason.
     private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetValues<ExclusionReason>().Select(r => r.Words()).ToList(), SelectedIndex = 0, MinWidth = 140 };
 
@@ -317,7 +317,7 @@ public sealed partial class MainWindow : Window
     /// The calibres the confirmation step offers: the one the holes look most like, and beside it any this sheet's holes cannot be told
     /// apart from. A person picks one instead of typing it, and typing it is still there for everything else.
     /// </summary>
-    private readonly WrapPanel calibreOffers = new() { ItemSpacing = 6, LineSpacing = 4, IsVisible = false };
+    private readonly WrapPanel calibreOffers = new() { ItemSpacing = Tokens.Space8, LineSpacing = 4, IsVisible = false };
 
     /// <summary>
     /// Whether the person has answered the calibre question on this marking, NOTES-FROM-PLANNING.md entry 131 section 6.3. Setting a calibre
@@ -3447,7 +3447,7 @@ public sealed partial class MainWindow : Window
     /// <summary>A row of controls that wraps onto a second line rather than running past its column (entry 105 section 1).</summary>
     private static WrapPanel Row(params Control[] children)
     {
-        var row = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 6, LineSpacing = 4 };
+        var row = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = Tokens.Space8, LineSpacing = 4 };
         foreach (var child in children)
         {
             row.Children.Add(child);
@@ -4135,7 +4135,7 @@ public sealed partial class MainWindow : Window
             sighterPanel.Children.Add(Line(withheld));
         }
 
-        var zero = new StackPanel { Spacing = 2 };
+        var zero = new StackPanel { Spacing = Tokens.Space4 };
         ShowZero(view, zero, "sighter-zero");
         sighterPanel.Children.Add(zero);
     }

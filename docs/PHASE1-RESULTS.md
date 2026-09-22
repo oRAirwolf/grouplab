@@ -7041,6 +7041,29 @@ The photograph Alan opened, which flagged all fifteen of its holes with the righ
 At a third doubles the marks fall into two clear sizes and entry 82 section 3 takes over, refusing to read a size and asking for the calibre, so nothing is flagged at all. That is the opposite of what entry 141 section 4.2 wants, and the two sizes cannot be told from two calibres by their sizes alone: a merged pair is 1.41 times a single across, and .224 against .308 is 1.38. **Question 40** carries it with what I would do. Both rows are pinned by tests, so whichever way it is settled the change is one line.
 
 
+# One type scale, one spacing scale, and a measurement instead of a squint
+
+Entry 141 section 5.1, the first part of the interface work.
+
+## The scales were already there; nothing held them
+
+`Tokens` has had a six-size type scale and a six-step spacing scale for some time, and `Entry109Tests` already walks a rendered window and fails on a text size that is not on the scale. That is the better of the two checks **where it reaches**, and it only reaches what a test happens to render: a size set on a control no headless test shows is invisible to it, and stays invisible until somebody looks at that screen.
+
+`TypeScaleTests` reads the source instead. Every file under `src/GroupLab.App` outside the theme folder, every commit:
+
+- **No font size is a number.** There were none to begin with, so this holds a line that was already good.
+- **Every gap is a step on the scale.** There were **eighteen** that were not: gaps of 1, 2, 6 and 10 pixels scattered through the marking window, the compare screen, the equipment form, the loads column and the print screen. They are now `Space4`, `Space8` and `Space12`.
+- **The scale is five or six sizes**, because a scale of ten is not a scale.
+
+## And a defect I did not find, which is the point of measuring
+
+Reading the analysis screen's render at 1280 by 720, the figures in the right column looked cut off at the window's edge: "0.132 in" appeared to lose its last letter under the scrollbar. I changed the side columns to refuse a sideways scroll, re-rendered, and it looked exactly the same.
+
+**So I measured it instead of looking harder.** `NothingIsCutOffTests` renders the analysis window at both of entry 141's sizes, asks Avalonia where it actually put every word, and fails on any whose right edge is past the window's. Nothing is past it, at either size. The figures sit close to the edge and are inside it, and the change I had made fixed nothing, so it is reverted rather than kept as a fix for a defect that was not there.
+
+What is kept is the test. A screenshot is looked at once, on the night it is taken; this runs on every commit at both sizes and fails with the word and how far out it landed.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

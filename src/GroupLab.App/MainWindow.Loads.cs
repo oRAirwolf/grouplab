@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using GroupLab.App.Diagnostics;
+using GroupLab.App.Theme;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Trace;
 
@@ -20,8 +21,8 @@ namespace GroupLab.App;
 public sealed partial class MainWindow
 {
     private readonly ComboBox bullLoad = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
-    private readonly StackPanel bullLoadLines = new() { Spacing = 2 };
-    private readonly StackPanel aimedAtLines = new() { Spacing = 2 };
+    private readonly StackPanel bullLoadLines = new() { Spacing = Tokens.Space4 };
+    private readonly StackPanel aimedAtLines = new() { Spacing = Tokens.Space4 };
     private HashSet<int> bullSelection = [];
 
     private void BuildBullLoads(StackPanel panel)
