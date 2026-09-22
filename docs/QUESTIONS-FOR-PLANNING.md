@@ -12,6 +12,62 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, known limits of the calibre guess, recorded rather than tuned
+
+**Status: recorded 2026-09-22, on Alan's instruction not to tune the guess on four scans.**
+
+The guess snaps to Alan's lists and offers the neighbours it cannot separate. On the four range scans of known calibre it preselects the right one on two, offers it on three, and misses on one. These are the two that are not right, written down so they are not rediscovered:
+
+| scan | known | preselected | offered beside it | what is wrong |
+|---|---|---|---|---|
+| 3 | 6.5 Creedmoor, .264 | .277 | **.264**, .284, .257 | the estimate lands at 0.2708, which is 0.0068 from .264 and 0.0062 from .277, so the wrong one is nearer by four ten-thousandths |
+| 4 | .22 LR, .222 | .204 | .172 | the estimate lands at 0.1901, and **.222 is not offered at all**: its holes measure 0.052 in under the bullet where the three centrefire sheets give 0.013 to 0.019 |
+
+**Scan 3 is the estimator running a little high.** Putting back a fixed 0.0202 in for the paper overshoots by 0.002 to 0.007 in on centrefire, and .264 and .277 are only 0.013 in apart, so a small bias is enough to tip it. The right answer is still offered, second, and the reading is marked rough.
+
+**Scan 4 is the rimfire blind spot** question 38 found: the hole-to-bullet ratio is not calibre-independent, and it was measured on .264, .308 and .338 only.
+
+**Neither is tuned.** Four scans, of which one is rimfire, cannot fit a correction that would not simply be four numbers memorised. What both need is a measurement across more sheets, and in particular more small-calibre ones. Until then the guess is offered and never applied, which is what makes a miss cost a person one keystroke.
+
+---
+
+## 2026-09-22, question 40: at a third doubles, entry 141 section 4.2 and entry 82 section 3 ask for opposite things
+
+**Status: open, and neither rule was worked around.**
+
+### 1. The two rules
+
+Entry 141 section 4.2:
+
+> The sheet's reference is robust to the doubles it is judging: take it from the marks that agree with each other, never a plain mean of all marks.
+
+Entry 82 section 3, which the code still follows:
+
+> Where the round marks fall clearly into two groups, no one size fits: a sheet shot with two calibres, or one with as many merged pairs as single holes. Nothing is flagged, the veto falls back to the bound, and the description asks for the calibre.
+
+### 2. Where they meet
+
+On a generated sheet of fifteen bulls:
+
+| doubles among the marks | what happens |
+|---|---|
+| 3 of 18 marks, a sixth | the sheet's own quarter-point, unmoved to a thousandth of an inch, and the doubles are flagged |
+| 5 of 20 marks, a quarter | the marks fall into two clear sizes, so entry 82 section 3 refuses to read a size and asks for the calibre. **Nothing is flagged, including the five real doubles** |
+
+Section 4.2 is satisfied in the first row and cannot be in the second while section 3 stands.
+
+### 3. Why it is not obvious which should win
+
+The two sizes on such a sheet are singles and merged pairs. The two sizes on a sheet shot with two calibres are two calibres. **The code cannot tell them apart from the sizes alone**: a merged pair is about twice the area of a single, so about 1.41 times the diameter, and .224 against .308 is 1.38. The measurement that would separate them is not in this evidence.
+
+### 4. What I would do
+
+Where the sheet's own marks are the reference, **take the quarter-point of the smaller group rather than refusing**. Whichever the two sizes turn out to be, the smaller marks are the better estimate of one hole: if they are singles, the doubles are then flagged correctly; if they are a second, smaller calibre, the larger holes are flagged and entry 140 section 3.2's guard turns that into one question about the calibre rather than a flood. Refusing flags nothing either way, which is the worst of the three outcomes on a sheet that really does hold five doubles.
+
+I have not built it. It changes entry 82 section 3's behaviour beyond what entry 141 asked for, and it is a judgement about a case with no measurement behind it. `CryingWolfTests` pins both rows above, so whichever way this is settled the change is one line and the test says what moved.
+
+---
+
 ## 2026-09-22, question 39: three of Alan's five close calibre pairs straddle his own two lists
 
 **Status: open, and handled in the meantime.**

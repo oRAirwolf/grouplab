@@ -166,7 +166,9 @@ public class CalibreSplitTests
         {
             var result = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, new OpenCvSharpBackend(), new RenderDifferenceOptions(CalibreInches: calibre), render);
             var blobs = Blobs(definition, truth, result);
-            Assert.Equal(calibre is null ? HoleSizeSource.Sheet : HoleSizeSource.Calibre, result.HoleSize!.Source);
+            // Entry 141 section 4: twenty round marks outrank a stated calibre, so both runs read the sheet's own quarter-point. What this
+            // test is about is unchanged, and is the stronger claim: the merged pair is flagged and the singles are not, either way.
+            Assert.Equal(HoleSizeSource.Sheet, result.HoleSize!.Source);
             for (int k = 0; k < 20; k++)
             {
                 var mark = Assert.Single(Assert.Single(blobs, b => b.Bull == k).Holes);

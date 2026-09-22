@@ -41,21 +41,44 @@ public class CryingWolfTests
     }
 
     /// <summary>
-    /// Entry 140 sections 3.2 and 3.3, Alan's own case: the same sheet with a calibre too small for it. Every hole reads as about two, and the
-    /// queue says so once, about the calibre, rather than fifteen times about the holes.
+    /// Alan's own case, and what entry 141 section 4 did to it: the same sheet with a calibre too small for it now flags **nothing**, because
+    /// fifteen round marks outrank a stated calibre and the sheet's own quarter-point is what a hole on this sheet actually measures.
+    /// <para>
+    /// This is a better answer than entry 140 section 3.2's one question, and it is the one question 38 earned: a hole is not the bullet, and
+    /// how much smaller it is depends on the paper, the backing and, on a photograph, the light. The flood guard is still there for a sheet
+    /// with too few marks to speak for itself, which is the test below.
+    /// </para>
     /// </summary>
     [Fact]
-    public void AWrongSmallerCalibreRaisesOneQuestionAboutTheCalibreNotFifteenItems()
+    public void AWrongSmallerCalibreNoLongerFloodsBecauseTheSheetOutranksIt()
     {
         double sheet = GeneratedSheet.Detect(Shots).Holes.HoleSize!.FlagInches!.Value;
         var (holes, definition, truth) = GeneratedSheet.Detect(Shots, calibreInches: 0.7 * sheet);
 
-        Assert.Equal(Shots, holes.Holes.Count(h => h.Oversized));
-        Assert.All(holes.Holes, h => Assert.InRange(h.SizeHoles!.Value, 1.5, 2.6));
+        Assert.Equal(HoleSizeSource.Sheet, holes.HoleSize!.Source);
+        Assert.Contains("rather than the", holes.HoleSize.Description, StringComparison.Ordinal);
+        Assert.DoesNotContain(holes.Holes, h => h.Oversized);
+        Assert.Empty(Oversized(GeneratedSheet.Marked(holes, definition, truth).State));
+    }
+
+    /// <summary>
+    /// Entry 140 section 3.2's flood guard, on the sheet that still needs it: too few marks for the sheet to speak for itself, and a calibre
+    /// too small. Five of five flagged raises one item about the calibre, not five about the holes.
+    /// </summary>
+    [Fact]
+    public void ASmallSheetWithAWrongCalibreStillRaisesOneQuestion()
+    {
+        const int few = 5;
+        double sheet = GeneratedSheet.Detect(Shots).Holes.HoleSize!.FlagInches!.Value;
+        var (holes, definition, truth) = GeneratedSheet.Detect(few, calibreInches: 0.7 * sheet);
+
+        Assert.Equal(HoleSizeSource.Calibre, holes.HoleSize!.Source);
+        Assert.Contains("too few to measure one from", holes.HoleSize.Description, StringComparison.Ordinal);
+        Assert.Equal(few, holes.Holes.Count(h => h.Oversized));
 
         var item = Assert.Single(Oversized(GeneratedSheet.Marked(holes, definition, truth).State));
         Assert.Equal("oversized:all", item.Key);
-        Assert.Contains("15 of the 15 marks", item.Sentence, StringComparison.Ordinal);
+        Assert.Contains("5 of the 5 marks", item.Sentence, StringComparison.Ordinal);
         Assert.Contains("the calibre is wrong", item.Sentence, StringComparison.Ordinal);
     }
 
@@ -81,6 +104,42 @@ public class CryingWolfTests
         // Two holes this far over each other hold well under two holes' worth of paper, which is why the threshold is 1.35 and not 2.
         Assert.True(shot.Oversize!.Holes >= new RenderDifferenceOptions().OversizeHoles, $"the pair read as {shot.Oversize.Holes:0.00} holes");
         Assert.All(state.Shots.Where(s => s.Id != shot.Id), s => Assert.Null(s.Oversize));
+    }
+
+    /// <summary>
+    /// Entry 141 section 4.2: the sheet's own reference has to survive the very doubles it is judging. A third of this sheet's marks hold two
+    /// holes each, and the quarter-point is unmoved by them, because a merged pair measures larger than anything else and sits at the top of
+    /// the order. A mean of every mark would be pulled up by each one, and on a sheet like this it would not be a hole size at all.
+    /// </summary>
+    [Fact]
+    public void DoublesAmongTheMarksDoNotMoveTheSheetsOwnReference()
+    {
+        var plain = GeneratedSheet.Detect(Shots);
+        var (holes, definition, truth) = GeneratedSheet.Detect(Shots, doubledBulls: 3);
+
+        Assert.Equal(HoleSizeSource.Sheet, holes.HoleSize!.Source);
+
+        // The reference moves by less than a thousandth of an inch, with a fifth of the marks now pairs.
+        Assert.Equal(plain.Holes.HoleSize!.FlagInches!.Value, holes.HoleSize.FlagInches!.Value, 3);
+
+        // And the doubles are what gets flagged, not the singles.
+        var state = GeneratedSheet.Marked(holes, definition, truth).State;
+        Assert.InRange(state.Shots.Count(s => s.Oversize is not null), 1, 5);
+        Assert.All(Oversized(state), i => Assert.NotEqual("oversized:all", i.Key));
+    }
+
+    /// <summary>
+    /// The boundary, and it is a conflict between two entries rather than a fault: at a third doubles the marks fall into two clear sizes,
+    /// and entry 82 section 3 refuses to read a size from a sheet like that and asks for the calibre instead. Entry 141 section 4.2 asks for
+    /// the sheet's own reference to survive exactly this. **Question 40** carries it; nothing here works around either rule.
+    /// </summary>
+    [Fact]
+    public void AThirdBeingDoublesFallsToEntry82sTwoSizesRule()
+    {
+        var (holes, _, _) = GeneratedSheet.Detect(Shots, doubledBulls: 5);
+
+        Assert.Equal(HoleSizeSource.TwoSizes, holes.HoleSize!.Source);
+        Assert.Contains("name the calibre", holes.HoleSize.Description, StringComparison.Ordinal);
     }
 
     /// <summary>

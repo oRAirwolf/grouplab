@@ -58,6 +58,18 @@ public sealed record RenderDifferenceOptions(
     double SmallestHoleInches = 0.16,
     double LargestHoleInches = 0.60,
     int MarksForSheetSize = 12,
+
+    /// <summary>
+    /// How many round marks a sheet needs before its own marks outrank a calibre the person named, NOTES-FROM-PLANNING.md entry 141 section 4.
+    /// <para>
+    /// <b>Twelve, which is the number the sheet was already trusted at.</b> The thirteen images of question 38 ran from 14 to 25 round marks
+    /// and every one of them produced a usable reference from its own marks: nothing was flagged on ten of the thirteen and one mark on the
+    /// other three, against fifteen of fifteen when a stated calibre was used on a photograph. So the measurement supports 14 and above
+    /// directly, and 12 is inherited from entry 82's own line between a sheet size it trusts and one it only flags tentatively. Below 12
+    /// there is no evidence either way, which is exactly why a stated calibre is what is used there.
+    /// </para>
+    /// </summary>
+    int MarksToOutrankACalibre = 12,
     int MarksForTentativeSize = 5,
     bool KeepResidual = false);
 
@@ -423,7 +435,12 @@ public static class RenderDifferenceHoleDetector
     /// <summary>
     /// The size of a single hole, graded by what supports it (NOTES-FROM-PLANNING.md entries 81 and 82).
     /// <list type="bullet">
-    /// <item><b>A calibre</b> named is used as it is, for the veto and the flags.</item>
+    /// <item><b>The sheet's own marks first</b>, where it has enough of them (NOTES-FROM-PLANNING.md entry 141 section 4, replacing the
+    /// first rule of entry 82). A hole is not the bullet, and how much smaller it is depends on the paper, the backing, the velocity and,
+    /// on a photograph, the light it was taken in: question 38 measured the same holes at 0.90 to 1.45 times the bullet across nine
+    /// photographs of four sheets of known calibre, where the scans of those sheets read 0.92 to 0.95. The sheet's own marks carry all of
+    /// that already, because whatever the light did to one hole it did to all of them.</item>
+    /// <item><b>A calibre</b> named is the fallback, used as it is for the veto and the flags.</item>
     /// <item><b>Without one, the sheet's quarter-point round mark</b>, clamped to the sizes a bullet hole can have, SmallestHoleInches to
     /// LargestHoleInches, so no reference outside what a bullet makes is ever adopted. From MarksForSheetSize round marks it is trusted for
     /// both. From MarksForTentativeSize it only flags, tentatively, because the quarter-point of a handful of marks is little better than
@@ -440,19 +457,35 @@ public static class RenderDifferenceHoleDetector
     {
         var inv = System.Globalization.CultureInfo.InvariantCulture;
         int n = roundDiameters.Count;
-        if (options.CalibreInches is { } calibre)
+        double bound = options.SmallestHoleInches;
+        var order = roundDiameters.Order().ToList();
+
+        // Entry 141 section 4: where the sheet has enough round marks to speak for itself, its own marks are the reference and a stated
+        // calibre is the fallback. This is the reverse of entry 82's first rule, and question 38 is why.
+        //
+        // The quarter-point is what makes it safe to do this on a sheet that may hold the very doubles it is judging. A merged pair measures
+        // larger than anything else on the sheet, so it sits at the top of the order and moves the lower quartile not at all; a mean would
+        // move with every one of them, and on a sheet a third of whose marks are doubles a mean is not a hole size at all.
+        if (n >= options.MarksToOutrankACalibre && TwoSizes(order) is null)
         {
-            return new HoleSizeReference(HoleSizeSource.Calibre, calibre, calibre, n, string.Create(inv, $"a hole is taken as {calibre:0.000} in, from the calibre named"));
+            double own = Math.Clamp(order[n / 4], bound, options.LargestHoleInches);
+            return new HoleSizeReference(HoleSizeSource.Sheet, own, own, n, options.CalibreInches is { } named
+                ? string.Create(inv, $"a hole is taken as {own:0.000} in, the quarter-point of this sheet's {n} round marks, rather than the {named:0.000} in the calibre named: what a hole measures depends on the paper, the backing and the light, and this sheet's own marks carry all of it")
+                : string.Create(inv, $"a hole is taken as {own:0.000} in, the quarter-point of {n} round marks"));
         }
 
-        double bound = options.SmallestHoleInches;
+        if (options.CalibreInches is { } calibre)
+        {
+            return new HoleSizeReference(HoleSizeSource.Calibre, calibre, calibre, n, string.Create(inv, $"a hole is taken as {calibre:0.000} in, from the calibre named, because this sheet has {n} round mark{(n == 1 ? "" : "s")} of its own, too few to measure one from"));
+        }
+
         if (n < options.MarksForTentativeSize)
         {
             return new HoleSizeReference(HoleSizeSource.Bound, bound, null, n, string.Create(inv,
                 $"with {n} round mark{(n == 1 ? "" : "s")} and no calibre, a hole is only known to be at least {bound:0.00} in, so no mark is judged oversized"));
         }
 
-        var sorted = roundDiameters.Order().ToList();
+        var sorted = order;
         double quarter = Math.Clamp(sorted[n / 4], bound, options.LargestHoleInches);
         if (n >= options.MarksForSheetSize && TwoSizes(sorted) is { } groups)
         {

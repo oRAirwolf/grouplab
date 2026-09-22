@@ -117,6 +117,10 @@ public static class CalibreConfirmation
                 [], false, true);
         }
 
+        // Entry 141 section 4.3: the same reference the detector uses, which is the sheet's own marks with the doubles left out. The detector
+        // takes their quarter-point and this takes their median, both from the same set for the same reason, so a person is never told one
+        // thing by the flag and another by the guess.
+        //
         // Only holes nobody has flagged as possibly two: a merged pair measures like nothing on the sheet and would widen the spread that
         // decides how sure this can be.
         var measured = state.Shots

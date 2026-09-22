@@ -26,8 +26,13 @@ public static class GeneratedSheet
     /// <summary>One hole on each of the first <paramref name="shots"/> scoring bulls, plus a second into the third bull where asked.</summary>
     /// <param name="calibreInches">The calibre the person named, or null where they have named none.</param>
     /// <param name="holeRadiusInches">The rim radius every hole is drawn at, so a sheet of another calibre can be generated.</param>
+    /// <param name="doubledBulls">
+    /// How many of the first bulls take a second shot each, close enough to merge into one mark. Entry 141 section 4.4 wants a sheet a third
+    /// of whose marks are real doubles, because that is where a reference taken from a mean of every mark stops being a hole size at all.
+    /// </param>
     public static (RenderDifferenceResult Holes, TargetDefinition Definition, IPageMapping Truth) Detect(
-        int shots, double? calibreInches = null, bool withARealDouble = false, int seed = 1403, double holeRadiusInches = RimRadiusInches)
+        int shots, double? calibreInches = null, bool withARealDouble = false, int seed = 1403, double holeRadiusInches = RimRadiusInches,
+        int doubledBulls = 0)
     {
         var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
@@ -39,6 +44,11 @@ public static class GeneratedSheet
         {
             // Two shots into the third bull, far enough over each other that their shape does not ask to be cut: one mark holding two holes.
             holes.Add(Hole(scoring[2].Bull.X + 90 + (0.10 * 254), scoring[2].Bull.Y + 90, 103, holeRadiusInches));
+        }
+
+        for (int k = 0; k < doubledBulls && k < scoring.Count; k++)
+        {
+            holes.Add(Hole(scoring[k].Bull.X + 90 + (0.10 * 254), scoring[k].Bull.Y + 90, 200 + k, holeRadiusInches));
         }
 
         var observed = SyntheticSheet.Compose(render, Dpi, truth, render.Width, render.Height, holes, [], new Random(seed));

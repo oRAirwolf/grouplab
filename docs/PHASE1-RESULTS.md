@@ -7004,6 +7004,43 @@ The commit is now worked out once, in a step of its own, and every later job tak
 `ReleaseAssetTests` holds all of it: the schedule's cron, that the resolved commit is what packaging and publishing use, that `head_branch` appears nowhere, and the concurrency group on both workflows.
 
 
+# The sheet's own marks decide what is one hole and what is two
+
+Entry 141 section 4, approving question 38's recommendation. This reverses the first rule of entry 82.
+
+## The rule
+
+**Where a sheet has twelve or more round marks and they do not fall into two clear sizes, its own marks are the reference, and a stated calibre is the fallback.** Below that, the stated calibre is used, and with no calibre the ladder of entry 82 stands as it was.
+
+Twelve is the number the sheet was already trusted at. The thirteen images of question 38 ran from 14 to 25 round marks and every one produced a usable reference from its own marks, so the measurement supports 14 and above directly; 12 is inherited from entry 82's own line, and below 12 there is no evidence either way, which is exactly why a stated calibre is what is used there.
+
+**The reference survives the doubles it is judging** because it is the quarter-point, not a mean. A merged pair measures larger than anything else on the sheet, so it sits at the top of the order and moves the lower quartile not at all. With a sixth of a sheet's marks turned into real doubles the reference moves by less than a thousandth of an inch.
+
+**The calibre keeps its other jobs**, which is the whole reason a person should still enter it: the smallest-hole gate, the torn-hole rescue and the size reported in holes are all still the calibre's.
+
+## What it does to the thirteen images of question 38
+
+Read only, nothing committed. Every one with the calibre Alan actually shot, stated:
+
+| sheet | marks | flagged before | flagged now | reference |
+|---|---|---|---|---|
+| photo .22 LR, two of them | 24, 24 | 15 to 24 of them | **0**, **0** | the sheet |
+| photo 6 ARC, three of them | 20, 18, 21 | most of them | **1**, **1**, **0** | the sheet |
+| photo 6.5 CM 25 shot | 25 | most of them | **0** | the sheet |
+| photo 6.5 CM 15 shot, three of them | 15, 17, 14 | **15 of 15** on the one Alan met | **1**, **1**, **0** | the sheet |
+| the four scans | 15, 25, 24, 20 | 0 | **0** | the sheet |
+
+The photograph Alan opened, which flagged all fifteen of its holes with the right calibre entered, now flags one.
+
+**And the scans are untouched**, which is what entry 141 section 4.5 requires: they read the same reference they always did, because on a scan the sheet's quarter-point and the calibre agree within five percent. `HoleToCalibre` is unchanged.
+
+**One thing worth seeing in that table.** Scan 4, the .22 LR sheet, finds **24 marks with the calibre stated against 19 without it**. The calibre is still worth entering, and still for the reason entry 130 section 2b.3 gave: it is what stops small holes being refused as too small. What it no longer does is decide whether those holes are one or two.
+
+## Where it stops
+
+At a third doubles the marks fall into two clear sizes and entry 82 section 3 takes over, refusing to read a size and asking for the calibre, so nothing is flagged at all. That is the opposite of what entry 141 section 4.2 wants, and the two sizes cannot be told from two calibres by their sizes alone: a merged pair is 1.41 times a single across, and .224 against .308 is 1.38. **Question 40** carries it with what I would do. Both rows are pinned by tests, so whichever way it is settled the change is one line.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
