@@ -7537,6 +7537,77 @@ So the grey is still decoded as grey, and the saving is one read and one decode 
 **`ImageLoaderSameResultTests` is the reason this is known rather than assumed.** It was written expecting to pass, and it failed on the first run, on all eight images. Without it the conversion would have shipped, every figure would have moved by an amount nobody could predict, and the commit message would have said "no change in results".
 
 
+# The bent-sheet model, run beside the ordinary one
+
+Entry 130 section 6b item 2: a model that allows the page to bend, as a candidate beside the current one and never replacing it.
+
+GroupLab already has one. `RegistrationModel.Surface` is a generalised cylinder through a camera, and `Auto` never chooses it, which is why every row of the gate record says "homography with radial distortion". `compare-photos` gains `--model auto|homography|radial|surface`, defaulting to `auto`, so the candidate runs only where it is asked for and the application's behaviour is untouched.
+
+## What it does to the seven paired photographs it can run on
+
+| photograph | bull median, radial | bull median, surface | bull worst, radial | bull worst, surface | hole median, radial | hole median, surface |
+|---|---|---|---|---|---|---|
+| 165624 | 0.0076 | **0.0065** | 0.0353 | **0.0184** | **0.0316** | 0.0328 |
+| 165627 | 0.0044 | **0.0030** | 0.0197 | **0.0130** | **0.0346** | 0.0361 |
+| 165634 | 0.0109 | **0.0084** | **0.0552** | 0.0601 | **0.0450** | 0.0466 |
+| 165637 | 0.0088 | **0.0066** | 0.0636 | **0.0617** | **0.0375** | 0.0392 |
+| 153340 | 0.0138 | **0.0059** | **0.0491** | 0.0542 | **0.0282** | 0.0354 |
+| 153344 | 0.0125 | **0.0082** | **0.0217** | 0.0486 | **0.0229** | 0.0287 |
+| 153347 | 0.0044 | **0.0037** | 0.0222 | **0.0213** | **0.0246** | 0.0248 |
+
+**The bent-sheet model fits the markers better and predicts the holes worse.** Seven of seven on the median bull error, four of seven on the worst bull, and **nought of seven** on hole positions.
+
+That is worth stating plainly because it is the opposite of what a better registration is supposed to buy. The markers are what the model is fitted to; the holes are the points it was not fitted to, and they are the only ones that matter. A model that improves where it was fitted and not where it was not is describing the markers rather than the sheet.
+
+It also does not rescue the gate: not one photograph comes inside 0.005 in at the worst bull under either model, which is what `DESIGN.md` [r6] already found on the Phase 0 frames.
+
+## What section 6b item 2 asked for that this is not
+
+The entry asks for a **smooth correction over the marker grid**, a thin-plate spline or piecewise fit on top of a deterministic robust homography, with markers held out in turn. That is not built. What is reported here is the model that already exists, run on the same photographs, which is the comparison the entry wants without the new model it also wants.
+
+Given what the existing surface model does to the hole errors, a leave-one-out measurement is exactly the right next step, and the result above is the reason: it is the measurement that would have caught this without needing the scans at all.
+
+## A crash, found by running it
+
+`20260920_153336.jpg` under `--model surface` throws `System.IndexOutOfRangeException` inside the surface mapping:
+
+```
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at GroupLab.Core.Detection.ExpectedImage.Render(...) ExpectedImage.cs:line 31
+```
+
+Line 31 is the `mapping.ToPage` call, so the index is thrown inside `DevelopableSurface`'s inverse, through `FoldedSheet.Sheet`. The other fourteen paired photographs run. It is **not reachable from the application**, since `Auto` never selects this model and the window passes no options, so it is a defect in a candidate rather than a live fault. Recorded as question 44 with the exact reproduction rather than guessed at: the candidates are `Beyond` and `Last` indexing a `Side` whose arrays are shorter than the bisection assumes, and a proper answer needs a debugger on that one photograph.
+
+
+# When GroupLab should tell somebody to scan instead
+
+Entry 130 section 6b item 3: say what a photograph can be trusted for, and propose the warning's wording. Proposed, not built.
+
+## What the measurements support
+
+- **A hole's position in a photograph is out by about 0.03 in at the median**, 0.07 in at the 95th percentile, against a group whose mean radius is about 0.17 in.
+- **The worst bull is outside the 0.005 in gate on 30 of 31 photographs**, under either model.
+- **28 of 59 photographs could not be read at all.**
+
+## The proposed wording
+
+Three messages, none of them a refusal, because a photograph that reads is worth having.
+
+**When a sheet is read from a photograph at all**, on the analysis, beside the scale:
+
+> Measured from a photograph. Shot positions are typically out by about 0.03 in, which is a fifth of a group this size. Good for counting shots and for a zero; scan the sheet before comparing two loads.
+
+**When the worst bull is far out**, which is the case a person can do something about:
+
+> This photograph was taken at enough of an angle, or the sheet was bent enough, that one corner of it registers about {worst} in off. Photograph the sheet square on and as flat as you can get it, or scan it.
+
+**When no code could be read**, which is the commonest failure by a long way:
+
+> GroupLab could not find the printed code on this sheet, so it does not know which target it is. Fill the frame with the sheet, get the whole of it in, and try not to photograph it at an angle. A scan almost always works.
+
+The numbers in the first two come from the figures above and would move with them, so they belong in one place with the measurement beside them, the way `HoleToCalibre` does.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

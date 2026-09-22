@@ -12,7 +12,7 @@ namespace GroupLab.Cli;
 /// </summary>
 public static class PhotoVerb
 {
-    public const string Usage = "grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]";
+    public const string Usage = "grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>] [--model auto|homography|radial|surface]";
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
     {
@@ -23,6 +23,11 @@ public static class PhotoVerb
         var libraries = new List<string>();
         string? truthPath = null;
         Calibre? calibre = null;
+
+        // NOTES-FROM-PLANNING.md entry 130 section 6b item 2: the bent-sheet model reported beside the ordinary one, on the same
+        // photographs, so the two can be compared rather than argued about. It never changes what the application does: the default is
+        // Auto, exactly as before, and the candidate runs only where it is asked for.
+        var model = RegistrationModel.Auto;
         for (int i = 0; i < args.Length; i++)
         {
             switch (args[i])
@@ -32,6 +37,14 @@ public static class PhotoVerb
                     break;
                 case "--library" when i + 1 < args.Length:
                     libraries.Add(args[++i]);
+                    break;
+                case "--model" when i + 1 < args.Length:
+                    if (!Enum.TryParse(args[++i], ignoreCase: true, out model))
+                    {
+                        error.WriteLine($"compare-photos: {args[i]} is not a registration model; use auto, homography, radial or surface");
+                        return 2;
+                    }
+
                     break;
                 case "--calibre" when i + 1 < args.Length:
                     calibre = Calibre.Parse(args[++i], out string? problem);
@@ -99,7 +112,8 @@ public static class PhotoVerb
         foreach (string photo in images.Skip(1))
         {
             string name = Path.GetFileName(photo);
-            var result = AnalyzeVerb.Analyze(photo, null, out string? photoFailure, libraries.Count > 0 ? libraries : null, calibre);
+            var result = AnalyzeVerb.Analyze(photo, null, out string? photoFailure, libraries.Count > 0 ? libraries : null, calibre,
+                model == RegistrationModel.Auto ? null : new MeasureOptions(Model: model));
             if (photoFailure is not null || result is null || result.Failure is not null || result.Marking is not { } marking || result.Automatic.Scale is not { } scale)
             {
                 output.WriteLine($"{name}: failed, {photoFailure ?? result?.Failure ?? "it did not register"}");

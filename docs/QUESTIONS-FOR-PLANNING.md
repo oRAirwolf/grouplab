@@ -12,6 +12,33 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 44: the bent-sheet model crashes on one photograph, and improves the wrong points on the rest
+
+**Status: open, and nothing a person can reach is affected.**
+
+### The crash
+
+`grouplab compare-photos <scan 4> --model surface 20260920_153336.jpg` throws:
+
+```
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at GroupLab.Core.Detection.ExpectedImage.Render(...) ExpectedImage.cs:line 31
+```
+
+Line 31 is the `mapping.ToPage` call, so the index comes from `DevelopableSurface.ToPage`, through `FoldedSheet.Sheet`. The other fourteen paired photographs of 2026-09-20 run under the same model.
+
+**It is not reachable from the application.** `RegistrationModel.Auto` never chooses `Surface`, and the window passes no measure options, so this is a defect in a candidate model rather than a live fault. That is why it is a question and not a fix: guessing at it would be changing registration code on a hunch.
+
+**Where I would look.** `FoldedSheet.Sheet` picks a fold with `Beyond(side, 0, ...)` and then `Last(side, ...)`, both of which index `Side.Sx`, `Side.Dx` and `Side.T` at an index the bisection derives from `side.T.Length`. A side with fewer folds than the bisection assumes indexes past the end. `count` is computed from the page's half width and half height, so a model whose `PageCentreX` or `PageCentreY` is degenerate would produce it. One photograph out of fifteen is consistent with a fit that went somewhere strange rather than with an everyday off-by-one.
+
+### The finding that matters more
+
+Run on the seven paired photographs it does not crash on, the bent-sheet model **improves the bull-centre error on seven of seven at the median and worsens the hole-position error on seven of seven**.
+
+The markers are what the model is fitted to. The holes are the points it was not fitted to. A model that gets better where it was fitted and worse where it was not is describing the markers rather than the sheet, and that is the classic signature of a fit with too much freedom for its evidence.
+
+**What I would do:** before building the thin-plate spline entry 130 section 6b item 2 asks for, measure the existing surface model leave-one-marker-out, which is the same measurement the entry wants for the new one and needs no scans at all. If the existing model already fails to predict held-out markers, a spline with more freedom will fail harder, and that is worth knowing before writing it.
+
 ## 2026-09-22, question 43: entry 137 names an image safety the desktop does not have
 
 **Status: open, and nothing is blocked by it.** Entry 137 section 4:

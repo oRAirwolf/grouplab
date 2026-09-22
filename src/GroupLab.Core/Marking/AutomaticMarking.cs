@@ -93,13 +93,13 @@ public static class AutomaticMarking
     /// never slows the pipeline down. Off by default; only the marking screen turns it on. It sets <see cref="TraceRecorder.KeepArtefacts"/>,
     /// so each stage's record carries its picture as it files and a live run shows it as the stage lands.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false)
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false, Measurement.MeasureOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
         trace ??= new Trace.TraceRecorder();
         trace.KeepArtefacts |= artefacts;
-        var measurement = SheetMeasurer.Measure(grey, metadata, definition, new MeasureOptions(), backend, trace);
+        var measurement = SheetMeasurer.Measure(grey, metadata, definition, options ?? new MeasureOptions(), backend, trace);
         cancellation.ThrowIfCancellationRequested();
         var fiducials = measurement.Fiducials;
         string markers = fiducials is null ? "no markers" : string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found");

@@ -4,7 +4,7 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
 
-**Next step:** entry 130 section 6b items 2 and 3 (the bent-page candidate and the warning wording), then questions 34 and 36.
+**Next step:** questions 34 and 36 answered with a recommendation, then entry 129 prepared.
 
 ---
 

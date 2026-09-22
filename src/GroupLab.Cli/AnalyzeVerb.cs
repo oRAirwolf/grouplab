@@ -129,7 +129,7 @@ public static class AnalyzeVerb
     /// the sheet's codes name among those under <paramref name="libraries"/>. Null with the reason when the image cannot be read, or no
     /// definition can be.
     /// </summary>
-    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null)
+    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null, GroupLab.Core.Measurement.MeasureOptions? options = null)
     {
         failure = null;
         TargetDefinition? definition = null;
@@ -179,7 +179,7 @@ public static class AnalyzeVerb
             definition = identity.Definition;
         }
 
-        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace, calibre);
+        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace, calibre, options);
     }
 
     private static void WriteGroup(TextWriter output, GroupReport report)

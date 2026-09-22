@@ -30,10 +30,10 @@ public sealed record SheetAnalysisResult(
 /// </summary>
 public static class SheetAnalysis
 {
-    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace, Calibre? calibre = null)
+    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace, Calibre? calibre = null, Measurement.MeasureOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(trace);
-        var automatic = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, calibre: calibre);
+        var automatic = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, calibre: calibre, options: options);
         if (automatic.Failure is not null || automatic.Scale is not { } scale)
         {
             return new SheetAnalysisResult(automatic, [], null, null, trace.Records, automatic.Failure ?? "registration failed");
