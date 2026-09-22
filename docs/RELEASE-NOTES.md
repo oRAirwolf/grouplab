@@ -10,6 +10,74 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.76
+
+**2026-09-22**, commit `f935ab2`. Nightly.
+
+Nothing in this build changes what you see or do. It carries internal work only.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.76)
+
+---
+## 0.2.0-nightly.75
+
+**2026-09-22**, commit `a82d7f5`. Nightly.
+
+Nothing in this build changes what you see or do. It carries internal work only.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.75)
+
+---
+## 0.2.0-nightly.74
+
+**2026-09-22**, commit `1ab0b86`. Nightly.
+
+### New
+
+- Telling GroupLab which bulls you aimed at now works from the command line too, with the same words the application takes.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.74)
+
+---
+## 0.2.0-nightly.73
+
+**2026-09-22**, commit `5f1be30`. Nightly.
+
+### Changed
+
+- Opening a photograph or scan is faster: GroupLab used to read and decode the same file three times before showing it to you, and now reads it once.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.73)
+
+---
+## 0.2.0-nightly.72
+
+**2026-09-22**, commit `f40260a`. Nightly.
+
+Nothing in this build changes what you see or do. It carries internal work only.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.72)
+
+---
+## 0.2.0-nightly.71
+
+**2026-09-22**, commit `72afe73`. Nightly.
+
+### New
+
+- You can now open a target by dropping the image on the GroupLab window, or by pasting it with Ctrl+V, including a screenshot or an image copied from a browser. A file that turns out not to be an image now says so instead of ending the session.
+- You can now say which bull a shot belongs to straight from the shots list, and tick several shots to move them all to one bull in a single step that undoes in one go. Selecting a shot also highlights every review item that is about it.
+- Where you have entered a string of velocities, GroupLab now draws them with the mean and spread marked, gives the SD with the range that many shots really pins it to, and says that an extreme spread can only be compared with another string of the same length.
+- The Session records screen now draws one load's sessions over time, each with its uncertainty, and says whether the sessions can really tell that the load is getting better or worse.
+
+### Fixed
+
+- When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first.
+- An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.71)
+
+---
 ## 0.2.0-nightly.66
 
 **2026-09-22**, commit `398f987`. Nightly.
