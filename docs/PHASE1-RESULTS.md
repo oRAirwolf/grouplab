@@ -7407,6 +7407,58 @@ and in the trace beside the tile choice, with what it passed over, in the existi
 The four measurement items need the range folder read in place: pairing each burst with its scan by hole pattern, agreement in inches hole by hole, the 14:14 burst's per-photograph identification at each angle, and what the blank-sheet path makes of the two tape-measure frames. None was reached. The behaviour change was taken first because it is the one that changes what a person is told, and because it needed no photographs to build or to prove.
 
 
+# The mounted photograph gate, measured for the first time
+
+Entry 130 section 6b item 1. `DESIGN.md` says the mounted half of the photograph gate is the product requirement and has never had real material. Alan's 59 photographs of 2026-09-20, sheets stapled to corrugated plastic outdoors at many angles, are that material. Read in place; nothing committed, no metadata read.
+
+## The first number is the one nobody expected
+
+**28 of the 59 photographs could not be read at all.**
+
+| why it failed | how many |
+|---|---|
+| no code on the sheet could be read | 27 |
+| the code read, but 0 of 34 markers found | 1 |
+| **read and registered** | **31** |
+
+Twenty-seven photographs of a day's shooting, in which GroupLab could not find the printed code that says which sheet it is looking at. Before any question about accuracy, that is the gate: **on nearly half of a real day's photographs the software does not get as far as having an opinion.**
+
+Whether those 27 are photographs of sheets at all, or of the bench, the rifle and the view, is not established: the folder was read in place and its contents were not catalogued beyond what the command reported. That is the first thing section 2c's pairing will settle, and it could move this number a long way in either direction.
+
+## What the 31 that registered actually measured
+
+Every one of them fitted the same model: a homography with radial distortion. Not one needed anything else, and not one failed to fit.
+
+| bull-centre error, inches on the page | median across the 31 | range |
+|---|---|---|
+| each photograph's median | 0.0048 | 0.0019 to 0.0132 |
+| each photograph's worst bull | 0.0202 | 0.0044 to 0.0898 |
+
+Against the gate's 0.005 in for bull centres:
+
+- **18 of 31** have a median inside it.
+- **1 of 31** has its *worst* bull inside it.
+- 9 of 31 keep the worst bull under 0.010 in; 15 under 0.017 in.
+
+24 of the 31 located all 25 bulls. The rest located 4, 5, 5, 11, 15, 15 and 24, which is a sheet partly out of frame or too oblique at one end.
+
+## What that means, plainly
+
+**A photograph of a stapled sheet registers well on average and badly somewhere.** The median bull is inside the gate on more than half the photographs; the worst bull is outside it on thirty of thirty-one. A group is measured from particular bulls, not from the median bull, so the worst-bull figure is the one that decides what a photograph can be trusted for.
+
+Set 0.02 in, the median worst-bull error, against a mean radius of about 0.17 in on scan 6: a shot measured from a bull that is 0.02 in out carries roughly a **twelve percent** error in its own offset. That will not turn a good group into a bad one, and it is far too large to compare two loads with.
+
+## What is not measured here, and must not be read as if it were
+
+**The hole columns in this run are meaningless and are not reported.** Every photograph was run against one scan, scan 6, because pairing each photograph with its own scan is section 2c's first item and is not done. The bull-centre figures survive that, because both the scan and the photograph locate the *printed* bulls of the same definition in page coordinates, and every copy of a definition has the same printed geometry. Hole positions do not survive it: they are the holes of whichever sheet was in front of the camera.
+
+So this is half a gate record. The half it has is the half that was missing.
+
+## Still to do in section 6b
+
+Items 2 and 3 are untouched: the bent-page model fitted with markers held out in turn, and the proposed wording for when GroupLab should tell somebody to flatten the sheet, shoot more squarely, or scan instead. Both want the pairing first, because a candidate model has to be judged on hole positions and those need the right scan.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
