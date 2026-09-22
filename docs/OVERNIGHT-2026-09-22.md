@@ -6,6 +6,8 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **Next step:** entry 129's server side, which is the last unbuilt item and needs Alan awake for every path in it.
 
+**`docs/RELEASE-NOTES.md` is current to nightly 76.** The commit that added those notes produced a nightly of its own, which carries nothing a person would notice; whoever works next adds it along with their own. That is the ordinary rhythm rather than a gap, and chasing it would never end.
+
 **What is waiting for Alan, and nothing else can proceed without him:**
 
 1. **The research section.** All eighteen of my own articles and the twelve planning drafts are written, built and rendered. **Nothing is published and nothing will be until he says "publish research batch 1".** The renders are in `docs/figures/research/`, one narrow and one desktop for each. To see the built site himself: `python website/build.py`, then from inside `website/_site`, `python -m http.server`, and open `http://localhost:8000/research/`.
