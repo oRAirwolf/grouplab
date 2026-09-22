@@ -37,29 +37,29 @@ Each one ends with a list of what to check against the repository before it goes
 | 5 | `how-grouplab-reads-a-target` | How GroupLab reads a target | Reading targets | Code | **written**, batch 1 |
 | 6 | `wrong-bull` | When shots land on the wrong bull | Reading targets | Code | **written**, batch 1 |
 | 7 | `uploads-rebuilt-from-pixels` | Every upload is rebuilt from pixels | How GroupLab is built | Code | not started, batch 3 |
-| 8 | `can-you-see-the-bull` | Can you see the bull? Aim points and optics at 100 yards | Range tests | Planning | waiting for the draft and the 2026-09-23 range data |
+| 8 | `can-you-see-the-bull` | Can you see the bull? Aim points and optics at 100 yards | Range tests | Planning | **imported, draft**: results wait for the 2026-09-23 test |
 | 9 | `scans-against-photos` | Scans against phone photos: how close is close enough? | Reading targets | Code | not started, after entry 130 section 2c |
 | 10 | `safe-updates` | How GroupLab updates itself safely | How GroupLab is built | Code | not started, batch 3 |
 | 11 | `how-many-shots` | How many shots do you need? | Measuring groups | Planning | **imported, draft** |
 | 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | not started, batch 2 |
 | 13 | `cep-explained` | CEP 50 and 90 explained | Measuring groups | Planning | **imported, draft**: corrected, the roundness verdict is a test rather than an aspect threshold |
-| 14 | `velocity-sd-small-samples` | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning | waiting for the draft |
-| 15 | `moa-mils-inches` | MOA, mils and inches: one group four ways | Measuring groups | Planning | waiting for the draft |
+| 14 | `velocity-sd-small-samples` | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning | **imported, draft** |
+| 15 | `moa-mils-inches` | MOA, mils and inches: one group four ways | Measuring groups | Planning | **imported, draft** |
 | 16 | `when-to-adjust-zero` | Zeroing: when to adjust and when to leave it | Measuring groups | Planning | **imported, draft**: corrected, the zero figures are at 95 percent |
 | 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | not started, batch 2 |
 | 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | not started, batch 2 |
 | 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | not started, batch 2 |
 | 20 | `blank-sheet-zero` | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code | not started, batch 2 |
-| 21 | `photographing-targets` | How to photograph a target so it measures well | Guides | Planning | waiting for the draft |
-| 22 | `printer-true-size` | Does your printer print at true size? | Guides | Planning | waiting for the draft |
-| 23 | `scanner-traps` | Scanner traps: cropping, DPI and colour | Guides | Planning | waiting for the draft |
+| 21 | `photographing-targets` | How to photograph a target so it measures well | Guides | Planning | **imported, draft**: it caught an arithmetic error of mine, see the questions file |
+| 22 | `printer-true-size` | Does your printer print at true size? | Guides | Planning | **imported, draft** |
+| 23 | `scanner-traps` | Scanner traps: cropping, DPI and colour | Guides | Planning | **imported, draft** |
 | 24 | `choosing-the-markers` | Choosing the markers | How GroupLab is built | Code | not started, batch 3 |
 | 25 | `designing-a-readable-target` | Designing a target GroupLab can read | How GroupLab is built | Code | not started, batch 3 |
 | 26 | `what-grouplab-sends` | What GroupLab sends from your computer | How GroupLab is built | Code | not started, batch 3 |
 | 27 | `nightly-builds` | Nightly builds, from commit to installer | How GroupLab is built | Code | not started, batch 3 |
 | 28 | `smaller-installer` | Cutting the installer from 97 MB to 81 MB | How GroupLab is built | Code | not started, batch 3 |
-| 29 | `aim-points-by-optic-class` | Aim points for 1x to high power optics | Range tests | Planning | waiting for the draft and the 2026-09-23 range data |
-| 30 | `range-test-log` | The range test log | Range tests | Planning | waiting for the draft |
+| 29 | `aim-points-by-optic-class` | Aim points for 1x to high power optics | Range tests | Planning | **imported, draft**: results wait for the class tests |
+| 30 | `range-test-log` | The range test log | Range tests | Planning | **imported, draft**: the 2026-09-23 entry waits for results |
 
 ## Rules that apply to every one
 

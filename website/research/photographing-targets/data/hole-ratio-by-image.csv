@@ -1,0 +1,14 @@
+image,kind,sheet,bullet_in,median_hole_over_bullet,registration_rms_in,markers_found_of_34,capture_burst
+20260920_153325.jpg,photo,.22 LR,0.224,1.069,0.0044,33,15:33
+20260920_153356.jpg,photo,.22 LR,0.224,1.077,0.0042,34,15:33
+20260920_153340.jpg,photo,6 ARC,0.243,1.256,0.0059,27,15:33
+20260920_153344.jpg,photo,6 ARC,0.243,1.333,0.0060,25,15:33
+20260920_153347.jpg,photo,6 ARC,0.243,1.360,0.0053,29,15:33
+20260920_153336.jpg,photo,6.5 Creedmoor 25-shot,0.264,0.898,0.0042,31,15:33
+20260920_165624.jpg,photo,6.5 Creedmoor 15-shot,0.264,1.452,0.0047,34,16:56
+20260920_165634.jpg,photo,6.5 Creedmoor 15-shot,0.264,1.405,0.0050,21,16:56
+20260920_165637.jpg,photo,6.5 Creedmoor 15-shot,0.264,1.449,0.0054,24,16:56
+scan 4,scan,.22 LR,0.224,0.758,0.0023,34,
+scan 5,scan,6 ARC,0.243,0.923,0.0025,32,
+scan 3,scan,6.5 Creedmoor 25-shot,0.264,0.949,0.0026,33,
+scan 1,scan,6.5 Creedmoor 15-shot,0.264,0.937,0.0026,33,

@@ -1,0 +1,15 @@
+class,optic,magnification,focal_plane,reticle,tier_by_owner
+1x,Sig Sauer ROMEO 5,1x,n/a,2 MOA dot,low end
+1x,Holosun SCRS MRS (red),1x,n/a,multi-reticle (dot and circle),mid tier
+1x,Holosun SCRS MRS (green),1x,n/a,multi-reticle (dot and circle),mid tier
+1x,Primary Arms SLx 1x MicroPrism Gen II,1x,n/a,ACSS Cyclops (etched),low-mid tier
+LPVO,Vortex Razor HD Gen IIE 1-6x24,1-6x,SFP,JM-1 MRAD,high end
+LPVO,Vortex Viper PST Gen II 1-6x24,1-6x,SFP,VMR-2 MRAD with fibre dot,mid tier
+LPVO,Primary Arms PLxC Compact 1-8x24,1-8x,FFP,ACSS Griffin MIL M8,high end
+LPVO,Vortex Razor HD Gen III 1-10x24,1-10x,FFP,EBR-9 MRAD,high end
+MPVO,Vortex Venom 3-15x44,3-15x,FFP,EBR-7C Mil,low-mid tier
+MPVO,Nightforce NX8 2.5-20x50 F1,2.5-20x,FFP,Mil-XT illuminated,high end
+HPVO,Vortex Venom 5-25x56,5-25x,FFP,EBR-7C Mil,low-mid tier
+HPVO,Vortex Strike Eagle 5-25x56,5-25x,FFP,EBR-7C Mil,mid tier
+HPVO,DNT TheOne 7-35x56,7-35x,FFP,TOR Mil,mid tier
+HPVO,Vortex Razor HD Gen III 6-36x56,6-36x,FFP,EBR-7D Mil,high end

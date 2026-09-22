@@ -1,0 +1,7 @@
+fact,value,source
+Range-day scans resolution,600 dpi,docs/NOTES-FROM-PLANNING.md entry 120
+Scan 2 pixel size,4958 x 6458,docs/NOTES-FROM-PLANNING.md entry 120 section 4
+Scan 2 captured area,8.26 x 10.76 in,docs/NOTES-FROM-PLANNING.md entry 120 section 4
+Marker fit error on range-day scans (RMS),0.0023 to 0.0026 in,question 38 measurements
+Marker fit error on range-day phone photos (RMS),0.0042 to 0.0060 in,question 38 measurements
+Print-scale detection at 600 and 300 dpi,0.96200 and 0.96201 for a 96.2 percent print,docs/PHASE0-RESULTS.md measurement 5

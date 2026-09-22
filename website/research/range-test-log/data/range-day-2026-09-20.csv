@@ -1,0 +1,7 @@
+scan,sheet,distance_yd,cartridge,load_as_written,rifle_note,shots_per_shooter,notes
+1,GL-CF25-LTR-D,100,6.5 Creedmoor,153.5 gr LRHT; 42.4 gr H4350; Alpha SRP brass; 7.5 BR primer; 2.874 in,28 in Seekins,15,one shot on each of bulls 1 to 15
+2,blank letter sheet,100,6.5 Creedmoor,zero group,,not fixed,hand-drawn aiming cross
+3,GL-CF25-LTR-D,100,6.5 Creedmoor,same as scan 1 (primer written as GM205MAR in error; it was 7.5 BR),,25,one shot on each bull; published as GroupLab's sample scan
+4,GL-CF25-LTR-D,100,.22 LR,40 gr SK Standard Plus,20 in CZ,23,strong variable crosswind; windage changed after row 2
+5,GL-CF25-LTR-D,100,6 ARC,108 gr ELD-M; 27 gr N140; Starline brass; GM205MAR; 2.250 in,18 in RTR,20,bulls 2 to 5 of each row; not zeroed for this load (high and left)
+6,GL-CF25-LTR-D,100,6mm Creedmoor,120 gr LRHT; 39.0 gr N550; Lapua SRP brass; GM205MAR and CCI BR-4; 2.810 in,AI AXSR,10,bulls 1 to 5 GM205MAR; bulls 6 to 10 CCI BR-4 (landed a row low)

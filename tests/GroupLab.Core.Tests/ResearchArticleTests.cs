@@ -103,9 +103,18 @@ public class ResearchArticleTests
             var front = Regex.Match(text, @"\A---\r?\n(.*?)\r?\n---", RegexOptions.Singleline);
             Assert.True(front.Success, $"{name} has no front matter");
             var samples = Regex.Match(front.Groups[1].Value, @"^samples:\s*(?<it>.+)$", RegexOptions.Multiline);
-            if (!samples.Success || !Regex.IsMatch(samples.Groups["it"].Value, @"\d"))
+            string it = samples.Success ? samples.Groups["it"].Value.Trim().Trim('"') : "";
+
+            // A number in digits or in words, or a plain statement that there is nothing to count yet. An article whose test has not been
+            // shot cannot state a sample size, and making it invent one would be worse than letting it say so.
+            bool counted = Regex.IsMatch(it, @"\d")
+                || Regex.IsMatch(it, @"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|thirty)\b", RegexOptions.IgnoreCase);
+            bool saysThereIsNoneYet = it.Contains("pending", StringComparison.OrdinalIgnoreCase)
+                || it.Contains("see each entry", StringComparison.OrdinalIgnoreCase);
+
+            if (it.Length == 0 || (!counted && !saysThereIsNoneYet))
             {
-                wrong.Add($"{name}: its samples line names no number");
+                wrong.Add($"{name}: its samples line neither names a number nor says the results are not in yet: {it}");
             }
         }
 
