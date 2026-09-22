@@ -2,9 +2,29 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
-**Next step:** the ballistics page (entry 131 section 8), then Compare loads (section 10), then question 37's control. The analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet. The site was published at 01:16 and the server pulls on a 15 minute timer; `/releases/` was still 404 at the last check, so confirm it before the morning report.
+**Next step:** a nightly is building with the relaunch fix. When it publishes, run `scripts/Test-RealUpdate.ps1` from nightly 37 to it: that is the proof Alan asked for, and the script fails unless the new version's window appears on its own and no crash record is written. Then the site needs republishing, and the sync's fixed live check needs putting on the server, which needs Alan.
 
 ---
+
+## The update that installed and did not reopen
+
+Alan pressed Install and restart on nightly 31 and GroupLab did not come back; starting it by hand reported a crash.
+
+**The cause, in one sentence:** the silent update passes `/CLOSEAPPLICATIONS`, which makes Inno Setup use the Restart Manager, and the Restart Manager restarts what it closed, so GroupLab was brought back while its files were still being replaced and died on its first line.
+
+```
+01:50:43.910  INFO   update.install version=0.2.0-nightly.35 silent=yes
+01:50:51.709  INFO   app.start      version=0.2.0-nightly.35
+01:50:52.211  ERROR  app.crash      ex=System.IO.FileNotFoundException
+                     message="Could not load file or assembly 'Avalonia.Themes.Fluent, Version=12.1.2.0'"
+01:50:52.239  INFO   app.exit       code=-1 seconds=0.5
+```
+
+That file is in the installed folder now, so nothing is missing from the package: it was simply not written yet when the process started. `RestartApplications=no` now leaves the relaunch to the installer's own `[Run]` entry, which runs after every file is in place.
+
+**It was not the other possibility.** The record is the new process crashing, not the old one being killed mid-save: `SaveSession` runs before the installer is started, and a crash record is written from an unhandled exception and nothing else, so an exit GroupLab chose can never be recorded as one.
+
+**Two things were missing and are here now.** GroupLab records the moment the installer started, so a start long afterwards is one a person made themselves: it logs `update.relaunch.missed` and says so in Settings. And `scripts/Test-RealUpdate.ps1` is the real update test written down, with the check that was absent: it waits for a window from a new process and fails if none arrives or a crash record appears.
 
 ## The queue
 
