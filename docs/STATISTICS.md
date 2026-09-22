@@ -545,6 +545,20 @@ DESIGN.md section 14 makes true MOA the default at 1.047 inches per 100 yards, w
 
 ---
 
+## 12a. Did the group open up as it was shot?
+
+A barrel warming, a shooter tiring, a rest settling: all things people believe they can see in a group, and a group of ten shots fired in a random order will look like one of them often enough to convince somebody. The question is worth answering because the answer is usually no.
+
+**The statistic** is Spearman's rank correlation between the order a shot was fired in and its distance from the group's centre. Ranks rather than the radii themselves for two reasons: the question is whether later shots sit further out, not whether they sit further out in proportion to anything; and one wild shot should not be allowed to decide it.
+
+**The p-value is a permutation test**, two sided. Under the hypothesis that order carries nothing, every ordering of the same shots is equally likely, so the null distribution is built from the shots themselves by shuffling: no distributional assumption at all, which is what matters at the sample sizes people actually shoot. It is two sided because a shooter looking for a barrel warming will find one at half the price otherwise, and a shooter looking for settling in will find the opposite.
+
+**Below five shots it answers nothing**, because every ordering is then a large share of the ones there are and no p-value can be small.
+
+**Calibration.** `ShotOrderTrendTests` fires 400 simulated groups of ten Rayleigh radii in random order and requires the share called a trend at the 5 percent level to stay under 11 percent. That is the test that decides whether this is worth showing anybody: what matters is not that a real trend is found, but how often one is announced when there is none.
+
+**Where the order comes from.** Only from a chronograph string mapped to the shots. A sheet on its own does not record what order it was shot in, and nothing here invents one.
+
 ## 13. Units
 
 Everything is stored canonically as linear distance at the target plane, per DESIGN.md section 14.

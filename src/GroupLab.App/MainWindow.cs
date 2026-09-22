@@ -277,6 +277,9 @@ public sealed partial class MainWindow : Window
     /// <summary>The two spreads drawn on one scale, entry 141 section 5.2.2.</summary>
     private readonly SpreadStrips spread = new();
 
+    /// <summary>Distance from the centre against the order fired, entry 141 section 5.2.3. Empty unless the order is known.</summary>
+    private readonly ShotOrderChart shotOrder = new();
+
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = Tokens.Space8 };
@@ -953,6 +956,40 @@ public sealed partial class MainWindow : Window
     /// <summary>The calibres the confirmation step is offering, for the headless tests.</summary>
     internal IReadOnlyList<string> CalibreOffers =>
         [.. calibreOffers.Children.OfType<Button>().Select(b => b.Content as string ?? "")];
+
+    /// <summary>
+    /// The shots in the order they were fired, where a chronograph string has been mapped to them, with the trend test under it. Entry 141
+    /// section 5.2.3 asks for nothing at all when the order is not known, rather than an order invented from the sheet.
+    /// </summary>
+    private void ShowShotOrder(MarkingState state, IReadOnlyList<MarkedShot> counted)
+    {
+        var order = currentSession is { } id && sessions is not null
+            ? sessions.ShotVelocities(id).OrderBy(v => v.StringId).ThenBy(v => v.Ordinal).Select(v => v.ShotId).ToList()
+            : [];
+        var byId = counted.ToDictionary(s => s.Id);
+        var offsets = GroupAnalysis.CompositeOffsets(state, counted);
+        var radius = counted.Select((s, i) => (s.Id, R: Math.Sqrt((offsets[i].X * offsets[i].X) + (offsets[i].Y * offsets[i].Y))))
+            .ToDictionary(p => p.Id, p => p.R);
+
+        var fired = order.Where(byId.ContainsKey).Select(shotId => radius[shotId]).ToList();
+        shotOrder.Radii = fired;
+        shotOrder.Trend = fired.Count > 0 ? ShotOrderTrend.Of(fired) : null;
+        shotOrder.Length = inches => units.Length(inches);
+        shotOrder.IsVisible = fired.Count >= 2;
+        shotOrder.InvalidateMeasure();
+        shotOrder.InvalidateVisual();
+        if (fired.Count < 2)
+        {
+            return;
+        }
+
+        statistics.Children.Add(Ruled("In the order fired"));
+        statistics.Children.Add(shotOrder);
+        statistics.Children.Add(Note(shotOrder.Description));
+    }
+
+    /// <summary>What the shot order chart says, for the headless tests.</summary>
+    internal string ShotOrderSays => shotOrder.Description;
 
     /// <summary>The unit setting in use, for the headless tests.</summary>
     internal UnitSettings Units => units;
@@ -1806,6 +1843,10 @@ public sealed partial class MainWindow : Window
                     statistics.Children.Add(Ruled("Across, and up and down"));
                     statistics.Children.Add(spread);
                     statistics.Children.Add(Note(spread.Description));
+
+                    // Entry 141 section 5.2.3: only where a chronograph string says what order the shots were fired in. A sheet does not
+                    // record that, and numbering the holes left to right would draw a chart that looks the same and means nothing.
+                    ShowShotOrder(state, counted);
                 }
 
                 foreach (string line in MoreFigureLines(state, all))

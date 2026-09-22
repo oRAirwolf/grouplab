@@ -7115,6 +7115,36 @@ The dots are the shots themselves rather than a bar, because a spread where one 
 Where the shots **can** separate them it says that instead, and where there were too few shots to run the circularity test it says there is no way to tell. The p value is the analysis's own, so the picture makes no claim the figures do not already make.
 
 
+# Did the group open up as it was shot?
+
+Entry 141 section 5.2.3. A barrel warming, a shooter tiring, a rest settling: all things people believe they can see in a group, and a group of ten shots fired in a random order will look like one of them often enough to convince somebody.
+
+## It draws nothing unless the order is really known
+
+A sheet does not record what order it was shot in. The order exists only where a chronograph string has been mapped to the shots, and nothing else in GroupLab knows it.
+
+Numbering the holes left to right and calling that the shot order would draw a chart that looks **exactly** like a real one, and a reader would have no way to tell the two apart. So with no order known the block does not appear and the words say why.
+
+## The test, not the picture
+
+Spearman's rank correlation between the order fired and the distance from the group's centre, with a two-sided permutation p-value. `docs/STATISTICS.md` section 12a has the reasoning:
+
+- **Ranks**, because the question is whether later shots sit further out, not whether they sit further out in proportion to anything, and because one wild shot should not decide it.
+- **A permutation test**, because under "order carries nothing" every ordering of these shots is equally likely, so the null distribution comes from the shots themselves and assumes no distribution at all.
+- **Two sided**, because a shooter looking for a barrel warming would otherwise find one at half price, and a shooter looking for settling in would find the opposite.
+- **Nothing below five shots**, where every ordering is a large share of the ones there are.
+
+## The test that decides whether it was worth building
+
+`ShotOrderTrendTests` fires **400 simulated groups of ten Rayleigh radii in a random order** and requires the share called a trend at the 5 percent level to stay under 11 percent.
+
+That is the measure that matters. What counts is not that a real trend is found; it is how often one is announced when there is none, because that is the number that decides whether this picture teaches people something true or teaches them to see barrel warmings in noise.
+
+The caption follows it:
+
+> It tightened a little, but 8 shots cannot tell that from chance: a group whose order carried nothing looks at least this ordered about 62 percent of the time.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

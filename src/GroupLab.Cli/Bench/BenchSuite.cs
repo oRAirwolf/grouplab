@@ -290,6 +290,15 @@ public static class BenchSuite
             },
             ["ShapeTests", "CircularAspect", "GroupGeometry"]);
 
+        yield return new BenchCase("statistics", "the shot order trend", "Whether the group opened up as it was shot: a rank correlation against 9999 shuffles of the same shots, which is the slowest of the shape answers.",
+            _ =>
+            {
+                var radii = GroupStatistics.Radii(shots, GroupStatistics.Centre(shots));
+                var trend = ShotOrderTrend.Of(radii);
+                return string.Create(CultureInfo.InvariantCulture, $"correlation {trend?.Correlation ?? 0:0.00}, p {trend?.PValue ?? 1:0.000}");
+            },
+            ["ShotOrderTrend"]);
+
         yield return new BenchCase("statistics", "the flyer calibration", "What the worst shot of a group this size is expected to be, which the worst-shot card is read against.",
             _ => string.Create(CultureInfo.InvariantCulture, $"worst expected at {Flyers.ExpectedWorstInSigmas(shots.Count):0.000} sigma"),
             ["Flyers", "SampleSize"]);
