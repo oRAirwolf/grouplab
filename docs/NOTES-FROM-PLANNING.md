@@ -76,6 +76,84 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 ---
 
+# 2026-09-22, entry 142: a Research section on grouplab.org, thirty articles
+
+**Status: in progress 2026-09-22.** Sections 1 and 2 are done: the page, the navigation link, the article format, the build and its checks. Section 3 is four of the eighteen articles code writes (1, 3, 5 and 6), which are batch 1; the planning session's twelve drafts have not appeared in `C:\Dev\grouplab-research-drafts` yet, and nothing has been imported. Section 4 is not done: **nothing is published**, and batch 1 waits for Alan's review and his words "publish research batch 1". Section 5's constant check is in. The state of all thirty is `docs/RESEARCH.md`.
+
+Written by the planning session at 09:10 UTC on 2026-09-22. Alan approved every decision here.
+
+**Order: this comes after entry 141 sections 1 to 5.** Printing, the CI changes, the queued work, question 38 and Alan's interface priorities come first. Nothing in this entry is pushed while the section 1.5 printing hold is in force, and nothing here touches printing, sheet rendering or the library.
+
+## 1. Decisions
+
+1. The page is called **Research**, at `https://grouplab.org/research/`, with a "Research" link in the top navigation of every page.
+2. Byline on every article: "GroupLab project, tested by Alan Hayes, researched and written with Claude", with the date it was written and the date of its data.
+3. **Images:** articles may show Alan's range scans and photographs, re-encoded from pixels with every piece of metadata removed. Never read, print or publish GPS, location or timestamp data. Two exclusions stand: the orange commercial target (never shown, never named) and the friend's scan until its consent record is published in the repository. Nothing from `C:\Dev\grouplab-submissions` is used in an article without its consent and a later instruction.
+4. **Gear:** articles may name Alan's rifles and optics. Alan will supply a list of optics by class (1x, low power variable, medium power variable, high power variable) for the aim point series.
+5. Every standing rule applies to the site text as well: no em dashes, no pseudoscience (barrel harmonics, optimal barrel time, velocity or accuracy nodes), no mention of OnTarget.
+
+## 2. How an article is stored and built
+
+1. Each article is `website/research/<slug>.md` with front matter: title, one or two sentence description for the index, topic group, number, date written, date of data, sample size, status (draft or published), sources, and data files.
+2. Every chart built from GroupLab data is made by a script beside it, `website/research/<slug>/figures/*.py`, from data in the repository or from derived CSV files that are committed. A reader can download the CSV behind every chart. Concept charts made from simulation state that they are simulated, with the seed.
+3. `website/build.py` renders the articles and an index page grouped by topic, each entry showing the title, the description and a small thumbnail of the article's lead graphic.
+4. Every article opens with a short box: what we found, how sure we are (sample size and the main limit), and where the data is. Sources are listed at the end with links.
+5. Images of Alan's sheets are re-encoded from pixels at a web size, with no metadata, and checked by a test that fails if any published image carries EXIF, XMP or IPTC data.
+6. Add tests: every article in the index has its front matter complete, every CSV it links exists, every figure script runs, and no article text contains an em dash or the banned terms.
+
+## 3. Who writes which
+
+**Code writes** the articles built on GroupLab's own data, code and history, eighteen of them: 1, 2, 3, 5, 6, 7, 9, 10, 12, 17, 18, 19, 20, 24, 25, 26, 27, 28.
+
+**The planning session drafts** the concept and research articles, twelve of them: 4, 8, 11, 13, 14, 15, 16, 21, 22, 23, 29, 30. Drafts arrive in `C:\Dev\grouplab-research-drafts\<slug>\` as `article.md`, figures, their scripts or data, and a sources list. Bring each one into `website/research/`, check every number against the repository and the application, regenerate figures from repository data where it exists, and raise any disagreement in `docs/QUESTIONS-FOR-PLANNING.md` rather than changing a claim silently. Do not write, rename or delete anything in the drafts folder.
+
+| # | Slug | Title | Group | Writer |
+|---|---|---|---|---|
+| 1 | photo-hole-size | Why a photo cannot tell you your bullet's size | Reading targets | Code |
+| 2 | hole-is-not-the-bullet | A bullet hole is not the bullet | Reading targets | Code |
+| 3 | primer-comparison | Did the primer matter? A real comparison | Range tests | Code |
+| 4 | mean-radius-or-extreme-spread | Mean radius or extreme spread? | Measuring groups | Planning |
+| 5 | how-grouplab-reads-a-target | How GroupLab reads a target | Reading targets | Code |
+| 6 | wrong-bull | When shots land on the wrong bull | Reading targets | Code |
+| 7 | uploads-rebuilt-from-pixels | Every upload is rebuilt from pixels | How GroupLab is built | Code |
+| 8 | can-you-see-the-bull | Can you see the bull? Aim points and optics at 100 yards | Range tests | Planning |
+| 9 | scans-against-photos | Scans against phone photos: how close is close enough? | Reading targets | Code |
+| 10 | safe-updates | How GroupLab updates itself safely | How GroupLab is built | Code |
+| 11 | how-many-shots | How many shots do you need? | Measuring groups | Planning |
+| 12 | pooling-groups | Pooling groups: when two sheets are one load | Measuring groups | Code |
+| 13 | cep-explained | CEP 50 and 90 explained | Measuring groups | Planning |
+| 14 | velocity-sd-small-samples | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning |
+| 15 | moa-mils-inches | MOA, mils and inches: one group four ways | Measuring groups | Planning |
+| 16 | when-to-adjust-zero | Zeroing: when to adjust and when to leave it | Measuring groups | Planning |
+| 17 | one-hole-or-two | One hole or two? | Reading targets | Code |
+| 18 | curled-angled-paper | Curled, angled and wrinkled paper | Reading targets | Code |
+| 19 | wind-or-rifle | Wind or rifle? | Range tests | Code |
+| 20 | blank-sheet-zero | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code |
+| 21 | photographing-targets | How to photograph a target so it measures well | Guides | Planning |
+| 22 | printer-true-size | Does your printer print at true size? | Guides | Planning |
+| 23 | scanner-traps | Scanner traps: cropping, DPI and colour | Guides | Planning |
+| 24 | choosing-the-markers | Choosing the markers | How GroupLab is built | Code |
+| 25 | designing-a-readable-target | Designing a target GroupLab can read | How GroupLab is built | Code |
+| 26 | what-grouplab-sends | What GroupLab sends from your computer | How GroupLab is built | Code |
+| 27 | nightly-builds | Nightly builds, from commit to installer | How GroupLab is built | Code |
+| 28 | smaller-installer | Cutting the installer from 97 MB to 81 MB | How GroupLab is built | Code |
+| 29 | aim-points-by-optic-class | Aim points for 1x to high power optics | Range tests | Planning |
+| 30 | range-test-log | The range test log | Range tests | Planning |
+
+Articles 8 and 29 wait for Alan's range data. Article 9 follows entry 130 section 2c.
+
+## 4. Publishing
+
+1. Batches of five or six. For each batch, build the site locally, render every new page at phone and desktop widths under `docs/figures/research/`, and stop with STATUS: NEEDS YOU asking Alan to review them. Publish a batch only after Alan sends "publish research batch N". The normal site publishing rule applies after that: `docs/RELEASE-NOTES.md` current, the website workflow run by dispatch, the live check confirmed.
+2. Batch 1: the Research page and navigation link, plus articles 1, 3, 5 and 6, and any planning drafts that are ready.
+3. Keep a table of all thirty with their state in `docs/RESEARCH.md`.
+
+## 5. Accuracy
+
+Every figure states its sample size. Nothing is called proven that five shots cannot prove. Where GroupLab's own behaviour is described, it describes the build on the site, and a test fails if an article quotes a constant (such as the hole to calibre ratio) that no longer matches the code.
+
+---
+
 # 2026-09-22, entry 141: tonight's work, and printing that must work by morning
 
 **Status: in progress 2026-09-22.** Section 1.1 done, the print path held by tests that need no printer. Section 3 was done before this entry arrived. Sections 1.2 to 1.5, 2, 4, 5 and 6 are not done yet; the progress file is `docs/OVERNIGHT-2026-09-22.md`.
