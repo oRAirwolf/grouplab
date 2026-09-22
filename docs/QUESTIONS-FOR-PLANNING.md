@@ -12,6 +12,45 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 39: three of Alan's five close calibre pairs straddle his own two lists
+
+**Status: open, and handled in the meantime.**
+
+### 1. What the requirement says
+
+Alan's 2026-09-22 requirement for the calibre guess gives two lists and five examples of pairs the measurement cannot separate:
+
+> Rifle: .172, .204, .222 (shown as 22LR), .224, .243, .257, .264, .277, .284, .308, .338, .375, .416, .458, .510
+> Pistol: .312, .355, .400, .410, .430, .451, .500
+
+> where the measured size cannot tell two diameters apart (for example .222 and .224, .308 and .312, .451 and .458, .500 and .510, .400 and .410)
+
+Three of those five pairs have one member on each list:
+
+| pair | apart | where they live |
+|---|---|---|
+| .222 and .224 | 0.002 in | both rifle |
+| .400 and .410 | 0.010 in | both pistol |
+| **.308 and .312** | 0.004 in | rifle and pistol |
+| **.451 and .458** | 0.007 in | pistol and rifle |
+| **.500 and .510** | 0.010 in | pistol and rifle |
+
+So a guess that may only offer diameters from one list can never offer three of the five pairs Alan named.
+
+### 2. What I did
+
+The **preselection** comes from the firearm type's list, as asked. The **neighbours** are drawn from both lists. A person who has set "rifle" and shot a 0.310 in bullet is offered .308 first with .312 beside it, rather than being told .308 on evidence that cannot separate them. The alternative, offering only same-list neighbours, would state a calibre as measured when it is not, which is the one thing the requirement says never to do.
+
+It also covers the commoner case: the firearm type is a field somebody may simply not have set, and the default is rifle.
+
+### 3. What I would like settled
+
+Confirm this, or say that the lists are meant to be strict both ways and the three cross-list pairs are simply not offered together. If strict, .308 and .312 in particular will read as a firm answer on evidence that cannot support one, and I would want the wording changed to say so.
+
+Nothing depends on the answer: the behaviour above is in, with tests for all five pairs.
+
+---
+
 ## 2026-09-22, question 38: on a photograph, every hole measures about half again what the bullet is, so a stated calibre flags the whole sheet
 
 **Status: answered 2026-09-22.** Alan: "yes, measure the photographed hole size factor yourself". Measured, and the answer is that **there is no factor to measure**: it is not a property of the medium. `docs/PHASE1-RESULTS.md`, "What a hole measures in a photograph", has the numbers and the recommendation, which is that a photograph's doubles are judged against the sheet's own marks rather than against any constant. No constant was changed.

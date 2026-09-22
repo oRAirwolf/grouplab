@@ -314,6 +314,12 @@ public sealed partial class MainWindow : Window
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>
+    /// The calibres the confirmation step offers: the one the holes look most like, and beside it any this sheet's holes cannot be told
+    /// apart from. A person picks one instead of typing it, and typing it is still there for everything else.
+    /// </summary>
+    private readonly WrapPanel calibreOffers = new() { ItemSpacing = 6, LineSpacing = 4, IsVisible = false };
+
+    /// <summary>
     /// Whether the person has answered the calibre question on this marking, NOTES-FROM-PLANNING.md entry 131 section 6.3. Setting a calibre
     /// answers it, and so does clearing it, because "no calibre" is a deliberate answer for somebody marking a photograph of something that
     /// is not a GroupLab sheet. What it stops is Accept on a sheet where nobody has been asked at all.
@@ -522,6 +528,7 @@ public sealed partial class MainWindow : Window
             session.SetCalibre(null);
         })));
         panel.Children.Add(calibreNote);
+        panel.Children.Add(calibreOffers);
         panel.Children.Add(FieldLabel("Shot distance"));
         shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
         panel.Children.Add(Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Clear", () =>
@@ -886,6 +893,63 @@ public sealed partial class MainWindow : Window
     /// <summary>The in-the-moment notice of entry 41 section 5, best effort: the window may not be able to draw, and the record is already written.</summary>
     private void OnCrashRecorded(object? sender, string crash) => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         problem.Text = "Something went wrong, and GroupLab recorded what. The window carried on, but check your last change. The next time GroupLab opens it offers the record.");
+
+    /// <summary>
+    /// What GroupLab reads the calibre as, for this sheet: from the chosen load where it records a diameter, from the rifle's own list
+    /// otherwise, and from nothing at all where the marks came from a photograph (question 38).
+    /// </summary>
+    internal CalibreGuess TheCalibreGuess(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        var rifle = state.Rifle is { Name: { } named } ? book.FindRifle(named) ?? state.Rifle : state.Rifle;
+        var load = state.Load is { } loadName ? book.FindLoad(loadName) : null;
+        return CalibreConfirmation.Guess(state, rifle?.Firearm ?? FirearmType.Rifle, load?.BulletDiameterInches, metadata?.IsCamera == true);
+    }
+
+    /// <summary>
+    /// The calibre line and the buttons under it, NOTES-FROM-PLANNING.md entry 131 section 6.3 and Alan's 2026-09-22 requirement: the guess
+    /// snaps to something somebody shoots, and where the holes cannot tell two of them apart both are offered rather than one asserted.
+    /// </summary>
+    private void ShowCalibreGuess(MarkingState state)
+    {
+        calibreOffers.Children.Clear();
+        if (state.Calibre is { } calibre)
+        {
+            calibreNote.Text = $"Read as a {units.Length(calibre.DiameterInches)} bullet diameter. Type the diameter itself if that is not right.";
+            calibreOffers.IsVisible = false;
+            return;
+        }
+
+        var guess = TheCalibreGuess(state);
+        calibreNote.Text = guess.DiameterInches is not null
+            ? guess.Why
+            : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+
+        // A photograph offers the whole list rather than a preselection, so the buttons would be a wall of them: it asks instead.
+        var offered = guess.Rough && guess.Nearest is null ? [] : guess.Offered;
+        foreach (var choice in offered)
+        {
+            var button = Button(choice.Name, () =>
+            {
+                session.SetCalibre(choice);
+                calibreBox.Text = choice.DiameterInches.ToString("0.###", CultureInfo.InvariantCulture);
+                CalibreAnswered();
+                Refresh();
+            });
+            if (ReferenceEquals(choice, guess.Nearest))
+            {
+                button.Classes.Add(AppStyles.Primary);
+            }
+
+            calibreOffers.Children.Add(button);
+        }
+
+        calibreOffers.IsVisible = calibreOffers.Children.Count > 0;
+    }
+
+    /// <summary>The calibres the confirmation step is offering, for the headless tests.</summary>
+    internal IReadOnlyList<string> CalibreOffers =>
+        [.. calibreOffers.Children.OfType<Button>().Select(b => b.Content as string ?? "")];
 
     /// <summary>The unit setting in use, for the headless tests.</summary>
     internal UnitSettings Units => units;
@@ -1645,11 +1709,7 @@ public sealed partial class MainWindow : Window
 
         // NOTES-FROM-PLANNING.md entry 131 section 6.3: with no calibre named, show what the holes themselves suggest, so a person has
         // something to accept or correct rather than an empty box. Naming it is worth five holes on one of the range scans.
-        calibreNote.Text = state.Calibre is { } calibre
-            ? $"Read as a {units.Length(calibre.DiameterInches)} bullet diameter. Type the diameter itself if that is not right."
-            : CalibreConfirmation.Guess(state) is { DiameterInches: not null } guess
-                ? guess.Why
-                : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+        ShowCalibreGuess(state);
         if (!shotDistance.IsKeyboardFocusWithin)
         {
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";

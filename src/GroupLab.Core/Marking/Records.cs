@@ -17,6 +17,12 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     // What the ballistic solver needs from the rifle, NOTES-FROM-PLANNING.md entry 112 section 4, all optional: a rifle without them simply
     // cannot use the solver, and the screen says which is missing.
 
+    /// <summary>
+    /// Whether this is a rifle or a pistol, which decides the list a calibre is guessed from. It defaults to a rifle, because every record
+    /// made before this field existed is one, and because most of them will go on being one.
+    /// </summary>
+    public FirearmType Firearm { get; init; } = FirearmType.Rifle;
+
     /// <summary>The height of the sight's axis above the bore, in inches.</summary>
     public double? SightHeightInches { get; init; }
 

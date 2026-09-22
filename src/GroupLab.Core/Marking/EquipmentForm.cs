@@ -58,6 +58,7 @@ public static class EquipmentForm
     public static ImmutableList<EquipmentField> Rifle { get; } =
     [
         new("name", "Name", FieldKind.Words, Required: true),
+        new("firearm", "Rifle or pistol", FieldKind.Choice),
         new("manufacturer", "Manufacturer", FieldKind.Words),
         new("cartridge", "Cartridge", FieldKind.Words),
         new("barrelLengthInches", "Barrel length", FieldKind.Number, "in"),
@@ -176,6 +177,7 @@ public static class EquipmentForm
             "cartridge" => Text(rifle.Cartridge),
             "barrelLengthInches" => Text(rifle.BarrelLengthInches),
             "twistInches" => Text(rifle.TwistInches),
+            "firearm" => rifle.Firearm.ToString(),
             "twistDirection" => rifle.TwistDirection is { } d ? (d < 0 ? "left" : "right") : null,
             "scope" => Text(rifle.Scope),
             "clickUnit" => rifle.ClickUnit.ToString(),

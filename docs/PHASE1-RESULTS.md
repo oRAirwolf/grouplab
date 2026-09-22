@@ -6887,6 +6887,56 @@ The calibre keeps its other two jobs, where it is still the better answer: the s
 **And a second finding, smaller but real.** The .22 LR scan reads 0.758 where the three centrefire scans read 0.92 to 0.95. A .22 hole measures proportionally less of its bullet than a centrefire hole does, so the single constant is not calibre-independent either. It was measured on .264, .308 and .338 only, which is why nobody had seen this. It matters for the size gate on small calibres, which entry 130 section 2b.3 has already been round once. I have changed nothing: that needs its own measurement across more small-calibre sheets than the one here.
 
 
+# The calibre guess lands on something somebody shoots
+
+Alan's requirement of 2026-09-22, and entry 141 section 3.3.
+
+## The lists
+
+The guess now snaps to one of Alan's own diameters and nothing else:
+
+- **Rifle**: .172, .204, .222 (the rimfire, named `22LR`), .224, .243, .257, .264, .277, .284, .308, .338, .375, .416, .458, .510
+- **Pistol**: .312, .355, .400, .410, .430, .451, .500
+
+Each is shown in both units, as everything else here is. Reading 0.2371 in off a sheet and offering "0.237 in" is arithmetic dressed as knowledge, because nobody loads a .237; offering .243 with .224 beside it is a question a shooter answers in a second.
+
+**The list limits the guess, not the person.** Any diameter at all can still be typed, and the refusals for designations typed as diameters (6.5 mm, 7.62 mm, .38) are untouched.
+
+## Which list, and when there is nothing to guess
+
+The Equipment screen's rifle form gains **Rifle or pistol**, defaulting to rifle, so every record made before it existed is one. The guess reads it from the rifle the sheet names.
+
+**A diameter on the chosen load wins outright and nothing is guessed.** The shooter wrote it down; nothing read off paper beats that.
+
+## Never a calibre the evidence cannot support
+
+Where the holes cannot tell two listed diameters apart, both are offered, the likelier first, and the sentence says why. "Cannot tell apart" is two standard errors of the estimate, and the estimate has two sources of error:
+
+1. **The sheet's own spread**, the scatter of its single marks, which is what Alan asked for: a sheet that measures consistently earns a narrow window and a ragged one is told it is ragged. Marks flagged as possibly two holes are left out, since a merged pair measures like nothing on the sheet.
+2. **The estimator's own error, about 0.007 in**, which no sheet can see. Putting back a fixed allowance for the paper assumes this paper, backing and velocity close a hole like the ones the allowance was measured on. On the four range scans of known calibre the estimate landed 0.0016, 0.0035 and 0.0068 in high on the three centrefire sheets.
+
+The second term is the larger one on a tidy sheet, and it is why .451 and .458 are offered together however well a sheet measures. **The neighbours are drawn from both lists even though the preselection respects the firearm type**: most of the pairs that cannot be separated straddle the lists (.308 against .312, .451 against .458, .500 against .510), and hiding half of one because a record says "rifle" would assert a calibre the evidence does not separate.
+
+## What it does on the four range scans
+
+Read only, nothing committed.
+
+| scan | known | preselected | offered beside it |
+|---|---|---|---|
+| 1 | 6.5 Creedmoor, .264 | **.264** | .277, .257 |
+| 3 | 6.5 Creedmoor, .264 | .277 | **.264**, .284, .257 |
+| 4 | .22 LR, .222 | .204 | .172 |
+| 5 | 6 ARC, .243 | **.243** | .257 |
+
+Two of four preselect the right calibre, three of four offer it, and every one of them is marked rough with its neighbours beside it, so nothing is asserted.
+
+**Scan 4 is a miss and it is the rimfire one.** Its holes measure 0.170 in for a 0.222 in bullet, a deficit of 0.052 where the three centrefire sheets give 0.013 to 0.019. Question 38's second finding is exactly this: the hole-to-bullet ratio is not calibre-independent, and it was measured on .264, .308 and .338 only. Nothing has been fudged to cover it. The guess is offered and never applied, so a person on that sheet types .222 and moves on, and the fix is a measurement across more rimfire sheets than the one there is.
+
+## A photograph guesses nothing
+
+Question 38 measured photographs of sheets of known calibre at 0.90 to 1.45 times the bullet, sheet by sheet. So from a photograph the confirmation step preselects nothing, offers the list, and says plainly that a hole photographed in low light reads far wider than the same hole scanned.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

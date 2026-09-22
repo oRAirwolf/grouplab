@@ -179,6 +179,7 @@ public sealed partial class MainWindow
     /// <summary>The fixed lists, which are choices rather than free text: a scope's units, a twist's hand, a barrel's rifle, a drag model.</summary>
     private List<string>? ChoicesFor(string key) => key switch
     {
+        "firearm" => ["Rifle", "Pistol"],
         "clickUnit" => ["Moa", "Mrad", "Smoa"],
         "twistDirection" => ["right", "left"],
         "dragModel" => ["G1", "G7"],
@@ -263,6 +264,7 @@ public sealed partial class MainWindow
                 var unit = Typed("clickUnit") switch { "Mrad" => AngularUnit.Mrad, "Smoa" => AngularUnit.Smoa, _ => AngularUnit.Moa };
                 book = book.With(new Rifle(name, click, unit)
                 {
+                    Firearm = Typed("firearm") is "Pistol" ? FirearmType.Pistol : FirearmType.Rifle,
                     Manufacturer = Blank(Typed("manufacturer")),
                     Cartridge = Blank(Typed("cartridge")),
                     BarrelLengthInches = Number(Typed("barrelLengthInches")),
