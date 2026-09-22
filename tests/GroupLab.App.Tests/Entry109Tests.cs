@@ -115,7 +115,8 @@ public class Entry109Tests
         var (window, path, _) = Sheet();
         try
         {
-            Assert.Equal(["Open image…", "Open marking…", "Export…", "Report a problem…"], window.MenuItems);
+            // Entry 140 section 2 put New target at the head of the menu: it is the document action that comes before opening one.
+            Assert.Equal(["New target (Ctrl+N)", "Open image…", "Open marking…", "Export…", "Report a problem…"], window.MenuItems);
             // Only what is on this screen: the library has worded Zoom in, Zoom out and Fit buttons of its own (entry 120 section 10.3),
             // and they are in the window's tree whichever screen is showing.
             var words = window.GetLogicalDescendants().OfType<Button>().Where(Shown).Select(b => b.Content as string).Where(c => c is not null).ToList();

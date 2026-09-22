@@ -497,6 +497,8 @@ public sealed partial class MainWindow : Window
         // the group was shot with and the shots; the units, the theme and the log are settings, on their own screen.
         var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
         panel.Children.Add(crashBanner);
+        BuildLeavingAsk();
+        panel.Children.Add(leavingAsk);
         panel.Children.Add(Heading("Review"));
         panel.Children.Add(review);
         AddHandler(KeyDownEvent, OnReviewKey, Avalonia.Interactivity.RoutingStrategies.Tunnel);
@@ -1079,6 +1081,7 @@ public sealed partial class MainWindow : Window
         detectedState = null;
         plotDefinition = null;
         registrationResidual = null;
+        savedMarking = null;
         // A new sheet is a new question: entry 131 section 6.3's gate asks again, because the calibre is a property of this group and not of
         // the session, and a person who answered for the last sheet has said nothing about this one.
         calibreConfirmed = false;
@@ -1173,6 +1176,7 @@ public sealed partial class MainWindow : Window
         }
 
         session.Load(state);
+        MarkingIsSaved();
         status.Text = "Reopened " + Path.GetFileName(path) + "." + (notes.Count > 0 ? " " + string.Join(" ", notes) : "");
     }
 
@@ -1236,7 +1240,7 @@ public sealed partial class MainWindow : Window
         DiagnosticLog.Info("dialog.result", ("dialog", "open-marking"), ("chosen", files.Count > 0));
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
-            OpenMarking(path);
+            Leaving(() => OpenMarking(path));
         }
     }
 
@@ -1276,7 +1280,8 @@ public sealed partial class MainWindow : Window
         DiagnosticLog.Info("dialog.result", ("dialog", "open-image"), ("chosen", files.Count > 0));
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
-            OpenImage(path);
+            // Entry 140 section 1.4: the sheet that is about to be thrown away asks first, where it holds edits nobody has saved.
+            Leaving(() => OpenImage(path));
         }
     }
 
@@ -2143,6 +2148,8 @@ public sealed partial class MainWindow : Window
         try
         {
             currentSession = sessions.Save(record);
+            // Entry 140 section 1.4: from here the sheet is in a saved session, so leaving it asks nothing until it is edited again.
+            MarkingIsSaved();
             DiagnosticLog.Info("session.save", ("session", currentSession), ("shots", record.ShotCount), ("proof", proof?.Length ?? 0));
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
@@ -2225,6 +2232,7 @@ public sealed partial class MainWindow : Window
         registrationResidual = null;
         detectedState = null;
         session.Load(state);
+        MarkingIsSaved();
         currentSession = id;
         destination = Destination.Analyse;
         SetAnalysing(true);
@@ -2353,7 +2361,7 @@ public sealed partial class MainWindow : Window
             }
 
             ToolTip.SetTip(open, $"Open the session of {s.ShotDate}, {s.SheetName}");
-            open.Click += (_, _) => OpenSession(id);
+            open.Click += (_, _) => Leaving(() => OpenSession(id));
             var delete = Button("Delete", () => { });
             delete.Width = SessionDeleteWidth;
             var row = new DockPanel();
@@ -3314,6 +3322,9 @@ public sealed partial class MainWindow : Window
             case Key.Y when control:
                 session.Redo();
                 break;
+            case Key.N when control:
+                NewTarget();
+                break;
             case Key.P:
                 SetTool(MarkingTool.Pan);
                 break;
@@ -3897,6 +3908,11 @@ public sealed partial class MainWindow : Window
         var menu = new MenuFlyout();
         foreach (var (label, action) in new (string, Func<Task>)[]
         {
+            ("New target (Ctrl+N)", () =>
+            {
+                NewTarget();
+                return Task.CompletedTask;
+            }),
             ("Open image\u2026", OpenImageDialog),
             ("Open marking\u2026", OpenMarkingDialog),
             ("Export\u2026", ExportDialog),
