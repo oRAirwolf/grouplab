@@ -10,6 +10,55 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.44
+
+**2026-09-22**, commit `75ff2e8`. Nightly.
+
+### Fixed
+
+- Opening a new target no longer carries the last one's calibre, rounds fired or distance over to it, which was flagging every hole on the new sheet as possibly two. There is a button to copy that setup across when you do want it.
+
+### Known issues
+
+- On a photograph, a stated calibre can still flag most of the holes as possibly two shots, because holes photographed in low light read larger than the same holes scanned. Leave the calibre empty on a photograph until this is settled, and GroupLab judges the holes against each other instead.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.44)
+
+---
+
+## 0.2.0-nightly.43
+
+**2026-09-22**, commit `6545cf2`. Nightly.
+
+### Fixed
+
+- Fixed an update that older builds refused as unsigned, which had left them unable to update themselves at all.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.43)
+
+---
+
+## 0.2.0-nightly.42
+
+**2026-09-22**, commit `6616330`. Nightly.
+
+### New
+
+- Compare loads now draws each load's mean radius and sigma with the range it could really be, so you can see at a glance whether the shots can tell two loads apart at all.
+
+### Fixed
+
+- Fixed an update that installed and then did not reopen GroupLab. The installer was bringing it back before it had finished, and it closed again immediately.
+- Each build's release notes now list only what changed since the previous build, instead of repeating the whole history every time.
+
+### Known issues
+
+- **This build cannot update older builds.** It carried a field in its update information that builds up to nightly 41 do not know, and those builds refuse it as unsigned. Fixed in nightly 43; anybody stuck on an older build can install the newest by hand from the downloads below.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.42)
+
+---
+
 ## 0.2.0-nightly.37
 
 **2026-09-22**, commit `e551dbb`. Nightly.
