@@ -10,6 +10,14 @@ The Research page, the navigation link, the article format, the build and its ch
 
 **About those renders.** Entry 142 section 4.1 asks for phone and desktop widths. Chrome's command line screenshot on this machine does not emulate a phone: it lays the page out at about 800 pixels whatever window size it is given and then crops the picture to the size asked for, so a "390 wide" render is a crop of a wider page and shows text running off an edge that is not really there. I checked this against an existing page, `/guides/`, which crops identically. So the narrow renders are taken at 860, the width where the site's own mobile layout begins, which Chrome does honour. A true phone render needs device emulation through the DevTools protocol, which is not set up here.
 
+## Importing a planning draft
+
+The twelve drafts arrived in `C:\Dev\grouplab-research-drafts` on 2026-09-22, one folder each with `article.md`, its figures and the script that makes them, its data and its sources. Nothing there is written to, renamed or deleted.
+
+Each one ends with a list of what to check against the repository before it goes in. **Article 4's three checked out exactly**: the 86 percent ammunition figure at 25 shots is `docs/STATISTICS.md` section 5's own number, the mean radius scale marks are word for word what `MeanRadiusScale.cs` holds, and the headline figure is in the logo's amber as the draft says.
+
+**Their figure scripts need numpy, scipy and matplotlib, and this machine has no package source to install from.** The build says so by name and uses the committed figure beside the script, rather than failing: a script that needs a package that is not here is not a broken script. Anything else a script does wrong still fails the build. `_style.py`, the shared chart style the drafts import, sits at `website/research/_style.py` and the research folder is on the path when a script runs.
+
 ## What is built
 
 - `website/research/<slug>.md`, front matter and body, one file an article.
@@ -25,7 +33,7 @@ The Research page, the navigation link, the article format, the build and its ch
 | 1 | `photo-hole-size` | Why a photo cannot tell you your bullet's size | Reading targets | Code | **written**, batch 1 |
 | 2 | `hole-is-not-the-bullet` | A bullet hole is not the bullet | Reading targets | Code | not started, batch 2 |
 | 3 | `primer-comparison` | Did the primer matter? A real comparison | Range tests | Code | **written**, batch 1 |
-| 4 | `mean-radius-or-extreme-spread` | Mean radius or extreme spread? | Measuring groups | Planning | waiting for the draft |
+| 4 | `mean-radius-or-extreme-spread` | Mean radius or extreme spread? | Measuring groups | Planning | **imported, draft**: its three checks verified against the repository |
 | 5 | `how-grouplab-reads-a-target` | How GroupLab reads a target | Reading targets | Code | **written**, batch 1 |
 | 6 | `wrong-bull` | When shots land on the wrong bull | Reading targets | Code | **written**, batch 1 |
 | 7 | `uploads-rebuilt-from-pixels` | Every upload is rebuilt from pixels | How GroupLab is built | Code | not started, batch 3 |

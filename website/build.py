@@ -742,10 +742,23 @@ def build_research_figures() -> list[str]:
     """
     problems = []
     for script in sorted((REPO / "website" / "research").glob("*/figures/*.py")):
-        done = subprocess.run([sys.executable, "-B", script.name], cwd=script.parent, capture_output=True, text=True)
-        if done.returncode != 0:
-            tail = done.stderr.strip().splitlines()[-1] if done.stderr.strip() else "no output"
-            problems.append(f"research/{script.parent.parent.name}: {script.name} failed: {tail}")
+        # The research folder is on the path so a shared style module beside the articles is importable from any of them,
+        # which is how the planning session's figure scripts are written.
+        env = dict(os.environ, PYTHONPATH=str(REPO / "website" / "research"))
+        done = subprocess.run([sys.executable, "-B", script.name], cwd=script.parent, capture_output=True, text=True, env=env)
+        if done.returncode == 0:
+            continue
+
+        tail = done.stderr.strip().splitlines()[-1] if done.stderr.strip() else "no output"
+
+        # A script that needs a package this machine does not have is not a broken script, and this machine has no
+        # package source to install one from. It says so and moves on; anything else fails the build. The figure it
+        # would have drawn is committed beside it, so the page is complete either way.
+        if "ModuleNotFoundError" in tail:
+            print(f"research/{script.parent.parent.name}: {script.name} needs a package that is not here ({tail}); its committed figure is used")
+            continue
+
+        problems.append(f"research/{script.parent.parent.name}: {script.name} failed: {tail}")
     return problems
 
 
@@ -824,7 +837,7 @@ def page_research_article(meta: dict) -> str:
     content = markdown.markdown(meta["body"], extensions=["tables", "sane_lists", "fenced_code"])
     sources = "".join(f"<li>{markdown.markdown(str(x), extensions=[])[3:-4]}</li>" for x in (meta.get("sources") or []))
     data = "".join(
-        f'<li><a href="/research/{meta["slug"]}/{d}">{esc(d)}</a></li>' for d in (meta.get("data") or [])
+        f'<li><a href="/research/{meta["slug"]}/{d}">{esc(d.rsplit("/", 1)[-1])}</a></li>' for d in (meta.get("data") or [])
     )
     # Entry 142 section 2.4: every article opens with what we found, how sure we are, and where the data is.
     box = f"""<div class="panel pad stack tight research-box">
