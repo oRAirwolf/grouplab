@@ -73,6 +73,12 @@ public static class ReviewQueue
     /// <summary>How many candidates a count item names, most likely first.</summary>
     public const int CountCandidates = 3;
 
+    /// <summary>The fewest flagged marks before "most of them" can mean anything: three is a pattern, one is a mark.</summary>
+    public const int MostOfThem = 3;
+
+    /// <summary>The share of a sheet's marks that being flagged makes the calibre the likelier explanation than the holes.</summary>
+    public const double MostOfThemShare = 0.6;
+
     /// <param name="analyseSighters">
     /// NOTES-FROM-PLANNING.md entry 105 section 8: sighters are ignored unless the person asks for them. Ignored, nothing that concerns only
     /// sighter bulls is an item: no size flag on a sighter's mark and no contest between two sighters. A contest that involves a scoring bull
@@ -139,7 +145,29 @@ public static class ReviewQueue
             items.Add(new ReviewItem(key, ReviewKind.Contested, shot.Id, shot.Bull, shot.Image, sentence, choices, shot.BullChosen || Dismissed(key)));
         }
 
-        foreach (var shot in shots.Where(s => s.Oversize is not null && !OnlySighters(s.Bull)))
+        // NOTES-FROM-PLANNING.md entry 140 section 3.2: if most of the holes on a sheet would be flagged as possibly two, the assumption is
+        // wrong, not the holes. Alan opened a 6.5 mm sheet after a smaller one, the calibre followed him across, and all fifteen holes were
+        // flagged at 2.0 to 2.36 holes' area: sixteen items on a sheet with nothing wrong with it. A queue that cries wolf teaches people to
+        // ignore it, so this raises one question about the calibre instead of one item a shot.
+        var flagged = shots.Where(s => s.Oversize is not null && !OnlySighters(s.Bull)).ToList();
+        var judged = shots.Where(s => !OnlySighters(s.Bull)).ToList();
+        if (flagged.Count >= MostOfThem && judged.Count > 0 && flagged.Count >= judged.Count * MostOfThemShare)
+        {
+            const string key = "oversized:all";
+            items.Add(new ReviewItem(
+                key,
+                ReviewKind.Oversized,
+                flagged[0].Id,
+                flagged[0].Bull,
+                flagged[0].Image,
+                string.Create(CultureInfo.InvariantCulture,
+                    $"{flagged.Count} of the {judged.Count} marks on this sheet read as more than one hole, which usually means the calibre is wrong rather than that you fired twice at every bull. Check what you were shooting."),
+                [new ReviewChoice("One shot each", ReviewAction.Keep)],
+                Dismissed(key)));
+            flagged = [];
+        }
+
+        foreach (var shot in flagged)
         {
             string key = $"oversized:{shot.Id}";
             var choices = new List<ReviewChoice> { new("One shot", ReviewAction.Keep) };
@@ -242,7 +270,14 @@ public static class ReviewQueue
             ? " No mark carries a measured size, so there is nothing to rank: look at the sheet."
             : (tooFew ? " Most likely to be two, closest to two holes' size first: " : " Least like a hole, smallest first: ")
               + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes"))) + ".";
-        string sentence = string.Create(inv, $"You fired {expected} and {found} {(found == 1 ? "is" : "are")} marked.")
+        // NOTES-FROM-PLANNING.md entry 140: "You fired 25" was said to Alan on a sheet where he had typed nothing, because the number came
+        // from the sheet's own twenty five bulls. He read it as the last sheet's count following him across, and it is worth seeing why that
+        // reading was reasonable: the sentence claimed he had said something he had not. A number the sheet worked out says so, and says what
+        // would settle it.
+        string marked = string.Create(inv, $"{found} {(found == 1 ? "is" : "are")} marked");
+        string sentence = (state.ExpectedShots is not null
+                ? string.Create(inv, $"You fired {expected} and {marked}.")
+                : string.Create(inv, $"This sheet takes {expected} shots and {marked}. Nobody has said how many rounds were fired."))
             + (tooFew ? Empty(state, labels) : "") + list;
 
         var first = ranked.FirstOrDefault();

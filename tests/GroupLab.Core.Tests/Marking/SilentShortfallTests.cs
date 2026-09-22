@@ -57,7 +57,12 @@ public class SilentShortfallTests
         var shortfall = ReviewQueue.For(session.State).SingleOrDefault(i => i.Kind == ReviewKind.Count);
         Assert.NotNull(shortfall);
         Assert.False(shortfall.Resolved);
-        Assert.Contains("You fired 5 and 4 are marked", shortfall.Sentence, StringComparison.Ordinal);
+        Assert.Contains("This sheet takes 5 shots and 4 are marked", shortfall.Sentence, StringComparison.Ordinal);
+
+        // NOTES-FROM-PLANNING.md entry 140: a number the sheet worked out never says the person gave it. "You fired 25" on a sheet where
+        // nothing had been typed is what made Alan read the last sheet's count as having followed him across.
+        Assert.Contains("Nobody has said how many rounds were fired.", shortfall.Sentence, StringComparison.Ordinal);
+        Assert.DoesNotContain("You fired", shortfall.Sentence, StringComparison.Ordinal);
     }
 
     /// <summary>It names where to look, which is the difference between a warning and a useful one.</summary>
@@ -72,7 +77,7 @@ public class SilentShortfallTests
 
         var shortfall = ReviewQueue.For(session.State).Single(i => i.Kind == ReviewKind.Count);
 
-        Assert.Contains("You fired 5 and 3 are marked", shortfall.Sentence, StringComparison.Ordinal);
+        Assert.Contains("This sheet takes 5 shots and 3 are marked", shortfall.Sentence, StringComparison.Ordinal);
         Assert.Contains("Nothing is marked on bulls 2, 4", shortfall.Sentence, StringComparison.Ordinal);
     }
 
@@ -145,7 +150,7 @@ public class SilentShortfallTests
 
         Assert.Equal(6, ReviewQueue.Expected(session.State));
         var shortfall = ReviewQueue.For(session.State).Single(i => i.Kind == ReviewKind.Count);
-        Assert.Contains("You fired 6 and 3 are marked", shortfall.Sentence, StringComparison.Ordinal);
+        Assert.Contains("This sheet takes 6 shots and 3 are marked", shortfall.Sentence, StringComparison.Ordinal);
     }
 
     /// <summary>A number somebody typed still wins, because they know what they fired and the sheet only knows what it was printed for.</summary>
