@@ -25,6 +25,37 @@ public static class Temp
     public static string Folder(string what) =>
         Path.Combine(Path.GetTempPath(), $"grouplab-{what}-{Guid.NewGuid():N}");
 
+    /// <summary>
+    /// Removes one file, and does nothing at all where it cannot. The same reasoning as <see cref="Delete"/>: on 2026-09-22 the end to end
+    /// test failed in its finally block because a PNG it had written seconds earlier was still open outside the process, and a cleanup that
+    /// cannot delete is not a failing test.
+    /// </summary>
+    public static void DeleteFile(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return;
+        }
+
+        for (int attempt = 1; attempt <= Tries; attempt++)
+        {
+            try
+            {
+                File.Delete(path);
+                return;
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                if (attempt == Tries)
+                {
+                    return;
+                }
+
+                Thread.Sleep(WaitMilliseconds);
+            }
+        }
+    }
+
     /// <summary>Removes a folder and everything under it, and does nothing at all where it cannot.</summary>
     public static void Delete(string? path)
     {

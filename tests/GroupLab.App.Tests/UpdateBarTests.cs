@@ -46,16 +46,7 @@ public class UpdateBarTests : IDisposable
         MainWindow.ThisBuild = _wasBuild;
         MainWindow.TrustedKey = _wasKey;
         TestDefaults.Outside.Forget();
-        try
-        {
-            if (File.Exists(_settings))
-            {
-                File.Delete(_settings);
-            }
-        }
-        catch (IOException)
-        {
-        }
+        GroupLab.Tests.Support.Temp.DeleteFile(_settings);
     }
 
     private static SignedManifest Signed(string version = "0.2.0-nightly.13") =>

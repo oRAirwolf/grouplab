@@ -183,7 +183,7 @@ public class Entry105Tests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -234,7 +234,7 @@ public class Entry105Tests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -260,7 +260,7 @@ public class Entry105Tests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -327,7 +327,7 @@ public class Entry105Tests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 }

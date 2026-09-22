@@ -220,7 +220,7 @@ public partial class ThemeTests
         finally
         {
             Application.Current!.RequestedThemeVariant = ThemeVariant.Default;
-            File.Delete(settings);
+            GroupLab.Tests.Support.Temp.DeleteFile(settings);
         }
     }
 

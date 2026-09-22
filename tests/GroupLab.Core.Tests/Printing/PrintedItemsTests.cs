@@ -292,15 +292,6 @@ public class PrintedItemsTests(ITestOutputHelper output)
         throw new TimeoutException($"{path} was not written within two minutes.");
     }
 
-    private static void Delete(string path)
-    {
-        try
-        {
-            File.Delete(path);
-        }
-        catch (IOException)
-        {
-            // The spooler may still hold it; it is a temporary file either way.
-        }
-    }
+    /// <summary>The spooler may still hold the file; it is a temporary one either way, so a cleanup that cannot delete gives up quietly.</summary>
+    private static void Delete(string path) => GroupLab.Tests.Support.Temp.DeleteFile(path);
 }

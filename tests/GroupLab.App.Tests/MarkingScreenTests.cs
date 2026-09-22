@@ -122,8 +122,8 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
-            File.Delete(settings);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(settings);
         }
     }
 
@@ -202,7 +202,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -285,7 +285,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -324,7 +324,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -377,7 +377,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -441,8 +441,8 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(sheet);
-            File.Delete(plain);
+            GroupLab.Tests.Support.Temp.DeleteFile(sheet);
+            GroupLab.Tests.Support.Temp.DeleteFile(plain);
         }
     }
 
@@ -490,7 +490,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(sheet);
+            GroupLab.Tests.Support.Temp.DeleteFile(sheet);
         }
     }
 
@@ -512,7 +512,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(sheet);
+            GroupLab.Tests.Support.Temp.DeleteFile(sheet);
         }
     }
 
@@ -585,7 +585,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -626,7 +626,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -672,7 +672,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -714,8 +714,8 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
-            File.Delete(settings);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(settings);
         }
     }
 
@@ -764,7 +764,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -806,7 +806,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -864,7 +864,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -888,7 +888,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -928,7 +928,7 @@ public class MarkingScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 }

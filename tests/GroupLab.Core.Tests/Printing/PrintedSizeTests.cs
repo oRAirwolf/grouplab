@@ -88,7 +88,7 @@ public class PrintedSizeTests(ITestOutputHelper output)
         }
         finally
         {
-            File.Delete(file);
+            GroupLab.Tests.Support.Temp.DeleteFile(file);
         }
     }
 

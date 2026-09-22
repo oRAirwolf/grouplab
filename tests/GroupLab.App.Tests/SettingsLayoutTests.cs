@@ -124,13 +124,7 @@ public class SettingsLayoutTests(ITestOutputHelper output) : IDisposable
         Assert.Contains(found, later.UpdateStateText, StringComparison.Ordinal);
         later.Close();
 
-        try
-        {
-            File.Delete(settings);
-        }
-        catch (IOException)
-        {
-        }
+        GroupLab.Tests.Support.Temp.DeleteFile(settings);
     }
 
     /// <summary>The control a label names: the next visible thing to its right in the same grid row.</summary>

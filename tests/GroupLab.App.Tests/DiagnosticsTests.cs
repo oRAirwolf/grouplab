@@ -218,7 +218,7 @@ public partial class DiagnosticsTests
         }
         finally
         {
-            File.Delete(blocker);
+            GroupLab.Tests.Support.Temp.DeleteFile(blocker);
         }
     }
 

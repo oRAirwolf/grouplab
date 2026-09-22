@@ -101,7 +101,7 @@ public class AnalysisStateTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -138,7 +138,7 @@ public class AnalysisStateTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -183,7 +183,7 @@ public class AnalysisStateTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -220,7 +220,7 @@ public class AnalysisStateTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 
@@ -266,7 +266,7 @@ public class AnalysisStateTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 

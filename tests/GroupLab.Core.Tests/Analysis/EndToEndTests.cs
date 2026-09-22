@@ -122,7 +122,7 @@ public class EndToEndTests(ITestOutputHelper output)
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
     }
 }

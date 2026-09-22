@@ -96,8 +96,8 @@ public class PrintScreenTests
         }
         finally
         {
-            File.Delete(blocker);
-            File.Delete(good);
+            GroupLab.Tests.Support.Temp.DeleteFile(blocker);
+            GroupLab.Tests.Support.Temp.DeleteFile(good);
             window.Close();
         }
     }
@@ -134,7 +134,7 @@ public class PrintScreenTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
         }
 
         window.Close();

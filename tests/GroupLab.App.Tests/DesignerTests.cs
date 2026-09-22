@@ -44,7 +44,7 @@ public class DesignerTests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
             window.Close();
         }
     }

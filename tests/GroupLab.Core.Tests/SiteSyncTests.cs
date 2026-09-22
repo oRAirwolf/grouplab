@@ -89,7 +89,7 @@ spec.loader.exec_module(sync)
         }
         finally
         {
-            File.Delete(file);
+            GroupLab.Tests.Support.Temp.DeleteFile(file);
         }
     }
 

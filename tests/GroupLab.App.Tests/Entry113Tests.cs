@@ -257,7 +257,7 @@ public class Entry113Tests
         }
         finally
         {
-            File.Delete(path);
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
             print.Close();
         }
     }
