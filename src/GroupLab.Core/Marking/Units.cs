@@ -127,6 +127,14 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
     /// <summary>A shot distance in the chosen unit, with its symbol.</summary>
     public string DistanceText(double inches) => DistanceFromInches(inches, Distance).ToString("0.#", CultureInfo.InvariantCulture) + " " + Symbol(Distance);
 
+    /// <summary>
+    /// A speed in the person's units: feet a second where distances are in yards, metres a second where they are in metres. A muzzle velocity
+    /// is read beside a distance far more often than beside a group size, so it follows the distance unit rather than the linear one.
+    /// </summary>
+    public string Speed(double feetPerSecond) =>
+        (Distance == DistanceUnit.Metre ? feetPerSecond * 0.3048 : feetPerSecond).ToString("0", CultureInfo.InvariantCulture)
+        + (Distance == DistanceUnit.Metre ? " m/s" : " ft/s");
+
     /// <summary>A length at the target as an angle at the shot distance, or null without one.</summary>
     public double? Angle(double inches, double? distanceInches) =>
         distanceInches is { } d && d > 0 ? Statistics.Angular.ToAngle(inches, d, 1, Angular) : null;

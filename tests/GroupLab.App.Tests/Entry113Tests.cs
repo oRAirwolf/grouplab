@@ -127,6 +127,24 @@ public class Entry113Tests
             window.CompareSubgroups();
             Settle();
             Assert.Equal(["41.5 gr", "42.1 gr"], window.Comparison!.Groups.Select(g => g.Name));
+
+            // Entry 131 section 10: velocity and SD on the cards where the record book knows them, and nothing on the card where it does not.
+            Assert.DoesNotContain(window.CompareText, t => t.Contains("ft/s", StringComparison.Ordinal));
+            window.Book = window.Book.With(new GroupLab.Core.Marking.Load("41.5 gr", null)
+            {
+                MuzzleVelocityFps = 2850,
+                MuzzleVelocitySdFps = 11,
+                MuzzleVelocitySdFrom = "24 readings, 20 September 2026",
+            });
+            window.CompareSubgroups();
+            Settle();
+            Assert.Contains(window.CompareText, t => t == "2850 ft/s, SD 11 ft/s from 24 readings, 20 September 2026");
+
+            // The card follows the units in force, as every other figure on the screen does.
+            window.SetUnits(GroupLab.Core.Marking.UnitSettings.Metric);
+            window.CompareSubgroups();
+            Settle();
+            Assert.Contains(window.CompareText, t => t.StartsWith("869 m/s, SD 3 m/s", StringComparison.Ordinal));
             window.Close();
         }
         finally

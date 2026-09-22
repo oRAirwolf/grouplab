@@ -25,7 +25,7 @@ public sealed partial class MainWindow
     private readonly StackPanel compareColumn = new() { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12 };
     private readonly HashSet<long> sessionChosen = [];
     private readonly Control compareBody;
-    private List<(string Name, IReadOnlyList<PointD> Offsets, string Detail)> compareGroups = [];
+    private List<(string Name, IReadOnlyList<PointD> Offsets, string Detail, string? Speed)> compareGroups = [];
     private string? compareFooting;
     private LoadComparisonReport? comparison;
 
@@ -57,7 +57,7 @@ public sealed partial class MainWindow
         }
 
         var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Reverse().Select(s => sessions.Get(s.Id)!).ToList();
-        var groups = new List<(string, IReadOnlyList<PointD>, string)>();
+        var groups = new List<(string, IReadOnlyList<PointD>, string, string?)>();
         var distances = new List<double?>();
         foreach (var record in records)
         {
@@ -65,7 +65,8 @@ public sealed partial class MainWindow
             var (offsets, excluded) = KeptOffsets(state);
             string name = record.Load ?? record.SheetName;
             groups.Add((groups.Any(g => g.Item1 == name) ? $"{name}, {record.ShotDate}" : name, offsets,
-                $"{offsets.Count} shots, {record.ShotDate}{(excluded > 0 ? $", {excluded} excluded and left out" : "")}"));
+                $"{offsets.Count} shots, {record.ShotDate}{(excluded > 0 ? $", {excluded} excluded and left out" : "")}",
+                SpeedOf(record.Load)));
             distances.Add(record.DistanceInches);
         }
 
@@ -82,7 +83,7 @@ public sealed partial class MainWindow
             for (int i = 0; i < groups.Count; i++)
             {
                 double k = first / distances[i]!.Value;
-                groups[i] = (groups[i].Item1, [.. groups[i].Item2.Select(o => new PointD(o.X * k, o.Y * k))], groups[i].Item3 + $", shot at {units.DistanceText(distances[i]!.Value)}");
+                groups[i] = (groups[i].Item1, [.. groups[i].Item2.Select(o => new PointD(o.X * k, o.Y * k))], groups[i].Item3 + $", shot at {units.DistanceText(distances[i]!.Value)}", groups[i].Item4);
             }
 
             compareFooting = $"These were shot at different distances, so they are compared as angles: every group is scaled to {units.DistanceText(first)}, where its figures are given.";
@@ -103,11 +104,12 @@ public sealed partial class MainWindow
         }
 
         var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
-        var groups = new List<(string, IReadOnlyList<PointD>, string)>();
+        var groups = new List<(string, IReadOnlyList<PointD>, string, string?)>();
         foreach (string name in map.Names)
         {
             var shots = state.Shots.Where(s => s.IsShot && s.Exclusion is null && s.Bull is { } b && !sighters.Contains(b) && map.For(b) == name).ToList();
-            groups.Add((name, GroupAnalysis.CompositeOffsets(state, shots), $"{shots.Count} shots, bulls {string.Join(", ", map.ByBull.Where(p => p.Value == name).Select(p => BullLabel(p.Key)))}"));
+            groups.Add((name, GroupAnalysis.CompositeOffsets(state, shots), $"{shots.Count} shots, bulls {string.Join(", ", map.ByBull.Where(p => p.Value == name).Select(p => BullLabel(p.Key)))}",
+                SpeedOf(name) ?? SpeedOf(state.Load)));
         }
 
         compareFooting = null;
@@ -123,7 +125,29 @@ public sealed partial class MainWindow
         return (GroupAnalysis.CompositeOffsets(state, kept), shots.Count - kept.Count);
     }
 
-    private void ShowComparison(List<(string, IReadOnlyList<PointD>, string)> groups, string? refusal)
+    /// <summary>
+    /// What a load was chronographed at, for the card, entry 131 section 10: the muzzle velocity and its spread where the record book has
+    /// them, and null where it does not. A figure GroupLab worked out from readings says so, because a measured spread and a typed one are
+    /// not the same claim (entry 115 section 3).
+    /// </summary>
+    private string? SpeedOf(string? loadName)
+    {
+        if (loadName is null || book.FindLoad(loadName) is not { MuzzleVelocityFps: { } fps })
+        {
+            return null;
+        }
+
+        var load = book.FindLoad(loadName)!;
+        string speed = units.Speed(fps);
+        if (load.MuzzleVelocitySdFps is not { } sd)
+        {
+            return speed;
+        }
+
+        return speed + ", SD " + units.Speed(sd) + (load.MuzzleVelocitySdFrom is { Length: > 0 } from ? " from " + from : "");
+    }
+
+    private void ShowComparison(List<(string, IReadOnlyList<PointD>, string, string?)> groups, string? refusal)
     {
         compareGroups = groups;
         comparison = null;
@@ -175,6 +199,10 @@ public sealed partial class MainWindow
             var card = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, 0, Tokens.Space12, 0) };
             card.Children.Add(new TextBlock { Text = group.Name, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Section } });
             card.Children.Add(Detail(compareGroups[i].Detail));
+            if (compareGroups[i].Speed is { } speed)
+            {
+                card.Children.Add(Detail(speed));
+            }
             var groupPlot = new CompositePlot
             {
                 Height = 220,

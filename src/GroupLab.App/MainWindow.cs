@@ -903,6 +903,9 @@ public sealed partial class MainWindow : Window
         }
 
         ShowUnits();
+        // Entry 131 section 8: the ballistics page names its units on every label, and they are written rather than built once, so a change
+        // made anywhere reaches them.
+        RelabelBallistics();
         Refresh();
     }
 

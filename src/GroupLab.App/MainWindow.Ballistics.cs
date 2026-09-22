@@ -58,6 +58,10 @@ public sealed partial class MainWindow
 
     private static TextBox Field(string text = "") => new() { Width = 110, Text = text };
 
+    /// <summary>What a box holds, turned into the imperial value the records and the solver use, or null where it holds nothing usable.</summary>
+    private double? Imperial(TextBox box, BallisticMeasure measure) =>
+        Number(box) is { } shown ? BallisticMeasures.ToImperial(shown, measure, units) : null;
+
     private static double? Number(TextBox box) =>
         double.TryParse(box.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double value) && value > 0 && double.IsFinite(value) ? value : null;
 
@@ -66,6 +70,19 @@ public sealed partial class MainWindow
         var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space8, MaxWidth = 1100, HorizontalAlignment = HorizontalAlignment.Left };
         column.Children.Add(new TextBlock { Text = "Ballistics", Classes = { AppStyles.Title } });
         column.Children.Add(Line("The solver's trajectory for a rifle and load. What it needs is kept on the records, and all of it is optional: a record without it cannot use the solver, and this says which field is missing."));
+        // Entry 131 section 8: the imperial and metric toggle, at the top where Alan's own calculator has it. It moves the whole
+        // application's units, because a page in one system and a panel in another is how somebody reads a number as the wrong thing.
+        var toggle = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
+        toggle.Children.Add(new TextBlock { Text = "Units", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Label } });
+        foreach (var (name, chosen) in new[] { ("Imperial", UnitSettings.Imperial), ("Metric", UnitSettings.Metric) })
+        {
+            var button = new Button { Content = name, Name = "BallisticUnits" + name };
+            button.Click += (_, _) => UseUnits(chosen);
+            unitButtons[name] = button;
+            toggle.Children.Add(button);
+        }
+
+        column.Children.Add(toggle);
         column.Children.Add(Row(FieldLabel("Rifle"), ballisticRifle, FieldLabel("Load"), ballisticLoad));
         foreach (var combo in new[] { ballisticRifle, ballisticLoad })
         {
@@ -79,19 +96,21 @@ public sealed partial class MainWindow
         }
 
         column.Children.Add(Heading("The rifle"));
-        column.Children.Add(Row(FieldLabel("Sight height, in"), sightHeight, FieldLabel("Zero distance, " + UnitSettings.Symbol(units.Distance)), zeroDistance));
-        column.Children.Add(Row(FieldLabel("Twist, in per turn"), twist, twistDirection));
+        column.Children.Add(Row(Measured("Sight height", BallisticMeasure.SmallLength), sightHeight, Distanced("Zero distance"), zeroDistance));
+        column.Children.Add(Row(Measured("Twist", BallisticMeasure.SmallLength, " per turn"), twist, twistDirection));
         column.Children.Add(Heading("The load"));
-        column.Children.Add(Row(FieldLabel("Muzzle velocity, ft/s"), muzzleVelocity, FieldLabel("Its standard deviation, ft/s"), muzzleVelocitySd));
+        column.Children.Add(Row(Measured("Muzzle velocity", BallisticMeasure.Speed), muzzleVelocity, Measured("Its standard deviation", BallisticMeasure.Speed), muzzleVelocitySd));
         column.Children.Add(sdFrom);
         column.Children.Add(Row(FieldLabel("BC"), ballisticCoefficient, FieldLabel("Drag model"), dragModel, FieldLabel("Its reference atmosphere"), bcReference));
-        column.Children.Add(Row(FieldLabel("Bullet weight, gr"), bulletWeight, FieldLabel("Length, in"), bulletLength, FieldLabel("Diameter, in"), bulletDiameter));
+        // Grains stay grains on both sides of the toggle: a reloader weighs in grains whatever else they measure in.
+        column.Children.Add(Row(FieldLabel("Bullet weight, gr"), bulletWeight, Measured("Length", BallisticMeasure.SmallLength), bulletLength, Measured("Diameter", BallisticMeasure.SmallLength), bulletDiameter));
         column.Children.Add(Row(Button("Keep these on the records", KeepBallistics)));
         column.Children.Add(Heading("The air"));
-        column.Children.Add(Row(FieldLabel("Temperature, \u00b0F"), airTemperature, FieldLabel("Station pressure, inHg"), airPressure, FieldLabel("Altitude, ft"), airAltitude, FieldLabel("Humidity, %"), airHumidity));
+        column.Children.Add(Row(Measured("Temperature", BallisticMeasure.Temperature), airTemperature, Measured("Station pressure", BallisticMeasure.Pressure), airPressure,
+            Measured("Altitude", BallisticMeasure.Altitude), airAltitude, FieldLabel("Humidity, %"), airHumidity));
         column.Children.Add(Line("Leave the pressure empty to take it from the altitude. The zero correction on the analysis carries in this air too."));
         column.Children.Add(Heading("Dope table"));
-        column.Children.Add(Row(FieldLabel("To, " + UnitSettings.Symbol(units.Distance)), dopeTo, FieldLabel("Every"), dopeStep, Button("Work out the table", FillDope)));
+        column.Children.Add(Row(Distanced("To"), dopeTo, FieldLabel("Every"), dopeStep, Button("Work out the table", FillDope)));
 
         // Entry 131 section 8: the curve beside the table. A table answers "what do I dial at 600" exactly and cannot show shape; the curve
         // shows where the drop runs away and how far the velocity holds, which is what a person reads a trajectory for.
@@ -116,10 +135,25 @@ public sealed partial class MainWindow
         // Entry 113 section 3: the analysed group carried to another distance, its hit probability there and its predicted size.
         column.Children.Add(Heading("The analysed group at another distance"));
         column.Children.Add(Line("A prediction from the group open in the analysis, the rifle and load it names, and the air above: its sigma carried through the solver, with the load's velocity SD and the crosswind's uncertainty added where they are given. It is never a measurement."));
-        column.Children.Add(Row(FieldLabel("At, " + UnitSettings.Symbol(units.Distance)), projectTo, FieldLabel("Crosswind uncertainty, mph"), windSd));
-        column.Children.Add(Row(FieldLabel("Target"), targetShape, FieldLabel("Size, " + UnitSettings.Symbol(units.Linear)), targetWidth, targetHeight, Button("Work it out", FillProjection)));
+        column.Children.Add(Row(Distanced("At"), projectTo, Measured("Crosswind uncertainty", BallisticMeasure.WindSpeed), windSd));
+        column.Children.Add(Row(FieldLabel("Target"), targetShape, Lengthed("Size"), targetWidth, targetHeight, Button("Work it out", FillProjection)));
         column.Children.Add(projectionLines);
         BuildChronograph(column);
+        unitBoxes.AddRange(new (TextBox, BallisticMeasure)[]
+        {
+            (sightHeight, BallisticMeasure.SmallLength),
+            (twist, BallisticMeasure.SmallLength),
+            (muzzleVelocity, BallisticMeasure.Speed),
+            (muzzleVelocitySd, BallisticMeasure.Speed),
+            (bulletLength, BallisticMeasure.SmallLength),
+            (bulletDiameter, BallisticMeasure.SmallLength),
+            (airTemperature, BallisticMeasure.Temperature),
+            (airPressure, BallisticMeasure.Pressure),
+            (airAltitude, BallisticMeasure.Altitude),
+            (windSd, BallisticMeasure.WindSpeed),
+        });
+        RelabelBallistics();
+        airTemperature.Text = BallisticMeasures.Text(59, BallisticMeasure.Temperature, units);
         return new ScrollViewer { Content = column, IsVisible = false };
     }
 
@@ -144,6 +178,87 @@ public sealed partial class MainWindow
 
     private static string Text(double? value) => value is { } v ? v.ToString("0.####", CultureInfo.InvariantCulture) : "";
 
+    /// <summary>The page's unit buttons, so the one in force can be shown as chosen.</summary>
+    private readonly Dictionary<string, Button> unitButtons = [];
+
+    /// <summary>Every label that names a unit, with how to write it. They are rewritten when the toggle moves rather than built once.</summary>
+    private readonly List<(TextBlock Label, Func<string> Words)> unitLabels = [];
+
+    /// <summary>Every box holding a value in the person's units, with what it measures, so the toggle can rewrite what is in it.</summary>
+    private readonly List<(TextBox Box, BallisticMeasure Measure)> unitBoxes = [];
+
+    private TextBlock Measured(string name, BallisticMeasure measure, string after = "")
+    {
+        var label = FieldLabel("");
+        unitLabels.Add((label, () => name + ", " + BallisticMeasures.Symbol(measure, units) + after));
+        return label;
+    }
+
+    private TextBlock Distanced(string name)
+    {
+        var label = FieldLabel("");
+        unitLabels.Add((label, () => name + ", " + UnitSettings.Symbol(units.Distance)));
+        return label;
+    }
+
+    private TextBlock Lengthed(string name)
+    {
+        var label = FieldLabel("");
+        unitLabels.Add((label, () => name + ", " + UnitSettings.Symbol(units.Linear)));
+        return label;
+    }
+
+    /// <summary>Writes every unit-bearing label on this page as the units in force say it.</summary>
+    private void RelabelBallistics()
+    {
+        foreach (var (label, words) in unitLabels)
+        {
+            label.Text = words();
+        }
+
+        foreach (var (name, button) in unitButtons)
+        {
+            button.Classes.Set(AppStyles.Primary, name == (BallisticMeasures.IsMetric(units) ? "Metric" : "Imperial"));
+        }
+    }
+
+    /// <summary>
+    /// Moves the whole application to these units, entry 131 section 8. What is typed on this page is rewritten in the new units first, from
+    /// the imperial values everything is stored in, so a number never silently changes meaning under somebody.
+    /// </summary>
+    internal void UseUnits(UnitSettings chosen)
+    {
+        ArgumentNullException.ThrowIfNull(chosen);
+        var imperial = unitBoxes
+            .Select(b => (b.Box, b.Measure, Value: Number(b.Box) is { } v ? BallisticMeasures.ToImperial(v, b.Measure, units) : (double?)null))
+            .ToList();
+        var distances = new[] { zeroDistance, dopeTo, dopeStep, projectTo }
+            .Select(box => (Box: box, Value: Number(box) is { } v ? UnitSettings.DistanceToInches(v, units.Distance) : (double?)null))
+            .ToList();
+        var lengths = new[] { targetWidth, targetHeight }
+            .Select(box => (Box: box, Value: Number(box) is { } v ? UnitSettings.ToInches(v, units.Linear) : (double?)null))
+            .ToList();
+
+        SetUnits(chosen);
+        foreach (var (box, measure, value) in imperial)
+        {
+            box.Text = BallisticMeasures.Text(value, measure, units);
+        }
+
+        foreach (var (box, value) in distances)
+        {
+            box.Text = Text(value is { } v ? UnitSettings.DistanceFromInches(v, units.Distance) : null);
+        }
+
+        foreach (var (box, value) in lengths)
+        {
+            box.Text = Text(value is { } v ? UnitSettings.FromInches(v, units.Linear) : null);
+        }
+
+        DiagnosticLog.Info("units.chosen", ("linear", units.Linear.ToString()), ("distance", units.Distance.ToString()), ("where", "ballistics"));
+        FillDope();
+    }
+
     private void ShowBallisticRecords()
     {
         var rifle = ChosenRifle;
@@ -151,18 +266,18 @@ public sealed partial class MainWindow
         // Entry 115 section 3: a velocity SD GroupLab worked out says where it came from, beside the field it is in.
         sdFrom.Text = load?.MuzzleVelocitySdFrom is { } from ? "The velocity SD is from " + from + "." : "";
         sdFrom.IsVisible = load?.MuzzleVelocitySdFrom is not null;
-        sightHeight.Text = Text(rifle?.SightHeightInches);
+        sightHeight.Text = BallisticMeasures.Text(rifle?.SightHeightInches, BallisticMeasure.SmallLength, units);
         zeroDistance.Text = Text(rifle?.ZeroDistanceYards is { } yards ? UnitSettings.DistanceFromInches(yards * 36, units.Distance) : null);
-        twist.Text = Text(rifle?.TwistInches);
+        twist.Text = BallisticMeasures.Text(rifle?.TwistInches, BallisticMeasure.SmallLength, units);
         twistDirection.SelectedIndex = rifle?.TwistDirection == -1 ? 1 : 0;
-        muzzleVelocity.Text = Text(load?.MuzzleVelocityFps);
-        muzzleVelocitySd.Text = Text(load?.MuzzleVelocitySdFps);
+        muzzleVelocity.Text = BallisticMeasures.Text(load?.MuzzleVelocityFps, BallisticMeasure.Speed, units);
+        muzzleVelocitySd.Text = BallisticMeasures.Text(load?.MuzzleVelocitySdFps, BallisticMeasure.Speed, units);
         ballisticCoefficient.Text = Text(load?.BallisticCoefficient);
         dragModel.SelectedIndex = load?.DragModel switch { DragModel.G1 => 1, DragModel.G7 => 2, _ => 0 };
         bcReference.SelectedIndex = load?.BcReference switch { ReferenceAtmosphere.Icao => 1, ReferenceAtmosphere.ArmyStandardMetro => 2, _ => 0 };
         bulletWeight.Text = Text(load?.BulletWeightGrains);
-        bulletLength.Text = Text(load?.BulletLengthInches);
-        bulletDiameter.Text = Text(load?.BulletDiameterInches);
+        bulletLength.Text = BallisticMeasures.Text(load?.BulletLengthInches, BallisticMeasure.SmallLength, units);
+        bulletDiameter.Text = BallisticMeasures.Text(load?.BulletDiameterInches, BallisticMeasure.SmallLength, units);
         FillDope();
     }
 
@@ -181,9 +296,9 @@ public sealed partial class MainWindow
         {
             book = book.With(rifle with
             {
-                SightHeightInches = Number(sightHeight),
+                SightHeightInches = Imperial(sightHeight, BallisticMeasure.SmallLength),
                 ZeroDistanceYards = Number(zeroDistance) is { } zero ? UnitSettings.DistanceToInches(zero, units.Distance) / 36 : null,
-                TwistInches = Number(twist),
+                TwistInches = Imperial(twist, BallisticMeasure.SmallLength),
                 TwistDirection = Number(twist) is null ? null : twistDirection.SelectedIndex == 1 ? -1 : 1,
             });
         }
@@ -192,14 +307,14 @@ public sealed partial class MainWindow
         {
             book = book.With(load with
             {
-                MuzzleVelocityFps = Number(muzzleVelocity),
-                MuzzleVelocitySdFps = Number(muzzleVelocitySd),
+                MuzzleVelocityFps = Imperial(muzzleVelocity, BallisticMeasure.Speed),
+                MuzzleVelocitySdFps = Imperial(muzzleVelocitySd, BallisticMeasure.Speed),
                 BallisticCoefficient = Number(ballisticCoefficient),
                 DragModel = dragModel.SelectedIndex switch { 1 => DragModel.G1, 2 => DragModel.G7, _ => null },
                 BcReference = bcReference.SelectedIndex switch { 1 => ReferenceAtmosphere.Icao, 2 => ReferenceAtmosphere.ArmyStandardMetro, _ => null },
                 BulletWeightGrains = Number(bulletWeight),
-                BulletLengthInches = Number(bulletLength),
-                BulletDiameterInches = Number(bulletDiameter),
+                BulletLengthInches = Imperial(bulletLength, BallisticMeasure.SmallLength),
+                BulletDiameterInches = Imperial(bulletDiameter, BallisticMeasure.SmallLength),
             });
         }
 
@@ -219,13 +334,24 @@ public sealed partial class MainWindow
 
     /// <summary>The air as the Ballistics screen states it, the standard atmosphere where a field is empty or not a number.</summary>
     private AirInput Air() => new(
-        double.TryParse(airTemperature.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double t) ? t : 59,
-        Number(airPressure),
-        double.TryParse(airAltitude.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double a) ? a : 0,
+        double.TryParse(airTemperature.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double t)
+            ? BallisticMeasures.ToImperial(t, BallisticMeasure.Temperature, units) : 59,
+        Imperial(airPressure, BallisticMeasure.Pressure),
+        double.TryParse(airAltitude.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double a)
+            ? BallisticMeasures.ToImperial(a, BallisticMeasure.Altitude, units) : 0,
         double.TryParse(airHumidity.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double h) ? Math.Clamp(h, 0, 100) : 50);
 
-    private string AirWords(AirInput air) => string.Create(CultureInfo.InvariantCulture,
-        $"{air.TemperatureF:0.#} \u00b0F, {(air.PressureInHg is { } p ? $"{p:0.00} inHg" : $"{air.AltitudeFt:0} ft of altitude")}, {air.HumidityPct:0} percent humidity");
+    private string AirWords(AirInput air)
+    {
+        // The air is stated in whichever system the toggle is on, entry 131 section 8. It is held in imperial, as everything here is.
+        string Shown(double imperial, BallisticMeasure measure, string format) => string.Create(CultureInfo.InvariantCulture,
+            $"{BallisticMeasures.FromImperial(imperial, measure, units).ToString(format, CultureInfo.InvariantCulture)} {BallisticMeasures.Symbol(measure, units)}");
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{Shown(air.TemperatureF, BallisticMeasure.Temperature, "0.#")}, "
+            + $"{(air.PressureInHg is { } p ? Shown(p, BallisticMeasure.Pressure, "0.00") : Shown(air.AltitudeFt, BallisticMeasure.Altitude, "0") + " of altitude")}, "
+            + $"{air.HumidityPct:0} percent humidity");
+    }
 
     private const string DopeColumns = "90,*,*,*,*,*,*";
 
@@ -455,7 +581,7 @@ public sealed partial class MainWindow
         var sigma = group!.Sigma!;
         var estimate = new Estimate(sigma.Value, sigma.Lower ?? sigma.Value, sigma.Upper ?? sigma.Value);
         double from = state.ShotDistanceInches!.Value / 36, to = UnitSettings.DistanceToInches(Number(projectTo)!.Value, units.Distance) / 36;
-        var (projection, failed) = Projection.Project(input, estimate, from, to, load!.MuzzleVelocitySdFps, Number(windSd));
+        var (projection, failed) = Projection.Project(input, estimate, from, to, load!.MuzzleVelocitySdFps, Imperial(windSd, BallisticMeasure.WindSpeed));
         if (projection is null)
         {
             projectionLines.Children.Add(Line(failed!));
@@ -470,7 +596,7 @@ public sealed partial class MainWindow
         projectionLines.Children.Add(Line($"CEP 50 about {units.Length(cep)} there, about the group's own centre."));
         projectionLines.Children.Add(Line(projection.AngularOnly
             ? "No velocity SD or crosswind uncertainty is given, so this is the group scaled by angle and nothing more."
-            : $"Of that, the load's velocity SD of {load.MuzzleVelocitySdFps?.ToString("0.#", CultureInfo.InvariantCulture) ?? "0"} ft/s gives {units.Length(projection.VelocityAtToInches)} up and down at {at}, having been taken out of the group measured, where it gave {units.Length(projection.VelocityAtFromInches)}; the crosswind's uncertainty gives {units.Length(projection.WindAtToInches)} across."));
+            : $"Of that, the load's velocity SD of {units.Speed(load.MuzzleVelocitySdFps ?? 0)} gives {units.Length(projection.VelocityAtToInches)} up and down at {at}, having been taken out of the group measured, where it gave {units.Length(projection.VelocityAtFromInches)}; the crosswind's uncertainty gives {units.Length(projection.WindAtToInches)} across."));
         if (projection.Lower.LowerEndAllVelocity)
         {
             projectionLines.Children.Add(Note("At the lower end of the sigma interval the velocity SD accounts for all of the vertical measured, so that end's vertical is the velocity's alone."));
@@ -543,6 +669,13 @@ public sealed partial class MainWindow
         dragModel.SelectedIndex = model;
         bcReference.SelectedIndex = reference;
         bulletWeight.Text = weight;
+    }
+
+    /// <summary>Chooses a load on the ballistics page by name, for the headless tests.</summary>
+    internal void ChooseBallisticLoad(string name)
+    {
+        ballisticLoad.ItemsSource = new[] { "No load" }.Concat(book.Loads.Select(l => l.Name)).ToList();
+        ballisticLoad.SelectedIndex = book.Loads.FindIndex(l => string.Equals(l.Name, name, StringComparison.OrdinalIgnoreCase)) + 1;
     }
 
     /// <summary>The record book, kept as it is set, for the headless tests.</summary>

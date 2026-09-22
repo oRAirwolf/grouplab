@@ -6791,6 +6791,42 @@ The per-version notes finally have somewhere safe to travel. `scripts/release-no
 `scripts/Test-RealUpdate.ps1` runs between two published nightlies. The first nightly carrying this is the one after this commit, so the real update test runs then, not now.
 
 
+# The ballistics page in either system, and the loads compared with their velocities
+
+Entry 131 sections 8 and 10, the last two pieces of the entry 135 queue's items 4 and 5.
+
+## Imperial and metric, on the page where it matters
+
+Alan's own calculator has the toggle at the top, and the ballistics page is the one screen where a person types physical quantities rather than reading them. It now has one, and it moves the **whole application's** units: a page in one system beside a panel in another is how somebody reads a number as the wrong thing.
+
+**The labels are the easy half.** A toggle that renames `ft/s` to `m/s` and leaves 2850 in the box has quietly turned a rifle into something travelling at Mach 8, and the solver will answer in perfect detail about it. So the values are rewritten as the toggle moves, from the imperial figures everything is stored in:
+
+| field | imperial | metric |
+|---|---|---|
+| sight height, twist, bullet length and diameter | in | mm |
+| muzzle velocity and its SD | ft/s | m/s |
+| temperature | °F | °C |
+| station pressure | inHg | hPa |
+| altitude | ft | m |
+| crosswind uncertainty | mph | km/h |
+| zero distance, dope table, projection | yd | m |
+| bullet weight | gr | gr |
+
+Grains stay grains, because a reloader weighs in them whatever else they measure in.
+
+**Nothing stored changes.** The records hold inches and feet a second on both sides, and the solver works in them, so 869 m/s typed by one person and 2850 ft/s typed by another are the same load in the same file. `BallisticUnitsTests` types on one side and reads the record on the other.
+
+**And a defect it turned up.** Every unit-bearing label on that page was built once, at startup, from the units in force then. Changing the units in Settings left `Zero distance, yd` saying yd over a box holding metres. The labels are now written rather than built, and `SetUnits` writes them wherever the change was made.
+
+## Velocity and SD on the compare cards
+
+Each card in Compare loads now carries what the load was chronographed at, from the record book, under the shot count: `2850 ft/s, SD 11 ft/s from 24 readings, 20 September 2026`. Where GroupLab worked the SD out from readings it says so, because a measured spread and a typed one are not the same claim; where the book has no velocity the card says nothing rather than a dash.
+
+## One test was taking two minutes because of the group it used
+
+`NewTargetTests` put its five shots on a straight line, which is degenerate for the shape tests, and the resampling behind them ran for about a hundred seconds a test: five tests took 520 seconds where the same five on an ordinary group take 58. That is worth writing down because the fault is invisible: the test passes either way, and it is only the clock that says anything is wrong. A group in a test is a scatter unless the test is about a line.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

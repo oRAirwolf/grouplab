@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
-**Next step:** a nightly is building with the relaunch fix. When it publishes, run `scripts/Test-RealUpdate.ps1` from nightly 37 to it: that is the proof Alan asked for, and the script fails unless the new version's window appears on its own and no crash record is written. Then the site needs republishing, and the sync's fixed live check needs putting on the server, which needs Alan.
+**Next step:** queue item 1, the entry 131 section 1 checklist pass over every screen, starting with the analysis panel rebuild. Then item 6, question 37's control. `scripts/Test-RealUpdate.ps1` runs again once the nightly carrying entry 139 publishes, which is the proof entry 139 section 5 asks for. The website still needs republishing, and the sync's fixed live check still needs Alan to run the installer on the server.
 
 ---
 
@@ -44,8 +44,8 @@ That file is in the installed folder now, so nothing is missing from the package
 | 1 | Entry 131 section 1: before and after renders of every screen, checked against the checklist and fixed where they fail. Analysis page first. | **in progress**: renders now taken at 1280 by 720 and 2560 by 1440, before and after kept under `docs/figures/screens/`. First pass on the analysis page: the mean radius is the one figure in the logo's amber, and the zero correction's direction word no longer runs off the edge. The panel rebuild from `AnalysisPanel` is still to do. |
 | 2 | Entry 131 section 6.2: the zero offset picture | **done**: `ZeroOffsetPicture`, behind a "Where it landed" disclosure on the zero block. The aim as a cross, the group's centre with its uncertainty ellipse, and an arrow an axis pointing the way a shot has to move, with the clicks on it. Where the uncertainty covers the aim there are no arrows, because an arrow is an instruction and there is nothing to instruct. |
 | 3 | Entry 131 section 7: the Equipment screen, with the old "rounds or components" box gone | **done**: a rail slot of its own, three lists, a form generated from the one field list so the screen and the record cannot drift, autocomplete offering earlier values, and a name already used refused rather than silently overwriting. The old box is gone and the column carries a link to the screen instead. |
-| 4 | Entry 131 section 8: the ballistics page rebuilt | **in part**: the trajectory graph is built, with drop, wind drift, velocity and energy each on their own and the zero marked. The inputs were already grouped into sections and the dope table already existed. The imperial and metric toggle is not done. |
-| 5 | Entry 131 section 10: Compare loads rebuilt | **in part**: mean radius and sigma are now dot-and-whisker charts with their intervals, under the side by side plots, and the chart says in words whether the intervals overlap. The side by side plots, shot counts and verdict lines were already there. Velocity and SD on the cards are not. |
+| 4 | Entry 131 section 8: the ballistics page rebuilt | **done**: the trajectory graph with drop, wind drift, velocity and energy each on their own and the zero marked; the inputs already grouped and the dope table already there; and now the imperial and metric toggle at the top. It moves the whole application's units and rewrites what is typed rather than only relabelling it, so 2850 ft/s becomes 868.68 m/s and back again; the air, the velocity SD and every label follow; grains stay grains. |
+| 5 | Entry 131 section 10: Compare loads rebuilt | **done**: mean radius and sigma as dot-and-whisker charts with their intervals, under the side by side plots, with the chart saying in words whether they overlap; the side by side plots, shot counts and verdict lines were already there; and each card now carries the load's velocity and SD from the record book, in the units in force, saying where a measured SD came from. |
 | 6 | Question 37's control: saying which bulls were aimed at, on the sheet | not started |
 | 7 | Anything left from entry 131 sections 2 to 9, and a final checklist pass | not started |
 | 8 | Entry 134, the installer icon | **done**, `ab3dbcf` |
@@ -57,6 +57,8 @@ That file is in the installed folder now, so nothing is missing from the package
 
 | Item | State |
 |---|---|
+| Entry 140, a new image is a new target | **done**: every section. `75ff2e8` (the reset and the setup offer), `3ae2de1` (the review queue), `78f6549` (New target and the unsaved question) |
+| Entry 139, signing the bytes as published | **done bar section 5**: `28a3365`. The real update test runs once the nightly carrying it publishes |
 | Entry 123 section 2.7: did the real update pass, and between which nightlies | **done**: yes, nightly 25 to nightly 26, real clicks, no installer window, no elevation prompt, sessions database byte identical |
 | Questions 34 and 36 answered with a recommendation | not started |
 | Entry 128 section 5 install and section 6 publish | install **done by Alan** and confirmed here; publish next |
