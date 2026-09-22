@@ -7370,6 +7370,43 @@ The test now also holds every word against every ancestor that clips, walks five
 - **It counts what it measured.** If nothing in the window sits inside a panel that clips, the walk proves nothing and would go on passing while saying nothing at all, so it fails in that case too. A test that cannot fail is worse than no test, because it looks like cover.
 
 
+# Two sheets in one photograph, and which one you are reading
+
+Entry 130 section 2c's last item: "the several-sheets-in-frame case, where GroupLab should say that more than one sheet is in view and which one it measured rather than choosing silently."
+
+## What it did before
+
+Marker ids are unique on a sheet, so two copies of the same printed sheet in one frame repeat every id.
+
+`DetectFiducials` matched each decoded marker against the printed list and removed it as it went. The first marker carrying a given id won, purely by the order the detector listed them; every later marker with that id fell through to `unexpected` and was rejected as "decoded, but not printed on this tile or already matched".
+
+So the measurement was of one of the two targets, chosen by list order, and **nothing anywhere said there was a second one**. Not the summary, not the trace, not the screen. Somebody who photographed two targets on the bench at once got figures about one of them and no way to know which.
+
+That is not an accuracy problem. Both sheets were measurable and one of them was measured correctly. It is a problem of silence, which is the failure this project treats as the serious one.
+
+## What it does now
+
+**It counts.** The number of copies in view is the largest number of times any one id appears. One copy is the ordinary case and says nothing, because there is nothing to say.
+
+**It groups.** With two or more copies, the markers are split into that many groups by where they are in the frame, largest first, each group taking at most one marker of any id. Two sheets side by side separate on the gap between them.
+
+**It chooses, by a rule written down.** The group with the most markers decoded wins, because a sheet whose markers all read is the one the measurement can trust. The largest markers break a tie, being the sheet nearest the camera and most square to it.
+
+**It says so**, in the summary a person reads:
+
+> 38 of 38 markers found. 2 sheets are in view; the one measured has 38 of its markers decoded, the largest in the frame.
+
+and in the trace beside the tile choice, with what it passed over, in the existing `Decide` form:
+
+> **sheet**: 1 of 2 in view, because 4 of its markers decoded, the largest in the frame. Instead of: a sheet with 2 markers decoded.
+
+`TwoSheetsInFrameTests` holds six things, including the one that would let the whole thing be wrong: **no sheet ever takes the same id twice**, which is what would let two sheets be measured as one.
+
+## What is still not done in section 2c
+
+The four measurement items need the range folder read in place: pairing each burst with its scan by hole pattern, agreement in inches hole by hole, the 14:14 burst's per-photograph identification at each angle, and what the blank-sheet path makes of the two tape-measure frames. None was reached. The behaviour change was taken first because it is the one that changes what a person is told, and because it needed no photographs to build or to prove.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

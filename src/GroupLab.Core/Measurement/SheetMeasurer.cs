@@ -55,7 +55,9 @@ public sealed record FiducialResult(
     double PixelsPerDmm,
     double MarkerSize,
     IReadOnlyList<Marker> Missing,
-    IReadOnlyList<IReadOnlyList<PointD>> Undecoded);
+    IReadOnlyList<IReadOnlyList<PointD>> Undecoded,
+    int SheetsInView = 1,
+    string? WhichSheet = null);
 
 /// <summary>One marker corner against the fitted registration, in page dmm.</summary>
 public sealed record CornerResidual(int MarkerId, int Corner, PointD Image, PointD Page, double Error, bool Inlier);
@@ -209,11 +211,17 @@ public static class SheetMeasurer
         }
 
         var printed = expectedByTile[tile];
+
+        // NOTES-FROM-PLANNING.md entry 130 section 2c: more than one sheet in the frame. A second copy of the same printed sheet repeats
+        // every marker id, so a decoded id appearing twice is two sheets in view and not a misread. Before this, the first marker with each
+        // id won by the order it came in, the rest were counted "unexpected", and nothing said a second sheet was there at all: the
+        // measurement was of whichever sheet the detector happened to list first, which is the silent choice the entry is about.
+        var (chosen, sheetsInView, whichSheet) = OneSheet(detection.Markers, s2);
         var unmatched = printed.GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
         var matches = new List<MarkerMatch>();
         int unexpected = 0;
         double half = f.MarkerSize / 2.0;
-        foreach (var marker in detection.Markers)
+        foreach (var marker in chosen)
         {
             if (!unmatched.Remove(marker.Id, out var m))
             {
@@ -253,8 +261,77 @@ public static class SheetMeasurer
         s2.Artefact(() => new MarkerArtefact([.. matches.Select(m => m.ImageCorners)]));
         s2.Done(matches.Count < 4 ? StageStatus.Failed : notFound > 0 ? StageStatus.Degraded : StageStatus.Ok, summary);
         return new FiducialResult(tile, tiles, printed.Count, matches, unexpected, detection.Rejected.Count, detection.CandidatesNotDecoded, pixelsPerDmm,
-            f.MarkerSize, [.. unmatched.Values.OrderBy(m => m.Id)], detection.Undecoded);
+            f.MarkerSize, [.. unmatched.Values.OrderBy(m => m.Id)], detection.Undecoded, sheetsInView, whichSheet);
     }
+
+    /// <summary>
+    /// The markers of one sheet, where more than one copy of the same sheet is in the frame, NOTES-FROM-PLANNING.md entry 130 section 2c.
+    /// <para>
+    /// <b>How a second sheet is known.</b> Marker ids are unique on a sheet, so a decoded id that appears twice means two copies of that
+    /// sheet are in view. The number of copies is the largest number of times any one id appears.
+    /// </para>
+    /// <para>
+    /// <b>Which one is measured, and it is said out loud.</b> The markers are split into that many groups by where they are in the frame,
+    /// and the group with the most markers decoded wins, because a sheet whose markers all read is the one the measurement can trust; the
+    /// largest markers break a tie, being the sheet nearest the camera and most square to it. The trace records the choice and what was
+    /// passed over, the same way the tile choice is recorded, so nobody has to guess which sheet a figure is about.
+    /// </para>
+    /// </summary>
+    internal static (IReadOnlyList<DetectedMarker> Chosen, int SheetsInView, string? WhichSheet) OneSheet(
+        IReadOnlyList<DetectedMarker> markers, Trace.StageScope s2)
+    {
+        var inv = CultureInfo.InvariantCulture;
+        int copies = markers.Count == 0 ? 1 : markers.GroupBy(m => m.Id).Max(g => g.Count());
+        if (copies < 2)
+        {
+            return (markers, 1, null);
+        }
+
+        // Split by position into as many groups as there are copies. Each group takes at most one marker of any id, and a marker joins the
+        // group whose markers it sits nearest, so two sheets side by side separate on the gap between them.
+        var groups = new List<List<DetectedMarker>>();
+        foreach (var marker in markers.OrderByDescending(Area))
+        {
+            var home = groups
+                .Where(g => g.All(m => m.Id != marker.Id))
+                .OrderBy(g => g.Min(m => Distance(Centre(m), Centre(marker))))
+                .FirstOrDefault();
+
+            if (home is null && groups.Count < copies)
+            {
+                groups.Add([marker]);
+            }
+            else if (home is not null)
+            {
+                home.Add(marker);
+            }
+        }
+
+        var best = groups.OrderByDescending(g => g.Count).ThenByDescending(g => g.Sum(Area)).First();
+        string which = string.Create(inv, $"{best.Count} of its markers decoded, the largest in the frame");
+        s2.Decide("sheet", string.Create(inv, $"1 of {groups.Count} in view"), which,
+            [.. groups.Where(g => !ReferenceEquals(g, best)).Select(g => string.Create(inv, $"a sheet with {g.Count} markers decoded"))]);
+
+        return (best, groups.Count, string.Create(inv, $"{groups.Count} sheets are in view; the one measured has {which}"));
+    }
+
+    private static PointD Centre(DetectedMarker marker) =>
+        new(marker.Corners.Average(c => c.X), marker.Corners.Average(c => c.Y));
+
+    private static double Area(DetectedMarker marker)
+    {
+        var c = marker.Corners;
+        double sum = 0;
+        for (int i = 0; i < c.Count; i++)
+        {
+            var a = c[i];
+            var b = c[(i + 1) % c.Count];
+            sum += (a.X * b.Y) - (b.X * a.Y);
+        }
+
+        return Math.Abs(sum) / 2;
+    }
+
 
     /// <summary>
     /// Stage S3: RANSAC against the known page coordinates, then solve (DETECTION-PIPELINE.md). A homography for a scan; for

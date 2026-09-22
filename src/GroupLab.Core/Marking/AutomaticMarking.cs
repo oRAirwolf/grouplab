@@ -103,6 +103,14 @@ public static class AutomaticMarking
         cancellation.ThrowIfCancellationRequested();
         var fiducials = measurement.Fiducials;
         string markers = fiducials is null ? "no markers" : string.Create(CultureInfo.InvariantCulture, $"{fiducials.Matches.Count} of {fiducials.Expected} markers found");
+
+        // NOTES-FROM-PLANNING.md entry 130 section 2c: where more than one sheet is in the frame, the summary says so and says which one
+        // was measured. It goes in the first clause because every figure below it is about that one sheet, and a person who photographed
+        // two targets at once has no other way to tell which one they are reading.
+        if (fiducials is { SheetsInView: > 1, WhichSheet: { } whichSheet })
+        {
+            markers += ". " + whichSheet;
+        }
         if (measurement.Registration is not { } registration || fiducials is null)
         {
             // NOTES-FROM-PLANNING.md entry 120 section 1: the definition travels with a failure too. Without it the screen cannot say
