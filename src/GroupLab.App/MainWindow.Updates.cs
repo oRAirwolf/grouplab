@@ -137,6 +137,10 @@ public partial class MainWindow
                     updateButtons.Children.Add(Button("What changed", ShowUpdateNotes));
                 }
 
+                // NOTES-FROM-PLANNING.md entry 136 section 1.4: "What changed" is this build's own notes on GitHub; this opens the whole
+                // history on the site, at the offered version's own block, so somebody can see what they skipped as well as what is next.
+                updateButtons.Children.Add(Button("Show all", ShowEveryReleaseNote));
+
                 updateButtons.Children.Add(Button("Later", () => Show(updateNow with { Stage = UpdateStage.Idle }, visible: false)));
                 updateButtons.Children.Add(Button("Skip this version", SkipThisVersion));
                 break;
@@ -187,6 +191,13 @@ public partial class MainWindow
             OpenInTheBrowser("https://github.com/oRAirwolf/grouplab/releases/tag/v" + signed.Payload.Version);
         }
     }
+
+    /// <summary>
+    /// The release notes page on the site, opened at the offered version's own block (entry 136 section 1.4). Everything that leaves the
+    /// process goes through <c>IOutsideWorld</c>, so a test can watch this without a browser opening on anybody's machine.
+    /// </summary>
+    private void ShowEveryReleaseNote() =>
+        OpenInTheBrowser(GroupLab.Core.Updates.ReleaseNotesPage.For(updateNow.Version?.Number ?? ThisBuild.Version.Number));
 
     /// <summary>Skip means silence about this one version until something newer appears, entry 119 section 4.4. It is not "never again".</summary>
     private void SkipThisVersion()

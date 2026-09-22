@@ -63,6 +63,7 @@ I do not publish for an internal refactor, a test-only change, or work in progre
 
 Each publish, in the same task that caused it:
 
+0. **Bring `docs/RELEASE-NOTES.md` up to date first**, with every nightly published since the last time, from those builds' `Release-note:` trailers. NOTES-FROM-PLANNING.md entry 136 section 2.3: the page at `/releases/` is built from that file, so publishing without this step puts up a history that is already missing its newest builds, and a page missing its newest entry looks exactly like a page nobody has updated. A test fails if the file has fallen behind the tags. The nightly workflow never commits to the repository and never publishes the site; this is my step, taken when I publish.
 1. `python website/build.py`, and look at every page it changed.
 2. Commit and push with the task's other work.
 3. Wait for CI to be green on that commit.

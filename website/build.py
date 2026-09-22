@@ -181,6 +181,7 @@ NAV = [
     ("Download", "/download/"),
     ("Shoot a target", "/shoot-a-target/"),
     ("Guides", "/guides/"),
+    ("Release notes", "/releases/"),
     ("Support", "/support/"),
 ]
 
@@ -265,7 +266,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <nav class="footer-links" aria-label="Footer">
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
 <a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">Licence, GPL-3.0</a>
-<a href="/guides/">Guides</a><a href="{GITHUB}/releases">All builds</a>
+<a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
 <a href="/support/">Support</a><a href="{UPLOAD_PAGE}">Send target photos</a>
 </nav>
 </div>
@@ -433,6 +434,7 @@ def page_download() -> str:
 </section>
 <section class="wrap section-sm last row-between">
 <p>macOS is built and tested on every change, but nobody has run it yet, so it is not offered here. Earlier builds each keep a release of their own.</p>
+<a href="/releases/">What changed in each build</a>
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
@@ -634,6 +636,54 @@ def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
 </section>
 """
     return shell(f"/guides/{key}/", label, desc, body, "Guides")
+
+
+def releases() -> list[tuple[str, str, str]]:
+    """Every build in docs/RELEASE-NOTES.md, newest first: its anchor, its version and its notes as HTML.
+
+    NOTES-FROM-PLANNING.md entry 136 section 2.1. The file is the source of truth and the page is built from it, so the
+    two cannot disagree and the build never fetches anything from the network to make this page.
+    """
+    src = need(REPO / "docs" / "RELEASE-NOTES.md").read_text(encoding="utf-8")
+    out: list[tuple[str, str, str]] = []
+    version = None
+    body: list[str] = []
+    for line in src.splitlines():
+        if line.startswith("## ") and not line.startswith("### "):
+            if version is not None:
+                out.append((slug(version), version, markdown.markdown(chr(10).join(body).strip(), extensions=["tables", "sane_lists"])))
+            version = line[3:].strip()
+            body = []
+        elif version is not None and line.strip() != "---":
+            body.append(line)
+    if version is not None:
+        out.append((slug(version), version, markdown.markdown(chr(10).join(body).strip(), extensions=["tables", "sane_lists"])))
+    return out
+
+
+def page_releases() -> str:
+    blocks = []
+    for i, (anchor, version, notes) in enumerate(releases()):
+        # The newest is open, the rest closed, so the page opens on what somebody almost always came for.
+        open_attr = " open" if i == 0 else ""
+        blocks.append(
+            f'<details class="panel pad release" id="{anchor}"{open_attr}>'
+            f'<summary><span class="h3">{esc(version)}</span></summary>'
+            f'<div class="prose tight">{notes}</div>'
+            "</details>"
+        )
+
+    body = f"""
+<section class="wrap stack">
+<h1>Release notes</h1>
+<p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
+<p class="small faint">A nightly is numbered by the run that built it, and a run that is cancelled or skipped still takes its number, which is why the numbers skip.</p>
+<div class="stack tight releases">
+{"".join(blocks)}
+</div>
+</section>
+"""
+    return shell("/releases/", "Release notes", "What changed in each build of GroupLab, newest first.", body, "Release notes")
 
 
 def page_guides_index() -> str:
@@ -1045,9 +1095,10 @@ def main() -> None:
     write("guides/index.html", page_guides_index())
     for g in GUIDES:
         write(f"guides/{g[0]}/index.html", page_guide(*g))
+    write("releases/index.html", page_releases())
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/support/"]
+    pages = ["/", "/download/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')

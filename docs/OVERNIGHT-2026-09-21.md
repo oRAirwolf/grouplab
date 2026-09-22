@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
-**Next step:** entry 131 section 1, the analysis page. Take the before renders at the two sizes entry 131 asks for, then rebuild the right-hand panel from `AnalysisPanel`, which exists and is tested and which no screen uses yet.
+**Next step:** publish the site for the first time (entry 128 section 6), confirm it is live, then publish again with the release notes page. Then back to entry 131 section 1: the analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet.
 
 ---
 
@@ -10,7 +10,7 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 
 | # | Item | State |
 |---|---|---|
-| 1 | Entry 131 section 1: before and after renders of every screen, checked against the checklist and fixed where they fail. Analysis page first. | **in progress** |
+| 1 | Entry 131 section 1: before and after renders of every screen, checked against the checklist and fixed where they fail. Analysis page first. | **in progress**: renders now taken at 1280 by 720 and 2560 by 1440, before and after kept under `docs/figures/screens/`. First pass on the analysis page: the mean radius is the one figure in the logo's amber, and the zero correction's direction word no longer runs off the edge. The panel rebuild from `AnalysisPanel` is still to do. |
 | 2 | Entry 131 section 6.2: the zero offset picture | not started |
 | 3 | Entry 131 section 7: the Equipment screen, with the old "rounds or components" box gone | not started |
 | 4 | Entry 131 section 8: the ballistics page rebuilt | not started |
@@ -28,13 +28,15 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 |---|---|
 | Entry 123 section 2.7: did the real update pass, and between which nightlies | **done**: yes, nightly 25 to nightly 26, real clicks, no installer window, no elevation prompt, sessions database byte identical |
 | Questions 34 and 36 answered with a recommendation | not started |
-| Entry 128 section 5 install and section 6 publish | **blocked**, see below |
+| Entry 128 section 5 install and section 6 publish | install **done by Alan** and confirmed here; publish next |
 
-## Blocked, and why
+## The server install, done
 
-**The entry 128 server install.** Alan approved the four SSH commands and the copy went through; the remote `sudo` command was then refused by this session's own permission classifier, not by Alan. Entry 135 section 0.4 forbids SSH and server changes tonight in any case, so it stays where it is. It needs either a permission rule for that command or a turn where the classifier allows it.
+**Alan ran it himself** after the session's own permission classifier refused the remote `sudo` command. Confirmed here by read-only checks: the timer is scheduled every 15 minutes and the log reads "nothing to do: the site release does not exist yet", with the live site untouched.
 
-**Entry 136, the release notes page**, ends in a site publish, and the site cannot deploy until that install has run. Folded with its status rather than written blind.
+**He also found a real defect in it.** `install.py --dry-run` created `/var/lib/grouplab-site-sync`: the dry run said "would create" it and the real run afterwards said it "is there". Two faults met. The installer passed a hard-coded false where it meant its own dry run flag, so it really executed the sync's dry run; and the sync made its state folder on the way into `sync()` and its log folder inside `log()`, rather than when it had something to put in them. Both fixed in `65e07bc`, with two tests.
+
+**Entry 136, the release notes page**, is built: `docs/RELEASE-NOTES.md` is the source of truth with all twelve published builds, `/releases/` is generated from it with one collapsible block per version and the newest open, the update bar's "Show all" opens the offered version's own block, and a test fails if the file falls behind the tags.
 
 **Entry 137, drop and paste**, places itself after the entry 135 queue and entry 136.
 

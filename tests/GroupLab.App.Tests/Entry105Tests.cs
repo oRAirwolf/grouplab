@@ -310,10 +310,14 @@ public class Entry105Tests
             Assert.EndsWith(" in", text[meanRadius + 1], StringComparison.Ordinal);
             Assert.Contains("MOA", text[meanRadius + 2], StringComparison.Ordinal);
 
+            // Entry 131 section 1.2: the direction used to sit in a fourth column, and four columns do not fit the right-hand panel at
+            // 1280 by 720, so the word was cut off at the edge and "0.012 in low" read as "0.012 in lo". It rides with the angular figure
+            // now. What this test is for is unchanged: the linear figure and the angular one are each in a column of their own, and both
+            // axes say which way to go.
             var zero = window.ZeroText.ToList();
-            Assert.Contains(zero, t => t is "left" or "right");
-            Assert.Contains(zero, t => t is "high" or "low");
-            Assert.Contains(zero, t => t.EndsWith(" MOA", StringComparison.Ordinal) && !t.Contains(' ' + "in", StringComparison.Ordinal));
+            Assert.Contains(zero, t => t.EndsWith(" right", StringComparison.Ordinal) || t.EndsWith(" left", StringComparison.Ordinal));
+            Assert.Contains(zero, t => t.EndsWith(" high", StringComparison.Ordinal) || t.EndsWith(" low", StringComparison.Ordinal));
+            Assert.Contains(zero, t => t.Contains(" MOA", StringComparison.Ordinal) && !t.Contains(" in", StringComparison.Ordinal));
             window.Close();
         }
         finally
