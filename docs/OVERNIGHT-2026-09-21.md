@@ -2,6 +2,8 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
+**Entry 141 has arrived** and carries a hard deadline: Alan prints targets from the newest nightly before he leaves between 12:00 and 13:00 Mountain on 2026-09-23, and wants the print checks and a verified build by 09:00 Mountain. This file covers the 2026-09-21 night; entry 141 asks for `docs/OVERNIGHT-2026-09-22.md` as its own progress file.
+
 **Next step:** queue item 1, the entry 131 section 1 checklist pass over every screen, starting with the analysis panel rebuild. Then item 6, question 37's control. `scripts/Test-RealUpdate.ps1` runs again once the nightly carrying entry 139 publishes, which is the proof entry 139 section 5 asks for. The website still needs republishing, and the sync's fixed live check still needs Alan to run the installer on the server.
 
 **Stopped at Alan's request after `6c32b1e`,** with queue items 4 and 5 finished. Local suites green alone: Core 1249, App 169.
@@ -64,6 +66,8 @@ That file is in the installed folder now, so nothing is missing from the package
 | Item | State |
 |---|---|
 | The fixed sync on the server | **done 2026-09-22**: five files copied, SHA-256 matched against the repository, and Alan ran the dry run and the install. The old script is kept beside the new one as a timestamped `.bak`, and the timer is enabled and active |
+| The website republished and confirmed live | **done 2026-09-22**: `grouplab.org` serves `b5ea04c1a8e8007b591089a60a86a356411636d4` in its build meta tag, `/releases/` answers 200 and lists nightlies 44, 43 and 42. The sync log reads `the live check passed on attempt 2` then `installed 52 files`, with no rollback: the retry is the fix working, because attempt 1 is what rolled the first publish back |
+| The calibre best guess on Alan's lists | **done 2026-09-22**: snaps to his fifteen rifle and seven pistol diameters, a load's own diameter wins outright, neighbours it cannot separate go beside it, and a photograph guesses nothing. Question 39 raised: three of his five close pairs straddle the two lists |
 | Question 38, the photographed hole size | **answered by measuring**: 176 holes, nine photographs, four sheets of known calibre. The ratio runs 0.90 to 1.45 sheet by sheet where the scans of those sheets read 0.76 to 0.95, and it is not resolution and not angle. No constant changed; the recommendation is the sheet's own marks, which every one of the thirteen sheets already produced |
 | Entry 140, a new image is a new target | **done**: every section. `75ff2e8` (the reset and the setup offer), `3ae2de1` (the review queue), `78f6549` (New target and the unsaved question) |
 | Entry 139, signing the bytes as published | **done bar section 5**: `28a3365`. The real update test runs once the nightly carrying it publishes |
