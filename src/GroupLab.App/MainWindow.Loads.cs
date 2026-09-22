@@ -1,5 +1,7 @@
+using System.Collections.Immutable;
 using System.Globalization;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using GroupLab.App.Diagnostics;
@@ -19,6 +21,7 @@ public sealed partial class MainWindow
 {
     private readonly ComboBox bullLoad = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel bullLoadLines = new() { Spacing = 2 };
+    private readonly StackPanel aimedAtLines = new() { Spacing = 2 };
     private HashSet<int> bullSelection = [];
 
     private void BuildBullLoads(StackPanel panel)
@@ -27,6 +30,18 @@ public sealed partial class MainWindow
         panel.Children.Add(bullLoad);
         panel.Children.Add(Row(Button("Set", () => SetLoadOnChosenBulls(bullLoad.SelectedIndex > 0 ? bullLoad.SelectedItem as string : null)), Button("Clear", () => SetLoadOnChosenBulls(null))));
         panel.Children.Add(bullLoadLines);
+
+        // Question 37 and entry 130 section 3.1. The offset solver is the fix for the worst defect this project has found, and it only runs
+        // where the shooter has said which bulls they aimed at, because a sheet of twenty five bulls with ten shot has a translation that
+        // explains the holes for almost any reading. Until this control existed there was no way to say it, so the fix was in the build and
+        // out of reach. The bulls are chosen the same way a load's are: click one, shift-click for more.
+        panel.Children.Add(FieldLabel("Bulls you fired at"));
+        panel.Children.Add(Row(
+            Button("These ones", () => SetAimedAtChosenBulls(false)),
+            Button("Every bull", () => SetAimedAtChosenBulls(true)),
+            Button("Clear", () => SetAimedAt(null))));
+        panel.Children.Add(aimedAtLines);
+
         canvas.BullClicked += (_, chosen) =>
         {
             if (!chosen.Add)
@@ -112,6 +127,61 @@ public sealed partial class MainWindow
     }
 
     internal IReadOnlySet<int> ChosenBulls => bullSelection;
+
+    /// <summary>
+    /// Says which bulls the shooter fired at, so the offset solver can run (question 37, entry 130 section 3.1). Every bull takes one shot,
+    /// which is what a sheet of bulls means unless the doubles rule says otherwise.
+    /// </summary>
+    internal void SetAimedAtChosenBulls(bool everyBull)
+    {
+        var bulls = everyBull
+            ? session.State.Bulls.Where(b => b.Scoring).Select(b => b.Index).ToList()
+            : [.. bullSelection];
+
+        if (bulls.Count == 0)
+        {
+            problem.Text = "Choose the bulls first: with the select tool, click one and hold shift to add more. Or press Every bull.";
+            return;
+        }
+
+        SetAimedAt(new AssignmentRule(false, bulls.ToImmutableDictionary(b => b, _ => 1)));
+    }
+
+    /// <summary>Sets or clears the rule, and says what it did.</summary>
+    private void SetAimedAt(AssignmentRule? rule)
+    {
+        session.SetAssignmentRule(rule);
+        DiagnosticLog.Info("marking.aimed", ("bulls", rule?.PerBull.Count ?? 0));
+        toaster.Show(new Confirmation(
+            rule is null
+                ? "Cleared which bulls you fired at."
+                : string.Create(CultureInfo.InvariantCulture, $"{rule.PerBull.Count} bull{(rule.PerBull.Count == 1 ? "" : "s")} marked as fired at."),
+            session.CanUndo ? () => session.Undo() : null));
+        Refresh();
+    }
+
+    /// <summary>What the panel says about the rule, rebuilt on every refresh.</summary>
+    private void ShowAimedAt(MarkingState state)
+    {
+        aimedAtLines.Children.Clear();
+        if (state.Bulls.Count == 0)
+        {
+            aimedAtLines.Children.Add(Line("This marking has no bulls, so there is nothing to say which of them you shot at."));
+            return;
+        }
+
+        if (state.Rule is not { } rule || rule.NearestOnly || rule.PerBull.IsEmpty)
+        {
+            aimedAtLines.Children.Add(Line("Not said. Where a group lands away from where it was aimed, GroupLab cannot tell which bulls you meant to hit, so it measures each shot from whichever bull it landed nearest. Saying which bulls you fired at lets it work out where the group actually landed and measure from the right ones."));
+            return;
+        }
+
+        aimedAtLines.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
+            $"{rule.PerBull.Count} of {state.Bulls.Count(b => b.Scoring)} bulls, one shot each. Shots are assigned in the frame the group actually landed in.")));
+    }
+
+    /// <summary>What the panel says about which bulls were fired at, for the headless tests.</summary>
+    internal IReadOnlyList<string> AimedAtText => [.. aimedAtLines.Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
 
     /// <summary>Picks a load in the field by name, for the headless tests.</summary>
     internal void PickBullLoad(string? load)

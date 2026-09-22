@@ -307,6 +307,11 @@ public class Entry109Tests
                         Save(window, $"ballistics-{name}-{size}");
                         window.ShowBallistics(false);
 
+                        // Entry 131 section 7: the Equipment screen, with a rifle and a load on it so the lists are not empty.
+                        window.ShowEquipment(GroupLab.Core.Marking.EquipmentKind.Rifle);
+                        Save(window, $"equipment-{name}-{size}");
+                        window.BackToEditor();
+
                         // Entry 113 section 2: two sessions of the sheet compared, the second saved as another load the first time round.
                         if (window.Sessions!.List().Count < 2)
                         {

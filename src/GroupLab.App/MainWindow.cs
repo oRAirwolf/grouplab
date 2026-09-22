@@ -1596,6 +1596,7 @@ public sealed partial class MainWindow : Window
         flags.Children.Clear();
         ShowBreadcrumb(state);
         ShowEquipment(state);
+        ShowAimedAt(state);
         ShowZero(state);
         if (report.AllShots is { } all)
         {
@@ -1821,7 +1822,7 @@ public sealed partial class MainWindow : Window
         compareBody.IsVisible = destination == Destination.Compare;
         equipmentBody.IsVisible = destination == Destination.Equipment;
         settingsCrumb.IsVisible = !here;
-        settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Target library", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", _ => "\u203a  Settings" };
+        settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Target library", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", Destination.Equipment => "\u203a  Equipment", _ => "\u203a  Settings" };
         workBar.IsVisible = workShown && here;
         railHere.Classes.Set(AppStyles.Warn, here);
         railSettings.Classes.Set(AppStyles.Warn, destination == Destination.Settings);
@@ -3605,6 +3606,7 @@ public sealed partial class MainWindow : Window
         Destination.Ballistics => "Work out a trajectory from a load and a zero. Nothing here changes a marking or an analysis.",
         Destination.Compare => "Two sessions side by side, with the difference between them and what it is worth saying about.",
         Destination.Settings => "Units, theme, updates and the log. Every choice here is remembered.",
+        Destination.Equipment => "Your rifles, barrels and loads. Nothing here changes a marking; a sheet names which of these it was shot with.",
 
         // The marking screen's line belongs to the tool in hand, so coming back to it says what that tool says, not what the screen being
         // left said. A test goes to the settings page and back and holds this.

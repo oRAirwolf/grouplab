@@ -173,15 +173,16 @@ jobs:
           ls -la release
           test "$(find release -type f | wc -l)" -eq 6
 
-      # What changed since the previous nightly, read before the rolling tag moves, because moving it is what loses the answer.
+      # What changed since the previous published build on this train, and nothing older.
+      #
+      # NOTES-FROM-PLANNING.md entry 138 section 2. This used to start from the rolling `nightly` tag, which moves: a run reading it could
+      # see itself or an older build depending on when it looked. The per-build `v<version>-nightly.N` tags do not move, so the script finds
+      # the newest one below this build itself. A nightly that was cancelled or skipped never got a tag, so its changes roll into this one,
+      # which is what section 1 asks for. The tags have to be in the checkout for that, hence the fetch.
       - name: Write the notes
         run: |
-          git fetch --quiet origin 'refs/tags/nightly:refs/tags/previous-nightly' 2>/dev/null || true
-          previous=$(git rev-parse -q --verify refs/tags/previous-nightly || true)
-          if [ "$previous" = "$SHA" ]; then previous=""; fi
-          # Entry 132 section 1.6: the first nightly with readable notes also carries a hand written account of the builds from
-          # nightly 18 onwards, which went out with notes that said nothing. Drop --since-eighteen once a build after it has published.
-          python3 scripts/release-notes.py "$VERSION" "$SHA" "$previous" --since-eighteen > notes.md
+          git fetch --quiet --tags origin 2>/dev/null || true
+          python3 scripts/release-notes.py "$VERSION" "$SHA" > notes.md
           cat notes.md
 
       # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.

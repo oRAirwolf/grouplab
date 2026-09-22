@@ -53,23 +53,33 @@ FORBIDDEN = [
     ("a server address", re.compile(r"\bpissinhot\b|\b\d{1,3}(\.\d{1,3}){3}\b")),
 ]
 
-# One hand written block, entry 132 section 1.6: the builds from nightly 18 onwards went out with unreadable notes, so the next one says what
-# they were. It is written here rather than derived, because those commits do not carry trailers and their releases are not edited.
-SINCE_EIGHTEEN = """**Since nightly 18**
 
-These builds went out with notes that did not say what changed. In plain words, this is what happened in them.
 
-- GroupLab can update itself at last. Every build before nightly 25 refused its own update as unsigned, whichever version it was, so it could never install anything. If you are on nightly 18 or earlier you have to install this one by hand, once; after that it updates itself.
-- Builds before nightly 16 described themselves as a development build in Settings and never looked for an update at all.
-- When GroupLab finds fewer holes than the shots you fired, it says so and names the bulls with nothing on them, instead of showing a clean result you have no reason to question.
-- Holes from small calibres such as .22 LR are no longer refused as too small when you have entered the calibre.
-- A hole cut off by the edge of the scan is detected instead of being ignored.
-- A shot that landed off the bulls is kept and offered, instead of being dropped.
-- GroupLab can work out where your group actually landed before deciding which bull each shot belongs to, so a sheet shot away from its aim is not measured against the wrong bulls. It needs to be told which bulls you aimed at, and there is not yet a control on any screen that tells it, so this does not reach you yet.
-- Where the shot to bull assignment is not certain, the group figures say so, and the zero correction is withheld rather than being given from shots that may belong elsewhere.
-- A blank sheet scanned on a flatbed can use the scan's own resolution as its scale. GroupLab shows the number and you can refuse it.
-- The Support button opens the support page at grouplab.org, and the report window tells you both ways to send a report.
-"""
+def nightly_number(tag):
+    """The run number in a per-build nightly tag, or None where the tag is not one."""
+    m = re.fullmatch(r"v\d+\.\d+\.\d+-nightly\.(\d+)", tag.strip())
+    return int(m.group(1)) if m else None
+
+
+def previous_published(version):
+    """The tag of the newest published build on this train below this one, or "" where this is the first.
+
+    NOTES-FROM-PLANNING.md entry 138 section 2. The rolling ``nightly`` tag moves, so a run that reads it can
+    see itself or an older build depending on when it looks; the per-build ``v<version>-nightly.N`` tags do not
+    move, and the newest one below this build is exactly the version a person could have been on before it.
+
+    A nightly that was cancelled or skipped before publishing never got a tag, so its changes roll into the next
+    published build on their own, which is what entry 138 section 1 asks for.
+    """
+    mine = nightly_number(version if version.startswith("v") else "v" + version)
+    if mine is None:
+        return ""
+
+    out = subprocess.run(
+        ["git", "tag", "--list", "v*-nightly.*"], capture_output=True, text=True, check=True
+    ).stdout.split()
+    below = [(n, t) for t in out if (n := nightly_number(t)) is not None and n < mine]
+    return max(below)[1] if below else ""
 
 
 def commits(previous, head):
@@ -128,7 +138,7 @@ def problems(sha, note):
 def main():
     version = sys.argv[1] if len(sys.argv) > 1 else "this build"
     head = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
-    previous = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else ""
+    previous = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else previous_published(version)
 
     notes = {k: [] for k in KINDS}
     silent = 0
@@ -151,12 +161,6 @@ def main():
         return 1
 
     lines = [f"GroupLab {version}.", ""]
-
-    # Entry 132 section 1.6: the builds from nightly 18 onwards went out with notes that said nothing, so the first nightly with readable
-    # notes carries a hand written account of them. It is dropped once a build after it has been published with real notes.
-    if "--since-eighteen" in sys.argv:
-        lines.append(SINCE_EIGHTEEN)
-        lines.append("")
 
     if previous and not any(notes[k] for k in KINDS) and silent:
         lines.append("Nothing in this build changes what you see or do. It carries internal work only.")
