@@ -6786,9 +6786,20 @@ The pinned nightly 37 copy is deliberately a separate record with only the seven
 
 The per-version notes finally have somewhere safe to travel. `scripts/release-notes.py --versions versions.json <version>` writes the last ten published builds' own notes, the nightly passes it to `update-manifest --versions`, and it rides in the second file only. Somebody on nightly 31 offered nightly 40 now reads "9 builds are new to you, newest first" with each build's own changes under its own heading, instead of one build's worth of notes for nine builds of work.
 
-## Not done yet
+## Proved, from a build that had never heard of the second format
 
-`scripts/Test-RealUpdate.ps1` runs between two published nightlies. The first nightly carrying this is the one after this commit, so the real update test runs then, not now.
+`scripts/Test-RealUpdate.ps1` ran from the installed nightly 44 to nightly 49, pressing the real buttons on the real window.
+
+That pairing is the proof rather than a formality. **Nightly 44 predates this entry**, so it reads only the first format and verifies it the old way, by re-serialising what it read. **Nightly 49 is the first build to publish both files.** If the second file had changed anything about the first, or if the first had gained so much as a null field, nightly 44 would have answered `BadSignature`, which is exactly what nightly 37 did to nightly 42.
+
+```
+08:58:34 update.check   result=Offered refusal=None
+08:58:39 update.install version=0.2.0-nightly.49 silent=yes
+08:58:47 app.start      version=0.2.0-nightly.49+b5ea04c
+08:58:48 update.arrived from=0.2.0-nightly.44 to=0.2.0-nightly.49
+```
+
+Offered, downloaded, installed, and back on its own fifteen seconds later, with no crash record. The build now installed reads the second file first.
 
 
 # The ballistics page in either system, and the loads compared with their velocities
