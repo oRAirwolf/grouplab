@@ -645,6 +645,9 @@ public sealed class MarkingSession
         var aimed = new List<int>();
         for (int i = 0; i < open.Count; i++)
         {
+            // NOTE: this is every scoring bull, not only the ones aimed at, because AimedBulls.For lists them all and gives nought shots
+            // to the rest. Narrowing it to a count above zero reads better and makes SheetOffsetAssignmentTests put five of twenty shots
+            // on bulls nobody aimed at, so the solver is not being given the question this line appears to ask. Question 46.
             if (rule.PerBull.ContainsKey(open[i].Index))
             {
                 aimed.Add(i);

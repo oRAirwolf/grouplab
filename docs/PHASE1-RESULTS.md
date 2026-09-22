@@ -7608,6 +7608,51 @@ Three messages, none of them a refusal, because a photograph that reads is worth
 The numbers in the first two come from the figures above and would move with them, so they belong in one place with the measurement beside them, the way `HoleToCalibre` does.
 
 
+# The end to end proof against entry 120's ground truth
+
+Entry 141 section 5.3.4: "Scans 4, 5 and 6's ground truth in entry 120 is the test: show that with the aimed bulls set, the assignments match Alan's table." Scans read in place, nothing committed.
+
+`grouplab analyze` gains `--aimed`, taking the same words the window's own box takes, because both now call `AimedBulls.Parse`. A proof run from the command line is worth nothing if "bulls 2 to 5 of every row" means something different there than in the product.
+
+## Scan 5, which is the sheet the whole feature exists for
+
+Alan's table: 20 shots, bulls 2, 3, 4 and 5 of every row, a load the rifle is not zeroed for, so every shot lands high and left of its aim point and many holes sit nearer a bull they were not aimed at.
+
+| | nearest bull | aimed bulls set |
+|---|---|---|
+| assignment | bulls it landed nearest | **2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 15, 17, 18, 19, 20, 22, 23, 24, 25** |
+| mean radius | 1.120 in | 0.617 in |
+| extreme spread | 5.304 in | 2.375 in |
+| centre from aim, across | **-0.041 in** | **-1.163 in** |
+| centre from aim, down | -0.657 in | -1.106 in |
+
+**The assignment is Alan's table exactly**, all twenty, one shot per aimed bull.
+
+**The bottom row is the defect.** With nearest bull, GroupLab told this shooter their group was 0.041 in off centre across: nothing to dial. It is 1.163 in left. A person reading the old figure would have left the sights alone, and the number that told them to was produced with no hint that anything was wrong with it.
+
+## Scan 4, which it does not fix, and was never going to
+
+Alan's table: 23 shots on bulls 1 to 4, 6 to 9, and 11 to 25. Windage was changed after row 2, so rows 1 and 2 share one point of impact and rows 3 to 5 another.
+
+With those bulls named, GroupLab assigns its 24 detected holes to bulls 2, 3, 4, 4, 7, 8, 9, 9, 11, 12, 13, 13, 14, 16, 17, 17, 18, 19, 20, 20, 21, 23, 24, 24: six bulls take two shots and six take none.
+
+**That is the expected answer and not a failure of this feature.** A single sheet-wide offset cannot describe a sheet with two points of impact, which entry 120 said on paper before any of it was built. The item that would fix scan 4 is entry 130 section 3.2, row breaks, and it is still not built. Until it is, scan 4 is a sheet GroupLab should be saying it cannot assign confidently rather than assigning.
+
+## Scan 6, where the assignment is right and a hole is missing
+
+Alan's table: 10 shots, bulls 1 to 5 with one primer and 6 to 10 with another, with shot 6 landing left of bull 21, far from the rest.
+
+GroupLab detects **9** holes and assigns them to bulls 1, 2, 3, 4, 5, 7, 8, 9, 10: one per aimed bull except bull 6, whose shot is the one that is not detected. Every shot it has is on the bull Alan aimed at.
+
+## Two disagreements this turned up
+
+**1. Scan 6 detects 9 holes where entry 130 item 2b.6 recorded 10.** That item says "scan 6 goes 9 to 10, both exactly Alan's own counts", with the calibre named. Measured tonight, scan 6 reads 9 holes with `--calibre .243`, 9 without a calibre, and 9 with `--sighters`. Recorded as **question 45** rather than assumed to be a mistake in either place.
+
+**2. The sheet offset is solved over every bull, and narrowing it makes things worse.** `AimedBulls.For` lists every scoring bull and gives nought shots to the ones nobody aimed at, so `SheetOffset`'s test of `PerBull.ContainsKey` is true for the whole sheet, which is exactly what its own documentation says must not happen. Narrowing it to a count above zero made `SheetOffsetAssignmentTests` put five of twenty shots on bulls nobody aimed at, with the real scan 5 unaffected either way. **It is back as it was, with a note at the line**, because a comment is not a reason to turn a passing proof red. Question 46 carries what I think is going on: the restraint is real but delivered by the matching rather than by the solve, which would make the code right and the paragraph above it wrong.
+
+**And a third, smaller.** "columns 7" on a sheet five bulls wide parsed perfectly and produced a rule naming no bulls, which makes the offset give up and the shots go to whichever bull they landed nearest: the exact behaviour the shooter was turning off, with nothing on screen saying so. It is refused now, like any other text that names nothing.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

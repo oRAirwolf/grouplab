@@ -11,7 +11,7 @@ using GroupLab.Core.Trace;
 namespace GroupLab.Cli;
 
 /// <summary>
-/// <c>grouplab analyze &lt;image&gt; [--target &lt;definition&gt;] [--library &lt;directory&gt;]... [--calibre &lt;calibre&gt;] [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
+/// <c>grouplab analyze &lt;image&gt; [--target &lt;definition&gt;] [--library &lt;directory&gt;]... [--calibre &lt;calibre&gt;] [--aimed &lt;bulls&gt;] [-v 1|2|3] [--json &lt;marking&gt;]</c>: NOTES-FROM-PLANNING.md entry 33
 /// section 1, a photograph or scan of a GroupLab sheet in and a group out, through <see cref="SheetAnalysis"/>. It prints the stage trace in
 /// DETECTION-PIPELINE.md section 6.3's console form, then every recovered shot and the pooled group, and with <c>--json</c> writes the result
 /// as a marking file the marking screen can open.
@@ -27,7 +27,7 @@ public static class AnalyzeVerb
     public static int Run(string imagePath, string[] rest, TextWriter output, TextWriter error)
     {
         ArgumentNullException.ThrowIfNull(rest);
-        string? target = null, json = null;
+        string? target = null, json = null, aimed = null;
         Calibre? calibre = null;
         var libraries = new List<string>();
         int verbosity = 1;
@@ -51,6 +51,11 @@ public static class AnalyzeVerb
                     }
 
                     break;
+                case "--aimed" when i + 1 < rest.Length:
+                    // NOTES-FROM-PLANNING.md entry 141 section 5.3.4: "rows 1-3", "columns 2-5", or a list of bulls by their printed
+                    // numbers, exactly as the window's own box takes it. Both ask AimedBulls.Parse, so the two cannot drift apart.
+                    aimed = rest[++i];
+                    break;
                 case "--sighters":
                     // NOTES-FROM-PLANNING.md entry 105 section 8: sighters are set aside unless asked for, as the window does.
                     sighters = true;
@@ -68,7 +73,7 @@ public static class AnalyzeVerb
             }
         }
 
-        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null, calibre);
+        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null, calibre, null, aimed);
         if (loadFailure is not null)
         {
             error.WriteLine($"analyze: {loadFailure}");
@@ -129,7 +134,7 @@ public static class AnalyzeVerb
     /// the sheet's codes name among those under <paramref name="libraries"/>. Null with the reason when the image cannot be read, or no
     /// definition can be.
     /// </summary>
-    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null, GroupLab.Core.Measurement.MeasureOptions? options = null)
+    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null, GroupLab.Core.Measurement.MeasureOptions? options = null, string? aimed = null)
     {
         failure = null;
         TargetDefinition? definition = null;
@@ -179,7 +184,7 @@ public static class AnalyzeVerb
             definition = identity.Definition;
         }
 
-        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace, calibre, options);
+        return SheetAnalysis.Run(imagePath, grey, value, metadata, definition, backend, trace, calibre, options, aimed);
     }
 
     private static void WriteGroup(TextWriter output, GroupReport report)

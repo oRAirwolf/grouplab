@@ -12,6 +12,74 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-22, question 46: the sheet offset is solved over every bull, and narrowing it makes things worse
+
+**Status: open. Nothing is broken today; this is a line that does not do what it reads as doing.**
+
+### What it says
+
+`MarkingSession.SheetOffset` is documented, at length and convincingly, as the restraint that makes the whole feature safe:
+
+> **It is only applied where the shooter has said which bulls they aimed at.** That restraint is the whole of the design. A sheet of twenty five bulls where ten were shot has a translation that explains the holes for almost any reading, so solving over every bull would let the software choose between them on a margin it cannot justify.
+
+### What it does
+
+```csharp
+if (rule.PerBull.ContainsKey(open[i].Index))
+```
+
+`AimedBulls.For` puts **every scoring bull** in `PerBull`, giving nought shots to the ones nobody aimed at. So that test is true for the whole sheet, and the solver is handed every bull as a candidate, which is the thing the paragraph above says must not happen.
+
+### What happened when I narrowed it
+
+Changing it to `rule.For(open[i].Index) > 0`, which is what the documentation describes, made `SheetOffsetAssignmentTests.ToldWhichBullsWereAimedAtEveryShotFindsItsOwn` put **five of twenty shots on bulls nobody aimed at**. The real scan 5 was unaffected and still matches Alan's table exactly either way.
+
+So the narrower question is the one the documentation asks for and the one that makes a passing proof fail. I have put it back as it was, with a note at the line, rather than shipping a change that turns a proof red on the strength of a comment.
+
+### What I think is going on, and would check
+
+`ImpactOffsets.Solve` takes the candidate bulls as indices into the open list. Given all twenty-five, it has more geometry to fit the translation against and lands on the right one; given only the twenty aimed at, it has less and lands slightly differently, and the matching that follows then goes wrong for the five shots furthest from their bulls.
+
+If that is right, then the documented restraint is real but it is delivered by the **matching**, which is restricted to the aimed bulls, rather than by the offset solve, which benefits from seeing the whole grid. That would make the line correct and the paragraph above it wrong, which is worth fixing in the words rather than the code.
+
+**What would settle it:** run `ImpactOffsets.Solve` on scan 5's geometry both ways and compare the offsets it returns against the offset Alan's table implies. One measurement, and it decides whether the code or its documentation is the thing to change.
+
+## 2026-09-22, question 45: scan 6 reads 9 holes tonight where entry 130 recorded 10
+
+**Status: open. It is a disagreement between two measurements, not a design question.**
+
+### What is recorded
+
+`docs/NOTES-FROM-PLANNING.md`, entry 130 item 2b.6, done 2026-09-22:
+
+> **Three of the four missed holes are back**, two of them only when the calibre is named: scan 5 goes 18 to 20 and scan 6 goes 9 to 10, both exactly Alan's own counts.
+
+Alan's table for scan 6 is 10 shots.
+
+### What it reads tonight
+
+Read in place from the 600 dpi scan of sheet 6 in the range folder, three ways:
+
+| run | holes |
+|---|---|
+| `analyze --calibre .243` | **9** |
+| `analyze` with no calibre | **9** |
+| `analyze --calibre .243 --sighters` | **9** |
+
+Scan 5 still reads 20, which is what the same item recorded, so this is scan 6 alone.
+
+### Why it matters more than one hole
+
+The missing one is **shot 6**, which entry 120 describes as landing left of bull 21, much lower than the rest, "a real shot, not a flyer to delete". It is the hardest hole on the sheet and the most interesting: it is the shot that proves a group can contain something a long way from everything else.
+
+With the aimed bulls set, scan 6's nine detected holes assign one per aimed bull except bull 6, so **the assignment is right for every shot it has**. The gap is detection, not assignment.
+
+### What I have not done
+
+I have not gone looking for which change cost it, and I am not guessing. The obvious suspect is tonight's entry 141 section 4, which made the sheet's own marks the size reference in place of a stated calibre, and section 4.5 required the scans to be untouched by it. My own write-up of that change said the scans were untouched, and what I checked was the **flag** counts, not the hole counts. That is a weaker check than the sentence I wrote implies, and it is worth saying so.
+
+**What would settle it:** re-run scan 6 at the commit before entry 141 section 4 landed and compare the hole count. That is one command and I would rather it were run deliberately than folded into other work.
+
 ## 2026-09-22, question 44: the bent-sheet model crashes on one photograph, and improves the wrong points on the rest
 
 **Status: open, and nothing a person can reach is affected.**

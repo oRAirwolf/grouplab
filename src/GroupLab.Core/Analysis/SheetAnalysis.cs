@@ -30,7 +30,7 @@ public sealed record SheetAnalysisResult(
 /// </summary>
 public static class SheetAnalysis
 {
-    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace, Calibre? calibre = null, Measurement.MeasureOptions? options = null)
+    public static SheetAnalysisResult Run(string imagePath, GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, TraceRecorder trace, Calibre? calibre = null, Measurement.MeasureOptions? options = null, string? aimed = null)
     {
         ArgumentNullException.ThrowIfNull(trace);
         var automatic = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, calibre: calibre, options: options);
@@ -46,6 +46,13 @@ public static class SheetAnalysis
         if (calibre is not null)
         {
             session.SetCalibre(calibre);
+        }
+
+        // NOTES-FROM-PLANNING.md entry 141 section 5.3.4: which bulls the shooter says they aimed at. Without it the shots go to whichever
+        // bull they landed nearest, which is the whole of the defect entry 120 found on scan 5.
+        if (aimed is not null && AimedBulls.Parse(aimed, session.State.Bulls) is { } rule)
+        {
+            session.SetAssignmentRule(rule);
         }
 
         var state = session.State;

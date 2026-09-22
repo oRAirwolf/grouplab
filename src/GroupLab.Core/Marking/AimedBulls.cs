@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Collections.Immutable;
 
 namespace GroupLab.Core.Marking;
@@ -105,6 +106,111 @@ public static class AimedBulls
     }
 
     /// <summary>The scoring bulls this rule says were aimed at, in index order.</summary>
+    /// <summary>
+    /// The rule a person's own words describe, NOTES-FROM-PLANNING.md entry 141 section 5.3.4. Three ways of saying it, because three ways
+    /// is how people shoot: whole rows, the same columns of every row, or a list of bulls by their printed numbers. An empty text is every
+    /// bull, which is what a sheet shot the ordinary way means.
+    /// <para>
+    /// It lives here rather than in the window so that the command line asks the same question the same way. A proof that the assignments
+    /// match a shooter's table is worth nothing if the command line's idea of "bulls 2 to 5 of every row" is not the application's.
+    /// </para>
+    /// </summary>
+    /// <returns>The rule, or null where the text names nothing on this sheet.</returns>
+    public static AssignmentRule? Parse(string? text, IReadOnlyList<BullAim> bulls, int each = 1)
+    {
+        ArgumentNullException.ThrowIfNull(bulls);
+        string said = (text ?? "").Trim();
+        if (said.Length == 0)
+        {
+            return EveryBull(bulls, each);
+        }
+
+        if (said.StartsWith("row", StringComparison.OrdinalIgnoreCase))
+        {
+            var numbers = Numbers(After(said));
+            return numbers is { Count: > 0 } ? Real(RowsOf(bulls, numbers, each)) : null;
+        }
+
+        if (said.StartsWith("column", StringComparison.OrdinalIgnoreCase))
+        {
+            var numbers = Numbers(After(said));
+            return numbers is { Count: > 0 } ? Real(ColumnsOfEveryRow(bulls, numbers, each)) : null;
+        }
+
+        return Named(said, bulls) is { Count: > 0 } named ? Real(For(bulls, named, each)) : null;
+    }
+
+    /// <summary>
+    /// A rule that names no bull at all is refused, the same as text that names nothing.
+    /// <para>
+    /// "columns 7" on a sheet five bulls wide parses perfectly and then names nothing. Returning it would be worse than returning nothing:
+    /// a rule with no bulls in it makes the sheet offset give up and the shots go to whichever bull they landed nearest, which is the exact
+    /// behaviour the shooter was trying to turn off, and no part of the screen would say so.
+    /// </para>
+    /// </summary>
+    private static AssignmentRule? Real(AssignmentRule rule) => rule.PerBull.Values.Any(n => n > 0) ? rule : null;
+
+    private static string After(string said) => said.IndexOf(' ', StringComparison.Ordinal) is var at && at >= 0 ? said[(at + 1)..] : "";
+
+    /// <summary>Plain numbers and ranges, "1-3, 5", with no bull labels involved: a row is not a bull.</summary>
+    private static List<int>? Numbers(string text)
+    {
+        var found = new List<int>();
+        foreach (string part in text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            string[] ends = part.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (ends.Length == 1 && int.TryParse(ends[0], CultureInfo.InvariantCulture, out int one))
+            {
+                found.Add(one);
+            }
+            else if (ends.Length == 2 && int.TryParse(ends[0], CultureInfo.InvariantCulture, out int from)
+                && int.TryParse(ends[1], CultureInfo.InvariantCulture, out int to) && to >= from)
+            {
+                found.AddRange(Enumerable.Range(from, to - from + 1));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return found;
+    }
+
+    /// <summary>The bulls a list like "1-10, 12" names, by their printed labels, as indices; null when any part names no bull.</summary>
+    private static List<int>? Named(string text, IReadOnlyList<BullAim> bulls)
+    {
+        var byLabel = bulls.Where(b => b.Scoring).GroupBy(b => b.Label).ToDictionary(g => g.Key, g => g.First().Index);
+        var named = new List<int>();
+        foreach (string part in text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            string[] ends = part.Split('-', StringSplitOptions.TrimEntries);
+            if (ends.Length == 2 && int.TryParse(ends[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int from)
+                && int.TryParse(ends[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int to) && from <= to)
+            {
+                for (int n = from; n <= to; n++)
+                {
+                    if (!byLabel.TryGetValue(n.ToString(CultureInfo.InvariantCulture), out int index))
+                    {
+                        return null;
+                    }
+
+                    named.Add(index);
+                }
+            }
+            else if (byLabel.TryGetValue(part, out int index))
+            {
+                named.Add(index);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return named;
+    }
+
     public static IReadOnlyList<int> Of(AssignmentRule? rule, IEnumerable<BullAim> bulls)
     {
         ArgumentNullException.ThrowIfNull(bulls);

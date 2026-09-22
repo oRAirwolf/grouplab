@@ -85,53 +85,7 @@ public sealed partial class MainWindow
     /// The rule the box describes, or null where it describes nothing. Three ways of saying it, because three ways is how people shoot:
     /// a list of bulls, whole rows, or the same columns of every row.
     /// </summary>
-    private AssignmentRule? AimedFromBox()
-    {
-        string text = (doubledBulls.Text ?? "").Trim();
-        var bulls = session.State.Bulls;
-        if (text.Length == 0)
-        {
-            return AimedBulls.EveryBull(bulls);
-        }
-
-        if (text.StartsWith("rows", StringComparison.OrdinalIgnoreCase) || text.StartsWith("row", StringComparison.OrdinalIgnoreCase))
-        {
-            var numbers = Numbers(text[(text.IndexOf(' ') + 1)..]);
-            return numbers is { Count: > 0 } ? AimedBulls.RowsOf(bulls, numbers) : null;
-        }
-
-        if (text.StartsWith("column", StringComparison.OrdinalIgnoreCase))
-        {
-            var numbers = Numbers(text[(text.IndexOf(' ') + 1)..]);
-            return numbers is { Count: > 0 } ? AimedBulls.ColumnsOfEveryRow(bulls, numbers) : null;
-        }
-
-        return NamedBulls(text) is { Count: > 0 } named ? AimedBulls.For(bulls, named) : null;
-    }
-
-    /// <summary>Plain numbers and ranges, "1-3, 5", with no bull labels involved: a row is not a bull.</summary>
-    private static List<int>? Numbers(string text)
-    {
-        var found = new List<int>();
-        foreach (string part in text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            string[] ends = part.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            if (ends.Length == 1 && int.TryParse(ends[0], CultureInfo.InvariantCulture, out int one))
-            {
-                found.Add(one);
-            }
-            else if (ends.Length == 2 && int.TryParse(ends[0], CultureInfo.InvariantCulture, out int from) && int.TryParse(ends[1], CultureInfo.InvariantCulture, out int to) && to >= from)
-            {
-                found.AddRange(Enumerable.Range(from, to - from + 1));
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        return found;
-    }
+    private AssignmentRule? AimedFromBox() => AimedBulls.Parse(doubledBulls.Text, session.State.Bulls);
 
     /// <summary>Writes the rule in force under the control, so a person can check what they told GroupLab.</summary>
     private void ShowRule() => ruleSays.Text = session.State.Bulls.Count == 0 ? "" : AimedBulls.Says(session.State.Rule, session.State.Bulls);
