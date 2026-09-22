@@ -185,20 +185,6 @@ jobs:
           python3 scripts/release-notes.py "$VERSION" "$SHA" > notes.md
           cat notes.md
 
-          # Entry 138 section 5: the notes of each of the last few published builds, each one only its own changes, so the update bar can
-          # show somebody who skipped several what every one of them changed. Written here because this is where the history is; the machine
-          # being updated has none to read.
-          mkdir -p version-notes
-          echo "--version-notes $VERSION notes.md" > version-notes/args
-          # Read with for-each-ref, never with the command that also creates tags: only the nightly may tag and only its own
-          # pre-releases (entry 119 section 8), and a test holds this workflow to never naming that command at all.
-          for tag in $(git for-each-ref --format='%(refname:short)' 'refs/tags/v*-nightly.*' | sort -t. -k4 -n | tail -8); do
-            past="${tag#v}"
-            if [ "$past" = "$VERSION" ]; then continue; fi
-            python3 scripts/release-notes.py "$past" "$tag" > "version-notes/$past.md" 2>/dev/null || continue
-            echo "--version-notes $past version-notes/$past.md" >> version-notes/args
-          done
-          cat version-notes/args
 
       # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.
       - name: Write and sign the manifest
@@ -212,7 +198,7 @@ jobs:
             --version "$VERSION" --train nightly --commit "$SHA" --notes notes.md --out release/update-manifest.json \
             --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
-            --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"             $(cat version-notes/args)
+            --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"
           # Checked with the key compiled into the build being published, not with the key that signed it: that is the stronger question,
           # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
           # was set fails here by design, and the message says NoKey.

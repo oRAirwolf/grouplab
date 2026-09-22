@@ -106,4 +106,31 @@ public class SkippedVersionsTests
 
         Assert.Equal(["0.2.0-nightly.35", "0.2.0-nightly.31", "0.2.0-nightly.28"], between.Select(v => v.Version));
     }
+    /// <summary>
+    /// <b>The rule this feature ran into, held so nobody meets it the hard way again.</b>
+    /// <para>
+    /// A manifest is verified by serialising the record it was read into and checking those bytes against the signature. A build that does
+    /// not know a field drops it on the way back out, so the bytes it checks are not the bytes that were signed. Adding one field for entry
+    /// 138 section 5 published nightly 42 with it, and nightly 37 answered <c>update.check result=Refused refusal=BadSignature</c>: every
+    /// build already installed was unable to update itself at all, which is worse than the fault that change was travelling with.
+    /// </para>
+    /// <para>
+    /// So the signed payload's shape is fixed until every build in the field understands a new one. This test names the fields, so adding
+    /// one fails here rather than in somebody's copy of GroupLab.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void TheSignedManifestHasExactlyTheseFieldsAndAddingOneBreaksEveryInstalledBuild()
+    {
+        var written = System.Text.Json.Nodes.JsonNode.Parse(
+            System.Text.Encoding.UTF8.GetString(
+                new UpdateManifest(UpdateManifest.Current, "0.2.0-nightly.1", "nightly", "abc1234", "2026-01-01T00:00:00Z", "notes",
+                    [new UpdateAsset("windows", "installer", "a.exe", 1, "hash", "https://example.invalid/a.exe")]).Signable()))!.AsObject();
+
+        // Offered and OnTrain are computed from the others and still land in the signed bytes, which is its own trap: changing what either
+        // one returns changes the signature of every manifest as surely as adding a field would.
+        Assert.Equal(
+            ["manifest", "version", "train", "commit", "publishedUtc", "notes", "assets", "Offered", "OnTrain"],
+            written.Select(p => p.Key));
+    }
 }

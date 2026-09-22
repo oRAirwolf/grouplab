@@ -16,10 +16,11 @@ public sealed record UpdateAsset(string Platform, string Kind, string Name, long
 /// cases saying so in plain words rather than failing quietly. <see cref="UpdateSignature"/> is where that is done.
 /// </para>
 /// </summary>
-/// <summary>One published version's own notes, for the update bar to show a person everything they skipped (entry 138 section 5).</summary>
-public sealed record VersionNotes(
-    [property: JsonPropertyName("version")] string Version,
-    [property: JsonPropertyName("notes")] string Notes);
+/// <summary>
+/// One published version's own notes, for the update bar to show a person everything they skipped (entry 138 section 5). It is not carried
+/// in the manifest: see the note in <see cref="UpdateManifest"/> for why nothing may be added there.
+/// </summary>
+public sealed record VersionNotes(string Version, string Notes);
 
 public sealed record UpdateManifest(
     [property: JsonPropertyName("manifest")] int Manifest,
@@ -28,18 +29,17 @@ public sealed record UpdateManifest(
     [property: JsonPropertyName("commit")] string Commit,
     [property: JsonPropertyName("publishedUtc")] string PublishedUtc,
     [property: JsonPropertyName("notes")] string Notes,
-    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets,
-    /// <summary>
-    /// Every published version from just after some horizon up to this one, newest first, each with its own notes and nothing older
-    /// (NOTES-FROM-PLANNING.md entry 138 section 5). Null on a manifest written before this existed, which is why it is optional and last:
-    /// an older build ignores a field it does not know, and a newer build falls back to <see cref="Notes"/> when it is missing.
-    /// <para>
-    /// It is here so that somebody who skipped five builds is shown what each of them changed rather than only the newest, which is what
-    /// they would want and what no amount of re-reading history on their own machine could give them.
-    /// </para>
-    /// </summary>
-    [property: JsonPropertyName("versions")] IReadOnlyList<VersionNotes>? Versions = null)
+    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets)
 {
+    // NOTES-FROM-PLANNING.md entry 138 section 5 wanted a list of each recent version's own notes here, and it cannot go here.
+    //
+    // **Nothing may be added to this record without breaking every build already installed.** Signable() serialises the record as it was
+    // deserialised, so a build that does not know a field drops it on the way back out, the bytes it checks are not the bytes that were
+    // signed, and the manifest is refused as BadSignature. Adding "versions" did exactly that: nightly 42 published with it and nightly 37
+    // answered `update.check result=Refused refusal=BadSignature`, which is every older build unable to update itself at all.
+    //
+    // So the shape is fixed until every build in the field understands a new one, which for a project with no release yet means: not now.
+    // SkippedVersions is built and tested and waiting for somewhere safe to carry its input.
     /// <summary>The only manifest version this application reads. A newer one is refused by name rather than half understood.</summary>
     public const int Current = 1;
 
