@@ -68,7 +68,7 @@ Nor is it the angle. The widest reading in the whole set, 1.452, came from the s
 
 Look at the two 6.5 Creedmoor sheets. Same rifle, same load, same box of bullets, same afternoon. Scanned, they read 0.949 and 0.937, which is as close as two measurements of this kind get. Photographed, one reads 0.898 and the other 1.45.
 
-The difference between them is not the hole. It is that one was photographed at half past three and the other at five, with the sun an hour and a half lower.
+The difference between them is not the hole. It is that one was photographed at 15:33 and the other at 16:56, an hour and twenty minutes later, with the sun that much lower.
 
 A hole in paper is not a flat black disc. It is a torn crown with a shadow in it, and the size of that shadow depends entirely on where the light is coming from. A scanner has a lamp at a fixed angle two centimetres from the paper and a white lid behind it, which is why its numbers are boring and repeatable. An afternoon is not like that.
 

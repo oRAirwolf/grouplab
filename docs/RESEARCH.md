@@ -40,12 +40,12 @@ Each one ends with a list of what to check against the repository before it goes
 | 8 | `can-you-see-the-bull` | Can you see the bull? Aim points and optics at 100 yards | Range tests | Planning | waiting for the draft and the 2026-09-23 range data |
 | 9 | `scans-against-photos` | Scans against phone photos: how close is close enough? | Reading targets | Code | not started, after entry 130 section 2c |
 | 10 | `safe-updates` | How GroupLab updates itself safely | How GroupLab is built | Code | not started, batch 3 |
-| 11 | `how-many-shots` | How many shots do you need? | Measuring groups | Planning | waiting for the draft |
+| 11 | `how-many-shots` | How many shots do you need? | Measuring groups | Planning | **imported, draft** |
 | 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | not started, batch 2 |
-| 13 | `cep-explained` | CEP 50 and 90 explained | Measuring groups | Planning | waiting for the draft |
+| 13 | `cep-explained` | CEP 50 and 90 explained | Measuring groups | Planning | **imported, draft**: corrected, the roundness verdict is a test rather than an aspect threshold |
 | 14 | `velocity-sd-small-samples` | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning | waiting for the draft |
 | 15 | `moa-mils-inches` | MOA, mils and inches: one group four ways | Measuring groups | Planning | waiting for the draft |
-| 16 | `when-to-adjust-zero` | Zeroing: when to adjust and when to leave it | Measuring groups | Planning | waiting for the draft |
+| 16 | `when-to-adjust-zero` | Zeroing: when to adjust and when to leave it | Measuring groups | Planning | **imported, draft**: corrected, the zero figures are at 95 percent |
 | 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | not started, batch 2 |
 | 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | not started, batch 2 |
 | 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | not started, batch 2 |

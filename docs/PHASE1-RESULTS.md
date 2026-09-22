@@ -6877,7 +6877,7 @@ Two photographs of one sheet at 278 and 177 pixels per inch give 1.452 and 1.449
 
 Nor is it obliqueness: the 15-shot sheet's worst reading, 1.452, is the one photograph in the set with all 34 markers found and the lowest residual, which is the squarest and cleanest of them.
 
-**What it is.** Two 6.5 Creedmoor sheets, same rifle, same load, same day, scanned at 0.949 and 0.937, photograph at 0.898 and 1.45. The difference between them is not the hole; it is the photograph. The 25-shot sheet was photographed at 15:33 and the 15-shot sheet at 16:56, with the sun three hours lower. A hole photographed in low, raking light carries its own shadow, and the dark blob that render-and-difference measures is the hole plus that shadow. A scan has a lamp at a fixed angle and a white lid behind the paper, which is why its numbers are steady.
+**What it is.** Two 6.5 Creedmoor sheets, same rifle, same load, same day, scanned at 0.949 and 0.937, photograph at 0.898 and 1.45. The difference between them is not the hole; it is the photograph. The 25-shot sheet was photographed at 15:33 and the 15-shot sheet at 16:56, an hour and twenty minutes later with the sun that much lower. (I first wrote "three hours lower" here, which is simply wrong arithmetic on those two times; the planning session caught it when checking a draft against this file.) A hole photographed in low, raking light carries its own shadow, and the dark blob that render-and-difference measures is the hole plus that shadow. A scan has a lamp at a fixed angle and a white lid behind the paper, which is why its numbers are steady.
 
 So the quantity is not "how much larger a hole is in a photograph". It is "how much shadow was in that photograph", and no constant can carry it.
 
