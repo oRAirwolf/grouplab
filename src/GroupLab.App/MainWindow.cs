@@ -171,6 +171,11 @@ public sealed partial class MainWindow : Window
 
     private readonly StackPanel sessionRows = new() { Spacing = 0 };
 
+    /// <summary>Entry 141 section 5.2.4: is this load getting better or worse? Shown only when the filters name one load.</summary>
+    private readonly StackPanel sessionTrendPanel = new() { Spacing = Tokens.Space8 };
+
+    private readonly SessionsOverTime sessionTrend = new();
+
     private readonly ComboBox sessionRifle = new() { MinWidth = 180 };
 
     private readonly ComboBox sessionLoad = new() { MinWidth = 180 };
@@ -2395,6 +2400,7 @@ public sealed partial class MainWindow : Window
         column.Children.Add(filters);
         // Entry 113 section 2: each row's box chooses it for comparing, and two or more chosen compare side by side.
         column.Children.Add(Row(Button("Compare the chosen", CompareChosen), new TextBlock { Text = "Tick two or more sessions to compare their loads.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        column.Children.Add(sessionTrendPanel);
         column.Children.Add(sessionRows);
         return new ScrollViewer { Content = column, IsVisible = false };
     }
@@ -2426,6 +2432,7 @@ public sealed partial class MainWindow : Window
         fillingSessions = false;
 
         var list = sessions.List(rifle, load);
+        FillSessionTrend(load, list);
         if (list.Count == 0)
         {
             sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyse on a marked sheet saves one." : "No session matches the rifle and load chosen."));
@@ -2519,6 +2526,50 @@ public sealed partial class MainWindow : Window
             sessionRows.Children.Add(row);
         }
     }
+
+    /// <summary>
+    /// The sessions of one load over time, NOTES-FROM-PLANNING.md entry 141 section 5.2.4. It appears only when the filters name a single
+    /// load, because "is this load getting better or worse" is not a question that can be asked of a mixture of loads, and a chart drawn
+    /// over several of them would answer a question nobody asked.
+    /// </summary>
+    private void FillSessionTrend(string? load, IReadOnlyList<SessionSummary> list)
+    {
+        sessionTrendPanel.Children.Clear();
+        if (load is null)
+        {
+            sessionTrendPanel.Children.Add(Line("Choose one load above to see whether it is getting better or worse."));
+            return;
+        }
+
+        var points = list
+            .Where(s => s.MeanRadiusInches is not null)
+            .Select(s => new SessionPoint(WhenShot(s), s.MeanRadiusInches!.Value, s.MeanRadiusLowerInches, s.MeanRadiusUpperInches, s.ShotCount))
+            .OrderBy(p => p.When)
+            .ToList();
+
+        sessionTrend.Points = points;
+        sessionTrend.Load = load;
+        sessionTrend.Length = units.Length;
+        sessionTrend.InvalidateVisual();
+
+        sessionTrendPanel.Children.Add(new TextBlock { Text = "Is this load getting better or worse?", Classes = { AppStyles.Section } });
+        if (points.Count > 0)
+        {
+            sessionTrendPanel.Children.Add(sessionTrend);
+        }
+
+        sessionTrendPanel.Children.Add(Line(sessionTrend.Description));
+    }
+
+    /// <summary>When a session was shot: its shot date where it has one, and the date it was recorded where it does not.</summary>
+    private static DateTime WhenShot(SessionSummary session) =>
+        DateTime.TryParse(session.ShotDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var shot) ? shot
+            : DateTime.TryParse(session.CreatedUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var made) ? made
+            : DateTime.MinValue;
+
+    /// <summary>What the sessions-over-time chart says, for the headless tests.</summary>
+    internal string SessionTrendDescription =>
+        string.Join(" ", sessionTrendPanel.Children.OfType<TextBlock>().Select(t => t.Text));
 
     /// <summary>The Session records rows' texts, for the headless tests.</summary>
     internal IReadOnlyList<string> SessionRowTexts =>
