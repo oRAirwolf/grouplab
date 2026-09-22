@@ -356,6 +356,52 @@ public sealed partial class MainWindow : Window
 
     /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
     private readonly TextBox roundsFired = new() { Width = 90 };
+
+    /// <summary>
+    /// What the last sheet was shot with, NOTES-FROM-PLANNING.md entry 140 section 1.3: the equipment and the conditions, and nothing about
+    /// where any shot landed. It is offered on the next sheet and never applied on its own.
+    /// </summary>
+    private sealed record Setup(Rifle? Rifle, string? Barrel, string? Load, Calibre? Calibre, double? DistanceInches)
+    {
+        /// <summary>What the button says it would copy, so a person can see what they are accepting before they press it.</summary>
+        public string Describe(UnitSettings units)
+        {
+            ArgumentNullException.ThrowIfNull(units);
+            var parts = new List<string>();
+            if (Rifle is { } rifle)
+            {
+                parts.Add(rifle.Name);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Barrel))
+            {
+                parts.Add(Barrel!);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Load))
+            {
+                parts.Add(Load!);
+            }
+
+            if (Calibre is { } calibre)
+            {
+                parts.Add(calibre.Name);
+            }
+
+            if (DistanceInches is { } inches)
+            {
+                parts.Add(units.DistanceText(inches));
+            }
+
+            return parts.Count == 0 ? "" : string.Join(", ", parts);
+        }
+
+        public bool Anything => Rifle is not null || !string.IsNullOrWhiteSpace(Barrel) || !string.IsNullOrWhiteSpace(Load) || Calibre is not null || DistanceInches is not null;
+    }
+
+    private Setup? lastSetup;
+
+    private readonly StackPanel sameSetup = new() { Spacing = Tokens.Space4, IsVisible = false };
     // NOTES-FROM-PLANNING.md entry 131 section 3.3: the shot distance's unit is a dropdown beside the number, yards or metres. It was a label
     // showing whatever the Settings said, so somebody who works in metres but shoots at a hundred yard range had to change a global setting to
     // type one number, or convert it in their head. It chooses how the number in the box is read and written; the distance itself is kept in
@@ -459,6 +505,9 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(Ruled("Scale"));
         panel.Children.Add(scaleInputs);
         panel.Children.Add(Ruled("Group"));
+
+        // Entry 140 section 1.3: what the last sheet was shot with, offered rather than applied, with what it would copy written beside it.
+        panel.Children.Add(sameSetup);
 
         // Entry 24 section 5: the calibre is a property of the group, entered once, from the list or typed.
         panel.Children.Add(FieldLabel("Calibre"));
@@ -1008,14 +1057,24 @@ public sealed partial class MainWindow : Window
         metadata = meta;
         artwork = null;
         statedSize = StatedSheetSize.Beside(path);
-        // Entry 78 section 4: the calibre is used in finding holes, so the one named stays named for the next sheet, where detection
-        // on opening can use it. It stays in view in the calibre box.
-        var calibre = session.State.Calibre;
+        // NOTES-FROM-PLANNING.md entry 140: a new image is a new target, and nothing from the last one is used silently.
+        //
+        // The calibre used to carry over, on the reasoning of entry 78 section 4 that detection on opening could use it. What that actually
+        // did was measure one sheet's holes against another sheet's bullet: Alan opened a 6.5 mm sheet after a smaller one and every one of
+        // its fifteen holes was flagged "possibly two holes" at 2.0 to 2.36 holes' area, with sixteen review items on a sheet that had
+        // nothing wrong with it. A review queue that cries wolf teaches people to ignore it, which costs more than the convenience was worth.
+        //
+        // So it is offered instead. LastSetup holds what the previous sheet was shot with, and the button says what it would copy.
+        lastSetup = session.State.Bulls.Count > 0 || session.State.Shots.Count > 0
+            ? new Setup(session.State.Rifle, session.State.Barrel, session.State.Load, session.State.Calibre, session.State.ShotDistanceInches)
+            : lastSetup;
         session.Open(path, meta.Orientation);
-        if (calibre is not null)
-        {
-            session.Load(session.State with { Calibre = calibre });
-        }
+
+        // The boxes that hold one sheet's own facts are emptied with it, or they would still read the last sheet's numbers over a state that
+        // no longer has them.
+        roundsFired.Text = "";
+        calibreBox.Text = "";
+        shotDistance.Text = "";
 
         detectedState = null;
         plotDefinition = null;
@@ -1607,6 +1666,7 @@ public sealed partial class MainWindow : Window
         ShowBreadcrumb(state);
         ShowEquipment(state);
         ShowAimedAt(state);
+        ShowSameSetup(state);
         ShowZero(state);
         if (report.AllShots is { } all)
         {
@@ -3040,6 +3100,56 @@ public sealed partial class MainWindow : Window
             status.Text = "The records could not be saved to the database (" + ex.Message + "), so they last until GroupLab closes.";
         }
     }
+
+    /// <summary>
+    /// The offer to copy the last sheet's equipment and conditions, entry 140 section 1.3. It appears only where there is something to copy
+    /// and this sheet does not already have it, and it names what it would copy, because a button that silently changes five things is the
+    /// thing this entry exists to stop.
+    /// </summary>
+    private void ShowSameSetup(MarkingState state)
+    {
+        sameSetup.Children.Clear();
+        bool worth = lastSetup is { Anything: true }
+            && state.Rifle is null && state.Load is null && state.Calibre is null && state.ShotDistanceInches is null;
+        sameSetup.IsVisible = worth;
+        if (!worth)
+        {
+            return;
+        }
+
+        sameSetup.Children.Add(Button("Same setup as the last target", UseLastSetup));
+        sameSetup.Children.Add(Line("Copies " + lastSetup!.Describe(units) + ". Nothing about where shots landed is copied."));
+    }
+
+    /// <summary>Copies the last sheet's equipment and conditions onto this one, and says what it did.</summary>
+    internal void UseLastSetup()
+    {
+        if (lastSetup is not { Anything: true } setup)
+        {
+            return;
+        }
+
+        session.SetEquipment(setup.Rifle, setup.Barrel, setup.Load);
+        if (setup.Calibre is not null)
+        {
+            session.SetCalibre(setup.Calibre);
+            calibreConfirmed = true;
+        }
+
+        if (setup.DistanceInches is { } inches)
+        {
+            session.SetShotDistance(inches);
+        }
+
+        DiagnosticLog.Info("marking.same-setup");
+        toaster.Show(new Confirmation("Copied " + setup.Describe(units) + " from the last target.", session.CanUndo ? () => session.Undo() : null));
+        Refresh();
+    }
+
+    /// <summary>What the offer says, for the headless tests, or empty where it is not shown.</summary>
+    internal string SameSetupSays => sameSetup.IsVisible
+        ? string.Join(" ", sameSetup.Children.OfType<TextBlock>().Select(t => t.Text ?? ""))
+        : "";
 
     /// <summary>Entry 95 section 2: the rounds fired, which the review queue checks the marks against.</summary>
     internal void SetRoundsFiredFromBox()

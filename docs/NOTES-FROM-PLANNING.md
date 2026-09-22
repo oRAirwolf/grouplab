@@ -76,6 +76,81 @@ Section 1 goes before any further nightly is published, so the next nightly alre
 
 ---
 
+# 2026-09-22, entry 140: a new image is a new target
+
+**Status: actioned in part 2026-09-22.** Section 1's reset and section 1.3's offer are done, with the test section 1.1 asks for. Sections 1.4, 2, 3 and 4 are not.
+- **Section 1.1 and 1.2, done.** The calibre no longer follows the last sheet, and neither does anything else: a test walks `MarkingState`'s own properties and fails if a field is left set after opening a new image, so a field added later is caught here rather than by somebody opening their second target of the day. The rounds fired, calibre and distance boxes are emptied with it.
+- **Section 1.3, done.** "Same setup as the last target" copies the rifle, barrel, load, calibre and distance, names what it would copy beside the button, and is offered only where this sheet has none of them.
+- **Not done: 1.4** (the save, discard or cancel question), **2** (New target and Ctrl+N), **3** (the doubles check judged against the sheet's own holes) and **4** (the proof on Alan's own photograph).
+
+Alan opened `20260920_165624.jpg` (a sheet with 15 shots, one on each of bulls 1 to 15) straight after working on a 25-shot sheet. GroupLab carried the last sheet's facts over. His screenshot shows:
+
+- "Count differs from rounds fired: You fired 25 and 15 are marked. Nothing is marked on bulls 16, 17, 18 ..." The 25 was the previous sheet's rounds fired.
+- **Every one of the 15 shots flagged "Possibly two holes"**, with sizes of 2.0 to 2.36 holes (shot 15: diameter 0.412 in, "2.36 holes"). A 6.5 mm hole reads as two holes when it is measured against a smaller calibre, which suggests the previous sheet's calibre was kept too. Confirm whether that is the cause.
+- 16 review items on a sheet that has nothing wrong with it. That is the review queue crying wolf, which teaches people to ignore it.
+
+## 1. What resets when an image is opened
+
+1. **Everything that describes one sheet starts empty for a new image**: rounds fired, shots per bull, which bulls were aimed at and sight changes (question 37), the load on each bull, the calibre and its confirmation, the shot distance, the scale, every mark, the review queue, the undo history, excluded and flyer marks, notes, and anything else held per sheet. List every field you reset in the results, found by reading the state, not from memory, and add a test that fails if a new per-sheet field is added without being reset.
+2. **Nothing from the previous sheet is used silently.** If something must carry over, it is offered, not applied.
+3. **"Same setup as the last target"**: a clearly labelled button, shown after opening a new image when a previous sheet exists, that copies only the equipment and conditions: rifle, barrel, load, calibre and shot distance. Never counts, marks, aimed bulls or anything about where shots landed. What it copies is listed beside it so the person can see what they are accepting.
+4. **Unsaved work**: if the current sheet has edits that are not saved as a session, opening another image first asks "Save this target, discard it, or cancel", never losing work and never keeping it attached to the new image.
+
+## 2. A reset of one's own
+
+Add **New target** (Ctrl+N) to the Open menu and to the toolbar area: it clears the current sheet exactly as opening a new image does, with the same save, discard or cancel question, and a toast with Undo (entry 131 section 9).
+
+## 3. The "Possibly two holes" check
+
+1. It must never use a calibre the person has not confirmed for this sheet. Without one, judge doubles against the other holes on the same sheet (a hole about twice the area of its neighbours), not against an assumed calibre.
+2. If most holes on a sheet would be flagged, the assumption is wrong, not the holes: raise **one** item asking the person to confirm the calibre, instead of one item per shot.
+3. Test it with generated sheets: 15 single holes of one calibre with no calibre stated raise no doubles; the same with a wrong smaller calibre stated raise one calibre question, not fifteen items; a real double among singles is still found.
+
+## 4. Proof
+
+Recreate Alan's case in a test: analyse a 25-shot generated sheet with a calibre and rounds fired set, then open a 15-shot generated sheet, and check that no count, calibre, distance, review item or mark from the first appears on the second. Then run `20260920_165624.jpg` from `C:\Dev\grouplab-range-2026-09-20\photos\` (read only, nothing committed) the same way and report its review queue before and after. A plain `Release-note:` trailer. Put this near the top of the queue: it affects every session Alan runs.
+
+---
+
+# 2026-09-22, entry 139: sign the manifest's bytes, not a re-serialised copy
+
+**Status: not actioned 2026-09-22.** Nothing of it was started, so nothing is half built. It is the right fix for the fault my entry 138 section 5 caused, and it is the next thing to do.
+- **What is already true:** the revert is in (`6545cf2`), and a test now names every field in the signed bytes so adding one fails there rather than in somebody's copy of GroupLab. That test also records the sharper trap: `Offered` and `OnTrain` are computed and still land in the signed bytes, so changing what either returns changes every manifest's signature too.
+
+Your revert (6545cf2) was the right call, and the finding behind it is important: a build verifies the manifest by re-serialising the record it read and checking those bytes against the signature, so **any new field, or any change to a computed property, makes every older build refuse every future update**. That makes the manifest format frozen forever, and one careless change bricks the updater for everyone who has GroupLab installed. My entry 138 section 5 walked straight into it. Fix the design, without stranding the builds already out there.
+
+1. **A second manifest whose signature covers the exact bytes as published.** Publish, beside today's `update-manifest.json`, a new file (for example `update-manifest-2.json`) shaped as `{ "algorithm": ..., "payload": "<base64 of the exact JSON bytes that were signed>", "signature": ... }`. A build verifies the signature over the decoded payload bytes as received, and only then parses them. It ignores fields it does not know. Nothing is ever re-serialised for verification.
+2. **Keep the old manifest exactly as it is** (same fields, same signed bytes, generated from the same data) for as long as any build that reads only it may still be installed: every nightly up to the one that first reads the new file, plus a margin. Record in `docs/UPDATES.md` when the old one may be retired and how you will know.
+3. **New builds read the new manifest first** and fall back to the old one only if the new one is missing. The skipped versions' notes from entry 138 section 5 travel in the new manifest, where adding fields is safe.
+4. **Tests**: a manifest with extra unknown fields verifies and parses on a build that does not know them; a changed byte anywhere in the payload is refused; the old manifest's signed bytes are held to a recorded string so they can never drift; and a test runs the updater of an older published build (nightly 37's code, pinned) against a freshly generated pair of manifests and proves it still accepts an update.
+5. **The real update test** from `scripts/Test-RealUpdate.ps1` runs after this change, from the newest build Alan has installed to the new nightly, before this is called done.
+6. A plain `Release-note:` trailer. Put this straight after the relaunch proof in the queue.
+
+---
+
+# 2026-09-22, entry 138: each version's notes cover only what changed since the version before it
+
+**Status: actioned 2026-09-22. Sections 1 to 4 and 6 done; section 5 built, then reverted, and it found something important.**
+- **Sections 1 to 3, done and proved.** A version's notes now start at the previous published build, found from the per-build `v<version>-nightly.N` tags rather than the rolling `nightly` tag, which moves. The "Since nightly 18" block is gone from the generator for good. Nightly 43's notes open with what changed since nightly 42 and nothing older.
+- **Section 4, checked and nothing to correct.** No change is listed in two blocks of `docs/RELEASE-NOTES.md`. Four bullets repeat and all four are known issues rather than changes, which is right: nightlies 12 and 14 both genuinely cannot update themselves.
+- **Section 6, done.** A generated history with published and skipped nightlies holds the range, and the skipped runs' changes roll into the next published build.
+- **Section 5, built and reverted, and entry 139 came from it.** Putting the per-version notes in the signed manifest stopped every installed build updating itself: a build verifies by re-serialising the record it read, so a field it does not know is dropped and the bytes no longer match. Nightly 42 went out with it and nightly 37 answered `refusal=BadSignature`. `SkippedVersions` and its tests are kept and are waiting for somewhere safe to carry their input.
+
+Alan: "The release notes should show changes since the last release. For instance, GroupLab 0.2.0-nightly.35 should only show changes since GroupLab 0.2.0-nightly.31."
+
+The published notes for `v0.2.0-nightly.35` still open with the hand-written **"Since nightly 18"** block from entry 132 section 1.6. That catch-up list belonged in the first readable nightly only, once; it is now repeated on every build, so each version appears to contain months of changes.
+
+1. **The rule**: a version's notes list exactly the changes between the previous **published** version on the same train and this one. Nightlies that were cancelled or skipped before publishing (entry 123's freshness check) do not count as versions: their changes roll into the next published one. So nightly 35's notes are everything from nightly 31 (exclusive) to nightly 35 (inclusive), and nothing older.
+2. **Find the previous published version from the releases, not the rolling tag.** Read the newest published `v<version>-nightly.N` tag lower than this build (the per-build tags the workflow keeps), and take the `Release-note:` trailers in that range. Do not use the rolling `nightly` tag as the start, since it moves.
+3. **Remove the "Since nightly 18" block from the generator for good.** It stays exactly once, in `docs/RELEASE-NOTES.md`, as the entry for nightly 31 (the first build with readable notes), where the release notes page shows it in its place in history.
+4. **The release notes page and `docs/RELEASE-NOTES.md`** follow the same rule: every version's block holds only its own changes. Check the entries written for entry 136 and correct any that overlap.
+5. **The in-application update bar** is the one place that should combine versions: someone on nightly 31 offered nightly 40 should see the changes of every version from 32 to 40, newest first and grouped by version, because all of them are new to that person. Build that from the per-version notes, not by re-reading history.
+6. **Tests**: a generated history with published and skipped nightlies, checking that each version's notes start at the previous published version and that the update bar combines exactly the versions between the installed build and the offered one.
+7. **Do not edit published GitHub releases**; the next nightly is the first with correct notes. Republish the website once `docs/RELEASE-NOTES.md` is corrected.
+8. A plain `Release-note:` trailer.
+
+---
+
 # 2026-09-21, entry 137: open an image by dropping or pasting it
 
 **Status: not actioned 2026-09-22.** Nothing of it was started, so nothing is half built. The entry places itself after the entry 135 queue and entry 136, and the entry 135 queue is the interface, which is what tonight went to.

@@ -475,7 +475,15 @@ public class MarkingScreenTests
             Assert.Equal(MainWindow.CalibreAfterCorrectionsText, window.StatusText);
             Assert.Contains(window.Session.State.Shots, s => s.Provenance == ShotProvenance.Manual);
 
+            // NOTES-FROM-PLANNING.md entry 140 replaces entry 78 section 4 here. The calibre used to follow the person to the next image so
+            // that detection on opening could use it, and what that did was measure one sheet's holes against another sheet's bullet: Alan
+            // opened a 6.5 mm sheet after a smaller one and every hole on it was flagged as possibly two. It is offered now, not applied.
             window.OpenImage(sheet);
+            Assert.Null(window.Session.State.Calibre);
+            Assert.Contains(".223", window.SameSetupSays, StringComparison.Ordinal);
+            Assert.Contains("Nothing about where shots landed", window.SameSetupSays, StringComparison.Ordinal);
+
+            window.UseLastSetup();
             Assert.Equal(".223 in (5.66 mm)", window.Session.State.Calibre!.Name);
             Pump(window);
             window.Close();
