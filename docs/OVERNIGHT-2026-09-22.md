@@ -4,7 +4,13 @@ NOTES-FROM-PLANNING.md entry 141. This is the live state of tonight's queue: rea
 
 **The printing deadline is lifted**: Alan has printed everything he needs for 2026-09-23, so there is no push freeze and no print report. The section 1.1 print tests stay, because they protect future printing.
 
-**Next step:** entry 129 prepared, which is the last unbuilt item in the queue and needs Alan awake for every server path in it.
+**Next step:** entry 129's server side, which is the last unbuilt item and needs Alan awake for every path in it.
+
+**What is waiting for Alan, and nothing else can proceed without him:**
+
+1. **The research section.** All eighteen of my own articles and the twelve planning drafts are written, built and rendered. **Nothing is published and nothing will be until he says "publish research batch 1".** The renders are in `docs/figures/research/`, one narrow and one desktop for each. To see the built site himself: `python website/build.py`, then from inside `website/_site`, `python -m http.server`, and open `http://localhost:8000/research/`.
+2. **Entry 129.** Every path in it is a path on the server, and it needs SSH, sudo and the Turnstile secret. The receivers, the worker and the page mean nothing until there is a server running them, and building them untested against the real nginx and PHP setup is how a receiver ships with a typo in it.
+3. **Six questions**, all with a recommendation, none blocking: 41 (a drag means both move and assign), 42 (a corrected shot does not survive re-detection), 43 (entry 137 names an image safety the desktop does not have), 44 (the bent-sheet model crashes on one photograph and fits the markers rather than the sheet), 45 (scan 6 reads 9 holes where entry 130 recorded 10), 46 (`SheetOffset`'s documented restraint is not what the line does).
 
 ---
 
