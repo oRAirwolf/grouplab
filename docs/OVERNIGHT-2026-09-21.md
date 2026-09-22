@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
-**Next step:** publish the site once CI is green (entry 128 section 6 and entry 136 section 3 together, since the release notes page is built), confirm it is live, then the Equipment screen. The analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet.
+**Next step:** the ballistics page (entry 131 section 8), then Compare loads (section 10), then question 37's control. The analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet. The site was published at 01:16 and the server pulls on a 15 minute timer; `/releases/` was still 404 at the last check, so confirm it before the morning report.
 
 ---
 
@@ -29,6 +29,23 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 | Entry 123 section 2.7: did the real update pass, and between which nightlies | **done**: yes, nightly 25 to nightly 26, real clicks, no installer window, no elevation prompt, sessions database byte identical |
 | Questions 34 and 36 answered with a recommendation | not started |
 | Entry 128 section 5 install and section 6 publish | install **done by Alan** and confirmed here; publish next |
+
+## The first publish rolled itself back, and the live site is safe
+
+The site was published at 01:16 UTC and the server pulled it at 19:25 local. Then this, in its own log:
+
+```
+the live check failed: the home page is not serving the new commit
+rolled back: the site did not answer correctly after installing
+```
+
+**The safety worked.** grouplab.org is still serving the site it was serving before, and nothing is broken; the rollback is the sync doing exactly what it was built to do.
+
+**Why it fired.** The install had worked: the files reach `/home/airwolf/web/grouplab.org/public_html`, the origin serves that directory, and hitting it directly the way the check does reaches the right site. The check runs the instant the directory is replaced, and it read the page the web server was still holding open, so it saw the old commit and called the install a failure.
+
+**The fix, in the repository and not yet on the server.** The live check now asks up to five times, three seconds apart, and only rolls back when every attempt says the same thing. A single immediate read is not evidence that an install failed: a web server takes a moment to notice that the directory under it has been swapped, and rolling a good site back for that is the worse mistake. It still rolls back on a real failure, which is the point of it.
+
+**This needs Alan**, because putting the fixed sync script on the server is the installer's job and that is a server change: `sudo python3 ~/grouplab-server/install.py` again, after the copy. Until then every publish will pull, install, fail its own check and roll back, leaving the live site as it is.
 
 ## The server install, done
 

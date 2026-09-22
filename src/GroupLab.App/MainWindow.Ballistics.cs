@@ -92,6 +92,25 @@ public sealed partial class MainWindow
         column.Children.Add(Line("Leave the pressure empty to take it from the altitude. The zero correction on the analysis carries in this air too."));
         column.Children.Add(Heading("Dope table"));
         column.Children.Add(Row(FieldLabel("To, " + UnitSettings.Symbol(units.Distance)), dopeTo, FieldLabel("Every"), dopeStep, Button("Work out the table", FillDope)));
+
+        // Entry 131 section 8: the curve beside the table. A table answers "what do I dial at 600" exactly and cannot show shape; the curve
+        // shows where the drop runs away and how far the velocity holds, which is what a person reads a trajectory for.
+        var series = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
+        foreach (var which in new[] { TrajectorySeries.Drop, TrajectorySeries.Wind, TrajectorySeries.Velocity, TrajectorySeries.Energy })
+        {
+            var button = new Button { Content = TrajectoryGraph.Title(which).Split(',')[0], Name = "TrajectorySeries" + which };
+            button.Click += (_, _) =>
+            {
+                trajectory.Series = which;
+                trajectory.InvalidateVisual();
+                ShowTrajectoryTitle();
+            };
+            series.Children.Add(button);
+        }
+
+        column.Children.Add(series);
+        column.Children.Add(trajectoryTitle);
+        column.Children.Add(trajectory);
         column.Children.Add(dopeTable);
 
         // Entry 113 section 3: the analysed group carried to another distance, its hit probability there and its predicted size.
@@ -211,9 +230,29 @@ public sealed partial class MainWindow
     private const string DopeColumns = "90,*,*,*,*,*,*";
 
     /// <summary>The dope table for the chosen rifle and load in the stated air, or which fields it still needs.</summary>
+    private readonly TrajectoryGraph trajectory = new();
+
+    private readonly TextBlock trajectoryTitle = new() { Classes = { AppStyles.Label } };
+
+    /// <summary>The graph's caption, which names the series and its unit so the axis figures mean something.</summary>
+    private void ShowTrajectoryTitle() => trajectoryTitle.Text = TrajectoryGraph.Title(trajectory.Series);
+
+    /// <summary>What the trajectory graph is showing, for the headless tests.</summary>
+    internal string TrajectorySays => trajectory.Description;
+
+    /// <summary>Chooses the graph's series, for the headless tests.</summary>
+    internal void ShowTrajectorySeries(TrajectorySeries which)
+    {
+        trajectory.Series = which;
+        trajectory.InvalidateVisual();
+        ShowTrajectoryTitle();
+    }
+
     internal void FillDope()
     {
         dopeTable.Children.Clear();
+        trajectory.Points = [];
+        ShowTrajectoryTitle();
         var rifle = ChosenRifle;
         var load = ChosenLoad;
         var missing = SolverUse.Missing(rifle, load);
@@ -240,6 +279,10 @@ public sealed partial class MainWindow
         var air = Air();
         var input = SolverUse.Input(rifle, load, air)!;
         var table = SolverUse.Dope(input, toYards, stepYards);
+        trajectory.Points = table.Points;
+        trajectory.ZeroYards = rifle!.ZeroDistanceYards;
+        trajectory.Distance = yards => units.DistanceText(yards * 36);
+        trajectory.InvalidateVisual();
         Grid Cells(IEnumerable<string> texts, bool heading)
         {
             var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(DopeColumns) };

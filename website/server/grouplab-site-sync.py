@@ -196,13 +196,21 @@ def own_address() -> str | None:
     return parts[0] if parts else None
 
 
-def serving(commit: str | None) -> bool:
-    """Asks the server itself, through TLS, whether it is serving the site that was just installed."""
-    address = own_address()
-    if not address:
-        log("could not work out the machine's own address, so the live check was skipped")
-        return True
+# How many times the live check asks before it believes the answer, and how long it waits between.
+#
+# The first publish rolled back on this. The install had worked and the files were in the web root, and the check,
+# run the instant the directory was replaced, read the page the web server was still holding open. A single
+# immediate read is not evidence that an install failed: a web server can take a moment to notice that the
+# directory under it has been swapped, and rolling a good site back because of that is the worse mistake.
+#
+# It still rolls back on a real failure. Nothing here weakens that: it only stops the check calling a slow answer
+# a wrong one.
+CHECK_TRIES = 5
+CHECK_WAIT_SECONDS = 3
 
+
+def asked_once(address: str, commit: str | None) -> str | None:
+    """One pass of the live check. None where it is serving the new site, or what is wrong where it is not."""
     for path in CHECK_PATHS:
         result = run([
             "curl", "--silent", "--show-error", "--max-time", "30",
@@ -212,16 +220,36 @@ def serving(commit: str | None) -> bool:
         ])
         code = result.stdout.strip()[-3:]
         if code != "200":
-            log(f"the live check failed: {path} returned {code or 'nothing'}")
-            return False
+            return f"{path} returned {code or 'nothing'}"
 
         if path == "/" and commit:
             body = Path("/tmp/grouplab-site-check").read_text(encoding="utf-8", errors="replace")
             if f'content="{commit}"' not in body:
-                log("the live check failed: the home page is not serving the new commit")
-                return False
+                return "the home page is not serving the new commit"
 
-    return True
+    return None
+
+
+def serving(commit: str | None) -> bool:
+    """Asks the server itself, through TLS, whether it is serving the site that was just installed."""
+    address = own_address()
+    if not address:
+        log("could not work out the machine's own address, so the live check was skipped")
+        return True
+
+    wrong = None
+    for attempt in range(1, CHECK_TRIES + 1):
+        wrong = asked_once(address, commit)
+        if wrong is None:
+            if attempt > 1:
+                log(f"the live check passed on attempt {attempt}")
+            return True
+
+        if attempt < CHECK_TRIES:
+            time.sleep(CHECK_WAIT_SECONDS)
+
+    log(f"the live check failed after {CHECK_TRIES} attempts: {wrong}")
+    return False
 
 
 def restore(backup: Path) -> None:
