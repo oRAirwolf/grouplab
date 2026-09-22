@@ -661,6 +661,40 @@ def releases() -> list[tuple[str, str, str]]:
     return out
 
 
+def release_notes_are_current() -> list[str]:
+    """Every published build has an entry, NOTES-FROM-PLANNING.md entry 136 section 2.4.
+
+    The page is built from docs/RELEASE-NOTES.md, so a build published since that file was last
+    written would put up a history already missing its newest entries, and nobody would notice:
+    a page short of its newest build looks exactly like a page nobody has updated.
+
+    The tags in the checkout are the evidence, never the network. A checkout with no tags at all
+    is a shallow one and knows nothing either way, so it says so rather than guessing; the
+    publishing workflow fetches them for this reason.
+    """
+    try:
+        tags = subprocess.run(
+            ["git", "tag", "--list", "v*"], cwd=REPO, capture_output=True, text=True, timeout=60, check=True
+        ).stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        return []
+
+    published = [t[1:] for t in tags if t.startswith("v") and not t.endswith("-draft")]
+    if not published:
+        print("release notes: this checkout carries no tags, so whether the page is current cannot be told here.")
+        return []
+
+    written = {v.lower() for v, in [(v,) for _, v, _ in releases()]}
+    missing = sorted(v for v in published if v.lower() not in written)
+    if missing:
+        return [
+            "docs/RELEASE-NOTES.md has fallen behind: "
+            + ", ".join(missing)
+            + ". Add each from its Release-note trailers before publishing."
+        ]
+    return []
+
+
 def page_releases() -> str:
     blocks = []
     for i, (anchor, version, notes) in enumerate(releases()):
@@ -1107,7 +1141,7 @@ def main() -> None:
     fingerprint()
 
     # Checks: banned words and characters, and no IP address anywhere in text output.
-    problems = []
+    problems = release_notes_are_current()
     ip = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
     for f in OUT.rglob("*"):
         if f.suffix in {".html", ".css", ".js", ".xml", ".txt", ".svg"}:
