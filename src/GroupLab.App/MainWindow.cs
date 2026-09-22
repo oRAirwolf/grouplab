@@ -264,6 +264,9 @@ public sealed partial class MainWindow : Window
 
     // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
     // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
+    /// <summary>The zero offset pictures by block, entry 131 section 6.2, so a headless test can read what each one is showing.</summary>
+    private readonly Dictionary<string, ZeroOffsetPicture> zeroOffsetPictures = [];
+
     private readonly StackPanel moreFigures = new() { Spacing = 4 };
     private readonly Expander moreFiguresPanel = new() { Header = "More figures", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel selection = new() { Spacing = 6 };
@@ -2464,6 +2467,9 @@ public sealed partial class MainWindow : Window
     /// <summary>Whether the window is in the analysis state, for the headless tests.</summary>
     internal bool Analysing => analysing;
 
+    /// <summary>What the zero block's picture is showing, entry 131 section 6.2, or null where there is none.</summary>
+    internal string? ZeroPictureSays => zeroOffsetPictures.TryGetValue("zero", out var p) ? p.Description : null;
+
     /// <summary>The alert line, for tests: what the window is telling the person is wrong.</summary>
     internal string ProblemText => problem.Text ?? "";
 
@@ -4054,6 +4060,31 @@ public sealed partial class MainWindow : Window
         }
 
         zeroPanel.Children.Add(Explained(verdict, item, [.. view.Why]));
+
+        // Entry 131 section 6.2: where the group actually landed against where it was aimed. It sits behind a disclosure because the numbers
+        // above already answer the question for most sheets, and the picture is for the sheet where they do not: it shows at a glance whether
+        // the uncertainty covers the aim, which is the thing that decides whether dialling is worth anything.
+        if (view.Offset is { } offset)
+        {
+            var picture = new ZeroOffsetPicture
+            {
+                Centre = offset,
+                Uncertainty = view.Uncertainty,
+                AcrossSays = view.AcrossSays,
+                DownSays = view.DownSays,
+                Worth = view.Dial,
+                BullInches = PlotDiscs(state).Where(d => !d.Paper).Select(d => (double?)d.DiameterInches).LastOrDefault(),
+            };
+            zeroOffsetPictures[item] = picture;
+            zeroPanel.Children.Add(new Expander
+            {
+                Header = "Where it landed",
+                Content = picture,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                IsExpanded = false,
+            });
+        }
+
         if (item == "zero")
         {
             ShowCarry(state, zeroPanel);
@@ -4065,7 +4096,17 @@ public sealed partial class MainWindow : Window
     /// from, or the two readouts, the uncertainty, the verdict (a correction to dial or the refusal with the shots that would settle it) and
     /// the reasoning behind its "why".
     /// </summary>
-    private sealed record ZeroView(string? Refusal, IReadOnlyList<(string Label, string Linear, string Angular, string Sits)> Rows, string? Note, string Verdict, bool Dial, IReadOnlyList<string> Why);
+    private sealed record ZeroView(string? Refusal, IReadOnlyList<(string Label, string Linear, string Angular, string Sits)> Rows, string? Note, string Verdict, bool Dial, IReadOnlyList<string> Why)
+    {
+        /// <summary>Entry 131 section 6.2: what the picture draws, in inches, or null where there is nothing to draw.</summary>
+        public PointD? Offset { get; init; }
+
+        public PointD? Uncertainty { get; init; }
+
+        public string? AcrossSays { get; init; }
+
+        public string? DownSays { get; init; }
+    }
 
     private ZeroView ZeroFor(MarkingState state)
     {
@@ -4089,6 +4130,8 @@ public sealed partial class MainWindow : Window
         }
 
         string note = $"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent";
+        var offset = new PointD(zero.Windage.OffsetInches, zero.Elevation.OffsetInches);
+        var uncertainty = new PointD(zero.Windage.HalfWidthInches, zero.Elevation.HalfWidthInches);
 
         // Entry 97 section 2: in clicks where the marking names a rifle and the distance is set, with what rounding leaves, and otherwise in
         // the linear and angular figures, which every turret is marked in one of.
@@ -4128,7 +4171,13 @@ public sealed partial class MainWindow : Window
             : state.Rifle is null
                 ? "Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
-        return new ZeroView(null, rows, note, verdict, dial.Count > 0, why);
+        return new ZeroView(null, rows, note, verdict, dial.Count > 0, why)
+        {
+            Offset = offset,
+            Uncertainty = uncertainty,
+            AcrossSays = zero.Windage.Distinguishable ? Dial(zero.Windage) : null,
+            DownSays = zero.Elevation.Distinguishable ? Dial(zero.Elevation) : null,
+        };
     }
 }
 

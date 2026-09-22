@@ -2,7 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight's queue. It is read at the start of every wake-up, updated after every item, and committed with the work.
 
-**Next step:** publish the site for the first time (entry 128 section 6), confirm it is live, then publish again with the release notes page. Then back to entry 131 section 1: the analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet.
+**Next step:** publish the site once CI is green (entry 128 section 6 and entry 136 section 3 together, since the release notes page is built), confirm it is live, then the Equipment screen. The analysis panel still needs rebuilding from `AnalysisPanel`, which exists and is tested and which no screen uses yet.
 
 ---
 
@@ -11,7 +11,7 @@ NOTES-FROM-PLANNING.md entry 135 section 0.1. This is the live state of tonight'
 | # | Item | State |
 |---|---|---|
 | 1 | Entry 131 section 1: before and after renders of every screen, checked against the checklist and fixed where they fail. Analysis page first. | **in progress**: renders now taken at 1280 by 720 and 2560 by 1440, before and after kept under `docs/figures/screens/`. First pass on the analysis page: the mean radius is the one figure in the logo's amber, and the zero correction's direction word no longer runs off the edge. The panel rebuild from `AnalysisPanel` is still to do. |
-| 2 | Entry 131 section 6.2: the zero offset picture | not started |
+| 2 | Entry 131 section 6.2: the zero offset picture | **done**: `ZeroOffsetPicture`, behind a "Where it landed" disclosure on the zero block. The aim as a cross, the group's centre with its uncertainty ellipse, and an arrow an axis pointing the way a shot has to move, with the clicks on it. Where the uncertainty covers the aim there are no arrows, because an arrow is an instruction and there is nothing to instruct. |
 | 3 | Entry 131 section 7: the Equipment screen, with the old "rounds or components" box gone | not started |
 | 4 | Entry 131 section 8: the ballistics page rebuilt | not started |
 | 5 | Entry 131 section 10: Compare loads rebuilt | not started |
