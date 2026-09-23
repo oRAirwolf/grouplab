@@ -22,6 +22,7 @@ from __future__ import annotations
 import datetime
 import hashlib
 import html
+import json
 import os
 import re
 import shutil
@@ -178,6 +179,7 @@ def build_downloads() -> None:
 
 NAV = [
     ("Download", "/download/"),
+    ("Tour", "/tour/"),
     ("Shoot a target", "/shoot-a-target/"),
     ("Guides", "/guides/"),
     ("Research", "/research/"),
@@ -361,11 +363,10 @@ def page_home() -> str:
 <div class="stack">
 <p class="eyebrow">The application</p>
 <h2>It shows its work.</h2>
+<p>Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.</p>
 </div>
 <div class="grid-2">
-<figure class="fig">{screen("marking", "The marking screen with every detected hole numbered to its bull and one shot raised for review")}<figcaption><strong>Marking and review</strong><span>Every hole numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it.</span></figcaption></figure>
-<figure class="fig">{screen("library", "The target library listing the built-in sheets by family")}<figcaption><strong>Target library</strong><span>Load development, rimfire, large format, tiled long range, roll media and zeroing sheets, plus your own designs.</span></figcaption></figure>
-<figure class="fig">{screen("print", "The print screen with a sheet preview and the load block fields")}<figcaption><strong>Printing at actual size</strong><span>Prints the sheet itself and refuses, with the reason, when the paper or the printer's margins would spoil it.</span></figcaption></figure>
+<figure class="fig">{screen("marking", "The marking screen with every detected hole numbered to its bull and one shot raised for review")}<figcaption><strong>Marking and review</strong><span>Every hole numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it. <a href="/tour/marking/">See this screen explained</a></span></figcaption></figure>
 <div class="panel status">
 <h3>What it is today</h3>
 <p>A Windows test build. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
@@ -374,6 +375,7 @@ def page_home() -> str:
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>
+<div class="note note-teal"><span class="mono">Every screen</span><p>The <a href="/tour/">tour</a> has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there. It is the quickest way to see whether GroupLab suits you before you download it.</p></div>
 </section>
 
 <section class="wrap section last">
@@ -941,6 +943,128 @@ def page_guides_index() -> str:
     return shell("/guides/", "Guides", "The GroupLab user guide and the guide to trying the test build for the first time.", body, "Guides")
 
 
+# ---------------------------------------------------------------- the tour, entry 146
+
+
+def tour() -> dict:
+    """The screen list the tour is built from, and the order it reads in.
+
+    NOTES-FROM-PLANNING.md entry 146 section 4.1: the same list drives the tour and the weekly screenshot job, so a
+    screen that gains or loses a render fails this build rather than going stale quietly. The job renders every screen
+    in both themes at 1400 by 900, and those files are the evidence; ``tour_problems`` holds the two lists to each
+    other in both directions.
+    """
+    return json.loads(need(REPO / "website" / "tour.json").read_text(encoding="utf-8"))
+
+
+def rendered_screens() -> set:
+    """Every screen the render walk actually produced, by the name the tour uses."""
+    return {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")}
+
+
+def tour_problems() -> list:
+    """Entry 146 section 4.2, as a build failure rather than a test, because the page is the thing that goes wrong."""
+    found = []
+    data = tour()
+    listed, have = set(data["order"]), rendered_screens()
+
+    for key in sorted(listed - have):
+        found.append(f"website/tour.json: the tour has a page for {key!r} and no screenshot of it was rendered")
+    for key in sorted(have - listed):
+        found.append(f"website/tour.json: {key!r} is rendered and has no tour page, so the tour is missing a screen")
+
+    for key in data["order"]:
+        screen_data = data["screens"].get(key)
+        if screen_data is None:
+            found.append(f"website/tour.json: {key!r} is in the order and has no entry")
+            continue
+        for field in ["name", "blurb", "purpose", "fits"]:
+            if not str(screen_data.get(field, "")).strip():
+                found.append(f"website/tour.json: {key} has no {field}")
+        if len(screen_data.get("parts") or []) < 3:
+            found.append(f"website/tour.json: {key} names fewer than three parts, so a reader cannot follow the picture")
+        if not (2 <= len(screen_data.get("steps") or []) <= 5):
+            found.append(f"website/tour.json: {key} needs two to five steps, entry 146 section 2.4")
+
+    return found
+
+
+def tour_shot(key: str, alt: str, eager: bool = False) -> str:
+    """The screenshot for one tour page, linked to the full size image for a reader who wants to look closely."""
+    return (
+        f'<a class="plain tour-shot" href="/assets/screens/{key}-dark-1400x900.webp">{screen(key, alt, eager, cls="shot tour-img")}</a>'
+    )
+
+
+def page_tour_index() -> str:
+    data = tour()
+    cards = []
+    for key in data["order"]:
+        item = data["screens"][key]
+        cards.append(
+            f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'
+            f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">'
+            f'<h3 class="h3">{esc(item["name"])}</h3>'
+            f'<p class="small">{esc(item["blurb"])}</p>'
+            "</a>"
+        )
+
+    body = f"""
+<section class="wrap stack">
+<h1>A tour of GroupLab</h1>
+<p class="lead">Every screen, what it is for, and what you would do on it. Ten pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
+<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody's photographs.</p>
+<div class="research-grid">{"".join(cards)}</div>
+</section>
+"""
+    return shell("/tour/", "Tour", "Every screen in GroupLab, what it is for, and what you would do on it.", body, "Tour")
+
+
+def page_tour_screen(key: str) -> str:
+    data = tour()
+    item = data["screens"][key]
+    order = data["order"]
+    at = order.index(key)
+    before = order[at - 1] if at > 0 else None
+    after = order[at + 1] if at + 1 < len(order) else None
+
+    parts = "".join(
+        f'<li><strong>{esc(label)}.</strong> {text}</li>' for label, text in item["parts"]
+    )
+    steps = "".join(f"<li>{esc(step)}</li>" for step in item["steps"])
+    links = "".join(f'<li><a href="{href}">{esc(label)}</a></li>' for label, href in (item.get("links") or []))
+
+    around = []
+    if before:
+        around.append(f'<a href="/tour/{before}/">&lsaquo; {esc(data["screens"][before]["name"])}</a>')
+    around.append('<a href="/tour/">All screens</a>')
+    if after:
+        around.append(f'<a href="/tour/{after}/">{esc(data["screens"][after]["name"])} &rsaquo;</a>')
+
+    body = f"""
+<section class="wrap guide">
+<article class="prose">
+<p class="small faint"><a class="plain" href="/tour/">Tour</a> &rsaquo; {esc(item["name"])}</p>
+<h1>{esc(item["name"])}</h1>
+<p class="lead">{esc(item["blurb"])}</p>
+{tour_shot(key, item["name"] + " in GroupLab: " + item["blurb"], eager=True)}
+<p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>
+<h2>What this screen is for</h2>
+<p>{esc(item["purpose"])}</p>
+<h2>What you are looking at</h2>
+<ul class="tour-parts">{parts}</ul>
+<h2>What you would do here</h2>
+<ol>{steps}</ol>
+<h2>Where it fits</h2>
+<p>{item["fits"]}</p>
+{f'<h2>Read more</h2><ul>{links}</ul>' if links else ""}
+<nav class="tour-around" aria-label="Other screens">{" ".join(around)}</nav>
+</article>
+</section>
+"""
+    return shell(f"/tour/{key}/", item["name"], item["blurb"], body, "Tour")
+
+
 def page_404() -> str:
     body = f"""
 <section class="wrap page-head last">
@@ -1143,6 +1267,14 @@ p.text,.text p,.text{color:var(--text)}
 .research-card:hover{border-color:var(--accent)}
 .research-thumb{width:100%;height:auto;border-radius:4px;background:var(--panel-2,transparent);margin-bottom:8px}
 .research-box{border-left:3px solid var(--accent);margin:20px 0 28px}
+
+/* Entry 146: the tour. The picture carries each page, so it goes full width of the column with a little air
+   under it, and the numbered list beneath is what a reader matches against it. */
+.tour-shot{display:block;margin:8px 0 6px}
+.tour-img{margin:0}
+.tour-parts{margin:8px 0 24px;padding-left:22px}
+.tour-parts li{margin:0 0 10px}
+.tour-around{display:flex;flex-wrap:wrap;gap:20px;margin-top:36px;padding-top:16px;border-top:1px solid var(--line2);font-size:15px}
 .research-box p{margin:0}
 /* A flex child will not shrink below its content by default, and a four column table is wider than a
    phone, so the article held the page open and everything ran off the right edge. */
@@ -1352,9 +1484,13 @@ def main() -> None:
         for extra in sorted(figures.rglob("*")) if figures.is_dir() else []:
             if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv"}:
                 copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
+    write("tour/index.html", page_tour_index())
+    for key in tour()["order"]:
+        write(f"tour/{key}/index.html", page_tour_screen(key))
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]
+    pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
@@ -1377,7 +1513,7 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
-    problems += figure_problems + research_problems()
+    problems += figure_problems + research_problems() + tour_problems()
     problems += link_problems()
     problems += php_problems()
     if problems:

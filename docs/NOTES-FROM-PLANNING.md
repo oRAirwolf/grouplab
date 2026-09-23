@@ -15,6 +15,69 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 146: a tour of the application, one page per screen
+
+**Status: actioned 2026-09-23**, sections 1 to 6. Every screen, not the three section 6 allows as a fallback.
+
+- **Sections 1 and 2.** `/tour/`, in the top navigation between Download and Guides. An index of ten cards, then one page per screen: library, print, marking, analysis, showing the work, session records, compare loads, equipment, ballistics, settings. Each carries the screenshot large in both themes at the size the site uses, what the screen is for, a numbered list of its parts, two to five steps, where it sits in the flow with links either side, and links to the guide or research article where one exists.
+- **Section 2.3, and the choice I made in it.** The entry offers a numbered overlay on the image or a labelled list beneath. **I used the list.** Every one of these screens has eight to eleven parts worth naming, and eleven numbered badges over a 1400 by 900 screenshot would obscure the thing they point at. The list names each part in the words the screen itself uses, which a reader can match by reading rather than by hunting for a small number.
+- **Section 4.1 and 4.2, in two places.** `website/tour.json` is the list, and **the site build refuses to build** when a screen there has no render or a render has no page. `TourTests` says the same from the other side, so a screen added to the render walk fails with the name of the page somebody still has to write. Proved by adding a screen with no picture: `the tour has a page for 'reloading' and no screenshot of it was rendered`, and the build stopped.
+- **Section 4.3.** The pictures are the ones `PublishedRendersTests` already holds to a source in `SOURCES.md`: generated sheets, invented rifles and loads, nothing from a range folder and nothing from a submission.
+- **Section 4.4** is a rule rather than code, so it is in `CLAUDE.md`: the screenshot job replaces the picture and nothing replaces the words, so an entry that changes a screen says whether its tour page still describes it.
+- **Section 5.** The home page had four screenshots: analysis in the hero, then marking, the target library and printing in a row of three. **It now has two**, the hero analysis and marking, and the row of three is a single figure beside the status panel with a link to that screen's tour page, plus a note pointing at the tour. A test fails if it ever shows more than two.
+- **Section 3, and what it cost.** No class names and no file paths, checked by a test on the same four patterns the release notes use. Writing them meant reading every screenshot rather than the code, which is the point: the parts are named as they appear, so "Accept and analyse" and "Detect on a GroupLab sheet" are what the page calls them because that is what the button says.
+- `docs/PHASE1-RESULTS.md` "Entry 146".
+
+Written by the planning session at 00:20 Mountain on 2026-09-23. Do this after entries 144 and 145, and before the remainder of entry 143.
+
+Alan: "I think there should be a separate page for screenshots of each section of the application that explains what is happening instead of just a few screenshots on the main page."
+
+A handful of pictures on the home page shows that GroupLab exists. It does not show what using it is like, and that is the question somebody has before they download an unknown program. The screenshot job from entry 144 section 4 already produces the pictures; this entry gives them somewhere to live and something to say.
+
+## 1. The section
+
+`https://grouplab.org/tour/`, linked in the top navigation between Download and Guides. An index page, then one page per screen.
+
+The index gives each screen a card: its name, one sentence saying what it is for, and its own screenshot. A reader should be able to understand the shape of the application from the index alone, and go deeper where they care.
+
+## 2. One page per screen
+
+Eleven screens exist as renders today: analysis, analysis with a sheet open, marking, library, print, equipment, compare, ballistics, sessions, settings, and whatever the twelfth becomes as the interface grows. Give every one its own page, driven by the same list that drives the screenshot job, so a new screen cannot appear in one and not the other.
+
+Each page carries:
+
+1. **The screenshot, large**, light and dark, following the reader's theme, at the desktop size.
+2. **What this screen is for**, one short paragraph in plain words, from the shooter's side.
+3. **What you are looking at**: a numbered list keyed to the picture, naming the parts and saying what each does. Use a numbered overlay on the image, or a labelled list beneath it where an overlay would crowd the picture. A reader must be able to match every item to something they can see.
+4. **What you would do here**, two to five steps, in order, as a person would do them.
+5. **Where it fits**, a line linking the screens before and after it in the ordinary flow: print a sheet, shoot it, open the image, mark it, read the analysis, record the session, compare loads.
+6. **Links to the related guide and any research article**, where one exists.
+
+## 3. The words
+
+Written for somebody who has never opened GroupLab, and never for somebody who has read the code. No class names, no file paths. Name what is on the screen using the same words the screen uses, so a reader can follow along with the application open beside the page.
+
+Keep each page short: a picture, a paragraph, a numbered list, a few steps. Where a screen needs a long explanation, that explanation belongs in a guide or a research article, and the tour page links to it.
+
+Nothing on these pages may claim a feature that is not in the published build the screenshots came from. Say which build the pictures are from, and let the screenshot job keep that current.
+
+## 4. Keeping it true
+
+1. The pages are built from the same screen list as the screenshot job in entry 144 section 4, so a screen that gains or loses a render fails the build rather than going stale quietly.
+2. A test fails if a tour page references a screenshot that is not produced, or if a produced screenshot has no tour page.
+3. The screenshots use generated data only: a generated sheet, invented rifles and loads, no material from Alan's range folder and nothing from a submission.
+4. When the interface changes enough that a picture is wrong, the screenshot job replaces the picture and the entry that changed the interface should say whether the words need changing too.
+
+## 5. The home page
+
+Once the tour exists, the home page keeps one or two pictures at most and links to the tour rather than trying to be it. Say in your report what you removed.
+
+## 6. Order and effort
+
+This is a page-building job, not an application job, and it must not displace entry 143's queue. If it runs long, publish the index and the three screens that matter most to a newcomer (analysis, marking, print), and add the rest in a second pass.
+
+---
+
 # 2026-09-22, entry 145: every build says what changed, in plain words
 
 **Status: actioned 2026-09-23**, sections 1 to 6.

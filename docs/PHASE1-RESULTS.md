@@ -7810,6 +7810,75 @@ GroupLab 0.2.0-nightly.77
 | the generator cannot write the old sentence | the way it returns is not somebody typing it, it is the generator falling back to it |
 
 
+# Entry 146: a tour of the application, one page per screen
+
+`docs/NOTES-FROM-PLANNING.md` entry 146, actioned 2026-09-23. Every screen, not the three the entry allows as a fallback.
+
+Alan: "I think there should be a separate page for screenshots of each section of the application that explains what is happening instead of just a few screenshots on the main page."
+
+## What is there
+
+`https://grouplab.org/tour/`, in the top navigation between Download and Guides. Eleven pages: an index of ten cards, and one page per screen.
+
+| page | what it covers |
+|---|---|
+| Target library | the twenty built-in sheets, grouped by job, and designing your own |
+| Printing | printing at true size, and what GroupLab has and has not proved on paper |
+| Marking and review | every hole numbered to its bull, and the questions raised before anything is measured |
+| The analysis | the composite, the intervals, the zero correction and the per-axis views |
+| Showing the work | the same screen with every explanation open |
+| Session records | the saved sheets, filtered, and choosing two to compare |
+| Compare loads | two loads side by side, and the sentence saying whether the shots tell them apart |
+| Equipment | rifles, barrels and loads, and which fields the other screens need |
+| Ballistics | a trajectory and a dope table, which changes no marking |
+| Settings | units, theme, which builds it offers, and the log |
+
+Each page: the screenshot large in both themes, what the screen is for, a numbered list of its parts, two to five steps, where it sits in the flow with links either side, and links to the guide or research article where one exists.
+
+## Section 2.3: a list, not an overlay
+
+The entry offers a numbered overlay on the image or a labelled list beneath, and says a reader must be able to match every item to something they can see.
+
+**I used the list**, and it is worth saying why rather than leaving it as a preference. Every one of these screens has eight to eleven parts worth naming. Eleven numbered badges over a 1400 by 900 screenshot would sit on top of the thing they point at, and the screens with the most to say, marking and the analysis, are the ones where the badges would cover the most. The list names each part in the words the screen itself uses, so "Accept and analyse" and "Detect on a GroupLab sheet" are found by reading the button rather than by hunting for a small number.
+
+## Section 4: how it cannot go stale
+
+The tour and the weekly screenshot job are two lists of the same screens in two languages that cannot see each other. Two lists drift.
+
+1. **`website/tour.json` is the list**, and `website/build.py` builds every page from it.
+2. **The site build refuses** when a screen there has no render, or a render has no page. That is a build failure rather than a test, because the page is the thing that goes wrong.
+3. **`TourTests` says the same from the other side**, so a screen added to the render walk fails with the name of the page somebody still has to write.
+
+**Proved rather than assumed.** A screen named `reloading` was added with no picture behind it, and the build stopped:
+
+```
+website/tour.json: the tour has a page for 'reloading' and no screenshot of it was rendered
+```
+
+## Section 5: what came off the home page
+
+It had four screenshots. **It has two.**
+
+| was | now |
+|---|---|
+| analysis, in the hero | kept |
+| marking, in a row of three | kept, as a single figure beside the status panel, with a link to its tour page |
+| the target library, in that row | removed; it is the tour's first page |
+| printing, in that row | removed; it is the tour's second page |
+
+In their place, a note pointing at the tour: the quickest way to see whether GroupLab suits you before downloading it. A test fails if the home page ever shows more than two screens again.
+
+## Section 3: the words
+
+No class names and no file paths, held by a test on the same four patterns the release notes use.
+
+That rule is not free. Writing these meant reading every screenshot rather than the code, which is exactly the point: a page written from the code names the class, and a reader with the application open beside the page cannot find it.
+
+## What section 4.4 asks of every entry after this one
+
+The screenshot job replaces the picture on its own and nothing replaces the words. A tour page naming a button that is no longer there is worse than no tour page, because a reader takes it for the truth. So an entry that changes a screen now says in its report whether that screen's tour page still describes it. It is in `CLAUDE.md` rather than in a test, because no test can tell whether a sentence is still true.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
