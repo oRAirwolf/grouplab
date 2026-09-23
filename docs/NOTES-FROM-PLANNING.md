@@ -15,6 +15,18 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 150: an executable is built only when the application changes
+
+**Status: actioned 2026-09-23**, all six sections. Section 3's proof is a run rather than a reading, and the run it is proved by is the push that carries this entry.
+
+- **Section 1.** `.github/shipping-paths.json` is the one list, read by the nightly's gate and by `ShippingPathsTests`. Twenty seven top level entries, eighteen shipping and nine content, each in exactly one list, with a reason written beside every one. **A path in neither list fails the gate**, which is the entry's own instruction and the right way round: a new top level directory should make somebody decide which side it is on rather than silently picking one.
+- **Section 2.** The gate is a step in `name-it`, which is the first job and already resolves which commit the nightly is for, and it outputs `application-changed`. Both `package` and `publish` depend on it. A skipped night writes **"No application change since nightly NN. No build produced."** into the summary and creates no release, no tag and no assets.
+- **Section 2.4, and it was a real change rather than a line of prose.** The version came from `github.run_number`, which counts runs, so a cancelled or skipped run consumed a number: that is why the published numbers already jump 14, 16, 18, 25. The number is now the highest nightly tag plus one, so numbers count builds.
+- **Section 5, the measurement, and it does not say what it was expected to say.** Five of the last twenty eight nightlies changed nothing that ships: **14, 72, 76, 77 and 78**. **Nightly 84, the one Alan named, would still have been built**: 147 paths changed and they included `src`, `tests`, `.github` and `scripts` as well as 95 website files. So the waste is real but smaller than the releases page makes it look, and what made 84 look like a website build was its release note rather than its diff. That is entry 145's problem, not this one's.
+- **Section 6.** Two tests as asked, over the lists and over the workflow's shape. Section 6.3's dry run against the last thirty nightlies is **a step in the nightly rather than a test**, printed into the run summary: it needs the tag history, which a test in CI does not have, and running it every night exercises it against real history exactly as the section asks.
+
+---
+
 # 2026-09-23, entry 149: answers to questions 35, 37, 40 and 47, and the Alan list for this run
 
 **Status: actioned 2026-09-23**, sections 1, 2, 5 and 6. **Sections 3 and 4 are not done**, and both are real work rather than a judgement call: section 3 is question 37's A and D, which is marking-screen interaction, and section 4 is re-running the entry 121 survey's own baselines against the narrowed rule. Both are named in `docs/PHASE1-RESULTS.md` as outstanding, and neither is worked around anywhere.

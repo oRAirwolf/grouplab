@@ -59,6 +59,7 @@ jobs:
       signing: ${{ steps.key.outputs.present }}
       fresh: ${{ steps.fresh.outputs.fresh }}
       sha: ${{ steps.pick.outputs.sha }}
+      application-changed: ${{ steps.gate.outputs.application-changed }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -159,19 +160,87 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::main has moved from ${SHA:0:7} to ${head:0:7}, so this nightly publishes nothing. The newer push brings its own."
 
-      # <N> is this workflow's own run number, which only ever increases, so nightly versions are ordered by when they were built.
+      # The gate, NOTES-FROM-PLANNING.md entry 150 section 2. Alan, reading the releases page: a lot of builds were release note pages being
+      # brought up to date or research articles being written, and every one of them compiled and tested a new executable on three operating
+      # systems. A build is for a change to the application; everything else is content and publishes through the site path entry 144 built.
+      #
+      # A scheduled workflow gets no paths filter, so this is a job output every later job depends on rather than a filter on the trigger.
+      # `.github/shipping-paths.json` is the one list of which paths are which, read here and by ShippingPathsTests, so the two cannot drift.
+      # A path in neither list fails the gate on purpose: a new top level directory should make somebody decide which side it is on.
+      - name: Did anything that ships inside the executable change
+        id: gate
+        if: steps.pick.outputs.todo == 'yes'
+        env:
+          SHA: ${{ steps.pick.outputs.sha }}
+        run: |
+          set -o pipefail
+          # for-each-ref rather than the porcelain listing command, which a test forbids in this file. An annotated tag names its commit in
+          # *objectname and a lightweight one in objectname, so both are read.
+          previous=$(git for-each-ref --sort=-creatordate --format='%(objectname) %(*objectname) %(refname:strip=2)' \
+            'refs/tags/v*-nightly.*' | awk -v sha="$SHA" '{ c = ($2 ~ /^[0-9a-f]{40}$/ ? $2 : $1); n = $NF; if (c != sha) { print c, n; exit } }')
+          base=$(echo "$previous" | cut -d' ' -f1)
+          tag=$(echo "$previous" | cut -d' ' -f2)
+          if [ -z "$base" ]; then
+            echo "application-changed=yes" >> "$GITHUB_OUTPUT"
+            echo "there is no earlier nightly to compare against, so this one is built"
+            exit 0
+          fi
+
+          if ! out=$(python3 scripts/shipping-gate.py --decide "$base" "$SHA" 2>&1); then
+            echo "$out"
+            echo "::error::a changed path is in neither list in .github/shipping-paths.json. Decide which side it is on and add it."
+            exit 1
+          fi
+          echo "$out"
+
+          verdict=$(printf '%s\n' "$out" | head -1 | cut -d= -f2)
+          echo "application-changed=$verdict" >> "$GITHUB_OUTPUT"
+          if [ "$verdict" != "yes" ]; then
+            number=${tag##*-nightly.}
+            echo "::notice::no application change since nightly ${number}. No build produced."
+            {
+              echo "### No application change since nightly ${number}. No build produced."
+              echo
+              echo "Everything that changed since that build is content: the website, the documentation, the release notes or the research"
+              echo "articles. Content publishes through the site and never produces an executable. NOTES-FROM-PLANNING.md entry 150."
+              echo
+              echo '```'
+              printf '%s\n' "$out"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Entry 150 section 6.3: the gate's logic exercised against the real history rather than against a fixture, every night, printed where
+      # somebody reading a run can see what it would have done. It never fails the run; it is a measurement.
+      - name: What the gate would have done to the last thirty nightlies
+        if: steps.pick.outputs.todo == 'yes'
+        continue-on-error: true
+        run: |
+          {
+            echo "<details><summary>What the gate would have done to the last thirty nightlies</summary>"
+            echo
+            echo '```'
+            python3 scripts/shipping-gate.py --history 30 || true
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Entry 150 section 2.4: nightly numbers count builds, not days, so a skipped night does not consume one. The number is the highest
+      # nightly tag that exists plus one, rather than this workflow's run number, which counts every run including the ones that built
+      # nothing. That is why the published numbers already jump: 14 to 16 to 18 to 25.
       - name: Work out the version
         id: name
-        if: steps.pick.outputs.todo == 'yes'
+        if: steps.pick.outputs.todo == 'yes' && steps.gate.outputs.application-changed == 'yes'
         run: |
           base=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2)
-          echo "version=${base}-nightly.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          last=$(git for-each-ref --format='%(refname:strip=2)' 'refs/tags/v*-nightly.*' | sed 's/.*-nightly\.//' | sort -n | tail -1)
+          echo "version=${base}-nightly.$(( ${last:-0} + 1 ))" >> "$GITHUB_OUTPUT"
           echo "commit=$(git rev-parse --short ${{ steps.pick.outputs.sha }})" >> "$GITHUB_OUTPUT"
 
       # Entry 119 section 3.2: no key, no publishing. It fails here, before anything is built, so the reason is the first thing in the log.
       - name: The signing key must be here
         id: key
-        if: steps.pick.outputs.todo == 'yes'
+        if: steps.pick.outputs.todo == 'yes' && steps.gate.outputs.application-changed == 'yes'
         env:
           GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
         run: |
@@ -192,7 +261,8 @@ jobs:
   package:
     name: package
     needs: name-it
-    if: needs.name-it.outputs.fresh == 'yes'
+    # Entry 150 section 2.2: every build, test, package and release job depends on the gate.
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
     uses: ./.github/workflows/package.yml
     with:
       ref: ${{ needs.name-it.outputs.sha }}
@@ -202,7 +272,8 @@ jobs:
   publish:
     name: publish the nightly
     needs: [name-it, package]
-    if: needs.name-it.outputs.fresh == 'yes'
+    # Entry 150 section 2.2: every build, test, package and release job depends on the gate.
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

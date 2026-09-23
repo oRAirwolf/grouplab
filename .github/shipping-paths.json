@@ -1,0 +1,49 @@
+{
+  "why": [
+    "NOTES-FROM-PLANNING.md entry 150 section 1. Alan, reading the releases page: a lot of builds are",
+    "extremely minor, release note pages brought up to date or research articles written, and every one",
+    "of them compiled and tested a new executable. Nightly 84 was all website changes.",
+    "",
+    "So: a new executable exists only when something that ships inside the executable changed. Everything",
+    "else is content, and content publishes through the site path entry 144 built.",
+    "",
+    "Both the nightly workflow and a test read this file, so the gate and the rule cannot drift apart.",
+    "A path in neither list is a failure rather than a default, because a new top level directory should",
+    "make somebody decide which side it is on instead of silently picking one."
+  ],
+
+  "rule": "The first segment of a changed path decides. A top level file is its own entry.",
+
+  "ships": {
+    ".gitattributes": "line endings at checkout, and a test has already failed over CRLF on a Windows runner",
+    ".github": "the build, packaging and release workflows themselves, and this file",
+    "Directory.Build.props": "the version the build is named from, and the compiler settings",
+    "Directory.Build.targets": "build settings",
+    "GroupLab.slnx": "which projects are built",
+    "LICENSE": "shipped inside the package",
+    "THIRD-PARTY-NOTICES.md": "shipped inside the package",
+    "nuget.config": "where packages are restored from",
+    "packaging": "the installer and its inputs",
+    "reference": "ballistics reference data the tests measure against, so a change here can fail the build",
+    "samples": "sample sheets the tests decode, so a change here can fail the build",
+    "scans": "the real scans the detection tests run against",
+    "scripts": "the build and release scripts, including the release notes generator",
+    "src": "the application",
+    "targets": "target definitions embedded in the application, not only printed by the site",
+    "test": "test fixtures",
+    "tests": "the tests, where a failure stops the build",
+    "tools": "the reference encoder the fixtures are dumped from"
+  },
+
+  "content": {
+    ".gitignore": "cannot change what is built",
+    "CLAUDE.md": "the rules this session works to, read by nobody at runtime",
+    "CONTRIBUTING.md": "documentation",
+    "DESIGN.md": "documentation",
+    "README.md": "documentation, and the site reads it",
+    "SAMPLE-NOTES.md": "documentation",
+    "START-HERE.md": "documentation",
+    "docs": "documentation, the release notes, the guides and the research articles",
+    "website": "the site, which publishes itself"
+  }
+}

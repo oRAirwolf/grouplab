@@ -1253,7 +1253,7 @@ def page_releases() -> str:
 <section class="wrap stack">
 <h1>Release notes</h1>
 <p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
-<p class="small faint">A nightly is numbered by the run that built it, and a run that is cancelled or skipped still takes its number, which is why the numbers skip.</p>
+<p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was cancelled or skipped still took its number, which is why the older gaps are wider.</p>
 <div class="stack tight releases">
 {"".join(blocks)}
 </div>

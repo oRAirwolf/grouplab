@@ -8129,6 +8129,43 @@ Alan has said plainly that the Claude Code panel is hard to read and that answer
 
 **Tests:** the 17 affected tests pass, `ReleaseNoteKindsTests`, `CryingWolfTests` and `CalibreSplitTests` together. The full suites run with the next entry.
 
+## Entry 150: an executable is built only when the application changes
+
+Alan, reading the releases page: *"it seems like a lot of builds and releases are extremely minor, like just updating release note pages being brought up to date or research articles were written. Why does this need a new executable? Can't these things be done without creating a new executable and having to get compiled and tested? That seems like a total waste of time."*
+
+### One list, read by the gate and by the tests
+
+`.github/shipping-paths.json` names every top level entry and says which side it is on and why. Twenty seven entries, eighteen shipping and nine content. `scripts/shipping-gate.py` reads it and so does `ShippingPathsTests`, so the rule and the gate cannot drift apart, which is the failure that actually happens: not somebody deleting the gate, but the gate going on answering after it has stopped being right.
+
+**A path in neither list fails.** That is the entry's instruction and it is the right way round. Default to shipping and every website change wastes a build; default to content and something untested is published. Failing makes a new top level directory a decision somebody takes once.
+
+### The gate
+
+A scheduled workflow gets no paths filter, so the gate is a job output rather than a trigger filter. It is a step in `name-it`, which is the first job and is already where the nightly works out which commit it is for, and it outputs `application-changed`. Both `package` and `publish` depend on it.
+
+A skipped night creates no release, no tag and no assets, and writes one line into the run summary: **"No application change since nightly NN. No build produced."**
+
+**Nightly numbers now count builds rather than runs.** The version came from `github.run_number`, which increments for every run including the ones that build nothing, and that is why the published numbers already jump: 14, 16, 18, 25. It is now the highest existing nightly tag plus one.
+
+### What the waste actually was
+
+Of the last twenty eight nightlies, **five changed nothing that ships inside the executable: 14, 72, 76, 77 and 78.** Each of those compiled and tested on three operating systems to produce a build identical to the one before it.
+
+**Nightly 84, the build Alan named, would still have been built.** Its diff against 81 is 147 paths, and although 95 of them are the website, it also changed `src`, `tests`, `.github` and `scripts`. So what made 84 look like a website build was not its diff but its release note, which described the website work and nothing else. That is entry 145's territory rather than this entry's, and it is worth saying plainly: the gate fixes the builds that should not have happened, and it does not fix a note that describes the wrong half of a build.
+
+No published release was edited or deleted.
+
+### The two loops
+
+Entry 144's guard on the notes commit still holds and now has a second one underneath it: a `[notes] ` commit is skipped by `name-it`'s condition, and it is content, so the gate would refuse it even if the condition were removed. The site publish and the nightly remain connected only through the release note append entry 144 defined. Proved by the run that carries this entry rather than by reading the YAML.
+
+### Tests
+
+- Every top level entry git tracks is in exactly one list, taken from `git ls-tree` rather than from the filesystem, so an untracked scratch folder beside the repository does not fail the build.
+- The nightly has a gate whose output is `application-changed`, and both `package` and `publish` depend on it. The workflow's text is normalised to LF first: a pattern anchored on a line ending has already cost this repository two red pushes on Windows runners.
+- The releases page says why the numbers skip.
+- Section 6.3's dry run is a step in the nightly rather than a test. It needs the tag history, which a CI checkout does not have, and running it nightly exercises the logic against real history exactly as the section asks.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
