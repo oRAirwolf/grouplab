@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the build pipeline and the failures that shaped it
 state: published
+no_figure: "This article is about a build pipeline. There is nothing photographable in it, and a screenshot of a green tick would be decoration rather than evidence."
 found: The hard parts are not building. They are making sure a build happens on a quiet day, that two pushes do not race, and that the release notes say something a shooter can use.
 sure: This describes the pipeline as it stands. The numbers in it, such as the run times, are from ordinary runs and are not benchmarks.
 sources:
@@ -75,3 +76,14 @@ So: if the working part cannot be reached from any screen, the note says so in t
 - A manifest listing every file with its size and SHA-256, signed, so the updater can refuse a tampered download.
 - The release notes for that version only, meaning the changes since the previous **published** build. A cancelled or skipped nightly never got a tag, so its changes roll into the next real one rather than vanishing.
 - The notes of the last several versions as well, so somebody who skipped five builds can be shown everything they missed rather than only the newest.
+
+## What this means
+
+
+If you follow the nightly train, three things follow from all this.
+
+**A gap in the build numbers is not a problem.** Builds are produced on the days the application changed. A run of numbers with holes in it means work happened that does not reach you, not that something broke, and the releases page says so.
+
+**Read the notes and not the version.** The notes for a build are written by the person making the change, in plain words, and the build fails rather than publish a note written for the project's own log. So if a note tells you nothing, that is a defect worth reporting, the same as a crash.
+
+**Do not trust a note that describes something you cannot find on a screen.** That happened once here and it was caught afterwards rather than before. If you install a build for a feature the notes describe and cannot find it, say so: the note is the bug.

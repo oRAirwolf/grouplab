@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, with the rule it follows and what it keeps
 state: published
+no_figure: "The subject is what is removed from a file, which by definition is not visible in it. The keep list is in the article in full."
 found: The keep list is nine fields about the camera and the exposure. Everything else goes, including every GPS field, every date, every serial number, every maker note, and whatever a phone appended after the end of the image.
 sure: This describes the code and the rule it implements. It is not a guarantee about any other software that has touched your file before it reached GroupLab.
 sources:
@@ -71,3 +72,11 @@ That is deliberate and it is the same reasoning again. A parser that has given u
 **Location is never read in the first place.** Separately from all of the above, no part of GroupLab reads GPS or location values from any photograph at any point, including the diagnostic log, which has its own whitelist following the same rule. The stripping is for what gets published; the not-reading is for everything else.
 
 **A photograph can still identify a place.** A recognisable backdrop is a recognisable backdrop, and no metadata rule touches pixels. If where you shoot is sensitive, photograph the sheet and not the view.
+
+## What this means
+
+**Send the photograph rather than editing it first.** Stripping metadata by hand is easy to do incompletely: the common tools remove the EXIF block and leave what a phone appended after the end of the image, which on the submissions received here ran to hundreds of kilobytes and included a second, smaller copy of the scene. Rebuilding from pixels removes it because it never copies it.
+
+**Do not treat this as protection from what has already happened to the file.** If a photograph has been posted somewhere, or synced, or sent through a service that keeps a copy, this removes nothing from those copies. It governs what reaches this project, which is the only thing it can govern.
+
+**The transferable part is the keep list.** A remove list is a list of the things somebody thought of, and a file format can always carry a field nobody thought of. A keep list of nine fields cannot: anything not named is gone, including the field invented next year.

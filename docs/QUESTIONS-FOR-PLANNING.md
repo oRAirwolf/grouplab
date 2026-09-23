@@ -284,6 +284,8 @@ Section 4.2 is satisfied in the first row and cannot be in the second while sect
 
 The two sizes on such a sheet are singles and merged pairs. The two sizes on a sheet shot with two calibres are two calibres. **The code cannot tell them apart from the sizes alone**: a merged pair is about twice the area of a single, so about 1.41 times the diameter, and .224 against .308 is 1.38. The measurement that would separate them is not in this evidence.
 
+**The .224 here is correct and is not the rimfire figure.** Entry 153 section 4 corrects a rimfire 22 to 0.222 everywhere it appears; this line is about two centrefire cartridges, 5.56x45 or 22 ARC against .308, so 0.224 is the right number and a sweep should leave it alone.
+
 ### 4. What I would do
 
 Where the sheet's own marks are the reference, **take the quarter-point of the smaller group rather than refusing**. Whichever the two sizes turn out to be, the smaller marks are the better estimate of one hole: if they are singles, the doubles are then flagged correctly; if they are a second, smaller calibre, the larger holes are flagged and entry 140 section 3.2's guard turns that into one question about the calibre rather than a flood. Refusing flags nothing either way, which is the worst of the three outcomes on a sheet that really does hold five doubles.

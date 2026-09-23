@@ -24,10 +24,16 @@ public sealed partial record Calibre(string Name, double DiameterInches)
     /// <summary>
     /// The pick list: every distinct bullet diameter in Alan's rifle and pistol lists of entry 105 section 7, in inches, from .172 to .510.
     /// .223, which came from the old ".22 LR" entry, is not among them and can still be typed.
+    /// <para>
+    /// <b>0.222 is the rimfire 22, NOTES-FROM-PLANNING.md entry 153 section 4.</b> It was missing entirely: 0.2215 is 5.45x39 and 0.224 is
+    /// the centrefire 22 of 5.56x45 and 22 ARC, so the most commonly shot cartridge in the world had nothing in this list to pick, and a
+    /// rimfire shooter's nearest choice was 0.9 percent too wide. The two figures sit next to each other here on purpose: they are different
+    /// cartridges that happen to be a thousandth apart, not a duplicate.
+    /// </para>
     /// </summary>
     public static IReadOnlyList<double> Diameters { get; } =
     [
-        0.172, 0.204, 0.2215, 0.224, 0.243, 0.257, 0.264, 0.277, 0.284, 0.308, 0.309, 0.310, 0.3105, 0.312, 0.321, 0.323, 0.338, 0.355, 0.356,
+        0.172, 0.204, 0.2215, 0.222, 0.224, 0.243, 0.257, 0.264, 0.277, 0.284, 0.308, 0.309, 0.310, 0.3105, 0.312, 0.321, 0.323, 0.338, 0.355, 0.356,
         0.357, 0.358, 0.366, 0.375, 0.400, 0.410, 0.411, 0.416, 0.423, 0.430, 0.451, 0.452, 0.454, 0.458, 0.474, 0.500, 0.505, 0.510,
     ];
 

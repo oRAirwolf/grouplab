@@ -846,6 +846,36 @@ def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
     return shell(f"/guides/{key}/", label, desc, body, "Guides")
 
 
+def page_what_can_be_measured() -> str:
+    """docs/WHAT-CAN-BE-MEASURED.md as a page, NOTES-FROM-PLANNING.md entry 152 section 5.2.
+
+    Two statements published on the tour were wrong about what GroupLab measures and about what a mis-scaled print
+    costs, and a research article on this same site said the opposite of the second one. A reader who read both
+    learned that the site cannot be trusted rather than which sentence was right. The wrong wordings are quoted in
+    NOTES-FROM-PLANNING.md entry 152, which is where a log of them belongs; a test fails if they come back here.
+
+    So there is one source and everything else points at it: the tour pages, the research articles and the README.
+    A page that states its own version of this is the fault coming back.
+    """
+    title, content, toc = render_guide(need(REPO / "docs" / "WHAT-CAN-BE-MEASURED.md"))
+    toc_html = "\n".join(f'<a href="#{hid}">{esc(html.unescape(text))}</a>' for hid, text in toc)
+    body = f"""
+<section class="wrap guide">
+<nav class="toc" aria-label="On this page">
+<p class="mono faint small caps">On this page</p>
+{toc_html}
+</nav>
+<article class="prose">
+<h1>{esc(title)}</h1>
+{content}
+</article>
+</section>
+"""
+    return shell("/what-can-be-measured/", "What GroupLab can measure",
+                 "Where the scale comes from, what a GroupLab sheet adds, and why a sheet printed at the wrong size still measures correctly.",
+                 body, "Tour")
+
+
 def releases() -> list[tuple[str, str, str]]:
     """Every build in docs/RELEASE-NOTES.md, newest first: its anchor, its version and its notes as HTML.
 
@@ -1124,6 +1154,19 @@ def figure_theme_problems() -> list[str]:
     return problems
 
 
+# NOTES-FROM-PLANNING.md entry 153 section 6: the standard goes on in batches, not in one commit that rewrites
+# thirty articles. An article named here has a "What this means" section and a figure with a caption, and the build
+# fails if it loses either. One that is not named is listed at the end of the build as still to come.
+STANDARD_153: set[str] = {
+    "nightly-builds", "smaller-installer", "safe-updates",
+    "choosing-the-markers", "what-grouplab-sends", "uploads-rebuilt-from-pixels",
+    "how-grouplab-reads-a-target", "designing-a-readable-target", "primer-comparison",
+    "blank-sheet-zero", "one-hole-or-two", "photo-hole-size", "pooling-groups",
+    "scans-against-photos", "wind-or-rifle", "wrong-bull",
+    "curled-angled-paper", "hole-is-not-the-bullet",
+}
+
+
 def research_problems() -> list[str]:
     """Everything wrong with the research articles, entry 142 sections 2.5 and 2.6.
 
@@ -1132,7 +1175,8 @@ def research_problems() -> list[str]:
     given a download link that 404s has been told the data is available when it is not.
     """
     required = ["title", "description", "group", "number", "written", "data_date", "samples", "state", "found", "sure"]
-    problems = []
+    problems: list[str] = []
+    later: list[str] = []
     live = published_articles()
     for meta in research_articles():
         where = f"research/{meta['slug']}.md"
@@ -1158,6 +1202,36 @@ def research_problems() -> list[str]:
                 f"{where}: {PUBLISHED.name} says this went live and the state says {meta.get('state')!r}. A page that "
                 "is on the site and does not admit it will be taken down by the next build without anybody deciding to")
 
+        # Entry 153 sections 2 and 3, applied in the batches section 6 asks for. An article in STANDARD_153 has been
+        # brought up to the standard and is held to it from then on; one that is not is named in the build output and
+        # does not fail it. Landing the check hard on all thirty at once would have meant rewriting thirty articles in
+        # one commit, which is the thing section 6 forbids.
+        hard = meta["slug"] in STANDARD_153
+        note = problems.append if hard else (lambda m: later.append(m))
+
+        means = re.search(r"^##\s+What this means\s*$(.*?)(?=^##\s|\Z)", meta["body"], re.MULTILINE | re.DOTALL)
+        if means is None:
+            note(f'{where}: no "What this means" section. Entry 153 section 2: say what a reader should do differently, '
+                 "or stop believing, because of what this measured")
+        else:
+            said = means.group(1).strip()
+            if len(said) < 200:
+                note(f'{where}: "What this means" is {len(said)} characters. It is the section a reader came for, and a '
+                     "sentence is not an answer")
+            elif said[:120].strip() and said[:120].strip() in str(meta.get("found", "")):
+                note(f'{where}: "What this means" repeats the front matter\'s found line. It is for what to do about the '
+                     "result, not for the result again")
+
+        # Entry 153 section 3.5: an article about something visible carries a picture of it, or says in one line why it
+        # cannot. The exemption is a written sentence rather than a silent pass, so somebody had to decide.
+        figures = re.findall(r"!\[([^\]]*)\]\(([^)\s]+)", meta["body"])
+        if not figures and not str(meta.get("no_figure", "")).strip():
+            note(f"{where}: no figure, and no no_figure line in the front matter saying why. Entry 153 section 3")
+        for alt, src in figures:
+            if not alt.strip():
+                note(f"{where}: the figure {src} has no caption. Entry 153 section 3.3: say what to look at, not what "
+                     "the figure is")
+
         folder = REPO / "website" / "research" / meta["slug"]
         for data in meta.get("data") or []:
             if not (folder / data).exists():
@@ -1174,6 +1248,12 @@ def research_problems() -> list[str]:
         for marker, what in ((b"Exif", "EXIF"), (b"http://ns.adobe.com/xap/", "XMP"), (b"Photoshop 3.0", "IPTC"), (b"GPS", "GPS")):
             if marker in raw[:65536]:
                 problems.append(f"{image.relative_to(OUT)}: carries {what} metadata")
+
+    # Entry 153 section 6: what the next batch has to pick up. Printed, never a failure, and it has to reach zero.
+    if later:
+        print(f"still to be brought up to entry 153's standard, {len(later)} item{'' if len(later) == 1 else 's'}:")
+        for line in later:
+            print("  " + line)
 
     return problems
 
@@ -1206,6 +1286,12 @@ def page_research_index() -> str:
     return shell("/research/", "Research", "What GroupLab has measured on real targets, with the data behind it.", body, "Research")
 
 
+# NOTES-FROM-PLANNING.md entry 153 section 1.2. Alan: "For all of the research documents, I would prefer if my
+# name is not mentioned. Just say the author or developer." One form, used everywhere, rather than a variant invented
+# per page: a byline that varies reads as carelessness about attribution, which is the opposite of what it is for.
+BYLINE = "GroupLab project. Researched and written with Claude. Testing and data collection by the developer."
+
+
 def page_research_article(meta: dict) -> str:
     content = research_swap(markdown.markdown(meta["body"], extensions=["tables", "sane_lists", "fenced_code"]))
     sources = "".join(f"<li>{markdown.markdown(str(x), extensions=[])[3:-4]}</li>" for x in (meta.get("sources") or []))
@@ -1221,13 +1307,18 @@ def page_research_article(meta: dict) -> str:
 {f'<p class="mono faint small caps">The data</p><ul class="small">{data}</ul>' if data else ""}
 </div>"""
     draft = {"draft": DRAFT_NOTICE, "ready": READY_NOTICE}.get(str(meta.get("state")), "")
+    # Entry 153 section 3.4: where an article genuinely has nothing to show, it says so in one line rather than
+    # leaving a gap where a reader expects a picture and assumes somebody forgot.
+    no_figure = (f'<p class="small faint">No figure: {esc(str(meta["no_figure"]))}</p>'
+                 if str(meta.get("no_figure", "")).strip() else "")
     body = f"""
 <section class="wrap guide">
 <article class="prose research-article">
 <p class="small faint"><a class="plain" href="/research/">Research</a> &rsaquo; {esc(meta.get("group", ""))}</p>
 <h1>{esc(meta["title"])}</h1>
-<p class="small faint">GroupLab project, tested by Alan Hayes, researched and written with Claude. Written {esc(str(meta["written"]))}; the data is from {esc(str(meta["data_date"]))}.</p>
+<p class="small faint">{BYLINE} Written {esc(str(meta["written"]))}; the data is from {esc(str(meta["data_date"]))}.</p>
 {draft}
+{no_figure}
 {box}
 {content}
 {f'<h2>Sources</h2><ol class="small">{sources}</ol>' if sources else ""}
@@ -1318,7 +1409,8 @@ def tour_problems() -> list:
         if screen_data is None:
             found.append(f"website/tour.json: {key!r} is in the order and has no entry")
             continue
-        for field in ["name", "blurb", "purpose", "fits"]:
+        # Entry 152 section 4: every tour page says what that screen does with a target GroupLab did not print.
+        for field in ["name", "blurb", "purpose", "fits", "withoutASheet"]:
             if not str(screen_data.get(field, "")).strip():
                 found.append(f"website/tour.json: {key} has no {field}")
         if len(screen_data.get("parts") or []) < 3:
@@ -1391,6 +1483,8 @@ def page_tour_screen(key: str) -> str:
 <p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>
 <h2>What this screen is for</h2>
 <p>{esc(item["purpose"])}</p>
+<h2>Without a GroupLab sheet</h2>
+<p>{esc(item["withoutASheet"])} <a href="/what-can-be-measured/">What GroupLab can measure</a>.</p>
 <h2>What you are looking at</h2>
 <ul class="tour-parts">{parts}</ul>
 <h2>What you would do here</h2>
@@ -1965,6 +2059,7 @@ def main() -> None:
     write("guides/index.html", page_guides_index())
     for g in GUIDES:
         write(f"guides/{g[0]}/index.html", page_guide(*g))
+    write("what-can-be-measured/index.html", page_what_can_be_measured())
     write("releases/index.html", page_releases())
     figure_problems = build_research_figures()
     write("research/index.html", page_research_index())

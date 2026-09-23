@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, with the test that keeps it true
 state: published
+no_figure: "A list of network calls has no picture. The one thing a reader could look at, the crash report contents, is quoted in full in the article."
 found: GroupLab sends four things, none of them without an action from you, and none containing where you were. A test fails the build if any part of the program learns to reach the outside world on its own.
 sure: This describes the code as it stands and the tests that hold it there. It is not an audit by anyone else, and you are welcome to read the source instead.
 sources:
@@ -62,3 +63,11 @@ That is the part worth trusting more than any promise on this page. A rule a per
 ## Reading the clipboard
 
 GroupLab can open an image you paste with Ctrl+V. It reads the clipboard **only** at that moment, never on its own and never in the background, and the same one-door rule covers it: exactly one file in the program may touch a real clipboard, and the build fails the day a second one learns how.
+
+## What this means
+
+**You can read this list and then check it.** The point of the test that fails the build is that the list stays four items long without anybody remembering to keep it that way. If you would rather verify than trust, the test is named in the sources and it is short.
+
+**Nothing here is a promise about your network.** It is a statement about what this program does. If something on your machine is watching what it talks to, this article tells you what it should see and nothing more.
+
+**The part worth carrying away:** a program that reaches the outside world in four places can be described in a paragraph, and one that reaches it in forty cannot be described at all. That is the reason for the rule, rather than any particular one of the four.

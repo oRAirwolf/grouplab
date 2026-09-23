@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, the failure it shipped with, and the tests added afterwards
 state: published
+no_figure: "This is about what happens between a download and an install, which has no picture. The update bar itself is in the tour."
 found: A signature that covers a rebuilt copy of a file rather than the file itself breaks the day you add a field. That shipped, and every installed build refused every update until it was reverted.
 sure: This describes the code and a fault that really happened, with the commit that reverted it. It is not a security audit.
 sources:
@@ -72,3 +73,12 @@ Any secret compiled into an open source program is public the moment it ships. A
 - The updater of an **older published build**, pinned at its real code, is run against freshly generated manifests and must still accept an update.
 
 That last one exists because the fault was not in the new code. It was in the old code's ability to read what the new code produced, and no test that only runs the current version can see it.
+
+## What this means
+
+
+**You can leave updates on.** The manifest is signed, and GroupLab refuses a download whose hashes do not match it, so the worst a tampered file can do is stop the update rather than install itself. Nothing is applied without you saying so.
+
+**Check the notes before you take a build, not after.** The notes shown in the update bar are the same ones on the releases page, and they are written to be read by somebody deciding whether to install rather than by somebody who already has.
+
+**If an update fails, the old version is still the one you are running.** That is deliberate. A failed update is an inconvenience; a half-applied one is a program that does not start, and this project would rather you be inconvenienced.

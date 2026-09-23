@@ -27,13 +27,13 @@ If you photograph a target and GroupLab measures the holes, can it tell you what
 
 It is a fair thing to want. The hole is right there, the software has already measured it to a thousandth of an inch, and a calibre is one more number it could hand you. It would also be useful in the other direction: if GroupLab knows the calibre, it can tell one hole from two, because two bullets through one hole make a mark about twice the area of one.
 
-So we measured it, on four sheets whose calibre we knew for certain because Alan loaded them.
+So we measured it, on four sheets whose calibre we knew for certain because the developer loaded them.
 
 ## What we did
 
 Four sheets from one afternoon: a .22 LR block, a 6 ARC block, and two 6.5 Creedmoor sheets. Each was scanned at 600 dpi on a flatbed and photographed with a phone, some square on, some at an angle, some close, some from across the bench.
 
-Every image went through GroupLab's ordinary path: find the printed markers, work out where the page is, and measure each hole. Then we divided the median hole by the bullet diameter Alan actually fired.
+Every image went through GroupLab's ordinary path: find the printed markers, work out where the page is, and measure each hole. Then we divided the median hole by the bullet diameter the developer actually fired.
 
 Every sheet registered cleanly. The scans came out at 0.0023 to 0.0026 inches of registration error and the photographs at 0.0042 to 0.0060, so nothing below is a sheet GroupLab could not read.
 
@@ -41,7 +41,7 @@ Every sheet registered cleanly. The scans came out at 0.0023 to 0.0026 inches of
 
 | sheet | bullet | scanned | photographed |
 |---|---|---|---|
-| .22 LR block | 0.224 in | 0.758 | 1.069, 1.077 |
+| .22 LR block | 0.222 in | 0.765 | 1.079, 1.087 |
 | 6 ARC block | 0.243 in | 0.923 | 1.256, 1.333, 1.360 |
 | 6.5 Creedmoor, 25 shots | 0.264 in | 0.949 | 0.898 |
 | 6.5 Creedmoor, 15 shots | 0.264 in | 0.937 | 1.452, 1.405, 1.449 |
@@ -88,6 +88,16 @@ That change is worth a number. On the photograph that started all this, a 6.5 Cr
 
 ## What we still do not know
 
-The .22 LR scan reads 0.758 where the three centrefire scans read 0.92 to 0.95. A rimfire hole in paper closes up far more than a centrefire one, which makes sense, and means the "holes are about 0.94 of the bullet" figure that works for .264, .308 and .338 is not a law. We have exactly one rimfire sheet, which is not enough to say what the right number is.
+The .22 LR scan reads 0.765 where the three centrefire scans read 0.92 to 0.95. A rimfire hole in paper closes up far more than a centrefire one, which makes sense, and means the "holes are about 0.94 of the bullet" figure that works for .264, .308 and .338 is not a law. We have exactly one rimfire sheet, which is not enough to say what the right number is.
 
 We also cannot tell you how to photograph a target so that its holes measure true, because we do not know that a way exists. What we can tell you is that scanning works, and that if you photograph, GroupLab will read your sheet against itself and not against an assumption.
+
+## What this means
+
+**Do not read a hole size off a photograph and act on it.** Not to check a bullet's diameter, not to compare one load's holes with another's. The same holes in this test measured from nine tenths to one and a half times the bullet, and which you get depends on the light you happened to shoot in.
+
+**Positions from photographs are fine.** This article is about size and only size. Where the shots landed, and therefore the group, came out sound from the same photographs, which is why GroupLab still reads them.
+
+**If you need a size, scan.** The three centrefire scans agreed with each other to within three percent, in the same session, on the same sheets, with the same holes.
+
+**And stop believing the 0.94 figure is a law.** It describes centrefire holes on this paper. The one rimfire sheet here read 0.765, and one sheet is not enough to say what the right rimfire number is.

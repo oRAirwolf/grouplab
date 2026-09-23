@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: one Windows build, measured before and after, with the analysis re-run on a 25 shot sheet to prove nothing changed
 state: published
+no_figure: "The finding is a table of file sizes and it is already in the article. A chart of two bars would add nothing a reader cannot see in the numbers."
 found: 100.7 MB of a 332.6 MB install was debug symbols, 100 MB of it in two files. Removing them took the install to 204.3 MB, a 39 percent cut, and made the self-contained build smaller than the framework-dependent one had been.
 sure: One build on one machine, measured directly rather than estimated, and checked by re-running the analysis afterwards.
 sources:
@@ -61,3 +62,12 @@ The specific finding is worth 128 MB to anyone downloading GroupLab. The general
 **Nobody was looking for this.** It was found because a different question forced somebody to list what was actually in the package, file by file, rather than reasoning about what ought to be in it. The reasoning would never have found it: the runtime *is* large, the graphics libraries *are* large, and a 332 MB install for a program with a bundled runtime is entirely plausible. Every step of that argument is correct and the conclusion was wrong by a third.
 
 That is what measuring is for, and it is why this project tries to measure things that seem obvious. The times it has paid off have almost all been like this one: not a surprise about the thing being measured, but something else entirely, sitting in plain sight in the numbers nobody had written down before.
+
+## What this means
+
+
+**For anybody downloading GroupLab:** the install is 204 MB rather than 333 MB, and there is no second, smaller installer to choose between, because the ordinary one is now smaller than the alternative would have been. If you were waiting for a light build, it exists and it is the one you already have.
+
+**For anybody building software:** the useful part is not the 128 MB. It is that the reasoning was sound at every step and the conclusion was wrong by a third. A bundled runtime is large, graphics libraries are large, and 333 MB was entirely plausible. Nothing short of listing the files would have found it, and nobody lists the files unless something makes them.
+
+So the thing to stop believing is that a plausible number has been checked. It has not. It has been accepted.

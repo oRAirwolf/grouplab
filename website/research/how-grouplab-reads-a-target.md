@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: the six range scans of 2026-09-20 and nine photographs of the same sheets
 state: published
+no_figure: "The six steps are each shown on screen inside GroupLab, and the tour carries those pictures. Reproducing them here would put a second, staler copy of the same screenshots on the site."
 found: GroupLab finds the printed markers, works out exactly where the page is, subtracts the artwork it knows it printed, and calls what is left a hole. Every step reports what it did, and any step can be checked against the picture.
 sure: The steps below are what the current build does. The figures quoted are from one range day, six scans and nine photographs of four sheets.
 sources:
@@ -60,3 +61,11 @@ A shot is measured from the bull it was aimed at, so the software has to decide 
 Every one of those steps is in a "Show your work" panel: how many markers, how well the mapping fit, what size a hole was taken to be and where that came from, how many candidates were refused and for what reason.
 
 That is deliberate. A number with no working behind it is a number you have to trust. A number with the working attached is one you can check, and on a target, checking takes ten seconds: does the picture have a mark where the software says it does?
+
+## What this means
+
+**Every number GroupLab gives you can be traced back to a picture.** That is the point of the six steps being separate and each reporting what it did. If a result looks wrong, the useful question is not "is the software wrong" but "which of the six steps did something I can see is wrong", and you can look.
+
+**The step that fails is almost never the last one.** A hole count that is short usually means the page was placed badly, and a page placed badly usually means too few markers were found, and too few markers usually means the photograph. So work backwards through the steps rather than arguing with the answer.
+
+**Stop believing that subtraction is clever.** It is not. It works because GroupLab knows exactly what it printed, which is the whole reason a GroupLab sheet is easier than any other target, and it is why the same trick cannot be used on a target from somewhere else.

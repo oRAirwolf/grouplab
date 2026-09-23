@@ -14,7 +14,7 @@ data:
 sources:
   - "Michael Bach, Visual acuity and hyperacuity. https://michaelbach.de/ot/lum-hyperacuity/"
   - "First and second focal plane scopes. https://en.wikipedia.org/wiki/Telescopic_sight"
-  - "Alan Hayes's optics list, supplied 2026-09-22 (data/optics.csv)."
+  - "the developer's optics list, supplied 2026-09-22 (data/optics.csv)."
 ---
 
 ## Four classes, four questions
@@ -28,7 +28,7 @@ sources:
 
 ## The optics
 
-Alan's optics span every class and several price points. The tier is his own rating.
+The developer's optics span every class and several price points. The tier is the developer's own rating.
 
 | Class | Optic | Focal plane | Tier |
 |---|---|---|---|

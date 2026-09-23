@@ -7,8 +7,9 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: three sheets of 20, 23 and 10 shots with the shooter's own record of where each was aimed
 state: published
+no_figure: "The three sheets are the developer's range targets and are not published under a consent record. The article gives the offsets and the counts instead."
 found: Nearest bull is the wrong rule whenever the rifle is not zeroed for the load. On one 20 shot sheet every single shot landed nearer a bull it was not aimed at, and the group that comes out of reading it that way is tight, confident and meaningless.
-sure: Three sheets from one afternoon, with the shooter's written record of which bulls he aimed at. Enough to show the failure clearly; the fix is still being built.
+sure: Three sheets from one afternoon, with the shooter's own written record of which bulls were aimed at. Enough to show the failure clearly; the fix is still being built.
 sources:
   - "The three sheets and the shooter's own record of them: `docs/NOTES-FROM-PLANNING.md`, entry 120."
   - "What GroupLab did with them: `docs/PHASE1-RESULTS.md`, \"Entry 120\", sections 2 and 7."
@@ -22,7 +23,7 @@ It only works if the software knows which bull each shot was aimed at. The obvio
 
 ## Where that falls apart
 
-Alan shot a 6 ARC load at 100 yards through a rifle zeroed for something else. He aimed at bulls 2, 3, 4 and 5 of every row, twenty shots.
+The developer shot a 6 ARC load at 100 yards through a rifle zeroed for something else. He aimed at bulls 2, 3, 4 and 5 of every row, twenty shots.
 
 Every shot landed high and left of its aim point, by more than the distance between two bulls.
 
@@ -38,7 +39,7 @@ There is no single offset to correct here. A sheet-wide correction would be wron
 
 ## The third sheet: a whole row low, and one shot from nowhere
 
-The primer test sheet had five shots on row 1 where they were aimed and five more aimed at row 2 that landed on row 3. One of those five landed far from everything else, low and left, next to bull 21. Alan fired it, saw where it went, and does not know why.
+The primer test sheet had five shots on row 1 where they were aimed and five more aimed at row 2 that landed on row 3. One of those five landed far from everything else, low and left, next to bull 21. The developer fired it, saw where it went, and does not know why.
 
 So this sheet has a group that is where it should be, a group that is a whole row low, and a single shot that is neither.
 
@@ -63,3 +64,11 @@ Three things, in the order they matter.
 If your rifle is not zeroed for the load you are testing, either zero it first, or expect to move some shots by hand and check the review queue before you trust the figures.
 
 And if a group looks better than you shot, look at the assignment before you believe it. A tight group from a sheet you know you scattered is not good news; it is the software measuring something else.
+
+## What this means
+
+**Zero the rifle for the load before you shoot a multi-bull sheet.** That is the whole practical finding. On one twenty shot sheet every single shot landed nearer a bull it was not aimed at, and what came out was a tight, confident and completely meaningless group.
+
+**Be suspicious of a result that is too good.** Reading shots to the nearest bull turns a consistent offset into twenty small groups, each one clustered around a bull. The numbers look better than the shooting was. That is the dangerous shape of this failure: it does not look like an error.
+
+**Until GroupLab lets you say which bulls you aimed at**, the defence is your own record. Write the bulls down at the bench. It takes a moment and it is the only thing that survives a wrong assumption about the zero.

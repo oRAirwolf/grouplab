@@ -267,7 +267,7 @@ public static class ParametricSheet
                 : markers < ThinMarkers
                     ? new SheetCheck(CheckLevel.Warning, string.Create(CultureInfo.InvariantCulture, $"The layout carries {markers} markers. A photograph that loses a quarter of them, as an oblique one can, keeps {markers - (markers / 4)}, near the {FewestMarkers} no sheet here registers below."))
                     : new SheetCheck(CheckLevel.Fine, string.Create(CultureInfo.InvariantCulture, $"The layout carries {markers} markers.")),
-            new(CheckLevel.Fine, "Print at actual size, 100 percent. Never fit to page: a sheet printed at any other scale measures wrong."),
+            new(CheckLevel.Fine, "Print at actual size, 100 percent. Never fit to page: a scaled sheet loses the spacing it was designed for."),
         };
         return new SheetDesign(spec, finished, markers, checks);
     }

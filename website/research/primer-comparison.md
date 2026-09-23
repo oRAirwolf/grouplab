@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: 5 shots with one primer and 4 with the other
 state: published
+no_figure: "The two groups are on one sheet, and the sheet is a real range target rather than a render. It has not been photographed for publication under a consent record yet, so the article gives the coordinates instead of the picture."
 found: Changing the primer moved where the shots landed, by about a whole row of bulls, and that shift is about as certain as anything in this article. Whether it changed how tightly the rifle grouped, nine shots cannot say, and GroupLab refuses to say it.
 sure: Nine shots in total, one rifle, one sitting. This is a worked example of how to read a small comparison, not a finding about primers.
 sources:
@@ -17,13 +18,13 @@ sources:
 
 ## The test
 
-Alan loaded ten rounds of 6mm Creedmoor identically except for the primer: five with Federal GM205MAR, five with CCI BR-4. He fired the GM205MAR rounds at bulls 1 to 5 and the BR-4 rounds at bulls 6 to 10, one shot per bull, at 100 yards.
+The developer loaded ten rounds of 6mm Creedmoor identically except for the primer: five with Federal GM205MAR, five with CCI BR-4. He fired the GM205MAR rounds at bulls 1 to 5 and the BR-4 rounds at bulls 6 to 10, one shot per bull, at 100 yards.
 
 This is the comparison every reloader makes, and it is the one where it is easiest to fool yourself.
 
 ## What happened on the paper
 
-The BR-4 shots did not land on bulls 6 to 10. They landed a whole row low, on row 3, and one of them landed a long way from everything else, left of bull 21. That shot is not a flyer to be deleted: Alan fired it, it went where it went, and it belongs to the BR-4 group.
+The BR-4 shots did not land on bulls 6 to 10. They landed a whole row low, on row 3, and one of them landed a long way from everything else, left of bull 21. That shot is not a flyer to be deleted: The developer fired it, it went where it went, and it belongs to the BR-4 group.
 
 Nine of the ten shots are on the sheet. One is not, which is itself worth saying rather than quietly analysing nine and calling it ten.
 
@@ -40,7 +41,7 @@ Three things in that table are worth more than the numbers.
 
 **The BR-4 mean radius is withheld.** Four shots is not enough to state a group size, so GroupLab does not state one. It would be easy to print 0.2 something and let you read it as a measurement. A figure with four shots behind it and no warning is worse than no figure, because you will compare it with the five shot number above it as though the two meant the same thing.
 
-**The centres differ and that is a real result.** p = 0.001 means a shift this large would almost never happen by chance if the two primers put their shots in the same place. It matches what Alan could see standing at the bench: the BR-4 shots were a row low.
+**The centres differ and that is a real result.** p = 0.001 means a shift this large would almost never happen by chance if the two primers put their shots in the same place. It matches what the developer could see standing at the bench: the BR-4 shots were a row low.
 
 **The dispersions do not differ, and that is not a result at all.** p = 0.434 means the data cannot tell the two apart. It does **not** mean the primers group the same. Five shots against four can only detect an enormous difference, so failing to detect one tells you almost nothing. GroupLab says "no evidence either way" rather than "no difference", and those are different sentences.
 
@@ -59,3 +60,11 @@ If you change one component and the point of impact moves, you can often see tha
 If you change one component and want to know whether it groups better, you need far more shots than you think, and nine is not close. The honest answer from this test is: the primer moved the zero, and we do not know what it did to the group.
 
 Do not let that disappoint you into reading the p = 0.434 as "they are the same". It says "we looked, with nine shots, and nine shots cannot see it".
+
+## What this means
+
+**One certain result and one that is not, from the same nine shots.** The shift in where the shots landed is about as solid as a small sample gets. Whether the primer changed how tightly the rifle grouped is a question nine shots cannot answer, and GroupLab says so rather than giving you a number that looks like an answer.
+
+**So do not test two things at once and read the one you were hoping for.** The temptation with a comparison like this is to take the significant result as evidence for the whole change. It is evidence for exactly what it measured: the centre moved.
+
+**If you want the dispersion question answered, shoot more.** Not a little more. The number of shots needed to tell two dispersions apart is far larger than the number needed to tell two centres apart, and that is a fact about the arithmetic rather than about your rifle.

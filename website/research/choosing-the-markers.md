@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: six marker dictionaries compared, with false-positive counts measured on real scanned target artwork under a permissive detector
 state: published
+no_figure: "The markers are a design decision and there is nothing to photograph that would not be a picture of a square. The dictionaries themselves are in the article as numbers."
 found: Dictionaries with a minimum Hamming distance of 4 or less produced false marker detections on ordinary target artwork. Every dictionary at Hamming 11 or above produced none. That one number decided it.
 sure: The false-positive test used one corpus of real scans. The Hamming figures were recomputed from rendered markers rather than taken from documentation, and agreed with it.
 sources:
@@ -70,3 +71,11 @@ Small enough that a page of them does not look like a page of them, large enough
 The interesting part of this decision was not picking the winner. It was that **the plausible cheap options were measured failing** on the actual material, rather than being ruled out by an argument about Hamming distances.
 
 An argument would have reached the same answer here. It does not always, and the cost of finding out in the field, on somebody's targets, is that you never find out at all: a false marker does not announce itself, it just moves your group slightly.
+
+## What this means
+
+**If you design your own sheet, leave the markers alone.** The dictionary and the marker size were chosen against a measurement, not a preference, and the number that decided it was the one place a cheaper choice produced false detections on ordinary target artwork. A sheet whose markers were changed to look better is a sheet that may register onto the wrong thing and say nothing about it.
+
+**If you are choosing a marker dictionary for something of your own**, the transferable part is not the answer but the test. Documentation for these dictionaries states their Hamming distances, and those figures were recomputed here from rendered markers rather than trusted; they agreed, which is the outcome you want and not the one you should assume. What the documentation cannot tell you is how a dictionary behaves against your artwork, and that is the measurement that decided this.
+
+**Stop believing that a larger dictionary is a better one.** More codes means codes that are closer together, and closeness is what produces a false reading of a printed ring as a marker.

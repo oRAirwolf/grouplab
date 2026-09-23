@@ -5,8 +5,9 @@ group: Reading targets
 number: 9
 written: 2026-09-22
 data_date: 2026-09-20
-samples: the 59 photographs Alan took at his range on 2026-09-20, paired against his six 600 dpi flatbed scans of the same sheets
+samples: the 59 photographs the developer took at the range on 2026-09-20, paired against the six 600 dpi flatbed scans of the same sheets
 state: published
+no_figure: "The photographs in question are the developer's range material, which is not published under a consent record, so the comparison is given as the measured numbers instead."
 found: Of 59 photographs, 28 could not be read at all. Of the 15 that paired with a scan, a hole's position was out by about 0.03 in at the median and 0.07 in at the 95th percentile, against a mean radius of about 0.17 in.
 sure: One shooter, one afternoon, one phone and one scanner. The gap is measured properly against scans of the same sheets; how a different phone or a different day would compare is not established.
 sources:
@@ -77,3 +78,13 @@ There is more on that in [Curled, angled and wrinkled paper](curled-angled-paper
 One shooter, one afternoon, one phone, one scanner. The gap between photograph and scan is measured properly, against scans of the same sheets, with the pairing done by matching hole patterns rather than by trusting file names.
 
 What is not established: how a different phone compares, how much of the 0.03 in is the bend and how much is the light, and whether a photograph taken deliberately well does better than these, which were taken the way somebody actually photographs a target at a range.
+
+## What this means
+
+**The first question is not accuracy, it is whether the photograph can be read at all.** Twenty eight of fifty nine could not. Before worrying about a hundredth of an inch, take a photograph GroupLab can use: whole sheet in frame, square on, even light, no shadow across the markers.
+
+**For a group size, a readable photograph is good enough.** A median position error of about 0.03 in against a mean radius of about 0.17 in does not change which load is tighter.
+
+**For anything at the scale of a single hole, it is not.** Hole sizes, edge-to-edge figures, and any judgement that turns on a few hundredths belong on a scan.
+
+**Stop believing the camera is the limit.** It is not the megapixels. It is the light and the angle, both of which are free to fix.

@@ -17,7 +17,9 @@ public class CalibreTests
     [Fact]
     public void EveryPickListDiameterReadsExactlyInBothUnits()
     {
-        Assert.Equal(37, Calibre.Diameters.Distinct().Count());
+        // 38 since entry 153 section 4 added 0.222, the rimfire 22, which was missing: 0.2215 is 5.45x39 and 0.224 is the
+        // centrefire 22 of 5.56x45 and 22 ARC, so the most commonly shot cartridge in the world had nothing to pick.
+        Assert.Equal(38, Calibre.Diameters.Distinct().Count());
         Assert.Equal((0.172, 0.510), (Calibre.Diameters.Min(), Calibre.Diameters.Max()));
         Assert.DoesNotContain(0.223, Calibre.Diameters);
         foreach (double inches in Calibre.Diameters)
@@ -143,7 +145,7 @@ public class CalibreTests
             Assert.NotNull(Calibre.Parse(millimetres.ToString("0.00", CultureInfo.InvariantCulture) + " mm", out _));
         }
 
-        Assert.Equal(37, Calibre.Diameters.Count);
+        Assert.Equal(38, Calibre.Diameters.Count);
     }
 
     /// <summary>A marking saved under a calibre name before entry 107 loads with its diameter, shown in both units; the old name is not displayed.</summary>

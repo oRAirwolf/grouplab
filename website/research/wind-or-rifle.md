@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: one 24 shot .22 LR sheet shot in a shifting crosswind with the windage adjusted mid-sheet, plus the circularity test run against simulated round groups
 state: published
+no_figure: "The illustration is one real windy sheet from the developer's range day, which is not published under a consent record. The distribution the test is built on is exact and is given as numbers."
 found: Every group is lopsided. Whether a group is lopsided enough to blame the wind is a question with a numerical answer, and at the shot counts people fire the answer is usually no.
 sure: The simulation behind the test is exact for a round normal distribution. The one real windy sheet is an illustration, not evidence about wind in general.
 sources:
@@ -56,7 +57,7 @@ Where the shots **can** separate them it says so instead. It never states the fi
 
 ## The sheet that really was windy
 
-Alan shot a .22 LR sheet in a strong, shifting crosswind, and adjusted the windage between row 2 and row 3.
+The developer shot a .22 LR sheet in a strong, shifting crosswind, and adjusted the windage between row 2 and row 3.
 
 That sheet is a useful illustration of something different: the wind was real and it still was not a single fact about the sheet. Rows 1 and 2 share one point of impact, rows 3 to 5 share another, and within each the wind moved shots around by a genuine amount. There is no one correction that describes it, and software that fitted a single offset would be wrong for one half of the sheet whichever half it fitted.
 
@@ -68,3 +69,11 @@ So even when wind is unambiguously present, "the wind pushed my group right by t
 - **Read the caption, not the picture.** The picture always shows a lopsided group.
 - **If you change your sights mid-sheet, write down where.** A sheet with two points of impact is two sheets, and no amount of statistics recovers the information that they were different if nobody recorded it.
 - **A windy day's group measures the day, not the rifle.** That is fine, as long as you do not later compare it with a calm day's group and call the difference a load.
+
+## What this means
+
+**Your group is lopsided and that means nothing.** Every group is. A round distribution produces lopsided-looking groups at the shot counts people actually fire, and the eye is extremely good at finding a direction in noise.
+
+**Before you blame the wind, ask the question properly.** GroupLab gives the answer numerically, and at five or ten shots the answer is usually that the group is no more lopsided than chance would produce. That is not a failure to detect wind; it is an honest statement that these shots cannot tell.
+
+**So do not adjust anything on the strength of a shape.** A correction made for a pattern that was not there costs you the zero you had, and you will not find out for another session.

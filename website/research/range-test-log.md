@@ -19,7 +19,7 @@ data:
 
 **What was done:** test sheets printed at 100 percent and deliberately at 96.2 percent, scanned at 300 and 600 dpi.
 
-**What we learned:** Alan's printer at "Actual size" measured 1.0001 horizontally and 1.0006 vertically. GroupLab measured the reduced sheet at 0.96200 (600 dpi) and 0.96201 (300 dpi).
+**What we learned:** the developer's printer at "Actual size" measured 1.0001 horizontally and 1.0006 vertically. GroupLab measured the reduced sheet at 0.96200 (600 dpi) and 0.96201 (300 dpi).
 
 **Written up in:** "Does your printer print at true size?", "Scanner traps".
 

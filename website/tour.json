@@ -1,555 +1,570 @@
 {
-  "_": [
-    "NOTES-FROM-PLANNING.md entry 146: a tour of the application, one page per screen, at /tour/.",
-    "",
-    "Alan: 'I think there should be a separate page for screenshots of each section of the application that explains",
-    "what is happening instead of just a few screenshots on the main page.' A handful of pictures on the home page",
-    "shows that GroupLab exists. It does not show what using it is like, and that is the question somebody has before",
-    "they download an unknown program.",
-    "",
-    "This file is the list. website/build.py builds the index and one page per screen from it, and refuses to build if",
-    "a screen here has no screenshot or a screenshot has no screen here, so the tour and the weekly screenshot job of",
-    "entry 144 section 4 cannot drift apart quietly.",
-    "",
-    "Every 'part' must name something a reader can actually see in the picture, in the words the screen itself uses.",
-    "No class names, no file paths, and nothing claimed that is not in the build the pictures came from."
-  ],
-  "order": [
-    "library",
-    "print",
-    "marking",
-    "analysis",
-    "analysis-open",
-    "sessions",
-    "compare",
-    "equipment",
-    "ballistics",
-    "settings"
-  ],
-  "screens": {
-    "library": {
-      "name": "Target library",
-      "blurb": "The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.",
-      "purpose": "GroupLab can only measure a sheet it printed, because the measurement comes from the markers and codes printed around the bulls rather than from anything you tell it. The library is where you choose which sheet to print. Every one of them is designed for a particular job at a particular distance, and the description under each says which.",
-      "parts": [
-        [
-          "The list, grouped by what the sheet is for",
-          "Centrefire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
-        ],
-        [
-          "The sheet you have chosen",
-          "Shown whole on the right, with its full description underneath: the bull spacing, the sighter row, the distance it was designed for, and the paper it wants."
-        ],
-        [
-          "Built in and read only",
-          "The twenty that come with GroupLab cannot be edited. Duplicate makes a copy that is yours, to rename and change."
-        ],
-        [
-          "Print",
-          "Opens the print screen with this sheet already chosen."
-        ],
-        [
-          "Design your own sheet",
-          "For a sheet no built-in one covers. Your own sheets appear at the bottom of the list."
-        ],
-        [
-          "Zoom in, Zoom out and Fit",
-          "Move around the preview. This is artwork, not a photograph, so it stays sharp however far you go in."
-        ]
-      ],
-      "steps": [
-        "Find the group that matches what you are doing: load development, rimfire, zeroing.",
-        "Pick a sheet whose distance and paper size match your range and your printer.",
-        "Read the description to check the bull spacing suits the group you expect.",
-        "Press Print to go to the print screen with it loaded."
-      ],
-      "fits": "This is usually where a session starts. From here you go to <a href=\"/tour/print/\">Printing</a>.",
-      "links": [
-        [
-          "Designing a target GroupLab can read",
-          "/research/designing-a-readable-target/"
-        ],
-        [
-          "Choosing the markers",
-          "/research/choosing-the-markers/"
-        ]
-      ]
-    },
-    "print": {
-      "name": "Printing",
-      "blurb": "Prints the sheet at its true size, and tells you when the paper or the printer's margins would spoil it.",
-      "purpose": "Everything GroupLab measures depends on the sheet being the size it says it is. A sheet printed at 97 percent measures three percent small, and nothing later can recover that. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.",
-      "parts": [
-        [
-          "The sheet list on the left",
-          "The same sheets as the library. The one in the shaded row is the one being printed."
-        ],
-        [
-          "The description at the top",
-          "What this sheet is, how many scoring bulls, the grid spacing, the distance it was designed for and the paper it needs."
-        ],
-        [
-          "Print the actual-size instruction",
-          "Adds a line along the bottom edge of each sheet telling whoever prints it to choose Actual size and never Fit. Leave it on unless you are printing for yourself and know the driver."
-        ],
-        [
-          "The warning about drivers",
-          "GroupLab says plainly what it has and has not proved on paper. It asks the viewer for no scaling and cannot set your printer driver, so it tells you what to check rather than promising."
-        ],
-        [
-          "Open to print, Save PDF and Print",
-          "Open to print hands the PDF to your usual viewer, which is the safest route today. Save PDF writes the file. Print goes straight to a driver."
-        ],
-        [
-          "Print a volunteer pack",
-          "The sheet plus one page telling somebody else how to shoot it, photograph it and send it back."
-        ],
-        [
-          "Previous sheet, Next sheet",
-          "For a tiled sheet that spans several pages. The counter says which page of how many."
-        ],
-        [
-          "The preview",
-          "The artwork of the page about to print. Its text is drawn in the PDF rather than in the preview, so the preview shows slightly less than the paper will."
-        ]
-      ],
-      "steps": [
-        "Choose the sheet and check the paper size against what is in your printer.",
-        "Leave the actual-size instruction on if anybody but you will print it.",
-        "Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.",
-        "Measure one printed bull with a ruler against the size in the description before you shoot a whole session on it."
-      ],
-      "fits": "After <a href=\"/tour/library/\">the library</a>. You shoot the sheet, then photograph or scan it and open it in <a href=\"/tour/marking/\">marking</a>.",
-      "links": [
-        [
-          "Printing a target at its true size",
-          "/research/printer-true-size/"
-        ],
-        [
-          "The user guide",
-          "/guides/user-guide/"
-        ]
-      ]
-    },
-    "marking": {
-      "name": "Marking and review",
-      "blurb": "Every hole found and numbered to its bull, with anything uncertain raised for you to settle.",
-      "purpose": "This is where GroupLab shows its working before it measures anything. It finds the holes, works out the scale from the printed markers, and assigns each hole to a bull. Where it is not sure, it says so and asks, rather than quietly guessing and giving you a clean-looking number built on a guess.",
-      "parts": [
-        [
-          "The count at the top",
-          "How many shots are marked and how many need review, so you know how much is left before you can trust the result."
-        ],
-        [
-          "Review, on the right",
-          "One question at a time, in order, each saying what GroupLab thinks and why. The buttons are the answers. Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it."
-        ],
-        [
-          "The numbered list underneath",
-          "Every question still to answer, the current one marked NOW and the next marked NEXT."
-        ],
-        [
-          "The keyboard line",
-          "Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a shot. Faster than the mouse once a sheet has a dozen questions."
-        ],
-        [
-          "Selected shot",
-          "Everything known about the one you have picked: where it is, how wide the hole is, how many holes' worth of ink it contains, and how far it is from anything else. The three chips say whether it was detected, corrected by you, or added by hand."
-        ],
-        [
-          "Called flyer and Exclude",
-          "Marking a shot you called as a flyer, or leaving it out of the measurement. GroupLab keeps it on the sheet and says so in the analysis rather than deleting it."
-        ],
-        [
-          "Scale",
-          "Which markers gave the scale and how many of them were read. This is what makes the measurement real, so it is shown rather than assumed."
-        ],
-        [
-          "The tools along the top of the picture",
-          "Pan, measure, box, the scale ends, the bull picker, and select. Undo and redo sit beside them."
-        ],
-        [
-          "Detect on a GroupLab sheet",
-          "Runs the detection again, for instance after you have entered the calibre."
-        ],
-        [
-          "Accept and analyse",
-          "When you are satisfied. It saves the session and takes you to the analysis."
-        ]
-      ],
-      "steps": [
-        "Open your photograph or scan, by dragging it onto the window or from the file menu.",
-        "Answer each review item in turn, using the buttons or the keys shown.",
-        "Drag any mark that sits off a hole, and use a bull's number to move a shot to the right bull.",
-        "Mark anything you called as a flyer, so the analysis can say what difference it made.",
-        "Press Accept and analyse."
-      ],
-      "fits": "After you have shot and photographed a sheet from <a href=\"/tour/print/\">printing</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
-      "links": [
-        [
-          "How GroupLab reads a target",
-          "/research/how-grouplab-reads-a-target/"
-        ],
-        [
-          "One hole or two",
-          "/research/one-hole-or-two/"
-        ],
-        [
-          "When a shot is on the wrong bull",
-          "/research/wrong-bull/"
-        ]
-      ]
-    },
-    "analysis": {
-      "name": "The analysis",
-      "blurb": "Every shot on one bull, with mean radius, sigma, extreme spread and CEP, each carrying the range it could really be.",
-      "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is.",
-      "parts": [
-        [
-          "The composite, in the middle",
-          "A dot at each shot's centre, drawn where it landed relative to its own bull. The circle around each dot is the calibre outline, so you can see how much of the group is bullet and how much is dispersion."
-        ],
-        [
-          "The key, top left",
-          "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group centre."
-        ],
-        [
-          "Zero correction",
-          "How far the group centre is from where you aimed, across and up and down, in inches and in your angle unit, with the give or take. Underneath, in plain words, whether that offset is distinguishable from zero at all with this many shots."
-        ],
-        [
-          "Carried to another distance",
-          "The same correction worked out for a different range."
-        ],
-        [
-          "Group",
-          "How many shots you said, how many were detected, and then the measurements. Mean radius is shown largest because it is the one that settles down fastest with few shots."
-        ],
-        [
-          "The intervals under every number",
-          "Mean radius 0.132 inches with an interval of 0.110 to 0.166 is not the same claim as 0.132. Two loads whose intervals overlap have not been told apart."
-        ],
-        [
-          "Across, and up and down",
-          "The same shots seen one axis at a time, which shows a vertical or horizontal string that the round picture hides."
-        ],
-        [
-          "The load block, left",
-          "Which rifle, barrel, load and calibre this sheet was shot with, and where the calibre came from."
-        ],
-        [
-          "Shots, from their own bull",
-          "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold."
-        ],
-        [
-          "Show work, Report and Export",
-          "Show work opens the reasoning behind every figure. Report makes a printable page. Export writes the numbers out."
-        ]
-      ],
-      "steps": [
-        "Read the mean radius and its interval before anything else.",
-        "Check the zero correction, and read the sentence under it saying whether the offset is real at this many shots.",
-        "Look at Across, and up and down for a string in one axis.",
-        "Press Show work on anything you want the reasoning for.",
-        "Report or Export if you want to keep it outside GroupLab."
-      ],
-      "fits": "After <a href=\"/tour/marking/\">marking</a>. The session is saved to <a href=\"/tour/sessions/\">session records</a>, where two can be sent to <a href=\"/tour/compare/\">compare loads</a>.",
-      "links": [
-        [
-          "Mean radius or extreme spread",
-          "/research/mean-radius-or-extreme-spread/"
-        ],
-        [
-          "How many shots",
-          "/research/how-many-shots/"
-        ],
-        [
-          "CEP explained",
-          "/research/cep-explained/"
-        ],
-        [
-          "When to adjust your zero",
-          "/research/when-to-adjust-zero/"
-        ]
-      ]
-    },
-    "analysis-open": {
-      "name": "Showing the work",
-      "blurb": "The same analysis with every explanation opened, so no number on the screen is one you have to take on trust.",
-      "purpose": "Every figure GroupLab shows has a why beside it. This is the analysis with all of them open at once. It exists because a measurement you cannot check is a measurement you cannot argue with, and the whole point of measuring a group is to settle an argument about a load.",
-      "parts": [
-        [
-          "The why links",
-          "Beside every figure on the analysis. Each opens the reasoning for that one number: what was measured, over how many shots, and what the interval means."
-        ],
-        [
-          "Show work, at the top",
-          "Opens all of them together, which is this view."
-        ],
-        [
-          "The review notice",
-          "Where decisions were left unmade in marking, it says how many and offers to take you back to them, because an analysis over unsettled marks is worth less than one over settled ones."
-        ]
-      ],
-      "steps": [
-        "Press Show work on the analysis.",
-        "Read the reasoning beside any number you are about to act on.",
-        "Press it again to fold them away."
-      ],
-      "fits": "The same screen as <a href=\"/tour/analysis/\">the analysis</a>, with everything opened.",
-      "links": [
-        [
-          "How many shots",
-          "/research/how-many-shots/"
-        ]
-      ]
-    },
-    "sessions": {
-      "name": "Session records",
-      "blurb": "Every sheet you have accepted, newest first, ready to open again or to compare.",
-      "purpose": "A session is one sheet, accepted and saved. This is the list of them. It is how you go back to a result weeks later, and how you pick which two loads to put side by side.",
-      "parts": [
-        [
-          "Rifle and Load",
-          "Narrow the list to one rifle or one load. Choosing a single load also shows whether it is getting better or worse over time."
-        ],
-        [
-          "The tick boxes",
-          "Choose two or more sessions to compare."
-        ],
-        [
-          "The columns",
-          "Date, sheet, rifle, load, distance, how many shots, and the mean radius with its interval, so you can see at a glance which sessions are worth comparing without opening any of them."
-        ],
-        [
-          "Compare the chosen",
-          "Takes the ticked sessions to the compare screen."
-        ],
-        [
-          "A row",
-          "Opens that session's analysis again, exactly as it was."
-        ],
-        [
-          "Delete",
-          "Removes one session. It does not touch the image it was made from."
-        ]
-      ],
-      "steps": [
-        "Filter by rifle or load if the list is long.",
-        "Tick the sessions you want to put beside each other.",
-        "Press Compare the chosen, or click a row to reopen its analysis."
-      ],
-      "fits": "Filled by <a href=\"/tour/analysis/\">the analysis</a> every time you accept a sheet. Feeds <a href=\"/tour/compare/\">compare loads</a>.",
-      "links": [
-        [
-          "Keeping a range test log",
-          "/research/range-test-log/"
-        ],
-        [
-          "Pooling groups",
-          "/research/pooling-groups/"
-        ]
-      ]
-    },
-    "compare": {
-      "name": "Compare loads",
-      "blurb": "Two or more sessions side by side, and a plain sentence saying whether the shots actually tell them apart.",
-      "purpose": "This is the screen that answers the question load development is for. It puts the groups beside each other, then draws each measurement as the range it could really be. Where those ranges overlap, the shots have not told the loads apart, and it says so in words rather than leaving you to read it off a chart.",
-      "parts": [
-        [
-          "The plots along the top",
-          "One per load. Dots are the shots about their own bulls, excluded ones left out, the cross is the group centre, the dotted circle CEP 50 and the dashed circle CEP 90."
-        ],
-        [
-          "The figures under each plot",
-          "Sigma, mean radius and extreme spread, each with its 95 percent interval."
-        ],
-        [
-          "Mean radius, with the range each could really be",
-          "A line per load showing the whole interval, with the measured value marked on it. Two lines that overlap are two loads these shots cannot separate."
-        ],
-        [
-          "The sentence underneath",
-          "The conclusion in plain words. Here: every one of these overlaps every other, so these shots do not tell them apart."
-        ],
-        [
-          "Sigma, with the range each could really be",
-          "The same treatment for the other measure of spread."
-        ],
-        [
-          "The header",
-          "How many loads, how many shots in total, and that they are in the order you chose."
-        ]
-      ],
-      "steps": [
-        "Tick two or more sessions in session records and press Compare the chosen.",
-        "Read the sentence under the mean radius bars before you read the numbers.",
-        "If the intervals overlap, shoot more of both loads rather than picking a winner.",
-        "Look at the plots for a difference in shape that the single numbers hide."
-      ],
-      "fits": "From <a href=\"/tour/sessions/\">session records</a>. It is usually where a load development session ends.",
-      "links": [
-        [
-          "Mean radius or extreme spread",
-          "/research/mean-radius-or-extreme-spread/"
-        ],
-        [
-          "How many shots",
-          "/research/how-many-shots/"
-        ],
-        [
-          "Was it the wind or the rifle",
-          "/research/wind-or-rifle/"
-        ]
-      ]
-    },
-    "equipment": {
-      "name": "Equipment",
-      "blurb": "Your rifles, barrels and loads. A sheet names one of each, and everything else takes what it needs from here.",
-      "purpose": "Rather than typing the same rifle into every session, you record it once. Everything is optional except a name: GroupLab will happily measure a group for a rifle it knows nothing else about. The extra fields are there because the ballistics page and the zero correction need them, and it says which one is missing when it cannot work something out.",
-      "parts": [
-        [
-          "Rifles, Barrels, Loads",
-          "Three lists behind three buttons. A session names one of each."
-        ],
-        [
-          "The list on the left",
-          "What you have already, with Add another underneath."
-        ],
-        [
-          "The form on the right",
-          "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; twist, scope and click value matter for the ballistics page."
-        ],
-        [
-          "Notes",
-          "Anything that does not fit a field. It travels with the record."
-        ],
-        [
-          "The line along the bottom",
-          "A reminder that nothing here changes a marking. A sheet names which of these it was shot with, and that is all."
-        ]
-      ],
-      "steps": [
-        "Add a rifle with just its name if that is all you have.",
-        "Fill in sight height and the distance it is zeroed at when you want zero corrections.",
-        "Add the load, with muzzle velocity and ballistic coefficient if you want a dope table.",
-        "Press Save. The record is then offered on every new session."
-      ],
-      "fits": "Used by <a href=\"/tour/marking/\">marking</a>, <a href=\"/tour/analysis/\">the analysis</a> and <a href=\"/tour/ballistics/\">ballistics</a>.",
-      "links": [
-        [
-          "The user guide",
-          "/guides/user-guide/"
-        ]
-      ]
-    },
-    "ballistics": {
-      "name": "Ballistics",
-      "blurb": "A trajectory for one rifle and load, and a dope table at whatever spacing you ask for.",
-      "purpose": "Everything else in GroupLab measures what your rifle did. This works out what it should do. It takes the rifle and load you have already recorded, asks for the air it will be shot in, and gives you drop, wind drift, velocity and energy out to whatever distance you name. Nothing here changes a marking or an analysis.",
-      "parts": [
-        [
-          "Units",
-          "Imperial or metric, for this page."
-        ],
-        [
-          "Rifle and Load",
-          "Chosen from what you recorded on the equipment screen. The fields below fill themselves in from those records."
-        ],
-        [
-          "The rifle",
-          "Sight height, zero distance, barrel twist and its direction. Twist is what lets it work out spin drift."
-        ],
-        [
-          "The load",
-          "Muzzle velocity and its standard deviation, ballistic coefficient, drag model and the atmosphere the coefficient was measured in, bullet weight, length and diameter."
-        ],
-        [
-          "The air",
-          "Temperature, station pressure, altitude and humidity. Leave the pressure empty to take it from the altitude."
-        ],
-        [
-          "Keep these on the records",
-          "Writes what you have typed back to the rifle and load, so you do not type it again."
-        ],
-        [
-          "Dope table",
-          "To what distance, and in what steps. Work out the table fills the chart."
-        ],
-        [
-          "Drop, Wind drift, Velocity, Energy",
-          "Four views of the same trajectory. The chart marks your zero."
-        ]
-      ],
-      "steps": [
-        "Choose the rifle and load.",
-        "Fill in anything the record is missing; the page names the field when it cannot solve.",
-        "Set the air, or leave the pressure empty and give the altitude.",
-        "Set the distance and step, press Work out the table, and switch between drop, drift, velocity and energy."
-      ],
-      "fits": "Takes its inputs from <a href=\"/tour/equipment/\">equipment</a>. It does not feed back into a marking or an analysis.",
-      "links": [
-        [
-          "MOA, mils and inches",
-          "/research/moa-mils-inches/"
-        ],
-        [
-          "When to adjust your zero",
-          "/research/when-to-adjust-zero/"
-        ]
-      ]
-    },
-    "settings": {
-      "name": "Settings",
-      "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
-      "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimetres without touching a single record. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
-      "parts": [
-        [
-          "Units",
-          "Lengths, angles and distances. Displayed only; nothing stored changes."
-        ],
-        [
-          "Theme",
-          "Light, dark, or follow the system."
-        ],
-        [
-          "This build",
-          "The version and the commit it was made from. Copy that line into a bug report and it says exactly which build you were on."
-        ],
-        [
-          "Updates",
-          "Which train to follow and how often to check. A check is one request for one public file, and it sends nothing about you, your rifles or your targets."
-        ],
-        [
-          "Detailed logging",
-          "Off by default. Turn it on before reproducing a problem, then send the report."
-        ],
-        [
-          "Report a problem",
-          "Collects what is useful and lets you look at it before anything leaves your machine."
-        ]
-      ],
-      "steps": [
-        "Set your units once. Everything on every screen follows.",
-        "Choose a theme, or leave it following the system.",
-        "If you are testing, set the train to nightly so you are offered new builds.",
-        "Turn on detailed logging only while chasing a problem."
-      ],
-      "fits": "Reachable from the cog at the bottom of the sidebar on every screen.",
-      "links": [
-        [
-          "How GroupLab updates itself safely",
-          "/research/safe-updates/"
-        ],
-        [
-          "What GroupLab sends from your computer",
-          "/research/what-grouplab-sends/"
-        ],
-        [
-          "Nightly builds",
-          "/research/nightly-builds/"
-        ]
-      ]
-    }
+ "_": [
+  "NOTES-FROM-PLANNING.md entry 146: a tour of the application, one page per screen, at /tour/.",
+  "",
+  "Alan: 'I think there should be a separate page for screenshots of each section of the application that explains",
+  "what is happening instead of just a few screenshots on the main page.' A handful of pictures on the home page",
+  "shows that GroupLab exists. It does not show what using it is like, and that is the question somebody has before",
+  "they download an unknown program.",
+  "",
+  "This file is the list. website/build.py builds the index and one page per screen from it, and refuses to build if",
+  "a screen here has no screenshot or a screenshot has no screen here, so the tour and the weekly screenshot job of",
+  "entry 144 section 4 cannot drift apart quietly.",
+  "",
+  "Every 'part' must name something a reader can actually see in the picture, in the words the screen itself uses.",
+  "No class names, no file paths, and nothing claimed that is not in the build the pictures came from.",
+  "",
+  "Entry 152: what each screen does with a target GroupLab did not print is a field of its own, 'withoutASheet',",
+  "and every screen has one. On several of them the honest answer is 'no difference', and saying so is worth a line.",
+  "docs/WHAT-CAN-BE-MEASURED.md is the one source for what GroupLab can measure and where the scale comes from;",
+  "nothing here states its own version of that."
+ ],
+ "order": [
+  "library",
+  "print",
+  "marking",
+  "analysis",
+  "analysis-open",
+  "sessions",
+  "compare",
+  "equipment",
+  "ballistics",
+  "settings"
+ ],
+ "screens": {
+  "library": {
+   "name": "Target library",
+   "blurb": "The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.",
+   "purpose": "The library is where you choose which sheet to print. Every one of them is designed for a particular job at a particular distance, and the description under each says which. A GroupLab sheet is the easy path, because it carries its own scale, its own orientation and the positions of its bulls in the markers printed around them, so nothing has to be set by hand. Any other target can be measured too, once you have set the scale yourself and marked the shots yourself.",
+   "withoutASheet": "Nothing on this screen applies. The library holds the sheets GroupLab prints; a target from anywhere else is opened on the marking screen instead.",
+   "parts": [
+    [
+     "The list, grouped by what the sheet is for",
+     "Centrefire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
+    ],
+    [
+     "The sheet you have chosen",
+     "Shown whole on the right, with its full description underneath: the bull spacing, the sighter row, the distance it was designed for, and the paper it wants."
+    ],
+    [
+     "Built in and read only",
+     "The twenty that come with GroupLab cannot be edited. Duplicate makes a copy that is yours, to rename and change."
+    ],
+    [
+     "Print",
+     "Opens the print screen with this sheet already chosen."
+    ],
+    [
+     "Design your own sheet",
+     "For a sheet no built-in one covers. Your own sheets appear at the bottom of the list."
+    ],
+    [
+     "Zoom in, Zoom out and Fit",
+     "Move around the preview. This is artwork, not a photograph, so it stays sharp however far you go in."
+    ]
+   ],
+   "steps": [
+    "Find the group that matches what you are doing: load development, rimfire, zeroing.",
+    "Pick a sheet whose distance and paper size match your range and your printer.",
+    "Read the description to check the bull spacing suits the group you expect.",
+    "Press Print to go to the print screen with it loaded."
+   ],
+   "fits": "This is usually where a session starts. From here you go to <a href=\"/tour/print/\">Printing</a>.",
+   "links": [
+    [
+     "Designing a target GroupLab can read",
+     "/research/designing-a-readable-target/"
+    ],
+    [
+     "Choosing the markers",
+     "/research/choosing-the-markers/"
+    ]
+   ]
+  },
+  "print": {
+   "name": "Printing",
+   "blurb": "Prints the sheet at its true size, and tells you when the paper or the printer's margins would spoil it.",
+   "purpose": "A sheet printed smaller than it should be still measures correctly, because the scale comes from the markers and they shrank with everything else. What printing at actual size protects is different: the bulls stay the distance apart the sheet was designed for, the markers stay large enough to be found, and a ruler against the printed edge tells you the scaling was uniform rather than varying across the page, which is the one case nothing later can undo. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.",
+   "withoutASheet": "Nothing on this screen applies. It prints GroupLab's own sheets, at their true size.",
+   "parts": [
+    [
+     "The sheet list on the left",
+     "The same sheets as the library. The one in the shaded row is the one being printed."
+    ],
+    [
+     "The description at the top",
+     "What this sheet is, how many scoring bulls, the grid spacing, the distance it was designed for and the paper it needs."
+    ],
+    [
+     "Print the actual-size instruction",
+     "Adds a line along the bottom edge of each sheet telling whoever prints it to choose Actual size and never Fit. Leave it on unless you are printing for yourself and know the driver."
+    ],
+    [
+     "The warning about drivers",
+     "GroupLab says plainly what it has and has not proved on paper. It asks the viewer for no scaling and cannot set your printer driver, so it tells you what to check rather than promising."
+    ],
+    [
+     "Open to print, Save PDF and Print",
+     "Open to print hands the PDF to your usual viewer, which is the safest route today. Save PDF writes the file. Print goes straight to a driver."
+    ],
+    [
+     "Print a volunteer pack",
+     "The sheet plus one page telling somebody else how to shoot it, photograph it and send it back."
+    ],
+    [
+     "Previous sheet, Next sheet",
+     "For a tiled sheet that spans several pages. The counter says which page of how many."
+    ],
+    [
+     "The preview",
+     "The artwork of the page about to print. Its text is drawn in the PDF rather than in the preview, so the preview shows slightly less than the paper will."
+    ]
+   ],
+   "steps": [
+    "Choose the sheet and check the paper size against what is in your printer.",
+    "Leave the actual-size instruction on if anybody but you will print it.",
+    "Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.",
+    "Measure one printed bull with a ruler against the size in the description before you shoot a whole session on it."
+   ],
+   "fits": "After <a href=\"/tour/library/\">the library</a>. You shoot the sheet, then photograph or scan it and open it in <a href=\"/tour/marking/\">marking</a>.",
+   "links": [
+    [
+     "Printing a target at its true size",
+     "/research/printer-true-size/"
+    ],
+    [
+     "The user guide",
+     "/guides/user-guide/"
+    ]
+   ]
+  },
+  "marking": {
+   "name": "Marking and review",
+   "blurb": "Every hole found and numbered to its bull, with anything uncertain raised for you to settle.",
+   "purpose": "This is where GroupLab shows its working before it measures anything. It finds the holes, works out the scale from the printed markers, and assigns each hole to a bull. Where it is not sure, it says so and asks, rather than quietly guessing and giving you a clean-looking number built on a guess.",
+   "withoutASheet": "The same screen, and the work is yours. You set the scale, by tapping a known length or the corners of a known rectangle, and you place each shot. There is no automatic detection, nothing is assigned to a bull for you, and the review queue stays empty, because it exists to question what the detector decided and nothing decided anything.",
+   "parts": [
+    [
+     "The count at the top",
+     "How many shots are marked and how many need review, so you know how much is left before you can trust the result."
+    ],
+    [
+     "Review, on the right",
+     "One question at a time, in order, each saying what GroupLab thinks and why. The buttons are the answers. Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it."
+    ],
+    [
+     "The numbered list underneath",
+     "Every question still to answer, the current one marked NOW and the next marked NEXT."
+    ],
+    [
+     "The keyboard line",
+     "Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a shot. Faster than the mouse once a sheet has a dozen questions."
+    ],
+    [
+     "Selected shot",
+     "Everything known about the one you have picked: where it is, how wide the hole is, how many holes' worth of ink it contains, and how far it is from anything else. The three chips say whether it was detected, corrected by you, or added by hand."
+    ],
+    [
+     "Called flyer and Exclude",
+     "Marking a shot you called as a flyer, or leaving it out of the measurement. GroupLab keeps it on the sheet and says so in the analysis rather than deleting it."
+    ],
+    [
+     "Scale",
+     "Which markers gave the scale and how many of them were read. This is what makes the measurement real, so it is shown rather than assumed."
+    ],
+    [
+     "The tools along the top of the picture",
+     "Pan, measure, box, the scale ends, the bull picker, and select. Undo and redo sit beside them."
+    ],
+    [
+     "Detect on a GroupLab sheet",
+     "Runs the detection again, for instance after you have entered the calibre."
+    ],
+    [
+     "Accept and analyse",
+     "When you are satisfied. It saves the session and takes you to the analysis."
+    ]
+   ],
+   "steps": [
+    "Open your photograph or scan, by dragging it onto the window or from the file menu.",
+    "Answer each review item in turn, using the buttons or the keys shown.",
+    "Drag any mark that sits off a hole, and use a bull's number to move a shot to the right bull.",
+    "Mark anything you called as a flyer, so the analysis can say what difference it made.",
+    "Press Accept and analyse."
+   ],
+   "fits": "After you have shot and photographed a sheet from <a href=\"/tour/print/\">printing</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
+   "links": [
+    [
+     "How GroupLab reads a target",
+     "/research/how-grouplab-reads-a-target/"
+    ],
+    [
+     "One hole or two",
+     "/research/one-hole-or-two/"
+    ],
+    [
+     "When a shot is on the wrong bull",
+     "/research/wrong-bull/"
+    ]
+   ]
+  },
+  "analysis": {
+   "name": "The analysis",
+   "blurb": "Every shot on one bull, with mean radius, sigma, extreme spread and CEP, each carrying the range it could really be.",
+   "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is.",
+   "withoutASheet": "No difference. Every figure here is worked out from the marks and the scale, and it does not matter whether a detector placed them or you did.",
+   "parts": [
+    [
+     "The composite, in the middle",
+     "A dot at each shot's centre, drawn where it landed relative to its own bull. The circle around each dot is the calibre outline, so you can see how much of the group is bullet and how much is dispersion."
+    ],
+    [
+     "The key, top left",
+     "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group centre."
+    ],
+    [
+     "Zero correction",
+     "How far the group centre is from where you aimed, across and up and down, in inches and in your angle unit, with the give or take. Underneath, in plain words, whether that offset is distinguishable from zero at all with this many shots."
+    ],
+    [
+     "Carried to another distance",
+     "The same correction worked out for a different range."
+    ],
+    [
+     "Group",
+     "How many shots you said, how many were detected, and then the measurements. Mean radius is shown largest because it is the one that settles down fastest with few shots."
+    ],
+    [
+     "The intervals under every number",
+     "Mean radius 0.132 inches with an interval of 0.110 to 0.166 is not the same claim as 0.132. Two loads whose intervals overlap have not been told apart."
+    ],
+    [
+     "Across, and up and down",
+     "The same shots seen one axis at a time, which shows a vertical or horizontal string that the round picture hides."
+    ],
+    [
+     "The load block, left",
+     "Which rifle, barrel, load and calibre this sheet was shot with, and where the calibre came from."
+    ],
+    [
+     "Shots, from their own bull",
+     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold."
+    ],
+    [
+     "Show work, Report and Export",
+     "Show work opens the reasoning behind every figure. Report makes a printable page. Export writes the numbers out."
+    ]
+   ],
+   "steps": [
+    "Read the mean radius and its interval before anything else.",
+    "Check the zero correction, and read the sentence under it saying whether the offset is real at this many shots.",
+    "Look at Across, and up and down for a string in one axis.",
+    "Press Show work on anything you want the reasoning for.",
+    "Report or Export if you want to keep it outside GroupLab."
+   ],
+   "fits": "After <a href=\"/tour/marking/\">marking</a>. The session is saved to <a href=\"/tour/sessions/\">session records</a>, where two can be sent to <a href=\"/tour/compare/\">compare loads</a>.",
+   "links": [
+    [
+     "Mean radius or extreme spread",
+     "/research/mean-radius-or-extreme-spread/"
+    ],
+    [
+     "How many shots",
+     "/research/how-many-shots/"
+    ],
+    [
+     "CEP explained",
+     "/research/cep-explained/"
+    ],
+    [
+     "When to adjust your zero",
+     "/research/when-to-adjust-zero/"
+    ]
+   ]
+  },
+  "analysis-open": {
+   "name": "Showing the work",
+   "blurb": "The same analysis with every explanation opened, so no number on the screen is one you have to take on trust.",
+   "purpose": "Every figure GroupLab shows has a why beside it. This is the analysis with all of them open at once. It exists because a measurement you cannot check is a measurement you cannot argue with, and the whole point of measuring a group is to settle an argument about a load.",
+   "withoutASheet": "No difference. The explanations are of the arithmetic, which is the same either way, except that the scale is named as the one you set.",
+   "parts": [
+    [
+     "The why links",
+     "Beside every figure on the analysis. Each opens the reasoning for that one number: what was measured, over how many shots, and what the interval means."
+    ],
+    [
+     "Show work, at the top",
+     "Opens all of them together, which is this view."
+    ],
+    [
+     "The review notice",
+     "Where decisions were left unmade in marking, it says how many and offers to take you back to them, because an analysis over unsettled marks is worth less than one over settled ones."
+    ]
+   ],
+   "steps": [
+    "Press Show work on the analysis.",
+    "Read the reasoning beside any number you are about to act on.",
+    "Press it again to fold them away."
+   ],
+   "fits": "The same screen as <a href=\"/tour/analysis/\">the analysis</a>, with everything opened.",
+   "links": [
+    [
+     "How many shots",
+     "/research/how-many-shots/"
+    ]
+   ]
+  },
+  "sessions": {
+   "name": "Session records",
+   "blurb": "Every sheet you have accepted, newest first, ready to open again or to compare.",
+   "purpose": "A session is one sheet, accepted and saved. This is the list of them. It is how you go back to a result weeks later, and how you pick which two loads to put side by side.",
+   "withoutASheet": "No difference. A session from a hand-marked target is saved, listed and reopened like any other.",
+   "parts": [
+    [
+     "Rifle and Load",
+     "Narrow the list to one rifle or one load. Choosing a single load also shows whether it is getting better or worse over time."
+    ],
+    [
+     "The tick boxes",
+     "Choose two or more sessions to compare."
+    ],
+    [
+     "The columns",
+     "Date, sheet, rifle, load, distance, how many shots, and the mean radius with its interval, so you can see at a glance which sessions are worth comparing without opening any of them."
+    ],
+    [
+     "Compare the chosen",
+     "Takes the ticked sessions to the compare screen."
+    ],
+    [
+     "A row",
+     "Opens that session's analysis again, exactly as it was."
+    ],
+    [
+     "Delete",
+     "Removes one session. It does not touch the image it was made from."
+    ]
+   ],
+   "steps": [
+    "Filter by rifle or load if the list is long.",
+    "Tick the sessions you want to put beside each other.",
+    "Press Compare the chosen, or click a row to reopen its analysis."
+   ],
+   "fits": "Filled by <a href=\"/tour/analysis/\">the analysis</a> every time you accept a sheet. Feeds <a href=\"/tour/compare/\">compare loads</a>.",
+   "links": [
+    [
+     "Keeping a range test log",
+     "/research/range-test-log/"
+    ],
+    [
+     "Pooling groups",
+     "/research/pooling-groups/"
+    ]
+   ]
+  },
+  "compare": {
+   "name": "Compare loads",
+   "blurb": "Two or more sessions side by side, and a plain sentence saying whether the shots actually tell them apart.",
+   "purpose": "This is the screen that answers the question load development is for. It puts the groups beside each other, then draws each measurement as the range it could really be. Where those ranges overlap, the shots have not told the loads apart, and it says so in words rather than leaving you to read it off a chart.",
+   "withoutASheet": "No difference, with one thing worth knowing: a hand-set scale that assumes a square-on photograph carries that assumption into the comparison, and the figures say so.",
+   "parts": [
+    [
+     "The plots along the top",
+     "One per load. Dots are the shots about their own bulls, excluded ones left out, the cross is the group centre, the dotted circle CEP 50 and the dashed circle CEP 90."
+    ],
+    [
+     "The figures under each plot",
+     "Sigma, mean radius and extreme spread, each with its 95 percent interval."
+    ],
+    [
+     "Mean radius, with the range each could really be",
+     "A line per load showing the whole interval, with the measured value marked on it. Two lines that overlap are two loads these shots cannot separate."
+    ],
+    [
+     "The sentence underneath",
+     "The conclusion in plain words. Here: every one of these overlaps every other, so these shots do not tell them apart."
+    ],
+    [
+     "Sigma, with the range each could really be",
+     "The same treatment for the other measure of spread."
+    ],
+    [
+     "The header",
+     "How many loads, how many shots in total, and that they are in the order you chose."
+    ]
+   ],
+   "steps": [
+    "Tick two or more sessions in session records and press Compare the chosen.",
+    "Read the sentence under the mean radius bars before you read the numbers.",
+    "If the intervals overlap, shoot more of both loads rather than picking a winner.",
+    "Look at the plots for a difference in shape that the single numbers hide."
+   ],
+   "fits": "From <a href=\"/tour/sessions/\">session records</a>. It is usually where a load development session ends.",
+   "links": [
+    [
+     "Mean radius or extreme spread",
+     "/research/mean-radius-or-extreme-spread/"
+    ],
+    [
+     "How many shots",
+     "/research/how-many-shots/"
+    ],
+    [
+     "Was it the wind or the rifle",
+     "/research/wind-or-rifle/"
+    ]
+   ]
+  },
+  "equipment": {
+   "name": "Equipment",
+   "blurb": "Your rifles, barrels and loads. A sheet names one of each, and everything else takes what it needs from here.",
+   "purpose": "Rather than typing the same rifle into every session, you record it once. Everything is optional except a name: GroupLab will happily measure a group for a rifle it knows nothing else about. The extra fields are there because the ballistics page and the zero correction need them, and it says which one is missing when it cannot work something out.",
+   "withoutASheet": "No difference. Nothing here depends on a sheet.",
+   "parts": [
+    [
+     "Rifles, Barrels, Loads",
+     "Three lists behind three buttons. A session names one of each."
+    ],
+    [
+     "The list on the left",
+     "What you have already, with Add another underneath."
+    ],
+    [
+     "The form on the right",
+     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; twist, scope and click value matter for the ballistics page."
+    ],
+    [
+     "Notes",
+     "Anything that does not fit a field. It travels with the record."
+    ],
+    [
+     "The line along the bottom",
+     "A reminder that nothing here changes a marking. A sheet names which of these it was shot with, and that is all."
+    ]
+   ],
+   "steps": [
+    "Add a rifle with just its name if that is all you have.",
+    "Fill in sight height and the distance it is zeroed at when you want zero corrections.",
+    "Add the load, with muzzle velocity and ballistic coefficient if you want a dope table.",
+    "Press Save. The record is then offered on every new session."
+   ],
+   "fits": "Used by <a href=\"/tour/marking/\">marking</a>, <a href=\"/tour/analysis/\">the analysis</a> and <a href=\"/tour/ballistics/\">ballistics</a>.",
+   "links": [
+    [
+     "The user guide",
+     "/guides/user-guide/"
+    ]
+   ]
+  },
+  "ballistics": {
+   "name": "Ballistics",
+   "blurb": "A trajectory for one rifle and load, and a dope table at whatever spacing you ask for.",
+   "purpose": "Everything else in GroupLab measures what your rifle did. This works out what it should do. It takes the rifle and load you have already recorded, asks for the air it will be shot in, and gives you drop, wind drift, velocity and energy out to whatever distance you name. Nothing here changes a marking or an analysis.",
+   "withoutASheet": "No difference. Nothing here depends on a sheet.",
+   "parts": [
+    [
+     "Units",
+     "Imperial or metric, for this page."
+    ],
+    [
+     "Rifle and Load",
+     "Chosen from what you recorded on the equipment screen. The fields below fill themselves in from those records."
+    ],
+    [
+     "The rifle",
+     "Sight height, zero distance, barrel twist and its direction. Twist is what lets it work out spin drift."
+    ],
+    [
+     "The load",
+     "Muzzle velocity and its standard deviation, ballistic coefficient, drag model and the atmosphere the coefficient was measured in, bullet weight, length and diameter."
+    ],
+    [
+     "The air",
+     "Temperature, station pressure, altitude and humidity. Leave the pressure empty to take it from the altitude."
+    ],
+    [
+     "Keep these on the records",
+     "Writes what you have typed back to the rifle and load, so you do not type it again."
+    ],
+    [
+     "Dope table",
+     "To what distance, and in what steps. Work out the table fills the chart."
+    ],
+    [
+     "Drop, Wind drift, Velocity, Energy",
+     "Four views of the same trajectory. The chart marks your zero."
+    ]
+   ],
+   "steps": [
+    "Choose the rifle and load.",
+    "Fill in anything the record is missing; the page names the field when it cannot solve.",
+    "Set the air, or leave the pressure empty and give the altitude.",
+    "Set the distance and step, press Work out the table, and switch between drop, drift, velocity and energy."
+   ],
+   "fits": "Takes its inputs from <a href=\"/tour/equipment/\">equipment</a>. It does not feed back into a marking or an analysis.",
+   "links": [
+    [
+     "MOA, mils and inches",
+     "/research/moa-mils-inches/"
+    ],
+    [
+     "When to adjust your zero",
+     "/research/when-to-adjust-zero/"
+    ]
+   ]
+  },
+  "settings": {
+   "name": "Settings",
+   "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
+   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimetres without touching a single record. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
+   "withoutASheet": "No difference. Nothing here depends on a sheet.",
+   "parts": [
+    [
+     "Units",
+     "Lengths, angles and distances. Displayed only; nothing stored changes."
+    ],
+    [
+     "Theme",
+     "Light, dark, or follow the system."
+    ],
+    [
+     "This build",
+     "The version and the commit it was made from. Copy that line into a bug report and it says exactly which build you were on."
+    ],
+    [
+     "Updates",
+     "Which train to follow and how often to check. A check is one request for one public file, and it sends nothing about you, your rifles or your targets."
+    ],
+    [
+     "Detailed logging",
+     "Off by default. Turn it on before reproducing a problem, then send the report."
+    ],
+    [
+     "Report a problem",
+     "Collects what is useful and lets you look at it before anything leaves your machine."
+    ]
+   ],
+   "steps": [
+    "Set your units once. Everything on every screen follows.",
+    "Choose a theme, or leave it following the system.",
+    "If you are testing, set the train to nightly so you are offered new builds.",
+    "Turn on detailed logging only while chasing a problem."
+   ],
+   "fits": "Reachable from the cog at the bottom of the sidebar on every screen.",
+   "links": [
+    [
+     "How GroupLab updates itself safely",
+     "/research/safe-updates/"
+    ],
+    [
+     "What GroupLab sends from your computer",
+     "/research/what-grouplab-sends/"
+    ],
+    [
+     "Nightly builds",
+     "/research/nightly-builds/"
+    ]
+   ]
   }
+ }
 }

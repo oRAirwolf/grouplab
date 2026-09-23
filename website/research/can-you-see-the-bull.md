@@ -20,9 +20,9 @@ sources:
 
 ## What happened on the range
 
-On 2026-09-20 Alan shot five 25-bull GroupLab sheets at 100 yards with three rifles:
+On 2026-09-20 the developer shot five 25-bull GroupLab sheets at 100 yards with three rifles:
 
-| Rifle | Scope | What he saw |
+| Rifle | Scope | What the developer saw |
 |---|---|---|
 | 6.5 Creedmoor | Vortex Razor HD Gen III 6-36x56 FFP, EBR-7D Mil | Could make out the bull centres |
 | 6 ARC | DNT TheOne 7-35x56 FFP, TOR Mil | Slightly harder |
@@ -71,7 +71,7 @@ We propose that every feature a shooter must see should look at least 3 to 4 arc
 
 ## Nine candidates
 
-Alan took this card to the range on 2026-09-23. Every design except I fits GroupLab's current 1.5 inch bull spacing, so a winner could replace the bull without losing bulls per sheet.
+The developer took this card to the range on 2026-09-23. Every design except I fits GroupLab's current 1.5 inch bull spacing, so a winner could replace the bull without losing bulls per sheet.
 
 ![The aim point test card](/research/can-you-see-the-bull/figures/test-card.png)
 

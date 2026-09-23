@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: the design rules of twenty-two built-in sheets, with the failures that produced each one
 state: published
+no_figure: "The rules are about layout, and the twenty built-in sheets are the worked examples. Every one of them can be printed from the application and looked at, which is better than a picture of one."
 found: The most effective single rule is declaring where printed matter is, so candidates there are dropped rather than classified. A declared rectangle is free and perfectly reliable; classification is neither.
 sure: These are design decisions with reasons, several of them driven by real failures on real targets. Where a rule rests on a measurement, that measurement is linked.
 sources:
@@ -71,3 +72,11 @@ There is no free-form visual designer where you place bulls anywhere you like.
 Every one of the twenty-two built-in sheets is parametric: a grid, a spacing, a ring set, a page size. A form covers that space completely. A canvas for arbitrarily placed bulls is a large piece of software for a case nobody has asked for, and it is revisited the day somebody asks for a layout the form cannot express.
 
 The same canvas would also be the route to tracing a definition over a store-bought target, which is a genuinely useful thing. So the two arrive together or not at all, and the decision is recorded rather than left as an absence somebody has to guess the reason for.
+
+## What this means
+
+**If you design a sheet, declare where the printed matter is.** It is the single rule that does the most work, it costs nothing, and it is perfectly reliable where classification is neither. A design that leaves GroupLab to work out that a ring is not a hole will sometimes be wrong, and it will be wrong silently.
+
+**Do not design for how the sheet looks to you.** Several of these rules exist because a sheet that read perfectly well to a person failed on paper. The bull size is for the shot, the marker spacing is for the photograph, and the sighter pool is separate because mixing it changes the answer rather than the appearance.
+
+**What to stop believing:** that a target is a picture. It is a measuring instrument that happens to be printed, and every choice in it either helps a measurement or costs one.

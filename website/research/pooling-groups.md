@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: two scans of one load, 40 shots
 state: published
+no_figure: "The two ways of pooling are two arithmetics over the same shots, and the article gives both results. A chart would show two numbers that are already written down."
 found: Pooling is not arithmetic, it is a choice. Centre all the shots together and you measure the rifle over a day; centre each sheet on itself and you measure the ammunition. The two numbers differ, and the difference is itself the useful finding.
 sure: The statistics are exact. Which of the two a shooter wants is a judgement, and GroupLab does not yet make it for them, on purpose.
 sources:
@@ -78,3 +79,11 @@ The recommendation on the table is **C, with B as the headline**: a person pooli
 - **Do pool by hand if you need the shots**, and know which of A and B you did. If you measured every shot from one overall centre, you measured A.
 - **Do not compare a pooled forty shot figure with a single twenty shot figure** unless you know both were computed the same way. This is the commonest way to make a load look better or worse than it is.
 - **Do keep the sheets separate in your records.** Two sheets can always be pooled later; a pooled number can never be unpooled.
+
+## What this means
+
+**Decide what you are measuring before you pool.** Centre all the shots together and you are measuring the rifle over a day, including whatever drifted. Centre each sheet on itself and you are measuring the ammunition, with the drift removed. Both are real numbers and they answer different questions.
+
+**The difference between the two is the finding, not an inconvenience.** If they are close, nothing moved between sheets. If they are far apart, something did, and that is worth knowing before you draw any conclusion about the load.
+
+**Do not let software choose for you here, including this one.** GroupLab reports both and names the difference on purpose. A program that silently picked one would be answering a question about your intentions that it cannot know the answer to.

@@ -7,12 +7,12 @@ written: 2026-09-22
 data_date: "2026-09-20"
 samples: "176 holes in nine phone photos of four sheets, compared with 600 dpi scans of the same sheets"
 state: draft
-found: "on Alan's range day, GroupLab placed every photographed sheet to within 0.004 to 0.006 inch using its printed markers, so shot positions from photos are sound. Hole size is another matter: the same holes measured anywhere from 0.90 to 1.45 times the bullet diameter in photos, against a steady 0.92 to 0.95 in scans. The cause was not the camera's resolution or angle. It was the light: low sun puts shadow into and beside each hole, and the camera cannot tell shadow from hole."
+found: "on the developer's range day, GroupLab placed every photographed sheet to within 0.004 to 0.006 inch using its printed markers, so shot positions from photos are sound. Hole size is another matter: the same holes measured anywhere from 0.90 to 1.45 times the bullet diameter in photos, against a steady 0.92 to 0.95 in scans. The cause was not the camera's resolution or angle. It was the light: low sun puts shadow into and beside each hole, and the camera cannot tell shadow from hole."
 sure: "nine photos of four sheets on one afternoon is enough to show the effect clearly and not enough to put a precise number on it. The advice below follows from it; the numbers will firm up as more photos come in."
 data:
   - data/hole-ratio-by-image.csv
 sources:
-  - "GroupLab measurements of Alan Hayes's range sheets, 2026-09-20: question 38 in docs/QUESTIONS-FOR-PLANNING.md and the commit 'Question 38 answered by measuring'. Pixels only; no image metadata was read."
+  - "GroupLab measurements of the developer's range sheets, 2026-09-20: question 38 in docs/QUESTIONS-FOR-PLANNING.md and the commit 'Question 38 answered by measuring'. Pixels only; no image metadata was read."
   - "GroupLab detection pipeline notes (docs/DETECTION-PIPELINE.md)."
 ---
 
@@ -39,7 +39,7 @@ Each dot is the typical (median) hole size on one image, as a multiple of the bu
 
 | Sheet | Bullet | Scan | Photos |
 |---|---|---|---|
-| .22 LR | 0.224 in | 0.76 | 1.07, 1.08 |
+| .22 LR | 0.222 in | 0.77 | 1.08, 1.09 |
 | 6 ARC | 0.243 in | 0.92 | 1.26, 1.33, 1.36 |
 | 6.5 Creedmoor, 25-shot sheet | 0.264 in | 0.95 | 0.90 |
 | 6.5 Creedmoor, 15-shot sheet | 0.264 in | 0.94 | 1.45, 1.41, 1.45 |

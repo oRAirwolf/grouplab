@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: one commercial sheet photographed flat on a bench, fitted against thirty known bull centres, compared with pinned and flat frames from an earlier survey
 state: published
+no_figure: "The subject is a sheet that is not flat, and the evidence is the measured error at each angle, which the article tabulates. The sheets are the developer's range material and are not published under a consent record."
 found: A flat model of a laid-down sheet leaves 0.018 to 0.021 in of error. A bent surface takes that to 0.0063 in. The sheet had a fold across its bottom edge, and fitting for it was worth three times the accuracy.
 sure: One sheet, one camera, one afternoon. The size of the effect is measured; how much a different sheet on a different bench bends is not.
 sources:
@@ -68,7 +69,7 @@ Cropped to the sheet alone, the same detector on the same image found 26 of the 
 
 The assumption that broke is one a scanner always satisfies and a photograph often does not: **the paper fills the frame**. On a scanner the paper is the whole image. On a bench it is a rectangle in the middle of whatever else is there.
 
-## What this means when you photograph a target
+## What this means
 
 - **Light background, or crop to the sheet.** A dark bench mat is the single most effective way to get nothing at all out of a photograph.
 - **A fold costs you more than a wrinkle.** The fitted bend followed the crease. Store targets flat if you can, and if you cannot, expect the fitted correction to be doing real work.

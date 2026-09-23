@@ -21,6 +21,7 @@ Every distinct bullet diameter in Alan's rifle and pistol lists, smallest first.
 | .172 | 4.37 |
 | .204 | 5.18 |
 | .2215 | 5.63 |
+| .222 | 5.64 |
 | .224 | 5.69 |
 | .243 | 6.17 |
 | .257 | 6.53 |

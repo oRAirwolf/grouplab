@@ -2,6 +2,6 @@ measurement,value,source
 Deliberately reduced sheet: detected scale at 600 dpi (by area),0.96200,docs/PHASE0-RESULTS.md measurement 5
 Deliberately reduced sheet: detected scale at 300 dpi (by area),0.96201,docs/PHASE0-RESULTS.md measurement 5
 Pass criterion,ratio 0.962 within 0.001,docs/PHASE0-RESULTS.md
-Alan's printer own scale x,1.0001,docs/PHASE0-RESULTS.md measurement 5
-Alan's printer own scale y,1.0006,docs/PHASE0-RESULTS.md measurement 5
+the developer's printer own scale x,1.0001,docs/PHASE0-RESULTS.md measurement 5
+the developer's printer own scale y,1.0006,docs/PHASE0-RESULTS.md measurement 5
 GroupLab reports a print scale when it differs from 100 percent by more than,0.25 percent,src/GroupLab.Core/Marking/DetectionAdvice.cs ScaleWorthSaying

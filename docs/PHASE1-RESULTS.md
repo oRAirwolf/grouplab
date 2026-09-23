@@ -8193,6 +8193,119 @@ Two new tests:
 - **No page on the built site carries a `<meta http-equiv="refresh">`.** That is the general form of the fault rather than the one instance of it, so the next page that tries to navigate on its own fails the build.
 - **The community page carries the invite as a link and as visible text**, and says "new tab" before it is clicked. A page carrying it only as an `href` would have lost half of what section 1.3 asks for with nothing looking wrong.
 
+## Entry 152: what GroupLab can actually measure, and two published claims that were wrong
+
+Alan, reading the tour, on two statements: *"This is not true. It can read any target as long as a scale is defined, right?"* and *"Doesn't GroupLab correct for sheets being printed at the wrong scale? I know we emphasize the importance of this, but isn't it technically a non issue?"*
+
+He is right on both, and the second was contradicted by `printer-true-size`, a research article published on the same site. A reader who read both learned that the site cannot be trusted rather than which sentence was right.
+
+### Section 2 item 1: what can establish scale
+
+Four things, all of them real today.
+
+| Source | Where | What it needs | What it models |
+| --- | --- | --- | --- |
+| A GroupLab sheet's markers | `SheetReference`, `Marking/ScaleReference.cs` | A sheet GroupLab printed, with enough markers visible | Perspective, the lens, and the sheet's own print scale. The only automatic one |
+| A known rectangle | `RectangleReference`, same file | Four corners tapped in order, and its real size | Perspective exactly. Not a bow in the paper: a homography is planar |
+| A known length | `LengthReference`, same file | Two points tapped, and the distance | One scale over the whole image; declares that it assumes square on and flat |
+| A scan's stated resolution | `Marking/StatedResolutionScale.cs` | A scan, not a photograph, stating a believable resolution | The same as a known length. Offered, never applied by itself |
+
+The fourth refuses a photograph outright, because a photograph's stated resolution describes the file and not the paper, and refuses anything below 100 or above 4800 dpi, since 72 and 96 are what a file gets when the thing that wrote it had nothing to say.
+
+### Section 2 items 2 and 3: a target GroupLab did not print
+
+**It can be measured.** The user sets the scale by tapping a known length or a known rectangle, and marks the shots by hand. Everything downstream then works identically: group size, extreme spread, mean radius, the standard deviations, the comparison between sessions, the units, the export and the report.
+
+**Exactly five things need a GroupLab sheet**, and nothing else does:
+
+1. **The scale**, automatically and with perspective and lens modelled rather than assumed away.
+2. **Finding the holes.** `AutomaticMarking.Run` takes a `TargetDefinition` and cannot run without one, because detection works by rendering the sheet GroupLab printed and differencing the photograph against it. `NeutralDarknessHoleDetector` needs no definition, but it is reached only from the CLI spikes and from no screen, so it is not an answer for a user today.
+3. **Which bull each shot belongs to**, because the sheet is what says where its bulls are.
+4. **The review queue**, which exists to question what the detector decided. Hand-placed marks are not guesses, so it has nothing to question.
+5. **The sheet's identity**, which ties a photograph to the sheet it is of.
+
+### Section 2 item 4: a wrong print scale is corrected, not merely reported
+
+**The measurement is corrected and the figures are right.** The scale comes from the markers, and the markers shrank with everything else, so a sheet printed at 96.2 percent is a smaller sheet measured by its own smaller markers.
+
+The proof is already in the suite and was not written for this entry. `SyntheticScanTests.Test43APrintAt962PercentReportsItsScale` renders the reference sheet at 96.2 percent and puts it through **the same gate as a full size sheet**: every bull centre recovered within 0.001 in. It then additionally asserts the reported scale is 0.962. The research article's "detects this and corrects every figure for it" is exactly right.
+
+The print scale itself is computed by comparing the resolution the markers measure against the resolution the file states, in `ScaleReport`, and exists to say so to the person: `DetectionAdvice.PrintScale` writes "The measurements are corrected for it, and the figures are right; print at actual size, 100 percent, to keep the sheet's own spacing."
+
+So Alan's "technically a non issue" is right for the uniform case, which is the ordinary case.
+
+### Section 2 item 5: what genuinely cannot be recovered
+
+- **Scaling that varies across the page.** The registration fits a planar mapping, which handles a uniform shrink and even different amounts in x and y, because those are still planar. A printer whose scaling drifts across the page is not planar and cannot be undone. It shows as a rising fit residual rather than as a wrong answer that looks right, which is the better of the two failures.
+- **Markers cut off, obscured or too few.** Registration says so and refuses rather than guessing.
+- **A bow in the paper**, on the rectangle and known-length paths.
+- **Perspective, on the known-length path**, where the error varies across the frame and nothing in the figures shows it. That scale declares the assumption beside every result it produces, which is the only honest thing to do about it.
+
+### So the real reason to print at actual size
+
+Not that a shrunk sheet measures wrong, because it does not. Three reasons that are true:
+
+1. **A shrunk sheet is a different sheet.** Its bulls are closer together than the distance it was designed for. That is a fact about the shooting, not the measurement.
+2. **Scaling that varies across the page is the unrecoverable case**, and a ruler against the printed edge is how you tell it from an ordinary uniform shrink.
+3. **Smaller markers register less well**, and below some size stop being found at all.
+
+The instruction printed along the bottom edge and the ruler check both stay. **What was wrong was the reason printed on the sheet itself**: `SceneBuilder.ActualSizeNote` read "Never fit to page: a sheet printed at any other scale measures wrong", on every sheet GroupLab prints. It now reads "a scaled sheet loses the spacing it was designed for". The print screen's own wording said a 97 percent print "measures 3 percent small" and is corrected the same way.
+
+### One source, and the tests
+
+`docs/WHAT-CAN-BE-MEASURED.md` holds all of the above and is published at `/what-can-be-measured/`. The tour pages, the research article and the build all point at it rather than writing their own version, which is what section 5.2 asks for and is the whole reason the two claims came to disagree with an article in the first place.
+
+- **Five phrasings are banned** across `website`, `src`, `docs` and the README, by the mechanism entry 145 used for "nothing in this build changes". The logs and the inbox are excluded, because a log that cannot record what was wrong is not a log. The test caught my own quotation of one of the claims in a docstring on its first run.
+- **Every tour screen carries a `withoutASheet` line** and the site build refuses a screen without one. On six of the ten the answer is "no difference", which is the line most worth having: the question a reader actually has is whether the application is useless to them without a printed sheet.
+
+### A stale record this entry turned up
+
+Changing the printed note changed the printed artwork, which is what gates `scans/phase1/measurements/detection-counts.json`. Comparing then showed **26 of 55 corpus images with different counts**.
+
+**None of it is this entry's work.** The question 40 change from entry 149 was the obvious suspect, so it was measured directly: with the previous detector restored, the same 26 rows differ by the same amounts. The record was last written at entry 101, and entries 130 and 141 changed detection substantially since, each measured and accepted at the time and none of them re-recorded here.
+
+The record is now current. **The gate fires on artwork and not on counts**, which is how four entries of accepted change went unrecorded without anything going red.
+
+## Entry 153: the standard every research article is held to, sections 1 to 4
+
+**In progress.** Sections 1 and 4 are complete. Sections 2 and 3 are complete for **all eighteen published articles** and outstanding for the twelve drafts, which section 6 asks to be brought up before they are offered for review rather than after. Section 5, the hole crops for the photo hole size article, is not started. The inbox file stays until they are.
+
+### Section 1: the developer is not named
+
+Alan: *"For all of the research documents, I would prefer if my name is not mentioned. Just say the author or developer."*
+
+His name is gone from every file under `website/research/`: fourteen articles, two figure scripts and one data file. The sweep also caught the pronouns, which are the half that would have survived a name search: "the developer photographed his targets", "what he saw", "the calibre he actually shot". Those read as a name to anybody who knows whose project this is.
+
+The byline is one form, used everywhere: **"GroupLab project. Researched and written with Claude. Testing and data collection by the developer."** It replaces a per-page sentence that named him. A byline that varies from page to page reads as carelessness about attribution, which is the opposite of what a byline is for.
+
+**Scoped to that directory**, as section 1.4 asks. His name belongs in the licence, in the commit history and in `samples/PROVENANCE.md`, where it sits under a consent record, and that file is untouched. A test that banned it everywhere would fail on work nobody should change and would eventually be switched off, taking the useful half with it.
+
+### Section 4: a rimfire 22 is 0.222, not 0.224
+
+**The pick list did not have it at all.** It held 0.2215, which is 5.45x39, and 0.224, which is the centrefire 22 of 5.56x45 and 22 ARC. So the most commonly shot cartridge in the world had nothing in the list to choose, and the nearest thing was 0.9 percent too wide. Three cartridges within a thousandth of each other is exactly the shape of thing that looks like a duplicate and gets tidied away, so the test says all three are there and says why.
+
+Two articles reported a rimfire ratio computed against 0.224, and the divisor moved, so they were **recomputed rather than edited**: `photo-hole-size` 0.758 to 0.765 scanned and 1.069, 1.077 to 1.079, 1.087 photographed; `photographing-targets` the same figures to two places. Nothing else in either article changes, because the three centrefire sheets are unaffected and the range quoted for the photographs still holds.
+
+**`AutomaticMarking.HoleToCalibre` does not move, and here is why**, which section 4.3 asks for specifically. It is 0.945, pooled over 102 holes on eight frames of **two sheets** with sheet means 0.949 and 0.932. The rimfire sheet in the same session read 0.758, nowhere near either, and the two sheets behind the constant are the 6.5 Creedmoor pair at 0.264. No rimfire measurement is in that constant, so correcting the rimfire diameter cannot change it.
+
+Question 40's arithmetic in `docs/QUESTIONS-FOR-PLANNING.md` uses .224 against .308, which is correct because it is about two centrefire cartridges. A note now says so in place, or the next sweep will helpfully break it.
+
+### Sections 2 and 3: what the numbers mean, and showing the evidence
+
+Alan: *"they should explain how to interpret the numbers or what they mean, rather than just presenting the numbers"* and *"Being able to visualize something is much easier than just reading about it."*
+
+Every published article now ends with **"What this means"**, and it is about what to do differently or stop believing rather than the result again in words. Two articles already had the section under their own headings, "What this means for you" and "What this means when you photograph a target"; those are normalised to the one heading, because a reader who learns where to look should find it in the same place every time.
+
+**The figure rule has an exemption that somebody had to write.** Several of these articles are about a build pipeline, a list of network calls or what is removed from a file, and there is genuinely nothing to photograph. Rather than a silent pass, the front matter carries `no_figure` with the reason, the page prints it where the picture would be, and the build fails on an article that has neither. A gap where a reader expects a figure reads as something forgotten; a line saying why reads as a decision.
+
+**Applied in the batches section 6 asks for.** `STANDARD_153` in `website/build.py` names the articles brought up to the standard, and the build fails if one of them loses its section or its caption. An article not yet on the list is printed at the end of the build as still to come, and that count has to reach zero. It is 13 lines over 12 drafts today, from 30 when the check was first run.
+
+### Not done
+
+- **Section 5**, the three hole crops with measurements drawn on them for `photo-hole-size`. It needs real material and image work, and it is the section most worth doing properly rather than quickly.
+- **Section 3 for the drafts**, which section 6 puts before they are offered for review.
+- **Section 3.1 and 3.2 for the published articles that carry `no_figure`.** Each exemption is honest today, and several of them would be better served by a figure that does not exist yet: the six steps of reading a target, the two ways of pooling. The exemption is a statement that nothing exists to show, not that nothing could.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

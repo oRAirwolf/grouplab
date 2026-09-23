@@ -21,7 +21,7 @@ public enum DataBlockMode
 /// Print-time choices, none of which is part of the definition. <see cref="Scale"/> exists to produce the deliberately
 /// mis-scaled print of DESIGN.md section 21's Phase 0 gate, and is 1 for every real print. <see cref="PrintNote"/> is a line of
 /// text along the bottom edge, NOTES-FROM-PLANNING.md entry 25 section 2, so that a sheet printed at the wrong scale carries the
-/// instruction it ignored; without it a page is exactly what Phase 0 drew.
+/// instruction it ignored, and a ruler against the printed edge says whether the scaling was uniform; without it a page is exactly what Phase 0 drew.
 /// </summary>
 public sealed record RenderOptions(
     DataBlockMode Mode = DataBlockMode.Blank,
@@ -46,7 +46,7 @@ public static class SceneBuilder
     public const int InstanceModuleSize = 4;
 
     /// <summary>The print instruction the print screen puts on every sheet, in plain words.</summary>
-    public const string ActualSizeNote = "Print at actual size, 100 percent. Never fit to page: a sheet printed at any other scale measures wrong.";
+    public const string ActualSizeNote = "Print at actual size, 100 percent. Never fit to page: a scaled sheet loses the spacing it was designed for.";
 
     /// <summary>
     /// The print note's baseline, 45 dmm above the bottom edge, and its largest size, 18 dmm, both in half-dmm. On every built-in sheet

@@ -15,6 +15,18 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 152: say plainly what GroupLab can measure, because two published claims are wrong
+
+**Status: actioned 2026-09-23**, all five sections. Both claims were wrong, and the research article was right.
+
+- **Section 2, the measurement, and the answers are in `docs/PHASE1-RESULTS.md` with the file that settles each one.** There are four ways to get a scale, not one. Any target can be measured once the scale is set. A sheet printed at 96.2 percent measures correctly and is put through the same gate as a full size one. The print scale is computed to tell the person their printer shrank the sheet, not to correct anything, because the markers shrank with the sheet and the correction is already in the mapping.
+- **Section 3.** `docs/WHAT-CAN-BE-MEASURED.md` is the one source. Both tour paragraphs are rewritten from it, and **the sweep found the same claim printed on every sheet GroupLab prints**: `SceneBuilder.ActualSizeNote` said "a sheet printed at any other scale measures wrong". That is now "a scaled sheet loses the spacing it was designed for", which is the true reason. The print screen's own wording was wrong the same way and is corrected. The ruler check and the printed instruction stay, as the entry asks.
+- **Section 4.** Every tour screen carries a `withoutASheet` line, and the build refuses a screen without one. On six of the ten the honest answer is "no difference", and saying so is the point: the question a reader has is whether the application is useless to them without a printed sheet, and it is not.
+- **Section 5.** Five phrasings banned across `website`, `src`, `docs` and the README, by the mechanism entry 145 used. One source, pointed at by the tour, the article and the build. The test caught my own quotation of the wrong claim in a docstring, which is the mechanism working.
+- **A finding this entry turned up and did not go looking for: the corpus detection-counts record has been stale since entry 101.** Changing the printed note changed the artwork fingerprint, which is what gates that record, and the comparison then showed 26 of 55 images differing. **None of it is this entry's change**: with the old detector restored the same 26 rows differ, so the drift is entries 130 and 141's accepted work, never re-recorded. The record is now current. The gate fires on artwork and not on counts, which is why four entries of change went unrecorded without anything going red.
+
+---
+
 # 2026-09-23, entry 151: the Community link goes to a page, not straight out to Discord
 
 **Status: actioned 2026-09-23**, all four sections, with one part of section 1.2 standing on a request rather than on a guess.

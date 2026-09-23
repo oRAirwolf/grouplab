@@ -1,4 +1,4 @@
-"""Figures for 'Scanner traps'. Scan-bed geometry from Alan's range-day scan 2; synthetic hole image (seed 2026) for the settings illustration."""
+"""Figures for 'Scanner traps'. Scan-bed geometry from the developer's range-day scan 2; synthetic hole image (seed 2026) for the settings illustration."""
 import sys, os, csv, io
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 import numpy as np

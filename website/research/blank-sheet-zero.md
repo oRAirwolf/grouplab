@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: one blank sheet shot at a marker dot and scanned at 600 dpi, checked against the scanner's stated resolution
 state: published
+no_figure: "The sheet is blank. A photograph of blank paper shows nothing, and the number the article is about is written inside the file rather than visible on the page."
 found: A scan states its own resolution, and on a blank sheet that is a complete scale with no ruler needed. A photograph's stated resolution describes the file and not the paper, so it is never offered one.
 sure: One sheet, one scanner. The principle is sound because the number is written in the file by the device that made it; what is not established is how often a scanner lies about it.
 sources:
@@ -24,7 +25,7 @@ Every figure depends on getting that right. A scale that is out by a factor of t
 
 ## What a scanner already knows
 
-A flatbed scanner knows its own resolution, and it writes it into the file. A PNG carries a `pHYs` chunk; one of Alan's blank sheets carries 23622 pixels per metre, which is exactly 600 dots per inch.
+A flatbed scanner knows its own resolution, and it writes it into the file. A PNG carries a `pHYs` chunk; one of the developer's blank sheets carries 23622 pixels per metre, which is exactly 600 dots per inch.
 
 If a scan is 600 dpi, then 600 pixels is one inch of paper. That is a complete scale, from the device that made the image, with no ruler in the picture and nothing for you to measure.
 
@@ -55,3 +56,11 @@ If you photograph it, do measure something real. A photograph will not tell you 
 ## The honest limit
 
 This rests on one sheet and one scanner. The principle is solid, because the resolution is written by the device that did the scanning rather than inferred from the picture. What is not established here is how often a scanner writes a resolution it did not actually use, which is the failure mode that would matter, and which is exactly why GroupLab shows you the number instead of quietly using it.
+
+## What this means
+
+**Scan a blank sheet rather than photographing one.** A scan brings its own ruler and a photograph does not, and no amount of care with the camera replaces it. This is the one case where the medium decides the answer rather than the technique.
+
+**Look at the number before you accept it.** GroupLab shows you the resolution it found and waits. That is not politeness: a scale decides what every figure on the sheet means, and a wrong one produces a page of plausible numbers with nothing on screen looking unusual. Reading 600 and pressing accept takes a second.
+
+**If you have no scanner, you have not lost anything you had.** Measuring a known distance by hand is what this replaces, and it is still there. What you lose is the convenience, not the measurement.

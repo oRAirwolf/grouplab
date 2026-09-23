@@ -1,4 +1,4 @@
-"""Figures for 'How to photograph a target so it measures well'. Data: GroupLab measurements of Alan Hayes's 2026-09-20 range
+"""Figures for 'How to photograph a target so it measures well'. Data: GroupLab measurements of the developer's 2026-09-20 range
 sheets (question 38, docs/QUESTIONS-FOR-PLANNING.md), pixels only, no image metadata read."""
 import sys, os, csv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
