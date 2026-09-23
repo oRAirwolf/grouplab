@@ -383,7 +383,7 @@ def page_home() -> str:
 <div class="stack">
 <p class="eyebrow amber">Help prove it</p>
 <h2>Shoot a target for GroupLab.</h2>
-<p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, and photograph it before you take it down: about ten minutes on top of the shooting. Keep the files until the upload page opens here, which is being built now.</p>
+<p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, photograph it before you take it down: about ten minutes on top of the shooting. {"Sending them takes no account, no email address and no follow up." if limits().get("open") else "The page for sending them is built and waiting on one install on the server; keep the files meanwhile."}</p>
 </div>
 <div class="actions col">
 {btn("Get the donor pack", "/shoot-a-target/", True, "Instructions and two targets · PDF")}
@@ -482,18 +482,151 @@ def page_shoot() -> str:
 <div class="stack">
 <ol class="step-list" start="4">
 {st("4", "Photograph it before you take it down", "Four photographs on your phone's main camera at 1x: not the wide lens, not zoomed, no flash, your shadow off the sheet. A target still hanging where it was shot is the material the project most needs.")}
-{st("5", "Keep the files as they came off the camera", "A 600 dpi flatbed scan too, if you have one. Do not crop them and do not send them through a messaging app, which shrinks them. Uploading opens here shortly; until then the originals are the thing to hold on to.")}
+{st("5", "Send them as they came off the camera", "A 600 dpi flatbed scan too, if you have one. Do not crop them and do not send them through a messaging app, which shrinks them.", "Send your photos, below" if limits().get("open") else "Sending opens here shortly")}
 </ol>
 <div class="callout small-callout">
 <div class="stack">
-<h2 class="h3">Sending them, shortly</h2>
-<p class="text">The upload page is being built here on grouplab.org, with no account, no email and no follow up, and terms shown before you submit anything. It is not open yet, so keep your files and check back.</p>
+<h2 class="h3">Send them</h2>
+<p class="text">No account, no email address and no follow up. Every photo is rebuilt from its pixels on the server, so the camera facts the measurements need come across and the location and the date and time cannot.</p>
+{"" if limits().get("open") else '<p class="text">The page is built and waiting on one install on the server. Until then, keep your files as they came off the camera.</p>'}
 </div>
+{f'<div class="actions col">{btn("Send your target photos", "/shoot-a-target/send/", True, "JPEG, PNG, HEIC or TIFF")}</div>' if limits().get("open") else ""}
 </div>
 </div>
 </section>
 """
     return shell("/shoot-a-target/", "Shoot a target", "Print a GroupLab target, shoot it, photograph it and send it, to help prove the software measures correctly. Donor pack PDFs and instructions.", body, "Shoot a target")
+
+
+# ---------------------------------------------------------------- the upload page, entry 129
+
+
+def limits() -> dict:
+    """The one place the page and the receiver both take their limits from, entry 129 section 1.2."""
+    return json.loads(need(REPO / "website" / "api" / "limits.json").read_text(encoding="utf-8"))
+
+
+def limit_problems() -> list:
+    """The page's limits and the receiver's are the same numbers, entry 129 section 1.2.
+
+    The page is built by Python and the receiver is PHP, and neither can read the other's constants. A page that
+    says 30 MB while the receiver refuses at 20 wastes somebody's upload and tells them nothing useful about why,
+    so the build reads the receiver's own constants back and holds them to this file.
+    """
+    found = []
+    limit = limits()
+    php = need(REPO / "website" / "api" / "upload.php").read_text(encoding="utf-8")
+
+    def constant(name: str) -> str | None:
+        m = re.search(r"const\s+" + name + r"\s*=\s*([^;]+);", php)
+        return m.group(1).strip() if m else None
+
+    pairs = [
+        ("MAX_FILES", str(limit["maxFiles"])),
+        ("MAX_FILE_BYTES", f'{limit["maxFileMegabytes"]} * 1024 * 1024'),
+        ("MAX_SUBMISSION_BYTES", f'{limit["maxSubmissionMegabytes"]} * 1024 * 1024'),
+    ]
+    for name, expected in pairs:
+        got = constant(name)
+        if got is None:
+            found.append(f"website/api/upload.php: no {name} constant, so the page's limits cannot be checked against it")
+        elif not got.startswith(expected):
+            found.append(f"website/api/upload.php: {name} is {got!r} and limits.json says {expected!r}")
+
+    if f"const CONSENT_VERSION = '{limit['consentVersion']}'" not in php:
+        found.append(f"website/api/upload.php: the consent version is not {limit['consentVersion']}")
+    if limit["consentText"] not in php:
+        found.append("website/api/upload.php: the consent text differs from limits.json, and the page shows one while the receiver records the other")
+
+    # Entry 129, Alan's decision 6: no PDF. The refusal has to be in the receiver, not only on the page.
+    if "'application/pdf'" in php.split("const ACCEPTED")[-1].split("];")[0]:
+        found.append("website/api/upload.php: PDF is in ACCEPTED, and Alan's decision 6 refuses it")
+
+    return found
+
+
+def page_send() -> str:
+    limit = limits()
+    types = ", ".join(limit["types"][:-1]) + " and " + limit["types"][-1]
+
+    def ask(name: str, label: str, options: list | None = None, placeholder: str = "", maxlength: int = 60, area: bool = False) -> str:
+        if options is not None:
+            choices = "".join(f"<option>{esc(o)}</option>" for o in options)
+            field = f'<select id="{name}" name="{name}"><option value="">No answer</option>{choices}</select>'
+        elif area:
+            field = f'<textarea id="{name}" name="{name}" rows="3" maxlength="{maxlength}" placeholder="{esc(placeholder)}"></textarea>'
+        else:
+            field = f'<input type="text" id="{name}" name="{name}" maxlength="{maxlength}" placeholder="{esc(placeholder)}" autocomplete="off">'
+        return f'<div class="ask"><label for="{name}">{esc(label)}</label>{field}</div>'
+
+    body = f"""
+<section class="wrap page-head">
+<div class="stack">
+<p class="eyebrow"><a class="plain" href="/shoot-a-target/">Shoot a target</a> &rsaquo; Send your photos</p>
+<h1>Send your target photos.</h1>
+<p class="lead">No account, no email address, no follow up. Everything on this page is optional except the consent box.</p>
+</div>
+</section>
+
+<section class="wrap section top">
+<div class="panel pad stack send-terms">
+<h2 class="h3">What happens to them</h2>
+<ul>
+<li>They go straight into a holding area on the server that is not reachable from the web.</li>
+<li>Every photo is then <strong>rebuilt from its pixels</strong> and the file you sent is deleted. Your camera's make, model, lens, focal length, exposure and resolution are carried across, because the measurements need them. <strong>Location, GPS and the date and time are not, and cannot be</strong>, because the new file is built from pixels and a short list of numbers rather than copied.</li>
+<li>They are pulled onto one machine, measured, and then deleted from the server.</li>
+<li>If you tick the box below, they are used for testing only and never published.</li>
+</ul>
+</div>
+</section>
+
+<section class="wrap section last">
+<form id="send" class="send-form stack" method="post" action="/api/upload.php" enctype="multipart/form-data">
+<noscript><p class="small warn">Sending needs JavaScript, because of the check that proves you are a person. Reading this page does not.</p></noscript>
+
+<h2 class="h3">The photos</h2>
+<p class="small faint">Up to {limit["maxFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSubmissionMegabytes"]} MB in total. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
+<input type="file" id="photos" name="photos" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
+
+<h2 class="h3">About the target</h2>
+<p class="small faint">Answer what you can be bothered to answer and leave the rest. Every question here is one that cannot be read off the image.</p>
+<div class="asks">
+{ask("backing", "What was the target attached to?", ["Cardboard", "OSB or plywood", "Corrugated plastic", "Steel frame", "Paper backer", "Nothing behind it", "Other or not sure"])}
+{ask("attachment", "How was it attached?", ["Staples", "Tape", "Clips or clothespins", "Glued or stuck on", "Not attached, it was lying flat", "Other or not sure"])}
+{ask("shot_distance", "What distance did you shoot it at?", placeholder="100 yards", maxlength=40)}
+{ask("caliber", "Bullet diameter?", placeholder="0.264 in, or 6.5 mm", maxlength=40)}
+</div>
+<p class="small faint">The diameter, not the cartridge name, because that is what measures a hole: a 6.5 Creedmoor and a 6.5x55 both put a 0.264 in bullet through the paper. If you only know the cartridge, write that instead and it will be worked out.</p>
+<div class="asks">
+{ask("notes", "Anything else worth knowing?", placeholder="A pulled shot, a wrong bull, the wind", maxlength=300, area=True)}
+{ask("credit_name", "Name or handle, if you want credit.", placeholder="Leave blank to stay anonymous", maxlength=60)}
+</div>
+
+<div class="hp" aria-hidden="true">
+<label for="contact_reason">Do not fill this in</label>
+<input type="text" id="contact_reason" name="contact_reason" tabindex="-1" autocomplete="off">
+</div>
+
+<div class="panel pad stack tight consent">
+<label class="tick"><input type="checkbox" id="consent" name="consent" value="1" required><span>{esc(limit["consentText"])}</span></label>
+<label class="tick"><input type="checkbox" id="exclude_public" name="exclude_public" value="1"><span>Do not include my photos in the public data set. Use them for testing only.</span></label>
+</div>
+
+<div class="cf-turnstile" data-sitekey="{esc(limit["turnstileSiteKey"])}"></div>
+
+<div class="actions">
+<button type="submit" class="btn btn-primary btn-big" id="sendButton"><span>Send the photos</span></button>
+</div>
+<p id="sendStatus" class="small" role="status" aria-live="polite"></p>
+</form>
+</section>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="/assets/js/send.js" defer></script>
+"""
+    return shell("/shoot-a-target/send/", "Send your target photos",
+                 "Send photographs of a target you have shot, to help prove GroupLab measures correctly. No account and no email address.",
+                 body, "Shoot a target")
 
 
 def page_support() -> str:
@@ -1412,6 +1545,22 @@ p.text,.text p,.text{color:var(--text)}
 .plate-number{font-size:30px;color:var(--dim);line-height:1}
 .research-box{border-left:3px solid var(--accent);margin:20px 0 28px}
 
+/* Entry 129: the send form. Plain, wide fields, and a honeypot nobody sees. */
+.send-form{max-width:720px}
+.send-terms ul{margin:4px 0 0;padding-left:20px}
+.send-terms li{margin:0 0 8px}
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:8px 0 4px}
+.ask{display:flex;flex-direction:column;gap:6px}
+.ask label{font-size:14px;color:var(--dim)}
+.ask input,.ask select,.ask textarea{font:inherit;font-size:15px;padding:10px 12px;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:4px;width:100%}
+.ask textarea{resize:vertical}
+.send-form input[type=file]{font:inherit;font-size:15px;padding:12px;color:var(--text);background:var(--panel);border:1px dashed var(--line2);border-radius:4px;width:100%}
+.consent{margin:8px 0}
+.tick{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.5}
+.tick input{margin-top:3px;flex:0 0 auto}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.cf-turnstile{margin:8px 0}
+
 /* Entry 146: the tour. The picture carries each page, so it goes full width of the column with a little air
    under it, and the numbered list beneath is what a reader matches against it. */
 .tour-shot{display:block;margin:8px 0 6px}
@@ -1584,6 +1733,66 @@ def link_problems() -> list[str]:
 # Entry 129 section 3.3: PHP runs only for the receivers, and nginx is configured to refuse a .php
 # request anywhere else. This is the other half of that: the built site may not contain a .php file
 # that is not a receiver, so there is nothing else for a misconfiguration to execute.
+# ---------------------------------------------------------------- the send form's script
+
+
+# Entry 129 section 1.3: the page reads without JavaScript and says plainly that sending needs it, because the
+# check that proves you are a person does. This posts the form rather than letting the browser navigate, so the
+# result can be said on the page instead of as a page of JSON.
+SEND_JS = """(function () {
+  var form = document.getElementById('send');
+  if (!form) { return; }
+  var button = document.getElementById('sendButton');
+  var status = document.getElementById('sendStatus');
+
+  function say(text, bad) {
+    status.textContent = text;
+    status.className = 'small ' + (bad ? 'warn' : 'teal');
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var photos = document.getElementById('photos');
+    if (!photos.files || photos.files.length === 0) {
+      say('Choose at least one photo first.', true);
+      return;
+    }
+    if (!document.getElementById('consent').checked) {
+      say('Please read and tick the consent box. It is the one thing that is not optional.', true);
+      document.getElementById('consent').focus();
+      return;
+    }
+
+    button.disabled = true;
+    say('Sending. Large photos over a phone connection can take a few minutes, so please leave this page open.', false);
+
+    var data = new FormData(form);
+    fetch(form.action, { method: 'POST', body: data })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'The server answered with something this page could not read.' }; }); })
+      .then(function (r) {
+        if (r && r.ok) {
+          form.innerHTML = '<h2 class=\"h3\">Thank you.</h2>' +
+            '<p>Your photos are in. Reference <span class=\"mono\">' + (r.id || '') + '</span>, which you do not need to keep.</p>' +
+            '<p class=\"small faint\">Nothing else happens now: no email, no account, no follow up. ' +
+            '<a href=\"/shoot-a-target/\">Back to shooting a target</a>.</p>';
+          form.scrollIntoView({ block: 'start' });
+          return;
+        }
+        button.disabled = false;
+        say((r && r.error) || 'That did not go through. Please try again.', true);
+        if (window.turnstile) { window.turnstile.reset(); }
+      })
+      .catch(function () {
+        button.disabled = false;
+        say('That did not go through, and it looks like the connection dropped. Your photos are still on your phone; please try again.', true);
+        if (window.turnstile) { window.turnstile.reset(); }
+      });
+  });
+})();
+"""
+
+
 RECEIVERS = ["api/upload.php", "api/crash-report.php"]
 
 
@@ -1615,6 +1824,14 @@ def main() -> None:
     write("index.html", page_home())
     write("download/index.html", page_download())
     write("shoot-a-target/index.html", page_shoot())
+    # Entry 129: the page and the receiver go up together or not at all. A form posting to a path the server does
+    # not serve yet takes somebody's photographs, spends their upload and tells them nothing useful.
+    if limits().get("open"):
+        write("shoot-a-target/send/index.html", page_send())
+        # Section 3.4: the receivers are part of the site build, so they are versioned here, signed and delivered
+        # by the same pipeline as the pages rather than copied to the server by hand.
+        copy(need(REPO / "website" / "api" / "upload.php"), "api/upload.php")
+        write("assets/js/send.js", SEND_JS)
     write("support/index.html", page_support())
     write("guides/index.html", page_guides_index())
     for g in GUIDES:
@@ -1657,7 +1874,7 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
-    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems()
+    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems()
     problems += link_problems()
     problems += php_problems()
     if problems:

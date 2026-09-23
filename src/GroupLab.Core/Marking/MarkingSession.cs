@@ -520,7 +520,7 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null, (MarkSize?)null))], summary, null, _ => null);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null, (MarkSize?)null))], summary, null, (_, _) => null);
     }
 
     /// <summary>
@@ -532,25 +532,148 @@ public sealed class MarkingSession
     {
         ArgumentNullException.ThrowIfNull(detections);
         ArgumentNullException.ThrowIfNull(rejected);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize, d.Size))], summary, detection, firstId => assignment is null
+        // The surviving detections are the ones no correction already speaks for (entry 143, question 42), so the details are built from
+        // those rather than from every detection: an id here has to be the id the shot was actually given.
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize, d.Size))], summary, detection, (firstId, surviving) => assignment is null
             ? null
-            : new AssignmentReview(assignment.Method, assignment.Reason, [.. detections.Select((d, i) => AssignmentReview.Detail(firstId + i, d.Assignment, d.Assignment.Bull))], [.. rejected], assignment.Method));
+            : new AssignmentReview(assignment.Method, assignment.Reason,
+                [.. surviving.Select((at, i) => AssignmentReview.Detail(firstId + i, detections[at].Assignment, detections[at].Assignment.Bull))],
+                [.. rejected], assignment.Method));
     }
 
-    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections, string summary, DetectionRecord? detection, Func<int, AssignmentReview?> review)
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections, string summary, DetectionRecord? detection, Func<int, IReadOnlyList<int>, AssignmentReview?> review)
     {
         int id = State.NextId;
         var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection };
-        var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual).Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s).ToList();
+
+        // Entry 143, question 42: a correction survives a second detection. Only shots placed by hand used to be kept, so every hole a
+        // person had moved or reassigned went back to where the detector put it, with nothing saying so.
+        var kept = State.Shots
+            .Where(s => s.Provenance is ShotProvenance.Manual or ShotProvenance.Corrected)
+            .Select(s => s.Bull is null ? s with { Bull = NearestBull(registered, s.Image) } : s)
+            .ToList();
+
+        // The person's position and their chosen bull win over the detector's, so a detection they have already corrected is dropped rather
+        // than added beside it. One hole never becomes two marks.
+        var superseded = Superseded(scale, kept, detections, HoleWidth(detection, detections)).ToHashSet();
+        var surviving = Enumerable.Range(0, detections.Count).Where(i => !superseded.Contains(i)).ToList();
+
         int firstId = id;
-        var detected = detections.Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter, Oversize: d.Oversize, Size: d.Size)).ToList();
+        var detected = surviving.Select(i => detections[i])
+            .Select(d => new MarkedShot(id++, d.Image, ShotProvenance.Automatic, Bull: d.Bull, MeasuredDiameterInches: d.Diameter, Oversize: d.Oversize, Size: d.Size))
+            .ToList();
+
         Apply(Rematch(registered with
         {
             Shots = [.. kept, .. detected],
             NextId = id,
-            Assignment = review(firstId),
+            Assignment = review(firstId, surviving),
         }));
     }
+
+    /// <summary>
+    /// How wide one hole is on this sheet, in inches, or null where nothing here can say.
+    /// <para>
+    /// Entry 143, question 42: the sheet's own size reference where it exists, and the stated calibre where it does not.
+    /// <see cref="DetectionRecord.HoleSizeInches"/> is already that choice made, entry 141 section 4, so this reads it rather than making
+    /// it again. The measured marks are the last resort, for the older call that carries no record.
+    /// </para>
+    /// </summary>
+    private static double? HoleWidth(DetectionRecord? detection, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections)
+    {
+        if (detection?.HoleSizeInches is > 0 and var stated)
+        {
+            return stated;
+        }
+
+        if (detection?.Calibre?.DiameterInches is > 0 and var calibre)
+        {
+            return calibre;
+        }
+
+        var measured = detections.Select(d => d.Diameter).OfType<double>().Where(d => d > 0).Order().ToList();
+        if (measured.Count > 0)
+        {
+            return measured[measured.Count / 2];
+        }
+
+        // Nothing here can say, which is the older call that carries no record and no measurements. The smallest hole any bullet makes is
+        // the answer that cannot be too generous: a correction further than that from a fresh detection is a different mark on any sheet,
+        // whatever was shot at it. Returning nothing instead would leave one hole carrying two marks, which is worse than either mistake
+        // this rule can make.
+        return SmallestHoleInches;
+    }
+
+    /// <summary>
+    /// The smallest hole any bullet makes, in inches, as the detector uses it. It is the last-resort width for matching a correction to a
+    /// fresh detection where the sheet has no size reference and no calibre was named.
+    /// </summary>
+    private const double SmallestHoleInches = 0.16;
+
+    /// <summary>
+    /// Which of the fresh detections are the same holes as shots the person has already corrected, by index.
+    /// <para>
+    /// Entry 143, question 42: nearest within one hole's width, so a correction that moved a mark onto the hole beside it is recognised as
+    /// that hole, and a correction moved further than a hole's width survives on its own because nothing fresh is the same mark. Each
+    /// detection can answer for one corrected shot only, or two corrections a person made close together would both swallow it.
+    /// </para>
+    /// <para>
+    /// A shot placed by hand is never matched. It was not the detector's to begin with, and the detector finding a hole there now is the
+    /// detector finding a hole the person already knew about, which is the case where two marks for one hole would be wrong in the other
+    /// direction: the person's mark is the record and the fresh one is the duplicate.
+    /// </para>
+    /// </summary>
+    private static List<int> Superseded(ScaleReference scale, IReadOnlyList<MarkedShot> kept, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> fresh, double? holeInches)
+    {
+        var gone = new List<int>();
+        if (holeInches is not > 0 || fresh.Count == 0)
+        {
+            return gone;
+        }
+
+        var taken = new bool[fresh.Count];
+        var at = fresh.Select(d => scale.ToTarget(d.Image)).ToList();
+
+        foreach (var shot in kept.Where(s => s.Provenance == ShotProvenance.Corrected))
+        {
+            var here = scale.ToTarget(shot.Image);
+            int best = -1;
+            double closest = holeInches.Value;
+
+            for (int i = 0; i < fresh.Count; i++)
+            {
+                if (taken[i])
+                {
+                    continue;
+                }
+
+                double dx = at[i].X - here.X, dy = at[i].Y - here.Y;
+                double away = Math.Sqrt((dx * dx) + (dy * dy));
+                if (away <= closest)
+                {
+                    closest = away;
+                    best = i;
+                }
+            }
+
+            if (best >= 0)
+            {
+                taken[best] = true;
+                gone.Add(best);
+            }
+        }
+
+        return gone;
+    }
+
+    /// <summary>
+    /// How many hand corrections a second detection would carry over, so the button can say it before it is pressed.
+    /// <para>
+    /// Entry 143, question 42: "make the button honest". A person who has spent ten minutes settling a sheet is entitled to know that
+    /// pressing this keeps that work, and a count is the shortest way to say it.
+    /// </para>
+    /// </summary>
+    public int CorrectionsThatWouldBeKept() => State.Shots.Count(s => s.Provenance is ShotProvenance.Manual or ShotProvenance.Corrected);
 
     /// <summary>
     /// The matching rule of NOTES-FROM-PLANNING.md entry 70 section 3, applied after every change to the shots.

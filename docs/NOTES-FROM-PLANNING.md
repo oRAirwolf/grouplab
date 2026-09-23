@@ -15,6 +15,90 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 143: answers to questions 41 to 46, and the review of research batch 1
+
+**Status: actioned 2026-09-23**, sections 1 and 2 in section 3's order. **Question 43 is answered and deliberately not built**, which the entry allows: it is last of everything here, and the reason is recorded in `docs/PHASE1-RESULTS.md` under "Where entry 137 and the code disagree" so the specification and the code agree rather than only appearing to.
+
+- **Question 45, first as the entry demands, done in 2c51788.** Scan 6 was never ten. No regression; the tenth shot has never been detected, and it is a standing detection target in `range-scan-counts.json` now.
+- **Section 1.1, and the live site was worse than the review said.** One card in four had a thumbnail locally; on the site it was one in eighteen, because every article with a chart is still a draft and all eighteen published ones have no figure at all. So the entry's own fallback is what fits: a plain titled panel in the site's colours, the same shape as a thumbnail, with no image to go stale.
+- **Section 1.2.** `_style.py` writes both versions and **no figure script had to change**: `save` draws once, writes the light file, recolours the same figure and writes it beside as `-dark.png`. Recolouring rather than redrawing keeps the two identical in everything but colour. Two faults that first run produced, neither visible to a build that checks files exist: every dark figure had a black title on a black background, because an axes has three title artists and this style puts titles on the left; and one figure had a white cross on the chart and a black one in the key, because a legend's sample marks are copies. **So the build looks at the picture**, and two figures are exempt by name, being photographs of white paper.
+- **Section 1.3.** Three states, and `website/research/PUBLISHED.md` is the record of publishing having happened. The build refuses both halves of a disagreement, proved both ways.
+- **Section 1.4** left alone, as the entry asks.
+- **Question 46, measured.** The wide and narrow solves return the same shift, 0.247 in from the one Alan's table implies, and differ only in confidence. `MarkingSession` acts only on a certain offset, so the wide solve does nothing and the restraint comes from the matching. The code was right and the paragraph above it was wrong. `SheetOffsetWideOrNarrowTests` pins it.
+- **Question 42, built and tested on scan 5 and scan 6.** A corrected shot now survives a second detection, matched to the nearest fresh detection within one hole's width, with the person's position and chosen bull winning and the detection dropped. A correction moved further than a hole's width survives on its own. The button says how many marks it will keep before anybody presses it.
+- **Question 41.** Drag onto a bull was never built, so nothing was removed from the application. Entry 141 section 5.3 item 3 is amended in place below, and `DragNeverAssignsTests` is what stops it arriving by accident.
+- **Question 44, measured, and the answer is not to write the spline.** Held out one marker at a time across the 15 paired photographs: **the held-out error is the same as the fit's own residual**, ratio 0.8 to 1.0 on every photograph. The model predicts a marker it has never seen as well as one it was fitted to, so its 0.005 in is not flexibility spent bending to its own markers, and a more flexible surface fitted to the same markers cannot help. The thin-plate spline of entry 130 section 6b item 2 should not be written.
+- **The crash, narrowed without a debugger.** The photograph that throws fitted cleanly here, nineteen times over with a different marker held out each time. So the fault is not in the fit and not in `ToPage` over the page: it is `ToPage` at a point outside the page, which only `ExpectedImage.Render` reaches. `SurfaceCrashTests` records it.
+- `docs/PHASE1-RESULTS.md` "Entry 143 section 1" and "Entry 143, question 44".
+
+Written by the planning session at 04:30 Mountain on 2026-09-23. The review in section 1 is the planning session's, sent to Alan at the same time as this entry; the answers in section 2 are decisions.
+
+## 1. Research batch 1: approved to publish, with four things to fix
+
+Alan has the same review and will send "publish research batch 1" himself. The writing is good and the honesty is right: the primer article in particular says what nine shots can and cannot support, which is the whole point of the section. Fix these, and take them as the standard for later batches.
+
+1. **Every card on the index needs a lead image, or none of them do.** Today one card in four has a thumbnail and the rest are empty, so the row is as tall as the tallest card with three large blanks in it. Give every article a lead figure, and where an article has no natural chart, a plain titled panel in the site's own style is better than a gap.
+2. **The charts are light panels on a dark page.** Every figure is drawn on a near-white surface, which glares against the dark theme and looks pasted on. Have each figure script write both a light and a dark version from the same data, and let the page choose by the reader's theme. This applies to the planning drafts as well: `_style.py` should grow a dark palette and the scripts should call it, rather than each script deciding for itself. If that is more work than it is worth this week, the fallback is a consistent light card behind every figure, so at least they all look deliberate.
+3. **Front matter says `status: published` on articles that are not published.** Two different meanings of the word are in play. Use `state: draft | ready | published`, where `published` is set only when a batch actually goes live, and make the build refuse a page whose state says published when it is not in a published batch.
+4. **The narrow renders are not phone renders**, as `docs/RESEARCH.md` says plainly, and that is an honest note rather than a fault. Leave it. Alan will look at the real pages on his phone after the first publish and report anything that breaks.
+
+Nothing else blocks publication. Publish batch 1 when Alan's message arrives, then offer batches 2 and 3 for review the same way rather than publishing them with it.
+
+## 2. Questions 41 to 46
+
+### Question 41: dragging a shot onto a bull means two different things
+
+**Dragging always moves the shot, and never changes which bull it belongs to.** A mark's position is a measurement and a drag is how it is corrected; nothing else may ride on that gesture. Entry 141 section 5.3 item 3 is amended: assignment happens through the bull picker in the shots list, through the keyboard (select, type the bull number), and through the multiple-selection assignment you have built. Drag onto a bull is removed from the specification. If you later want a pointer gesture for assignment, it must be a distinct one, such as a drag with a modifier key held, and it must leave the hole where it is and say in the toast which bull it moved the shot to.
+
+### Question 42: a corrected shot does not survive a second detection
+
+**Build the matching you propose**, and do not lose a person's correction silently.
+
+- Match each kept corrected shot to the nearest freshly detected shot within **one hole's width**, using the sheet's own size reference from entry 141 section 4 where it exists and the stated calibre where it does not. Where a match exists, the person's position and chosen bull win over the detector's. Where none exists, keep the corrected shot as it is.
+- Never produce two marks for one hole; that remains the rule your current code protects.
+- Also make the button honest: detecting again says, in one line, how many hand corrections it will carry over.
+- Test on scan 5 and scan 6, and with a generated sheet where a correction is moved beyond one hole's width and must therefore survive on its own.
+
+### Question 43: entry 137 names an image safety the desktop does not have
+
+**Both, as their own item, after the current queue.** Not urgent.
+
+1. A cap at **400 megapixels**, phrased as a limit against a hostile or broken file rather than a judgement about scanning, with the number and the measured size in the message. Alan's 600 dpi letter scans are about 32 megapixels, so the cap is twelve times his largest real file.
+2. Move the decode to a background thread with a timeout, because the window freezing on a large scan is a real complaint waiting to happen. Show progress while it runs.
+
+Until then, say in entry 137's record that the pixel cap and decode limit were not built and why, so the specification and the code agree.
+
+### Question 44: the bent-sheet model crashes on one photograph, and improves the wrong points
+
+**Measure first, build nothing.** Run the leave-one-marker-out measurement on the existing surface model across the paired photographs and report it. A model that cannot predict a marker it did not see will not predict a hole, and that decides whether the thin-plate spline in entry 130 section 6b item 2 is worth writing at all. Do not write the spline until that measurement is in.
+
+The crash: spend up to an hour finding it, because an `IndexOutOfRangeException` in registration is worth understanding even in an unreachable model. If it is not obvious in that time, leave it with a test that records the crashing photograph and a note, rather than a speculative fix.
+
+### Question 45: scan 6 reads 9 holes tonight where entry 130 recorded 10
+
+**This is the first thing to do, before any new feature.** A real shot that the software used to find and now does not is the most serious kind of regression this project can have, and shot 6 is the one shot on that sheet that proves a group can contain something far from everything else.
+
+1. Re-run scan 6 at the commit before entry 141 section 4 landed, and at the commit after, and report both counts.
+2. If section 4 cost the hole, fix it so the sheet's own size reference does not drop a hole that a stated calibre finds, and say in the fix what the mechanism was.
+3. Record the hole counts for all six range scans as a checked expectation somewhere a change like this trips over, without committing the scans: a small file of counts plus each scan's SHA-256, and a test that runs only when the folder is present and is skipped with a clear message when it is not.
+4. You were right to say your earlier check was weaker than your sentence implied. Flag counts are not hole counts, and the correction belongs in the record.
+
+### Question 46: the sheet offset is solved over every bull
+
+**Run the measurement you propose**, both ways on scan 5, and compare each result against the offset Alan's table implies.
+
+- If the wide solve is the better estimate, keep the code and rewrite the paragraph: the restraint is delivered by the matching, which only considers aimed bulls, and the solve is allowed to use the whole printed grid because the grid is geometry, not evidence about where the shooter aimed.
+- If the narrow solve is as good, narrow it and fix the five-shot test.
+- Either way, the test that broke is a case worth keeping: add it with a name that says which reading it is pinning.
+
+Do not leave the code and the comment disagreeing, whichever way it goes.
+
+## 3. Order
+
+Question 45, then the batch 1 fixes in section 1, then questions 46, 42 and 41, then question 44's measurement. Question 43 last. Entry 129, the server work, waits for Alan and does not move.
+
+---
+
 # 2026-09-23, entry 146: a tour of the application, one page per screen
 
 **Status: actioned 2026-09-23**, sections 1 to 6. Every screen, not the three section 6 allows as a fallback.
@@ -417,6 +501,7 @@ This is question 37's control (queue item 6 of entry 135) and the shot editor fr
 1. Select a shot by clicking it; the shot is highlighted on the image, in the shots list and in the review queue at once.
 2. Move a shot by dragging it; add one by a click in add mode; delete with the Delete key or a button. Every edit goes through undo and redo.
 3. Assign a shot to a bull by dragging it onto the bull, by a bull picker in the shots list, or by keyboard (select, then type the bull number). Select several shots and assign them together.
+   - **Amended by entry 143, question 41, on 2026-09-23: drag onto a bull is removed.** A drag always moves the shot and never changes which bull it belongs to, because a mark's position is a measurement and a drag is how it is corrected; nothing else may ride on that gesture. Assignment happens through the bull picker, the keyboard and the multiple-selection assignment. A pointer gesture for assignment, if one is ever wanted, must be a distinct one such as a drag with a modifier held, must leave the hole where it is, and must say in the toast which bull it moved the shot to. It was never built, so nothing was removed from the application; `DragNeverAssignsTests` is what stops it arriving by accident.
 4. Say which bulls were aimed at: click bulls to mark them aimed or not aimed, with presets for "every bull", "rows", and "bulls 2 to 5 of each row" style patterns, and a shots-per-bull count. Assignment uses this. Scans 4, 5 and 6's ground truth in entry 120 is the test: show that with the aimed bulls set, the assignments match Alan's table.
 5. A shot moved or assigned by hand is marked as manual, shown differently, and never changed by a later re-detection or re-assignment.
 6. Every statistic and graphic updates as soon as an edit is made.

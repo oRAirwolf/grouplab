@@ -96,6 +96,13 @@ public sealed partial class MainWindow : Window
     /// <summary>The header's review count, "2 of 26 need review", as the concept puts it beside the actions: amber while anything is open.</summary>
     private readonly TextBlock reviewCount = new() { Classes = { AppStyles.PillText } };
 
+    /// <summary>
+    /// Entry 143, question 42: "make the button honest". Detecting again used to throw away every mark a person had moved or
+    /// reassigned, and now it keeps them, so the button says how many it is keeping before anybody presses it. Somebody who has spent
+    /// ten minutes settling a sheet is entitled to know that.
+    /// </summary>
+    private Button? detectButton;
+
     private readonly Border reviewPill = new() { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Pill } };
 
     /// <summary>
@@ -623,7 +630,8 @@ public sealed partial class MainWindow : Window
         var actions = new StackPanel { Orientation = Orientation.Horizontal };
         reviewPill.Child = reviewCount;
         editorActions.Children.Add(reviewPill);
-        editorActions.Children.Add(Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false)));
+        detectButton = Button("Detect on a GroupLab sheet", async () => await Detect(automatic: false));
+        editorActions.Children.Add(detectButton);
         editorActions.Children.Add(showWorkEditor);
         discardButton.Click += (_, _) => AskDiscard();
         editorActions.Children.Add(discardButton);
@@ -4449,6 +4457,18 @@ public sealed partial class MainWindow : Window
         int open = ReviewQueue.Open(ReviewQueue.For(state, analyseSighters));
         reviewPill.IsVisible = shots > 0;
         reviewCount.Text = FormattableString.Invariant($"{open} of {shots} need review");
+
+        // Entry 143, question 42. The label is shorter than the one it replaces, so nothing in the header moves.
+        if (detectButton is not null)
+        {
+            int keeping = session.CorrectionsThatWouldBeKept();
+            detectButton.Content = keeping == 0
+                ? "Detect on a GroupLab sheet"
+                : FormattableString.Invariant($"Detect again, keeping {keeping}");
+            ToolTip.SetTip(detectButton, keeping == 0
+                ? "Find the holes again from the printed sheet."
+                : FormattableString.Invariant($"Find the holes again. The {keeping} mark{(keeping == 1 ? "" : "s")} you placed or moved by hand {(keeping == 1 ? "is" : "are")} kept where you put {(keeping == 1 ? "it" : "them")}."));
+        }
         foreach (var (target, classes) in new (Avalonia.StyledElement, Classes)[] { (reviewPill, reviewPill.Classes), (reviewCount, reviewCount.Classes) })
         {
             classes.Remove(AppStyles.Warn);

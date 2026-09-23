@@ -1,0 +1,30 @@
+{
+  "_": [
+    "NOTES-FROM-PLANNING.md entry 129 section 1.2: every limit shown to the person is the one the receiver",
+    "enforces, taken from one place so they cannot drift. The page is built by Python and the receiver is",
+    "PHP, and neither can read the other's constants, so this file is the one place and a test holds both",
+    "to it. A page that says 30 MB while the receiver refuses at 20 is a page that wastes somebody's",
+    "upload and tells them nothing useful about why.",
+    "",
+    "`open` is whether the receiver is installed and answering on the server. While it is false the page is not",
+    "built and nothing links to it, because a form that posts to a path the server does not serve is worse than",
+    "no form: it takes somebody's photographs, spends their upload and tells them nothing useful. Entry 129's",
+    "installer run by Alan is what makes it true."
+  ],
+  "open": false,
+  "maxFiles": 10,
+  "maxFileMegabytes": 30,
+  "maxSubmissionMegabytes": 90,
+  "types": [
+    "JPEG",
+    "PNG",
+    "HEIC",
+    "TIFF"
+  ],
+  "typesRefused": [
+    "PDF"
+  ],
+  "consentVersion": "consent_v1",
+  "consentText": "I took these photos, or I have permission to share them. I understand they may be published as part of GroupLab's public test data on GitHub under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.",
+  "turnstileSiteKey": "0x4AAAAAAE-rzvtx_a4nBHHr"
+}

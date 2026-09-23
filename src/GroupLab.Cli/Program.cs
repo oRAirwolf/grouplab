@@ -40,6 +40,10 @@ return args switch
     ["surface", "lens"] => SurfaceLens.Frames("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     ["surface", "noise"] => SurfaceNoise.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
     ["surface", "correlation"] => SurfaceCorrelation.Run("scans/phase0", SampleSet.FrozenDirectory, Console.Out),
+    // Entry 143, question 44: hold one marker out of the bent-sheet fit and ask the fit where it is. Measure first, build nothing.
+    ["surface", "held-out", .. var heldOut] when heldOut.Length > 0 => SurfaceHeldOut.Run(
+        [.. heldOut.Where(a => !a.StartsWith("--", StringComparison.Ordinal))],
+        [.. Pairs(heldOut, "--library")], Console.Out, Console.Error),
     ["holes", "baseline"] => HolesBaseline.Run("scans", "scans/phase1", Console.Out),
     ["holes", "ink-proximity"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", null, false, Console.Out),
     ["holes", "ink-proximity", "-v"] => InkProximity.Run("scans/phase0", SampleSet.FrozenDirectory, "scans/phase1", null, true, Console.Out),
@@ -547,4 +551,16 @@ static int Usage()
         grouplab mounted pair
         """);
     return 2;
+}
+
+/// <summary>Every value given after one option name, for the small spike verbs that take a repeated option.</summary>
+static IEnumerable<string> Pairs(string[] args, string option)
+{
+    for (int i = 0; i + 1 < args.Length; i++)
+    {
+        if (string.Equals(args[i], option, StringComparison.Ordinal))
+        {
+            yield return args[++i];
+        }
+    }
 }

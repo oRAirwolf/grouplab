@@ -25,6 +25,18 @@ Do not make him wait through an hour of unrelated work for a command he could ha
 
 If something that needs him only becomes apparent later, say so as soon as I know, and keep working on what does not depend on it while I wait.
 
+## A short report when an entry finishes
+
+**When an entry is finished, post a report before starting the next one. Five lines at most:**
+
+1. What the entry asked for.
+2. What is now true.
+3. Anything I could not do, and why.
+4. Anything Alan should look at.
+5. What I am starting next.
+
+I do not stop for a reply. The turn carries on unless it is a real `STATUS: NEEDS YOU`. This is not a write-up: the detail belongs in `docs/PHASE1-RESULTS.md` and in the commit.
+
 ## Waiting
 
 **Waiting for CI or a nightly is never a reason to end a turn.** NOTES-FROM-PLANNING.md entry 131 section 0, and it replaces the earlier rule about an hour.

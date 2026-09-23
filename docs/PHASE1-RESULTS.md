@@ -7316,6 +7316,13 @@ Entry 137 section 4 says: *"The same image safety applies (pixel cap, decode wit
 
 So drop and paste have exactly the safety Open has, which is what the section's first sentence asks for, and the parenthetical describes something that does not exist yet. Raised as question 43 rather than invented tonight, because a cap is a number somebody has to choose and a wrong one refuses a legitimate 60 megapixel scan.
 
+**Answered by entry 143, question 43, on 2026-09-23: build both, as their own item, after the current queue. Not urgent, and not built yet.** The numbers are decided:
+
+1. A cap at **400 megapixels**, phrased as a limit against a hostile or broken file rather than a judgement about scanning, with the number and the measured size in the message. Alan's 600 dpi letter scans are about 32 megapixels, so the cap is twelve times his largest real file.
+2. The decode moves to a background thread with a timeout and shows progress, because the window freezing on a large scan is a real complaint waiting to happen.
+
+**Why it is still not built, said here so the specification and the code agree rather than only appearing to.** Entry 143 section 3 puts question 43 last of everything in that entry, behind questions 45, 46, 42, 41 and 44 and behind the batch 1 fixes. It is the one item in the queue that guards against a file nobody has sent, on a path nobody has complained about, and the items ahead of it were all things that mislead somebody using GroupLab today. Until it is built, **the desktop's Open, drop and paste paths have no pixel cap and no decode timeout**, and entry 137 section 4's parenthetical describes the submission intake's protections rather than the desktop's.
+
 
 # The same newly written file, on the other side of the test
 
@@ -7877,6 +7884,72 @@ That rule is not free. Writing these meant reading every screenshot rather than 
 ## What section 4.4 asks of every entry after this one
 
 The screenshot job replaces the picture on its own and nothing replaces the words. A tour page naming a button that is no longer there is worse than no tour page, because a reader takes it for the truth. So an entry that changes a screen now says in its report whether that screen's tour page still describes it. It is in `CLAUDE.md` rather than in a test, because no test can tell whether a sentence is still true.
+
+
+# Entry 143, question 44: leave one marker out, and the answer is not to write the spline
+
+`docs/NOTES-FROM-PLANNING.md` entry 143, question 44, measured 2026-09-23. "Measure first, build nothing."
+
+## The question, and why the fit's own residual could not answer it
+
+A bent-sheet model is fitted to the printed markers and then used to say where a bullet hole is. A hole is not a marker: it sits between them, where nothing was measured. So the residual at the markers the model was fitted to says almost nothing about how well it places a hole, and the model that fits its own markers best is the one most likely to be bending to them.
+
+What does say something is holding a marker out of the fit and asking the model to predict it.
+
+`grouplab surface held-out`, on the 15 paired photographs of entry 130 section 2c. For each photograph: register as the application does with the surface model, then, for every marker the fit kept, refit with that marker's four corners excluded and measure where the refitted model puts them.
+
+## The measurement
+
+| | inches |
+|---|---|
+| held-out error, median over the 15 photographs | 0.0043 |
+| held-out error at the worst marker, median over the 15 | 0.0139 |
+| held-out error at the worst marker on any photograph | 0.0214 |
+| the photograph gate | 0.005 |
+
+15 of 15 fitted. 8 to 33 markers each.
+
+## The finding, which is not what either side of the question expected
+
+**The held-out error is the same as the fit's own residual.** The ratio of one to the other is between 0.8 and 1.0 on every one of the fifteen photographs, and 1.0 on five of them.
+
+| photograph | markers | fit rms, in | held-out median, in | ratio |
+|---|---|---|---|---|
+| 165624 | 26 | 0.0055 | 0.0055 | 1.0 |
+| 165627 | 25 | 0.0051 | 0.0051 | 1.0 |
+| 165634 | 18 | 0.0049 | 0.0043 | 0.9 |
+| 165637 | 22 | 0.0058 | 0.0058 | 1.0 |
+| 165611 | 11 | 0.0031 | 0.0026 | 0.8 |
+| 165617 | 11 | 0.0038 | 0.0031 | 0.8 |
+| 161502 | 8 | 0.0021 | 0.0020 | 0.9 |
+| 153309 | 23 | 0.0045 | 0.0038 | 0.8 |
+| 153325 | 32 | 0.0046 | 0.0043 | 0.9 |
+| 153333 | 16 | 0.0052 | 0.0052 | 1.0 |
+| 153336 | 19 | 0.0047 | 0.0040 | 0.9 |
+| 153356 | 33 | 0.0047 | 0.0045 | 1.0 |
+| 153340 | 21 | 0.0057 | 0.0053 | 0.9 |
+| 153344 | 19 | 0.0062 | 0.0064 | 1.0 |
+| 153347 | 28 | 0.0049 | 0.0040 | 0.8 |
+
+**The model is not overfitting.** It predicts a marker it has never seen as accurately as it reproduces one it was fitted to. Whatever is costing it 0.005 in is not flexibility spent bending to its own markers, because taking a marker away costs it nothing.
+
+## So: do not write the thin-plate spline
+
+Entry 130 section 6b item 2 proposed a thin-plate spline as the next model, on the reasoning that a more flexible surface would follow a real bow more closely.
+
+**A more flexible surface fitted to the same markers cannot help.** A spline earns its keep exactly where a stiffer model is leaving structure in the residual, and there is none: the residual is already at the level of what the corners themselves can be located to. Adding flexibility to a model that already generalises perfectly would make the fit's own residual smaller and the held-out error larger, which is the one thing this measurement can see and the fit's own residual cannot.
+
+That is question 44 answered, and the answer is to leave it. The 0.005 in is in the corner measurements, the lens, or the sheet's real shape between markers, and none of those is fixed by a spline.
+
+## The crash, narrowed without a debugger
+
+`20260920_153336.jpg` throws `System.IndexOutOfRangeException` under `compare-photos --model surface`, at `ExpectedImage.Render`'s `mapping.ToPage` call.
+
+**It fitted here, cleanly, with 19 markers and a held-out median of 0.0040 in.** That narrows it usefully: the surface fit works on this photograph, and so does `ToPage` at every marker corner, twenty times over with a different marker held out each time. What this measurement does not do is call `ToPage` for every pixel of a bull's box, which is what `ExpectedImage.Render` does.
+
+So the crash is not in the fit and not in `ToPage` over the page. It is `ToPage` at a point outside the page, where the Newton iteration in `SurfaceMapping.ToPage` is free to wander before it converges and `FoldedSheet.Sheet` is asked about a page point nothing bounded.
+
+Left there rather than fixed, as entry 143 allows: the model is not reachable from the application, `Auto` never selects it, and the measurement above says the model should not be extended anyway. `SurfaceCrashTests` records the photograph, the command and this narrowing, so the next person starts from here rather than from the stack trace.
 
 
 ## Decision log
