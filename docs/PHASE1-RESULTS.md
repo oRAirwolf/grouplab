@@ -7952,6 +7952,94 @@ So the crash is not in the fit and not in `ToPage` over the page. It is `ToPage`
 Left there rather than fixed, as entry 143 allows: the model is not reachable from the application, `Auto` never selects it, and the measurement above says the model should not be extended anyway. `SurfaceCrashTests` records the photograph, the command and this narrowing, so the next person starts from here rather than from the stack trace.
 
 
+# Entry 129: the target upload page, the receivers, and what is waiting on the server
+
+`docs/NOTES-FROM-PLANNING.md` entry 129, built 2026-09-23. **Sections 1, 2, 3, 5, 7 and 8.1 are built and tested. Sections 4, 6 and 8.2 need the server, and Alan's list is in the report.**
+
+## The stack, and why
+
+**The receiver is PHP. The worker stays Python.**
+
+The server already runs PHP-FPM under HestiaCP for the other domain, the receiver that ran at the old address is PHP and has been taking real submissions for months, and entry 129 section 7.1 says to enable it here the same way. Rewriting a proven receiver in another language to avoid a language would have thrown away the part that was already right.
+
+## What the receiver keeps from the old one, and what is new
+
+Kept, every one of them: storage outside the web root, content sniffing by magic bytes rather than by extension or by what the browser said, safe stored names, a honeypot, per-address rate limits on a salted hash of `CF-Connecting-IP` taken only from Cloudflare's own ranges, the size and count caps, the disk cap with a free-space floor, a consent record written by the receiver, and a SHA-256 per file on arrival.
+
+| new | why |
+|---|---|
+| quarantine, and nothing else | the old receiver stored the bytes as received; this one writes them into quarantine and the worker rebuilds each from its pixels. PHP never decodes an image |
+| Cloudflare Turnstile, server side | verified before anything is written, and **refusing when siteverify cannot be reached or the secret is missing**, because refusing is the safe direction when the check itself is unavailable |
+| no PDF | Alan's decision 6. It is not a photograph and the rebuild cannot handle it, which is the whole safety of the pipeline |
+| 60 submissions an hour across every address | a botnet spread thin enough to stay under the per-address limit could still fill the disk |
+| an `open` flag | the page is not built and the receiver is not shipped until the server can answer. A form posting to a path the server does not serve takes somebody's photographs, spends their upload and tells them nothing |
+
+## The one that would have broken quietly
+
+PHP's per-directory settings for grouplab.org live in `public_html/.user.ini`, because HestiaCP regenerates the FPM pool file on a template rebuild and a direct edit of one does not survive.
+
+**That file is not part of the built site, so the sync's `rsync --delete` would have removed it on the first run after the installer put it there.** The only symptom would have been every real photograph failing to upload, with nothing anywhere saying why: nginx would have returned 413 before PHP was ever reached. `grouplab-site-sync.py` excludes it by name now, and the installer order in Alan's list puts the updated sync in before the intake, so the window never opens.
+
+## The tests, and the two things they found
+
+31 receiver tests, no network, on the Linux runner beside the syntax check. Cloudflare's siteverify is faked with a `file://` URL, and storage is a temporary tree that goes when the run ends.
+
+Covered: a good submission, a PDF, a renamed executable, a mismatched extension, more than ten files, a file over the limit, **a part-way upload that still sniffs as a valid JPEG**, the honeypot, consent, a missing token, a refused token, an unreachable siteverify, a missing secret, the rate limit, and for the crash receiver a good report, one carrying a photograph, one carrying settings, an entry with a path in its name, nothing attached, one over the wall, the kill switch and its rate limit.
+
+**Two of them found real faults rather than confirming what I had written.**
+
+1. **The crash receiver told somebody whose upload did not attach that their report was too large.** It would have sent them away to shrink a file that was never the problem. It now distinguishes a post PHP dropped for size, where the form fields are missing too, from a request that simply carried no report.
+2. **My own test was quietly testing the wrong thing.** PHP's `??` treats an explicit `null` as absent, so the case called "no secret on the server" was running against a server that had one. It passed, and it was worthless.
+
+## The crash receiver's whitelist is now read from the receiver
+
+The application has held the receiver's `ALLOWED_ENTRIES` as a list it could only take on trust, because the receiver did not exist. It exists, so `ReportPackageTests` reads the patterns out of it.
+
+A pattern changed on one side and not the other would refuse every report from every installed build, and the only sign would be people saying the button does not work.
+
+## The six waiting submissions, ingested
+
+All six, through the existing intake tool, into `C:/Dev/grouplab-submissions/public`, **which is outside the repository and is not the website**. Nothing is published to anybody by running it.
+
+| submission | files | hashes verified | accepted | held for a person |
+|---|---|---|---|---|
+| 2026-09-20_26eeb40d | 8 | yes | 7 | 1 |
+| 2026-09-20_a75ba5a0 | 8 | yes | 7 | 1 |
+| 2026-09-20_aa9361c8 | 7 | yes | 6 | 1 |
+| 2026-09-20_c157245c | 1 | yes | 0 | 1 |
+| 2026-09-20_45235a2d | 1 | yes | 0 | 1 |
+| 2026-09-21_86926341 | 10 | yes | 10 | 0 |
+
+**23 photographs were withheld by the opt-out list**, by bytes and by photograph, which is the rule working on real material.
+
+**Why the two iPhone submissions were held: 0 GroupLab markers decoded on either.** Both are 4032 by 3024 at a 48 mm equivalent, and the automatic path can neither register nor scale a photograph it cannot find four markers on. They are not bad photographs; they are photographs of something this software cannot measure yet.
+
+**And a finding worth the entry on its own: every single photograph carried data after the image's end marker**, between 28 KB and 280 KB of it. On the Pixel photographs that is the motion-photo payload and on the iPhone ones the depth data, and both are benign. But it is exactly the shape of the thing entry 129 section 3.5.3 exists to defeat, arriving on ordinary submissions from ordinary phones, and the rebuild removes all of it along with the GPS block every one of them also carried.
+
+## The ledger
+
+`C:/Dev/grouplab-submissions/ledger.json`, outside the repository because it names submissions. Each entry records pulled, hashes verified, ingested with its outcome, and whether it has been deleted from the server. All six are marked ingested and none deleted, because deletion is an SSH step on Alan's list.
+
+`scripts/Remove-ReadSubmissions.ps1` deletes only the IDs the ledger marks ingested, and only after re-verifying the local copy against its own `meta.json`: where the local copy no longer matches, the server copy is the only good one left and it refuses to touch it.
+
+## The donor PDFs name no address at all
+
+Entry 129 section 6.3 asks whether the donor instructions name the old address, and whether they need regenerating.
+
+**Neither PDF names any address, old or new.** Checked by decompressing every stream in both and searching the raw bytes as well. So no regeneration is needed for the reason the entry gives.
+
+**But that is not entirely good news, and it is worth saying rather than passing.** A person holding the printed pack has no way to find where to send their photographs. The pack tells them to keep the files and says nothing about where they go. That is a gap the entry did not anticipate, because it assumed the PDFs named the old address; they name none. Raised here rather than fixed, because regenerating a donor pack is a design change and this entry did not ask for one.
+
+## What is not done, and why
+
+| section | what | why |
+|---|---|---|
+| 4.3, 4.4, 4.5 | the server purge, deletion as part of the intake run, and the backup question | all need SSH; the backup question is a read on Alan's list |
+| 6.1, second half | deleting the six from the old server | SSH, after the install |
+| 6.2 | the redirect | SSH, and only after the new page is live and tested |
+| 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
