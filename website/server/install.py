@@ -41,6 +41,42 @@ FOLDERS = [
 
 NEEDED = ["python3", "curl", "rsync", "openssl", "systemctl"]
 
+# --- the intake side, NOTES-FROM-PLANNING.md entry 129 section 7.1 -------------------------------
+#
+# Installed by --intake, separately from the site sync, because the site sync has been running since
+# 2026-09-22 and a change to it is a change to something that works. Everything here is additive: no
+# file the site sync owns is touched, and nothing belonging to any other domain is touched at all.
+
+SITE = Path("/home/airwolf/web/grouplab.org")
+
+INTAKE_SCRIPTS = [
+    ("grouplab-intake-worker.py", Path("/usr/local/sbin/grouplab-intake-worker.py"), 0o755),
+    ("grouplab-set-turnstile-secret", Path("/usr/local/sbin/grouplab-set-turnstile-secret"), 0o750),
+]
+
+INTAKE_UNITS = [
+    ("grouplab-intake-worker.service", Path("/etc/systemd/system/grouplab-intake-worker.service"), 0o644),
+    ("grouplab-intake-worker.timer", Path("/etc/systemd/system/grouplab-intake-worker.timer"), 0o644),
+]
+
+# PHP's per-directory settings, and the nginx include. The .user.ini sits inside public_html, which the
+# site sync rsyncs with --delete, so the sync excludes it by name; without that exclusion the first sync
+# after this installer would delete it and every real photograph would fail to upload with nothing
+# saying why.
+INTAKE_CONFIG = [
+    ("user.ini", SITE / "public_html" / ".user.ini", 0o644, "airwolf"),
+    ("nginx.ssl.conf_grouplab", Path("/home/airwolf/conf/web/grouplab.org/nginx.ssl.conf_grouplab"), 0o644, "airwolf"),
+]
+
+# Everything an upload passes through, outside public_html and never served. 0750 and owned by the
+# site's own user, which is the user PHP-FPM runs as and the user the worker runs as.
+INTAKE_FOLDERS = [
+    (SITE / "private", 0o750, "airwolf"),
+    (SITE / "private" / "quarantine", 0o750, "airwolf"),
+    (SITE / "private" / "ready", 0o750, "airwolf"),
+    (SITE / "private" / "refused", 0o750, "airwolf"),
+]
+
 
 def say(message: str) -> None:
     print(message, flush=True)
@@ -81,8 +117,20 @@ def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
     return True
 
 
-def folders(dry_run: bool) -> None:
-    for path, mode, owner in FOLDERS:
+def put_owned(name: str, target: Path, mode: int, owner: str, dry_run: bool) -> bool:
+    """As :func:`put`, and then owned by somebody other than root. Used for the files the site's own user reads."""
+    if not put(name, target, mode, dry_run):
+        return False
+    if dry_run:
+        say(f"  would give it to {owner}")
+        return True
+    shutil.chown(target, owner, owner)
+    say(f"  gave it to {owner}")
+    return True
+
+
+def make_folders(items: list, dry_run: bool) -> None:
+    for path, mode, owner in items:
         if path.is_dir():
             say(f"  {path} is there")
             continue
@@ -111,9 +159,72 @@ def run(args: list[str], dry_run: bool) -> int:
     return result.returncode
 
 
+def intake(dry_run: bool) -> int:
+    """The target upload intake, NOTES-FROM-PLANNING.md entry 129 section 7.1.
+
+    Separate from the site sync above, and additive: it installs the quarantine folders, the worker and its units,
+    the script Alan types the Turnstile secret into, PHP's per-directory settings and the nginx include. It touches
+    no file the site sync owns, and nothing belonging to any other domain.
+
+    **It never runs nginx -t and never reloads nginx.** Entry 129 section 7.3 asks for the configuration to be
+    tested before a graceful reload and for pissinhot.com to be checked afterwards, and those are Alan's commands to
+    run and read, not this script's to run on his behalf. It prints them at the end.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    say("the folders an upload passes through, outside public_html and never served")
+    make_folders(INTAKE_FOLDERS, dry_run)
+
+    say("the worker, and the script the Turnstile secret is typed into")
+    for item in INTAKE_SCRIPTS:
+        if not put(*item, dry_run):
+            return 2
+
+    say("the worker's systemd units")
+    for unit in INTAKE_UNITS:
+        if not put(*unit, dry_run):
+            return 2
+
+    say("PHP's settings for this site, and the nginx include")
+    for name, target, mode, owner in INTAKE_CONFIG:
+        if not put_owned(name, target, mode, owner, dry_run):
+            return 2
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    if run(["systemctl", "enable", "--now", "grouplab-intake-worker.timer"], dry_run) != 0:
+        return 1
+
+    if not dry_run:
+        run(["systemctl", "list-timers", "grouplab-intake-worker.timer", "--no-pager"], False)
+
+    say("")
+    say("Two things are left, and neither is this script's to do.")
+    say("")
+    say("1. The Turnstile secret, which nobody but you ever sees:")
+    say("     sudo /usr/local/sbin/grouplab-set-turnstile-secret")
+    say("")
+    say("2. nginx, tested before it is reloaded, and pissinhot.com checked afterwards:")
+    say("     sudo nginx -t")
+    say("     sudo systemctl reload nginx")
+    say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://pissinhot.com/")
+    say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://grouplab.org/")
+    say("")
+    say("If nginx -t complains about a duplicate client_max_body_size, another include for this site already sets")
+    say("it. Raise that one instead and delete the line from nginx.ssl.conf_grouplab; do not reload until -t passes.")
+    say("")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install the grouplab.org site sync.")
     parser.add_argument("--dry-run", action="store_true", help="say what would happen and change nothing")
+    parser.add_argument("--intake", action="store_true",
+                        help="install the target upload intake instead of the site sync (entry 129)")
     args = parser.parse_args()
 
     gone = missing_tools()
@@ -125,8 +236,11 @@ def main() -> int:
         say("This has to run as root: sudo python3 install.py")
         return 2
 
+    if args.intake:
+        return intake(args.dry_run)
+
     say("folders")
-    folders(args.dry_run)
+    make_folders(FOLDERS, args.dry_run)
 
     say("the public key the sync checks signatures with")
     if not put(*PUBLIC_KEY, args.dry_run):

@@ -1,0 +1,68 @@
+# HestiaCP custom nginx include for grouplab.org, NOTES-FROM-PLANNING.md entry 129 section 7.1.
+# Install as: /home/airwolf/conf/web/grouplab.org/nginx.ssl.conf_grouplab
+#
+# The nginx.ssl.conf_* mechanism survives HestiaCP template rebuilds, which a direct edit of the
+# generated vhost does not. This is the same mechanism the old target upload page used on
+# pissinhot.com, for the same reason.
+#
+# Three jobs, and one refusal that matters more than any of them.
+#
+#   1. Raise the request body limit. nginx defaults to 1 MB and returns 413 before PHP is ever
+#      reached, which makes the upload page look like it works while every real photograph fails.
+#
+#   2. Run PHP for the receiver paths, and only for those. Everything else on grouplab.org is a
+#      static page built from the repository.
+#
+#   3. Refuse every other .php request outright, so a file that somehow reached public_html with a
+#      .php name is served as nothing rather than executed. The site build already fails if it
+#      contains any .php file other than the receivers; this is the same rule enforced on the
+#      server, where it is the one that counts.
+#
+# NOTE ON THE 96m FIGURE: the site is proxied through Cloudflare, which caps request bodies at
+# 100 MB on Free and Pro plans. Raising this past that achieves nothing, because the edge rejects
+# the request before it reaches this server. The page and the receiver both cap a submission at
+# 90 MB to stay clear of that ceiling with room for the form fields.
+#
+# BEFORE INSTALLING: check that client_max_body_size is not already set in another include for this
+# domain, or nginx will refuse to start on a duplicate directive.
+#
+#   grep -r client_max_body_size /home/airwolf/conf/web/grouplab.org/
+#
+# If it is already set somewhere, delete the line below and raise the existing one instead.
+
+client_max_body_size 96m;
+
+# The receivers, and nothing else. Each is named in full rather than matched by a pattern, so a new
+# .php file appearing under /api/ does not become executable by being in the right folder.
+location = /api/upload.php {
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php8.3-fpm-grouplab.org.sock;
+    fastcgi_read_timeout 300s;
+    fastcgi_send_timeout 300s;
+}
+
+location = /api/crash-report.php {
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php8.3-fpm-grouplab.org.sock;
+    fastcgi_read_timeout 60s;
+}
+
+# Everything else with a .php name. This has to come after the two exact-match blocks above, which
+# nginx prefers over a regex location whatever the order in the file, so the receivers still run.
+location ~ \.php$ {
+    return 404;
+}
+
+# PHP's per-directory settings live in public_html/.user.ini and must never be served. HestiaCP's
+# templates deny dotfiles already; this says so here as well, because the cost of being wrong is
+# publishing the upload limits and the shape of the setup for nothing.
+location ~ /\. {
+    deny all;
+    access_log off;
+    log_not_found off;
+}
+
+# The uploads live under private/, outside public_html, and are never served. There is deliberately
+# no location block pointing anywhere near them, and there never should be.

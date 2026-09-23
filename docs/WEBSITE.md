@@ -120,6 +120,55 @@ sudo systemctl stop grouplab-site-sync.timer      # until the next boot
 sudo systemctl disable --now grouplab-site-sync.timer   # for good
 ```
 
+## The target upload page, and what happens to a photograph
+
+NOTES-FROM-PLANNING.md entry 129. The page is `/shoot-a-target/send/` and the receiver is `website/api/upload.php`, built and delivered by the same pipeline as every page.
+
+**The strongest single protection here is that nothing you send is ever opened.**
+
+The receiver writes each accepted upload into `private/quarantine/` and does nothing else with it: no decode, no GD, no Imagick, nothing but sniffing the first 32 bytes and hashing the file. `grouplab-intake-worker.py`, a systemd service running as the site's own user with no network and a read-only view of everything but its three folders, then decodes each file and writes a **new** image from the decoded pixels alone, and **deletes the original bytes**.
+
+So a payload hidden in an upload never reaches anybody. Not data appended after the image, not a polyglot that is a valid image and a valid script at once, not a metadata block crafted for whatever opens it next. None of it survives being decoded to a pixel array and written out again, because nothing but the pixels is carried over.
+
+A short whitelist of camera facts crosses, as validated numbers written freshly into the new file rather than copied as bytes: resolution, orientation, camera make and model, focal length and its 35 mm equivalent, f-number, digital zoom, lens model, ISO and exposure time. **GPS, location, dates and times, maker notes, thumbnails, XMP, comments, serial numbers and owner fields do not, and cannot**, because the new file is built from pixels and a list of numbers. That is what makes the consent text's promise about GPS true on the server rather than only in the intake on one machine.
+
+### What the page and the receiver agree on
+
+| | |
+|---|---|
+| types | JPEG, PNG, HEIC/HEIF, TIFF, sniffed by magic bytes, never by extension |
+| refused | PDF, and anything whose extension and content disagree |
+| sizes | 30 MB a file, 90 MB a submission, 10 files |
+| per address | 5 an hour, 20 a day, on a salted hash of `CF-Connecting-IP` taken only from Cloudflare's own ranges |
+| everybody at once | 60 an hour, so a botnet spread thin enough to stay under the per-address limit still cannot fill the disk |
+| disk | 20 GB cap, 3 GB free floor |
+| bots | Cloudflare Turnstile, verified server side, plus a honeypot |
+
+`website/api/limits.json` is the one place those numbers live. The page is built by Python and the receiver is PHP, neither can read the other's constants, and the build fails if they disagree: a page saying 30 MB while the receiver refuses at 20 wastes somebody's upload and tells them nothing useful about why.
+
+**A Turnstile check that cannot be reached refuses the submission.** So does a missing secret. Refusing is the safe direction when the check itself is unavailable, and it is entry 129 section 2.1's rule.
+
+### The secret
+
+The site key is public and is in the page. **The secret half never enters this repository, a commit, a log or a report.** Alan types it into `grouplab-set-turnstile-secret` in his own SSH session, with the echo off, and it goes straight into a file under `private/` with mode 600. It is not passed as an argument, because an argument is visible to every process on the machine and lands in the shell history.
+
+### Installing it
+
+```
+sudo python3 ~/grouplab-server/install.py --intake --dry-run
+sudo python3 ~/grouplab-server/install.py --intake
+```
+
+Separate from the site sync, and additive: it creates the quarantine folders, installs the worker and its units, the secret script, PHP's per-directory settings and the nginx include, and touches nothing the site sync owns and nothing belonging to another domain. **It never runs `nginx -t` and never reloads nginx**; it prints those commands for a person to run and read.
+
+### One thing that would have broken quietly
+
+PHP's per-directory settings for grouplab.org live in `public_html/.user.ini`, because HestiaCP regenerates the FPM pool file on a template rebuild and a direct edit of one does not survive. That file is not part of the built site, so the sync's `rsync --delete` would have removed it on the first run after the installer put it there. The only symptom would have been every real photograph failing to upload, with nothing anywhere saying why. `grouplab-site-sync.py` excludes it by name.
+
+### The page is not live until the receiver is
+
+`website/api/limits.json` carries an `open` flag. While it is false the page is not built, the receiver is not shipped and nothing links to either, because a form posting to a path the server does not serve takes somebody's photographs, spends their upload and tells them nothing. It goes true in the same commit that follows the install.
+
 ## Backups do not cover this yet
 
 The server's existing backup and offsite scripts (`pih-backup` and the Google Drive copy) cover pissinhot.com only. When those scripts are next touched, these should be added to them:

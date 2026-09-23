@@ -171,10 +171,20 @@ def back_up() -> Path | None:
     return path
 
 
+# NOTES-FROM-PLANNING.md entry 129 section 7.1: PHP's per-directory settings for grouplab.org live in
+# public_html/.user.ini, because HestiaCP regenerates the FPM pool file on a template rebuild and a
+# direct edit of it does not survive. That file is not part of the built site, so rsync --delete would
+# remove it on the first sync after the installer put it there, and the only symptom would be every
+# real photograph failing to upload with nothing saying why. It is excluded here rather than shipped
+# in the site, because it is server configuration and the site archive is public.
+KEEP_IN_PLACE = [".user.ini"]
+
+
 def install(folder: Path) -> None:
     SITE_ROOT.mkdir(parents=True, exist_ok=True)
     result = run([
         "rsync", "-a", "--delete",
+        *[f"--exclude={name}" for name in KEEP_IN_PLACE],
         f"--chown={OWNER}", "--chmod=D755,F644",
         str(folder) + "/", str(SITE_ROOT) + "/",
     ])

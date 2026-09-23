@@ -241,6 +241,13 @@ jobs:
           echo "$found PHP files checked, $failed with errors"
           test "$failed" -eq 0
 
+      # NOTES-FROM-PLANNING.md entry 129 section 8.1: the receiver refuses what it should, with no network. Parsing says only that the
+      # file is PHP; this runs it, against a temporary tree that goes when the run ends, with Cloudflare's siteverify faked by a
+      # file:// URL so nothing leaves the runner. It covers a good submission, each refused type, the size and count limits, the
+      # honeypot, consent, every way a Turnstile token can fail, and the rate limit.
+      - name: The receiver refuses what it should
+        run: php tests/php/receiver-tests.php
+
       - name: Say what it made
         run: |
           {

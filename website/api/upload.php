@@ -45,7 +45,7 @@ const SITE_PRIVATE = '/home/airwolf/web/grouplab.org/private';
 const QUARANTINE   = SITE_PRIVATE . '/quarantine';
 const DB_PATH      = SITE_PRIVATE . '/submissions.db';
 const SALT_PATH    = SITE_PRIVATE . '/submissions_salt.txt';
-const TURNSTILE_SECRET_PATH = SITE_PRIVATE . '/turnstile_secret.txt';
+const TURNSTILE_SECRET_PATH = SITE_PRIVATE . '/turnstile-secret.txt';
 
 const MAX_FILES            = 10;
 const MAX_FILE_BYTES       = 30 * 1024 * 1024;   // 30 MB a file
