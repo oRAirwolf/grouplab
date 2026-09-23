@@ -6,7 +6,7 @@ number: 15
 written: 2026-09-22
 data_date: "Worked example, one simulated group, seed 2026"
 samples: "One 10-shot example group"
-status: draft
+state: draft
 found: "nothing new, deliberately. This is a reference page. The one number people most often get wrong: a true minute of angle is 1.047 inches at 100 yards, not 1 inch. The difference is 4.7 percent, enough to matter when you compare groups or count clicks at distance."
 sure: "these are definitions. The conversions are exact and match the constants in GroupLab's statistics code."
 data:

@@ -6,7 +6,7 @@ number: 12
 written: 2026-09-22
 data_date: 2026-09-20
 samples: two scans of one load, 40 shots
-status: published
+state: published
 found: Pooling is not arithmetic, it is a choice. Centre all the shots together and you measure the rifle over a day; centre each sheet on itself and you measure the ammunition. The two numbers differ, and the difference is itself the useful finding.
 sure: The statistics are exact. Which of the two a shooter wants is a judgement, and GroupLab does not yet make it for them, on purpose.
 sources:

@@ -6,7 +6,7 @@ number: 4
 written: 2026-09-22
 data_date: simulation with seed 2026
 samples: 20000 simulated groups at each of 8 shot counts
-status: draft
+state: draft
 found: At five shots, extreme spread and mean radius are about equally noisy. As the shot count grows, mean radius settles down and extreme spread does not, because extreme spread only ever looks at the two worst shots. At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence.
 sure: The figures come from simulation of a well-behaved rifle (round groups, no flyers) and from the published Monte Carlo tables in the shotGroups package. Real groups with flyers make extreme spread look worse, not better.
 data:

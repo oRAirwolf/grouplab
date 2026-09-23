@@ -6,7 +6,7 @@ number: 23
 written: 2026-09-22
 data_date: "2026-09-20"
 samples: "Six 600 dpi scans from one range day, plus GroupLab's print tests"
-status: draft
+state: draft
 found: "on Alan's range day, 600 dpi scans let GroupLab place each sheet to within 0.0023 to 0.0026 inch, about twice as tight as phone photos, and gave hole sizes that agreed from sheet to sheet. The same scanner also cropped a quarter inch off two edges of a letter sheet without saying so. Scans are the reference, provided a few settings are right."
 sure: "the numbers come from one scanner and six sheets. The traps below are general to flatbed scanners; how your own scanner names its settings will differ."
 data:

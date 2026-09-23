@@ -6,7 +6,7 @@ number: 25
 written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: the design rules of twenty-two built-in sheets, with the failures that produced each one
-status: published
+state: published
 found: The most effective single rule is declaring where printed matter is, so candidates there are dropped rather than classified. A declared rectangle is free and perfectly reliable; classification is neither.
 sure: These are design decisions with reasons, several of them driven by real failures on real targets. Where a rule rests on a measurement, that measurement is linked.
 sources:

@@ -6,7 +6,7 @@ number: 7
 written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, with the rule it follows and what it keeps
-status: published
+state: published
 found: The keep list is nine fields about the camera and the exposure. Everything else goes, including every GPS field, every date, every serial number, every maker note, and whatever a phone appended after the end of the image.
 sure: This describes the code and the rule it implements. It is not a guarantee about any other software that has touched your file before it reached GroupLab.
 sources:

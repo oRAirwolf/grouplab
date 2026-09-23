@@ -737,6 +737,37 @@ def unquote(value: str) -> str:
     return value
 
 
+# Entry 143 section 1.3: three states, not two, because "published" was being used for two different things.
+# An article that is finished and reviewed is `ready`; it becomes `published` on the day a batch goes live, and
+# PUBLISHED.md is the record of that having happened.
+STATES = {"draft", "ready", "published"}
+
+PUBLISHED = REPO / "website" / "research" / "PUBLISHED.md"
+
+DRAFT_NOTICE = ('<p class="small warn">This article is a draft. It is not finished, it is not linked from the '
+                'research index, and anything in it may change.</p>')
+
+READY_NOTICE = ('<p class="small warn">This article is finished and waiting to be published with its batch. It is '
+                'not linked from the research index yet.</p>')
+
+
+def published_articles() -> set:
+    """The slugs that have actually gone live, from the record beside the articles.
+
+    Entry 143 section 1.3. The record is a deliberate act with a date on it, which is the difference between an
+    article saying it is published and an article having been published. The build holds the two together in both
+    directions, so neither can drift.
+    """
+    if not PUBLISHED.exists():
+        return set()
+    out = set()
+    for line in PUBLISHED.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith("- ") and " " in line[2:]:
+            out.add(line[2:].split()[0])
+    return out
+
+
 def research_articles() -> list[dict]:
     """Every article, front matter parsed, newest number last. Entry 142 section 2.1.
 
@@ -746,6 +777,9 @@ def research_articles() -> list[dict]:
     out = []
     folder = REPO / "website" / "research"
     for path in sorted(folder.glob("*.md")):
+        # The record of what has gone live lives beside the articles and is not one. Entry 143 section 1.3.
+        if path.name == PUBLISHED.name:
+            continue
         text = path.read_text(encoding="utf-8")
         if not text.startswith("---"):
             raise SystemExit(f"{path.name}: no front matter")
@@ -764,6 +798,59 @@ def research_figure(meta: dict) -> str | None:
         if (folder / f"lead{ext}").exists():
             return f"/research/{meta['slug']}/figures/lead{ext}"
     return None
+
+
+def research_lead(meta: dict) -> str:
+    """The picture at the top of an index card, and never a gap.
+
+    Entry 143 section 1.1: "Every card on the index needs a lead image, or none of them do." One card in four had a
+    thumbnail, so the row stood as tall as its tallest card with large blanks in the rest of it.
+
+    **On the live site it was worse than that.** Every article with a chart was still a draft, so seventeen of the
+    eighteen published articles had no lead at all. The entry's own fallback is what fits: where an article has no
+    natural chart, a plain titled panel in the site's own style is better than a gap. The panel is built from the
+    article's own group and number, in the site's colours, at the same shape as a thumbnail, so it follows the
+    reader's theme for nothing and there is no image to go stale.
+    """
+    figure = research_figure(meta)
+    if figure:
+        return themed_image(figure, "", "research-thumb", width=320, height=200)
+
+    return (
+        f'<div class="research-thumb research-plate" aria-hidden="true">'
+        f'<span class="mono small caps">{esc(str(meta.get("group", "")))}</span>'
+        f'<span class="plate-rule"></span>'
+        f'<span class="mono plate-number">{esc(str(meta.get("number", "")))}</span>'
+        "</div>"
+    )
+
+
+def themed_image(src: str, alt: str, cls: str, width: int = 0, height: int = 0) -> str:
+    """One image, or a light and a dark one where the figure script wrote both.
+
+    Entry 143 section 1.2: every figure was drawn on a near-white surface, which glared against the dark theme and
+    looked pasted on. ``_style.py`` now writes ``<name>-dark.png`` beside every figure it saves, and this is the
+    half that puts it on the page. A figure with no dark file beside it is shown as it always was, so an older
+    figure that has not been regenerated still appears rather than vanishing.
+    """
+    size = f' width="{width}" height="{height}"' if width else ""
+    dot = src.rfind(".")
+    dark_src = src[:dot] + "-dark" + src[dot:]
+    if not (REPO / "website" / dark_src.lstrip("/")).exists():
+        return f'<img class="{cls}" src="{src}" alt="{esc(alt)}"{size} loading="lazy" decoding="async">'
+
+    return (
+        f'<img class="{cls} only-dark" src="{dark_src}" alt="{esc(alt)}"{size} loading="lazy" decoding="async">'
+        f'<img class="{cls} only-light" src="{src}" alt="{esc(alt)}"{size} loading="lazy" decoding="async">'
+    )
+
+
+def research_swap(html_text: str) -> str:
+    """Every figure in an article body, given its dark half where one exists."""
+    def one(m):
+        return themed_image(m.group(2), html.unescape(m.group(1)), "research-fig")
+
+    return re.sub(r'<img alt="([^"]*)" src="(/research/[^"]+)"\s*/?>', one, html_text)
 
 
 def build_research_figures() -> list[str]:
@@ -795,6 +882,44 @@ def build_research_figures() -> list[str]:
     return problems
 
 
+# Entry 143 section 1.2: figures a script drew as artwork of white paper. These are pictures of a scanned sheet, so
+# white is the subject and not the theme, and they are the same in both. Everything else must have a dark version.
+PAPER = {"scanner-traps/settings.png", "can-you-see-the-bull/test-card.png"}
+
+# The surface _style.py draws a dark figure on. Held here as well so a figure saved by something that did not use the
+# shared style, or a light figure copied to a dark name, is caught rather than published.
+DARK_SURFACE = (0x19, 0x1a, 0x1e)
+
+
+def figure_theme_problems() -> list[str]:
+    """Every figure has a dark version, and every dark version is actually dark.
+
+    Entry 143 section 1.2. The first run of this produced dark figures with black titles on them, because the style was
+    recolouring the centre title artist and every title in these articles is a left one. Nothing in the build noticed:
+    the file was written, the page showed it, and it was only visible to somebody looking at the picture. So the build
+    looks at the picture.
+    """
+    problems = []
+    root = REPO / "website" / "research"
+    for light in sorted(root.glob("*/figures/*.png")):
+        name = f"{light.parent.parent.name}/{light.name}"
+        if "-dark" in light.stem or light.stem == "lead" or name in PAPER:
+            continue
+
+        dark = light.with_name(light.stem + "-dark.png")
+        if not dark.exists():
+            problems.append(f"research/{name}: has no dark version. Draw it with _style.save, which writes both")
+            continue
+
+        corner = Image.open(dark).convert("RGB").getpixel((1, 1))
+        if corner != DARK_SURFACE:
+            problems.append(
+                f"research/{light.parent.parent.name}/{dark.name}: its corner is {corner}, not the dark surface "
+                f"{DARK_SURFACE}, so it is a light figure under a dark name")
+
+    return problems
+
+
 def research_problems() -> list[str]:
     """Everything wrong with the research articles, entry 142 sections 2.5 and 2.6.
 
@@ -802,8 +927,9 @@ def research_problems() -> list[str]:
     still writes the figure the page shows, and no published image carrying metadata. A reader who is
     given a download link that 404s has been told the data is available when it is not.
     """
-    required = ["title", "description", "group", "number", "written", "data_date", "samples", "status", "found", "sure"]
+    required = ["title", "description", "group", "number", "written", "data_date", "samples", "state", "found", "sure"]
     problems = []
+    live = published_articles()
     for meta in research_articles():
         where = f"research/{meta['slug']}.md"
         for key in required:
@@ -811,8 +937,22 @@ def research_problems() -> list[str]:
                 problems.append(f"{where}: front matter has no {key}")
         if meta.get("group") not in RESEARCH_GROUPS:
             problems.append(f"{where}: group {meta.get('group')!r} is not one of {RESEARCH_GROUPS}")
-        if meta.get("status") not in {"draft", "published"}:
-            problems.append(f"{where}: status is {meta.get('status')!r}, which is neither draft nor published")
+        if meta.get("state") not in STATES:
+            problems.append(f"{where}: state is {meta.get('state')!r}, and it must be one of {sorted(STATES)}")
+        if meta.get("status"):
+            problems.append(f"{where}: still has a status field. Entry 143 section 1.3 replaced it with state")
+
+        # Entry 143 section 1.3, and the whole point of the three states. "published" is not a thing an article can
+        # say about itself: it is a thing the record says happened, on a date, to a batch. Setting it here and
+        # nowhere else would put a page on the index that nobody agreed to publish.
+        if meta.get("state") == "published" and meta["slug"] not in live:
+            problems.append(
+                f"{where}: state says published and {PUBLISHED.name} does not list it. Publishing is a decision, so it "
+                "is recorded there when a batch actually goes live, and only then does this field say published")
+        if meta.get("state") != "published" and meta["slug"] in live:
+            problems.append(
+                f"{where}: {PUBLISHED.name} says this went live and the state says {meta.get('state')!r}. A page that "
+                "is on the site and does not admit it will be taken down by the next build without anybody deciding to")
 
         folder = REPO / "website" / "research" / meta["slug"]
         for data in meta.get("data") or []:
@@ -835,16 +975,12 @@ def research_problems() -> list[str]:
 
 
 def page_research_index() -> str:
-    published = [m for m in research_articles() if m.get("status") == "published"]
+    published = [m for m in research_articles() if m.get("state") == "published"]
     groups = []
     for group in RESEARCH_GROUPS:
         cards = []
         for meta in [m for m in published if m.get("group") == group]:
-            figure = research_figure(meta)
-            thumb = (
-                f'<img class="research-thumb" src="{figure}" alt="" width="320" height="200" loading="lazy">'
-                if figure else ""
-            )
+            thumb = research_lead(meta)
             cards.append(
                 f'<a class="panel pad stack tight research-card plain" href="/research/{meta["slug"]}/">'
                 f"{thumb}"
@@ -867,7 +1003,7 @@ def page_research_index() -> str:
 
 
 def page_research_article(meta: dict) -> str:
-    content = markdown.markdown(meta["body"], extensions=["tables", "sane_lists", "fenced_code"])
+    content = research_swap(markdown.markdown(meta["body"], extensions=["tables", "sane_lists", "fenced_code"]))
     sources = "".join(f"<li>{markdown.markdown(str(x), extensions=[])[3:-4]}</li>" for x in (meta.get("sources") or []))
     data = "".join(
         f'<li><a href="/research/{meta["slug"]}/{d}">{esc(d.rsplit("/", 1)[-1])}</a></li>' for d in (meta.get("data") or [])
@@ -880,7 +1016,7 @@ def page_research_article(meta: dict) -> str:
 <p class="small">{esc(meta["sure"])}</p>
 {f'<p class="mono faint small caps">The data</p><ul class="small">{data}</ul>' if data else ""}
 </div>"""
-    draft = '<p class="small warn">This article is a draft and is not linked from the index yet.</p>' if meta.get("status") != "published" else ""
+    draft = {"draft": DRAFT_NOTICE, "ready": READY_NOTICE}.get(str(meta.get("state")), "")
     body = f"""
 <section class="wrap guide">
 <article class="prose research-article">
@@ -1265,7 +1401,15 @@ p.text,.text p,.text{color:var(--text)}
 .research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:12px 0 32px}
 .research-card{display:block;transition:border-color .15s ease}
 .research-card:hover{border-color:var(--accent)}
-.research-thumb{width:100%;height:auto;border-radius:4px;background:var(--panel-2,transparent);margin-bottom:8px}
+/* Entry 143 section 1.1: every card's lead is the same shape, whether it is a chart or a plate, so the row is
+   even. Without this the one card with a real figure set the height of the whole row. */
+.research-thumb{width:100%;aspect-ratio:320/200;object-fit:cover;border-radius:4px;background:var(--sunk);margin-bottom:8px}
+.research-fig{max-width:100%;height:auto;border-radius:4px}
+/* Entry 143 section 1.1: the lead for an article with no chart. Same shape as a thumbnail so the row is even,
+   and drawn in the site's own colours so it follows the theme with no second image to keep in step. */
+.research-plate{aspect-ratio:320/200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--sunk);border:1px solid var(--line);color:var(--faint)}
+.plate-rule{width:42px;height:2px;background:var(--amber);opacity:.8}
+.plate-number{font-size:30px;color:var(--dim);line-height:1}
 .research-box{border-left:3px solid var(--accent);margin:20px 0 28px}
 
 /* Entry 146: the tour. The picture carries each page, so it goes full width of the column with a little air
@@ -1513,7 +1657,7 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
-    problems += figure_problems + research_problems() + tour_problems()
+    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems()
     problems += link_problems()
     problems += php_problems()
     if problems:

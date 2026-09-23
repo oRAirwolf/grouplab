@@ -6,7 +6,7 @@ number: 11
 written: 2026-09-22
 data_date: "Closed-form statistics and simulation, seed 2026"
 samples: "Exact chi-square and F distributions; 40 simulated groups for the scatter"
-status: draft
+state: draft
 found: "from one five-shot group, your rifle's true dispersion could be anywhere from about 0.68 to 1.92 times what you measured. At 25 shots that narrows to 0.83 to 1.25. To show that one load groups 20 percent tighter than another takes about 81 shots of each; to show a 10 percent difference takes 434."
 sure: "these are exact results for round, flyer-free groups, the same mathematics GroupLab uses and validates against the shotGroups package. Real groups with flyers or stringing need at least this many shots, usually more."
 data:

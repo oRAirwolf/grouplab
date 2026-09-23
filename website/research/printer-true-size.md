@@ -6,7 +6,7 @@ number: 22
 written: 2026-09-22
 data_date: "GroupLab Phase 0 print tests, September 2026"
 samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi"
-status: draft
+state: draft
 found: "a printer set to 'Actual size' can be very accurate: Alan's measured 1.0001 horizontally and 1.0006 vertically, within 0.06 percent. The danger is the print dialog. 'Fit to page' or 'Shrink oversized pages' typically prints a letter sheet at around 94 to 97 percent. On a scan, GroupLab detects this (a sheet printed at 96.2 percent was measured at 0.96200) and corrects every figure for it."
 sure: "the detection result comes from GroupLab's own acceptance tests. One printer is not every printer; that is why the check below exists."
 data:

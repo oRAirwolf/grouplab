@@ -20,3 +20,7 @@ website/_site/
 # the moment the script beside it changed, so the repository carried a compiled copy of a script it no longer matched.
 __pycache__/
 *.pyc
+
+# Entry 143 section 1.2: two research scripts build PDFs beside themselves. Nothing on the site links them,
+# the runner has no reportlab to rebuild them, and a generated file in the repository goes stale silently.
+website/research/*/figures/*.pdf

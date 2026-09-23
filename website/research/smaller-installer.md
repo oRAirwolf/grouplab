@@ -6,7 +6,7 @@ number: 28
 written: 2026-09-22
 data_date: 2026-09-22
 samples: one Windows build, measured before and after, with the analysis re-run on a 25 shot sheet to prove nothing changed
-status: published
+state: published
 found: 100.7 MB of a 332.6 MB install was debug symbols, 100 MB of it in two files. Removing them took the install to 204.3 MB, a 39 percent cut, and made the self-contained build smaller than the framework-dependent one had been.
 sure: One build on one machine, measured directly rather than estimated, and checked by re-running the analysis afterwards.
 sources:

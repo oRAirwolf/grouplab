@@ -6,7 +6,7 @@ number: 20
 written: 2026-09-22
 data_date: 2026-09-20
 samples: one blank sheet shot at a marker dot and scanned at 600 dpi, checked against the scanner's stated resolution
-status: published
+state: published
 found: A scan states its own resolution, and on a blank sheet that is a complete scale with no ruler needed. A photograph's stated resolution describes the file and not the paper, so it is never offered one.
 sure: One sheet, one scanner. The principle is sound because the number is written in the file by the device that made it; what is not established is how often a scanner lies about it.
 sources:

@@ -6,7 +6,7 @@ number: 3
 written: 2026-09-22
 data_date: 2026-09-20
 samples: 5 shots with one primer and 4 with the other
-status: published
+state: published
 found: Changing the primer moved where the shots landed, by about a whole row of bulls, and that shift is about as certain as anything in this article. Whether it changed how tightly the rifle grouped, nine shots cannot say, and GroupLab refuses to say it.
 sure: Nine shots in total, one rifle, one sitting. This is a worked example of how to read a small comparison, not a finding about primers.
 sources:

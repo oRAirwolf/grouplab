@@ -6,7 +6,7 @@ number: 27
 written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the build pipeline and the failures that shaped it
-status: published
+state: published
 found: The hard parts are not building. They are making sure a build happens on a quiet day, that two pushes do not race, and that the release notes say something a shooter can use.
 sure: This describes the pipeline as it stands. The numbers in it, such as the run times, are from ordinary runs and are not benchmarks.
 sources:

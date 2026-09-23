@@ -6,7 +6,7 @@ number: 19
 written: 2026-09-22
 data_date: 2026-09-20
 samples: one 24 shot .22 LR sheet shot in a shifting crosswind with the windage adjusted mid-sheet, plus the circularity test run against simulated round groups
-status: published
+state: published
 found: Every group is lopsided. Whether a group is lopsided enough to blame the wind is a question with a numerical answer, and at the shot counts people fire the answer is usually no.
 sure: The simulation behind the test is exact for a round normal distribution. The one real windy sheet is an illustration, not evidence about wind in general.
 sources:

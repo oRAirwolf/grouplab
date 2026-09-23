@@ -6,7 +6,7 @@ number: 5
 written: 2026-09-22
 data_date: 2026-09-20
 samples: the six range scans of 2026-09-20 and nine photographs of the same sheets
-status: published
+state: published
 found: GroupLab finds the printed markers, works out exactly where the page is, subtracts the artwork it knows it printed, and calls what is left a hole. Every step reports what it did, and any step can be checked against the picture.
 sure: The steps below are what the current build does. The figures quoted are from one range day, six scans and nine photographs of four sheets.
 sources:

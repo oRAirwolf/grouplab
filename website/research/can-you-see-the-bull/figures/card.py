@@ -1,9 +1,15 @@
+# Entry 143 section 1.2. This wrote to /mnt/user-data/outputs, which is a folder in the session that first
+# ran it and exists on no machine this repository is checked out on. It failed on every build here and the
+# failure was hidden, because reportlab is not installed on the runner either, so the build reported a
+# missing package and moved on. It writes beside itself now, like every other script in the research folder.
+from pathlib import Path
+HERE = Path(__file__).resolve().parent
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 import math
 W,H=letter
-c=canvas.Canvas("/mnt/user-data/outputs/GroupLab-aim-point-test-card.pdf",pagesize=letter)
+c=canvas.Canvas(str(HERE / "GroupLab-aim-point-test-card.pdf"),pagesize=letter)
 c.setTitle("GroupLab aim point visibility test card, 100 yards")
 K=(0,0,0);Wt=(1,1,1)
 def disc(x,y,d,col):

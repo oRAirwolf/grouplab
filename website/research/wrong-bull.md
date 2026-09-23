@@ -6,7 +6,7 @@ number: 6
 written: 2026-09-22
 data_date: 2026-09-20
 samples: three sheets of 20, 23 and 10 shots with the shooter's own record of where each was aimed
-status: published
+state: published
 found: Nearest bull is the wrong rule whenever the rifle is not zeroed for the load. On one 20 shot sheet every single shot landed nearer a bull it was not aimed at, and the group that comes out of reading it that way is tight, confident and meaningless.
 sure: Three sheets from one afternoon, with the shooter's written record of which bulls he aimed at. Enough to show the failure clearly; the fix is still being built.
 sources:

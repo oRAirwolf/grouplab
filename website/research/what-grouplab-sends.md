@@ -6,7 +6,7 @@ number: 26
 written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, with the test that keeps it true
-status: published
+state: published
 found: GroupLab sends four things, none of them without an action from you, and none containing where you were. A test fails the build if any part of the program learns to reach the outside world on its own.
 sure: This describes the code as it stands and the tests that hold it there. It is not an audit by anyone else, and you are welcome to read the source instead.
 sources:

@@ -6,7 +6,7 @@ number: 21
 written: 2026-09-22
 data_date: "2026-09-20"
 samples: "176 holes in nine phone photos of four sheets, compared with 600 dpi scans of the same sheets"
-status: draft
+state: draft
 found: "on Alan's range day, GroupLab placed every photographed sheet to within 0.004 to 0.006 inch using its printed markers, so shot positions from photos are sound. Hole size is another matter: the same holes measured anywhere from 0.90 to 1.45 times the bullet diameter in photos, against a steady 0.92 to 0.95 in scans. The cause was not the camera's resolution or angle. It was the light: low sun puts shadow into and beside each hole, and the camera cannot tell shadow from hole."
 sure: "nine photos of four sheets on one afternoon is enough to show the effect clearly and not enough to put a precise number on it. The advice below follows from it; the numbers will firm up as more photos come in."
 data:

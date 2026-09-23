@@ -6,7 +6,7 @@ number: 24
 written: 2026-09-22
 data_date: 2026-09-22
 samples: six marker dictionaries compared, with false-positive counts measured on real scanned target artwork under a permissive detector
-status: published
+state: published
 found: Dictionaries with a minimum Hamming distance of 4 or less produced false marker detections on ordinary target artwork. Every dictionary at Hamming 11 or above produced none. That one number decided it.
 sure: The false-positive test used one corpus of real scans. The Hamming figures were recomputed from rendered markers rather than taken from documentation, and agreed with it.
 sources:

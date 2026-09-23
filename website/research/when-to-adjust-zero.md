@@ -6,7 +6,7 @@ number: 16
 written: 2026-09-22
 data_date: "Simulation, seed 2026"
 samples: "200,000 simulated zeroing sessions; worked examples"
-status: draft
+state: draft
 found: "the centre of a small group is itself uncertain. After a full correction based on three shots, your new zero misses the true one by about 0.72 sigma on average, whatever the old error was. So if your zero is already closer than that, adjusting on three shots makes it worse. A rifle that starts perfectly zeroed and is 'corrected' after every three-shot group settles at an average error of 0.72 sigma."
 sure: "exact for round groups; the chasing figure is from 200,000 simulated sessions. It assumes the scope moves exactly as marked, which a scope that tracks badly makes worse."
 data:

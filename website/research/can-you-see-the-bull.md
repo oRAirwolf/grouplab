@@ -6,7 +6,7 @@ number: 8
 written: 2026-09-22
 data_date: "2026-09-20 observations; test results 2026-09-23 (pending)"
 samples: "Four optics, nine aim point designs, two observers (results pending)"
-status: draft
+state: draft
 found: "see the article"
 sure: "the geometry is exact. The 4 arcminute working rule is a proposal to test. The side-by-side results from the 2026-09-23 range test will be added below."
 data:

@@ -6,7 +6,7 @@ number: 13
 written: 2026-09-22
 data_date: "Simulation, seed 2026"
 samples: "400,000 simulated shots per shape; 30-shot example groups"
-status: draft
+state: draft
 found: "for a round group, CEP 50, mean radius and CEP 90 are fixed multiples of the same underlying spread: 1.18, 1.25 and 2.15 sigma. They are three views of one number. When a group stretches to twice as wide as it is tall, the round-group CEP 50 circle holds about 54 percent of shots instead of 50, and the CEP 90 circle about 89 percent instead of 90."
 sure: "exact for the model; the stretched-group figures are from 400,000 simulated shots per shape. Real groups with flyers break every one of these formulas, which is why GroupLab handles flyers separately."
 data:

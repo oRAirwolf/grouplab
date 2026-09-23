@@ -6,7 +6,7 @@ number: 9
 written: 2026-09-22
 data_date: 2026-09-20
 samples: the 59 photographs Alan took at his range on 2026-09-20, paired against his six 600 dpi flatbed scans of the same sheets
-status: published
+state: published
 found: Of 59 photographs, 28 could not be read at all. Of the 15 that paired with a scan, a hole's position was out by about 0.03 in at the median and 0.07 in at the 95th percentile, against a mean radius of about 0.17 in.
 sure: One shooter, one afternoon, one phone and one scanner. The gap is measured properly against scans of the same sheets; how a different phone or a different day would compare is not established.
 sources:

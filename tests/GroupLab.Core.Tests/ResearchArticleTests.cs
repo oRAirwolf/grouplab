@@ -21,9 +21,17 @@ public class ResearchArticleTests
 {
     private static string Folder => Repo.PathTo("website", "research");
 
+    /// <summary>
+    /// The record of which articles have actually gone live, entry 143 section 1.3. It sits beside the articles and is not one, so every
+    /// check here skips it rather than reading it as a page with no front matter.
+    /// </summary>
+    private const string TheRecord = "PUBLISHED.md";
+
     private static IEnumerable<(string Name, string Text)> Articles() =>
         Directory.Exists(Folder)
-            ? Directory.EnumerateFiles(Folder, "*.md").Select(f => (Path.GetFileName(f), File.ReadAllText(f)))
+            ? Directory.EnumerateFiles(Folder, "*.md")
+                .Where(f => !string.Equals(Path.GetFileName(f), TheRecord, StringComparison.Ordinal))
+                .Select(f => (Path.GetFileName(f), File.ReadAllText(f)))
             : [];
 
     /// <summary>
@@ -126,5 +134,54 @@ public class ResearchArticleTests
         }
 
         Assert.True(wrong.Count == 0, string.Join("; ", wrong));
+    }
+
+    /// <summary>
+    /// Entry 143 section 1.3: front matter said <c>status: published</c> on articles that were not published, because the word was doing two
+    /// jobs, finished and on the site. There are three states now, and the third one means something only because a separate record says it
+    /// happened. The site build refuses either half of a disagreement; this is the same rule where the rest of the suite can see it.
+    /// </summary>
+    [Fact]
+    public void AnArticleIsPublishedOnlyWhenTheRecordSaysItWent()
+    {
+        string record = Path.Combine(Folder, TheRecord);
+        Assert.True(File.Exists(record), $"{TheRecord} is the record of which articles have gone live. It must exist.");
+
+        var live = File.ReadAllLines(record)
+            .Select(l => l.Trim())
+            .Where(l => l.StartsWith("- ", StringComparison.Ordinal) && l[2..].Contains(' '))
+            .Select(l => l[2..].Split(' ')[0])
+            .ToHashSet(StringComparer.Ordinal);
+
+        var wrong = new List<string>();
+        foreach (var (name, text) in Articles())
+        {
+            string slug = name[..^3];
+            string? state = System.Text.RegularExpressions.Regex.Match(text, "^state: *(.+)$", System.Text.RegularExpressions.RegexOptions.Multiline)
+                .Groups[1].Value.Trim();
+
+            if (text.Contains($"{Environment.NewLine}status:", StringComparison.Ordinal) || text.StartsWith("status:", StringComparison.Ordinal)
+                || System.Text.RegularExpressions.Regex.IsMatch(text, "^status:", System.Text.RegularExpressions.RegexOptions.Multiline))
+            {
+                wrong.Add($"{name}: still has a status field, which entry 143 section 1.3 replaced with state");
+            }
+
+            if (state is not ("draft" or "ready" or "published"))
+            {
+                wrong.Add($"{name}: state is \"{state}\", and it must be draft, ready or published");
+            }
+
+            if (state == "published" && !live.Contains(slug))
+            {
+                wrong.Add($"{name}: says published and {TheRecord} does not list it");
+            }
+
+            if (state != "published" && live.Contains(slug))
+            {
+                wrong.Add($"{name}: {TheRecord} says it went live and it says {state}");
+            }
+        }
+
+        Assert.True(wrong.Count == 0, string.Join(Environment.NewLine + "  ", wrong));
     }
 }

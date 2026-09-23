@@ -6,7 +6,7 @@ number: 1
 written: 2026-09-22
 data_date: 2026-09-20
 samples: 176 holes photographed and 78 scanned, over four sheets of known calibre
-status: published
+state: published
 found: A hole in paper photographed with a phone measures anywhere from nine tenths to one and a half times the bullet that made it, and which end you land on depends on the light rather than on the bullet. Scanned, the same four sheets all read between 0.92 and 0.95.
 sure: Four sheets, nine photographs, 176 holes, one shooter, one afternoon. Enough to show that no single correction exists; not enough to tell you what the correction would be if one did.
 data:

@@ -6,7 +6,7 @@ number: 29
 written: 2026-09-22
 data_date: "Planned; results pending"
 samples: "Fourteen optics in four classes (planned)"
-status: draft
+state: draft
 found: "see the article"
 sure: "see the article"
 data:

@@ -68,3 +68,28 @@ Each one ends with a list of what to check against the repository before it goes
 - Images of Alan's sheets are re-encoded from pixels at a web size with no metadata. The orange commercial target is never shown or named, and the friend's scan waits for its consent record.
 - No GPS, location or timestamp data is read, printed or published, from anything.
 - Nothing in `C:\Dev\grouplab-research-drafts` is written to, renamed or deleted. Drafts are read and brought across.
+
+## Figures come in both themes
+
+NOTES-FROM-PLANNING.md entry 143 section 1.2. Every figure used to be drawn on a near-white surface, which glared against the site's dark theme and looked pasted on.
+
+`_style.py` now writes two files for every figure. `save(fig, path)` draws it once, writes the light version, recolours the same figure to the dark palette, and writes it beside the first as `<name>-dark.png`. **No figure script had to change**, and recolouring rather than redrawing is what keeps the two identical in everything but colour: same artists, same data, same layout, so a figure cannot come out saying two different things in two themes.
+
+Only the neutrals move. The three data colours, blue, orange and aqua, were chosen to sit on either background and are untouched. Anything a script coloured deliberately still means what it meant.
+
+**Two faults the first run produced, both invisible to a build that only checks files exist:**
+
+- Every dark figure had a black title on a black background. An axes has three title artists, one for each position, and this style puts titles on the left, so recolouring `ax.title` recoloured an empty string.
+- "Chasing the zero" came out with a white cross on the chart and a black one in the key for it, because a legend's sample marks are copies made when the legend was built.
+
+So the build looks at the picture: every figure must have a dark version, and every dark version's corner must be the dark surface. Two figures are exempt and named in `PAPER`, because they are photographs of white paper, where white is the subject rather than the theme.
+
+## Three states, and a record of what went live
+
+Entry 143 section 1.3. Front matter said `status: published` on articles that were not published, because the word was doing two jobs: finished, and on the site.
+
+- `state: draft` is being written. It is built and reachable by its own address, carries a notice saying so, and is not on the index.
+- `state: ready` is finished and reviewed, waiting for its batch. Same treatment, different notice.
+- `state: published` is on the site.
+
+**The third one is not a thing an article can say about itself.** `website/research/PUBLISHED.md` is the record of publishing having happened, with a date and a batch, and the build refuses both halves of a disagreement: a page claiming to be published that is not listed, and a page listed there that does not claim it. So publishing stays a decision somebody took on a day.

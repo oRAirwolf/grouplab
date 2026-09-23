@@ -6,7 +6,7 @@ number: 30
 written: 2026-09-22
 data_date: "Running log; latest entry 2026-09-23"
 samples: "See each entry"
-status: draft
+state: draft
 found: "see the article"
 sure: "see the article"
 data:

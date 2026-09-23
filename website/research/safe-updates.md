@@ -6,7 +6,7 @@ number: 10
 written: 2026-09-22
 data_date: 2026-09-22
 samples: not a measurement: an account of the code, the failure it shipped with, and the tests added afterwards
-status: published
+state: published
 found: A signature that covers a rebuilt copy of a file rather than the file itself breaks the day you add a field. That shipped, and every installed build refused every update until it was reverted.
 sure: This describes the code and a fault that really happened, with the commit that reverted it. It is not a security audit.
 sources:

@@ -6,7 +6,7 @@ number: 17
 written: 2026-09-22
 data_date: 2026-09-20
 samples: thirteen images of Alan's own sheets, nine photographs and four scans, 14 to 25 marks each, with the calibre he actually shot
-status: published
+state: published
 found: A stated calibre is the wrong reference for a photograph. On one 15 shot sheet it flagged all fifteen holes as possibly two shots. Measuring the sheet's own marks against each other instead brings that to one, and leaves scans exactly as they were.
 sure: Thirteen images from one afternoon and one shooter. Enough to show that the old rule fails on photographs and that the new one does not, but the sizes it produces are not a calibrated measurement of anything.
 sources:

@@ -6,7 +6,7 @@ number: 14
 written: 2026-09-22
 data_date: "Closed-form statistics and simulation, seed 2026"
 samples: "Exact chi-square intervals; 60 simulated strings; 200,000 simulated strings per row of the ES table"
-status: draft
+state: draft
 found: "if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s. With 20 shots the same reading narrows to 7.6 to 14.6. Single-digit SD claims from five-shot strings are mostly luck."
 sure: "exact for normally distributed velocities, which is a good description of well-made ammunition. A string with a genuine outlier (a bad primer, a light charge) is worse than this, not better."
 data:
