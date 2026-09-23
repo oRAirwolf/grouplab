@@ -8080,6 +8080,55 @@ Three failures, all mine:
 3. **On Windows alone, my own test anchored a pattern with `$`** against the workflow file. A fresh checkout on Windows has CRLF line endings, so `- name: Publish$` matches nothing there and passes everywhere else. It passed here because this working copy is LF and only a fresh checkout converts. Entry 121 section 3 records the same fault in another test, with the same cause, which is the part that should have stopped me writing it again.
 
 
+## Entry 149: four answers, and requests stop going through the panel
+
+### Question 47, the five kind words (section 1)
+
+The planning session kept all five. The reason it gives is the one that decides it: a change whose only benefit is a shorter list of words, paid for by rewriting 45 commit messages, is not worth making.
+
+What was actually wrong was not the vocabulary but that there were three descriptions of one rule. Entry 145 named two words, because two headings are what a reader sees. `CLAUDE.md` named some of them. `scripts/release-notes.py` accepted five. None of the three was wrong on its own, and a person writing a commit trailer had no way to tell which one to believe.
+
+- `CLAUDE.md` now names `new`, `fixed`, `changed`, `user` and `internal`, says which of the two headings each lands under, and says why there are five: **the heading is what the reader sees, the kind is what the writer says.** Somebody marking a change `fixed` rather than `changed` is saying something true about it even though both land in the same place.
+- `ReleaseNoteKindsTests` reads the list out of `CLAUDE.md` and out of `release-notes.py` and requires the same set. It carries no copy of its own, because a third copy is a third thing to drift.
+- A third test catches the quiet half: a word the pattern accepts but `KINDS` and `SAME` sort nowhere would be accepted on a trailer and then vanish from the notes, with nothing failing.
+
+### Question 40, two sizes on one sheet (section 2)
+
+**The quarter-point of the smaller group is the hole size, and entry 82 section 3 is amended by this rather than worked around.** The amendment is written where the rule lives, in `RenderDifferenceHoleDetector.SizeReference` and on `HoleSizeSource.TwoSizes`, not only here.
+
+Before, a sheet whose round marks fell into two clear sizes got no size at all and a request for the calibre. That refusal flags nothing, and a sheet carrying five doubles is exactly the sheet where flagging nothing is worst.
+
+The code cannot tell the two cases apart, and taking the smaller group is right in both:
+
+| What the two sizes really are | What taking the smaller group does |
+| --- | --- |
+| Small marks are single shots, large ones are doubles | The doubles are flagged, which is what they are |
+| Small marks are a second, smaller calibre | The larger holes are flagged, and entry 140 section 3.2's guard turns that flood into one question about the calibre rather than a page of them |
+
+The description still asks for the calibre. Taking a reading does not stop the question being worth asking, because which of the two sizes a single shot makes is precisely what is not known.
+
+`TwoSizes` now returns the cut as well as the two medians, so the quarter-point is taken inside the smaller group rather than across the sheet. `CryingWolfTests` keeps both rows of the table and the two-sizes row asserts the new behaviour: a size is read, it sits below the larger group, the doubles are flagged, and `oversized:all` is not raised.
+
+Item 4 of the section, that a rimfire 22 is nominally 0.222 in and not 0.224, is entry 153 section 4's sweep and belongs there. Both `Calibre.cs` and `CalibreGuessList.cs` already carry the two figures as separate entries.
+
+### Questions 37 and 35: not done in this pass (sections 3 and 4)
+
+Both are accepted as written and neither is started.
+
+- **Section 3, question 37: build A and D, not C.** A is clicking the bulls on the sheet, on the marking screen, with a way to select a row, a column and everything. D is offering it where a certain offset would move shots. That is marking-screen interaction and it is not a small change. **Until A exists the release note wording stays as it is**, which the entry requires: no note may claim this is fixed for anybody who has not read the code.
+- **Section 4, question 35: keep one bull's width, then finish it.** The honest completion is re-running the entry 121 survey's own baselines against the narrowed rule, because that survey is where the false positives were counted. Six real scans are not that survey. **Until it has run, "no false holes anywhere" is not a sentence this project may publish**, and that limit belongs beside any claim made from the six scans.
+
+### Requests for Alan go to a file (sections 5 and 6)
+
+Alan has said plainly that the Claude Code panel is hard to read and that answering a question there is harder than answering it in the planning session. So `docs/notes/for-alan.md` exists, newest first, each request saying what is needed, why, and what a good answer looks like. An answered request is marked answered with the date and left in place.
+
+- **A request never stops the run.** It is written down and the work carries on. If an entry cannot finish without an answer, everything else in it is done and the report says which part is waiting.
+- **The one exception is a command he pastes into a shell**, because he runs those from the panel. It goes there written out in full, with which shell and what a good result looks like. He works inside MobaXterm and does not need the connection commands.
+- The file starts with three real requests: entry 129's server work, the hit probability screenshots entry 156 asks for, and the photograph annotations entry 158 section 2 asks for. The last two are already in hand with the planning session, so they are recorded and not chased.
+- The report after an entry is now the entry number, what changed, the test result, the commit, and whether the site has published it, with no request for Alan inside it.
+
+**Tests:** the 17 affected tests pass, `ReleaseNoteKindsTests`, `CryingWolfTests` and `CalibreSplitTests` together. The full suites run with the next entry.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

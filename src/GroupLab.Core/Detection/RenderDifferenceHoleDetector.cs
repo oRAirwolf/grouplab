@@ -88,7 +88,10 @@ public enum HoleSizeSource
     /// <summary>No size the sheet can give, so only the smallest hole any bullet makes: enough to veto a split, never to flag.</summary>
     Bound,
 
-    /// <summary>The round marks fall into two sizes, so no one size fits the sheet, and the person is asked for the calibre.</summary>
+    /// <summary>
+    /// The round marks fall into two sizes. Entry 149 section 2: the hole size is the quarter-point of the smaller group, so the larger
+    /// marks are flagged, and the person is still asked for the calibre because which group is a single shot is the thing not known.
+    /// </summary>
     TwoSizes,
 }
 
@@ -489,8 +492,19 @@ public static class RenderDifferenceHoleDetector
         double quarter = Math.Clamp(sorted[n / 4], bound, options.LargestHoleInches);
         if (n >= options.MarksForSheetSize && TwoSizes(sorted) is { } groups)
         {
-            return new HoleSizeReference(HoleSizeSource.TwoSizes, bound, null, n, string.Create(inv,
-                $"the marks fall into two sizes, about {groups.Small:0.00} and {groups.Large:0.00} in across, so no one hole size fits this sheet: name the calibre to have oversized marks flagged"));
+            // NOTES-FROM-PLANNING.md entry 149 section 2, answering question 40, and it amends entry 82 section 3 rather than working
+            // around it: where the marks fall into two clear sizes, the quarter-point of the SMALLER group is the hole size, instead of
+            // refusing to read one.
+            //
+            // Refusing flags nothing, and a sheet carrying five doubles is exactly the sheet where flagging nothing is worst. The two
+            // cases this code cannot tell apart are both handled correctly by taking the smaller group. If the smaller marks are singles,
+            // the doubles are flagged, which is what they are. If the smaller marks are a second, smaller calibre, the larger holes are
+            // flagged, and entry 140 section 3.2's guard turns that flood into one question about the calibre rather than a page of them.
+            //
+            // The description still asks for the calibre, because taking a reading does not stop the question being worth asking.
+            double smaller = Math.Clamp(sorted[Math.Max(0, groups.Cut / 4)], bound, options.LargestHoleInches);
+            return new HoleSizeReference(HoleSizeSource.TwoSizes, bound, smaller, n, string.Create(inv,
+                $"the marks fall into two sizes, about {groups.Small:0.00} and {groups.Large:0.00} in across; a hole is taken as {smaller:0.000} in, the quarter-point of the {groups.Cut} smaller marks, so the larger ones are flagged: name the calibre to be sure which of the two sizes a single shot makes"));
         }
 
         return n >= options.MarksForSheetSize
@@ -505,7 +519,7 @@ public static class RenderDifferenceHoleDetector
     /// gap is at least five pooled standard deviations. A continuous spread of sizes, however wide, is not two sizes: an even spread cut in
     /// half is only about three and a half apart.
     /// </summary>
-    internal static (double Small, double Large)? TwoSizes(IReadOnlyList<double> sortedDiameters)
+    internal static (double Small, double Large, int Cut)? TwoSizes(IReadOnlyList<double> sortedDiameters)
     {
         var logs = sortedDiameters.Select(d => 2 * Math.Log(d)).ToList();
         int n = logs.Count, least = Math.Max(3, (int)Math.Ceiling(n / 4.0));
@@ -537,7 +551,7 @@ public static class RenderDifferenceHoleDetector
         double pooled = Math.Sqrt((Sd(small) * Sd(small) + (Sd(large) * Sd(large))) / 2);
         double gap = large.Average() - small.Average();
         double medianSmall = sortedDiameters[bestCut / 2], medianLarge = sortedDiameters[bestCut + ((n - bestCut) / 2)];
-        return gap >= Math.Log(1.35) && gap >= 5 * pooled ? (medianSmall, medianLarge) : null;
+        return gap >= Math.Log(1.35) && gap >= 5 * pooled ? (medianSmall, medianLarge, bestCut) : null;
     }
 
     /// <summary>

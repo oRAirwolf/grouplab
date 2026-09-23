@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-23, question 47: I kept `new`, `fixed` and `changed` as release note kinds, where entry 145 names two
 
-**Status: open. Nothing is blocked; the code does the wider thing, and narrowing it later costs one line.**
+**Status: answered 2026-09-23.** Answered by entry 149 section 1: keep all five. `CLAUDE.md` names them and `ReleaseNoteKindsTests` holds the documentation and the generator to the same set.
 
 ### What entry 145 says
 
@@ -257,7 +257,7 @@ The guess snaps to Alan's lists and offers the neighbours it cannot separate. On
 
 ## 2026-09-22, question 40: at a third doubles, entry 141 section 4.2 and entry 82 section 3 ask for opposite things
 
-**Status: open, and neither rule was worked around.**
+**Status: answered 2026-09-23.** Answered by entry 149 section 2: take the quarter-point of the smaller group. Entry 82 section 3 is amended by it, and the description still asks for the calibre.
 
 ### 1. The two rules
 
@@ -377,7 +377,7 @@ Until then the behaviour is safe rather than right: one question instead of fift
 
 ## 2026-09-22, question 37: the point-of-impact correction works, and there is no way for a shooter to switch it on
 
-**Status: open**
+**Status: answered 2026-09-23.** Answered by entry 149 section 3: build A and D, not C. Not built yet; recorded as outstanding in `docs/PHASE1-RESULTS.md` under entry 149.
 
 ### 1. What happened
 
@@ -473,7 +473,7 @@ Revisit the light installer if the download is still thought too large after 1 a
 
 ## 2026-09-22, question 35: holes off the bull grid are now kept, and that loosens the one rule that removed every false positive
 
-**Status: open**
+**Status: answered 2026-09-23.** Answered by entry 149 section 4: keep one bull's width, then re-run the entry 121 survey's own baselines against the narrowed rule before any claim is made from it.
 
 ### 1. What was asked for and what was built
 

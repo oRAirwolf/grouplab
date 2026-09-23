@@ -17,25 +17,42 @@ Actioning an entry means four things, in the same commit as the work:
 
 A design question never stops the run. Record it as a question, build what does not depend on the answer, and carry on.
 
-## Anything that needs Alan comes first
+## Anything that needs Alan goes to a file, not to the panel
 
-**Before starting the body of any entry or queue, read the whole of it and find every step that will need him**: a server command to paste, an approval, a secret to set, a setting to change, a file to fetch, a build to install and test. Prepare all of them up front and give them to him in one message as a numbered list, each with the exact command or click, in the order he should do them. Only then carry on with the work that needs nobody.
+**NOTES-FROM-PLANNING.md entry 149 section 5, and it replaces the earlier rule about handing him a numbered
+list in the panel.** Alan has said plainly that the panel is hard to read and that answering a question there
+is harder than answering it in the planning session. So nothing is asked of him through the panel except a
+command he pastes into a shell.
 
-Do not make him wait through an hour of unrelated work for a command he could have had at the start, and do not dribble them out one at a time.
+`docs/notes/for-alan.md` is the list of open requests, newest first, each numbered, each saying in plain words
+what is needed, why, and what a good answer looks like. An answered request is marked answered with the date
+and left in place. **I write the request and carry on.** I never stop and wait for one. If an entry cannot
+finish without an answer, I do everything else in it, say in the report which part is waiting, and move to the
+next entry. At the start of a run I print the count of open requests in that file and nothing more; the
+planning session reads it and puts the requests to Alan in a form he can answer in one sitting. His answers
+come back the way everything else does, as an inbox entry.
 
-If something that needs him only becomes apparent later, say so as soon as I know, and keep working on what does not depend on it while I wait.
+**The one exception is a command he has to paste into a shell**, because he runs those from the panel. It goes
+in the panel written out in full, with which shell it goes into and what a good result looks like. He works
+inside MobaXterm and does not need the connection commands.
+
+**Still true, and it is why the file exists:** before starting the body of any entry or queue, read the whole
+of it and find every step that will need him. Prepare all of them up front, write them into
+`docs/notes/for-alan.md` in one go, and only then carry on with the work that needs nobody. Do not dribble
+them out one at a time, and do not make him wait through an hour of unrelated work for a command he could have
+had at the start.
 
 ## A short report when an entry finishes
 
 **When an entry is finished, post a report before starting the next one. Five lines at most:**
 
-1. What the entry asked for.
-2. What is now true.
-3. Anything I could not do, and why.
-4. Anything Alan should look at.
-5. What I am starting next.
+1. The entry number.
+2. What changed.
+3. The test result.
+4. The commit.
+5. Whether the site has published it yet.
 
-I do not stop for a reply. The turn carries on unless it is a real `STATUS: NEEDS YOU`. This is not a write-up: the detail belongs in `docs/PHASE1-RESULTS.md` and in the commit.
+**Entry 149 section 6 replaced the older five.** No request for Alan appears inside a report; those go in `docs/notes/for-alan.md`. I do not stop for a reply. The turn carries on unless it is a real `STATUS: NEEDS YOU`. This is not a write-up: the detail belongs in `docs/PHASE1-RESULTS.md` and in the commit.
 
 ## Waiting
 
@@ -100,8 +117,10 @@ NOTES-FROM-PLANNING.md entry 132 section 1. Alan read the notes for a nightly an
 
 **Every commit carries a `Release-note:` trailer**, entry 145 section 3.1, not only the ones a person notices. One or two plain sentences from the user's side, ending with the reference in brackets, and a `Release-note-kind:` saying which of the two headings it belongs under:
 
-- `new`, `fixed`, `changed` or `user` put it under **What you will notice**: something on screen, something that behaves differently, something new or gone, something fixed, a change to what is installed or downloaded.
+- `new`, `fixed`, `changed` and `user` all put it under **What you will notice**: something on screen, something that behaves differently, something new or gone, something fixed, a change to what is installed or downloaded.
 - `internal` puts it under **Under the hood**: tests, documentation, the website, the build, refactoring, performance nobody can perceive yet. Still in plain words, one line per real change.
+
+**Five words, two headings, and that is deliberate.** Entry 149 section 1: the heading is what the reader sees, the kind is what the writer says. Somebody marking a change `fixed` rather than `changed` is saying something true about it even though both land in the same place, and the words already written across 45 commits stay valid. `scripts/release-notes.py` accepts exactly these five and rejects anything else, and a test holds the list here and the list in the generator to the same set, because that is the pair that drifted.
 
 ```
 Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)

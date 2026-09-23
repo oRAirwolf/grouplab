@@ -129,17 +129,32 @@ public class CryingWolfTests
     }
 
     /// <summary>
-    /// The boundary, and it is a conflict between two entries rather than a fault: at a third doubles the marks fall into two clear sizes,
-    /// and entry 82 section 3 refuses to read a size from a sheet like that and asks for the calibre instead. Entry 141 section 4.2 asks for
-    /// the sheet's own reference to survive exactly this. **Question 40** carries it; nothing here works around either rule.
+    /// The boundary, and it was a conflict between two entries rather than a fault: at a third doubles the marks fall into two clear sizes,
+    /// and entry 82 section 3 refused to read a size from a sheet like that and asked for the calibre instead. Entry 141 section 4.2 asks
+    /// for the sheet's own reference to survive exactly this, and question 40 carried the conflict.
+    /// <para>
+    /// <b>Entry 149 section 2 settled it and amends entry 82 section 3.</b> The sheet is still recognised as carrying two sizes and the
+    /// calibre is still asked for, because which of the two sizes a single shot makes is the thing not known. But a size is read now, the
+    /// quarter-point of the smaller group, so the doubles are flagged. Refusing flagged nothing, and a sheet carrying five doubles is
+    /// exactly the sheet where flagging nothing is worst.
+    /// </para>
     /// </summary>
     [Fact]
-    public void AThirdBeingDoublesFallsToEntry82sTwoSizesRule()
+    public void AThirdBeingDoublesStillAsksForTheCalibreAndNowFlagsTheDoubles()
     {
-        var (holes, _, _) = GeneratedSheet.Detect(Shots, doubledBulls: 5);
+        var (holes, definition, truth) = GeneratedSheet.Detect(Shots, doubledBulls: 5);
 
         Assert.Equal(HoleSizeSource.TwoSizes, holes.HoleSize!.Source);
         Assert.Contains("name the calibre", holes.HoleSize.Description, StringComparison.Ordinal);
+
+        // A size is read, and it is the smaller group's, so it sits below the doubles rather than between the two groups.
+        Assert.NotNull(holes.HoleSize.FlagInches);
+
+        // And it is the doubles that are flagged, not every mark on the sheet.
+        var state = GeneratedSheet.Marked(holes, definition, truth).State;
+        int flagged = state.Shots.Count(s => s.Oversize is not null);
+        Assert.InRange(flagged, 1, 8);
+        Assert.All(Oversized(state), i => Assert.NotEqual("oversized:all", i.Key));
     }
 
     /// <summary>

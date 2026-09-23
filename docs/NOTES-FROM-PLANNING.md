@@ -15,6 +15,18 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 149: answers to questions 35, 37, 40 and 47, and the Alan list for this run
+
+**Status: actioned 2026-09-23**, sections 1, 2, 5 and 6. **Sections 3 and 4 are not done**, and both are real work rather than a judgement call: section 3 is question 37's A and D, which is marking-screen interaction, and section 4 is re-running the entry 121 survey's own baselines against the narrowed rule. Both are named in `docs/PHASE1-RESULTS.md` as outstanding, and neither is worked around anywhere.
+
+- **Section 1, question 47: the five kinds stay.** `CLAUDE.md` now names all five, says which of the two headings each one lands under, and says why there are five rather than two: the heading is what the reader sees, the kind is what the writer says. `ReleaseNoteKindsTests` reads the word list out of `CLAUDE.md` and out of `scripts/release-notes.py` and holds them to the same set, because that pair is what drifted, and a third copy inside the test would have drifted the same way.
+- **Section 2, question 40: the quarter-point of the smaller group.** Where the round marks fall into two clear sizes, a size is read now instead of refused, and it is the quarter-point of the smaller group. **This amends entry 82 section 3 and says so where the rule lives**, in `RenderDifferenceHoleDetector.SizeReference` and on `HoleSizeSource.TwoSizes`. The description still asks for the calibre, because which of the two sizes a single shot makes is exactly the thing not known. `CryingWolfTests` keeps both rows and the two-sizes row now asserts the doubles are flagged rather than that nothing is.
+- **Section 2 item 4, the rimfire diameter,** is entry 153 section 4's sweep and is done there, not here. Both `Calibre.cs` and `CalibreGuessList.cs` already carry 0.222 and 0.224 as separate entries.
+- **Section 5: requests for Alan go to `docs/notes/for-alan.md`.** The file exists with the three requests the entry names, newest first. `CLAUDE.md`'s "anything that needs Alan comes first" section is rewritten around it: nothing is asked of him in the panel except a command he pastes into a shell, and a request never stops the run.
+- **Section 6:** the five-line report is now the entry number, what changed, the test result, the commit, and whether the site has published it yet, with no request for Alan inside it.
+
+---
+
 # 2026-09-23, entry 143: answers to questions 41 to 46, and the review of research batch 1
 
 **Status: actioned 2026-09-23**, sections 1 and 2 in section 3's order. **Question 43 is answered and deliberately not built**, which the entry allows: it is last of everything here, and the reason is recorded in `docs/PHASE1-RESULTS.md` under "Where entry 137 and the code disagree" so the specification and the code agree rather than only appearing to.

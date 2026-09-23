@@ -229,7 +229,12 @@ public class CalibreSplitTests
         double[] twoCalibres = [.. Enumerable.Repeat(0.24, 8).Select((d, i) => d + (0.001 * i)), .. Enumerable.Repeat(0.32, 8).Select((d, i) => d + (0.001 * i))];
         var two = RenderDifferenceHoleDetector.SizeReference(twoCalibres, options);
         Assert.Equal(HoleSizeSource.TwoSizes, two.Source);
-        Assert.Null(two.FlagInches);
+
+        // Entry 149 section 2, answering question 40: the size read is the quarter-point of the eight smaller marks, 0.242 in, not a
+        // refusal. It sits below every mark in the larger group, so the larger ones are flagged and the smaller ones are not. The calibre
+        // is still asked for, because which group a single shot belongs to is the thing that is not known.
+        Assert.Equal(twoCalibres[2], two.FlagInches!.Value, 9);
+        Assert.True(two.FlagInches!.Value < twoCalibres[8], "the reference has to sit below the larger group or it flags nothing");
         Assert.Contains("name the calibre", two.Description, StringComparison.Ordinal);
 
         double[] spread = [.. Enumerable.Range(0, 20).Select(i => 0.20 + (0.01 * i))];
