@@ -28,22 +28,43 @@ public class DiscordLinkTests
         string invite = Invite();
         Assert.StartsWith("https://discord.gg/", invite, StringComparison.Ordinal);
 
+        // The places the invite could be written out, rather than every file in the repository. An earlier version walked the root and
+        // read whatever it found, which on the Windows runner meant opening test-output.txt while the test run was writing it.
+        string[] folders = ["docs", "website", "src", "tests", "scripts", ".github", "targets", "samples"];
+
+        var files = folders
+            .Select(f => Repo.PathTo(f))
+            .Where(Directory.Exists)
+            .SelectMany(f => Directory.EnumerateFiles(f, "*.*", SearchOption.AllDirectories))
+            .Concat(Directory.EnumerateFiles(Repo.Root, "*.md", SearchOption.TopDirectoryOnly));
+
         var elsewhere = new List<string>();
-        foreach (string file in Directory.EnumerateFiles(Repo.Root, "*.*", SearchOption.AllDirectories))
+        foreach (string file in files)
         {
             string rel = Path.GetRelativePath(Repo.Root, file).Replace(Path.DirectorySeparatorChar, '/');
-            if (rel.StartsWith(".git/", StringComparison.Ordinal) || rel.Contains("/bin/", StringComparison.Ordinal)
-                || rel.Contains("/obj/", StringComparison.Ordinal) || rel.StartsWith("website/_site/", StringComparison.Ordinal)
+            if (rel.Contains("/bin/", StringComparison.Ordinal) || rel.Contains("/obj/", StringComparison.Ordinal)
+                || rel.StartsWith("website/_site/", StringComparison.Ordinal)
                 || rel == "website/links.json" || rel.StartsWith("docs/notes/inbox/", StringComparison.Ordinal)
+                || rel == "docs/NOTES-FROM-PLANNING.md"
                 // This file, which names the shape of an invite in order to check it and so matches itself.
                 || rel.EndsWith("DiscordLinkTests.cs", StringComparison.Ordinal)
-                || rel == "docs/NOTES-FROM-PLANNING.md"
                 || Path.GetExtension(file) is not (".md" or ".py" or ".cs" or ".json" or ".html" or ".yml" or ".ps1" or ".txt"))
             {
                 continue;
             }
 
-            if (File.ReadAllText(file).Contains("discord.gg", StringComparison.OrdinalIgnoreCase))
+            string text;
+            try
+            {
+                text = File.ReadAllText(file);
+            }
+            catch (IOException)
+            {
+                // Something outside this test is holding it. That is never where an invite would be written down.
+                continue;
+            }
+
+            if (text.Contains("discord.gg", StringComparison.OrdinalIgnoreCase))
             {
                 elsewhere.Add(rel);
             }
