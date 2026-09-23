@@ -1,0 +1,12 @@
+{
+  "_": [
+    "NOTES-FROM-PLANNING.md entry 148 section 3: the Discord invite is written down in exactly one place, so replacing",
+    "it later is a single edit and no published link ever breaks.",
+    "",
+    "Everything published points at the canonical address, grouplab.org/discord, which redirects to the invite. The",
+    "invite itself appears on no page and in no document: only in this file and in the redirect the build makes from it.",
+    "A test fails if the invite is written out anywhere else."
+  ],
+  "discordInvite": "https://discord.gg/jY7MrYNN5V",
+  "discordCanonical": "https://grouplab.org/discord"
+}

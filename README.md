@@ -28,6 +28,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **On a Mac**, move `GroupLab.app` into Applications and then run `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal. That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software. It is the standard way to run unsigned software. **Anyone not comfortable running that command should not run this build.**
+- **Questions, or somewhere to say it did not work:** the [GroupLab Discord](https://grouplab.org/discord). For anything private, or anything with a photograph attached, the support address is better.
 - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
 

@@ -8046,6 +8046,40 @@ Entry 129 section 6.3 asks whether the donor instructions name the old address, 
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
 
+# Entry 147: macOS test builds, and one source for the platform statement
+
+`docs/NOTES-FROM-PLANNING.md` entry 147, actioned 2026-09-23. Every section.
+
+## What is published now
+
+| download | for | tested |
+|---|---|---|
+| `grouplab-setup-win-x64.exe`, `grouplab-win-x64.zip` | Windows 10 and 11 | by hand, daily |
+| `grouplab-linux-x64.tar.gz` | x86-64 Linux | by the suite, on every build |
+| `grouplab-macos-arm64.tar.gz` | Apple silicon | by the suite only. **Nobody has run it on a Mac** |
+| `grouplab-macos-x64.tar.gz` | Intel Macs | by the suite only. **Nobody has run it on a Mac** |
+
+Both macOS downloads are real `.app` bundles: `Info.plist`, `PkgInfo`, the icon, and every published file underneath. A bare executable runs from a terminal and behaves like a stranger in the dock, which is not worth publishing.
+
+## One source, three readers
+
+Section 3.2. The statement is Alan's settled wording and is not to be reworded, which is exactly the text that gets edited in one place and not the others. `docs/PLATFORM-SUPPORT.md` is the source; the download page renders it, `scripts/platform-support.py --readme` writes it into the README between two markers, `--check` fails CI when it drifts, and the nightly appends it to any release carrying a macOS asset. Nothing restates it.
+
+## To add a Linux target without further questions
+
+The page promises other targets on request, so it is worth saying what makes a request actionable: **the architecture, and whether a plain tarball or a package built for a named distribution is wanted.** With those two the change is one row in `package.yml`'s matrix. Without the second, a request for "arm64" could mean a tarball or a `.deb`, and those are different amounts of work.
+
+## The push that went red, which is the part worth reading
+
+The first push failed on all three runners, so no nightly ran, so the download page was live offering two builds whose files returned 404. I published a page that promises a download before anything had built it.
+
+Three failures, all mine:
+
+1. **A README heading with no contents entry** — and the heading was inside the Planned section rather than top level, so adding the entry in the obvious place did not fix it.
+2. **The README linked five assets where the test allowed three.**
+3. **On Windows alone, my own test anchored a pattern with `$`** against the workflow file. A fresh checkout on Windows has CRLF line endings, so `- name: Publish$` matches nothing there and passes everywhere else. It passed here because this working copy is LF and only a fresh checkout converts. Entry 121 section 3 records the same fault in another test, with the same cause, which is the part that should have stopped me writing it again.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

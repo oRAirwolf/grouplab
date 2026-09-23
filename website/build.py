@@ -177,12 +177,26 @@ def build_downloads() -> None:
 
 # ---------------------------------------------------------------- page shell
 
+# NOTES-FROM-PLANNING.md entry 148 section 3: the Discord invite is written down in exactly one place. Everything
+# published points at the canonical address, which redirects to the invite, so replacing the invite later is a single
+# edit and no published link ever breaks.
+LINKS = REPO / "website" / "links.json"
+
+
+def links() -> dict:
+    return json.loads(need(LINKS).read_text(encoding="utf-8"))
+
+
+DISCORD = "/discord/"
+
+
 NAV = [
     ("Download", "/download/"),
     ("Tour", "/tour/"),
     ("Shoot a target", "/shoot-a-target/"),
     ("Guides", "/guides/"),
     ("Research", "/research/"),
+    ("Community", DISCORD),
     ("Release notes", "/releases/"),
     ("Support", "/support/"),
 ]
@@ -273,7 +287,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
 <a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">Licence, GPL-3.0</a>
 <a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
-<a href="/support/">Support</a>
+<a href="/support/">Support</a><a href="{DISCORD}">Discord</a>
 </nav>
 </div>
 <div class="wrap footer-base">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</div>
@@ -487,7 +501,7 @@ def page_download() -> str:
 </div>
 </section>
 <section class="wrap section-sm last row-between">
-<p>Every build keeps a release of its own, so a bug report names something that still exists.</p>
+<p>Every build keeps a release of its own, so a bug report names something that still exists. If something does not work, the <a href="{DISCORD}">Discord</a> is somewhere to ask.</p>
 <a href="/releases/">What changed in each build</a>
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
@@ -692,6 +706,14 @@ def page_support() -> str:
 <p class="eyebrow">Support</p>
 <h1>Something wrong? Tell us.</h1>
 <p class="lead">GroupLab is a test build that changes whenever the code does. A report with the build it came from is the most useful thing you can send.</p>
+</section>
+<section class="wrap section-sm">
+<div class="panel pad stack tight">
+<h2 class="h3">Discord</h2>
+<p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
+<p class="small">For anything private, or anything with a photograph attached, the support address below is better.</p>
+<div class="actions">{btn("Join the Discord", DISCORD, True)}</div>
+</div>
 </section>
 <section class="wrap grid-3">
 <div class="panel pad stack tight"><span class="mono amber">01</span><h2 class="h3">Check what is not done yet</h2><p>Some things are known to be missing or unproven. The testing guide lists them in one short section.</p><a href="/guides/testing-guide/#what-is-not-done-yet">What is not done yet</a></div>
@@ -1383,6 +1405,25 @@ def page_tour_screen(key: str) -> str:
     return shell(f"/tour/{key}/", item["name"], item["blurb"], body, "Tour")
 
 
+def page_discord() -> str:
+    """The canonical address, which redirects to the invite.
+
+    Entry 148 section 1: everything published points here, so replacing the invite later is a single edit in
+    website/links.json and no published link ever breaks. It is a meta refresh with a real link behind it, because a
+    page that redirects and shows nothing is a page that looks broken to anybody whose browser refuses the refresh.
+    """
+    invite = links()["discordInvite"]
+    body = f"""
+<section class="wrap page-head stack">
+<h1>The GroupLab Discord</h1>
+<p class="lead">Taking you to the invite. If nothing happens, <a href="{invite}">open it here</a>.</p>
+<p class="small faint">Questions, bug reports, target sheets, and what people are shooting. For anything private, or anything with a photograph attached, <a href="/support/">the support address</a> is better.</p>
+</section>
+"""
+    page = shell(DISCORD, "Discord", "Join the GroupLab Discord: questions, bug reports, target sheets, and what people are shooting.", body, "Community")
+    return page.replace("<head>", f'<head>\n<meta http-equiv="refresh" content="0; url={invite}">', 1)
+
+
 def page_404() -> str:
     body = f"""
 <section class="wrap page-head last">
@@ -1898,6 +1939,7 @@ def main() -> None:
     write("tour/index.html", page_tour_index())
     for key in tour()["order"]:
         write(f"tour/{key}/index.html", page_tour_screen(key))
+    write("discord/index.html", page_discord())
     write("404.html", page_404())
 
     pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]

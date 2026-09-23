@@ -99,6 +99,176 @@ Question 45, then the batch 1 fixes in section 1, then questions 46, 42 and 41, 
 
 ---
 
+# 2026-09-23, entry 147: macOS test builds, and a plain statement of what is supported
+
+**Status: actioned 2026-09-23**, every section.
+
+- **Section 1.** `osx-arm64` and `osx-x64`, self-contained, built on `macos-latest`, each a real `.app` bundle with `Info.plist`, `PkgInfo` and the icon, packed as `grouplab-macos-arm64.tar.gz` and `grouplab-macos-x64.tar.gz`. `scripts/macos-bundle.py` is the one place the bundle's shape is decided, and `MacBundleTests` builds one and reads it back without needing a Mac.
+- **Section 1.5.** The updater already refused to offer a self-install off Windows. It now says plainly that updates are manual there, on the Settings screen and in the update run's own message, instead of reporting that there is nothing to install for this platform, which reads like a fault in the build.
+- **Section 1.6.** Labelled untested on both cards, in the file names, and in the bundle's own `Info.plist`, which is the one label that survives unpacking after the download page is long forgotten.
+- **Section 2.** The command on the download page and in the README, with what it removes and who should not run it.
+- **Sections 3 and 3.2.** `docs/PLATFORM-SUPPORT.md` is the one source. `website/build.py` renders it into the download page, `scripts/platform-support.py` writes it into `README.md` between two markers and `--check` fails CI when it drifts, and the nightly appends it to any release whose assets include a macOS build. Nothing restates it, because a statement in somebody's settled words is exactly the text that gets reworded in one place and not the others.
+- **Section 3.1.** The build targets are one list in `package.yml`. **To add one without further questions we need the architecture, and whether a plain tarball or a package built for a named distribution is wanted.**
+- **Section 5.** Five tests, none of which need a Mac.
+- **What went wrong, and it is the part worth reading.** The first push went red on all three runners and no nightly ran, so grouplab.org was live offering two Mac builds whose files returned 404. Three failures, all mine: a README heading with no contents entry, which was in the wrong section anyway; a README linking five assets where the test allowed three; and, on Windows alone, my own test anchoring a pattern with `$` against a file that has CRLF line endings on a fresh checkout. It passed here because this working copy is LF. Entry 121 section 3 records the same fault in another test, with the same cause.
+- `docs/PHASE1-RESULTS.md` "Entry 147".
+
+Written by the planning session at 02:10 Mountain on 2026-09-23. Alan's decision, in his words below. Do this after entry 129.
+
+Today every build is tested on macOS, because `build and test` runs on `macos-latest` as well as Windows and Linux, and no macOS download exists. That is a reasonable state and a confusing one to a reader, because nothing on the site says either half of it. This entry publishes a macOS build, marks it honestly, and says plainly what will and will not happen.
+
+## 1. Build and publish a macOS test build
+
+1. Add macOS to the packaging alongside the Linux tarball: `osx-arm64` for Apple silicon and `osx-x64` for Intel Macs, self-contained, two separate downloads rather than a universal binary.
+2. Package each as a proper `.app` bundle inside a `.tar.gz` or `.zip`, with `Info.plist`, the GroupLab icon, and a name that reads correctly in Finder. A bare executable runs from a terminal and behaves like a stranger in the dock, which is not worth publishing.
+3. Publish both as nightly assets beside the Windows and Linux ones, named so the architecture is obvious, for example `grouplab-macos-arm64.tar.gz` and `grouplab-macos-x64.tar.gz`.
+4. Build them on the `macos-latest` runner, which is already in the matrix, so the packaging is done by the platform it targets.
+5. **The updater does not offer these builds.** The silent install and relaunch chain is the Windows installer, and a macOS build must not be offered an update it cannot apply. Check what the update path does on macOS and make it say plainly that updates are manual there.
+6. **Label them untested everywhere they appear**: on the GitHub release, on the download page, in the file name if you can do it without making the name silly. Nobody has run this on a Mac.
+
+## 2. The terminal command, and why it is needed
+
+An unsigned application downloaded from the internet is quarantined by macOS, and Gatekeeper refuses to open it. Give the exact command on the download page and in the README, with a sentence saying what it does:
+
+```
+xattr -dr com.apple.quarantine /Applications/GroupLab.app
+```
+
+Say that this removes the quarantine flag macOS puts on downloaded files, that it is the standard way to run unsigned software, and that a reader who is not comfortable doing that should not run the build. Adjust the path in the instructions to wherever the pages tell people to put the app.
+
+## 3. The platform statement, word for word
+
+Alan has settled this wording. Publish it as its own section on the download page, titled "What is supported, and what is not", linked from the README, and do not reword it. It avoids the first and second person on purpose, and it says "they" of the author on purpose.
+
+---
+
+**Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
+
+**Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
+
+**macOS builds are published and have never been run on a Mac.** The tests run on macOS on every build, so the code works at that level, but nobody has opened the window, printed a target or saved a session on real hardware. These builds are an experiment rather than a release.
+
+### What happens once the application settles
+
+Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
+
+**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+
+### Running the macOS build
+
+macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
+
+```
+xattr -dr com.apple.quarantine /Applications/GroupLab.app
+```
+
+Anyone not comfortable running that command should not run this build.
+
+### Why it is not signed
+
+Signing a macOS application requires the Apple developer programme, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+
+That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+
+### Signing elsewhere
+
+The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
+
+### Apple mobile
+
+An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer programme, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+
+### Other Linux builds
+
+The published Linux build is x86-64. Other targets can be added to the nightly builds on request: Arm64 for a Raspberry Pi or an Arm laptop, or a package built for a particular distribution rather than a tarball. Adding one is a line of configuration rather than a project. The reason a dozen are not published already is simply that nobody has asked for them.
+
+Requests go to support@grouplab.org, naming the distribution and the architecture.
+
+### Reports from Linux and macOS are welcome
+
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
+
+---
+
+Two notes for Code rather than for the page. Keep the build targets as a single list in the workflow, so adding one really is a line, and say in your report what a person must tell us for a target to be added without further questions. And a test should fail if this section's macOS wording, or the sentence saying nobody has run it on a Mac, disappears while a macOS asset is still published.
+
+## 3.2 The same statement in all three places
+
+The wording in section 3 goes, identically, to:
+
+1. **The website**, as its own section of the download page at `https://grouplab.org/download/`, with its own heading so it can be linked to directly.
+2. **The repository README**, which is the first page anyone sees on GitHub. Put a short "What is supported" section there with the same words, or the first two paragraphs and a link to the download page if the README would otherwise get unwieldy. The three facts that must appear on GitHub itself, not only behind a link, are that Windows is supported, that the macOS build has never been run on a Mac, and that other Linux targets can be requested.
+3. **Every GitHub release that carries a macOS asset**, as a short note in the release body, next to the downloads, saying the macOS build is untested and unsigned, giving the quarantine command, and linking to the full statement.
+
+Keep one source for the words: hold the statement in a single file in the repository, generate the website section and the README section from it, and have the release note quote from it. A statement that has to be edited in three places is a statement that will disagree with itself within a month. A test fails if the copies drift apart.
+
+## 4. Ask for what would change it
+
+Close the section with a plain invitation: if someone with a Mac wants to run the build and report what happens, that is useful on its own, and the support address is the way to do it. Make it easy to say "it started" or "it crashed at this point", and make it clear that crash reports from macOS are welcome even though macOS is not supported.
+
+## 5. Keep it true
+
+- A test fails if a macOS asset is published without the untested wording on the download page.
+- The download page names each build's architecture, so an Apple silicon owner does not take the Intel one by accident.
+- If a macOS build ever fails to package, the nightly still publishes the Windows and Linux ones rather than failing entirely, and says which one is missing.
+
+---
+
+# 2026-09-23, entry 148: the Discord server, linked from the site and GitHub
+
+**Status: actioned 2026-09-23**, sections 1 to 5. Section 5 is a note rather than a build, as it asks.
+
+- **Sections 1 and 3.** The invite is in `website/links.json` and nowhere else. Everything published points at `https://grouplab.org/discord`, which the build makes as a redirect page carrying the invite from that file. **Two tests hold it**: the invite is written out in one place only, and the one built page that carries an invite carries the one in that file. Replacing the invite later is a single edit and no published link breaks.
+- **Section 2.** Top navigation as "Community", the footer beside the other links, the support page as the first option with the sentence about the address being better for anything private or with a photograph, the README near the download links as a plain line, and one line on the download page.
+- **Section 2, last line, observed.** Nothing was put in the application. A link inside the software outlives the server, and that is a different decision.
+- **Section 4.** The words are the entry's, unchanged. Nothing calls it official support, nothing promises a response time, nothing implies it is staffed.
+- **Section 5.** Noted in `docs/WEBSITE.md` with the one line on how it would work: the nightly already writes the plain-words note before it publishes, so posting it is a single HTTP call to a webhook URL held as a repository secret, in the same job.
+- `docs/WEBSITE.md`.
+
+Written by the planning session at 03:40 Mountain on 2026-09-23. Do this after entry 129, alongside entry 147.
+
+Alan has created the GroupLab Discord server and its permanent invite. Use the link in section 1 exactly as written; never invent or guess an invite.
+
+## 1. The link
+
+The permanent invite exists and never expires:
+
+```
+https://discord.gg/jY7MrYNN5V
+```
+
+Publish `https://grouplab.org/discord` as the canonical link everywhere (site, README, release notes), and have it redirect to the invite above. The invite itself is written down in exactly one place in the repository, so replacing it later is a single edit and no published link ever breaks.
+
+## 2. Where it goes
+
+The same link, from one source in the repository, in these places:
+
+1. **The website's top navigation**, as "Community" or "Discord", so it is reachable from every page.
+2. **The website footer**, beside the GitHub link.
+3. **The support page**, as the first option for questions, with a sentence saying the support address remains for anything private or anything involving a photograph.
+4. **The repository README**, near the top with the download and website links, as a plain line rather than a badge, unless a badge fits the README's existing style.
+5. **The download page**, one line: somewhere to ask if something does not work.
+
+Do not put it in the application itself in this entry. A link inside the software is a different decision, because it outlives the server.
+
+## 3. How to hold it
+
+Put the URL in the same single source that entry 147 section 3.2 uses for the platform statement, or beside it: one file, rendered into the page, the README and anywhere else. A test fails if the link appears written out in more than one place, and a test fails if any published page carries an invite that is not the one in that file.
+
+## 4. What the site says about it
+
+Short, and honest about what it is for:
+
+> **Discord.** Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it. For anything private, or anything with a photograph attached, the support address is better.
+
+Do not call it "official support", do not promise a response time, and do not imply it is staffed.
+
+## 5. Not automated yet
+
+Release announcements into Discord are a webhook from the release workflow and are worth doing, but not in this entry. Alan is using GitHub's own webhook to begin with. Note it in `docs/WEBSITE.md` as a possible later item, with one line on how it would work: the release workflow already has the plain-words release note, so posting it is a single HTTP call to a Discord webhook URL held as a repository secret.
+
+---
+
 # 2026-09-23, entry 146: a tour of the application, one page per screen
 
 **Status: actioned 2026-09-23**, sections 1 to 6. Every screen, not the three section 6 allows as a fallback.

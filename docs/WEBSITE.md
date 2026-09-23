@@ -169,6 +169,12 @@ PHP's per-directory settings for grouplab.org live in `public_html/.user.ini`, b
 
 `website/api/limits.json` carries an `open` flag. While it is false the page is not built, the receiver is not shipped and nothing links to either, because a form posting to a path the server does not serve takes somebody's photographs, spends their upload and tells them nothing. It goes true in the same commit that follows the install.
 
+## The Discord, and one thing not automated
+
+Entry 148. The invite is in `website/links.json` and nowhere else. Everything published points at `https://grouplab.org/discord`, which the build makes as a redirect page, so replacing the invite later is a single edit and no published link ever breaks. A test fails if the invite is written out anywhere else, and a test fails if any built page carries an invite that is not the one in that file.
+
+**Release announcements into Discord are not automated, and entry 148 section 5 says they are worth doing later.** How it would work: the nightly already writes the plain-words release note before it publishes, so posting it is a single HTTP call to a Discord webhook URL held as a repository secret, in the same job, after the release is made. Alan is using GitHub's own webhook to begin with.
+
 ## Backups do not cover this yet
 
 The server's existing backup and offsite scripts (`pih-backup` and the Google Drive copy) cover pissinhot.com only. When those scripts are next touched, these should be added to them:
