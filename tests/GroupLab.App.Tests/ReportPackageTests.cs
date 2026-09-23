@@ -29,9 +29,27 @@ public sealed class ReportPackageTests : IDisposable
     /// <summary>Text that does not compress, so a size cap is exercised by bytes that stay large inside the zip.</summary>
     private static string Incompressible(int bytes) => Convert.ToBase64String(RandomNumberGenerator.GetBytes(bytes * 3 / 4));
 
+    /// <summary>
+    /// The application's list and the receiver's are the same list, read out of the receiver rather than copied here.
+    /// <para>
+    /// Entry 129 section 5.1 built the receiver, so this no longer has to take the patterns on trust. The application packs a report and the
+    /// receiver decides whether to keep it, in two languages that cannot see each other; a pattern changed on one side and not the other
+    /// would refuse every report from every installed build, and the only sign would be people saying the button does not work.
+    /// </para>
+    /// </summary>
     [Fact]
     public void ThePermittedEntriesAreExactlyTheReceiversList()
     {
+        string receiver = System.IO.File.ReadAllText(System.IO.Path.Combine(Entry109Tests.Repository(), "website", "api", "crash-report.php"));
+        string block = receiver.Split("const ALLOWED_ENTRIES = [")[1].Split("];")[0];
+
+        // Each is a PCRE with its delimiters, which the C# side holds without them.
+        var receivers = System.Text.RegularExpressions.Regex.Matches(block, "'/(?<pattern>[^']*)/'")
+            .Select(m => m.Groups["pattern"].Value)
+            .ToList();
+
+        Assert.Equal(receivers, ReportPackage.PermittedEntryPatterns);
+
         Assert.Equal(
             [@"^crash-\d{8}-\d{6}-\d+\.json$", @"^grouplab-\d{8}-\d{6}-\d+\.log$", @"^environment\.txt$", @"^description\.txt$", @"^contact\.txt$"],
             ReportPackage.PermittedEntryPatterns);

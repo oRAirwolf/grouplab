@@ -266,6 +266,105 @@ for ($i = 0; $i < 6; $i++) {
 check('the sixth submission from one address in an hour is refused', ($last['json']['code'] ?? '') === 'rate_limit', $last['raw']);
 
 // ---------------------------------------------------------------------
+// The crash receiver, entry 129 section 5. Same shape: its constants are pointed at the temporary
+// tree and each request runs in its own process.
+// ---------------------------------------------------------------------
+
+$crashSource = file_get_contents(__DIR__ . '/../../website/api/crash-report.php');
+if ($crashSource === false) {
+    fwrite(STDERR, "could not read website/api/crash-report.php\n");
+    exit(2);
+}
+
+/** A zip holding the named entries, each with a little content. */
+function make_zip(string $root, array $names, int $bytesEach = 256): string
+{
+    $path = $root . '/uploads/report-' . bin2hex(random_bytes(4)) . '.zip';
+    $zip = new ZipArchive();
+    $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    foreach ($names as $name) {
+        $zip->addFromString($name, str_repeat('x', $bytesEach));
+    }
+    $zip->close();
+    return $path;
+}
+
+function crash_request(string $root, string $source, ?string $zip, array $options = []): array
+{
+    $patched = strtr($source, [
+        "const SITE_PRIVATE = '/home/airwolf/web/grouplab.org/private';" => "const SITE_PRIVATE = " . var_export($root . '/private', true) . ";",
+    ]);
+    $patched = str_replace('!is_uploaded_file($tmp)', '!is_file($tmp)', $patched);
+    $patched = str_replace('move_uploaded_file($tmp, $dest)', 'rename($tmp, $dest)', $patched);
+
+    $script = $root . '/crash-' . bin2hex(random_bytes(3)) . '.php';
+    file_put_contents($script, $patched);
+
+    $files = $zip === null ? [] : ['report' => ['name' => 'report.zip', 'tmp_name' => $zip, 'size' => filesize($zip), 'error' => UPLOAD_ERR_OK]];
+
+    $harness = $root . '/runc-' . bin2hex(random_bytes(3)) . '.php';
+    file_put_contents($harness, '<?php' . "\n"
+        . '$_SERVER["REQUEST_METHOD"] = "POST";' . "\n"
+        . '$_SERVER["REMOTE_ADDR"] = ' . var_export($options['remote'] ?? '203.0.113.9', true) . ';' . "\n"
+        . '$_SERVER["CONTENT_LENGTH"] = ' . var_export((string) ($options['length'] ?? 1000), true) . ';' . "\n"
+        . '$_POST = ' . var_export($options['post'] ?? [], true) . ';' . "\n"
+        . '$_FILES = ' . var_export($files, true) . ';' . "\n"
+        . 'require ' . var_export($script, true) . ';' . "\n");
+
+    $flags = (string) getenv('GROUPLAB_PHP_FLAGS');
+    $errors = $root . '/cerr-' . bin2hex(random_bytes(3)) . '.txt';
+    $out = [];
+    $code = 0;
+    exec(escapeshellarg(PHP_BINARY) . ($flags !== '' ? ' ' . $flags : '') . ' ' . escapeshellarg($harness)
+        . ' 2>' . escapeshellarg($errors), $out, $code);
+    $text = trim(implode("\n", $out));
+    $log = is_file($errors) ? trim((string) file_get_contents($errors)) : '';
+    $json = json_decode($text, true);
+    return ['json' => is_array($json) ? $json : null, 'raw' => $text . ($log !== '' ? ' | log: ' . $log : '')];
+}
+
+if (!extension_loaded('zip')) {
+    check('the crash receiver cases need PHP zip, which is not loaded', false, 'install php-zip');
+} else {
+    $goodZip = make_zip($root, ['crash-20260923-081500-1234.json', 'grouplab-20260923-081500-1234.log', 'environment.txt', 'description.txt']);
+    $r = crash_request($root, $crashSource, $goodZip);
+    check('a good crash report is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);
+    check('and is stored outside the web root', count(glob($root . '/private/crash-reports/*.zip') ?: []) === 1);
+
+    $r = crash_request($root, $crashSource, make_zip($root, ['crash-20260923-081500-1234.json', 'IMG_1580.jpg']));
+    check('a report carrying a photograph is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
+
+    $r = crash_request($root, $crashSource, make_zip($root, ['settings.json']));
+    check('a report carrying settings is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
+
+    $r = crash_request($root, $crashSource, make_zip($root, ['logs/grouplab-20260923-081500-1234.log']));
+    check('an entry with a path in its name is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
+
+    // Nothing attached, but the form fields did arrive. That is a request with no report in it, not a request
+    // that was too large, and telling somebody to shrink a file they never attached would send them away to fix
+    // the wrong thing. The receiver said "too large" here until this case was written.
+    $r = crash_request($root, $crashSource, null, ['post' => ['anything' => '1']]);
+    check('no report attached is refused as no report, not as too large', ($r['json']['code'] ?? '') === 'no_file', $r['raw']);
+
+    // A fresh zip: the receiver moves an accepted one out of the uploads folder, so $goodZip is gone by now.
+    $r = crash_request($root, $crashSource, make_zip($root, ['environment.txt']), ['length' => 6 * 1024 * 1024]);
+    check('a report over the 5 MB wall is refused before it is read', ($r['json']['code'] ?? '') === 'too_big', $r['raw']);
+
+    // The kill switch, entry 129 section 5.3.
+    file_put_contents($root . '/private/crash-reports-closed', 'off');
+    $r = crash_request($root, $crashSource, make_zip($root, ['environment.txt']));
+    check('the kill switch refuses everything and says nothing is wrong with the report',
+        ($r['json']['code'] ?? '') === 'closed', $r['raw']);
+    unlink($root . '/private/crash-reports-closed');
+
+    $last = null;
+    for ($i = 0; $i < 7; $i++) {
+        $last = crash_request($root, $crashSource, make_zip($root, ['environment.txt']), ['remote' => '198.51.100.9']);
+    }
+    check('the seventh report from one address in an hour is refused', ($last['json']['code'] ?? '') === 'rate_limit', $last['raw']);
+}
+
+// ---------------------------------------------------------------------
 
 echo "receiver tests: $passed passed, " . count($failed) . " failed\n";
 foreach ($failed as $f) {

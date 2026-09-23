@@ -1831,6 +1831,7 @@ def main() -> None:
         # Section 3.4: the receivers are part of the site build, so they are versioned here, signed and delivered
         # by the same pipeline as the pages rather than copied to the server by hand.
         copy(need(REPO / "website" / "api" / "upload.php"), "api/upload.php")
+        copy(need(REPO / "website" / "api" / "crash-report.php"), "api/crash-report.php")
         write("assets/js/send.js", SEND_JS)
     write("support/index.html", page_support())
     write("guides/index.html", page_guides_index())
