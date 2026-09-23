@@ -287,7 +287,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
 <a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">Licence, GPL-3.0</a>
 <a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
-<a href="/support/">Support</a><a href="{DISCORD}">Discord</a>
+<a href="/support/">Support</a><a href="{DISCORD}">Community</a>
 </nav>
 </div>
 <div class="wrap footer-base">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</div>
@@ -712,7 +712,7 @@ def page_support() -> str:
 <h2 class="h3">Discord</h2>
 <p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
 <p class="small">For anything private, or anything with a photograph attached, the support address below is better.</p>
-<div class="actions">{btn("Join the Discord", DISCORD, True)}</div>
+<div class="actions">{btn("What is in the Discord", DISCORD, True)}</div>
 </div>
 </section>
 <section class="wrap grid-3">
@@ -1406,22 +1406,60 @@ def page_tour_screen(key: str) -> str:
 
 
 def page_discord() -> str:
-    """The canonical address, which redirects to the invite.
+    """The community page, NOTES-FROM-PLANNING.md entry 151.
 
-    Entry 148 section 1: everything published points here, so replacing the invite later is a single edit in
-    website/links.json and no published link ever breaks. It is a meta refresh with a real link behind it, because a
-    page that redirects and shows nothing is a page that looks broken to anybody whose browser refuses the refresh.
+    Alan: "make it so the community link at the top of the page does not automatically redirect to the discord
+    server. People will not appreciate this. Make a page that has a link to the invite and let people choose if
+    they want to click on it."
+
+    He is right, and the meta refresh entry 148 built is gone. A navigation item that ejects you from the site
+    before you have read anything is the kind of thing people remember badly. The canonical address stays,
+    because everything published points at it; it is a page now rather than a redirect.
+
+    **One thing on this page leaves the site**, and it says so in words before it is clicked. The invite is
+    visible as text as well as being that link's target, because some people want to see where a link goes
+    before they follow it.
     """
-    invite = links()["discordInvite"]
+    data = links()
+    invite = data["discordInvite"]
+    groups = "".join(
+        f'<div class="panel pad stack tight"><h3 class="h4">{esc(g["name"])}</h3><p class="small">{esc(g["what"])}</p></div>'
+        for g in data.get("discordGroups", [])
+    )
+
     body = f"""
 <section class="wrap page-head stack">
+<p class="eyebrow">Community</p>
 <h1>The GroupLab Discord</h1>
-<p class="lead">Taking you to the invite. If nothing happens, <a href="{invite}">open it here</a>.</p>
-<p class="small faint">Questions, bug reports, target sheets, and what people are shooting. For anything private, or anything with a photograph attached, <a href="/support/">the support address</a> is better.</p>
+<p class="lead">Somewhere to ask a question, say what a build did, show a target, and talk to whoever is working on GroupLab. Nothing here joins anything on its own.</p>
+</section>
+
+<section class="wrap stack">
+<h2>What is in there</h2>
+<p>The server is grouped like this, so you can see what you are joining before you join.</p>
+<div class="grid-2">{groups}</div>
+</section>
+
+<section class="wrap stack">
+<h2>Joining</h2>
+<p>The invite opens Discord in a new tab. It is the only thing on this page that leaves grouplab.org.</p>
+<div class="actions"><a class="btn btn-primary" href="{invite}" target="_blank" rel="noopener noreferrer"><span>Open the invite on Discord</span><span class="btn-sub mono">Opens Discord in a new tab</span></a></div>
+<p class="small faint">It goes to <code>{esc(invite)}</code>.</p>
+<p class="small">Discord is a third party service. It has its own account requirement and its own terms, and it is not run by this project. <strong>Nobody has to join it to use GroupLab or to get help.</strong> <a href="/support/">The support address</a> reaches the same people, and <a href="https://github.com/oRAirwolf/grouplab/issues">GitHub issues</a> are the place for anything that should stay on the record.</p>
+</section>
+
+<section class="wrap stack last">
+<h2>What is expected there</h2>
+<p>The server has its own rules and they are the first thing you will see. In short, and so they are readable before you join rather than only after:</p>
+<ul class="prose tight">
+<li><strong>Be civil.</strong> People turn up at every level of experience, and a question that sounds obvious to you was not obvious to whoever asked it.</li>
+<li><strong>Post no personal information</strong>, yours or anybody else's. A photograph of a target can carry the place it was taken; take the location data off it, or post it through <a href="/send/">the submission page</a>, which strips that before anybody sees the file.</li>
+<li><strong>Firearms law is yours to know.</strong> Nothing said there is legal advice, and no part of GroupLab is.</li>
+<li><strong>Bugs are welcome anywhere</strong>, but one written into <a href="https://github.com/oRAirwolf/grouplab/issues">an issue</a> is one that still exists next month.</li>
+</ul>
 </section>
 """
-    page = shell(DISCORD, "Discord", "Join the GroupLab Discord: questions, bug reports, target sheets, and what people are shooting.", body, "Community")
-    return page.replace("<head>", f'<head>\n<meta http-equiv="refresh" content="0; url={invite}">', 1)
+    return shell(DISCORD, "Community", "The GroupLab Discord: what is in it, what is expected there, and the invite, which you click yourself.", body, "Community")
 
 
 def page_404() -> str:

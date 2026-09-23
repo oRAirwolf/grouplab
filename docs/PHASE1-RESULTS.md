@@ -8166,6 +8166,33 @@ Entry 144's guard on the notes commit still holds and now has a second one under
 - The releases page says why the numbers skip.
 - Section 6.3's dry run is a step in the nightly rather than a test. It needs the tag history, which a CI checkout does not have, and running it nightly exercises the logic against real history exactly as the section asks.
 
+## Entry 151: the community page, and nothing on the site navigates on its own
+
+Alan: *"make it so the community link at the top of the page does not automatically redirect to the discord server. People will not appreciate this. Make a page that has a link to the invite and let people choose if they want to click on it."*
+
+He is right, and entry 148 built the thing he is describing: `grouplab.org/discord` was a meta refresh that threw the visitor off the site before they had read a word. A navigation item that ejects you from the site is remembered badly.
+
+### What is there now
+
+A real page, in the site's own layout, with the navigation, the footer and the theme. It says what the Discord is for, what is in it, what is expected there, and that Discord is a third party service nobody has to join to use GroupLab or to get help.
+
+**One thing on the page leaves the site.** It is marked "Opens Discord in a new tab" before it is clicked, it opens in a new tab, and the invite address is printed as visible text beside it, because some people want to see where a link goes before they follow it.
+
+### What the page does not claim
+
+**The channel names are not on it, because nobody has read them out of the server.** The five group names came with the entry, so the page names the groups and says in a line what each one is for. Inventing channel names to fill a list would have been the same fault entry 159 is about: something published that is not true, in a place nobody would think to check.
+
+**The rules section is the project's own expectations**, written here, and the page says so rather than presenting them as the server's. `docs/notes/for-alan.md` request 4 asks for both, and `website/links.json` is where both go, so the page becomes exact without a rewrite.
+
+### The one source, and the tests
+
+`website/links.json` still holds the invite and the canonical address, and now the group list as well. The test that the invite is written out in exactly one place is amended for the one exception the entry allows rather than deleted, and the published-site test now names the community page instead of the redirect.
+
+Two new tests:
+
+- **No page on the built site carries a `<meta http-equiv="refresh">`.** That is the general form of the fault rather than the one instance of it, so the next page that tries to navigate on its own fails the build.
+- **The community page carries the invite as a link and as visible text**, and says "new tab" before it is clicked. A page carrying it only as an `href` would have lost half of what section 1.3 asks for with nothing looking wrong.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

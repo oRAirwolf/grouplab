@@ -14,6 +14,25 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 4. The Discord channel names, and the server's own rules
+
+**Opened 2026-09-23. Entry 151 sections 1.2 and 1.5. Waiting.**
+
+**What is needed.** The names of the channels inside each of the five groups on the Discord server, and the
+text of the server's rules.
+
+**Why.** `grouplab.org/discord` is a real page now instead of a redirect, and entry 151 asks it to show the
+channel list in plain words so somebody can see what they are joining before they join, and to summarise the
+rules so they are readable before joining rather than only after. The five group names are known, so the page
+is live and honest with a line about each group. The channels inside them are not, and nothing invented them:
+the page says what each group is for and stops there. The rules section on the page is the project's own
+expectations, written here, not a copy of the server's.
+
+**A good answer.** A paste of the channel list, and a paste of the rules channel. Both go into
+`website/links.json`, which is the one source the page reads, and the page becomes exact without a rewrite.
+
+---
+
 ## 3. The photograph annotations, for the paper-tearing program
 
 **Opened 2026-09-23. Entry 158 section 2. Waiting.**

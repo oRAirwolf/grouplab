@@ -101,7 +101,7 @@ public class DiscordLinkTests
             string rel = Path.GetRelativePath(built, file).Replace(Path.DirectorySeparatorChar, '/');
             if (rel != "discord/index.html")
             {
-                wrong.Add(rel + ": carries an invite, and only the redirect page may");
+                wrong.Add(rel + ": carries an invite, and only the community page may");
             }
             else if (!text.Contains(invite, StringComparison.Ordinal))
             {
@@ -110,5 +110,63 @@ public class DiscordLinkTests
         }
 
         Assert.True(wrong.Count == 0, string.Join("; ", wrong));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 151 section 4.1. Alan: "make it so the community link at the top of the page does not automatically
+    /// redirect to the discord server. People will not appreciate this." The page that did it was a meta refresh, and this is the general
+    /// form of that fault rather than the one instance of it, so it catches the next one too. Nothing on this site navigates on its own.
+    /// </summary>
+    [Fact]
+    public void NoPageOnTheSiteNavigatesOnItsOwn()
+    {
+        string built = Repo.PathTo("website", "_site");
+        if (!Directory.Exists(built))
+        {
+            Assert.True(true, "skipped: website/_site has not been built here");
+            return;
+        }
+
+        var refreshing = new List<string>();
+        foreach (string file in Directory.EnumerateFiles(built, "*.html", SearchOption.AllDirectories))
+        {
+            string text = File.ReadAllText(file);
+            if (text.Contains("http-equiv=\"refresh\"", StringComparison.OrdinalIgnoreCase)
+                || text.Contains("http-equiv='refresh'", StringComparison.OrdinalIgnoreCase))
+            {
+                refreshing.Add(Path.GetRelativePath(built, file).Replace(Path.DirectorySeparatorChar, '/'));
+            }
+        }
+
+        Assert.True(refreshing.Count == 0,
+            "these pages throw the visitor somewhere else before they have read anything, which is what entry 151 removed: "
+            + string.Join(", ", refreshing));
+    }
+
+    /// <summary>
+    /// Entry 151 section 4.2. The community page carries the invite twice on purpose: once as the link's target and once as visible text,
+    /// because some people want to see where a link goes before they follow it. A page carrying it only as an <c>href</c> has quietly lost
+    /// half of what the section asks for, and nothing would look wrong.
+    /// </summary>
+    [Fact]
+    public void TheCommunityPageShowsTheInviteAsWellAsLinkingIt()
+    {
+        string page = Path.Combine(Repo.PathTo("website", "_site"), "discord", "index.html");
+        if (!File.Exists(page))
+        {
+            Assert.True(true, "skipped: website/_site has not been built here");
+            return;
+        }
+
+        string text = File.ReadAllText(page);
+        string invite = Invite();
+
+        Assert.Contains($"href=\"{invite}\"", text, StringComparison.Ordinal);
+
+        // The visible half: the address inside an element's text rather than inside an attribute.
+        Assert.Contains($">{invite}<", text.Replace("<code>", ">").Replace("</code>", "<"), StringComparison.Ordinal);
+
+        // And it says where it goes before it is clicked.
+        Assert.Contains("new tab", text, StringComparison.OrdinalIgnoreCase);
     }
 }

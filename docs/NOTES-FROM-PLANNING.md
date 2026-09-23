@@ -15,6 +15,18 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-23, entry 151: the Community link goes to a page, not straight out to Discord
+
+**Status: actioned 2026-09-23**, all four sections, with one part of section 1.2 standing on a request rather than on a guess.
+
+- **Section 1.** The meta refresh is gone and `grouplab.org/discord` is a real page in the site's layout. One thing on it leaves the site, it is marked "Opens Discord in a new tab" before it is clicked, and the invite is visible as text as well as being the link's target.
+- **Section 1.2, and this is the part that is not complete.** The five group names are the server's own and the page describes what each group is for. **The channel names inside them are not written anywhere I can read**, so nothing invented them: the page says what each group is for and stops. `docs/notes/for-alan.md` request 4 asks for the channel list and for the server's own rules text, and `website/links.json` is where both go, so the page becomes exact without a rewrite.
+- **Section 1.5.** The rules summary on the page is **the project's own expectations**, written here, and it says so. It is not a copy of the server's rules, because nobody has read those out of the server.
+- **Section 2.** The footer said "Discord" and the navigation said "Community". Both say Community now.
+- **Sections 3 and 4.** `website/links.json` is still the one source, and it now carries the group list as well. The test that the invite appears nowhere else is amended rather than deleted, for the one exception the entry allows. Two new tests: **no page on the built site carries a meta refresh**, which is the general form of the fault rather than the one instance of it, and the community page carries the invite both as a link and as visible text.
+
+---
+
 # 2026-09-23, entry 150: an executable is built only when the application changes
 
 **Status: actioned 2026-09-23**, all six sections. Section 3's proof is a run rather than a reading, and the run it is proved by is the push that carries this entry.

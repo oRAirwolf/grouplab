@@ -3,10 +3,38 @@
     "NOTES-FROM-PLANNING.md entry 148 section 3: the Discord invite is written down in exactly one place, so replacing",
     "it later is a single edit and no published link ever breaks.",
     "",
-    "Everything published points at the canonical address, grouplab.org/discord, which redirects to the invite. The",
-    "invite itself appears on no page and in no document: only in this file and in the redirect the build makes from it.",
-    "A test fails if the invite is written out anywhere else."
+    "Entry 151 supersedes the redirect. grouplab.org/discord is a real page now, in the site's own layout, and the only",
+    "thing on it that leaves the site is one clearly marked link. The invite appears as visible text there as well as",
+    "being that link's target, because some people want to see where a link goes before they follow it. Nowhere else on",
+    "the site or in any document carries the discord.gg address, and a test holds that to the one exception.",
+    "",
+    "discordGroups is the channel list in plain words, so somebody can see what they are joining before they join. The",
+    "group names are the server's own. The channels inside each group are not written here yet, because nobody has read",
+    "them out of the server; docs/notes/for-alan.md request 4 asks for them, and this file is where they go."
   ],
   "discordInvite": "https://discord.gg/jY7MrYNN5V",
-  "discordCanonical": "https://grouplab.org/discord"
+  "discordCanonical": "https://grouplab.org/discord",
+
+  "discordGroups": [
+    {
+      "name": "Information",
+      "what": "What the project is, what is being worked on, and the rules of the server. Read only, so it stays readable."
+    },
+    {
+      "name": "Using GroupLab",
+      "what": "Questions about the application: printing a sheet, reading a scan, a number that looks wrong, a build that will not start."
+    },
+    {
+      "name": "Shooting",
+      "what": "Targets, groups, loads and what people are shooting. Not about the software."
+    },
+    {
+      "name": "Development",
+      "what": "How GroupLab is built and why, what is being measured, and what is coming next."
+    },
+    {
+      "name": "Voice",
+      "what": "Talking rather than typing, for anybody who would rather explain something out loud."
+    }
+  ]
 }
