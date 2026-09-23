@@ -1,0 +1,62 @@
+{
+  "why": "NOTES-FROM-PLANNING.md entry 143, question 45 item 3. A hole that the software used to find and no longer finds is the most serious kind of regression this project can have, and it went unnoticed once because nothing checked. These are the counts on Alan's six range scans of 2026-09-20, which are not committed: the test that reads this file runs only where the folder is present and skips with a clear message where it is not.",
+  "folder": "C:\\Dev\\grouplab-range-2026-09-20\\scans",
+  "measured": "2026-09-23",
+  "measuredAt": "be9edbd",
+  "scans": [
+    {
+      "file": "1-600-dpi09202026.png",
+      "sha256": "44c377d5120a75bfa134b4dbd65a48a7db1b1be664a38821c049ac230d388814",
+      "calibre": "0.224",
+      "holesWithCalibre": 15,
+      "holesWithoutCalibre": 14,
+      "shotsAlanRecorded": 15,
+      "note": "Entry 130 item 2b.1: bull 2 is still missed with a calibre and without. The calibre is worth one hole here."
+    },
+    {
+      "file": "2-600-dpi09202026.png",
+      "sha256": "859715cbb9f2def6ad62d0c88f2538c40b891e7fbe015c323c6fb9adbf1c4b30",
+      "calibre": null,
+      "holesWithCalibre": null,
+      "holesWithoutCalibre": null,
+      "shotsAlanRecorded": null,
+      "note": "Cannot be registered at all: no code on the sheet can be read, on a flat 600 dpi scan. Recorded so that the day it starts reading is noticed as loudly as the day a count drops."
+    },
+    {
+      "file": "3-600-dpi09202026.png",
+      "sha256": "93140a6a37777667d0c47d61a3a9c53e7ba9c7fb5c4e67038e3e4206ed8ededa",
+      "calibre": "0.308",
+      "holesWithCalibre": 25,
+      "holesWithoutCalibre": 25,
+      "shotsAlanRecorded": 25,
+      "note": "The gate record's sheet. Both readings are complete and must stay so."
+    },
+    {
+      "file": "4-600-dpi09202026.png",
+      "sha256": "a2e04ebf34e857dcea913aff896a5eb2a06de95b1921c2b0615628590942cd8e",
+      "calibre": "0.224",
+      "holesWithCalibre": 24,
+      "holesWithoutCalibre": 19,
+      "shotsAlanRecorded": 23,
+      "note": "24 found against Alan's 23, which is one too many and wants the bull-by-bull look entry 130 item 2b asked for. The calibre is worth five holes here."
+    },
+    {
+      "file": "5-600-dpi09202026.png",
+      "sha256": "dabd4bedafe41c7ebe9129c751657aaf2826eb6f2585b99691ac122c67390bd4",
+      "calibre": "0.224",
+      "holesWithCalibre": 20,
+      "holesWithoutCalibre": 20,
+      "shotsAlanRecorded": 20,
+      "note": "Complete, and matches Alan's table shot for shot once the aimed bulls are set."
+    },
+    {
+      "file": "6-600-dpi09202026.png",
+      "sha256": "d1aff0b4d6b55f39e401e180a79e73cd505f15d8c14a8e165b2b0b4d77b99bbb",
+      "calibre": "0.243",
+      "holesWithCalibre": 9,
+      "holesWithoutCalibre": 9,
+      "shotsAlanRecorded": 10,
+      "note": "Nine against Alan's ten. The missing one is shot 6, which landed left of bull 21, far from the rest, and which entry 120 calls a real shot rather than a flyer to delete. Question 45 established that this was never ten: it reads nine at the commit that recorded ten, and nine before and after entry 141 section 4. It is a standing miss, not a regression, and it is the hole most worth recovering."
+    }
+  ]
+}

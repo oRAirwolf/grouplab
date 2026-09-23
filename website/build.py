@@ -41,7 +41,6 @@ NIGHTLY = GITHUB + "/releases/download/nightly/"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
 # than one that leads somewhere old. Entry 129 section 6.2 flips it and redirects the old page.
-UPLOAD_PAGE = "https://pissinhot.com/targets"
 
 # The Turnstile site key is the public half and belongs in the page. The secret half lives only on
 # the server, in a file with mode 600, put there by grouplab-set-turnstile-secret. It is never in
@@ -272,7 +271,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
 <a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">Licence, GPL-3.0</a>
 <a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
-<a href="/support/">Support</a><a href="{UPLOAD_PAGE}">Send target photos</a>
+<a href="/support/">Support</a>
 </nav>
 </div>
 <div class="wrap footer-base">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</div>
@@ -382,11 +381,10 @@ def page_home() -> str:
 <div class="stack">
 <p class="eyebrow amber">Help prove it</p>
 <h2>Shoot a target for GroupLab.</h2>
-<p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, photograph it before you take it down, and send the photographs. About ten minutes on top of the shooting.</p>
+<p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, and photograph it before you take it down: about ten minutes on top of the shooting. Keep the files until the upload page opens here, which is being built now.</p>
 </div>
 <div class="actions col">
 {btn("Get the donor pack", "/shoot-a-target/", True, "Instructions and two targets · PDF")}
-{btn("Send your photographs", UPLOAD_PAGE)}
 </div>
 </div>
 </section>
@@ -482,14 +480,13 @@ def page_shoot() -> str:
 <div class="stack">
 <ol class="step-list" start="4">
 {st("4", "Photograph it before you take it down", "Four photographs on your phone's main camera at 1x: not the wide lens, not zoomed, no flash, your shadow off the sheet. A target still hanging where it was shot is the material the project most needs.")}
-{st("5", "Send it", "Upload the photographs, and a 600 dpi scan if you have a flatbed scanner. Do not crop them or send them through a messaging app, which shrinks them.")}
+{st("5", "Keep the files as they came off the camera", "A 600 dpi flatbed scan too, if you have one. Do not crop them and do not send them through a messaging app, which shrinks them. Uploading opens here shortly; until then the originals are the thing to hold on to.")}
 </ol>
 <div class="callout small-callout">
 <div class="stack">
-<h2 class="h3">Send your photographs</h2>
-<p class="text">No account, no email, no follow up. Submitting means following the terms on the upload page.</p>
+<h2 class="h3">Sending them, shortly</h2>
+<p class="text">The upload page is being built here on grouplab.org, with no account, no email and no follow up, and terms shown before you submit anything. It is not open yet, so keep your files and check back.</p>
 </div>
-<div>{btn("Open the upload page", UPLOAD_PAGE, True, "pissinhot.com/targets")}</div>
 </div>
 </div>
 </section>
