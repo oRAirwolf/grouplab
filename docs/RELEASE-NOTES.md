@@ -12,6 +12,19 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 ---
 
+## 0.2.0-nightly.93
+
+**2026-09-23**, commit `aa8c559`. Nightly.
+
+**Under the hood**
+
+- Every research article on the website now ends with what the
+- [notes] 0.2.0-nightly.92.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.93)
+
+---
+
 ## 0.2.0-nightly.92
 
 **2026-09-23**, commit `57f5a3f`. Nightly.
