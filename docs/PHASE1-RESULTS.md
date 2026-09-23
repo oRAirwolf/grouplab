@@ -7321,6 +7321,12 @@ So drop and paste have exactly the safety Open has, which is what the section's 
 1. A cap at **400 megapixels**, phrased as a limit against a hostile or broken file rather than a judgement about scanning, with the number and the measured size in the message. Alan's 600 dpi letter scans are about 32 megapixels, so the cap is twelve times his largest real file.
 2. The decode moves to a background thread with a timeout and shows progress, because the window freezing on a large scan is a real complaint waiting to happen.
 
+**Item 1 is built, 2026-09-23.** `ImageLoader.MostPixels` is 400 megapixels, checked after every decode in all four of the loader's paths, and the message says the measured size, the limit, and that a file that large is broken or built to exhaust memory rather than a scan anybody made. The check is after the decode because that is where the size is known: OpenCV reads the header and allocates in one call and there is no way through it to ask first, so this does not prevent the allocation, it stops everything downstream working on a file nothing here should be working on.
+
+`PixelCapTests` holds the number against a real 600 dpi letter scan, which is 33.7 megapixels, and holds the other direction too: an ordinary image is still read. A cap written the wrong way round refuses every file, and a test that only checked the refusal would pass.
+
+**Item 2, the background decode with a timeout and progress, is still not built.**
+
 **Why it is still not built, said here so the specification and the code agree rather than only appearing to.** Entry 143 section 3 puts question 43 last of everything in that entry, behind questions 45, 46, 42, 41 and 44 and behind the batch 1 fixes. It is the one item in the queue that guards against a file nobody has sent, on a path nobody has complained about, and the items ahead of it were all things that mislead somebody using GroupLab today. Until it is built, **the desktop's Open, drop and paste paths have no pixel cap and no decode timeout**, and entry 137 section 4's parenthetical describes the submission intake's protections rather than the desktop's.
 
 

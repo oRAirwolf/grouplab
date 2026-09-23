@@ -42,6 +42,34 @@ public static class ImageLoader
         }
     }
 
+    /// <summary>
+    /// The most pixels GroupLab will decode from one file, NOTES-FROM-PLANNING.md entry 143, question 43.
+    /// <para>
+    /// <b>It is a limit against a hostile or broken file, not a judgement about scanning.</b> A few bytes of header can claim an image of
+    /// any size, and decoding it allocates the whole thing before anything else can object. 400 megapixels is twelve times Alan's largest
+    /// real file, a 600 dpi letter scan at about 32 megapixels, so nothing anybody scans comes near it.
+    /// </para>
+    /// </summary>
+    public const long MostPixels = 400L * 1000 * 1000;
+
+    /// <summary>
+    /// Refuses a decoded image larger than <see cref="MostPixels"/>, saying the measured size and the limit.
+    /// <para>
+    /// The check is after the decode because that is where the size is known: OpenCV reads the header and allocates in one call, and there
+    /// is no way through it to ask first. So this does not prevent the allocation; it stops everything downstream from working on a file
+    /// nothing here should be working on, and says why in a sentence a person can act on.
+    /// </para>
+    /// </summary>
+    private static void NotTooLarge(Mat mat, string path)
+    {
+        long pixels = (long)mat.Width * mat.Height;
+        if (pixels > MostPixels)
+        {
+            throw new InvalidDataException(FormattableString.Invariant(
+                $"{path} is {mat.Width} by {mat.Height}, which is {pixels / 1_000_000} megapixels. GroupLab reads up to {MostPixels / 1_000_000} megapixels, which is far larger than any scan or photograph of a target. A file this big is either broken or built to exhaust memory."));
+        }
+    }
+
     public static (GrayImage Image, ImageMetadata Metadata) Load(string path)
     {
         byte[] bytes = Bytes(path);
@@ -51,6 +79,8 @@ public static class ImageLoader
         {
             throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
         }
+
+        NotTooLarge(mat, path);
 
         return (OpenCvSharpBackend.Copy(mat), metadata);
     }
@@ -68,6 +98,8 @@ public static class ImageLoader
         {
             throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
         }
+
+        NotTooLarge(mat, path);
 
         var channels = Cv2.Split(mat);
         try
@@ -119,6 +151,8 @@ public static class ImageLoader
 
         try
         {
+            NotTooLarge(colour, path);
+
             using var grey = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
             if (grey.Empty())
             {
@@ -161,6 +195,8 @@ public static class ImageLoader
         {
             throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
         }
+
+        NotTooLarge(mat, path);
 
         var channels = Cv2.Split(mat);
         try
