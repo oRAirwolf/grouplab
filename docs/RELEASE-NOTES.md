@@ -12,6 +12,25 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 ---
 
+## 0.2.0-nightly.92
+
+**2026-09-23**, commit `57f5a3f`. Nightly.
+
+**What you will notice**
+
+- The Community link at the top of grouplab.org now opens a page
+- GroupLab is only built and released on the nights something in
+
+**Under the hood**
+
+- Anything GroupLab needs from you is written down in a file now
+- Eleven new pieces of planned work arrived, covering the release
+- [notes] 0.2.0-nightly.91.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.92)
+
+---
+
 ## 0.2.0-nightly.91
 
 **2026-09-23**, commit `2d8f229`. Nightly.
