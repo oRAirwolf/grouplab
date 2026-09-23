@@ -165,8 +165,12 @@ public partial class MacBuildsTests
         }
 
         // One publish step and one pack step, whatever the target. Three of each would mean three places to edit.
-        Assert.Single(Regex.Matches(package, "^[ ]+- name: Publish$", RegexOptions.Multiline));
-        Assert.Single(Regex.Matches(package, "^[ ]+- name: Pack$", RegexOptions.Multiline));
+        //
+        // The carriage return in those patterns is not decoration: a checkout on Windows has CRLF line endings, so a
+        // pattern anchored with $ alone matches nothing there while passing everywhere else. This test went red on the
+        // Windows runner and nowhere else, for exactly that reason.
+        Assert.Single(Regex.Matches(package, "^[ ]+- name: Publish\\r?$", RegexOptions.Multiline));
+        Assert.Single(Regex.Matches(package, "^[ ]+- name: Pack\\r?$", RegexOptions.Multiline));
     }
 
     /// <summary>

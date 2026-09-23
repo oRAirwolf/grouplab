@@ -11,7 +11,19 @@ namespace GroupLab.Core.Tests;
 public partial class ReleaseAssetTests
 {
     /// <summary>The three stable names both workflows publish, and the README links to twice.</summary>
-    private static readonly string[] Stable = ["grouplab-setup-win-x64.exe", "grouplab-win-x64.zip", "grouplab-linux-x64.tar.gz"];
+    /// <summary>
+    /// The stable asset names the rolling nightly release keeps, and the only ones the README may link to.
+    /// <para>
+    /// The two macOS builds are optional in the packaging matrix, entry 147 section 5.3: a macOS packaging failure does not stop the nightly
+    /// publishing the others. They are still named here, because the README links them and the rolling release's upload line names them; a
+    /// nightly that could not build them publishes without them and says which is missing.
+    /// </para>
+    /// </summary>
+    private static readonly string[] Stable =
+    [
+        "grouplab-setup-win-x64.exe", "grouplab-win-x64.zip", "grouplab-linux-x64.tar.gz",
+        "grouplab-macos-arm64.tar.gz", "grouplab-macos-x64.tar.gz",
+    ];
 
     [Fact]
     public void TheReadmesDownloadLinksAreTheAssetsTheWorkflowAttaches()

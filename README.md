@@ -41,6 +41,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - [Concept screens](#concept-screens)
 - [Built with](#built-with)
 - [Architecture](#architecture)
+- [What is supported, and what is not](#what-is-supported-and-what-is-not)
 - [Status](#status)
 - [Planned](#planned)
   - [What each phase holds](#what-each-phase-holds)
@@ -158,6 +159,60 @@ flowchart TB
 ```
 
 `GroupLab.Core` deliberately has no user-interface types and no OpenCV dependency. That is what lets the Android shell be swapped for a different toolkit later without touching a line of measurement code, and it is why the reference fixtures can validate the core without a window ever opening.
+
+## What is supported, and what is not
+
+<!-- platform-support: generated from docs/PLATFORM-SUPPORT.md, do not edit between these markers -->
+
+**Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
+
+**Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
+
+**macOS builds are published and have never been run on a Mac.** The tests run on macOS on every build, so the code works at that level, but nobody has opened the window, printed a target or saved a session on real hardware. These builds are an experiment rather than a release.
+
+### What happens once the application settles
+
+Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
+
+**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+
+### Running the macOS build
+
+macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
+
+```
+xattr -dr com.apple.quarantine /Applications/GroupLab.app
+```
+
+Anyone not comfortable running that command should not run this build.
+
+### Why it is not signed
+
+Signing a macOS application requires the Apple developer programme, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+
+That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+
+### Signing elsewhere
+
+The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
+
+### Apple mobile
+
+An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer programme, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+
+### Other Linux builds
+
+The published Linux build is x86-64. Other targets can be added to the nightly builds on request: Arm64 for a Raspberry Pi or an Arm laptop, or a package built for a particular distribution rather than a tarball. Adding one is a line of configuration rather than a project. The reason a dozen are not published already is simply that nobody has asked for them.
+
+Requests go to support@grouplab.org, naming the distribution and the architecture.
+
+### Reports from Linux and macOS are welcome
+
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
+
+<!-- end platform-support -->
+
+---
 
 ## Status
 
@@ -300,60 +355,6 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Deferred: the full visual designer, and with it the full detector on a bought target.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for. The same canvas is how a person would trace a store-bought target into a definition, and a definition is what the detector needs, so the designer's deferral carries that second promise too: when either is asked for, both arrive together. Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.
 
 A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
-
-## What is supported, and what is not
-
-<!-- platform-support: generated from docs/PLATFORM-SUPPORT.md, do not edit between these markers -->
-
-**Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
-
-**Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
-
-**macOS builds are published and have never been run on a Mac.** The tests run on macOS on every build, so the code works at that level, but nobody has opened the window, printed a target or saved a session on real hardware. These builds are an experiment rather than a release.
-
-### What happens once the application settles
-
-Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
-
-**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
-
-### Running the macOS build
-
-macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
-
-```
-xattr -dr com.apple.quarantine /Applications/GroupLab.app
-```
-
-Anyone not comfortable running that command should not run this build.
-
-### Why it is not signed
-
-Signing a macOS application requires the Apple developer programme, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
-
-That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
-
-### Signing elsewhere
-
-The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
-
-### Apple mobile
-
-An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer programme, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
-
-### Other Linux builds
-
-The published Linux build is x86-64. Other targets can be added to the nightly builds on request: Arm64 for a Raspberry Pi or an Arm laptop, or a package built for a particular distribution rather than a tarball. Adding one is a line of configuration rather than a project. The reason a dozen are not published already is simply that nobody has asked for them.
-
-Requests go to support@grouplab.org, naming the distribution and the architecture.
-
-### Reports from Linux and macOS are welcome
-
-A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
-
-<!-- end platform-support -->
-
----
 
 ### Platforms
 
