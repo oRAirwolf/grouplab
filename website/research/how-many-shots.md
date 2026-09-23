@@ -76,3 +76,11 @@ This is the table that load development by three-shot groups runs into. A genuin
 - **Pool your groups.** GroupLab can combine groups of the same load across sheets and sessions. Eight sessions of 25 shots is 200 shots: a usable sample. Eight separate 25-shot groups looked at one by one is not.
 - **Read the interval, not just the number.** GroupLab shows every mean radius with its interval. When two loads' intervals overlap heavily, the honest verdict is "not shown yet", not "load A wins".
 - **Beware of many comparisons.** Test six charges against each other and you are running fifteen comparisons. At a 5 percent risk each, one will look "significant" by chance about half the time. GroupLab corrects for this when it compares several loads, and says that it did.
+
+## What this means
+
+**Your five-shot group told you much less than it appears to.** The true dispersion behind a five-shot group sits somewhere between about 0.68 and 1.92 times what you measured. That is a factor of nearly three from end to end, and no amount of care at the bench narrows it: it is what five shots can say.
+
+**So do not change a load on the strength of one group.** Two loads that differ by 20 percent need about 81 shots each to be told apart with confidence. Ten percent needs 434. If those numbers are more ammunition than you want to spend, that is a real answer, and it means the honest conclusion is that you do not know.
+
+**What to do instead of shooting 81 rounds:** accept a wider conclusion. "These two are not obviously different" is true, useful, and free.

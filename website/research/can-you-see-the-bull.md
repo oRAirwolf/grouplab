@@ -105,3 +105,11 @@ Four optics at 100 yards, each scored 0 (cannot see the centre), 1 (can see it b
 ## What happens next
 
 The winning design becomes a new ring set in the GroupLab library, tested on real sheets before it replaces anything. A follow-up test covers 1x red dots and prisms, low power variables and medium power variables at distances suited to each (see "Aim points for 1x to high power optics").
+
+## What this means
+
+**Try the card before you commit to a design.** The geometry in this article is exact and the four arcminute working rule is a proposal, not a result. What the eye does with a particular mark, in particular light, through particular glass, is a thing to test rather than calculate.
+
+**A bull you cannot see clearly costs you group size that is not your rifle's.** If the aiming mark is at the edge of what you can resolve, your hold varies, and that variation lands in the measurement as dispersion. It is the cheapest source of error on this list to remove.
+
+**And do not choose a bull because it looks good on screen.** A sheet is read at arm's length on a bench, not at 100 percent zoom on a monitor.

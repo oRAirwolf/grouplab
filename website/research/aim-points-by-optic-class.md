@@ -77,3 +77,11 @@ The chart is illustrative, with typical rather than measured values, but it show
 ## Results
 
 **[Placeholder: results by class as each test is shot. The 100 yard high power results from 2026-09-23 appear first in "Can you see the bull?".]**
+
+## What this means
+
+**Pick the aim point for what you can actually see through your own scope, not for what looks precise.** An aim point finer than your optic can resolve is not more accurate; it is a guess with a sharp edge on it, and the shot-to-shot variation it adds is invisible in the target afterwards.
+
+**If you are testing a load, hold the optic constant.** Changing scope and aim point between strings puts a difference into the group that has nothing to do with the ammunition, and no amount of statistics afterwards can separate the two.
+
+**Stop believing magnification alone decides this.** What matters is the angular size of the mark at the distance you are shooting, against what the reticle and the glass can separate.

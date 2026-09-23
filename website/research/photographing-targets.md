@@ -68,3 +68,11 @@ Because of this finding, GroupLab no longer judges hole size in a photo against 
 6. **Use the main camera, not digital zoom.** Step closer instead of zooming.
 7. **One sheet per photo.** Several sheets in one frame make identification harder and give each sheet fewer pixels.
 8. **If it matters, scan it.** For hole sizes, for calibre, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
+
+## What this means
+
+**Photograph for position, scan for size.** Positions from a readable photograph are sound to within a few thousandths of an inch, so a group size from a photograph is trustworthy. A hole size from one is not, and the reason is the light rather than the camera.
+
+**Shoot the photograph in flat light.** Low sun puts a shadow into and beside every hole, and the camera cannot tell shadow from hole. Open shade, an overcast sky, or indoors under even light all work. Bright, low, side-on sun is the worst case and it is the one people naturally get at the end of a range day.
+
+**Stop believing a better phone would fix it.** It would not. The effect is the same at every resolution tested here, because it is a property of the scene and not of the sensor.

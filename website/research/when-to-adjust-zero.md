@@ -67,3 +67,11 @@ This is what GroupLab's zero offset picture shows: the aim as a cross, the group
 - **Adjust once, then confirm.** Make one correction from a decent group, then shoot to confirm rather than correcting again straight away.
 - **Know your click size.** A 0.1 mil click is 0.36 inch at 100 yards and a 1/4 MOA click is 0.26 inch. A zero error smaller than one click cannot be corrected anyway.
 - **Pool zero groups.** Shots from several sessions with the same zero, rifle and load all count towards knowing where it really shoots.
+
+## What this means
+
+**Do not correct your zero on three shots if your zero is already good.** The centre of a three-shot group is itself uncertain by about 0.72 sigma, so a full correction based on it leaves you that far out on average, whatever you started from. A rifle that begins perfectly zeroed and is corrected after every three-shot group settles at that error permanently.
+
+**Shoot more before you touch the turret, or correct less than the full amount.** Both work. What does not work is a full correction on a small group, repeated.
+
+**The counter-intuitive part is worth stating plainly:** adjusting a zero can make it worse, and the better your zero already is, the more likely that is.

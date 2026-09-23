@@ -8268,7 +8268,7 @@ The record is now current. **The gate fires on artwork and not on counts**, whic
 
 ## Entry 153: the standard every research article is held to, sections 1 to 4
 
-**In progress.** Sections 1 and 4 are complete. Sections 2 and 3 are complete for **all eighteen published articles** and outstanding for the twelve drafts, which section 6 asks to be brought up before they are offered for review rather than after. Section 5, the hole crops for the photo hole size article, is not started. The inbox file stays until they are.
+**In progress.** Sections 1 to 4 are complete, sections 2 and 3 for **all thirty articles**, published and draft. Section 5, the three hole crops with measurements drawn on them, is not started, so the inbox file stays.
 
 ### Section 1: the developer is not named
 
@@ -8298,13 +8298,12 @@ Every published article now ends with **"What this means"**, and it is about wha
 
 **The figure rule has an exemption that somebody had to write.** Several of these articles are about a build pipeline, a list of network calls or what is removed from a file, and there is genuinely nothing to photograph. Rather than a silent pass, the front matter carries `no_figure` with the reason, the page prints it where the picture would be, and the build fails on an article that has neither. A gap where a reader expects a figure reads as something forgotten; a line saying why reads as a decision.
 
-**Applied in the batches section 6 asks for.** `STANDARD_153` in `website/build.py` names the articles brought up to the standard, and the build fails if one of them loses its section or its caption. An article not yet on the list is printed at the end of the build as still to come, and that count has to reach zero. It is 13 lines over 12 drafts today, from 30 when the check was first run.
+**Applied in the batches section 6 asks for, and the scaffolding is gone.** `STANDARD_153` in `website/build.py` named the articles brought up to the standard and the build failed if one of them lost its section or its caption; an article not yet on it was printed at the end of the build as still to come. The list grew from three to all thirty over four batches, so it has been removed and the checks are unconditional. A new article meets the standard from its first commit rather than joining a backlog, which is the point: a backlog list that outlives its backlog becomes a way to opt out.
 
 ### Not done
 
 - **Section 5**, the three hole crops with measurements drawn on them for `photo-hole-size`. It needs real material and image work, and it is the section most worth doing properly rather than quickly.
-- **Section 3 for the drafts**, which section 6 puts before they are offered for review.
-- **Section 3.1 and 3.2 for the published articles that carry `no_figure`.** Each exemption is honest today, and several of them would be better served by a figure that does not exist yet: the six steps of reading a target, the two ways of pooling. The exemption is a statement that nothing exists to show, not that nothing could.
+- **Section 3.1 and 3.2 for the articles that carry `no_figure`.** Each exemption is honest today, and several of them would be better served by a figure that does not exist yet: the six steps of reading a target, the two ways of pooling. The exemption is a statement that nothing exists to show, not that nothing could.
 
 ## Decision log
 

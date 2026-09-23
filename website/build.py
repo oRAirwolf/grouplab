@@ -1154,19 +1154,6 @@ def figure_theme_problems() -> list[str]:
     return problems
 
 
-# NOTES-FROM-PLANNING.md entry 153 section 6: the standard goes on in batches, not in one commit that rewrites
-# thirty articles. An article named here has a "What this means" section and a figure with a caption, and the build
-# fails if it loses either. One that is not named is listed at the end of the build as still to come.
-STANDARD_153: set[str] = {
-    "nightly-builds", "smaller-installer", "safe-updates",
-    "choosing-the-markers", "what-grouplab-sends", "uploads-rebuilt-from-pixels",
-    "how-grouplab-reads-a-target", "designing-a-readable-target", "primer-comparison",
-    "blank-sheet-zero", "one-hole-or-two", "photo-hole-size", "pooling-groups",
-    "scans-against-photos", "wind-or-rifle", "wrong-bull",
-    "curled-angled-paper", "hole-is-not-the-bullet",
-}
-
-
 def research_problems() -> list[str]:
     """Everything wrong with the research articles, entry 142 sections 2.5 and 2.6.
 
@@ -1176,7 +1163,6 @@ def research_problems() -> list[str]:
     """
     required = ["title", "description", "group", "number", "written", "data_date", "samples", "state", "found", "sure"]
     problems: list[str] = []
-    later: list[str] = []
     live = published_articles()
     for meta in research_articles():
         where = f"research/{meta['slug']}.md"
@@ -1202,12 +1188,10 @@ def research_problems() -> list[str]:
                 f"{where}: {PUBLISHED.name} says this went live and the state says {meta.get('state')!r}. A page that "
                 "is on the site and does not admit it will be taken down by the next build without anybody deciding to")
 
-        # Entry 153 sections 2 and 3, applied in the batches section 6 asks for. An article in STANDARD_153 has been
-        # brought up to the standard and is held to it from then on; one that is not is named in the build output and
-        # does not fail it. Landing the check hard on all thirty at once would have meant rewriting thirty articles in
-        # one commit, which is the thing section 6 forbids.
-        hard = meta["slug"] in STANDARD_153
-        note = problems.append if hard else (lambda m: later.append(m))
+        # Entry 153 sections 2 and 3. It went on in the batches section 6 asks for, gated on a list that grew from
+        # three articles to all thirty; the list is gone now that every article is on it, and a new article meets the
+        # standard from its first commit rather than joining a backlog.
+        note = problems.append
 
         means = re.search(r"^##\s+What this means\s*$(.*?)(?=^##\s|\Z)", meta["body"], re.MULTILINE | re.DOTALL)
         if means is None:
@@ -1248,12 +1232,6 @@ def research_problems() -> list[str]:
         for marker, what in ((b"Exif", "EXIF"), (b"http://ns.adobe.com/xap/", "XMP"), (b"Photoshop 3.0", "IPTC"), (b"GPS", "GPS")):
             if marker in raw[:65536]:
                 problems.append(f"{image.relative_to(OUT)}: carries {what} metadata")
-
-    # Entry 153 section 6: what the next batch has to pick up. Printed, never a failure, and it has to reach zero.
-    if later:
-        print(f"still to be brought up to entry 153's standard, {len(later)} item{'' if len(later) == 1 else 's'}:")
-        for line in later:
-            print("  " + line)
 
     return problems
 

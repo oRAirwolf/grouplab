@@ -7,6 +7,7 @@ written: 2026-09-22
 data_date: "Running log; latest entry 2026-09-23"
 samples: "See each entry"
 state: draft
+no_figure: "This is a log of what happened on a range day. The sheets it refers to are the developer's own and are not published under a consent record; the figures they produced are given instead."
 found: "see the article"
 sure: "see the article"
 data:
@@ -74,3 +75,11 @@ data:
 ## Data
 
 - `data/range-day-2026-09-20.csv`: the six range-day sheets, cartridges, loads as written, shots and notes.
+
+## What this means
+
+**This page is evidence, not advice.** It exists so that the numbers quoted elsewhere on this site can be traced to a day, a rifle and a sheet, rather than appearing as figures from nowhere.
+
+**What to take from it:** how much goes wrong on an ordinary range day. Sheets that could not be read, a scanner that cropped without saying so, a zero that was not what it was assumed to be. Every one of those became a rule somewhere else in this project, and none of them would have been found by reasoning.
+
+**If you are running your own test**, the transferable part is writing it down at the bench. Nearly every difficulty here was recoverable only because something was recorded at the time.

@@ -64,3 +64,11 @@ A phone photo has no built-in ruler, because the camera's distance from the pape
 ## A note on paper
 
 Paper grows and shrinks slightly with humidity, and a sheet that has been rained on or left in the sun for hours can change shape. For normal range use this is small compared with the print-scale mistake above, but do not measure a sheet that has been soaked and dried.
+
+## What this means
+
+**Check once, with a ruler, and then stop worrying.** A printer set to "Actual size" was accurate to 0.06 percent here. The danger is not the printer, it is the print dialog quietly choosing "Fit to page" and shrinking the sheet by three to six percent.
+
+**A uniformly shrunk sheet still measures correctly**, because GroupLab takes its scale from the markers and they shrank with everything else. What you lose is the spacing the sheet was designed for, and the ability to tell a uniform shrink from a printer whose scaling drifts across the page, which is the case nothing later can undo. That is what the ruler check is for.
+
+**So the check is worth doing on a new printer and not worth repeating every session.** [What GroupLab can measure](/what-can-be-measured/) sets out which errors are recovered and which are not.

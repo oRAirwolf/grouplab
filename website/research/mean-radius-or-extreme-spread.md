@@ -73,3 +73,11 @@ In the simulation, the average extreme spread goes from about 3.1 sigma at five 
 ## If you only remember one thing
 
 A single five-shot extreme spread tells you less than it seems to, and comparing two of them tells you less still. If you want to know whether a load is better, shoot more rounds of it and look at mean radius with its interval. The article on how many shots you need puts numbers on "more".
+
+## What this means
+
+**Use mean radius if you are comparing anything.** At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence, because it only ever looks at the two worst shots and throws away everything the other twenty three told you.
+
+**Extreme spread is not wrong, it is expensive.** It is also what almost everybody else quotes, so keep reporting it if you want to compare with other people. Just do not make decisions on it.
+
+**And the gap gets worse, not better, as you shoot more.** Mean radius settles down with shot count; extreme spread does not, because a larger sample gives the two worst shots more chances to be extreme.

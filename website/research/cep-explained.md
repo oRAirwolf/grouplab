@@ -72,3 +72,11 @@ The shotGroups package, which GroupLab validates against, offers eleven ways to 
 - Each with a confidence interval from the same Rayleigh estimate as mean radius.
 - Width and height of the group, so a stretched group is visible as stretched rather than hidden inside a circle, with the spread across and up and down drawn on one scale.
 - A verdict on whether the group is round at all: not a warning at some aspect ratio, but a circularity test, which says "Round, as far as 24 shots can tell" when the shots cannot separate the two axes and "Not round" when they can. The error ellipse's aspect and the angle of its major axis are given beside it. That distinction matters here, because with few shots almost every group measures oval and almost none of them is.
+
+## What this means
+
+**Stop treating CEP, mean radius and sigma as different measurements.** For a round group they are the same number in three costumes: 1.18, 1.25 and 2.15 times the same spread. If somebody quotes you one and you want another, you multiply. There is no extra information in the second figure.
+
+**So pick one and stay with it.** Switching between them between sessions makes your own numbers incomparable for no benefit.
+
+**Where it stops being true is the part to remember.** Those fixed multiples assume a round group. Stretch the group to twice as wide as it is tall and the CEP 50 circle holds 54 percent rather than 50. That is a small error, and it is the first thing that goes wrong when a group is not round, which is a good reason to look at the shape before quoting any of the three.

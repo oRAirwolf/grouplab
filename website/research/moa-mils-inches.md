@@ -70,3 +70,11 @@ GroupLab does these conversions with the exact trigonometric form, not the small
 An angle needs a distance. Without one, a half-inch group could be 0.5 MOA at 100 yards or 0.1 MOA at 500. So GroupLab stores everything as a real distance on the paper and only shows MOA or mil once it knows how far away the target was. With no distance, the angular columns are not shown at all, rather than shown as zero or guessed.
 
 GroupLab can show inches, centimetres, MOA and mil side by side. It uses true MOA by default and offers IPHY for those who prefer it, and the metric and imperial switch changes every figure in the application at once.
+
+## What this means
+
+**A minute of angle is 1.047 inches at 100 yards, not 1 inch.** The round number is a convenience that costs 4.7 percent, and 4.7 percent is enough to change which of two loads looks tighter and enough to matter when you count clicks at distance.
+
+**Where it does not matter:** comparing two groups shot at the same distance in the same unit. The error cancels.
+
+**Where it does:** anything crossing a distance or a unit. Converting a group at 300 yards to MOA, working out a correction in clicks, or comparing your figures with somebody else's. Use the real number; GroupLab does.

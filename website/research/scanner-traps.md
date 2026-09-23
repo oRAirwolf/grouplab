@@ -72,3 +72,11 @@ Holes are holes because light (or the lid's white backing) shows through them. I
 ## A good scan in one line
 
 Greyscale or colour, 600 dpi optical, PNG, no automatic corrections, full bed, lid closed, all markers visible in the preview.
+
+## What this means
+
+**Scan rather than photograph if you can.** Twice the placement accuracy, and hole sizes that agree from sheet to sheet rather than varying with the light.
+
+**Check what your scanner actually produced, once.** The scanner here cropped a quarter inch off two edges of a letter sheet and said nothing about it. Multiply the pixel dimensions by the stated resolution and see whether you get the paper size you fed it. If you do not, the settings are wrong and every sheet from that scanner is affected.
+
+**Turn off everything that improves the image.** Sharpening, descreening, dust removal and automatic contrast all change the edges of a hole, which is the thing being measured. A flat, dull scan is the useful one.

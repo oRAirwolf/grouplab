@@ -70,3 +70,11 @@ So an ES of 25 ft/s over five shots and an ES of 40 ft/s over twenty shots can d
 - **Compare SDs with their intervals.** Two loads with five-shot SDs of 8 and 12 ft/s are not shown to be different. With twenty shots each, they might be.
 - **Look at the paper too.** Velocity SD is one input to vertical spread at distance. GroupLab can compare the vertical spread you measured with what your velocity spread predicts, which tells you whether velocity is really the limit or whether the rifle, the rest or the shooter is.
 - **Do not chase a number the sample cannot support.** Nothing in this article says small SDs do not matter. It says a five-shot string cannot tell you whether you have one.
+
+## What this means
+
+**A single-digit SD from a five-shot string is mostly luck.** Measure 10 ft/s over five shots and the true value is somewhere between 6.0 and 28.7 with 95 percent confidence. That range includes both "excellent" and "poor", which is another way of saying five shots did not tell you which you have.
+
+**Twenty shots is where the number starts to mean something**, narrowing the same reading to 7.6 to 14.6. Still wide, and honest.
+
+**So do not chase a load on SD alone from short strings**, and be sceptical of anybody quoting one. The claim is not usually dishonest; it is just a reading that has not been given enough shots to become a measurement.
