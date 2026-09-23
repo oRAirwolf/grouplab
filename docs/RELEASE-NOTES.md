@@ -12,6 +12,30 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 ---
 
+## 0.2.0-nightly.91
+
+**2026-09-23**, commit `2d8f229`. Nightly.
+
+**What you will notice**
+
+- GroupLab has a Discord now, linked from every page of the website and from the README, for questions, bug reports and target sheets. (Entry 148)
+- GroupLab now publishes Mac builds, one for Apple silicon and one for Intel. Nobody has run either on a real Mac, the download page says so beside each one, and it gives the Terminal command macOS needs before it will open unsigned software. (Entry 147)
+- A broken or hostile image file that claims to be hundreds of megapixels is now refused with its measured size, instead of being decoded until GroupLab runs out of memory. Real scans are unaffected: the limit is twelve times a 600 dpi letter scan. (Entry 143, 43)
+- When you run detection again on a sheet, the marks you had already moved or reassigned are kept where you put them instead of being thrown away, and the button tells you how many it will keep. (Entry 143, 42)
+
+**Under the hood**
+
+- A check that the Discord invite is written down in only one place no longer fails on Windows because it was reading a file the test run itself had open. (Entry 148)
+- The project's own checks now cover the README's new platform section and the Mac downloads, after a push that went red on every operating system. (Entry 147)
+- Six sets of donated target photographs have been read in and checked, with every photograph rebuilt from its pixels so that location data and anything hidden after the end of the image are gone. (Entry 129, 6)
+- The server side that will receive crash reports on grouplab.org is written and tested, including the check that nothing but a report's own logs and notes can be inside one. (Entry 129, 5)
+- The page for sending target photos to the project is built and waiting on one setup step on the server; nothing on grouplab.org links to it yet. (Entry 129)
+- [notes] 0.2.0-nightly.84.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.91)
+
+---
+
 ## 0.2.0-nightly.84
 
 **2026-09-23**, commit `fcdebac`. Nightly.
