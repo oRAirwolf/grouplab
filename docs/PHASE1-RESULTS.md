@@ -7409,7 +7409,9 @@ The four measurement items need the range folder read in place: pairing each bur
 
 # The mounted photograph gate, measured for the first time
 
-Entry 130 section 6b item 1. `DESIGN.md` says the mounted half of the photograph gate is the product requirement and has never had real material. Alan's 59 photographs of 2026-09-20, sheets stapled to corrugated plastic outdoors at many angles, are that material. Read in place; nothing committed, no metadata read.
+Entry 130 section 6b item 1. `DESIGN.md` says the mounted half of the photograph gate is the product requirement and has never had real material. Alan's 59 photographs of 2026-09-20, taken at his range at many angles, are that material. Read in place; nothing committed, no metadata read.
+
+**A correction, 2026-09-23.** This record first said those sheets were stapled to corrugated plastic outdoors. That description came from entry 130 section 6b's own wording and I repeated it; Alan says his sheets are on his backer board, and the stapled corrugated plastic is a submission from a second phone that none of this work used. I read those photographs for measurement only and never established what they show, so the mounting should never have been asserted here. What the figures below rest on is stated by provenance instead.
 
 ## The first number is the one nobody expected
 
@@ -7444,7 +7446,7 @@ Against the gate's 0.005 in for bull centres:
 
 ## What that means, plainly
 
-**A photograph of a stapled sheet registers well on average and badly somewhere.** The median bull is inside the gate on more than half the photographs; the worst bull is outside it on thirty of thirty-one. A group is measured from particular bulls, not from the median bull, so the worst-bull figure is the one that decides what a photograph can be trusted for.
+**A photograph of a mounted sheet registers well on average and badly somewhere.** The median bull is inside the gate on more than half the photographs; the worst bull is outside it on thirty of thirty-one. A group is measured from particular bulls, not from the median bull, so the worst-bull figure is the one that decides what a photograph can be trusted for.
 
 Set 0.02 in, the median worst-bull error, against a mean radius of about 0.17 in on scan 6: a shot measured from a bull that is 0.02 in out carries roughly a **twelve percent** error in its own offset. That will not turn a good group into a bad one, and it is far too large to compare two loads with.
 

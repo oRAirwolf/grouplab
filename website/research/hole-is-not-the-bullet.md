@@ -5,10 +5,10 @@ group: Reading targets
 number: 2
 written: 2026-09-22
 data_date: 2026-09-20
-samples: 176 holes on nine photographs and four scans of four sheets of known calibre, plus two earlier sheets the constant was first measured on
+samples: 176 holes photographed and 78 scanned, over the four sheets of known calibre Alan shot on 2026-09-20
 status: published
 found: On a scanner a hole measures about 0.94 of the bullet's diameter, consistently enough to tell one hole from two. On a photograph the same ratio runs from 0.90 to 1.45 depending on the light and the angle, so there is no photograph constant to be had.
-sure: Six sheets in total, two shooters, one scanner and one phone. Enough to tell one hole from two; nowhere near enough to report a calibre back to you from a measurement.
+sure: Four sheets, one afternoon, one scanner and one phone. The scanner ratio was first fixed on earlier sheets that are not published here, and rests on very few of them. Enough to tell one hole from two; nowhere near enough to report a calibre back to you from a measurement.
 sources:
   - "Where the ratio came from, and what it is good for: `src/GroupLab.Core/Marking/AutomaticMarking.cs`, `HoleToCalibre`."
   - "The 176 hole re-measurement on photographs: `docs/PHASE1-RESULTS.md`, question 38."
@@ -24,15 +24,15 @@ That is the first thing to know if you ever try to work out what calibre someone
 
 For a scanned sheet, GroupLab uses **0.945**: a hole measures about 94.5 percent of the bullet's diameter.
 
-That figure is not from a textbook. It was measured on Alan's own sheets, of known calibre, scanned on his own flatbed. Two sheets, then re-measured with more.
+That figure is not from a textbook. It was measured on scanned sheets of known calibre, and on very few of them: it began as a measurement over two, and was re-measured later with more.
 
-**Two sheets is not much**, and it is worth being plain about what a number from two sheets can and cannot do.
+**Two sheets is not much**, and it is worth being plain about what a number from so few can and cannot do.
 
 ## What a rough number is enough for
 
 Telling one hole from two is a **factor-of-two** judgement. Two bullets through nearly the same spot leave a mark about 1.4 times as wide as one, and if they are further apart, wider still. Against a difference that large, an error of a few percent in the ratio cannot flip the answer.
 
-So two sheets are enough for the job GroupLab actually uses it for.
+So a handful of sheets is enough for the job GroupLab actually uses it for.
 
 ## What it is not enough for
 

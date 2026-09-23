@@ -5,7 +5,7 @@ group: Reading targets
 number: 9
 written: 2026-09-22
 data_date: 2026-09-20
-samples: 59 photographs of sheets stapled to corrugated plastic outdoors, paired against six 600 dpi flatbed scans of the same sheets
+samples: the 59 photographs Alan took at his range on 2026-09-20, paired against his six 600 dpi flatbed scans of the same sheets
 status: published
 found: Of 59 photographs, 28 could not be read at all. Of the 15 that paired with a scan, a hole's position was out by about 0.03 in at the median and 0.07 in at the 95th percentile, against a mean radius of about 0.17 in.
 sure: One shooter, one afternoon, one phone and one scanner. The gap is measured properly against scans of the same sheets; how a different phone or a different day would compare is not established.
@@ -20,7 +20,7 @@ Scanning a target is a nuisance. You have to take it home, flatten it, and feed 
 
 So: how much do you lose?
 
-Until now GroupLab could not answer that, because nobody had photographed a set of targets and scanned the same ones. In September a shooter did: 59 photographs of sheets stapled to corrugated plastic outdoors at many angles, and flatbed scans at 600 dpi of the same sheets.
+Until now GroupLab could not answer that, because nobody had photographed a set of targets and scanned the same ones. In September a shooter did: 59 photographs taken at the range, at many angles and distances, and flatbed scans at 600 dpi of the same sheets.
 
 ## The first answer is not about accuracy
 
