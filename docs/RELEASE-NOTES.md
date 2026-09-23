@@ -12,6 +12,21 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 ---
 
+## 0.2.0-nightly.84
+
+**2026-09-23**, commit `fcdebac`. Nightly.
+
+**What you will notice**
+
+- grouplab.org has a tour now, with a page for each of the ten screens in GroupLab: what the screen is for, what every part of it does, and what you would do there. The home page links to it instead of showing a row of screenshots. (Entry 146)
+- Every card on the research index now carries a lead image, and the charts come in a dark version that follows your theme instead of glaring white on a dark page. (Entry 143, 1)
+- The release notes now say what is in every build, under What you will notice and Under the hood, instead of telling you that some builds changed nothing. Ten past builds that said nothing, or listed only their known issues, have been written out from what they actually carried. (Entry 145)
+- The screenshots on grouplab.org now show the current version of GroupLab rather than one from several days ago, and the release notes page keeps itself up to date as each nightly build is published. (Entry 144)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.84)
+
+---
+
 ## 0.2.0-nightly.81
 
 **2026-09-23**, commit `2c51788`. Nightly.
