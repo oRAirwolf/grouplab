@@ -247,6 +247,21 @@ jobs:
           # the second manifest format only, where a field an older build does not know is a field it ignores.
           python3 scripts/release-notes.py --versions versions.json "$VERSION" "$SHA"
 
+      # Entry 145 section 3.3. The generator no longer hides a commit with no note in a count: it writes a line from the subject
+      # instead. This is the other half of that, naming those commits in the build's own report, so a forgotten note is noticed on
+      # the day by the person who wrote the commit rather than months later by somebody reading the website. It reports and does
+      # not fail, because a note can be improved after a build and a build cannot be un-published.
+      - name: Name any commit that wrote its own note
+        run: |
+          python3 scripts/release-notes.py --missing "$VERSION" "$SHA" | tee missing.txt
+          {
+            echo "### Notes written from a commit subject"
+            echo
+            echo "```"
+            cat missing.txt
+            echo "```"
+          } >> "$GITHUB_STEP_SUMMARY"
+
 
       # The manifest: what this build is, what it offers, and the SHA-256 of every file, signed so the application can tell it from a forgery.
       - name: Write and sign the manifest

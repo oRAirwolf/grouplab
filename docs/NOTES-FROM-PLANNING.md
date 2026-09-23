@@ -15,6 +15,75 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-22, entry 145: every build says what changed, in plain words
+
+**Status: actioned 2026-09-23**, sections 1 to 6.
+
+- **Sections 1 and 2.** Two headings, `**What you will notice**` and `**Under the hood**`, and a build shows only the ones it has. There is no third state: a build with no commits behind it is refused outright, because that is the only thing left that could honestly say nothing, and it cannot happen.
+- **Section 3.1.** `Release-note-kind:` accepts `internal` for the second heading and `user` for the first. `new`, `fixed` and `changed` are kept and all mean the first heading. **This is a decision I took rather than the reading the entry gives**, which is that the kind is `user` or `internal` and nothing else. Every commit in the history uses the three older words, section 5 says this is a rewording and not a rewrite of history, and dropping them would have invalidated every trailer already written. Raised as **question 47** so the planning session can overrule it.
+- **Section 3.2.** A commit with no trailer gets a line of its own, written from its subject with the entry reference taken off, under the second heading. The count is gone.
+- **The awkward part of that, said plainly.** A commit subject here is often written for the log, so a generated line can carry a file path or a class name, which section 4 forbids. Two things stop that: a short table translating the handful of repository files whose names appear in subjects into plain words, so "docs slash release notes carries nightlies 71 to 76" becomes "the release notes carries nightlies 71 to 76"; and, for anything the table does not cover, the build fails and names the commit. **Grammar suffers in the translated case**, and I have left it rather than guess: the fix is a trailer on the commit, which is what section 3.1 asks for anyway.
+- **Section 3.3.** `--missing` lists every commit since the previous build that made the generator write from a subject, and the nightly puts that list in the build's own report. It reports and does not fail, because a note can be improved after a build and a build cannot be un-published.
+- **Section 4.** Four checks on every line, written or generated: a file path, a commit hash, a class or method name, and anything in code style. "GroupLab" is the one word shaped like a class name that belongs in a note. The reference in brackets at the end of a note is the one place an entry may be named, and it is not checked.
+- **Section 5, and more than section 5 asked for.** The six builds that said "Nothing in this build changes what you see or do" are rewritten from their own commits: **nightlies 78, 77, 76, 75, 72 and 30**. None of them contains that sentence now, and a test fails if it comes back. Nightly 81, published tonight and not yet in the file, is written in the new shape.
+- **Four more builds were silent in a way the entry did not name**, and I fixed them rather than leave them: nightlies 26, 18, 14 and 12 listed their known issues and said nothing at all about what changed. Nightly 12 is the first build GroupLab ever published for itself, and the file did not say so.
+- **The one thing I would not write.** Nightly 26 carried the commits behind "where the group actually landed" and "the scan's stated resolution", and `CLAUDE.md` records that nightly 27's note about the first of those was untrue on the day it was published, because the code was wired to nothing. Its new entry says those two are groundwork that could not be reached from any screen in that build, which is what was true.
+- **Section 6.** Five tests. The sentence and the count cannot come back, every build lists something, every build's lines sit under a heading, no line names a file, a hash or a class, and the generator itself cannot write the old sentence. The three build jump in the update bar is in the results with its exact text.
+- `docs/PHASE1-RESULTS.md` "Entry 145".
+
+Written by the planning session at 23:45 Mountain on 2026-09-22.
+
+Alan, on the release notes as they read today: "I dont like how many of the release notes just say 'Nothing in this build changes what you see or do. It carries internal work only.' No matter what is done, it should be stated plainly what changed."
+
+He is right, and the sentence is not even true. Something changed in every build, or there would be no build. Saying otherwise teaches a reader that the page is filler and trains them to stop reading it.
+
+Do this after entry 144, and before the rest of entry 143.
+
+## 1. The rule
+
+**No build ever says nothing changed.** Every published build lists what is in it, in plain English, whoever it affects. A build that carries one documentation commit says which document and what it now says.
+
+## 2. The shape of an entry
+
+Two headings, and a build shows only the ones it has.
+
+**What you will notice.** Changes a user meets: something on screen, something that behaves differently, a new or removed feature, a fix to something that was wrong, a change to what is installed or downloaded. Written from the user's side, never from the code's.
+
+**Under the hood.** Everything else, still in plain words: tests, documentation, the website, the build, refactoring, performance work that nobody can perceive yet. One line per real change, not a count. "Two internal changes" is the thing this entry exists to remove.
+
+Keep each line to one sentence. Group several commits that did one job into one line, and say so: "three commits finishing the shot editor's undo support". Aim for at most six lines a build, by grouping rather than by leaving things out. Where a build is genuinely one commit, it is one line.
+
+## 3. Where the words come from
+
+1. `Release-note:` stays the first source, and it should now be written for every commit, not only the ones a user notices. `Release-note-kind:` says which of the two headings it belongs under: `user` or `internal`.
+2. Where a commit has no trailer, `scripts/release-notes.py` must not fall back to a count. It writes a line from the commit's subject, rewritten as a plain sentence, and marks it so the build reads as complete rather than as boilerplate.
+3. Add a check on main: every commit since the previous tag either carries a `Release-note:` trailer or is reported by name in the build's report, so a missing one is noticed at the time rather than months later on the site.
+
+## 4. Plain words, specifically
+
+Write for a shooter who has never read this repository. Name the thing on screen, not the class.
+
+- Not "refactored MarkingSession.Load". Instead: "opening a sheet again keeps the marks you moved by hand".
+- Not "added ResearchArticleTests". Instead: "the website now refuses to publish an article whose data file is missing".
+- Not "bumped the freshness gate". Instead: "a nightly build is no longer published when a newer commit has already landed".
+
+No class names, no file paths, no commit hashes in the body. The commit is already named in the entry's header for anyone who wants it. Keep the project's other rules: no em dashes, no pseudoscience, no jargon left unexplained.
+
+## 5. Go back over the ones already published
+
+Every entry in `docs/RELEASE-NOTES.md` that says nothing changed, or gives only a count, is rewritten from its own commits under section 2's shape. Do not invent detail: where a build really was one documentation commit, say which document and what changed in it. Keep each build's date and commit as recorded; this is a rewording, not a rewrite of history.
+
+Nightlies 77 and 78 are the two nearest examples, and they are honest ones: 77 carried the release notes for nightlies 71 to 76, and 78 carried a note about where the notes stopped. Both are worth one plain line each, and both are more interesting than "internal work only".
+
+## 6. Tests
+
+- A test fails if any entry contains "nothing in this build changes", "internal work only", or a bare count of changes.
+- A test fails if an entry has no lines under either heading.
+- A test fails if a line contains a file path, a commit hash, or a bare identifier in code style, in the body of an entry.
+- The update bar in the application reads the same source, so check that a multi-build offer still reads well with the new shape, and say in your report what it looks like for a three build jump.
+
+---
+
 # 2026-09-22, entry 144: the site publishes itself, and the release notes keep up
 
 **Status: actioned 2026-09-23**, sections 1 to 5 and 6's documentation. **Section 6's proof is partly open**, and named here rather than left implied: the site content commit that published itself and the failure path are in this commit's report; the nightly whose notes reach the live releases page with no human step cannot be shown until the next nightly runs; and the 5 minute sync cadence cannot be shown until Alan runs `install.py`, which section 3 says is the one manual step.

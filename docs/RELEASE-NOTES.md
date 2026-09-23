@@ -4,9 +4,25 @@ Every build of GroupLab anyone could download, newest first. This file is the so
 
 GroupLab is unreleased. Everything below is a pre-release, and the version numbers say so.
 
-**How to read this.** Each build lists what a person would notice, under New, Fixed and Changed. Anything a person would not notice, a test or an internal change, is not listed. Where a build has something wrong with it that matters, it says so under **Known issues**.
+**How to read this.** Every build says what is in it, whoever it affects. **What you will notice** is the part you meet: something on screen, something that behaves differently, something new or gone, something fixed, or a change to what gets installed. **Under the hood** is everything else in plain words: tests, documentation, this website, the build itself. A build shows only the headings it has, and no build says nothing changed, because something changed in every one of them or there would have been no build. Where a build has something wrong with it that matters, it says so under **Known issues**.
+
+Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed**, which are all things you would notice. Those entries are left as they were published, except the six that used to say nothing changed at all. Those six are rewritten here from their own commits, because each of them did carry something worth naming, and one of them carried the first real measurement GroupLab has against photographs of a target on a board.
 
 **Why the nightly numbers skip.** A nightly is numbered by its run, and a run that is cancelled or skipped still takes its number. Two things caused most of the gaps, both fixed on 2026-09-21: every push went to two branches and started two runs, so one of each pair was cancelled, and a run whose commit was already published skipped rather than publishing again.
+
+---
+
+## 0.2.0-nightly.81
+
+**2026-09-23**, commit `2c51788`. Nightly.
+
+**Under the hood**
+
+- The research section went live on grouplab.org with all eighteen articles, from how to photograph a target to how GroupLab updates itself and what it sends from your computer.
+- Two corrections went in before any of it was published: how the test photographs were actually mounted, which had been stated here and never checked, and which sheets each published figure really rests on.
+- Every link to the old target upload site is gone from grouplab.org, including the one in the footer of every page, and the pages that carried it now say that uploading opens here shortly and to keep your files meanwhile.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.81)
 
 ---
 
@@ -14,7 +30,9 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 **2026-09-22**, commit `aae67d8`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- The release notes gained a short note saying why the history starts where it does, so a reader can tell a deliberate starting point from an entry somebody forgot.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.78)
 
@@ -24,7 +42,9 @@ Nothing in this build changes what you see or do. It carries internal work only.
 
 **2026-09-22**, commit `ad41ea1`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- The release notes page was brought up to date with six builds it was missing, so the history on the website matches the builds you can actually download.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.77)
 
@@ -34,7 +54,9 @@ Nothing in this build changes what you see or do. It carries internal work only.
 
 **2026-09-22**, commit `f935ab2`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- The project's own progress file now says in one place what is waiting on a decision, so nothing sits unnoticed.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.76)
 
@@ -43,7 +65,9 @@ Nothing in this build changes what you see or do. It carries internal work only.
 
 **2026-09-22**, commit `a82d7f5`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- The last eight of the eighteen research articles were written, covering how GroupLab updates itself, what it sends from your computer, why these particular markers were chosen, and how a target is designed for a camera to read.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.75)
 
@@ -74,7 +98,9 @@ Nothing in this build changes what you see or do. It carries internal work only.
 
 **2026-09-22**, commit `f40260a`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- GroupLab was measured for the first time against 59 real photographs of a target sheet on a backer board, and the numbers are not good: 28 of the 59 could not be read at all, and of the 31 that could, one was accurate enough to measure a group from.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.72)
 
@@ -251,7 +277,11 @@ Nothing in this build changes what you see or do. It carries internal work only.
 
 **2026-09-21**, commit `3c6db96`. Nightly.
 
-Nothing in this build changes what you see or do. It carries internal work only.
+**Under the hood**
+
+- Four changes setting up the machinery that keeps grouplab.org up to date, including the key the server uses to check that a site update really came from GroupLab.
+- This build was checked by installing it and analysing a real scanned sheet: 25 holes and a mean radius of 0.232 inches, unchanged from the build before it.
+- The rules this project works to now say that a release note may only promise something a person can actually reach in the build being described.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.30)
 
@@ -329,7 +359,16 @@ The first build whose notes were written for a person rather than taken from com
 
 **2026-09-21**, commit `b089122`. Nightly.
 
-The build used to prove the updater end to end: nightly 25 updated itself to this one on a real machine, with real clicks, in under two minutes and with no installer window and no administrator prompt.
+**What you will notice**
+
+- This is the build the updater was proved on: nightly 25 updated itself to this one on a real machine, with real clicks, in under two minutes, with no installer window and no administrator prompt.
+- When GroupLab finds fewer holes than the number of shots you told it you fired, it says so and names the bulls with nothing on them, instead of reporting a clean result.
+- A measurement GroupLab is not sure about now carries that doubt with it wherever the number goes, rather than looking as solid as any other.
+
+**Under the hood**
+
+- Groundwork for two things you could not reach from any screen in this build: working out where a group actually landed before deciding which bull each shot belongs to, and offering a scan's own stated resolution as the scale.
+- A check that every new kind of measurement has a test behind it, which caught the ones added that night.
 
 ### Known issues
 
@@ -361,6 +400,15 @@ The build used to prove the updater end to end: nightly 25 updated itself to thi
 
 **2026-09-21**, commit `a5e90de`. Nightly.
 
+**What you will notice**
+
+- The support page and the application now name the same address for getting help, so whichever you look at, it is the right one.
+- On Linux and on a Mac, the update button now says what it will actually do instead of offering a Windows installer.
+
+**Under the hood**
+
+- The rules this project works to gained a plain way of saying when a piece of work is finished and when it is still waiting.
+
 ### Known issues
 
 - **Cannot update itself.** It refuses its own update as unsigned. Install a later build by hand once.
@@ -390,6 +438,10 @@ The build used to prove the updater end to end: nightly 25 updated itself to thi
 
 **2026-09-21**, commit `9db6500`. Nightly.
 
+**Under the hood**
+
+- The planning notes for the next round of work were written down. That is the whole of this build, and it is why nothing below the known issues changed.
+
 ### Known issues
 
 - **Calls itself a development build** in Settings, and never looks for an update.
@@ -402,6 +454,17 @@ The build used to prove the updater end to end: nightly 25 updated itself to thi
 ## 0.2.0-nightly.12
 
 **2026-09-21**, commit `862aab2`. Nightly. The first automatic nightly.
+
+**What you will notice**
+
+- This is the first build GroupLab published for itself. From here on a build appears after every change that passes its tests, and one download link always points at the newest one.
+- The target library now fills the window instead of sitting in a corner of it.
+- A real scanned sheet is included in the download, so there is something to try GroupLab on straight away.
+
+**Under the hood**
+
+- Everything that reaches outside GroupLab now goes through one door, so a test can never open a browser or start an installer on somebody's machine.
+- The key that proves an update really came from GroupLab, and each build checking an update against the key built into itself.
 
 ### Known issues
 

@@ -12,6 +12,38 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-23, question 47: I kept `new`, `fixed` and `changed` as release note kinds, where entry 145 names two
+
+**Status: open. Nothing is blocked; the code does the wider thing, and narrowing it later costs one line.**
+
+### What entry 145 says
+
+Section 3.1, quoted:
+
+> `Release-note-kind:` says which of the two headings it belongs under: `user` or `internal`.
+
+Read strictly, that retires the three kinds `scripts/release-notes.py` has taken since entry 132: `new`, `fixed` and `changed`.
+
+### What I did instead
+
+`Release-note-kind:` now accepts five words. `internal` puts a note under **Under the hood**. `new`, `fixed`, `changed` and `user` all put it under **What you will notice**, which is the only thing the two headings ask of a kind.
+
+### Why
+
+1. **Every trailer in the history uses the three older words.** 45 commits carry one. Retiring them would make every one of them unreadable to the generator on the day the change landed, and section 5 is explicit that this is "a rewording, not a rewrite of history".
+2. **They still say something the two headings cannot.** "Fixed" and "New" tell a reader whether something was broken or absent before, which "you will notice" does not. They are not used as sub-headings any more, so nothing on the page shows them; they are simply a writer saying a little more than the minimum.
+3. **The cost of being wrong is one line.** If the planning session wants exactly two, `KINDS` and `NOTICED` lose three entries and every historic trailer needs rewriting, which is a scripted change over commit messages this project does not rewrite. That is the real reason to ask rather than assume.
+
+### What I would choose
+
+Keep the five. If the answer is two, say so and I will map the three older words to `user` on read and stop documenting them, which keeps the history readable without keeping the vocabulary.
+
+### Where it lives
+
+`scripts/release-notes.py`, the `KIND`, `KINDS`, `SAME` and `NOTICED` definitions, and `CLAUDE.md`'s release notes section, which still names the three older words.
+
+---
+
 ## 2026-09-22, question 46: the sheet offset is solved over every bull, and narrowing it makes things worse
 
 **Status: open. Nothing is broken today; this is a line that does not do what it reads as doing.**

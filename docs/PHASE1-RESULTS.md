@@ -7716,6 +7716,100 @@ Named rather than implied, because a report that quietly omits its unproved part
 - **The sync log at a 5 minute cadence:** cannot be shown until Alan runs `install.py`. It is the one manual step section 3 names.
 
 
+# Entry 145: every build says what changed, in plain words
+
+`docs/NOTES-FROM-PLANNING.md` entry 145, actioned 2026-09-23.
+
+Alan, on the release notes as they read that morning: "I dont like how many of the release notes just say 'Nothing in this build changes what you see or do. It carries internal work only.' No matter what is done, it should be stated plainly what changed."
+
+## The six, and what they actually carried
+
+Every one of these said nothing changed. This is what was in them.
+
+| build | what it really carried |
+|---|---|
+| nightly.78 | a note saying where the release notes history starts, and why that is not a gap |
+| nightly.77 | six missing builds added to the release notes page |
+| nightly.76 | the progress file saying in one place what is waiting on a decision |
+| nightly.75 | the last eight of the eighteen research articles |
+| nightly.72 | **the first measurement GroupLab has against 59 real photographs of a target on a board** |
+| nightly.30 | the key the server uses to check a site update, and a check of the build against a real scanned sheet |
+
+Nightly 72 is the one that makes the case. 28 of 59 photographs could not be read at all, and of the 31 that could, one was accurate enough to measure a group from. That is the most useful thing GroupLab had learned about itself that week, and the page said "internal work only".
+
+## Four more that were silent in a way the entry did not name
+
+Nightlies 26, 18, 14 and 12 listed their known issues and said nothing at all about what changed. They were not caught by the entry's wording, and they are the same fault, so they are written too.
+
+**Nightly 12 is the first build GroupLab ever published for itself**, and the file did not say so.
+
+## The one claim I would not write
+
+Nightly 26 carries the commits behind "where the group actually landed" and "the scan's stated resolution". `CLAUDE.md` records that nightly 27's note about the first of those was untrue on the day it was published, because the code existed and was wired to nothing.
+
+So its new entry says those two are groundwork that **could not be reached from any screen in that build**. That is what was true, and it is the second time this project has had to write that sentence about the same feature.
+
+## What the generator does now
+
+| before | after |
+|---|---|
+| New, Fixed, Changed | **What you will notice** and **Under the hood**, and a build shows only the ones it has |
+| a commit with no trailer became part of "Plus 7 internal changes" | it gets a line of its own, written from its subject |
+| four checks on a note | eight: the four that were there, plus no file path, no commit hash, no class or method name, nothing in code style |
+| no way to know a trailer was forgotten | `--missing` names those commits in the build's own report |
+
+A build with no commits behind it is refused outright. It is the only thing left that could honestly say nothing, and it cannot happen: a build is made from a commit.
+
+## The awkward part, said plainly
+
+A commit subject here is often written for the log, so a line generated from one can carry a file path or a class name, which section 4 forbids. Two things stop that, and neither is free:
+
+1. **A short table** translating the handful of repository files whose names appear in subjects into plain words. "docs slash release notes carries nightlies 71 to 76" becomes "The release notes carries nightlies 71 to 76."
+2. **For anything the table does not cover, the build fails** and names the commit.
+
+**The grammar suffers in the translated case**, as that example shows, and I have left it rather than guess at a rewrite. The fix is a trailer on the commit, which is what section 3.1 asks for anyway, and `--missing` is what makes the omission visible.
+
+## Section 6: what a three build jump looks like in the update bar
+
+Generated from the real builds, as `SkippedVersions.Combined` assembles them. Somebody on nightly 76 being offered nightly 81 sees:
+
+```
+3 builds are new to you, newest first.
+
+GroupLab 0.2.0-nightly.81
+
+**Under the hood**
+
+- No link to the old site anywhere on grouplab.org, and scan 6 was never ten.
+- Two corrections before anything is published.
+- The research section goes live, and the notes carry nightlies 77 and 78.
+
+GroupLab 0.2.0-nightly.78
+
+**Under the hood**
+
+- A note on where the release notes stop, and why that is not a gap.
+
+GroupLab 0.2.0-nightly.77
+
+**Under the hood**
+
+- The release notes carries nightlies 71 to 76.
+```
+
+**It reads adequately and not well**, and it is worth saying which part is which. The shape works: the heading tells the reader at a glance that none of this is something they will meet, which is exactly what they want to know before deciding whether to update. The lines are the generated kind, because none of those three commits carried a trailer, so they are the floor rather than the ceiling. The same jump written from trailers would be three sentences a person could act on. That is the argument for section 3.1's rule that every commit carries one.
+
+## The tests
+
+| what | why it exists |
+|---|---|
+| the sentence cannot come back | it is named, and so is the count that replaced the rest of a build |
+| every build lists something | a build with no lines is the old fault in a new shape |
+| every build's lines sit under a heading | a loose list says nothing about whether you will meet it |
+| no line names a file, a hash or a class | this page is read by people who have never seen this repository |
+| the generator cannot write the old sentence | the way it returns is not somebody typing it, it is the generator falling back to it |
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

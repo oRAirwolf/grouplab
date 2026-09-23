@@ -1,21 +1,43 @@
-"""The notes for one build, written from the Release-note trailers of the commits since the last build on the same train.
+"""The notes for one build, in plain words, from the commits since the last build on the same train.
 
-NOTES-FROM-PLANNING.md entry 132 section 1, which replaced the old rule for a plain reason: Alan read the notes for v0.2.0-nightly.26 and they
-told him nothing. They said things like "Entry 130 item 3.3: doubt travels with the number". That is a commit subject, written for the log,
-and a person deciding whether to install a build cannot use it.
+NOTES-FROM-PLANNING.md entry 132 section 1 stopped the notes being commit subjects, because Alan read
+"Entry 130 item 3.3: doubt travels with the number" and it told him nothing. Entry 145 fixes what that left
+behind. Six published builds said:
 
-So nothing is guessed from a subject line any more. A commit that changes something a person can see or rely on says so itself:
+    Nothing in this build changes what you see or do. It carries internal work only.
 
-    Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with
-    nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)
+Alan, on reading them: "No matter what is done, it should be stated plainly what changed." He is right, and
+the sentence was not even true. Something changed in every build or there would have been no build. One of
+those six carried the mounted photograph gate measured on 59 real frames for the first time; another carried
+eight research articles. Saying "internal work only" about those teaches a reader that the page is filler.
+
+**So no build ever says nothing changed.** Every build lists what is in it under at most two headings:
+
+    **What you will notice**   something on screen, something that behaves differently, a new or removed
+                               feature, a fix, a change to what is installed or downloaded
+    **Under the hood**         everything else, still in plain words: tests, documentation, the website,
+                               the build, refactoring, performance nobody can perceive yet
+
+A commit says which it belongs under:
+
+    Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the
+    bulls with nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)
     Release-note-kind: fixed
 
-Commits without a trailer do not appear at all, except in one closing line counting them. That is deliberate: a notes fold, a write-up, a test
-or a build change is invisible to a tester, and listing it is noise that makes the real notes harder to find.
+``new``, ``fixed`` and ``changed`` all mean the first heading and are kept, because every commit in the
+history uses them and they still say something useful. ``user`` is a synonym of ``changed``. ``internal``
+means the second.
 
-It then checks each note and fails rather than publishing a build with unreadable notes: a note that is only a reference, that begins with
-"Entry", that is too short to be a sentence, or that uses words meaning nothing to a shooter. And the rules the public repository has always
-had: no em dashes, nothing from the private range folder or a submission, no coordinates, no server address.
+**A commit with no trailer is not a count any more.** It gets a line of its own, written from its subject
+with the entry reference taken off, under the second heading. That is a floor, not a target: ``--missing``
+lists every commit since the previous build that made the generator do it, so the build's own report names
+them and a missing trailer is noticed on the day rather than months later on the website.
+
+Every line, written or generated, is then checked, and the build fails rather than publishing notes a
+shooter cannot read: a line that is only a reference, that begins with "Entry", that is too short to be a
+sentence, that uses a word meaning nothing outside this repository, or that carries a file path, a commit
+hash or a class name. And the rules the public repository has always had: no em dashes, nothing from the
+private range folder or a submission, no coordinates, no server address.
 """
 import json
 import re
@@ -23,10 +45,16 @@ import subprocess
 import sys
 
 NOTE = re.compile(r"^Release-note:\s*(?P<note>.+)$", re.IGNORECASE)
-KIND = re.compile(r"^Release-note-kind:\s*(?P<kind>new|fixed|changed)\s*$", re.IGNORECASE)
+KIND = re.compile(r"^Release-note-kind:\s*(?P<kind>new|fixed|changed|user|internal)\s*$", re.IGNORECASE)
 
-KINDS = ["new", "fixed", "changed"]
-HEADINGS = {"new": "**New**", "fixed": "**Fixed**", "changed": "**Changed**"}
+# Entry 145 section 2. Two headings, and a build shows only the ones it has. The three older kinds are kept because every
+# commit in the history uses them and "New" and "Fixed" still tell a reader something "changed" does not; they are simply
+# all under the first heading now. "user" is a synonym of "changed" for anybody writing a trailer from entry 145 alone.
+KINDS = ["new", "fixed", "changed", "internal"]
+SAME = {"user": "changed"}
+NOTICED = ["new", "fixed", "changed"]
+NOTICE_HEADING = "**What you will notice**"
+HOOD_HEADING = "**Under the hood**"
 
 # The fewest words that can be a sentence about what changed. A trailer shorter than this is a label, not a note.
 LEAST_WORDS = 8
@@ -49,6 +77,32 @@ JARGON = {
     "refactor": "nothing about it is visible to a person using GroupLab",
     "stub": "it is unfinished code",
 }
+
+# The few repository files whose names turn up in a commit subject, and what they are to somebody who has never read this
+# repository. Entry 145 section 1 asks that a build carrying one documentation commit says which document and what it now says, so
+# these are translated rather than refused. Anything not here still fails, which is what keeps this list from becoming a way of
+# publishing a line nobody outside can read.
+SPELL = {
+    "docs/RELEASE-NOTES.md": "the release notes",
+    "RELEASE-NOTES.md": "the release notes",
+    "docs/USER-GUIDE.md": "the user guide",
+    "docs/TESTING-GUIDE.md": "the guide for testers",
+    "docs/GLOSSARY.md": "the glossary",
+    "docs/WEBSITE.md": "the notes on how the website is built and served",
+    "docs/RESEARCH.md": "the notes on how the research articles are made",
+    "CLAUDE.md": "the rules this project works to",
+    "README.md": "the front page of the project",
+}
+
+
+# Entry 145 section 4: write for a shooter who has never read this repository. Name the thing on screen, not the class.
+# "GroupLab" is the one word shaped like a class name that belongs in a note.
+CODE_SHAPED = [
+    ("a file path", re.compile(r"\b[\w.-]+/[\w./-]+|\b[\w-]+\.(?:md|py|cs|json|ya?ml|html|css|js|txt|pdf|png)\b", re.IGNORECASE)),
+    ("a commit hash", re.compile(r"\b(?=[0-9a-f]{7,40}\b)(?=[^\s]*\d)[0-9a-f]{7,40}\b")),
+    ("a class or method name", re.compile(r"\b(?!GroupLab\b)[A-Z][a-z0-9]+(?:[A-Z][A-Za-z0-9]*)+\b")),
+    ("a name in code style", re.compile(r"`[^`]+`")),
+]
 
 FORBIDDEN = [
     ("an em dash", re.compile("[—–]")),
@@ -110,19 +164,51 @@ def read(body):
         if (m := NOTE.match(line)) is not None:
             note = m.group("note").strip()
         elif (k := KIND.match(line)) is not None:
-            kind = k.group("kind").lower()
+            kind = SAME.get(k.group("kind").lower(), k.group("kind").lower())
     return (note, kind) if note else None
 
 
-def problems(sha, note):
-    """Everything wrong with one note, said so it can be fixed."""
+def plain(subject):
+    """A commit subject turned into a sentence, for a commit that carries no trailer.
+
+    Entry 145 section 3.2: where a commit has no trailer this must not fall back to a count. The subject is what
+    the repository already has, and most of a subject here is already a sentence with a reference bolted to the
+    front of it. So the reference comes off, the first letter goes up, and a full stop goes on.
+
+    It is a floor and not a target. A subject written for the log will often fail the checks below, which is the
+    point: the line names the commit that needs a trailer instead of hiding it in a number.
+    """
+    text = subject.strip()
+
+    # "Entry 144 section 3: ", "Entry 130 item 2b.6: ", "Entry 142, research batch 3: " and the bare "CLAUDE.md: ".
+    text = re.sub(r"^Entry\s+\d+[^:]*:\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"^[\w.-]+\.(?:md|py|cs|json|ya?ml):\s*", "", text, flags=re.IGNORECASE)
+    for name, words in SPELL.items():
+        text = re.sub(re.escape(name), words, text, flags=re.IGNORECASE)
+
+    text = text.strip().rstrip(".")
+
+    if not text:
+        return ""
+    return text[0].upper() + text[1:] + "."
+
+
+def problems(sha, note, generated=False):
+    """Everything wrong with one note, said so it can be fixed.
+
+    ``generated`` is on for a line written from a commit subject rather than from a trailer. Such a line is held to
+    everything that could mislead a reader or leak something, and not to the length rule. The length rule is there to
+    stop somebody writing a label where a note belongs; a commit subject is not a label chosen instead of a note, it
+    is the repository's own summary of the change, and rejecting it would put the build back to saying nothing, which
+    is the one thing entry 145 forbids. ``--missing`` names those commits instead, so the note gets better next time.
+    """
     found = []
     words = [w for w in re.split(r"\s+", re.sub(r"\(.*?\)", "", note)) if w]
 
     if note.lower().startswith("entry"):
         found.append("it begins with an entry reference rather than saying what changed")
 
-    if len(words) < LEAST_WORDS:
+    if len(words) < LEAST_WORDS and not generated:
         found.append(f"it is {len(words)} words, and a note has to be a sentence a person can read")
 
     if re.fullmatch(r"\(?[Ee]ntry[^)]*\)?\.?", note.strip()):
@@ -136,6 +222,12 @@ def problems(sha, note):
     for what, pattern in FORBIDDEN:
         if pattern.search(note):
             found.append(f"it contains {what}")
+
+    # Entry 145 section 4. The reference in brackets at the end is the one place a note is allowed to name an entry,
+    # so it is taken off before this runs; everything else is prose a shooter has to be able to read.
+    for what, pattern in CODE_SHAPED:
+        if (m := pattern.search(re.sub(r"\((?:Entry|entry)[^)]*\)\s*$", "", note))) is not None:
+            found.append(f"it contains {what}, {m.group(0)!r}, which names something only this repository knows about")
 
     return [f"{sha}: {p}" for p in found]
 
@@ -190,13 +282,21 @@ def build_notes(version, head, previous, heading=True):
     version heading itself and a second one inside the text would read as a stutter.
     """
     notes = {k: [] for k in KINDS}
-    silent = 0
+    generated = []
     wrong = []
 
-    for sha, body in commits(previous, head):
-        read_note = read(body)
+    for sha, message in commits(previous, head):
+        read_note = read(message)
         if read_note is None:
-            silent += 1
+            # Entry 145 section 1: no build ever says nothing changed. A commit with no trailer still did something,
+            # so its subject becomes a line rather than a number.
+            first = message.splitlines()[0] if message.splitlines() else ""
+            line = plain(first)
+            if not line:
+                continue
+            wrong += problems(sha, line, generated=True)
+            notes["internal"].append(line)
+            generated.append(sha)
             continue
         note, kind = read_note
         wrong += problems(sha, note)
@@ -205,26 +305,29 @@ def build_notes(version, head, previous, heading=True):
     if wrong:
         return "", wrong
 
-    lines = [f"GroupLab {version}.", ""] if heading else []
+    # A build with no commits behind it is the only thing left that could say nothing, and it cannot happen: a build is
+    # made from a commit. Refusing it here rather than printing an empty block is what stops the old sentence returning.
+    if not any(notes[k] for k in KINDS):
+        return "", ["this build has no commits behind it, which cannot be right, so there is nothing honest to publish"]
 
-    if previous and not any(notes[k] for k in KINDS) and silent:
-        lines.append("Nothing in this build changes what you see or do. It carries internal work only.")
-        lines.append("")
+    out = [f"GroupLab {version}.", ""] if heading else []
 
-    for kind in KINDS:
-        if not notes[kind]:
-            continue
-        lines.append(HEADINGS[kind])
-        lines.append("")
-        for note in notes[kind]:
-            lines.append("- " + note)
-        lines.append("")
+    if any(notes[k] for k in NOTICED):
+        out.append(NOTICE_HEADING)
+        out.append("")
+        for kind in NOTICED:
+            for note in notes[kind]:
+                out.append("- " + note)
+        out.append("")
 
-    if silent:
-        lines.append(f"Plus {silent} internal changes (tests, documentation, build).")
-        lines.append("")
+    if notes["internal"]:
+        out.append(HOOD_HEADING)
+        out.append("")
+        for note in notes["internal"]:
+            out.append("- " + note)
+        out.append("")
 
-    text = "\n".join(lines)
+    text = "\n".join(out)
     for what, pattern in FORBIDDEN:
         if pattern.search(text):
             return "", ["the notes contain " + what]
@@ -232,7 +335,38 @@ def build_notes(version, head, previous, heading=True):
     return text.rstrip() + "\n", []
 
 
+def missing(version, head, previous):
+    """Every commit since the previous build that carries no Release-note trailer, named.
+
+    Entry 145 section 3.3. The generator no longer hides these in a count, so they reach the notes as a line from
+    the commit subject; this is the other half, which puts them in the build's own report by name. A trailer that
+    was forgotten is then noticed on the day the build goes out, by the person who wrote the commit, rather than
+    months later by somebody reading the website.
+
+    It reports; it does not fail. A build is not worth stopping over a note that can be improved afterwards, and
+    entry 144 section 2.4 says the generated entry is the floor and not the ceiling.
+    """
+    found = [(sha, message.splitlines()[0] if message.splitlines() else "")
+             for sha, message in commits(previous, head) if read(message) is None]
+
+    if not found:
+        print("Every commit in " + version + " carries a Release-note trailer.")
+        return 0
+
+    print(str(len(found)) + " of the commits in " + version + " carry no Release-note trailer, so their notes were "
+          + "written from their subjects. Named here so they can be improved:")
+    for sha, subject in found:
+        print("  " + sha + "  " + subject)
+    return 0
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--missing":
+        version = sys.argv[2] if len(sys.argv) > 2 else "this build"
+        head = sys.argv[3] if len(sys.argv) > 3 else "HEAD"
+        previous = sys.argv[4] if len(sys.argv) > 4 and sys.argv[4] else previous_published(version)
+        return missing(version, head, previous)
+
     if len(sys.argv) > 2 and sys.argv[1] == "--versions":
         out = sys.argv[2]
         version = sys.argv[3] if len(sys.argv) > 3 else "this build"

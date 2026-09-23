@@ -84,7 +84,10 @@ GPS and location values are never read, printed or logged, from any photograph, 
 
 NOTES-FROM-PLANNING.md entry 132 section 1. Alan read the notes for a nightly and they told him nothing, because they were commit subjects: "Entry 130 item 3.3: doubt travels with the number". That is written for the log. Somebody deciding whether to install a build cannot use it.
 
-**Every commit that changes something a person can see or rely on carries a `Release-note:` trailer**, one or two plain sentences from the user's side, ending with the reference in brackets, and a `Release-note-kind:` of `new`, `fixed` or `changed`.
+**Every commit carries a `Release-note:` trailer**, entry 145 section 3.1, not only the ones a person notices. One or two plain sentences from the user's side, ending with the reference in brackets, and a `Release-note-kind:` saying which of the two headings it belongs under:
+
+- `new`, `fixed`, `changed` or `user` put it under **What you will notice**: something on screen, something that behaves differently, something new or gone, something fixed, a change to what is installed or downloaded.
+- `internal` puts it under **Under the hood**: tests, documentation, the website, the build, refactoring, performance nobody can perceive yet. Still in plain words, one line per real change.
 
 ```
 Release-note: When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with nothing on them, instead of reporting a clean result. (Entry 130, 2b.2)
@@ -101,11 +104,20 @@ Release-note: A blank sheet scanned on a flatbed can now use the scan's own reso
 Release-note-kind: new
 ```
 
-A commit with nothing a person would notice carries no trailer: a notes fold, a write-up, a test, an internal change, CI. Those appear only in one closing line counting them. `scripts/release-notes.py` builds the notes from the trailers alone and guesses nothing from a subject line.
+```
+Release-note: The website's screenshots are now regenerated every week from the newest build, so what you see on grouplab.org is the version you would download. (Entry 144, 4)
+Release-note-kind: internal
+```
 
-**It fails the nightly** on a note that is only a reference, begins with "Entry", is shorter than eight words, or uses words that mean nothing to a shooter: folded, gate record, recorder, harness, manifest, trailer, fixture, regression, refactor, stub. The same notes go in the update bar inside the application, so they have to read well there too.
+**No build ever says nothing changed.** Entry 145: six published builds said "Nothing in this build changes what you see or do. It carries internal work only", and the sentence was not even true, because something changed in every build or there would have been no build. One of those six carried the first measurement GroupLab has against 59 real photographs of a target on a board.
 
-Writing the trailer is part of writing the change, not a step afterwards. If I cannot say what a commit changes for somebody using GroupLab, either it changes nothing they can see, in which case it carries no trailer, or I do not yet understand what I have done.
+So a commit with no trailer is not a count any more. `scripts/release-notes.py` writes a line from its subject instead, and `--missing` names it in the build's report so the note can be better next time. That is a floor, not a target: a subject written for the log usually fails the checks below, and then the build fails and names the commit.
+
+Keep each line to one sentence. Group several commits that did one job into one line and say so. Aim for at most six lines a build, by grouping rather than by leaving things out.
+
+**It fails the nightly** on a note that is only a reference, begins with "Entry", is shorter than eight words, or uses words that mean nothing to a shooter: folded, gate record, recorder, harness, manifest, trailer, fixture, regression, refactor, stub. Entry 145 section 4 adds four more: no file path, no commit hash, no class or method name, nothing in code style. Name the thing on screen, not the class. The same notes go in the update bar inside the application, so they have to read well there too.
+
+Writing the trailer is part of writing the change, not a step afterwards. If I cannot say what a commit changes, in plain words, for somebody who has never read this repository, I do not yet understand what I have done.
 
 **A note promises what a person can actually reach.** Nightly 27 told people GroupLab "now works out where your group actually landed before deciding which bull each shot belongs to". The code to do it existed and was wired to nothing, so the sentence was untrue on the day it was published, and nobody reading it could have known. A note describes what somebody can do after installing the build, not what is in the repository: if the working part cannot be reached from any screen, the note says so in the same breath or there is no note. A published release is never edited to cover this up; the correction goes in the next one.
 
