@@ -394,8 +394,30 @@ def page_home() -> str:
     return shell("/", "", "GroupLab measures how accurately a rifle shoots from a photograph or scan of a target, and is honest about how little a small group tells you. Free and open source.", body)
 
 
+# NOTES-FROM-PLANNING.md entry 147 section 3.2: the platform statement appears on this page, in README.md and on every
+# release carrying a macOS asset, and all three are generated from docs/PLATFORM-SUPPORT.md. It is Alan's settled wording and
+# is not to be reworded, which is exactly the kind of text that gets edited in one place and not the others. One source, three
+# readers, and a test that fails when any of them drifts.
+PLATFORM_SUPPORT = REPO / "docs" / "PLATFORM-SUPPORT.md"
+
+
+def platform_support() -> str:
+    """The statement as HTML, without the source file's own notes about where it is used."""
+    text = need(PLATFORM_SUPPORT).read_text(encoding="utf-8")
+    if "\n---\n" not in text:
+        raise SystemExit("docs/PLATFORM-SUPPORT.md has no rule separating its notes from the statement")
+
+    body = text.split("\n---\n", 1)[1].strip()
+    rendered = markdown.markdown(body, extensions=["sane_lists", "fenced_code"])
+
+    # The page's own heading level: the statement's h2s sit under this section's h2, so they become h3s.
+    rendered = rendered.replace("<h2>", '<h3 class="h3">').replace("</h2>", "</h3>")
+    rendered = rendered.replace("<pre><code>", '<p><code class="block">').replace("</code></pre>", "</code></p>")
+    return '<h2 class="h3">What is supported, and what is not</h2>' + rendered
+
+
 def page_download() -> str:
-    def card(title: str, file: str, desc: str, points: list[str], rec: bool = False) -> str:
+    def card(title: str, file: str, desc: str, points: list[str], rec: bool = False, label: str | None = None) -> str:
         badge = '<span class="badge mono">Recommended</span>' if rec else ""
         lis = "".join(f"<li>{p}</li>" for p in points)
         return f"""<div class="panel card{' card-rec' if rec else ''}">
@@ -403,7 +425,7 @@ def page_download() -> str:
 <p class="mono teal small">{file}</p>
 <p>{desc}</p>
 <ul class="dim small-list">{lis}</ul>
-<div class="card-foot">{btn("Download " + title.lower(), NIGHTLY + file, rec)}</div>
+<div class="card-foot">{btn(label or ("Download " + title.lower()), NIGHTLY + file, rec)}</div>
 </div>"""
 
     body = f"""
@@ -417,6 +439,15 @@ def page_download() -> str:
 {card("Zip", "grouplab-win-x64.zip", "Windows 10 and 11. Unzip it anywhere and run GroupLab.App.exe.", ["Nothing to install", "Tells you when a newer build exists; you download it yourself"])}
 {card("Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.", ["Nobody uses it day to day yet", "Reports from Linux are especially welcome"])}
 </section>
+<section class="wrap grid-3">
+{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with an M1 or later. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Unsigned: see the Terminal command below", "M1, M2, M3, M4. Not an Intel Mac"], label="Download for Apple silicon")}
+{card("macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Unsigned: see the Terminal command below", "Intel only. Not an Apple silicon Mac"], label="Download for an Intel Mac")}
+<div class="panel pad stack tight">
+<h2 class="h3">Which Mac have you got?</h2>
+<p class="small">Apple menu, then About This Mac. A line saying <strong>Chip</strong> and a name beginning with M is Apple silicon. A line saying <strong>Processor</strong> and Intel is the Intel one.</p>
+<p class="small faint">Taking the wrong one gives you an application that will not open, with no useful message about why.</p>
+</div>
+</section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad">
 <h2 class="h3">When Windows says "Windows protected your PC"</h2>
@@ -428,22 +459,40 @@ def page_download() -> str:
 </ol>
 </div>
 <div class="panel pad">
+<h2 class="h3">When macOS refuses to open it</h2>
+<p>macOS puts a quarantine flag on anything downloaded from the internet, and Gatekeeper refuses to open an unsigned application that carries it. Move <code>GroupLab.app</code> into your Applications folder, then run this in Terminal:</p>
+<p><code class="block">xattr -dr com.apple.quarantine /Applications/GroupLab.app</code></p>
+<p class="small">That removes the quarantine flag macOS puts on downloaded files, and nothing else. It is the standard way to run unsigned software. <strong>Anyone not comfortable running that command should not run this build.</strong> Why there is no signed build is below, under <a href="#supported">What is supported, and what is not</a>.</p>
+</div>
+</section>
+<section class="wrap section-sm grid-2">
+<div class="panel pad">
 <h2 class="h3">What you get</h2>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
 <div><dt class="mono">Samples</dt><dd>Two sample sheets, so there is something to open in the first minute.</dd></div>
-<div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> and nowhere else. An update check sends nothing about you.</dd></div>
+<div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, and under your home folder elsewhere. An update check sends nothing about you.</dd></div>
 <div><dt class="mono">Which build</dt><dd>The Settings screen names the version, the train and the commit. Put that line in any report.</dd></div>
 </dl>
 </div>
+<div class="panel pad">
+<h2 class="h3">Updating</h2>
+<p><strong>Only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
+<p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
+</div>
+</section>
+<section class="wrap section-sm">
+<div class="panel pad stack supported prose" id="supported">
+{platform_support()}
+</div>
 </section>
 <section class="wrap section-sm last row-between">
-<p>macOS is built and tested on every change, but nobody has run it yet, so it is not offered here. Earlier builds each keep a release of their own.</p>
+<p>Every build keeps a release of its own, so a bug report names something that still exists.</p>
 <a href="/releases/">What changed in each build</a>
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
-    return shell("/download/", "Download", "Download the latest GroupLab test build for Windows or Linux: the installer, the zip or the Linux tarball.", body, "Download")
+    return shell("/download/", "Download", "Download the latest GroupLab test build for Windows, Linux or macOS: the installer, the zip, the Linux tarball or an untested Mac build.", body, "Download")
 
 
 def page_shoot() -> str:

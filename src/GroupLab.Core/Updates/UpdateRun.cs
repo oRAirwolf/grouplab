@@ -124,7 +124,12 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
     {
         if (Manifest?.For(platform, kind) is not { } asset)
         {
-            return new UpdateState(UpdateStage.Refused, "This build has nothing to install for " + platform + ".");
+            // Entry 147 section 1.5: say what to do, not only that nothing happened. A macOS build has no asset in the manifest on purpose,
+            // because there are two architectures and nothing here can tell which one somebody wants; saying so plainly is better than a
+            // sentence that reads like a fault in the build.
+            return new UpdateState(UpdateStage.Refused, platform == "macos"
+                ? "Updates are manual on macOS. A newer build is published; download the one for your Mac from grouplab.org/download."
+                : "This build has nothing to install for " + platform + ".");
         }
 
         Directory.CreateDirectory(_folder);

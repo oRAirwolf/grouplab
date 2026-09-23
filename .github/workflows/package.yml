@@ -97,10 +97,27 @@ jobs:
             out/package/*.exe
           retention-days: 30
 
-  linux:
-    name: linux tarball
-    runs-on: ubuntu-latest
+  # NOTES-FROM-PLANNING.md entry 147 section 3.1: the build list lives here, as a list, so adding a target really is a line.
+  #
+  # To add one, add a row. `rid` is the .NET runtime identifier, `os` the runner that builds it, and `label` the name a
+  # person sees in the download. `optional` means a failure here does not stop the nightly publishing the others, which
+  # is section 5.3: the Windows and Linux builds are what people actually run, and a macOS packaging problem must not
+  # take them down with it.
+  #
+  # Everything is built on the platform it targets rather than cross-published, because the OpenCV native package is the
+  # build host's own; ci.yml's tarball job says why at length.
+  portable:
+    name: ${{ matrix.target.label }} package
+    runs-on: ${{ matrix.target.os }}
     timeout-minutes: 60
+    continue-on-error: ${{ matrix.target.optional }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - { rid: linux-x64, os: ubuntu-latest, label: linux-x64, bundle: false, optional: false }
+          - { rid: osx-arm64, os: macos-latest, label: macos-arm64, bundle: true, optional: true }
+          - { rid: osx-x64, os: macos-latest, label: macos-x64, bundle: true, optional: true }
     steps:
       - uses: actions/checkout@v5
         with:
@@ -112,27 +129,50 @@ jobs:
 
       - name: Work out the version and the commit
         id: name
+        shell: bash
         run: |
           version="${{ inputs.version }}"
           if [ -z "$version" ]; then version=$(grep -o '<Version>[^<]*' Directory.Build.props | head -1 | cut -d'>' -f2); fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "commit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-      # Built on Linux rather than cross-published, because the OpenCV native package is the build host's own (ci.yml's tarball job says why).
-      - name: Publish and pack
+      - name: Publish
+        shell: bash
         run: |
           set -o pipefail
-          dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab \
+          dotnet publish src/GroupLab.App --configuration Release -r "${{ matrix.target.rid }}" --self-contained -o publish/grouplab \
             "-p:Version=${{ steps.name.outputs.version }}" "-p:GroupLabTrain=${{ inputs.train }}"
           cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
+
+      # Entry 147 section 1.2: a proper .app bundle. A bare executable runs from a terminal and behaves like a stranger in
+      # the dock, which is not worth publishing. The bundle is built here rather than by a packaging tool so that what it
+      # contains is readable, and scripts/macos-bundle.py is the one place its shape is decided.
+      - name: Make the app bundle
+        if: matrix.target.bundle
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/macos-bundle.py publish/grouplab out/bundle \
+            --version "${{ steps.name.outputs.version }}" --arch "${{ matrix.target.label }}"
+
+      - name: Pack
+        shell: bash
+        run: |
+          set -o pipefail
           mkdir -p out/package
-          tar -czf "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" -C publish grouplab
-          cp "out/package/grouplab-${{ steps.name.outputs.version }}-linux-x64-${{ steps.name.outputs.commit }}.tar.gz" out/package/grouplab-linux-x64.tar.gz
+          stem="grouplab-${{ steps.name.outputs.version }}-${{ matrix.target.label }}-${{ steps.name.outputs.commit }}"
+          if [ "${{ matrix.target.bundle }}" = "true" ]; then
+            tar -czf "out/package/$stem.tar.gz" -C out/bundle GroupLab.app
+          else
+            tar -czf "out/package/$stem.tar.gz" -C publish grouplab
+          fi
+          cp "out/package/$stem.tar.gz" "out/package/grouplab-${{ matrix.target.label }}.tar.gz"
+          ls -la out/package
 
-
-      # NOTES-FROM-PLANNING.md entry 125 section 1: v0.2.0-nightly.12 was published with its train missing, so it called itself a development
-      # build and would never have updated itself. The cause is fixed, but this is where the claim can be checked against the thing actually
-      # being shipped. It reads the metadata out of the file rather than running it, so it works for any platform on any runner.
+      # NOTES-FROM-PLANNING.md entry 125 section 1: v0.2.0-nightly.12 was published with its train missing, so it called
+      # itself a development build and would never have updated itself. The cause is fixed, but this is where the claim
+      # can be checked against the thing actually being shipped. It reads the metadata out of the file rather than
+      # running it, so it works for any platform on any runner.
       - name: The build must be stamped for the train it was packaged for
         if: inputs.train != ''
         shell: bash
@@ -142,6 +182,6 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         with:
-          name: linux-package
+          name: ${{ matrix.target.label }}-package
           path: out/package/*.tar.gz
           retention-days: 30

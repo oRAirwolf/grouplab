@@ -248,6 +248,12 @@ jobs:
       - name: The receiver refuses what it should
         run: php tests/php/receiver-tests.php
 
+      # Entry 147 section 3.2: the platform statement is generated into README.md from docs/PLATFORM-SUPPORT.md. A person editing the
+      # README by hand between the markers would leave two versions of what the project promises about macOS, and no way to tell which
+      # is the real one. This says so at the time rather than months later.
+      - name: The README carries the current platform statement
+        run: python3 scripts/platform-support.py --check
+
       - name: Say what it made
         run: |
           {

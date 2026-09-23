@@ -225,12 +225,40 @@ jobs:
         with:
           path: assets
 
+      # NOTES-FROM-PLANNING.md entry 147 section 5.3: a macOS build that fails to package must not take the Windows and Linux ones
+      # down with it, and the run must say which one is missing rather than publishing a shorter list quietly. So the builds people
+      # actually run are required by name, and the untested ones are counted and reported.
       - name: Gather the assets
         run: |
+          set -o pipefail
           mkdir -p release
           find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
           ls -la release
-          test "$(find release -type f | wc -l)" -eq 6
+
+          missing=""
+          for needed in grouplab-setup-win-x64.exe grouplab-win-x64.zip grouplab-linux-x64.tar.gz; do
+            test -f "release/$needed" || missing="$missing $needed"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::these supported builds did not package, so this nightly is not published:$missing"
+            exit 1
+          fi
+
+          absent=""
+          for optional in grouplab-macos-arm64.tar.gz grouplab-macos-x64.tar.gz; do
+            if [ ! -f "release/$optional" ]; then
+              absent="$absent $optional"
+              echo "::warning::$optional did not package; the rest of the nightly is published without it"
+            fi
+          done
+          if [ -n "$absent" ]; then
+            echo "MISSING_BUILDS=$absent" >> "$GITHUB_ENV"
+            {
+              echo "### macOS builds missing from this nightly"
+              echo
+              echo "$absent"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       # What changed since the previous published build on this train, and nothing older.
       #
@@ -283,6 +311,24 @@ jobs:
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest-2.json
 
+      # Entry 147 section 3.2: a release carrying a macOS asset carries the platform statement with it, generated from
+      # docs/PLATFORM-SUPPORT.md like the download page and the README. Somebody who reaches a release straight from a link
+      # has not read the download page, and the words that say nobody has run this on a Mac have to travel with the file.
+      - name: The platform statement, on a release that carries a Mac build
+        run: |
+          set -o pipefail
+          if ls release/grouplab-macos-*.tar.gz >/dev/null 2>&1; then
+            {
+              echo
+              echo "---"
+              echo
+              python3 scripts/platform-support.py --release
+            } >> notes.md
+            echo "the platform statement is on this release, because it carries a macOS build"
+          else
+            echo "no macOS asset, so the platform statement is not on this release"
+          fi
+
       # The build's own release, which keeps the versioned assets so a bug report names something that still exists.
       # GH_DEBUG=api is here because entry 123 section 1 step 3 asks for the exact request and response when this 403s, and it did again on
       # 2026-09-21 with the repository default already set to write, no rulesets and no tag protection. It prints headers and status, never
@@ -296,7 +342,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true)
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
@@ -308,7 +354,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true)
 
       # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
       # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.

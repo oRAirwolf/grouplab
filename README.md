@@ -17,6 +17,8 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 | **[Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs. It keeps itself up to date. |
 | **[Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe`. It tells you when there is a newer build and you download it yourself. |
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
+| **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later. **Untested on a real Mac.** |
+| **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
 
 **Every build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
 
@@ -25,7 +27,9 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing anywhere, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
-- **macOS** is built and tested on every push, and nobody has ever run it, so it is not offered here.
+- **On a Mac**, move `GroupLab.app` into Applications and then run `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal. That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software. It is the standard way to run unsigned software. **Anyone not comfortable running that command should not run this build.**
+- **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
+- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
 
 ---
 
@@ -297,6 +301,60 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
 
+## What is supported, and what is not
+
+<!-- platform-support: generated from docs/PLATFORM-SUPPORT.md, do not edit between these markers -->
+
+**Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
+
+**Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
+
+**macOS builds are published and have never been run on a Mac.** The tests run on macOS on every build, so the code works at that level, but nobody has opened the window, printed a target or saved a session on real hardware. These builds are an experiment rather than a release.
+
+### What happens once the application settles
+
+Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
+
+**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+
+### Running the macOS build
+
+macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
+
+```
+xattr -dr com.apple.quarantine /Applications/GroupLab.app
+```
+
+Anyone not comfortable running that command should not run this build.
+
+### Why it is not signed
+
+Signing a macOS application requires the Apple developer programme, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+
+That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+
+### Signing elsewhere
+
+The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
+
+### Apple mobile
+
+An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer programme, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+
+### Other Linux builds
+
+The published Linux build is x86-64. Other targets can be added to the nightly builds on request: Arm64 for a Raspberry Pi or an Arm laptop, or a package built for a particular distribution rather than a tarball. Adding one is a line of configuration rather than a project. The reason a dozen are not published already is simply that nobody has asked for them.
+
+Requests go to support@grouplab.org, naming the distribution and the architecture.
+
+### Reports from Linux and macOS are welcome
+
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
+
+<!-- end platform-support -->
+
+---
+
 ### Platforms
 
 **Windows 10 and 11 is what GroupLab is built for.** It is where the application is developed and used, where every screenshot comes from, and the only platform offered as a download today.
@@ -307,9 +365,9 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 |---|---|---|---|---|
 | Windows 10 and 11 | every push | the reference | **yes**, an installer and a zip | yes |
 | Linux | every push | **yes** | **yes**, a tarball | no |
-| macOS | every push | **yes** | not yet | no |
+| macOS | every push | **yes** | **yes**, two `.app` bundles, arm64 and x64 | no, and nobody has ever run one |
 
-**What stands between macOS and a download is that nobody has run it.** The Linux tarball is attached to every release; the macOS build is not offered until somebody opens the application on a Mac. Both reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
+**The macOS builds are published and labelled untested, which is the honest position.** Entry 147: withholding a build nobody has run does not make it more tested, it just means nobody can run it. Both are attached to every release, both are unsigned, and the download page says in Alan's own words why there will be no signed Mac build unless somebody donates a Mac and pays the developer fees. Both platforms reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
 
 **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 

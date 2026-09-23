@@ -3778,11 +3778,28 @@ public sealed partial class MainWindow : Window
 
     private readonly TextBlock updateState = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
-    /// <summary>The one line above the train choice, which says what this build is on and what the other trains are.</summary>
+    /// <summary>
+    /// The one line above the train choice, which says what this build is on and what the other trains are.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 147 section 1.5: a build that cannot replace itself must say so, rather than offering an update it
+    /// cannot apply. Only the Windows installer knows where GroupLab was put; a zip, a tarball and a macOS bundle were unpacked wherever
+    /// their owner chose, and GroupLab does not write over a folder it did not make. So on those it checks, says a newer build exists, and
+    /// leaves the downloading to the person.
+    /// </para>
+    /// </summary>
     private static string UpdateTrainHelp() =>
         ThisBuild.IsDevelopment
             ? "This is a development build, so it does not update itself. A build from the nightly train does."
-            : "Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken.";
+            : UpdateAssets.CanInstallItself
+                ? "Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken."
+                : ManualUpdatesHere + " Release and Beta are " + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ". Nightly is every change that passes the tests, and may be broken.";
+
+    /// <summary>
+    /// Said on every platform but Windows, entry 147 section 1.5. It is one sentence and it is first, because somebody reading this wants
+    /// to know whether the choice below them will do anything.
+    /// </summary>
+    internal const string ManualUpdatesHere =
+        "Updates are manual on this platform: GroupLab tells you when a newer build exists and you download it yourself. Only the Windows installer replaces itself.";
 
     private static string TrainLabel(UpdateTrain train) => train.IsAvailable() ? train.Words() : train.Words() + " (" + UpdateTrains.NotAvailableYet.ToLowerInvariant() + ")";
 
