@@ -4,12 +4,16 @@ using GroupLab.Core.Tests.Support;
 namespace GroupLab.Core.Tests;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 128 sections 3.1 and 3.6: publishing grouplab.org is something a person does, and nothing else.
+/// NOTES-FROM-PLANNING.md entry 144, which replaced entry 128 section 6: the site publishes itself when its content changes, and what is
+/// visible is controlled by the content rather than by the pipeline.
 /// <para>
-/// The rule is worth a test rather than a comment because the failure is silent and public. A site that republished itself on every push
-/// would put a half-finished change on the public web the moment it was committed, with nobody deciding; and the nightly's "keep the newest
-/// thirty" step deletes releases by pattern, so a pattern that ever matched <c>site</c> would delete the website without anyone noticing
-/// until the server pulled nothing.
+/// <b>What this still pins, and why it is not weaker than the rule it replaced.</b> The old test said the only trigger was a person. The
+/// new one says the only triggers are a person and a change to something the site is built from, which is the same guarantee turned the
+/// right way round: an ordinary code commit must not republish the website, and nothing but this workflow may write the site release.
+/// </para>
+/// <para>
+/// The nightly's "keep the newest thirty" step deletes releases by pattern, so a pattern that ever matched <c>site</c> would delete the
+/// website without anyone noticing until the server pulled nothing. That half of the test is untouched.
 /// </para>
 /// </summary>
 public partial class WebsiteWorkflowTests
@@ -20,17 +24,55 @@ public partial class WebsiteWorkflowTests
         Directory.EnumerateFiles(Repo.PathTo(".github", "workflows"), "*.yml")
             .Where(f => Path.GetFileName(f) != "website.yml");
 
-    /// <summary>The only trigger the website workflow may ever have.</summary>
+    /// <summary>
+    /// The only two triggers the website workflow may have: a person, and a change to the content it publishes. Entry 144 section 1.1.
+    /// </summary>
     [Fact]
-    public void TheWebsiteIsPublishedByAPersonAndByNothingElse()
+    public void TheWebsiteIsPublishedByAPersonOrByItsOwnContentChanging()
     {
         var triggers = Triggers(Website);
 
-        Assert.Equal(["workflow_dispatch"], triggers);
+        Assert.Equal(["push", "workflow_dispatch"], triggers.Order(StringComparer.Ordinal));
 
-        // And it asks why, because a publish with no reason recorded is one nobody can account for later.
+        // A push publishes only from main, and only when something the site is built from has changed. Without the paths filter every
+        // commit would republish the website, which is the thing entry 144 was careful to keep.
+        Assert.Contains("branches: [main]", Website, StringComparison.Ordinal);
+        Assert.Contains("paths:", Website, StringComparison.Ordinal);
+        foreach (string path in new[] { "'website/**'", "'docs/RELEASE-NOTES.md'", "'targets/**'" })
+        {
+            Assert.Contains(path, Website, StringComparison.Ordinal);
+        }
+
+        // And it still asks a person why, when a person is the one asking.
         Assert.Contains("reason:", Website, StringComparison.Ordinal);
-        Assert.Contains("required: true", Website, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 144 section 1.2: the site's gate is its own. The whole point of publishing on a push is that it does not wait half an hour for
+    /// a Windows test run, so a dependency on the other workflow would quietly undo the change.
+    /// </summary>
+    [Fact]
+    public void TheWebsiteDoesNotWaitOnTheOtherWorkflow()
+    {
+        Assert.DoesNotContain("workflow_run", Website, StringComparison.Ordinal);
+        Assert.DoesNotContain("needs:", Website, StringComparison.Ordinal);
+
+        // It runs the checks that can tell whether a page is wrong, rather than none at all.
+        foreach (string test in new[] { "ResearchArticleTests", "ReleaseNotesTests", "NoPissinhotOnTheSiteTests" })
+        {
+            Assert.Contains(test, Website, StringComparison.Ordinal);
+        }
+    }
+
+    /// <summary>
+    /// Entry 144 section 1.3: a burst of commits publishes once. Queueing one publish per commit would mean the server pulling several
+    /// parcels in a row, each already out of date when it arrived.
+    /// </summary>
+    [Fact]
+    public void ABurstOfCommitsPublishesOnce()
+    {
+        Assert.Contains("group: website", Website, StringComparison.Ordinal);
+        Assert.Contains("cancel-in-progress: true", Website, StringComparison.Ordinal);
     }
 
     /// <summary>Nothing else may start it, which is the other half of the same rule.</summary>

@@ -15,6 +15,65 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ---
 
+# 2026-09-22, entry 144: the site publishes itself, and the release notes keep up
+
+**Status: actioned 2026-09-23**, sections 1 to 5 and 6's documentation. **Section 6's proof is partly open**, and named here rather than left implied: the site content commit that published itself and the failure path are in this commit's report; the nightly whose notes reach the live releases page with no human step cannot be shown until the next nightly runs; and the 5 minute sync cadence cannot be shown until Alan runs `install.py`, which section 3 says is the one manual step.
+
+- **Section 1.** `website.yml` gained a `push` trigger on `main` with a paths filter, keeping `workflow_dispatch`. The filter is `website/**`, `docs/RELEASE-NOTES.md`, `docs/GLOSSARY.md`, `docs/USER-GUIDE.md`, `docs/TESTING-GUIDE.md`, both guide PDFs, `docs/figures/screens/**`, `targets/**` and the workflow file itself. It no longer waits on `build and test`: it installs the .NET SDK, builds the site and runs the site's own tests before publishing anything. Concurrency is one publish at a time with `cancel-in-progress`, so a burst of commits publishes once. `reason` became optional, and a push records the commit subject instead.
+- **The two gaps I found in my own first cut of section 1, both while checking rather than while writing.** The filter did not include `docs/figures/screens/**`, so section 4's screenshot commit would have committed new images and published nothing; and the guides' own sources were missing, so editing a guide would have left the site showing the old one. Both are in the filter now.
+- **Section 2.** `nightly.yml` writes its build's entry with `scripts/release-notes.py`, prepends it to `docs/RELEASE-NOTES.md`, commits it as `[notes] <version>` and pushes it. That path is in section 1's filter, so the site follows. **The loop is guarded in both directions and proved in both directions**: every job in `ci.yml` and the nightly's first job refuse a subject beginning `[notes] `, and `NotesCommitLoopTests` holds four facts, including the one that would otherwise fail silently, which is that an ordinary commit still runs everything. A guard written the wrong way round turns the whole suite off and nothing says so, so the test reads every clause of every condition and requires each to be a denial.
+- **Why the guard is not paranoia.** A run whose jobs all skip still reports success, and the nightly triggers on `build and test` succeeding. Without the marker check in the nightly as well, a notes commit would have started a build, which publishes, which writes notes, which pushes: a release every few minutes for ever, each deleting the oldest to keep thirty.
+- **Section 3.** `grouplab-site-sync.timer` is 5 minutes, from 15. The files are on the server and Alan's command is in the report.
+- **Section 4.** `screenshots.yml`, weekly on Monday at 06:00 UTC plus dispatch, renders every screen from `main` in both themes at the three sizes and commits what changed as `[screens] ...`. It runs `PublishedRendersTests` before committing, so a render nothing in `SOURCES.md` accounts for stops it. That marker is guarded the same way as `[notes] `: an image-only commit needs no C# test run, and a build of the application from one would be a release of nothing.
+- **What section 4 uncovered, which is worse than the drift it was written for.** The site's screenshots were last regenerated on 2026-09-19 and could not have been refreshed by running the walk, because **no test produced the 1400 by 900 size the website actually shows**. The render walk did 1280 by 720 and 2560 by 1440 only. So the live site had been showing a four day old interface with no way to notice: the walk passed, the sizes it produced were current, and the size the site served was not among them. 1400 by 900 is back in the walk, and this commit carries 31 refreshed images including two screens the site had never shown at all.
+- **Section 5 and 6's documentation.** `docs/WEBSITE.md` gained "Stopping a publish" and its publishing section now describes the push trigger. `CLAUDE.md`'s website section is rewritten around the same rule. **Entry 128 section 6 is superseded by this entry**, and is marked so below.
+- `docs/PHASE1-RESULTS.md` "Entry 144".
+
+Written by the planning session at 23:10 Mountain on 2026-09-22. This replaces entry 128 section 6's rule that nothing publishes the site by itself.
+
+**Why it is changing.** That rule was right when nothing had been proved. The signature check, the live check and the rollback have now all done their jobs on real publishes, including a rollback that saved the live site and a retry that installed it. What is left of the old rule is only cost: Alan watched a night's work sit unpublished, with release notes ending nine builds behind, because publishing needed a person to ask and a full Windows test run to finish first. His words: the fact that it did not happen overnight is annoying. He is right.
+
+**What replaces it.** The machinery runs by itself. What is visible is still controlled, but by the content rather than by the pipeline: a research article appears when its own state says published, which only Alan agrees to, and an unfinished page is simply not marked ready.
+
+Do this after the publish in flight, in this order. Every security constraint stands: no server address anywhere in the repository, no secret in a workflow log, no repository settings changed, no tags but the nightly workflow's.
+
+## 1. A site workflow of its own, triggered by content
+
+1. `website.yml` gains a `push` trigger on `main`, with a paths filter: `website/**`, `docs/RELEASE-NOTES.md`, `targets/**`, and any other file the site is built from. Keep `workflow_dispatch` as well.
+2. It must not wait on `build and test`. The site's own gate is its own: run `python website/build.py` and the site's tests (the research front matter, data and figure checks, the em dash and banned term check, the metadata check on published images, the release notes check). Those take a minute or two, and they are the checks that can actually tell whether a page is wrong.
+3. Concurrency: one site publish at a time per branch, newest wins, so a burst of commits publishes once.
+4. If the build or its tests fail, publish nothing and leave the last good parcel in place.
+5. Say in `docs/WEBSITE.md` what a person has to do to stop a publish: mark the page's state, or push a fix. There is no dispatch to withhold any more.
+
+## 2. The release notes write themselves
+
+1. When `nightly.yml` publishes a build, it also generates that build's entry with `scripts/release-notes.py` and appends it to `docs/RELEASE-NOTES.md`, then pushes that one file to main. That push matches section 1's paths filter, so the site follows within a couple of minutes.
+2. Guard the loop: the notes commit must not start another `build and test` or another nightly. Use a marker in the commit message and skip on it, or a paths-ignore, whichever is cleaner in this repository, and prove both ways round in the report: a notes commit publishes the site and starts nothing else; an ordinary commit still runs the full suite.
+3. The existing test that fails when the notes fall behind the tags stays, and becomes almost impossible to trip.
+4. Hand-written wording stays welcome. The generated entry is the floor, not the ceiling: an entry Code improves later is an ordinary site content commit.
+
+## 3. The server checks every 5 minutes
+
+Change the timer from 15 minutes to 5. That makes the whole path, from a commit to a live page, about 7 to 8 minutes. The sync already does nothing when there is nothing new, so the extra runs cost nothing worth measuring. This needs `install.py` run again by Alan: prepare it, scp it, and give him the command in your report. It is the only manual step in this entry.
+
+## 4. Screenshots that keep up with the application
+
+The site shows the interface, and the interface is changing weekly. Add a job that regenerates the site's screenshots from the newest published build and commits them when they differ from what is committed, which publishes them by section 1. Once a week is enough, plus whenever an entry says the interface changed. Renders go through `IOutsideWorld`; nothing is printed and no real printer or paper is touched. If a screenshot shows a sheet or a result, it uses generated data, never Alan's range material.
+
+## 5. What a person still decides
+
+- Whether a research article is published, through its state.
+- Whether a page exists at all.
+- Anything that would change what the site claims about GroupLab: those are still entries from the planning session.
+
+The pipeline decides nothing except when to run.
+
+## 6. Prove it, and say so
+
+In the report, show: a site content commit that published itself with its timings; a nightly whose notes reached the live releases page with no human step; the failure path, where a deliberately broken page stops the publish and leaves the live site untouched; and the sync log showing a 5 minute cadence. Update `docs/WEBSITE.md` and `CLAUDE.md` so the publishing rule they describe is this one, and note in `docs/NOTES-FROM-PLANNING.md` that entry 128 section 6 is superseded.
+
+---
+
 # 2026-09-21, entry 133: a "light" installer, measured before it is built
 
 **Status: actioned 2026-09-22**, sections 1 to 6. Measured and proposed; nothing was built, as the entry requires.
@@ -759,6 +818,8 @@ End with one message under the `CLAUDE.md` status rules (`STATUS: NEEDS YOU` is 
 ---
 
 # 2026-09-21, entry 128: you own grouplab.org from now on
+
+**Section 6 is superseded by entry 144**, on 2026-09-23. The rule that nothing publishes the site but a person starting the workflow by hand has been replaced: a push to `main` touching site content publishes it. Everything else in this entry stands, including the single `site` release, the signature check and the server pulling rather than being pushed to.
 
 **Status: actioned 2026-09-21**, sections 1 to 4, 7 and 8. **Sections 5 and 6 are not done**: they need SSH to Alan's server, which he approves one command at a time, and the first publish only makes sense after that install. Both are named below with what is ready for them.
 - **Section 1.1:** `website/build.py`, ported with every path relative to the repository root, writing to `website/_site/` which git ignores. Built both and compared: **seven of the eight pages are byte-identical** once the new fingerprints and the new build meta tag are set aside. The eighth, `guides/testing-guide/index.html`, differs in three places, all of them mine: entry 126's support sentence, entry 126's two ways to send a report, and a link that had to go.

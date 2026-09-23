@@ -1,0 +1,77 @@
+# Keeping the website's screenshots in step with the application, NOTES-FROM-PLANNING.md entry 144 section 4.
+#
+# **Why it exists.** The site shows the interface and the interface changes weekly. On 2026-09-23 the screenshots on grouplab.org were from
+# 2026-09-19: four days of type scale work, three new charts, a bull picker, tick boxes on every shot row and a drop target, none of it
+# visible to anybody reading the site. Nothing had gone wrong. Nobody had run the walk, because running it was a thing a person remembered.
+#
+# **What it does.** Renders every screen from the code on main, in both themes at the three sizes the site and the reports use, and commits
+# them when they differ. That commit touches docs/figures/screens, which is inside website.yml's paths filter, so the site follows on its
+# own within a couple of minutes.
+#
+# **What it never does.** No real printer, no paper, no network: every render is headless and everything that reaches outside the process
+# goes through IOutsideWorld, which the tests replace with a recorder. Every sheet and every figure in these screenshots is generated, never
+# Alan's range material, which is not in this repository and is not on the runner.
+name: screenshots
+
+on:
+  # Once a week is enough for drift. A person runs it by hand after an entry that changed the interface.
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One at a time: two runs committing the same twenty images would conflict, and the newer render is the one worth keeping.
+concurrency:
+  group: screenshots
+  cancel-in-progress: true
+
+jobs:
+  render:
+    name: render every screen and commit what changed
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The same walk a person runs locally, with the same environment variable, so what CI commits is what a person would have produced.
+      - name: Render every screen
+        env:
+          GROUPLAB_SCREENS_TO_DOCS: '1'
+        run: >
+          dotnet test tests/GroupLab.App.Tests
+          --filter "FullyQualifiedName~Entry109Tests.EveryScreenIsPhotographedInBothThemesAtBothSizes"
+          --logger "console;verbosity=minimal"
+
+      # PublishedRendersTests holds every committed render to a line in SOURCES.md saying what it is of. A render that appears with nothing
+      # declaring it is a render nobody can account for, so this refuses to commit rather than explain it later.
+      - name: Every render is still accounted for
+        run: >
+          dotnet test tests/GroupLab.Core.Tests
+          --filter "FullyQualifiedName~PublishedRendersTests"
+          --logger "console;verbosity=minimal"
+
+      - name: Commit them if they changed
+        shell: bash
+        run: |
+          set -o pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- docs/figures/screens; then
+            echo "the interface renders the same as what is committed, so there is nothing to publish."
+            exit 0
+          fi
+
+          count=$(git diff --name-only -- docs/figures/screens | wc -l)
+          git add docs/figures/screens
+          git commit -m "[screens] the website's screenshots catch up with the application" -m "Rendered from main by the weekly job, NOTES-FROM-PLANNING.md entry 144 section 4. $count images changed. The marker keeps this out of the test suite and the nightly: no C# has changed, PublishedRendersTests has already run above, and a build of the application from an image-only commit would be a release of nothing."
+          git push origin main
+          echo "committed $count changed images; website.yml's paths filter publishes them"

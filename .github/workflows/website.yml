@@ -1,9 +1,18 @@
-# Publishing grouplab.org, NOTES-FROM-PLANNING.md entry 128 section 3.
+# Publishing grouplab.org, NOTES-FROM-PLANNING.md entry 144, which replaces entry 128 section 6's rule that nothing publishes the site by
+# itself.
 #
-# This is the only thing that publishes the website, and **only a person can start it**. The trigger is workflow_dispatch and nothing else:
-# no push, no schedule, no workflow_run, not now and not later. A test fails if this file ever gains another trigger, and another fails if
-# any other workflow starts it or writes to the `site` release. That is deliberate. A site that republishes itself on every push would mean
-# a half-finished change reaching the public web the moment it was committed, and nobody deciding.
+# **The site publishes itself when its content changes.** A push to main that touches anything the site is built from builds, signs and
+# publishes it. That rule was the other way round until entry 144, and it was right while none of the machinery had been proved: the
+# signature check, the live check and the rollback have now each done their job on real publishes, including a rollback that saved the live
+# site. What was left of the old rule was only cost, and a night's work sat unpublished with release notes nine builds behind because
+# publishing needed a person to ask.
+#
+# **What is visible is still controlled, by the content rather than by the pipeline.** A research article appears when its own state says
+# published, which only Alan agrees to, and an unfinished page is simply not marked ready. To stop a publish there is no dispatch to
+# withhold: change the page's state, or push a fix. docs/WEBSITE.md says so in those words.
+#
+# **This does not wait on "build and test".** The site's gate is its own: the build, and the tests that can actually tell whether a page is
+# wrong. A C# test failing on Windows says nothing about whether an article quotes a constant the code no longer uses.
 #
 # It does not deploy either. It builds the site, signs it, and puts it in a rolling release. The server pulls from there on its own timer,
 # checks the signature, and installs it (website/server/). So GitHub holds no key, no server address and no password, and the server needs no
@@ -11,21 +20,40 @@
 name: website
 
 on:
+  # Entry 144 section 1.1: the content decides. Every path here is something the built site is made from, and nothing else starts a publish,
+  # so an ordinary code commit does not republish the website.
+  push:
+    branches: [main]
+    paths:
+      - 'website/**'
+      - 'docs/RELEASE-NOTES.md'
+      - 'docs/GLOSSARY.md'
+      - 'docs/USER-GUIDE.md'
+      - 'docs/TESTING-GUIDE.md'
+      - 'docs/USER-GUIDE.pdf'
+      - 'docs/TESTING-GUIDE.pdf'
+      - 'docs/figures/screens/**'
+      - 'targets/**'
+      - '.github/workflows/website.yml'
+
   workflow_dispatch:
     inputs:
       reason:
         description: 'Why the site is being published, in one line. It goes in the release notes.'
-        required: true
+        required: false
         type: string
 
 permissions:
   contents: write
 
-# One publish at a time, and a later one waits rather than cancelling: the server reads whatever is newest when it looks, and two runs
-# racing to replace the same assets is the one way to serve half a site.
+# Entry 144 section 1.3: one publish at a time, newest wins, so a burst of commits publishes once rather than queueing a publish each.
+#
+# Cancelling mid-upload cannot serve half a site. The worst it can leave in the release is a new archive beside an old signature, and the
+# server refuses a parcel whose signature does not verify and goes on serving what it has. So the failure mode is a publish that waits for
+# the next run, which is the one that was going to replace it anyway.
 concurrency:
   group: website
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   publish:
@@ -34,7 +62,9 @@ jobs:
     timeout-minutes: 30
     env:
       GH_TOKEN: ${{ github.token }}
-      REASON: ${{ inputs.reason }}
+      # A dispatch says why in its own words. A push says it with the commit that caused it, which is the same question answered by the
+      # thing that answered it.
+      REASON: "${{ inputs.reason || format('pushed, {0}', github.event.head_commit.message) }}"
     steps:
       # main, not the branch this was started from: the site is what has landed, never what is being worked on.
       - uses: actions/checkout@v5
@@ -53,6 +83,20 @@ jobs:
 
       - name: Build the site
         run: python website/build.py
+
+      # Entry 144 section 1.2: the site's own gate. These are the checks that can tell whether a page is wrong: an article quoting a
+      # constant the code no longer uses, an em dash or a banned term, a figure with no sample size, a releases page that has fallen behind
+      # the tags, a render nobody declared, or a link to the old site. A minute or two, and none of it waits on a Windows test run, because
+      # a C# test failing on Windows says nothing about whether a page is right.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: The site's own tests
+        run: >
+          dotnet test tests/GroupLab.Core.Tests
+          --filter "FullyQualifiedName~ResearchArticleTests|FullyQualifiedName~ReleaseNotesTests|FullyQualifiedName~NoPissinhotOnTheSiteTests|FullyQualifiedName~PublishedRendersTests|FullyQualifiedName~WebsiteWorkflowTests|FullyQualifiedName~SiteSyncTests|FullyQualifiedName~SupportLinkTests"
+          --logger "console;verbosity=minimal"
 
       # Every page carries the commit it was built from, and the server checks that the page it is serving afterwards carries this one.
       - name: The commit it was built from must be in every page
@@ -129,5 +173,5 @@ jobs:
             echo "- commit $(git rev-parse HEAD)"
             echo "- why: $REASON"
             echo "- sha256 $(cat grouplab-site.tar.gz.sha256)"
-            echo "- the server pulls it within 15 minutes"
+            echo "- the server pulls it on its own timer"
           } >> "$GITHUB_STEP_SUMMARY"

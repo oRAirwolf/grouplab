@@ -624,11 +624,18 @@ public sealed class MarkingSession
     /// <summary>
     /// The sheet's point of impact, NOTES-FROM-PLANNING.md entry 130 section 3.1, or null where it must not be applied.
     /// <para>
-    /// <b>It is only applied where the shooter has said which bulls they aimed at</b>, which is what <see cref="AssignmentRule.PerBull"/>
-    /// records. That restraint is the whole of the design. A sheet of twenty five bulls where ten were shot has a translation that explains
-    /// the holes for almost any reading, so solving over every bull would let the software choose between them on a margin it cannot
-    /// justify, and it would be choosing on the sheets where being wrong is quietest. Where the shooter has named the bulls, the question
-    /// stops being "where might these have been aimed" and becomes "how far from there did they land", which is arithmetic.
+    /// <b>The restraint is real, and it is the matching that delivers it, not this solve.</b> Question 46 measured both readings on scan 5,
+    /// and they return the same shift: solving over every printed bull and solving over only the aimed ones give -0.995, -0.924 in alike.
+    /// They differ in confidence, and an offset only moves anything when it is certain. The wide solve is not certain, so it does nothing,
+    /// the assignment falls through to the matching, which does consider only the bulls the shooter named, and scan 5 comes out exactly as
+    /// his table says.
+    /// <para>
+    /// Narrowing this to the aimed bulls, which an earlier version of this comment described as the whole of the design, does not improve
+    /// the offset by a thousandth of an inch. It makes the solver <i>certain</i> of a shift a quarter of an inch from the one the shooter's
+    /// own table implies, and acting on it put five of twenty shots on bulls nobody aimed at. `SheetOffsetWideOrNarrowTests` pins all of
+    /// that, including the 0.247 in gap, which is the number to watch: the solver is not recovering this sheet's offset, and until it does,
+    /// being uncertain is the only thing keeping it from being wrong out loud.
+    /// </para>
     /// </para>
     /// <para>
     /// The offset has to be both certain and worth more than a tenth of an inch before it moves anything, so an ordinary sheet shot at its
@@ -645,9 +652,8 @@ public sealed class MarkingSession
         var aimed = new List<int>();
         for (int i = 0; i < open.Count; i++)
         {
-            // NOTE: this is every scoring bull, not only the ones aimed at, because AimedBulls.For lists them all and gives nought shots
-            // to the rest. Narrowing it to a count above zero reads better and makes SheetOffsetAssignmentTests put five of twenty shots
-            // on bulls nobody aimed at, so the solver is not being given the question this line appears to ask. Question 46.
+            // Every scoring bull, not only the ones aimed at: AimedBulls.For lists them all and gives nought shots to the rest. Measured
+            // both ways in question 46, the shift is identical and only the confidence changes, so this stays as it is deliberately.
             if (rule.PerBull.ContainsKey(open[i].Index))
             {
                 aimed.Add(i);

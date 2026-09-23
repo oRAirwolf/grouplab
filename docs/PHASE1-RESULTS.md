@@ -7655,6 +7655,67 @@ GroupLab detects **9** holes and assigns them to bulls 1, 2, 3, 4, 5, 7, 8, 9, 1
 **And a third, smaller.** "columns 7" on a sheet five bulls wide parsed perfectly and produced a rule naming no bulls, which makes the offset give up and the shots go to whichever bull they landed nearest: the exact behaviour the shooter was turning off, with nothing on screen saying so. It is refused now, like any other text that names nothing.
 
 
+# Entry 144: the site publishes itself, and the release notes keep up
+
+`docs/NOTES-FROM-PLANNING.md` entry 144, actioned 2026-09-23. It supersedes entry 128 section 6.
+
+## What changed, in one table
+
+| what | before | after |
+|---|---|---|
+| a site content commit | published nothing until a person ran `gh workflow run website.yml` | publishes itself, within about 7 to 8 minutes of the push |
+| what the site waits on | `build and test` on Windows, macOS and Linux, about half an hour | its own build and its own page tests, about a minute |
+| the release notes | written by hand, and nine builds behind on 2026-09-22 | the nightly writes and pushes its own entry, which publishes the page |
+| the server's check | every 15 minutes | every 5 |
+| the screenshots | whenever somebody remembered, last on 2026-09-19 | weekly, and on demand |
+| a publish's reason | required on the dispatch | optional; a push records the commit subject |
+
+## The paths that publish
+
+`website/**`, `docs/RELEASE-NOTES.md`, `docs/GLOSSARY.md`, `docs/USER-GUIDE.md`, `docs/TESTING-GUIDE.md`, `docs/USER-GUIDE.pdf`, `docs/TESTING-GUIDE.pdf`, `docs/figures/screens/**`, `targets/**`, `.github/workflows/website.yml`.
+
+A commit touching only `src/` publishes nothing, which is the point: the application changing is not the site changing, and the nightly's own notes commit is what carries an application change onto the site.
+
+## Two gaps I found in my own work, before either could bite
+
+Both were found by re-reading what I had written against what section 4 needed, not by a test.
+
+1. **`docs/figures/screens/**` was not in the paths filter.** The weekly screenshot job would have rendered the interface, committed twenty changed images, and published nothing. The symptom would have been a site that looked maintained and was not.
+2. **The screenshot commit would have started a full CI run and a nightly build.** An image-only commit has no C# in it, and a build of the application from one is a release of nothing. It now carries a `[screens] ` marker, guarded exactly like `[notes] `.
+
+## The screenshot finding, which is worse than the drift the job was written for
+
+The site's screenshots were last regenerated on 2026-09-19. They could not have been refreshed by running the render walk, because **the walk did not produce the size the website uses.** It rendered 1280 by 720 and 2560 by 1440; the site shows 1400 by 900.
+
+So for four days the live site showed an interface from before the type scale work, the three new charts, the bull picker, the tick boxes on every shot row and the drop target, and nothing could have said so: the walk passed, every size it produced was current, and the size being served was not among them.
+
+1400 by 900 is back in `Entry109Tests`. This commit carries **31 refreshed images**, two of them screens the site had never shown at any size.
+
+## The loop guard, proved both ways round
+
+Section 2.2 asks for proof in both directions, and the second direction is the one that fails silently.
+
+| what is proved | how |
+|---|---|
+| a notes commit starts no test run | every job in `ci.yml` refuses a subject beginning `[notes] ` |
+| and starts no nightly either | the nightly's first job refuses it too, because a run whose jobs all skip still reports success |
+| an ordinary commit still runs everything | every clause of every condition is read and required to be a denial, with no `\|\|` anywhere |
+| a notes commit does publish the site | `docs/RELEASE-NOTES.md` is in the site workflow's paths filter |
+
+`NotesCommitLoopTests`, four tests. The loop it guards against is not hypothetical: notes land, `build and test` runs, the nightly fires on that success, builds, publishes, writes notes, pushes. That is a release every few minutes for ever, each one deleting the oldest to keep thirty, until somebody notices.
+
+The third row is the one worth the effort. A guard written the wrong way round would skip every ordinary commit instead of the marked ones, turning the whole test suite off, and CI would go green faster than ever.
+
+## What is still open in section 6
+
+Named rather than implied, because a report that quietly omits its unproved parts is the thing entry 130 section 4 was written about.
+
+- **A site content commit that published itself, with its timings:** this commit. Reported below.
+- **The failure path:** measured locally. Reported below.
+- **A nightly whose notes reach the live releases page with no human step:** cannot be shown until the next nightly runs.
+- **The sync log at a 5 minute cadence:** cannot be shown until Alan runs `install.py`. It is the one manual step section 3 names.
+
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

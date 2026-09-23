@@ -16,6 +16,10 @@ concurrency:
 
 jobs:
   test:
+    # Entry 144 section 2.2: the nightly's own release-notes commit must not start another full test run, or every
+    # nightly would cause one and each would cause another nightly. The marker is in the commit subject and nothing else
+    # writes it. An ordinary commit has no marker and runs everything, which the entry asks to be proved both ways round.
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
@@ -125,6 +129,7 @@ jobs:
   # caught before anything reaches a download. The packaging script checks the package carries its own runtime and its OpenCV native
   # library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse fails the build rather than a person.
   windows-package:
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: windows package
     runs-on: windows-latest
     timeout-minutes: 60
@@ -193,6 +198,7 @@ jobs:
           retention-days: 30
 
   website:
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: website builds
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -245,6 +251,7 @@ jobs:
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
   tarball:
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: linux tarball
     runs-on: ubuntu-latest
     timeout-minutes: 30

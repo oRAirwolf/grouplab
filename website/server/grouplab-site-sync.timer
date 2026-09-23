@@ -1,14 +1,16 @@
 [Unit]
-# NOTES-FROM-PLANNING.md entry 128 section 4: every 15 minutes, and 2 minutes after boot.
-# Fifteen minutes is the longest a publish waits to reach the site, and the shortest interval worth
-# having: the sync exits in under a second when nothing has changed, because it reads one small hash
-# file and stops.
-Description=Pull the published grouplab.org site every fifteen minutes
+# NOTES-FROM-PLANNING.md entry 144 section 3: every 5 minutes, and 2 minutes after boot. It was 15
+# under entry 128 section 4, when a publish was something a person asked for and waited on. Now the
+# site publishes itself when its content changes, so this interval is the whole of the remaining
+# delay, and five minutes makes the path from a commit to a live page about seven or eight.
+# The sync exits in under a second when nothing has changed, because it reads one small hash file
+# and stops, so the extra runs cost nothing worth measuring.
+Description=Pull the published grouplab.org site every five minutes
 Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=15min
+OnUnitActiveSec=5min
 AccuracySec=1min
 Persistent=true
 Unit=grouplab-site-sync.service

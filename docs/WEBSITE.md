@@ -1,15 +1,28 @@
 # grouplab.org: how it is built, published and served
 
-NOTES-FROM-PLANNING.md entry 128. The website lives in this repository and is published from it. Nothing about it is kept anywhere else.
+NOTES-FROM-PLANNING.md entries 128 and 144. The website lives in this repository and is published from it. Nothing about it is kept anywhere else.
 
 ## The shape of it, and why
 
 **This repository publishes. The server pulls.**
 
 1. `website/build.py` builds the site into `website/_site/` from what is already here: the guides, the screenshots, the fonts and the logos.
-2. CI builds it on every push and publishes nothing.
-3. `.github/workflows/website.yml` builds it again, signs it, and puts three files in a rolling GitHub release tagged `site`.
-4. The server checks that release every 15 minutes, verifies the signature, and installs it.
+2. CI builds it on every push, as a check, and publishes nothing.
+3. `.github/workflows/website.yml` builds it again, signs it, and puts three files in a rolling GitHub release tagged `site`. **It runs by itself on any push to `main` that touches something the site is built from**, and it can still be started by hand.
+4. The server checks that release every 5 minutes, verifies the signature, and installs it.
+
+From a commit to a live page is about seven or eight minutes.
+
+## Stopping a publish
+
+Entry 144 replaced entry 128 section 6's rule that nothing published the site by itself. **There is no dispatch to withhold any more**, so stopping a publish means one of two things:
+
+- **Do not mark the page ready.** A research article appears on the index when its own front matter says `published`, and nothing else puts it there. An unfinished page is simply not marked, and it can sit in the repository for as long as it likes: it is built, it is reachable by its own address, and it carries a notice saying it is a draft.
+- **Push a fix.** A page that is wrong is corrected the way anything else here is corrected. The site follows within a couple of minutes.
+
+**What still stops a bad page reaching the web on its own:** the site workflow runs the site's own tests before it publishes anything, and if the build or those tests fail it publishes nothing and the last good parcel stays where it is. The signature check, the live check and the rollback on the server are all unchanged.
+
+**What is deliberately not a stop:** the other workflow's Windows and macOS test runs. The site no longer waits on them, because a C# test failing on Windows says nothing about whether a page is right, and waiting half an hour for it was the cost that entry 144 removed.
 
 The point of pulling rather than pushing is what it makes unnecessary. **GitHub holds no SSH key, no server address and no password, and the server needs no inbound access at all.** A GitHub account that fell into the wrong hands could publish a bad site; it could not reach the server. And the server will not install a site whose signature does not verify against the key compiled into GroupLab itself.
 
@@ -27,14 +40,16 @@ Every asset URL carries a hash of its own contents, so a changed screenshot, PDF
 
 ## Publishing it
 
-**Only a person publishes the site.** The workflow's single trigger is `workflow_dispatch`, and tests fail if it ever gains another, if any other workflow starts it, or if anything else writes to the `site` release.
+**A push publishes it.** Any commit on `main` that touches something the site is built from starts `website.yml` by itself: anything under `website/`, the release notes, the glossary, the three guides and their PDFs, the screenshots, `targets/`, and the workflow file itself. Nothing else does, so a change to the application alone publishes nothing.
+
+Starting it by hand still works, and is how a publish is forced when nothing the filter watches has changed:
 
 ```
 gh workflow run website.yml --ref main -f reason="<one line saying why>"
 gh run watch
 ```
 
-The reason is required and goes in the release notes, so every publish can be accounted for later.
+The reason is optional now. On a push the release notes record the commit subject instead, which says as much and needs nobody to write it. Tests fail if anything other than a push or a person starts the workflow, or if anything else writes to the `site` release.
 
 It signs the archive with `GROUPLAB_UPDATE_SIGNING_KEY`, the same key that signs update manifests, and verifies that signature against the public half in `UpdateKeys.cs` before publishing anything. A key that cannot verify its own signature fails in the workflow rather than on the server, where the only symptom would be a site that quietly stopped updating.
 
@@ -42,7 +57,7 @@ Three files end up at `https://github.com/oRAirwolf/grouplab/releases/download/s
 
 ## What the server does
 
-`grouplab-site-sync.timer` runs `grouplab-site-sync.py` as root every 15 minutes and 2 minutes after boot. A systemd timer rather than a crontab entry, because HestiaCP's `v-rebuild-user` wipes user crontabs.
+`grouplab-site-sync.timer` runs `grouplab-site-sync.py` as root every 5 minutes and 2 minutes after boot (entry 144 section 3; it was 15 while a publish was something a person asked for). A systemd timer rather than a crontab entry, because HestiaCP's `v-rebuild-user` wipes user crontabs.
 
 Each run:
 

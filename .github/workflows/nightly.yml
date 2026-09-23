@@ -44,7 +44,13 @@ jobs:
   # The version is worked out once and both the package and the publish use it, so the assets, the tag and the manifest cannot disagree.
   name-it:
     name: name the build
-    if: github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success'
+    # Entry 144 section 2.2, the other half of the guard. ci.yml skips every job on a notes commit, and a run whose jobs were all skipped
+    # still completes as a success, which would start a nightly, which would write notes, which would start another. So the nightly checks
+    # the marker too. A schedule has no workflow_run, and the empty subject does not match, so the daily build is unaffected.
+    if: >-
+      (github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success')
+      && !startsWith(github.event.workflow_run.head_commit.message, '[notes] ')
+      && !startsWith(github.event.workflow_run.head_commit.message, '[screens] ')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -304,6 +310,64 @@ jobs:
               subprocess.run(['gh', 'release', 'delete', tag, '--yes', '--cleanup-tag'], check=False)
           print(str(min(len(nightlies), 30)) + ' nightly releases kept')
           "
+
+      # Entry 144 section 2: the notes write themselves. The generated entry is the floor, not the ceiling; improving its wording later is
+      # an ordinary site content commit.
+      #
+      # The loop is guarded by the marker in the commit subject, which ci.yml and this workflow both skip on. That push does match
+      # website.yml's paths filter, which is the point: the releases page follows within a couple of minutes without anybody asking.
+      # Entry 144 section 2: the notes write themselves. The generated entry is the floor, not the ceiling; improving its wording later is
+      # an ordinary site content commit.
+      #
+      # The loop is guarded by the marker in the commit subject, which ci.yml and this workflow both skip on. That push does match
+      # website.yml's paths filter, which is the point: the releases page follows within a couple of minutes without anybody asking.
+      - name: Write this build's notes into docs/RELEASE-NOTES.md
+        run: |
+          set -o pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --quiet origin main
+          git checkout --quiet -B main origin/main
+
+          if grep -q "^## $VERSION$" docs/RELEASE-NOTES.md; then
+            echo "$VERSION is already in the file, so nothing is appended."
+            exit 0
+          fi
+
+          python3 scripts/release-notes.py "$VERSION" "$SHA" > body.md
+          python3 - "$VERSION" "$SHA" <<'PY'
+          import io, sys, datetime
+          version, sha = sys.argv[1], sys.argv[2]
+          nl = chr(10)
+          body = io.open('body.md', encoding='utf-8').read()
+          # The generator's first line names the build; the file's own heading does that, so it is not repeated.
+          lines = [l for l in body.splitlines() if not l.startswith('GroupLab ')]
+          entry = [
+              '## ' + version,
+              '',
+              '**' + datetime.date.today().isoformat() + '**, commit `' + sha[:7] + '`. Nightly.',
+              '',
+              nl.join(lines).strip(),
+              '',
+              '[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v' + version + ')',
+              '',
+              '---',
+              '',
+              '',
+          ]
+          path = 'docs/RELEASE-NOTES.md'
+          text = io.open(path, encoding='utf-8', newline='').read()
+          # Newest first, directly under the horizontal rule that closes the file's preamble.
+          rule = nl + '---' + nl
+          at = text.index(rule) + len(rule)
+          io.open(path, 'w', encoding='utf-8', newline='').write(text[:at] + nl + nl.join(entry) + text[at:].lstrip(nl))
+          PY
+
+          rm -f body.md
+          git add docs/RELEASE-NOTES.md
+          git commit -m "[notes] $VERSION" -m "Written by the nightly from this build's Release-note trailers, NOTES-FROM-PLANNING.md entry 144 section 2."
+          git push origin main
+          echo "appended $VERSION and pushed it; website.yml's paths filter picks it up"
 
       - name: Say what it is
         run: |

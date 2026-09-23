@@ -15,3 +15,8 @@ scans/mounted/
 
 # NOTES-FROM-PLANNING.md entry 128: the site is built into website/_site/, which is never committed.
 website/_site/
+
+# Entry 144: Python's own build output. website/server/__pycache__ was committed by accident and the .pyc went stale
+# the moment the script beside it changed, so the repository carried a compiled copy of a script it no longer matched.
+__pycache__/
+*.pyc

@@ -2,7 +2,7 @@
 """Pull the published grouplab.org site and install it, NOTES-FROM-PLANNING.md entry 128 section 4.
 
 The server pulls. GitHub holds no key, no address and no password, and this machine needs no
-new inbound access. It runs as root from a systemd timer, every 15 minutes and 2 minutes after
+new inbound access. It runs as root from a systemd timer, every 5 minutes and 2 minutes after
 boot.
 
 What it will not do, ever: change nginx, reload nginx, touch anything belonging to another

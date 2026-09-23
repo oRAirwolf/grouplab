@@ -54,8 +54,10 @@ source that is not on the list below, or if any test writing into this folder co
 | `compare-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `compare-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `equipment-dark-1280x720.png` | no sheet at all |
+| `equipment-dark-1400x900.png` | no sheet at all |
 | `equipment-dark-2560x1440.png` | no sheet at all |
 | `equipment-light-1280x720.png` | no sheet at all |
+| `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
 | `library-dark-1280x720.png` | built-in library sheet |
 | `library-dark-1400x900.png` | Entry109Tests synthetic sheet |
