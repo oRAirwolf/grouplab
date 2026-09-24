@@ -98,7 +98,8 @@ def relative(full: str) -> str | None:
 def evaluate(project: Path) -> dict:
     out = subprocess.run(
         ["dotnet", "msbuild", str(project), "-p:Configuration=Release",
-         *[f"-getItem:{i}" for i in READ], "-getProperty:MSBuildAllProjects", "-getProperty:DirectoryBuildPropsPath"],
+         *[f"-getItem:{i}" for i in READ], "-getProperty:MSBuildAllProjects", "-getProperty:DirectoryBuildPropsPath",
+         "-getProperty:DirectoryBuildTargetsPath"],
         cwd=HERE, capture_output=True, text=True, check=True).stdout
     return json.loads(out)
 
@@ -116,7 +117,9 @@ def read_by_build() -> set[str]:
         data = evaluate(project)
 
         props = data.get("Properties", {})
-        for p in props.get("MSBuildAllProjects", "").split(";") + [props.get("DirectoryBuildPropsPath", "")]:
+        # Directory.Build.targets is asked for by name: a fresh checkout's evaluation leaves it out of MSBuildAllProjects, which is why CI
+        # disagreed with every developer machine from entry 168 until entry 171 found it.
+        for p in props.get("MSBuildAllProjects", "").split(";") + [props.get("DirectoryBuildPropsPath", ""), props.get("DirectoryBuildTargetsPath", "")]:
             if p and (r := relative(p)):
                 found.add(r)
 
@@ -186,6 +189,12 @@ def generate(check: bool) -> int:
         if have.replace("\r\n", "\n") != wanted:
             print(".github/shipping-generated.json is not what the build reads. Run: python3 scripts/shipping-gate.py --generate",
                   file=sys.stderr)
+            before = set(json.loads(have).get("ships", [])) if have else set()
+            after = set(json.loads(wanted)["ships"])
+            for entry in sorted(after - before):
+                print(f"  the build reads {entry}, and the list does not have it", file=sys.stderr)
+            for entry in sorted(before - after):
+                print(f"  the list has {entry}, and the build does not read it", file=sys.stderr)
             return 1
         print("the ships list is what the build reads.")
         return 0

@@ -10,31 +10,73 @@
     "",
     "discordGroups is the channel list in plain words, so somebody can see what they are joining before they join. The",
     "group names are the server's own. The channels inside each group are not written here yet, because nobody has read",
-    "them out of the server; docs/notes/for-alan.md request 4 asks for them, and this file is where they go."
+    "discordGroups is the server's channel list, by category, so somebody can see what they are joining before they join.",
+    "discordRules is a summary of the rules as posted in #rules. Both came from the planning session, which built the",
+    "server, in NOTES-FROM-PLANNING.md entry 171 section 3, and the page reads them from here so the page and the server",
+    "can be compared in one place when either changes. The moderators' own channel is private and is never listed here."
   ],
   "discordInvite": "https://discord.gg/jY7MrYNN5V",
   "discordCanonical": "https://grouplab.org/discord",
-
   "discordGroups": [
     {
       "name": "Information",
-      "what": "What the project is, what is being worked on, and the rules of the server. Read only, so it stays readable."
+      "what": "What the project is, what is being worked on, and the rules of the server. Read only, so it stays readable.",
+      "channels": [
+        "announcements",
+        "start-here",
+        "rules"
+      ]
     },
     {
       "name": "Using GroupLab",
-      "what": "Questions about the application: printing a sheet, reading a scan, a number that looks wrong, a build that will not start."
+      "what": "Questions about the application: printing a sheet, reading a scan, a number that looks wrong, a build that will not start.",
+      "channels": [
+        "feature-requests (forum)",
+        "bug-reports (forum)",
+        "help (forum)",
+        "target-sheets",
+        "show-your-groups"
+      ]
     },
     {
       "name": "Shooting",
-      "what": "Targets, groups, loads and what people are shooting. Not about the software."
+      "what": "Targets, groups, loads and what people are shooting. Not about the software.",
+      "channels": [
+        "general",
+        "load-development",
+        "optics-and-gear",
+        "range-reports"
+      ]
     },
     {
       "name": "Development",
-      "what": "How GroupLab is built and why, what is being measured, and what is coming next."
+      "what": "How GroupLab is built and why, what is being measured, and what is coming next.",
+      "channels": [
+        "development",
+        "github",
+        "testing"
+      ]
     },
     {
       "name": "Voice",
-      "what": "Talking rather than typing, for anybody who would rather explain something out loud."
+      "what": "Talking rather than typing, for anybody who would rather explain something out loud.",
+      "channels": [
+        "Voice chat",
+        "Range day",
+        "Screen share"
+      ]
     }
+  ],
+  "discordRules": [
+    "Be civil. Disagree with the idea, not the person.",
+    "Use the channel that fits the subject. Long side discussions belong in a thread.",
+    "No firearm, ammunition or component sales, trades or transfers.",
+    "No load data handed out as safe to copy. Say what you observed, and let people work up their own loads from published data.",
+    "No advertising or self promotion without asking a moderator first.",
+    "Safety is not a joke. Muzzle discipline and range rules get discussed seriously.",
+    "Post only images that belong to you. Anything posted there can be seen by anyone.",
+    "No personal information about yourself or anyone else, including addresses and anything that identifies where someone shoots.",
+    "English in the public channels, so moderation can keep up.",
+    "Moderator decisions stand in the moment. Appeals go to a direct message."
   ]
 }

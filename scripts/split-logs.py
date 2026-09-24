@@ -29,10 +29,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 ARCHIVE = REPO / "docs" / "notes" / "archive"
 
-# Entry 160 section 1.1: the last fifteen entries stay live. The entry also offers "or the last fourteen
-# days, whichever is longer", which is inoperative here: this repository is eleven days old, so fourteen
-# days is the whole file and the rule would move nothing. Raised as a question; the count is what the
-# section is for.
+# Entry 160 section 1.1: the last fifteen entries stay live. Its fourteen day clause is dropped by entry 171
+# section 2, answering question 48: the count is what the rule is for, and the day count moved nothing.
 LIVE_ENTRIES = 15
 
 # Entry 160 section 1.2: the results file keeps its newest sections. Ten is about one run's worth.

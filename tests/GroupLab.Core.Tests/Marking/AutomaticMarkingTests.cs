@@ -33,7 +33,8 @@ public class AutomaticMarkingTests
 
         var result = AutomaticMarking.Run(observed, observed, ImageMetadata.ForScan(render.Width, render.Height, dpi), definition, new OpenCvSharpBackend(), trace, calibre: new Calibre(".308", 0.308));
 
-        double size = 0.308 * AutomaticMarking.HoleToCalibre;
+        // Entry 171: the detector is given the bullet in the sheet's own inches, so the scan's measured print scale divides it.
+        double size = 0.308 * AutomaticMarking.HoleToCalibre / (result.Scale!.PrintScale ?? 1);
         Assert.NotEmpty(result.Difference!.Holes);
         Assert.All(result.Difference.Holes, h => Assert.Equal(h.AreaInches / (Math.PI * Math.Pow(size / 2, 2)), h.CalibreHoles!.Value, 9));
         var stage = trace.Records.Single(r => r.Stage == "S5-S8.holes");

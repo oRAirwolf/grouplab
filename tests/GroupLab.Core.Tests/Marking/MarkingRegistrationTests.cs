@@ -49,6 +49,25 @@ public class MarkingRegistrationTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 1.4: the file says whether its figures are real inches, corrected by a scan's print scale, or
+    /// the sheet's own, so a saved group from a scan and one from a photograph can be told apart. A file from before entry 171 has neither and
+    /// reads as the sheet's own inches, which is what it was.
+    /// </summary>
+    [Fact]
+    public void TheFileSaysWhetherItsFiguresAreRealInches()
+    {
+        var mapping = new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+        foreach (double? scale in new double?[] { 0.962, null })
+        {
+            string json = MarkingFile.Write(With(new SheetReference(mapping, "s") { PrintScale = scale }));
+            Assert.Equal(scale is null ? "sheet" : "real", (string?)System.Text.Json.Nodes.JsonNode.Parse(json)!["scale"]!["inches"]);
+            var read = Assert.IsType<SheetReference>(MarkingFile.Read(json).State.Scale);
+            Assert.Equal(scale, read.PrintScale);
+            Assert.Equal(254 * (scale ?? 1) / 254, read.ToTarget(new PointD(254, 0)).X, 12);
+        }
+    }
+
     [Fact]
     public void AMarkingWithoutItsRegistrationStillReadsWithItsNote()
     {

@@ -65,7 +65,9 @@ The largest, 0.274 in, **1.039 of the bullet**, so this one measures wider than 
 
 **That is the whole finding in three pictures, and these are scans.** The spread from 0.897 to 1.039 is what one sheet does under a flatbed, with the light constant and the scale absolute. A photograph adds the shadow on top of this, which is how the same holes reach 1.45.
 
-**There is no photographed crop here, and that is a limit rather than an oversight.** The only real material this project may publish is this one scan, under the consent record in `samples/PROVENANCE.md`. Every photograph from that range day stays private, so the shadow that does the damage is described and not shown.
+![A photographed hole measured at 0.383 inches, its torn crown in shadow, with the caliper line reaching well past the dark core](/research/photo-hole-size/figures/hole-shadow.png)
+
+**And this is a photograph.** One of the developer's, of the 6.5 Creedmoor 15 shot sheet, square on and close, and published under the developer's standing consent. GroupLab measured this hole at 0.383 in, **1.452 of the bullet**, which is the median hole on that sheet and not an outlier. Look at what is dark: the core, and around it a ring of torn paper standing up out of the sheet and throwing its own shadow into the hole. To the camera, that shadow is hole. On the scanner, whose lamp sits two centimetres away at a fixed angle, the same sheet's holes measured 0.937 of the bullet.
 
 The three centrefire scans agree with each other to within three percent. The photographs do not agree with anything: they run from 0.90 to 1.45, a spread of more than half the bullet's width.
 

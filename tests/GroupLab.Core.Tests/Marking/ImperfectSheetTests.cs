@@ -86,6 +86,43 @@ public class ImperfectSheetTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 1.5, answering question 49: a scan of a sheet printed at 96 percent reads its true size, and the
+    /// same sheet photographed reads 4 percent large and says why. The photograph is the same pixels with no stated resolution, which is
+    /// exactly what a camera gives: nothing in it is an absolute ruler.
+    /// </summary>
+    [Fact]
+    public void AScanPrintedAt96PercentReadsTrueSizeAndAPhotographSaysWhyItDoesNot()
+    {
+        var (image, definition, holes) = Sheet(printScale: 0.96);
+        var scan = AutomaticMarking.Run(image, image, Scan(image), definition, Backend);
+        var photo = AutomaticMarking.Run(image, image, new ImageMetadata("JPEG", image.Width, image.Height, null, null, null, null, null, null, null), definition, Backend);
+        Assert.Null(scan.Failure);
+        Assert.Null(photo.Failure);
+
+        // The two holes furthest apart on the page, measured in real inches on the paper: page dmm times the scale the printer applied.
+        var (a, b) = holes.SelectMany(h => holes, (h, g) => (h, g)).MaxBy(p => Distance(p.h, p.g));
+        double truth = Distance(a, b) * 0.96 / 254;
+        double Measured(AutomaticResult r)
+        {
+            var found = r.Detections.Select(d => d.Image).ToList();
+            PointD Nearest(PointD page) => found.MinBy(i => Distance(r.Scale!.Mapping.ToPage(i), page));
+            return Distance(r.Scale!.ToTarget(Nearest(a)), r.Scale.ToTarget(Nearest(b)));
+        }
+
+        Assert.True(scan.Scale!.RealInches);
+        Assert.InRange(Measured(scan) / truth, 0.998, 1.002);
+        Assert.False(photo.Scale!.RealInches);
+        Assert.InRange(Measured(photo) / truth, (1 / 0.96) - 0.002, (1 / 0.96) + 0.002);
+        Assert.Equal(DetectionAdvice.SheetInches, DetectionAdvice.PrintScale(photo.Measurement));
+
+        // A hole is a physical size too: on the scan its diameter is in real inches, so the same hole reads 4 percent smaller than on the photograph.
+        double scanHole = scan.Detections.Average(d => d.DiameterInches!.Value), photoHole = photo.Detections.Average(d => d.DiameterInches!.Value);
+        Assert.InRange(scanHole / photoHole, 0.955, 0.965);
+    }
+
+    private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+
     private static List<PointD> Page(AutomaticResult result) =>
         [.. result.Detections.Select(d => result.Scale!.Mapping.ToPage(d.Image))];
 
@@ -137,7 +174,7 @@ public class ImperfectSheetTests
         Assert.Contains("nothing was analysed", codes, StringComparison.Ordinal);
     }
 
-    /// <summary>Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, and its measurements are corrected.</summary>
+    /// <summary>Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, and on a scan its sizes are corrected.</summary>
     [Fact]
     public void ASheetPrintedSmallIsNamedWithItsFigure()
     {
@@ -146,10 +183,8 @@ public class ImperfectSheetTests
         Assert.Null(result.Failure);
         string said = DetectionAdvice.PrintScale(result.Measurement)!;
         Assert.Contains("97.0 percent of its intended size", said, StringComparison.Ordinal);
-        // Entry 161 section 6: nothing is corrected, so the sentence says which way every size reads and by how much. At 97 percent a sheet
-        // inch is 0.97 of a real one, so a size reads 1 / 0.97 = 3.1 percent large.
-        Assert.Contains("reads 3.1 percent large", said, StringComparison.Ordinal);
-        Assert.DoesNotContain("corrected", said, StringComparison.Ordinal);
+        // Entry 171 section 1: a scan measures the scale, so its sizes are real inches and the sentence says so.
+        Assert.Contains("corrected to real inches", said, StringComparison.Ordinal);
 
         // Corrected: every hole is still where it was put on the page, whatever the printer did to the paper.
         var found = Page(result);

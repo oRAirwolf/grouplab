@@ -209,6 +209,7 @@ So: **run them one after the other**, and when a test fails on a temp file, re-r
 - `C:\Dev\grouplab-site` may be **read** for facts, and never written to, run or deleted from. Entry 128 moved the site into this repository; that folder is now a record of how it was first set up.
 - `C:\Dev\pissinhot`: read only the files an entry names, never a salt, an admin file, a database or any credential, and never write anything there.
 - Never commit anything from a range folder except what an entry names, and only after its consent record is committed.
+- **A sample over about 10 MB is never committed.** Entry 171 section 6: it is attached to the `test-data` release, listed with its SHA-256 in `tests/test-data.json`, and fetched and checked by CI. `TestDataTests` fails on a large committed file.
 - Never read or log GPS or location data from a photograph. Logs carry no metadata and no paths.
 - Never push a `v*` tag by hand. Only the nightly workflow creates those.
 - Never change a repository setting or permission without being asked to.

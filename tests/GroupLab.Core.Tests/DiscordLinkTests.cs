@@ -169,4 +169,31 @@ public class DiscordLinkTests
         // And it says where it goes before it is clicked.
         Assert.Contains("new tab", text, StringComparison.OrdinalIgnoreCase);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 3: the channel list and the rules are in the data file the page reads, every category has its
+    /// channels, all ten rules are there, and the moderators' private channel is named nowhere a visitor can read. The planning session
+    /// built the server, so this is the one place the page and the server can be compared when either changes.
+    /// </summary>
+    [Fact]
+    public void TheChannelsAndRulesComeFromTheDataFileAndTheModeratorsChannelIsNotListed()
+    {
+        using var doc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Repo.PathTo("website", "links.json")));
+        var groups = doc.RootElement.GetProperty("discordGroups").EnumerateArray().ToList();
+        Assert.Equal(["Information", "Using GroupLab", "Shooting", "Development", "Voice"], groups.Select(g => g.GetProperty("name").GetString()));
+        Assert.All(groups, g => Assert.NotEmpty(g.GetProperty("channels").EnumerateArray()));
+        Assert.Equal(10, doc.RootElement.GetProperty("discordRules").GetArrayLength());
+
+        string channels = string.Join(" ", groups.SelectMany(g => g.GetProperty("channels").EnumerateArray().Select(c => c.GetString())));
+        Assert.DoesNotContain("moderator", channels, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("staff", channels, StringComparison.OrdinalIgnoreCase);
+
+        string page = Path.Combine(Repo.PathTo("website", "_site"), "discord", "index.html");
+        if (File.Exists(page))
+        {
+            string text = File.ReadAllText(page);
+            Assert.Contains("load-development", text, StringComparison.Ordinal);
+            Assert.Contains("Moderator decisions stand in the moment", text, StringComparison.Ordinal);
+        }
+    }
 }

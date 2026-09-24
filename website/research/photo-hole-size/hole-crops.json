@@ -36,5 +36,15 @@
       "measuredInches": 0.2743,
       "fractionOfBullet": 1.039
     }
-  ]
+  ],
+  "photograph": {
+    "name": "hole-shadow",
+    "source": "hole-shadow-source.png",
+    "from": "One of the developer's photographs of the 6.5 Creedmoor 15 shot sheet, 2026-09-20, square on and close. Published under the developer's standing consent of 2026-09-24 in samples/PROVENANCE.md; pixels only, turned as GroupLab displays it.",
+    "shot": 1,
+    "pixelsPerInch": 293.0,
+    "measuredInches": 0.3833,
+    "fractionOfBullet": 1.452,
+    "sheetMedianInches": 0.3833
+  }
 }

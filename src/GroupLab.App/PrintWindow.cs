@@ -14,6 +14,7 @@ using GroupLab.Cli.Printing;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Marking;
 using GroupLab.Core.Printing;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
@@ -48,9 +49,8 @@ public sealed class PrintWindow : Window
 
     internal const string ScaleWords =
         "Print at actual size. In the print dialog choose \"Actual size\" or \"100%\", never \"Fit\", \"Shrink oversized pages\" or " +
-        "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver. A sheet " +
-        "printed at 97 percent makes every group read about 3 percent large, because GroupLab measures in the sheet's own inches; a " +
-        "scan can tell you it happened and a photograph cannot.";
+        "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver. " +
+        DetectionAdvice.WhyActualSize + " A sheet printed at 97 percent and photographed makes every group read about 3 percent large.";
 
     private readonly List<LibrarySheet> sheets;
     private readonly OwnSheets? own;

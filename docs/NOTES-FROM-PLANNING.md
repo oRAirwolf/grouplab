@@ -24,6 +24,30 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 171: answers to questions 48 and 49, request 4 answered, and stale items closed
+
+**Status: actioned 2026-09-24**, all seven sections and section 6's two amendments. Three things wait on a later step, not on a decision:
+the friend's scan is attached to the `test-data` release once `ci.yml` has created it; `.user.ini` surviving the first real deploy is
+checked after this push publishes; and request 5 closes when Alan confirms.
+
+- **Section 1, question 49.** A scan now reports real inches: every distance, bull and hole diameter is multiplied by the measured print
+  scale, and the detector is given the calibre in the sheet's own inches. A photograph stays in sheet inches and says so in the entry's
+  words. The reason to print at actual size is one sentence the print screen, the statement of record and the tour share. The marking
+  file records which it used. Tested at 96 percent both ways round.
+- **Section 2, question 48.** The fourteen day clause is gone from the split script's rule; the count stays.
+- **Section 3.** The channels and the ten rules are in `website/links.json`, which the community page reads. The moderators' channel is
+  not named, and a test says so.
+- **Section 4.** Questions 39, 41, 42, 45 and 46 are archived with their answers, as are 48 and 49. Question 44's crash outside the page
+  is the one part still open.
+- **Section 5.** STATE.md is rewritten, and its test now checks the inbox line against the directory.
+- **Section 6.** Alan's standing consent is in `samples/PROVENANCE.md`, quoted and dated, and the shadow crop is on the hole size
+  article: one of his photographs, 0.383 in, 1.452 of the bullet. Fenix is recorded for entry 166's credit. The 59 MB scan is a
+  `test-data` release download, fetched and hash-checked by CI, and no sample over about 10 MB may be committed. Request 1 says what is
+  left of entry 129, with the redirect's commands. The installer's closing lines now say only what is still to do.
+- **Section 6.1.** Entry 149 section 3 goes with entry 170 section 2, and section 4 with entry 172 section 3 item 1.
+
+---
+
 ## 2026-09-24, entry 167: replace the Equipment icon
 
 **Status: actioned 2026-09-24**, all three sections. Section 2.3, the tour page showing the new icon, is confirmed after the next weekly screenshot run.

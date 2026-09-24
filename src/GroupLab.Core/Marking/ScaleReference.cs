@@ -1,4 +1,5 @@
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Measurement;
 using GroupLab.Core.Registration;
 
 namespace GroupLab.Core.Marking;
@@ -97,14 +98,46 @@ public sealed record RectangleReference : ScaleReference
     public override bool AssumesSquareOn => false;
 }
 
-/// <summary>A GroupLab sheet registered from its fiducials: the pipeline's own mapping from image pixels to page dmm.</summary>
+/// <summary>
+/// A GroupLab sheet registered from its fiducials: the pipeline's own mapping from image pixels to page dmm.
+/// <para>
+/// <b>On a scan, real inches; on a photograph, the sheet's own.</b> NOTES-FROM-PLANNING.md entry 171 section 1, answering question 49. A scan's
+/// stated resolution is an absolute ruler, so it measures how large the sheet was printed, and every distance here is multiplied by that
+/// <see cref="PrintScale"/>: a group on a sheet printed at 96.2 percent reads its true size. A photograph has no absolute ruler, so its
+/// figures stay in the sheet's inches and the screen says so. The scale is applied uniformly, by area, because that is the one figure the
+/// screen reports and a scanner's own x and y differ by more than a printer's.
+/// </para>
+/// </summary>
 public sealed record SheetReference(IPageMapping Mapping, string Summary) : ScaleReference
 {
+    /// <summary>
+    /// The lowest and highest print scale believed. Outside them the file's stated resolution is more likely wrong than the print, a scan
+    /// resampled or a screenshot saying 96 DPI, so the figures stay in the sheet's own inches rather than being multiplied by nonsense. A
+    /// "fit to page" dialog prints at 94 to 97 percent, well inside.
+    /// </summary>
+    public const double LowestBelievable = 0.85;
+
+    public const double HighestBelievable = 1.15;
+
     public override PointD ToTarget(PointD image)
     {
         var page = Mapping.ToPage(image);
-        return new PointD(page.X / 254, page.Y / 254);
+        double k = (PrintScale ?? 1) / 254;
+        return new PointD(page.X * k, page.Y * k);
     }
+
+    /// <summary>
+    /// The measured print scale every distance is multiplied by, so the figures are real inches; null where they are the sheet's own inches,
+    /// on a photograph or wherever the scale could not be believed.
+    /// </summary>
+    public double? PrintScale { get; init; }
+
+    /// <summary>Whether this sheet's figures are real inches, which is what a saved or exported group records.</summary>
+    public bool RealInches => PrintScale is not null;
+
+    /// <summary>The print scale a measurement's figures should be multiplied by, or null to keep them in the sheet's own inches.</summary>
+    public static double? Correction(ScaleReport? report) =>
+        report?.Scale is { } s && s >= LowestBelievable && s <= HighestBelievable ? s : null;
 
     public override string Description => "the sheet's own printed markers: " + Summary;
 

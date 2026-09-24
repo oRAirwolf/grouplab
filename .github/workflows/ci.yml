@@ -68,6 +68,20 @@ jobs:
       - name: Build
         run: dotnet build GroupLab.slnx --configuration Release
 
+      # NOTES-FROM-PLANNING.md entry 171 section 6: files over about 10 MB are downloads on the test-data release, never in the
+      # repository. They are cached by the manifest's hash, fetched by URL where the cache misses, and verified by SHA-256 before a test
+      # reads them. A file not uploaded yet is named in the log, and the tests that need it skip and say so.
+      - name: Test data cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/test-data
+          key: test-data-${{ hashFiles('tests/test-data.json') }}
+
+      - name: Test data
+        run: |
+          python3 scripts/test-data.py fetch --to "$RUNNER_TEMP/test-data"
+          echo "GROUPLAB_TEST_DATA=$RUNNER_TEMP/test-data" >> "$GITHUB_ENV"
+
       - name: Test
         run: |
           set -o pipefail
@@ -128,6 +142,34 @@ jobs:
   # why it is here and not in package.yml: entry 119's test-build.yml runs after this workflow succeeds, so a packaging fault caught here is
   # caught before anything reaches a download. The packaging script checks the package carries its own runtime and its OpenCV native
   # library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse fails the build rather than a person.
+  # Entry 171 section 6: the release the large test files hang from, created once by the workflow that uses them rather than by the
+  # nightly, so nothing that prunes or rewrites nightly releases can reach it. It is a pre-release that is never latest, so GitHub's
+  # releases/latest and the update manifest never see it. Creating it is the whole job; files are attached to it by hand, each with its
+  # consent record committed first.
+  test-data-release:
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: The test-data release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          # Only a push to main creates it; a pull request or a branch run has nothing to do here.
+          if [ "$GITHUB_EVENT_NAME" != "push" ] || [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "not a push to main, so the release is left alone"
+            exit 0
+          fi
+          if gh release view test-data >/dev/null 2>&1; then
+            echo "test-data release already exists"
+          else
+            gh release create test-data --prerelease --latest=false --target "$GITHUB_SHA" \
+              --title "Test data, not a build" \
+              --notes "Large files the tests read, kept out of the repository so no clone carries them. Nothing here is GroupLab. Each file is listed with its SHA-256 in tests/test-data.json and its consent in samples/PROVENANCE.md. Created by ci.yml, NOTES-FROM-PLANNING.md entry 171 section 6."
+          fi
+
   windows-package:
     if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: windows package

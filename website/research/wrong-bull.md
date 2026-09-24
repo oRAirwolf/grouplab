@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: three sheets of 20, 23 and 10 shots with the shooter's own record of where each was aimed
 state: published
-no_figure: "The three sheets are the developer's range targets and are not published under a consent record. The article gives the offsets and the counts instead."
+no_figure: "The article gives the offsets and the counts. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet, including the three sheets it describes."
 found: Nearest bull is the wrong rule whenever the rifle is not zeroed for the load. On one 20 shot sheet every single shot landed nearer a bull it was not aimed at, and the group that comes out of reading it that way is tight, confident and meaningless.
 sure: Three sheets from one afternoon, with the shooter's own written record of which bulls were aimed at. Enough to show the failure clearly; the fix is still being built.
 sources:

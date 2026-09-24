@@ -28,7 +28,7 @@ public class CalibreNeverMakesItWorseTests(ITestOutputHelper output)
 
     private sealed record RangeSheet(string Folder, IReadOnlyList<Scan> Scans);
 
-    private sealed record Friend(string Folder, string File, string Sha256, string Calibre, int Shots);
+    private sealed record Friend(string Folder, string File, string Sha256, string PublishedSha256, string Calibre, int Shots);
 
     private static readonly JsonSerializerOptions Json = new() { PropertyNameCaseInsensitive = true };
 
@@ -40,7 +40,7 @@ public class CalibreNeverMakesItWorseTests(ITestOutputHelper output)
         var found = new List<(string, string, Calibre)>();
 
         var friend = JsonSerializer.Deserialize<Friend>(File.ReadAllText(Fixture("friend-scan-2026-09-23.json")), Json)!;
-        Add(friend.Folder, friend.File, friend.Sha256, friend.Calibre);
+        Add(TestData.Folder(friend.File, friend.Folder), friend.File, TestData.Matches(TestData.Path(friend.File, friend.Folder), friend.PublishedSha256) ? friend.PublishedSha256 : friend.Sha256, friend.Calibre);
 
         var range = JsonSerializer.Deserialize<RangeSheet>(File.ReadAllText(Fixture("range-scan-counts.json")), Json)!;
         foreach (var scan in range.Scans.Where(s => s.Calibre is not null))
@@ -89,7 +89,7 @@ public class CalibreNeverMakesItWorseTests(ITestOutputHelper output)
     public void TheFriendsScanRaisesNoDoublesWithTheCorrectCalibreNamed()
     {
         var friend = JsonSerializer.Deserialize<Friend>(File.ReadAllText(Fixture("friend-scan-2026-09-23.json")), Json)!;
-        string path = Path.Combine(friend.Folder, friend.File);
+        string path = TestData.Path(friend.File, friend.Folder);
         if (!File.Exists(path))
         {
             Assert.True(true, $"skipped: {path} is not on this machine, so entry 161's scan was not checked");

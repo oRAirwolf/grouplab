@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: "GroupLab Phase 0 print tests, September 2026"
 samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi"
 state: draft
-found: "a printer set to 'Actual size' can be very accurate: The developer's measured 1.0001 horizontally and 1.0006 vertically, within 0.06 percent. The danger is the print dialog. 'Fit to page' or 'Shrink oversized pages' typically prints a letter sheet at around 94 to 97 percent. On a scan, GroupLab detects this (a sheet printed at 96.2 percent was measured at 0.96200) and says so. It does not correct the figures, and on a photograph it cannot detect it at all."
+found: "a printer set to 'Actual size' can be very accurate: The developer's measured 1.0001 horizontally and 1.0006 vertically, within 0.06 percent. The danger is the print dialog. 'Fit to page' or 'Shrink oversized pages' typically prints a letter sheet at around 94 to 97 percent. On a scan, GroupLab detects this (a sheet printed at 96.2 percent was measured at 0.96200), says so and corrects every size to real inches. On a photograph it cannot detect it at all."
 sure: "the detection result comes from GroupLab's own acceptance tests. One printer is not every printer; that is why the check below exists."
 data:
   - data/error-by-scale.csv
@@ -47,11 +47,11 @@ A flatbed scanner has an absolute ruler built in: its resolution. At 600 dpi, 60
 
 In GroupLab's acceptance tests, a sheet deliberately printed at 96.2 percent was measured at 0.96200 from a 600 dpi scan and 0.96201 from a 300 dpi scan. The test required agreement within 0.001; it agreed within 0.00001. The printer's own error at 100 percent (x 1.0001, y 1.0006) cancels out in that comparison.
 
-When the scale differs from 100 percent by more than a quarter of a percent, GroupLab says so on the results panel, says how far every size on that sheet reads large, and suggests printing at actual size next time. It does not correct the figures: they stay in the sheet's own inches.
+GroupLab then corrects for it: on a scan every distance is multiplied by the measured scale, so a group on a sheet printed at 96 percent reads its true size. When the scale differs from 100 percent by more than a quarter of a percent, the results panel names it and says the sizes are corrected.
 
 This is the statement of record, and it is the one place on this site that was right about it: [what GroupLab can measure](/what-can-be-measured/) sets out where the scale comes from, what a mis-scaled print does to every figure, and why only a scan can tell you.
 
-A phone photo has no built-in ruler, because the camera's distance from the paper is unknown. So for photographed sheets, printing at true size is up to you.
+A phone photo has no built-in ruler, because the camera's distance from the paper is unknown, so its figures stay in the sheet's own inches and the screen says so. It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it.
 
 ## A thirty-second check
 
@@ -69,6 +69,6 @@ Paper grows and shrinks slightly with humidity, and a sheet that has been rained
 
 **Check once, with a ruler, and then stop worrying.** A printer set to "Actual size" was accurate to 0.06 percent here. The danger is not the printer, it is the print dialog quietly choosing "Fit to page" and shrinking the sheet by three to six percent.
 
-**A shrunk sheet makes every group read large by the same fraction**, because GroupLab measures in the sheet's own inches and the markers shrank with the sheet. A scan tells you it happened; a photograph cannot. That is what the ruler check is for, and it is the one check that works for both.
+**On a photograph, a shrunk sheet makes every group read large by the same fraction**, because the markers shrank with the sheet and a photograph has nothing else to measure against. A scan measures the shrink and corrects for it. That is what the ruler check is for, and it is the one check that works for both.
 
 **So the check is worth doing on a new printer and not worth repeating every session.** [What GroupLab can measure](/what-can-be-measured/) sets out which errors are recovered and which are not.

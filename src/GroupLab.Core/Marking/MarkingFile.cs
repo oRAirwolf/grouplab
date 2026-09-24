@@ -236,7 +236,7 @@ public static class MarkingFile
     {
         LengthReference length => new { kind = "length", a = length.A, b = length.B, inches = length.Inches },
         RectangleReference rectangle => new { kind = "rectangle", corners = rectangle.Corners, widthInches = rectangle.WidthInches, heightInches = rectangle.HeightInches },
-        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, mapping = MappingDocument(sheet.Mapping) },
+        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, inches = sheet.RealInches ? "real" : "sheet", printScale = sheet.PrintScale, mapping = MappingDocument(sheet.Mapping) },
         _ => null,
     };
 
@@ -287,7 +287,7 @@ public static class MarkingFile
             case "rectangle":
                 return new RectangleReference([.. node!["corners"]!.AsArray().Select(c => Point(c)!.Value)], (double)node["widthInches"]!, (double)node["heightInches"]!);
             case "sheet" when ReadMapping(node!["mapping"]) is { } mapping:
-                return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"] };
+                return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"], PrintScale = (double?)node["printScale"] };
             case "sheet":
                 notes.Add("The sheet's registration is not stored in the file. Detect on the GroupLab sheet again to restore its scale.");
                 return null;

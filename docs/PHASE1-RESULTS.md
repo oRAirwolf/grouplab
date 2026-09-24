@@ -602,6 +602,61 @@ The new `Icons.Equipment` is the planning session's baked path exactly: a bullet
 
 The Ballistics icon's summary comment had sat above Equipment's, so each read as the other's; each is above its own now.
 
+## Entry 171: a scan reports real inches, and the stale items closed
+
+### Section 1: question 49, option 3
+
+**On a scan, every distance is real inches.** `SheetReference` carries the measured print scale, and `ToTarget` multiplies by it, so
+bull centres, shots, groups and point of aim all scale together, and a hole's diameter is reported in real inches too. The detector
+itself works in the sheet's inches, so a named calibre reaches it divided by the scale: a 0.308 in bullet is 0.320 of a 96.2 percent
+sheet's inches. Two choices the entry left open, taken and stated:
+
+- **The scale is applied by area, uniformly.** It is the one figure the screen reports, and a scanner's own x and y differ by more than
+  a printer's do.
+- **Outside 85 to 115 percent, nothing is corrected.** A stated resolution that puts the sheet there is more likely wrong than the
+  print, a resampled scan or a screenshot saying 96 DPI, and multiplying by it would make every figure wrong. The screen says so.
+
+**On a photograph**, the figures stay in the sheet's inches and the results panel says, word for word from the entry: "Measured in the
+sheet's own inches; if the sheet was not printed at actual size, the figures are off by the same percentage." The reason to print at
+actual size is `DetectionAdvice.WhyActualSize`, which the print screen uses directly; `WHAT-CAN-BE-MEASURED.md` and the tour's print
+page carry the same sentence, and `ClaimsAboutMeasuringTests` holds all three to it. The sentences entry 161 banned for saying the
+figures were corrected are unbanned where they are now true, and the ones that said nothing is corrected are banned instead.
+
+**Tested both ways round** in `ImperfectSheetTests`: a sheet printed at 96 percent, scanned, measures the two holes furthest apart
+within 0.2 percent of their true distance on the paper; the same pixels with no stated resolution, as a photograph, measure them
+1/0.96 large and say why; and the scan's holes measure 0.96 of the photograph's. The marking file records `"inches": "real"` or
+`"sheet"` and the scale, and reopens with it.
+
+### Sections 2 to 5
+
+- **Question 48.** The split script's comment now says the fourteen day clause is dropped. It never did anything.
+- **The community page** lists every channel under its category and the ten rules, from `website/links.json`. `DiscordLinkTests` checks
+  the five categories, the ten rules, and that no moderators' or staff channel is named.
+- **Questions closed:** 39, 41, 42, 45 and 46, with a pointer to entry 143 or 161; and 48 and 49. **Question 44 keeps one open part**:
+  `SurfaceMapping.ToPage` throws at a point outside the page, recorded by `SurfaceCrashTests` and reachable only through
+  `compare-photos --model surface`.
+- **STATE.md** is rewritten, and `StateFileTests` reads its `**Holds:**` line and the inbox directory and fails when they differ.
+
+### Section 6: the requests
+
+- **Request 6.** Alan's standing consent is in `samples/PROVENANCE.md` with the exact words, the date and the exception clause. It does
+  not reach anything a friend shot. **The shadow crop is published**: the photographs of the 6.5 Creedmoor 15 shot sheet were told
+  apart from the rest by running the analyser over the range folder into the scratchpad, fifteen holes at a median 0.383 in. The crop
+  is shot 1, the median hole, 0.383 in and 1.452 of the bullet, cut from the stored pixels at the local 293 pixels per inch, turned
+  as GroupLab displays it, and saved with no metadata. Only its 220 pixel square is committed. Seven research articles whose reason
+  for having no figure was "not published under a consent record" now give their real reason instead.
+- **Request 7.** Fenix. The credit is placed under entry 166 section 5.
+- **Request 8.** `scripts/test-data.py rebuild` made the published copy: the original's pixels byte for byte and its resolution,
+  nothing else, 59,215,934 bytes, SHA-256 `c2b2e595...` It is larger than the 56 MB the request quoted because PIL's best compression
+  is not the original's. `ci.yml` creates the `test-data` release once, as a pre-release that is never latest, and the nightly's pruning
+  only touches tags shaped like a nightly. CI caches the file, fetches it by URL on a miss, and checks its hash before a test reads it.
+  `TestDataTests` fails if a file over about 10 MB is committed, other than scan 3, which predates the rule.
+- **Request 1** now says exactly what is left of entry 129: opening the page, the end to end test, the waiting submissions and the
+  redirect, with its commands written out. Entry 173 then changes the address to `grouplab.org/targets/`.
+- **Request 5** is marked as being applied, with the planning session's correction to the push rule.
+- **The installer's closing lines** say the Turnstile secret is present, from the file's size without opening it, and print the nginx
+  steps only when this run wrote the include. `SiteSyncTests` holds it.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

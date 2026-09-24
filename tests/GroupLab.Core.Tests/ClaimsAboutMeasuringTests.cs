@@ -1,3 +1,4 @@
+using GroupLab.Core.Marking;
 using GroupLab.Core.Tests.Support;
 
 namespace GroupLab.Core.Tests;
@@ -20,25 +21,31 @@ public class ClaimsAboutMeasuringTests
 {
     /// <summary>
     /// The two claims themselves, and the words they were made of. The first is false: any target can be measured once the scale is set.
-    /// The second is false the other way round: a uniformly mis-scaled print is corrected, because the markers shrank with the sheet.
+    /// The second is false the other way round: a uniformly mis-scaled print is read correctly, because the markers shrank with the sheet, and
+    /// since entry 171 a scan corrects its sizes to real inches.
     /// </summary>
     private static readonly (string Phrase, string Why)[] Banned =
     [
         ("only measure a sheet it printed",
             "GroupLab measures any target once the scale is set by hand. docs/WHAT-CAN-BE-MEASURED.md."),
-        // Entry 161 corrected entry 152: GroupLab measures in the sheet's own inches and never applies the print scale, so a sheet printed
-        // small makes every figure read LARGE. The sentences banned here are the ones that said otherwise, including the ones entry 152
-        // wrote, and the one that got the direction wrong.
+        // Entry 161 corrected entry 152: nothing applied the print scale, so a sheet printed small made every figure read LARGE, and these
+        // sentences got the direction wrong.
         ("measures three percent small",
-            "a sheet printed at 97 percent makes every group read about 3 percent large, not small, because the ruler shrank."),
+            "a sheet printed at 97 percent and photographed makes every group read about 3 percent large, not small, because the ruler shrank."),
         ("measures 3 percent small",
-            "a sheet printed at 97 percent makes every group read about 3 percent large, not small, because the ruler shrank."),
+            "a sheet printed at 97 percent and photographed makes every group read about 3 percent large, not small, because the ruler shrank."),
         ("still measures correctly",
-            "a shrunk sheet is read correctly bull by bull, and every distance on it is in the sheet's own inches. Entry 161."),
-        ("corrects every figure",
-            "the print scale is measured on a scan and reported, and no figure is corrected for it. Entry 161."),
-        ("The measurements are corrected for it",
-            "the print scale is measured on a scan and reported, and no figure is corrected for it. Entry 161."),
+            "a shrunk sheet is read correctly bull by bull; a scan corrects its sizes to real inches and a photograph cannot. Entries 161 and 171."),
+        // Entry 171 answered question 49: a scan now corrects every distance for the print scale, so what entry 161 truthfully said about
+        // the code is no longer true of it.
+        ("It does not correct the figures",
+            "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
+        ("no figure is corrected for it",
+            "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
+        ("never applies the print scale",
+            "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
+        ("nothing multiplies them by the print scale",
+            "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
     ];
 
     /// <summary>
@@ -111,6 +118,23 @@ public class ClaimsAboutMeasuringTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 1.3: why to print at actual size is one sentence, and the print screen, the statement of record
+    /// and the tour all say it from <see cref="DetectionAdvice.WhyActualSize"/>. The print screen uses the constant itself; the two pages
+    /// are text, so they are held to it here. The photograph line on the results panel is said word for word from the entry.
+    /// </summary>
+    [Fact]
+    public void WhyToPrintAtActualSizeIsSaidFromOneSentence()
+    {
+        Assert.Contains("DetectionAdvice.WhyActualSize", File.ReadAllText(Path.Combine(Repo.Root, "src", "GroupLab.App", "PrintWindow.cs")), StringComparison.Ordinal);
+        Assert.Contains(DetectionAdvice.WhyActualSize, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "WHAT-CAN-BE-MEASURED.md")), StringComparison.Ordinal);
+
+        using var tour = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repo.PathTo("website"), "tour.json")));
+        Assert.Contains(DetectionAdvice.WhyActualSize, tour.RootElement.GetProperty("screens").GetProperty("print").GetProperty("purpose").GetString(), StringComparison.Ordinal);
+
+        Assert.Equal("Measured in the sheet's own inches; if the sheet was not printed at actual size, the figures are off by the same percentage.", DetectionAdvice.SheetInches);
+    }
+
+    /// <summary>
     /// Entry 152 section 5.2, the cheap version and the right one: one place says what GroupLab can measure, and everything else points at
     /// it. Two carefully written copies of a statement this specific drift, and then there are two versions of what the project claims with
     /// no way to tell which is the real one. That is exactly how these two claims came to disagree with a research article.
@@ -122,7 +146,7 @@ public class ClaimsAboutMeasuringTests
         Assert.True(File.Exists(source), "docs/WHAT-CAN-BE-MEASURED.md is the one source for what GroupLab can measure, and it is not here.");
 
         string text = File.ReadAllText(source);
-        Assert.Contains("A sheet printed at the wrong size is read correctly, and measured in its own inches", text, StringComparison.Ordinal);
+        Assert.Contains("A sheet printed at the wrong size is read correctly, and a scan measures it in real inches", text, StringComparison.Ordinal);
         Assert.Contains("Any target can be measured once the scale is set", text, StringComparison.Ordinal);
 
         string build = File.ReadAllText(Path.Combine(Repo.PathTo("website"), "build.py"));

@@ -5,6 +5,256 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-24, question 49: should a scan report real inches, now that it knows the print scale?
+
+**Status: closed.** Answered 2026-09-24 by entry 171 section 1: option 3. A scan reports real inches, corrected by its measured print scale; a photograph stays in the sheet's own inches and says so in one line.
+
+### What the code does
+
+`SheetReference.ToTarget` in `src/GroupLab.Core/Marking/ScaleReference.cs` returns the sheet's own coordinates, page dmm over 254. Nothing multiplies them by the print scale. So every distance GroupLab reports is in **the sheet's inches**. On a sheet printed at 96.2 percent a sheet inch is 0.962 of a real one, and a group reported as 1.00 in is 0.96 in on the paper.
+
+On a scan the print scale is measured, from the file's stated resolution against what the markers measure, and `DetectionAdvice.PrintScale` reports it. On a photograph there is no absolute ruler, so it cannot be measured.
+
+### What was wrong until entry 161
+
+The in-app sentence said "The measurements are corrected for it, and the figures are right", and entry 152 repeated that on the website and in `docs/WHAT-CAN-BE-MEASURED.md`. **Both were false.** Entry 161 section 6 asked whether the application reports sheet coordinates or corrects to physical inches, and reading the code answered it. Every place that said otherwise is corrected, and the false sentences are banned by `ClaimsAboutMeasuringTests`.
+
+### The options
+
+1. **Keep sheet inches everywhere, and say so.** What happens now. Consistent between scans and photographs, and a group from a mis-printed sheet reads large by the print error. The screen says how much, on a scan.
+2. **On a scan, report real inches.** Multiply by the measured scale. A scan's figures become physically right, and a photograph's stay in sheet inches. The cost: the same sheet scanned and photographed gives two different group sizes, and a comparison across the two has to know which it has.
+3. **Report real inches on a scan and flag every photograph's figures as sheet inches.** Option 2 with the difference made visible.
+
+### What I would choose
+
+**Option 3**, because a group size is a physical quantity and on a scan GroupLab has the number that makes it physical. The difference is 0.3 percent at the 100.3 percent a real sheet here was printed at, so it will not show on a well-printed sheet, and it is 4 percent on a "fit to page" one, which is exactly where somebody would want it right. But it changes what every scan reports, which is the planning session's decision rather than mine.
+
+---
+
+## 2026-09-23, question 48: entry 160's fourteen day rule would have moved nothing
+
+**Status: closed.** Answered 2026-09-24 by entry 171 section 2: the fourteen day clause is dropped and the entry count kept, as applied.
+
+### What entry 160 section 1.1 says
+
+> The live `NOTES-FROM-PLANNING.md` keeps the last fifteen entries or the last fourteen days, whichever is longer.
+
+### Why it does not work here
+
+This repository is eleven days old. Entry 1 is dated 2026-09-13 and today is 2026-09-23, so **every entry in the file falls inside fourteen days**, and "whichever is longer" selects the whole 1.1 MB file. Applied literally, section 1 moves nothing and the entry does not happen.
+
+The rule is written for a project with a normal rate of entries. This one produced 151 entries in eleven days, so an age-based rule and a count-based rule are two orders of magnitude apart.
+
+### What I did
+
+**Applied the fifteen entry rule and ignored the fourteen day clause**, because the section's purpose is stated in its own first paragraph: the live file has to be small enough to read. Fifteen entries is 97 KB against 1,102 KB.
+
+### What I would choose
+
+Drop the fourteen day clause, or invert it to "whichever is **shorter**", which gives the same answer here and also behaves sensibly in a quiet month. A quiet month under the current wording would keep fifteen entries that might be months old, which is fine, so the clause is doing no work in either direction.
+
+### Where it lives
+
+`scripts/split-logs.py`, `LIVE_ENTRIES`, with the reasoning in a comment beside it.
+
+---
+
+## 2026-09-22, question 46: the sheet offset is solved over every bull, and narrowing it makes things worse
+
+**Status: closed.** Answered 2026-09-23 by entry 143, and closed by entry 171 section 4. Measured: the wide and narrow solves give the same shift and differ only in confidence, so the code was right and its paragraph wrong; `SheetOffsetWideOrNarrowTests` pins it.
+
+### What it says
+
+`MarkingSession.SheetOffset` is documented, at length and convincingly, as the restraint that makes the whole feature safe:
+
+> **It is only applied where the shooter has said which bulls they aimed at.** That restraint is the whole of the design. A sheet of twenty five bulls where ten were shot has a translation that explains the holes for almost any reading, so solving over every bull would let the software choose between them on a margin it cannot justify.
+
+### What it does
+
+```csharp
+if (rule.PerBull.ContainsKey(open[i].Index))
+```
+
+`AimedBulls.For` puts **every scoring bull** in `PerBull`, giving nought shots to the ones nobody aimed at. So that test is true for the whole sheet, and the solver is handed every bull as a candidate, which is the thing the paragraph above says must not happen.
+
+### What happened when I narrowed it
+
+Changing it to `rule.For(open[i].Index) > 0`, which is what the documentation describes, made `SheetOffsetAssignmentTests.ToldWhichBullsWereAimedAtEveryShotFindsItsOwn` put **five of twenty shots on bulls nobody aimed at**. The real scan 5 was unaffected and still matches Alan's table exactly either way.
+
+So the narrower question is the one the documentation asks for and the one that makes a passing proof fail. I have put it back as it was, with a note at the line, rather than shipping a change that turns a proof red on the strength of a comment.
+
+### What I think is going on, and would check
+
+`ImpactOffsets.Solve` takes the candidate bulls as indices into the open list. Given all twenty-five, it has more geometry to fit the translation against and lands on the right one; given only the twenty aimed at, it has less and lands slightly differently, and the matching that follows then goes wrong for the five shots furthest from their bulls.
+
+If that is right, then the documented restraint is real but it is delivered by the **matching**, which is restricted to the aimed bulls, rather than by the offset solve, which benefits from seeing the whole grid. That would make the line correct and the paragraph above it wrong, which is worth fixing in the words rather than the code.
+
+**What would settle it:** run `ImpactOffsets.Solve` on scan 5's geometry both ways and compare the offsets it returns against the offset Alan's table implies. One measurement, and it decides whether the code or its documentation is the thing to change.
+
+---
+
+## 2026-09-22, question 45: scan 6 reads 9 holes tonight where entry 130 recorded 10
+
+**Status: closed.** Answered 2026-09-23 by entry 143, and closed by entry 171 section 4. Scan 6 was never ten: the tenth shot has never been detected, and it is a standing detection target in `range-scan-counts.json`.
+
+### What is recorded
+
+`docs/NOTES-FROM-PLANNING.md`, entry 130 item 2b.6, done 2026-09-22:
+
+> **Three of the four missed holes are back**, two of them only when the calibre is named: scan 5 goes 18 to 20 and scan 6 goes 9 to 10, both exactly Alan's own counts.
+
+Alan's table for scan 6 is 10 shots.
+
+### What it reads tonight
+
+Read in place from the 600 dpi scan of sheet 6 in the range folder, three ways:
+
+| run | holes |
+|---|---|
+| `analyze --calibre .243` | **9** |
+| `analyze` with no calibre | **9** |
+| `analyze --calibre .243 --sighters` | **9** |
+
+Scan 5 still reads 20, which is what the same item recorded, so this is scan 6 alone.
+
+### Why it matters more than one hole
+
+The missing one is **shot 6**, which entry 120 describes as landing left of bull 21, much lower than the rest, "a real shot, not a flyer to delete". It is the hardest hole on the sheet and the most interesting: it is the shot that proves a group can contain something a long way from everything else.
+
+With the aimed bulls set, scan 6's nine detected holes assign one per aimed bull except bull 6, so **the assignment is right for every shot it has**. The gap is detection, not assignment.
+
+### What I have not done
+
+I have not gone looking for which change cost it, and I am not guessing. The obvious suspect is tonight's entry 141 section 4, which made the sheet's own marks the size reference in place of a stated calibre, and section 4.5 required the scans to be untouched by it. My own write-up of that change said the scans were untouched, and what I checked was the **flag** counts, not the hole counts. That is a weaker check than the sentence I wrote implies, and it is worth saying so.
+
+**What would settle it:** re-run scan 6 at the commit before entry 141 section 4 landed and compare the hole count. That is one command and I would rather it were run deliberately than folded into other work.
+
+---
+
+## 2026-09-22, question 44: the bent-sheet model crashes on one photograph, and improves the wrong points on the rest
+
+**Status: closed.** Answered 2026-09-23 by entry 143, and closed by entry 171 section 4, except one part kept open in the live file. The held-out error equals the fit's own residual, so the thin-plate spline is not written. The crash is narrowed to the inverse at a point outside the page and recorded by `SurfaceCrashTests`, not fixed.
+
+### The crash
+
+`grouplab compare-photos <scan 4> --model surface 20260920_153336.jpg` throws:
+
+```
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at GroupLab.Core.Detection.ExpectedImage.Render(...) ExpectedImage.cs:line 31
+```
+
+Line 31 is the `mapping.ToPage` call, so the index comes from `DevelopableSurface.ToPage`, through `FoldedSheet.Sheet`. The other fourteen paired photographs of 2026-09-20 run under the same model.
+
+**It is not reachable from the application.** `RegistrationModel.Auto` never chooses `Surface`, and the window passes no measure options, so this is a defect in a candidate model rather than a live fault. That is why it is a question and not a fix: guessing at it would be changing registration code on a hunch.
+
+**Where I would look.** `FoldedSheet.Sheet` picks a fold with `Beyond(side, 0, ...)` and then `Last(side, ...)`, both of which index `Side.Sx`, `Side.Dx` and `Side.T` at an index the bisection derives from `side.T.Length`. A side with fewer folds than the bisection assumes indexes past the end. `count` is computed from the page's half width and half height, so a model whose `PageCentreX` or `PageCentreY` is degenerate would produce it. One photograph out of fifteen is consistent with a fit that went somewhere strange rather than with an everyday off-by-one.
+
+### The finding that matters more
+
+Run on the seven paired photographs it does not crash on, the bent-sheet model **improves the bull-centre error on seven of seven at the median and worsens the hole-position error on seven of seven**.
+
+The markers are what the model is fitted to. The holes are the points it was not fitted to. A model that gets better where it was fitted and worse where it was not is describing the markers rather than the sheet, and that is the classic signature of a fit with too much freedom for its evidence.
+
+**What I would do:** before building the thin-plate spline entry 130 section 6b item 2 asks for, measure the existing surface model leave-one-marker-out, which is the same measurement the entry wants for the new one and needs no scans at all. If the existing model already fails to predict held-out markers, a spline with more freedom will fail harder, and that is worth knowing before writing it.
+
+---
+
+## 2026-09-22, question 42: a corrected shot does not survive a second detection
+
+**Status: closed.** Answered 2026-09-23 by entry 143, and closed by entry 171 section 4. A corrected shot survives a second detection, with the person's position and bull winning.
+
+> A shot moved or assigned by hand is marked as manual, shown differently, and **never changed by a later re-detection or re-assignment.**
+
+**Re-assignment is already safe.** `BullChosen` pins a person's bull, and `Rematch` leaves those shots alone.
+
+**Re-detection is not.** `MarkingSession.Load` keeps exactly one kind of shot:
+
+```csharp
+var kept = State.Shots.Where(s => s.Provenance == ShotProvenance.Manual)
+```
+
+So a shot **placed** by hand survives detection, and a detected shot a person **moved or reassigned**, which is `ShotProvenance.Corrected`, is thrown away and replaced by whatever the detector finds this time. The person's correction is gone with no message.
+
+**Why it is written that way, which is not a mistake.** A corrected shot is a detected shot. Keeping it and adding the fresh detection of the same hole would leave two marks on one hole, which is worse than losing the correction and much harder to notice.
+
+**What I would do, and have not done:** match each kept corrected shot to the nearest shot in the new detection within about one hole's width, and where there is one, put the person's position and chosen bull back on it rather than the detector's. Where there is none, keep it as it is, since the detector has stopped finding that hole and the person said it is there. That satisfies section 5.3 item 5 without ever producing two marks for one hole. It needs a distance to be agreed and a test on the range scans.
+
+**The alternative is to say so instead:** if detecting again is meant to be "start over", then the button that does it should say that corrections will be lost and ask first, which is a smaller change and an honest one. I would rather build the matching, but this is a behaviour question rather than a bug, so it is yours.
+
+---
+
+## 2026-09-22, question 41: dragging a shot onto a bull means two different things
+
+**Status: closed.** Answered 2026-09-23 by entry 143, and closed by entry 171 section 4. A drag always moves the shot and never assigns it; `DragNeverAssignsTests` holds it.
+
+> 2. **Move a shot by dragging it**; add one by a click in add mode; delete with the Delete key or a button.
+>
+> 3. **Assign a shot to a bull by dragging it onto the bull**, by a bull picker in the shots list, or by keyboard.
+
+**These are the same gesture with two meanings, and the difference matters.** A mark's position is a measurement: it is where the hole is on the paper, and every figure GroupLab reports is computed from it. Dragging it is how a person corrects a mark the detector put in the wrong place by a few thousandths of an inch. Which bull a shot belongs to is a different fact entirely, and changing it must never move the hole.
+
+If dragging onto a bull reassigns, then a person dragging a mark a long way to correct a badly placed one silently changes its bull as well. If dragging never reassigns, section 5.3 item 3's first route does not exist.
+
+**What is built today**, `MarkingCanvas.OnPointerPressed` and `MarkingSession.AssignBull`:
+
+- Dragging a mark moves it, as one undo step, and the nearest bull is recomputed unless a person has chosen one.
+- **Click the hole, then click the bull** reassigns it, sets `BullChosen`, and never moves the mark. DESIGN.md section 13 calls this the reassignment.
+- Typing a bull's label and pressing Enter does the same for the selected shot.
+
+**What I would do, and have not done:** keep dragging as move only, and read section 5.3 item 3's "dragging it onto the bull" as satisfied by the existing click-hole-then-click-bull, which is the same two-target gesture without the risk. Then add the two routes that are genuinely missing: a bull picker on each shots-list row, and assigning several selected shots at once.
+
+**If you want a real drag-to-assign**, the way that does not destroy a measurement is a drag that starts on the shots-list row rather than on the mark: the row is a name, not a position, so dropping it on a bull can only mean assignment. Say which you want and I will build it.
+
+### And the same section's "select several shots" has a gesture already spoken for
+
+Section 5.3 item 3 ends: *"Select several shots and assign them together."* The obvious gesture for adding a shot to a selection is control-click or shift-click on the mark, and on the marking canvas both are taken: entry 115 section 2 gave them to choosing **bulls** for the load field, and says explicitly "never a hole".
+
+**What I built, and will change if you say otherwise:** a tick box on each shots-list row, the same control Session records already uses to choose sessions for comparing, with one picker above the list that assigns every ticked shot at once, as a single undo step. That needs no gesture at all, so nothing in entry 115 has to move, and it puts the multi-shot answer in the same place as the single-shot one.
+
+---
+
+## 2026-09-22, question 39: three of Alan's five close calibre pairs straddle his own two lists
+
+**Status: closed.** Moot since entry 161, and closed by entry 171 section 4. The calibre guess no longer names a cartridge, so no neighbours are offered and the question of which list they come from does not arise.
+
+**Entry 161 note, 2026-09-24.** The calibre guess no longer names a cartridge at all, from a scan or a photograph, so no neighbours are offered and the question of which list they come from does not arise on the screen today. Left open for the planning session to close.
+
+### 1. What the requirement says
+
+Alan's 2026-09-22 requirement for the calibre guess gives two lists and five examples of pairs the measurement cannot separate:
+
+> Rifle: .172, .204, .222 (shown as 22LR), .224, .243, .257, .264, .277, .284, .308, .338, .375, .416, .458, .510
+> Pistol: .312, .355, .400, .410, .430, .451, .500
+
+> where the measured size cannot tell two diameters apart (for example .222 and .224, .308 and .312, .451 and .458, .500 and .510, .400 and .410)
+
+Three of those five pairs have one member on each list:
+
+| pair | apart | where they live |
+|---|---|---|
+| .222 and .224 | 0.002 in | both rifle |
+| .400 and .410 | 0.010 in | both pistol |
+| **.308 and .312** | 0.004 in | rifle and pistol |
+| **.451 and .458** | 0.007 in | pistol and rifle |
+| **.500 and .510** | 0.010 in | pistol and rifle |
+
+So a guess that may only offer diameters from one list can never offer three of the five pairs Alan named.
+
+### 2. What I did
+
+The **preselection** comes from the firearm type's list, as asked. The **neighbours** are drawn from both lists. A person who has set "rifle" and shot a 0.310 in bullet is offered .308 first with .312 beside it, rather than being told .308 on evidence that cannot separate them. The alternative, offering only same-list neighbours, would state a calibre as measured when it is not, which is the one thing the requirement says never to do.
+
+It also covers the commoner case: the firearm type is a field somebody may simply not have set, and the default is rifle.
+
+### 3. What I would like settled
+
+Confirm this, or say that the lists are meant to be strict both ways and the three cross-list pairs are simply not offered together. If strict, .308 and .312 in particular will read as a firm answer on evidence that cannot support one, and I would want the wording changed to say so.
+
+Nothing depends on the answer: the behaviour above is in, with tests for all five pairs.
+
+---
+
 ## 2026-09-23, question 47: I kept `new`, `fixed` and `changed` as release note kinds, where entry 145 names two
 
 **Status: answered 2026-09-23.** Answered by entry 149 section 1: keep all five. `CLAUDE.md` names them and `ReleaseNoteKindsTests` holds the documentation and the generator to the same set.

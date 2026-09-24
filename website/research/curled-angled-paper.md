@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: one commercial sheet photographed flat on a bench, fitted against thirty known bull centres, compared with pinned and flat frames from an earlier survey
 state: published
-no_figure: "The subject is a sheet that is not flat, and the evidence is the measured error at each angle, which the article tabulates. The sheets are the developer's range material and are not published under a consent record."
+no_figure: "The subject is a sheet that is not flat, and the evidence is the measured error at each angle, which the article tabulates. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
 found: A flat model of a laid-down sheet leaves 0.018 to 0.021 in of error. A bent surface takes that to 0.0063 in. The sheet had a fold across its bottom edge, and fitting for it was worth three times the accuracy.
 sure: One sheet, one camera, one afternoon. The size of the effect is measured; how much a different sheet on a different bench bends is not.
 sources:

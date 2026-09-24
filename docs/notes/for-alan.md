@@ -16,7 +16,10 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ## 8. The friend's 2026-09-23 scan is 56 MB: publish it whole, or smaller?
 
-**Opened 2026-09-24. Entry 162 section 1. Waiting.**
+**Opened 2026-09-24. Entry 162 section 1. Answered 2026-09-24**, by entry 171 section 6: Alan left it to the planning session on one
+condition, nothing that causes space problems later, and it chose 3. The rebuilt scan is a download on the `test-data` release, CI
+fetches it and checks its SHA-256, and `samples/PROVENANCE.md` names the release and the hash. Any future sample over about 10 MB goes
+the same way, and `TestDataTests` fails if one is committed.
 
 **What is needed.** A choice of how to publish `Scan_20260923.png`, which the friend has consented to.
 
@@ -41,7 +44,8 @@ the scan wherever it is on the machine, so nothing waits on this except CI runni
 
 ## 7. What name, if any, should the macOS tester be thanked under?
 
-**Opened 2026-09-24. Entry 166 section 5. Waiting.**
+**Opened 2026-09-24. Entry 166 section 5. Answered 2026-09-24**, by entry 171 section 6: thank him as **Fenix**. The credit itself is
+entry 166 section 5's work, in the queue.
 
 **What is needed.** The name the macOS tester would like to appear under in the project's list of people who
 tested it, or a line saying he would rather be listed as an anonymous macOS tester.
@@ -61,7 +65,9 @@ beyond request 1's five steps, those commands are added here in full as soon as 
 
 ## 6. May one crop of one photographed hole be published?
 
-**Opened 2026-09-23. Entry 153 section 5. Waiting.**
+**Opened 2026-09-23. Entry 153 section 5. Answered 2026-09-24**, by entry 171 section 6. Alan: "Yes any of my photographs or scans can
+be published unless I specify one cannot." Recorded in `samples/PROVENANCE.md` as a standing consent for his own photographs and
+scans, which does not reach anything a friend shot; the 2026-09-16 friend scan is still never published.
 
 **What is needed.** Permission to publish a crop of a single bullet hole from one of the photographs from
 the 2026-09-20 range day, about three quarters of an inch square, showing the hole and the paper around
@@ -83,7 +89,9 @@ is honest and costs nothing.
 
 ## 5. Pre-approve the commands ordinary work needs, so you are asked once instead of fifty times
 
-**Opened 2026-09-23. Entry 160 section 6. Waiting.**
+**Opened 2026-09-23. Entry 160 section 6. Being applied**, entry 171 section 6: Alan is applying it with one change. The existing
+`settings.local.json` allowed `git push *`, which covers a force push and contradicted this request's own promise that a force push
+would still ask, so that rule is removed and the narrow push rule below replaces it. Closed when Alan confirms.
 
 **What is needed.** One setting change on your side, so that ordinary commands in this repository run
 without a prompt each time.
@@ -126,7 +134,8 @@ Removing lines only costs prompts; it breaks nothing.
 
 ## 4. The Discord channel names, and the server's own rules
 
-**Opened 2026-09-23. Entry 151 sections 1.2 and 1.5. Waiting.**
+**Opened 2026-09-23. Entry 151 sections 1.2 and 1.5. Answered 2026-09-24**, by entry 171 section 3: the planning session built the
+server and gave the channels and the rules itself. They are in `website/links.json`, which the community page reads.
 
 **What is needed.** The names of the channels inside each of the five groups on the Discord server, and the
 text of the server's rules.
@@ -183,40 +192,54 @@ of it he actually looks at. The parts he ignores are as useful as the parts he u
 
 ---
 
-## 1. Entry 129 sections 4, 6 and 8.2: the server work for the upload page
+## 1. Entry 129: what is left after the install
 
-**Opened 2026-09-23. Needs a shell, so the commands also go in the panel. Waiting.**
+**Opened 2026-09-23. Rewritten 2026-09-24 by entry 171 section 6. Waiting, and one step needs a shell.**
 
-**What is needed.** Five things on the server, in this order. Everything in the repository is built and
-tested; the send page and the receiver are gated out of the site build by `"open": false` in
-`website/api/limits.json` until this has run, so nothing is live until Alan says it is.
+**The install is done.** Alan did it with the planning session on 2026-09-22 and 2026-09-23: the folders, the worker and its units,
+`.user.ini`, the nginx include, the Turnstile secret, `nginx -t`, the reload, and both sites answering 200. ClamAV runs as on demand
+`clamscan` with no daemon, which the worker already supports, so the old step about the daemon's memory does not apply. The planning
+session is checking that the installed files match the repository's current copies and will say in a later entry whether any need
+copying up again.
 
-1. **Copy the intake files up.** The six files `install.py --intake` installs all sit in
-   `website/server/`: `grouplab-intake-worker.py`, `grouplab-set-turnstile-secret`,
-   `grouplab-intake-worker.service`, `grouplab-intake-worker.timer`, `user.ini` and
-   `nginx.ssl.conf_grouplab`, alongside `install.py` itself.
-2. **Run the installer, dry first.** `sudo python3 install.py --intake --dry-run`, read what it says it
-   would do, then `sudo python3 install.py --intake`. It backs up anything it replaces. It installs the
-   worker, its two systemd units, PHP's per-directory settings and the nginx include, and nothing that
-   belongs to any other domain is touched.
-3. **The Turnstile secret, which nobody but Alan ever sees.**
-   `sudo /usr/local/sbin/grouplab-set-turnstile-secret`, and paste the secret half of the Cloudflare
-   Turnstile key at its prompt. The public half is already in the page. The secret is never typed into
-   the panel, a file here, or a commit.
-4. **nginx, tested before it is reloaded, and pissinhot.com checked afterwards.** `sudo nginx -t`, then
-   `sudo systemctl reload nginx`, then curl both `https://pissinhot.com/` and `https://grouplab.org/` and
-   confirm both answer 200. If `nginx -t` complains about a duplicate `client_max_body_size`, another
-   include for this site already sets it: raise that one instead and delete the line from
-   `nginx.ssl.conf_grouplab`, and do not reload until `-t` passes.
-5. **ClamAV's memory.** `systemctl status clamav-daemon` and `free -m`. The scanner wants about a
-   gigabyte resident. If it is not running or the machine cannot spare it, say so and the receiver holds
-   submissions unscanned in quarantine rather than pretending they were scanned.
+**What is left, in this order.**
 
-**Why.** Six submissions are waiting and there is no page for anybody to send a seventh through. The
-receiver refuses PDFs, rebuilds every image from its pixels, drops GPS and timestamps, records consent
-with the submission, and verifies Turnstile server-side before it writes anything. None of that can be
-proved live until it is installed.
+1. **The page opens.** `"open"` is set to `true` in `website/api/limits.json`, in a commit of mine, once the planning session's check
+   above says the installed files are current. Nothing for Alan to do.
+2. **The end to end test.** Alan sends one of his own photographs through https://grouplab.org/shoot-a-target/send/ and says so. I
+   pull it, check it was rebuilt from pixels with no metadata and that its consent was recorded, and report.
+3. **The waiting submissions.** I pull, ingest and delete the six waiting on the server, and anything newer, under entry 129 section 6.1.
+   Each SSH or SCP command is asked for before it runs.
+4. **The redirect, the one change to pissinhot.com Alan has approved.** Entry 129 section 6.2: `pissinhot.com/targets` becomes a 301 to
+   the new page and the old receiver refuses uploads with a message naming it. This is the shell step, and it goes in the panel as well.
+   It replaces the one include the old page installed and touches nothing else there. In the server's shell, as the user who can sudo:
 
-**A good answer.** The installer's output, the two curl codes, and what `systemctl status clamav-daemon`
-and `free -m` said. After that, the end-to-end test and the redirect in section 6.2 follow, and the six
-waiting submissions are ingested and deleted from the server.
+   ```bash
+   cd /home/airwolf/conf/web/pissinhot.com
+   sudo cp -p nginx.ssl.conf_targets nginx.ssl.conf_targets.before-redirect
+   sudo tee nginx.ssl.conf_targets >/dev/null <<'EOF'
+   # pissinhot.com/targets moved to grouplab.org. NOTES-FROM-PLANNING.md entry 129 section 6.2.
+   # The body limit is kept exactly as it was, so nothing else about the site changes.
+   client_max_body_size 96m;
+
+   location = /targets      { return 301 https://grouplab.org/shoot-a-target/send/; }
+   location = /targets.html { return 301 https://grouplab.org/shoot-a-target/send/; }
+   location = /api/upload.php {
+       default_type text/plain;
+       return 410 "Target uploads have moved to https://grouplab.org/shoot-a-target/send/\n";
+   }
+   EOF
+   sudo nginx -t && sudo systemctl reload nginx
+   curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://pissinhot.com/targets
+   curl -s -o /dev/null -w '%{http_code}\n' -X POST https://pissinhot.com/api/upload.php
+   curl -s -o /dev/null -w '%{http_code}\n' https://pissinhot.com/
+   ```
+
+   **A good result:** `nginx -t` says the syntax is ok and the test is successful, then the three lines read
+   `301 https://grouplab.org/shoot-a-target/send/`, `410` and `200`. If `nginx -t` fails, do not reload: put the old file back with
+   `sudo cp -p nginx.ssl.conf_targets.before-redirect nginx.ssl.conf_targets` and send me what it said.
+5. **One last pull** after the redirect, for anything that arrived in between, ingested and deleted like the rest.
+
+**Why.** Six submissions are waiting, and the old page still accepts uploads to a server this project is moving away from.
+
+**A good answer.** Step 2's "sent", and step 4's three lines.

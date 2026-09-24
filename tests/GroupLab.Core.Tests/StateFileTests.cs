@@ -60,4 +60,24 @@ public class StateFileTests
                 + "day's token allowance spent before any work happens, which is what entry 160 was about.");
         }
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 5: the inbox line is the one fact in this file a machine can check, and it was the one that
+    /// was wrong. It listed 154 to 159 and 161 when the directory held 154 to 159, 164 to 167, 169 and 170. The line starting
+    /// <c>**Holds:**</c> is read as a list of entry numbers and compared with the <c>entry-NN.md</c> files in the directory.
+    /// </summary>
+    [Fact]
+    public void ItsInboxListIsWhatTheInboxHolds()
+    {
+        string line = File.ReadAllLines(Path).SingleOrDefault(l => l.StartsWith("**Holds:**", StringComparison.Ordinal))
+            ?? throw new Xunit.Sdk.XunitException("docs/notes/STATE.md has no \"**Holds:**\" line under The inbox, so what it says the inbox holds cannot be checked.");
+        var listed = System.Text.RegularExpressions.Regex.Matches(line, @"\d+").Select(m => int.Parse(m.Value, System.Globalization.CultureInfo.InvariantCulture)).Order().ToList();
+
+        var held = Directory.EnumerateFiles(Repo.PathTo("docs", "notes", "inbox"), "entry-*.md")
+            .Select(f => System.Text.RegularExpressions.Regex.Match(System.IO.Path.GetFileName(f), @"^entry-(\d+)\.md$"))
+            .Where(m => m.Success).Select(m => int.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture)).Order().ToList();
+
+        Assert.True(listed.SequenceEqual(held),
+            $"docs/notes/STATE.md says the inbox holds {string.Join(", ", listed)}, and it holds {string.Join(", ", held)}. Rewrite the line.");
+    }
 }

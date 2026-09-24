@@ -144,6 +144,7 @@ public static class AutomaticMarking
         }
 
         var mapping = registration.Mapping;
+        double printScale = SheetReference.Correction(measurement.Scale) ?? 1;
         var missing = fiducials.Missing.Select(m => mapping.ToImage(new PointD(m.X, m.Y))).ToList();
         double dpi = (measurement.Scale?.PixelsPerDmmArea ?? fiducials.PixelsPerDmm) * 254;
         RenderDifferenceResult holes;
@@ -153,7 +154,10 @@ public static class AutomaticMarking
             try
             {
                 detection = new DetectionRecord(calibre, calibre?.DiameterInches * HoleToCalibre);
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre, KeepResidual: trace.KeepArtefacts));
+
+                // The detector works in the sheet's own inches, so a real bullet is converted into them: on a sheet printed at 96.2 percent
+                // a 0.308 in hole spans 0.320 of the sheet's inches. Entry 171 section 1.
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre / printScale, KeepResidual: trace.KeepArtefacts));
             }
             catch (InvalidOperationException ex)
             {
@@ -231,14 +235,14 @@ public static class AutomaticMarking
                 $"{assignment.Shots.Count} shots to {bullPages.Count} bulls by {assignment.Method.Words()}{(ambiguous > 0 ? $", {ambiguous} ambiguous" : "")}{(unassigned > 0 ? $", {unassigned} unassigned" : "")}"));
         }
 
-        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches,
+        var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches * printScale,
             h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB) : null,
             h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,
             $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method.Words()}{(string.IsNullOrWhiteSpace(assignment.Reason) ? "" : ": " + assignment.Reason)}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = SheetReference.Correction(measurement.Scale) }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
     }
 }
 

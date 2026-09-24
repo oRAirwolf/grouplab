@@ -12,7 +12,7 @@
 | **Given on** | 2026-09-21 |
 | **Given how** | In writing, to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 120 section 9 |
 | **What was said** | "Use scan 3 as the sample scan. I dont care about my load data being shared." |
-| **Covers** | This one file. Every other scan and every photograph from that range day stays private. |
+| **Covers** | This one file. Written before Alan's standing consent of 2026-09-24, below, which now covers the rest of his own photographs and scans too. |
 | **Licence** | The repository's, GPL-3.0, as for everything else published here |
 
 The load block written on the sheet is part of the image and is published with it: the date, the distance, the cartridge, the bullet, the powder charge, the brass, the primer and the seating depth. That is what "I dont care about my load data being shared" permits.
@@ -41,6 +41,25 @@ GroupLab's own `GL-CF25-LTR-D`, the 5 by 5 load development sheet with a load bl
 Analysed at 600 dpi with no calibre named, GroupLab reads the sheet's codes, registers it from 33 of its 34 markers and finds **25 holes, one on each of the 25 bulls**, which agrees with Alan's account exactly. That is the expected result the Windows package's self-test holds it to: a sample the package cannot analyse correctly must fail the build rather than reach a tester.
 
 ---
+
+# Alan's own photographs and scans: a standing consent
+
+| | |
+|---|---|
+| **Given by** | Alan Hayes |
+| **Given on** | 2026-09-24 |
+| **Given how** | In writing, to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 171 section 6 |
+| **What was said** | "Yes any of my photographs or scans can be published unless I specify one cannot." |
+| **Covers** | Every photograph and scan Alan took himself, of his own targets, unless he names one as an exception. None is named yet. |
+| **Does not cover** | Anything anybody else shot. Each friend's sheet keeps its own record, and **the 2026-09-16 friend scan is never published.** |
+| **Licence** | The repository's, GPL-3.0 |
+
+**What does not change.** Every published copy is rebuilt from its pixels and carries no metadata. GPS, location and timestamps are never
+read, printed or logged, from any photograph, at any point. A consent to publish is not a reason to publish: an image goes where it shows
+something a reader needs, and the rest stays where it is.
+
+**Exceptions.** When Alan names a photograph or scan that cannot be published, it is listed here with the date he said so, and nothing
+published from it before that date is kept on the site.
 
 # The 2026-09-23 friend scan, and the consent that lets it be used
 
@@ -72,9 +91,16 @@ one gets published by mistake, so each is named here by its file name and its da
 | **Image** | 5100 by 7013 pixels, 8 bits per channel, RGB, 600 dpi |
 | **A published copy** | Rebuilt from those pixels with only the resolution chunk, as scan 3's was. Nothing else from the original's metadata is read, printed, logged or carried, at any point. |
 
-**Not committed yet, and why.** The copy rebuilt from pixels is 56 MB: scanner noise does not compress. A file that size in git is carried
-by every clone for ever and can only be removed by rewriting history, which this project has had to do once already. So the consent is
-recorded and the file is not yet in the repository; `docs/notes/for-alan.md` request 8 asks which form to publish.
+**Published as a download, never committed.** Entry 171 section 6, closing request 8: the copy rebuilt from pixels is 59 MB, because
+scanner noise does not compress, and a file that size in git would be carried by every clone for ever. So it is attached to the
+`test-data` release of this repository, created by `ci.yml` for exactly this, and listed in `tests/test-data.json`. CI downloads it and
+verifies its hash before a test reads it, with `scripts/test-data.py`.
+
+| | |
+|---|---|
+| **Release** | `test-data`, https://github.com/oRAirwolf/grouplab/releases/tag/test-data |
+| **Published file** | `Scan_20260923.png`, 59,215,934 bytes, SHA-256 `c2b2e595358cf5dd8d1f932da3f07eb9722ca189c300c4edcf6c68fcbc54570e` |
+| **Rebuilt how** | `scripts/test-data.py rebuild`: the original's pixels, byte for byte, and its 600 dpi resolution. Nothing else. |
 
 ## What is on the sheet
 

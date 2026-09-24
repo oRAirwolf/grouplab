@@ -99,29 +99,52 @@ public static class DetectionAdvice
             return null;
         }
 
+        // The detector's figures are the sheet's own inches; on a scan they are said in real ones, like every other size. Entry 171.
+        double k = result.Scale?.PrintScale ?? 1;
         return string.Create(CultureInfo.InvariantCulture,
-            $"These holes measure {marks:0.000} in across, and a {calibre.Name} bullet would be expected to make about {expected:0.000} in. GroupLab is judging one hole from two against the sheet's own marks, not the calibre.");
+            $"These holes measure {marks * k:0.000} in across, and a {calibre.Name} bullet would be expected to make about {expected * k:0.000} in. GroupLab is judging one hole from two against the sheet's own marks, not the calibre.");
     }
 
     /// <summary>
-    /// What the print scale says, where it is far enough from full size to matter, or null.
+    /// The line a photograph's figures carry, NOTES-FROM-PLANNING.md entry 171 section 1.2, word for word. A photograph has no absolute ruler,
+    /// so it cannot measure the print scale, and its figures stay in the sheet's own inches.
+    /// </summary>
+    public const string SheetInches = "Measured in the sheet's own inches; if the sheet was not printed at actual size, the figures are off by the same percentage.";
+
+    /// <summary>
+    /// Why to print at actual size, entry 171 section 1.3: the one source the print screen, <c>docs/WHAT-CAN-BE-MEASURED.md</c> and the tour
+    /// take it from, and a test holds all three to it.
+    /// </summary>
+    public const string WhyActualSize = "It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it.";
+
+    /// <summary>
+    /// What the print scale means for this sheet's figures, or null where there is nothing to say.
     /// <para>
-    /// <b>Nothing is corrected, and the sentence says so.</b> NOTES-FROM-PLANNING.md entry 161 section 6: <see cref="SheetReference.ToTarget"/>
-    /// returns the sheet's own coordinates and nothing multiplies them by this scale, so every size on a sheet printed at 96.2 percent reads
-    /// about 4 percent large. This sentence used to say the measurements were corrected and the figures right, and entry 152 repeated it on
-    /// the website. Whether a scan, which knows the scale, should report real inches instead is question 49.
+    /// <b>On a scan the figures are real inches.</b> NOTES-FROM-PLANNING.md entry 171 section 1 answered question 49: a scan measures the print
+    /// scale and every distance is multiplied by it, so the sentence names the scale and says the sizes are corrected, once it is more than a
+    /// quarter of a percent from full size. On a photograph, or a scan whose stated resolution puts the sheet somewhere no printer would, the
+    /// figures stay in the sheet's own inches and <see cref="SheetInches"/> says so. Until entry 171 nothing was corrected on either, and
+    /// entry 161 section 6 had made this sentence say so.
     /// </para>
     /// </summary>
     public static string? PrintScale(SheetMeasurement measurement)
     {
         ArgumentNullException.ThrowIfNull(measurement);
-        if (measurement.Scale?.Scale is not { } scale || Math.Abs(scale - 1) <= ScaleWorthSaying)
+        if (measurement.Scale?.Scale is not { } scale)
         {
-            return null;
+            return SheetInches;
         }
 
-        return string.Create(CultureInfo.InvariantCulture,
-            $"This sheet was printed at {scale * 100:0.0} percent of its intended size. GroupLab measures in the sheet's own inches, so every size on this sheet reads {Math.Abs((1 / scale) - 1) * 100:0.0} percent {(scale < 1 ? "large" : "small")} against a real ruler. Print at actual size, 100 percent.");
+        if (SheetReference.Correction(measurement.Scale) is null)
+        {
+            return string.Create(CultureInfo.InvariantCulture,
+                $"The file's stated resolution puts this sheet at {scale * 100:0.0} percent of its intended size, which is more likely a wrong resolution than a real print, so nothing is corrected. ") + SheetInches;
+        }
+
+        return Math.Abs(scale - 1) <= ScaleWorthSaying
+            ? null
+            : string.Create(CultureInfo.InvariantCulture,
+                $"This sheet was printed at {scale * 100:0.0} percent of its intended size. The scan measured that, so every size here is corrected to real inches.");
     }
 
     /// <summary>

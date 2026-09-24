@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: 176 holes photographed and 78 scanned, over the four sheets of known calibre the developer shot on 2026-09-20
 state: published
-no_figure: "The finding is a ratio measured over many holes, and it is in the article as a table. The sheets it came from are the developer's range material and are not published under a consent record."
+no_figure: "The finding is a ratio measured over many holes, and it is in the article as a table. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
 found: On a scanner a hole measures about 0.94 of the bullet's diameter, consistently enough to tell one hole from two. On a photograph the same ratio runs from 0.90 to 1.45 depending on the light and the angle, so there is no photograph constant to be had.
 sure: Four sheets, one afternoon, one scanner and one phone. The scanner ratio was first fixed on earlier sheets that are not published here, and rests on very few of them. Enough to tell one hole from two; nowhere near enough to report a calibre back to you from a measurement.
 sources:

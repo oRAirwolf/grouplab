@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: thirteen images of the developer's own sheets, nine photographs and four scans, 14 to 25 marks each, with the calibre actually shot
 state: published
-no_figure: "The finding is a count of review items, and the sheets it came from are the developer's own range targets, which are not published under a consent record."
+no_figure: "The finding is a count of review items, and it is in the article as numbers. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
 found: A stated calibre is the wrong reference for a photograph. On one 15 shot sheet it flagged all fifteen holes as possibly two shots. Measuring the sheet's own marks against each other instead brings that to one, and leaves scans exactly as they were.
 sure: Thirteen images from one afternoon and one shooter. Enough to show that the old rule fails on photographs and that the new one does not, but the sizes it produces are not a calibrated measurement of anything.
 sources:

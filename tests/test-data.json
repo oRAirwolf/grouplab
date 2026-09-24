@@ -1,0 +1,19 @@
+{
+  "why": [
+    "NOTES-FROM-PLANNING.md entry 171 section 6, closing request 8. A sample over about 10 MB is attached to the test-data",
+    "release as a download and never committed, so nothing is added to any clone, ever. CI fetches each file by URL and verifies",
+    "its SHA-256 with scripts/test-data.py before a test uses it. The release is created once by ci.yml, not by the nightly, so",
+    "nothing that rewrites or prunes nightly releases touches it. Each file names the consent record that lets it be published."
+  ],
+  "repository": "oRAirwolf/grouplab",
+  "release": "test-data",
+  "files": [
+    {
+      "name": "Scan_20260923.png",
+      "sha256": "c2b2e595358cf5dd8d1f932da3f07eb9722ca189c300c4edcf6c68fcbc54570e",
+      "bytes": 59215934,
+      "what": "The friend's 2026-09-23 scan, rebuilt from its pixels with only the resolution kept. Same pixels as the original.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-23 friend scan"
+    }
+  ]
+}

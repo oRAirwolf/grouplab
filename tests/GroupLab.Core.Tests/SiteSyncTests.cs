@@ -458,4 +458,19 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Contains("if not LOG.parent.is_dir():", sync, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 171 section 6: the installer's closing reminder told the person to set the Turnstile secret and reload
+    /// nginx every time, even with the secret set and nothing nginx reads changed. It now says the secret is present without opening it, and
+    /// prints the nginx steps only where the include was written.
+    /// </summary>
+    [Fact]
+    public void TheClosingReminderSaysOnlyWhatIsLeft()
+    {
+        string installer = File.ReadAllText(Repo.PathTo("website/server/install.py"));
+        Assert.Contains("TURNSTILE_SECRET.stat().st_size", installer, StringComparison.Ordinal);
+        Assert.DoesNotContain("TURNSTILE_SECRET.read", installer, StringComparison.Ordinal);
+        Assert.DoesNotContain("open(TURNSTILE_SECRET", installer, StringComparison.Ordinal);
+        Assert.Contains("if include in CHANGED:", installer, StringComparison.Ordinal);
+        Assert.Contains("needs no reload", installer, StringComparison.Ordinal);
+    }
 }

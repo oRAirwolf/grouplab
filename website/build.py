@@ -1134,7 +1134,7 @@ def build_research_figures() -> list[str]:
 # white is the subject and not the theme, and they are the same in both. Everything else must have a dark version.
 PAPER = {"scanner-traps/settings.png", "can-you-see-the-bull/test-card.png",
          "photo-hole-size/hole-smallest.png", "photo-hole-size/hole-typical.png",
-         "photo-hole-size/hole-largest.png"}
+         "photo-hole-size/hole-largest.png", "photo-hole-size/hole-shadow.png"}
 
 # The surface _style.py draws a dark figure on. Held here as well so a figure saved by something that did not use the
 # shared style, or a light figure copied to a dark name, is caught rather than published.
@@ -1514,9 +1514,12 @@ def page_discord() -> str:
     data = links()
     invite = data["discordInvite"]
     groups = "".join(
-        f'<div class="panel pad stack tight"><h3 class="h4">{esc(g["name"])}</h3><p class="small">{esc(g["what"])}</p></div>'
+        f'<div class="panel pad stack tight"><h3 class="h4">{esc(g["name"])}</h3><p class="small">{esc(g["what"])}</p>'
+        + (f'<p class="small mono">{" · ".join(esc(c) for c in g["channels"])}</p>' if g.get("channels") else "")
+        + "</div>"
         for g in data.get("discordGroups", [])
     )
+    rules = "".join(f"<li>{esc(r)}</li>" for r in data.get("discordRules", []))
 
     body = f"""
 <section class="wrap page-head stack">
@@ -1541,13 +1544,9 @@ def page_discord() -> str:
 
 <section class="wrap stack last">
 <h2>What is expected there</h2>
-<p>The server has its own rules and they are the first thing you will see. In short, and so they are readable before you join rather than only after:</p>
-<ul class="prose tight">
-<li><strong>Be civil.</strong> People turn up at every level of experience, and a question that sounds obvious to you was not obvious to whoever asked it.</li>
-<li><strong>Post no personal information</strong>, yours or anybody else's. A photograph of a target can carry the place it was taken; take the location data off it, or post it through <a href="/send/">the submission page</a>, which strips that before anybody sees the file.</li>
-<li><strong>Firearms law is yours to know.</strong> Nothing said there is legal advice, and no part of GroupLab is.</li>
-<li><strong>Bugs are welcome anywhere</strong>, but one written into <a href="https://github.com/oRAirwolf/grouplab/issues">an issue</a> is one that still exists next month.</li>
-</ul>
+<p>The server's rules are the first thing you will see there. In short, so they are readable before you join rather than only after:</p>
+<ol class="prose tight">{rules}</ol>
+<p class="small">A photograph of a target can carry the place it was taken. Take the location data off it before posting, or send it through <a href="/send/">the submission page</a>, which strips that before anybody sees the file. Nothing said on the server is legal advice, and no part of GroupLab is.</p>
 </section>
 """
     return shell(DISCORD, "Community", "The GroupLab Discord: what is in it, what is expected there, and the invite, which you click yourself.", body, "Community")

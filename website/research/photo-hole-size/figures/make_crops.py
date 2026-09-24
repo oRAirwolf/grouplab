@@ -5,11 +5,11 @@ NOTES-FROM-PLANNING.md entry 153 section 5, on the research section: "Show examp
 measurements where applicable. Being able to visualize something is much easier than just reading about
 it." The article said a hole measures 0.9 to 1.5 times the bullet and showed nobody a hole.
 
-**The only real material this project may publish is the sample scan**, `samples/gl-cf25-ltr-d-25-shots-600-dpi.png`,
-under the consent record in `samples/PROVENANCE.md`. Every other scan and every photograph from that
-range day stays private, so these three crops are all scans. That limit is stated in the captions rather
-than worked around: the shadow case section 5 asks for exists only in a photograph, and there is no
-photograph anybody has consented to publish a crop of.
+Three crops come from the sample scan, `samples/gl-cf25-ltr-d-25-shots-600-dpi.png`. The fourth, the shadow
+case section 5 asks for, exists only in a photograph, and entry 171 section 6 made it publishable: the developer's
+standing consent of 2026-09-24 in `samples/PROVENANCE.md` covers his own photographs. Its pixels, and only
+its pixels, are committed beside the article as `hole-shadow-source.png`, so the build never needs the
+photograph itself.
 
 The numbers are not typed in. They come from `grouplab analyze` on that scan, so a crop cannot drift
 from the figure the article quotes.
@@ -52,11 +52,11 @@ def font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
     return ImageFont.load_default()
 
 
-def crop(image: Image.Image, shot: dict, name: str) -> Path:
+def crop(image: Image.Image, shot: dict, name: str, dpi: float = DPI) -> Path:
     """One hole, with a caliper line across its measured diameter and a scale bar under it."""
     measured = shot["measuredDiameterInches"]
     cx, cy = shot["image"]["x"], shot["image"]["y"]
-    half = int(CROP_INCHES * DPI / 2)
+    half = int(CROP_INCHES * dpi / 2)
 
     box = (int(cx) - half, int(cy) - half, int(cx) + half, int(cy) + half)
     out = image.crop(box).convert("RGB")
@@ -67,7 +67,7 @@ def crop(image: Image.Image, shot: dict, name: str) -> Path:
     out = out.resize((out.width * scale, out.height * scale), Image.LANCZOS)
     d = ImageDraw.Draw(out)
     mid = out.width // 2
-    px = measured * DPI * scale
+    px = measured * dpi * scale
 
     # The caliper, across the hole at its measured width, with the ticks a caliper's jaws would make.
     y = mid
@@ -83,7 +83,7 @@ def crop(image: Image.Image, shot: dict, name: str) -> Path:
     d.text((mid - w / 2, y - 64), label, fill=RULE, font=f)
 
     # A tenth of an inch, so the reader can check every other length on the picture against something.
-    bar = 0.1 * DPI * scale
+    bar = 0.1 * dpi * scale
     bx, by = out.width - bar - 30, out.height - 40
     d.line([(bx, by), (bx + bar, by)], fill=INK, width=4)
     for x in (bx, bx + bar):
@@ -91,7 +91,8 @@ def crop(image: Image.Image, shot: dict, name: str) -> Path:
     small = font(24)
     d.text((bx, by - 36), "0.1 in", fill=INK, font=small)
 
-    out = out.resize((out.width // scale * 2, out.height // scale * 2), Image.LANCZOS)
+    # Every crop comes out the same size on the page, whatever resolution it was cut at.
+    out = out.resize((round(CROP_INCHES * DPI) * 2, round(CROP_INCHES * DPI) * 2), Image.LANCZOS)
     path = HERE / f"{name}.png"
     out.save(path, optimize=True)
     return path
@@ -127,6 +128,14 @@ def main() -> int:
         path = crop(image, shot, hole["name"])
         print(f"{path.name}: shot {hole['shot']}, {hole['measuredInches']:.4f} in, "
               f"{hole['fractionOfBullet']:.3f} of the {NOMINAL} in bullet")
+
+    # The photographed hole: its source is already the crop, centred on the hole, at the photograph's own scale there.
+    if photo := record.get("photograph"):
+        source = Image.open(HERE.parent / photo["source"])
+        shot = {"id": photo["shot"], "image": {"x": source.width / 2, "y": source.height / 2},
+                "measuredDiameterInches": photo["measuredInches"]}
+        path = crop(source, shot, photo["name"], photo["pixelsPerInch"])
+        print(f"{path.name}: photographed, {photo['measuredInches']:.4f} in, {photo['fractionOfBullet']:.3f} of the bullet")
     return 0
 
 

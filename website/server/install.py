@@ -86,6 +86,14 @@ def missing_tools() -> list[str]:
     return [t for t in NEEDED if shutil.which(t) is None]
 
 
+# Every file this run wrote, or in a dry run would write, so the closing lines can say only what is still to do.
+# NOTES-FROM-PLANNING.md entry 171 section 6: the reminder used to say "set the secret and reload nginx" every time.
+CHANGED: set[Path] = set()
+
+# Where grouplab-set-turnstile-secret keeps the secret. Only its presence is checked here; it is never opened.
+TURNSTILE_SECRET = Path("/home/airwolf/web/grouplab.org/private/turnstile-secret.txt")
+
+
 def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
     """Copies one file into place, backing up anything different that is already there."""
     source = HERE / name
@@ -98,6 +106,7 @@ def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
         say(f"  {target} is already what it should be")
         return True
 
+    CHANGED.add(target)
     if dry_run:
         what = "replace" if target.exists() else "create"
         say(f"  would {what} {target} (mode {oct(mode)[2:]})")
@@ -202,19 +211,35 @@ def intake(dry_run: bool) -> int:
         run(["systemctl", "list-timers", "grouplab-intake-worker.timer", "--no-pager"], False)
 
     say("")
-    say("Two things are left, and neither is this script's to do.")
-    say("")
-    say("1. The Turnstile secret, which nobody but you ever sees:")
-    say("     sudo /usr/local/sbin/grouplab-set-turnstile-secret")
-    say("")
-    say("2. nginx, tested before it is reloaded, and pissinhot.com checked afterwards:")
-    say("     sudo nginx -t")
-    say("     sudo systemctl reload nginx")
-    say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://pissinhot.com/")
-    say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://grouplab.org/")
-    say("")
-    say("If nginx -t complains about a duplicate client_max_body_size, another include for this site already sets")
-    say("it. Raise that one instead and delete the line from nginx.ssl.conf_grouplab; do not reload until -t passes.")
+    left = []
+    # The secret is looked at only to see that it is there: its size, never its contents.
+    if TURNSTILE_SECRET.is_file() and TURNSTILE_SECRET.stat().st_size > 0:
+        say("The Turnstile secret is already set. It was not read or printed.")
+    else:
+        left.append(["The Turnstile secret, which nobody but you ever sees:",
+                     "     sudo /usr/local/sbin/grouplab-set-turnstile-secret"])
+
+    include = next(target for name, target, _, _ in INTAKE_CONFIG if name == "nginx.ssl.conf_grouplab")
+    if include in CHANGED:
+        left.append(["nginx, tested before it is reloaded, and pissinhot.com checked afterwards:",
+                     "     sudo nginx -t",
+                     "     sudo systemctl reload nginx",
+                     "     curl -sS -o /dev/null -w '%{http_code}\\n' https://pissinhot.com/",
+                     "     curl -sS -o /dev/null -w '%{http_code}\\n' https://grouplab.org/",
+                     "",
+                     "If nginx -t complains about a duplicate client_max_body_size, another include for this site already sets",
+                     "it. Raise that one instead and delete the line from nginx.ssl.conf_grouplab; do not reload until -t passes."])
+    else:
+        say("The nginx include was already current, so nginx has nothing new to read and needs no reload.")
+
+    if left:
+        say("")
+        say(("One thing is" if len(left) == 1 else f"{len(left)} things are") + " left, and not this script's to do.")
+        for i, lines in enumerate(left, 1):
+            say("")
+            say(f"{i}. {lines[0]}")
+            for line in lines[1:]:
+                say(line)
     say("")
     say("done" if not dry_run else "dry run finished, nothing was changed")
     return 0

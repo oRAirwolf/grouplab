@@ -84,7 +84,7 @@
   "print": {
    "name": "Printing",
    "blurb": "Prints the sheet at its true size, and tells you when the paper or the printer's margins would spoil it.",
-   "purpose": "A sheet printed smaller than it should be is still read correctly, bull by bull, because the markers shrank with everything else. But GroupLab measures in the sheet's own inches, so a sheet printed at 97 percent makes every group read about 3 percent large, and only a scan can tell you it happened. A ruler against the printed edge is how you know before you shoot. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.",
+   "purpose": "A sheet printed smaller than it should be is still read correctly, bull by bull, because the markers shrank with everything else. It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it. A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large. A ruler against the printed edge is how you know before you shoot. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.",
    "withoutASheet": "Nothing on this screen applies. It prints GroupLab's own sheets, at their true size.",
    "parts": [
     [

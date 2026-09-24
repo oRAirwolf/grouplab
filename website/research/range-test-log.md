@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: "Running log; latest entry 2026-09-23"
 samples: "See each entry"
 state: draft
-no_figure: "This is a log of what happened on a range day. The sheets it refers to are the developer's own and are not published under a consent record; the figures they produced are given instead."
+no_figure: "This is a log of what happened on a range day, and the figures the sheets produced are given in it. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
 found: "see the article"
 sure: "see the article"
 data:
