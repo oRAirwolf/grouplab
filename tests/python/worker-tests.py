@@ -96,6 +96,11 @@ def main() -> int:
     subprocess.run(["sudo", "sh", "-c", "rm -f /var/lib/clamav/*.cvd /var/lib/clamav/*.cld /var/lib/clamav/*.ndb"], check=False)
     (root / "grouplab-test.ndb").write_text(f"GroupLab.Test.Marker:0:*:{marker.hex()}" + chr(10), encoding="ascii")
     subprocess.run(["sudo", "install", "-m", "0644", str(root / "grouplab-test.ndb"), "/var/lib/clamav/grouplab-test.ndb"], check=True)
+    # Ubuntu's unit starts only where the real daily database exists; the runner has only the test signature, so that one condition is
+    # cleared for the runner. The server has the real databases and is not touched by this.
+    subprocess.run(["sudo", "mkdir", "-p", "/etc/systemd/system/clamav-daemon.service.d"], check=True)
+    subprocess.run(["sudo", "tee", "/etc/systemd/system/clamav-daemon.service.d/grouplab-test.conf"], input="[Unit]\nConditionPathExistsGlob=\n", text=True, capture_output=True, check=True)
+    subprocess.run(["sudo", "systemctl", "daemon-reload"], check=True)
     subprocess.run(["sudo", "systemctl", "restart", "clamav-daemon"], check=False)
     answering = False
     for _ in range(90):
