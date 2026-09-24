@@ -70,7 +70,7 @@ public class CartridgeTableTests
         var lines = CartridgeTable.Suggest("6.5");
         Assert.StartsWith("6.5 Creedmoor", lines[0], StringComparison.Ordinal);
         Assert.EndsWith(": 0.264 in (6.71 mm)", lines[0], StringComparison.Ordinal);
-        Assert.Equal("not the same as .25 calibre, 0.257 in (6.53 mm)", lines[1]);
+        Assert.Equal("not the same as .25 caliber, 0.257 in (6.53 mm)", lines[1]);
 
         // A trap line is not a choice.
         Assert.Null(Calibre.Parse(lines[1], out _));

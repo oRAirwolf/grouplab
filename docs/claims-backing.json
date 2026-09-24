@@ -1380,6 +1380,18 @@
   "GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab&#x27;s public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use.": {
    "kind": "decided",
    "where": "entry 165 section 2: the publishable consent level, in website/api/limits.json consentTexts"
+  },
+  "**With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown"
+  },
+  "With the shot distance set, each is an angle first, in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown"
+  },
+  "MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA"
   }
  },
  "rules": [

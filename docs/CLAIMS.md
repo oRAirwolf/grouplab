@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 927 |
-| measured | 1341 |
-| decided | 1098 |
+| code | 929 |
+| measured | 1343 |
+| decided | 1106 |
 | unbacked | 0 |
-| **total** | **3366** |
+| **total** | **3378** |
 
-**396** of them were read one sentence at a time and their backing written against the sentence. The other **2970** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**400** of them were read one sentence at a time and their backing written against the sentence. The other **2978** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -915,6 +915,10 @@ one that matters.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): *Precisely:* The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## SMOA An inch at 100 yards, two inches at 200: the way many shooters think of a minute of angle.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A true minute is 1.047 inches at 100 yards, so this unit reads about 5 percent higher.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A 0.422 inch group shot at 25.4 yards is 1.66 in it, and 1.59 true minutes.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): *Precisely:* One inch of height at 100 yards, 1/3600 of the distance.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
 
@@ -2613,6 +2617,8 @@ one that matters.
 - *code* (CompositePlot in src/GroupLab.App/CompositePlot.cs): Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): **Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
+- *code* (src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown): **With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
+- *measured* (src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA): MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.
 - *code* (ShowZero in src/GroupLab.App/MainWindow.cs and Clicks.Describe (entry 169)): Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click".
 - *code* (FullFigures in src/GroupLab.App/MainWindow.Figures.cs): The table gives the CEP at 50, 90, 95 and 99 percent three ways.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): ![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's Report button saves the session as a PDF: - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
@@ -2829,6 +2835,10 @@ one that matters.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Precisely: The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): SMOA An inch at 100 yards, two inches at 200: the way many shooters think of a minute of angle.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A true minute is 1.047 inches at 100 yards, so this unit reads about 5 percent higher.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A 0.422 inch group shot at 25.4 yards is 1.66 in it, and 1.59 true minutes.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Precisely: One inch of height at 100 yards, 1/3600 of the distance.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
 
@@ -2884,6 +2894,8 @@ one that matters.
 - *code* (AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking): Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a guess is marked as resting on a guess.
 - *code* (CompositePlot in src/GroupLab.App/CompositePlot.cs): Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
+- *code* (src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown): With the shot distance set, each is an angle first, in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
+- *measured* (src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA): MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.
 - *code* (ShowZero in src/GroupLab.App/MainWindow.cs and Clicks.Describe (entry 169)): Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click".
 - *code* (FullFigures in src/GroupLab.App/MainWindow.Figures.cs): The table gives the CEP at 50, 90, 95 and 99 percent three ways.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Session records The analysis's Report button saves the session as a PDF: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.

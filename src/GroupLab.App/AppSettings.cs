@@ -82,6 +82,14 @@ public sealed class AppSettingsStore(string path)
         });
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 189 section 3: a group's size is shown first as an angle where the distance is known, and this puts the
+    /// size on the paper first instead, for a shooter who only ever shoots one distance. Off unless chosen.
+    /// </summary>
+    public bool LoadSizeOnPaperFirst() => Read(file => (bool?)file["sizeOnPaperFirst"]) ?? false;
+
+    public bool SaveSizeOnPaperFirst(bool first) => Save(file => file["sizeOnPaperFirst"] = first);
+
     /// <summary>The remembered theme, NOTES-FROM-PLANNING.md entry 42 section 2: dark, light, or following the system, which is the default.</summary>
     public ThemeChoice LoadTheme()
     {

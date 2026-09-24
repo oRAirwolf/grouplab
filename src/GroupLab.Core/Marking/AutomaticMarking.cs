@@ -203,7 +203,7 @@ public static class AutomaticMarking
                 }
             }
 
-            stage.Parameter("calibre", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
+            stage.Parameter("caliber", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
                 $"{calibre.Name}, {calibre.DiameterInches:0.000} in; a hole of it has measured {calibre.DiameterInches * HoleToCalibreLow:0.000} to {calibre.DiameterInches * HoleToCalibreHigh:0.000} in on the scans so far, depending on the paper and the backing, so it keeps a single hole from being split and sets the smallest hole accepted, and does not judge one hole from two"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");

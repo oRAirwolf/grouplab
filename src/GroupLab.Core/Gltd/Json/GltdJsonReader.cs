@@ -20,7 +20,7 @@ public static partial class GltdJsonReader
 
     private static readonly string[] TopLevelKeys =
     [
-        "gltd", "revision", "id", "name", "description", "author", "licence", "created", "units",
+        "gltd", "revision", "id", "name", "description", "author", "licence", "created", "units",  // British on purpose: a key in a file GroupLab reads and writes
         "page", "inks", "ringSets", "bulls", "cells", "fiducials", "codes", "print",
         "dataBlock", "instance", "tiling", "grids",
     ];
@@ -137,7 +137,7 @@ public static partial class GltdJsonReader
             string name = o.Str("name", true, minLength: 1, maxLength: 120) ?? "";
             string? description = o.Str("description", false, maxLength: 2000);
             string? author = o.Str("author", false, maxLength: 120);
-            string? licence = o.Str("licence", false, maxLength: 64);
+            string? licence = o.Str("licence", false, maxLength: 64);  // British on purpose: a key in a file GroupLab reads and writes
             string? created = o.Date("created", false);
             string units = o.Str("units", true) ?? "";
             if (o.Has("units") && units.Length > 0 && units != "dmm")

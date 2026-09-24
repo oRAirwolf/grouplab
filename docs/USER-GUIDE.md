@@ -59,7 +59,7 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 3. It finds the holes by comparing the image with the sheet as printed.
 4. It gives each hole to a bull.
 
-Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size.
+Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners again and enter the new size, or choose the length or rectangle tool and **Change the length of the scale in use**; every figure follows. Typing a caliber offers the cartridges that match, and choosing one from the list, with a click or with Enter, sets it at once.
 
 With the rectangle tool, **Find the paper's edges** places the four corners on the paper itself when the sheet stands out from what is
 behind it, still draggable, and offers a standard paper size when the photograph's shape matches one. On a white board it cannot tell the
@@ -125,7 +125,7 @@ Every edit shows a small message at the bottom of the screen saying what changed
 
 **Every word you may not know is underlined with dots,** a figure's name or a word like sigma, MOA or bull, here and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means; click it or press Enter for the whole entry, with **More in the glossary**. For a figure the sentences say what it is good for and what the number of shots does to it. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
 
-**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
+**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
 **Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it.
 
@@ -234,7 +234,7 @@ Crash records are written to your own machine whether or not you ever send them.
 ## 12. Settings
 
 The gear opens the settings:
-- **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown.
+- **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle.
 - **Theme:** dark, light, high contrast, or follow the system.
 - **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. It also lists what is sent, how many targets have gone from this computer and how to have one removed, and anything waiting to be tried again. Until sending is switched on, this section says only that.
 - **Log:** how much the diagnostic log records, and where it is.

@@ -45,6 +45,46 @@ public class AmericanSpellingTests
         Assert.True(Environment.GetEnvironmentVariable("CI") is null, "no python on this CI runner, so the spelling check did not run, and it must");
     }
 
+    /// <summary>
+    /// Entry 189 section 2: "Calibre" sat on the Setup panel because a literal with no space was taken for a key. The script's self-test
+    /// holds the cases: a one-word label is caught, a key marked British on purpose is not, and neither is an identifier.
+    /// </summary>
+    [Fact]
+    public void AOneWordLabelIsCheckedAndAMarkedKeyIsNot()
+    {
+        foreach (string python in new[] { "python3", "python" })
+        {
+            System.Diagnostics.Process? run;
+            try
+            {
+                run = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(python, "scripts/american-spelling.py --self-test")
+                {
+                    WorkingDirectory = Repo.Root,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                });
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                continue;
+            }
+
+            string said = run!.StandardOutput.ReadToEnd() + run.StandardError.ReadToEnd();
+            run.WaitForExit();
+            if (run.ExitCode == 9009)
+            {
+                continue;
+            }
+
+            Assert.True(run.ExitCode == 0, said);
+            Assert.Contains("ok   setup.Children.Add(Needed(\"Calibre\"", said, StringComparison.Ordinal);
+            return;
+        }
+
+        Assert.True(Environment.GetEnvironmentVariable("CI") is null, "no python on this CI runner, so the spelling self-test did not run, and it must");
+    }
+
     /// <summary>The allowances are the script's, and they are the ones the entry names: quoted material, and nothing that is not read.</summary>
     [Fact]
     public void TheCheckKeepsItsAllowances()

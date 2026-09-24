@@ -11,8 +11,11 @@ identifiers are not renamed: that is churn with no reader.
 What counts as something a user reads:
 
 - In C#, in the application and the engine behind it, the text of a string literal that holds a space,
-  outside any {hole} of an interpolated string. A literal with no space is a key, a name in a file format
-  or a command, and is never changed: renaming a JSON key would break every file already saved. Comments
+  outside any {hole} of an interpolated string. A literal with no space is usually a key, a name in a file
+  format or a command, and is never changed: renaming a JSON key would break every file already saved. But a
+  literal whose whole text is one British word is checked too, entry 189 section 2: "Calibre" was the Setup
+  panel's label for a week because it had no space in it. The few that really are keys say "British on
+  purpose" on their line. Comments
   are not read by users and are left alone. A line that has to keep a British form, because it reads what
   a person types, says so with the words "British on purpose" in a comment.
 - The command line tool is not swept: its usage names options such as --calibre that its parser reads,
@@ -99,6 +102,9 @@ def prose(text: str, fix: bool) -> tuple[str, list[str]]:
 def literal_text(body: str, interpolated: bool, fix: bool) -> tuple[str, list[str]]:
     """A C# literal's text: only a literal holding a space is prose, and in an interpolated one only outside the holes."""
     if " " not in body:
+        # Entry 189 section 2: one British word on its own is a label as often as a key, so it is reported, and a key says so on its line.
+        if not interpolated and body.lower() in WORDS:
+            return (american(body) if fix else body), [body]
         return body, []
     if not interpolated:
         return prose_plain(body, fix)
@@ -266,6 +272,8 @@ def targets() -> list[tuple[Path, str]]:
         if (REPO / "docs" / name).is_file():
             files.append((REPO / "docs" / name, "md"))
     files.append((REPO / "website/tour.json", "json"))
+    # Entry 189 section 2: the cartridge families' names are the caliber box's suggestions, so they are text a user reads.
+    files.append((REPO / "src/GroupLab.Core/Marking/cartridges.json", "names"))
     files.append((REPO / "website/build.py", "py"))
     return files
 
@@ -313,13 +321,51 @@ def json_strings(source: str, fix: bool) -> tuple[str, list[tuple[int, str]]]:
     return "".join(out), found
 
 
-HANDLERS = {"cs": csharp, "md": markdown, "json": json_strings, "py": python_strings}
+def json_names(source: str, fix: bool) -> tuple[str, list[tuple[int, str]]]:
+    """Only the "name" values: the shorthand beside them is what a person types, "22 centrefire" included, and is read, never shown."""
+    out, found, last = [], [], 0
+    for m in re.finditer(r'"name":\s*"((?:\\.|[^"\\])*)"', source):
+        out.append(source[last:m.start(1)])
+        text, words = prose_plain(m.group(1), fix)
+        found += [(source.count("\n", 0, m.start()) + 1, w) for w in words]
+        out.append(text)
+        last = m.end(1)
+    out.append(source[last:])
+    return "".join(out), found
+
+
+HANDLERS = {"cs": csharp, "md": markdown, "json": json_strings, "py": python_strings, "names": json_names}
+
+
+def self_test() -> int:
+    """The cases entry 189 section 2 names, each with what the check must say. Prints and exits 0 or 1."""
+    cases = [
+        ('setup.Children.Add(Needed("Calibre", calibreNeeded, calibreFrame));', ["Calibre"]),
+        ('ToolTip.SetTip(railHere, "Analyse");', ["Analyse"]),
+        ('Opt(w, "licence", d.Licence);  // British on purpose: a key in a file GroupLab reads and writes', []),
+        ('string key = "calibreInches";', []),
+        ('Readout("Caliber", name);', []),
+        ('status.Text = "Measured from the centre of each hole.";', ["centre"]),
+    ]
+    failed = 0
+    for source, want in cases:
+        # Each case is a line of its own, as in a file, so a marker on it is read the way the sweep reads it.
+        _, found = csharp("\n" + source + "\n", False)
+        got = [w for _, w in found]
+        ok = got == want
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + source[:70] + ("" if ok else f": got {got}, want {want}"))
+    print("american-spelling self-test: " + ("passed" if not failed else f"{failed} failed"))
+    return 1 if failed else 0
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="American spelling in user-facing text.")
     parser.add_argument("--fix", action="store_true", help="change the British forms")
+    parser.add_argument("--self-test", action="store_true", help="check the checker against the cases it must catch and pass")
     args = parser.parse_args()
+    if args.self_test:
+        return self_test()
     total = 0
     for path, kind in targets():
         raw = path.read_bytes()

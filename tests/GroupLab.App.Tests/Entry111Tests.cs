@@ -144,7 +144,7 @@ public partial class Entry111Tests
                 Assert.True(row.Children[0].Margin.Right >= 40, "the item leaves no room for its why");
             }
 
-            var calibre = window.GetLogicalDescendants().OfType<TextBlock>().Single(t => t.Text == "Calibre" && Entry109Tests.Shown(t));
+            var calibre = window.GetLogicalDescendants().OfType<TextBlock>().Single(t => t.Text == "Caliber" && Entry109Tests.Shown(t));
             Assert.Equal(Avalonia.Layout.VerticalAlignment.Top, calibre.VerticalAlignment);
 
             var text = window.StatisticsText.ToList();

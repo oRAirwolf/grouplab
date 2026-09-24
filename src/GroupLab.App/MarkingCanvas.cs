@@ -701,21 +701,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                     break;
                 }
 
-                if (pending.Count == 0)
-                {
-                    awaiting.Clear();
-                }
-
-                pending.Add(image);
-                hover = image;
-                if (pending.Count == (Tool == MarkingTool.Length ? 2 : 4))
-                {
-                    awaiting.AddRange(pending);
-                    pending.Clear();
-                    hover = null;
-                    (Tool == MarkingTool.Length ? LengthTapped : RectangleTapped)?.Invoke(this, [.. awaiting]);
-                }
-
+                TapScalePoint(image);
                 break;
 
             case MarkingTool.Aim:
@@ -869,9 +855,43 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
     private Point? panPressedAt;
 
+    /// <summary>One tap of a scale reference being made; the last one asks for its size.</summary>
+    private void TapScalePoint(PointD image)
+    {
+        if (pending.Count == 0)
+        {
+            awaiting.Clear();
+        }
+
+        pending.Add(image);
+        hover = image;
+        if (pending.Count == (Tool == MarkingTool.Length ? 2 : 4))
+        {
+            awaiting.AddRange(pending);
+            pending.Clear();
+            hover = null;
+            (Tool == MarkingTool.Length ? LengthTapped : RectangleTapped)?.Invoke(this, [.. awaiting]);
+        }
+    }
+
+    /// <summary>
+    /// Places a length's two ends as if they had been tapped and asks for the distance: how the scale in use is given a new size
+    /// (NOTES-FROM-PLANNING.md entry 189 section 5). The ends stay draggable like tapped ones.
+    /// </summary>
+    public void PlaceLength(PointD a, PointD b)
+    {
+        pending.Clear();
+        awaiting.Clear();
+        awaiting.AddRange([a, b]);
+        InvalidateVisual();
+        LengthTapped?.Invoke(this, [.. awaiting]);
+    }
+
     /// <summary>
     /// Puts a dragged scale point where it was let go: in the taps being made or waiting, or, for the reference in use, as a new reference
-    /// of the same size, one undo step. A press on an end that does not move it changes nothing.
+    /// of the same size, one undo step. A press on an end of the reference in use that does not move it is a tap there, which starts a new
+    /// reference: entry 189 section 5, Unholy, who could not set a scale again by tapping the same two marks, because each tap grabbed an end
+    /// and let it go where it was. A drag still moves the end and nothing else, as entry 143 settled.
     /// </summary>
     private void ReleaseHandle(MarkingSession session, (Handle Kind, int Index) grabbed)
     {
@@ -884,6 +904,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 awaiting[grabbed.Index] = handleAt;
                 break;
             case Handle.Committed when Distance(ToControl(ScalePoints(session.State.Scale)[grabbed.Index]), ToControl(handleAt)) <= 1:
+                if (Tool is MarkingTool.Length or MarkingTool.Rectangle)
+                {
+                    TapScalePoint(ScalePoints(session.State.Scale)[grabbed.Index]);
+                }
+
                 break;
             case Handle.Committed when session.State.Scale is LengthReference length:
                 session.SetScale(grabbed.Index == 0 ? length with { A = handleAt } : length with { B = handleAt });

@@ -285,6 +285,14 @@ How tightly a rifle and load group, as the spread of the shots on each axis stat
 
 *Precisely:* The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 
+## SMOA
+
+<a id="smoa"></a>
+
+An inch at 100 yards, two inches at 200: the way many shooters think of a minute of angle. A true minute is 1.047 inches at 100 yards, so this unit reads about 5 percent higher. A 0.422 inch group shot at 25.4 yards is 1.66 in it, and 1.59 true minutes.
+
+*Precisely:* One inch of height at 100 yards, 1/3600 of the distance.
+
 ## Sample size
 
 <a id="sample-size"></a>

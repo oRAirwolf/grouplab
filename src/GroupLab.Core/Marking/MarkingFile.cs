@@ -209,11 +209,11 @@ public static class MarkingFile
             turns,
             orientation,
             // Entry 107 section 1: a marking saved under a calibre name keeps its diameter and is shown by it; the old name is not displayed.
-            file["calibre"] is { } calibre ? Calibre.Of((double)calibre["diameterInches"]!) : null,
+            file["calibre"] is { } calibre ? Calibre.Of((double)calibre["diameterInches"]!) : null,  // British on purpose: a key in a file GroupLab reads and writes
             (double?)file["shotDistanceInches"],
             Detection: file["detection"] is JsonObject detection
                 ? new DetectionRecord(
-                    detection["calibre"] is { } used ? Calibre.Of((double)used["diameterInches"]!) : null,
+                    detection["calibre"] is { } used ? Calibre.Of((double)used["diameterInches"]!) : null,  // British on purpose: a key in a file GroupLab reads and writes
                     (double?)detection["holeSizeInches"])
                 : null,
             Capture: file["capture"] is JsonObject capture && capture["quality"] is JsonObject quality

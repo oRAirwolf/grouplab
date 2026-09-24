@@ -997,6 +997,47 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 189: Unholy's feedback: the zeroing grids, the caliber box, the scale, and angles first
+
+**The zeroing grids found no holes, from their own renders.** A new test renders every sheet in the library at 300 dpi with holes on
+it, has it name itself from its codes, and runs detection end to end. Sixteen passed; all four zeroing grids found none of five holes
+placed in open cells. The cause: detection keeps a mark only inside a bull's cell or within one cell of it, and a cell is sized from the
+spacing between bulls. A zeroing grid has one bull, so its cell was a point and every hole was refused as out in the margins. A bull
+with no cell of its own now takes the measurement grid it sits in (`RenderDifferenceHoleDetector.DetectionCells`); the renderer's use of
+the cells is unchanged. All twenty sheets now pass, `EverySheetDetectsTests`. Three sheets that first missed one hole of five did so
+because the test put a hole on printed ink and called it paper; the test now reads the render to say which.
+
+**The codes are marginal on two sheets.** GL-ZERO-MIL-100Y's codes did not read from a clean render at 200 dpi, while they read at 150
+and 300, and under one pattern of synthetic scanner noise at 300 dpi neither its codes nor GL-LR300-R36's read, where every other
+sheet's did; with the holes placed differently, both read. Straightening each found code and thresholding it before decoding was tried
+and did not help, and was taken out. Question 56.
+
+**The caliber box.** Choosing a suggestion wrote its text into the box, and the box's text handler made the suggestions afresh on every
+change, which threw the choice away, so "6.5" stayed and Set had to be pressed twice. The suggestions are now made again only for text
+a person typed, and a suggestion chosen by a click, or by Enter or Tab on a highlighted one, goes into the box and is set in one action.
+A test types "6.5" and presses Down and Enter, which failed before; the click is sent as what its release hands on, because the headless
+window closes the list on a press before the list sees it. Entry 192 found the exception behind the Set button half of this.
+
+**"Calibre" on screen.** The spelling check skipped any string with no space in it as a key. A string whose whole text is one British
+word is now checked too, and the real keys, in the session file and the target format, say "British on purpose" on their line; the
+check's `--self-test` holds the `Needed("Calibre", ...)` case, which it did not catch before. Fixed: the Setup label, the load readout,
+the report, the Analyze tooltip, the still-needed list, the CSV import's unit names, Show work's parameter name, and the eight cartridge
+family names ("not the same as .25 caliber"), whose names are now swept too.
+
+**A scale set by hand could not be set again** by tapping the same two marks, because a tap on an end of the scale in use grabbed the end
+and let it go where it was. A tap that does not move is now a tap, which starts a new scale; a drag still moves the end. The length and
+rectangle tools also offer "Change the length (size) of the scale in use". A test sets a length, sets it again on the same marks and
+somewhere else, then changes it from the tool, and checks the sizes follow each scale.
+
+**Angles first.** With a distance, every size in view, the report's figures and Compare's cards and charts give the angle in the chosen unit first
+and the size on the paper beneath, at the distance shot. Without one, sizes are on the paper and the panel says an angle needs the
+distance, with a button to set it. A Settings box puts the size on the paper first. SMOA is in the glossary with Unholy's example, 0.422
+in at 25.4 yd is 1.66 SMOA and 1.59 MOA, and its words are the Angles setting's tooltip.
+
+**Thanks.** The README thanks Unholy and Fenix; request 16's naming half came back.
+
+**Tests.** Core `EverySheetDetectsTests`, 20; App `Entry189Tests`, 4. Core 1642 passed, 2 skipped; App 288.
+
 ## Entry 188: the test data release is a draft, and CI still reads it
 
 **Request 17 is answered.** The release is a draft, off the releases page.

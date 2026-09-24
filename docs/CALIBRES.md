@@ -21,20 +21,20 @@ Generated from `src/GroupLab.Core/Marking/cartridges.json`. Every cartridge here
 
 | Bullet | Family | Cartridges | Easily mistaken for |
 |---|---|---|---|
-| 0.204 in (5.18 mm) | .20 calibre | .204 Ruger |  |
+| 0.204 in (5.18 mm) | .20 caliber | .204 Ruger |  |
 | 0.224 in (5.69 mm) | .22 centerfire | .223 Remington, .22-250 Remington, .222 Remington, .22 Hornet |  |
 | 0.243 in (6.17 mm) | 6 mm | .243 Winchester, 6mm BR |  |
-| 0.257 in (6.53 mm) | .25 calibre | .25-06 Remington, .257 Roberts, .257 Weatherby Magnum, .250 Savage | 0.264 in |
+| 0.257 in (6.53 mm) | .25 caliber | .25-06 Remington, .257 Roberts, .257 Weatherby Magnum, .250 Savage | 0.264 in |
 | 0.264 in (6.71 mm) | 6.5 mm | 6.5 Creedmoor, 6.5x55 Swedish, .260 Remington, 6.5 Grendel, 26 Nosler | 0.257 in |
-| 0.277 in (7.04 mm) | .270 calibre | .270 Winchester, 6.8 SPC | 0.284 in |
+| 0.277 in (7.04 mm) | .270 caliber | .270 Winchester, 6.8 SPC | 0.284 in |
 | 0.284 in (7.21 mm) | 7 mm | 7mm Remington Magnum, 7mm-08 Remington, .280 Remington, 7x57 Mauser | 0.277 in |
-| 0.308 in (7.82 mm) | .30 calibre | .308 Winchester, .30-06 Springfield, .300 Winchester Magnum, .300 AAC Blackout, .300 WSM, .30-30 Winchester, .300 H&H Magnum |  |
+| 0.308 in (7.82 mm) | .30 caliber | .308 Winchester, .30-06 Springfield, .300 Winchester Magnum, .300 AAC Blackout, .300 WSM, .30-30 Winchester, .300 H&H Magnum |  |
 | 0.323 in (8.20 mm) | 8 mm | 8mm Mauser |  |
-| 0.338 in (8.59 mm) | .338 calibre | .338 Lapua Magnum, .338 Winchester Magnum |  |
+| 0.338 in (8.59 mm) | .338 caliber | .338 Lapua Magnum, .338 Winchester Magnum |  |
 | 0.355 in (9.02 mm) | 9 mm | 9mm Luger, .380 ACP, .357 SIG | 0.357 in |
-| 0.357 in (9.07 mm) | .38 calibre | .38 Special, .357 Magnum | 0.355 in |
-| 0.375 in (9.53 mm) | .375 calibre | .375 H&H Magnum |  |
-| 0.400 in (10.16 mm) | .40 calibre | .40 S&W, 10mm Auto |  |
+| 0.357 in (9.07 mm) | .38 caliber | .38 Special, .357 Magnum | 0.355 in |
+| 0.375 in (9.53 mm) | .375 caliber | .375 H&H Magnum |  |
+| 0.400 in (10.16 mm) | .40 caliber | .40 S&W, 10mm Auto |  |
 
 ## 3. Held back until a second source agrees
 

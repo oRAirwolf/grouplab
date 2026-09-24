@@ -98,8 +98,8 @@ public static class GltdNames
 
     public static NameTable<ColourMode> ColourMode { get; } = new(
         ("mono", Model.ColourMode.Mono),
-        ("greyscale", Model.ColourMode.Greyscale),
-        ("colour", Model.ColourMode.Colour));
+        ("greyscale", Model.ColourMode.Greyscale),  // British on purpose: a key in a file GroupLab reads and writes
+        ("colour", Model.ColourMode.Colour));  // British on purpose: a key in a file GroupLab reads and writes
 
     public static NameTable<DataBlockLayout> DataBlockLayout { get; } = new(
         ("fields-3x3-1", Model.DataBlockLayout.Fields3x3),

@@ -9,17 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 188.
+**Last rewritten:** 2026-09-24, after entry 189.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 188 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 189 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entries 189 to 194 are next, in number order; 190 corrects 189 section 4.
+- Entries 190 to 194 are next, in number order. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
+  194 sends error reports to a private repository and ends in one request for Alan.
 - **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
   (question 52, option A).
@@ -43,7 +44,9 @@ Open requests in `docs/notes/for-alan.md`: **7** (22 most urgent, then 9, 16, 20
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55.
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55.
+
+- **56** the codes on two sheets read only some of the time under a scanner's noise
 
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -63,10 +66,12 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 189, 190, 191, 192, 193, 194
+**Holds:** 190, 191, 192, 193, 194
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
+- **The zeroing grids found no holes at all** until entry 189: their one bull had a cell of no size.
 - **The upload page asks for one of two consent levels**, testing only or may be published (`consent_v2`), and a
   testing only target can never reach `samples/`, the research build or the site (entry 165).
 - **Every upload is virus scanned**, streamed to clamd, since request 14 (entries 182 and 183).

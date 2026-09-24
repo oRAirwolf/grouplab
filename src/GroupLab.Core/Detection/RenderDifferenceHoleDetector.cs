@@ -214,7 +214,7 @@ public static class RenderDifferenceHoleDetector
         double inkFraction = InkFraction(observed, expected, paper, block);
 
         // S5, alignment: each bull's cell by phase correlation, the rest by the median shift.
-        var cells = BullCells.Of(definition);
+        var cells = DetectionCells(definition);
         var (aligned, shifts) = Align(observed, expected, paper, block, inkFraction, cells, registration, options.MaximumShiftInches * dpi, backend);
         expected = aligned;
         inkFraction = InkFraction(observed, expected, paper, block);
@@ -671,6 +671,28 @@ public static class RenderDifferenceHoleDetector
     /// the image through the registration, and filled row by row by the even-odd rule at pixel centres. The points along each side
     /// follow a photograph's curved mapping as well as a scan's straight one.
     /// </summary>
+    /// <summary>
+    /// Where shots are looked for: each bull's cell, from the spacing of the bulls. NOTES-FROM-PLANNING.md entry 189 section 4, Unholy: a
+    /// sheet with one bull, such as every zeroing grid, has no spacing, so its one cell was a point, every hole on it was refused as out in
+    /// the margins, and none of the four zeroing grids could find a single hole. A bull with no cell of its own takes the measurement grid
+    /// it sits in, which is where a zeroing group lands; one with no grid either keeps the point, and is refused as before rather than
+    /// guessed at. The renderer's own use of the cells, keeping the sheet's name clear of them, is not changed.
+    /// </summary>
+    internal static IReadOnlyList<(double X, double Y, double HalfWidth, double HalfHeight)> DetectionCells(TargetDefinition definition)
+    {
+        var cells = BullCells.Of(definition);
+        if (definition.Grids is not { Count: > 0 } grids || cells.All(c => c.HalfWidth > 0 && c.HalfHeight > 0))
+        {
+            return cells;
+        }
+
+        return [.. cells.Select(c => c.HalfWidth > 0 && c.HalfHeight > 0
+            ? c
+            : grids.FirstOrDefault(g => Math.Abs(c.X - g.CentreX) <= g.Half && Math.Abs(c.Y - g.CentreY) <= g.Half) is { } grid
+                ? ((double)grid.CentreX, (double)grid.CentreY, (double)grid.Half, (double)grid.Half)
+                : c)];
+    }
+
     internal static bool[] SheetMask(int pageWidth, int pageHeight, IPageMapping registration, int width, int height)
     {
         const int PerSide = 64;

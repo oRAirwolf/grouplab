@@ -411,6 +411,12 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private bool calibreConfirmed;
 
+    /// <summary>True while a chosen suggestion is being put into the caliber box, so the text it writes is not taken for new typing.</summary>
+    private bool choosingCalibre;
+
+    /// <summary>The text the caliber box's suggestions were made for, so they are made again only when the text really changes.</summary>
+    private string? calibreSuggestedFor = "";
+
     /// <summary>
     /// Records that the calibre question has been answered, NOTES-FROM-PLANNING.md entry 131 section 6.3, without naming a calibre. It is
     /// what the Clear button does, and what a test whose subject is not the calibre uses so the gate does not stand in its way.
@@ -510,6 +516,9 @@ public sealed partial class MainWindow : Window
     private readonly ComboBox themeChoice = new() { ItemsSource = new[] { "Follow system", "Dark", "Light", "High contrast" }, MinWidth = 140 };
     private bool showingTheme;
     private UnitSettings units;
+
+    /// <summary>Entry 189 section 3: the size on the paper before its angle, for one-distance shooters. Off unless chosen in Settings.</summary>
+    private bool sizeOnPaperFirst;
     private bool showingUnits;
 
     public MainWindow()
@@ -527,6 +536,7 @@ public sealed partial class MainWindow : Window
         // same shape of fault as entry 125 section 1: a thing read before the thing it depends on was ready.
         updates = settings.LoadUpdatePreferences(OwnTrain);
         units = settings.LoadUnits();
+        sizeOnPaperFirst = settings.LoadSizeOnPaperFirst();
         moreFiguresPanel.Content = moreFigures;
         moreFiguresPanel.IsExpanded = settings.LoadMoreFigures();
         moreFiguresPanel.PropertyChanged += (_, e) =>
@@ -647,7 +657,7 @@ public sealed partial class MainWindow : Window
         // thing in the panel now, each says what it unlocks, each can be answered "not known", and an empty one that matters is outlined and
         // says "needed", in words as well as colour.
         setup.Children.Add(Ruled("Setup"));
-        setup.Children.Add(Needed("Calibre", calibreNeeded,
+        setup.Children.Add(Needed("Caliber", calibreNeeded,
             "Names the bullet for the record and for ballistics, and sets the smallest hole GroupLab accepts.", calibreFrame, new StackPanel
             {
                 Children =
@@ -665,7 +675,35 @@ public sealed partial class MainWindow : Window
                     calibreOffers,
                 },
             }));
-        calibreBox.TextChanged += (_, _) => calibreBox.ItemsSource = CartridgeTable.Suggest(calibreBox.Text);
+        // Entry 189 section 6, Unholy: typing "6.5" and clicking "6.5 Creedmoor" left "6.5" in the box, and Set had to be pressed twice.
+        // Highlighting or choosing a suggestion writes its text into the box, and the suggestions were made afresh on every change of
+        // text, which threw the choice away before the box took it. They are made again only for text a person typed.
+        calibreBox.TextChanged += (_, _) =>
+        {
+            // A suggestion highlighted or chosen writes its own text into the box; that is not new typing, so the list stays as it is.
+            if (!choosingCalibre && calibreBox.Text != calibreSuggestedFor && !(calibreBox.ItemsSource is IEnumerable<string> shown && shown.Contains(calibreBox.Text)))
+            {
+                calibreSuggestedFor = calibreBox.Text;
+                calibreBox.ItemsSource = CartridgeTable.Suggest(calibreBox.Text);
+            }
+        };
+
+        // And a suggestion chosen by a click, or by Enter or Tab on a highlighted one, goes into the box and is set in the same action; Set
+        // stays for a caliber typed that is not in the list. The box's own commit is not used: it reports the choice with the typed text
+        // and an empty selection, so the gestures are read from its list instead.
+        calibreBox.TemplateApplied += (_, e) =>
+        {
+            calibreList = e.NameScope.Find<Avalonia.Controls.Primitives.SelectingItemsControl>("PART_SelectingItemsControl");
+            calibreList?.AddHandler(PointerReleasedEvent, (_, _) => ChooseCalibreSuggestion(calibreList.SelectedItem as string), Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+        };
+        calibreBox.AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.Key is Key.Enter or Key.Tab && calibreBox.IsDropDownOpen && calibreList?.SelectedItem is string highlighted)
+            {
+                ChooseCalibreSuggestion(highlighted);
+                e.Handled = e.Key == Key.Enter;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
         shotDistance.KeyDown += (_, e) =>
         {
@@ -676,7 +714,7 @@ public sealed partial class MainWindow : Window
             }
         };
         shotDistance.LostFocus += (_, _) => CommitShotDistanceIfChanged();
-        setup.Children.Add(Needed("Shot distance", distanceNeeded, "Gives every figure in MOA and mil as well as inches.", distanceFrame,
+        setup.Children.Add(Needed("Shot distance", distanceNeeded, "Gives every size as an angle, which compares groups shot at different distances.", distanceFrame,
             Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Not known", () =>
             {
                 shotDistance.Text = "";
@@ -1287,11 +1325,37 @@ public sealed partial class MainWindow : Window
         return units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{text} ({x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down})" : text;
     }
 
-    /// <summary>The centre from aim as a figure row: the offsets in the length unit as its value, and in the angular unit beneath when there is a distance.</summary>
+    /// <summary>The centre from aim as a figure row: its angle first when there is a distance, and the offsets on the paper beneath.</summary>
     private Control CentreRow(PointD centre)
     {
         var (value, detail) = CentreTexts(centre);
-        return Kept("Center from aim", value, detail is null ? [] : [detail]);
+        return Kept("Center from aim", value, [], beneath: detail);
+    }
+
+    /// <summary>
+    /// A group's size as a figure shows it, NOTES-FROM-PLANNING.md entry 189 section 3, Unholy: "if the target is not at 100 yards it should
+    /// be giving data corrected for 100 yards that most people are familiar with." Where the distance is known the angle leads, in the
+    /// chosen angular unit, because an angle is what makes groups shot at different distances comparable, and the size on the paper is
+    /// beneath it, saying at what distance. Without a distance there is no angle and the size on the paper is the figure, never a guess.
+    /// A one-distance shooter can put the size on the paper first in Settings.
+    /// </summary>
+    private (string Value, string? Beneath) Sized(double inches, double? distance) =>
+        Sized(units.Length(inches), units.AngleText(inches, distance), distance);
+
+    /// <summary>Width by height the same way: both angles, or both sizes on the paper.</summary>
+    private (string Value, string? Beneath) SizedPair(double width, double height, double? distance) =>
+        Sized($"{units.Number(width)} \u00d7 {units.Length(height)}",
+            units.Angle(width, distance) is { } across ? $"{across.ToString("0.00", CultureInfo.InvariantCulture)} \u00d7 {units.AngleText(height, distance)}" : null, distance);
+
+    private (string Value, string? Beneath) Sized(string onPaper, string? angle, double? distance)
+    {
+        if (angle is null || distance is not { } d)
+        {
+            return (onPaper, null);
+        }
+
+        string paper = $"{onPaper} on the paper at {units.DistanceText(d)}";
+        return sizeOnPaperFirst ? (onPaper, angle) : (angle, paper);
     }
 
     /// <summary>
@@ -1299,7 +1363,7 @@ public sealed partial class MainWindow : Window
     /// and its angle, interval and the figure without exclusions in a tooltip rather than on lines of their own. The report still prints
     /// those lines in full.
     /// </summary>
-    private static Control Kept(string name, string value, IEnumerable<string?> details, bool headline = false)
+    private static Control Kept(string name, string value, IEnumerable<string?> details, bool headline = false, string? beneath = null)
     {
         var row = Readout(name, value, headline ? Tokens.LeadValueSize : Tokens.ValueSize, FontWeight.Medium, labelAtTop: true, headline: headline);
         string tip = string.Join("\n", details.Where(d => !string.IsNullOrWhiteSpace(d)));
@@ -1309,8 +1373,16 @@ public sealed partial class MainWindow : Window
             Avalonia.Automation.AutomationProperties.SetHelpText(row, tip);
         }
 
-        return row;
+        // Entry 189 section 3: the figure's other form, smaller, beneath it: the size on the paper under an angle, or the angle under a size.
+        return beneath is null
+            ? row
+            : new StackPanel { Children = { row, new TextBlock { Text = beneath, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, Classes = { AppStyles.Secondary } } } };
     }
+
+    /// <summary>The smaller line beneath each figure kept in view, for the headless tests.</summary>
+    internal IReadOnlyList<string> KeptBeneath => [.. statistics.GetLogicalDescendants().OfType<StackPanel>()
+        .Where(s => s.Children.Count == 2 && s.Children[0] is DockPanel && s.Children[1] is TextBlock)
+        .Select(s => ((TextBlock)s.Children[1]).Text ?? "")];
 
     /// <summary>The "figure" readouts kept in view and their tooltips, for the headless tests.</summary>
     internal IReadOnlyList<(string Name, string Value, string? Tip)> KeptFigures => [.. statistics.GetLogicalDescendants().OfType<DockPanel>()
@@ -1539,6 +1611,36 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    /// <summary>The suggestion list inside the caliber box, found when its template is applied.</summary>
+    private Avalonia.Controls.Primitives.SelectingItemsControl? calibreList;
+
+    /// <summary>A suggestion chosen: into the box, the list closed, and set, in one action. A trap line such as "not the same as" is not a caliber.</summary>
+    internal void ChooseCalibreSuggestion(string? chosen)
+    {
+        if (choosingCalibre || chosen is null || chosen.StartsWith("not the same as", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        choosingCalibre = true;
+        try
+        {
+            calibreBox.Text = chosen;
+            calibreBox.IsDropDownOpen = false;
+            SetCalibreFromBox();
+        }
+        finally
+        {
+            choosingCalibre = false;
+        }
+    }
+
+    /// <summary>What the caliber box's list has highlighted, and whether it was found, for the headless tests.</summary>
+    internal string CalibreHighlighted => calibreList is null ? "(no list)" : calibreList.SelectedItem as string ?? "(nothing)";
+
+    /// <summary>The caliber box itself, for the headless tests that type into it and click its suggestions.</summary>
+    internal AutoCompleteBox CalibreBox => calibreBox;
+
     /// <summary>Types a calibre into the box and presses Set, for the headless tests.</summary>
     internal void EnterCalibre(string text)
     {
@@ -1706,7 +1808,7 @@ public sealed partial class MainWindow : Window
         sheetChoice.SelectedIndex = sheets.Count > 0 ? 0 : -1;
         sheetChooser.IsVisible = true;
         status.Text = "GroupLab could not read this sheet's codes. Which sheet is it?";
-        problem.Text = $"The codes did not give the sheet's definition ({why}). A sheet whose codes did not print, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand.";
+        problem.Text = $"GroupLab looked for the square codes near the sheet's corners, which name the sheet, and could not read them ({why}). A sheet whose codes did not print cleanly, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand. A flat scan at 300 dpi reads the codes most reliably.";
         DiagnosticLog.Info("detect.offer", ("sheets", sheets.Count), ("failure", why));
     }
 
@@ -1854,6 +1956,20 @@ public sealed partial class MainWindow : Window
         {
             scaleInputs.Children.Clear();
             scaleInputs.Children.Add(Row(Button("Find the paper's edges", FindPaper)));
+        }
+
+        // Entry 189 section 5: the scale in use can be given a new size at any time, without tapping it out again.
+        if (tool is MarkingTool.Length or MarkingTool.Rectangle && canvas.AwaitingTaps.Count == 0)
+        {
+            if (tool == MarkingTool.Length && session.State.Scale is LengthReference length)
+            {
+                scaleInputs.Children.Clear();
+                scaleInputs.Children.Add(Row(Button("Change the length of the scale in use", () => canvas.PlaceLength(length.A, length.B))));
+            }
+            else if (tool == MarkingTool.Rectangle && session.State.Scale is RectangleReference rectangle)
+            {
+                scaleInputs.Children.Add(Row(Button("Change the size of the scale in use", () => canvas.PlaceRectangle(rectangle.Corners))));
+            }
         }
     }
 
@@ -2091,6 +2207,25 @@ public sealed partial class MainWindow : Window
                 ? CentreRow(centre)
                 : Line($"Center from aim: {all.CentreFromAimUnavailable}.")));
             var reducedOrNull = excluded ? reduced : null;
+            double? distance = state.ShotDistanceInches;
+
+            // Entry 189 section 3.3: without the distance there is no angle, and the panel says so once, with the way to give it.
+            if (distance is null && all.DispersionWithheld is null)
+            {
+                statistics.Children.Add(Rowed(new StackPanel
+                {
+                    Spacing = Tokens.Space4,
+                    Children =
+                    {
+                        Line("These sizes are on the paper. An angle, which compares groups shot at different distances, needs the shot distance."),
+                        Button("Set the shot distance", () =>
+                        {
+                            SetAnalysing(false);
+                            shotDistance.Focus();
+                        }),
+                    },
+                }));
+            }
 
             if (all.DispersionWithheld is { } withheld)
             {
@@ -2104,19 +2239,25 @@ public sealed partial class MainWindow : Window
                 // visibly subordinate, its interval behind the More figures disclosure because it changes no decision.
                 // Entry 169 section 1: the figures a shooter reads off any target, in the order he named them, each a value in view with its
                 // angle, interval and the figure without exclusions in its tooltip rather than on a second line. Sigma goes to Advanced.
-                statistics.Children.Add(Rowed(Kept("Extreme spread", units.Length(all.ExtremeSpread!.Value), FigureDetails(all.ExtremeSpread, reducedOrNull, f => f.ExtremeSpread, interval: false))));
-                if (all is { SdX: not null, SdY: not null } && SizeValue(all) is { } widthByHeight)
+                // Entry 189 section 3: each size as an angle first where the distance is known, the size on the paper beneath it.
+                var es = Sized(all.ExtremeSpread!.Value, distance);
+                statistics.Children.Add(Rowed(Kept("Extreme spread", es.Value, FigureDetails(all.ExtremeSpread, reducedOrNull, f => f.ExtremeSpread, interval: false), beneath: es.Beneath)));
+                if (all is { SdX: not null, SdY: not null, Width: { } width, Height: { } height })
                 {
-                    statistics.Children.Add(Rowed(Kept("Group width \u00d7 height", widthByHeight, SizeDetails(all, reducedOrNull))));
+                    var size = SizedPair(width, height, distance);
+                    statistics.Children.Add(Rowed(Kept("Group width \u00d7 height", size.Value, SizeDetails(all, reducedOrNull), beneath: size.Beneath)));
                 }
 
-                statistics.Children.Add(Rowed(Kept("Mean radius", units.Length(all.MeanRadius!.Value), FigureDetails(all.MeanRadius, reducedOrNull, f => f.MeanRadius, interval: true), headline: true)));
+                var mr = Sized(all.MeanRadius!.Value, distance);
+                statistics.Children.Add(Rowed(Kept("Mean radius", mr.Value, FigureDetails(all.MeanRadius, reducedOrNull, f => f.MeanRadius, interval: true), headline: true, beneath: mr.Beneath)));
                 if (all is { Cep90: { } cep90, Cep50: { } cep50, Cep95: not null })
                 {
                     var cepLines = CepDetails(all, reducedOrNull);
                     cepLines.Add(CepWhy);
-                    statistics.Children.Add(Rowed(Kept("CEP 50", units.Length(cep50.Value), cepLines)));
-                    statistics.Children.Add(Rowed(Kept("CEP 90", units.Length(cep90.Value), cepLines)));
+                    var c50 = Sized(cep50.Value, distance);
+                    var c90 = Sized(cep90.Value, distance);
+                    statistics.Children.Add(Rowed(Kept("CEP 50", c50.Value, cepLines, beneath: c50.Beneath)));
+                    statistics.Children.Add(Rowed(Kept("CEP 90", c90.Value, cepLines, beneath: c90.Beneath)));
                 }
 
                 advancedFigures.Children.Add(Rowed(Figure("Sigma", all.Sigma!, reducedOrNull, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
@@ -2362,7 +2503,7 @@ public sealed partial class MainWindow : Window
         loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         // Entry 104 section 4: a calibre set after detection ran without one would otherwise sit beside a status line saying there was none.
-        loadLines.Children.Add(Readout("Calibre", state.Calibre is null ? "not set"
+        loadLines.Children.Add(Readout("Caliber", state.Calibre is null ? "not set"
             : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
 
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
@@ -4318,7 +4459,7 @@ public sealed partial class MainWindow : Window
                 status.Text = "You are on the analysis screen.";
             }
         };
-        ToolTip.SetTip(railHere, "Analyse");
+        ToolTip.SetTip(railHere, "Analyze");
         top.Children.Add(railHere);
         foreach (var (icon, tip, action) in new (string, string, Action)[]
         {
@@ -4464,6 +4605,22 @@ public sealed partial class MainWindow : Window
         }
 
         column.Children.Add(unitGrid);
+
+        // Entry 189 section 3.2: SMOA explained where it is chosen, in the glossary's words.
+        if (GroupLab.Core.Marking.Glossary.Find("SMOA") is { } smoa)
+        {
+            ToolTip.SetTip(angularUnit, "SMOA: " + smoa.Plain);
+        }
+
+        // Entry 189 section 3.4: the size on the paper first, for a shooter who only shoots one distance.
+        var paperFirst = new CheckBox { Content = "Show a group's size on the paper first, and its angle beneath, for shooting at one distance", IsChecked = sizeOnPaperFirst };
+        paperFirst.IsCheckedChanged += (_, _) =>
+        {
+            sizeOnPaperFirst = paperFirst.IsChecked == true;
+            settingsStore.SaveSizeOnPaperFirst(sizeOnPaperFirst);
+            Refresh();
+        };
+        column.Children.Add(paperFirst);
 
         // Entry 42 section 2: dark, light, or following the system, remembered like the units.
         column.Children.Add(Ruled("Theme"));
@@ -4730,7 +4887,7 @@ public sealed partial class MainWindow : Window
         var needed = new List<string>();
         if (CalibreConfirmation.WhyAcceptIsHeld(state, calibreConfirmed) is not null)
         {
-            needed.Add("calibre");
+            needed.Add("caliber");
         }
 
         if (state.ShotDistanceInches is null && !distanceNotKnown && state.Shots.Count > 0)
@@ -4750,7 +4907,7 @@ public sealed partial class MainWindow : Window
     private void ShowNeeded()
     {
         var needed = StillNeeded();
-        foreach (var (name, word, frame) in new[] { ("calibre", calibreNeeded, calibreFrame), ("shot distance", distanceNeeded, distanceFrame), ("rounds fired", roundsNeeded, roundsFrame) })
+        foreach (var (name, word, frame) in new[] { ("caliber", calibreNeeded, calibreFrame), ("shot distance", distanceNeeded, distanceFrame), ("rounds fired", roundsNeeded, roundsFrame) })
         {
             bool need = needed.Contains(name);
             word.IsVisible = need;

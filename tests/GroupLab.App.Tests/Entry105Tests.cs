@@ -313,10 +313,11 @@ public class Entry105Tests
         {
             window.Session.SetShotDistance(3600);
             Dispatcher.UIThread.RunJobs();
-            // Entry 169 section 1: the value alone beside its label, and the angle with the interval in its tooltip rather than a line beneath.
+            // Entry 169 section 1: the value alone beside its label, with the interval in its tooltip. Entry 189 section 3: with the distance
+            // set the value is the angle, and the size on the paper is the smaller line beneath it.
             var mean = window.KeptFigures.Single(k => k.Name == "Mean radius");
-            Assert.EndsWith(" in", mean.Value, StringComparison.Ordinal);
-            Assert.Contains("MOA", mean.Tip, StringComparison.Ordinal);
+            Assert.EndsWith(" MOA", mean.Value, StringComparison.Ordinal);
+            Assert.Contains(window.KeptBeneath, t => t.EndsWith(" in on the paper at 100 yd", StringComparison.Ordinal));
 
             // Entry 169 section 2: the zero readouts are cells in columns headed by their units, the length unit, MOA and mil, and each
             // axis's row says which way the group sits.

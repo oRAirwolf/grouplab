@@ -35,7 +35,7 @@ public static class CanonicalJsonWriter
             w.WriteString("name", d.Name);
             Opt(w, "description", d.Description);
             Opt(w, "author", d.Author);
-            Opt(w, "licence", d.Licence);
+            Opt(w, "licence", d.Licence);  // British on purpose: a key in a file GroupLab reads and writes
             Opt(w, "created", d.Created);
             w.WriteString("units", d.Units);
             WritePage(w, d.Page);

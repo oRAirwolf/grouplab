@@ -34,7 +34,7 @@ public sealed partial class MainWindow
             new("Rifle", state.Rifle is { } rifle ? $"{rifle.Name}, {rifle.DescribeClick()}" : "not chosen"),
             new("Barrel", state.Barrel ?? "not chosen"),
             new("Load", state.Load ?? "not chosen"),
-            new("Calibre", state.Calibre?.Name ?? "not set"),
+            new("Caliber", state.Calibre?.Name ?? "not set"),
             new("Shots", CountedShots(state).ToString(CultureInfo.InvariantCulture)),
         };
 
@@ -65,18 +65,25 @@ public sealed partial class MainWindow
             else
             {
                 GroupFigures? without = excluded ? reduced : null;
-                figures.Add(new ReportFigure("Mean radius", units.Length(all.MeanRadius!.Value), FigureDetails(all.MeanRadius, without, f => f.MeanRadius, interval: true)));
+                // Entry 189 section 3: the same order as the panel, the angle first where the distance is known and the size on the paper beneath.
+                double? distance = state.ShotDistanceInches;
+                List<string> With(string? beneath, List<string> details) => beneath is null ? details : [beneath, .. details];
+                var mr = Sized(all.MeanRadius!.Value, distance);
+                figures.Add(new ReportFigure("Mean radius", mr.Value, With(mr.Beneath, FigureDetails(all.MeanRadius, without, f => f.MeanRadius, interval: true))));
                 figures.Add(new ReportFigure("Sigma", units.Length(all.Sigma!.Value), FigureDetails(all.Sigma, without, f => f.Sigma, interval: true)));
-                figures.Add(new ReportFigure("Extreme spread", units.Length(all.ExtremeSpread!.Value), FigureDetails(all.ExtremeSpread, without, f => f.ExtremeSpread, interval: false)));
+                var es = Sized(all.ExtremeSpread!.Value, distance);
+                figures.Add(new ReportFigure("Extreme spread", es.Value, With(es.Beneath, FigureDetails(all.ExtremeSpread, without, f => f.ExtremeSpread, interval: false))));
                 if (all is { Cep90: { } cep90, Cep50: not null, Cep95: not null })
                 {
-                    figures.Add(new ReportFigure("CEP 90", units.Length(cep90.Value), CepDetails(all, without)));
+                    var c90 = Sized(cep90.Value, distance);
+                    figures.Add(new ReportFigure("CEP 90", c90.Value, With(c90.Beneath, CepDetails(all, without))));
                     why.Add(new ReportSection("CEP", [CepWhy]));
                 }
 
-                if (all is { SdX: not null, SdY: not null } && SizeValue(all) is { } size)
+                if (all is { SdX: not null, SdY: not null, Width: { } width, Height: { } height })
                 {
-                    figures.Add(new ReportFigure("Group width \u00d7 height", size, SizeDetails(all, without)));
+                    var size = SizedPair(width, height, distance);
+                    figures.Add(new ReportFigure("Group width \u00d7 height", size.Value, With(size.Beneath, SizeDetails(all, without))));
                 }
 
                 foreach (var card in JudgementCardsFor(state, all))
@@ -171,7 +178,8 @@ public sealed partial class MainWindow
         double? distance = session.State.ShotDistanceInches;
         string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
         string value = $"{units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
-        return (value, units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down}" : null);
+        string? angle = units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down}" : null;
+        return Sized(value, angle, distance);
     }
 
     /// <summary>The shot table as the analysis shows it, with the bull always named and each shot's standing, an excluded one struck through with its reason.</summary>

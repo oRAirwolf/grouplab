@@ -26,6 +26,9 @@ public sealed partial class MainWindow
     private readonly HashSet<long> sessionChosen = [];
     private readonly Control compareBody;
     private List<(string Name, IReadOnlyList<PointD> Offsets, string Detail, string? Speed)> compareGroups = [];
+
+    /// <summary>The distance every compared group is given at: their own where they share one, the first's where they were scaled to it.</summary>
+    private double? compareDistance;
     private string? compareFooting;
     private LoadComparisonReport? comparison;
 
@@ -71,6 +74,7 @@ public sealed partial class MainWindow
         }
 
         compareFooting = null;
+        compareDistance = distances.FirstOrDefault();
         if (distances.Distinct().Count() > 1)
         {
             if (distances.Any(d => d is null))
@@ -113,6 +117,7 @@ public sealed partial class MainWindow
         }
 
         compareFooting = null;
+        compareDistance = state.ShotDistanceInches;
         DiagnosticLog.Info("compare.subgroups", ("groups", groups.Count));
         ShowComparison(groups, null);
     }
@@ -217,9 +222,21 @@ public sealed partial class MainWindow
             string Interval(Estimate e) => $"{units.Number(e.Lower)} to {units.Length(e.Upper)}";
             card.Children.Add(Rowed(Readout("Sigma", units.Length(group.Rayleigh.Sigma.Value), Tokens.ValueSize)));
             card.Children.Add(Detail("95% interval " + Interval(group.Rayleigh.Sigma)));
-            card.Children.Add(Rowed(Readout("Mean radius", units.Length(group.MeanRadius.Value), Tokens.ValueSize)));
+            // Entry 189 section 3: the same order as the analysis, the angle first where there is a distance.
+            var mr = Sized(group.MeanRadius.Value, compareDistance);
+            card.Children.Add(Rowed(Readout("Mean radius", mr.Value, Tokens.ValueSize)));
+            if (mr.Beneath is { } mrBeneath)
+            {
+                card.Children.Add(Detail(mrBeneath));
+            }
+
             card.Children.Add(Detail("95% interval " + Interval(group.MeanRadius)));
-            card.Children.Add(Rowed(Readout("Extreme spread", units.Length(group.ExtremeSpread), Tokens.ValueSize, subordinate: true)));
+            var es = Sized(group.ExtremeSpread, compareDistance);
+            card.Children.Add(Rowed(Readout("Extreme spread", es.Value, Tokens.ValueSize, subordinate: true)));
+            if (es.Beneath is { } esBeneath)
+            {
+                card.Children.Add(Detail(esBeneath));
+            }
             Grid.SetColumn(card, i);
             cards.Children.Add(card);
         }
@@ -236,7 +253,8 @@ public sealed partial class MainWindow
             ("Sigma", [.. report.Groups.Select(g => new IntervalRow(g.Name, g.Rayleigh.Sigma.Value, g.Rayleigh.Sigma.Lower, g.Rayleigh.Sigma.Upper))]),
         })
         {
-            var chart = new IntervalChart { Rows = rows, Length = inches => units.Length(inches) };
+            // Entry 189 section 3: the charts read in the same order as the cards, as angles where there is a distance.
+            var chart = new IntervalChart { Rows = rows, Length = inches => Sized(inches, compareDistance).Value };
             compareCharts[title] = chart;
             compareColumn.Children.Add(Ruled(title + ", with the range each could really be"));
             compareColumn.Children.Add(chart);

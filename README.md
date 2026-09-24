@@ -53,6 +53,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - [Repository layout](#repository-layout)
 - [Test data](#test-data)
 - [Building](#building)
+- [Thanks](#thanks)
 - [License](#license)
 
 ---
@@ -435,6 +436,13 @@ dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o
 ```
 
 GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
+
+## Thanks
+
+To the people who have tested GroupLab and said what they found, by the names they gave:
+
+- **Unholy** scanned a GroupLab sheet he shot on 2026-09-23, which showed that naming the right caliber could make the reading worse, and then went through the application and wrote down what got in his way: the caliber label, figures at 100 yards, the zeroing grid, setting the scale again, and the caliber box.
+- **Fenix** ran GroupLab on a Mac with Apple silicon and found that Command Z did nothing and that there was no pinch zoom.
 
 ## License
 

@@ -136,7 +136,7 @@
     ],
     [
      "Group",
-     "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. Hover over a figure for its angle, the range it could really be, and the figure without any shot you left out."
+     "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. With the shot distance set each is an angle first, in MOA unless you chose another unit, with its size on the paper beneath; without it, the size on the paper and a button to set the distance. Hover over a figure for the range it could really be and the figure without any shot you left out."
     ],
     [
      "Advanced, closed until you open it",
@@ -441,7 +441,7 @@
    "parts": [
     [
      "Units",
-     "Lengths, angles and distances. Displayed only; nothing stored changes."
+     "Lengths, angles and distances. Displayed only; nothing stored changes. A box beneath puts a group's size on the paper before its angle, for shooting at one distance."
     ],
     [
      "Theme",

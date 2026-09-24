@@ -112,7 +112,7 @@ public class FirstUserTests
             var review = column.Children.OfType<TextBlock>().First(t => t.Text == "Review");
             Assert.True(column.Children.IndexOf(setup) < column.Children.IndexOf(review), "the setup block is below the review");
 
-            Assert.Contains("calibre", window.StillNeeded());
+            Assert.Contains("caliber", window.StillNeeded());
             Assert.Contains("shot distance", window.StillNeeded());
             var words = setup.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Text == "needed" && t.IsVisible).ToList();
             var frames = setup.GetLogicalDescendants().OfType<Border>().Where(b => b.Classes.Contains(AppStyles.Needed)).ToList();

@@ -20,7 +20,7 @@
   "families": [
     {
       "diameter": 0.308,
-      "name": ".30 calibre",
+      "name": ".30 caliber",
       "shorthand": [
         "30",
         ".30",
@@ -348,7 +348,7 @@
     },
     {
       "diameter": 0.277,
-      "name": ".270 calibre",
+      "name": ".270 caliber",
       "shorthand": [
         "270",
         ".270",
@@ -388,7 +388,7 @@
     },
     {
       "diameter": 0.257,
-      "name": ".25 calibre",
+      "name": ".25 caliber",
       "shorthand": [
         "257",
         ".257"
@@ -445,7 +445,7 @@
     },
     {
       "diameter": 0.338,
-      "name": ".338 calibre",
+      "name": ".338 caliber",
       "shorthand": [
         "338",
         ".338"
@@ -506,7 +506,7 @@
     },
     {
       "diameter": 0.204,
-      "name": ".20 calibre",
+      "name": ".20 caliber",
       "shorthand": [
         "20",
         ".20",
@@ -530,7 +530,7 @@
     },
     {
       "diameter": 0.375,
-      "name": ".375 calibre",
+      "name": ".375 caliber",
       "shorthand": [
         "375",
         ".375"
@@ -603,7 +603,7 @@
     },
     {
       "diameter": 0.357,
-      "name": ".38 calibre",
+      "name": ".38 caliber",
       "shorthand": [
         "38",
         ".38",
@@ -642,7 +642,7 @@
     },
     {
       "diameter": 0.4,
-      "name": ".40 calibre",
+      "name": ".40 caliber",
       "shorthand": [
         "40",
         ".40",

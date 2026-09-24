@@ -19,7 +19,7 @@ public sealed partial class MainWindow
 {
     private static readonly (string Name, CoordinateUnit Unit)[] ImportUnits =
     [
-        ("inches", CoordinateUnit.Inch), ("millimetres", CoordinateUnit.Millimetre), ("centimetres", CoordinateUnit.Centimetre), ("MOA", CoordinateUnit.Moa), ("mil", CoordinateUnit.Mil),
+        ("inches", CoordinateUnit.Inch), ("millimeters", CoordinateUnit.Millimetre), ("centimeters", CoordinateUnit.Centimetre), ("MOA", CoordinateUnit.Moa), ("mil", CoordinateUnit.Mil),
     ];
 
     /// <summary>Writes the shots as CSV, one row per shot, for spreadsheets and other tools.</summary>

@@ -175,7 +175,8 @@ gh release edit test-data --draft=false
 
 ## 16. The macOS tester: a name for the thanks, and ten minutes on a newer build
 
-**Opened 2026-09-24. Entry 166. Waiting. Not urgent; either half can come back on its own.**
+**Opened 2026-09-24. Entry 166. Waiting, half of it. Not urgent.** The first half came back on 2026-09-24, entry 189: the
+tester is Fenix, and he is thanked in the README with Unholy. The trackpad half below is still open.
 
 **What is needed.** Two things from the tester who ran nightly 93 on the M5 Max, passed on by Alan.
 
