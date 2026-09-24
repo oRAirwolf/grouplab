@@ -19,8 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's order from here: **169, 159, 154, 155, 156, 157, 158, 165**, then 184 (Discord build announcements), which
-  arrived after the order was given. Entries 156
+- Alan's order from here: **169, 184 (Discord build announcements), 185 (the duplicate nightly release and the
+  test-data release among the builds), then 159, 154, 155, 156, 157, 158, 165**, as he gave it. Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
@@ -62,7 +62,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 169, 184
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 169, 184, 185
 
 ## Things that would surprise somebody who was not here yesterday
 

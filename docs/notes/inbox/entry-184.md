@@ -47,3 +47,9 @@ nothing.
 ## 4. Order
 
 After entry 183. It is small, and nothing else depends on it.
+
+## 5. Alan's side is done (added 2026-09-24)
+
+Alan created `#builds` and its webhook, and added the secret to the repository. So the first nightly after
+this entry lands should post for real. If `DISCORD_ANNOUNCE_WEBHOOK` is absent, stable releases simply skip
+the #announcements post, as section 2 item 2 says. Quote in the report what the first real post contained.
