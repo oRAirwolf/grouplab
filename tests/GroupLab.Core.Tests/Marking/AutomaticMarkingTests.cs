@@ -37,7 +37,9 @@ public class AutomaticMarkingTests
         Assert.NotEmpty(result.Difference!.Holes);
         Assert.All(result.Difference.Holes, h => Assert.Equal(h.AreaInches / (Math.PI * Math.Pow(size / 2, 2)), h.CalibreHoles!.Value, 9));
         var stage = trace.Records.Single(r => r.Stage == "S5-S8.holes");
-        Assert.Contains(stage.Parameters, p => p.Name == "calibre" && p.Value.Contains("a hole of about 0.291 in:", StringComparison.Ordinal));
+        // Entry 162 section 3.1: the trace says the range a hole of this bullet has measured, not one figure, and what the calibre is used for.
+        Assert.Contains(stage.Parameters, p => p.Name == "calibre" && p.Value.Contains("a hole of it has measured 0.234 to 0.351 in", StringComparison.Ordinal)
+            && p.Value.Contains("does not judge one hole from two", StringComparison.Ordinal));
     }
 
     [Fact]
