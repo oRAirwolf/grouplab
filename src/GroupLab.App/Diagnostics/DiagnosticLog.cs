@@ -134,7 +134,15 @@ public sealed partial class DiagnosticLog : IDisposable
     /// </summary>
     public static string? LastAction { get; private set; }
 
-    /// <summary>A file as the log records it: its name, and a salted hash of its full path, never the directory (entry 41 section 3).</summary>
+    /// <summary>
+    /// A file as the log records it: its extension and a salted hash of its full path, never its name and never the directory.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 164 section 4, amending entry 41 section 3, which kept the name. The first macOS report showed the opened
+    /// image's name in plain text beside its hash. A report is saved by the person and shared by hand, so the risk is small, but a file name
+    /// can carry a person's name or a place, and nothing the log is for needs it: the hash ties one report's lines to the same file, and the
+    /// extension says what kind of file it was. Somebody helping can ask for the name, which leaves it the owner's to give.
+    /// </para>
+    /// </summary>
     public static (string Key, object? Value)[] File(string path) => Current.FileFields(path);
 
     public (string Key, object? Value)[] FileFields(string path)
@@ -151,7 +159,7 @@ public sealed partial class DiagnosticLog : IDisposable
         }
 
         string id = Convert.ToHexStringLower(SHA256.HashData([.. salt, .. Encoding.UTF8.GetBytes(full)]))[..8];
-        return [("file", Path.GetFileName(path)), ("pathid", id)];
+        return [("ext", Path.GetExtension(path).ToLowerInvariant()), ("pathid", id)];
     }
 
     public void Write(LogLevel level, string name, IEnumerable<(string Key, object? Value)> fields, IEnumerable<string>? continuation = null)

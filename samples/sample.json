@@ -25,9 +25,24 @@
     "how": "SHA-256 of the decoded 8-bit BGR pixel buffer as OpenCV reads it, 4958 by 6458 by 3 bytes",
     "identicalInBoth": true
   },
-  "image": { "width": 4958, "height": 6458, "bitsPerChannel": 8, "colourType": "RGB", "interlaced": false, "dpi": 600 },
-  "chunksKept": ["IHDR", "pHYs", "IDAT", "IEND"],
-  "chunksDropped": ["tIME", "tEXt x10, every value empty"],
+  "image": {
+    "width": 4958,
+    "height": 6458,
+    "bitsPerChannel": 8,
+    "colourType": "RGB",
+    "interlaced": false,
+    "dpi": 600
+  },
+  "chunksKept": [
+    "IHDR",
+    "pHYs",
+    "IDAT",
+    "IEND"
+  ],
+  "chunksDropped": [
+    "tIME",
+    "tEXt x10, every value empty"
+  ],
   "locationData": "none: a flatbed scanner records none, and the text chunks were empty before they were dropped",
   "sheet": "GL-CF25-LTR-D, GroupLab's own 5 by 5 load development sheet with a load block",
   "groundTruth": {
@@ -37,6 +52,14 @@
     "distanceYards": 100,
     "loadBlockAsWritten": "9/20/26, 100 y, 6.5 Creedmoor, 153.5 LRHT, 42.4 H4350, Alpha SRP brass, primer GM205MAR, 2.874",
     "loadBlockCorrection": "the primer was 7.5BR, not the GM205MAR written on the sheet; the sheet is published as it is and the correction is recorded here",
-    "expectedOfGroupLab": "25 holes on 25 bulls, one each, registering from the sheet's own printed markers"
+    "expectedOfGroupLab": "25 holes on 25 bulls, one each, registering from the sheet's own printed markers",
+    "markers": {
+      "printed": 34,
+      "read": 33,
+      "missed": 28,
+      "where": "0.512 in from the left, 9.142 in down: the lower left, above the load block",
+      "why": "printed with horizontal white streaks across it, the printer's banding, so its black border is not a closed square and the detector finds no quad there. No hole is near it. Every other marker reads, and the sheet registers at 0.0026 in.",
+      "measured": "entry 164 section 2: 33 of 34 on Windows and on macOS from the same file, and SampleMarkerTests holds it on all three operating systems CI runs on"
+    }
   }
 }

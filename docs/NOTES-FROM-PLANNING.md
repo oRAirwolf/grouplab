@@ -24,6 +24,19 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 164: the first macOS log, and two things it raises that need no tester
+
+**Status: actioned 2026-09-24**, all four sections.
+
+- **Section 1.** Recorded; nothing to do about the updater.
+- **Section 2.** Windows reads 33 of 34 too. Marker 28 is printed with the printer's banding across it. Recorded with the sample's ground truth, and a test holds it on all three CI platforms.
+- **Section 3.** Not a slowdown: the baseline was a scan with no holes. On the same file the M5 Max is about a fifth faster. No x86 intrinsics, no ReadyToRun on either platform, and both are faster on the second run.
+- **Section 4.** The log records the extension and the path hash, never the name, amending entry 41 section 3.
+
+---
+
+---
+
 ## 2026-09-24, entry 173: open the target upload page, and put it in the top bar
 
 **Status: actioned 2026-09-24**, sections 1 to 3, with two parts waiting on Alan rather than on a decision: section 1.3's end to end test

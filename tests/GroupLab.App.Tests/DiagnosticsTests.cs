@@ -136,7 +136,8 @@ public partial class DiagnosticsTests
             string text = LogOf(window => window.OpenImage(photograph));
 
             Assert.Contains("image.open", text, StringComparison.Ordinal);
-            Assert.Contains("file=target.jpg", text, StringComparison.Ordinal);
+            Assert.Contains("ext=.jpg", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("target.jpg", text, StringComparison.Ordinal);
             Assert.Contains("pathid=", text, StringComparison.Ordinal);
             Assert.Contains("make=TestPhone", text, StringComparison.Ordinal);
             foreach (string forbidden in new[] { "GPS", PersonalJpeg.LatitudeSeconds, PersonalJpeg.LongitudeSeconds, "Jane", "Oak Lane", "MAKERNOTE", "Range photos", Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar) })
@@ -167,7 +168,8 @@ public partial class DiagnosticsTests
                 window.OpenMarking(Path.Combine(directory, "missing.grouplab.json"));
             });
 
-            Assert.Contains("file=broken.grouplab.json", text, StringComparison.Ordinal);
+            Assert.Contains("ext=.json", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("broken.grouplab.json", text, StringComparison.Ordinal);
             Assert.DoesNotMatch(DriveLetterPath(), text);
             Assert.DoesNotContain(directory, text, StringComparison.Ordinal);
             Assert.DoesNotContain(PersonalJpeg.Artist, text, StringComparison.Ordinal);

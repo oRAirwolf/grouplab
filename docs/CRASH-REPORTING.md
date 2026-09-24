@@ -10,7 +10,7 @@ What GroupLab records when something goes wrong, what a report contains, and exa
   - no image of any kind, and no photograph's metadata or GPS coordinates;
   - no marking file, no settings file, and nothing from anybody's submissions;
   - no file path, because a path begins with the user's own name.
-- **How a file appears in a log:** by its name and a salted hash of its path, so the log can say the same file was opened twice without saying where it lives.
+- **How a file appears in a log:** by its extension and a salted hash of its path, so the log can say the same file was opened twice without saying where it lives or what it is called. Entry 164 section 4 removed the name, because a file name can carry a person's name or a place.
 - **If an image is ever wanted with a report,** that is a separate, explicit, per-file consent, and not a checkbox in a crash dialog.
 - **Nothing is sent without a click.** The report dialog shows what is in the package before it goes anywhere. Saving the file is the first choice, and sending is a separate button that is never the default. Nothing is ever sent silently, on a timer or at startup.
 - **The send address is empty by default,** and the Send button does not exist while it is empty. A copy of GroupLab built by anybody else never posts to anybody's server unless it is configured to.

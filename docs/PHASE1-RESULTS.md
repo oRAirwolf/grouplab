@@ -690,6 +690,30 @@ pissinhot.com's two folders and would have left every grouplab.org submission on
 **Entry 171's `.user.ini` check.** The deploy of `9ade3bf` was the first that changed the site since the new exclusion. Read over SSH
 without sudo: `public_html/.user.ini` is still there, owned by airwolf, 2383 bytes, unchanged since the install.
 
+## Entry 164: the first macOS log, and the two questions it raised
+
+A friend ran nightly 93 on a MacBook Pro with an M5 Max and sent a diagnostics report. Native Arm64, not Rosetta; the sample opened, identified itself and read 25 holes on 25 bulls; the session saved; the updater refused as intended; no errors or warnings. Nothing here needed the tester to answer.
+
+### Section 2: 33 of 34 markers is the sample, not the Mac
+
+**Windows reads 33 of 34 from the same file**, at 0.0026 in, exactly as the Mac did, so it is not a platform difference. The one missed is **marker 28**, 0.512 in from the left and 9.142 in down, above the load block. It is printed with horizontal white streaks across it, the printer's banding, so its black border is not a closed square and the detector finds no quad there. No hole is near it. It is recorded with the sample's ground truth in `samples/sample.json`, and `SampleMarkerTests` holds it at 33 of 34 with marker 28 missed. **CI runs that test on Windows, Linux and macOS on every push**, which is the three-platform comparison the section asked for, repeated rather than done once.
+
+### Section 3: the Mac is faster, and the comparison was two different files
+
+The 3,649 ms in `docs/PERFORMANCE.md` is **a different scan**: a 600 dpi sheet with no holes in it and four markers unread, where hole detection is 2.1 s. The sample has 25 holes, and hole detection on it is 4.7 s. The comparison was never like for like.
+
+Timed on the Windows baseline machine, same file, three runs: 7.5, 6.9 and 6.9 s for every stage. The Mac's figure is the application's `detect.run`, which starts after the image is decoded, so the matching Windows figure is those less the 380 ms decode: **about 6.5 s here against 5.4 s and 4.8 s on the M5 Max.** The Mac is about a fifth faster on the same file.
+
+The three things the section asked to check, each answered from the repository:
+
+1. **No x86 intrinsics anywhere in `src`**, and no explicit vectors, so there is no scalar fallback on Arm64 to remove. The heavy work is OpenCV's native code, which has its own Arm paths.
+2. **Neither the Windows nor the macOS publish is ReadyToRun.** It is not a difference between them.
+3. **The second run is faster on both**: 12 percent on the Mac, and about 8 percent here, which is start-up and just-in-time compilation.
+
+### Section 4: a report carries no file names
+
+**Decided: the hash and the extension only.** The log recorded an opened image's name beside its salted path hash. A report is saved and shared by hand, so the risk is small, but a file name can carry a person's name or a place, and nothing the log is for needs it: the hash ties one report's lines to the same file and the extension says what kind of file it was. Somebody helping can ask for the name, which leaves it the owner's to give. `DiagnosticLog.File` now records `ext` and `pathid`, amending entry 41 section 3, and `docs/CRASH-REPORTING.md` says so. The two log tests check the name is gone, not only that the extension is there.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

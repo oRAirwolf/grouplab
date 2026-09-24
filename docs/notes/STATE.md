@@ -15,20 +15,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- Entries 149 to 153, 160 to 163, 167, 168, 171 and 173 are done; **the upload page is open at `grouplab.org/targets/`**. **Entry 164 is finished and waiting to be
-  committed**: it was set aside so 171 could go first.
-- Alan's order from here: **164, 170, 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
+- Entries 149 to 153, 160 to 164, 167, 168, 171 and 173 are done. **The upload page is open at
+  `grouplab.org/targets/`.**
+- Alan's order from here: **170, 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 sections 3 and 4 were never done and nothing brought them back. Entry 171 section 6.1 puts
   section 3 with entry 170 section 2 and section 4 with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 164.** The first macOS log: marker 28 is printer banding, the Mac is faster than Windows on
-   the same file, and a report no longer carries file names. Done, needs committing.
-2. **Entry 170.** An outside user's defects: two interface freezes, a zero correction that does not say
+1. **Entry 170.** An outside user's defects: two interface freezes, a zero correction that does not say
    its distance, and hole centres he had to move by hand. With entry 149 section 3.
-3. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures entry 170's hole centres.
+2. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures entry 170's hole centres.
+3. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, and what was checked on a Mac.
 
 ## Blocked, and on what
 
@@ -64,7 +63,7 @@ of 44; answered ones are listed there by number and live whole in the archive.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ, because this was the fact that was wrong last time.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 164, 165, 166, 169, 170, 172
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172
 
 ## Things that would surprise somebody who was not here yesterday
 
