@@ -102,3 +102,103 @@ send screenshots. Use them to decide the layout and the defaults.
 Do not copy their wording, their layout, their labels or any code. Build the model from section 2.
 Where GroupLab's answer differs from theirs for the same inputs, that is worth investigating and
 possibly worth an article under entry 158, but it is not a reason to change the model to agree.
+
+## 7. What the Blackburn Defense calculator actually does (added 2026-09-24)
+
+The planning session opened the page and ran it with its defaults. Record this as the reference, and
+still build from section 2's model rather than from their layout or wording.
+
+**Inputs, with the page's defaults:**
+
+| input | default |
+|---|---|
+| target | 20 in circle |
+| iterations | 1000 |
+| group size | average five shot group 1 MOA, standard deviation 0.5 MOA |
+| muzzle velocity | 2800 fps measured, 2800 actual, standard deviation 10 fps |
+| BC | 0.3 measured, 0.3 actual, standard deviation 0.003 |
+| range | 1000 yd measured, 1000 actual, standard deviation 3 yd |
+| wind speed | 10 mph measured, 10 actual, standard deviation 2 mph |
+| wind direction | 90 degrees measured, 90 actual, standard deviation 5 degrees |
+
+**Outputs:** a scatter of simulated impacts in two colours, and two numbers. With the defaults above:
+first round hit probability 40.8 percent, second round hit probability 75.0 percent. The second round
+cloud is much tighter, because the second shot is corrected from where the first one landed.
+
+**Two ideas worth taking, both of which fit section 2's model:**
+
+1. **Measured, actual and uncertainty are three separate things.** For every environmental input the
+   page distinguishes what the shooter believes (measured), what is really true (actual), and how
+   uncertain the belief is (standard deviation). Setting measured and actual apart models a **bias**,
+   such as a chronograph reading 20 fps fast, which a standard deviation alone cannot. Offer the actual
+   value behind the advanced disclosure, defaulting to the measured one.
+2. **A second round probability, after correcting from the first impact.** This is the number that
+   matters in real engagements and on most match stages. Model it honestly: after the first shot, the
+   shooter corrects by that shot's observed miss, which removes most of the per string errors of section
+   2, the wind call, the range error and the zero error. **But the correction also contains the first
+   shot's own random dispersion**, because the shooter cannot tell which part of a miss was the wind and
+   which part was the rifle. So the second shot carries its own dispersion plus the first shot's, and a
+   model that ignores that will overstate the second round number. Show first round and second round
+   probability side by side, and say in the assumptions that the second assumes the first impact was
+   seen.
+
+**Where GroupLab should do better than the reference:**
+
+- The reference asks for an average five shot group in MOA. GroupLab has the shooter's measured
+  dispersion with its confidence interval, which is a better input than a remembered group size, and
+  the extreme spread of five shots is a poor estimator of dispersion in the first place.
+- The reference shows a single percentage with no interval. Section 3 item 1 still stands: show the
+  interval, including the uncertainty in the shooter's own measured dispersion.
+- 1000 iterations gives a Monte Carlo standard error of about 1.6 points on a probability near 50
+  percent, far coarser than the tenth of a percent the page prints. Keep section 1's default of 10000,
+  and never print more precision than the trial count supports.
+
+## 8. What Applied Ballistics Quantum's WEZ screen does (added 2026-09-24)
+
+Alan sent eight screenshots of the WEZ calculator in the Applied Ballistics Quantum app, with his own
+6.5 Creedmoor profile loaded, and pointed at https://appliedballisticsllc.com/weapon-employment-zone-wez/
+for the background. This is the tool he uses, so it is the stronger of the two references. Same rule as
+section 6: learn from it, copy none of its layout, labels, numbers or code.
+
+**What it shows.** Hit probability sits in a strip at the top of the firing solution, beside energy,
+elevation and two wind holds. So a shooter reads the probability with the dope, not on a separate page.
+Below that, the WEZ view draws the simulated impacts over the target.
+
+**Its inputs:**
+
+- range, target type, and target width and height, 12 by 12 in at 1000 yd in his screenshots
+- target types: IPSC, rectangle, circle, and animal outlines (deer, coyote, elk, prairie dog)
+- graph type: shot simulation, vertical uncertainty, horizontal uncertainty, and probability of hit
+- **uncertainties**, each as one number: range, muzzle velocity, wind speed, drag (as a percentage of
+  the drag model), rifle precision (in mrad), temperature, pressure, humidity, azimuth, inclination and
+  latitude
+
+**Confidence presets.** One control, Low, Medium, High or Custom, sets every uncertainty at once. With
+his 12 inch target at 1000 yd, the presets gave 4, 25 and 84 percent, and his own custom values gave 51
+percent. That spread is the whole lesson of the screen: the uncertainties decide the answer far more than
+the rifle does.
+
+**What to take into GroupLab:**
+
+1. **Show the probability with the dope.** Put the hit probability on the Ballistics screen's solution,
+   beside the elevation and wind holds, as well as on its own view.
+2. **Confidence presets that set every uncertainty at once**, with Custom for anything edited. Define
+   GroupLab's own presets, each described in a sentence by the situation it represents, such as "known
+   distance, measured wind" against "lasered distance, estimated wind", and document where each number
+   comes from. Do not reuse the Quantum preset values.
+3. **Widen section 1's inputs** to include the uncertainties Quantum carries that section 1 does not:
+   drag model uncertainty as a percentage, and temperature, pressure, humidity, azimuth, inclination and
+   latitude. All of them go behind the advanced disclosure; the presets fill them.
+4. **Target shapes**: circle, rectangle and IPSC first. A target from GroupLab's own library, by its bull
+   size, is a natural fourth. Animal vital zones are a later decision, not part of this entry.
+5. **Vertical and horizontal uncertainty views.** Section 3 item 5's sensitivity list is the same idea
+   done better, since it names which input costs the most. Offer the vertical and horizontal split as
+   well, because it is how Quantum users already think.
+
+**Where GroupLab is ahead, and this is the reason to build it at all:** Quantum asks the shooter to type
+"rifle precision" and a velocity uncertainty. GroupLab has measured both. Pre-populate rifle precision
+from the selected load's measured dispersion and velocity uncertainty from its chronograph data, each with
+its confidence interval, and say on screen where each came from. **State the definition exactly**:
+"rifle precision" here must be the per axis standard deviation in mrad, which for circular dispersion is
+the Rayleigh parameter. Mixing up a per axis figure with a radial one changes the answer considerably, so
+write the conversion down, test it, and never let two numbers with different definitions share a field.

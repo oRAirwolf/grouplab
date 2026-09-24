@@ -103,10 +103,35 @@ to end test, the `pissinhot.com/targets` redirect of section 6.2, and ingesting 
 submissions. Rewrite request 1 to say exactly that, with the commands for the redirect, which is the one
 change to pissinhot.com that Alan has approved.
 
+**Checked and brought current on 2026-09-24 at 00:21 Mountain.** Every intake file on the server matched
+the repository except that `public_html/.user.ini` was missing. The cause: the server's copy of
+`grouplab-site-sync.py` predated the `KEEP_IN_PLACE` exclusion and had deleted it on a sync. Alan copied
+the current `website/server/` files to `/home/ubuntu/grouplab-server/`, ran both installers dry and then
+for real, and the sync script on the server now hashes the same as the repository's, `6bf8b72d...`.
+`.user.ini` is back, owned by airwolf, 2383 bytes. Both timers are running. The nginx include was
+unchanged, so no reload was needed. **The server side of entry 129 is finished.** Two things to add:
+
+1. **Check `.user.ini` survives the next real deploy**, the first sync that actually changes the site, and
+   say so in the report. The dry run and the real run both found nothing to deploy, so the new exclusion
+   has not yet been exercised.
+2. **The installer's closing reminder is misleading once the install is done.** It tells the person to
+   set the Turnstile secret and reload nginx every time, even when the secret is already set and nothing
+   nginx reads has changed. Make it check: say the secret is present, without printing it, and only
+   print the nginx steps when the include was actually written.
+
 **Request 5, pre-approved commands.** Alan is applying it now, with one change the planning session
 made: the existing `settings.local.json` already allowed `git push *`, which covers a force push and
 contradicted the request's own promise that a force push would still ask. That rule is removed and the
 narrow push rule from the request replaces it. Close request 5 when Alan confirms.
+
+## 6.1 Entry 149 sections 3 and 4 must not fall out of the queue
+
+Entry 149's status records sections 3 and 4 as not done: question 37's A and D (clicking the bulls that
+were aimed at, and the review queue offering the offset where it would move shots) and re-running the
+entry 121 survey's baselines against the narrowed rule of question 35. Neither is in any later entry, so
+nothing would bring them back. Do section 3 together with entry 170 section 2, since that freeze is in the
+same control, and section 4 together with entry 172 section 3 item 1, since both measure false and missed
+holes. Say in each report that 149's section is now closed.
 
 ## 7. The order from here
 
