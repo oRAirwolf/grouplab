@@ -12,6 +12,36 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-24, question 54: entry 157's angle limit, and a white board behind the sheet
+
+Status: open. Built as described; nothing waits on the answer.
+
+### 1. The limit on how far off square a photograph may be
+
+Section 3 item 4: "Measure that limit rather than choosing it: entry 130's paired photographs and scans are the material." That material
+stops at 35 degrees: every 2026-09-20 range photograph up to 35 registered, and the twelve fully framed ones measured against their scans,
+from 3 to 32 degrees, kept the same hole error, while their bull centers grew about three times worse from square on to 30 degrees. A
+rendered sheet through a known camera keeps its bulls within 0.001 in to 60 degrees and cannot register at 70. So the measurement bounds
+the limit rather than fixing it, and I set **40 degrees**, above everything real that worked and well inside where the ideal case breaks.
+`docs/MOBILE-CAPTURE.md` section 4.2 has the tables. Request 18 asks Alan for photographs of a scanned sheet at 40 to 60 degrees, which
+would put a real number on it. The alternative is 35, the steepest real photograph, which refuses nothing that has been measured to work
+and nothing that has been measured to fail either.
+
+### 2. The quality score's levels
+
+Section 5 fixes what goes in and not where each part is perfect or worthless. The levels are in `docs/MOBILE-CAPTURE.md` section 5: for
+example focus perfect at a blur of 0.004 in and worthless at 0.015, resolution perfect at 150 pixels an inch and worthless at 50. They are
+judgment, set so the range photographs' spread reads sensibly; the planning session may have better reasons for any of them.
+
+### 3. White paper on a white board
+
+`SheetOutline` finds a sheet against anything darker, and it cannot find one on Alan's white backer board: the light across the sheet
+varies more than the paper and the board differ. An edge based search did no better, losing the paper's faint edges among the printing and
+the board's ribs. For the desktop that only means a person taps the corners, as before. For the mobile capture screen, whose section 2
+conditions include "the sheet edges or the printed markers are detected", it means a commercial sheet on that board never satisfies the
+condition, so the screen needs either *put something darker behind the sheet* as guidance or a manual corner path. I wrote the first into
+section 1's C3 order and would want the second as well.
+
 ## 2026-09-24, question 53: three judgment calls in entry 156's hit probability
 
 Status: open. Built as described; nothing waits on the answer.

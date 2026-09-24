@@ -1201,6 +1201,14 @@
    "kind": "code",
    "where": "the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156"
   },
+  "On a white board it cannot tell the paper from the board, and you tap the corners.": {
+   "kind": "code",
+   "where": "the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157"
+  },
+  "A photograph taken more than 40 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.": {
+   "kind": "code",
+   "where": "the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157"
+  },
   "- **Print** (on Windows) prints from inside GroupLab at actual size.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
@@ -1367,6 +1375,11 @@
   }
  },
  "rules": [
+  {
+   "surface": "^docs/MOBILE-CAPTURE\\.md$",
+   "kind": "measured",
+   "where": "entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs"
+  },
   {
    "surface": "^site:guides/glossary/|^docs/GLOSSARY\\.md$",
    "kind": "decided",

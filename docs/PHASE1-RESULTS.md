@@ -997,6 +997,42 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 157: how the mobile application takes the photograph
+
+**The specification**, `docs/MOBILE-CAPTURE.md`: the capture screen's conditions, one instruction at a time and the outline that
+snaps, the flash, the lens, distortion and perspective, what is recorded, and targets GroupLab did not print. Each requirement names the
+test that holds it, or the test the mobile work must write.
+
+**Built on the desktop, in `src/GroupLab.Core/Capture`, and measured with `grouplab capture-check`:**
+
+- **The paper's corners.** `SheetOutline` finds the paper by its brightness, splitting again where a light board surrounds it, and refines
+  each edge to a fraction of a pixel. On a rendered sheet photographed through a known camera the worst corner is under 0.3 px from 0 to 70
+  degrees. On 85 real photographs it found the one whole sheet on a darker mat and nothing on Alan's white board: the light across a sheet
+  varies more than paper and board differ. On the marking screen, **Find the paper's edges** places the corners for the rectangle scale.
+- **The off-axis angle, its limit and the refusal.** `CameraGeometry` reads the angle from the page-to-image homography with the
+  camera's focal length, or one solved from the sheet above 20 degrees. The markers give it within 0.05 degrees to 65 degrees in the
+  sweep. On the range photographs 31 of 59 registered, at 3 to 35 degrees. Of the 12 fully framed ones measured against their scans:
+  - the bull centers' median error rose from 0.0024 to 0.0076 in square on, to 0.0088 to 0.0138 at 27 to 32 degrees
+  - the holes' error did not change
+
+  The synthetic sheet keeps its bulls within 0.001 in to 60 degrees and cannot register at 70. **The limit is 40 degrees**, and the
+  refusal names the angle and the limit; question 54 asks planning to read it, and request 18 asks for steeper photographs.
+- **The quality score**, 0 to 100 and shown as good, usable or poor, is the least of focus, exposure, angle, resolution and markings read.
+  Its formula is in the document to recompute by hand. On the 31 range photographs:
+  - good 10, usable 6, poor 15: set by the angle on 7, blown-out paper on 6, missed markers on 2
+  - the blown out include the two photographs of scan 1's sheet that matched 5 of its 14 holes
+  - focus decided none of them
+- **Lens distortion from the markers** was built in Phase 0. On the 12 paired photographs it halves the worst bull error: a median of
+  0.029 in against 0.054 with a plain homography, and better on 11 of 12.
+- **Kept with the photograph.** Every photograph that registers keeps a `CaptureRecord` in its marking: lens, focal lengths, angle,
+  correction, radial terms and quality, never a place or a time. The registration line on screen says how far off square it was and how
+  good it is.
+
+**Tests.** `CaptureTests`, 18, and `Entry157Tests`, 2. App 275 passed; Core 1615 passed, 2 skipped.
+
+**Also.** a70338a fixed entry 156's red Linux tarball check: the ships list is generated from the files git tracks, and the two new
+files were not yet added.
+
 ## Entry 156: hit probability from the shooter's own dispersion
 
 **The model**, in `HitProbability` and written down there and in `docs/STATISTICS.md` section 12.6. Each simulated shot is the sum of

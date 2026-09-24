@@ -28,7 +28,8 @@ public sealed record AutomaticResult(
     IReadOnlyList<RejectedCandidate>? Rejected = null,
     RenderDifferenceResult? Difference = null,
     DetectionRecord? Detection = null,
-    TargetDefinition? Definition = null);
+    TargetDefinition? Definition = null,
+    GroupLab.Core.Capture.CaptureRecord? Capture = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -147,6 +148,27 @@ public static class AutomaticMarking
         double printScale = SheetReference.Correction(measurement.Scale) ?? 1;
         var missing = fiducials.Missing.Select(m => mapping.ToImage(new PointD(m.X, m.Y))).ToList();
         double dpi = (measurement.Scale?.PixelsPerDmmArea ?? fiducials.PixelsPerDmm) * 254;
+
+        // NOTES-FROM-PLANNING.md entry 157 sections 3 and 5: a photograph's off-axis angle and quality, kept with it, and a photograph beyond the
+        // angle GroupLab corrects is refused with the angle and the limit named, before anything is measured from it.
+        GroupLab.Core.Capture.CaptureRecord? capture = null;
+        if (metadata.IsCamera)
+        {
+            using var stage = trace.Begin("S4.capture");
+            capture = GroupLab.Core.Capture.CaptureRecord.Of(grey, metadata, mapping, definition.Page.Width, definition.Page.Height, fiducials.Matches.Count, fiducials.Expected, measurement.Lens?.K1, measurement.Lens?.K2);
+            stage.Metric("off axis", capture.OffAxisDegrees, "degrees");
+            stage.Metric("quality", capture.Quality.Score, "of 100");
+            stage.Parameter("focal length", capture.FocalSource);
+            if (GroupLab.Core.Capture.OffAxisLimit.Refusal(capture.OffAxisDegrees) is { } refusal)
+            {
+                stage.Done(StageStatus.Failed, refusal);
+                return new AutomaticResult(measurement, null, [], [], missing, markers, refusal, Definition: definition, Capture: capture);
+            }
+
+            stage.Done(StageStatus.Ok, capture.Quality.Describe());
+            markers += "; " + capture.Clause;
+        }
+
         RenderDifferenceResult holes;
         DetectionRecord detection;
         using (var stage = trace.Begin("S5-S8.holes"))
@@ -242,7 +264,7 @@ public static class AutomaticMarking
 
         string summary = string.Create(CultureInfo.InvariantCulture,
             $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method.Words()}{(string.IsNullOrWhiteSpace(assignment.Reason) ? "" : ": " + assignment.Reason)}");
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = SheetReference.Correction(measurement.Scale) }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = SheetReference.Correction(measurement.Scale) }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition, capture);
     }
 }
 

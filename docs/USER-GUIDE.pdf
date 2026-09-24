@@ -66,7 +66,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 5293 >>
+<< /Length 6021 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -137,6 +137,11 @@ BT /F1 71 Tf 1 0 0 -1 409 4319 Tm (4.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 508 4319 Tm (It gives each hole to a bull.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4421 Tm (Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4509 Tm (by hand against a length or a rectangle of known size.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4632 Tm (With the rectangle tool, Find the paper's edges places the four corners on the paper itself when the sheet stands) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4720 Tm (out from what is behind it, still draggable, and offers a standard paper size when the photograph's shape) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4808 Tm (matches one. On a white board it cannot tell the paper from the board, and you tap the corners. A photograph) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4896 Tm (taken more than 40 degrees off square to the sheet is refused, with the angle named, and every photograph you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4984 Tm (open keeps how far off square it was and how good it is: good, usable or poor.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 2 of 11) Tj ET
 Q
 endstream
@@ -5721,33 +5726,33 @@ xref
 0000000485 00000 n 
 0000003723 00000 n 
 0000003849 00000 n 
-0000009194 00000 n 
-0000009347 00000 n 
-0000012920 00000 n 
-0000013048 00000 n 
-0000016510 00000 n 
-0000016665 00000 n 
-0000020364 00000 n 
-0000020492 00000 n 
-0000026574 00000 n 
-0000026729 00000 n 
-0000028157 00000 n 
-0000028312 00000 n 
-0000030141 00000 n 
-0000030296 00000 n 
-0000033553 00000 n 
-0000033681 00000 n 
-0000039080 00000 n 
-0000039235 00000 n 
-0000039500 00000 n 
-0000297179 00000 n 
-0000492772 00000 n 
-0000756560 00000 n 
-0000824876 00000 n 
-0000945361 00000 n 
-0001043288 00000 n 
+0000009922 00000 n 
+0000010075 00000 n 
+0000013648 00000 n 
+0000013776 00000 n 
+0000017238 00000 n 
+0000017393 00000 n 
+0000021092 00000 n 
+0000021220 00000 n 
+0000027302 00000 n 
+0000027457 00000 n 
+0000028885 00000 n 
+0000029040 00000 n 
+0000030869 00000 n 
+0000031024 00000 n 
+0000034281 00000 n 
+0000034409 00000 n 
+0000039808 00000 n 
+0000039963 00000 n 
+0000040228 00000 n 
+0000297907 00000 n 
+0000493500 00000 n 
+0000757288 00000 n 
+0000825604 00000 n 
+0000946089 00000 n 
+0001044016 00000 n 
 trailer
 << /Size 33 /Root 1 0 R >>
 startxref
-1122410
+1123138
 %%EOF

@@ -1775,7 +1775,7 @@ public sealed partial class MainWindow : Window
         canvas.Artwork = artwork = result.ExpectedArtwork;
         plotDefinition = result.Definition;
         registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
-        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
+        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture);
         RememberDetected();
 
         // Entry 163 section 1: detection used to switch to the select tool, which is how a first user found a drag doing nothing useful.
@@ -1839,7 +1839,53 @@ public sealed partial class MainWindow : Window
         }
 
         status.Text = ToolStatus(tool);
+
+        // Entry 157 section 4: the paper itself is a known rectangle, and GroupLab can find its edges when the sheet stands out from what is behind it.
+        if (tool == MarkingTool.Rectangle && grey is not null && canvas.AwaitingTaps.Count == 0)
+        {
+            scaleInputs.Children.Clear();
+            scaleInputs.Children.Add(Row(Button("Find the paper's edges", FindPaper)));
+        }
     }
+
+    /// <summary>
+    /// Finds the paper's four edges and places them as the reference rectangle, NOTES-FROM-PLANNING.md entry 157 section 4, or says why not.
+    /// With the camera's focal length the photograph gives the paper's shape, and a standard size that shape matches is offered, never assumed.
+    /// A photograph taken further off square than GroupLab corrects is refused with the angle named.
+    /// </summary>
+    internal void FindPaper()
+    {
+        if (grey is null)
+        {
+            return;
+        }
+
+        var quad = GroupLab.Core.Capture.SheetOutline.Find(grey, out string? why);
+        if (quad is null)
+        {
+            problem.Text = $"GroupLab could not find the paper's edges: {why}. A darker background behind the sheet lets it; otherwise tap the four corners.";
+            DiagnosticLog.Info("scale.paper", ("found", false));
+            return;
+        }
+
+        var angle = GroupLab.Core.Capture.CameraGeometry.Measure(quad.FromUnitSquare(), grey.Width, grey.Height, metadata);
+        if (GroupLab.Core.Capture.OffAxisLimit.Refusal(angle.Degrees) is { } refusal)
+        {
+            problem.Text = refusal;
+            DiagnosticLog.Info("scale.paper", ("found", true), ("refused", true));
+            return;
+        }
+
+        paperGuess = angle.Focal == GroupLab.Core.Capture.FocalSource.Camera && GroupLab.Core.Capture.CameraGeometry.NearestPaper(angle.Aspect) is { } paper
+            ? (angle.Aspect >= 1 ? (paper.Name, paper.HeightInches, paper.WidthInches) : (paper.Name, paper.WidthInches, paper.HeightInches))
+            : null;
+        DiagnosticLog.Info("scale.paper", ("found", true), ("refused", false), ("shape", paperGuess is not null));
+        canvas.PlaceRectangle(quad.Corners);
+        status.Text = string.Create(CultureInfo.InvariantCulture, $"The paper's four corners are placed, {angle.Degrees:0} degrees off square. Drag any that is not on its corner, then enter the paper's size, the first corner to the second as the width.");
+    }
+
+    /// <summary>The standard size the found paper's shape matched, offered beside the rectangle's size and never assumed.</summary>
+    private (string Name, double WidthInches, double HeightInches)? paperGuess;
 
     /// <summary>
     /// What the marking screen says with a tool in hand. It is the marking screen's whole status line, which is why leaving that screen and
@@ -1889,6 +1935,16 @@ public sealed partial class MainWindow : Window
         var height = new TextBox { Text = "1", Width = 70 };
         var unit = units.Linear;
         scaleInputs.Children.Add(new TextBlock { Text = $"Drag any corner onto its mark if it is not on it, then enter the rectangle's width (first to second corner) and height, {UnitSettings.Symbol(unit)}:", TextWrapping = TextWrapping.Wrap });
+        if (paperGuess is { } guess)
+        {
+            scaleInputs.Children.Add(Button($"Its shape is {guess.Name}'s: use {UnitSettings.FromInches(guess.WidthInches, unit).ToString("0.##", CultureInfo.InvariantCulture)} by {UnitSettings.FromInches(guess.HeightInches, unit).ToString("0.##", CultureInfo.InvariantCulture)}", () =>
+            {
+                width.Text = UnitSettings.FromInches(guess.WidthInches, unit).ToString("0.###", CultureInfo.InvariantCulture);
+                height.Text = UnitSettings.FromInches(guess.HeightInches, unit).ToString("0.###", CultureInfo.InvariantCulture);
+            }));
+            paperGuess = null;
+        }
+
         if (statedSize is { } stated)
         {
             scaleInputs.Children.Add(Button($"Use the stated sheet size, {stated.Text}", () =>

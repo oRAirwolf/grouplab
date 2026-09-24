@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 6.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 16, 17, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 7.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
+Then 9, 16, 17, 18, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,23 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 18. Photographs of a scanned GroupLab sheet at 40 to 60 degrees
+
+**Opened 2026-09-24. Entry 157. Optional, and nothing waits on it: a limit is set without it.**
+
+**What is needed.** Any GroupLab sheet you have shot and also scanned at 600 dpi, or one you will scan: five or six photographs of it at
+about 40, 45, 50, 55 and 60 degrees off square, the phone's normal camera, the whole sheet in the frame, and the scan beside them. The
+photographs can go in `C:\Dev\grouplab-range-2026-09-20\photos` or a new folder of the same kind; say which.
+
+**Why.** Entry 157 asks for the angle past which GroupLab refuses a photograph to be measured, not chosen. Your 2026-09-20 photographs
+reach 35 degrees and every one of them worked, so the measurement says the limit is somewhere above 35 without saying where. GroupLab
+refuses past 40 for now (question 54). Photographs of a scanned sheet at steeper angles show where the holes and bulls stop agreeing with
+the scan.
+
+**A good answer.** "The photographs are in <folder>, of the sheet in <scan file>." Nothing else.
 
 ---
 

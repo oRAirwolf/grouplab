@@ -242,6 +242,20 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Where the pointer is over the image while a scale reference is being made, which the line being made is drawn to.</summary>
     internal PointD? Hover => hover;
 
+    /// <summary>
+    /// Places a rectangle's four corners as if they had been tapped, top left first and around, and asks for its size: what finding the
+    /// paper's edges does (NOTES-FROM-PLANNING.md entry 157 section 4). The corners stay draggable like tapped ones.
+    /// </summary>
+    public void PlaceRectangle(IReadOnlyList<PointD> corners)
+    {
+        ArgumentNullException.ThrowIfNull(corners);
+        pending.Clear();
+        awaiting.Clear();
+        awaiting.AddRange(corners);
+        InvalidateVisual();
+        RectangleTapped?.Invoke(this, [.. awaiting]);
+    }
+
     /// <summary>Forgets a completed scale reference once it has been used; the reference in use is drawn from the session.</summary>
     public void ClearAwaiting()
     {

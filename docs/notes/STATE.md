@@ -9,26 +9,26 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 156.
+**Last rewritten:** 2026-09-24, after entry 157.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154, 155, 156 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154, 155, 156, 157 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's order from here: **157, 158, 165**, as he gave it.
+- Alan's order from here: **158, 165**, as he gave it.
 - **The first Discord post** comes with the next published nightly; entry 184 section 3.3 quotes it then. Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 157.** With entry 172's remaining parts as it makes them possible.
-2. **Entry 158.** The same.
-3. **Entry 165.** Re-read first: it was amended after it was first read.
+1. **Entry 158.** With entry 172's remaining parts: detection on the ST-4, the same group measured seven ways, the grid.
+2. **Entry 165.** Re-read first: it was amended after it was first read.
+3. Nothing else queued.
 
 ## Blocked, and on what
 
@@ -38,12 +38,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
 
-Open requests in `docs/notes/for-alan.md`: **6** (15 most urgent, then 9, 16, 17, 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **7** (15 most urgent, then 9, 16, 17, 18, 12, and 5 being applied).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **54** entry 157's 40 degree limit, the quality score's levels, a white board behind the sheet
 - **53** entry 156's presets, its refusal threshold and a pooled group's velocity share
 - **52** a stable release's body is fixed text, not the generated notes its announcement uses
 - **51** which hole centre GroupLab should report; waits on request 9
@@ -65,13 +66,14 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 157, 158, 165
+**Holds:** 158, 165
 
 ## Things that would surprise somebody who was not here yesterday
 
 - **Every upload is virus scanned**, streamed to clamd, since request 14 (entries 182 and 183).
 - **The web upload path works end to end**, desktop and phone. Entry 129 is complete.
 - **Command Z works on a Mac now, and pinch zoom exists**, on no hardware checked yet; a plain scroll pans on a Mac.
+- **A photograph over 40 degrees off square is refused**, naming the angle, and every photograph keeps its angle and a quality score (entry 157).
 - **Ballistics has a hit probability by simulation** (entry 156): per-shot and per-string errors, first and second round, what costs the most.
 - **The library and printing are one screen, Targets** (entry 155); the old tour addresses link to it.
 - **Every word a shooter may not know explains itself**, in the app and on the site, from `glossary.json` (entry 154).

@@ -70,7 +70,11 @@
     ],
     [
      "Scale",
-     "Which markers gave the scale and how many of them were read. This is what makes the measurement real, so it is shown rather than assumed."
+     "Which markers gave the scale and how many of them were read, and for a photograph how far off square it was and how good it is. This is what makes the measurement real, so it is shown rather than assumed."
+    ],
+    [
+     "Find the paper's edges",
+     "With the rectangle tool, on a target GroupLab did not print: the paper's four corners placed for you when the sheet stands out from what is behind it, and a standard paper size offered when the photograph's shape matches one."
     ],
     [
      "The tools along the top of the picture",

@@ -61,6 +61,11 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 
 Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size.
 
+With the rectangle tool, **Find the paper's edges** places the four corners on the paper itself when the sheet stands out from what is
+behind it, still draggable, and offers a standard paper size when the photograph's shape matches one. On a white board it cannot tell the
+paper from the board, and you tap the corners. A photograph taken more than 40 degrees off square to the sheet is refused, with the angle
+named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
+
 ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png)
 
 The pill in the header counts the marks that need you. The review queue in the side panel lists each one with the choices that settle it. The items are:

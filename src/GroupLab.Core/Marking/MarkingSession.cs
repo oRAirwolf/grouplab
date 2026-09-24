@@ -189,7 +189,8 @@ public sealed record MarkingState(
     string? Load = null,
     AssignmentRule? Rule = null,
     string? Paper = null,
-    string? Backing = null)
+    string? Backing = null,
+    GroupLab.Core.Capture.CaptureRecord? Capture = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -541,7 +542,7 @@ public sealed class MarkingSession
     public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IEnumerable<(PointD Image, int? Bull)> detections, string summary)
     {
         ArgumentNullException.ThrowIfNull(detections);
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null, (MarkSize?)null))], summary, null, (_, _) => null);
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Bull, (double?)null, (DetectedOversize?)null, (MarkSize?)null))], summary, null, null, (_, _) => null);
     }
 
     /// <summary>
@@ -549,23 +550,23 @@ public sealed class MarkingSession
     /// shot's figures are kept under the id it is given here, with the method, its reason and the refused candidates, so the editor can
     /// show a contested case and count what needs review. A shot kept from before carries no figures, because the matching did not place it.
     /// </summary>
-    public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<DetectedShot> detections, ShotAssignmentResult? assignment, IEnumerable<RejectedCandidate> rejected, string summary, DetectionRecord? detection = null)
+    public void LoadDetections(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<DetectedShot> detections, ShotAssignmentResult? assignment, IEnumerable<RejectedCandidate> rejected, string summary, DetectionRecord? detection = null, GroupLab.Core.Capture.CaptureRecord? capture = null)
     {
         ArgumentNullException.ThrowIfNull(detections);
         ArgumentNullException.ThrowIfNull(rejected);
         // The surviving detections are the ones no correction already speaks for (entry 143, question 42), so the details are built from
         // those rather than from every detection: an id here has to be the id the shot was actually given.
-        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize, d.Size))], summary, detection, (firstId, surviving) => assignment is null
+        Load(scale, bulls, [.. detections.Select(d => (d.Image, d.Assignment.Bull, d.DiameterInches, d.Oversize, d.Size))], summary, detection, capture, (firstId, surviving) => assignment is null
             ? null
             : new AssignmentReview(assignment.Method, assignment.Reason,
                 [.. surviving.Select((at, i) => AssignmentReview.Detail(firstId + i, detections[at].Assignment, detections[at].Assignment.Bull))],
                 [.. rejected], assignment.Method));
     }
 
-    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections, string summary, DetectionRecord? detection, Func<int, IReadOnlyList<int>, AssignmentReview?> review)
+    private void Load(ScaleReference scale, IEnumerable<BullAim> bulls, IReadOnlyList<(PointD Image, int? Bull, double? Diameter, DetectedOversize? Oversize, MarkSize? Size)> detections, string summary, DetectionRecord? detection, GroupLab.Core.Capture.CaptureRecord? capture, Func<int, IReadOnlyList<int>, AssignmentReview?> review)
     {
         int id = State.NextId;
-        var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection };
+        var registered = State with { Scale = scale, Bulls = [.. bulls], RegistrationSummary = summary, Detection = detection, Capture = capture };
 
         // Entry 143, question 42: a correction survives a second detection. Only shots placed by hand used to be kept, so every hole a
         // person had moved or reassigned went back to where the detector put it, with nothing saying so.

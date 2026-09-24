@@ -57,6 +57,37 @@ public static class MarkingFile
                     description = detection.Describe(),
                 }
                 : null,
+            // NOTES-FROM-PLANNING.md entry 157 section 3 item 5: what the photograph was taken with and how good it is, never where or when.
+            capture = state.Capture is { } capture
+                ? new
+                {
+                    lens = capture.Lens,
+                    focalLengthMm = capture.FocalLengthMm,
+                    focalLength35mm = capture.FocalLength35mm,
+                    offAxisDegrees = capture.OffAxisDegrees,
+                    focalSource = capture.FocalSource,
+                    correction = capture.Correction,
+                    k1 = capture.K1,
+                    k2 = capture.K2,
+                    quality = new
+                    {
+                        score = capture.Quality.Score,
+                        words = capture.Quality.Words,
+                        blurInches = capture.Quality.BlurInches,
+                        focusPart = capture.Quality.FocusPart,
+                        clippedShare = capture.Quality.ClippedShare,
+                        paperLevel = capture.Quality.PaperLevel,
+                        exposurePart = capture.Quality.ExposurePart,
+                        anglePart = capture.Quality.AnglePart,
+                        leastPixelsPerInch = capture.Quality.LeastPixelsPerInch,
+                        resolutionPart = capture.Quality.ResolutionPart,
+                        markingsRead = capture.Quality.MarkingsRead,
+                        markingsExpected = capture.Quality.MarkingsExpected,
+                        markingsPart = capture.Quality.MarkingsPart,
+                        description = capture.Quality.Describe(),
+                    },
+                }
+                : null,
             shotDistanceInches = state.ShotDistanceInches,
             displayUnits = displayUnits is { } units ? new { linear = units.Linear.ToString(), angular = units.Angular.ToString(), distance = units.Distance.ToString() } : null,
             scale = ScaleDocument(state.Scale),
@@ -213,6 +244,32 @@ public static class MarkingFile
                 ? new DetectionRecord(
                     detection["calibre"] is { } used ? Calibre.Of((double)used["diameterInches"]!) : null,
                     (double?)detection["holeSizeInches"])
+                : null,
+            Capture: file["capture"] is JsonObject capture && capture["quality"] is JsonObject quality
+                ? new GroupLab.Core.Capture.CaptureRecord(
+                    (string?)capture["lens"],
+                    (double?)capture["focalLengthMm"],
+                    (int?)capture["focalLength35mm"],
+                    (double?)capture["offAxisDegrees"] ?? 0,
+                    (string?)capture["focalSource"] ?? "",
+                    (string?)capture["correction"] ?? "",
+                    (double?)capture["k1"],
+                    (double?)capture["k2"],
+                    new GroupLab.Core.Capture.CaptureQuality(
+                        (int?)quality["score"] ?? 0,
+                        (string?)quality["words"] ?? "",
+                        (double?)quality["blurInches"],
+                        (double?)quality["focusPart"],
+                        (double?)quality["clippedShare"],
+                        (double?)quality["paperLevel"],
+                        (double?)quality["exposurePart"],
+                        (double?)capture["offAxisDegrees"] ?? 0,
+                        (double?)quality["anglePart"] ?? 0,
+                        (double?)quality["leastPixelsPerInch"] ?? 0,
+                        (double?)quality["resolutionPart"] ?? 0,
+                        (int?)quality["markingsRead"],
+                        (int?)quality["markingsExpected"],
+                        (double?)quality["markingsPart"]))
                 : null,
             Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
             ExpectedShots: (int?)file["expectedShots"],
