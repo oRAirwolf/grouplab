@@ -58,36 +58,7 @@ public static class MarkingFile
                 }
                 : null,
             // NOTES-FROM-PLANNING.md entry 157 section 3 item 5: what the photograph was taken with and how good it is, never where or when.
-            capture = state.Capture is { } capture
-                ? new
-                {
-                    lens = capture.Lens,
-                    focalLengthMm = capture.FocalLengthMm,
-                    focalLength35mm = capture.FocalLength35mm,
-                    offAxisDegrees = capture.OffAxisDegrees,
-                    focalSource = capture.FocalSource,
-                    correction = capture.Correction,
-                    k1 = capture.K1,
-                    k2 = capture.K2,
-                    quality = new
-                    {
-                        score = capture.Quality.Score,
-                        words = capture.Quality.Words,
-                        blurInches = capture.Quality.BlurInches,
-                        focusPart = capture.Quality.FocusPart,
-                        clippedShare = capture.Quality.ClippedShare,
-                        paperLevel = capture.Quality.PaperLevel,
-                        exposurePart = capture.Quality.ExposurePart,
-                        anglePart = capture.Quality.AnglePart,
-                        leastPixelsPerInch = capture.Quality.LeastPixelsPerInch,
-                        resolutionPart = capture.Quality.ResolutionPart,
-                        markingsRead = capture.Quality.MarkingsRead,
-                        markingsExpected = capture.Quality.MarkingsExpected,
-                        markingsPart = capture.Quality.MarkingsPart,
-                        description = capture.Quality.Describe(),
-                    },
-                }
-                : null,
+            capture = CaptureDocument(state.Capture),
             shotDistanceInches = state.ShotDistanceInches,
             displayUnits = displayUnits is { } units ? new { linear = units.Linear.ToString(), angular = units.Angular.ToString(), distance = units.Distance.ToString() } : null,
             scale = ScaleDocument(state.Scale),
@@ -317,6 +288,42 @@ public static class MarkingFile
         },
         _ => null,
     };
+
+    /// <summary>
+    /// What a photograph was taken with and how good it is, never where or when, NOTES-FROM-PLANNING.md entry 157 section 3 item 5: the
+    /// session file's record, and entry 187 section 2 sends the same with a target, every part of the score, so real submissions can tune
+    /// its levels later.
+    /// </summary>
+    public static object? CaptureDocument(GroupLab.Core.Capture.CaptureRecord? capture) => capture is null
+        ? null
+        : new
+        {
+            lens = capture.Lens,
+            focalLengthMm = capture.FocalLengthMm,
+            focalLength35mm = capture.FocalLength35mm,
+            offAxisDegrees = capture.OffAxisDegrees,
+            focalSource = capture.FocalSource,
+            correction = capture.Correction,
+            k1 = capture.K1,
+            k2 = capture.K2,
+            quality = new
+            {
+                score = capture.Quality.Score,
+                words = capture.Quality.Words,
+                blurInches = capture.Quality.BlurInches,
+                focusPart = capture.Quality.FocusPart,
+                clippedShare = capture.Quality.ClippedShare,
+                paperLevel = capture.Quality.PaperLevel,
+                exposurePart = capture.Quality.ExposurePart,
+                anglePart = capture.Quality.AnglePart,
+                leastPixelsPerInch = capture.Quality.LeastPixelsPerInch,
+                resolutionPart = capture.Quality.ResolutionPart,
+                markingsRead = capture.Quality.MarkingsRead,
+                markingsExpected = capture.Quality.MarkingsExpected,
+                markingsPart = capture.Quality.MarkingsPart,
+                description = capture.Quality.Describe(),
+            },
+        };
 
     private static readonly JsonSerializerOptions MappingOptions = new() { Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } };
 

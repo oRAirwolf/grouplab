@@ -183,7 +183,7 @@ public sealed partial class MainWindow
             ["scale"] = state.Scale?.Description,
             ["registration"] = state.RegistrationSummary,
             ["printScale"] = (state.Scale as SheetReference)?.PrintScale,
-            ["capture"] = state.Capture?.Quality.Describe(),
+            ["capture"] = System.Text.Json.JsonSerializer.SerializeToNode(MarkingFile.CaptureDocument(state.Capture)),
         };
         var environment = new JsonObject { ["text"] = ReportPackage.EnvironmentText(RenderScaling) };
         // What detection left, the state Discard edits returns to, before any person changed a mark.

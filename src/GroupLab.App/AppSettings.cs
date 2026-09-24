@@ -285,6 +285,28 @@ public sealed class AppSettingsStore(string path)
         file["sending"] = sending;
     });
 
+    /// <summary>
+    /// The targets whose "which bulls did you fire at" hint was answered or put away, NOTES-FROM-PLANNING.md entry 187 section 6: once is
+    /// enough for a target. The newest 200 are kept.
+    /// </summary>
+    public bool AimHintPutAway(string target) => Read(file => file["aimHintPutAway"] is JsonArray put && put.Any(p => (string?)p == target));
+
+    public bool PutAwayAimHint(string target) => Save(file =>
+    {
+        var put = file["aimHintPutAway"] as JsonArray ?? [];
+        if (!put.Any(p => (string?)p == target))
+        {
+            put.Add(target);
+        }
+
+        while (put.Count > 200)
+        {
+            put.RemoveAt(0);
+        }
+
+        file["aimHintPutAway"] = put;
+    });
+
     private T? Read<T>(Func<JsonObject, T?> get)
     {
         try

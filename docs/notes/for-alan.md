@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **9**, the same scan marked by hand twice, because the choice of where a hole's center is waits on it.
-Then 16, 17, 19, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 8.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
+Then 9, 16, 17, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,44 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 22. Send one test target from GroupLab, then pull it
+
+**Opened 2026-09-24. Entry 187 section 1. Waiting, and it needs PowerShell on this machine. Most urgent: sending from the application
+is switched on only after this pull matches.**
+
+**What is needed.** Two commands in PowerShell, a few minutes apart. The first sends one target to grouplab.org exactly as GroupLab
+will: the published sample scan (`samples/gl-cf25-ltr-d-25-shots-600-dpi.png`, your own 25 shot sheet, a flatbed scan with no person
+and no location in it), the 25 holes GroupLab finds on it, and **testing only** consent. It is a small program this session wrote for
+the one test; the session could not send it itself, because posting to the live site needs your say so.
+
+```powershell
+dotnet run --project "C:\Users\Airwolf\AppData\Local\Temp\claude\c--Dev-grouplab\25df80e1-3782-4339-9fd2-f7dce06d9933\scratchpad\sendone" -- --send
+```
+
+**A good result:** two lines. `detected 25 marks; image target.png, 17602175 bytes, sha256 c52412d8...` and then
+`answer after N s: 200 {"ok":true,"id":"xxxxxxxx"}`. The eight characters after `id` name the folder: today's date in UTC, an
+underscore, and those eight, for example `2026-09-24_1a2b3c4d`. If the answer is anything but 200, or takes more than a minute, that
+is worth a line back as it is; a slow send is what request 21 is for.
+
+Wait three minutes for the worker, then pull:
+
+```powershell
+cd C:\Dev\grouplab\scripts
+.\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready
+```
+
+**A good result:** `Pulled 2 submission(s)`, the test and the photograph request 15 brought back, then `All checksums match.`, and
+both named under `marked DO NOT PUBLISH`. The test's folder in `C:\Dev\grouplab-submissions` holds `001_target-rebuilt.png`,
+`meta.json`, `DO-NOT-PUBLISH` and `CONSENT.txt`. `Pulled 0` means the worker has not finished yet; run the pull again in two minutes.
+
+**Why.** Every part of sending has been tested against a stand in, and none of it against the real server. One real target from the
+real program to the real worker is the test the upload page had before it opened.
+
+**A good answer.** The two lines from the send and the last lines of the pull. Then sending is switched on in its own build, and the
+test is added to request 12's list for removal.
 
 ---
 
@@ -65,13 +103,18 @@ after another. Any subset helps; the four subsonic ones and the two .300 Blackou
 **Why.** A .22 LR hole measures 0.765 of the bullet where centerfire holes measure 0.92 to 0.95, and the one rimfire sheet cannot say
 whether that is speed, nose shape, lead against a jacket, or width. This set separates speed from width.
 
+**One more thing, whenever you shoot any commercial gridded sheet** (entry 187 section 7): before it goes in the bin, scan it flat at
+600 dpi and note the distance, the cartridge, and which mark each group was aimed at. The ST-4 of 2026-09-20 is gone, and the
+research on reading a sheet GroupLab did not print needs another one.
+
 **A good answer.** "The scans are in <folder>", with which sheet is which cartridge.
 
 ---
 
 ## 19. Can the ST-4 sheet of 2026-09-20 still be scanned?
 
-**Opened 2026-09-24. Entry 158 program A. Steps 3 and 4 wait on it.**
+**Opened 2026-09-24. Entry 158 program A. Answered 2026-09-24**, entry 187 section 7: the sheet no longer exists. Program A steps 3
+and 4 now wait on another commercial gridded sheet, which request 20 asks for in one line.
 
 **What is needed.** If you still have the orange ST-4 sheet with the twenty groups, a 600 dpi scan of it, on the flatbed you used for the
 GroupLab sheets. It is larger than Letter, so two overlapping scans are fine; say which half is which.
@@ -283,6 +326,14 @@ cd C:\Dev\grouplab\scripts
 **A good result:** the dry run lists what it would remove and what it would leave alone and why; the real run removes those and ends with
 `done: N removed`. **It removes only what the ledger marks ingested**, after checking the copy here still matches, and the ledger marks 6 of
 the 18: the other 12 are left alone, and say so, until they are ingested. That is the rule working, not a fault.
+
+**Added by entry 187: the test target from request 22**, once it has been pulled and this session has marked it read in the ledger.
+It is removed from grouplab.org, not pissinhot.com, and never kept as test data. The folder name is the one request 22's send printed:
+
+```powershell
+cd C:\Dev\grouplab\scripts
+.\Remove-ReadSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -Only 2026-09-24_xxxxxxxx
+```
 
 **Why.** A photograph somebody sent, sitting on a web server that no longer receives any, is a risk nobody agreed to.
 

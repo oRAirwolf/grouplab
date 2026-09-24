@@ -255,6 +255,23 @@ def plain(subject):
     return text[0].upper() + text[1:] + "."
 
 
+# Entry 187 section 8: the notes are text a shooter reads on the releases page, in Discord and in the update bar, so they are held to
+# the same American spelling as the site, from the same word list, rather than a second copy of it that could drift.
+_spelling = importlib.util.spec_from_file_location("american_spelling", Path(__file__).resolve().parent / "american-spelling.py")
+AMERICAN = importlib.util.module_from_spec(_spelling)
+_spelling.loader.exec_module(AMERICAN)
+
+# The reference a trailer ends with, "(Entry 130, 2b.2)" or "(Entries 126 and 127)". It stays in the commit, where it is useful, and comes
+# off the text a reader sees, entry 187 section 8.2: an entry number means nothing to anybody outside this project.
+REFERENCE = re.compile(r"\s*\((?:[Ee]ntr(?:y|ies))\b[^)]*\)(?=\.?\s*$)")
+
+
+def reader_text(note):
+    """A note as a reader sees it: the reference in brackets at its end taken off, the full stop kept."""
+    text = REFERENCE.sub("", note.strip()).rstrip()
+    return text if text.endswith((".", "!", "?")) else text + "."
+
+
 def problems(sha, note, generated=False):
     """Everything wrong with one note, said so it can be fixed.
 
@@ -288,6 +305,10 @@ def problems(sha, note, generated=False):
     for what, pattern in FORBIDDEN:
         if pattern.search(note):
             found.append(f"it contains {what}")
+
+    _, british = AMERICAN.prose(note, False)
+    for word in british:
+        found.append(f"it spells {word!r} the British way; a shooter reading it is most likely American, so write {AMERICAN.american(word)!r}")
 
     # Entry 145 section 4. The reference in brackets at the end is the one place a note is allowed to name an entry,
     # so it is taken off before this runs; everything else is prose a shooter has to be able to read.
@@ -371,7 +392,7 @@ def build_notes(version, head, previous, heading=True):
             continue
         for note, kind in read_notes:
             wrong += problems(sha, note)
-            notes[kind].append(note)
+            notes[kind].append(reader_text(note))
 
     if wrong:
         return "", wrong
@@ -497,6 +518,20 @@ def self_test():
         ok = bool(said) == path
         failed += not ok
         print(("ok   " if ok else "FAIL ") + ("refused as a path: " if path else "an address on grouplab.org is not a path: ") + note[:50])
+
+    for note, want in [("When GroupLab finds fewer holes than you fired, it says so. (Entry 130, 2b.2)", "When GroupLab finds fewer holes than you fired, it says so."),
+                       ("The support address is on every screen now (Entries 126 and 127).", "The support address is on every screen now."),
+                       ("A sentence that names entry 12 inside itself keeps it.", "A sentence that names entry 12 inside itself keeps it.")]:
+        ok = reader_text(note) == want
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + "a reader sees: " + want[:60] + ("" if ok else f", got {reader_text(note)!r}"))
+
+    for note, british in [("Holes are measured from their centre for every calibre you enter.", True),
+                          ("Holes are measured from their center for every caliber you enter.", False)]:
+        said = [s for s in problems("0000000", note) if "British" in s]
+        ok = bool(said) == british
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + ("refused for British spelling: " if british else "American spelling passes: ") + note[:50])
 
     for note in ["Nothing in this changes the application. The project's own records were split so reading them is cheaper.",
                  "Nothing in this nightly changes what you see or do, it carries internal work only.",

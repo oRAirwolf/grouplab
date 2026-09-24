@@ -86,14 +86,14 @@ public class ReleaseNoteRangeTests
             // Two published builds, then two nightlies that were cancelled before publishing and so never got a tag, then a published one.
             Commit(folder, "the first thing a person would notice in the whole history", "v0.2.0-nightly.10");
             Commit(folder, "something that shipped in the twelfth build and nothing later", "v0.2.0-nightly.12");
-            Commit(folder, "a change from a run that was cancelled before it published");
+            Commit(folder, "a change from a run that was canceled before it published");
             Commit(folder, "another change from a run that never published either");
             Commit(folder, "the change the twentieth build was made for", "v0.2.0-nightly.20");
 
             string notes = Run(folder, SiteSyncTests.PythonOnThisMachine!, $"\"{Repo.PathTo("scripts/release-notes.py")}\" 0.2.0-nightly.20 HEAD");
 
             // Everything since nightly 12, which is the previous published build: the two from the cancelled runs roll into this one.
-            Assert.Contains("a change from a run that was cancelled before it published", notes, StringComparison.Ordinal);
+            Assert.Contains("a change from a run that was canceled before it published", notes, StringComparison.Ordinal);
             Assert.Contains("another change from a run that never published either", notes, StringComparison.Ordinal);
             Assert.Contains("the change the twentieth build was made for", notes, StringComparison.Ordinal);
 

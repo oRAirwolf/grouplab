@@ -9,24 +9,27 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 186.
+**Last rewritten:** 2026-09-24, after entry 187.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186, 187 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entry 187 is next: sending switched on after one test package, and the answers to questions 50 to 55.
+- Entries 188, 189 and 190 are next, in that order; 190 corrects 189 section 4.
+- **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
+- **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
+  (question 52, option A).
 - **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until question 55
   is answered. The live receiver already answers; request 21's longer timeouts are optional.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Turn on sending from the application** when question 55 is answered: one real package end to end, then `appOpen` true.
+1. **Turn on sending from the application** when request 22's pull matches: `appOpen` true, its own commit and release note.
 2. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 3. Program B's article when request 20's test is shot.
 
@@ -35,25 +38,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
-- **Entry 165, switching it on.** Question 55: when, and after what end to end test.
+- **Entry 165, switching it on.** Request 22: Alan's one test target and pull.
 
-Open requests in `docs/notes/for-alan.md`: **8** (9 most urgent, then 16, 17, 19, 20, 18, 12, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **8** (22 most urgent, then 9, 16, 17, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
-Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55.
 
-- **55** when to switch on sending from the application, and after what end to end test
-
-- **54** entry 157's 40 degree limit, the quality score's levels, a white board behind the sheet
-- **53** entry 156's presets, its refusal threshold and a pooled group's velocity share
-- **52** a stable release's body is fixed text, not the generated notes its announcement uses
-- **51** which hole centre GroupLab should report; waits on request 9
-- **50** question 37's D cannot find the offset without being told the bulls
+- **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
 - **36** a light installer, measured, and why shrinking the one we have beat it
-- **34** pooling two sheets of one load needs a rule for what a pooled group's centre means
+- **34** pooling two sheets of one load needs a rule for what a pooled group's center means
 
 ## Builds and the site
 
@@ -67,7 +64,7 @@ Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 187, 188
+**Holds:** 188, 189, 190, 191, 192, 193, 194
 
 ## Things that would surprise somebody who was not here yesterday
 

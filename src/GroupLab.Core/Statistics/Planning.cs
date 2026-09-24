@@ -235,6 +235,9 @@ public static class Pooling
     /// </summary>
     public static RayleighEstimate Recentred(IReadOnlyList<IReadOnlyList<PointD>> targets, double level = 0.95)
     {
+        // Entry 187 section 3.3, question 53: sessions shot at different distances are pooled here and the hit probability takes the velocity
+        // share out at the nearest distance, which errs cautious and the screen says so. The better answer is to take each session's velocity
+        // share out at its own distance before pooling. Do that the next time this method is touched, not as work of its own.
         ArgumentNullException.ThrowIfNull(targets);
         double sum = 0;
         int shots = 0;

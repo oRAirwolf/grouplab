@@ -997,6 +997,35 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 187: the answers to questions 50 to 55, and sending waits on one test
+
+**Sending, question 55.** The one package is ready: the published sample scan, 25 marks detected, testing only, 17.6 MB, built by
+the application's own code and posted through its own network path. This session was not allowed to post it, so it is request 22:
+one command for Alan, then the pull, with the good result written out. `appOpen` stays false until the pull matches; request 12 now
+lists the test's folder for removal.
+
+**Question 54.** 40 degrees and the score's levels stand, recorded as judgment in `docs/MOBILE-CAPTURE.md` already. Every part of every
+score now travels with a sent target, from the same record the session file writes (`MarkingFile.CaptureDocument`), where before the
+package carried one sentence. White paper on a white board: the guidance and the corners placed by hand both exist on the desktop, and
+a test now makes such a photograph, lit unevenly as Alan's range photographs are, proves the paper cannot be found and says so, then
+sets the scale from four corners placed by hand.
+
+**Question 53** accepted; a comment on `Pooling.Recentred` says to take the velocity share out per session the next time it is
+touched. **Question 52**, option A, is a line in STATE.md for the next stable release. **Question 51** waits on request 9.
+
+**Question 50, quietly.** Where a sheet has more scoring bulls than shots and nobody has said which bulls, one line beside "Bulls you
+fired at" says how many of each and to choose them and press These ones, with Put this away. It is not a review item and holds nothing
+back. Answering or putting it away is remembered for that target, the newest 200 kept.
+
+**Request 19** is closed: the sheet is gone. Request 20 asks, in one line, for any commercial gridded sheet to be scanned before it is
+thrown away.
+
+**Release notes.** `scripts/release-notes.py` refuses a note with a British spelling, from the spelling script's own word list, and
+takes the "(Entry N)" reference off the text a reader sees while it stays in the commit. Its self-test holds both. The published lines
+were corrected and then put back, per entry 189 section 2.3.
+
+**Tests.** Core `CaptureDocumentTests`, 1; App `Entry187Tests`, 3: the hint, answering it, and white on white.
+
 ## Entry 186: request 15 is installed, request 5 is done, and an opted out pull stays out
 
 **Requests 15 and 5 are answered** in `docs/notes/for-alan.md`, and opted out submissions are accepted again: the one the old worker

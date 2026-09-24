@@ -135,7 +135,7 @@ the camera more squarely over the sheet and take it again." The automatic path g
 Section 5 says how it is computed. On the 31 range photographs that registered it reads **good on 10, usable on 6 and poor on 15**.
 The poor are set by the angle on 7, all between 28 and 35 degrees off square, by the paper blown out on 6, and by markers missed on 2.
 Among the blown out are the two photographs of scan 1's sheet that matched only 5 of its 14 holes. Focus set none of them: every photograph's blur read under 0.0013 in, so on this material the focus part never
-told a photograph apart, and whether its levels are right is untested (question 54).
+told a photograph apart, and whether its levels are right is untested. **The levels are judgment**, kept as they are by entry 187 section 2, and every part of every score is sent with a target so real submissions can tune them.
 
 ### 4.4 Lens distortion solved from the printed markers
 

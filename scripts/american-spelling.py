@@ -22,7 +22,8 @@ What counts as something a user reads:
 
 Quoted material is left as it was written: anything between double quotes or curly quotes in prose, and any
 line of a Markdown block quote or code block. docs/RELEASE-NOTES.md is not swept: every entry in it is a
-published release's notes, and a published release is never edited. The test in
+published release's notes, and a published release is never edited. A new note is checked before it reaches the
+file instead: scripts/release-notes.py refuses one with a British form, from this file's own word list (entries 187 and 189). The test in
 tests/GroupLab.Core.Tests/AmericanSpellingTests.cs runs this in its checking mode.
 """
 

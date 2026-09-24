@@ -12,109 +12,9 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-09-24, question 55: when to switch on sending from the application
-
-Status: open. Built and switched off; nothing else waits on the answer.
-
-Entry 165: "Build the application side and the receiver now; keep the question hidden until `open` is true in
-`website/api/limits.json`, exactly as the upload page is." The upload page's `open` has been true since entry 129 finished, so read
-literally the question would already show. I gave the application its own switch, `appOpen`, set false, for two reasons.
-
-1. **The receiver has not taken a real package on the server.** Its checks run in CI against a stand-in; on the live site at 16:58 UTC
-   an empty post was answered 400, "The target arrived without its package", so it is reachable through the server's nginx as it
-   stands. A real package would land in the real quarantine and go through the worker, which is the end to end test entry 129 ran for
-   the upload page, and I did not make one without being asked, because it leaves a submission on the server for Alan to clear.
-2. **It asks strangers for their photographs.** Turning it on is the moment the first run screen appears for every tester on the
-   nightly train, and that seemed worth a decision rather than a default.
-
-The options: switch it on in the next build, with one end to end package sent by me and removed through Alan's usual pull; switch it on
-after Alan sends one from his own copy; or leave it off until a stable release. I would send one test package, have Alan confirm it
-reached ready, then set `appOpen` true. Request 21, the include's longer timeouts, is optional either way.
-
----
-
-## 2026-09-24, question 54: entry 157's angle limit, and a white board behind the sheet
-
-Status: open. Built as described; nothing waits on the answer.
-
-### 1. The limit on how far off square a photograph may be
-
-Section 3 item 4: "Measure that limit rather than choosing it: entry 130's paired photographs and scans are the material." That material
-stops at 35 degrees: every 2026-09-20 range photograph up to 35 registered, and the twelve fully framed ones measured against their scans,
-from 3 to 32 degrees, kept the same hole error, while their bull centers grew about three times worse from square on to 30 degrees. A
-rendered sheet through a known camera keeps its bulls within 0.001 in to 60 degrees and cannot register at 70. So the measurement bounds
-the limit rather than fixing it, and I set **40 degrees**, above everything real that worked and well inside where the ideal case breaks.
-`docs/MOBILE-CAPTURE.md` section 4.2 has the tables. Request 18 asks Alan for photographs of a scanned sheet at 40 to 60 degrees, which
-would put a real number on it. The alternative is 35, the steepest real photograph, which refuses nothing that has been measured to work
-and nothing that has been measured to fail either.
-
-### 2. The quality score's levels
-
-Section 5 fixes what goes in and not where each part is perfect or worthless. The levels are in `docs/MOBILE-CAPTURE.md` section 5: for
-example focus perfect at a blur of 0.004 in and worthless at 0.015, resolution perfect at 150 pixels an inch and worthless at 50. They are
-judgment, set so the range photographs' spread reads sensibly; the planning session may have better reasons for any of them.
-
-### 3. White paper on a white board
-
-`SheetOutline` finds a sheet against anything darker, and it cannot find one on Alan's white backer board: the light across the sheet
-varies more than the paper and the board differ. An edge based search did no better, losing the paper's faint edges among the printing and
-the board's ribs. For the desktop that only means a person taps the corners, as before. For the mobile capture screen, whose section 2
-conditions include "the sheet edges or the printed markers are detected", it means a commercial sheet on that board never satisfies the
-condition, so the screen needs either *put something darker behind the sheet* as guidance or a manual corner path. I wrote the first into
-section 1's C3 order and would want the second as well.
-
-## 2026-09-24, question 53: three judgment calls in entry 156's hit probability
-
-Status: open. Built as described; nothing waits on the answer.
-
-### 1. The confidence presets' figures
-
-Entry 156 section 8 item 2 asks for GroupLab's own presets, "each described in a sentence by the situation it represents", and to
-"document where each number comes from". The figures are in `docs/STATISTICS.md` section 12.6 with the reasoning for each, and in
-`src/GroupLab.Core/Ballistics/HitPresets.cs`. They are judgment, not measurement: for example a wind call of 1.5, 3 and 4 mph and a range
-of 0.5 yd, 1.5 yd and 5 percent of the distance for the three presets. If the planning session has sources for any of them, or wants them
-different, they are one line each to change.
-
-### 2. When the answer is refused
-
-Section 4 item 4: "Refuse ... when the group behind the sigma is too small to say anything." I read "anything" as the first-round answer
-moving across more than half the scale, 50 points, between the two ends of sigma's 95 percent interval. On a target where the chance is
-near a half, that refuses a five-shot group and accepts about eight shots; on an easy target a five-shot group is not refused, because its
-interval is narrow there. The refusal names the shots in one group that would bring it inside half the scale. The alternative is a fixed
-minimum shot count, which would refuse the easy target too.
-
-### 3. A pooled precision from sessions at different distances
-
-Pooled sessions of one load are converted to angles before pooling, so the distances do not matter to sigma. They matter to the velocity's
-share of the vertical, which is taken out at the distance the group was shot. With several distances I take it out at the nearest, which
-removes the least and so keeps the answer on the cautious side, and the screen says so. Taking it out per session before pooling is
-possible and more exact, and would need a change to how `Pooling.Recentred` is fed.
-
-## 2026-09-24, question 52: a stable release's body is not the generated notes, so its announcement cannot match it
-
-Entry 184 section 2.3 says the Discord message carries "the release's own notes ... generated by the same code as the release body so
-the two can never differ". That holds for a nightly, whose body is `scripts/release-notes.py`'s output. A stable release is published by
-`release.yml`, whose body is a fixed paragraph about unsigned builds and never lists what changed.
-
-### What I built
-
-The stable announcement uses `scripts/release-notes.py` for the version and commit, the same generator as every nightly, so #builds and
-#announcements say what changed. It is the release body that differs, not the announcement.
-
-### The options
-
-- **A.** Make `release.yml`'s body the generated notes as well, with the unsigned-build paragraph after them. Then the rule holds for
-  every release. It changes the release workflow, which only runs when Alan asks for a release by name.
-- **B.** Leave it: the announcement lists changes and the release page says how to install.
-
-### What I would choose
-
-A, next time a release is asked for, because a release page that does not say what changed is the same fault entry 132 fixed for
-nightlies. Nothing is waiting on it: there has been no stable release yet.
-
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
 
-**Status: open. Nothing is changed yet; request 9's hand markings are the evidence that decides it.**
+**Status: open. Nothing is changed yet; request 9's hand markings are the evidence that decides it.** Entry 187 section 5 agreed: nothing changes until request 9's two hand markings arrive.
 
 ### What was measured, entry 170 section 4
 
@@ -147,43 +47,6 @@ estimates with no reference, which is how the weighted centroid was chosen in th
 
 ---
 
-## 2026-09-24, question 50: question 37's D cannot find the offset without being told the bulls
-
-**Status: open. Nothing is blocked: A is built, and D is not, for the reason below.**
-
-### What entry 149 section 3 asks
-
-> **D, offering it where it would change the answer.** When a certain offset exists that would move shots, the review queue says so in
-> plain words and offers to apply it. That is what makes A discoverable.
-
-### Why it cannot be built as written
-
-I built it: with no bulls named, work out what naming every scoring bull would do, and offer "Every bull" where a certain offset would
-move shots. On `SheetOffsetAssignmentTests`' shifted sheet, twenty shots aimed at columns 2 to 5 and landing one bull to the left, it
-finds **nothing**: every bull named moves no shot and the offset is not certain.
-
-That is geometry, not a bug. If every bull was aimed at, a group shifted one whole bull to the left is exactly the same sheet as the same
-group aimed one bull to the left with no shift. The two readings cannot be told apart from the holes, so the solver is rightly uncertain,
-which is what question 46 measured on scan 5. **The offset that matters is only certain once the shooter has said which bulls**, and at
-that point the matching already applies it. So there is no case where D has something certain to offer that A has not already been told.
-
-What D could honestly say without the fact, "the shots sit 0.4 in left of their bulls, all by the same amount", is a partial shift, which
-the zero correction already reports, and it is blind to the whole-bull shift that is the actual defect.
-
-### The options
-
-1. **Leave D out.** A, the row and column selection and the "Bulls you fired at" control are how the fact gets in.
-2. **Make D a prompt, not a finding.** Where nobody has said which bulls and the sheet has more bulls than shots, one review item asks
-   "Which bulls did you fire at?" and points at the control, with no claim that anything would move. It is discoverability without a
-   guess, and it would appear on nearly every partly used sheet.
-
-### What I would choose
-
-**Option 2, but only where the sheet has more scoring bulls than shots**, because that is exactly the case where the one-to-one matching
-has room to pick the wrong bulls and nothing on the screen says so.
-
----
-
 ## 2026-09-24, question 44, the part still open: the bent-sheet model throws outside the page
 
 **Status: open, and nothing a person can reach is affected.** Entry 171 section 4 closed the rest of question 44, which is in the answered archive.
@@ -194,10 +57,10 @@ has room to pick the wrong bulls and nothing on the screen says so.
 
 ## Answered, and moved
 
-These 46 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 51 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 49, 48, 47, 46, 45, 44, 42, 41, 40, 39, 38, 37, 35, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.
+> 55, 54, 53, 52, 50, 49, 48, 47, 46, 45, 44, 42, 41, 40, 39, 38, 37, 35, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.
 
 ---
 

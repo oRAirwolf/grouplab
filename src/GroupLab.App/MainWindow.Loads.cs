@@ -23,6 +23,7 @@ public sealed partial class MainWindow
     private readonly ComboBox bullLoad = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel bullLoadLines = new() { Spacing = Tokens.Space4 };
     private readonly StackPanel aimedAtLines = new() { Spacing = Tokens.Space4 };
+    private readonly TextBlock aimHint = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private HashSet<int> bullSelection = [];
 
     /// <summary>The bull clicked last, which "Its row" and "Its column" extend from.</summary>
@@ -215,7 +216,32 @@ public sealed partial class MainWindow
         if (state.Rule is not { } rule || rule.NearestOnly || rule.PerBull.IsEmpty)
         {
             aimedAtLines.Children.Add(Line("Not said. Where a group lands away from where it was aimed, GroupLab cannot tell which bulls you meant to hit, so it measures each shot from whichever bull it landed nearest. Saying which bulls you fired at lets it work out where the group actually landed and measure from the right ones."));
+
+            // Entry 187 section 6, question 50's option 2, quietly: a hint beside this control where the sheet has more scoring bulls than
+            // shots, never a review item, never holding Accept back, and never claiming anything would move. Answering it or putting it
+            // away once is final for the target.
+            int scoring = state.Bulls.Count(b => b.Scoring);
+            int shots = state.ExpectedShots ?? state.Shots.Count(s => s.IsShot);
+            if (shots > 0 && shots < scoring && state.ImagePath is { } target && !settingsStore.AimHintPutAway(target))
+            {
+                aimHint.Text = string.Create(CultureInfo.InvariantCulture,
+                    $"This sheet has {scoring} bulls and {shots} shots. If you fired at only some of the bulls, choose them and press These ones.");
+                aimedAtLines.Children.Add(aimHint);
+                aimedAtLines.Children.Add(Button("Put this away", () =>
+                {
+                    settingsStore.PutAwayAimHint(target);
+                    DiagnosticLog.Info("marking.aim-hint", ("put-away", true));
+                    ShowAimedAt(session.State);
+                }));
+            }
+
             return;
+        }
+
+        // Saying which bulls answers the hint for this target for good.
+        if (state.ImagePath is { } answered && !settingsStore.AimHintPutAway(answered))
+        {
+            settingsStore.PutAwayAimHint(answered);
         }
 
         aimedAtLines.Children.Add(Line(string.Create(CultureInfo.InvariantCulture,
@@ -224,6 +250,10 @@ public sealed partial class MainWindow
 
     /// <summary>What the panel says about which bulls were fired at, for the headless tests.</summary>
     internal IReadOnlyList<string> AimedAtText => [.. aimedAtLines.Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
+
+    /// <summary>Presses the hint's Put this away, for the headless tests.</summary>
+    internal void PutAwayAimHintNow() => aimedAtLines.Children.OfType<Avalonia.Controls.Button>().First(b => b.Content as string == "Put this away")
+        .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
 
     /// <summary>Picks a load in the field by name, for the headless tests.</summary>
     internal void PickBullLoad(string? load)
