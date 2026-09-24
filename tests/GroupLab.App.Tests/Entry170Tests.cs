@@ -23,7 +23,10 @@ public class Entry170Tests
     /// <summary>A group of ten shots 0.221 in right of the aim at 25.4 yd, as his was, on a plain length scale.</summary>
     private static MainWindow Offset(Rifle rifle)
     {
-        var window = new MainWindow();
+        // Imperial, stated: a runner's default is metric, where "25.4" typed into the distance box is metres.
+        var store = new AppSettingsStore(Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json"));
+        store.SaveUnits(UnitSettings.Imperial);
+        var window = new MainWindow(store);
         window.Show();
         var session = window.Session;
         session.SetScale(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1));

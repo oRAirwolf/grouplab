@@ -137,7 +137,10 @@ def read_by_build() -> set[str]:
                     found.add(r)
 
     found.discard("")
-    return found
+    # Only files the repository tracks: after a restore or a publish MSBuild also reports what it generated under obj/, which ships
+    # nothing and exists on one machine and not another. Entry 174's push found it on the runner.
+    tracked = set(git("ls-files").splitlines())
+    return {f for f in found if f in tracked}
 
 
 def packaged() -> dict[str, str]:
