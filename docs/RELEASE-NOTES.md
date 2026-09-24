@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.99
+
+**2026-09-24**, commit `e84c949`. Nightly.
+
+**What you will notice**
+
+- Settings has a new Sending targets section; sending a target you have analyzed to the project is built but not switched on yet, so for now the section says so and nothing is sent. (Entry 165)
+- The upload page on grouplab.org now asks whether your photographs are for testing only or may also be published, and a testing only target is never published. (Entry 165)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.99)
+
+---
+
 ## 0.2.0-nightly.98
 
 **2026-09-24**, commit `099c270`. Nightly.
