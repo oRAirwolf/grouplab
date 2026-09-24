@@ -54,13 +54,18 @@ public class NothingIsCutOffTests
     /// a screenshot looks like, and the panel it is in is the one that needs the room.
     /// </summary>
     [AvaloniaTheory]
-    [InlineData(1280, 720)]
-    [InlineData(2560, 1440)]
-    public void NoTextRunsPastTheEdgeOfTheWindow(int width, int height)
+    [InlineData(1280, 720, false)]
+    [InlineData(2560, 1440, false)]
+    [InlineData(1280, 720, true)]
+    [InlineData(2560, 1440, true)]
+    public void NoTextRunsPastTheEdgeOfTheWindow(int width, int height, bool explained)
     {
         var window = NewWindow(width, height);
         window.Show();
         Mark(window);
+
+        // NOTES-FROM-PLANNING.md entry 163 section 5.4: every explanation collapsed, as a person first sees it, and every one opened.
+        window.SetEveryWhy(explained);
         Dispatcher.UIThread.RunJobs();
         window.Measure(new Size(width, height));
         window.Arrange(new Rect(0, 0, width, height));
@@ -81,7 +86,7 @@ public class NothingIsCutOffTests
             }
         }
 
-        Assert.True(over.Count == 0, $"at {width} by {height}, text is cut off at the window's edge:\n  " + string.Join("\n  ", over.Take(12)));
+        Assert.True(over.Count == 0, $"at {width} by {height}{(explained ? ", explained" : "")}, text is cut off at the window's edge:\n  " + string.Join("\n  ", over.Take(12)));
         window.Close();
     }
 
@@ -95,13 +100,18 @@ public class NothingIsCutOffTests
     /// </para>
     /// </summary>
     [AvaloniaTheory]
-    [InlineData(1280, 720)]
-    [InlineData(2560, 1440)]
-    public void NoTextIsCutOffByThePanelItIsIn(int width, int height)
+    [InlineData(1280, 720, false)]
+    [InlineData(2560, 1440, false)]
+    [InlineData(1280, 720, true)]
+    [InlineData(2560, 1440, true)]
+    public void NoTextIsCutOffByThePanelItIsIn(int width, int height, bool explained)
     {
         var window = NewWindow(width, height);
         window.Show();
         Mark(window);
+
+        // NOTES-FROM-PLANNING.md entry 163 section 5.4: every explanation collapsed, as a person first sees it, and every one opened.
+        window.SetEveryWhy(explained);
         Dispatcher.UIThread.RunJobs();
         window.Measure(new Size(width, height));
         window.Arrange(new Rect(0, 0, width, height));
@@ -126,7 +136,7 @@ public class NothingIsCutOffTests
         // and the day somebody replaces those panels it would go on passing while saying nothing at all.
         Assert.True(looked > 0, "nothing in the window sits inside a panel that clips, so this measured nothing");
 
-        Assert.True(cut.Count == 0, $"at {width} by {height}, text is cut off inside a panel:\n  " + string.Join("\n  ", cut.Take(12)));
+        Assert.True(cut.Count == 0, $"at {width} by {height}{(explained ? ", explained" : "")}, text is cut off inside a panel:\n  " + string.Join("\n  ", cut.Take(12)));
         window.Close();
     }
 

@@ -117,15 +117,19 @@ public class CalibreGuessTests
         Assert.Equal(5, CalibreConfirmation.Guess(withADouble).HolesMeasured);
     }
 
-    /// <summary>Whatever the list says, a diameter that is not on it can still be typed, and the refusals for designations still stand.</summary>
+    /// <summary>
+    /// Whatever the list says, a diameter that is not on it can still be typed. A designation that names a cartridge family is now read as
+    /// that family, which reverses entry 108 on purpose (entry 163 section 3): "6.5" and "6.5 mm" are the 6.5 mm family, 0.264 in, where
+    /// entry 108 refused them. One that names no family in the table is still refused rather than read as a diameter, because 7.62 mm could
+    /// be three different bullets.
+    /// </summary>
     [Fact]
-    public void AnythingCanStillBeTypedAndTheDesignationsAreStillRefused()
+    public void AnythingCanStillBeTypedAndANameIsReadAsItsFamily()
     {
         Assert.Equal(0.2235, Calibre.Parse("0.2235", out _)!.DiameterInches, 6);
-        Assert.Null(Calibre.Parse("6.5", out string? why));
-        Assert.Contains("Enter the bullet diameter", why!, StringComparison.Ordinal);
-        Assert.Null(Calibre.Parse("6.5 mm", out string? metric));
-        Assert.Contains("not the bullet's diameter", metric!, StringComparison.Ordinal);
-        Assert.Null(Calibre.Parse("7.62 mm", out _));
+        Assert.Equal(0.264, Calibre.Parse("6.5", out _)!.DiameterInches, 6);
+        Assert.Equal(0.264, Calibre.Parse("6.5 mm", out _)!.DiameterInches, 6);
+        Assert.Null(Calibre.Parse("7.62 mm", out string? why));
+        Assert.Contains("not the bullet's diameter", why!, StringComparison.Ordinal);
     }
 }

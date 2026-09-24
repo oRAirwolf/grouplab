@@ -532,6 +532,66 @@ Card stock, cardboard behind it, 6.5 Creedmoor at 0.264 in, printed with no scal
 
 **3.2.** Paper and backing are recorded fields on a marking, saved and read back with it: paper is copy paper, card stock or other, backing is cardboard, foam board, none or other, both optional and never guessed. A value outside the choices is recorded as not said. They are two optional choices on the marking screen under "Rounds fired at the group". The tour's marking page does not name every field on that panel and still describes it truthfully.
 
+## Entry 163: the first real user's feedback on the marking screen, and a cartridge list
+
+The friend who shot the 2026-09-23 sheet used nightly 93 and sent five points. He is the first person other than the developer to use GroupLab for real.
+
+### Section 1: pan by default, and a click selects
+
+Pan was already the tool on open; **detection switched to select**, which is what he met. Detection no longer changes the tool. The pan tool now selects a mark on a click and pans on a drag: a press becomes a selection only when it is let go within four pixels of where it began, so a drag that starts on a mark pans and never moves the mark, which is entry 143's rule that a stray drag must not move a measurement. Only the select tool drags shots. The middle button pans in every tool, as it did.
+
+**Two finger drag, scroll and pinch are not decided here.** Entry 166 section 3 corrects this section's rule, because on a Mac trackpad a two finger drag is a scroll, and it asks for the behaviour to be measured per device first. That is done under entry 166.
+
+### Section 2: pan and select on neighbouring keys
+
+**C pans, beside V, which selects.** V is the convention in most design tools, C sits beside it under the left hand, and C was free: it is not a review key (Space, Enter, T, N), not bull entry (digits and S), and not a modified shortcut. P still pans, so nobody who learned it is broken. The keyboard strip shows both, and the user guide's key list says so.
+
+### Section 3: cartridge names, matched before numbers
+
+**This reverses entries 107 and 108, and says so where their rule was written**, in `docs/CALIBRES.md` and in the tests that held it. Typing 6.5 now offers *"6.5 Creedmoor, 6.5x55 Swedish, .260 Remington and others: 0.264 in (6.71 mm)"* first and, under it, *"not the same as .25 calibre, 0.257 in (6.53 mm)"*. It used to offer .257 because the pick list was filtered by "contains", and "6.53 mm" contains "6.5".
+
+**Every diameter is checked against two independent published sources**, as the section asks, and the table records which:
+
+- **A**: Wikipedia's table of handgun and rifle cartridges, which cites SAAMI and CIP.
+- **B**: Nosler's load data index, which files each cartridge under its bullet diameter from the bullet maker's own load development.
+
+**Forty cartridges in fourteen families are confirmed by both. Thirty three are held**, offered nowhere, until a second source agrees. They include 6.5 PRC, 6mm Creedmoor, .22 Long Rifle, 7mm PRC, .300 PRC, .303 British, .44 Magnum, .45 ACP and .50 BMG, which are exactly the ones a shooter types most, so this is the list most worth a second source next. Typing one of them works as before: GroupLab asks for the diameter.
+
+**The two sources disagree in three places**, and each disagreement keeps the cartridge out rather than picking a side: 7.62x39 is 0.312 in A and 0.310 in B; A gives 7.62x54R as 0.308, which is not what it is loaded with, and B does not list it; and A gives .22 LR as 0.223 against entry 153's nominal 0.222, with no second source either way. The planning session's seed table, written from memory, had 7.62x54R at 0.311; A says otherwise, which is the reason a seed is not a source.
+
+Two sources were tried and failed: a Graf & Sons chart, whose text is an image inside its PDF, and a reloading page whose certificate the fetch refused.
+
+**Choices the section left open, taken and stated:**
+
+- A family name counts as a name even with a leading point where it is a designation: ".38" is 0.357 in and ".270" is 0.277 in, which is the very case entry 108 existed for.
+- **".223" is not a name**: with its leading point it is a diameter under rule 3, and 0.223 in is a real .22 LR figure in source A. "223" without the point is .223 Remington.
+- Family shorthands never point at a held cartridge or a trap: "7.62" could be 7.62x39, "25" could be .25 ACP at 0.251 in, and "9" could be anything from 9mm to 9.3.
+
+`CartridgeTableTests` holds one case per row of section 3.2 that the table can offer, checks the held rows are offered at no diameter, and checks every offered cartridge names two sources.
+
+### Section 4: what has to be filled in goes at the top, and says so
+
+A **Setup** block is the first thing in the panel, above the review: calibre, shot distance and rounds fired, then rifle, barrel and load, "Same setup as the last target", and the paper and backing from entry 162. Each says in a line what it unlocks, worded after entry 161 so the calibre is not claimed to change which holes are flagged. An empty one that matters is outlined in the alert red **and** says "needed", because colour alone fails a colour blind user. Each has **Not known**, which is an answer and clears the mark. **Accept and analyse** says what is still needed in one line, whether it stops for the calibre or goes ahead without the distance.
+
+### Section 5: the analysis screen explains less by default
+
+The explanations were already behind "why" toggles that remember being opened. What showed by default was each judgement card's evidence and the extra CEP lines. A card now opens as its verdict alone, with its evidence and reasoning behind the verdict's "why", and CEP shows its first line. Nothing is removed. `NothingIsCutOffTests` now runs with every explanation closed and with every one open.
+
+### Section 6: what a Mac changes
+
+- **Shortcut modifiers and the trackpad**: entry 166 sections 2 and 3, which name the cause, every handler reading `KeyModifiers.Control`.
+- **The application menu**: the tester reports Command Q quits.
+- **The updater** offers a macOS build no update: there is no macOS asset in the manifest, and the update step says updates are manual on macOS and where to download.
+- **The platform statement is stale**, as the section says, and is rewritten under entry 166 from what was actually checked.
+
+### The tour and the guide
+
+The tour's marking page named neither the setup block nor the new keys nor that pan selects. It does now, and its steps start with the setup. The user guide's key list says C or P. Both guide PDFs are regenerated; the testing guide's had been stale since entry 159's wording change.
+
+### Two tests I broke under entry 162 and found here
+
+`c8bbf9e` was committed after running only its new tests. Two older tests failed on it: the detection trace's calibre wording, fixed in `c09ad1e`, and the bench coverage test, which wanted `TargetMaterial` either benched or named as not worth benching, fixed in this commit. **The rule this repeats is to run the full Core suite before every commit**, not the tests that look related.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

@@ -133,7 +133,7 @@ public class Entry109Tests
             var tools = window.GetLogicalDescendants().OfType<Avalonia.Controls.Primitives.ToggleButton>().Where(t => t.Classes.Contains(AppStyles.IconButton)).ToList();
             Assert.Equal(6, tools.Count);
             Assert.All(tools, t => Assert.IsType<PathIcon>(t.Content));
-            Assert.Equal(["Pan (P)", "Scale: length (L)", "Scale: rectangle (R)", "Point of aim (A)", "Impact (I)", "Select (V)"], tools.Select(t => ToolTip.GetTip(t) as string));
+            Assert.Equal(["Pan, and click a mark to select it (C or P)", "Scale: length (L)", "Scale: rectangle (R)", "Point of aim (A)", "Impact (I)", "Select (V)"], tools.Select(t => ToolTip.GetTip(t) as string));
             window.Close();
         }
         finally
@@ -201,12 +201,15 @@ public class Entry109Tests
             Assert.All(bodies, b => Assert.False(b.IsVisible));
 
             var shape = window.JudgementCards[0];
-            // The lines in view, the verdict first: every text in the card that is not inside a "why".
+            // Entry 163 section 5 changed entry 111's card: it opens as its verdict alone, and the evidence is behind the verdict's "why"
+            // rather than in view. The first real user found the analysis screen explaining too much before anybody asked.
             var shown = window.GetLogicalDescendants().OfType<Border>().Single(b => b.Name == "shapeCard").GetLogicalDescendants().OfType<TextBlock>()
-                .Where(t => !t.GetLogicalAncestors().OfType<StackPanel>().Any(a => a.Classes.Contains(AppStyles.WhyBody))).Select(t => t.Text ?? "").ToList();
-            Assert.StartsWith("Circularity test, ", shown[1], StringComparison.Ordinal);
-            Assert.Contains(": p = ", shown[1], StringComparison.Ordinal);
-            Assert.StartsWith("Vertical stringing", shown[2], StringComparison.Ordinal);
+                .Where(t => !t.GetLogicalAncestors().OfType<StackPanel>().Any(a => a.Classes.Contains(AppStyles.WhyBody)) && !t.GetLogicalAncestors().OfType<Button>().Any())
+                .Select(t => t.Text ?? "").ToList();
+            Assert.Single(shown);
+            Assert.StartsWith("Circularity test, ", shape[1], StringComparison.Ordinal);
+            Assert.Contains(": p = ", shape[1], StringComparison.Ordinal);
+            Assert.StartsWith("Vertical stringing", shape[2], StringComparison.Ordinal);
             Assert.Contains(shape, l => l.StartsWith("Error ellipse", StringComparison.Ordinal));
 
             var zero = window.ZeroText.ToList();

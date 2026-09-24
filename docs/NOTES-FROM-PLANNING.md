@@ -24,6 +24,20 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 163: a first real user's feedback on the marking screen, and a cartridge list
+
+**Status: actioned 2026-09-24**, all seven sections, with section 1's trackpad rule and section 6's two Mac defects done under entry 166, which corrects them.
+
+- **Section 1.** Pan selects on a click and pans on a drag, and detection no longer switches tools. The two finger and pinch rule is entry 166's.
+- **Section 2.** C pans beside V; P still pans. C conflicts with nothing: not a review key, not bull entry.
+- **Section 3.** Names before numbers, **reversing entries 107 and 108 where their rule is written**. Forty cartridges confirmed by two independent sources, thirty three held until a second agrees, three disagreements between the sources each keeping the cartridge out. ".223" stays a diameter.
+- **Section 4.** A Setup block first in the panel, each needed field outlined and saying "needed", each answerable "not known", and Accept saying what is still needed.
+- **Section 5.** Cards open as their verdict, CEP as its first line, and the cut-off tests run closed and open.
+- **Section 6.** The updater offers a Mac no update; Command Q quits by the tester's report; modifiers and pinch are entry 166.
+- **Section 7.** One test per offerable row of section 3.2, and the four App tests the section lists.
+
+---
+
 ## 2026-09-24, entry 162: consent for the 2026-09-23 friend scan, and what it was shot on
 
 **Status: actioned 2026-09-24**, all three sections, with one part of section 1 waiting on a choice: publishing the scan itself.

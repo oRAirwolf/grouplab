@@ -334,7 +334,10 @@ public sealed partial class MainWindow : Window
 
     // A sheet size the person who shot it stated, from a provenance record beside the image (NOTES-FROM-PLANNING.md entry 37 section 5).
     private StatedSheetSize? statedSize;
-    private readonly AutoCompleteBox calibreBox = new() { ItemsSource = Calibre.Common.Select(c => c.Name).ToList(), FilterMode = AutoCompleteFilterMode.Contains, MinWidth = 180, PlaceholderText = "optional, e.g. .308" };
+    // NOTES-FROM-PLANNING.md entry 163 section 3: the list offers cartridge names with their diameter, the common first, and names the
+    // family a person could pick by mistake. It used to offer bare diameters filtered by "contains", which is how typing 6.5 offered .257:
+    // "6.53 mm" contains "6.5". The list is rebuilt from the cartridge table as somebody types, so the order is the table's, not the box's.
+    private readonly AutoCompleteBox calibreBox = new() { ItemsSource = CartridgeTable.Suggest(""), FilterMode = AutoCompleteFilterMode.None, MinWidth = 180, PlaceholderText = "e.g. 6.5 Creedmoor, 308 or .264", Name = "CalibreBox" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>
@@ -386,6 +389,11 @@ public sealed partial class MainWindow : Window
 
     /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
     private readonly TextBox roundsFired = new() { Width = 90 };
+
+    // Entry 163 section 4: what marks a setup field as still needed, and the "not known" answers that clear the mark.
+    private readonly TextBlock calibreNeeded = NeededWord(), distanceNeeded = NeededWord(), roundsNeeded = NeededWord();
+    private readonly Border calibreFrame = new(), distanceFrame = new(), roundsFrame = new();
+    private bool distanceNotKnown, roundsNotKnown;
 
     // Entry 162 section 3.2: what the sheet was shot on. Optional, plain choices, and never guessed.
     private readonly ComboBox paperChoice = new() { ItemsSource = TargetMaterial.Papers, PlaceholderText = "not said", MinWidth = 160, Name = "PaperChoice" };
@@ -496,7 +504,7 @@ public sealed partial class MainWindow : Window
         var tools = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         foreach (var (tool, icon, name, key) in new[]
         {
-            (MarkingTool.Pan, Icons.Pan, "Pan", "P"),
+            (MarkingTool.Pan, Icons.Pan, "Pan, and click a mark to select it", "C or P"),
             (MarkingTool.Length, Icons.Length, "Scale: length", "L"),
             (MarkingTool.Rectangle, Icons.Rectangle, "Scale: rectangle", "R"),
             (MarkingTool.Aim, Icons.Aim, "Point of aim", "A"),
@@ -516,7 +524,8 @@ public sealed partial class MainWindow : Window
         tools.Children.Add(IconButton(Icons.Undo, "Undo (Ctrl+Z)", () => session.Undo()));
         tools.Children.Add(IconButton(Icons.Redo, "Redo (Ctrl+Y)", () => session.Redo()));
         var hints = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        foreach (var (key, what) in new[] { ("Space", "next item"), ("Enter", "first choice"), ("N", "not a shot"), ("Ctrl Z", "undo") })
+        // Entry 163 section 2: pan and select sit on neighbouring keys under the left hand, and the strip shows both.
+        foreach (var (key, what) in new[] { ("C", "pan"), ("V", "select"), ("Space", "next item"), ("Enter", "first choice"), ("N", "not a shot"), ("Ctrl Z", "undo") })
         {
             hints.Children.Add(Keycap(key));
             hints.Children.Add(new TextBlock { Text = what, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space4, 0, Tokens.Space8, 0), Classes = { AppStyles.Secondary } });
@@ -530,9 +539,11 @@ public sealed partial class MainWindow : Window
         // Entry 109 section 2: the panel is the task. The review queue, the selected shot and the scale lead, as the concept has them, then what
         // the group was shot with and the shots; the units, the theme and the log are settings, on their own screen.
         var panel = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space12 };
+        var setup = new StackPanel { Spacing = Tokens.Space8, Name = "SetupBlock" };
         panel.Children.Add(crashBanner);
         BuildLeavingAsk();
         panel.Children.Add(leavingAsk);
+        panel.Children.Add(setup);
         panel.Children.Add(Heading("Review"));
         panel.Children.Add(review);
         AddHandler(KeyDownEvent, OnReviewKey, Avalonia.Interactivity.RoutingStrategies.Tunnel);
@@ -543,30 +554,6 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(selection);
         panel.Children.Add(Ruled("Scale"));
         panel.Children.Add(scaleInputs);
-        panel.Children.Add(Ruled("Group"));
-
-        // Entry 140 section 1.3: what the last sheet was shot with, offered rather than applied, with what it would copy written beside it.
-        panel.Children.Add(sameSetup);
-
-        // Entry 24 section 5: the calibre is a property of the group, entered once, from the list or typed.
-        panel.Children.Add(FieldLabel("Calibre"));
-        panel.Children.Add(Row(calibreBox, Button("Set", SetCalibreFromBox), Button("Clear", () =>
-        {
-            calibreBox.Text = "";
-            // Entry 131 section 6.3: clearing it is an answer too. Somebody marking a photograph of something that is not a GroupLab sheet
-            // means "no calibre", and the gate is there to stop Accept on a sheet where nobody was ever asked, not to force a number.
-            calibreConfirmed = true;
-            session.SetCalibre(null);
-        })));
-        panel.Children.Add(calibreNote);
-        panel.Children.Add(calibreOffers);
-        panel.Children.Add(FieldLabel("Shot distance"));
-        shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
-        panel.Children.Add(Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Clear", () =>
-        {
-            shotDistance.Text = "";
-            session.SetShotDistance(null);
-        })));
         // Entry 97 section 2: which rifle, barrel and load, from a record book kept deliberately small.
         // Entry 112 section 1: the records live in the database now; the old file is read in on the first open and kept as a backup.
         try
@@ -581,19 +568,72 @@ public sealed partial class MainWindow : Window
             problem.Text = "The session database could not be opened (" + ex.Message + "), so sessions and records are not kept this time.";
             DiagnosticLog.Exception(LogLevel.Warn, "store.open", ex);
         }
-        panel.Children.Add(FieldLabel("Rifle, barrel and load"));
-        panel.Children.Add(Row(rifleChoice));
-        panel.Children.Add(Row(barrelChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
-        panel.Children.Add(Row(loadChoice));
+
+        // NOTES-FROM-PLANNING.md entry 163 section 4. The first real user: "Required values like caliber and shot distance and rounds fired
+        // should be near the top and marked in red until they are filled in. They are buried further down and it is not obvious that they need
+        // to be filled in first." They were below the review queue, the selected shot and the whole scale explanation. They are the first
+        // thing in the panel now, each says what it unlocks, each can be answered "not known", and an empty one that matters is outlined and
+        // says "needed", in words as well as colour.
+        setup.Children.Add(Ruled("Setup"));
+        setup.Children.Add(Needed("Calibre", calibreNeeded,
+            "Names the bullet for the record and for ballistics, and sets the smallest hole GroupLab accepts.", calibreFrame, new StackPanel
+            {
+                Children =
+                {
+                    Row(calibreBox, Button("Set", SetCalibreFromBox), Button("Not known", () =>
+                    {
+                        calibreBox.Text = "";
+                        // Entry 131 section 6.3: not knowing is an answer too, and the gate is there to stop Accept on a sheet where nobody
+                        // was ever asked, not to force a number.
+                        calibreConfirmed = true;
+                        session.SetCalibre(null);
+                        ShowNeeded();
+                    })),
+                    calibreNote,
+                    calibreOffers,
+                },
+            }));
+        calibreBox.TextChanged += (_, _) => calibreBox.ItemsSource = CartridgeTable.Suggest(calibreBox.Text);
+        shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
+        setup.Children.Add(Needed("Shot distance", distanceNeeded, "Gives every figure in MOA and mil as well as inches.", distanceFrame,
+            Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Not known", () =>
+            {
+                shotDistance.Text = "";
+                distanceNotKnown = true;
+                session.SetShotDistance(null);
+                ShowNeeded();
+            }))));
+        setup.Children.Add(Needed("Rounds fired at the group, sighters not counted", roundsNeeded,
+            "Settles whether a mark is missing or one too many.", roundsFrame,
+            Row(roundsFired, Button("Set", SetRoundsFiredFromBox), Button("Not known", () =>
+            {
+                roundsFired.Text = "";
+                roundsNotKnown = true;
+                session.SetExpectedShots(null);
+                ShowNeeded();
+            }))));
+        setup.Children.Add(FieldLabel("Rifle, barrel and load"));
+        setup.Children.Add(Row(rifleChoice));
+        setup.Children.Add(Row(barrelChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
+        setup.Children.Add(Row(loadChoice));
         foreach (var combo in new[] { rifleChoice, barrelChoice, loadChoice })
         {
             combo.SelectionChanged += (_, _) => EquipmentChosen();
         }
 
-        // Entry 131 section 7.7: the box that used to sit here is gone. It had one field shared between a barrel's round count and a load's
-        // components, so the field meant a different thing depending on which of two buttons you pressed after filling it, and nothing on the
-        // screen said which. Records have a screen of their own now, and this is the way to it.
-        panel.Children.Add(Button("Add or edit equipment", () => Go(Destination.Equipment)));
+        // Entry 131 section 7.7: records have a screen of their own, and this is the way to it.
+        setup.Children.Add(Button("Add or edit equipment", () => Go(Destination.Equipment)));
+
+        // Entry 140 section 1.3: what the last sheet was shot with, offered rather than applied, with what it would copy written beside it.
+        setup.Children.Add(sameSetup);
+        setup.Children.Add(FieldLabel("Paper it was printed on, optional"));
+        setup.Children.Add(paperChoice);
+        setup.Children.Add(FieldLabel("What was behind it, optional"));
+        setup.Children.Add(backingChoice);
+        paperChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+        backingChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+
+        panel.Children.Add(Ruled("Group"));
         // Entry 105 section 8: sighters are found and matched and then set aside, unless a person asks for them to be analysed.
         analyseSighters = settings.LoadAnalyseSighters();
         analyseSightersBox.IsChecked = analyseSighters;
@@ -604,18 +644,6 @@ public sealed partial class MainWindow : Window
             Refresh();
         };
         panel.Children.Add(analyseSightersBox);
-        panel.Children.Add(FieldLabel("Rounds fired at the group, sighters not counted"));
-        panel.Children.Add(Row(roundsFired, Button("Set", SetRoundsFiredFromBox), Button("Clear", () =>
-        {
-            roundsFired.Text = "";
-            session.SetExpectedShots(null);
-        })));
-        panel.Children.Add(FieldLabel("Paper it was printed on, optional"));
-        panel.Children.Add(paperChoice);
-        panel.Children.Add(FieldLabel("What was behind it, optional"));
-        panel.Children.Add(backingChoice);
-        paperChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
-        backingChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
         BuildShotsPerBull(panel);
         BuildBullLoads(panel);
         sheetChooser.Children.Add(FieldLabel("Which sheet is this?"));
@@ -1224,6 +1252,8 @@ public sealed partial class MainWindow : Window
         roundsFired.Text = "";
         calibreBox.Text = "";
         shotDistance.Text = "";
+        distanceNotKnown = false;
+        roundsNotKnown = false;
         paperChoice.SelectedIndex = -1;
         backingChoice.SelectedIndex = -1;
 
@@ -1613,7 +1643,9 @@ public sealed partial class MainWindow : Window
         registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
         RememberDetected();
-        SetTool(MarkingTool.Select);
+
+        // Entry 163 section 1: detection used to switch to the select tool, which is how a first user found a drag doing nothing useful.
+        // The default tool now pans and selects both, so the tool the person chose stays chosen.
         // Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, rather than analysed silently.
         // Entry 161 section 3.2: and where the holes and the calibre named disagree, that is said beside it, in the same place.
         printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
@@ -1671,7 +1703,7 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private string ToolStatus(MarkingTool tool) => tool switch
     {
-        MarkingTool.Pan => "Drag to move the image. Zoom with the wheel or the buttons.",
+        MarkingTool.Pan => "Drag to move the image, click a mark to select it. Zoom with the wheel or the buttons.",
         MarkingTool.Length => "Tap two points a known distance apart. The line is drawn as you make it; drag either end onto its mark, then enter the distance. The ends stay draggable afterwards.",
         MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. Drag any corner onto its mark. This removes perspective.",
         MarkingTool.Aim => "Tap the point of aim.",
@@ -1787,6 +1819,7 @@ public sealed partial class MainWindow : Window
         var state = session.State;
         var report = GroupAnalysis.Analyse(state);
         problem.Text = report.Problem ?? "";
+        ShowNeeded();
         ShowReview(state);
 
         if (!calibreBox.IsKeyboardFocusWithin && (calibreBox.Text ?? "") != (state.Calibre?.Name ?? ""))
@@ -1856,11 +1889,8 @@ public sealed partial class MainWindow : Window
                     var cep = new StackPanel { Spacing = 0 };
                     cep.Children.Add(Readout("CEP 90", units.Length(cep90.Value), Tokens.ValueSize));
                     var cepLines = CepDetails(all, excluded ? reduced : null);
-                    cep.Children.Add(Explained(Detail(cepLines[0]), "cep", CepWhy));
-                    foreach (string line in cepLines.Skip(1))
-                    {
-                        cep.Children.Add(Detail(line));
-                    }
+                    // Entry 163 section 5: the first line in view, the rest behind its "why", collapsed until somebody opens it.
+                    cep.Children.Add(Explained(Detail(cepLines[0]), "cep", [.. cepLines.Skip(1), CepWhy]));
 
                     statistics.Children.Add(Rowed(cep));
                 }
@@ -2017,14 +2047,13 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private Border Card(string name, string verdict, string[] evidence, string[] why)
     {
+        // NOTES-FROM-PLANNING.md entry 163 section 5. The first real user: "there is too much information by default that is being explained
+        // in sentences and it should be collapsed by default." A card opens as its verdict alone, with its evidence and its reasoning behind
+        // the verdict's "why", which remembers being opened. Nothing is taken away: entry 153 wants more interpretation, not less, and it is
+        // one click from the verdict instead of in the way of it.
         var column = new StackPanel { Spacing = Tokens.Space4 };
-        column.Children.Add(new TextBlock { Text = verdict, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-        for (int i = 0; i < evidence.Length; i++)
-        {
-            var line = new TextBlock { Text = evidence[i], TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
-            // The card's "why" sits beside its last line in view.
-            column.Children.Add(i == evidence.Length - 1 && why.Length > 0 ? Explained(line, name, why) : line);
-        }
+        var verdictLine = new TextBlock { Text = verdict, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
+        column.Children.Add(evidence.Length + why.Length > 0 ? Explained(verdictLine, name, [.. evidence, .. why]) : verdictLine);
 
         return new Border { Child = column, Name = name + "Card", Classes = { AppStyles.JudgementCard } };
     }
@@ -2262,11 +2291,20 @@ public sealed partial class MainWindow : Window
     /// </summary>
     internal void Analyse()
     {
+        var needed = StillNeeded();
         if (CalibreConfirmation.WhyAcceptIsHeld(session.State, calibreConfirmed) is { } held)
         {
-            problem.Text = held;
+            // Entry 163 section 4.5: what is still needed is said in one line, rather than silently refusing.
+            problem.Text = held + (needed.Count > 1 ? " Also still needed: " + string.Join(", ", needed.Skip(1)) + "." : "");
+            ShowNeeded();
             calibreBox.Focus();
             return;
+        }
+
+        // And rather than silently proceeding: the analysis is made, and the line says what it was made without.
+        if (needed.Count > 0)
+        {
+            status.Text = "Accepted without " + string.Join(" or ", needed) + ": answer it in Setup, or say not known.";
         }
 
         int open = ReviewQueue.Open(ReviewQueue.For(session.State, analyseSighters));
@@ -2775,7 +2813,7 @@ public sealed partial class MainWindow : Window
     internal string PillText => analysing ? registrationText.Text ?? "" : reviewCount.Text ?? "";
 
     /// <summary>Each judgement card's lines, verdict first, for the headless tests.</summary>
-    internal IReadOnlyList<IReadOnlyList<string>> JudgementCards => [.. judgements.Children.OfType<Border>().Select(b => (IReadOnlyList<string>)[.. b.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")])];
+    internal IReadOnlyList<IReadOnlyList<string>> JudgementCards => [.. judgements.Children.OfType<Border>().Select(b => (IReadOnlyList<string>)[.. b.GetLogicalDescendants().OfType<TextBlock>().Where(t => !t.GetLogicalAncestors().OfType<Button>().Any()).Select(t => t.Text ?? "")])];
 
     /// <summary>The analysis state's right column's section headings, in order, for the headless tests.</summary>
     internal IEnumerable<string> FigureColumnHeadings =>
@@ -3702,6 +3740,9 @@ public sealed partial class MainWindow : Window
             case Key.N when control:
                 NewTarget();
                 break;
+            // Entry 163 section 2: C for pan, beside V for select, because those are the two a person alternates between. P still works,
+            // so nobody who learned it is broken. S is not available: it types a sighter bull when a shot is reassigned by keyboard.
+            case Key.C when !control:
             case Key.P:
                 SetTool(MarkingTool.Pan);
                 break;
@@ -4362,6 +4403,60 @@ public sealed partial class MainWindow : Window
 
     /// <summary>A field's name above it, in the label style.</summary>
     private static TextBlock FieldLabel(string text) => new() { Text = text, Classes = { AppStyles.Label } };
+
+    private static TextBlock NeededWord() => new() { Text = "needed", Margin = new Thickness(Tokens.Space8, 0, 0, 0), IsVisible = false, Classes = { AppStyles.Alert } };
+
+    /// <summary>A setup field: its label with the word "needed" beside it, what it unlocks in a line, and the field inside an outline.</summary>
+    private static Control Needed(string label, TextBlock word, string unlocks, Border frame, Control field)
+    {
+        var heading = new StackPanel { Orientation = Orientation.Horizontal };
+        heading.Children.Add(FieldLabel(label));
+        heading.Children.Add(word);
+        frame.BorderThickness = new Thickness(2);
+        frame.CornerRadius = new CornerRadius(4);
+        frame.Padding = new Thickness(Tokens.Space4);
+        frame.Child = field;
+        var column = new StackPanel { Spacing = Tokens.Space4 };
+        column.Children.Add(heading);
+        column.Children.Add(new TextBlock { Text = unlocks, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        column.Children.Add(frame);
+        return column;
+    }
+
+    /// <summary>What is still needed, in the order the setup block shows it, for the outlines and for the line Accept writes.</summary>
+    internal IReadOnlyList<string> StillNeeded()
+    {
+        var state = session.State;
+        var needed = new List<string>();
+        if (CalibreConfirmation.WhyAcceptIsHeld(state, calibreConfirmed) is not null)
+        {
+            needed.Add("calibre");
+        }
+
+        if (state.ShotDistanceInches is null && !distanceNotKnown && state.Shots.Count > 0)
+        {
+            needed.Add("shot distance");
+        }
+
+        if (state.ExpectedShots is null && !roundsNotKnown && state.Shots.Count > 0)
+        {
+            needed.Add("rounds fired");
+        }
+
+        return needed;
+    }
+
+    /// <summary>Outlines each needed field and shows its word, or clears both.</summary>
+    private void ShowNeeded()
+    {
+        var needed = StillNeeded();
+        foreach (var (name, word, frame) in new[] { ("calibre", calibreNeeded, calibreFrame), ("shot distance", distanceNeeded, distanceFrame), ("rounds fired", roundsNeeded, roundsFrame) })
+        {
+            bool need = needed.Contains(name);
+            word.IsVisible = need;
+            frame.Classes.Set(AppStyles.Needed, need);
+        }
+    }
 
     /// <summary>
     /// An item with its "why", NOTES-FROM-PLANNING.md entry 109 section 1 principle 1 and entry 111 section 3: the sentences that explain the

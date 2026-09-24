@@ -46,6 +46,8 @@ public class BenchCoverageTests
         ["CalibreList"] = "A generated document, written by grouplab calibres at release time and not by anything a person waits for.",
         ["AimedBulls"] = "It sorts a sheet's bulls into rows and builds a dictionary from them. The matching it feeds is measured; this is the sentence before it.",
         ["CalibreGuessList"] = "Twenty-two numbers and the nearest one to a reading. There is nothing in it whose speed or accuracy a figure could report.",
+        ["CartridgeTable"] = "Forty names and fourteen diameters read once from an embedded file, and a list of strings for a box somebody is typing in. Entry 163.",
+        ["TargetMaterial"] = "Two short lists of words and a check that a value is one of them. Entry 162.",
         ["CanonicalJsonWriter"] = "Writing a definition back out happens in the editor's save, which is measured as a control.",
         ["MarkingFile"] = "Measured as part of saving and reopening a session, which is what writes and reads it.",
         ["ShotLabels"] = "A few dozen string comparisons inside the analysis, below the resolution of any figure here.",

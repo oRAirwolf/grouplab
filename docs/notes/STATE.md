@@ -15,19 +15,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- **Entry 153 is closed**, section 5 included, within the one limit on publishing real material.
-- **Entry 159 is next**, then 154, 155, 156, 157, 158, and entry 161, which arrived during this run.
+- Entries 149 to 153, 160 to 163 and 168 are done. **Entry 164 is next**, then 166, 159, 154, 155, 156, 157, 158, 165,
+  with 167, the Equipment icon, fitted between larger ones. That order is Alan's.
 
 ## The next three
 
-1. **Entry 159.** Audit the website, the README and the application for claims that are not true, and
-   build the claims register the audit produces.
-2. **Entry 154.** A word a shooter does not know gets an explanation where they meet it: one glossary
-   source, tooltips on the site that work on tap as well as hover, and the same text in the
-   application.
-3. **Entry 155.** One Targets screen, because the library and the print dialog do the same job.
-
-Then, in this order and not reordered: 156, 157, 158, and 161.
+1. **Entry 164.** The first macOS log: 33 of 34 markers on the sample, and detection slower on an M5 Max.
+2. **Entry 166.** The Mac tester's answers: Command shortcuts read Control, pinch zoom was never built, and the
+   platform statement says exactly what was checked.
+3. **Entry 159, resumed.** The claims register: 3079 candidate claims to classify, five already corrected.
 
 ## Blocked, and on what
 

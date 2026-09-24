@@ -86,7 +86,7 @@ The queue works from the keyboard:
 - **N** marks the selected mark as not a shot.
 
 The tools have keys too:
-- P pan, V select, I impact, A aim, L length and R rectangle;
+- C or P pan, V select, I impact, A aim, L length and R rectangle;
 - the square brackets turn the view;
 - Delete removes the selected mark;
 - Ctrl+Z and Ctrl+Y undo and redo.

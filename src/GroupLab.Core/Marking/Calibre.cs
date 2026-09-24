@@ -84,6 +84,13 @@ public sealed partial record Calibre(string Name, double DiameterInches)
             return null;
         }
 
+        // NOTES-FROM-PLANNING.md entry 163 section 3.1, reversing entry 108: names are matched before numbers. "6.5" is the 6.5 mm family,
+        // 0.264 in, and not 6.5 mm; ".38" is 0.357 in, and not 0.380. Only what matches no name is read as a diameter.
+        if (CartridgeTable.Named(typed) is { } family)
+        {
+            return Of(family.Diameter);
+        }
+
         double inches;
         if (Inches().Match(typed) is { Success: true } i)
         {

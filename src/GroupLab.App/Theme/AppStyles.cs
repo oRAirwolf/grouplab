@@ -70,6 +70,12 @@ public static class AppStyles
 
     public const string Alert = "alert";
 
+    /// <summary>
+    /// A field that has to be answered before the result means what it says, NOTES-FROM-PLANNING.md entry 163 section 4: outlined in the
+    /// alert colour, always beside the word "needed", because colour alone fails somebody who cannot see it.
+    /// </summary>
+    public const string Needed = "needed";
+
     /// <summary>A status pill, such as the scale's: mono, 11 point, a thin border; good in teal, a hand-drawn reference in amber.</summary>
     public const string Pill = "pill";
 
@@ -214,6 +220,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(HeadlineFigure), (TextBlock.ForegroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(Alert), (TextBlock.ForegroundProperty, Brush(p.Alert))),
+        Rule(x => x.OfType<Border>().Class(Needed), (Border.BorderBrushProperty, Brush(p.Alert))),
         Rule(x => x.OfType<TextBlock>().Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),
         Rule(x => x.OfType<TextBlock>().Class(PillText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.DetailSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),

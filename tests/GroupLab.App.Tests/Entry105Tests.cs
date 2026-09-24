@@ -239,18 +239,21 @@ public class Entry105Tests
     }
 
     /// <summary>
-    /// Entry 107 section 1 in the window: a name is refused with the sentence that says what to type and sets nothing, and a diameter is set and
-    /// shown in both units, as the load panel shows it.
+    /// Entry 107 section 1 in the window, as entry 163 section 3 reversed it: a name the cartridge table knows is set as its family's bullet,
+    /// "38 Cal." as 0.357 in and not 0.380; one it does not know is refused with the sentence that says what to type and sets nothing; and a
+    /// diameter is set and shown in both units, as the load panel shows it.
     /// </summary>
     [AvaloniaFact]
-    public void TheCalibreBoxTakesADiameterAndRefusesAName()
+    public void TheCalibreBoxTakesANameOrADiameterAndRefusesWhatItCannotRead()
     {
         var (window, _) = NewWindow();
         string path = Marked(window);
         try
         {
             window.EnterCalibre("38 Cal.");
-            Assert.Null(window.Session.State.Calibre);
+            Assert.Equal(0.357, window.Session.State.Calibre!.DiameterInches, 12);
+
+            window.EnterCalibre("7.62");
             Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == Calibre.Refusal);
 
             window.EnterCalibre(".357");

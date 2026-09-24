@@ -145,6 +145,10 @@
    "withoutASheet": "The same screen, and the work is yours. You set the scale, by tapping a known length or the corners of a known rectangle, and you place each shot. There is no automatic detection, nothing is assigned to a bull for you, and the review queue stays empty, because it exists to question what the detector decided and nothing decided anything.",
    "parts": [
     [
+     "Setup, at the top of the panel",
+     "Calibre, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle, barrel and load, the paper and what was behind it sit under them."
+    ],
+    [
      "The count at the top",
      "How many shots are marked and how many need review, so you know how much is left before you can trust the result."
     ],
@@ -158,7 +162,7 @@
     ],
     [
      "The keyboard line",
-     "Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a shot. Faster than the mouse once a sheet has a dozen questions."
+     "C pans and V selects, side by side under the left hand. Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a shot. Faster than the mouse once a sheet has a dozen questions."
     ],
     [
      "Selected shot",
@@ -174,7 +178,7 @@
     ],
     [
      "The tools along the top of the picture",
-     "Pan, measure, box, the scale ends, the bull picker, and select. Undo and redo sit beside them."
+     "Pan, which is the tool on open and also selects a mark you click without moving it, then measure, box, the scale ends, the bull picker, and select, which is the one that drags a mark. Undo and redo sit beside them."
     ],
     [
      "Detect on a GroupLab sheet",
@@ -187,10 +191,10 @@
    ],
    "steps": [
     "Open your photograph or scan, by dragging it onto the window or from the file menu.",
+    "Answer the setup at the top: the calibre, the distance and how many rounds you fired, or say not known.",
     "Answer each review item in turn, using the buttons or the keys shown.",
-    "Drag any mark that sits off a hole, and use a bull's number to move a shot to the right bull.",
-    "Mark anything you called as a flyer, so the analysis can say what difference it made.",
-    "Press Accept and analyse."
+    "Drag any mark that sits off a hole with the select tool, V, and use a bull's number to move a shot to the right bull.",
+    "Mark anything you called as a flyer, then press Accept and analyse."
    ],
    "fits": "After you have shot and photographed a sheet from <a href=\"/tour/print/\">printing</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
    "links": [

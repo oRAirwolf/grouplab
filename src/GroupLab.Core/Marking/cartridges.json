@@ -1,0 +1,906 @@
+{
+  "_": [
+    "NOTES-FROM-PLANNING.md entry 163 section 3. A person who shoots a 6.5 Creedmoor typed 6.5 and GroupLab offered .257,",
+    "because 6.53 mm is the nearest diameter to 6.5. Names are matched before numbers now, from this table.",
+    "",
+    "Every cartridge here is confirmed at its diameter by BOTH sources below, read on 2026-09-24. A cartridge only one",
+    "source lists is in 'pending' with the one it has, and is offered nowhere until a second is found, because the entry",
+    "asked for every diameter to be verified against two independent published sources before it goes in. Where the two",
+    "sources disagree, the family carries a note and a range, and the disagreement is recorded in docs/CALIBRES.md.",
+    "",
+    "Families are in the order a suggestion list shows them: the common ones first.",
+    "",
+    "A family shorthand never points at a held cartridge or at a trap: '7.62' could be 7.62x39, '5.56' and '8.6' are held, '25' could be .25 ACP at 0.251, and '9' could be anything from 9mm to 9.3.",
+    "'.223' is not a name here: with its leading point it is a diameter, entry 163 section 3.1 rule 3, and 0.223 in is a real .22 LR figure in source A. '223' without the point is .223 Remington."
+  ],
+  "sources": {
+    "A": "Wikipedia, Table of handgun and rifle cartridges, bullet diameter column, which cites SAAMI and CIP. Read 2026-09-24.",
+    "B": "Nosler load data, caliber and cartridge index, which lists each cartridge under its bullet diameter from the bullet maker's own load development. Read 2026-09-24."
+  },
+  "families": [
+    {
+      "diameter": 0.308,
+      "name": ".30 calibre",
+      "shorthand": [
+        "30",
+        ".30",
+        "30 cal",
+        "308",
+        ".308"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".308 Winchester",
+          "shorthand": [
+            "308",
+            "308 Win",
+            ".308 Win",
+            "7.62x51",
+            "7.62 NATO"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".30-06 Springfield",
+          "shorthand": [
+            "30-06",
+            "3006",
+            "30-06 Sprg"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".300 Winchester Magnum",
+          "shorthand": [
+            "300 Win Mag",
+            "300 WM",
+            "300 Win"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".300 AAC Blackout",
+          "shorthand": [
+            "300 BLK",
+            "300 Blackout",
+            "300 AAC"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".300 WSM",
+          "shorthand": [
+            "300 WSM",
+            "300 Winchester Short Magnum"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".30-30 Winchester",
+          "shorthand": [
+            "30-30",
+            "3030"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".300 H&H Magnum",
+          "shorthand": [
+            "300 H&H",
+            "300 Holland"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.264,
+      "name": "6.5 mm",
+      "shorthand": [
+        "6.5",
+        "6.5mm",
+        "6.5 mm",
+        "264",
+        ".264",
+        "26"
+      ],
+      "traps": [
+        0.257
+      ],
+      "cartridges": [
+        {
+          "name": "6.5 Creedmoor",
+          "shorthand": [
+            "6.5 CM",
+            "6.5 Creed",
+            "6.5CM",
+            "6.5 Creedmore"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "6.5x55 Swedish",
+          "shorthand": [
+            "6.5x55",
+            "6.5 Swede",
+            "6.5x55 SE"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".260 Remington",
+          "shorthand": [
+            "260",
+            "260 Rem",
+            ".260"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "6.5 Grendel",
+          "shorthand": [
+            "6.5 Grendel",
+            "Grendel"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "26 Nosler",
+          "shorthand": [
+            "26 Nos",
+            "26 Nosler"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.224,
+      "name": ".22 centrefire",
+      "shorthand": [
+        "22 centerfire",
+        "22 centrefire",
+        "224",
+        ".224"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".223 Remington",
+          "shorthand": [
+            "223",
+            "223 Rem"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".22-250 Remington",
+          "shorthand": [
+            "22-250",
+            "22250"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".222 Remington",
+          "shorthand": [
+            "222 Rem",
+            ".222 Rem"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".22 Hornet",
+          "shorthand": [
+            "22 Hornet",
+            "Hornet"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.243,
+      "name": "6 mm",
+      "shorthand": [
+        "6mm",
+        "6 mm",
+        "243",
+        ".243"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".243 Winchester",
+          "shorthand": [
+            "243 Win",
+            ".243 Win",
+            "243"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "6mm BR",
+          "shorthand": [
+            "6BR",
+            "6 BR",
+            "6mm Bench Rest"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.284,
+      "name": "7 mm",
+      "shorthand": [
+        "7mm",
+        "7 mm",
+        "284",
+        ".284"
+      ],
+      "traps": [
+        0.277
+      ],
+      "cartridges": [
+        {
+          "name": "7mm Remington Magnum",
+          "shorthand": [
+            "7mm Rem Mag",
+            "7 Mag",
+            "7mm RM"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "7mm-08 Remington",
+          "shorthand": [
+            "7mm-08",
+            "7-08"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".280 Remington",
+          "shorthand": [
+            "280",
+            "280 Rem",
+            ".280"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "7x57 Mauser",
+          "shorthand": [
+            "7x57",
+            "7mm Mauser"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.277,
+      "name": ".270 calibre",
+      "shorthand": [
+        "270",
+        ".270",
+        "277",
+        ".277",
+        "6.8"
+      ],
+      "traps": [
+        0.284
+      ],
+      "cartridges": [
+        {
+          "name": ".270 Winchester",
+          "shorthand": [
+            "270 Win",
+            ".270 Win",
+            "270"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "6.8 SPC",
+          "shorthand": [
+            "6.8 SPC",
+            "6.8 Remington SPC",
+            "6.8mm SPC"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.257,
+      "name": ".25 calibre",
+      "shorthand": [
+        "257",
+        ".257"
+      ],
+      "traps": [
+        0.264
+      ],
+      "cartridges": [
+        {
+          "name": ".25-06 Remington",
+          "shorthand": [
+            "25-06",
+            "2506"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".257 Roberts",
+          "shorthand": [
+            "257 Roberts",
+            "257 Bob"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".257 Weatherby Magnum",
+          "shorthand": [
+            "257 Wby",
+            "257 Weatherby"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".250 Savage",
+          "shorthand": [
+            "250 Savage",
+            "250-3000"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.338,
+      "name": ".338 calibre",
+      "shorthand": [
+        "338",
+        ".338"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".338 Lapua Magnum",
+          "shorthand": [
+            "338 Lapua",
+            "338 LM",
+            "338 Lap"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".338 Winchester Magnum",
+          "shorthand": [
+            "338 Win Mag",
+            "338 WM"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.323,
+      "name": "8 mm",
+      "shorthand": [
+        "8mm",
+        "8 mm",
+        "323",
+        ".323",
+        "7.92"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": "8mm Mauser",
+          "shorthand": [
+            "8x57",
+            "8x57 JS",
+            "7.92x57",
+            "8mm Mauser"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.204,
+      "name": ".20 calibre",
+      "shorthand": [
+        "20",
+        ".20",
+        "204",
+        ".204"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".204 Ruger",
+          "shorthand": [
+            "204",
+            "204 Ruger"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.375,
+      "name": ".375 calibre",
+      "shorthand": [
+        "375",
+        ".375"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".375 H&H Magnum",
+          "shorthand": [
+            "375 H&H",
+            "375 Holland"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.355,
+      "name": "9 mm",
+      "shorthand": [
+        "9mm",
+        "9 mm",
+        "355",
+        ".355"
+      ],
+      "traps": [
+        0.357
+      ],
+      "cartridges": [
+        {
+          "name": "9mm Luger",
+          "shorthand": [
+            "9mm",
+            "9x19",
+            "9mm Parabellum",
+            "9 Luger"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".380 ACP",
+          "shorthand": [
+            "380",
+            "380 Auto",
+            ".380"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".357 SIG",
+          "shorthand": [
+            "357 Sig",
+            ".357 Sig"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.357,
+      "name": ".38 calibre",
+      "shorthand": [
+        "38",
+        ".38",
+        "357",
+        ".357"
+      ],
+      "traps": [
+        0.355
+      ],
+      "cartridges": [
+        {
+          "name": ".38 Special",
+          "shorthand": [
+            "38 Spl",
+            "38 Special",
+            ".38 Spl"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": ".357 Magnum",
+          "shorthand": [
+            "357 Mag",
+            ".357 Mag",
+            "357 Magnum"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    },
+    {
+      "diameter": 0.4,
+      "name": ".40 calibre",
+      "shorthand": [
+        "40",
+        ".40",
+        "400",
+        ".400",
+        "10mm"
+      ],
+      "traps": [],
+      "cartridges": [
+        {
+          "name": ".40 S&W",
+          "shorthand": [
+            "40 S&W",
+            "40 SW",
+            ".40 SW"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "10mm Auto",
+          "shorthand": [
+            "10mm",
+            "10 mm",
+            "10mm Auto"
+          ],
+          "sources": [
+            "A",
+            "B"
+          ]
+        }
+      ]
+    }
+  ],
+  "pending": [
+    {
+      "name": ".17 Remington",
+      "diameter": 0.172,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": "6.5 PRC",
+      "diameter": 0.264,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": "6.5x47 Lapua",
+      "diameter": 0.264,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "6mm Creedmoor",
+      "diameter": 0.243,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": "6mm ARC",
+      "diameter": 0.243,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "5.56x45mm NATO",
+      "diameter": 0.224,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": ".22 WMR",
+      "diameter": 0.224,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "5.7x28mm",
+      "diameter": 0.224,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "22 Nosler",
+      "diameter": 0.224,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".22 Long Rifle",
+      "diameter": 0.222,
+      "sources": [
+        "A"
+      ],
+      "note": "A gives 0.223; entry 153 section 4 took 0.222 as nominal. Neither is a second source."
+    },
+    {
+      "name": ".22 Short",
+      "diameter": 0.222,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "7mm PRC",
+      "diameter": 0.284,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".284 Winchester",
+      "diameter": 0.284,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": "28 Nosler",
+      "diameter": 0.284,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".300 PRC",
+      "diameter": 0.308,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".300 Norma Magnum",
+      "diameter": 0.308,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": ".30 Carbine",
+      "diameter": 0.308,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": "7.62x39mm",
+      "diameter": 0.31,
+      "sources": [
+        "A",
+        "B"
+      ],
+      "note": "The two disagree: A gives 0.312, B lists it under 0.310. Held until a third source settles it."
+    },
+    {
+      "name": "7.62x54mmR",
+      "diameter": 0.311,
+      "sources": [
+        "A"
+      ],
+      "note": "A gives 0.308, which is not what anybody loads it with; B does not list it. Held."
+    },
+    {
+      "name": ".303 British",
+      "diameter": 0.311,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": ".338 Norma Magnum",
+      "diameter": 0.338,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": ".44 Magnum",
+      "diameter": 0.429,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".44 Special",
+      "diameter": 0.429,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".45 ACP",
+      "diameter": 0.451,
+      "sources": [
+        "B"
+      ]
+    },
+    {
+      "name": ".45 Colt",
+      "diameter": 0.451,
+      "sources": [
+        "B"
+      ],
+      "note": "B lists 0.451; 0.452 and 0.454 are also loaded."
+    },
+    {
+      "name": ".17 HMR",
+      "diameter": 0.172,
+      "sources": [
+        "A"
+      ]
+    },
+    {
+      "name": ".50 BMG",
+      "diameter": 0.51,
+      "sources": []
+    },
+    {
+      "name": "6.8 Western",
+      "diameter": 0.277,
+      "sources": []
+    },
+    {
+      "name": ".25 Creedmoor",
+      "diameter": 0.257,
+      "sources": []
+    },
+    {
+      "name": "22 ARC",
+      "diameter": 0.224,
+      "sources": []
+    },
+    {
+      "name": ".224 Valkyrie",
+      "diameter": 0.224,
+      "sources": []
+    },
+    {
+      "name": "8.6 Blackout",
+      "diameter": 0.338,
+      "sources": []
+    },
+    {
+      "name": "6 Dasher",
+      "diameter": 0.243,
+      "sources": []
+    }
+  ]
+}

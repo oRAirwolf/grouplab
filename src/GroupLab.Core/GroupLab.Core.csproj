@@ -4,6 +4,7 @@
     <EmbeddedResource Include="Gltd\Schema\gltd-1.schema.json" LogicalName="GroupLab.Core.Gltd.Schema.gltd-1.schema.json" />
     <EmbeddedResource Include="Statistics\RangeStatistics.csv" LogicalName="GroupLab.Core.Statistics.RangeStatistics.csv" />
     <EmbeddedResource Include="..\..\docs\VOLUNTEER-PACK.md" LogicalName="GroupLab.Core.Reporting.VolunteerPack.md" />
+    <EmbeddedResource Include="Marking\cartridges.json" LogicalName="GroupLab.Core.Marking.cartridges.json" />
   </ItemGroup>
 
   <ItemGroup>

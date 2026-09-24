@@ -637,6 +637,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         if (Tool == MarkingTool.Pan || point.Properties.IsMiddleButtonPressed)
         {
             panFrom = point.Position;
+
+            // NOTES-FROM-PLANNING.md entry 163 section 1: the default tool pans on a drag over the sheet and selects on a click on a mark,
+            // because a new user's first act is to look around and their second is to click what they see. A press only becomes a
+            // selection when it is let go close to where it began, so a drag that starts on a mark pans and never moves the mark: entry 143
+            // settled that a stray drag must not move a measurement, and only the select tool drags shots.
+            panPressedAt = Tool == MarkingTool.Pan && point.Properties.IsLeftButtonPressed ? point.Position : null;
             e.Pointer.Capture(this);
             return;
         }
@@ -798,13 +804,26 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
         }
 
+        if (panPressedAt is { } pressed && Session is { } s && Distance(pressed, e.GetPosition(this)) <= ClickSlop)
+        {
+            var hit = s.State.Shots.Where(x => Distance(ToControl(x.Image), pressed) <= ShotReach(s.State, x)).MinBy(x => Distance(ToControl(x.Image), pressed));
+            Selected = hit?.Id;
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         dragging = null;
         handle = null;
         placing = null;
         panFrom = null;
+        panPressedAt = null;
         e.Pointer.Capture(null);
         InvalidateVisual();
     }
+
+    /// <summary>How far, in screen pixels, a press may move and still be a click rather than a pan.</summary>
+    internal const double ClickSlop = 4;
+
+    private Point? panPressedAt;
 
     /// <summary>
     /// Puts a dragged scale point where it was let go: in the taps being made or waiting, or, for the reference in use, as a new reference

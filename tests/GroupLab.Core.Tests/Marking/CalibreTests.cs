@@ -52,19 +52,29 @@ public class CalibreTests
     }
 
     /// <summary>
-    /// Names are refused with the one sentence that says what to type, and so is a bare number of one or more, which the old rule guessed as
-    /// millimetres, hundredths or thousandths: "7.62" read as 0.300 in, a diameter no 7.62 bullet has.
+    /// NOTES-FROM-PLANNING.md entry 163 section 3, reversing entries 107 and 108: a name the cartridge table knows is read as its family's
+    /// bullet diameter. These were all refused before, and a real user shooting a 6.5 Creedmoor was offered .257 for typing 6.5.
     /// </summary>
     [Theory]
-    [InlineData("300 Blackout")]
-    [InlineData("6.5 Creedmoor")]
-    [InlineData("30 Cal.")]
-    [InlineData("9mm Luger")]
+    [InlineData("300 Blackout", 0.308)]
+    [InlineData("6.5 Creedmoor", 0.264)]
+    [InlineData("30 Cal.", 0.308)]
+    [InlineData("9mm Luger", 0.355)]
+    [InlineData("308", 0.308)]
+    [InlineData("6.5", 0.264)]
+    public void NamesAreReadAsTheirFamilysBullet(string text, double inches)
+    {
+        Assert.Equal(inches, Calibre.Parse(text, out _)!.DiameterInches, 6);
+    }
+
+    /// <summary>
+    /// A bare number that names nothing is still refused with the one sentence that says what to type, rather than guessed as millimetres,
+    /// hundredths or thousandths: "7.62" read as 0.300 in, a diameter no 7.62 bullet has, and "22" could be 0.222 or 0.224.
+    /// </summary>
+    [Theory]
     [InlineData("7.62")]
-    [InlineData("308")]
     [InlineData("22")]
-    [InlineData("6.5")]
-    public void NamesAndBareNumbersAreRefusedWithWhatToType(string text)
+    public void ABareNumberThatNamesNothingIsRefusedWithWhatToType(string text)
     {
         Assert.Null(Calibre.Parse(text, out string? problem));
         Assert.Equal(Calibre.Refusal, problem);
@@ -96,17 +106,31 @@ public class CalibreTests
             typed.Add((v.ToString("0.00", CultureInfo.InvariantCulture) + " mm", v.ToString("0.00", CultureInfo.InvariantCulture) + " mm"));
         }
 
+        // Entry 163 section 3: a designation that names a family in the cartridge table is read as that family's bullet, which is what the
+        // refusal was protecting against getting wrong. One that names no family is still refused, and says why.
         foreach (var (text, shown) in typed)
         {
-            Assert.True(Calibre.Parse(text, out string? problem) is null, $"{text} was read");
+            var read = Calibre.Parse(text, out string? problem);
+            if (CartridgeTable.Named(text) is { } family)
+            {
+                Assert.Equal(family.Diameter, read!.DiameterInches, 6);
+                continue;
+            }
+
+            Assert.True(read is null, $"{text} was read");
             Assert.Equal(Calibre.DesignationRefusal(shown), problem);
         }
 
-        foreach (string text in new[] { "9mm", "7.62mm", ".38", ".270", ".300", ".22", ".45", "5.56 mm" })
+        foreach (string text in new[] { "7.62mm", ".22", ".45", "5.56 mm" })
         {
             Assert.Null(Calibre.Parse(text, out string? problem));
             Assert.Contains("is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", problem, StringComparison.Ordinal);
         }
+
+        // And the ones that name a family now read as it: .38 is 0.357 in, not 0.380, which is the case entry 108 existed for.
+        Assert.Equal(0.357, Calibre.Parse(".38", out _)!.DiameterInches, 6);
+        Assert.Equal(0.355, Calibre.Parse("9mm", out _)!.DiameterInches, 6);
+        Assert.Equal(0.277, Calibre.Parse(".270", out _)!.DiameterInches, 6);
 
         Assert.Equal("7.62 mm is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", Calibre.DesignationRefusal("7.62 mm"));
     }

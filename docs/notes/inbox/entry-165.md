@@ -30,6 +30,26 @@ After **Accept and analyse**, once the analysis is on screen, one short panel as
 4. **Not this time is final for that target.** The question does not come back for the same session.
 5. It never blocks the analysis, never delays it, and never appears on top of the numbers.
 
+### 1.1 Asked once, on first run (added 2026-09-24)
+
+Alan's friend, the first outside user: "when you first open the program, ask if you want to opt in for
+sending your targets to grouplab for analysis and if they choose yes, it automatically uploads their
+targets, results, and logs."
+
+So the choice is offered **once, on first run**, as well as being in Settings:
+
+1. The first time GroupLab opens, one screen asks whether to send targets to the project, with the same
+   two consent levels as section 2 and a plain list of what is sent. The choices are **Send every target
+   automatically**, **Ask me each time**, and **Never**. Nothing is preselected; the person must choose.
+2. **Send every target automatically** means exactly that: after Accept and analyse, the package goes
+   with no further question, and a small unobtrusive line says it was sent.
+3. **Ask me each time** is the per target question of section 1.
+4. The first run screen is shown only while `open` is true. Before the receiver exists, asking a person
+   to send targets to a place that does not answer is the worst of both worlds, so the screen waits and
+   appears on the first start after the receiver opens, once.
+5. The public address people see for this is `grouplab.org/targets`, which does not exist yet. It is the
+   page that explains what is collected and why, and it is built with the receiver.
+
 ## 2. Consent, in two levels
 
 `consent_v1` on the upload page is all or nothing: it says the photos may be published. For the
