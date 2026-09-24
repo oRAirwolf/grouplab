@@ -40,5 +40,8 @@
   },
   "appOpen": false,
   "appReceiver": "https://grouplab.org/api/app-submission.php",
+  "errorReportsOpen": false,
+  "errorReceiver": "https://grouplab.org/api/error-report.php",
+  "maxErrorReportsPerDay": 20,
   "maxAppPackageMegabytes": 4
 }

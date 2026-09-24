@@ -54,8 +54,25 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
             root.GetProperty("appOpen").GetBoolean(),
             root.GetProperty("appReceiver").GetString()!,
             root.GetProperty("maxFileMegabytes").GetInt64() * 1024 * 1024,
-            root.GetProperty("maxAppPackageMegabytes").GetInt64() * 1024 * 1024);
+            root.GetProperty("maxAppPackageMegabytes").GetInt64() * 1024 * 1024)
+        {
+            ErrorReportsOpen = root.GetProperty("errorReportsOpen").GetBoolean(),
+            ErrorReceiver = root.GetProperty("errorReceiver").GetString()!,
+            MaxErrorReportsPerDay = root.GetProperty("maxErrorReportsPerDay").GetInt32(),
+        };
     });
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 194: whether the error report receiver and its worker are installed. Nothing is asked and nothing is
+    /// sent while it is false, as with <see cref="AppOpen"/>.
+    /// </summary>
+    public bool ErrorReportsOpen { get; init; }
+
+    /// <summary>Where error reports go: grouplab.org, never GitHub, which only the server's worker talks to.</summary>
+    public string ErrorReceiver { get; init; } = "";
+
+    /// <summary>Entry 194 section 2.5: the most reports one installation sends in a day.</summary>
+    public int MaxErrorReportsPerDay { get; init; }
 
     /// <summary>The terms this build carries.</summary>
     public static ReceiverTerms Current => Built.Value;

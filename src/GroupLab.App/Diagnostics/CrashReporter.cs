@@ -249,11 +249,7 @@ public static class CrashReporter
             try
             {
                 var record = JsonNode.Parse(File.ReadAllText(crash));
-                var first = record?["exceptions"]?.AsArray().FirstOrDefault();
-                string type = (string?)first?["type"] ?? "no exception";
-                string frame = ((string?)first?["stack"] ?? "").Split('\n').Select(l => l.Trim()).FirstOrDefault(l => l.StartsWith("at GroupLab.", StringComparison.Ordinal)) ?? "";
-                string at = frame.Length == 0 ? "" : " in " + frame[3..].Split('(')[0];
-                string key = type + at;
+                string key = GroupKey(record);
                 string kind = KindOfRecord(crash);
                 groups[key] = groups.TryGetValue(key, out var seen) ? (seen.Count + 1, seen.Kind, (string?)record?["last_action"] ?? seen.Last) : (1, kind, (string?)record?["last_action"]);
             }
@@ -265,6 +261,15 @@ public static class CrashReporter
 
         return string.Join("\n", groups.OrderByDescending(g => g.Value.Count).Select(g => string.Create(CultureInfo.InvariantCulture,
             $"{g.Value.Count} time{(g.Value.Count == 1 ? "" : "s")}: {g.Key}, {(g.Value.Kind == Survived ? "survived" : "closed")}{(g.Value.Last is { } last ? ", after " + last : "")}")));
+    }
+
+    /// <summary>What went wrong, as the grouping reads it: the exception's type and the first GroupLab frame, without its line.</summary>
+    internal static string GroupKey(JsonNode? record)
+    {
+        var first = record?["exceptions"]?.AsArray().FirstOrDefault();
+        string type = (string?)first?["type"] ?? "no exception";
+        string frame = ((string?)first?["stack"] ?? "").Split('\n').Select(l => l.Trim()).FirstOrDefault(l => l.StartsWith("at GroupLab.", StringComparison.Ordinal)) ?? "";
+        return type + (frame.Length == 0 ? "" : " in " + frame[3..].Split('(')[0]);
     }
 
     /// <summary>Every crash record in the directory not yet dealt with, oldest first.</summary>

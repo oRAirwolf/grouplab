@@ -1,0 +1,11 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 194 section 3.2: every five minutes, so a report reaches its issue within minutes.
+Description=Turn GroupLab error reports into issues, every five minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+Unit=grouplab-error-worker.service
+
+[Install]
+WantedBy=timers.target

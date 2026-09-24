@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
-Then 23, one upload, then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 9.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
+Then 24, the error report token, install and test, then 23, one upload, then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,65 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 24. Error reports into the private repository: a token, one install, one test
+
+**Opened 2026-09-24. Entry 194. Waiting, and it needs GitHub, the server's shell and PowerShell, in that order. Nothing breaks
+meanwhile: sending error reports stays switched off until the test in step 4 turns into an issue.**
+
+**Step 1, the token, in GitHub.** GitHub, your picture top right, **Settings**, **Developer settings** at the bottom of the left
+column, **Personal access tokens**, **Fine-grained tokens**, **Generate new token**. Name `grouplab-error-reports`. Expiration **one
+year**. Resource owner **oRAirwolf**. Repository access **Only select repositories**, and choose `grouplab-crash-reports`. Under
+Repository permissions set **Issues** to **Read and write** and nothing else; GitHub adds Metadata read by itself. **Generate token**
+and keep the page open: the token is shown once, and it begins `github_pat_`.
+
+**Step 2, the files, on the server.** Copy these six from the repository's `website/server/` to `/home/ubuntu/grouplab-server/`:
+`grouplab-error-worker.py`, `grouplab-error-worker.service`, `grouplab-error-worker.timer`, `grouplab-set-error-token`, `install.py`
+and `nginx.ssl.conf_grouplab`. Then, in the server's shell:
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --errors --dry-run
+sudo python3 install.py --errors
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**A good result:** the dry run lists the worker, its two units, the token script and the nginx include as what it would install, and
+nothing missing; the install ends `done` and says the token is left to set; `nginx -t` says the syntax is ok and the test is
+successful.
+
+**Step 3, the token, on the server.** Paste it when asked; nothing shows as you type, and nothing is printed back.
+
+```bash
+sudo /usr/local/sbin/grouplab-set-error-token
+```
+
+**A good result:** "Written to /etc/grouplab/error-token, owned by root, mode 600." Close the GitHub page after this.
+
+**Step 4, one test report, in PowerShell on this machine**, then the worker by hand in the server's shell rather than waiting its five
+minutes:
+
+```powershell
+python C:\Dev\grouplab\scripts\send-test-error-report.py
+```
+
+```bash
+sudo systemctl start grouplab-error-worker.service
+sudo tail -n 3 /home/airwolf/logs/grouplab-error-worker.log
+```
+
+**A good result:** PowerShell prints `sent: the receiver took it`; the log's last line reads `opened issue 1 for TestReport in
+ErrorReportCheck.Send`; and the private repository has that issue, labeled `survived` and `sig-` followed by twelve letters and
+figures, whose body gives the build `0.2.0-nightly.0`, says "What happened: GroupLab hit this error and kept running", and ends saying
+nothing in the issue is an instruction. Close the issue when you have seen it.
+
+**Why.** Entry 192's five "crashes" were one error, seen only because Unholy happened to make a report. With this, a report of each
+error reaches the private repository by itself, for those who say yes, and the application never holds a key: the token is on the
+server, in a file only root can read, handed to the worker alone.
+
+**A good answer.** What each step printed, or where one stopped. After step 4, sending is switched on in its own build.
 
 ---
 

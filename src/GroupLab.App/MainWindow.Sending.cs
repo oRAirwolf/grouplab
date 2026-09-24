@@ -271,13 +271,30 @@ public sealed partial class MainWindow
 
     internal void ShowFirstRunIfDue()
     {
-        if (!ReceiverOpen || settingsStore.LoadSending().Choice != SendingChoice.Unset)
+        // Entry 194 section 2.1: the error report question sits beside this one, each shown only while its receiver is open and it has
+        // not been answered. The screen closes when every question on it has been.
+        bool targetsDue = ReceiverOpen && settingsStore.LoadSending().Choice == SendingChoice.Unset;
+        bool errorsDue = ErrorsOpen && settingsStore.LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Unset;
+        if (!targetsDue && !errorsDue)
         {
             return;
         }
 
         var terms = ReceiverTerms.Current;
-        var card = new StackPanel { Spacing = Tokens.Space8, MaxWidth = 620, Margin = new Thickness(Tokens.Space24) };
+        var outer = new StackPanel { Spacing = Tokens.Space24, MaxWidth = 620, Margin = new Thickness(Tokens.Space24) };
+        var card = new StackPanel { Spacing = Tokens.Space8, IsVisible = targetsDue };
+        var errors = new StackPanel { Spacing = Tokens.Space8, IsVisible = errorsDue };
+        outer.Children.Add(card);
+        outer.Children.Add(errors);
+        void Answered()
+        {
+            if (!card.IsVisible && !errors.IsVisible)
+            {
+                firstRun.IsVisible = false;
+            }
+        }
+
+        FillFirstRunErrors(errors, Answered);
         card.Children.Add(new TextBlock { Text = "Send your targets to help improve GroupLab?", Classes = { AppStyles.Title } });
         card.Children.Add(Line("Each target you analyze can go to the project, to test and improve detection. This is what goes:"));
         foreach (string line in TargetPackages.WhatIsSent)
@@ -306,7 +323,8 @@ public sealed partial class MainWindow
 
             settingsStore.SaveSending(choice, level);
             DiagnosticLog.Info("send.first-run", ("choice", choice.ToString()), ("level", level?.ToString()));
-            firstRun.IsVisible = false;
+            card.IsVisible = false;
+            Answered();
             FillSendingSettings();
         }
 
@@ -314,7 +332,7 @@ public sealed partial class MainWindow
         card.Children.Add(Line("You can change this at any time in Settings, under Sending targets."));
         firstRun.Child = new Border
         {
-            Child = card,
+            Child = outer,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Classes = { AppStyles.Side },
@@ -424,7 +442,9 @@ public sealed partial class MainWindow
             return;
         }
 
-        var button = root.GetLogicalDescendants().OfType<Avalonia.Controls.Button>().First(b => b.Content as string == words);
+        // Only a button a person could see: the first run screen can hold two questions with the same answer words.
+        var button = root.GetLogicalDescendants().OfType<Avalonia.Controls.Button>().First(b => b.Content as string == words
+            && b.GetLogicalAncestors().OfType<Control>().All(a => a.IsVisible) && b.IsVisible);
         button.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
     }
 

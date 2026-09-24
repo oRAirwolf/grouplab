@@ -39,6 +39,7 @@
     "src/GroupLab.App/MainWindow.CsvImport.cs",
     "src/GroupLab.App/MainWindow.DropAndPaste.cs",
     "src/GroupLab.App/MainWindow.Equipment.cs",
+    "src/GroupLab.App/MainWindow.Errors.cs",
     "src/GroupLab.App/MainWindow.Figures.cs",
     "src/GroupLab.App/MainWindow.Hit.cs",
     "src/GroupLab.App/MainWindow.Library.cs",

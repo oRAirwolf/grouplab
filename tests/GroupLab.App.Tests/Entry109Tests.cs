@@ -172,7 +172,7 @@ public class Entry109Tests
             var settings = window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section) && Shown(t)).Select(t => t.Text).ToList();
             // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
             // Entry 165 section 9 adds "Sending targets", its own section rather than a toggle among the others.
-            Assert.Equal(["Units", "Theme", "This build", "Updates", "Sending targets", "Diagnostics", "Crash records"], settings);
+            Assert.Equal(["Units", "Theme", "This build", "Updates", "Sending targets", "Error reports", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }

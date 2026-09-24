@@ -51,6 +51,12 @@ public interface IOutsideWorld
     Task<PostAnswer?> PostTargetAsync(string address, string package, byte[] image, string imageName, CancellationToken token);
 
     /// <summary>
+    /// Sends an error report, NOTES-FROM-PLANNING.md entry 194: its JSON in the form field <c>report</c>, to grouplab.org. Null where
+    /// nothing answered.
+    /// </summary>
+    Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token);
+
+    /// <summary>
     /// Downloads a file, reporting the share done as it goes. It returns the bytes written, so a caller can tell a short download from a
     /// whole one, and throws nothing on a refusal: it returns null.
     /// </summary>
@@ -120,6 +126,22 @@ public sealed class TheOutsideWorld : IOutsideWorld
             file.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             form.Add(file, "image", imageName);
             request.Content = form;
+            using var response = await Http.SendAsync(request, token).ConfigureAwait(false);
+            return new PostAnswer((int)response.StatusCode, await response.Content.ReadAsStringAsync(token).ConfigureAwait(false));
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or UriFormatException)
+        {
+            return null;
+        }
+    }
+
+    public async Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Post, address);
+            request.Headers.UserAgent.ParseAdd(UserAgent);
+            request.Content = new FormUrlEncodedContent([new KeyValuePair<string, string>("report", report)]);
             using var response = await Http.SendAsync(request, token).ConfigureAwait(false);
             return new PostAnswer((int)response.StatusCode, await response.Content.ReadAsStringAsync(token).ConfigureAwait(false));
         }
@@ -220,6 +242,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>What a POST is answered with, from what was sent. Nothing set answers nothing, which is an unreachable receiver.</summary>
     public Func<string, string, byte[], PostAnswer?>? Answer { get; set; }
 
+    /// <summary>What an error report is answered with. Nothing set answers nothing, which is an unreachable receiver.</summary>
+    public Func<string, PostAnswer?>? ReportAnswer { get; set; }
+
+    /// <summary>Every error report posted: the address and its JSON, in order.</summary>
+    public List<(string Address, string Report)> Reports { get; } = [];
+
     /// <summary>Every target posted: the address, the package's JSON and the image, in order.</summary>
     public List<(string Address, string Package, byte[] Image)> Posted { get; } = [];
 
@@ -242,6 +270,8 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         Installer = null;
         Answer = null;
         Posted.Clear();
+        ReportAnswer = null;
+        Reports.Clear();
         Clipboard = ClipboardContents.Nothing;
     }
 
@@ -261,6 +291,13 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     {
         _asked.Add(("get", address));
         return Task.FromResult(Text.TryGetValue(address, out string? text) ? text : null);
+    }
+
+    public Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)
+    {
+        _asked.Add(("report", address));
+        Reports.Add((address, report));
+        return Task.FromResult(ReportAnswer?.Invoke(report));
     }
 
     public Task<PostAnswer?> PostTargetAsync(string address, string package, byte[] image, string imageName, CancellationToken token)

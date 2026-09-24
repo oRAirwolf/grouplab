@@ -19,7 +19,7 @@ sources:
 
 1. **An update check.** A plain request for a small file saying what the newest build is.
 2. **An update download**, if you accept one.
-3. **A crash report**, if you choose to send one.
+3. **An error report**, when GroupLab hits an error: sent by itself only if you said so, offered otherwise, never if you said never.
 4. **A target**, if you choose to send one to the project: from the page at `grouplab.org/targets/`, or from GroupLab itself after you analyze it.
 
 That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
@@ -32,15 +32,19 @@ It does not send your machine name, your account, your screen, your Windows vers
 
 You can turn it off, and then nothing is sent at all.
 
-## A crash report, and only if you send it
+## An error report, and only as you chose
 
-When GroupLab crashes it writes a record to a folder on your own machine and shows you where. **Nothing is sent at that moment.** If you choose to send it, one HTTPS POST carries a zip and the version number.
+When GroupLab hits an error, or closes without shutting down, it writes a record to a folder on your own machine. The first time it can, it asks whether to send such reports to the project: automatically, only when you say so each time, or never. Until you choose, it asks each time. **This is built but not switched on yet**: until the project's receiver for it opens, GroupLab asks nothing and sends nothing, and a crash is reported by hand as before.
 
-Three things about that are deliberate:
+**What a report holds:** the version of GroupLab and the system it runs on, the error and where in GroupLab it happened, and the names of the last few things done, such as setting the caliber, with nothing that was typed into them. Never a photograph or scan, a file name, a location, or anything you wrote. The same error several times goes as one report with a count, and a day's reports are capped at 20.
 
-**One attempt, no retry.** A crash reporter that retries in the background eventually sends something you have forgotten agreeing to. If the send fails, the zip stays where it was saved and GroupLab tells you so.
+It goes to grouplab.org, not to GitHub, and the application holds no key or token. The project's server turns it into an issue in a private repository, and the token that lets it do that lives on the server and nowhere else.
 
-**No authentication.** There is no key, because any secret inside an open source program is public the moment it ships, and pretending otherwise would be theatre.
+**A report you agreed to send is tried again.** If it cannot go at that moment it is kept on your machine and tried again for seven days, never twice once it has gone, and never with a dialog in your way. A report made by hand, from the banner or Report a problem, goes once, as a zip you can look at first, with a description of up to 500 characters if you write one.
+
+Two things about all of it are deliberate:
+
+**No authentication.** There is no key, because any secret inside an open source program is public the moment it ships, and pretending otherwise would be theatre. So anybody can send a report, and nothing in one is ever taken as an instruction.
 
 **No metadata, no paths.** The log carries no file paths and no image metadata. That is a rule with a test behind it rather than an intention.
 

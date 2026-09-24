@@ -55,6 +55,20 @@ INTAKE_SCRIPTS = [
     ("grouplab-set-turnstile-secret", Path("/usr/local/sbin/grouplab-set-turnstile-secret"), 0o750),
 ]
 
+# NOTES-FROM-PLANNING.md entry 194 section 3: error reports into issues in the private repository. The worker, its units, and the
+# script the GitHub token is typed into. The receiver itself, website/api/error-report.php, arrives with the site.
+ERROR_SCRIPTS = [
+    ("grouplab-error-worker.py", Path("/usr/local/sbin/grouplab-error-worker.py"), 0o755),
+    ("grouplab-set-error-token", Path("/usr/local/sbin/grouplab-set-error-token"), 0o750),
+]
+
+ERROR_UNITS = [
+    ("grouplab-error-worker.service", Path("/etc/systemd/system/grouplab-error-worker.service"), 0o644),
+    ("grouplab-error-worker.timer", Path("/etc/systemd/system/grouplab-error-worker.timer"), 0o644),
+]
+
+ERROR_TOKEN = Path("/etc/grouplab/error-token")
+
 INTAKE_UNITS = [
     ("grouplab-intake-worker.service", Path("/etc/systemd/system/grouplab-intake-worker.service"), 0o644),
     ("grouplab-intake-worker.timer", Path("/etc/systemd/system/grouplab-intake-worker.timer"), 0o644),
@@ -355,11 +369,77 @@ def intake(dry_run: bool) -> int:
     return 0
 
 
+def errors(dry_run: bool) -> int:
+    """Error reports into issues, NOTES-FROM-PLANNING.md entry 194 section 3.
+
+    Additive, like the intake: the folders the receiver writes into, the worker and its units, the script Alan types
+    the token into, and the nginx include, which carries the receiver's block. The token is looked at only to see
+    that it is there, by its size, never read or printed. It never runs nginx -t or reloads nginx; it prints them.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    say("the folders error reports pass through, outside public_html and never served")
+    make_folders([(SITE / "private", 0o750, "airwolf"), (SITE / "private" / "error-reports", 0o750, "airwolf"),
+                  (SITE / "private" / "error-reports" / "incoming", 0o750, "airwolf")], dry_run)
+
+    say("the worker, and the script the GitHub token is typed into")
+    for item in ERROR_SCRIPTS:
+        if not put(*item, dry_run):
+            return 2
+
+    say("the worker's systemd units")
+    for unit in ERROR_UNITS:
+        if not put(*unit, dry_run):
+            return 2
+
+    say("the nginx include, which carries the receiver's block")
+    for name, target, mode, owner in INTAKE_CONFIG:
+        if name == "nginx.ssl.conf_grouplab" and not put_owned(name, target, mode, owner, dry_run):
+            return 2
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    if run(["systemctl", "enable", "--now", "grouplab-error-worker.timer"], dry_run) != 0:
+        return 1
+
+    left = []
+    if ERROR_TOKEN.is_file() and ERROR_TOKEN.stat().st_size > 0:
+        say("The GitHub token is already set. It was not read or printed.")
+    else:
+        left.append(["The GitHub token, which nobody but you ever sees:", "     sudo /usr/local/sbin/grouplab-set-error-token"])
+    include = next(target for name, target, _, _ in INTAKE_CONFIG if name == "nginx.ssl.conf_grouplab")
+    if include in CHANGED:
+        left.append(["nginx, tested before it is reloaded, and pissinhot.com checked afterwards:",
+                     "     sudo nginx -t",
+                     "     sudo systemctl reload nginx",
+                     "     curl -sS -o /dev/null -w '%{http_code}\\n' https://pissinhot.com/",
+                     "     curl -sS -o /dev/null -w '%{http_code}\\n' https://grouplab.org/"])
+    else:
+        say("The nginx include was already current, so nginx has nothing new to read and needs no reload.")
+
+    if left:
+        say("")
+        say(("One thing is" if len(left) == 1 else f"{len(left)} things are") + " left, and not this script's to do.")
+        for i, lines in enumerate(left, 1):
+            say("")
+            say(f"{i}. {lines[0]}")
+            for line in lines[1:]:
+                say(line)
+    say("")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install the grouplab.org site sync.")
     parser.add_argument("--dry-run", action="store_true", help="say what would happen and change nothing")
     parser.add_argument("--intake", action="store_true",
                         help="install the target upload intake instead of the site sync (entry 129)")
+    parser.add_argument("--errors", action="store_true",
+                        help="install the error report worker instead of the site sync (entry 194)")
     args = parser.parse_args()
 
     gone = missing_tools()
@@ -373,6 +453,9 @@ def main() -> int:
 
     if args.intake:
         return intake(args.dry_run)
+
+    if args.errors:
+        return errors(args.dry_run)
 
     say("folders")
     make_folders(FOLDERS, args.dry_run)

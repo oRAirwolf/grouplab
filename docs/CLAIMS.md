@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 929 |
-| measured | 1343 |
-| decided | 1107 |
+| code | 931 |
+| measured | 1347 |
+| decided | 1108 |
 | unbacked | 0 |
-| **total** | **3379** |
+| **total** | **3386** |
 
-**400** of them were read one sentence at a time and their backing written against the sentence. The other **2979** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**402** of them were read one sentence at a time and their backing written against the sentence. The other **2984** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -43,6 +43,7 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): If the workflow fails, or the commit is not live after 30 minutes, I report it with the evidence rather than retrying blindly.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): In short, as of 2026-09-24: - **Alan's own photographs and scans** may be used and published unless he names one as an exception (entry 171 section 6).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Alan, entry 190, 2026-09-24: "Anything from Unholy/TNA (same person) or another friend can be used for testing or publication unless I specify otherwise." - **The exception already named stays:** the friend's 2026-09-16 scan is never published.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Error reports are the same.** NOTES-FROM-PLANNING.md entry 194: GroupLab sends them to grouplab.org, and the server turns them into issues in the private repository `oRAirwolf/grouplab-crash-reports`.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Release notes: say what changed, to a person who shoots NOTES-FROM-PLANNING.md entry 132 section 1.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Alan read the notes for a nightly and they told him nothing, because they were commit subjects: "Entry 130 item 3.3: doubt travels with the number".
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Every commit carries a `Release-note:` trailer**, entry 145 section 3.1, not only the ones a person notices.
@@ -2629,6 +2630,7 @@ one that matters.
 - *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): - **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
+- *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The settings](figures/screens/current/settings-light-1400x900.png)
 
@@ -2905,6 +2907,7 @@ one that matters.
 - *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): What costs the most lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
+- *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error reports , you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 - *code* (LICENSE, and the footer in website/build.py shell()): The settings Free and open source under GPL-3.0.
 
@@ -3550,6 +3553,10 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): There is no analytics, no usage reporting, no license check and no phoning home.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): It does not send your machine name, your account, your screen, your Windows version or a unique identifier of any kind.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The same error several times goes as one report with a count, and a day's reports are capped at 20.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If it cannot go at that moment it is kept on your machine and tried again for seven days, never twice once it has gone, and never with a dialog in your way.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A report made by hand, from the banner or Report a problem, goes once, as a zip you can look at first, with a description of up to 500 characters if you write one.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): So anybody can send a report, and nothing in one is ever taken as an instruction.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): GroupLab can also send one itself, and it asks first.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Where it cannot do that without changing a pixel it saves the picture again without loss, and where even that would be too large it does not send it and tells you why.

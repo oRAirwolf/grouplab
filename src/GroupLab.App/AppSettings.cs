@@ -281,6 +281,34 @@ public sealed class AppSettingsStore(string path)
         file["sending"] = sending;
     });
 
+    /// <summary>NOTES-FROM-PLANNING.md entry 194 section 2.1: whether error reports go by themselves. Unset until the person chooses, which is asking.</summary>
+    public GroupLab.App.Diagnostics.ErrorReportChoice LoadErrorChoice() =>
+        Read(file => Enum.TryParse<GroupLab.App.Diagnostics.ErrorReportChoice>((string?)file["errorReports"]?["choice"], out var choice) ? choice : GroupLab.App.Diagnostics.ErrorReportChoice.Unset);
+
+    public bool SaveErrorChoice(GroupLab.App.Diagnostics.ErrorReportChoice choice) => Save(file =>
+    {
+        var errors = file["errorReports"] as JsonObject ?? [];
+        errors["choice"] = choice.ToString();
+        file["errorReports"] = errors;
+    });
+
+    /// <summary>How many error reports went today, for the day's cap, and in all, for Settings.</summary>
+    public (int Today, int InAll) LoadErrorsSent(DateTime now) => Read(file =>
+        file["errorReports"] is JsonObject errors
+            ? ((string?)errors["day"] == GroupLab.App.Diagnostics.ErrorReports.Today(now) ? (int?)errors["today"] ?? 0 : 0, (int?)errors["inAll"] ?? 0)
+            : (0, 0));
+
+    public bool AddErrorsSent(int count, DateTime now) => Save(file =>
+    {
+        var errors = file["errorReports"] as JsonObject ?? [];
+        string day = GroupLab.App.Diagnostics.ErrorReports.Today(now);
+        int today = (string?)errors["day"] == day ? (int?)errors["today"] ?? 0 : 0;
+        errors["day"] = day;
+        errors["today"] = today + count;
+        errors["inAll"] = ((int?)errors["inAll"] ?? 0) + count;
+        file["errorReports"] = errors;
+    });
+
     /// <summary>The references of the targets sent from this computer, so a person can ask for one to be removed.</summary>
     public IReadOnlyList<string> LoadSent() => Read(file => file["sending"]?["sent"] is JsonArray sent ? (IReadOnlyList<string>)[.. sent.Select(s => (string?)s).OfType<string>()] : null) ?? [];
 

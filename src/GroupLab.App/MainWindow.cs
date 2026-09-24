@@ -568,9 +568,18 @@ public sealed partial class MainWindow : Window
             // Entry 165: the one first run question, and whatever was waiting to be sent, only while the receiver is open.
             ShowFirstRunIfDue();
             _ = RetryPendingAsync();
+
+            // Entry 194: the error reports waiting, where the person chose to send them by themselves.
+            _ = SendWaitingErrorsAsync();
         };
         CrashReporter.Recorded += OnCrashRecorded;
-        Closed += (_, _) => CrashReporter.Recorded -= OnCrashRecorded;
+        CrashReporter.Recorded += ErrorRecorded;
+        Closed += (_, _) =>
+        {
+            CrashReporter.Recorded -= OnCrashRecorded;
+            CrashReporter.Recorded -= ErrorRecorded;
+            errorSendSoon?.Stop();
+        };
 
         // Entry 109 section 2: the strip holds the tools as icons alone, each named with its key in a tooltip and the active one lit, then Undo
         // and Redo at its end, as the concept draws it, and on the right the keys the review answers to. The view controls float over the canvas,
@@ -1101,6 +1110,16 @@ public sealed partial class MainWindow : Window
 
                 ShowPendingCrashes();
             })));
+
+        // Entry 194 section 2.1: asking each time, the default, is this button: one report of each error, with nothing typed in it.
+        if (ErrorsOpen && settingsStore.LoadErrorChoice() is ErrorReportChoice.Ask or ErrorReportChoice.Unset)
+        {
+            crashBanner.Children.Add(Row(Button("Send the error report", async () =>
+            {
+                await SendWaitingErrorsAsync(asked: true);
+                ShowPendingCrashes();
+            })));
+        }
     }
 
     /// <summary>
@@ -4738,6 +4757,7 @@ public sealed partial class MainWindow : Window
         column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
 
         BuildSendingSettings(column);
+        BuildErrorSettings(column);
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));

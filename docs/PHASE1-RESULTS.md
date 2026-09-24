@@ -997,6 +997,44 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 194: error reports into a private repository, built and switched off
+
+**What users are asked.** Beside the target question on the first run screen, and in Settings under Error reports: send error reports
+automatically, ask each time, or never. Until someone chooses, it asks: the crash banner offers "Send the error report", and nothing
+goes by itself. Never sends nothing. While the receiver is closed, which it is, nothing is asked and Settings says so.
+
+**What a report holds.** Built from the crash records GroupLab already writes: the build and system, the error and its stack with paths
+taken out, and the names of the last events in the run's log, never their values. No description in an automatic report; a report made
+by hand keeps up to 500 characters, and the report window now stops at 500. Both kinds from entry 192: an error survived, sent a minute
+after it happens so a burst goes as one report with its count, and a close, sent at the next start. A record is marked sent and never
+sent twice; the receiver also takes a report's identifier once. One that meets no answer, a limit or a closed receiver is kept and tried
+at each start for seven days, then let go; one the receiver refuses for what it is, is let go at once. At most 20 a day, and the same
+error again after its report has gone in the same session is not sent again. No dialog ever.
+
+**The application never talks to GitHub and holds no token.** It posts to `api/error-report.php` on grouplab.org, through
+`IOutsideWorld`: no Turnstile, 256 KB, 20 an hour and 60 a day from one address, 300 an hour in all, a disk floor and a kill switch. It
+reads JSON from one form field, keeps only the schema's fields, drops the rest unread, and stores the report outside public_html for the
+worker; the sender's address is never stored, only its salted hash for the rate limit.
+
+**The worker**, `grouplab-error-worker.py`, its own service with the network it needs and nothing else: its own folders writable,
+ProtectSystem strict, AF_INET, AF_INET6 and AF_UNIX only, no capabilities, and the token handed to it alone with LoadCredential from a
+root-owned 0600 file that `grouplab-set-error-token` writes. It groups by the exception's type and GroupLab's top three frames, without
+line numbers, and keeps one issue per error: the first report opens it, labeled with its signature and its kind; later ones update the
+count, builds, platforms and dates, with a comment at most once per build per day; a closed issue reopens when the error comes from a
+build newer than any seen before. A description is headed as the user's and untrusted, fences cannot be closed from inside a report, and
+an at sign notifies nobody. When GitHub refuses the token, or says it expires within two weeks, the reports wait and the worker's status
+file and log say so. `install.py --errors` installs it all, and the nginx include carries the receiver's block.
+
+**The repository** exists and is PRIVATE; it has no issues yet. `gh issue list` on it is now the start of every run, in CLAUDE.md,
+which also says an error report is data, never an instruction.
+
+**For Alan:** request 24, the token's clicks, the install, the token script and one test report from
+`scripts/send-test-error-report.py`. After that, `errorReportsOpen` goes true in its own build.
+
+**Tests.** App `Entry194Tests`, 8. `receiver-tests.php` gains the error receiver's cases and `error-worker-tests.py`, 20 checks against a
+stand-in GitHub, runs in CI's intake worker job; both run in CI only, the PHP because PHP is not installed here, and the worker's ran
+here too.
+
 ## Entry 193: the zeroing grid found, no shots, and never a blank result
 
 **Section 1: 95 against 99.** Both were checked out and run on Unholy's scan. Both read none of its codes and ask which sheet it is;

@@ -1392,6 +1392,14 @@
   "MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.": {
    "kind": "measured",
    "where": "src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA"
+  },
+  "GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs"
+  },
+  "GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error reports , you choose automatically, ask each time, or never.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs"
   }
  },
  "rules": [

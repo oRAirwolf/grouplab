@@ -179,6 +179,10 @@ jobs:
       - name: The worker, run for real
         run: python3 tests/python/worker-tests.py
 
+      # Entry 194: the error worker against a GitHub that answers from the test itself, so nothing leaves the runner.
+      - name: The error worker, against a stand-in GitHub
+        run: python3 tests/python/error-worker-tests.py
+
   # Entry 171 section 6: the release the large test files hang from, created once by the workflow that uses them rather than by the
   # nightly, so nothing that prunes or rewrites nightly releases can reach it. It is a pre-release that is never latest, so GitHub's
   # releases/latest and the update manifest never see it. Creating it is the whole job; files are attached to it by hand, each with its

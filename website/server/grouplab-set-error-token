@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Put the GitHub token for error reports on the server, NOTES-FROM-PLANNING.md entry 194 section 3.5.
+
+Alan runs this himself, in his own SSH session, after making the fine-grained token in GitHub. It asks for the
+token with the echo turned off, writes it where only root can read it, and prints nothing back.
+
+    sudo /usr/local/sbin/grouplab-set-error-token
+
+**The token never enters this repository, a commit, a log or a report**, and it is never passed as an argument,
+which every process on the machine can see and the shell history keeps. systemd hands it to the error worker
+alone, with LoadCredential; the worker reads it from its own credentials folder and nowhere else.
+"""
+
+from __future__ import annotations
+
+import getpass
+import os
+import re
+import sys
+from pathlib import Path
+
+TOKEN = Path("/etc/grouplab/error-token")
+
+# A fine-grained personal access token begins github_pat_. This is a shape check only: whether it works is
+# something only GitHub can say, and the worker finds out on its next run.
+SHAPE = re.compile(r"^github_pat_[A-Za-z0-9_]{40,120}$")
+
+
+def main() -> int:
+    if os.geteuid() != 0:
+        print("This has to run as root: sudo /usr/local/sbin/grouplab-set-error-token")
+        return 2
+
+    print("Paste the fine-grained GitHub token for grouplab-crash-reports.")
+    print("It will not be shown as you type, and it is not written to the shell history.")
+    print()
+    try:
+        token = getpass.getpass("token: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\nNothing was changed.")
+        return 1
+
+    if not token:
+        print("Nothing was typed, so nothing was changed.")
+        return 1
+
+    if not SHAPE.match(token):
+        # Said without repeating any of it back.
+        print("That does not look like a fine-grained token: they begin github_pat_ and are longer than that.")
+        print("Nothing was changed.")
+        return 1
+
+    TOKEN.parent.mkdir(parents=True, exist_ok=True)
+    os.chmod(TOKEN.parent, 0o700)
+    # Written with the right mode from the start, so it is never briefly readable by anybody else.
+    fd = os.open(TOKEN, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(token + "\n")
+    os.chown(TOKEN, 0, 0)
+
+    print()
+    print(f"Written to {TOKEN}, owned by root, mode 600.")
+    print("The error worker picks it up on its next run, within five minutes:")
+    print("     sudo systemctl start grouplab-error-worker.service")
+    print("     sudo tail -n 5 /home/airwolf/logs/grouplab-error-worker.log")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
