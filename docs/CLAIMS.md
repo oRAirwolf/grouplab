@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 892 |
-| measured | 1279 |
-| decided | 1051 |
+| code | 895 |
+| measured | 1287 |
+| decided | 1056 |
 | unbacked | 0 |
-| **total** | **3222** |
+| **total** | **3238** |
 
-**387** of them were read one sentence at a time and their backing written against the sentence. The other **2835** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**390** of them were read one sentence at a time and their backing written against the sentence. The other **2848** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -905,12 +905,15 @@ one that matters.
 
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## Confidence preset One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## Hit probability How likely a shot is to land inside a target of a given size at a given distance, worked out from the group's spread, the rifle's predicted path and the errors you cannot measure.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): *Precisely:* The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
 
@@ -1154,6 +1157,7 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): | ### Measured by name, and not measured Entry 117 section 3b: exclusion is by name in the record, never by silence.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): | 306.9 | 401.2 | 401.2 | 2 | on the interface thread | | marking, a sheet detected | Every figure is shown in these units.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): | 244.5 | 298.1 | 298.1 | 2 | on the interface thread | | settings | Every figure is shown in these units.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Since entry 155 it is the Targets panel's own, and it is there on Windows only.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): The 56 MB scan's two copies were among the downloads.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): All 927 were deleted in one command once listed; the three entries still in use were kept.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Then, entry 179 section 1.1: ten earlier session folders idle for a day, the suite's 15,456 leftover `grouplab-*` entries and 4,292 empty random folders in `%TEMP%`, 1.45 GB, went in a second listed command.
@@ -1874,6 +1878,13 @@ one that matters.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): | Unit | Constant | Value | |---|---|---| | degrees | 360/π | 114.59155902616464175 | | radians | 2 | | | MOA | 21600/π | 6875.4935415698785052 | | SMOA (IPHY) | 1/atan(1/7200) | 7200.0000462962960581 | | mrad | 2000 | | | mil (NATO, 6400) | 6400/π | 2037.1832715762602978 | `MOA2SMOA = 0.95492965241113508368`.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): DESIGN.md section 14 makes true MOA the default at 1.047 inches per 100 yards, with IPHY available.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): Both are here, and the sanity anchor is that 1 inch at 100 yards is exactly 1.000000 SMOA and 0.954930 MOA, which is confirmed by execution.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): ### 12.6 Hit probability by simulation NOTES-FROM-PLANNING.md entry 156, built in `HitProbability`.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): Section 12.4's figure carries the group's sigma to a distance and integrates it over the target, which is right for a single shot with no error but the rifle's.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): A radial figure such as the mean radius is about 1.25 times it and is never put in its place.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): It comes from the group open in the analysis, from a load's sessions pooled re-centered as section 11 does, or typed.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): The group already holds the velocity's share of its vertical at the distance it was shot, so that share is taken out in quadrature before the velocity is drawn per shot, as section 12.2 does.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): The interval on every probability is widened by the answer worked out again at both ends of sigma's 95 percent interval, on the same random numbers, and by 1.96 standard errors of the simulation, and the screen says which of the two is the larger.
+- *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): **When it refuses.** When sigma's interval alone moves the first-round answer across more than half the scale, the answer says nothing useful, and the screen says so with the number of shots in one group that would narrow it to half the scale, found from section 9.1's interval multiples.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): **Calibration.** `ShotOrderTrendTests` fires 400 simulated groups of ten Rayleigh radii in random order and requires the share called a trend at the 5 percent level to stay under 11 percent.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): The same question as section 12a, asked of sessions instead of shots: do later sessions of one load measure larger than earlier ones, more than a shuffle of the same sessions would.
 - *measured* (derived in its own section and held by tests/GroupLab.Core.Tests/Statistics): **The SD.** A sample SD of 10 ft/s over ten shots does not mean the rifle holds 10 ft/s.
@@ -2499,6 +2510,7 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): - **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.
 - *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
+- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): - **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The settings](figures/screens/current/settings-light-1400x900.png)
@@ -2698,15 +2710,17 @@ one that matters.
 
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Confidence preset One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Hit probability How likely a shot is to land inside a target of a given size at a given distance, worked out from the group&#x27;s spread, the rifle&#x27;s predicted path and the errors you cannot measure.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Precisely: The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
-- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): The research article on it Free and open source under GPL-3.0.
 
 ### site:guides/index.html
 
@@ -2763,6 +2777,7 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Session records The analysis's Report button saves the session as a PDF: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): The ballistics screen The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
+- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): What costs the most lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (LICENSE, and the footer in website/build.py shell()): The settings Free and open source under GPL-3.0.
@@ -3481,6 +3496,7 @@ one that matters.
 ### site:tour/ballistics/index.html
 
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): What this screen is for Everything else in GroupLab measures what your rifle did.
+- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): Every error source by the hits it takes away, so you can see whether the wind call, the load or the range estimate is what to work on.
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): Fill in anything the record is missing; the page names the field when it cannot solve.
 
 ### site:tour/compare/index.html

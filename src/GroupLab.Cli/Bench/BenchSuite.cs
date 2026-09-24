@@ -361,6 +361,17 @@ public static class BenchSuite
                 return string.Create(CultureInfo.InvariantCulture, $"{dope.Points.Count} rows");
             },
             ["SolverUse", "Projection"]);
+
+        yield return new BenchCase("solver", "a hit probability", "Entry 156's answer at 600 yards on the middle confidence preset: ten thousand strings, the costs of every source and a curve against distance.",
+            _ =>
+            {
+                var errors = new Dictionary<HitSource, HitUncertainty>(HitPresets.All[1].Errors(600)) { [HitSource.Velocity] = new(10), [HitSource.Zero] = new(0.05) };
+                var setup = new HitSetup(input, 600, HitTarget.Circle(12), new HitPrecision(0.2, 18, 100), errors);
+                var answer = HitProbability.Work(setup);
+                var curve = HitProbability.Curve(setup, [300, 600, 900]);
+                return string.Create(CultureInfo.InvariantCulture, $"{100 * answer.FirstRound.Value:0} percent first round, {answer.Costs.Count} costs, {curve.Count} curve points");
+            },
+            ["HitProbability", "HitPresets"]);
     }
 
     private static IEnumerable<BenchCase> Storage(BenchMaterial m)

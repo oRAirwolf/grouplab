@@ -71,6 +71,12 @@ The check of whether a group is really stretched or only looks it by chance. It 
 
 The check of whether two or more loads put their groups in different places, beyond what chance would give. Like every comparison on few shots, it can only see large differences.
 
+## Confidence preset
+
+<a id="confidence-preset"></a>
+
+One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind. Change any one of them and the choice becomes custom.
+
 ## Correlated normal and Grubbs-Patnaik
 
 <a id="correlated-normal"></a>
@@ -133,6 +139,12 @@ More in [the research article](https://grouplab.org/research/wind-or-rifle/).
 
 A comparison of the spread of two groups, asking whether one load is really tighter than the other or the difference is chance. On small groups it can only see large differences, which is why it also says what size of difference it could have detected.
 
+## First and second round
+
+<a id="first-and-second-round"></a>
+
+The first round is the shot fired on your first reading of the wind and the range. The second is fired after you saw where the first one landed and moved your aim by its whole miss, which takes out the reading's errors but carries the first shot's own spread with it.
+
 ## Flyer
 
 <a id="flyer"></a>
@@ -157,7 +169,7 @@ How wide and how tall the group is, from the leftmost shot to the rightmost and 
 
 <a id="hit-probability"></a>
 
-How likely a shot is to land inside a target of a given size at a given distance, worked out from the group's spread and the rifle's predicted path. It is a range, because the spread it starts from is an estimate.
+How likely a shot is to land inside a target of a given size at a given distance, worked out from the group's spread, the rifle's predicted path and the errors you cannot measure. It is a range, because the spread it starts from is an estimate.
 
 ## Keystone
 
@@ -209,6 +221,12 @@ A milliradian, a thousandth of the distance to the target. At 100 meters it cove
 
 How fast the bullet leaves the barrel, usually measured with a chronograph a few feet in front of the muzzle. Together with the ballistic coefficient it decides how far the bullet drops at each distance.
 
+## Per shot and per string
+
+<a id="per-string"></a>
+
+Whether an error changes from one shot to the next or stays the same for a whole string. The rifle's own spread and the muzzle velocity change every shot. A wind call, a range estimate and the zero are the same for every shot fired on them, so they make a string miss together.
+
 ## Perspective correction
 
 <a id="perspective-correction"></a>
@@ -239,6 +257,12 @@ The square pattern printed on a GroupLab sheet that says which sheet it is. Grou
 
 The size a quarter of the way up from the smallest marks on a sheet. GroupLab uses it to judge what one hole looks like on that sheet, because it is steadier than the smallest mark and not pulled up by the marks that are really two holes.
 
+## Range estimation error
+
+<a id="range-error"></a>
+
+How far the distance you dial for may be from the true distance to the target. A rangefinder makes it small and a guess makes it large, and at long range it moves the shot up or down.
+
 ## Registration
 
 <a id="registration"></a>
@@ -252,6 +276,14 @@ More in [the research article](https://grouplab.org/research/how-grouplab-reads-
 <a id="review-queue"></a>
 
 The list of things GroupLab was not sure about on a sheet, such as a mark that may be two holes or a shot that may belong to another bull. It keeps them until you settle each one, and every figure that rests on one says so.
+
+## Rifle precision
+
+<a id="rifle-precision"></a>
+
+How tightly a rifle and load group, as the spread of the shots on each axis stated as an angle, so it holds at any distance. GroupLab fills it from a group you measured, which is the same figure as sigma, rather than from a group size remembered from a good day.
+
+*Precisely:* The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 
 ## Sample size
 
@@ -321,6 +353,12 @@ A part of the shots on a sheet treated as a group of its own, such as the shots 
 
 The range the true value is likely to lie in, given how many shots you fired. A wide interval does not mean the measurement is wrong; it means a handful of shots cannot pin it down. Firing more shots narrows it, and nothing else does.
 
+## Trials and seed
+
+<a id="trials"></a>
+
+How many strings the chance is worked out from, each with its own random errors of the sizes you gave, counting how often the shot lands on the target. More trials make the answer steadier, and the same seed repeats a run exactly, so a result can be checked.
+
 ## True size range
 
 <a id="true-size"></a>
@@ -334,6 +372,12 @@ What the group would likely measure if you fired it again, given what these shot
 How much the speed changes from shot to shot, as a standard deviation. Small differences in speed become differences in height at long range. On ten shots or fewer it is itself very uncertain.
 
 More in [the research article](https://grouplab.org/research/primer-comparison/).
+
+## Wind call
+
+<a id="wind-call"></a>
+
+Your reading of the crosswind before you fire, and how far the true wind may be from it. You make it once and fire on it, so every shot on that reading shares the same error, and at long range it usually costs more hits than anything else.
 
 ## Wind deflection
 
@@ -364,4 +408,10 @@ More in [the research article](https://grouplab.org/research/blank-sheet-zero/).
 How far to move your scope so the group's center lands where you aimed, in the units your scope adjusts in. It is worked out from where the group is now, so it is only as good as the center it came from: with a handful of shots, dialing a small correction can easily move you further from where you want to be.
 
 More in [the research article](https://grouplab.org/research/blank-sheet-zero/).
+
+## Zero error
+
+<a id="zero-error"></a>
+
+How far the rifle's zero may be from where you believe it is. GroupLab starts it at the uncertainty in the measured center of your group, because that is how well the group can tell where the rifle points, and every shot shares it.
 

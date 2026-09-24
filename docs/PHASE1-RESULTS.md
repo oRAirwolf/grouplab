@@ -997,6 +997,52 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 156: hit probability from the shooter's own dispersion
+
+**The model**, in `HitProbability` and written down there and in `docs/STATISTICS.md` section 12.6. Each simulated shot is the sum of
+independent contributions. The dispersion and the muzzle velocity's spread are drawn per shot. The wind call, the range estimate, the
+zero, the drag, the air, the shot angle and the Earth's rotation are drawn once per string. Each reaches the target through the solver:
+the trajectory with that input moved, less the believed one, with the dial set from the belief and the zero angle held, fitted by a
+quadratic either side. Sigma is drawn for every string from its own sampling distribution at stratified quantiles. The group's velocity
+share is taken out in quadrature before the velocity goes back in per shot. The second round is the second shot's per-shot error less
+the first's, because the whole miss is dialed off. A seed makes every run repeatable, and every run draws the same random numbers in the
+same order, so each source's cost is a clean difference.
+
+**On the screen**, a Hit probability section on Ballistics below the group carried to another distance, whose own analytic hit line it
+replaces:
+
+- **Rifle precision** from the group open in the analysis, from the chosen load's saved sessions pooled after centering each, or typed. It
+  is the per axis sigma as an angle, with the conversion tested, and the words under it say where it came from.
+- **Filled from what GroupLab measured:** the velocity spread from the load, the zero error from the center's uncertainty, and the distance
+  from the one the group was shot at.
+- **The target**: a circle, a rectangle or GroupLab's own IPSC outline, sized as a length or in MOA or mil.
+- **Three confidence presets** of GroupLab's own, each with its situation in a sentence, set every uncertainty nobody can measure.
+  Advanced holds each with a bias beside it, the zero error, the latitude, and the trials and seed; an edit makes the preset Custom.
+- **The answer** sits beside the elevation and wind for the distance: the first and the second round, each with an interval that holds
+  both the sigma's uncertainty and the simulation's, and a sentence on which is the larger.
+- **Beneath it** come the string's chance of at least one hit and its expected hits, every source by the probability it costs with its
+  spread up and down and across, the total split, the assumptions in one paragraph, and the scatter over the target with the second round
+  in its own color, and the curve against distance with its band.
+- **Honesty.** No point without its interval, at most two significant figures and never a digit finer than the trial count supports. A
+  refusal names the shots in one group that would make the answer mean something.
+
+Eight glossary terms explain the new inputs where they appear. The user guide, the tour's Ballistics page and the bench have them.
+
+**Tests.** `HitProbabilityTests`, 24:
+- the Rayleigh closed form at five radii
+- the second round's closed form at sigma times the root of two
+- the seed repeating a run
+- no added source ever raising the chance
+- a per-string error and a per-shot one of the same size agreeing on the first shot and not on a string
+- the interval holding sigma's uncertainty, the refusal, the ranking of costs, a bias against a standard deviation, and the velocity
+  refusal
+- the precision's definition, the rounding, the IPSC outline and the curve
+
+`Entry156Tests`, 4, on screen. App 273 passed; Core 1597 passed, 2 skipped.
+
+**Also in this commit.** Entry 155 left the interface benchmark's stale-exclusion test red on Linux and macOS: "Print…" is now the
+Targets panel's print-to-device button, which is there on Windows only. It is excluded as Windows-only, and its reason says so.
+
 ## Entry 155: one Targets screen
 
 **The screen.** The rail has one **Targets** button where it had the target library and Print a target. The list keeps its groups and

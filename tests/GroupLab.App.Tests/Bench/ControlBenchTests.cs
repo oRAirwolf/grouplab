@@ -90,7 +90,7 @@ public class ControlBenchTests(ITestOutputHelper output)
         }
 
         window.Close();
-        var stale = InterfaceBench.NotClicked.Keys.Where(k => !found.Contains(k)).Order(StringComparer.Ordinal).ToList();
+        var stale = InterfaceBench.NotClicked.Keys.Where(k => !found.Contains(k) && (OperatingSystem.IsWindows() || !InterfaceBench.WindowsOnly.Contains(k))).Order(StringComparer.Ordinal).ToList();
         Assert.True(stale.Count == 0, $"these controls are excluded from the interface benchmark and no screen has them: {string.Join(", ", stale)}");
     }
 

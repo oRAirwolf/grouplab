@@ -339,11 +339,11 @@ screen finished. Passes is how many layout passes the click caused.
 
 | Control | Why |
 |---|---|
-| Design your own sheet | It opens the editor in a window of its own, which is walked as its own screen when the editor benchmark is written. |
+| Design your own sheet | It opens the designer in the Targets panel, which is walked as its own screen when the editor benchmark is written. |
 | Duplicate | It writes a sheet into the person's own library, which is data a benchmark must not add to. |
 | Open image… | It opens the operating system's file picker, which waits for a person. Opening the file afterwards is measured as its own case. |
 | Open, export or report a problem | Its items open file pickers, which wait for a person. |
-| Print… | It opens the print screen, whose own controls print to a device. |
+| Print… | It prints to a device. Since entry 155 it is the Targets panel's own, and it is there on Windows only. |
 | Read the list | It reads the clipboard, which belongs to whoever is at the machine. |
 | Report a problem… | It writes a report package and then opens a file picker. |
 

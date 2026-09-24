@@ -357,8 +357,8 @@
   },
   "ballistics": {
    "name": "Ballistics",
-   "blurb": "A trajectory for one rifle and load, and a dope table at whatever spacing you ask for.",
-   "purpose": "Everything else in GroupLab measures what your rifle did. This works out what it should do. It takes the rifle and load you have already recorded, asks for the air it will be shot in, and gives you drop, wind drift, velocity and energy out to whatever distance you name. Nothing here changes a marking or an analysis.",
+   "blurb": "A trajectory for one rifle and load, a dope table at whatever spacing you ask for, and the chance of a hit from your own measured precision.",
+   "purpose": "Everything else in GroupLab measures what your rifle did. This works out what it should do. It takes the rifle and load you have already recorded, asks for the air it will be shot in, and gives you drop, wind drift, velocity and energy out to whatever distance you name, and the chance of a hit there from your own measured precision. Nothing here changes a marking or an analysis.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [
@@ -392,13 +392,30 @@
     [
      "Drop, Wind drift, Velocity, Energy",
      "Four views of the same trajectory. The chart marks your zero."
+    ],
+    [
+     "The analyzed group at another distance",
+     "The group open in the analysis carried through the solver to a distance you name, labeled a prediction, with its sigma there and its interval."
+    ],
+    [
+     "Hit probability",
+     "The chance of a hit on a circle, a rectangle or an IPSC outline, from the rifle precision you measured, the load's velocity spread and a confidence preset for everything nobody can measure. First and second round sit beside the elevation and wind for the distance, each with its interval."
+    ],
+    [
+     "What costs the most",
+     "Every error source by the hits it takes away, so you can see whether the wind call, the load or the range estimate is what to work on."
+    ],
+    [
+     "Advanced",
+     "Each uncertainty the preset set, a bias beside it for something you know is off, the zero error, the latitude, and the trials and seed that make a result repeatable."
     ]
    ],
    "steps": [
     "Choose the rifle and load.",
     "Fill in anything the record is missing; the page names the field when it cannot solve.",
     "Set the air, or leave the pressure empty and give the altitude.",
-    "Set the distance and step, press Work out the table, and switch between drop, drift, velocity and energy."
+    "Set the distance and step, press Work out the table, and switch between drop, drift, velocity and energy.",
+    "For a hit probability, set the distance and the target, choose the confidence preset closest to your situation, and press Work out the chance."
    ],
    "fits": "Takes its inputs from <a href=\"/tour/equipment/\">equipment</a>. It does not feed back into a marking or an analysis.",
    "links": [

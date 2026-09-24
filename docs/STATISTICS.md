@@ -543,6 +543,46 @@ shotGroups uses the **half-angle form** throughout, `angle = k · atan(x / (2·d
 
 DESIGN.md section 14 makes true MOA the default at 1.047 inches per 100 yards, with IPHY available. Both are here, and the sanity anchor is that 1 inch at 100 yards is exactly 1.000000 SMOA and 0.954930 MOA, which is confirmed by execution.
 
+
+### 12.6 Hit probability by simulation
+
+NOTES-FROM-PLANNING.md entry 156, built in `HitProbability`. Section 12.4's figure carries the group's sigma to a distance and integrates it over the target, which is right for a single shot with no error but the rifle's. The Ballistics screen's hit probability goes further, by simulation, because the errors that decide a hit at distance are not all of the same kind.
+
+**Per shot and per string.** The dispersion, with the precision's sigma on each axis, and the muzzle velocity's spread through the drop are drawn for every shot. The wind call, the range estimate, the zero, the drag, the air, the shot's inclination and the Earth's rotation are drawn once for a string and shared by every shot in it, because the shooter reads them once and fires. Drawing a wind call per shot would make it average out across a string like dispersion does, and flatter every figure about more than one shot.
+
+**Carried through the solver.** Each source's effect on the impact is the trajectory with that input moved, less the believed one, with the elevation and wind dialed from the belief and the sight's zero angle held. It is fitted by a quadratic through two solves either side of the belief, at the bias plus two standard deviations. The sources are added, which leaves out how they interact; that is second order at the sizes below.
+
+**Rifle precision** is the per-axis standard deviation of the shots about their own center, as an angle: for circular dispersion, sigma. A radial figure such as the mean radius is about 1.25 times it and is never put in its place. It comes from the group open in the analysis, from a load's sessions pooled re-centered as section 11 does, or typed. The group already holds the velocity's share of its vertical at the distance it was shot, so that share is taken out in quadrature before the velocity is drawn per shot, as section 12.2 does.
+
+**Sigma is drawn too.** For every string, sigma is drawn from its sampling distribution, sigma times sqrt(df / chi-squared(df)), at stratified quantiles. The interval on every probability is widened by the answer worked out again at both ends of sigma's 95 percent interval, on the same random numbers, and by 1.96 standard errors of the simulation, and the screen says which of the two is the larger. A typed precision has no known uncertainty and the screen says that too.
+
+**The second round** is fired after the first impact is seen and its whole miss dialed off. That removes every per-string error but adds the first shot's own dispersion and velocity, so the second shot lands at its per-shot error less the first's. A second-round figure that forgets the subtraction is too high.
+
+**What a person is shown.** Never a point without its interval; two significant figures at most, and no digit finer than the trial count supports. The cost of each source is the first-round probability it takes away, found by working the answer out without it on the same random numbers.
+
+**When it refuses.** When sigma's interval alone moves the first-round answer across more than half the scale, the answer says nothing useful, and the screen says so with the number of shots in one group that would narrow it to half the scale, found from section 9.1's interval multiples.
+
+**The confidence presets.** One choice sets every uncertainty a shooter cannot measure. They are GroupLab's own judgment of each situation, written down here so they can be argued with; none is taken from another calculator. Each figure is one standard deviation.
+
+| source | Known distance, measured air | Lasered distance, estimated wind | Estimated distance, estimated wind |
+|---|---|---|---|
+| range | 0.5 yd | 1.5 yd | 5 percent of the distance |
+| wind, full value | 1.5 mph | 3 mph | 4 mph |
+| drag | 1 percent | 2 percent | 3 percent |
+| temperature | 2 °F | 5 °F | 10 °F |
+| station pressure | 0.03 inHg | 0.1 inHg | 0.3 inHg |
+| humidity | 5 percent | 15 percent | 25 percent |
+| inclination | 0.5 degrees | 1 degree | 2 degrees |
+| azimuth | 5 degrees | 10 degrees | 15 degrees |
+| latitude | 0.5 degrees | 1 degree | 2 degrees |
+
+- **Range.** A marked range leaves only where the frame stands against its marker. A rangefinder reads to the yard, and its beam can return from the ground or a berm near the target. A distance judged by eye is wrong in proportion to the distance, so it is a share of it.
+- **Wind.** Read from flags and mirage at a familiar range is better than estimated from what can be seen downrange, which is better than estimated with nothing to read.
+- **Drag.** A drag confirmed against the shooter's own drops, a published figure for the bullet, and a published figure used for another lot or another rifle.
+- **The air.** A weather meter at the line, a phone or a forecast, and a guess from the season.
+- **Angles and latitude.** Measured with an angle indicator and a compass, read from a map, and estimated.
+
+The muzzle velocity's spread, the precision and the zero are never set by a preset: they come from what GroupLab measured. A bias, the true value less the believed one, is never set by a preset either, because it is something a person knows about their own equipment.
 ---
 
 ## 12a. Did the group open up as it was shot?

@@ -155,7 +155,7 @@ public class Entry113Tests
 
     /// <summary>
     /// Entry 113 section 3 on screen: the analysed group carried to 600 yd is labelled a prediction, gives its sigma with the interval's ends and
-    /// the chance of a hit as a range; with no velocity or wind spread it says it is angular scaling and nothing more; and a velocity SD too
+    /// the chance of a hit as a range, now from entry 156's simulation; with no velocity or wind spread it says it is angular scaling and nothing more; and a velocity SD too
     /// large for the group is refused.
     /// </summary>
     [AvaloniaFact]
@@ -184,15 +184,16 @@ public class Entry113Tests
             Assert.Contains("Predicted at 600 yd, not measured", text);
             Assert.Contains(text, t => t.StartsWith("Sigma across ", StringComparison.Ordinal) && t.Contains(" to ", StringComparison.Ordinal));
             Assert.Contains(text, t => t.StartsWith("Of that, the load's velocity SD of 10 ft/s gives ", StringComparison.Ordinal));
-            var hit = Assert.Single(text, t => t.StartsWith("Chance of a hit on a 4.000 in circle at 600 yd: ", StringComparison.Ordinal));
-            Assert.Matches(@": \d+ percent, between \d+ and \d+ percent across the sigma interval", hit);
+            // Entry 156: the chance of a hit is the simulation's now, beneath the projection, with its interval.
+            var hit = Assert.Single(window.HitShown, t => t.StartsWith("First round on a 4.000 in circle at 600 yd: ", StringComparison.Ordinal));
+            Assert.Matches(@": (more than |under )?[\d.]+ percent \([\d.]+ to [\d.]+\)\.$", hit);
             Assert.Contains("Aerodynamic jump is not modeled.", text);
 
             window.Book = window.Book.With(load with { MuzzleVelocitySdFps = null });
             window.ProjectGroup("600", 1, "6", "12", "");
             text = [.. window.ProjectionText];
             Assert.Contains("No velocity SD or crosswind uncertainty is given, so this is the group scaled by angle and nothing more.", text);
-            Assert.Contains(text, t => t.StartsWith("Chance of a hit on a 6.000 by 12.000 in rectangle at 600 yd: ", StringComparison.Ordinal));
+            Assert.Contains(window.HitShown, t => t.StartsWith("First round on a 6.000 by 12.000 in rectangle at 600 yd: ", StringComparison.Ordinal));
 
             window.Book = window.Book.With(load with { MuzzleVelocitySdFps = 500 });
             window.ProjectGroup("600", 0, "4", "4", "");

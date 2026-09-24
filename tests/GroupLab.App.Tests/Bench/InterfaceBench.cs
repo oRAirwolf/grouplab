@@ -38,11 +38,14 @@ public static class InterfaceBench
         ["Open image…"] = "It opens the operating system's file picker, which waits for a person. Opening the file afterwards is measured as its own case.",
         ["Open, export or report a problem"] = "Its items open file pickers, which wait for a person.",
         ["Report a problem…"] = "It writes a report package and then opens a file picker.",
-        ["Print…"] = "It opens the print screen, whose own controls print to a device.",
-        ["Design your own sheet"] = "It opens the editor in a window of its own, which is walked as its own screen when the editor benchmark is written.",
+        ["Print…"] = "It prints to a device. Since entry 155 it is the Targets panel's own, and it is there on Windows only.",
+        ["Design your own sheet"] = "It opens the designer in the Targets panel, which is walked as its own screen when the editor benchmark is written.",
         ["Duplicate"] = "It writes a sheet into the person's own library, which is data a benchmark must not add to.",
         ["Read the list"] = "It reads the clipboard, which belongs to whoever is at the machine.",
     };
+
+    /// <summary>Excluded controls that only one operating system shows, so their absence elsewhere is not a stale excuse.</summary>
+    public static IReadOnlySet<string> WindowsOnly { get; } = new HashSet<string>(StringComparer.Ordinal) { "Print…" };
 
     /// <summary>Times every control the walk finds on the window as it stands, leaving the excluded ones out by name.</summary>
     public static IReadOnlyList<ControlTiming> Measure(MainWindow window, string screen)

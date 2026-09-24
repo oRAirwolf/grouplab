@@ -18,7 +18,8 @@ namespace GroupLab.App;
 /// records, all of it optional, takes the air as an input, and shows a dope table: range, drop and the wind of a 10 mph crosswind, in the
 /// person's units and in the scope's clicks, with the sentence that aerodynamic jump is not modelled beside it. The analysis's zero block
 /// carries its correction to a second distance from the same records and air, with the uncertainty carried through, and keeps its refusal
-/// where the offset cannot be told from zero. Hit probability and distance normalisation wait for their own entry.
+/// where the offset cannot be told from zero. The group carried to another distance is entry 113's, and hit probability by simulation is
+/// entry 156's, in MainWindow.Hit.cs.
 /// </summary>
 public sealed partial class MainWindow
 {
@@ -45,9 +46,6 @@ public sealed partial class MainWindow
     private readonly StackPanel dopeTable = new() { Spacing = 0 };
     private readonly TextBox carryTo = new() { Width = 90 };
     private readonly TextBox projectTo = Field("600");
-    private readonly ComboBox targetShape = new() { ItemsSource = new[] { "circle, its diameter", "rectangle, width by height" }, SelectedIndex = 0, MinWidth = 180 };
-    private readonly TextBox targetWidth = Field("2");
-    private readonly TextBox targetHeight = Field("2");
     private readonly TextBox windSd = Field();
     private readonly StackPanel projectionLines = new() { Spacing = Tokens.Space4 };
     private readonly TextBlock sdFrom = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Secondary } };
@@ -135,9 +133,11 @@ public sealed partial class MainWindow
         // Entry 113 section 3: the analysed group carried to another distance, its hit probability there and its predicted size.
         column.Children.Add(Heading("The analyzed group at another distance"));
         column.Children.Add(Line("A prediction from the group open in the analysis, the rifle and load it names, and the air above: its sigma carried through the solver, with the load's velocity SD and the crosswind's uncertainty added where they are given. It is never a measurement."));
-        column.Children.Add(Row(Distanced("At"), projectTo, Measured("Crosswind uncertainty", BallisticMeasure.WindSpeed), windSd));
-        column.Children.Add(Row(FieldLabel("Target"), targetShape, Lengthed("Size"), targetWidth, targetHeight, Button("Work it out", FillProjection)));
+        column.Children.Add(Row(Distanced("At"), projectTo, Measured("Crosswind uncertainty", BallisticMeasure.WindSpeed), windSd, Button("Work it out", FillProjection)));
         column.Children.Add(projectionLines);
+
+        // Entry 156: the chance of a hit comes from the simulation below, which carries the errors a string shares as well as the group's own.
+        BuildHit(column);
         BuildChronograph(column);
         unitBoxes.AddRange(new (TextBox, BallisticMeasure)[]
         {
@@ -172,6 +172,7 @@ public sealed partial class MainWindow
         ballisticLoad.SelectedIndex = book.Loads.FindIndex(l => string.Equals(l.Name, load, StringComparison.OrdinalIgnoreCase)) + 1;
         fillingBallistics = false;
         ShowBallisticRecords();
+        ShowHitDistance();
         FillProjection();
         FillChronograph();
     }
@@ -201,13 +202,6 @@ public sealed partial class MainWindow
         return label;
     }
 
-    private TextBlock Lengthed(string name)
-    {
-        var label = FieldLabel("");
-        unitLabels.Add((label, () => name + ", " + UnitSettings.Symbol(units.Linear)));
-        return label;
-    }
-
     /// <summary>Writes every unit-bearing label on this page as the units in force say it.</summary>
     private void RelabelBallistics()
     {
@@ -232,14 +226,16 @@ public sealed partial class MainWindow
         var imperial = unitBoxes
             .Select(b => (b.Box, b.Measure, Value: Number(b.Box) is { } v ? BallisticMeasures.ToImperial(v, b.Measure, units) : (double?)null))
             .ToList();
-        var distances = new[] { zeroDistance, dopeTo, dopeStep, projectTo }
+        var distances = new[] { zeroDistance, dopeTo, dopeStep, projectTo, hitDistance }
             .Select(box => (Box: box, Value: Number(box) is { } v ? UnitSettings.DistanceToInches(v, units.Distance) : (double?)null))
             .ToList();
-        var lengths = new[] { targetWidth, targetHeight }
+        var lengths = (hitSizeUnit.SelectedIndex == 0 ? new[] { hitWidth, hitHeight } : [])
             .Select(box => (Box: box, Value: Number(box) is { } v ? UnitSettings.ToInches(v, units.Linear) : (double?)null))
             .ToList();
 
+        var hitBoxes = KeepHitBoxes();
         SetUnits(chosen);
+        hitBoxes();
         foreach (var (box, measure, value) in imperial)
         {
             box.Text = BallisticMeasures.Text(value, measure, units);
@@ -255,6 +251,7 @@ public sealed partial class MainWindow
             box.Text = Text(value is { } v ? UnitSettings.FromInches(v, units.Linear) : null);
         }
 
+        ShowSizeUnits();
         DiagnosticLog.Info("units.chosen", ("linear", units.Linear.ToString()), ("distance", units.Distance.ToString()), ("where", "ballistics"));
         FillDope();
     }
@@ -279,6 +276,7 @@ public sealed partial class MainWindow
         bulletLength.Text = BallisticMeasures.Text(load?.BulletLengthInches, BallisticMeasure.SmallLength, units);
         bulletDiameter.Text = BallisticMeasures.Text(load?.BulletDiameterInches, BallisticMeasure.SmallLength, units);
         FillDope();
+        ShowHitPrecision();
     }
 
     /// <summary>Keeps the fields on the chosen rifle and load; an empty field clears its value, which the solver then says is missing.</summary>
@@ -568,7 +566,6 @@ public sealed partial class MainWindow
             : group?.Sigma is null ? "The analysis has no group with a sigma to carry; mark at least " + GroupAnalysis.MinimumShotsForDispersion.ToString(CultureInfo.InvariantCulture) + " shots and accept them."
             : missing.Count > 0 ? "The solver needs " + Joined(missing) + ", for the rifle and load the analysis names."
             : Number(projectTo) is null ? "Enter the distance to carry the group to."
-            : Number(targetWidth) is null || (targetShape.SelectedIndex == 1 && Number(targetHeight) is null) ? "Enter the target's size."
             : null;
         if (refusal is not null)
         {
@@ -602,45 +599,22 @@ public sealed partial class MainWindow
             projectionLines.Children.Add(Note("At the lower end of the sigma interval the velocity SD accounts for all of the vertical measured, so that end's vertical is the velocity's alone."));
         }
 
-        // The group's centre carried to the distance, where the zero correction has one; otherwise the aim.
-        double muX = 0, muY = 0;
-        string centred = "about the aim";
-        if (Zeroing.For(state) is { } zero)
-        {
-            var carried = SolverUse.Carry(input, zero, from, to, rifle);
-            muX = carried.Windage.OffsetInches;
-            muY = carried.Elevation.OffsetInches;
-            centred = $"about the group's center carried there, {units.Length(Math.Abs(muX))} {(muX >= 0 ? "right" : "left")} and {units.Length(Math.Abs(muY))} {(muY >= 0 ? "low" : "high")} of the aim";
-        }
-
-        double width = UnitSettings.ToInches(Number(targetWidth)!.Value, units.Linear);
-        double height = targetShape.SelectedIndex == 1 ? UnitSettings.ToInches(Number(targetHeight)!.Value, units.Linear) : width;
-        var hit = targetShape.SelectedIndex == 1
-            ? Projection.Hit(projection, muX, muY, (x, y, sx, sy) => Projection.HitRectangle(x, y, sx, sy, width, height))
-            : Projection.Hit(projection, muX, muY, (x, y, sx, sy) => Projection.HitCircle(x, y, sx, sy, width / 2));
-        string target = targetShape.SelectedIndex == 1 ? $"a {units.Number(width)} by {units.Length(height)} rectangle" : $"a {units.Length(width)} circle";
-        string Percent(double p) => (100 * p).ToString("0", CultureInfo.InvariantCulture);
-        projectionLines.Children.Add(new TextBlock
-        {
-            Text = $"Chance of a hit on {target} at {at}: {Percent(hit.AtPoint)} percent, between {Percent(hit.AtUpperSigma)} and {Percent(hit.AtLowerSigma)} percent across the sigma interval, {centred}.",
-            TextWrapping = TextWrapping.Wrap,
-            FontWeight = FontWeight.SemiBold,
-        });
         foreach (string sentence in BallisticSolver.NotModelled)
         {
             projectionLines.Children.Add(Note(sentence));
         }
     }
 
-    /// <summary>Carries the analysed group to a distance and a target, as the screen's fields do, for the headless tests.</summary>
+    /// <summary>
+    /// Carries the analysed group to a distance, and works out its chance of a hit on a target there from the same group, as the screen's
+    /// fields do, for the headless tests.
+    /// </summary>
     internal void ProjectGroup(string distance, int shape, string width, string height, string wind)
     {
         projectTo.Text = distance;
-        targetShape.SelectedIndex = shape;
-        targetWidth.Text = width;
-        targetHeight.Text = height;
         windSd.Text = wind;
         FillProjection();
+        WorkOutHit(distance, shape, width, height);
     }
 
     internal IEnumerable<string> ProjectionText => projectionLines.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");

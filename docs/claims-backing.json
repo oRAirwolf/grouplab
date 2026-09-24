@@ -1189,6 +1189,18 @@
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
+  "What costs the most lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.": {
+   "kind": "code",
+   "where": "the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156"
+  },
+  "Every error source by the hits it takes away, so you can see whether the wind call, the load or the range estimate is what to work on.": {
+   "kind": "code",
+   "where": "the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156"
+  },
+  "- **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.": {
+   "kind": "code",
+   "where": "the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156"
+  },
   "- **Print** (on Windows) prints from inside GroupLab at actual size.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"

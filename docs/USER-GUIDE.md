@@ -184,10 +184,27 @@ All of it is optional. A record without what the solver needs says which field i
 
 **At another distance.** On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
 
-The ballistics screen also carries the analyzed group to another distance, and gives the chance of hitting a circle or a rectangle there:
-- It is a prediction, never a measurement.
-- The chance is given as a range across the group's sigma interval.
-- With neither a velocity spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
+The ballistics screen also carries the analyzed group to another distance, as a prediction and never a measurement. With neither a velocity
+spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
+
+**Hit probability.** Below that, the screen works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance:
+- **Rifle precision** fills itself from the group open in the analysis, or from every saved session of the chosen load pooled, or you type
+  it. It is the per axis standard deviation of your shots as an angle, which is sigma, never a group size.
+- The muzzle velocity's spread comes from the load, and the **zero error** starts at the uncertainty in your group's center.
+- A **confidence preset** sets everything nobody can measure at once, from a known distance with the air measured to a guessed distance
+  and a guessed wind. Under Advanced each figure can be edited, with a bias for something you know is off, such as a chronograph reading
+  fast.
+- The answer sits beside the elevation and the wind for that distance: the **first round**, and the **second round** fired after you saw
+  where the first landed and dialed off its miss. Each comes with its interval, and the screen says whether the interval is mostly your
+  precision's own uncertainty or the simulation's.
+- **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the
+  load or buy a rangefinder.
+- For a string of several shots on one reading it gives the chance of at least one hit and the hits to expect.
+- The simulated impacts are drawn over the target, and a curve shows the chance against distance with its interval as a band.
+
+A wind call is drawn once for a whole string, never per shot, because every shot you fire on one reading shares its error. When the group
+behind the precision is too small to say anything, the screen says so and how many shots would make it mean something. The same seed gives
+the same answer.
 
 ## 9. Keeping GroupLab up to date
 
