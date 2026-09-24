@@ -12,6 +12,32 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.100
+
+**2026-09-24**, commit `5f08633`. Nightly.
+
+**What you will notice**
+
+- Where a sheet has more bulls than shots and you have not said which you fired at, a short hint beside that choice suggests it; it holds nothing back, and Put this away hides it for that target.
+- When GroupLab finds your sheet but no holes on it, it now says so, gives the likely reason, and tells you how to mark the shots by hand, instead of showing an empty result.
+- Pressing Set for a caliber while its list of suggestions is open now sets it the first time, instead of failing quietly.
+- The zeroing grids now find your shots: before this build GroupLab found the sheet and then refused every hole on it as out of place.
+- Choosing a caliber from the suggestions now sets it in one click or with Enter, instead of needing Set pressed twice.
+- A scale you set by hand can be set again by tapping the same marks, or changed from the length or rectangle tool, and every figure follows.
+- Caliber is spelled caliber everywhere on screen now, including the setup label and the list of cartridges it suggests.
+- When GroupLab hits an error and keeps running it now says so, rather than saying it closed unexpectedly, and a report counts repeated errors together.
+- With the shot distance entered, each group size now leads with its angle in MOA or your chosen unit, with the size on the paper beneath; a setting puts the size first.
+
+**Under the hood**
+
+- A zeroing grid scanned at 600 dpi now registers and finds its shot once you say which sheet it is; its printed codes can still fail to read on a scan.
+- The consent record shipped with the sample now covers what Alan passes on from his testers, and names Unholy for the scan he gave.
+- A target sent to the project now carries every part of the photograph's quality score, so the scoring can be tuned from real photographs; sending itself is still switched off.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.100)
+
+---
+
 ## 0.2.0-nightly.99
 
 **2026-09-24**, commit `e84c949`. Nightly.
