@@ -5,7 +5,7 @@ group: How GroupLab is built
 number: 25
 written: 2026-09-22
 data_date: 2026-09-22
-samples: not a measurement: the design rules of twenty-two built-in sheets, with the failures that produced each one
+samples: not a measurement: the design rules of the built-in sheets, with the failures that produced each one
 state: published
 no_figure: "The rules are about layout, and the twenty built-in sheets are the worked examples. Every one of them can be printed from the application and looked at, which is better than a picture of one."
 found: The most effective single rule is declaring where printed matter is, so candidates there are dropped rather than classified. A declared rectangle is free and perfectly reliable; classification is neither.
@@ -63,13 +63,13 @@ A bull has two jobs that pull in opposite directions.
 
 It has to be **aimable**: big enough to see and center on at the distance you are shooting. And it has to be **small enough that a sheet holds many of them**, because the whole point of a twenty-five bull sheet is that you get a twenty-five shot group out of one-shot-per-bull, without the holes overlapping and without the group being about your aim instead of your rifle.
 
-That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centrefire at 300, and the built-in library is twenty-two sheets rather than one because those are genuinely different problems.
+That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is <!--count:sheets-->twenty<!--/count--> sheets rather than one because those are genuinely different problems.
 
 ## What is deliberately not offered
 
 There is no free-form visual designer where you place bulls anywhere you like.
 
-Every one of the twenty-two built-in sheets is parametric: a grid, a spacing, a ring set, a page size. A form covers that space completely. A canvas for arbitrarily placed bulls is a large piece of software for a case nobody has asked for, and it is revisited the day somebody asks for a layout the form cannot express.
+Every one of the <!--count:sheets-->twenty<!--/count--> built-in sheets is parametric: a grid, a spacing, a ring set, a page size. A form covers that space completely. A canvas for arbitrarily placed bulls is a large piece of software for a case nobody has asked for, and it is revisited the day somebody asks for a layout the form cannot express.
 
 The same canvas would also be the route to tracing a definition over a store-bought target, which is a genuinely useful thing. So the two arrive together or not at all, and the decision is recorded rather than left as an absence somebody has to guess the reason for.
 

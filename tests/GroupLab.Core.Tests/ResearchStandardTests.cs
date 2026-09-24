@@ -77,7 +77,7 @@ public class ResearchStandardTests
     /// </para>
     /// </summary>
     [Fact]
-    public void ThePickListKnowsARimfireFromACentrefire()
+    public void ThePickListKnowsARimfireFromACenterfire()
     {
         Assert.Contains(0.222, Calibre.Diameters);
         Assert.Contains(0.224, Calibre.Diameters);

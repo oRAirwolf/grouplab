@@ -69,7 +69,7 @@ The largest, 0.274 in, **1.039 of the bullet**, so this one measures wider than 
 
 **And this is a photograph.** One of the developer's, of the 6.5 Creedmoor 15 shot sheet, square on and close, and published under the developer's standing consent. GroupLab measured this hole at 0.383 in, **1.452 of the bullet**, which is the median hole on that sheet and not an outlier. Look at what is dark: the core, and around it a ring of torn paper standing up out of the sheet and throwing its own shadow into the hole. To the camera, that shadow is hole. On the scanner, whose lamp sits two centimeters away at a fixed angle, the same sheet's holes measured 0.937 of the bullet.
 
-The three centrefire scans agree with each other to within three percent. The photographs do not agree with anything: they run from 0.90 to 1.45, a spread of more than half the bullet's width.
+The three centerfire scans agree with each other to within three percent. The photographs do not agree with anything: they run from 0.90 to 1.45, a spread of more than half the bullet's width.
 
 ## It is not the camera
 
@@ -111,7 +111,7 @@ That change is worth a number. On the photograph that started all this, a 6.5 Cr
 
 ## What we still do not know
 
-The .22 LR scan reads 0.765 where the three centrefire scans read 0.92 to 0.95. A rimfire hole in paper closes up far more than a centrefire one, which makes sense, and means the "holes are about 0.94 of the bullet" figure that works for .264, .308 and .338 is not a law. We have exactly one rimfire sheet, which is not enough to say what the right number is.
+The .22 LR scan reads 0.765 where the three centerfire scans read 0.92 to 0.95. A rimfire hole in paper closes up far more than a centerfire one, which makes sense, and means the "holes are about 0.94 of the bullet" figure that works for .264, .308 and .338 is not a law. We have exactly one rimfire sheet, which is not enough to say what the right number is.
 
 We also cannot tell you how to photograph a target so that its holes measure true, because we do not know that a way exists. What we can tell you is that scanning works, and that if you photograph, GroupLab will read your sheet against itself and not against an assumption.
 
@@ -121,6 +121,6 @@ We also cannot tell you how to photograph a target so that its holes measure tru
 
 **Positions from photographs are fine.** This article is about size and only size. Where the shots landed, and therefore the group, came out sound from the same photographs, which is why GroupLab still reads them.
 
-**If you need a size, scan.** The three centrefire scans agreed with each other to within three percent, in the same session, on the same sheets, with the same holes.
+**If you need a size, scan.** The three centerfire scans agreed with each other to within three percent, in the same session, on the same sheets, with the same holes.
 
-**And stop believing the 0.94 figure is a law.** It describes centrefire holes on this paper. The one rimfire sheet here read 0.765, and one sheet is not enough to say what the right rimfire number is.
+**And stop believing the 0.94 figure is a law.** It describes centerfire holes on this paper. The one rimfire sheet here read 0.765, and one sheet is not enough to say what the right rimfire number is.

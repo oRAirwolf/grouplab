@@ -16,7 +16,7 @@
 | `docs/FIDUCIAL-DECISION.md` | section 9 | AprilTag `tag36h11`, and the measurements behind it |
 | `docs/DETECTION-PIPELINE.md` | section 12 | Eleven stages, written against the real scans |
 | `docs/STATISTICS.md` | section 14 | Estimators, tests, and validation against shotGroups |
-| `docs/TARGET-LIBRARY.md` | section 9 | Twenty built-in sheets, all geometry-validated |
+| `docs/TARGET-LIBRARY.md` | section 9 | <!--count:sheets:Words-->Twenty<!--/count--> built-in sheets, all geometry-validated |
 | `docs/SCAN-MEASUREMENTS.md` | section 6 | 343 holes measured across 15 files |
 | `docs/ONTARGET-DIMENSIONS.md` | section 9 | Dimensional survey of 47 shipped competitor sheets |
 
@@ -112,7 +112,7 @@ The consequence for backer material is unchanged: it has no effect on scanned ap
 
 **[r3] Scale is the primary discriminator, not intensity and not colour.** Every printed feature in the corpus is at most 0.0567 inches wide; every hole is 0.15 to 0.54 inches across. That is a factor of three to nine, it holds in every printing style including greyscale, and it survives resolution changes because it is expressed in physical units. Every other signal is a refinement on top of it.
 
-**[r3] Paper is a developable surface, and the crumpled target is barely warped.** On the worst sheet in the set, crumpled, torn along two edges, taped and non-rectangular, a plain four-point homography leaves a residual of rms 0.0027 inches. Four pristine sheets measured 0.0026 to 0.0032. This changes the justification for the marker count in section 9.
+**[r3] Paper is a developable surface, and the crumpled target is barely warped.** On the worst sheet in the set, crumpled, torn along two edges, taped and non-rectangular, a plain four-point homography leaves a residual of rms 0.0027 inches. Four pristine sheets measured 0.0026 to 0.0032 in. This changes the justification for the marker count in section 9.
 
 **[r3] Sample attribution corrected.** The `n568*` targets are .264, 6.5 mm, with the primer as the only variable, not the .338 class this document and `SAMPLE-NOTES.md` originally recorded.
 

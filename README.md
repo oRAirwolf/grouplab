@@ -301,7 +301,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Sighters found and matched and then set aside unless a person asks for them, and analyzed as a group of their own when they do, never pooled with the scoring shots.
-- **Done.** The caliber entered as the bullet's diameter and nothing else, in inches or in millimeters marked mm, with the common diameters in a pick list in both units, by decision: a caliber's name is usually not its diameter, so a designation typed as a number, such as .38 or 7.62 mm, is refused too.
+- **Done.** The caliber entered as a cartridge name, such as 6.5 Creedmoor, or as the bullet's diameter in inches or in millimeters marked mm. A name is offered only where two published sources agree on its diameter (entry 163); a designation typed as a number, such as .38 or 7.62 mm, is still refused, because a caliber's name is usually not its diameter.
 - **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a caliber-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Done.** The concept screen's appearance: the tool strip as icons, each named with its key, the review's keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
@@ -359,19 +359,17 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 
 ### Platforms
 
-**Windows 10 and 11 is what GroupLab is built for.** It is where the application is developed and used, where every screenshot comes from, and the only platform offered as a download today.
+**What is supported, and what has been checked on real hardware, is the platform statement above,** generated from its one source,
+`docs/PLATFORM-SUPPORT.md`. This section does not repeat it. What the plan adds is how the other platforms are kept correct.
 
-**Linux and macOS are built and tested alongside it, not after it.** Every push builds and runs the whole suite on all three. A second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record, which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers.
+**Linux and macOS are built and tested alongside Windows, not after it.** Every push builds and runs the whole suite on all three. A
+second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record,
+which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers. Both reproduce
+the record: every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing
+it.
 
-| Platform | Built and tested | Reproduces the Phase 0 record | Offered as a download | Used day to day |
-|---|---|---|---|---|
-| Windows 10 and 11 | every push | the reference | **yes**, an installer and a zip | yes |
-| Linux | every push | **yes** | **yes**, a tarball | no |
-| macOS | every push | **yes** | **yes**, two `.app` bundles, arm64 and x64 | no, and nobody has ever run one |
-
-**The macOS builds are published and labeled untested, which is the honest position.** Entry 147: withholding a build nobody has run does not make it more tested, it just means nobody can run it. Both are attached to every release, both are unsigned, and the download page says in Alan's own words why there will be no signed Mac build unless somebody donates a Mac and pays the developer fees. Both platforms reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
-
-**Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
+**The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real
+data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
 **Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
 

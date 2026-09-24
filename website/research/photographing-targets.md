@@ -44,7 +44,7 @@ Each dot is the typical (median) hole size on one image, as a multiple of the bu
 | 6.5 Creedmoor, 25-shot sheet | 0.264 in | 0.95 | 0.90 |
 | 6.5 Creedmoor, 15-shot sheet | 0.264 in | 0.94 | 1.45, 1.41, 1.45 |
 
-The scans of the three centrefire sheets agree within a few percent. The photos range from 10 percent smaller than the bullet to 45 percent bigger.
+The scans of the three centerfire sheets agree within a few percent. The photos range from 10 percent smaller than the bullet to 45 percent bigger.
 
 **It was not resolution.** Two photos of the 15-shot sheet taken at quite different resolutions (about 280 and 180 pixels per inch on the paper) gave 1.45 and 1.45. Two photos of different sheets at the same 180 pixels per inch gave 0.90 and 1.45.
 

@@ -46,6 +46,28 @@ public class ClaimsAboutMeasuringTests
             "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
         ("nothing multiplies them by the print scale",
             "on a scan every distance is multiplied by the measured print scale, entry 171. docs/WHAT-CAN-BE-MEASURED.md."),
+
+        // Entry 159 section 5.3: every false claim the audit found, so the exact wording cannot come back.
+        ("twenty-two built-in",
+            "there are twenty built-in sheets; the two tiled layouts are the same sheets on six pages. scripts/counts.py counts them."),
+        ("offered for Windows only",
+            "Windows, Linux and macOS builds are all published. docs/PLATFORM-SUPPORT.md."),
+        ("only platform offered as a download",
+            "Windows, Linux and macOS builds are all published. docs/PLATFORM-SUPPORT.md."),
+        ("the macOS build is not offered for download",
+            "both macOS builds are on the download page. docs/PLATFORM-SUPPORT.md."),
+        ("nobody has ever run one",
+            "the Apple silicon build has been run on one Mac, entry 166. docs/PLATFORM-SUPPORT.md."),
+        ("labeled untested",
+            "the Apple silicon build has been run on one Mac and says so, entry 166."),
+        ("no mounted photograph set",
+            "the mounted photograph gate was measured on 59 photographs of 2026-09-20, entry 130 section 6b."),
+        ("can read them as one group",
+            "pooling several sheets of one load is not built; what a pooled group's center means is question 34."),
+        ("caliber is the single most useful",
+            "naming the caliber can make the reading worse on a photograph, entry 161; it is not the single most useful thing."),
+        ("calibre is the single most useful",
+            "naming the caliber can make the reading worse on a photograph, entry 161; it is not the single most useful thing."),
     ];
 
     /// <summary>
@@ -71,6 +93,9 @@ public class ClaimsAboutMeasuringTests
                     || rel.StartsWith("docs/notes/", StringComparison.Ordinal)
                     || rel is "docs/NOTES-FROM-PLANNING.md" or "docs/PHASE1-RESULTS.md" or "docs/QUESTIONS-FOR-PLANNING.md"
 
+                    // The claims register quotes every published sentence, the corrected ones included, which is what a register is for.
+                    || rel is "docs/claims-backing.json" or "docs/CLAIMS.md"
+
                     // What each build said when it was published. Nightly 93 carries entry 152's false note that a shrunk sheet measures
                     // correctly; a published release is not edited to hide a mistake, and the correction is entry 161's note in the next.
                     || rel == "docs/RELEASE-NOTES.md")
@@ -86,6 +111,26 @@ public class ClaimsAboutMeasuringTests
         }
 
         yield return Path.Combine(Repo.Root, "README.md");
+    }
+
+    /// <summary>
+    /// Entry 159 sections 4 and 5.1: the README's download table and the download page each say how far each Mac build has been run, and
+    /// they had come apart, the README still calling the Apple silicon build untested after entry 166. Neither can be generated from the other
+    /// without moving the table, so the two are held to the platform statement's facts here.
+    /// </summary>
+    [Fact]
+    public void TheReadmeAndTheDownloadPageSayTheSameAboutEachMacBuild()
+    {
+        string readme = File.ReadAllText(Repo.PathTo("README.md"));
+        string builder = File.ReadAllText(Repo.PathTo("website", "build.py"));
+        string arm = readme.Split('\n').Single(l => l.StartsWith("| **[macOS, Apple silicon]", StringComparison.Ordinal));
+        string intel = readme.Split('\n').Single(l => l.StartsWith("| **[macOS, Intel]", StringComparison.Ordinal));
+        bool statementSaysRun = File.ReadAllText(Repo.PathTo("docs", "PLATFORM-SUPPORT.md")).Contains("the Apple silicon build has been run on one Mac", StringComparison.Ordinal);
+
+        Assert.Equal(statementSaysRun, arm.Contains("Run on one real Mac", StringComparison.Ordinal));
+        Assert.Equal(statementSaysRun, builder.Contains("<strong>Run on one real Mac.</strong>", StringComparison.Ordinal));
+        Assert.Contains("Untested on a real Mac", intel, StringComparison.Ordinal);
+        Assert.Contains("\"macOS, Intel\", \"grouplab-macos-x64.tar.gz\", \"For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.\", [\"<strong>Untested on a real Mac.</strong>", builder, StringComparison.Ordinal);
     }
 
     [Fact]

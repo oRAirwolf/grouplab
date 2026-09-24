@@ -16,7 +16,7 @@ Split into three sittings so the range day stays short. Only part B needs the ra
 
 ### A1. Print the pack
 
-**Print it from the application, not from a command.** The print screen now exists, it lists all twenty-two built-in sheets, and it drives the printer with scaling disabled rather than asking you to remember. **This is the first time a human has used it**, so it is a test as much as a task. If it fails or confuses you, note what happened and fall back to the command below; that report is worth as much as the paper.
+**Print it from the application, not from a command.** The print screen now exists, it lists every built-in sheet, and it drives the printer with scaling disabled rather than asking you to remember. **This is the first time a human has used it**, so it is a test as much as a task. If it fails or confuses you, note what happened and fall back to the command below; that report is worth as much as the paper.
 
 Print **three copies of `GL-CF25-LTR`**. Print **S1 with the load data block filled in** with your real load before you shoot it, and **S2 and S3 with a blank block** to write at the range. Both paths need exercising and this is the natural moment.
 

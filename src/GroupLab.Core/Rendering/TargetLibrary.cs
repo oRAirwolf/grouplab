@@ -40,9 +40,9 @@ public static class TargetLibrary
     /// <summary>File-name prefixes, most specific first, with the family and the distance each layout is designed around.</summary>
     private static readonly (string Prefix, string Family, string DesignedFor)[] Catalogue =
     [
-        ("GL-CF25-100M-", "Centrefire load development", "100 m"),
-        ("GL-CF25-", "Centrefire load development", "100 yd"),
-        ("GL-CF30-", "Centrefire load development", "100 yd"),
+        ("GL-CF25-100M-", "Centerfire load development", "100 m"),
+        ("GL-CF25-", "Centerfire load development", "100 yd"),
+        ("GL-CF30-", "Centerfire load development", "100 yd"),
         ("GL-RF25-A4", "Rimfire", "50 m"),
         ("GL-RF25-", "Rimfire", "50 yd"),
         ("GL-RF36-", "Rimfire", "50 yd"),

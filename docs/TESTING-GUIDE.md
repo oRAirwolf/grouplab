@@ -79,8 +79,8 @@ The repository's README is the authority on what works; this is the short versio
 - **Garmin Xero import** is not built. Chronograph readings are typed in, and reconciled with the shots rather than assumed to line up with them.
 - **The Equipment screen is not built.** Rifles, barrels and loads are added from a cramped box on the marking screen that shares one field between a barrel's round count and a load's components. It is confusing and it is being replaced.
 - **Sending in sheets** is coming. `grouplab.org/upload` is written and its address is reserved, but the server is not installed yet, so the link does not work.
-- **Several of the project's own gates have no material yet**: no mounted photograph set, no 25-shot editor timing, no blank-paper photograph. So GroupLab is careful software that has not yet been proved against a large body of real targets.
-- **Linux and macOS** are built and tested on every push. Nobody uses either day to day, and the macOS build is not offered for download.
+- **Two of the project's own gates have no material yet**: no 25-shot editor timing and no blank-paper photograph. The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them. So GroupLab is careful software that has not yet been proved against a large body of real targets.
+- **Linux and macOS** are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon Mac build has been run on one Mac; the platform statement on the download page says exactly what has been checked.
 
 ## Telling somebody when it is wrong
 

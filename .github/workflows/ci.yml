@@ -325,6 +325,12 @@ jobs:
       - name: Build the site
         run: python website/build.py
 
+      # NOTES-FROM-PLANNING.md entry 159 section 5.4: every checkable sentence the built site, the README and the documents publish has its
+      # backing in docs/claims-backing.json, read one sentence at a time or classified by a rule that says what the document is. A new or
+      # changed sentence with nothing behind it fails here, which is what makes the audit worth doing once.
+      - name: Every published claim is backed
+        run: python scripts/claims.py --check
+
       # NOTES-FROM-PLANNING.md entry 130 section 2.1. The receivers are PHP and run on a public web server, where a typo is a 500 for
       # everybody who tries to send a photograph and nothing in the logs a person would think to look at. The Linux runner has PHP, so the
       # syntax is checked here, on every push, before it can reach the server. Nothing runs the files: php -l parses and stops.

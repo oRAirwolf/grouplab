@@ -1,0 +1,1556 @@
+{
+ "_": [
+  "NOTES-FROM-PLANNING.md entry 159. What backs each published claim. 'backed' holds single sentences, read one at a time;",
+  "'rules' classify whole documents by what they are, and each research article by the evidence in its own front matter.",
+  "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
+ ],
+ "backed": {
+  "Page not found | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "&#169; 2026 the GroupLab contributors.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the footer; LICENSE"
+  },
+  "What is in there The server is grouped like this, so you can see what you are joining before you join.": {
+   "kind": "decided",
+   "where": "website/links.json, the server's channels and rules, entry 171 section 3"
+  },
+  "general · load-development · optics-and-gear · range-reports Development How GroupLab is built and why, what is being measured, and what is coming next.": {
+   "kind": "decided",
+   "where": "website/links.json, the server's channels and rules, entry 171 section 3"
+  },
+  "Nothing said on the server is legal advice, and no part of GroupLab is.": {
+   "kind": "decided",
+   "where": "website/links.json, the server's channels and rules, entry 171 section 3"
+  },
+  "Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "Nothing to install Tells you when a newer build exists; you download it yourself Download zip Linux tarball grouplab-linux-x64.tar.gz Self-contained, built on Ubuntu, and tested on every change.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs; package.yml builds the tarball on ubuntu-latest; ci.yml tests on it"
+  },
+  "Nobody uses it day to day yet Reports from Linux are especially welcome Download linux tarball macOS, Apple silicon grouplab-macos-arm64.tar.gz For any Mac with an M1 or later.": {
+   "kind": "decided",
+   "where": "entry 147 section 3, the platform statement"
+  },
+  "Self-contained, built on macOS, and tested by the suite on every change.": {
+   "kind": "code",
+   "where": ".github/workflows/package.yml builds on macos; ci.yml runs the suite on macos-latest"
+  },
+  "One tester, an M5 Max, nightly 93 Unsigned: see the Terminal command below M1, M2, M3, M4.": {
+   "kind": "decided",
+   "where": "entry 166 section 4, the tester's answers"
+  },
+  "Not an Intel Mac Download for Apple silicon macOS, Intel grouplab-macos-x64.tar.gz For a Mac with an Intel processor.": {
+   "kind": "code",
+   "where": "website/build.py page_download(): the two macOS cards and their assets"
+  },
+  "When Windows says \"Windows protected your PC\" Every build is unsigned, because signing costs money the project has not spent.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "Windows says this about any program nobody has paid to sign.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "When macOS refuses to open it macOS puts a quarantine flag on anything downloaded from the internet, and Gatekeeper refuses to open an unsigned application that carries it.": {
+   "kind": "decided",
+   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
+  },
+  "Move GroupLab.app into your Applications folder, then run this in Terminal: xattr -dr com.apple.quarantine /Applications/GroupLab.app That removes the quarantine flag macOS puts on downloaded files, and nothing else.": {
+   "kind": "decided",
+   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
+  },
+  "Why there is no signed build is below, under What is supported, and what is not .": {
+   "kind": "code",
+   "where": "website/build.py page_download(): the anchor to the statement"
+  },
+  "Your data Kept in %APPDATA%\\GroupLab on Windows, and under your home folder elsewhere.": {
+   "kind": "code",
+   "where": "AppSettingsStore.Default in src/GroupLab.App/AppSettings.cs: Environment.SpecialFolder.ApplicationData"
+  },
+  "Updating Only the Windows installer updates itself.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
+  },
+  "The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
+  },
+  "There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.": {
+   "kind": "code",
+   "where": "UpdateRun.DownloadAsync's refusal in src/GroupLab.Core/Updates/UpdateRun.cs, shown on Settings"
+  },
+  "It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Linux builds are published and are worth trying.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "The test suite runs on Linux on every build.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "macOS builds are published, and the Apple silicon build has been run on one Mac.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "macOS blocked the first launch, and the Terminal command below cleared it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "The tests run on macOS on every build.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Hands-on Linux testing follows, on virtual machines.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "macOS depends on the hardware question below.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Other Linux builds The published Linux build is x86-64.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Reports from Linux and macOS are welcome A report is useful even when the answer is that it crashed on startup.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "\"It opened and the buttons are the wrong size\" is a useful report, and so is a crash report, which GroupLab can send on request.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "What changed in each build Every build on GitHub Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "Guides | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "Windows may say \"Windows protected your PC\" .": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "On 2026-09-21 two machines installed grouplab-setup-win-x64.exe from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21, entries 119 to 123"
+  },
+  "The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
+  },
+  "One reinstall by hand, once v0.2.0-nightly.25 is the first build that can update itself.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21: the first self-update run end to end, entry 123"
+  },
+  "The update from nightly.25 to nightly.26 was then run end to end on a real machine, with real clicks: 97 MB downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back on the screen it was on.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21: the first self-update run end to end, entry 123"
+  },
+  "It is a GroupLab sheet with 25 shots, generated by GroupLab itself, so it is nobody's target.": {
+   "kind": "code",
+   "where": "samples/ and samples/PROVENANCE.md"
+  },
+  "GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and puts each on its bull.": {
+   "kind": "code",
+   "where": "AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment"
+  },
+  "A .22 hole in paper is a good deal smaller than the bullet that made it.": {
+   "kind": "measured",
+   "where": "the research article hole-is-not-the-bullet and photo-hole-size, with their data"
+  },
+  "Reading what it shows you The analysis The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.": {
+   "kind": "code",
+   "where": "CompositePlot in src/GroupLab.App/CompositePlot.cs"
+  },
+  "Where GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries the doubt until you settle it.": {
+   "kind": "code",
+   "where": "AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking"
+  },
+  "Measure bull 1 to bull 5 before you shoot: on the Letter 5x5 sheet it is 5.98 in (152.0 mm).": {
+   "kind": "code",
+   "where": "targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5"
+  },
+  "Two of the project's own gates have no material yet : no 25-shot editor timing and no blank-paper photograph.": {
+   "kind": "measured",
+   "where": "the gates in docs/PHASE1-RESULTS.md and the mounted photograph gate measured on 59 photographs of 2026-09-20"
+  },
+  "So GroupLab is careful software that has not yet been proved against a large body of real targets.": {
+   "kind": "measured",
+   "where": "the gates in docs/PHASE1-RESULTS.md; entry 159"
+  },
+  "Linux and macOS are built and tested on every push.": {
+   "kind": "code",
+   "where": ".github/workflows/ci.yml: the test matrix on windows, ubuntu and macos"
+  },
+  "Nobody uses Linux day to day, and the Apple silicon Mac build has been run on one Mac; the platform statement on the download page says exactly what has been checked.": {
+   "kind": "decided",
+   "where": "entries 147 and 166, the platform statement"
+  },
+  "User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Download as PDF On this page 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "Mark it and settle the review queue 5.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Sessions and the report 7.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "The zero correction at another distance, and the dope table 9.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Keeping GroupLab up to date 10.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Comparing several sheets at once 11.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "If something goes wrong 12.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Settings GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {
+   "kind": "decided",
+   "where": "what GroupLab is, DESIGN.md section 1"
+  },
+  "It describes the Windows application as it is built today, and every picture in it is a render of the build.": {
+   "kind": "code",
+   "where": ".github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)"
+  },
+  "On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.": {
+   "kind": "code",
+   "where": "the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)"
+  },
+  "On the Letter 5x5 sheet it is 5.98 in (152.0 mm).": {
+   "kind": "code",
+   "where": "targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5"
+  },
+  "There you can rename it, duplicate it, or delete it after GroupLab asks.": {
+   "kind": "code",
+   "where": "the library screen, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "Shoot it Mount the sheet flat, supported all over.": {
+   "kind": "decided",
+   "where": "the volunteer instructions, docs/VOLUNTEER-PACK.md, entry 113"
+  },
+  "For a load development sheet, fire one shot per bull, in order, starting at bull 1.": {
+   "kind": "decided",
+   "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
+  },
+  "Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10.": {
+   "kind": "decided",
+   "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
+  },
+  "GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both.": {
+   "kind": "code",
+   "where": "ScaleReference and StatedResolutionScale in src/GroupLab.Core/Marking; entry 171"
+  },
+  "For photographs: stand about 2.5 ft (75 cm) from the sheet; use the phone's main camera, not its wide or zoom lens; keep the whole sheet and all its corner squares in the frame; do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
+  },
+  "On a GroupLab sheet the rest happens on its own: GroupLab reads the sheet's printed codes to name its definition.": {
+   "kind": "code",
+   "where": "AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment"
+  },
+  "Every result is an ordinary mark that you can move, delete or reassign.": {
+   "kind": "code",
+   "where": "MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs"
+  },
+  "A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.": {
+   "kind": "measured",
+   "where": "the research article hole-is-not-the-bullet and photo-hole-size, with their data"
+  },
+  "Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a guess is marked as resting on a guess.": {
+   "kind": "code",
+   "where": "AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking"
+  },
+  "Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.": {
+   "kind": "code",
+   "where": "CompositePlot in src/GroupLab.App/CompositePlot.cs"
+  },
+  "Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.": {
+   "kind": "code",
+   "where": "MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: \"Dial 2 clicks left and 8 clicks up, at 0.1 mil a click\".": {
+   "kind": "code",
+   "where": "ShowZero in src/GroupLab.App/MainWindow.cs and Clicks.Describe (entry 169)"
+  },
+  "The table gives the CEP at 50, 90, 95 and 99 percent three ways.": {
+   "kind": "code",
+   "where": "FullFigures in src/GroupLab.App/MainWindow.Figures.cs"
+  },
+  "Session records The analysis's Report button saves the session as a PDF: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
+  },
+  "Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every \"why\".": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
+  },
+  "The ballistics screen The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.": {
+   "kind": "code",
+   "where": "the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs"
+  },
+  "When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.": {
+   "kind": "code",
+   "where": "UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs"
+  },
+  "Nothing is sent until you press send, and you can see what is in the package before you do.": {
+   "kind": "code",
+   "where": "ReportUploader and the report window, src/GroupLab.App (entry 164)"
+  },
+  "The settings Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics.": {
+   "kind": "code",
+   "where": "AutomaticMarking.Run and GroupAnalysis"
+  },
+  "Two loads that differ by 20 percent on five-shot groups cannot be told apart.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "GroupLab measures far more carefully, and then tells you what the number is worth.": {
+   "kind": "decided",
+   "where": "what GroupLab is for, DESIGN.md section 1"
+  },
+  "From five shots, the true dispersion lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "5 to 20 Prints each figure with its interval's real coverage, not a comfortable 95 percent.": {
+   "kind": "code",
+   "where": "GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9"
+  },
+  "01 Print a GroupLab sheet Twenty built-in sheets, printed at actual size.": {
+   "kind": "code",
+   "where": "scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "02 Shoot it One shot per bull, in order.": {
+   "kind": "decided",
+   "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
+  },
+  "03 Scan or photograph it A flat 600 dpi scan is best.": {
+   "kind": "measured",
+   "where": "research/scanner-traps and research/scans-against-photos"
+  },
+  "04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.": {
+   "kind": "code",
+   "where": "the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.": {
+   "kind": "code",
+   "where": "the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "the build plan, DESIGN.md section 21 and README's Planned"
+  },
+  "Get the donor pack Instructions and two targets · PDF Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "Reading targets Why a photo cannot tell you your bullet&#x27;s size The same holes measure 0.90 to 1.45 times the bullet depending on the light they were photographed in.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 17 One hole or two?": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 18 Curled, angled and wrinkled paper A target you have laid flat on a bench is not flat.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 2 A bullet hole is not the bullet A .308 bullet does not leave a .308 hole.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 20 Zeroing on a blank sheet with a hand-drawn cross You do not need a printed target to zero a rifle.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 5 How GroupLab reads a target From a photograph to a group size, in six steps, with what each one can get wrong and how you would know.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 6 When shots land on the wrong bull On a 25 bull sheet, a rifle that is not zeroed puts every shot nearer a bull it was not aimed at.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Reading targets 9 Scans against phone photos: how close is close enough?": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "We paired 59 range photographs with their flatbed scans and measured the gap.": {
+   "kind": "measured",
+   "where": "the article it summarizes, with that article's data and sources"
+  },
+  "A hole in a photograph sits about 0.03 in from where the scan puts it, which is a fifth of a decent group.": {
+   "kind": "measured",
+   "where": "the article it summarizes, with that article's data and sources"
+  },
+  "Measuring groups Measuring groups 12 Pooling groups: when two sheets are one load Forty shots tell you far more than twenty.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Range tests Range tests 19 Wind or rifle?": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Range tests 3 Did the primer matter?": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built How GroupLab is built 10 How GroupLab updates itself safely An updater that can be tricked into installing someone else&#x27;s file is worse than no updater.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Here is what GroupLab checks, what it cannot promise, and the bug that stopped every installed build from updating at all.": {
+   "kind": "measured",
+   "where": "the article it summarizes, with that article's data and sources"
+  },
+  "How GroupLab is built 24 Choosing the markers The little black squares on a GroupLab target are AprilTag 36h11.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built 25 Designing a target GroupLab can read Everything printed on a target sheet is something a hole detector might mistake for a hole.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built 26 What GroupLab sends from your computer Four things leave your machine, all of them only when you ask.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built 27 Nightly builds, from commit to installer Every change that passes its tests becomes an installer you can download within about half an hour.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built 28 Cutting the installer from 97 MB to 81 MB A third of what GroupLab shipped was debug symbols for two libraries that nothing would ever read.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "How GroupLab is built 7 Every upload is rebuilt from pixels A photograph you send is stripped of everything except the camera and the exposure.": {
+   "kind": "measured",
+   "where": "each card is its article's own title and description, backed by that article's evidence"
+  },
+  "Shoot a target | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "grouplab-donor-pack.pdf &#183; 4 pages, Letter &#183; 215 KB Download PDF Instructions only The two pages of steps, without the targets.": {
+   "kind": "code",
+   "where": "website/build.py page_shoot(): size and page count read from each file"
+  },
+  "grouplab-donor-instructions.pdf &#183; 2 pages, Letter &#183; 51 KB Download PDF Target with load block 25 bulls and a block for your load details.": {
+   "kind": "code",
+   "where": "website/build.py page_shoot(): size and page count read from each file"
+  },
+  "GL-CF25-LTR-D.pdf &#183; 1 page, Letter &#183; 65 KB Download PDF Target with sighters 25 bulls and a row of three sighter bulls.": {
+   "kind": "code",
+   "where": "website/build.py page_shoot(): size and page count read from each file"
+  },
+  "GL-CF25-LTR.pdf &#183; 1 page, Letter &#183; 99 KB Download PDF 1 Print it at actual size Letter or A4 paper, Actual size or 100 percent.": {
+   "kind": "code",
+   "where": "website/build.py page_shoot(): size and page count read from each file"
+  },
+  "It must be 152.0 mm, or 5.98 in 2 Fill in the block At least the date, the distance and the cartridge.": {
+   "kind": "code",
+   "where": "targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5"
+  },
+  "3 Mount it flat and shoot it Staple or tape it flat onto cardboard at the four corners.": {
+   "kind": "decided",
+   "where": "the volunteer instructions, docs/VOLUNTEER-PACK.md, entry 113"
+  },
+  "4 Photograph it before you take it down Four photographs on your phone's main camera at 1x: not the wide lens, not zoomed, no flash, your shadow off the sheet.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
+  },
+  "5 Send them as they came off the camera A 600 dpi flatbed scan too, if you have one.": {
+   "kind": "measured",
+   "where": "research/scanner-traps and research/scans-against-photos"
+  },
+  "Send your target photos JPEG, PNG, HEIC or TIFF Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "GroupLab is a test build that changes whenever the code does.": {
+   "kind": "decided",
+   "where": "entry 116 and entry 164: the report package names its build"
+  },
+  "A report with the build it came from is the most useful thing you can send.": {
+   "kind": "decided",
+   "where": "entry 116 and entry 164: the report package names its build"
+  },
+  "What is in the Discord 01 Check what is not done yet Some things are known to be missing or unproven.": {
+   "kind": "code",
+   "where": "the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()"
+  },
+  "What is not done yet 02 Make a report package In GroupLab, open the settings from the gear at the bottom left and choose Report a problem .": {
+   "kind": "code",
+   "where": "the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()"
+  },
+  "03 Send it Open an issue on GitHub, attach the zip, and add a line about what you were doing.": {
+   "kind": "code",
+   "where": "the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()"
+  },
+  "Shoot a target Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "The photos Up to 10 files, 30 MB each and 90 MB in total.": {
+   "kind": "code",
+   "where": "website/limits.json, which upload.php and the page both read (entry 173)"
+  },
+  "About the target Answer what you can be bothered to answer and leave the rest.": {
+   "kind": "decided",
+   "where": "entry 129 section 5: every question optional"
+  },
+  "The diameter, not the cartridge name, because that is what measures a hole: a 6.5 Creedmoor and a 6.5x55 both put a 0.264 in bullet through the paper.": {
+   "kind": "decided",
+   "where": "entry 129: the upload form asks for the diameter"
+  },
+  "I understand they may be published as part of GroupLab&#x27;s public test data on GitHub under the GPL-3.0 license, for anyone to download and use.": {
+   "kind": "decided",
+   "where": "the consent text, website/api/upload.php CONSENT_TEXT, entry 129"
+  },
+  "Send the photos Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "What GroupLab can measure .": {
+   "kind": "code",
+   "where": "website/build.py: the link to /what-can-be-measured/"
+  },
+  "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group center.": {
+   "kind": "code",
+   "where": "CompositePlot in src/GroupLab.App/CompositePlot.cs"
+  },
+  "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.": {
+   "kind": "code",
+   "where": "MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "It exists because a measurement you cannot check is a measurement you cannot argue with, and the whole point of measuring a group is to settle an argument about a load.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 19: every figure carries its reasoning"
+  },
+  "What this screen is for Everything else in GroupLab measures what your rifle did.": {
+   "kind": "code",
+   "where": "SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs"
+  },
+  "Fill in anything the record is missing; the page names the field when it cannot solve.": {
+   "kind": "code",
+   "where": "SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs"
+  },
+  "Dots are the shots about their own bulls, excluded ones left out, the cross is the group center, the dotted circle CEP 50 and the dashed circle CEP 90.": {
+   "kind": "code",
+   "where": "the Compare screen, src/GroupLab.App/MainWindow.Compare.cs"
+  },
+  "Sigma, mean radius and extreme spread, each with its 95 percent interval.": {
+   "kind": "code",
+   "where": "the Compare screen, src/GroupLab.App/MainWindow.Compare.cs"
+  },
+  "The extra fields are there because the ballistics page and the zero correction need them, and it says which one is missing when it cannot work something out.": {
+   "kind": "code",
+   "where": "SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs"
+  },
+  "Ten pages, one per screen, so you can see what using GroupLab is like before you download it.": {
+   "kind": "code",
+   "where": "scripts/counts.py tour-screens, from website/tour.json"
+  },
+  "Target library The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.": {
+   "kind": "code",
+   "where": "scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "Target library | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Tour &rsaquo; Target library Target library The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "The library holds the sheets GroupLab prints; a target from anywhere else is opened on the marking screen instead.": {
+   "kind": "code",
+   "where": "scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "The twenty that come with GroupLab cannot be edited.": {
+   "kind": "code",
+   "where": "scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "How many shots are marked and how many need review, so you know how much is left before you can trust the result.": {
+   "kind": "code",
+   "where": "the review pill, ReviewQueue in src/GroupLab.Core/Marking"
+  },
+  "Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it.": {
+   "kind": "code",
+   "where": "the tour's marking screenshot, rendered by the screenshot tests from a sample"
+  },
+  "A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large.": {
+   "kind": "code",
+   "where": "SheetReference.PrintScale, entry 171; ImperfectSheetTests"
+  },
+  "So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.": {
+   "kind": "code",
+   "where": "the print screen, src/GroupLab.App/PrintWindow.cs"
+  },
+  "Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.": {
+   "kind": "decided",
+   "where": "the print instructions, entry 107 and the print screen"
+  },
+  "Date, sheet, rifle, load, distance, how many shots, and the mean radius with its interval, so you can see at a glance which sessions are worth comparing without opening any of them.": {
+   "kind": "code",
+   "where": "the session records table, src/GroupLab.App/MainWindow.cs BuildSessions"
+  },
+  "The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record.": {
+   "kind": "code",
+   "where": "UnitSettings in src/GroupLab.Core/Marking/Units.cs; MarkingScreenTests.UnitsChangeWhatIsShownAndNothingThatIsStored"
+  },
+  "Two published statements said GroupLab can only measure a sheet it printed, and that a sheet printed at the wrong size cannot be recovered.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "The second was half true, and entry 152 got the other half wrong in this file : it said a shrunk sheet measures correctly, and entry 161 read the code and found that it does not.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "The corrected statement is below, and the entry 152 version is quoted in the log rather than left standing here.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "Entry 171 then answered question 49: a scan now corrects for the print scale and reports real inches.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "GroupLab always says which of these it used, because they are not equally good.": {
+   "kind": "code",
+   "where": "ScaleReference.Describe, shown in Show work (entry 169)"
+  },
+  "src/GroupLab.Core/Marking/StatedResolutionScale.cs holds the fourth, which refuses a photograph and refuses the 72 and 96 that a file gets when the thing that wrote it had nothing to say.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/StatedResolutionScale.cs"
+  },
+  "SyntheticScanTests.Test43APrintAt962PercentReportsItsScale proves exactly this: on a sheet printed at 96.2 percent, every bull centre is recovered in the sheet's own coordinates to within 0.001 in.": {
+   "kind": "code",
+   "where": "SyntheticScanTests.Test43APrintAt962PercentReportsItsScale"
+  },
+  "A scan's stated resolution is an absolute ruler, so GroupLab measures how large the sheet was printed and multiplies every distance by it: a group on a sheet printed at 96 percent reads its true size, and a hole's diameter is its true diameter.": {
+   "kind": "code",
+   "where": "SheetReference.PrintScale, entry 171"
+  },
+  "The results panel names the scale once it is more than a quarter of a percent from 100.": {
+   "kind": "code",
+   "where": "DetectionAdvice's print scale line, src/GroupLab.Core/Marking/DetectionAdvice.cs"
+  },
+  "This is entry 171's answer to question 49, and ImperfectSheetTests.AScanPrintedAt96PercentReadsTrueSizeAndAPhotographSaysWhyItDoesNot holds it.": {
+   "kind": "code",
+   "where": "ImperfectSheetTests.AScanPrintedAt96PercentReadsTrueSizeAndAPhotographSaysWhyItDoesNot"
+  },
+  "Where a file's stated resolution puts the sheet below 85 or above 115 percent, which is more likely a wrong resolution than a real print, nothing is corrected and the screen says so.": {
+   "kind": "code",
+   "where": "SheetReference.Correction believes 0.85 to 1.15"
+  },
+  "At the 100.3 percent one sheet here was printed at, it is 0.003 in on a one inch group, which is below everything else in the measurement.": {
+   "kind": "measured",
+   "where": "entry 161 section 6 and the printer-true-size article"
+  },
+  "At the 94 to 97 percent a \"fit to page\" print dialog produces, it is 3 to 6 percent, which is larger than the difference between two good loads.": {
+   "kind": "measured",
+   "where": "entry 161 section 6 and the printer-true-size article"
+  },
+  "# GroupLab **An open-source tool that measures how accurately a rifle shoots, and is honest about how little a small group actually tells you.** Free, GPL-3.0, no account, no ads, no paid tier.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 1"
+  },
+  "GroupLab is a working name and may change.": {
+   "kind": "decided",
+   "where": "docs/TRADEMARK-SEARCH.md"
+  },
+  "** ** is the website: what GroupLab is, how to use it, and where to download it.": {
+   "kind": "code",
+   "where": "website/, published by website.yml (entry 144)"
+  },
+  "--- ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml, after ci.yml passes (entry 119)"
+  },
+  "**It may be broken**, because passing the tests is not the same as somebody having used it, and the Windows installer updates itself when a newer one appears.": {
+   "kind": "decided",
+   "where": "entry 119 section 2"
+  },
+  "| | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day.": {
+   "kind": "code",
+   "where": ".github/workflows/package.yml; the platform statement"
+  },
+  "| | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later.": {
+   "kind": "decided",
+   "where": "entries 147 and 166, the platform statement; package.yml builds both bundles"
+  },
+  "| | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac.": {
+   "kind": "decided",
+   "where": "entries 147 and 166, the platform statement; package.yml builds both bundles"
+  },
+  "**Untested on a real Mac.** | **Every build here is unsigned**, so Windows will say \"Windows protected your PC\": click **More info**, then **Run anyway**.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software.": {
+   "kind": "decided",
+   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
+  },
+  "- **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
+  },
+  "- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.": {
+   "kind": "code",
+   "where": "README.md's generated platform section and the download page"
+  },
+  "From five shots, the rifle's true dispersion is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "Two loads that differ by 20 percent on five-shot groups are statistically indistinguishable.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "GroupLab measures the same thing far more carefully, and then tells you what the number is worth.": {
+   "kind": "decided",
+   "where": "what GroupLab is for, DESIGN.md section 1"
+  },
+  "Between five and twenty it prints the figure with the interval's **real** coverage rather than a comfortable \"95 percent\".": {
+   "kind": "code",
+   "where": "GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9"
+  },
+  "```mermaid flowchart TB A[\"1.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Shoot it, one shot per bull\"] C[\"3.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Register: find the markers, undo perspective, lens distortion and paper bend\"] E[\"5.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Detect: find every hole, by subtracting the artwork the sheet declares\"] F[\"6.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Assign each hole to the bull it belongs to\"] G[\"7.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Combine twenty-five bulls into one group\"] H[\"8.": {
+   "kind": "code",
+   "where": "the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative.": {
+   "kind": "code",
+   "where": "the README's screenshots, rendered from the committed sample by the screenshot tests"
+  },
+  "Two loads 11 percent apart, 25 shots each, p = 0.31, and the honest answer is that it would take 434 shots per load to tell.": {
+   "kind": "measured",
+   "where": "the load comparison example in docs/STATISTICS.md, from the committed sample"
+  },
+  "| ## Built with | | | |---|---| | **Language** | C#, on .NET 10 .": {
+   "kind": "code",
+   "where": "Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20"
+  },
+  "| | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia.": {
+   "kind": "code",
+   "where": "Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20"
+  },
+  "On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke.": {
+   "kind": "code",
+   "where": "Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20"
+  },
+  "**None of it ships or runs at runtime.** | **Why C# rather than Rust or Go.** The deciding argument was one language across three shells: a measurement core plus Windows, Android and iOS interfaces that must produce identical numbers.": {
+   "kind": "code",
+   "where": "Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20"
+  },
+  "## What is supported, and what is not **Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "**Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "### What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "### Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "### Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "### Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "### Reports from Linux and macOS are welcome A report is useful even when the answer is that it crashed on startup.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "| Phase | State | Gate | |---|---|---| | **0a.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Registration spike** | **Built, not proven** | worst bull center within 0.005 in on a 600 DPI scan of a printed sheet, and on an off-axis photograph of a sheet held flat | | **1.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Detection spike** | **Built, not proven** | at least 99 percent of holes found with no false positives, matched at 0.15 in, and the mounted photograph gate at 0.005 in | | **2.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Core and statistics** | **Built, not proven** | statistical output matches the R package `shotGroups` to numerical tolerance on shared test data | | **3.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Editor** | **Built, not proven** | a full 25-shot target with several misassignments corrected in under two minutes | | **4.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application | | **5.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Chronograph, solver, and comparison** | **Not started** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots | | **6.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Android** | **Not started** | camera capture and lens distortion fitted on the device | | **7.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Synchronization** | **Not started** | cloud provider adapters over three-tier storage | | **8.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "iOS** | **Not started** | built and signed on CI | | **9.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | ### What each phase holds **Phase 0a.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "- **Done.** A validator, and 20 built-in target sheets.": {
+   "kind": "code",
+   "where": "scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.": {
+   "kind": "code",
+   "where": "the compare-photos command, src/GroupLab.Cli/Measurement/PhotoVerb.cs"
+  },
+  "- **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Done.** The caliber entered as a cartridge name, such as 6.5 Creedmoor, or as the bullet's diameter in inches or in millimeters marked mm.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "Windows application.** - **Done.** A print screen that renders any built-in sheet to PDF at actual size.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Built, not proven.** Printing from inside GroupLab on Windows: the real print dialog, the sheet drawn at actual size by GroupLab itself, a refusal with its reason when the paper is not the sheet's or ink would fall in the printer's margin, and a confirmation naming the printer and the pages sent.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Built, not proven.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval and without exclusions, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every \"why\", and the version and identifiers on page 2.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Done.** GroupLab's mark in the header and the rail, and as the application's icon for Windows, Linux and macOS, drawn from one committed source.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Done.** The four themes of `DESIGN.md` section 19: dark, light, high contrast and follow system, all four from one set of tokens, each held to its contrast ratio by a test.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "- **Built, not proven.** A volunteer print pack: the print screen's \"Print a volunteer pack\" gives the sheet and one page of instructions together, generated from `docs/VOLUNTEER-PACK.md` at the sheet's own paper size, with its own distance from bull 1 to bull 5 to measure.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "Chronograph, solver, and comparison.** - **Built, not proven.** Chronograph strings entered by hand, with the reconciliation `DESIGN.md` section 15 requires: the readings are never assumed to line up with the shots, the in-order pairing is a proposal, a reading that belongs to no shot or a shot the chronograph missed is marked, and what is accepted is kept on the session.": {
+   "kind": "decided",
+   "where": "the README's Planned: each state set in the same commit as its feature, held by ReadmeTests"
+  },
+  "On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.": {
+   "kind": "code",
+   "where": "the Ballistics screen and the zero carry, src/GroupLab.App/MainWindow.Ballistics.cs"
+  },
+  "It waits on the license permission under License, for distribution rather than for development.": {
+   "kind": "decided",
+   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
+  },
+  "It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21, Phase 9"
+  },
+  "### Deferred, and why **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down.": {
+   "kind": "decided",
+   "where": "README's Deferred and ReadmeTests"
+  },
+  "Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.": {
+   "kind": "decided",
+   "where": "README's Deferred and ReadmeTests"
+  },
+  "A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.": {
+   "kind": "decided",
+   "where": "README's Deferred and ReadmeTests"
+  },
+  "### Platforms **What is supported, and what has been checked on real hardware, is the platform statement above,** generated from its one source, `docs/PLATFORM-SUPPORT.md`.": {
+   "kind": "code",
+   "where": "scripts/platform-support.py writes it into README.md"
+  },
+  "**Linux and macOS are built and tested alongside Windows, not after it.** Every push builds and runs the whole suite on all three.": {
+   "kind": "code",
+   "where": ".github/workflows/ci.yml: the test matrix on windows, ubuntu and macos"
+  },
+  "A second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record, which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers.": {
+   "kind": "code",
+   "where": ".github/workflows/gate-record.yml"
+  },
+  "Both reproduce the record: every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it.": {
+   "kind": "code",
+   "where": ".github/workflows/gate-record.yml"
+  },
+  "**The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real data.": {
+   "kind": "decided",
+   "where": "entry 147 section 3"
+  },
+  "Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.": {
+   "kind": "decided",
+   "where": "entry 147 section 3"
+  },
+  "**Mobile comes after the desktop, Android first.** Android is Phase 6.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21"
+  },
+  "iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force.": {
+   "kind": "decided",
+   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
+  },
+  "## What GroupLab is not - **Not compatible with OnTarget, in any way.** No OnTarget PC or OnTarget TDS file format, target design or import path, and never will be.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 2 and docs/PATENT-SEARCH.md: no compatibility, by decision"
+  },
+  "- **Not a commercial product.** No paid tier, no license key, no upsell.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 1"
+  },
+  "**[DESIGN.md](DESIGN.md)**, the design document: what GroupLab is for, how it works, and the build plan.": {
+   "kind": "code",
+   "where": "the files themselves"
+  },
+  "**[docs/TARGET-SCHEMA.md](docs/TARGET-SCHEMA.md)**, the GLTD 1.0 format, including the conformance tests of section 10.": {
+   "kind": "code",
+   "where": "the files themselves"
+  },
+  "They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the license named in the consent text contributors agreed to.": {
+   "kind": "decided",
+   "where": "entry 37: donated photographs live in their own repository"
+  },
+  "The Phase 0 and Phase 1 scans under `scans/` stay here, because committed tests and gate records read them by path.": {
+   "kind": "code",
+   "where": "the gate records and tests read scans/ by path"
+  },
+  "In short, with the .NET 10 SDK: ``` dotnet build dotnet test dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf ``` GroupLab builds and its tests pass on Windows, Linux and macOS , and every push runs the suite on all three.": {
+   "kind": "code",
+   "where": ".github/workflows/ci.yml"
+  },
+  "Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml and package.yml"
+  },
+  "## License **GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.": {
+   "kind": "code",
+   "where": "LICENSE, and the footer in website/build.py shell()"
+  },
+  "**An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this.": {
+   "kind": "decided",
+   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
+  },
+  "## Included in the source ### AprilTag tag36h11 code table `src/GroupLab.Core/Rendering/Markers/Tag36h11.cs` contains the 587 codes and the bit layout of the `tag36h11` family, generated from `tag36h11.c` of the AprilTag reference implementation, https://github.com/AprilRobotics/apriltag.": {
+   "kind": "code",
+   "where": "THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts"
+  },
+  "``` Copyright (C) 2013-2016, The Regents of The University of Michigan.": {
+   "kind": "code",
+   "where": "THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts"
+  },
+  "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 1.": {
+   "kind": "code",
+   "where": "THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts"
+  },
+  "``` Copyright © 2017 IBM Corp.": {
+   "kind": "code",
+   "where": "THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts"
+  },
+  "with Reserved Font Name \"Plex\" ``` They are licensed under the SIL Open Font License, Version 1.1.": {
+   "kind": "code",
+   "where": "THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts"
+  },
+  "It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.": {
+   "kind": "decided",
+   "where": "entry 131 section 2: a flyer is the shooter's call"
+  },
+  "# What is supported, and what is not NOTES-FROM-PLANNING.md entry 147 section 3.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "**This file is the one source of this statement.** It is word for word as Alan settled it, and it is not to be reworded; entry 166 section 4 replaced the macOS paragraph with what the first tester on a real Mac checked, and nothing more.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears on the download page and in `README.md`, both generated from here, and every release that carries a macOS asset gets one line generated from its lead sentences with a link to the download page, because a published release is frozen and a whole copy on it goes stale.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "- `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.": {
+   "kind": "code",
+   "where": "scripts/platform-support.py and MacBuildsTests hold the one source"
+  },
+  "--- **Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## Other Linux builds The published Linux build is x86-64.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "## Reports from Linux and macOS are welcome A report is useful even when the answer is that it crashed on startup.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "# The 2026-09-14 history rewrite: old and new commit ids On 2026-09-14, `git filter-branch --index-filter` rewrote every local branch of this repository to replace sixteen Phase 0 phone photographs under `scans/phase0/` with copies scrubbed of their location metadata.": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "Thirteen of them carried the GPS coordinates of where they were taken, and the repository was about to be published (`docs/NOTES-FROM-PLANNING.md` entries 29 and 30, `docs/QUESTIONS-FOR-PLANNING.md` question 13).": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "- **Branches rewritten:** `main`, `phase-0`, `phase-0a`, `phase-1` and one leftover worktree branch.": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "- **Commits:** 59 before the rewrite.": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "42 changed id, listed below, and 17 did not.": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "- **The pre-rewrite history** is kept outside the repository in Alan's bundle, `grouplab-prerewrite-2026-09-14.bundle`, until the rewritten history is verified in a fresh repository.": {
+   "kind": "measured",
+   "where": "a dated record of the 2026-09-14 rewrite, entries 29 and 30"
+  },
+  "# Trying GroupLab ## What it is, in three sentences GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot.": {
+   "kind": "decided",
+   "where": "what GroupLab is, DESIGN.md section 1"
+  },
+  "Windows may say **\"Windows protected your PC\"**.": {
+   "kind": "decided",
+   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "On 2026-09-21 two machines installed `grouplab-setup-win-x64.exe` from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21, entries 119 to 123"
+  },
+  "### One reinstall by hand, once **`v0.2.0-nightly.25` is the first build that can update itself.** If you are on anything earlier, the update will not work and it is not your machine's fault: the signature those builds check was written differently on the machine that made them, so they reject a perfectly good update.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21: the first self-update run end to end, entry 123"
+  },
+  "The update from `nightly.25` to `nightly.26` was then run end to end on a real machine, with real clicks: 97 MB downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back on the screen it was on.": {
+   "kind": "measured",
+   "where": "measured 2026-09-21: the first self-update run end to end, entry 123"
+  },
+  "- Print with **Open to print**, and choose Actual size or 100 percent, never Fit to page.": {
+   "kind": "decided",
+   "where": "the print instructions, entry 107 and the print screen"
+  },
+  "- **Measure bull 1 to bull 5 before you shoot:** on the Letter 5x5 sheet it is 5.98 in (152.0 mm).": {
+   "kind": "code",
+   "where": "targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5"
+  },
+  "- Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at 600 dpi.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
+  },
+  "- **Two of the project's own gates have no material yet**: no 25-shot editor timing and no blank-paper photograph.": {
+   "kind": "measured",
+   "where": "the gates in docs/PHASE1-RESULTS.md and the mounted photograph gate measured on 59 photographs of 2026-09-20"
+  },
+  "# GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {
+   "kind": "decided",
+   "where": "what GroupLab is, DESIGN.md section 1"
+  },
+  "![The target library, with a built-in sheet chosen](figures/screens/current/library-light-1400x900.png) Print opens the print screen on the sheet you chose.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "- **Print** (on Windows) prints from inside GroupLab at actual size.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "![The print screen](figures/screens/current/print-light-1400x900.png) **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "Shoot it - Mount the sheet flat, supported all over.": {
+   "kind": "decided",
+   "where": "the volunteer instructions, docs/VOLUNTEER-PACK.md, entry 113"
+  },
+  "- For a load development sheet, fire one shot per bull, in order, starting at bull 1.": {
+   "kind": "decided",
+   "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
+  },
+  "For photographs: - stand about 2.5 ft (75 cm) from the sheet; - use the phone's main camera, not its wide or zoom lens; - keep the whole sheet and all its corner squares in the frame; - do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
+  },
+  "GroupLab reads the sheet's printed codes to name its definition.": {
+   "kind": "code",
+   "where": "AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment"
+  },
+  "![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) The pill in the header counts the marks that need you.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.** The queue works from the keyboard: - **Space** goes to the next item.": {
+   "kind": "code",
+   "where": "AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking"
+  },
+  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.": {
+   "kind": "code",
+   "where": "MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's Report button saves the session as a PDF: - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
+  },
+  "![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png)": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "# What GroupLab can measure, and what the scale comes from NOTES-FROM-PLANNING.md entries 152, 161 and 171.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "The second was half true, and entry 152 got the other half wrong **in this file**: it said a shrunk sheet measures correctly, and entry 161 read the code and found that it does not.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "`SyntheticScanTests.Test43APrintAt962PercentReportsItsScale` proves exactly this: on a sheet printed at 96.2 percent, every bull centre is recovered in the sheet's own coordinates to within 0.001 in.": {
+   "kind": "code",
+   "where": "SyntheticScanTests.Test43APrintAt962PercentReportsItsScale"
+  },
+  "**On a scan, every distance is in real inches.** A scan's stated resolution is an absolute ruler, so GroupLab measures how large the sheet was printed and multiplies every distance by it: a group on a sheet printed at 96 percent reads its true size, and a hole's diameter is its true diameter.": {
+   "kind": "code",
+   "where": "SheetReference.PrintScale, entry 171"
+  },
+  "This is entry 171's answer to question 49, and `ImperfectSheetTests.AScanPrintedAt96PercentReadsTrueSizeAndAPhotographSaysWhyItDoesNot` holds it.": {
+   "kind": "code",
+   "where": "ImperfectSheetTests.AScanPrintedAt96PercentReadsTrueSizeAndAPhotographSaysWhyItDoesNot"
+  },
+  "## So why print at actual size 1.": {
+   "kind": "decided",
+   "where": "entries 152, 161 and 171"
+  },
+  "What is supported, and what is not Windows is the supported platform.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166"
+  },
+  "The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them.": {
+   "kind": "measured",
+   "where": "the mounted photograph gate, measured on Alan's 59 photographs of 2026-09-20 (entry 130 section 6b, docs/notes/archive/results-milestones.md)"
+  },
+  "Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
+   "kind": "code",
+   "where": "the print screen's check line and targets/GL-CF25-LTR.gltd.json"
+  },
+  "**The Intel build has never been run on a Mac.** The tests run on macOS on every build.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166"
+  },
+  "### Other Linux builds The published Linux build is x86-64.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166"
+  },
+  "## Planned Every phase below is `DESIGN.md` section 21's, with its gate.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "Format and renderer** | **Done** | conformance test 43: a rendered definition analyzed as a scan recovers every bull center within 0.001 in | | **0.": {
+   "kind": "decided",
+   "where": "DESIGN.md section 21's phases, held to the README by ReadmeTests"
+  },
+  "A name is offered only where two published sources agree on its diameter (entry 163); a designation typed as a number, such as .38 or 7.62 mm, is still refused, because a caliber's name is usually not its diameter.": {
+   "kind": "code",
+   "where": "CartridgeTable in src/GroupLab.Core/Marking/CartridgeTable.cs, entry 163"
+  },
+  "## Reading what it shows you ![The analysis](figures/screens/current/analysis-light-1400x900.png) - **The plot** draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.": {
+   "kind": "code",
+   "where": "CompositePlot in src/GroupLab.App/CompositePlot.cs"
+  },
+  "- **Linux and macOS** are built and tested on every push.": {
+   "kind": "code",
+   "where": ".github/workflows/ci.yml: the test matrix on windows, ubuntu and macos"
+  },
+  "On a GroupLab sheet the rest happens on its own: 1.": {
+   "kind": "code",
+   "where": "AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs"
+  },
+  "- **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every \"why\".": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
+  },
+  "![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.": {
+   "kind": "code",
+   "where": "the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs"
+  },
+  "`src/GroupLab.Core/Marking/StatedResolutionScale.cs` holds the fourth, which refuses a photograph and refuses the 72 and 96 that a file gets when the thing that wrote it had nothing to say.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/StatedResolutionScale.cs"
+  },
+  "Installer Recommended grouplab-setup-win-x64.exe Windows 10 and 11.": {
+   "kind": "code",
+   "where": "package-windows.ps1 and .github/workflows/package.yml build it; ci.yml tests on windows-latest"
+  },
+  "No administrator rights needed Keeps itself up to date: asks first, then updates in the background Download installer Zip grouplab-win-x64.zip Windows 10 and 11.": {
+   "kind": "code",
+   "where": "PrivilegesRequired=lowest in packaging/windows/grouplab.iss; src/GroupLab.Core/Updates/UpdateRun.cs asks, then installs silently (entry 119)"
+  },
+  "- **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.": {
+   "kind": "code",
+   "where": "samples/ and samples/PROVENANCE.md, packaged by scripts/package-windows.ps1"
+  }
+ },
+ "rules": [
+  {
+   "surface": "^docs/RELEASE-NOTES\\.md$|^site:releases/",
+   "kind": "code",
+   "where": "each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing"
+  },
+  {
+   "surface": "^docs/(OVERNIGHT-\\d{4}-\\d{2}-\\d{2}|PHASE0-BRIEF|PHASE0-SPIKE-BRIEF|PHASE0-PRELIM|PHASE0-PRINT-PROTOCOL|PHASE1-BRIEF|PHASE1-PAPER-PROTOCOL|phase0a-plan|SPEC-ERRATA)\\.md$",
+   "kind": "decided",
+   "where": "a dated brief, plan or run record, kept as written; the entry it records is its backing, and it is not a statement about today"
+  },
+  {
+   "surface": "^docs/(PATENT-SEARCH|TRADEMARK-SEARCH)\\.md$",
+   "kind": "measured",
+   "where": "a dated search, recorded with its date and sources in the document itself"
+  },
+  {
+   "surface": "^(CLAUDE|CONTRIBUTING|START-HERE)\\.md$",
+   "kind": "decided",
+   "where": "working rules, each naming the NOTES-FROM-PLANNING.md entry that set it"
+  },
+  {
+   "surface": "^docs/STATISTICS\\.md$",
+   "kind": "measured",
+   "where": "derived in its own section and held by tests/GroupLab.Core.Tests/Statistics"
+  },
+  {
+   "surface": "^docs/(TARGET-SCHEMA|TARGET-LIBRARY)\\.md$",
+   "kind": "code",
+   "where": "the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests"
+  },
+  {
+   "surface": "^docs/CALIBRES\\.md$",
+   "kind": "code",
+   "where": "generated by `grouplab calibres` from src/GroupLab.Core/Marking/CalibreList.cs and CartridgeTable.cs"
+  },
+  {
+   "surface": "^docs/(FIDUCIAL-DECISION|DETECTION-PIPELINE|BALLISTICS-VALIDATION|PERFORMANCE)\\.md$",
+   "kind": "measured",
+   "where": "measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md"
+  },
+  {
+   "surface": "^docs/(UPDATES|CRASH-REPORTING|SESSION-SCHEMA|VOLUNTEER-PACK)\\.md$",
+   "kind": "code",
+   "where": "describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs"
+  },
+  {
+   "surface": "^(DESIGN\\.md|docs/WEBSITE\\.md|docs/RESEARCH\\.md)$",
+   "kind": "decided",
+   "where": "the design as decided, section by section, in NOTES-FROM-PLANNING.md"
+  },
+  {
+   "surface": "^SAMPLE-NOTES\\.md$",
+   "kind": "measured",
+   "where": "measured on the committed samples, samples/PROVENANCE.md"
+  },
+  {
+   "surface": "^site:research/aim\\-points\\-by\\-optic\\-class/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources and its data files, data from Planned; results pending"
+  },
+  {
+   "surface": "^site:research/blank\\-sheet\\-zero/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/can\\-you\\-see\\-the\\-bull/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)"
+  },
+  {
+   "surface": "^site:research/cep\\-explained/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026"
+  },
+  {
+   "surface": "^site:research/choosing\\-the\\-markers/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/curled\\-angled\\-paper/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/designing\\-a\\-readable\\-target/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/hole\\-is\\-not\\-the\\-bullet/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/how\\-grouplab\\-reads\\-a\\-target/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/how\\-many\\-shots/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from Closed-form statistics and simulation, seed 2026"
+  },
+  {
+   "surface": "^site:research/mean\\-radius\\-or\\-extreme\\-spread/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from simulation with seed 2026"
+  },
+  {
+   "surface": "^site:research/moa\\-mils\\-inches/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from Worked example, one simulated group, seed 2026"
+  },
+  {
+   "surface": "^site:research/nightly\\-builds/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/one\\-hole\\-or\\-two/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/photo\\-hole\\-size/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources and its data files, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/photographing\\-targets/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources and its data files, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/pooling\\-groups/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/primer\\-comparison/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/printer\\-true\\-size/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources and its data files, data from GroupLab Phase 0 print tests, September 2026"
+  },
+  {
+   "surface": "^site:research/range\\-test\\-log/",
+   "kind": "measured",
+   "where": "the article's own evidence: 0 sources and its data files, data from Running log; latest entry 2026-09-23"
+  },
+  {
+   "surface": "^site:research/safe\\-updates/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/scanner\\-traps/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources and its data files, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/scans\\-against\\-photos/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/smaller\\-installer/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/uploads\\-rebuilt\\-from\\-pixels/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/velocity\\-sd\\-small\\-samples/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026"
+  },
+  {
+   "surface": "^site:research/what\\-grouplab\\-sends/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+  },
+  {
+   "surface": "^site:research/when\\-to\\-adjust\\-zero/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources and its data files, data from Simulation, seed 2026"
+  },
+  {
+   "surface": "^site:research/wind\\-or\\-rifle/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/wrong\\-bull/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  }
+ ]
+}

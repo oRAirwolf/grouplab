@@ -196,9 +196,11 @@ def extract() -> int:
              "one that matters.", "", "---", ""]
 
     by_surface: dict[str, list[tuple[int, str, str, str]]] = defaultdict(list)
+    read = 0
     for name, i, s in rows:
         kind, where = backing_for(name, s, book)
         kinds[kind] += 1
+        read += s in book.get("backed", {})
         by_surface[name].append((i, s, kind, where))
 
     lines.append("## The count")
@@ -208,6 +210,11 @@ def extract() -> int:
     for kind in ("code", "measured", "decided", "unbacked"):
         lines.append(f"| {kind} | {kinds.get(kind, 0)} |")
     lines.append(f"| **total** | **{len(rows)}** |")
+    lines.append("")
+    lines.append(f"**{read}** of them were read one sentence at a time and their backing written against the sentence. The other "
+                 f"**{len(rows) - read}** are classified by a rule that says what their document is: a dated record, a specification the "
+                 "code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a "
+                 "reading, and a sentence a rule covers is only as checked as its document.")
     lines.append("")
 
     lines.append("## The claims")

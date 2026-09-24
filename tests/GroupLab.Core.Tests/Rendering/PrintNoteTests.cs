@@ -63,7 +63,7 @@ public class PrintNoteTests
         Assert.Contains("300 yd", tiled.Summary, StringComparison.Ordinal);
         Assert.Contains("4 sheets", tiled.Summary, StringComparison.Ordinal);
         Assert.Contains("Letter, 215.9 by 279.4 mm", sheets.Single(s => s.File == "GL-CF25-LTR.gltd.json").Summary, StringComparison.Ordinal);
-        Assert.Equal("Centrefire load development", sheets[0].Family);
+        Assert.Equal("Centerfire load development", sheets[0].Family);
     }
 
     private static (double X0, double Y0, double X1, double Y1) Box(SceneItem item) => item switch

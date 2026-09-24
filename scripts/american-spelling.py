@@ -37,7 +37,7 @@ REPO = Path(__file__).resolve().parents[1]
 
 # British form -> American form, whole words only, case kept.
 WORDS = {
-    "centre": "center", "centres": "centers", "centred": "centered", "centring": "centering", "centreline": "centerline",
+    "centre": "center", "centres": "centers", "centrefire": "centerfire", "centred": "centered", "centring": "centering", "centreline": "centerline",
     "calibre": "caliber", "calibres": "calibers",
     "analyse": "analyze", "analysed": "analyzed", "analysing": "analyzing", "analyser": "analyzer",
     "colour": "color", "colours": "colors", "coloured": "colored", "colouring": "coloring", "colourful": "colorful",

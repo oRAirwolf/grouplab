@@ -22,7 +22,7 @@ Generated from `src/GroupLab.Core/Marking/cartridges.json`. Every cartridge here
 | Bullet | Family | Cartridges | Easily mistaken for |
 |---|---|---|---|
 | 0.204 in (5.18 mm) | .20 calibre | .204 Ruger |  |
-| 0.224 in (5.69 mm) | .22 centrefire | .223 Remington, .22-250 Remington, .222 Remington, .22 Hornet |  |
+| 0.224 in (5.69 mm) | .22 centerfire | .223 Remington, .22-250 Remington, .222 Remington, .22 Hornet |  |
 | 0.243 in (6.17 mm) | 6 mm | .243 Winchester, 6mm BR |  |
 | 0.257 in (6.53 mm) | .25 calibre | .25-06 Remington, .257 Roberts, .257 Weatherby Magnum, .250 Savage | 0.264 in |
 | 0.264 in (6.71 mm) | 6.5 mm | 6.5 Creedmoor, 6.5x55 Swedish, .260 Remington, 6.5 Grendel, 26 Nosler | 0.257 in |

@@ -997,6 +997,52 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 159: every published claim, and what backs it
+
+**The register.** `scripts/claims.py` reads what a reader sees, the built site, the README, the root documents and `docs/`, and finds
+**3161 checkable sentences** on 94 surfaces. Every one is backed: **851 by code**, **1279 by a measurement**, **1031 by a decision**,
+**0 unbacked**. `docs/CLAIMS.md` lists them all with their backing; `docs/claims-backing.json` is where the backing is written.
+
+**How they were backed, said plainly.** 389 were read one sentence at a time, and each has its own line naming the file and symbol, the
+measurement and its date, or the entry. They are everything a shooter reads: the README, the home, download, support, upload and tour
+pages, both guides, the platform statement and what-can-be-measured. The other 2772 are classified by eleven document rules and thirty
+article rules, which say what their document is. The logs and briefs are dated records. The schema and library are specifications the
+code implements and the conformance tests hold. The caliber list and release notes are generated. Each research article is backed by
+the data files, data date and sources in its own front matter. **A rule is not a reading**, and the register says how many rest on one.
+Sixteen research articles have no sources in their front matter and are not published; if one is published, its sentences have no rule,
+and the check fails until they are backed.
+
+**What was wrong, and is corrected.** Before this run, in 227917a: the home page's twenty-two sheets against the tour's twenty; the
+README saying Windows only; both guides calling the caliber the single most useful thing, which entry 161 contradicted; a stale commit
+count. This run:
+
+| where | what it said | what is true |
+|---|---|---|
+| README, Platforms | Windows is "the only platform offered as a download today"; macOS "nobody has ever run one", "labeled untested" | all three are published, and the Apple silicon build has run on one Mac; the section now defers to the generated statement instead of being a second copy of it |
+| README, download table | the Apple silicon build "Untested on a real Mac" | run on one real Mac; a test now holds the table to the download page and the statement |
+| README, Planned | the caliber is a diameter and nothing else | since entry 163 a cartridge name is accepted where two sources agree |
+| testing guide | "the macOS build is not offered for download" | both macOS builds are on the download page |
+| testing guide | "no mounted photograph set" | the gate has 59 photographs of 2026-09-20, and about half could not be read |
+| user guide, section 10 | GroupLab "can read them as one group" | pooling several sheets is not built; question 34 is still open. **A claim no screen reaches** |
+| home page | the analysis shows sigma among the figures in view | since entry 169 sigma is under Advanced |
+| research article, designing a readable target | "twenty-two built-in sheets", twice | twenty; the two tiled layouts are the same sheets on six pages |
+| DESIGN.md, a dated protocol | twenty typed; twenty-two typed | counted, and "every built-in sheet" |
+| DESIGN.md | a measurement with its unit missing, where FIDUCIAL-DECISION.md has it | the unit added |
+| the cartridge list and the library | ".22 centrefire", "Centrefire load development" | the spelling entry 169 set, which its sweep had missed |
+
+**Contradictions by shape.** Three count flags, all legitimate (different sheets have different bull counts). Nineteen stale-worded
+sentences, "today", "not yet", "at present": each read, and every one is either a dated record or true by a mechanism, such as the guides'
+pictures, which are rendered from the newest build every week; none changed. Twelve near-duplicates: templated release lines differing in
+their values, and the one missing unit above. Claims about another product: the README's "not compatible with OnTarget" is Alan's
+decision and states what GroupLab is not; the patent and trademark searches are dated records. All kept.
+
+**What stops it happening again.** The README's Platforms section reads from the platform statement instead of restating it. Counts are
+spans from `scripts/counts.py`: the tour's screens, the donor PDFs' pages, read from the files; DESIGN.md and the research article joined
+its documents. `ClaimsAboutMeasuringTests` bans every false sentence above so the wording cannot come back, and holds the README's Mac rows to
+the download page. **CI's site job runs `scripts/claims.py --check`**, so a new or changed sentence with nothing behind it fails the build,
+and CLAUDE.md makes the backing part of the commit that writes the sentence. The README is now in the spelling sweep too; the drift it had
+from its platform source, which the sweep caused, was caught and fixed on the way.
+
 ## Entry 185: the releases page, and the next nightly's notes
 
 **The rolling `nightly` release is needed.** The updater reads its manifest from

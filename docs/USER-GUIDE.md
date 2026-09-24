@@ -201,7 +201,7 @@ If an update ever fails, the build you had is still installed and still works. N
 
 ## 10. Comparing several sheets at once
 
-Where several sheets were shot with the same load, GroupLab can read them as one group. It is not a matter of adding the numbers up: several sheets have several centers, and what a pooled figure means depends on which center you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.
+Reading several sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: several sheets have several centers, and what a pooled figure means depends on which center you measure from, which is still being decided. Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals.
 
 ## 11. If something goes wrong
 

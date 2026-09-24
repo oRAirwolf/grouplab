@@ -25,7 +25,7 @@ REPO = Path(__file__).resolve().parent.parent
 
 # The documents that carry generated counts. A document not listed here is not rewritten, which is
 # deliberate: the logs quote old numbers on purpose.
-DOCUMENTS = ["README.md", "docs/USER-GUIDE.md", "docs/TESTING-GUIDE.md"]
+DOCUMENTS = ["README.md", "DESIGN.md", "docs/USER-GUIDE.md", "docs/TESTING-GUIDE.md", "website/research/designing-a-readable-target.md"]
 
 SPAN = re.compile(r"<!--count:(?P<name>[a-z-]+)(?::(?P<form>words|Words|digits))?-->(?P<said>.*?)<!--/count-->")
 

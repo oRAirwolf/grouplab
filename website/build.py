@@ -35,7 +35,7 @@ from fontTools.ttLib import TTFont
 from PIL import Image
 
 # NOTES-FROM-PLANNING.md entry 159 section 5.2: a number that counts a thing in this repository is computed from
-# the thing it counts. The home page said twenty-two built-in sheets while the tour said twenty, both typed by hand.
+# the thing it counts. The home page counted the two tiled layouts as sheets while the tour did not, both typed by hand.
 import importlib.util as _importlib_util
 
 _spec = _importlib_util.spec_from_file_location("counts", Path(__file__).resolve().parent.parent / "scripts" / "counts.py")
@@ -395,7 +395,7 @@ def page_home() -> str:
 <li class="panel"><span class="mono num">01</span><h3>Print a GroupLab sheet</h3><p>{count_words('sheets', True)} built-in sheets, printed at actual size. Registration markers and QR codes carry the sheet's full definition.</p></li>
 <li class="panel"><span class="mono num">02</span><h3>Shoot it</h3><p>One shot per bull, in order. Write your load in the block at the bottom, or print it filled in.</p></li>
 <li class="panel"><span class="mono num">03</span><h3>Scan or photograph it</h3><p>A flat 600 dpi scan is best. A photograph works too, even with the sheet still stapled to the board.</p></li>
-<li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, sigma, CEP, extreme spread and the zero correction, each with its interval and the reasoning one click away.</p></li>
+<li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.</p></li>
 </ol>
 <div class="note note-teal"><span class="mono">Any target</span><p>A store-bought target or blank paper can be marked by hand: set a known length, tap each impact, and the same statistics run.</p></div>
 </section>
@@ -416,7 +416,7 @@ def page_home() -> str:
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>
-<div class="note note-teal"><span class="mono">Every screen</span><p>The <a href="/tour/">tour</a> has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there. It is the quickest way to see whether GroupLab suits you before you download it.</p></div>
+<div class="note note-teal"><span class="mono">Every screen</span><p>The <a href="/tour/">tour</a> has a page for each of the {count_words('tour-screens')} screens: what it is for, what you are looking at, and what you would do there. It is the quickest way to see whether GroupLab suits you before you download it.</p></div>
 </section>
 
 <section class="wrap section last">
@@ -537,8 +537,11 @@ def page_download() -> str:
 
 
 def page_shoot() -> str:
-    def pdf(title: str, file: str, desc: str, pages: str, primary: bool = False) -> str:
+    def pdf(title: str, file: str, desc: str, paper: str, primary: bool = False) -> str:
+        # Entry 159 section 5.2: the page count is read from the file, like its size, never typed beside it.
         size_kb = (DONOR / file).stat().st_size // 1024
+        count = len(re.findall(rb"/Type\s*/Page[^s]", (DONOR / file).read_bytes()))
+        pages = f"{count} page{'s' if count != 1 else ''}, {paper}"
         return f"""<div class="panel pdf-row{' card-rec' if primary else ''}">
 {ICON_PDF}
 <div class="pdf-text"><strong>{title}</strong><span>{desc}</span><span class="mono faint small">{file} &#183; {pages} &#183; {size_kb} KB</span></div>
@@ -558,10 +561,10 @@ def page_shoot() -> str:
 {f'<div class="actions">{btn("Send your target", SEND, True, "Already shot one? Send the photos")}</div>' if limits().get("open") else ""}
 </div>
 <div class="stack tight">
-{pdf("Donor pack", "grouplab-donor-pack.pdf", "The instructions and both targets, ready to print.", "4 pages, Letter", True)}
-{pdf("Instructions only", "grouplab-donor-instructions.pdf", "The two pages of steps, without the targets.", "2 pages, Letter")}
-{pdf("Target with load block", "GL-CF25-LTR-D.pdf", "25 bulls and a block for your load details.", "1 page, Letter")}
-{pdf("Target with sighters", "GL-CF25-LTR.pdf", "25 bulls and a row of three sighter bulls.", "1 page, Letter")}
+{pdf("Donor pack", "grouplab-donor-pack.pdf", "The instructions and both targets, ready to print.", "Letter", True)}
+{pdf("Instructions only", "grouplab-donor-instructions.pdf", "The two pages of steps, without the targets.", "Letter")}
+{pdf("Target with load block", "GL-CF25-LTR-D.pdf", "25 bulls and a block for your load details.", "Letter")}
+{pdf("Target with sighters", "GL-CF25-LTR.pdf", "25 bulls and a row of three sighter bulls.", "Letter")}
 </div>
 </section>
 <section class="wrap section two-col top last">
@@ -1469,7 +1472,7 @@ def page_tour_index() -> str:
     body = f"""
 <section class="wrap stack">
 <h1>A tour of GroupLab</h1>
-<p class="lead">Every screen, what it is for, and what you would do on it. Ten pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
+<p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
 <p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody's photographs.</p>
 <div class="research-grid">{"".join(cards)}</div>
 </section>

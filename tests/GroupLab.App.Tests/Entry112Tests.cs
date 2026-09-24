@@ -287,7 +287,7 @@ public class Entry112Tests
             Settle();
             Assert.True(window.ShowingLibrary);
             var rows = window.LibraryRows;
-            Assert.Equal("# Centrefire load development", rows[0]);
+            Assert.Equal("# Centerfire load development", rows[0]);
             Assert.Contains("GroupLab 5x5 Load Development, Letter", rows);
             Assert.Contains("# " + OwnSheets.Family, rows);
 
