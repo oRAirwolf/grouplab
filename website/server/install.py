@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -127,6 +128,19 @@ HESTIA_CONF = Path("/home/airwolf/conf/web")
 CONFIG_BACKUPS = Path("/home/airwolf/backups/grouplab.org/config")
 
 
+def keep_newest_backup(backup: Path) -> None:
+    """
+    Removes this installer's older dated backups of the same file, entry 178 section 5: /usr/local/sbin had three old copies of the sync
+    script after two installs and a hot fix, and backups kept for ever pile up exactly as scratch files do. Only files of this installer's
+    own name.YYYYMMDD-HHMMSS.bak shape are touched, so a copy a person made by hand under another name stays.
+    """
+    prefix = backup.name.rsplit(".", 2)[0]
+    shape = re.compile(re.escape(prefix) + r"\.\d{8}-\d{6}\.bak")
+    for older in backup.parent.glob(prefix + ".*.bak"):
+        if older != backup and shape.fullmatch(older.name):
+            older.unlink(missing_ok=True)
+
+
 def backup_path(target: Path) -> Path:
     """Where the old copy of a replaced file is kept: beside it, except in a HestiaCP web configuration folder, where it would be loaded."""
     stamp = time.strftime("%Y%m%d-%H%M%S")
@@ -160,6 +174,7 @@ def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
         backup = backup_path(target)
         backup.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(target, backup)
+        keep_newest_backup(backup)
         say(f"  kept the old one as {backup}")
 
     target.write_bytes(wanted)

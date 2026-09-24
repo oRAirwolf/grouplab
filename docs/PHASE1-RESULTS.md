@@ -831,6 +831,36 @@ fresh each time, but the second install that changed it would have left a live d
 **The rule is written down** in `CLAUDE.md`'s standing constraints and in `docs/WEBSITE.md`, and request 1 now carries the commands that
 worked, with a minute's wait before the checks, because a graceful reload lets an old worker answer a request or two.
 
+## Entry 179: temporary files
+
+**What filled 18 GB.** This session's scratchpad, nothing else: every time a test build had to avoid a locked folder I made a new
+`altbinN`, fourteen of them at about 705 MB each; repository clones and the three copies made for the history rewrite; downloaded release
+zips, installers and packages; rendered and rasterised sheets and one folder per research question. The largest single files were the git
+packs of those clones, 157 to 158 MB each, and nightly zips and installers of 97 to 133 MB. **The suite's own leaks were in `%TEMP%`**:
+14,987 `grouplab-settings-*.json` from App tests making a settings store and never removing it, 60 bench folders, 5 end to end images,
+and 4,301 empty folders with random eight dot three names.
+
+**The empty folders are `dotnet test`'s, not any test's.** No code in the repository makes a random temporary name, and a run of a few
+Core tests left two new ones with every test process's temporary directory already redirected. So they are made by the runner process
+before any test starts, two a run.
+
+**What changed.**
+
+1. `tests/Shared/TestTempRoot.cs`, a module initializer in both test projects, points `TMP`, `TEMP` and `TMPDIR` at a new
+   `grouplab-tests/<pid>-<guid>` folder before any test runs and deletes it at process exit; a killed run's folder is swept by the next
+   run after a day. Every test, the code under test and any child process writes there, so a forgotten cleanup line no longer leaks.
+2. CI runs `dotnet test` with the runner's own temporary directory redirected to a folder it removes, and brackets the suite with
+   `scripts/temp-leak-check.py snapshot` and `check`, which fails on any new `grouplab-*` entry, any run folder that did not remove itself,
+   or any new empty random folder. Locally it passed on a full Core run.
+3. `TestTempLeakTests` checks the redirection is in force and that no `Scratch*.cs` test is left in the suite.
+4. `scripts/clean-scratch.py` removes earlier Claude Code sessions' scratch folders on this repository that nothing has touched for seven
+   days, never this session's and nothing outside `c--Dev-grouplab`. It removed 15 empty ones today.
+5. The scratchpad went from 18.4 GB to 707 MB in one listed delete, keeping only the App build in use and two small folders of work in
+   progress.
+
+**Entry 178 section 5, done with it.** `install.py` keeps only its newest `name.YYYYMMDD-HHMMSS.bak` of each file it replaces; a copy
+made by hand under another name, such as the sync script's `.before-window`, is left alone.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

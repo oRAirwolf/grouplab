@@ -82,14 +82,27 @@ jobs:
           python3 scripts/test-data.py fetch --to "$RUNNER_TEMP/test-data"
           echo "GROUPLAB_TEST_DATA=$RUNNER_TEMP/test-data" >> "$GITHUB_ENV"
 
+      # NOTES-FROM-PLANNING.md entry 179: the suite must leave nothing in the temporary directory. Each test process writes into its own
+      # folder and removes it (tests/Shared/TestTempRoot.cs), and dotnet test itself, which makes two empty randomly named folders on every
+      # run before any test starts, is given a folder of its own that is removed afterwards. The check after the suite fails on anything left.
+      - name: What the temporary directory holds before the suite
+        run: $(command -v python3 || command -v python) scripts/temp-leak-check.py snapshot
+
       - name: Test
         run: |
           set -o pipefail
           status=0
+          runner_temp="$RUNNER_TEMP/grouplab-dotnet-test"
+          mkdir -p "$runner_temp"
           for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests; do
-            dotnet test "$project" --configuration Release --no-build 2>&1 | tee -a test-output.txt || status=1
+            TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build 2>&1 | tee -a test-output.txt || status=1
           done
+          rm -rf "$runner_temp"
           exit $status
+
+      - name: The suite left nothing in the temporary directory
+        if: always()
+        run: $(command -v python3 || command -v python) scripts/temp-leak-check.py check
 
       # NOTES-FROM-PLANNING.md entry 117 section 3: CI reports the benchmark and does not gate it, because runner speed varies between runs
       # and between machines. The committed record in docs/PERFORMANCE.md is measured on Alan's own desktop; this figure is for information,

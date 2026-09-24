@@ -37,7 +37,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   tools Alan already uses. Request 2.
 - **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
 
-Open requests in `docs/notes/for-alan.md`: **6** (2, 9, 10, 11, 12, and 5, which Alan is applying).
+Open requests in `docs/notes/for-alan.md`: **5** (2, 9, 11, 12, and 5, which Alan is applying).
 
 ## Open questions
 
@@ -63,7 +63,7 @@ of 44; answered ones are listed there by number and live whole in the archive.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ, because this was the fact that was wrong last time.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172, 180
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -79,5 +79,7 @@ they differ, because this was the fact that was wrong last time.
   things need a GroupLab sheet, and they are listed in `docs/WHAT-CAN-BE-MEASURED.md`.
 - **Cartridge names are matched before numbers.** Typing 6.5 offers 6.5 Creedmoor, not .257. Forty
   cartridges are confirmed by two sources; thirty three wait for a second one. `docs/CALIBRES.md`.
+- **Temporary files clean themselves up.** Tests write into one folder per run; CI fails on a leak; each run starts with
+  `scripts/clean-scratch.py`. Entry 179: the scratch area had reached 18 GB.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never in the Claude Code panel, with one
   exception: a command he pastes into a shell. Entry 149 section 5.

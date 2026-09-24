@@ -196,6 +196,22 @@ Entry 160 section 6: Alan has been approving every command including ordinary gi
 
 **Still asked for every time, and this list is the reason the rest can be pre-approved:** anything with `sudo`, any `ssh` or `scp`, `rm -rf`, `git push --force`, any `git tag`, any change to a repository setting, and anything that writes outside `C:\Dev\grouplab` except this session's scratchpad.
 
+## Temporary files are made in one place and deleted when done
+
+NOTES-FROM-PLANNING.md entry 179. Alan's temporary folder reached 18 GB: this session's scratchpad held fourteen copies of test build
+output, repository clones and downloaded release assets, and the suite had left 14,987 settings files and thousands of empty folders in
+`%TEMP%`. Nothing is allowed to accumulate.
+
+1. **Tests** write only inside their run's own folder, which `tests/Shared/TestTempRoot.cs` creates and deletes. `dotnet test` is run
+   with `TMP`, `TEMP` and `TMPDIR` pointed at a folder that is deleted afterwards, because the runner itself makes two empty folders a run.
+   CI checks with `scripts/temp-leak-check.py` that the suite left nothing, and fails if it did.
+2. **Scratch profiling tests** answer their question and are deleted in the same piece of work; `TestTempLeakTests` fails if one is left.
+3. **My own scratch work** is deleted as soon as it has served its purpose: a build output folder, a clone, a downloaded asset. One App
+   build folder, `altbin5`, is reused rather than a new one made.
+4. **At the start of every run**, `python scripts/clean-scratch.py <this session's folder> --delete` removes earlier sessions' folders
+   under `%LOCALAPPDATA%\Temp\claude\c--Dev-grouplab` that nothing has touched for seven days. It never touches this session's folder or
+   anything outside that one.
+
 ## Two suites at once is a flake, not a failure
 
 Running the Core and App suites at the same time on Alan's machine produces failures that are nothing to do with the code: a file in `%TEMP%` that cannot be opened or deleted at that moment, because something outside the test is holding a newly written file. Three different tests did it in one night, and every one passed alone straight afterwards. It has never happened in CI, where the suites run in separate jobs.

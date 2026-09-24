@@ -24,6 +24,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 179: 18 GB of scratch files, and temporary files that clean themselves up
+
+**Status: actioned 2026-09-24**, sections 1 to 4 and the amendment's section 1.1. The scratch area went from 18 GB to 707 MB.
+
+- **Section 1.** The 18 GB was this session's own scratch work: 14 copies of the App test build (9.9 GB), repository clones and rewrite
+  copies (1.6 GB), downloaded release assets (1.1 GB), rendered sheets and research folders (about 3 GB). In `%TEMP%` the suite had left
+  14,987 settings files (956 MB), 60 bench folders and 4,301 empty random folders. Details in `docs/PERFORMANCE.md`.
+- **Section 2.** 927 scratch entries, 18.5 GB, listed and deleted in one command; three in use kept. Every test process now writes into
+  its own `grouplab-tests/<run>` folder, removed at exit. The random folders come from `dotnet test` itself, two a run before any test
+  code, so the runner is given its own temp folder too. CI fails if the suite leaves anything; `TestTempLeakTests` holds the redirection
+  and that no scratch test remains. `scripts/clean-scratch.py` removes earlier sessions' folders idle for seven days: 15 went today.
+- **Section 1.1, the amendment.** Done by me, in one listed command: 10 earlier session folders untouched for a day, 15,456 `grouplab-*`
+  entries the suite had left in `%TEMP%`, and 4,292 empty random folders from `dotnet test` since 2026-09-13, 1.45 GB. The four session
+  folders touched within a day, three older empty folders and the .NET installer's caches were left alone.
+- **Section 3.** The rule is in `CLAUDE.md`, and the before and after in `docs/PERFORMANCE.md`: 18 GB to 707 MB, unchanged by a full
+  Core run.
+- **Section 4.** Confirmed: not this repository's code, `dotnet test`.
+
+---
+
 ## 2026-09-24, entry 178: pissinhot.com/targets redirects to grouplab.org, and a backup nginx loaded
 
 **Status: actioned 2026-09-24**, sections 1 to 4. **Entry 129 is complete.** Removing the 18 old submissions from pissinhot.com is
@@ -36,6 +56,8 @@ Alan's, when he chooses: request 12.
   shows, because the include has only ever been installed fresh. Its backups of anything in that folder now go to
   `/home/airwolf/backups/grouplab.org/config/`, and `SiteSyncTests` holds it. Request 1 is corrected to the commands that worked.
 - **Sections 3 and 4.** Request 1 is closed, and the last pull found nothing new.
+- **Section 5, added afterwards.** Request 10 is closed: the server's sync matched the repository at 03:37 Mountain. The installer now
+  keeps only its newest dated backup of each file it replaces, and leaves a copy made by hand under another name alone.
 
 ---
 

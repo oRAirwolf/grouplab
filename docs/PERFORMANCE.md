@@ -347,3 +347,19 @@ screen finished. Passes is how many layout passes the click caused.
 | Read the list | It reads the clipboard, which belongs to whoever is at the machine. |
 | Report a problem… | It writes a report package and then opens a file picker. |
 
+## Temporary files, entry 179
+
+| where | before, 2026-09-24 | after |
+|---|---|---|
+| `%LOCALAPPDATA%\Temp\claude\c--Dev-grouplab` | 17.96 GB, as Alan measured it; 18.4 GB by `du` | 707 MB, this session's one App build folder |
+| test leaks in `%TEMP%` | 14,987 `grouplab-settings-*.json` (956 MB), 60 `grouplab-bench-*` (245 MB), 5 `grouplab-end-to-end-*` (23 MB), 4,301 empty random folders | none from a run: every test writes into `grouplab-tests/<run>`, removed at exit, and the runner's own two folders go with its redirected temp |
+
+What filled the scratch area was this session's own work, not the suite: 14 copies of the App test build output at about 705 MB each
+(9.9 GB), clones and history-rewrite copies of the repository (1.6 GB), downloaded release assets and packages (1.1 GB), rendered and
+rasterised sheets and one-off research folders (about 3 GB), and about 800 small scripts. The 56 MB scan's two copies were among the
+downloads. All 927 were deleted in one command once listed; the three entries still in use were kept.
+
+Then, entry 179 section 1.1: ten earlier session folders idle for a day, the suite's 15,456 leftover `grouplab-*` entries and 4,292 empty
+random folders in `%TEMP%`, 1.45 GB, went in a second listed command. A full Core run afterwards left nothing, and the scratch area stayed
+at 707 MB.
+

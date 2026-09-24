@@ -24,6 +24,7 @@
   <!-- Shared by both test projects: a cleanup that cannot delete must never fail a test. -->
   <ItemGroup>
     <Compile Include="..\Shared\Temp.cs" Link="Support\Temp.cs" />
+    <Compile Include="..\Shared\TestTempRoot.cs" Link="Support\TestTempRoot.cs" />
   </ItemGroup>
 
 </Project>

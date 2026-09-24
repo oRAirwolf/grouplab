@@ -14,6 +14,14 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 13. Clear what the test suite left in %TEMP% before entry 179
+
+**Opened and answered 2026-09-24**, entry 179 section 1.1: Alan asked for the cleanup to be done for him rather than by hand, so I did
+it in one listed command: 15,456 `grouplab-*` entries and 4,292 empty random folders made by `dotnet test` since 2026-09-13, about
+1.2 GB. Nothing to do.
+
+---
+
 ## 12. Remove the old pissinhot.com submissions from that server, when you choose
 
 **Opened 2026-09-24. Entry 178 section 4. Waiting, optional, and it needs PowerShell on this machine.**
@@ -94,7 +102,9 @@ HEIC, which Ubuntu's Pillow cannot read. And a scanner that does not complete is
 
 ## 10. Replace the site sync's hot fix with the committed version
 
-**Opened 2026-09-24. Entries 174 and 175. Waiting, and it needs a shell.**
+**Opened 2026-09-24. Entries 174 and 175. Answered 2026-09-24**, entry 178 section 5: installed at 03:37 Mountain, both hashes
+`bb8a8636...`, and the server's sync matches the repository again. Its comment was reworded afterwards in `dcf01a1` and nothing else;
+the next reinstall picks that up, and nothing needs doing for it.
 
 **What is needed.** Your hot fix of entry 175, `CHECK_TRIES = 12` and `CHECK_WAIT_SECONDS = 10` edited into
 `/usr/local/sbin/grouplab-site-sync.py`, is now what the repository says, and the repository's copy also reads nginx's

@@ -517,4 +517,14 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.DoesNotContain("target.with_name(target.name + \".\" + time.strftime", installer, StringComparison.Ordinal);
         Assert.DoesNotContain("CONFIG_BACKUPS = Path(\"/home/airwolf/conf", installer, StringComparison.Ordinal);
     }
+
+    /// <summary>NOTES-FROM-PLANNING.md entry 178 section 5: the installer keeps only its newest backup of each file it replaces.</summary>
+    [Fact]
+    public void OnlyTheNewestBackupIsKept()
+    {
+        string installer = File.ReadAllText(Repo.PathTo("website/server/install.py"));
+        Assert.Contains("shutil.copy2(target, backup)", installer, StringComparison.Ordinal);
+        Assert.Contains("keep_newest_backup(backup)", installer, StringComparison.Ordinal);
+        Assert.Contains(@"\d{8}-\d{6}\.bak", installer, StringComparison.Ordinal);
+    }
 }
