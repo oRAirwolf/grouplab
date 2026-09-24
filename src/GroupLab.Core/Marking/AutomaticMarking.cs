@@ -71,6 +71,14 @@ public static class AutomaticMarking
     /// as reporting a measured calibre back to a person or comparing hole sizes between loads. A use of that kind must measure the ratio on
     /// many more sheets first rather than inherit a precision these never had.
     /// </para>
+    /// <para>
+    /// <b>And a scan has now measured it on the other side of 1 (entry 161, 2026-09-24).</b> A friend's ten 6.5 Creedmoor shots at about
+    /// 2845 fps measure 0.301 in across the middle on a 600 dpi scan, 1.14 times the 0.264 in bullet, where the range scans read 0.765 to
+    /// 0.949. Imaging does not explain it, since both are scans. So the ratio is not a constant, and this figure no longer sets the reference
+    /// the doubles test uses on any sheet with five marks or more: the sheet's own marks do. What it still does is keep a single small hole
+    /// from being split and set the smallest hole accepted, which only need it to be roughly right. It is deliberately not replaced with
+    /// 1.14, because one wrong constant replaced by another is the mistake the finding argues against.
+    /// </para>
     /// </summary>
     public const double HoleToCalibre = 0.945;
 

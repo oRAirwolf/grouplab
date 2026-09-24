@@ -52,7 +52,9 @@ The answer was in the sheet the whole time.
 
 You do not need to know how wide a hole is in inches. You need to know **whether one mark is wider than the others on the same sheet**, photographed in the same light, at the same angle, at the same distance. Every distortion that made the calibre useless applies equally to every mark on that sheet, and cancels.
 
-So where a sheet has twelve or more round marks, GroupLab takes its reference from those marks instead of from the calibre.
+So wherever a sheet has five or more round marks, GroupLab takes its reference from those marks instead of from the calibre, and it does so whether or not you named one.
+
+It used to be twelve, and below twelve a named calibre won. A scan of ten 6.5 Creedmoor shots ended that: every hole was found, and with the right calibre named five of the ten were called possibly two, because on that paper a hole measured 1.14 times the bullet where the calibre predicted 0.945. The sheet was telling the truth and the calibre rule overrode it.
 
 ## Why the quarter-point, and not the average
 
@@ -88,11 +90,9 @@ What it no longer does is decide, on its own, whether a mark is one shot or two.
 
 ## Where this stops, honestly
 
-At around a third of a sheet doubled, the marks stop being one population with a few large ones and become two clear groups of sizes. At that point GroupLab refuses to read a size from the sheet and asks for the calibre instead.
+At around a third of a sheet doubled, the marks stop being one population with a few large ones and become two clear groups of sizes. GroupLab then takes its reference from the smaller group and flags the larger marks, and still asks you for the calibre.
 
-That refusal is deliberate and it is also a limit: two sizes on a sheet could mean a third of the shots doubled, or it could mean two different calibres were shot at it. The sizes alone cannot tell those apart. A merged pair is 1.41 times a single hole across; .224 against .308 is 1.38. Those are the same number to any measurement a photograph supports.
-
-So on a sheet that doubled a third of its shots, GroupLab says it cannot tell and asks you. That is the correct answer to the question as asked, and it is not a satisfying one.
+That is a limit and it is stated as one: two sizes on a sheet could mean a third of the shots doubled, or two different calibres shot at it, and the sizes alone cannot tell those apart. A merged pair is 1.41 times a single hole across; .224 against .308 is 1.38. Taking the smaller group is right in both cases, because if the smaller marks are singles the doubles are flagged, and if they are the smaller calibre the larger holes are flagged and GroupLab asks one question about the calibre rather than one per hole.
 
 ## What this means
 

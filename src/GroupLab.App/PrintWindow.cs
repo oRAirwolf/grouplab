@@ -49,8 +49,8 @@ public sealed class PrintWindow : Window
     internal const string ScaleWords =
         "Print at actual size. In the print dialog choose \"Actual size\" or \"100%\", never \"Fit\", \"Shrink oversized pages\" or " +
         "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver. A sheet " +
-        "printed at 97 percent still measures correctly, because the markers shrank with it, but its bulls are 3 percent closer " +
-        "together than the distance it was designed for, and scaling that varies across the page is the one kind nothing later can undo.";
+        "printed at 97 percent makes every group read about 3 percent large, because GroupLab measures in the sheet's own inches; a " +
+        "scan can tell you it happened and a photograph cannot.";
 
     private readonly List<LibrarySheet> sheets;
     private readonly OwnSheets? own;

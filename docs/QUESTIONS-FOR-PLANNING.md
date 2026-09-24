@@ -12,6 +12,32 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-24, question 49: should a scan report real inches, now that it knows the print scale?
+
+**Status: open. Nothing is blocked; the application and every published page now say truthfully what it does.**
+
+### What the code does
+
+`SheetReference.ToTarget` in `src/GroupLab.Core/Marking/ScaleReference.cs` returns the sheet's own coordinates, page dmm over 254. Nothing multiplies them by the print scale. So every distance GroupLab reports is in **the sheet's inches**. On a sheet printed at 96.2 percent a sheet inch is 0.962 of a real one, and a group reported as 1.00 in is 0.96 in on the paper.
+
+On a scan the print scale is measured, from the file's stated resolution against what the markers measure, and `DetectionAdvice.PrintScale` reports it. On a photograph there is no absolute ruler, so it cannot be measured.
+
+### What was wrong until entry 161
+
+The in-app sentence said "The measurements are corrected for it, and the figures are right", and entry 152 repeated that on the website and in `docs/WHAT-CAN-BE-MEASURED.md`. **Both were false.** Entry 161 section 6 asked whether the application reports sheet coordinates or corrects to physical inches, and reading the code answered it. Every place that said otherwise is corrected, and the false sentences are banned by `ClaimsAboutMeasuringTests`.
+
+### The options
+
+1. **Keep sheet inches everywhere, and say so.** What happens now. Consistent between scans and photographs, and a group from a mis-printed sheet reads large by the print error. The screen says how much, on a scan.
+2. **On a scan, report real inches.** Multiply by the measured scale. A scan's figures become physically right, and a photograph's stay in sheet inches. The cost: the same sheet scanned and photographed gives two different group sizes, and a comparison across the two has to know which it has.
+3. **Report real inches on a scan and flag every photograph's figures as sheet inches.** Option 2 with the difference made visible.
+
+### What I would choose
+
+**Option 3**, because a group size is a physical quantity and on a scan GroupLab has the number that makes it physical. The difference is 0.3 percent at the 100.3 percent a real sheet here was printed at, so it will not show on a well-printed sheet, and it is 4 percent on a "fit to page" one, which is exactly where somebody would want it right. But it changes what every scan reports, which is the planning session's decision rather than mine.
+
+---
+
 ## 2026-09-23, question 48: entry 160's fourteen day rule would have moved nothing
 
 **Status: open. Nothing is blocked; the entry count was applied, which is what the section is for.**
@@ -263,6 +289,8 @@ The guess snaps to Alan's lists and offers the neighbours it cannot separate. On
 ## 2026-09-22, question 39: three of Alan's five close calibre pairs straddle his own two lists
 
 **Status: open, and handled in the meantime.**
+
+**Entry 161 note, 2026-09-24.** The calibre guess no longer names a cartridge at all, from a scan or a photograph, so no neighbours are offered and the question of which list they come from does not arise on the screen today. Left open for the planning session to close.
 
 ### 1. What the requirement says
 

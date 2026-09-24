@@ -139,39 +139,22 @@ public static class CalibreConfirmation
         }
 
         double median = measured[measured.Count / 2];
-        double diameter = median + PaperShrinkInches;
 
-        // How far apart two diameters must be before this sheet can tell them apart, from this sheet's own holes and nothing else.
-        double mean = measured.Average();
-        double spread = measured.Count > 1
-            ? Math.Sqrt(measured.Sum(v => Math.Pow(v - mean, 2)) / (measured.Count - 1))
-            : 0;
-        double sampling = MedianPenalty * spread / Math.Sqrt(measured.Count);
-        double window = SeparatingErrors * Math.Sqrt((sampling * sampling) + (EstimatorErrorInches * EstimatorErrorInches));
+        // NOTES-FROM-PLANNING.md entry 161 section 4: the guess names no cartridge, from a scan or from a photograph. A friend's scan of ten
+        // 6.5 Creedmoor shots, 0.264 in, was guessed as .308 with .312 beside it: both offered options were wrong, by 0.044 in. The guess
+        // inverted a hole-to-bullet relationship that entry 161 measured at 1.127 on that sheet against 0.765 to 0.949 on the earlier scans,
+        // so the relationship is not a constant and is not even on one side of 1. A hole cannot be turned back into a bullet until that is
+        // understood, and entry 158's program B is where it is being measured.
+        //
+        // So what is shown is the measurement and the question. A fact the shooter knows does not become a guess the software makes, which
+        // is the rule question 37 settled. The photograph wording is kept because its range is wider still, and it says why.
+        string why = fromPhotograph
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"These {measured.Count} holes measure {median:0.000} in across the middle, but this is a photograph, and a hole photographed in low light reads far wider than the same hole scanned: on sheets of known calibre the reading ran from 0.9 to 1.45 times the bullet depending on the light. So GroupLab will not guess a calibre from it. Say what you were shooting.")
+            : string.Create(CultureInfo.InvariantCulture,
+                $"These {measured.Count} holes measure {median:0.000} in across the middle. A hole is not the bullet: the reading moves with the paper, the backing and how fast the bullet was going, and on scanned sheets of known calibre it has run from about three quarters of the bullet to more than the bullet. So GroupLab does not guess a calibre from it. Name what you fired.");
 
-        // A photograph supports no absolute diameter, so it preselects nothing and says why rather than offering a number to be trusted.
-        if (fromPhotograph)
-        {
-            return new CalibreGuess(diameter, null, measured.Count, median,
-                string.Create(CultureInfo.InvariantCulture,
-                    $"These {measured.Count} holes measure {median:0.000} in across the middle, but this is a photograph, and a hole photographed in low light reads far wider than the same hole scanned: on sheets of known calibre the reading ran from 0.9 to 1.45 times the bullet depending on the light. So GroupLab will not guess a calibre from it. Say what you were shooting."),
-                [.. CalibreGuessList.For(firearm).Select(CalibreGuessList.Of)], true);
-        }
-
-        var nearest = CalibreGuessList.Nearest(diameter, firearm);
-        var neighbours = CalibreGuessList.Either
-            .Where(d => Math.Abs(d - nearest.DiameterInches) > 1e-9 && Math.Abs(d - diameter) <= window)
-            .OrderBy(d => Math.Abs(d - diameter))
-            .Select(CalibreGuessList.Of)
-            .ToList();
-
-        string why = string.Create(CultureInfo.InvariantCulture,
-            $"From {measured.Count} holes measuring {median:0.000} in across the middle, and the {PaperShrinkInches:0.000} in that paper closes behind a bullet, this looks most like {nearest.Name}. A hole is not the bullet, so check it: the reading moves with the paper, the backing and how fast the bullet was going.")
-            + (neighbours.Count > 0
-                ? " These holes vary too much to tell it from " + Listed(neighbours) + ", so those are beside it: pick the one you fired."
-                : "");
-
-        return new CalibreGuess(diameter, nearest, measured.Count, median, why, neighbours, neighbours.Count > 0);
+        return new CalibreGuess(null, null, measured.Count, median, why, [], true);
     }
 
     /// <summary>A list of calibres read as a sentence would say them.</summary>

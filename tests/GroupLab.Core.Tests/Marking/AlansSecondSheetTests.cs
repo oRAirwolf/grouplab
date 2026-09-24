@@ -57,7 +57,7 @@ public class AlansSecondSheetTests
         // The shortfall itself is right and stays: this GL-CF25-LTR sheet has twenty five bulls and fifteen of them were shot at. What was
         // wrong was the claim that he had said so, which is what sent him looking for the last sheet's count. Entry 140 section 4.
         var count = Assert.Single(items, i => i.Kind == ReviewKind.Count);
-        Assert.StartsWith("This sheet takes 25 shots and 15 are marked. Nobody has said how many rounds were fired.", count.Sentence, StringComparison.Ordinal);
+        Assert.StartsWith("This sheet takes 25 shots and 15 are marked. Nobody has said how many rounds were fired:", count.Sentence, StringComparison.Ordinal);
     }
 
     /// <summary>

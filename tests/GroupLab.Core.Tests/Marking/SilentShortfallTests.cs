@@ -61,7 +61,10 @@ public class SilentShortfallTests
 
         // NOTES-FROM-PLANNING.md entry 140: a number the sheet worked out never says the person gave it. "You fired 25" on a sheet where
         // nothing had been typed is what made Alan read the last sheet's count as having followed him across.
-        Assert.Contains("Nobody has said how many rounds were fired.", shortfall.Sentence, StringComparison.Ordinal);
+        Assert.Contains("Nobody has said how many rounds were fired:", shortfall.Sentence, StringComparison.Ordinal);
+
+        // NOTES-FROM-PLANNING.md entry 161 section 7: the item says where the answer goes, so filling the field is obviously the answer.
+        Assert.Contains("type it into Rounds fired at the group", shortfall.Sentence, StringComparison.Ordinal);
         Assert.DoesNotContain("You fired", shortfall.Sentence, StringComparison.Ordinal);
     }
 

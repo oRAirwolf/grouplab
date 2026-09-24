@@ -886,7 +886,7 @@ def page_what_can_be_measured() -> str:
 </section>
 """
     return shell("/what-can-be-measured/", "What GroupLab can measure",
-                 "Where the scale comes from, what a GroupLab sheet adds, and why a sheet printed at the wrong size still measures correctly.",
+                 "Where the scale comes from, what a GroupLab sheet adds, and what a sheet printed at the wrong size does to every figure.",
                  body, "Tour")
 
 

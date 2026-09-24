@@ -31,39 +31,38 @@ public class CalibreConfirmationTests
     /// A sheet of .22 holes reads as a .22. The holes measure well under the bullet, which is the whole difficulty, so the paper's own
     /// closing is put back before the reading is offered.
     /// </summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 161 section 4: holes are read and reported, and no diameter is guessed from them. A friend's ten 6.5
+    /// Creedmoor holes measured 1.14 of the bullet where earlier scans measured 0.765 to 0.949, so a hole cannot be turned back into a bullet
+    /// until what the ratio depends on is known, and the guess that did it named .308 for a .264.
+    /// </summary>
     [Fact]
-    public void ASheetOfSmallHolesReadsAsASmallCalibre()
+    public void HolesAreMeasuredAndNoDiameterIsGuessedFromThem()
     {
-        // .224 bullets leave holes around 0.20 in on this paper.
-        var guess = CalibreConfirmation.Guess(WithHoles(0.198, 0.204, 0.201, 0.207, 0.199));
+        var small = CalibreConfirmation.Guess(WithHoles(0.198, 0.204, 0.201, 0.207, 0.199));
+        Assert.Null(small.DiameterInches);
+        Assert.Null(small.Nearest);
+        Assert.Equal(5, small.HolesMeasured);
+        Assert.Equal(0.201, small.MedianHoleInches!.Value, 6);
 
-        Assert.NotNull(guess.DiameterInches);
-        Assert.InRange(guess.DiameterInches!.Value, 0.21, 0.24);
-        Assert.Equal(5, guess.HolesMeasured);
-        Assert.Equal(0.201, guess.MedianHoleInches!.Value, 6);
-    }
-
-    [Fact]
-    public void ASheetOfLargeHolesReadsAsALargeCalibre()
-    {
-        var guess = CalibreConfirmation.Guess(WithHoles(0.285, 0.292, 0.288, 0.295, 0.290));
-
-        Assert.NotNull(guess.DiameterInches);
-        Assert.InRange(guess.DiameterInches!.Value, 0.29, 0.33);
+        var large = CalibreConfirmation.Guess(WithHoles(0.285, 0.292, 0.288, 0.295, 0.290));
+        Assert.Null(large.DiameterInches);
+        Assert.Equal(0.290, large.MedianHoleInches!.Value, 6);
     }
 
     /// <summary>
-    /// The reading never states a calibre as fact. A hole in paper is not the bullet that made it, and the sentence says so and says what
-    /// moves it, so a person has something to judge rather than a number to accept.
+    /// The sentence never states a calibre. It gives the measurement, says what moves it, and asks for the one fact the shooter has and the
+    /// software does not.
     /// </summary>
     [Fact]
     public void TheGuessSaysWhatItCannotKnow()
     {
         string why = CalibreConfirmation.Guess(WithHoles(0.198, 0.204, 0.201, 0.207, 0.199)).Why;
 
+        Assert.Contains("0.201 in across the middle", why, StringComparison.Ordinal);
         Assert.Contains("A hole is not the bullet", why, StringComparison.Ordinal);
-        Assert.Contains("check it", why, StringComparison.Ordinal);
         Assert.Contains("the paper, the backing", why, StringComparison.Ordinal);
+        Assert.Contains("Name what you fired", why, StringComparison.Ordinal);
     }
 
     /// <summary>Too few holes is said as too few, not answered with a number read off one or two marks.</summary>

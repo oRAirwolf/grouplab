@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: "GroupLab Phase 0 print tests, September 2026"
 samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi"
 state: draft
-found: "a printer set to 'Actual size' can be very accurate: The developer's measured 1.0001 horizontally and 1.0006 vertically, within 0.06 percent. The danger is the print dialog. 'Fit to page' or 'Shrink oversized pages' typically prints a letter sheet at around 94 to 97 percent. On a scan, GroupLab detects this (a sheet printed at 96.2 percent was measured at 0.96200) and corrects every figure for it."
+found: "a printer set to 'Actual size' can be very accurate: The developer's measured 1.0001 horizontally and 1.0006 vertically, within 0.06 percent. The danger is the print dialog. 'Fit to page' or 'Shrink oversized pages' typically prints a letter sheet at around 94 to 97 percent. On a scan, GroupLab detects this (a sheet printed at 96.2 percent was measured at 0.96200) and says so. It does not correct the figures, and on a photograph it cannot detect it at all."
 sure: "the detection result comes from GroupLab's own acceptance tests. One printer is not every printer; that is why the check below exists."
 data:
   - data/error-by-scale.csv
@@ -47,9 +47,9 @@ A flatbed scanner has an absolute ruler built in: its resolution. At 600 dpi, 60
 
 In GroupLab's acceptance tests, a sheet deliberately printed at 96.2 percent was measured at 0.96200 from a 600 dpi scan and 0.96201 from a 300 dpi scan. The test required agreement within 0.001; it agreed within 0.00001. The printer's own error at 100 percent (x 1.0001, y 1.0006) cancels out in that comparison.
 
-When the scale differs from 100 percent by more than a quarter of a percent, GroupLab says so on the results panel, corrects every measurement for it, and suggests printing at actual size next time.
+When the scale differs from 100 percent by more than a quarter of a percent, GroupLab says so on the results panel, says how far every size on that sheet reads large, and suggests printing at actual size next time. It does not correct the figures: they stay in the sheet's own inches.
 
-This is the statement of record, and it is the one place on this site that was right about it: [what GroupLab can measure](/what-can-be-measured/) sets out where the scale comes from, why a uniformly mis-scaled print is recovered, and the one kind of scaling that is not.
+This is the statement of record, and it is the one place on this site that was right about it: [what GroupLab can measure](/what-can-be-measured/) sets out where the scale comes from, what a mis-scaled print does to every figure, and why only a scan can tell you.
 
 A phone photo has no built-in ruler, because the camera's distance from the paper is unknown. So for photographed sheets, printing at true size is up to you.
 
@@ -69,6 +69,6 @@ Paper grows and shrinks slightly with humidity, and a sheet that has been rained
 
 **Check once, with a ruler, and then stop worrying.** A printer set to "Actual size" was accurate to 0.06 percent here. The danger is not the printer, it is the print dialog quietly choosing "Fit to page" and shrinking the sheet by three to six percent.
 
-**A uniformly shrunk sheet still measures correctly**, because GroupLab takes its scale from the markers and they shrank with everything else. What you lose is the spacing the sheet was designed for, and the ability to tell a uniform shrink from a printer whose scaling drifts across the page, which is the case nothing later can undo. That is what the ruler check is for.
+**A shrunk sheet makes every group read large by the same fraction**, because GroupLab measures in the sheet's own inches and the markers shrank with the sheet. A scan tells you it happened; a photograph cannot. That is what the ruler check is for, and it is the one check that works for both.
 
 **So the check is worth doing on a new printer and not worth repeating every session.** [What GroupLab can measure](/what-can-be-measured/) sets out which errors are recovered and which are not.

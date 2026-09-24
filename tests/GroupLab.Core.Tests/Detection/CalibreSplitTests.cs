@@ -71,7 +71,14 @@ public class CalibreSplitTests
         var withoutResult = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism, render);
         Assert.Equal(HoleSizeSource.TwoSizes, withoutResult.HoleSize!.Source);
         var without = Blobs(definition, truth, withoutResult);
-        var with = Blobs(definition, truth, RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism with { CalibreInches = SingleHoleInches }, render));
+        var withResult = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, backend, mechanism with { CalibreInches = SingleHoleInches }, render);
+        var with = Blobs(definition, truth, withResult);
+
+        // Entry 161: a named calibre no longer replaces the sheet's own reference. This sheet has two sizes, so the reference is the
+        // smaller group's quarter-point, named calibre or not, and the calibre is what vetoes a split.
+        Assert.Equal(HoleSizeSource.TwoSizes, withResult.HoleSize!.Source);
+        Assert.Equal(SingleHoleInches, withResult.HoleSize.VetoInches, 9);
+        double reference = withResult.HoleSize.FlagInches!.Value;
 
         for (int k = 0; k < kinds.Length; k++)
         {
@@ -104,7 +111,7 @@ public class CalibreSplitTests
                     // NOTES-FROM-PLANNING.md entry 94 section 1: the flag counts the mark's own area, not the convex hull thrown around it,
                     // and a flagged mark carries the two centres a split would give so that taking it as two shots needs no mouse.
                     Assert.True(large.AreaInches <= large.HullAreaInches, "a mark cannot hold more ink than its own hull");
-                    Assert.Equal(large.AreaInches / (Math.PI * Math.Pow(SingleHoleInches / 2, 2)), large.SizeHoles!.Value, 6);
+                    Assert.Equal(large.AreaInches / (Math.PI * Math.Pow(reference / 2, 2)), large.SizeHoles!.Value, 6);
                     Assert.NotNull(large.SplitA);
                     Assert.NotNull(large.SplitB);
                     break;
@@ -207,8 +214,21 @@ public class CalibreSplitTests
     public void TheSizeOfASingleHoleIsGradedByWhatSupportsIt()
     {
         var options = new RenderDifferenceOptions();
+        // Entry 161: with too few marks to measure from, a named calibre keeps a single hole from being split and flags nothing. A flag from
+        // the calibre alone is the constant again, and entry 161 measured that constant wrong by nearly half a hole's area on a real scan.
         var calibre = RenderDifferenceHoleDetector.SizeReference([0.29, 0.30], options with { CalibreInches = 0.29 });
-        Assert.Equal((HoleSizeSource.Calibre, 0.29, (double?)0.29), (calibre.Source, calibre.VetoInches, calibre.FlagInches));
+        Assert.Equal((HoleSizeSource.Calibre, 0.29, (double?)null), (calibre.Source, calibre.VetoInches, calibre.FlagInches));
+
+        // And where the sheet has marks enough for any reference, the reference is the sheet's, named calibre or not. These are entry 161's
+        // ten holes in shape: 0.28 to 0.31 in across, with 0.249 in the calibre predicts. The flag is the marks' quarter-point, the veto
+        // is the calibre, and the description says the two disagree.
+        double[] ten = [0.275, 0.280, 0.284, 0.290, 0.295, 0.300, 0.301, 0.303, 0.305, 0.308];
+        var told = RenderDifferenceHoleDetector.SizeReference(ten, options with { CalibreInches = 0.249 });
+        Assert.Equal(HoleSizeSource.SheetTentative, told.Source);
+        Assert.Equal(ten[2], told.FlagInches!.Value, 9);
+        Assert.Equal(0.249, told.VetoInches, 9);
+        Assert.Contains("so the sheet's own marks are used", told.Description, StringComparison.Ordinal);
+        Assert.Equal(RenderDifferenceHoleDetector.SizeReference(ten, options).FlagInches, told.FlagInches);
 
         var few = RenderDifferenceHoleDetector.SizeReference([0.29, 0.30, 0.31], options);
         Assert.Equal((HoleSizeSource.Bound, options.SmallestHoleInches, (double?)null), (few.Source, few.VetoInches, few.FlagInches));

@@ -1,0 +1,22 @@
+{
+  "why": "NOTES-FROM-PLANNING.md entry 161. A friend's scan on which naming the correct calibre made the reading substantially worse: with 0.264 named, five of ten perfectly detected holes were called possibly two. It is a friend's target and is used here as a local fixture only: nothing from it is committed or published until there is a consent record. The tests that read this file run where the scan is present and skip with a clear message where it is not.",
+  "folder": "C:\\Users\\Airwolf\\Downloads",
+  "file": "Scan_20260923.png",
+  "sha256": "91206e022ef744344935b47a6447f06ab6da795af48a670160e2567f596d6437",
+  "calibre": "0.264",
+  "cartridge": "6.5 Creedmoor",
+  "shots": 10,
+  "bulls": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "note": "Ten shots, one per bull on bulls 1 to 10. Holes measure 0.301 in across the middle, 1.14 of the bullet."
+}

@@ -277,7 +277,7 @@ public static class ReviewQueue
         string marked = string.Create(inv, $"{found} {(found == 1 ? "is" : "are")} marked");
         string sentence = (state.ExpectedShots is not null
                 ? string.Create(inv, $"You fired {expected} and {marked}.")
-                : string.Create(inv, $"This sheet takes {expected} shots and {marked}. Nobody has said how many rounds were fired."))
+                : string.Create(inv, $"This sheet takes {expected} shots and {marked}. Nobody has said how many rounds were fired: type it into Rounds fired at the group and this settles itself."))
             + (tooFew ? Empty(state, labels) : "") + list;
 
         var first = ranked.FirstOrDefault();

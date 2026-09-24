@@ -146,7 +146,10 @@ public class ImperfectSheetTests
         Assert.Null(result.Failure);
         string said = DetectionAdvice.PrintScale(result.Measurement)!;
         Assert.Contains("97.0 percent of its intended size", said, StringComparison.Ordinal);
-        Assert.Contains("The measurements are corrected for it", said, StringComparison.Ordinal);
+        // Entry 161 section 6: nothing is corrected, so the sentence says which way every size reads and by how much. At 97 percent a sheet
+        // inch is 0.97 of a real one, so a size reads 1 / 0.97 = 3.1 percent large.
+        Assert.Contains("reads 3.1 percent large", said, StringComparison.Ordinal);
+        Assert.DoesNotContain("corrected", said, StringComparison.Ordinal);
 
         // Corrected: every hole is still where it was put on the page, whatever the printer did to the paper.
         var found = Page(result);

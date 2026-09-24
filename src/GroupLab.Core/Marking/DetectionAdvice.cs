@@ -1,4 +1,5 @@
 using System.Globalization;
+using GroupLab.Core.Detection;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Measurement;
@@ -8,8 +9,8 @@ namespace GroupLab.Core.Marking;
 /// <summary>
 /// What to say when a sheet is not perfect, NOTES-FROM-PLANNING.md entry 115 section 4. Each sentence says what to do next rather than what
 /// failed, because a person holding a scan of their own sheet can act on "the scan is 96 pixels to the inch; scan it again at 300 or more"
-/// and cannot act on "registration failed". The print scale is said plainly as well, since a sheet printed at 97 percent is measured
-/// correctly and the person should still know it happened.
+/// and cannot act on "registration failed". The print scale is said plainly as well, because a sheet printed at 97 percent is read in its
+/// own inches and every size on it reads 3 percent large (entry 161, which corrected the comment that said it was measured correctly).
 /// </summary>
 public static class DetectionAdvice
 {
@@ -82,8 +83,34 @@ public static class DetectionAdvice
     }
 
     /// <summary>
-    /// What the print scale says, where it is far enough from full size to matter, or null. The measurement is corrected either way: this
-    /// tells the person their printer shrank the sheet, which is worth knowing before they print another.
+    /// What the holes and the calibre disagree about, where they disagree enough to matter, or null. NOTES-FROM-PLANNING.md entry 161
+    /// section 3.2: a friend's scan of ten 6.5 Creedmoor shots had holes 0.301 in across where the calibre predicted 0.249, and GroupLab
+    /// quietly replaced its own measurement with the prediction and flagged five good holes. A disagreement that large is information the
+    /// shooter wants, and saying it out loud is how that defect would have been caught.
+    /// </summary>
+    public static string? CalibreDisagrees(AutomaticResult result, Calibre? calibre)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        if (calibre is null
+            || result.Difference?.HoleSize is not { MarksMedianInches: { } marks, CalibreHoleInches: { } expected } size
+            || size.Source is HoleSizeSource.Calibre or HoleSizeSource.Bound
+            || Math.Abs((marks / expected) - 1) <= RenderDifferenceHoleDetector.CalibreDisagrees)
+        {
+            return null;
+        }
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"These holes measure {marks:0.000} in across, and a {calibre.Name} bullet would be expected to make about {expected:0.000} in. GroupLab is judging one hole from two against the sheet's own marks, not the calibre.");
+    }
+
+    /// <summary>
+    /// What the print scale says, where it is far enough from full size to matter, or null.
+    /// <para>
+    /// <b>Nothing is corrected, and the sentence says so.</b> NOTES-FROM-PLANNING.md entry 161 section 6: <see cref="SheetReference.ToTarget"/>
+    /// returns the sheet's own coordinates and nothing multiplies them by this scale, so every size on a sheet printed at 96.2 percent reads
+    /// about 4 percent large. This sentence used to say the measurements were corrected and the figures right, and entry 152 repeated it on
+    /// the website. Whether a scan, which knows the scale, should report real inches instead is question 49.
+    /// </para>
     /// </summary>
     public static string? PrintScale(SheetMeasurement measurement)
     {
@@ -94,7 +121,7 @@ public static class DetectionAdvice
         }
 
         return string.Create(CultureInfo.InvariantCulture,
-            $"This sheet was printed at {scale * 100:0.0} percent of its intended size. The measurements are corrected for it, and the figures are right; print at actual size, 100 percent, to keep the sheet's own spacing.");
+            $"This sheet was printed at {scale * 100:0.0} percent of its intended size. GroupLab measures in the sheet's own inches, so every size on this sheet reads {Math.Abs((1 / scale) - 1) * 100:0.0} percent {(scale < 1 ? "large" : "small")} against a real ruler. Print at actual size, 100 percent.");
     }
 
     /// <summary>

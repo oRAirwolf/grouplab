@@ -56,30 +56,33 @@ public class CryingWolfTests
         var (holes, definition, truth) = GeneratedSheet.Detect(Shots, calibreInches: 0.7 * sheet);
 
         Assert.Equal(HoleSizeSource.Sheet, holes.HoleSize!.Source);
-        Assert.Contains("rather than the", holes.HoleSize.Description, StringComparison.Ordinal);
+        Assert.Contains("so the sheet's own marks are used", holes.HoleSize.Description, StringComparison.Ordinal);
         Assert.DoesNotContain(holes.Holes, h => h.Oversized);
         Assert.Empty(Oversized(GeneratedSheet.Marked(holes, definition, truth).State));
     }
 
     /// <summary>
-    /// Entry 140 section 3.2's flood guard, on the sheet that still needs it: too few marks for the sheet to speak for itself, and a calibre
-    /// too small. Five of five flagged raises one item about the calibre, not five about the holes.
+    /// Entry 140 section 3.2's flood guard was written for this sheet: too few marks to speak for themselves and a calibre too small, so every
+    /// mark was flagged and the guard turned five items into one question about the calibre.
+    /// <para>
+    /// <b>NOTES-FROM-PLANNING.md entry 161 removed the flood at its source</b>, which is better than a guard on it. Five marks are now enough
+    /// for the sheet's own reference, named calibre or not, and below five a calibre flags nothing, because a flag from the calibre alone is
+    /// the hole-to-bullet constant again and entry 161 measured that constant wrong by nearly half a hole's area on a real scan. So the same
+    /// wrong calibre on the same small sheet now raises nothing at all, which is the right answer for five single holes.
+    /// </para>
     /// </summary>
     [Fact]
-    public void ASmallSheetWithAWrongCalibreStillRaisesOneQuestion()
+    public void ASmallSheetWithAWrongCalibreRaisesNothing()
     {
-        const int few = 5;
         double sheet = GeneratedSheet.Detect(Shots).Holes.HoleSize!.FlagInches!.Value;
-        var (holes, definition, truth) = GeneratedSheet.Detect(few, calibreInches: 0.7 * sheet);
+        foreach (int few in new[] { 5, 4 })
+        {
+            var (holes, definition, truth) = GeneratedSheet.Detect(few, calibreInches: 0.7 * sheet);
 
-        Assert.Equal(HoleSizeSource.Calibre, holes.HoleSize!.Source);
-        Assert.Contains("too few to measure one from", holes.HoleSize.Description, StringComparison.Ordinal);
-        Assert.Equal(few, holes.Holes.Count(h => h.Oversized));
-
-        var item = Assert.Single(Oversized(GeneratedSheet.Marked(holes, definition, truth).State));
-        Assert.Equal("oversized:all", item.Key);
-        Assert.Contains("5 of the 5 marks", item.Sentence, StringComparison.Ordinal);
-        Assert.Contains("the calibre is wrong", item.Sentence, StringComparison.Ordinal);
+            Assert.Equal(few >= 5 ? HoleSizeSource.SheetTentative : HoleSizeSource.Calibre, holes.HoleSize!.Source);
+            Assert.DoesNotContain(holes.Holes, h => h.Oversized);
+            Assert.Empty(Oversized(GeneratedSheet.Marked(holes, definition, truth).State));
+        }
     }
 
     /// <summary>

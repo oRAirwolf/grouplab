@@ -46,16 +46,18 @@ Nothing else is blocked. Everything in the queue can proceed today.
 
 ## Open questions
 
-Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`, newest first. Answered ones are listed there by number
+Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`, newest first. Answered ones are listed there by number
 and live whole in `docs/notes/archive/questions-answered.md`.
 
+- **49** should a scan report real inches, now it knows the print scale (entry 161)
+- **48** entry 160's fourteen day rule would have moved nothing
 - **46** the sheet offset is solved over every bull, and narrowing it makes things worse
 - **45** scan 6 reads 9 holes tonight where entry 130 recorded 10
 - **44** the bent-sheet model crashes on one photograph and improves the wrong points on the rest
 - **43** entry 137 names an image safety the desktop does not have; item 1 is built, item 2 is not
 - **42** a corrected shot does not survive a second detection
 - **41** dragging a shot onto a bull means two different things
-- **39** three of Alan's five close calibre pairs straddle his own two lists
+- **39** close calibre pairs straddling two lists; moot since entry 161 stopped the guess naming one
 - **36** a light installer, measured, and why shrinking the one we have beat it
 - **34** pooling two sheets of one load needs a rule for what a pooled group's centre means
 
@@ -74,9 +76,9 @@ read yet.
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A sheet printed at the wrong size measures correctly.** The scale comes from the markers and they
-  shrank with the sheet. Two published pages said the opposite until entry 152.
-  `docs/WHAT-CAN-BE-MEASURED.md` is the one source for this and nothing states its own version.
+- **A sheet printed at the wrong size is read correctly and measured in its own inches.** Entry 152 said
+  it measures correctly; entry 161 read the code and it does not. Printed at 96 percent, every group reads
+  4 percent large; a scan says so and a photograph cannot. `docs/WHAT-CAN-BE-MEASURED.md` is the source.
 - **A target GroupLab did not print can be measured**, once the scale is set by hand. Exactly five
   things need a GroupLab sheet, and they are listed in that same file.
 - **The corpus detection-counts record had been stale since entry 101** and is now current. It is

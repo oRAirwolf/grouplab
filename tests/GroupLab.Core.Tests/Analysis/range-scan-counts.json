@@ -7,7 +7,7 @@
     {
       "file": "1-600-dpi09202026.png",
       "sha256": "44c377d5120a75bfa134b4dbd65a48a7db1b1be664a38821c049ac230d388814",
-      "calibre": "0.224",
+      "calibre": "0.222",
       "holesWithCalibre": 15,
       "holesWithoutCalibre": 14,
       "shotsAlanRecorded": 15,
@@ -25,7 +25,7 @@
     {
       "file": "3-600-dpi09202026.png",
       "sha256": "93140a6a37777667d0c47d61a3a9c53e7ba9c7fb5c4e67038e3e4206ed8ededa",
-      "calibre": "0.308",
+      "calibre": "0.264",
       "holesWithCalibre": 25,
       "holesWithoutCalibre": 25,
       "shotsAlanRecorded": 25,
@@ -34,7 +34,7 @@
     {
       "file": "4-600-dpi09202026.png",
       "sha256": "a2e04ebf34e857dcea913aff896a5eb2a06de95b1921c2b0615628590942cd8e",
-      "calibre": "0.224",
+      "calibre": "0.222",
       "holesWithCalibre": 24,
       "holesWithoutCalibre": 19,
       "shotsAlanRecorded": 23,
@@ -43,7 +43,7 @@
     {
       "file": "5-600-dpi09202026.png",
       "sha256": "dabd4bedafe41c7ebe9129c751657aaf2826eb6f2585b99691ac122c67390bd4",
-      "calibre": "0.224",
+      "calibre": "0.222",
       "holesWithCalibre": 20,
       "holesWithoutCalibre": 20,
       "shotsAlanRecorded": 20,
@@ -58,5 +58,6 @@
       "shotsAlanRecorded": 10,
       "note": "Nine against Alan's ten. The missing one is shot 6, which landed left of bull 21, far from the rest, and which entry 120 calls a real shot rather than a flyer to delete. Question 45 established that this was never ten: it reads nine at the commit that recorded ten, and nine before and after entry 141 section 4. It is a standing miss, not a regression, and it is the hole most worth recovering."
     }
-  ]
+  ],
+  "calibreNote": "Entry 161: scans 1, 4 and 5 are .22 LR, nominally 0.222 in (entry 153 section 4), and were recorded here as 0.224. Scan 3 is 6.5 Creedmoor, 0.264 in, as its own load block says, and was recorded here as 0.308. Both corrected, and every count re-measured, because a fixture with the wrong calibre tests the wrong thing."
 }

@@ -24,6 +24,20 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 161: naming the calibre makes the reading worse, and the hole to calibre constant is wrong
+
+**Status: actioned 2026-09-24**, all eight sections. It also corrects something entry 152 got wrong, which is in section 6 below.
+
+- **Section 1 and 2.** Both runs reproduced, and the measurement confirmed rather than taken: 0.301 in across the middle, 1.14 of the bullet, 1.43 holes' area against the calibre's 0.249, five false doubles.
+- **Section 3.** The sheet's own marks are the reference wherever there are five or more, named calibre or not, which **amends entry 141 section 4's line of twelve**. Below five a calibre vetoes splits and flags nothing. The scale panel says when the marks and the calibre disagree. Question 40's answer agrees.
+- **Section 4.** The guess names no cartridge, from a scan or a photograph. It gives the measurement and asks.
+- **Section 5.** Five scans now run from 0.765 to 1.14. `HoleToCalibre` stays 0.945 and says why it was not replaced. Worth an article under entry 158 section 1, held for entry 162's consent record.
+- **Section 6, and it corrects entry 152.** GroupLab reports every distance in the sheet's own inches and never applies the print scale, so a sheet printed small makes every size read large. **Entry 152 said a shrunk sheet measures correctly; that was wrong, and I wrote it**, from the in-app sentence that said the figures were corrected. Every place it was said is corrected. Question 49 asks whether a scan should report real inches.
+- **Section 7.** The rounds fired item says where the answer goes.
+- **Section 8.** The regression test, the general test and the both-ways table. On the code before this entry only the friend's sheet got worse, 0 doubles to 5. Two fixture errors corrected: three .22 LR scans recorded as 0.224, and scan 3 recorded as .308 where its load block says 6.5 Creedmoor.
+
+---
+
 ## 2026-09-23, entry 153: the standard every research article is held to
 
 **Status: actioned 2026-09-23**, all six sections, section 5 within the one limit this project has on publishing real material.

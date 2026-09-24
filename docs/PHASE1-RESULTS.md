@@ -378,6 +378,90 @@ The command set that covers ordinary work here is written out in `CLAUDE.md`, so
 
 **What deliberately stays behind a prompt** is listed as carefully as what does not: anything with `sudo`, any `ssh` or `scp`, `rm -rf`, `git push --force`, any `git tag`, any repository setting, and anything writing outside the repository. Those are the ones worth reading before saying yes.
 
+## Entry 161: naming the calibre made the reading worse, and the print scale was never corrected
+
+A friend shot `Scan_20260923.png` on 2026-09-23: ten 6.5 Creedmoor shots, 0.264 in, one per bull on bulls 1 to 10. In nightly 93, told nothing, it raised one review item. Told the truth, it raised six, five of them calling a single hole possibly two. **Software that gets worse when it is told the truth has the wrong model in it.**
+
+The scan is a local fixture, recorded in `tests/GroupLab.Core.Tests/Analysis/friend-scan-2026-09-23.json` by its SHA-256 and read from where it sits. Nothing from it is committed here; entry 162 brings its consent record.
+
+### Section 2: the measurement, confirmed rather than taken on trust
+
+| | measured here | the entry |
+|---|---|---|
+| detection | 10 holes, one per bull, bulls 1 to 10 | the same |
+| round marks across the middle | 0.301 in | 0.301 in |
+| hole over bullet | 1.14 | 1.140 |
+| the reference the calibre made | 0.249 in, 0.264 times 0.945 | the same |
+| marks against that reference, by area | about 1.43 | 1.46 |
+| flagged as possibly two, calibre named | 5 | 5 |
+
+The false alarms are fully explained by the constant. A hole on this paper is 14 percent **wider** than the bullet, and the constant assumes 5.5 percent narrower.
+
+### Section 3: the sheet's own marks are the reference, named calibre or not
+
+`RenderDifferenceHoleDetector.SizeReference` now takes the reference from the sheet wherever it has five round marks or more, whether or not a calibre was named. **This amends entry 141 section 4**, which set the line at twelve and said that below twelve there was no evidence either way; this scan, at ten marks, is that evidence. The option `MarksToOutrankACalibre` is gone because it no longer decides anything.
+
+- **Five to eleven marks:** the flag is the marks' quarter-point, tentative, and a named calibre is what vetoes a split.
+- **Twelve or more:** the marks' quarter-point, trusted, or the smaller group's where there are two sizes, named calibre or not.
+- **Fewer than five:** a named calibre keeps a single hole from being split and **flags nothing**. A flag from the calibre alone is the constant again.
+- **Where the marks and the calibre disagree by more than a tenth**, the scale panel says so, beside the print scale line: *"These holes measure 0.301 in across, and a .264 in (6.71 mm) bullet would be expected to make about 0.249 in. GroupLab is judging one hole from two against the sheet's own marks, not the calibre."* `DetectionAdvice.CalibreDisagrees`.
+- **Question 40's answer agrees.** The two-sizes rule was already the sheet's own reference; it now applies whether or not a calibre was named, and the calibre still vetoes splits there, which is the one job it does that the sheet cannot.
+
+On the friend's scan, with .264 named: ten holes, reference 0.284 in, **no mark flagged**, and the disagreement sentence shown.
+
+### Section 4: the guess names no cartridge
+
+`CalibreConfirmation.Guess` returns the measurement and the question, from a scan or a photograph, and no diameter, no nearest calibre and no buttons: *"These 10 holes measure 0.301 in across the middle. A hole is not the bullet: the reading moves with the paper, the backing and how fast the bullet was going, and on scanned sheets of known calibre it has run from about three quarters of the bullet to more than the bullet. So GroupLab does not guess a calibre from it. Name what you fired."*
+
+This retires Alan's 2026-09-22 requirement that the guess snap to a real cartridge and offer its neighbours, and with it the thing question 39 was about. The snapping tests were rewritten rather than deleted: they now hold that nothing is named, and one of them is the friend's sheet in numbers, which must not be called .308.
+
+### Section 5: the ratio is not a constant, and not even on one side of 1
+
+| scan | cartridge | hole over bullet |
+|---|---|---|
+| range day, .22 LR | 0.222 | 0.765 |
+| range day, 6 ARC | 0.243 | 0.923 |
+| range day, 6.5 Creedmoor, 15 shots | 0.264 | 0.937 |
+| range day, 6.5 Creedmoor, 25 shots | 0.264 | 0.949 |
+| **friend's sheet, 6.5 Creedmoor, about 2845 fps** | 0.264 | **1.14** |
+
+All five are 600 dpi scans, so imaging does not explain the spread; the photograph finding of question 38 did not have that protection. `HoleToCalibre` stays 0.945 and says in its own comment why it was not replaced with 1.14, and what it still does.
+
+**Under entry 158 section 1, this is worth an article**: it would change what a shooter does, which is stop reading anything off a hole's size, and what a developer builds, which is no hole-to-bullet constant. What it cannot yet say is what the ratio depends on, because paper, backing and velocity all changed together between these sheets. That separating test is entry 158 program B's, and the article waits for the scan's consent record in entry 162 so its first figure can be the sheet that showed it.
+
+### Section 6: the print scale, and an answer I got wrong under entry 152
+
+The friend printed with no scaling and GroupLab reported 100.3 percent. Alan: *"I dont think this needs correction because the apriltags are the source of truth."* **For this sheet he is right**: the markers solved 38 of 38 at 0.0035 in, and 0.3 percent is 0.003 in on a one inch group.
+
+**What the code does, which the entry asked me to say plainly:** GroupLab reports every distance in **the sheet's own inches**. `SheetReference.ToTarget` returns page coordinates and nothing multiplies them by the print scale. Which bull a shot belongs to and where it sits are right on any uniformly scaled print, because the markers moved with everything else. Every size is off by the print scale: a sheet printed at 96.2 percent makes a real 0.96 in group read 1.00 in. A scan measures the scale and says so; a photograph cannot measure it.
+
+**Entry 152 said the opposite and I wrote it.** I took the in-app sentence "The measurements are corrected for it, and the figures are right" at its word, and read `Test43APrintAt962PercentReportsItsScale`, which proves bull centres are recovered in the sheet's coordinates, as proof that sizes are physically right. It proves no such thing. The research article `printer-true-size` had the physics right ("a shrunken sheet makes groups look bigger, because the bullets are full size and the ruler they are measured against has shrunk") and I declared its opposite sentence the correct one.
+
+Corrected in every place it was said: `DetectionAdvice.PrintScale`, which now says which way sizes read and by how much; the print screen's own words; the tour's print page; `docs/WHAT-CAN-BE-MEASURED.md`; the article; the state file; and two code comments. The banned sentences in `ClaimsAboutMeasuringTests` now hold the false ones, which were mine, and no longer ban "any other scale measures wrong", which was true. Whether a scan should report real inches is **question 49**.
+
+### Section 7: the rounds fired item
+
+It works as designed and now says where the answer goes: *"Nobody has said how many rounds were fired: type it into Rounds fired at the group and this settles itself."*
+
+### Section 8: tests, and whether this was there all along
+
+`CalibreNeverMakesItWorseTests` reads every local scan with a known calibre, both ways, and fails if naming the correct one ever adds an open review item. It writes this table on every run.
+
+| scan | calibre | holes without, with | open items without, with | doubles without, with | doubles with, before entry 161 |
+|---|---|---|---|---|---|
+| friend's sheet | 0.264 | 10, 10 | 1, 1 | 0, 0 | **5** |
+| range 1 | 0.222 | 14, 15 | 1, 1 | 0, 0 | 0 |
+| range 3 | 0.264 | 25, 25 | 0, 0 | 0, 0 | 0 |
+| range 4 | 0.222 | 19, 24 | 13, 9 | 0, 0 | 0 |
+| range 5 | 0.222 | 20, 20 | 13, 13 | 0, 0 | 0 |
+| range 6 | 0.243 | 9, 9 | 2, 2 | 0, 0 | 0 |
+
+The last column was measured on the code as it stood before this entry, in a separate checkout outside the repository. **The defect was latent everywhere and fired once**: it needed fewer than twelve marks and holes wider than 0.945 of the bullet together, and none of the range scans had both.
+
+**Two fixture errors turned up and are corrected.** `range-scan-counts.json` recorded scans 1, 4 and 5 as 0.224, the centrefire figure entry 153 section 4 had swept everywhere else, and **scan 3 as 0.308, where its own load block reads 6.5 Creedmoor**. Every count was re-measured at the right calibre and none moved.
+
+`CalibreSplitTests` gains the synthetic form of the rule, so it runs everywhere: ten marks shaped like the friend's with the calibre's 0.249 in named give the sheet's reference, the calibre as the veto, and the disagreement in the description.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

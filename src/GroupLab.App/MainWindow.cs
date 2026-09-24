@@ -952,7 +952,9 @@ public sealed partial class MainWindow : Window
         }
 
         var guess = TheCalibreGuess(state);
-        calibreNote.Text = guess.DiameterInches is not null
+        // Entry 161 section 4: the guess names no calibre now, so what decides whether there is anything to say is whether a hole was
+        // measured, not whether a diameter was guessed.
+        calibreNote.Text = guess.DiameterInches is not null || guess.MedianHoleInches is not null
             ? guess.Why
             : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
 
@@ -1601,7 +1603,9 @@ public sealed partial class MainWindow : Window
         RememberDetected();
         SetTool(MarkingTool.Select);
         // Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, rather than analysed silently.
-        printScale.Text = DetectionAdvice.PrintScale(result.Measurement) ?? "";
+        // Entry 161 section 3.2: and where the holes and the calibre named disagree, that is said beside it, in the same place.
+        printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
+            .Where(s => !string.IsNullOrEmpty(s)));
         printScale.IsVisible = printScale.Text.Length > 0;
         // Entry 115 section 4: a sheet whose evidence says it may be another sheet is doubted out loud, rather than measured silently.
         problem.Text = result.Definition is { } against ? DetectionAdvice.Suspect(result.Measurement, against) ?? "" : "";

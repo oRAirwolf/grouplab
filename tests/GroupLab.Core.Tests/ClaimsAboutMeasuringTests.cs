@@ -26,14 +26,19 @@ public class ClaimsAboutMeasuringTests
     [
         ("only measure a sheet it printed",
             "GroupLab measures any target once the scale is set by hand. docs/WHAT-CAN-BE-MEASURED.md."),
-        ("nothing later can recover that",
-            "a uniformly mis-scaled print is corrected, because the scale comes from markers that shrank with the sheet."),
-        ("any other scale measures wrong",
-            "a sheet printed at another scale measures correctly. What it loses is the spacing it was designed for."),
+        // Entry 161 corrected entry 152: GroupLab measures in the sheet's own inches and never applies the print scale, so a sheet printed
+        // small makes every figure read LARGE. The sentences banned here are the ones that said otherwise, including the ones entry 152
+        // wrote, and the one that got the direction wrong.
         ("measures three percent small",
-            "it does not. The markers shrank with it, so the measurement is right and the bull spacing is what changed."),
+            "a sheet printed at 97 percent makes every group read about 3 percent large, not small, because the ruler shrank."),
         ("measures 3 percent small",
-            "it does not. The markers shrank with it, so the measurement is right and the bull spacing is what changed."),
+            "a sheet printed at 97 percent makes every group read about 3 percent large, not small, because the ruler shrank."),
+        ("still measures correctly",
+            "a shrunk sheet is read correctly bull by bull, and every distance on it is in the sheet's own inches. Entry 161."),
+        ("corrects every figure",
+            "the print scale is measured on a scan and reported, and no figure is corrected for it. Entry 161."),
+        ("The measurements are corrected for it",
+            "the print scale is measured on a scan and reported, and no figure is corrected for it. Entry 161."),
     ];
 
     /// <summary>
@@ -113,7 +118,7 @@ public class ClaimsAboutMeasuringTests
         Assert.True(File.Exists(source), "docs/WHAT-CAN-BE-MEASURED.md is the one source for what GroupLab can measure, and it is not here.");
 
         string text = File.ReadAllText(source);
-        Assert.Contains("A sheet printed at the wrong size measures correctly", text, StringComparison.Ordinal);
+        Assert.Contains("A sheet printed at the wrong size is read correctly, and measured in its own inches", text, StringComparison.Ordinal);
         Assert.Contains("Any target can be measured once the scale is set", text, StringComparison.Ordinal);
 
         string build = File.ReadAllText(Path.Combine(Repo.PathTo("website"), "build.py"));
