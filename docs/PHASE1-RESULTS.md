@@ -997,6 +997,34 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 191: Unholy's zeroing grid scan
+
+**Kept apart from `Scan_20260923.png`.** The scan was copied, not moved, to `C:\Dev\grouplab-submissions\unholy\` as
+`2026-09-24_zeroing-grid-mil-100yd.png`, identical to the original, SHA-256 367e55e5...7d73. `samples/PROVENANCE.md` has a record of
+its own with that hash, the published copy's and both of `Scan_20260923.png`'s. It was decoded to pixels and written again before
+anything else read it, so no metadata was read.
+
+**What the scan is.** GroupLab's "Zeroing Grid, mil at 100 yd", printed at actual size: its markers put the sheet at 600.1 dpi on a 600
+dpi scan. Letter paper. One shot, 0.266 in, just below and right of the point of aim.
+
+**Why it failed, in plain words.** Two things, and neither is the print or the scan.
+
+1. **Its codes do not read.** The four square codes are found and not decoded, on this scan as on the render at 200 dpi (question 56).
+   So GroupLab cannot name the sheet and asks which sheet it is. That is the same on nightlies 95, 99 and today.
+2. **Once the sheet is chosen, it registers perfectly and found no shot.** All 16 markers, 0.0025 in RMS, and 0 holes on nightlies 95
+   and 99, because the grid's one bull had a cell of no size and every hole was refused as out of place. Entry 189 fixed that; today it
+   finds the one hole.
+
+Nightlies 95 and 99 were checked out and run on the scan: they behave the same. No commit between them changes how a sheet is named or
+chosen, so "not found on 95, found on 99" is not a change in the code; entry 193 asks the same.
+
+**The test.** `UnholyZeroingGridTests` loads the published copy, runs the chosen sheet, and wants 16 markers, 600 dpi and exactly one
+hole where it is. It found none before entry 189. It runs here; in CI it skips with its reason until request 23 puts the file on the
+test data release and the file joins the list CI fetches.
+
+**Would Alan's own zeroing grids fail the same way?** Before entry 189, yes: every zeroing grid, whatever printed it, found no shots. From
+the build carrying entry 189 they find them. Whether their codes read depends on the scan, question 56.
+
 ## Entry 190: Alan's standing consent covers Unholy and his other friends
 
 Alan's words, 2026-09-24, are now in the three places the consent rules live: `samples/PROVENANCE.md` has a record of its own for what

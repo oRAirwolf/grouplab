@@ -26,6 +26,10 @@ The options: live with it, since the markers still register the sheet and the ap
 read; look further into the decoder; or print the codes larger in the next revision of the library, which changes every printed sheet's
 look and needs Alan. I would live with it and watch real scans: Unholy's scan of GL-ZERO-MIL-100Y (entry 191) is the first real test.
 
+**Entry 191 has answered the first real test: none of the four codes on Unholy's 600 dpi scan read.** The markers register the sheet
+perfectly once it is chosen. So the application's question, "which sheet is it?", is what every GL-ZERO-MIL-100Y scan meets today, and
+the choice between living with it, the decoder and larger codes matters more than it seemed.
+
 ---
 
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow

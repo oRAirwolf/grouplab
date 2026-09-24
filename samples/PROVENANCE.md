@@ -76,6 +76,22 @@ published from it before that date is kept on the site.
 **What does not change.** Everything that arrives is untrusted data until the intake worker or the pull has handled it. GPS, location and
 time metadata are never read, printed or logged. Unholy is credited by that name.
 
+# The 2026-09-24 zeroing grid scan by Unholy
+
+**Not `Scan_20260923.png`.** Alan passed it on as `Scan_20260923 (2).png`, a name one character from the scan below, and it is a
+different sheet: GroupLab's "Zeroing Grid, mil at 100 yd", printed at actual size on Letter, scanned at 600 dpi, with one shot in it.
+So it is named here, in the repository and on the test data release by what it is, and each file by its hash:
+
+| | |
+|---|---|
+| **Consent** | Entry 190's standing consent, above: may be used for testing and published, including as a test fixture |
+| **Original** | kept as `C:\Dev\grouplab-submissions\unholy\2026-09-24_zeroing-grid-mil-100yd.png`, 54,481,600 bytes, SHA-256 `367e55e5c2369f1ac578894bb82139753ba1a572b9db8bff1589740119ac7d73`, identical to what Alan passed on |
+| **Published copy** | `zeroing-grid-mil-100yd-unholy-2026-09-24.png`, 57,523,449 bytes, SHA-256 `c6db8580f59412b5152f6d8520c2e9143c174ce397606095cbb4c33e51367b27`, rebuilt from its pixels with only the resolution kept, for the test data release |
+| **Not to be confused with** | `Scan_20260923.png`: original SHA-256 `91206e022ef744344935b47a6447f06ab6da795af48a670160e2567f596d6437`, published copy `c2b2e595358cf5dd8d1f932da3f07eb9722ca189c300c4edcf6c68fcbc54570e` |
+
+Nothing from the original's metadata was read, printed or logged: it was decoded to pixels and written again before anything else
+looked at it.
+
 # The 2026-09-23 scan by Unholy, and the consent that lets it be used
 
 `Scan_20260923.png`, **shot 2026-09-23**, is a scan of a GroupLab sheet shot by Unholy, a friend of Alan's. It is the sheet that exposed the

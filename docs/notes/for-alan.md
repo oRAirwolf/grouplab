@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
-Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 8.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
+Then 23, one upload, then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,29 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 23. Put Unholy's zeroing grid scan on the test data release
+
+**Opened 2026-09-24. Entry 191. Waiting, and it needs PowerShell on this machine. Not urgent: the test that uses it runs on this
+machine already, and CI will run it once the file is there.**
+
+**What is needed.** One command. The file is the copy of Unholy's zeroing grid scan rebuilt from its pixels, with no metadata but its
+resolution, and it is 57.5 MB, so it goes on the test data release rather than in the repository. This session was not allowed to
+upload to a release itself.
+
+```powershell
+gh release upload test-data "C:\Dev\grouplab-submissions\unholy\zeroing-grid-mil-100yd-unholy-2026-09-24.png"
+gh release view test-data --json assets --jq ".assets[].name"
+```
+
+**A good result:** the first line finishes without an error, and the second lists two names, `Scan_20260923.png` and
+`zeroing-grid-mil-100yd-unholy-2026-09-24.png`. Then this session adds it to the list CI fetches, so the test runs there too.
+
+**Why.** It is the one real scan of a zeroing grid the project has, and the test on it is what stops the grid losing its shots again.
+
+**A good answer.** "Done", or what the first line printed.
 
 ---
 
