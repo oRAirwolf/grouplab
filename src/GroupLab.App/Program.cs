@@ -27,6 +27,7 @@ internal static class Program
 
         // Entry 41 section 5: the handlers go in before the window exists, so nothing the window does can fail unrecorded.
         using var crashes = CrashReporter.Install(log);
+        CrashReporter.BeginRun(log);
         var units = settings.LoadUnits();
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields(), ("units", $"{units.Linear} {units.Angular} {units.Distance}"), ("verbose", verbose), ("logdir", described)]);
         var clock = Stopwatch.StartNew();
@@ -39,6 +40,7 @@ internal static class Program
         finally
         {
             DiagnosticLog.Info("app.exit", ("code", code), ("seconds", Math.Round(clock.Elapsed.TotalSeconds, 1)));
+            CrashReporter.EndRun(log);
         }
     }
 

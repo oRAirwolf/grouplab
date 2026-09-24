@@ -224,4 +224,34 @@ public class Entry189Tests
             GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 192: Unholy's five "crashes" were one error, Set pressed while the caliber list was open, which set the
+    /// box's text from inside the box's own update and threw in Avalonia. Typing "6.5" and pressing Set now sets it, first time, with no error.
+    /// </summary>
+    [AvaloniaFact]
+    public void SetWithTheListOpenSetsTheCaliberFirstTime()
+    {
+        var (window, path, box) = Typed("6.5");
+        try
+        {
+            // A suggestion highlighted, as the pointer passing over the list or an arrow key does, and then Set rather than the suggestion.
+            window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            window.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            Settle();
+            box.Text = "6.5";
+            Settle();
+            var set = ((Panel)box.Parent!).Children.OfType<Button>().First(b => b.Content as string == "Set");
+            set.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Settle();
+            Assert.NotNull(window.Session.State.Calibre);
+            Assert.Equal(window.Session.State.Calibre!.Name, box.Text);
+            Assert.False(box.IsDropDownOpen);
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
+        }
+    }
 }

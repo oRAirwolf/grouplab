@@ -997,6 +997,34 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 192: the caliber Set error, and a survived error is not a close
+
+**The error.** Unholy's report holds two logs and one crash record, five `app.crash` lines between them, every one the same
+`ArgumentOutOfRangeException` raised in Avalonia's caliber box as Set wrote its text with the list open. Set now closes the list before the
+text changes, and the text it writes is not taken for typing, so the suggestions are not remade under it. With entry 189's change, a
+chosen suggestion sets in one action and Set works first time. `Entry189Tests.SetWithTheListOpenSetsTheCaliberFirstTime` types "6.5",
+highlights a suggestion and presses Set. It passes on the old code too, because the headless window cannot throw this exception; the
+exception needs a desktop's own list, and the fix is written to its stack.
+
+**The message.** A record now carries its kind: `survived`, from the window's thread or an unobserved task, or `closed`, from the process.
+Each run leaves a marker with its process id and removes it on a clean exit, so a run that ends without reaching its exit is recorded as a
+close at the next start. The banner says "GroupLab hit an error 5 times and kept running" for Unholy's case, calls only a real close
+closing, and keeps Make a report for both. Records written before this have no kind and are still described as closes.
+
+**Is surviving safe?** Not always, and it is written where the handler is installed. A handler that throws part way keeps whatever it had
+changed before the throw. The caliber Set button threw before it told the session anything, so nothing was left half done; a handler that
+changes the marking and throws before saving it, or changes one of two settings that go together, would leave them apart. Whether to keep
+swallowing or offer to save and restart is a decision, and it is not changed here.
+
+**Grouping.** A report now ends its environment text with every crash record on the computer grouped by the exception and the first
+GroupLab frame, with a count, the kind and the last action: "5 times: System.ArgumentOutOfRangeException in ... , survived". It rides in
+`environment.txt`, which the receiver already takes, so the receiver does not change.
+
+**Still open from Unholy's and Fenix's reports:** nothing. Unholy's five were this one error. Fenix has sent no report; request 16's
+trackpad half still asks for one.
+
+**Tests.** App `Entry192Tests`, 2, and `Entry189Tests.SetWithTheListOpenSetsTheCaliberFirstTime`.
+
 ## Entry 191: Unholy's zeroing grid scan
 
 **Kept apart from `Scan_20260923.png`.** The scan was copied, not moved, to `C:\Dev\grouplab-submissions\unholy\` as

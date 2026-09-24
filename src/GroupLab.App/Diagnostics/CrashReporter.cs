@@ -48,6 +48,11 @@ public static class CrashReporter
             Record(log, e.Exception, "task");
             e.SetObserved();
         };
+        // NOTES-FROM-PLANNING.md entry 192 section 3.3: an exception in a handler on the window's thread is recorded and swallowed, and the
+        // application carries on. That is kept, and it is not always safe. A handler that throws part way leaves whatever it had changed
+        // before the throw: the caliber Set button of entry 192 threw before it told the session anything, so nothing was left half done,
+        // but a handler that has changed the marking and not yet saved it, or has changed one of two settings that go together, would leave
+        // them apart. Whether to keep swallowing or offer to save and restart is for the planning session; this records which it was.
         DispatcherUnhandledExceptionEventHandler dispatcher = (_, e) =>
         {
             Record(log, e.Exception, "dispatcher");
@@ -82,7 +87,7 @@ public static class CrashReporter
             string path = Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"crash-{now:yyyyMMdd-HHmmss}-{Environment.ProcessId}.json"));
             if (!File.Exists(path))
             {
-                File.WriteAllText(path, Describe(exception, now).ToJsonString(Indented));
+                File.WriteAllText(path, Describe(exception, now, KindOf(source)).ToJsonString(Indented));
             }
 
             Recorded?.Invoke(null, path);
@@ -96,7 +101,7 @@ public static class CrashReporter
     }
 
     /// <summary>The crash record, entry 45 section 2, schema 1: exceptions outermost first, and the stages of an analysis in flight or none.</summary>
-    internal static JsonObject Describe(Exception exception, DateTime utc)
+    internal static JsonObject Describe(Exception exception, DateTime utc, string kind = Closed)
     {
         ArgumentNullException.ThrowIfNull(exception);
         var exceptions = new JsonArray();
@@ -113,6 +118,7 @@ public static class CrashReporter
         return new JsonObject
         {
             ["schema"] = Schema,
+            ["kind"] = kind,
             ["created_utc"] = utc.ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture),
             ["app"] = new JsonObject { ["version"] = AppInfo.Version, ["commit"] = AppInfo.Commit, ["channel"] = AppInfo.Channel },
             ["environment"] = new JsonObject
@@ -127,6 +133,138 @@ public static class CrashReporter
             ["exceptions"] = exceptions,
             ["stages"] = Stages(InFlight),
         };
+    }
+
+    /// <summary>
+    /// The two kinds of record, entry 192 section 3.2. Unholy was told GroupLab "closed unexpectedly 5 times" when it had closed not once:
+    /// five exceptions on the window's thread were recorded and survived. A record now says which it was: an error GroupLab survived, or an
+    /// exit without a clean shutdown, which is a crash of the process or a run that ended without reaching its own exit.
+    /// </summary>
+    public const string Survived = "survived";
+
+    public const string Closed = "closed";
+
+    /// <summary>The kind a handler's source means: the window's thread and unobserved tasks carry on; the process does not.</summary>
+    internal static string KindOf(string source) => source is "dispatcher" or "task" ? Survived : Closed;
+
+    /// <summary>A record's kind, read from it; a record written before kinds were recorded is taken as a close, as it was described then.</summary>
+    public static string KindOfRecord(string crash)
+    {
+        try
+        {
+            return JsonNode.Parse(File.ReadAllText(crash))?["kind"]?.GetValue<string>() is Survived ? Survived : Closed;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or InvalidOperationException or FormatException)
+        {
+            return Closed;
+        }
+    }
+
+    /// <summary>
+    /// A run that ends without reaching its own exit leaves no exception to record, so each run leaves a marker named with its process
+    /// id and removes it on a clean exit (entry 192 section 3.2). A marker whose process is gone at the next start is a run that closed
+    /// without shutting down, and is recorded as one, unless the run recorded its own crash first.
+    /// </summary>
+    public static void BeginRun(DiagnosticLog log)
+    {
+        ArgumentNullException.ThrowIfNull(log);
+        if (log.Directory is not { } directory)
+        {
+            return;
+        }
+
+        try
+        {
+            foreach (string marker in Directory.EnumerateFiles(directory, "running-*.marker"))
+            {
+                if (!int.TryParse(Path.GetFileNameWithoutExtension(marker)["running-".Length..], NumberStyles.None, CultureInfo.InvariantCulture, out int pid) || Alive(pid))
+                {
+                    continue;
+                }
+
+                DateTime began = File.GetLastWriteTimeUtc(marker);
+                bool recorded = Directory.EnumerateFiles(directory, $"crash-*-{pid}.json").Any(c => File.GetLastWriteTimeUtc(c) >= began && KindOfRecord(c) == Closed);
+                if (!recorded)
+                {
+                    string path = Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"crash-{began:yyyyMMdd-HHmmss}-{pid}.json"));
+                    var record = Describe(new InvalidOperationException("GroupLab did not shut down cleanly, and nothing was recorded at the time."), began, Closed);
+                    record["exceptions"] = new JsonArray();
+                    record["stopped"] = "the run ended without reaching its own exit";
+                    File.WriteAllText(path, record.ToJsonString(Indented));
+                    log.Write(LogLevel.Warn, "app.unclean", [("pid", pid)]);
+                }
+
+                File.Delete(marker);
+            }
+
+            File.WriteAllText(Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"running-{Environment.ProcessId}.marker")), "");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "crash.marker", ex);
+        }
+    }
+
+    /// <summary>A clean exit: this run's marker goes.</summary>
+    public static void EndRun(DiagnosticLog log)
+    {
+        ArgumentNullException.ThrowIfNull(log);
+        if (log.Directory is { } directory)
+        {
+            try
+            {
+                File.Delete(Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"running-{Environment.ProcessId}.marker")));
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                DiagnosticLog.Exception(LogLevel.Warn, "crash.marker", ex);
+            }
+        }
+    }
+
+    private static bool Alive(int pid)
+    {
+        try
+        {
+            using var process = System.Diagnostics.Process.GetProcessById(pid);
+            return !process.HasExited;
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Entry 192 section 3.4: the records grouped by what went wrong, so five records of one error read as one error five times. The
+    /// grouping is the exception's type and the first GroupLab frame in its stack, not Avalonia's, and each line says the kind and the last
+    /// thing the person did.
+    /// </summary>
+    public static string Summary(IEnumerable<string> crashes)
+    {
+        ArgumentNullException.ThrowIfNull(crashes);
+        var groups = new Dictionary<string, (int Count, string Kind, string? Last)>(StringComparer.Ordinal);
+        foreach (string crash in crashes)
+        {
+            try
+            {
+                var record = JsonNode.Parse(File.ReadAllText(crash));
+                var first = record?["exceptions"]?.AsArray().FirstOrDefault();
+                string type = (string?)first?["type"] ?? "no exception";
+                string frame = ((string?)first?["stack"] ?? "").Split('\n').Select(l => l.Trim()).FirstOrDefault(l => l.StartsWith("at GroupLab.", StringComparison.Ordinal)) ?? "";
+                string at = frame.Length == 0 ? "" : " in " + frame[3..].Split('(')[0];
+                string key = type + at;
+                string kind = KindOfRecord(crash);
+                groups[key] = groups.TryGetValue(key, out var seen) ? (seen.Count + 1, seen.Kind, (string?)record?["last_action"] ?? seen.Last) : (1, kind, (string?)record?["last_action"]);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or InvalidOperationException)
+            {
+                DiagnosticLog.Exception(LogLevel.Warn, "crash.summary", ex);
+            }
+        }
+
+        return string.Join("\n", groups.OrderByDescending(g => g.Value.Count).Select(g => string.Create(CultureInfo.InvariantCulture,
+            $"{g.Value.Count} time{(g.Value.Count == 1 ? "" : "s")}: {g.Key}, {(g.Value.Kind == Survived ? "survived" : "closed")}{(g.Value.Last is { } last ? ", after " + last : "")}")));
     }
 
     /// <summary>Every crash record in the directory not yet dealt with, oldest first.</summary>

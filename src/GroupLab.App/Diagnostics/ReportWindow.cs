@@ -110,7 +110,14 @@ public sealed class ReportWindow : Window
     {
         try
         {
-            var result = ReportPackage.Build(path, crash, runLog, previousLog, ReportPackage.EnvironmentText(CrashReporter.DisplayScale), description.Text, contact.Text);
+            // Entry 192 section 3.4: every record on this computer, grouped, so a reader sees one error five times rather than five crashes.
+            string environment = ReportPackage.EnvironmentText(CrashReporter.DisplayScale);
+            if (crash is not null && Path.GetDirectoryName(crash) is { } records && CrashReporter.Summary(Directory.EnumerateFiles(records, "crash-*.json").Order(StringComparer.Ordinal)) is { Length: > 0 } summary)
+            {
+                environment += "\n\nErrors recorded on this computer, grouped:\n" + summary;
+            }
+
+            var result = ReportPackage.Build(path, crash, runLog, previousLog, environment, description.Text, contact.Text);
             saved = path;
             reveal.IsEnabled = true;
             status.Text = $"Saved to {path}." + (result.DroppedPreviousLog ? " The log of the run before was left out to keep the report small." : "");

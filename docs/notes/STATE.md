@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 191.
+**Last rewritten:** 2026-09-24, after entry 192.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 191 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 192 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entries 192 to 194 are next, in number order. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
+- Entries 193 and 194 are next, in number order. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
   194 sends error reports to a private repository and ends in one request for Alan.
 - **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
@@ -66,10 +66,11 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 192, 193, 194
+**Holds:** 193, 194
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **An error GroupLab survives is no longer called a close** (entry 192); each run leaves a marker so a real close is caught.
 - **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
 - **The zeroing grids found no holes at all** until entry 189: their one bull had a cell of no size.
 - **The upload page asks for one of two consent levels**, testing only or may be published (`consent_v2`), and a

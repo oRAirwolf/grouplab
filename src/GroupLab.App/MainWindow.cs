@@ -1040,6 +1040,23 @@ public sealed partial class MainWindow : Window
     internal StackPanel CrashBanner => crashBanner;
 
     /// <summary>
+    /// What the banner says, entry 192 section 3.2: an error GroupLab survived is not a close. Unholy was told it "closed unexpectedly 5
+    /// times" by a run that never closed. Only a record of a real close is called closing.
+    /// </summary>
+    internal static string CrashBannerWords(IReadOnlyList<string> pending)
+    {
+        int survived = pending.Count(c => CrashReporter.KindOfRecord(c) == CrashReporter.Survived), closed = pending.Count - survived;
+        string Times(int n) => n == 1 ? "once" : string.Create(CultureInfo.InvariantCulture, $"{n} times");
+        return (closed, survived) switch
+        {
+            (0, _) => $"GroupLab hit an error {Times(survived)} and kept running, and recorded what went wrong.",
+            (1, 0) => "GroupLab closed unexpectedly last time, and recorded what went wrong.",
+            (_, 0) => $"GroupLab closed unexpectedly {Times(closed)}, and recorded what went wrong.",
+            _ => $"GroupLab closed unexpectedly {Times(closed)} and hit an error it kept running through {Times(survived)}, and recorded what went wrong.",
+        };
+    }
+
+    /// <summary>
     /// The next-launch offer, NOTES-FROM-PLANNING.md entry 41 section 5: a crashing application often cannot draw, so the reliable moment to
     /// say that something went wrong is the next time GroupLab opens. Every crash record not yet dealt with is offered here until the user
     /// deals with it.
@@ -1067,9 +1084,7 @@ public sealed partial class MainWindow : Window
         DiagnosticLog.Info("crash.offered", ("pending", pending.Count));
         crashBanner.Children.Add(new TextBlock
         {
-            Text = pending.Count == 1
-                ? "GroupLab closed unexpectedly last time, and recorded what went wrong."
-                : string.Create(CultureInfo.InvariantCulture, $"GroupLab closed unexpectedly {pending.Count} times, and recorded what went wrong."),
+            Text = CrashBannerWords(pending),
             TextWrapping = TextWrapping.Wrap,
             FontWeight = FontWeight.SemiBold,
             Classes = { AppStyles.Alert },
@@ -1586,7 +1601,20 @@ public sealed partial class MainWindow : Window
 
         if (calibre is not null)
         {
-            calibreBox.Text = calibre.Name;
+            // Entry 192, Unholy's five "crashes": Set pressed with the list open wrote the box's text from inside its own update, which closed
+            // the list over a selection it no longer held and threw in Avalonia. The first press was lost and the second worked. The list is
+            // closed before the text changes, and the text written here is not taken for typing, so the suggestions are not remade under it.
+            bool was = choosingCalibre;
+            choosingCalibre = true;
+            try
+            {
+                calibreBox.IsDropDownOpen = false;
+                calibreBox.Text = calibre.Name;
+            }
+            finally
+            {
+                choosingCalibre = was;
+            }
         }
 
         bool untouched = detectedState is not null && ReferenceEquals(session.State, detectedState);
@@ -1625,8 +1653,8 @@ public sealed partial class MainWindow : Window
         choosingCalibre = true;
         try
         {
-            calibreBox.Text = chosen;
             calibreBox.IsDropDownOpen = false;
+            calibreBox.Text = chosen;
             SetCalibreFromBox();
         }
         finally
