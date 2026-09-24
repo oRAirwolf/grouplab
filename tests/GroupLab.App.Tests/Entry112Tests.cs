@@ -313,21 +313,22 @@ public class Entry112Tests
             Assert.Equal("My 5x5", window.LibrarySelected!.Definition.Name);
             Assert.Equal(copy.File, window.LibrarySelected.File);
 
-            // The print screen lists both, and the own sheet prints through the same path as a built-in one.
+            // The print panel beside the list reads the same sheets, and the own sheet prints through the same path as a built-in one.
+            // Entry 155: it is the Targets screen's own panel, not a window of its own.
             var print = window.PrintFromLibrary();
+            Assert.Same(window.TargetsPanel, print);
             Assert.Contains(print.Sheets, s => s.Family == OwnSheets.Family && s.Definition.Name == "My 5x5");
             Assert.Contains(print.Sheets, s => s.Family != OwnSheets.Family);
             Assert.True(print.SavePdf(Path.Combine(folder, "own.pdf")));
-            print.Close();
 
-            // The designer keeps what it makes among the own sheets.
-            var designer = new PrintWindow(window.OwnSheets);
-            designer.Show();
+            // The designer keeps what it makes among the own sheets, and the list selects it.
+            var designer = window.TargetsPanel;
+            designer.Design();
             designer.SetDesign("letter", 5, 5, "1.50", 254, 3, false);
             var designed = Assert.IsType<GroupLab.Core.Rendering.LibrarySheet>(designer.SaveDesign());
             Assert.Contains(designer.Sheets, s => s.File == designed.File && s.Family == OwnSheets.Family);
             Assert.StartsWith("Saved as ", designer.StatusText, StringComparison.Ordinal);
-            designer.Close();
+            Assert.Equal(designed.File, window.LibrarySelected!.File);
 
             // Deleting asks first, says how many sessions used the sheet, and they keep their copy.
             window.ChooseLibrarySheet("My 5x5");

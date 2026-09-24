@@ -621,7 +621,7 @@
    "kind": "code",
    "where": "SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs"
   },
-  "Ten pages, one per screen, so you can see what using GroupLab is like before you download it.": {
+  "Nine pages, one per screen, so you can see what using GroupLab is like before you download it.": {
    "kind": "code",
    "where": "scripts/counts.py tour-screens, from website/tour.json"
   },
@@ -1185,15 +1185,11 @@
    "kind": "decided",
    "where": "what GroupLab is, DESIGN.md section 1"
   },
-  "![The target library, with a built-in sheet chosen](figures/screens/current/library-light-1400x900.png) Print opens the print screen on the sheet you chose.": {
+  "![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
   "- **Print** (on Windows) prints from inside GroupLab at actual size.": {
-   "kind": "code",
-   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
-  },
-  "![The print screen](figures/screens/current/print-light-1400x900.png) **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
@@ -1344,6 +1340,18 @@
   "From five shots, the rifle's true spread is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.": {
    "kind": "measured",
    "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the nine screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "the build plan, DESIGN.md section 21 and README's Planned"
+  },
+  "So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper cannot hold the sheet.": {
+   "kind": "code",
+   "where": "the print screen, src/GroupLab.App/PrintWindow.cs"
+  },
+  "**Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
+   "kind": "code",
+   "where": "the print screen's check line and targets/GL-CF25-LTR.gltd.json"
   }
  },
  "rules": [

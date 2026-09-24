@@ -170,11 +170,11 @@ public class ClaimsAboutMeasuringTests
     [Fact]
     public void WhyToPrintAtActualSizeIsSaidFromOneSentence()
     {
-        Assert.Contains("DetectionAdvice.WhyActualSize", File.ReadAllText(Path.Combine(Repo.Root, "src", "GroupLab.App", "PrintWindow.cs")), StringComparison.Ordinal);
+        Assert.Contains("DetectionAdvice.WhyActualSize", File.ReadAllText(Path.Combine(Repo.Root, "src", "GroupLab.App", "PrintPanel.cs")), StringComparison.Ordinal);
         Assert.Contains(DetectionAdvice.WhyActualSize, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "WHAT-CAN-BE-MEASURED.md")), StringComparison.Ordinal);
 
         using var tour = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repo.PathTo("website"), "tour.json")));
-        Assert.Contains(DetectionAdvice.WhyActualSize, tour.RootElement.GetProperty("screens").GetProperty("print").GetProperty("purpose").GetString(), StringComparison.Ordinal);
+        Assert.Contains(DetectionAdvice.WhyActualSize, tour.RootElement.GetProperty("screens").GetProperty("targets").GetProperty("purpose").GetString(), StringComparison.Ordinal);
 
         Assert.Equal("Measured in the sheet's own inches; if the sheet was not printed at actual size, the figures are off by the same percentage.", DetectionAdvice.SheetInches);
     }

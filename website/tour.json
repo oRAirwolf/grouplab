@@ -17,11 +17,13 @@
   "Entry 152: what each screen does with a target GroupLab did not print is a field of its own, 'withoutASheet',",
   "and every screen has one. On several of them the honest answer is 'no difference', and saying so is worth a line.",
   "docs/WHAT-CAN-BE-MEASURED.md is the one source for what GroupLab can measure and where the scale comes from;",
-  "nothing here states its own version of that."
+  "nothing here states its own version of that.",
+  "",
+  "Entry 155: the Target library and Printing were two screens doing one job, and are one screen now, Targets. /tour/library/ and",
+  "/tour/print/ are each a plain page with one link to /tour/targets/, since entry 151 bans a meta refresh, so a link to either still arrives."
  ],
  "order": [
-  "library",
-  "print",
+  "targets",
   "marking",
   "analysis",
   "analysis-open",
@@ -32,112 +34,6 @@
   "settings"
  ],
  "screens": {
-  "library": {
-   "name": "Target library",
-   "blurb": "The {count:sheets} sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.",
-   "purpose": "The library is where you choose which sheet to print. Every one of them is designed for a particular job at a particular distance, and the description under each says which. A GroupLab sheet is the easy path, because it carries its own scale, its own orientation and the positions of its bulls in the markers printed around them, so nothing has to be set by hand. Any other target can be measured too, once you have set the scale yourself and marked the shots yourself.",
-   "withoutASheet": "Nothing on this screen applies. The library holds the sheets GroupLab prints; a target from anywhere else is opened on the marking screen instead.",
-   "parts": [
-    [
-     "The list, grouped by what the sheet is for",
-     "Centerfire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
-    ],
-    [
-     "The sheet you have chosen",
-     "Shown whole on the right, with its full description underneath: the bull spacing, the sighter row, the distance it was designed for, and the paper it wants."
-    ],
-    [
-     "Built in and read only",
-     "The twenty that come with GroupLab cannot be edited. Duplicate makes a copy that is yours, to rename and change."
-    ],
-    [
-     "Print",
-     "Opens the print screen with this sheet already chosen."
-    ],
-    [
-     "Design your own sheet",
-     "For a sheet no built-in one covers. Your own sheets appear at the bottom of the list."
-    ],
-    [
-     "Zoom in, Zoom out and Fit",
-     "Move around the preview. This is artwork, not a photograph, so it stays sharp however far you go in."
-    ]
-   ],
-   "steps": [
-    "Find the group that matches what you are doing: load development, rimfire, zeroing.",
-    "Pick a sheet whose distance and paper size match your range and your printer.",
-    "Read the description to check the bull spacing suits the group you expect.",
-    "Press Print to go to the print screen with it loaded."
-   ],
-   "fits": "This is usually where a session starts. From here you go to <a href=\"/tour/print/\">Printing</a>.",
-   "links": [
-    [
-     "Designing a target GroupLab can read",
-     "/research/designing-a-readable-target/"
-    ],
-    [
-     "Choosing the markers",
-     "/research/choosing-the-markers/"
-    ]
-   ]
-  },
-  "print": {
-   "name": "Printing",
-   "blurb": "Prints the sheet at its true size, and tells you when the paper or the printer's margins would spoil it.",
-   "purpose": "A sheet printed smaller than it should be is still read correctly, bull by bull, because the markers shrank with everything else. It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it. A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large. A ruler against the printed edge is how you know before you shoot. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.",
-   "withoutASheet": "Nothing on this screen applies. It prints GroupLab's own sheets, at their true size.",
-   "parts": [
-    [
-     "The sheet list on the left",
-     "The same sheets as the library. The one in the shaded row is the one being printed."
-    ],
-    [
-     "The description at the top",
-     "What this sheet is, how many scoring bulls, the grid spacing, the distance it was designed for and the paper it needs."
-    ],
-    [
-     "Print the actual-size instruction",
-     "Adds a line along the bottom edge of each sheet telling whoever prints it to choose Actual size and never Fit. Leave it on unless you are printing for yourself and know the driver."
-    ],
-    [
-     "The warning about drivers",
-     "GroupLab says plainly what it has and has not proved on paper. It asks the viewer for no scaling and cannot set your printer driver, so it tells you what to check rather than promising."
-    ],
-    [
-     "Open to print, Save PDF and Print",
-     "Open to print hands the PDF to your usual viewer, which is the safest route today. Save PDF writes the file. Print goes straight to a driver."
-    ],
-    [
-     "Print a volunteer pack",
-     "The sheet plus one page telling somebody else how to shoot it, photograph it and send it back."
-    ],
-    [
-     "Previous sheet, Next sheet",
-     "For a tiled sheet that spans several pages. The counter says which page of how many."
-    ],
-    [
-     "The preview",
-     "The artwork of the page about to print. Its text is drawn in the PDF rather than in the preview, so the preview shows slightly less than the paper will."
-    ]
-   ],
-   "steps": [
-    "Choose the sheet and check the paper size against what is in your printer.",
-    "Leave the actual-size instruction on if anybody but you will print it.",
-    "Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.",
-    "Measure one printed bull with a ruler against the size in the description before you shoot a whole session on it."
-   ],
-   "fits": "After <a href=\"/tour/library/\">the library</a>. You shoot the sheet, then photograph or scan it and open it in <a href=\"/tour/marking/\">marking</a>.",
-   "links": [
-    [
-     "Printing a target at its true size",
-     "/research/printer-true-size/"
-    ],
-    [
-     "The user guide",
-     "/guides/user-guide/"
-    ]
-   ]
-  },
   "marking": {
    "name": "Marking and review",
    "blurb": "Every hole found and numbered to its bull, with anything uncertain raised for you to settle.",
@@ -196,7 +92,7 @@
     "Drag any mark that sits off a hole with the select tool, V, and use a bull's number to move a shot to the right bull.",
     "Mark anything you called as a flyer, then press Accept and analyze."
    ],
-   "fits": "After you have shot and photographed a sheet from <a href=\"/tour/print/\">printing</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
+   "fits": "After you have shot and photographed a sheet from <a href=\"/tour/targets/\">Targets</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
    "links": [
     [
      "How GroupLab reads a target",
@@ -566,6 +462,77 @@
     [
      "Nightly builds",
      "/research/nightly-builds/"
+    ]
+   ]
+  },
+  "targets": {
+   "name": "Targets",
+   "blurb": "The {count:sheets} sheets GroupLab comes with and any you design, grouped by what they are for, and everything it takes to print the one you choose, on one screen.",
+   "merged": "This was two screens, the target library and printing. They did the same job, so they are one screen now.",
+   "purpose": "This is where you choose which sheet to print and print it. Every sheet is designed for a particular job at a particular distance, and the description under each says which. A GroupLab sheet is the easy path, because it carries its own scale, its own orientation and the positions of its bulls in the markers printed around them, so nothing has to be set by hand. It prints at its true size. A sheet printed smaller than it should be is still read correctly, bull by bull, because the markers shrank with everything else. It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it. A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large. So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper cannot hold the sheet.",
+   "withoutASheet": "Nothing on this screen applies. It holds and prints GroupLab's own sheets; a target from anywhere else is opened on the marking screen instead.",
+   "parts": [
+    [
+     "The list, grouped by what the sheet is for",
+     "Centerfire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
+    ],
+    [
+     "The sheet you have chosen, beside the list",
+     "Its name and full description: the bull spacing, the sighter row, the distance it was designed for, and the paper it wants. Choosing a sheet fills everything under it at once."
+    ],
+    [
+     "Built in and read only",
+     "The twenty that come with GroupLab cannot be edited. Duplicate makes a copy that is yours, to rename and change."
+    ],
+    [
+     "The load block",
+     "Blank, to write on at the range, or filled in now from its fields."
+    ],
+    [
+     "Print the actual-size instruction",
+     "Adds a line along the bottom edge of each sheet telling whoever prints it to choose Actual size and never Fit. Leave it on unless you are printing for yourself and know the driver."
+    ],
+    [
+     "Open to print, Save PDF and Print",
+     "Open to print hands the PDF to your usual viewer, which is the safest route today. Save PDF writes the file. Print goes straight to a driver, on Windows."
+    ],
+    [
+     "Print a volunteer pack",
+     "The sheet plus one page telling somebody else how to shoot it, photograph it and send it back."
+    ],
+    [
+     "Previous sheet, Next sheet",
+     "For a tiled sheet that spans several pages. The counter says which page of how many."
+    ],
+    [
+     "The preview, with Zoom in, Zoom out and Fit",
+     "The artwork of the page about to print, filling the rest of the screen. It is artwork, not a photograph, so it stays sharp however far you go in; its text is drawn in the PDF, so the preview shows slightly less than the paper will."
+    ],
+    [
+     "Design your own sheet",
+     "For a sheet no built-in one covers. The designer opens beside the list, and your own sheets appear at the bottom of it."
+    ]
+   ],
+   "steps": [
+    "Find the group that matches what you are doing: load development, rimfire, zeroing.",
+    "Pick a sheet whose distance and paper size match your range and your printer.",
+    "Leave the actual-size instruction on if anybody but you will print it.",
+    "Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.",
+    "Measure one printed bull with a ruler against the size in the description before you shoot a whole session on it."
+   ],
+   "fits": "This is usually where a session starts. You shoot the sheet, then photograph or scan it and open it in <a href=\"/tour/marking/\">marking</a>.",
+   "links": [
+    [
+     "Designing a target GroupLab can read",
+     "/research/designing-a-readable-target/"
+    ],
+    [
+     "Choosing the markers",
+     "/research/choosing-the-markers/"
+    ],
+    [
+     "The user guide",
+     "/guides/user-guide/"
     ]
    ]
   }

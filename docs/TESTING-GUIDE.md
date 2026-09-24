@@ -62,13 +62,13 @@ Both packages bring a `samples` folder.
 
 ## Printing a sheet and shooting it
 
-The rail on the left has the target library and the print screen: <!--count:sheets-->twenty<!--/count--> built-in sheets, printed at actual size.
+The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->twenty<!--/count--> built-in sheets, printed at actual size.
 
 - Print with **Open to print**, and choose Actual size or 100 percent, never Fit to page.
 - **Measure bull 1 to bull 5 before you shoot:** on the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet.
 - Mount it flat, fire one shot per bull in order, and write only in the load block.
 - Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at 600 dpi. Do not crop it, and do not send it through a messaging app.
-- **Print a volunteer pack** on the print screen gives the sheet and a page of these instructions together.
+- **Print a volunteer pack**, beside the chosen sheet, gives the sheet and a page of these instructions together.
 
 ## What is not done yet
 

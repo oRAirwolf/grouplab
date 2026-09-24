@@ -79,8 +79,10 @@ public class LibraryLayoutTests(ITestOutputHelper output)
         // The sheet takes everything the list does not: it is the wider of the two at every size, and it grows as the window does.
         Assert.True(area.Width > window.LibraryListActualWidth,
             $"the sheet has {area.Width:0} and the list {window.LibraryListActualWidth:0}: the sheet should be the wider of the two");
-        Assert.True(area.Width >= window.LibrarySplitBounds.Width - window.LibraryListActualWidth - 40,
-            $"the sheet has {area.Width:0} of the {window.LibrarySplitBounds.Width - window.LibraryListActualWidth:0} left over, so something else is taking the room");
+        // Entry 155: the chosen sheet's print panel has a column of its own between the list and the preview, and the preview takes the rest.
+        double leftOver = window.LibrarySplitBounds.Width - window.LibraryListActualWidth - window.LibraryPanelColumnWidth;
+        Assert.True(area.Width >= leftOver - 40,
+            $"the sheet has {area.Width:0} of the {leftOver:0} left over, so something else is taking the room");
         Assert.True(area.Height >= height * 0.5,
             $"the sheet has {area.Height:0} of a {height} window");
 
@@ -97,7 +99,7 @@ public class LibraryLayoutTests(ITestOutputHelper output)
 
         if (Environment.GetEnvironmentVariable("GROUPLAB_SCREENS_TO_DOCS") == "1")
         {
-            string into = Path.Combine(Repository(), "docs", "figures", "screens", "current", $"library-light-{width}x{height}.png");
+            string into = Path.Combine(Repository(), "docs", "figures", "screens", "current", $"targets-light-{width}x{height}.png");
             Directory.CreateDirectory(Path.GetDirectoryName(into)!);
             using var frame = window.CaptureRenderedFrame();
             frame?.Save(into, new PngBitmapEncoderOptions());

@@ -52,23 +52,46 @@ public sealed partial class MainWindow
     private IReadOnlyList<LibrarySheet>? builtInSheets;
 
     /// <summary>
+    /// The chosen sheet's print panel, NOTES-FROM-PLANNING.md entry 155: the library and the print window did the same job, so they are one
+    /// screen, Targets. The library's grouped list chooses, this panel beside it prints, and no second window opens.
+    /// </summary>
+    private PrintPanel targetsPanel = null!;
+
+    /// <summary>
     /// The narrowest the list column may be, entry 120 section 10.1: wide enough for the longest built-in name beside its paper and bulls at
     /// the current font, so nothing is cut at the smallest window the application supports. A name longer than this wraps to a second line.
     /// </summary>
-    internal const double LibraryListWidth = 520;
+    /// <summary>
+    /// The list's least width. Entry 155 put the print panel between the list and the preview, so the list gives up the room it can spare:
+    /// its rows are a name and a line that wrap well, and the preview needs the width to fill its height at 1280 by 720.
+    /// </summary>
+    internal const double LibraryListWidth = 360;
 
     /// <summary>What the status line says on the library screen. It used to say the marking screen's words about zooming with buttons that were not there.</summary>
-    internal const string LibraryStatus = "The built-in sheets and your own. Choose one on the left to see it whole; the buttons under it zoom the preview.";
+    internal const string LibraryStatus = "The built-in sheets and your own. Choose one on the left: how to print it is beside it, and the buttons under the preview zoom it.";
 
     /// <summary>
-    /// The library screen, entry 120 section 10: it fills the window. A heading and one line at the top, then the list and the sheet side by
-    /// side, with a splitter between them whose width is remembered, and the preview taking everything left over.
+    /// The Targets screen, entry 120 section 10 and entry 155: it fills the window. A heading and one line at the top, then the list, the
+    /// chosen sheet with everything it takes to print it, and the preview taking everything left over. The list's width is remembered.
     /// </summary>
     private Control BuildLibrary()
     {
+        targetsPanel = new PrintPanel(LibrarySheets, ownSheets);
+        targetsPanel.PageShown += page =>
+        {
+            libraryPreview.Source = page;
+            SetLibraryZoom(libraryZoom);
+        };
+        targetsPanel.SheetsChanged += () => FillLibrary();
+        targetsPanel.SheetChosen += sheet =>
+        {
+            librarySelected = sheet;
+            FillLibrary();
+        };
+
         var head = new StackPanel { Spacing = Tokens.Space12 };
-        head.Children.Add(new TextBlock { Text = "Target library", Classes = { AppStyles.Title } });
-        head.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Print opens the print screen on the sheet chosen, where every sheet prints the same way."));
+        head.Children.Add(new TextBlock { Text = "Targets", Classes = { AppStyles.Title } });
+        head.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Choose one to print it: every sheet prints the same way, from the panel beside the list."));
         head.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true))));
 
         double width = Math.Max(LibraryListWidth, settingsStore.LoadColumnWidth("library") ?? LibraryListWidth);
@@ -81,9 +104,13 @@ public sealed partial class MainWindow
         Grid.SetColumn(splitter, 1);
         splitter.DragCompleted += (_, _) => settingsStore.SaveColumnWidth("library", librarySplit.ColumnDefinitions[0].ActualWidth);
 
-        // The sheet: what it is and what can be done with it at the top, the preview filling everything below.
-        var detail = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
-        detail.Children.Add(libraryDetail);
+        // The sheet: what it is, what can be done with it and how it prints, in a column of its own, and the preview filling everything
+        // beside it.
+        var detail = new Grid { ColumnDefinitions = new ColumnDefinitions("380,*"), Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
+        var sheetColumn = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space16, 0) };
+        sheetColumn.Children.Add(libraryDetail);
+        sheetColumn.Children.Add(targetsPanel);
+        detail.Children.Add(new ScrollViewer { Content = sheetColumn, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled });
 
 
         var preview = libraryPreviewArea;
@@ -96,7 +123,7 @@ public sealed partial class MainWindow
         zoom.Margin = new Thickness(0, Tokens.Space8, 0, 0);
         Grid.SetRow(zoom, 1);
         preview.Children.Add(zoom);
-        Grid.SetRow(preview, 1);
+        Grid.SetColumn(preview, 1);
         detail.Children.Add(preview);
 
         Grid.SetColumn(detail, 2);
@@ -173,13 +200,16 @@ public sealed partial class MainWindow
     /// <summary>The room the preview has, for the layout test.</summary>
     internal Rect LibraryPreviewArea => libraryPreviewArea.Bounds;
 
+    /// <summary>The print panel's column, with its margin, for the headless tests.</summary>
+    internal double LibraryPanelColumnWidth => 380 + Tokens.Space16;
+
     /// <summary>The split between the list and the sheet, for the layout test.</summary>
     internal Rect LibrarySplitBounds => librarySplit.Bounds;
 
     /// <summary>Every sheet the library lists: the built-in ones in the catalogue's order, then the person's own by name.</summary>
     private IReadOnlyList<LibrarySheet> LibrarySheets()
     {
-        builtInSheets ??= PrintWindow.BuiltIn();
+        builtInSheets ??= PrintPanel.BuiltIn();
         return [.. builtInSheets, .. ownSheets.List()];
     }
 
@@ -256,8 +286,6 @@ public sealed partial class MainWindow
     private void ShowLibrarySheet()
     {
         libraryDetail.Children.Clear();
-        (libraryPreview.Source as IDisposable)?.Dispose();
-        libraryPreview.Source = null;
         if (librarySelected is not { } sheet)
         {
             libraryDetail.Children.Add(Line("The built-in library was not found beside the application."));
@@ -273,7 +301,7 @@ public sealed partial class MainWindow
             ? "One of your own sheets, kept in GroupLab's data folder."
             : "Built in and read only. Duplicate makes a copy of your own, to rename and keep beside it."));
 
-        var actions = Row(Button("Print\u2026", () => OpenPrint(sheet, design: false)), Button("Duplicate", () => DuplicateSheet(sheet)));
+        var actions = Row(Button("Duplicate", () => DuplicateSheet(sheet)));
         libraryDetail.Children.Add(actions);
         if (mine)
         {
@@ -285,15 +313,15 @@ public sealed partial class MainWindow
             delete.Click += (_, _) =>
             {
                 deleteRow.Children.Clear();
-                deleteRow.Children.Add(new TextBlock { Text = DeleteQuestion(sheet, id), TextWrapping = TextWrapping.Wrap, MaxWidth = 520, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } });
+                deleteRow.Children.Add(new TextBlock { Text = DeleteQuestion(sheet, id), TextWrapping = TextWrapping.Wrap, MaxWidth = 340, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } });
                 deleteRow.Children.Add(Button("Delete", () => DeleteSheet(sheet)));
                 deleteRow.Children.Add(Button("Keep it", FillLibrary));
             };
             libraryDetail.Children.Add(deleteRow);
         }
 
-        libraryPreview.Source = PrintWindow.Preview(sheet.Definition);
-        SetLibraryZoom(libraryZoom);
+        // Entry 155: choosing the sheet fills its print panel at once, and the panel shows its first page in the preview.
+        targetsPanel.ShowSheet(sheet);
     }
 
     /// <summary>The question before a delete, which says how many sessions used the sheet and that each keeps its own copy.</summary>
@@ -340,28 +368,21 @@ public sealed partial class MainWindow
         FillLibrary();
     }
 
-    /// <summary>The print screen, on a chosen sheet or in its designer, with the person's own sheets listed and a design saved into them.</summary>
-    private PrintWindow OpenPrint(LibrarySheet? sheet, bool design)
+    /// <summary>The Targets screen, on a chosen sheet or in its designer. Entry 155: it is this screen, never a window of its own.</summary>
+    private PrintPanel OpenPrint(LibrarySheet? sheet, bool design)
     {
-        var print = new PrintWindow(ownSheets);
-        print.SheetsChanged += () =>
+        if (sheet is not null)
         {
-            if (destination == Destination.Library)
-            {
-                FillLibrary();
-            }
-        };
-        print.Show();
-        if (design)
-        {
-            print.Design();
-        }
-        else if (sheet is not null)
-        {
-            print.Select(sheet.File);
+            librarySelected = sheet;
         }
 
-        return print;
+        Go(Destination.Library);
+        if (design)
+        {
+            targetsPanel.Design();
+        }
+
+        return targetsPanel;
     }
 
     /// <summary>Shows or leaves the target library.</summary>
@@ -392,8 +413,11 @@ public sealed partial class MainWindow
         FillLibrary();
     }
 
-    /// <summary>Opens the print screen from the library as its Print does, for the headless tests.</summary>
-    internal PrintWindow PrintFromLibrary() => OpenPrint(librarySelected, design: false);
+    /// <summary>The chosen sheet's print panel on the Targets screen, for the headless tests.</summary>
+    internal PrintPanel PrintFromLibrary() => OpenPrint(librarySelected, design: false);
+
+    /// <summary>The Targets screen's print panel, for the headless tests.</summary>
+    internal PrintPanel TargetsPanel => targetsPanel;
 
     /// <summary>The texts of the chosen sheet's panel, for the headless tests.</summary>
     internal IEnumerable<string> LibraryDetailText => libraryDetail.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");

@@ -143,7 +143,7 @@ public class NothingIsCutOffTests
     /// <summary>The screens a person can reach, each with the way to it, so the walk cannot quietly miss one.</summary>
     private static IEnumerable<(string Name, Action Show)> Screens(MainWindow window) =>
     [
-        ("the target library", () => window.ShowLibrary()),
+        ("Targets", () => window.ShowLibrary()),
         ("Session records", () => { window.ShowLibrary(false); window.ShowSessions(); }),
         ("Ballistics", () => { window.ShowSessions(false); window.ShowBallistics(); }),
         ("Equipment", () => { window.ShowBallistics(false); window.ShowEquipment(EquipmentKind.Rifle); }),

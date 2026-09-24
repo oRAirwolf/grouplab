@@ -25,7 +25,8 @@ public class UserGuideTests
             Assert.True(File.Exists(Repo.PathTo("docs", guide + ".pdf")), $"docs/{guide}.pdf is missing: run `grouplab user-guide` and commit it.");
         }
 
-        Assert.True(DocumentPdf.Pictures(File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"))).Count >= 8);
+        // Entry 155: the target library and the print screen became one screen, Targets, so the guide shows one picture where it showed two.
+        Assert.True(DocumentPdf.Pictures(File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"))).Count >= 7);
     }
 
     [Fact]

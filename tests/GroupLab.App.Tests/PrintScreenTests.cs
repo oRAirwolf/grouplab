@@ -22,7 +22,7 @@ public class PrintScreenTests
         string path = Path.Combine(Path.GetTempPath(), "grouplab-print-launch.pdf");
         // Entry 122: opening is the one way out of the process now, so this names the file and nothing else. A verb is not expressible
         // from here, which is what the paragraph this test is named for is about.
-        var (opening, status, kind) = PrintWindow.PrintLaunch(path);
+        var (opening, status, kind) = PrintPanel.PrintLaunch(path);
         Assert.Equal(path, opening);
         Assert.Equal(StatusKind.Information, kind);
         Assert.Contains("open in your PDF viewer", status, StringComparison.Ordinal);
@@ -41,8 +41,7 @@ public class PrintScreenTests
     [AvaloniaFact]
     public void OpenToPrintIsThePrimaryUntilTheInAppPathIsCheckedOnPaper()
     {
-        var window = new PrintWindow { Width = 1200, Height = 800 };
-        window.Show();
+        var window = TargetsScreen.Open(1200, 800);
         Dispatcher.UIThread.RunJobs();
         window.Select("GL-CF25-LTR.gltd.json");
         Dispatcher.UIThread.RunJobs();
@@ -59,7 +58,7 @@ public class PrintScreenTests
 
             // The screen says why, in the warning role, naming what was lost and where the safe path is.
             var texts = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(window).OfType<Avalonia.Controls.TextBlock>().ToList();
-            var warning = Assert.Single(texts, t => t.Text == PrintWindow.UnconfirmedWords);
+            var warning = Assert.Single(texts, t => t.Text == PrintPanel.UnconfirmedWords);
             Assert.Contains(GroupLab.App.Theme.AppStyles.FormWarning, warning.Classes);
             Assert.Contains("Open to print", warning.Text, StringComparison.Ordinal);
         }
@@ -79,8 +78,7 @@ public class PrintScreenTests
     [AvaloniaFact]
     public void TheStatusLineIsAnAlertOnlyWhenSomethingFailed()
     {
-        var window = new PrintWindow { Width = 1200, Height = 800 };
-        window.Show();
+        var window = TargetsScreen.Open(1200, 800);
         Dispatcher.UIThread.RunJobs();
         window.Select("GL-CF25-LTR.gltd.json");
         string blocker = Path.Combine(Path.GetTempPath(), $"grouplab-status-{Guid.NewGuid():N}");
@@ -105,8 +103,7 @@ public class PrintScreenTests
     [AvaloniaFact]
     public void TheLibraryListsEverySheetAndSavesAPdfThatAsksForNoScaling()
     {
-        var window = new PrintWindow { Width = 1200, Height = 800 };
-        window.Show();
+        var window = TargetsScreen.Open(1200, 800);
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(22, window.Sheets.Count);
         Assert.NotNull(window.PreviewSource);
@@ -148,8 +145,7 @@ public class PrintScreenTests
     [AvaloniaFact]
     public void EverySheetCanBeSelectedInTurnToggledPagedAndSavedWithoutACrash()
     {
-        var window = new PrintWindow { Width = 1200, Height = 800 };
-        window.Show();
+        var window = TargetsScreen.Open(1200, 800);
         Dispatcher.UIThread.RunJobs();
         string directory = Path.Combine(Path.GetTempPath(), $"grouplab-print-{Guid.NewGuid():N}");
         try

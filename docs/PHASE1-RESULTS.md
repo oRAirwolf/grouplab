@@ -997,6 +997,34 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 155: one Targets screen
+
+**The screen.** The rail has one **Targets** button where it had the target library and Print a target. The list keeps its groups and
+the description under each sheet. Choosing a sheet fills the column beside it at once: its name and description, the load block, the
+actual-size instruction, Open to print, Save PDF, Print on Windows, the volunteer pack, Previous and Next sheet for a tiled sheet, and the
+status line. The sheet's artwork fills the rest of the screen, with zoom. Design your own sheet opens in the same column. No second
+window opens at any point: the print window became `PrintPanel`, a part of the screen, and the old window is gone, not left unreachable.
+
+**Nothing lost.** Every item section 2 lists that the print window had is on the panel, and `Entry155Tests` names each one. Copies and
+a paper chooser were never in the print window, since a sheet fixes its own paper and copies are chosen in the viewer or the driver, so
+nothing was added. The paper refusal is the print gate's, unchanged, and the printed markers and codes come from the same renderer.
+
+**Layout.** The list gives up the width it can spare, 520 to 360, so the preview still fills its height at 1280 by 720. A check box's
+words now take the theme's text color in every state; the panel's was the first to show the gap.
+
+**The tour.** One page, `/tour/targets/`, whose words describe the merged screen and say it was two. `/tour/library/` and
+`/tour/print/` are each a plain page with one link to it, the way the send page's old address is kept, because entry 151 bans a meta
+refresh. The user guide, the testing guide and the crash reporting page say Targets. The screenshot job needs no list change: it runs
+the screenshot test, which now photographs Targets with a sheet chosen, and the old library and print pictures are removed.
+
+**Tests.** The print screen's tests are repointed at the panel through a `TargetsScreen` helper, not deleted. `NothingIsCutOffTests`
+covers Targets at both window sizes; the rail test counts seven buttons. `Entry155Tests`: choosing a sheet fills the panel with no
+second window, section 2's list is all there, and no type in the application is a print window. App 269 passed, Core 1573 passed, 2
+skipped.
+
+**Also in this commit.** Entry 154's commit left the Linux tarball check red: its new source file was not in the ships list. The list is
+regenerated here.
+
 ## Entry 154: every word a shooter may not know explains itself
 
 **One list.** `src/GroupLab.Core/Marking/glossary.json` holds 54 terms: section 1.2's starting list, the ten figures that were already

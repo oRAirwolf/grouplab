@@ -2251,7 +2251,7 @@ public sealed partial class MainWindow : Window
         compareBody.IsVisible = destination == Destination.Compare;
         equipmentBody.IsVisible = destination == Destination.Equipment;
         settingsCrumb.IsVisible = !here;
-        settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Target library", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", Destination.Equipment => "\u203a  Equipment", _ => "\u203a  Settings" };
+        settingsCrumb.Text = destination switch { Destination.Sessions => "\u203a  Session records", Destination.Library => "\u203a  Targets", Destination.Ballistics => "\u203a  Ballistics", Destination.Compare => "\u203a  Compare loads", Destination.Equipment => "\u203a  Equipment", _ => "\u203a  Settings" };
         workBar.IsVisible = workShown && here;
         railHere.Classes.Set(AppStyles.Warn, here);
         railSettings.Classes.Set(AppStyles.Warn, destination == Destination.Settings);
@@ -4256,8 +4256,8 @@ public sealed partial class MainWindow : Window
         top.Children.Add(railHere);
         foreach (var (icon, tip, action) in new (string, string, Action)[]
         {
-            (Icons.Library, "Target library", () => Go(destination == Destination.Library ? Destination.Analyse : Destination.Library)),
-            (Icons.Print, "Print a target", () => OpenPrint(null, design: false)),
+            // Entry 155: the library and the print screen are one screen, Targets, so one slot.
+            (Icons.Library, "Targets", () => Go(destination == Destination.Library ? Destination.Analyse : Destination.Library)),
             (Icons.Records, "Session records", () => Go(destination == Destination.Sessions ? Destination.Analyse : Destination.Sessions)),
             // Entry 112 section 4: the dope table and the solver's fields on the records have no place in the concept's rail, so a slot of their own.
             (Icons.Ballistics, "Ballistics", () => Go(destination == Destination.Ballistics ? Destination.Analyse : Destination.Ballistics)),

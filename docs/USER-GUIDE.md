@@ -4,34 +4,32 @@ GroupLab measures how accurately a rifle shoots, and tells you how much its figu
 
 The rail down the left of the window is how you move around it:
 - the mark at the top is the sheet you are working on;
-- then the target library, printing, the session records and the ballistics screen;
+- then Targets, where sheets are chosen and printed, the session records and the ballistics screen;
 - then load comparison;
 - the gear at the foot is the settings.
 
 ## 1. Print a sheet
 
-Open the target library from the rail. It lists the built-in sheets by family, read only, and your own sheets after them. Choose a sheet to see what it is, its identifier and its artwork.
+Open **Targets** from the rail. It lists the built-in sheets by family, read only, and your own sheets after them. Choose a sheet and
+everything it takes to print it is beside the list, with its artwork filling the rest of the screen.
 
-![The target library, with a built-in sheet chosen](figures/screens/current/library-light-1400x900.png)
+![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png)
 
-Print opens the print screen on the sheet you chose.
 - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown. On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - **Print** (on Windows) prints from inside GroupLab at actual size. It refuses, with the reason, when the paper is not the sheet's or ink would fall in the printer's margin. When the job is sent, a confirmation names the printer and the pages.
 - **Open to print** opens the PDF in your viewer instead. Print it from there at Actual size or 100 percent, never Fit.
 - **Save PDF** keeps the file.
 
-![The print screen](figures/screens/current/print-light-1400x900.png)
-
 **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
 
-**Your own sheet.** Design your own sheet, in the library or on the print screen, lays out a grid of bulls:
+**Your own sheet.** Design your own sheet, at the top of Targets, lays out a grid of bulls:
 - you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;
 - a layout that cannot register or fit is refused;
 - if you give your five-shot group, a spacing tight for it is warned about.
 
-Save to your own sheets keeps a design in the library. There you can rename it, duplicate it, or delete it after GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.
+Save to your own sheets keeps a design in the list. There you can rename it, duplicate it, or delete it after GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.
 
-**A volunteer pack.** Print a volunteer pack, on the print screen, gives the sheet and one page of instructions together, for someone shooting a sheet for the project.
+**A volunteer pack.** Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of instructions together, for someone shooting a sheet for the project.
 
 ## 2. Shoot it
 

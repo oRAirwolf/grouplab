@@ -59,14 +59,12 @@ source that is not on the list below, or if any test writing into this folder co
 | `equipment-light-1280x720.png` | no sheet at all |
 | `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
-| `library-dark-1280x720.png` | built-in library sheet |
-| `library-dark-1400x900.png` | Entry109Tests synthetic sheet |
-| `library-dark-1920x1080.png` | Entry109Tests synthetic sheet |
-| `library-dark-2560x1440.png` | built-in library sheet |
-| `library-light-1280x720.png` | built-in library sheet |
-| `library-light-1400x900.png` | Entry109Tests synthetic sheet |
-| `library-light-1920x1080.png` | Entry109Tests synthetic sheet |
-| `library-light-2560x1440.png` | built-in library sheet |
+| `targets-dark-1280x720.png` | built-in library sheet |
+| `targets-dark-1400x900.png` | built-in library sheet |
+| `targets-dark-2560x1440.png` | built-in library sheet |
+| `targets-light-1280x720.png` | built-in library sheet |
+| `targets-light-1400x900.png` | built-in library sheet |
+| `targets-light-2560x1440.png` | built-in library sheet |
 | `marking-dark-1280x720.png` | Entry109Tests synthetic sheet |
 | `marking-dark-1400x900.png` | Entry109Tests synthetic sheet |
 | `marking-dark-1920x1080.png` | Entry109Tests synthetic sheet |
@@ -75,14 +73,6 @@ source that is not on the list below, or if any test writing into this folder co
 | `marking-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `marking-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `marking-light-2560x1440.png` | Entry109Tests synthetic sheet |
-| `print-dark-1280x720.png` | Entry109Tests synthetic sheet |
-| `print-dark-1400x900.png` | Entry109Tests synthetic sheet |
-| `print-dark-1920x1080.png` | Entry109Tests synthetic sheet |
-| `print-dark-2560x1440.png` | Entry109Tests synthetic sheet |
-| `print-light-1280x720.png` | Entry109Tests synthetic sheet |
-| `print-light-1400x900.png` | Entry109Tests synthetic sheet |
-| `print-light-1920x1080.png` | Entry109Tests synthetic sheet |
-| `print-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `sessions-dark-1280x720.png` | Entry109Tests synthetic sheet |
 | `sessions-dark-1400x900.png` | Entry109Tests synthetic sheet |
 | `sessions-dark-1920x1080.png` | Entry109Tests synthetic sheet |

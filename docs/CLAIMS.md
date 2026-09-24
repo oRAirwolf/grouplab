@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 895 |
+| code | 892 |
 | measured | 1279 |
 | decided | 1051 |
 | unbacked | 0 |
-| **total** | **3225** |
+| **total** | **3222** |
 
-**390** of them were read one sentence at a time and their backing written against the sentence. The other **2835** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**387** of them were read one sentence at a time and their backing written against the sentence. The other **2835** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2474,10 +2474,10 @@ one that matters.
 
 - *decided* (what GroupLab is, DESIGN.md section 1): # GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
-- *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The target library, with a built-in sheet chosen](figures/screens/current/library-light-1400x900.png) Print opens the print screen on the sheet you chose.
+- *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): - **Print** (on Windows) prints from inside GroupLab at actual size.
-- *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The print screen](figures/screens/current/print-light-1400x900.png) **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.
+- *code* (the print screen's check line and targets/GL-CF25-LTR.gltd.json): **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.
 - *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): On the Letter 5x5 sheet it is 5.98 in (152.0 mm).
 - *code* (the library screen, src/GroupLab.App/MainWindow.Library.cs): There you can rename it, duplicate it, or delete it after GroupLab asks.
 - *decided* (the volunteer instructions, docs/VOLUNTEER-PACK.md, entry 113): Shoot it - Mount the sheet flat, supported all over.
@@ -2780,7 +2780,7 @@ one that matters.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
-- *decided* (the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there.
+- *decided* (the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the nine screens: what it is for, what you are looking at, and what you would do there.
 - *code* (LICENSE, and the footer in website/build.py shell()): Get the donor pack Instructions and two targets · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
@@ -3494,25 +3494,12 @@ one that matters.
 
 ### site:tour/index.html
 
-- *code* (scripts/counts.py tour-screens, from website/tour.json): Ten pages, one per screen, so you can see what using GroupLab is like before you download it.
-- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): Target library The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.
-
-### site:tour/library/index.html
-
-- *code* (website/build.py shell(): the page frame and navigation): Target library | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Tour &rsaquo; Target library Target library The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.
-- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): The library holds the sheets GroupLab prints; a target from anywhere else is opened on the marking screen instead.
-- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): The twenty that come with GroupLab cannot be edited.
+- *code* (scripts/counts.py tour-screens, from website/tour.json): Nine pages, one per screen, so you can see what using GroupLab is like before you download it.
 
 ### site:tour/marking/index.html
 
 - *code* (the review pill, ReviewQueue in src/GroupLab.Core/Marking): How many shots are marked and how many need review, so you know how much is left before you can trust the result.
 - *code* (the tour's marking screenshot, rendered by the screenshot tests from a sample): Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it.
-
-### site:tour/print/index.html
-
-- *code* (SheetReference.PrintScale, entry 171; ImperfectSheetTests): A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large.
-- *code* (the print screen, src/GroupLab.App/PrintWindow.cs): So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper you have chosen cannot hold the sheet.
-- *decided* (the print instructions, entry 107 and the print screen): Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.
 
 ### site:tour/sessions/index.html
 
@@ -3521,6 +3508,13 @@ one that matters.
 ### site:tour/settings/index.html
 
 - *code* (UnitSettings in src/GroupLab.Core/Marking/Units.cs; MarkingScreenTests.UnitsChangeWhatIsShownAndNothingThatIsStored): The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record.
+
+### site:tour/targets/index.html
+
+- *code* (SheetReference.PrintScale, entry 171; ImperfectSheetTests): A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large.
+- *code* (the print screen, src/GroupLab.App/PrintWindow.cs): So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper cannot hold the sheet.
+- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): The twenty that come with GroupLab cannot be edited.
+- *decided* (the print instructions, entry 107 and the print screen): Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.
 
 ### site:what-can-be-measured/index.html
 

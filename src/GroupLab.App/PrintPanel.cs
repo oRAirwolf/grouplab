@@ -24,8 +24,10 @@ using GroupLab.Core.Updates;
 namespace GroupLab.App;
 
 /// <summary>
-/// The print screen, NOTES-FROM-PLANNING.md entry 25 section 2: where a new user starts, because GroupLab's premise is that you print
-/// its target, shoot it and photograph it. It calls the renderer that already works.
+/// The selected sheet's half of the Targets screen, NOTES-FROM-PLANNING.md entry 155, which merged the target library and the print window
+/// because they did the same job: the library's grouped list chooses the sheet, and this panel beside it holds everything the print window
+/// held, so no second window opens at any point. Before the merge it was the print screen of entry 25 section 2: where a new user starts,
+/// because GroupLab's premise is that you print its target, shoot it and photograph it. It calls the renderer that already works.
 /// <list type="number">
 /// <item>Pick a sheet from the built-in library by what it is for, its bulls, its paper and its distance.</item>
 /// <item>A preview of the artwork, page by page for a tiled set.</item>
@@ -36,7 +38,7 @@ namespace GroupLab.App;
 /// <item>A tiled target as one PDF of every tile, in order, each numbered beside its identifier.</item>
 /// </list>
 /// </summary>
-public sealed class PrintWindow : Window
+public sealed class PrintPanel : UserControl
 {
     /// <summary>What GroupLab cannot do for the user, said plainly beside the buttons.</summary>
     /// <summary>
@@ -52,10 +54,9 @@ public sealed class PrintWindow : Window
         "\"Fit to printable area\". GroupLab asks the PDF viewer for no scaling, but it cannot set your printer driver. " +
         DetectionAdvice.WhyActualSize + " A sheet printed at 97 percent and photographed makes every group read about 3 percent large.";
 
-    private readonly List<LibrarySheet> sheets;
     private readonly OwnSheets? own;
     private readonly Button saveOwn = new() { Content = "Save to your own sheets", IsVisible = false };
-    private readonly ListBox list = new();
+    private readonly Func<IReadOnlyList<LibrarySheet>> library;
     private readonly TextBlock title = new() { FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock summary = new() { TextWrapping = TextWrapping.Wrap };
     private readonly StackPanel loadBlock = new() { Spacing = Tokens.Space8 };
@@ -102,7 +103,7 @@ public sealed class PrintWindow : Window
 
     private bool designing;
 
-    public PrintWindow()
+    public PrintPanel()
         : this((OwnSheets?)null)
     {
     }
@@ -111,28 +112,21 @@ public sealed class PrintWindow : Window
     /// The built-in library and, NOTES-FROM-PLANNING.md entry 112 section 3, the person's own sheets after it, each printed exactly as a
     /// built-in one is, through the same refusals; with somewhere to keep them, the designer can save what it makes.
     /// </summary>
-    internal PrintWindow(OwnSheets? own)
-        : this([.. BuiltIn(), .. own?.List() ?? []], own)
+    internal PrintPanel(OwnSheets? own)
+        : this(() => [.. BuiltIn(), .. own?.List() ?? []], own)
     {
     }
 
-    internal PrintWindow(IReadOnlyList<LibrarySheet> library, OwnSheets? own = null)
+    internal PrintPanel(IReadOnlyList<LibrarySheet> library, OwnSheets? own = null)
+        : this(() => library, own)
     {
-        sheets = [.. library];
-        this.own = own;
-        Title = "GroupLab: print a target";
-        Width = 1200;
-        Height = 860;
+    }
 
-        FillList();
-        list.SelectionChanged += (_, _) =>
-        {
-            if (list.SelectedIndex >= 0)
-            {
-                ShowDesigner(false);
-                Show(sheets[list.SelectedIndex]);
-            }
-        };
+    /// <summary>A panel reading its sheets from the library that shows it, so a sheet saved, renamed or deleted there is the same sheet here.</summary>
+    internal PrintPanel(Func<IReadOnlyList<LibrarySheet>> library, OwnSheets? own = null)
+    {
+        this.library = library;
+        this.own = own;
 
         BuildDesigner();
         blank.Click += (_, _) => ShowFields();
@@ -153,33 +147,37 @@ public sealed class PrintWindow : Window
 
         details.Children.Add(PrintRow());
         // Entry 113 section 5: the sheet and its one page of instructions together, for a volunteer.
-        details.Children.Add(Row(Button("Print a volunteer pack", PrintPack), new TextBlock { Text = "The sheet and one page telling a volunteer how to shoot, photograph and send it.", VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } }));
+        // Entry 155: the words under the button rather than beside it, so they wrap in the Targets screen's narrower column.
+        var pack = Button("Print a volunteer pack", PrintPack);
+        pack.HorizontalAlignment = HorizontalAlignment.Left;
+        details.Children.Add(new StackPanel { Spacing = Tokens.Space4, Children = { pack, new TextBlock { Text = "The sheet and one page telling a volunteer how to shoot, photograph and send it.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } } } });
         details.Children.Add(status);
+        // The pages of a tiled set turn here; the preview itself is the library's, beside this panel, which shows every page this raises.
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
         details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = Tokens.DetailSize, Opacity = 0.7 });
-        details.Children.Add(preview);
+        details.Margin = new Thickness(0);
+        Content = details;
 
-        var dock = new DockPanel();
-        var leftPanel = new DockPanel();
-        var design = Button("Design your own sheet", () => ShowDesigner(true));
-        design.Margin = new Thickness(8);
-        DockPanel.SetDock(design, Dock.Top);
-        leftPanel.Children.Add(design);
-        leftPanel.Children.Add(new ScrollViewer { Content = list });
-        var left = new Border { Child = leftPanel, Width = 420 };
-        DockPanel.SetDock(left, Dock.Left);
-        dock.Children.Add(left);
-        dock.Children.Add(new ScrollViewer { Content = details });
-        Content = dock;
-
-        if (sheets.Count > 0)
-        {
-            list.SelectedIndex = 0;
-        }
-        else
+        if (library().Count == 0)
         {
             SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
         }
+    }
+
+    /// <summary>Raised with each page of artwork this panel shows, so the screen's one preview can show it.</summary>
+    internal event Action<Bitmap?>? PageShown;
+
+    /// <summary>Raised when the panel chooses a sheet itself, a design it has just saved, so the library can select it too.</summary>
+    internal event Action<LibrarySheet>? SheetChosen;
+
+    /// <summary>The sheets this panel can show, for the headless tests.</summary>
+    internal IReadOnlyList<LibrarySheet> Sheets => library();
+
+    /// <summary>Shows a sheet: its load block, its settings and its first page. The library calls this when a sheet is chosen.</summary>
+    internal void ShowSheet(LibrarySheet sheet)
+    {
+        ShowDesigner(false);
+        Show(sheet);
     }
 
     /// <summary>The built-in library beside the application.</summary>
@@ -188,22 +186,9 @@ public sealed class PrintWindow : Window
     /// <summary>Raised when the designer saves a sheet into the person's own, so the target library can show it.</summary>
     internal event Action? SheetsChanged;
 
-    /// <summary>The list, each sheet under its family, the person's own last.</summary>
-    private void FillList()
-    {
-        list.ItemsSource = sheets.Select(s =>
-        {
-            var item = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(2, 4) };
-            item.Children.Add(new TextBlock { Text = s.Family, FontSize = Tokens.DetailSize, Opacity = 0.7 });
-            item.Children.Add(new TextBlock { Text = s.Definition.Name, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-            item.Children.Add(new TextBlock { Text = s.Summary, FontSize = Tokens.LabelSize, TextWrapping = TextWrapping.Wrap });
-            return item;
-        }).ToList();
-    }
-
     /// <summary>
-    /// Keeps the design the designer shows as one of the person's own sheets, entry 112 section 3, and selects it in the list, where it prints
-    /// as any other sheet does.
+    /// Keeps the design the designer shows as one of the person's own sheets, entry 112 section 3, and selects it, in the library as well,
+    /// where it prints as any other sheet does.
     /// </summary>
     internal LibrarySheet? SaveDesign()
     {
@@ -214,13 +199,15 @@ public sealed class PrintWindow : Window
 
         var saved = own.Save(design.Definition);
         DiagnosticLog.Info("sheet.save", ("sheet", saved.File));
-        sheets.RemoveAll(s => s.Family == OwnSheets.Family);
-        sheets.AddRange(own.List());
-        FillList();
+        SheetsChanged?.Invoke();
         ShowDesigner(false);
         Select(saved.File);
+        if (library().FirstOrDefault(s => s.File == saved.File) is { } chosen)
+        {
+            SheetChosen?.Invoke(chosen);
+        }
+
         SetStatus($"Saved as {saved.Definition.Name} in your own sheets.", StatusKind.Success);
-        SheetsChanged?.Invoke();
         return saved;
     }
 
@@ -303,7 +290,6 @@ public sealed class PrintWindow : Window
         designer.IsVisible = on;
         if (on)
         {
-            list.SelectedIndex = -1;
             Redesign();
         }
     }
@@ -371,8 +357,6 @@ public sealed class PrintWindow : Window
         Classes = { level switch { CheckLevel.Refusal => AppStyles.FormError, CheckLevel.Warning => AppStyles.FormWarning, _ => AppStyles.Secondary } },
     });
 
-    /// <summary>The sheets listed, for the headless tests.</summary>
-    internal IReadOnlyList<LibrarySheet> Sheets => sheets;
 
     /// <summary>The preview image, for the headless tests.</summary>
     internal IImage? PreviewSource => preview.Source;
@@ -399,7 +383,13 @@ public sealed class PrintWindow : Window
     }
 
     /// <summary>Selects a sheet by its file name.</summary>
-    internal void Select(string file) => list.SelectedIndex = sheets.ToList().FindIndex(s => s.File == file);
+    internal void Select(string file)
+    {
+        if (library().FirstOrDefault(s => s.File == file) is { } sheet)
+        {
+            ShowSheet(sheet);
+        }
+    }
 
     internal void SetFilled(bool value)
     {
@@ -544,6 +534,7 @@ public sealed class PrintWindow : Window
 
         (preview.Source as IDisposable)?.Dispose();
         preview.Source = Preview(selected.Definition, page);
+        PageShown?.Invoke(preview.Source as Bitmap);
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
 
@@ -573,7 +564,12 @@ public sealed class PrintWindow : Window
         }
 
         DiagnosticLog.Info("dialog.open", ("dialog", "save-pdf"));
-        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        if (TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
+        {
+            return;
+        }
+
+        var file = await storage.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Save the target as a PDF",
             SuggestedFileName = Path.GetFileName(selected.File).Replace(".gltd.json", ".pdf", StringComparison.Ordinal),
@@ -719,7 +715,7 @@ public sealed class PrintWindow : Window
 
         string sheet = selected.Definition.Name;
         DiagnosticLog.Info("dialog.open", ("dialog", "print"), ("sheet", selected.File), ("pages", result.Pages.Count));
-        var outcome = WindowsPrinter.PrintWithDialog(TryGetPlatformHandle()?.Handle ?? IntPtr.Zero, result.Pages, sheet);
+        var outcome = WindowsPrinter.PrintWithDialog((TopLevel.GetTopLevel(this) as Window)?.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero, result.Pages, sheet);
         DiagnosticLog.Info("print.send", ("sheet", selected.File), ("outcome", outcome.Kind.ToString()), ("pages", outcome.Pages));
         switch (outcome.Kind)
         {
@@ -760,7 +756,10 @@ public sealed class PrintWindow : Window
         };
         ok.Click += (_, _) => dialog.Close();
         Confirmation = dialog;
-        _ = dialog.ShowDialog(this);
+        if (TopLevel.GetTopLevel(this) is Window owner)
+        {
+            _ = dialog.ShowDialog(owner);
+        }
     }
 
     /// <summary>The last confirmation shown, for the headless tests.</summary>

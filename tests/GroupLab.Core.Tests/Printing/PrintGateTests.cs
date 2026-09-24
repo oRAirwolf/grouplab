@@ -17,7 +17,7 @@ namespace GroupLab.Core.Tests.Printing;
 /// <b>Why this exists and why it exists now.</b> Alan prints his targets from the newest nightly before he goes shooting. Printing is the one
 /// thing that cannot slip, and the two tests that covered it best needed a real printer driver, so they skip on CI and they skipped here the
 /// moment "Microsoft Print to PDF" was missing. Everything below runs anywhere: it renders through <see cref="TargetRenderer"/>, which is the
-/// same call <c>PrintWindow.SavePdf</c> makes, and then reads the PDF that came out.
+/// same call <c>PrintPanel.SavePdf</c> makes, and then reads the PDF that came out.
 /// </para>
 /// <para>
 /// <b>The scale check is the one that matters.</b> A sheet that prints at 96 percent still looks perfect; every measurement taken from it is

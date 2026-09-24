@@ -1649,6 +1649,7 @@ def page_tour_screen(key: str) -> str:
 <p class="small faint"><a class="plain" href="/tour/">Tour</a> &rsaquo; {esc(item["name"])}</p>
 <h1>{esc(item["name"])}</h1>
 <p class="lead">{esc(item["blurb"])}</p>
+{f'<p class="note note-teal">{esc(item["merged"])}</p>' if item.get("merged") else ""}
 {tour_shot(key, item["name"] + " in GroupLab: " + item["blurb"], eager=True)}
 <p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>
 <h2>What this screen is for</h2>
@@ -1667,6 +1668,24 @@ def page_tour_screen(key: str) -> str:
 </section>
 """
     return shell(f"/tour/{key}/", item["name"], item["blurb"], body, "Tour")
+
+
+# Entry 155: the target library and the print screen became one screen, Targets. Their old tour addresses stay, each a plain page with
+# one link to the new one, the way the send page's old address is kept: nobody holding the old link is sent anywhere without choosing.
+TOUR_MOVED = {"library": "the target library", "print": "printing"}
+
+
+def page_tour_moved(old: str) -> str:
+    body = f"""
+<section class="wrap page-head stack last">
+<p class="eyebrow">Tour</p>
+<h1>This page has moved.</h1>
+<p class="lead">The target library and printing were two screens doing one job, and they are one screen now, Targets. What this page said about
+{TOUR_MOVED[old]} is on its page.</p>
+<div class="actions">{btn("Go to Targets", "/tour/targets/", True)}</div>
+</section>
+"""
+    return shell(f"/tour/{old}/", "Targets", "The target library and printing are one screen now, Targets.", body, "Tour")
 
 
 def page_discord() -> str:
@@ -1996,7 +2015,7 @@ p.text,.text p,.text{color:var(--text)}
 .research-thumb{width:100%;aspect-ratio:320/200;object-fit:cover;border-radius:4px;background:var(--sunk);margin-bottom:8px}
 .research-fig{max-width:100%;height:auto;border-radius:4px}
 /* Entry 143 section 1.1: the lead for an article with no chart. Same shape as a thumbnail so the row is even,
-   and drawn in the site's own colours so it follows the theme with no second image to keep in step. */
+   and drawn in the site's own colors so it follows the theme with no second image to keep in step. */
 .research-plate{aspect-ratio:320/200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--sunk);border:1px solid var(--line);color:var(--faint)}
 .plate-rule{width:42px;height:2px;background:var(--amber);opacity:.8}
 .plate-number{font-size:30px;color:var(--dim);line-height:1}
@@ -2347,6 +2366,8 @@ def main() -> None:
     write("tour/index.html", page_tour_index())
     for key in tour()["order"]:
         write(f"tour/{key}/index.html", page_tour_screen(key))
+    for old in TOUR_MOVED:
+        write(f"tour/{old}/index.html", page_tour_moved(old))
     write("discord/index.html", page_discord())
     write("404.html", page_404())
 

@@ -287,9 +287,6 @@ public class Entry109Tests
                         BcReference = GroupLab.Core.Ballistics.ReferenceAtmosphere.Icao, BulletWeightGrains = 140,
                     });
                     window.Session.SetEquipment(rifle, null, "Test load");
-                    var print = new PrintWindow { Width = width, Height = height };
-                    print.Show();
-                    print.Select("GL-CF25-LTR.gltd.json");
                     foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
                     {
                         string size = $"{width}x{height}";
@@ -310,8 +307,10 @@ public class Entry109Tests
                         window.ShowSessions();
                         Save(window, $"sessions-{name}-{size}");
                         window.ShowSessions(false);
+                        // Entry 155: the library and the print screen are one screen, Targets, photographed once with a sheet chosen.
                         window.ShowLibrary();
-                        Save(window, $"library-{name}-{size}");
+                        window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-CF25-LTR.gltd.json").Definition.Name);
+                        Save(window, $"targets-{name}-{size}");
                         window.ShowLibrary(false);
                         window.ShowBallistics();
                         window.ProjectGroup("600", 0, "4", "4", "2");
@@ -335,10 +334,8 @@ public class Entry109Tests
                         window.CompareChosen();
                         Save(window, $"compare-{name}-{size}");
                         window.ShowCompare(false);
-                        Save(print, $"print-{name}-{size}");
                     }
 
-                    print.Close();
                     window.Close();
                 }
                 finally

@@ -182,6 +182,14 @@ public static class AppStyles
             yield return ($"ToggleButtonBorderBrushChecked{state}", Brush(p.AmberTintBorder));
             yield return ($"ComboBoxBackground{state}", Brush(p.FieldBg));
             yield return ($"ComboBoxForeground{state}", Brush(p.Text));
+
+            // Entry 155: a check box's and a radio button's words are body text, in the theme's text color in every state, as the rest of
+            // the screen is. The print panel's check box on the Targets screen was the first to be held to it.
+            foreach (string check in new[] { "Unchecked", "Checked", "Indeterminate" })
+            {
+                yield return ($"CheckBoxForeground{check}{state}", Brush(p.Text));
+                yield return ($"RadioButtonForeground{state}", Brush(p.Text));
+            }
             yield return ($"ComboBoxBorderBrush{state}", Brush(state == "" ? p.FieldBorder : p.FocusRing));
         }
 

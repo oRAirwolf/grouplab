@@ -15,10 +15,9 @@ public class DesignerTests
 {
     private static string Repository([CallerFilePath] string here = "") => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", ".."));
 
-    private static PrintWindow Window()
+    private static PrintPanel Window()
     {
-        var window = new PrintWindow(TargetLibrary.Load(Path.Combine(Repository(), "targets")));
-        window.Show();
+        var window = TargetsScreen.Open();
         Dispatcher.UIThread.RunJobs();
         return window;
     }

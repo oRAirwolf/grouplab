@@ -241,8 +241,7 @@ public class Entry113Tests
     [AvaloniaFact]
     public void ThePrintScreenPrintsAVolunteerPack()
     {
-        var print = new PrintWindow();
-        print.Show();
+        var print = TargetsScreen.Open();
         print.Select("GL-CF25-LTR.gltd.json");
         Settle();
         Assert.Contains(print.GetLogicalDescendants().OfType<Button>(), b => Equals(b.Content, "Print a volunteer pack"));

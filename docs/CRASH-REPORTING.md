@@ -74,7 +74,7 @@ The pull script reads this to print one line per report saying what crashed, so 
   "exceptions": [
     { "type": "System.InvalidOperationException",
       "message": "The control TextBox already has a visual parent.",
-      "stack": "   at GroupLab.App.PrintWindow.ShowFields()..." }
+      "stack": "   at GroupLab.App.PrintPanel.ShowFields()..." }
   ],
   "stages": []
 }

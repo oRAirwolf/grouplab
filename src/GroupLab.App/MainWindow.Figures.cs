@@ -65,7 +65,7 @@ public sealed partial class MainWindow
         if (!ReferenceEquals(definition, thumbnailDefinition))
         {
             (thumbnail.Artwork as IDisposable)?.Dispose();
-            thumbnail.Artwork = PrintWindow.Preview(definition);
+            thumbnail.Artwork = PrintPanel.Preview(definition);
             thumbnailDefinition = definition;
         }
 
