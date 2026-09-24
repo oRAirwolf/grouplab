@@ -1,85 +1,78 @@
 # Where this project is, right now
 
-**Rewritten at the end of every run, never appended to. Under 120 lines, and a test holds it there.**
+**Rewritten at the end of every entry, never appended to. Under 120 lines, and a test holds it there.**
 
-NOTES-FROM-PLANNING.md entry 160 section 2. Both sessions read this file first, instead of searching
-`NOTES-FROM-PLANNING.md` and `PHASE1-RESULTS.md`, which together weighed 2 MB before entry 160 split
-them. It is also how the planning session stops working from a stale picture, which has already
-happened once, with entry 148.
+NOTES-FROM-PLANNING.md entries 160 and 180. Both sessions read this file first, instead of searching
+`NOTES-FROM-PLANNING.md` and `PHASE1-RESULTS.md`. Alan does not read the Claude Code panel: what is in it for
+him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs him is in
+`docs/notes/for-alan.md`, which starts with the count of open requests.
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 171.
+**Last rewritten:** 2026-09-24, after entry 180.
 
 ---
 
 ## In flight
 
-- Entries 149 to 153, 160 to 164, 167, 168, 171 and 173 are done. **The upload page is open at
-  `grouplab.org/targets/`.**
-- Alan's order from here: **170, 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
+- Done this run: 171, 173, 164, 174, 175, 176, 177, 178, 179, 180, and entry 170 sections 1 to 3.
+- **Entry 170 section 4, the hole centres, is part done and set aside**, uncommitted, in this session's
+  scratchpad (`e170-s4`). The finding: the detector's centre is pulled toward the scanner's shadow, 0.011 in
+  on average, the same way on every scan. The area centroid halves it; an edge fit removes it on real scans
+  but moved some synthetic holes up to 0.039 in, so neither is committed yet.
+- Alan's order from here: **170 (section 4), 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
-- Entry 149 sections 3 and 4 were never done and nothing brought them back. Entry 171 section 6.1 puts
-  section 3 with entry 170 section 2 and section 4 with entry 172 section 3 item 1.
+- Entry 149 section 3 A is built; D is question 50. Section 4 goes with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 170.** An outside user's defects: two interface freezes, a zero correction that does not say
-   its distance, and hole centres he had to move by hand. With entry 149 section 3.
-2. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures entry 170's hole centres.
-3. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, and what was checked on a Mac.
+1. **Entry 170 section 4.** Decide between the area centroid and an edge fit with a better gate, against
+   the synthetic truth and the real scans, then request 9's hand markings when they come.
+2. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures detection and hole centres.
+3. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, what was checked on a Mac.
 
 ## Blocked, and on what
 
-- **The intake worker's server side.** Request 11: the ClamAV daemon, HEIC decoding and the committed worker. Until
-  then the 3G drop-in keeps it running. Entry 129 itself is complete (entry 178).
-- **Entry 156, hit probability.** The mathematics is decided; the layout waits on screenshots of the
-  tools Alan already uses. Request 2.
-- **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
+- **The server's virus scanner.** Request 11: clamav-daemon, HEIC decoding and the committed intake worker.
+  Until then uploads are rebuilt from pixels but not scanned, and the pull script says so.
+- **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 
-Open requests in `docs/notes/for-alan.md`: **5** (2, 9, 11, 12, and 5, which Alan is applying).
+Open requests in `docs/notes/for-alan.md`: **4** (11 most urgent, then 9, 12, and 5 being applied).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 171 closed 39, 41, 42, 45, 46, 48 and 49 and most
-of 44; answered ones are listed there by number and live whole in the archive.
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **50** question 37's D cannot find the offset without being told the bulls
 - **44, the part still open** the bent-sheet model throws at a point outside the page
-- **43** entry 137 names an image safety the desktop does not have; item 1 is built, item 2 is not
+- **43** entry 137 names an image safety the desktop does not have
 - **36** a light installer, measured, and why shrinking the one we have beat it
 - **34** pooling two sheets of one load needs a rule for what a pooled group's centre means
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.94. Numbers count builds, not workflow runs, and since entry 168 a
-  night with no application change builds nothing.
-- **The site serves `9ade3bf`**, entry 171. Entry 173's push publishes the open upload page and the top
-  bar's "Send a target".
-- **Windows, Linux and both macOS downloads answer 200.** What was checked on a real Mac is being
-  rewritten under entry 166.
+- **Last nightly:** 0.2.0-nightly.94. Tonight's builds carry entries 164, 170 and 171's application changes.
+- **The site serves `a77a1c7` or later**; nothing since has changed a page. The upload page is live at
+  `grouplab.org/targets/` and takes photographs; `pissinhot.com/targets` redirects there.
+- **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox
 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
-they differ, because this was the fact that was wrong last time.
+they differ.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172, 180
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A scan now reports real inches.** Entry 171 answered question 49: a scan measures the print scale and
-  every distance is multiplied by it, so a sheet printed at 96 percent reads its true size. A photograph
-  cannot measure it, stays in the sheet's own inches, and says so in one line. `docs/WHAT-CAN-BE-MEASURED.md`.
-- **Alan's own photographs and scans may be published**, unless he names one, by a standing consent of
-  2026-09-24 in `samples/PROVENANCE.md`. It does not reach anything a friend shot, and the 2026-09-16
-  friend scan is still never published.
-- **A sample over about 10 MB is never committed.** It goes on the `test-data` release with its hash in
-  `tests/test-data.json`, and `TestDataTests` fails on a large committed file.
-- **A target GroupLab did not print can be measured**, once the scale is set by hand. Exactly five
-  things need a GroupLab sheet, and they are listed in `docs/WHAT-CAN-BE-MEASURED.md`.
-- **Cartridge names are matched before numbers.** Typing 6.5 offers 6.5 Creedmoor, not .257. Forty
-  cartridges are confirmed by two sources; thirty three wait for a second one. `docs/CALIBRES.md`.
-- **Temporary files clean themselves up.** Tests write into one folder per run; CI fails on a leak; each run starts with
-  `scripts/clean-scratch.py`. Entry 179: the scratch area had reached 18 GB.
-- **Requests for Alan go in `docs/notes/for-alan.md`**, never in the Claude Code panel, with one
-  exception: a command he pastes into a shell. Entry 149 section 5.
+- **The web upload path works end to end**, desktop and phone. Entry 129 is complete.
+- **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
+- **Temporary files clean themselves up.** Tests write into one folder per run, CI fails on a leak, and
+  each run starts with `scripts/clean-scratch.py`. The scratch area had reached 18 GB.
+- **Nothing is written into a HestiaCP `conf/web/<domain>/` folder** but the include itself: anything named
+  `nginx.ssl.conf_` there is live configuration, and a backup beside it broke `nginx -t` once.
+- **Alan's own photographs and scans may be published**, by his standing consent in `samples/PROVENANCE.md`;
+  the 2026-09-16 friend scan never is.
+- **A sample over about 10 MB is never committed**; it goes on the `test-data` release.
+- **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel; the panel is mirrored in
+  `docs/notes/panel.md` for the planning session.

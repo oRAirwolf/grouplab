@@ -24,6 +24,18 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 180: Alan does not read the panel, so everything he needs goes where the planning session reads it
+
+**Status: actioned 2026-09-24**, sections 1 to 4.
+
+- **Section 1.** `docs/notes/panel.md`, in `.gitignore`, mirrors every message put in the panel for Alan, newest first, from entry 171
+  on, and takes the reason for any command that will stop for his approval before it runs.
+- **Section 2.** Requests 1, 2 and 10 are marked answered; `for-alan.md` starts with the open count, 4, and the most urgent, 11.
+  `ForAlanTests` holds the count to the requests.
+- **Section 3.** STATE.md is rewritten now and at the end of every entry from here; `CLAUDE.md` says so.
+
+---
+
 ## 2026-09-24, entry 179: 18 GB of scratch files, and temporary files that clean themselves up
 
 **Status: actioned 2026-09-24**, sections 1 to 4 and the amendment's section 1.1. The scratch area went from 18 GB to 707 MB.

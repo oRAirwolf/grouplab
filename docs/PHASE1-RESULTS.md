@@ -861,6 +861,14 @@ before any test starts, two a run.
 **Entry 178 section 5, done with it.** `install.py` keeps only its newest `name.YYYYMMDD-HHMMSS.bak` of each file it replaces; a copy
 made by hand under another name, such as the sync script's `.before-window`, is left alone.
 
+## Entry 180: what the panel says is written down too
+
+The planning session cannot see the panel, and Alan relies on it to say what needs him. So every message for him in the panel is now
+also written to `docs/notes/panel.md`, which is ignored by git and read by the planning session, and a command that will stop for his
+approval has its reason written there first. `docs/notes/for-alan.md` starts with the number of open requests and the most urgent;
+requests 1, 2 and 10 were finished and still read as open, and are closed. `ForAlanTests` fails if the count and the requests disagree.
+STATE.md is rewritten at the end of every entry.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

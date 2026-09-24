@@ -1,5 +1,9 @@
 # Requests for Alan
 
+**Open: 4.** Most urgent: **11**, the virus scanner's daemon and the committed intake worker, because until it is installed the server's
+scanner is not scanning uploads, only the rebuild from pixels is. Then 9, 12, and 5 which Alan is applying. Entry 180: this line is
+rewritten whenever a request opens or closes.
+
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
 asked is worth as much later as the answer was at the time.
@@ -307,7 +311,8 @@ takes that photograph out of the evidence rather than leaving it in as a guess.
 
 ## 2. The hit probability screenshots
 
-**Opened 2026-09-23. Entry 156. Waiting.**
+**Opened 2026-09-23. Entry 156. Answered 2026-09-24**, entry 180: done on Alan's side, as entry 156's sections 7 and 8 record the
+Blackburn Defense calculator's inputs, outputs and the two ideas to take from it. Entry 156 is built from those.
 
 **What is needed.** Screenshots of the hit probability tools Alan already uses, as a reference for what a
 shooter expects to see and which inputs are worth showing first.

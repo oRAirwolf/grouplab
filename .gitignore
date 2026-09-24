@@ -24,3 +24,7 @@ __pycache__/
 # Entry 143 section 1.2: two research scripts build PDFs beside themselves. Nothing on the site links them,
 # the runner has no reportlab to rebuild them, and a generated file in the repository goes stale silently.
 website/research/*/figures/*.pdf
+
+# NOTES-FROM-PLANNING.md entry 180: the local mirror of everything put in the Claude Code panel for Alan, which the planning session reads.
+# Written as often as needed, never committed.
+docs/notes/panel.md

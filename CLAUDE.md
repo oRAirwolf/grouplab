@@ -42,6 +42,19 @@ of it and find every step that will need him. Prepare all of them up front, writ
 them out one at a time, and do not make him wait through an hour of unrelated work for a command he could have
 had at the start.
 
+## Alan does not read the panel; the planning session reads the files
+
+NOTES-FROM-PLANNING.md entry 180. Alan: "I rely on cowork to read what it is saying and tell me what needs action from me." The planning
+session cannot see the panel, so everything in it for Alan exists in a file too.
+
+1. **`docs/notes/panel.md`**, not committed (it is in `.gitignore`): every message put in the panel for Alan, newest first, with the time
+   and the entry number, the last 50 kept.
+2. **Before any command that will stop for Alan's approval**, a deletion, `sudo`, `ssh`, a push that prompts, its exact text, what it
+   changes or deletes, and why, go to the top of `panel.md` first.
+3. **`docs/notes/for-alan.md`** closes a request the day it is done and starts with one line: how many are open and which is most urgent.
+   `ForAlanTests` holds the line to the requests.
+4. **`docs/notes/STATE.md` is rewritten at the end of every entry**, not every run.
+
 ## A short report when an entry finishes
 
 **When an entry is finished, post a report before starting the next one. Five lines at most:**
