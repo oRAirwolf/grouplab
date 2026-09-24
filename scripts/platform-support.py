@@ -53,10 +53,25 @@ def for_readme() -> str:
     return "\n".join(lines)
 
 
+DOWNLOAD = "https://grouplab.org/download/"
+
+
 def for_release() -> str:
-    """The statement as it goes on a release whose assets include a macOS build."""
-    return ("## What is supported, and what is not\n\n"
-            + "\n".join("#" + l if l.startswith("## ") else l for l in statement().splitlines()))
+    """One line for a release whose assets include a macOS build, NOTES-FROM-PLANNING.md entry 168 section 5.
+
+    Entry 147 put the whole statement on every such release, and that was wrong for two reasons: it repeated the
+    same long section on every release, and a published release body is frozen, so every copy went stale the day
+    the statement changed. Nightly 94's copy was already false when it was published. So a release carries the
+    statement's own lead sentences, one for each platform, and the address where the whole of it is always current.
+    """
+    leads = []
+    for block in statement().split("\n\n"):
+        if block.startswith("## "):
+            break
+        if block.startswith("**") and "**" in block[2:]:
+            leads.append(block[2:block.index("**", 2)].strip())
+    return (" ".join(leads) + " How to open the unsigned macOS build, and the whole statement, always current: "
+            + DOWNLOAD)
 
 
 def write_readme(check_only: bool) -> int:

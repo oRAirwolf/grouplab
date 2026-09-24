@@ -14,6 +14,51 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 8. The friend's 2026-09-23 scan is 56 MB: publish it whole, or smaller?
+
+**Opened 2026-09-24. Entry 162 section 1. Waiting.**
+
+**What is needed.** A choice of how to publish `Scan_20260923.png`, which the friend has consented to.
+
+**Why.** Rebuilt from its pixels with no metadata, it is still 55,971,430 bytes, because scanner noise does
+not compress. Scan 3, the other published sample, is 16.8 MB. A file committed to git is carried by every
+clone for ever and can only be removed by rewriting history, which this project has done once already and
+does not want to repeat. The consent record is written in `samples/PROVENANCE.md` and the tests already run
+the scan wherever it is on the machine, so nothing waits on this except CI running those tests too.
+
+**The choices.**
+
+1. **Commit it whole, 56 MB.** Every test runs everywhere, including CI, on exactly the sheet that showed
+   the defect. GitHub warns above 50 MB and refuses above 100.
+2. **Commit it at 300 dpi, about 14 MB.** Still a real scan of the real sheet, and GroupLab reads 300 dpi
+   routinely. The figures move slightly, so the tests would hold the 300 dpi numbers.
+3. **Publish it as a download on a GitHub release, not in the repository.** Nothing is added to every clone;
+   CI fetches it by its SHA-256 when it runs the tests.
+
+**A good answer.** 1, 2 or 3. I would pick 3: it keeps the repository small and the tests exact.
+
+---
+
+## 7. What name, if any, should the macOS tester be thanked under?
+
+**Opened 2026-09-24. Entry 166 section 5. Waiting.**
+
+**What is needed.** The name the macOS tester would like to appear under in the project's list of people who
+tested it, or a line saying he would rather be listed as an anonymous macOS tester.
+
+**Why.** He ran nightly 93 on a MacBook Pro, sent the first macOS diagnostic log and answered the checklist,
+which found two real defects: Command shortcuts that do nothing and pinch zoom that was never built. He is
+owed credit, and a name is not something to invent.
+
+**A good answer.** A name and how he wants it written, or "anonymous". Until then he is credited as an
+anonymous macOS tester.
+
+**Also coming, and not yet written here:** entry 165's receiver for targets sent from the analysis screen
+reuses entry 129's quarantine, worker and folders. If building it shows it needs anything on the server
+beyond request 1's five steps, those commands are added here in full as soon as that is known.
+
+---
+
 ## 6. May one crop of one photographed hole be published?
 
 **Opened 2026-09-23. Entry 153 section 5. Waiting.**

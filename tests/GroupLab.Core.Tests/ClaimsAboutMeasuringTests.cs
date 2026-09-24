@@ -62,7 +62,11 @@ public class ClaimsAboutMeasuringTests
                 if (rel.Contains("/bin/", StringComparison.Ordinal) || rel.Contains("/obj/", StringComparison.Ordinal)
                     || rel.StartsWith("website/_site/", StringComparison.Ordinal)
                     || rel.StartsWith("docs/notes/", StringComparison.Ordinal)
-                    || rel is "docs/NOTES-FROM-PLANNING.md" or "docs/PHASE1-RESULTS.md" or "docs/QUESTIONS-FOR-PLANNING.md")
+                    || rel is "docs/NOTES-FROM-PLANNING.md" or "docs/PHASE1-RESULTS.md" or "docs/QUESTIONS-FOR-PLANNING.md"
+
+                    // What each build said when it was published. Nightly 93 carries entry 152's false note that a shrunk sheet measures
+                    // correctly; a published release is not edited to hide a mistake, and the correction is entry 161's note in the next.
+                    || rel == "docs/RELEASE-NOTES.md")
                 {
                     continue;
                 }

@@ -24,6 +24,18 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 168: nightly 94 should not exist, its notes are cut off, and the platform statement leaves the releases
+
+**Status: actioned 2026-09-24**, all seven sections.
+
+- **Section 1 and 2.** Nightly 94 was built by `scripts/claims.py`, `scripts/counts.py`, `scripts/split-logs.py` and five test files, all mine. What ships is now generated from what MSBuild says the published application reads, plus what the packaging copies; tests, tools and the other workflows are checked; the site and the documents are content. CI regenerates the list and fails if it differs. Under the new classes, 9 of the last 31 nightlies changed nothing in the application.
+- **Section 3.** A trailer continues until a blank line or the next trailer. The generator's own documented example wrapped, so it would have been cut too. A self-test holds four cases and a test runs it.
+- **Section 4.** Only a commit that touched something that ships is in an application's notes, never a `[notes]` commit, and a note saying the application did not change is refused by meaning rather than by phrase.
+- **Section 5.** One generated line and the download page's address replace the whole statement on a release.
+- **Section 6 and 7.** Every build regenerated: 30 rewritten, two kept as published and named, `0.1.0` untouched, known issues kept, nothing deleted. The GitHub bodies follow the file, and three are read back in the run report.
+
+---
+
 ## 2026-09-24, entry 161: naming the calibre makes the reading worse, and the hole to calibre constant is wrong
 
 **Status: actioned 2026-09-24**, all eight sections. It also corrects something entry 152 got wrong, which is in section 6 below.

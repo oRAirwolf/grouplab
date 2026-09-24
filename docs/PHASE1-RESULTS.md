@@ -462,6 +462,55 @@ The last column was measured on the code as it stood before this entry, in a sep
 
 `CalibreSplitTests` gains the synthetic form of the rule, so it runs everywhere: ten marks shaped like the friend's with the calibre's 0.249 in named give the sheet's reference, the calibre as the veto, and the disagreement in the description.
 
+## Entry 168: nightly 94 should not exist, its notes were cut off, and the platform statement leaves the releases
+
+Alan, on nightly 94: *"It looks like nightlies are still getting published when there are no changes to the application. Also the notes are getting cut off. I dont think the 'what is supported' section needs to be added to every release note. Can you go back and fix all of the release notes?"*
+
+### The three answers Alan asked for
+
+1. **What made nightly 94 build:** `scripts/claims.py`, `scripts/counts.py`, `scripts/split-logs.py` and five test files, from my own entries 159 and 160. None of them is in the executable. The gate counted `scripts` and `tests` as shipping by directory.
+2. **Past nightlies with no application change, under the corrected classes: 9 of the last 31**: nightlies 14, 30, 72, 75, 76, 77, 78, 81 and 94. Entry 150's gate would have caught five of those; 30, 75, 81 and 94 changed only tests, scripts or workflows, which it counted as shipping.
+3. **Release bodies rewritten:** given in the run report, from the rewrite's own count, with three read back from GitHub.
+
+### Section 2: what ships is what the build reads
+
+Three classes now, in `.github/shipping-paths.json`:
+
+- **ships**: generated, not judged. `scripts/shipping-gate.py --generate` asks MSBuild what `dotnet publish src/GroupLab.App` reads, follows its project references into Core and Cli, and adds what the packaging copies, which MSBuild never sees: the licence and notices, the two samples the Windows package carries, the two packaging scripts, `package.yml`, the macOS icon. The result is `.github/shipping-generated.json`, 80 entries.
+- **checked**: tests, tools, the build and release tooling, the other workflows. CI runs the suite and a failure blocks main, and **no release is produced**.
+- **content**: the website, the documentation, the research, the release notes.
+
+**The build had two surprises.** `docs/VOLUNTEER-PACK.md` ships: Core embeds it. And the eight Linux icon sizes do not: nothing in any package reads them. Both are what the build says, which is the point of asking it.
+
+A folder whose every tracked file ships is one entry, so a new source file there is covered by its folder. CI regenerates the list after publishing and fails if it differs, so a new embedded resource cannot arrive without the gate knowing. An unclassified path still fails.
+
+### Section 3: why the notes were cut off
+
+`read()` kept the line matching `Release-note:` and nothing after it. **The generator's own documented example wraps**, so its own example would have been cut, and every trailer I have written this week wraps. A trailer now continues until a blank line or the next `Key:` trailer, indented or not, joined with single spaces; a commit may carry several notes, each with its own kind.
+
+`--self-test` holds the docstring's own two-line example, a three-line unindented note, two notes in one commit and a trailer ending a note, and `ShippingPathsTests` runs it, failing in CI if Python is missing rather than skipping.
+
+### Section 4: only what ships goes in an application release
+
+The generator includes a commit only where it touched a path the gate classes as ships, and never a `[notes]` or `[screens]` commit. **The meaning is banned, not the phrase**: a note saying the application did not change is refused and names its commit, because entry 145 banned "nothing in this build changes" and nightly 94 said "Nothing in this changes the application". A build with nothing that ships says, once: *"This build has no change to the application; it behaves exactly as nightly NN does."*
+
+### Section 5: the platform statement leaves the release bodies
+
+A release carrying a macOS asset now carries one line made from the statement's own lead sentences and the download page's address, where the whole statement is always current:
+
+> Windows is the supported platform. Linux builds are published and are worth trying. macOS builds are published and have never been run on a Mac. How to open the unsigned macOS build, and the whole statement, always current: https://grouplab.org/download/
+
+That macOS sentence is out of date since the tester, and entry 166 changes the statement; the line follows it, because it is generated from it. The README and the download page keep the whole statement. `MacBuildsTests` asserts the link is there and the section is not.
+
+### Section 6: every published release rewritten
+
+`scripts/rewrite-release-notes.py` regenerates each build against the build published before it. **Nothing is deleted**: no release, asset or tag is touched.
+
+- **30 entries rewritten** in `docs/RELEASE-NOTES.md`. Nine say they changed nothing in the application.
+- **Two kept as published, and named in the file**: nightly 12, the first tagged build, which has no earlier build to diff against, and nightly 25, whose trailer uses "manifest", a word today's checks refuse. `0.1.0` is not a nightly and is untouched.
+- **Known issues** are kept exactly: 13 before, 13 after.
+- **Nightly 93 still carries entry 152's false note** that a shrunk sheet measures correctly. It is regenerated as it was written, because a published release is not edited to hide a mistake; entry 161's note in the next build is the correction.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

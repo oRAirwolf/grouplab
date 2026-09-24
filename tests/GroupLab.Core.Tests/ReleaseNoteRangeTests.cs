@@ -59,7 +59,11 @@ public class ReleaseNoteRangeTests
     /// <summary>One commit carrying a release note, and optionally a published build's tag afterwards.</summary>
     private static void Commit(string folder, string note, string? tag = null)
     {
-        File.AppendAllText(Path.Combine(folder, "work.txt"), note + "\n");
+        // Entry 168: only a commit that touches something that ships is in an application release, so the work is a file the gate
+        // classes as shipping. A plain file at the root is in no class, and would make every build here say nothing shipped.
+        string source = Path.Combine(folder, "src", "GroupLab.Core");
+        Directory.CreateDirectory(source);
+        File.AppendAllText(Path.Combine(source, "Work.cs"), "// " + note + "\n");
         Git(folder, "add -A");
         Git(folder, $"commit -q -m \"work\" -m \"Release-note: {note}\" -m \"Release-note-kind: changed\"");
         if (tag is not null)

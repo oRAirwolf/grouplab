@@ -382,20 +382,19 @@ jobs:
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest-2.json
 
-      # Entry 147 section 3.2: a release carrying a macOS asset carries the platform statement with it, generated from
-      # docs/PLATFORM-SUPPORT.md like the download page and the README. Somebody who reaches a release straight from a link
-      # has not read the download page, and the words that say nobody has run this on a Mac have to travel with the file.
-      - name: The platform statement, on a release that carries a Mac build
+      # Entry 168 section 5, amending entry 147 section 3.2: a release carrying a macOS asset carries ONE line, generated from
+      # docs/PLATFORM-SUPPORT.md's lead sentences, with the address of the download page where the whole statement is always
+      # current. The whole statement used to go here, and a published release is frozen, so every copy went stale the day the
+      # statement changed; nightly 94's was false when it was published.
+      - name: The platform line, on a release that carries a Mac build
         run: |
           set -o pipefail
           if ls release/grouplab-macos-*.tar.gz >/dev/null 2>&1; then
             {
               echo
-              echo "---"
-              echo
               python3 scripts/platform-support.py --release
             } >> notes.md
-            echo "the platform statement is on this release, because it carries a macOS build"
+            echo "the platform line is on this release, because it carries a macOS build"
           else
             echo "no macOS asset, so the platform statement is not on this release"
           fi

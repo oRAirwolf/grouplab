@@ -2,11 +2,11 @@
 
 NOTES-FROM-PLANNING.md entry 147 section 3. **This file is the one source of this statement.** It is word for word as Alan settled it, and it is not to be reworded. It avoids the first and second person on purpose, and it says "they" of the author on purpose.
 
-Entry 147 section 3.2: the same statement appears on the download page, in `README.md` and on every release that carries a macOS asset, and all three are generated from here. Nothing else may restate it, because a second copy is a copy that goes stale and nobody notices which one is wrong.
+Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears on the download page and in `README.md`, both generated from here, and every release that carries a macOS asset gets one line generated from its lead sentences with a link to the download page, because a published release is frozen and a whole copy on it goes stale. Nothing else may restate it, because a second copy is a copy that goes stale and nobody notices which one is wrong.
 
 - `website/build.py` renders it into `/download/`.
 - `scripts/platform-support.py` writes it into `README.md` between its two markers, and checks that it is current.
-- `.github/workflows/nightly.yml` appends it to a release whose assets include a macOS build.
+- `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.
 
 ---
 

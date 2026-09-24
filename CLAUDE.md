@@ -118,7 +118,7 @@ NOTES-FROM-PLANNING.md entry 132 section 1. Alan read the notes for a nightly an
 **Every commit carries a `Release-note:` trailer**, entry 145 section 3.1, not only the ones a person notices. One or two plain sentences from the user's side, ending with the reference in brackets, and a `Release-note-kind:` saying which of the two headings it belongs under:
 
 - `new`, `fixed`, `changed` and `user` all put it under **What you will notice**: something on screen, something that behaves differently, something new or gone, something fixed, a change to what is installed or downloaded.
-- `internal` puts it under **Under the hood**: tests, documentation, the website, the build, refactoring, performance nobody can perceive yet. Still in plain words, one line per real change.
+- `internal` puts it under **Under the hood**: work in the application nobody can perceive yet, such as refactoring or a check that now runs. Still in plain words, one line per real change. **A commit that touches nothing that ships is not in an application's notes at all** (entry 168): tests, tooling, the website, the guides and the research are published by the site, which says when it changes.
 
 **Five words, two headings, and that is deliberate.** Entry 149 section 1: the heading is what the reader sees, the kind is what the writer says. Somebody marking a change `fixed` rather than `changed` is saying something true about it even though both land in the same place, and the words already written across 45 commits stay valid. `scripts/release-notes.py` accepts exactly these five and rejects anything else, and a test holds the list here and the list in the generator to the same set, because that is the pair that drifted.
 
@@ -142,7 +142,7 @@ Release-note: The website's screenshots are now regenerated every week from the 
 Release-note-kind: internal
 ```
 
-**No build ever says nothing changed.** Entry 145: six published builds said "Nothing in this build changes what you see or do. It carries internal work only", and the sentence was not even true, because something changed in every build or there would have been no build. One of those six carried the first measurement GroupLab has against 59 real photographs of a target on a board.
+**No build lists nothing.** Entry 168 amended entry 145: a build whose commits touched nothing that ships should not exist, the gate in `scripts/shipping-gate.py` stops it, and the nine that were published before the gate was right say so in one line and name the build they behave like. What ships is generated from what MSBuild says the published application reads, not judged by directory. Entry 145's own words follow: Entry 145: six published builds said "Nothing in this build changes what you see or do. It carries internal work only", and the sentence was not even true, because something changed in every build or there would have been no build. One of those six carried the first measurement GroupLab has against 59 real photographs of a target on a board.
 
 So a commit with no trailer is not a count any more. `scripts/release-notes.py` writes a line from its subject instead, and `--missing` names it in the build's report so the note can be better next time. That is a floor, not a target: a subject written for the log usually fails the checks below, and then the build fails and names the commit.
 

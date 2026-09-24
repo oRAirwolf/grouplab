@@ -39,3 +39,55 @@ GroupLab's own `GL-CF25-LTR-D`, the 5 by 5 load development sheet with a load bl
 ## What GroupLab makes of it
 
 Analysed at 600 dpi with no calibre named, GroupLab reads the sheet's codes, registers it from 33 of its 34 markers and finds **25 holes, one on each of the 25 bulls**, which agrees with Alan's account exactly. That is the expected result the Windows package's self-test holds it to: a sample the package cannot analyse correctly must fail the build rather than reach a tester.
+
+---
+
+# The 2026-09-23 friend scan, and the consent that lets it be used
+
+`Scan_20260923.png`, **shot 2026-09-23**, is a scan of a GroupLab sheet shot by a friend of Alan's. It is the sheet that exposed the
+defect in `NOTES-FROM-PLANNING.md` entry 161: naming the correct calibre made the reading worse.
+
+**It is not the 2026-09-16 friend scan.** Both are from the same friend and the two have different consent. The 2026-09-16 scan is
+**never published**, and nothing in this record applies to it. Two scans from one person with different consent is exactly the case where
+one gets published by mistake, so each is named here by its file name and its date, and neither by the friend's name.
+
+## Consent
+
+| | |
+|---|---|
+| **Given by** | The friend who shot the sheet, **relayed by Alan on the friend's behalf**; the friend is not named |
+| **Given on** | 2026-09-24 |
+| **Given how** | In writing, relayed to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 162 section 1 |
+| **What was said** | "Yes he is willing to have his target used as a test fixture and yes it can be published." |
+| **Covers** | `Scan_20260923.png`, shot 2026-09-23, and only that file: as a test fixture, and published, including in `samples/` and in research articles. |
+| **Does not cover** | The 2026-09-16 friend scan, which is never published. |
+| **Licence** | The repository's, GPL-3.0, as for everything else published here |
+
+## The file
+
+| | |
+|---|---|
+| **Original** | `Scan_20260923.png`, 55,993,456 bytes, SHA-256 `91206e022ef744344935b47a6447f06ab6da795af48a670160e2567f596d6437` |
+| **Decoded pixels** | SHA-256 `8515b319cb1613083457a324914c0010b905ef5ce60db581e3393f161f2a6ed1` |
+| **Image** | 5100 by 7013 pixels, 8 bits per channel, RGB, 600 dpi |
+| **A published copy** | Rebuilt from those pixels with only the resolution chunk, as scan 3's was. Nothing else from the original's metadata is read, printed, logged or carried, at any point. |
+
+**Not committed yet, and why.** The copy rebuilt from pixels is 56 MB: scanner noise does not compress. A file that size in git is carried
+by every clone for ever and can only be removed by rewriting history, which this project has had to do once already. So the consent is
+recorded and the file is not yet in the repository; `docs/notes/for-alan.md` request 8 asks which form to publish.
+
+## What is on the sheet
+
+GroupLab's own `GL-CF25-LTR-D`, printed with no scaling selected, which GroupLab measured as 100.3 percent. Ten shots of **6.5 Creedmoor,
+0.264 in**, one per bull on **bulls 1 to 10**, which is the ground truth the tests hold it to.
+
+| | |
+|---|---|
+| **Paper** | card stock |
+| **Backing** | cardboard |
+| **Cartridge** | 6.5 Creedmoor, 0.264 in |
+| **Printing** | no scaling selected; GroupLab reported 100.3 percent |
+
+On this paper and backing a hole measures 0.301 in across the middle, **1.14 times the bullet**, where the earlier scans on other paper
+measured 0.765 to 0.949. That is entry 161's finding and entry 162's reason paper and backing are now recorded fields.
+

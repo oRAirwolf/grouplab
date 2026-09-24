@@ -222,10 +222,15 @@ public partial class MacBuildsTests
         Assert.Contains("<!-- platform-support:", readme, StringComparison.Ordinal);
         Assert.Contains("<!-- end platform-support -->", readme, StringComparison.Ordinal);
 
-        // A release that carries a Mac build carries the statement, and one that does not, does not.
-        string nightly = File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml"));
+        // Entry 168 section 5: a release that carries a Mac build carries one generated line and a link to the download page, not
+        // the whole statement, because a published release is frozen and a whole copy on it goes stale the day the statement changes.
+        string nightly = File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml")).ReplaceLineEndings("\n");
         Assert.Contains("scripts/platform-support.py --release", nightly, StringComparison.Ordinal);
         Assert.Contains("release/grouplab-macos-*.tar.gz", nightly, StringComparison.Ordinal);
+        Assert.DoesNotContain("echo \"---\"\n              echo\n              python3 scripts/platform-support.py --release", nightly, StringComparison.Ordinal);
+        string script = File.ReadAllText(Repo.PathTo("scripts", "platform-support.py"));
+        Assert.Contains("https://grouplab.org/download/", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("## What is supported, and what is not\\n\\n", script, StringComparison.Ordinal);
 
         foreach (string sentence in TheStatement)
         {

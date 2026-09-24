@@ -63,16 +63,30 @@ public partial class PlainReleaseNotesTests
             "these give a count where the changes themselves belong, which is what entry 145 removed: " + string.Join("; ", counted));
     }
 
-    /// <summary>Every build has something under one of the headings. A build with no lines at all is the old fault wearing a new shape.</summary>
+    /// <summary>
+    /// Every build either lists what changed in the application, or says in its one plain sentence that nothing did and names the build it
+    /// behaves exactly like.
+    /// <para>
+    /// <b>NOTES-FROM-PLANNING.md entry 168 amended entry 145 here.</b> Entry 145 said no build ever says nothing changed, because something
+    /// changed in every build or there would have been no build. That was true of the repository and not of the application: nine published
+    /// builds changed only the website, the tests or the tooling, and filling their notes with those changes is what nightly 94 did. Such a
+    /// build should not exist, and the gate now stops it; the ones that were published keep their releases and say what they are.
+    /// </para>
+    /// </summary>
     [Fact]
-    public void EveryBuildListsSomething()
+    public void EveryBuildListsSomethingOrSaysPlainlyThatNothingInTheApplicationChanged()
     {
-        var empty = Entries().Where(e => !Body(e.Value).Any()).Select(e => e.Key).ToList();
+        var empty = Entries()
+            .Where(e => !Body(e.Value).Any() && !NothingShipped().IsMatch(e.Value))
+            .Select(e => e.Key)
+            .ToList();
 
         Assert.True(empty.Count == 0,
-            "these builds list nothing at all, and something changed in every build or there would have been no build: "
-            + string.Join(", ", empty));
+            "these builds list nothing, and do not say that nothing in the application changed either: " + string.Join(", ", empty));
     }
+
+    [GeneratedRegex(@"This build has no change to the application; it behaves exactly as nightly \d+ does\.")]
+    private static partial Regex NothingShipped();
 
     /// <summary>
     /// And every build has a heading over those lines. A loose list with nothing saying whether it is the part you meet or the part you do
@@ -90,8 +104,9 @@ public partial class PlainReleaseNotesTests
             "### New", "### Fixed", "### Changed",
         ];
 
+        // A build that changed nothing in the application says so in a sentence, and any lines under it are its known issues.
         var loose = Entries()
-            .Where(e => Body(e.Value).Any() && !headings.Any(h => e.Value.Contains(h, StringComparison.Ordinal)))
+            .Where(e => Body(e.Value).Any() && !NothingShipped().IsMatch(e.Value) && !headings.Any(h => e.Value.Contains(h, StringComparison.Ordinal)))
             .Select(e => e.Key)
             .ToList();
 

@@ -38,7 +38,8 @@ public class ShippingPathsTests
     public void EveryTopLevelEntryIsInExactlyOneList()
     {
         var lists = Lists();
-        var ships = Names(lists, "ships").ToHashSet(StringComparer.Ordinal);
+        // Entry 168: the top level defaults are checked and content. What ships is generated from the build, file by file.
+        var ships = Names(lists, "checked").ToHashSet(StringComparer.Ordinal);
         var content = Names(lists, "content").ToHashSet(StringComparer.Ordinal);
 
         var here = Tracked();
@@ -71,6 +72,76 @@ public class ShippingPathsTests
         Assert.Equal(0, git.ExitCode);
 
         return [.. output.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(n => n.Trim()).Where(n => n.Length > 0)];
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 168 section 2. Nightly 94 was built from a test, a site script and the log splitter, because the
+    /// gate counted <c>tests</c>, <c>scripts</c> and <c>.github</c> as shipping by directory. What ships is now generated from what the
+    /// build reads, and these are the cases that went wrong, held one by one.
+    /// </summary>
+    [Fact]
+    public void WhatShipsIsWhatTheBuildReads()
+    {
+        string path = Path.Combine(Repo.PathTo(".github"), "shipping-generated.json");
+        Assert.True(File.Exists(path), ".github/shipping-generated.json is the gate's list of what ships, and it is not here.");
+
+        using var doc = JsonDocument.Parse(File.ReadAllText(path));
+        var ships = doc.RootElement.GetProperty("ships").EnumerateArray().Select(e => e.GetString()!).ToList();
+        bool Ships(string file) => ships.Any(s => s == file || (s.EndsWith('/') && file.StartsWith(s, StringComparison.Ordinal)));
+
+        // What the executable is made of, and what its packages copy.
+        Assert.True(Ships("src/GroupLab.Core/Marking/Calibre.cs"), "the application's own source must ship");
+        Assert.True(Ships("scripts/package-windows.ps1"), "the Windows packaging script decides what is in the download");
+        Assert.True(Ships("samples/gl-cf25-ltr-d-25-shots-600-dpi.png"), "the sample is copied into the Windows package");
+
+        // What made nightly 94, none of which is in the executable.
+        foreach (string not in new[] { "scripts/claims.py", "scripts/counts.py", "scripts/split-logs.py", "scripts/release-notes.py",
+                     "scripts/shipping-gate.py", "tests/GroupLab.Core.Tests/StateFileTests.cs", ".github/workflows/ci.yml" })
+        {
+            Assert.False(Ships(not), $"{not} is not in the executable or its package, and a change to it built nightly 94.");
+        }
+    }
+
+    /// <summary>
+    /// Entry 168 section 3.2: the release notes generator reads a trailer that wraps, and refuses a note saying the application did not
+    /// change. Nightly 94's notes were cut at the first line break, and the generator's own documented example wraps. The cases live in
+    /// the script's <c>--self-test</c>, and this runs it, because a check that exists and is never run is not a check.
+    /// </summary>
+    [Fact]
+    public void TheReleaseNotesGeneratorPassesItsOwnSelfTest()
+    {
+        foreach (string python in new[] { "python3", "python" })
+        {
+            System.Diagnostics.Process? run;
+            try
+            {
+                run = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(python, "scripts/release-notes.py --self-test")
+                {
+                    WorkingDirectory = Repo.Root,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                });
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                continue;
+            }
+
+            Assert.NotNull(run);
+            string said = run.StandardOutput.ReadToEnd() + run.StandardError.ReadToEnd();
+            run.WaitForExit();
+            if (run.ExitCode == 9009)
+            {
+                continue;   // the Windows store stub that stands in for a missing python
+            }
+
+            Assert.True(run.ExitCode == 0, "scripts/release-notes.py --self-test failed:\n" + said);
+            return;
+        }
+
+        Assert.True(Environment.GetEnvironmentVariable("CI") is null,
+            "no python on this CI runner, so the release notes generator's self-test did not run, and it must");
     }
 
     /// <summary>

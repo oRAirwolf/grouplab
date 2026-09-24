@@ -4,11 +4,11 @@ Every build of GroupLab anyone could download, newest first. This file is the so
 
 GroupLab is unreleased. Everything below is a pre-release, and the version numbers say so.
 
-**How to read this.** Every build says what is in it, whoever it affects. **What you will notice** is the part you meet: something on screen, something that behaves differently, something new or gone, something fixed, or a change to what gets installed. **Under the hood** is everything else in plain words: tests, documentation, this website, the build itself. A build shows only the headings it has, and no build says nothing changed, because something changed in every one of them or there would have been no build. Where a build has something wrong with it that matters, it says so under **Known issues**.
+**How to read this.** Every build says what is in it, whoever it affects. **What you will notice** is the part you meet: something on screen, something that behaves differently, something new or gone, something fixed, or a change to what gets installed. **Under the hood** is everything else in the application in plain words, such as a check that now runs or work nobody can perceive yet. Changes to this website, the guides and the research are not listed here, because they are not in the application; the website says when it changes. A build shows only the headings it has, and a build that changed nothing in the application says so in one line. Where a build has something wrong with it that matters, it says so under **Known issues**.
 
-Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed**, which are all things you would notice. Those entries are left as they were published, except the six that used to say nothing changed at all. Those six are rewritten here from their own commits, because each of them did carry something worth naming, and one of them carried the first real measurement GroupLab has against photographs of a target on a board.
+**Every entry was rewritten on 2026-09-24 from its build's own commits** (NOTES-FROM-PLANNING.md entry 168). Notes that had been cut off at a line break are whole again; website, research and documentation changes are gone from the builds, because they are not in the application and the website says when it changes; and a build that changed nothing in the application says so in one line and names the build it is the same as. **Known issues** sections are kept exactly as they were written. Two builds, nightly 25 and nightly 12, keep the text they were published with, because their notes were written before today's checks existed.
 
-**Why the nightly numbers skip.** A nightly is numbered by its run, and a run that is cancelled or skipped still takes its number. Two things caused most of the gaps, both fixed on 2026-09-21: every push went to two branches and started two runs, so one of each pair was cancelled, and a run whose commit was already published skipped rather than publishing again.
+**Why the nightly numbers skip.** Up to nightly 91 a nightly was numbered by the workflow run that built it, and a run that was cancelled or skipped still took its number. From nightly 92 the number is the last published build plus one, so from there a gap means a number was never used, and a build that should not have been made is named as such below rather than hidden.
 
 ---
 
@@ -16,16 +16,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-24**, commit `227917a`. Nightly.
 
-**What you will notice**
-
-- The website and the guides now agree on how many target sheets
-
-**Under the hood**
-
-- The research article about hole size now shows three real
-- Nothing in this changes the application. The project's own
-- [notes] 0.2.0-nightly.93.
-- Every research article on grouplab.org now ends with what its
+This build has no change to the application; it behaves exactly as nightly 93 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.94)
 
@@ -35,10 +26,15 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-23**, commit `aa8c559`. Nightly.
 
+**What you will notice**
+
+- A sheet your printer shrank still measures correctly, and GroupLab no longer tells you otherwise on the sheet itself or on the print screen. Printing at actual size still matters, for the reason that is actually true. (Entry 152, 3)
+- The calibre list now offers 0.222 for a rimfire 22, which was missing: the nearest thing it had was the centrefire 0.224, almost one percent too wide. (Entry 153, 4)
+- A target GroupLab did not print can be measured once you set the scale yourself, and the tour now says so on every screen instead of claiming otherwise. (Entry 152, 3 and 4)
+
 **Under the hood**
 
-- Every research article on the website now ends with what the
-- [notes] 0.2.0-nightly.92.
+- Every research article on the website now ends with what the numbers mean for you, and none of them names the developer. (Entry 153, 1 and 2)
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.93)
 
@@ -50,14 +46,11 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **What you will notice**
 
-- The Community link at the top of grouplab.org now opens a page
-- GroupLab is only built and released on the nights something in
+- When the holes on a sheet come out in two clear sizes, GroupLab now measures a hole from the smaller ones and flags the larger ones, instead of measuring nothing and flagging nothing. It still asks you for the calibre. (Entry 149, 2)
 
 **Under the hood**
 
-- Anything GroupLab needs from you is written down in a file now
-- Eleven new pieces of planned work arrived, covering the release
-- [notes] 0.2.0-nightly.91.
+- Anything GroupLab needs from you is written down in a file now rather than asked for in passing, so nothing is lost and nothing waits on an answer. (Entry 149, 5)
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.92)
 
@@ -69,19 +62,9 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **What you will notice**
 
-- GroupLab has a Discord now, linked from every page of the website and from the README, for questions, bug reports and target sheets. (Entry 148)
 - GroupLab now publishes Mac builds, one for Apple silicon and one for Intel. Nobody has run either on a real Mac, the download page says so beside each one, and it gives the Terminal command macOS needs before it will open unsigned software. (Entry 147)
 - A broken or hostile image file that claims to be hundreds of megapixels is now refused with its measured size, instead of being decoded until GroupLab runs out of memory. Real scans are unaffected: the limit is twelve times a 600 dpi letter scan. (Entry 143, 43)
 - When you run detection again on a sheet, the marks you had already moved or reassigned are kept where you put them instead of being thrown away, and the button tells you how many it will keep. (Entry 143, 42)
-
-**Under the hood**
-
-- A check that the Discord invite is written down in only one place no longer fails on Windows because it was reading a file the test run itself had open. (Entry 148)
-- The project's own checks now cover the README's new platform section and the Mac downloads, after a push that went red on every operating system. (Entry 147)
-- Six sets of donated target photographs have been read in and checked, with every photograph rebuilt from its pixels so that location data and anything hidden after the end of the image are gone. (Entry 129, 6)
-- The server side that will receive crash reports on grouplab.org is written and tested, including the check that nothing but a report's own logs and notes can be inside one. (Entry 129, 5)
-- The page for sending target photos to the project is built and waiting on one setup step on the server; nothing on grouplab.org links to it yet. (Entry 129)
-- [notes] 0.2.0-nightly.84.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.91)
 
@@ -93,9 +76,6 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **What you will notice**
 
-- grouplab.org has a tour now, with a page for each of the ten screens in GroupLab: what the screen is for, what every part of it does, and what you would do there. The home page links to it instead of showing a row of screenshots. (Entry 146)
-- Every card on the research index now carries a lead image, and the charts come in a dark version that follows your theme instead of glaring white on a dark page. (Entry 143, 1)
-- The release notes now say what is in every build, under What you will notice and Under the hood, instead of telling you that some builds changed nothing. Ten past builds that said nothing, or listed only their known issues, have been written out from what they actually carried. (Entry 145)
 - The screenshots on grouplab.org now show the current version of GroupLab rather than one from several days ago, and the release notes page keeps itself up to date as each nightly build is published. (Entry 144)
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.84)
@@ -106,11 +86,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-23**, commit `2c51788`. Nightly.
 
-**Under the hood**
-
-- The research section went live on grouplab.org with all eighteen articles, from how to photograph a target to how GroupLab updates itself and what it sends from your computer.
-- Two corrections went in before any of it was published: how the test photographs were actually mounted, which had been stated here and never checked, and which sheets each published figure really rests on.
-- Every link to the old target upload site is gone from grouplab.org, including the one in the footer of every page, and the pages that carried it now say that uploading opens here shortly and to keep your files meanwhile.
+This build has no change to the application; it behaves exactly as nightly 78 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.81)
 
@@ -120,9 +96,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `aae67d8`. Nightly.
 
-**Under the hood**
-
-- The release notes gained a short note saying why the history starts where it does, so a reader can tell a deliberate starting point from an entry somebody forgot.
+This build has no change to the application; it behaves exactly as nightly 77 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.78)
 
@@ -132,9 +106,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `ad41ea1`. Nightly.
 
-**Under the hood**
-
-- The release notes page was brought up to date with six builds it was missing, so the history on the website matches the builds you can actually download.
+This build has no change to the application; it behaves exactly as nightly 76 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.77)
 
@@ -144,9 +116,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `f935ab2`. Nightly.
 
-**Under the hood**
-
-- The project's own progress file now says in one place what is waiting on a decision, so nothing sits unnoticed.
+This build has no change to the application; it behaves exactly as nightly 75 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.76)
 
@@ -155,9 +125,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `a82d7f5`. Nightly.
 
-**Under the hood**
-
-- The last eight of the eighteen research articles were written, covering how GroupLab updates itself, what it sends from your computer, why these particular markers were chosen, and how a target is designed for a camera to read.
+This build has no change to the application; it behaves exactly as nightly 74 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.75)
 
@@ -166,9 +134,13 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `1ab0b86`. Nightly.
 
-### New
+**What you will notice**
 
-- Telling GroupLab which bulls you aimed at now works from the command line too, with the same words the application takes.
+- Telling GroupLab which bulls you aimed at now works from the command line too, with the same words the application takes. (Entry 141, 5.3.4)
+
+**Under the hood**
+
+- The bent sheet fits the markers, not the sheet.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.74)
 
@@ -177,9 +149,9 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `5f1be30`. Nightly.
 
-### Changed
+**What you will notice**
 
-- Opening a photograph or scan is faster: GroupLab used to read and decode the same file three times before showing it to you, and now reads it once.
+- Opening a photograph or scan is faster: GroupLab used to read and decode the same file three times before showing it to you, and now reads it once. (Entry 130, 6)
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.73)
 
@@ -188,9 +160,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `f40260a`. Nightly.
 
-**Under the hood**
-
-- GroupLab was measured for the first time against 59 real photographs of a target sheet on a backer board, and the numbers are not good: 28 of the 59 could not be read at all, and of the 31 that could, one was accurate enough to measure a group from.
+This build has no change to the application; it behaves exactly as nightly 71 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.72)
 
@@ -199,17 +169,14 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `72afe73`. Nightly.
 
-### New
+**What you will notice**
 
-- You can now open a target by dropping the image on the GroupLab window, or by pasting it with Ctrl+V, including a screenshot or an image copied from a browser. A file that turns out not to be an image now says so instead of ending the session.
-- You can now say which bull a shot belongs to straight from the shots list, and tick several shots to move them all to one bull in a single step that undoes in one go. Selecting a shot also highlights every review item that is about it.
-- Where you have entered a string of velocities, GroupLab now draws them with the mean and spread marked, gives the SD with the range that many shots really pins it to, and says that an extreme spread can only be compared with another string of the same length.
-- The Session records screen now draws one load's sessions over time, each with its uncertainty, and says whether the sessions can really tell that the load is getting better or worse.
-
-### Fixed
-
-- When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first.
-- An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused.
+- You can now open a target by dropping the image on the GroupLab window, or by pasting it with Ctrl+V, including a screenshot or an image copied from a browser. A file that turns out not to be an image now says so instead of ending the session. (Entry 137)
+- You can now say which bull a shot belongs to straight from the shots list, and tick several shots to move them all to one bull in a single step that undoes in one go. Selecting a shot also highlights every review item that is about it. (Entry 141, 5.3)
+- Where you have entered a string of velocities, GroupLab now draws them with the mean and spread marked, gives the SD with the range that many shots really pins it to, and says that an extreme spread can only be compared with another string of the same length. (Entry 141, 5.2.5)
+- The Session records screen now draws one load's sessions over time, each with its uncertainty, and says whether the sessions can really tell that the load is getting better or worse. (Entry 141, 5.2.4)
+- When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first. (Entry 130, 2c)
+- An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused. (Entry 141)
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.71)
 
@@ -218,19 +185,18 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `398f987`. Nightly.
 
-### New
+**What you will notice**
 
-- The analysis now draws how far your shots spread across and up and down, on one scale, and says plainly whether the shots can tell the two apart or whether the group is only lopsided the way small groups usually are.
-- Where you have recorded the velocities for a group, GroupLab now draws each shot's distance from the centre in the order you fired them, and says whether the group really opened up or whether that is what a group of that size looks like anyway.
-- You can now tell GroupLab which bulls you aimed at, by rows, by the same columns of every row, or as a list, and it reads the sheet that way instead of giving each shot to whichever bull it landed nearest. It says back what you told it.
-
-### Fixed
-
+- Where you have recorded the velocities for a group, GroupLab now draws each shot's distance from the centre in the order you fired them, and says whether the group really opened up or whether that is what a group of that size looks like anyway. (Entry 141, 5.2.3)
+- The analysis now draws how far your shots spread across and up and down, on one scale, and says plainly whether the shots can tell the two apart or whether the group is only lopsided the way small groups usually are. (Entry 141, 5.2.2)
+- You can now tell GroupLab which bulls you aimed at, by rows, by the same columns of every row, or as a list, and it reads the sheet that way instead of giving each shot to whichever bull it landed nearest. It says back what you told it. (Entry 141, 5.3.4)
 - On a sheet with enough holes, GroupLab now works out what one hole looks like from the sheet itself rather than from the calibre you entered, so a photograph no longer reports most of its holes as possibly two shots. Entering the calibre still helps it find small holes.
-
-### Changed
-
 - When GroupLab guesses the calibre from the holes, it now offers one of the diameters people actually shoot rather than a raw measurement, with any it cannot tell apart listed beside it, and it picks from a pistol list when your record says pistol. It no longer guesses at all from a photograph, where holes read far wider than they measure.
+
+**Under the hood**
+
+- Saying which bulls were aimed at, and a red I caused.
+- The scales held by a test, and a measurement instead of a squint.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.66)
 
@@ -240,15 +206,16 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `b5ea04c`. Nightly.
 
-### New
+**What you will notice**
 
-- The ballistics page has an imperial and metric switch, and the numbers in its boxes are converted rather than just relabelled. Compare loads now shows each load's velocity and its spread beside the group.
-- New target, on Ctrl+N or from the menu, clears the sheet and starts again, and a sheet with edits you have not saved now asks whether to save or discard them before it goes.
+- The ballistics page has an imperial and metric switch, and the numbers in its boxes are converted rather than just relabelled. Compare loads now shows each load's velocity and its spread beside the group. (Entry 131, 8 and 10)
+- New target, on Ctrl+N or from the menu, clears the sheet and starts again, and a sheet with edits you have not saved now asks whether to save or discard them before it goes. (Entry 140, 1.4 and 2)
+- An update published by a newer build can no longer stop older builds from updating themselves, and the update bar now lists every build you skipped, newest first, with what each one changed. (Entry 139)
+- GroupLab no longer flags every hole on a sheet as possibly two shots when the calibre does not fit what you were shooting; it asks once whether the calibre is right. It also no longer tells you that you fired a number of rounds you never entered. (Entry 140, 3)
 
-### Fixed
+**Under the hood**
 
-- An update published by a newer build can no longer stop older builds from updating themselves, and the update bar now lists every build you skipped, newest first, with what each one changed.
-- GroupLab no longer flags every hole on a sheet as possibly two shots when the calibre does not fit what you were shooting; it asks once whether the calibre is right. It also no longer tells you that you fired a number of rounds you never entered.
+- Question 38 answered by measuring: a photograph has no hole size factor.
 
 ### Known issues
 
@@ -262,7 +229,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `75ff2e8`. Nightly.
 
-### Fixed
+**What you will notice**
 
 - Opening a new target no longer carries the last one's calibre, rounds fired or distance over to it, which was flagging every hole on the new sheet as possibly two. There is a button to copy that setup across when you do want it.
 
@@ -278,7 +245,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `6545cf2`. Nightly.
 
-### Fixed
+**What you will notice**
 
 - Fixed an update that older builds refused as unsigned, which had left them unable to update themselves at all.
 
@@ -290,14 +257,15 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `6616330`. Nightly.
 
-### New
+**What you will notice**
 
 - Compare loads now draws each load's mean radius and sigma with the range it could really be, so you can see at a glance whether the shots can tell two loads apart at all.
-
-### Fixed
-
 - Fixed an update that installed and then did not reopen GroupLab. The installer was bringing it back before it had finished, and it closed again immediately.
 - Each build's release notes now list only what changed since the previous build, instead of repeating the whole history every time.
+
+**Under the hood**
+
+- The update bar is the one place that combines versions.
 
 ### Known issues
 
@@ -311,7 +279,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `e551dbb`. Nightly.
 
-### New
+**What you will notice**
 
 - The ballistics page now draws the trajectory as a curve against range, with drop, wind drift, velocity and energy each on their own, and your zero marked on it.
 - Rifles, barrels and loads now have their own Equipment screen, with a full form for each and earlier values offered as you type, instead of the cramped box with one field that meant two different things.
@@ -329,17 +297,12 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-22**, commit `5690ded`. Nightly.
 
-### New
+**What you will notice**
 
 - The zero correction can now show you where your group landed against where you aimed, with the uncertainty around it, so you can see whether it is worth dialling.
 - There is now a Release notes page on grouplab.org listing every build and what changed in it, and the update bar can open it at the version being offered.
-
-### Fixed
-
 - The zero correction no longer has its direction cut off at the edge of the panel on a smaller window.
-
-### Changed
-
+- Every hole on all six test sheets is now found. A hole the paper tore rather than punched was being refused, and a torn hole was being counted as two shots.
 - The installer now shows the GroupLab icon instead of a generic one, in your downloads and on the taskbar while it runs.
 
 ### Known issues
@@ -355,7 +318,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-21**, commit `85a4ac4`. Nightly.
 
-### New
+**What you will notice**
 
 - Where you have not said what you were shooting, GroupLab now reads a likely calibre from the holes and asks you to confirm it before accepting, because knowing it finds holes that would otherwise be refused.
 
@@ -367,11 +330,7 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-21**, commit `3c6db96`. Nightly.
 
-**Under the hood**
-
-- Four changes setting up the machinery that keeps grouplab.org up to date, including the key the server uses to check that a site update really came from GroupLab.
-- This build was checked by installing it and analysing a real scanned sheet: 25 holes and a mean radius of 0.232 inches, unchanged from the build before it.
-- The rules this project works to now say that a release note may only promise something a person can actually reach in the build being described.
+This build has no change to the application; it behaves exactly as nightly 29 does.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.30)
 
@@ -381,12 +340,9 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-21**, commit `dd57b31`. Nightly.
 
-### New
+**What you will notice**
 
 - GroupLab now reads the likely calibre from your holes and asks you to confirm or correct it, because knowing it lets GroupLab find holes it would otherwise refuse.
-
-### Changed
-
 - The shot distance now has its own yards or metres choice beside it, so you can type it in the unit you think in without changing a setting.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.29)
@@ -397,22 +353,22 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-21**, commit `37686b9`. Nightly.
 
-### New
+**What you will notice**
 
+- You can now click a hole to edit it, move it with the arrow keys, call it a flyer without dropping it from the group, set its size by hand and leave a note on it.
 - Every figure on the analysis page now has a ? beside it explaining what it means and what the number of shots does to it.
-- The analysis page can now be switched between inches with MOA and centimetres with mil, and remembers which you chose. Your saved sessions are unchanged either way.
-- The analysis page can now show your group's mean radius per 100 yards on a scale, against rules of thumb quoted on a Hornady podcast, with a plain note on how much weight your shot count can carry.
-- The zero correction is now shown in MOA, mil, inches and centimetres at once, with the number of clicks to turn where your rifle's scope details are recorded.
-- Every edit now shows a short line at the bottom right saying what changed, with an Undo button beside it, instead of changing the sheet silently.
-
-### Fixed
-
+- The analysis page can now be switched between inches with MOA and centimetres with mil, and remembers which you chose. Your saved sessions are unchanged either way. (Entry 131, 3.2)
+- The analysis page can now show your group's mean radius per 100 yards on a scale, against rules of thumb quoted on a Hornady podcast, with a plain note on how much weight your shot count can carry. (Entry 131, 6.1)
+- The zero correction is now shown in MOA, mil, inches and centimetres at once, with the number of clicks to turn where your rifle's scope details are recorded. (Entry 131, 3.1)
+- Every figure on the analysis page can now tell you what it means in two or three plain sentences, including what having only a few shots does to it. (Entry 131, 4)
+- Every edit now shows a short line at the bottom right saying what changed, with an Undo button beside it, instead of changing the sheet silently. (Entry 131, 9)
+- A sheet where the whole group landed away from where it was aimed is now measured against the bulls you actually shot at, once you tell GroupLab which those were.
 - Rifles and loads now keep everything you type about them. Sight height, zero distance, muzzle velocity, ballistic coefficient and the rest were being lost when the records were saved.
+- The download is about a third smaller, and the installed application about 128 MB smaller, with no change to what it does. (Entry 132, 2)
 
-### Changed
+**Under the hood**
 
-- The guides now cover updates, the shot editor, the explanations beside each figure and why naming your calibre matters.
-- The download is about a third smaller, and the installed application about 128 MB smaller, with no change to what it does.
+- Native libraries only for the platforms anything runs on.
 
 ### Known issues
 
@@ -426,20 +382,11 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 **2026-09-21**, commit `e5887a8`. Nightly.
 
-The first build whose notes were written for a person rather than taken from commit subjects. It opens with a plain summary of everything since nightly 18, because those builds went out with notes that said nothing.
+**Under the hood**
 
-### Fixed
-
-- When GroupLab finds fewer holes than the shots you fired, it now says so and names the bulls with nothing on them, instead of showing a clean result you have no reason to question.
-- Holes from small calibres such as .22 LR are no longer refused as too small when you have entered the calibre.
-- A hole cut off by the edge of the scan is detected instead of being ignored.
-- A shot that landed off the bulls is kept and offered, instead of being dropped.
-
-### Changed
-
-- Where the shot to bull assignment is not certain, the group figures say so, and the zero correction is withheld rather than being given from shots that may belong elsewhere.
-- A blank sheet scanned on a flatbed can use the scan's own resolution as its scale. GroupLab shows the number and you can refuse it.
-- The Support button opens the support page at grouplab.org, and the report window tells you both ways to send a report.
+- Holes off the grid are kept, and question 35 says what that costs.
+- The real update ran, and found one more defect.
+- A hole cut by the scan edge is still a hole.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.27)
 
@@ -449,16 +396,12 @@ The first build whose notes were written for a person rather than taken from com
 
 **2026-09-21**, commit `b089122`. Nightly.
 
-**What you will notice**
-
-- This is the build the updater was proved on: nightly 25 updated itself to this one on a real machine, with real clicks, in under two minutes, with no installer window and no administrator prompt.
-- When GroupLab finds fewer holes than the number of shots you told it you fired, it says so and names the bulls with nothing on them, instead of reporting a clean result.
-- A measurement GroupLab is not sure about now carries that doubt with it wherever the number goes, rather than looking as solid as any other.
-
 **Under the hood**
 
-- Groundwork for two things you could not reach from any screen in this build: working out where a group actually landed before deciding which bull each shot belongs to, and offering a scan's own stated resolution as the scale.
-- A check that every new kind of measurement has a test behind it, which caught the ones added that night.
+- Doubt travels with the number.
+- The scan's stated resolution, offered and never applied.
+- Where the group actually landed.
+- A shortfall is never silent, and the size gate follows the calibre.
 
 ### Known issues
 
@@ -490,14 +433,9 @@ The first build whose notes were written for a person rather than taken from com
 
 **2026-09-21**, commit `a5e90de`. Nightly.
 
-**What you will notice**
-
-- The support page and the application now name the same address for getting help, so whichever you look at, it is the right one.
-- On Linux and on a Mac, the update button now says what it will actually do instead of offering a Windows installer.
-
 **Under the hood**
 
-- The rules this project works to gained a plain way of saying when a piece of work is finished and when it is still waiting.
+- Entries 126 and 127: the support address, and saying plainly when work is done.
 
 ### Known issues
 
@@ -512,9 +450,11 @@ The first build whose notes were written for a person rather than taken from com
 
 **2026-09-21**, commit `b39b7af`. Nightly.
 
-### Fixed
+**Under the hood**
 
-- The build no longer describes itself as a development build in Settings, and looks for updates.
+- The published nightly called itself a development build.
+- The write-up, question 33, and two states nothing reached.
+- GroupLab installs its own updates.
 
 ### Known issues
 
@@ -528,9 +468,7 @@ The first build whose notes were written for a person rather than taken from com
 
 **2026-09-21**, commit `9db6500`. Nightly.
 
-**Under the hood**
-
-- The planning notes for the next round of work were written down. That is the whole of this build, and it is why nothing below the known issues changed.
+This build has no change to the application; it behaves exactly as nightly 12 does.
 
 ### Known issues
 

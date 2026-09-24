@@ -281,6 +281,12 @@ jobs:
       - name: Publish self-contained
         run: dotnet publish src/GroupLab.App --configuration Release -r linux-x64 --self-contained -o publish/grouplab
 
+      # NOTES-FROM-PLANNING.md entry 168 section 2.5: the nightly's gate decides whether a release is built from a list of what ships,
+      # and that list is generated from what MSBuild says this publish reads. Regenerated here and compared, so a new source file or
+      # embedded resource cannot be added without the gate knowing, and a test or a script cannot quietly start producing releases.
+      - name: The ships list is what the build reads
+        run: python3 scripts/shipping-gate.py --check-generated
+
       - name: Pack it, and say what it runs on
         run: |
           set -o pipefail

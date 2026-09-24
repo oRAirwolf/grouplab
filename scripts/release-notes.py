@@ -33,16 +33,44 @@ with the entry reference taken off, under the second heading. That is a floor, n
 lists every commit since the previous build that made the generator do it, so the build's own report names
 them and a missing trailer is noticed on the day rather than months later on the website.
 
+**Only what ships goes in an application release**, NOTES-FROM-PLANNING.md entry 168 section 4. A commit is
+included only where it touched a path `scripts/shipping-gate.py` classes as ships. A research article, a page
+or a guide is not in the executable, so it is not in the executable's notes: the site publishes it and the site
+says it changed. A nightly's own `[notes]` commit is never a change. A build with nothing that ships says so,
+once and plainly, and does not list content changes to fill the space; the gate should have stopped it, and
+every past build like that keeps its release because a bug report may name it.
+
+**A trailer continues onto following lines**, entry 168 section 3, until a blank line or the next trailer. The
+example above wraps, and until entry 168 this script kept only its first line, which is how nightly 94's notes
+were cut off mid sentence.
+
 Every line, written or generated, is then checked, and the build fails rather than publishing notes a
 shooter cannot read: a line that is only a reference, that begins with "Entry", that is too short to be a
 sentence, that uses a word meaning nothing outside this repository, or that carries a file path, a commit
 hash or a class name. And the rules the public repository has always had: no em dashes, nothing from the
 private range folder or a submission, no coordinates, no server address.
 """
+import importlib.util
 import json
 import re
 import subprocess
 import sys
+from pathlib import Path
+
+# The gate's own classifier, so the notes and the gate cannot disagree about what ships.
+_spec = importlib.util.spec_from_file_location("shipping_gate", Path(__file__).resolve().parent / "shipping-gate.py")
+_gate = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_gate)
+
+# Entry 168 section 4.3: a note in an application release that says the application did not change contradicts the
+# release it is in, because a build like that should not exist. Entry 145 banned one phrasing; this bans the meaning.
+NO_CHANGE = re.compile(
+    r"\bnothing in (?:this|it)\b[^.]*\bchange|\bno change to the application\b|\bdoes not change the application\b"
+    r"|\bchanges? nothing in the application\b|\binternal work only\b",
+    re.IGNORECASE)
+
+# What a build with nothing that ships says, once. Entry 168 section 6.4.
+NOTHING_SHIPS = "This build has no change to the application; it behaves exactly as {previous} does."
 
 NOTE = re.compile(r"^Release-note:\s*(?P<note>.+)$", re.IGNORECASE)
 KIND = re.compile(r"^Release-note-kind:\s*(?P<kind>new|fixed|changed|user|internal)\s*$", re.IGNORECASE)
@@ -155,17 +183,49 @@ def commits(previous, head):
         yield sha.strip()[:7], body
 
 
-def read(body):
-    """The note and its kind, or None where the commit does not carry one."""
+TRAILER = re.compile(r"^[A-Z][A-Za-z-]*:\s")
+
+
+def reads(body):
+    """Every note in a commit, each with its kind, in the order they appear.
+
+    Entry 168 section 3: a trailer's value continues onto every following line until a blank line or the next
+    ``Key:`` trailer, indented or not, joined with single spaces. A commit may carry several notes, each followed by
+    its own kind; a note with no kind after it is ``changed``.
+    """
+    found = []
     note = None
-    kind = "changed"
-    for line in body.splitlines():
-        line = line.strip()
+    for raw in body.splitlines() + [""]:
+        line = raw.strip()
         if (m := NOTE.match(line)) is not None:
-            note = m.group("note").strip()
+            if note is not None:
+                found.append([" ".join(note), "changed"])
+            note = [m.group("note").strip()]
         elif (k := KIND.match(line)) is not None:
-            kind = SAME.get(k.group("kind").lower(), k.group("kind").lower())
-    return (note, kind) if note else None
+            if note is not None:
+                found.append([" ".join(note), SAME.get(k.group("kind").lower(), k.group("kind").lower())])
+                note = None
+            elif found:
+                found[-1][1] = SAME.get(k.group("kind").lower(), k.group("kind").lower())
+        elif note is not None and line and not TRAILER.match(line):
+            note.append(line)
+        elif note is not None:
+            found.append([" ".join(note), "changed"])
+            note = None
+    return [(n, k) for n, k in found]
+
+
+def read(body):
+    """The first note and its kind, or None where the commit carries none. Kept for callers that need one."""
+    notes = reads(body)
+    return notes[0] if notes else None
+
+
+def ships(sha):
+    """Whether this commit touched anything that ships inside the executable or its package."""
+    files = subprocess.run(["git", "show", "--name-only", "--format=", sha], capture_output=True, text=True,
+                           check=True).stdout.splitlines()
+    return any(_gate.side(f) == "ships" for f in files if f)
 
 
 def plain(subject):
@@ -204,6 +264,10 @@ def problems(sha, note, generated=False):
     """
     found = []
     words = [w for w in re.split(r"\s+", re.sub(r"\(.*?\)", "", note)) if w]
+
+    if NO_CHANGE.search(note):
+        found.append("it says the application did not change, and a build like that should not exist; "
+                     "the commit behind it does not belong in an application release")
 
     if note.lower().startswith("entry"):
         found.append("it begins with an entry reference rather than saying what changed")
@@ -286,8 +350,13 @@ def build_notes(version, head, previous, heading=True):
     wrong = []
 
     for sha, message in commits(previous, head):
-        read_note = read(message)
-        if read_note is None:
+        # Entry 168 sections 3.3 and 4.1: a nightly writing its own notes is not a change, and a commit that touched
+        # nothing that ships is not in the executable, so neither is in the executable's notes.
+        subject = message.splitlines()[0] if message.splitlines() else ""
+        if subject.startswith("[notes]") or subject.startswith("[screens]") or not ships(sha):
+            continue
+        read_notes = reads(message)
+        if not read_notes:
             # Entry 145 section 1: no build ever says nothing changed. A commit with no trailer still did something,
             # so its subject becomes a line rather than a number.
             first = message.splitlines()[0] if message.splitlines() else ""
@@ -298,19 +367,22 @@ def build_notes(version, head, previous, heading=True):
             notes["internal"].append(line)
             generated.append(sha)
             continue
-        note, kind = read_note
-        wrong += problems(sha, note)
-        notes[kind].append(note)
+        for note, kind in read_notes:
+            wrong += problems(sha, note)
+            notes[kind].append(note)
 
     if wrong:
         return "", wrong
 
-    # A build with no commits behind it is the only thing left that could say nothing, and it cannot happen: a build is
-    # made from a commit. Refusing it here rather than printing an empty block is what stops the old sentence returning.
-    if not any(notes[k] for k in KINDS):
-        return "", ["this build has no commits behind it, which cannot be right, so there is nothing honest to publish"]
-
     out = [f"GroupLab {version}.", ""] if heading else []
+
+    # Entry 168 section 6.4: a build with nothing that ships says so, plainly and once, and names the build it is
+    # the same as. It does not list content to fill the space. The gate should have stopped it; it keeps its release
+    # because a bug report may name it.
+    if not any(notes[k] for k in KINDS):
+        before = f"nightly {nightly_number(previous)}" if previous and nightly_number(previous) else "the build before it"
+        out.append(NOTHING_SHIPS.format(previous=before))
+        return "\n".join(out).rstrip() + "\n", []
 
     if any(notes[k] for k in NOTICED):
         out.append(NOTICE_HEADING)
@@ -347,7 +419,8 @@ def missing(version, head, previous):
     entry 144 section 2.4 says the generated entry is the floor and not the ceiling.
     """
     found = [(sha, message.splitlines()[0] if message.splitlines() else "")
-             for sha, message in commits(previous, head) if read(message) is None]
+             for sha, message in commits(previous, head)
+             if not (message.splitlines() or [""])[0].startswith("[notes]") and ships(sha) and not reads(message)]
 
     if not found:
         print("Every commit in " + version + " carries a Release-note trailer.")
@@ -360,7 +433,51 @@ def missing(version, head, previous):
     return 0
 
 
+def self_test():
+    """The trailer reader and the contradiction check against known cases, entry 168 section 3.2. Prints and exits 0 or 1."""
+    docstring = [l for l in __doc__.splitlines() if l.startswith("    Release-note") or l.startswith("    bulls with")]
+    two_line = "\n".join(l[4:] for l in docstring)
+    cases = [
+        ("the docstring's own example, which wraps",
+         two_line,
+         [("When GroupLab finds fewer holes than the shots you fired, it now says so and lists the bulls with nothing on "
+           "them, instead of reporting a clean result. (Entry 130, 2b.2)", "fixed")]),
+        ("three lines, not indented",
+         "Subject\n\nRelease-note: One line of it,\nand a second line,\nand a third. (Entry 1, 1)\nRelease-note-kind: new\n",
+         [("One line of it, and a second line, and a third. (Entry 1, 1)", "new")]),
+        ("two notes in one commit, each with its kind",
+         "Subject\n\nRelease-note: The first\nnote. (Entry 2, 1)\nRelease-note-kind: fixed\n\n"
+         "Release-note: The second note. (Entry 2, 2)\nRelease-note-kind: internal\n\nCo-Authored-By: someone",
+         [("The first note. (Entry 2, 1)", "fixed"), ("The second note. (Entry 2, 2)", "internal")]),
+        ("a trailer after the note ends it",
+         "Subject\n\nRelease-note: A note that stops here. (Entry 3, 1)\nCo-Authored-By: someone\n",
+         [("A note that stops here. (Entry 3, 1)", "changed")]),
+    ]
+    failed = 0
+    if len(docstring) < 2:
+        print("FAIL the docstring's example is no longer two lines, so the case it tests has gone")
+        failed += 1
+    for name, body, want in cases:
+        got = reads(body)
+        ok = got == want
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + name + ("" if ok else f": got {got!r}"))
+
+    for note in ["Nothing in this changes the application. The project's own records were split so reading them is cheaper.",
+                 "Nothing in this nightly changes what you see or do, it carries internal work only.",
+                 "This build has no change to the application at all, only the website was improved."]:
+        said = problems("0000000", note)
+        ok = any("did not change" in s for s in said)
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + "refused: " + note[:60])
+    print("release-notes self-test: " + ("passed" if not failed else f"{failed} failed"))
+    return 1 if failed else 0
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
+        return self_test()
+
     if len(sys.argv) > 1 and sys.argv[1] == "--missing":
         version = sys.argv[2] if len(sys.argv) > 2 else "this build"
         head = sys.argv[3] if len(sys.argv) > 3 else "HEAD"
