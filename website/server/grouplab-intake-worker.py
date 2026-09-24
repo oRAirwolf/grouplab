@@ -51,6 +51,14 @@ MAX_PIXELS = 120_000_000
 BYTES_PER_PIXEL_AT_PEAK = 12
 MEMORY_MAX_MB = 1600
 
+# NOTES-FROM-PLANNING.md entry 182: the scanner is handed each file's bytes as a stream, so clamd's limits must exceed the largest file
+# the worker scans. That is not the 30 MB upload but the PNG rebuilt from it: at worst three bytes a pixel, colour with no alpha, and
+# noise that does not compress, at the 120 megapixel cap, 360 MB, plus a filter byte a row and zlib's own few bytes. So 400 MB for
+# StreamMaxLength, and for MaxFileSize and MaxScanSize too, because a file over either is skipped and reported clean unless
+# AlertExceedsMax is on. install.py --intake refuses to finish while clamd.conf says less.
+LARGEST_SCAN_BYTES = MAX_PIXELS * 3 + 16 * 1024 * 1024
+CLAMD_LIMIT_MB = 400
+
 # A submission the worker has started three times and never finished, because it was killed or crashed, is
 # refused with that reason rather than tried every two minutes for ever. Entry 176 section 5.
 MAX_ATTEMPTS = 3
@@ -161,15 +169,21 @@ def scan(path: Path, tool: str | None) -> tuple[bool, str]:
     if tool is None:
         return True, "not scanned: no ClamAV on the server"
 
-    # --fdpass hands clamd an open file rather than a path: clamd runs as its own user and cannot read
-    # quarantine, which stays 0750 airwolf. Section 8.1.
-    command = [tool, "--fdpass", "--no-summary", str(path)] if tool == "clamdscan" else [tool, "--no-summary", str(path)]
+    # Entry 182: --stream sends the file's bytes over clamd's socket, so clamd opens nothing. --fdpass handed it a descriptor from
+    # inside the worker's sandbox, a mount clamd cannot see, and clamd's AppArmor profile refused it as a disconnected path: no upload
+    # was scanned. Streaming keeps the sandbox exactly as tight and quarantine 0750 airwolf.
+    command = [tool, "--stream", "--no-summary", str(path)] if tool == "clamdscan" else [tool, "--no-summary", str(path)]
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=300)
     except (OSError, subprocess.TimeoutExpired) as e:
         log(f"  SCANNER DID NOT RUN on {path.name}: {type(e).__name__}")
         return True, f"not scanned: {tool} did not run, {type(e).__name__}"
 
+    said = (result.stdout or "") + (result.stderr or "")
+    if "Limits.Exceeded" in said or "size limit" in said.lower():
+        # A stream or a file over clamd's limits is not scanned in full, whatever the exit code, and is never called clean.
+        log(f"  SCANNER DID NOT COMPLETE on {path.name}: it is over clamd's limits, {path.stat().st_size} bytes; raise StreamMaxLength, MaxFileSize and MaxScanSize to {CLAMD_LIMIT_MB}M")
+        return True, f"not scanned: over clamd's limits at {path.stat().st_size} bytes"
     if result.returncode == 1:
         log(f"  {tool} found something in {path.name}")
         return False, f"{tool} found something"

@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 172.
+**Last rewritten:** 2026-09-24, after entry 182.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 181, 170 (its choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 182, 170 (its choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -31,11 +31,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **The server's intake worker** is installed with the ClamAV daemon and HEIC (request 11, entry 181's
-  line ending hot fix applied). Confirm from the next submission that it scans.
+- **No upload is virus scanned yet.** Request 14: clamd's limits and the worker that streams (entry 182). The rebuild
+  from pixels still runs, and every unscanned file is reported by the worker and the pull script.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 
-Open requests in `docs/notes/for-alan.md`: **3** (9 most urgent, then 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **4** (14 most urgent, then 9, 12, and 5 being applied).
 
 ## Open questions
 

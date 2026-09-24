@@ -24,6 +24,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 182: clamd cannot scan a file handed over from the worker's sandbox
+
+**Status: actioned 2026-09-24**, sections 1 to 4 in the repository. The server side, clamd's limits and the new worker, is request 14.
+
+- **Section 3.1.** `clamdscan --stream`: the bytes go over the socket, clamd opens nothing, and the sandbox and AppArmor are unchanged.
+- **Section 3.2.** A file over clamd's limits is never called clean; the worker says so loudly with the size and the lines to raise.
+- **Section 3.3.** Request 14 and the panel: back up to the server folder, show the four values, stop debconf regenerating the file,
+  change one line each, restart, prove with a 60 MB file. The limit is 400M for `StreamMaxLength`, and for `MaxFileSize` and
+  `MaxScanSize` too, with `AlertExceedsMax yes`, because a file over either of those is otherwise skipped and reported clean, which the
+  entry did not name and would have made streaming look like it worked. Derived from the worker: the rebuilt PNG at 120 megapixels,
+  three bytes a pixel, is about 361 MB.
+- **Section 3.4.** `install.py --intake` refuses while clamd.conf says less, naming each line; `WorkerLimitTests` holds the worker's
+  figure and the installer's together.
+- **Section 3.5.** The CI worker test runs under the unit's own mount sandbox now, `ProtectSystem`, `ProtectHome`, `ReadWritePaths` and
+  `PrivateTmp`, which is what caused the refusal, with clamd's limits set as on the server and a photograph whose rebuild is over 25 MB.
+
+---
+
 ## 2026-09-24, entry 172: ground truth for the 2026-09-20 ST-4 target, the first real material for entry 158 program A
 
 **Status: actioned 2026-09-24 in part.** Sections 1, 2 and 3.3 are done. **Not done: section 2 item 4 and section 3 items 1, 2, 4 and 5**,

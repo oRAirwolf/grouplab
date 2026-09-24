@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 3.** Most urgent: **9**, marking one scan by hand twice, which decides how GroupLab places hole centres (entry 170 section 4).
-Then 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 4.** Most urgent: **14**, clamd's limits and the worker that streams, because until it is done no upload is virus scanned.
+Then 9, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,55 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 14. Let the virus scanner take whole files as a stream
+
+**Opened 2026-09-24. Entry 182. Waiting, and it needs a shell. Most urgent: until it is done no upload is scanned.**
+
+**What is needed, in the server's shell.** First clamd's limits. The backup goes to your server folder, which nothing reads as
+configuration; the first line shows whether the package manages `clamd.conf` from debconf, and the fourth stops it doing so, so a package
+upgrade does not put the old limits back; the third and sixth show the four values before and after.
+
+```bash
+sudo debconf-show clamav-daemon | grep -E 'debconf|StreamMaxLength|MaxFileSize|MaxScanSize'
+sudo cp -p /etc/clamav/clamd.conf /home/ubuntu/grouplab-server/clamd.conf.before-stream
+grep -E '^(StreamMaxLength|MaxFileSize|MaxScanSize|AlertExceedsMax) ' /etc/clamav/clamd.conf
+echo 'clamav-daemon clamav-daemon/debconf boolean false' | sudo debconf-set-selections
+for kv in 'StreamMaxLength 400M' 'MaxFileSize 400M' 'MaxScanSize 400M' 'AlertExceedsMax yes'; do k=${kv%% *}; if grep -q "^$k " /etc/clamav/clamd.conf; then sudo sed -i "s/^$k .*/$kv/" /etc/clamav/clamd.conf; else echo "$kv" | sudo tee -a /etc/clamav/clamd.conf >/dev/null; fi; done
+grep -E '^(StreamMaxLength|MaxFileSize|MaxScanSize|AlertExceedsMax) ' /etc/clamav/clamd.conf
+sudo systemctl restart clamav-daemon
+until clamdscan --ping=1 >/dev/null 2>&1; do sleep 5; done; echo "clamd is answering"
+head -c 60000000 /dev/urandom > /tmp/grouplab-stream-check.bin
+clamdscan --stream --no-summary /tmp/grouplab-stream-check.bin; echo "exit $?"
+rm /tmp/grouplab-stream-check.bin
+```
+
+**A good result:** the sixth command prints `StreamMaxLength 400M`, `MaxFileSize 400M`, `MaxScanSize 400M` and `AlertExceedsMax yes`;
+then "clamd is answering"; then a line ending `OK` and `exit 0` for a 60 MB file, which the old 25 MB limit would have refused. If
+anything goes wrong, `sudo cp -p /home/ubuntu/grouplab-server/clamd.conf.before-stream /etc/clamav/clamd.conf` and a restart put it back.
+
+Then the worker that streams, and the installer that checks those limits. Copy `website/server/grouplab-intake-worker.py` and
+`website/server/install.py` from the repository to `/home/ubuntu/grouplab-server/`, and:
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --intake --dry-run
+sudo python3 install.py --intake
+```
+
+**A good result:** the dry run lists the worker as the file it would replace and names nothing missing. If it lists a clamd.conf line,
+the first block did not take.
+
+**Why.** The worker handed clamd an open file from inside its sandbox, and clamd's AppArmor profile refused it as a disconnected path, so
+nothing has been scanned. Streaming sends the bytes instead, so nothing about the sandbox or AppArmor changes. The limits are 400 MB
+because the largest file the worker scans is the rebuilt PNG, up to about 361 MB at the worker's 120 megapixel cap; Ubuntu's 25 MB would
+refuse even a 600 dpi scan's rebuild, and a file over `MaxFileSize` or `MaxScanSize` is skipped and called clean unless
+`AlertExceedsMax` is on.
+
+**A good answer.** The output of both blocks, and then send one photograph through grouplab.org/targets: the worker's log should say
+`clean, clamdscan` for it.
 
 ---
 

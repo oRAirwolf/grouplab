@@ -53,7 +53,8 @@ public class WorkerLimitTests
     public void TheScannerIsTheDaemonAndAFailureToScanIsLoud()
     {
         string worker = Worker;
-        Assert.Contains("\"--fdpass\"", worker, StringComparison.Ordinal);
+        Assert.Contains("\"--stream\"", worker, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"--fdpass\"", worker, StringComparison.Ordinal);
         Assert.Contains("record[\"notScanned\"]", worker, StringComparison.Ordinal);
         Assert.Contains("RestrictAddressFamilies=AF_UNIX", Unit, StringComparison.Ordinal);
         Assert.Contains("PrivateNetwork=yes", Unit, StringComparison.Ordinal);
@@ -72,5 +73,22 @@ public class WorkerLimitTests
 
         Assert.Contains("import PIL.Image", installer, StringComparison.Ordinal);
         Assert.Contains("heif-convert", Worker, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 182: the worker streams to clamd, so clamd's limits must exceed the largest file it streams, the rebuilt
+    /// PNG at the pixel cap; the installer holds clamd.conf to the same figure the worker does.
+    /// </summary>
+    [Fact]
+    public void ClamdsLimitsCoverTheLargestRebuiltFile()
+    {
+        string worker = Worker, installer = File.ReadAllText(Repo.PathTo("website/server/install.py"));
+        long pixels = Constant(worker, "MAX_PIXELS"), limit = Constant(worker, "CLAMD_LIMIT_MB");
+        Assert.True(pixels * 3 / 1_048_576 < limit, $"a rebuilt PNG at {pixels:N0} pixels can reach {pixels * 3 / 1_048_576} MB, over clamd's {limit} MB");
+        Assert.Equal(limit, Constant(installer, "CLAMD_LIMIT_MB"));
+        foreach (string key in new[] { "StreamMaxLength", "MaxFileSize", "MaxScanSize", "AlertExceedsMax" })
+        {
+            Assert.Contains(key, installer, StringComparison.Ordinal);
+        }
     }
 }

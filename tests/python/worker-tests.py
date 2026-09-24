@@ -89,6 +89,15 @@ def main() -> int:
         f.write(marker)
     (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
 
+    # Entry 182: a photograph whose rebuilt PNG is over 25 MB, Ubuntu's default StreamMaxLength, so the stream is proved above it.
+    import random as _random
+    folder = quarantine / "2026-09-24_aaaaaaa4"
+    folder.mkdir()
+    rng = _random.Random(182)
+    noisy = Image.frombytes("RGB", (4000, 3000), bytes(rng.getrandbits(8) for _ in range(4000 * 3000 * 3)))
+    noisy.save(folder / "001_large.jpg", "JPEG", quality=90)
+    (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
+
     # clamd as the server runs it: the packaged clamav-daemon service, with its own configuration, socket and AppArmor profile, given the
     # one test signature and nothing else. A clamd started by hand in the test tree was refused its log file by that profile, which is
     # exactly the difference between a test and the server that this test exists to close.
@@ -101,6 +110,10 @@ def main() -> int:
     subprocess.run(["sudo", "mkdir", "-p", "/etc/systemd/system/clamav-daemon.service.d"], check=True)
     subprocess.run(["sudo", "tee", "/etc/systemd/system/clamav-daemon.service.d/grouplab-test.conf"], input="[Unit]\nConditionPathExistsGlob=\n", text=True, capture_output=True, check=True)
     subprocess.run(["sudo", "systemctl", "daemon-reload"], check=True)
+
+    # Entry 182: the limits the worker needs, set the way Alan sets them on the server, one line each.
+    for key, value in (("StreamMaxLength", "400M"), ("MaxFileSize", "400M"), ("MaxScanSize", "400M"), ("AlertExceedsMax", "yes")):
+        subprocess.run(["sudo", "sh", "-c", f"grep -q '^{key} ' /etc/clamav/clamd.conf && sed -i 's/^{key} .*/{key} {value}/' /etc/clamav/clamd.conf || echo '{key} {value}' >> /etc/clamav/clamd.conf"], check=True)
     subprocess.run(["sudo", "systemctl", "restart", "clamav-daemon"], check=False)
     answering = False
     for _ in range(90):
@@ -116,6 +129,10 @@ def main() -> int:
         "sudo", "systemd-run", "--wait", "--pipe", "--collect", "--quiet",
         f"--uid={os.getuid()}", f"--gid={os.getgid()}",
         "-p", "MemoryMax=1600M", "-p", "RestrictAddressFamilies=AF_UNIX", "-p", "PrivateNetwork=yes",
+        # Entry 182: the unit's own mount sandbox, which is what made clamd refuse a passed descriptor as a disconnected path. Without it
+        # this test could not have seen that failure, and cannot now prove that streaming avoids it.
+        "-p", "ProtectSystem=strict", "-p", "ProtectHome=read-only", "-p", f"ReadWritePaths={root}", "-p", "PrivateTmp=yes",
+        "-p", "NoNewPrivileges=yes",
         "/usr/bin/python3", str(worker),
     ], capture_output=True, text=True, timeout=900)
     log = (root / "worker.log").read_text(encoding="utf-8", errors="replace") if (root / "worker.log").exists() else ""
@@ -148,6 +165,14 @@ def main() -> int:
         check("recorded as HEIC", meta["files"][0].get("heic") is True, str(meta["files"][0]))
         with Image.open(heic_dir / meta["files"][0]["stored"]) as rebuilt:
             check("rebuilt at its own size", rebuilt.size == (1200, 900), str(rebuilt.size))
+
+    large_dir = ready / "2026-09-24_aaaaaaa4"
+    check("the large photograph is in ready", large_dir.is_dir(), log[-800:])
+    if large_dir.is_dir():
+        meta = json.loads((large_dir / "meta.json").read_text(encoding="utf-8"))
+        size = (large_dir / meta["files"][0]["stored"]).stat().st_size
+        check("its rebuilt file is over 25 MB", size > 25 * 1024 * 1024, str(size))
+        check("and was scanned whole, as a stream", str(meta["files"][0].get("scan", "")).startswith("clean"), str(meta["files"][0]))
 
     marked_dir = refused / "2026-09-24_aaaaaaa3"
     check("the file the scanner found is refused", marked_dir.is_dir(), log[-800:])

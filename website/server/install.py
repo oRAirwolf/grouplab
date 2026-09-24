@@ -98,6 +98,43 @@ WORKER_NEEDS = [
 ]
 
 
+CLAMD_CONF = Path("/etc/clamav/clamd.conf")
+
+# NOTES-FROM-PLANNING.md entry 182: the worker streams each file to clamd, and the largest it streams is the rebuilt PNG, up to about
+# 361 MB at its 120 megapixel cap. The worker's CLAMD_LIMIT_MB is the figure; this must agree with it, and WorkerLimitTests holds them.
+CLAMD_LIMIT_MB = 400
+
+
+def size_mb(text: str) -> float | None:
+    """A clamd.conf size, 400M, 2G, 1024K or a bare number of bytes, in megabytes."""
+    m = re.fullmatch(r"(\d+)([kKmMgG]?)", text.strip())
+    if not m:
+        return None
+    scale = {"": 1 / 1048576, "k": 1 / 1024, "m": 1, "g": 1024}[m.group(2).lower()]
+    return int(m.group(1)) * scale
+
+
+def clamd_limits(conf: Path = CLAMD_CONF) -> list[str]:
+    """What in clamd.conf would stop a rebuilt file being scanned in full, each with the line it needs."""
+    try:
+        text = conf.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [f"{conf} cannot be read, so clamd's limits cannot be checked"]
+    values = {}
+    for line in text.splitlines():
+        parts = line.split(None, 1)
+        if len(parts) == 2 and not line.lstrip().startswith("#"):
+            values[parts[0]] = parts[1].strip()
+    problems = []
+    for key in ("StreamMaxLength", "MaxFileSize", "MaxScanSize"):
+        mb = size_mb(values.get(key, "")) if key in values else None
+        if mb is None or mb < CLAMD_LIMIT_MB:
+            problems.append(f"{key} is {values.get(key, 'not set')}; it must be at least {CLAMD_LIMIT_MB}M: {key} {CLAMD_LIMIT_MB}M")
+    if values.get("AlertExceedsMax", "").lower() not in ("yes", "true"):
+        problems.append("AlertExceedsMax is not on, so a file over a limit would be reported clean: AlertExceedsMax yes")
+    return problems
+
+
 def worker_missing() -> list[str]:
     """What the intake worker would fail without, as the package to install for each."""
     missing = []
@@ -249,7 +286,7 @@ def intake(dry_run: bool) -> int:
         say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
         return 2
 
-    gone = worker_missing()
+    gone = worker_missing() + [f"clamd.conf: {p}" for p in clamd_limits()]
     if gone:
         say("The worker would fail on every submission without these, so nothing was changed:")
         for line in gone:

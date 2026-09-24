@@ -955,6 +955,23 @@ These are what entry 157 section 4 and entry 158 program A are for, and they are
 check of section 2 item 4 wait for them: each needs the position of every hole on this sheet, and today those come only from a person
 clicking 115 of them.
 
+## Entry 182: the scanner takes a stream
+
+**Why nothing was scanned.** The worker runs in its own mount namespace, from `ProtectSystem=strict`, `ProtectHome=read-only`,
+`ReadWritePaths` and `PrivateTmp`. A descriptor it opened and passed with `--fdpass` referred to a mount clamd cannot see from its own
+root, and clamd's AppArmor profile refused it as a disconnected path, so every scan ended "Not a regular file". Entry 176's loud
+reporting is what caught it: the worker's log and the pull script both said the scanner did not complete.
+
+**The fix, and the part the entry left out.** `clamdscan --stream` sends the bytes over the socket, so nothing about the sandbox or the
+distribution's AppArmor profile changes. Streaming needs clamd's `StreamMaxLength` above the largest file scanned, which is the rebuilt
+PNG, not the upload: at the 120 megapixel cap, three bytes a pixel, about 361 MB. **But `StreamMaxLength` is not the only limit.**
+`MaxFileSize` and `MaxScanSize` skip anything larger and report it clean unless `AlertExceedsMax` is on, and Ubuntu sets them at 25 MB and
+100 MB. So all three go to 400M, `AlertExceedsMax yes` makes an oversized file a finding rather than a pass, and the worker treats an
+over-limit answer as not scanned, never clean. `install.py --intake` refuses to finish while `clamd.conf` says less, naming each line.
+
+**Tested where it failed.** The CI worker job now runs the worker under the unit's own mount sandbox, not only its memory limit, with
+clamd configured as the server will be and a photograph whose rebuilt PNG is over 25 MB, and it must come out recorded `clean, clamdscan`.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
