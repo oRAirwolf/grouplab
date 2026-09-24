@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.101
+
+**2026-09-24**, commit `98da32d`. Nightly.
+
+**What you will notice**
+
+- Settings has a new Error reports section; sending reports of errors to the project is built but not switched on yet, so for now the section says so and nothing is sent.
+- A problem report written by hand now keeps its description to 500 characters.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.101)
+
+---
+
 ## 0.2.0-nightly.100
 
 **2026-09-24**, commit `5f08633`. Nightly.
