@@ -16,7 +16,7 @@ public partial class NotesStatusTests
     [Fact]
     public void AnActionedStatusThatCountsTheSectionsCountsThemAll()
     {
-        string[] lines = File.ReadAllLines(Repo.PathTo("docs", "NOTES-FROM-PLANNING.md"));
+        string[] lines = Logs.Notes();
         var entries = lines.Select((l, i) => (l, i)).Where(x => x.l.StartsWith("## ", StringComparison.Ordinal)).Select(x => x.i).ToList();
         int checkedCount = 0;
         for (int e = 0; e < entries.Count; e++)
@@ -30,7 +30,20 @@ public partial class NotesStatusTests
 
             string said = claim.Groups["n"].Value.ToLowerInvariant();
             int claimed = int.TryParse(said, NumberStyles.None, CultureInfo.InvariantCulture, out int n) ? n : Array.IndexOf(Words, said);
-            int sections = lines[from..to].Count(l => Section().IsMatch(l));
+            var named = new HashSet<int>();
+            foreach (string line in lines[from..to])
+            {
+                foreach (Match s in Section().Matches(line))
+                {
+                    // "**Sections 3 and 4.**" names two, so every number in the run counts, not only the first.
+                    foreach (Match number in Number().Matches(s.Groups["ns"].Value))
+                    {
+                        named.Add(int.Parse(number.Value, CultureInfo.InvariantCulture));
+                    }
+                }
+            }
+
+            int sections = named.Count;
             checkedCount++;
             Assert.True(claimed == sections, $"{lines[from]} says \"all {said}\" in its status line and has {sections} numbered sections. Name the sections not done, or correct the count.");
         }
@@ -42,6 +55,14 @@ public partial class NotesStatusTests
     [GeneratedRegex(@"\b[Aa]ll (?<n>\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve) (?:items|sections)\b")]
     private static partial Regex AllCount();
 
-    [GeneratedRegex(@"^### \d+\. ")]
+    /// <summary>
+    /// A section of the entry, named either way a fold has written them. Early folds used a numbered heading; folds from entry 144 on use a
+    /// bold run inside a bullet. Entry 160 taught this test the second form, because the heading level in the log had drifted at entry 119
+    /// and this test had been silently skipping the thirty four newest entries, so nothing had told anybody the form had changed.
+    /// </summary>
+    [GeneratedRegex(@"^### (?<ns>\d+)\. |\*\*Sections? (?<ns>\d+(?:(?:,| and| to) \d+)*)")]
     private static partial Regex Section();
+
+    [GeneratedRegex(@"\d+")]
+    private static partial Regex Number();
 }

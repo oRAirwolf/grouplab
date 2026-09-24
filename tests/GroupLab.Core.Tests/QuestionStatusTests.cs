@@ -14,7 +14,7 @@ public partial class QuestionStatusTests
     public void NoQuestionMarkedOpenIsOneAnEntrySaysItAnswered()
     {
         var answered = new Dictionary<int, string>();
-        foreach (string heading in File.ReadAllLines(Repo.PathTo("docs", "NOTES-FROM-PLANNING.md")).Where(l => l.StartsWith("## ", StringComparison.Ordinal)))
+        foreach (string heading in Logs.Notes().Where(l => l.StartsWith("## ", StringComparison.Ordinal)))
         {
             foreach (Match match in AnsweredQuestions().Matches(heading))
             {
@@ -27,7 +27,7 @@ public partial class QuestionStatusTests
 
         Assert.True(answered.Count >= 5, $"only {answered.Count} questions found answered in the notes' headings; they have named at least five since entry 13, so the headings are probably not being read.");
 
-        string[] questions = File.ReadAllLines(Repo.PathTo("docs", "QUESTIONS-FOR-PLANNING.md"));
+        string[] questions = Logs.Questions();
         int checkedCount = 0;
         for (int i = 0; i < questions.Length; i++)
         {

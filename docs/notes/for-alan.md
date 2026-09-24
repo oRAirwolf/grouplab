@@ -14,6 +14,49 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 5. Pre-approve the commands ordinary work needs, so you are asked once instead of fifty times
+
+**Opened 2026-09-23. Entry 160 section 6. Waiting.**
+
+**What is needed.** One setting change on your side, so that ordinary commands in this repository run
+without a prompt each time.
+
+Create `C:\Dev\grouplab\.claude\settings.local.json` with the content below, or add these lines to the
+`permissions.allow` list if that file already exists. It is your own local file, it is not committed,
+and nothing here changes what the repository does.
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git show:*)",
+      "Bash(git add:*)", "Bash(git commit:*)", "Bash(git fetch:*)", "Bash(git rebase:*)",
+      "Bash(git push origin phase-1:main)", "Bash(git ls-tree:*)", "Bash(git for-each-ref:*)",
+      "Bash(grep:*)", "Bash(rg:*)", "Bash(find:*)", "Bash(ls:*)", "Bash(wc:*)",
+      "Bash(head:*)", "Bash(tail:*)", "Bash(cat:*)", "Bash(sed -n:*)",
+      "Bash(dotnet build:*)", "Bash(dotnet test:*)", "Bash(dotnet run --project src/GroupLab.Cli:*)",
+      "Bash(python:*)", "Bash(python3:*)", "Bash(php:*)",
+      "Bash(gh run list:*)", "Bash(gh run view:*)", "Bash(gh release list:*)", "Bash(gh release view:*)"
+    ]
+  }
+}
+```
+
+**Why.** You have been approving every command, including `git status`. A one hour run becomes several
+hours of your attention, and each prompt costs a round trip of context as well as your time. The list
+above is written out in `CLAUDE.md` under "The commands ordinary work needs", so what it covers is on
+the record rather than only in a settings file.
+
+**What it deliberately leaves out, and what will still stop and ask you every single time:** anything
+with `sudo`, any `ssh` or `scp`, `rm -rf`, `git push --force`, any `git tag`, any change to a repository
+setting, and anything writing outside the repository. Those are the ones worth reading before you say
+yes, and they stay that way.
+
+**A good answer.** "Done", or a narrower list if any line above is more than you want to pre-approve.
+Removing lines only costs prompts; it breaks nothing.
+
+---
+
 ## 4. The Discord channel names, and the server's own rules
 
 **Opened 2026-09-23. Entry 151 sections 1.2 and 1.5. Waiting.**

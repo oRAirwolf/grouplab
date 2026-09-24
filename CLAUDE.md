@@ -154,6 +154,48 @@ Writing the trailer is part of writing the change, not a step afterwards. If I c
 
 **A note promises what a person can actually reach.** Nightly 27 told people GroupLab "now works out where your group actually landed before deciding which bull each shot belongs to". The code to do it existed and was wired to nothing, so the sentence was untrue on the day it was published, and nobody reading it could have known. A note describes what somebody can do after installing the build, not what is in the repository: if the working part cannot be reached from any screen, the note says so in the same breath or there is no note. A published release is never edited to cover this up; the correction goes in the next one.
 
+## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160
+
+Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.
+
+**`docs/notes/STATE.md` is read first, by both sessions.** Under 120 lines, rewritten rather than appended at the end of every run, and a test holds it to that. It says what is in flight, what the next three things are, what is blocked and on whom, the open question numbers, the last nightly, whether the site is current with main, what is in the inbox, and anything that would surprise somebody who was not here yesterday. **If it disagrees with the logs, the logs are right and this file is stale**; say so and fix it.
+
+**The logs are split, and nothing in them was deleted.** `docs/NOTES-FROM-PLANNING.md` keeps the newest fifteen entries and an index; `docs/PHASE1-RESULTS.md` keeps its newest sections, the gates and the decision log; `docs/QUESTIONS-FOR-PLANNING.md` keeps the open questions and lists every answered number. The rest is whole and unedited in `docs/notes/archive/`. `scripts/split-logs.py` does it again when the live files have grown back. `docs/STATISTICS.md` stays whole: it is a reference and it is read on purpose.
+
+**A test that reads a log reads the archive too**, through `Logs.Notes()` and `Logs.Questions()`. A test that reads only the live file is a test that quietly stops checking anything, and that has already happened here by a different route: the entry headings drifted from `##` to `#` at entry 119 and the two tests that read them had been skipping the thirty four newest entries with nothing going red.
+
+### Output
+
+1. **Run the suites quietly.** Print the summary line and the failures. Nobody reads a passing test's output and it costs tokens every time it is produced.
+2. **Never paste test output, build output or file contents into a report, a commit message or a log.** Name the file and the symbol and give the number that matters.
+3. **Pipe a command that will be noisy through something that reduces it**: `| tail -20`, `| wc -l`, `| grep -c`. That is usually what was wanted anyway.
+4. The five line report per entry stays exactly as it is.
+
+### Reading
+
+1. **Never read a file to confirm a write succeeded.** The write either errored or it did not.
+2. **Never read a whole file to find one thing.** `grep -n` with a narrow pattern, then read the lines around the match.
+3. **An entry that says to sweep the repository names the directories.** Where a sweep really is repository wide, `grep -rl` first and open only what matched.
+4. **Do not re-derive a measurement that is already written down.** Check entry 159's claims register before measuring something again.
+
+### Work
+
+1. **One commit per entry** where the entry allows it. Each commit costs a round of context.
+2. **Do not interleave entries.** Finish one, report, start the next.
+3. **Regenerate the figure that changed**, not every research figure.
+4. **Where a task is mechanical and repetitive, write a script and run it once**, rather than performing the same edit fifty times by hand.
+
+### The commands ordinary work needs
+
+Entry 160 section 6: Alan has been approving every command including ordinary git ones, which turns a one hour run into several hours of his attention and costs a round trip each time. This is the set that covers ordinary work in this repository, and nothing in it writes outside the repository, reaches the network destructively, or touches the server:
+
+- **Reading and searching:** `git status`, `git diff`, `git log`, `git show`, `git ls-tree`, `git for-each-ref`, `grep`, `rg`, `find`, `ls`, `wc`, `head`, `tail`, `sed -n`, `cat`.
+- **Ordinary git:** `git add`, `git commit`, `git rebase origin/main`, `git fetch`, `git push origin phase-1:main`, `git checkout --`, `git restore`.
+- **Building and testing:** `dotnet build`, `dotnet test`, `dotnet run --project src/GroupLab.Cli`, `python website/build.py`, `python scripts/*.py`, `php tests/php/receiver-tests.php`.
+- **Looking at CI:** `gh run list`, `gh run view`, `gh release list`, `gh release view`, `gh workflow run website.yml`.
+
+**Still asked for every time, and this list is the reason the rest can be pre-approved:** anything with `sudo`, any `ssh` or `scp`, `rm -rf`, `git push --force`, any `git tag`, any change to a repository setting, and anything that writes outside `C:\Dev\grouplab` except this session's scratchpad.
+
 ## Two suites at once is a flake, not a failure
 
 Running the Core and App suites at the same time on Alan's machine produces failures that are nothing to do with the code: a file in `%TEMP%` that cannot be opened or deleted at that moment, because something outside the test is holding a newly written file. Three different tests did it in one night, and every one passed alone straight afterwards. It has never happened in CI, where the suites run in separate jobs.
