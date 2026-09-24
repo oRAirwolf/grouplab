@@ -657,6 +657,39 @@ within 0.2 percent of their true distance on the paper; the same pixels with no 
 - **The installer's closing lines** say the Turnstile secret is present, from the file's size without opening it, and print the nginx
   steps only when this run wrote the include. `SiteSyncTests` holds it.
 
+## Entry 173: the target upload page is open, at grouplab.org/targets
+
+**Opened.** `"open": true` in `website/api/limits.json`, with entry 171's record that the server side is finished and Alan's check that
+the Turnstile secret is present. The build now writes the page, the two receivers and the page's script.
+
+**One address.** The page is `/targets/`. `/shoot-a-target/send/` answers with a plain page saying it has moved and linking there; I
+chose that over a 301 because it needs no nginx change and a reload of Alan's, and it moves nobody on its own, which entry 151's rule
+is about. The page now says in plain words that a photograph is kept on the server until the developer has read it and then deleted
+from the server.
+
+**The top bar.** While `open` is true, "Shoot a target" becomes **"Send a target"**, to `/targets/`, in both the desktop bar and the
+phone menu. The footer keeps "Shoot a target", and the donor pack page gains a "Send your target" button at the top as well as the one
+beside step 5. While `open` is false, `nav()` returns the bar exactly as it was.
+
+**Checked before publishing.** `send_problems()` in the site build fails the build if the bar offers the page while it is closed, if
+any page's bar still says "Shoot a target" while it is open, if the page is missing while the link is there, if the old path does not
+link to the new one, or if the page's consent differs from `limits.json` or leaves out what happens to a photograph.
+`SendATargetTests` holds the same against the built site.
+
+**Everything else that named an address.** The application's printed volunteer pack told people to upload at `pissinhot.com/targets`;
+it and the README now say `grouplab.org/targets`, and `docs/WEBSITE.md` names the new path. The community page, which I had pointed at
+a `/send/` that never existed under entry 171, links to the page while it is open. The website's donor pack PDFs name no address and
+are not regenerated, as section 2.5 says.
+
+**The end to end test waits on a person.** A script cannot pass Turnstile, which is its point, and `Get-TargetSubmissions.ps1` and
+`Remove-ReadSubmissions.ps1` both run `sudo` on the server, which this session does not. So the test image is generated and labelled
+"Not a target", and request 1 gives Alan the three steps: send it from a browser, pull it with the command given, and then I verify it,
+mark it read and hand him the removal command. `Remove-ReadSubmissions.ps1` gained `-RemoteRoot`, because it could only ever delete from
+pissinhot.com's two folders and would have left every grouplab.org submission on the server.
+
+**Entry 171's `.user.ini` check.** The deploy of `9ade3bf` was the first that changed the site since the new exclusion. Read over SSH
+without sudo: `public_html/.user.ini` is still there, owned by airwolf, 2383 bytes, unchanged since the install.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

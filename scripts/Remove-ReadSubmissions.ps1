@@ -21,6 +21,8 @@
 .PARAMETER CrashReports
     Do the same for crash reports rather than submissions.
 
+.PARAMETER RemoteRoot
+    The folder on the server to remove from. grouplab.org's is /home/airwolf/web/grouplab.org/private/ready.
 .PARAMETER WhatIf
     Say what would be deleted and delete nothing.
 
@@ -36,14 +38,19 @@ param(
     [string]$SshHost = 'ssh.pissinhot.com',
     [string]$SshUser = 'ubuntu',
     [string]$KeyPath = 'C:\Users\Airwolf\Documents\ssh-key-2026-03-25.key',
-    [string]$LogPath = 'C:\Dev\grouplab-submissions\removed.log'
+    [string]$LogPath = 'C:\Dev\grouplab-submissions\removed.log',
+    # Entry 173: grouplab.org's receiver keeps what it has read in /home/airwolf/web/grouplab.org/private/ready. Name it here to
+    # remove from there; left out, the two pissinhot.com stores are used as before.
+    [string]$RemoteRoot
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # The two stores on the server. Nothing else is ever touched.
-$remoteRoot = if ($CrashReports) {
+$remoteRoot = if ($RemoteRoot) {
+    $RemoteRoot
+} elseif ($CrashReports) {
     '/home/airwolf/web/pissinhot.com/private/crash_reports'
 } else {
     '/home/airwolf/web/pissinhot.com/private/target_uploads'

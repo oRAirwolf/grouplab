@@ -9,9 +9,12 @@
     "`open` is whether the receiver is installed and answering on the server. While it is false the page is not",
     "built and nothing links to it, because a form that posts to a path the server does not serve is worse than",
     "no form: it takes somebody's photographs, spends their upload and tells them nothing useful. Entry 129's",
-    "installer run by Alan is what makes it true."
+    "installer run by Alan is what makes it true.",
+    "",
+    "Entry 173 set it true on 2026-09-24, with the server side of entry 129 finished and the Turnstile secret confirmed present.",
+    "The page is at grouplab.org/targets/, and while this is true the top bar's Shoot a target becomes Send a target."
   ],
-  "open": false,
+  "open": true,
   "maxFiles": 10,
   "maxFileMegabytes": 30,
   "maxSubmissionMegabytes": 90,

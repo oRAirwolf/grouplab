@@ -204,6 +204,10 @@ def links() -> dict:
 DISCORD = "/discord/"
 
 
+# NOTES-FROM-PLANNING.md entry 173 section 2: the upload page's one address. The old path keeps a plain page that links here.
+SEND = "/targets/"
+SEND_BEFORE = "/shoot-a-target/send/"
+
 NAV = [
     ("Download", "/download/"),
     ("Tour", "/tour/"),
@@ -214,6 +218,15 @@ NAV = [
     ("Release notes", "/releases/"),
     ("Support", "/support/"),
 ]
+
+def nav() -> list[tuple[str, str]]:
+    """The top bar. Entry 173 section 2.3: while the upload page is open, "Shoot a target" becomes "Send a target" and goes to it; the
+    donor pack keeps its place in the footer. While it is closed the bar is exactly as it was, so the link can never point at a page
+    that does not answer."""
+    if not limits().get("open"):
+        return NAV
+    return [("Send a target", SEND) if href == "/shoot-a-target/" else (label, href) for label, href in NAV]
+
 
 # NOTES-FROM-PLANNING.md entry 142 section 3: the index is grouped, and the groups read in this order rather than
 # alphabetically, because somebody arriving wants to know what a target says before they want to know how it is built.
@@ -235,7 +248,7 @@ def logo(cls: str = "logo") -> str:
 def shell(path: str, title: str, description: str, body: str, active: str = "") -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
     links = []
-    for label, href in NAV:
+    for label, href in nav():
         cur = ' aria-current="page"' if label == active else ""
         links.append(f'<a href="{href}"{cur}>{esc(label)}</a>')
     nav_links = "\n".join(links)
@@ -542,6 +555,7 @@ def page_shoot() -> str:
 <p class="eyebrow">Shoot a target</p>
 <h1>Help prove that GroupLab measures correctly.</h1>
 <p class="lead">It needs real targets, shot by real people with real rifles. Five steps, about ten minutes of your time on top of the shooting. Any distance, any rifle: nine shots is useful, twenty-five is better.</p>
+{f'<div class="actions">{btn("Send your target", SEND, True, "Already shot one? Send the photos")}</div>' if limits().get("open") else ""}
 </div>
 <div class="stack tight">
 {pdf("Donor pack", "grouplab-donor-pack.pdf", "The instructions and both targets, ready to print.", "4 pages, Letter", True)}
@@ -567,7 +581,7 @@ def page_shoot() -> str:
 <p class="text">No account, no email address and no follow up. Every photo is rebuilt from its pixels on the server, so the camera facts the measurements need come across and the location and the date and time cannot.</p>
 {"" if limits().get("open") else '<p class="text">The page is built and waiting on one install on the server. Until then, keep your files as they came off the camera.</p>'}
 </div>
-{f'<div class="actions col">{btn("Send your target photos", "/shoot-a-target/send/", True, "JPEG, PNG, HEIC or TIFF")}</div>' if limits().get("open") else ""}
+{f'<div class="actions col">{btn("Send your target photos", SEND, True, "JPEG, PNG, HEIC or TIFF")}</div>' if limits().get("open") else ""}
 </div>
 </div>
 </section>
@@ -639,7 +653,7 @@ def page_send() -> str:
     body = f"""
 <section class="wrap page-head">
 <div class="stack">
-<p class="eyebrow"><a class="plain" href="/shoot-a-target/">Shoot a target</a> &rsaquo; Send your photos</p>
+<p class="eyebrow">Send a target &middot; <a class="plain" href="/shoot-a-target/">How to shoot one</a></p>
 <h1>Send your target photos.</h1>
 <p class="lead">No account, no email address, no follow up. Everything on this page is optional except the consent box.</p>
 </div>
@@ -651,7 +665,7 @@ def page_send() -> str:
 <ul>
 <li>They go straight into a holding area on the server that is not reachable from the web.</li>
 <li>Every photo is then <strong>rebuilt from its pixels</strong> and the file you sent is deleted. Your camera's make, model, lens, focal length, exposure and resolution are carried across, because the measurements need them. <strong>Location, GPS and the date and time are not, and cannot be</strong>, because the new file is built from pixels and a short list of numbers rather than copied.</li>
-<li>They are pulled onto one machine, measured, and then deleted from the server.</li>
+<li>They are kept on the server until the developer has read them, then pulled onto one machine and <strong>deleted from the server</strong>.</li>
 <li>If you tick the box below, they are used for testing only and never published.</li>
 </ul>
 </div>
@@ -701,9 +715,23 @@ def page_send() -> str:
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="/assets/js/send.js" defer></script>
 """
-    return shell("/shoot-a-target/send/", "Send your target photos",
+    return shell(SEND, "Send a target",
                  "Send photographs of a target you have shot, to help prove GroupLab measures correctly. No account and no email address.",
-                 body, "Shoot a target")
+                 body, "Send a target")
+
+
+def page_send_moved() -> str:
+    """The old address, entry 173 section 2.2. A plain page with one link, not a meta refresh, which entry 151 bans: nobody holding
+    the old link is sent anywhere they did not choose to go. A real 301 would be an nginx change, and this needs none."""
+    body = f"""
+<section class="wrap page-head stack last">
+<p class="eyebrow">Send a target</p>
+<h1>This page has moved.</h1>
+<p class="lead">Sending a target is at <a href="{SEND}">grouplab.org/targets</a> now. Nothing else about it has changed.</p>
+<div class="actions">{btn("Go to the send page", SEND, True)}</div>
+</section>
+"""
+    return shell(SEND_BEFORE, "Send a target", "The page for sending a target has moved to grouplab.org/targets.", body, "Send a target")
 
 
 def page_support() -> str:
@@ -1546,7 +1574,7 @@ def page_discord() -> str:
 <h2>What is expected there</h2>
 <p>The server's rules are the first thing you will see there. In short, so they are readable before you join rather than only after:</p>
 <ol class="prose tight">{rules}</ol>
-<p class="small">A photograph of a target can carry the place it was taken. Take the location data off it before posting, or send it through <a href="/send/">the submission page</a>, which strips that before anybody sees the file. Nothing said on the server is legal advice, and no part of GroupLab is.</p>
+<p class="small">A photograph of a target can carry the place it was taken. Take the location data off it before posting, or send it through {f'<a href="{SEND}">the submission page</a>' if limits().get("open") else "the submission page, once it opens"}, which strips that before anybody sees the file. Nothing said on the server is legal advice, and no part of GroupLab is.</p>
 </section>
 """
     return shell(DISCORD, "Community", "The GroupLab Discord: what is in it, what is expected there, and the invite, which you click yourself.", body, "Community")
@@ -1916,6 +1944,38 @@ def fingerprint() -> None:
             f.write_text(REFERENCE.sub(swap, text), encoding="utf-8", newline="\n")
 
 
+def send_problems() -> list[str]:
+    """Entry 173 section 3. The top bar shows "Send a target" only while the page is open, and the page is in the build whenever the
+    link is. The old path answers with a page that links to the new one. The consent on the page is the one in limits.json, and the
+    page says in plain words what happens to a photograph."""
+    problems = []
+    is_open = bool(limits().get("open"))
+    page = OUT / "targets" / "index.html"
+    for f in OUT.rglob("*.html"):
+        text = f.read_text(encoding="utf-8")
+        linked = f'href="{SEND}"' in text and ">Send a target</a>" in text
+        if linked and not is_open:
+            problems.append(f"{f.relative_to(OUT)}: the top bar offers Send a target while the page is closed")
+        if is_open and ">Shoot a target</a>" in text.split("</header>")[0] and "<header" in text:
+            problems.append(f"{f.relative_to(OUT)}: the top bar still says Shoot a target while the send page is open")
+    if is_open:
+        if not page.exists():
+            problems.append("targets/index.html: the top bar links to it and it is not in the build")
+        else:
+            text = page.read_text(encoding="utf-8")
+            if esc(limits()["consentText"]) not in text:
+                problems.append("targets/index.html: the consent text is not the one in limits.json")
+            for words in ["rebuilt from its pixels", "Location, GPS and the date and time are not", "until the developer has read them", "deleted from the server"]:
+                if words not in text:
+                    problems.append(f"targets/index.html: does not say {words!r}")
+        moved = OUT / "shoot-a-target" / "send" / "index.html"
+        if not moved.exists() or f'href="{SEND}"' not in moved.read_text(encoding="utf-8"):
+            problems.append("shoot-a-target/send/index.html: the old address does not answer with a link to /targets/")
+    elif page.exists():
+        problems.append("targets/index.html: built while the page is closed")
+    return problems
+
+
 def link_problems() -> list[str]:
     """
     Entry 128 section 1.2. Two ways the Download page could quietly stop working, both of which
@@ -2045,7 +2105,8 @@ def main() -> None:
     # Entry 129: the page and the receiver go up together or not at all. A form posting to a path the server does
     # not serve yet takes somebody's photographs, spends their upload and tells them nothing useful.
     if limits().get("open"):
-        write("shoot-a-target/send/index.html", page_send())
+        write("targets/index.html", page_send())
+        write("shoot-a-target/send/index.html", page_send_moved())
         # Section 3.4: the receivers are part of the site build, so they are versioned here, signed and delivered
         # by the same pipeline as the pages rather than copied to the server by hand.
         copy(need(REPO / "website" / "api" / "upload.php"), "api/upload.php")
@@ -2098,6 +2159,7 @@ def main() -> None:
     problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems()
     problems += link_problems()
     problems += php_problems()
+    problems += send_problems()
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")

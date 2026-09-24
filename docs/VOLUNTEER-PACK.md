@@ -28,5 +28,5 @@ Thank you for shooting a sheet for GroupLab. This page goes with the sheet print
 
 ## Send it
 
-- Upload the photographs, and the scan if you made one, at https://pissinhot.com/targets.
+- Upload the photographs, and the scan if you made one, at https://grouplab.org/targets.
 - Submitting means following the terms on that page.

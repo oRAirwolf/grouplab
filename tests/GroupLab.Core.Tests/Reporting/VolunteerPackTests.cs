@@ -24,7 +24,7 @@ public class VolunteerPackTests
         foreach (string expected in new[]
         {
             "actual size", "bull 1 to the centre of bull 5", "5.98 in (152.0 mm)", "flat", "One shot per bull, in order", "Write only in the load block",
-            "four photographs", "2.5 ft", "main camera", "Do not crop", "messaging app", "600 dpi", "https://pissinhot.com/targets", "terms on that page",
+            "four photographs", "2.5 ft", "main camera", "Do not crop", "messaging app", "600 dpi", "https://grouplab.org/targets", "terms on that page",
         })
         {
             Assert.Contains(expected, text, StringComparison.Ordinal);

@@ -192,41 +192,50 @@ of it he actually looks at. The parts he ignores are as useful as the parts he u
 
 ---
 
-## 1. Entry 129: what is left after the install
+## 1. The target upload page: the end to end test, then the redirect
 
-**Opened 2026-09-23. Rewritten 2026-09-24 by entry 171 section 6. Waiting, and one step needs a shell.**
+**Opened 2026-09-23. Rewritten 2026-09-24 by entries 171 and 173. Waiting, and two steps need a shell.**
 
-**The install is done.** Alan did it with the planning session on 2026-09-22 and 2026-09-23: the folders, the worker and its units,
-`.user.ini`, the nginx include, the Turnstile secret, `nginx -t`, the reload, and both sites answering 200. ClamAV runs as on demand
-`clamscan` with no daemon, which the worker already supports, so the old step about the daemon's memory does not apply. The planning
-session is checking that the installed files match the repository's current copies and will say in a later entry whether any need
-copying up again.
+**Where it stands.** The server side of entry 129 is finished and the Turnstile secret is present. Entry 173 opened the page at
+**https://grouplab.org/targets/**, and the top bar says "Send a target". The old `/shoot-a-target/send/` answers with a plain page
+linking to it.
 
-**What is left, in this order.**
+**What is needed, in this order.**
 
-1. **The page opens.** `"open"` is set to `true` in `website/api/limits.json`, in a commit of mine, once the planning session's check
-   above says the installed files are current. Nothing for Alan to do.
-2. **The end to end test.** Alan sends one of his own photographs through https://grouplab.org/shoot-a-target/send/ and says so. I
-   pull it, check it was rebuilt from pixels with no metadata and that its consent was recorded, and report.
-3. **The waiting submissions.** I pull, ingest and delete the six waiting on the server, and anything newer, under entry 129 section 6.1.
-   Each SSH or SCP command is asked for before it runs.
-4. **The redirect, the one change to pissinhot.com Alan has approved.** Entry 129 section 6.2: `pissinhot.com/targets` becomes a 301 to
-   the new page and the old receiver refuses uploads with a message naming it. This is the shell step, and it goes in the panel as well.
-   It replaces the one include the old page installed and touches nothing else there. In the server's shell, as the user who can sudo:
+1. **Send the test image through the page, from a browser.** A script cannot do this step, because Turnstile is there to stop scripts.
+   The image is generated, not a target: `C:\Users\Airwolf\AppData\Local\Temp\claude\c--Dev-grouplab\25df80e1-3782-4339-9fd2-f7dce06d9933\scratchpad\grouplab-e2e-test-173.png`.
+   On https://grouplab.org/targets/ choose it, write **TEST, entry 173, not a target** in "Anything else worth knowing", tick the
+   consent box **and** "Do not include my photos in the public data set", pass the check and send. **A good result:** the page says it
+   was received and gives an identifier. Send me the identifier, or say what the page said instead.
+2. **Pull it**, in PowerShell on this machine:
+
+   ```powershell
+   cd C:\Dev\grouplab\scripts
+   .\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready
+   ```
+
+   **A good result:** one new submission, its hashes verified. I then check it was rebuilt from pixels with no metadata and that its
+   consent was recorded, mark it read in the ledger, and give you the one command that removes it from the server.
+3. **A photograph from your phone**, which the planning session will ask for separately: a test from this machine does not prove the
+   path works for a phone's photo formats.
+4. **The redirect, the one change to pissinhot.com you approved.** `pissinhot.com/targets` becomes a 301 to the new page and the old
+   receiver refuses uploads with a message naming it. **Only after the six waiting submissions have been pulled from pissinhot.com**,
+   because afterwards nothing new can arrive there. It replaces the one include the old page installed and touches nothing else. In the
+   server's shell:
 
    ```bash
    cd /home/airwolf/conf/web/pissinhot.com
    sudo cp -p nginx.ssl.conf_targets nginx.ssl.conf_targets.before-redirect
    sudo tee nginx.ssl.conf_targets >/dev/null <<'EOF'
-   # pissinhot.com/targets moved to grouplab.org. NOTES-FROM-PLANNING.md entry 129 section 6.2.
+   # pissinhot.com/targets moved to grouplab.org/targets. NOTES-FROM-PLANNING.md entries 129 and 173.
    # The body limit is kept exactly as it was, so nothing else about the site changes.
    client_max_body_size 96m;
 
-   location = /targets      { return 301 https://grouplab.org/shoot-a-target/send/; }
-   location = /targets.html { return 301 https://grouplab.org/shoot-a-target/send/; }
+   location = /targets      { return 301 https://grouplab.org/targets/; }
+   location = /targets.html { return 301 https://grouplab.org/targets/; }
    location = /api/upload.php {
        default_type text/plain;
-       return 410 "Target uploads have moved to https://grouplab.org/shoot-a-target/send/\n";
+       return 410 "Target uploads have moved to https://grouplab.org/targets/\n";
    }
    EOF
    sudo nginx -t && sudo systemctl reload nginx
@@ -236,10 +245,10 @@ copying up again.
    ```
 
    **A good result:** `nginx -t` says the syntax is ok and the test is successful, then the three lines read
-   `301 https://grouplab.org/shoot-a-target/send/`, `410` and `200`. If `nginx -t` fails, do not reload: put the old file back with
+   `301 https://grouplab.org/targets/`, `410` and `200`. If `nginx -t` fails, do not reload: put the old file back with
    `sudo cp -p nginx.ssl.conf_targets.before-redirect nginx.ssl.conf_targets` and send me what it said.
-5. **One last pull** after the redirect, for anything that arrived in between, ingested and deleted like the rest.
+5. **One last pull from pissinhot.com** after the redirect, for anything that arrived in between.
 
-**Why.** Six submissions are waiting, and the old page still accepts uploads to a server this project is moving away from.
+**Why.** The page is live for anybody now, and nothing has yet gone through it end to end.
 
-**A good answer.** Step 2's "sent", and step 4's three lines.
+**A good answer.** Step 1's identifier, step 2's output, and later step 4's three lines.

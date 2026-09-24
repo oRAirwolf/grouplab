@@ -252,7 +252,7 @@ public class Entry113Tests
             Assert.True(print.SaveVolunteerPack(path));
             string pdf = System.Text.Encoding.Latin1.GetString(File.ReadAllBytes(path));
             Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(pdf, "/Type /Page /Parent").Count);
-            Assert.Contains("pissinhot.com/targets", pdf, StringComparison.Ordinal);
+            Assert.Contains("grouplab.org/targets", pdf, StringComparison.Ordinal);
             Assert.StartsWith("Saved the volunteer pack, 2 pages", print.StatusText, StringComparison.Ordinal);
         }
         finally

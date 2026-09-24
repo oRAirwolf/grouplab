@@ -24,9 +24,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 173: open the target upload page, and put it in the top bar
+
+**Status: actioned 2026-09-24**, sections 1 to 3, with two parts waiting on Alan rather than on a decision: section 1.3's end to end test
+needs a person in a browser, because Turnstile is there to stop scripts, and its pull and removal run `sudo` on the server; section
+2.4's redirect is his to run. Both are in request 1 of `docs/notes/for-alan.md` with the commands, and the redirect is in the panel.
+
+- **Section 1.** `open` is true. The test image is generated and labelled as not a target.
+- **Section 2.** The page is at `/targets/`. The old path answers with a plain page linking there, with no refresh and no nginx change.
+  The top bar says "Send a target" while the page is open and is unchanged while it is closed; the donor pack page keeps its footer
+  place and gains a "Send your target" button. The redirect's commands now point at `/targets/`. The printed donor PDFs are untouched.
+- **Section 3.** The build checks all three and fails before publishing if any is wrong, and `SendATargetTests` holds them.
+
+---
+
 ## 2026-09-24, entry 171: answers to questions 48 and 49, request 4 answered, and stale items closed
 
-**Status: actioned 2026-09-24**, all seven sections and section 6's two amendments. Three things wait on a later step, not on a decision:
+**Status: actioned 2026-09-24**, sections 1 to 6 and section 6's two amendments; section 7 is the order of work, which is followed. Three things wait on a later step, not on a decision:
 the friend's scan is attached to the `test-data` release once `ci.yml` has created it; `.user.ini` surviving the first real deploy is
 checked after this push publishes; and request 5 closes when Alan confirms.
 

@@ -122,7 +122,7 @@ sudo systemctl disable --now grouplab-site-sync.timer   # for good
 
 ## The target upload page, and what happens to a photograph
 
-NOTES-FROM-PLANNING.md entry 129. The page is `/shoot-a-target/send/` and the receiver is `website/api/upload.php`, built and delivered by the same pipeline as every page.
+NOTES-FROM-PLANNING.md entries 129 and 173. The page is `/targets/`, opened on 2026-09-24; the old `/shoot-a-target/send/` answers with a plain page linking to it, and `pissinhot.com/targets` is to redirect there. The receiver is `website/api/upload.php`, built and delivered by the same pipeline as every page.
 
 **The strongest single protection here is that nothing you send is ever opened.**
 

@@ -15,10 +15,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- Entries 149 to 153, 160 to 163, 167, 168 and 171 are done. **Entry 164 is finished and waiting to be
+- Entries 149 to 153, 160 to 163, 167, 168, 171 and 173 are done; **the upload page is open at `grouplab.org/targets/`**. **Entry 164 is finished and waiting to be
   committed**: it was set aside so 171 could go first.
-- Alan's order from here: **173, 164, 170, 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entry 173
-  opens the upload page at `grouplab.org/targets/` and puts it in the top bar. Entries 156
+- Alan's order from here: **164, 170, 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 sections 3 and 4 were never done and nothing brought them back. Entry 171 section 6.1 puts
   section 3 with entry 170 section 2 and section 4 with entry 172 section 3 item 1.
@@ -33,14 +32,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **Entry 129, what is left of it.** The server side is finished (entry 171). What remains is opening the
-  page, Alan's end to end test, ingesting the six waiting submissions, and the pissinhot.com redirect,
-  whose commands are written out in request 1 of `docs/notes/for-alan.md`.
+- **The upload page's end to end test and the redirect.** The page is open (entry 173). A browser has to
+  pass Turnstile and the pull runs sudo, so both are Alan's: request 1 of `docs/notes/for-alan.md`.
 - **Entry 156, hit probability.** The mathematics is decided; the layout waits on screenshots of the
   tools Alan already uses. Request 2.
 - **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
-- **The friend's 59 MB scan in CI.** The `test-data` release is created by `ci.yml` on the next push to
-  main; the file is attached to it once, and CI then fetches and checks it on every run.
 
 Open requests in `docs/notes/for-alan.md`: **4** (1, 2, 3, and 5, which Alan is applying).
 
@@ -58,8 +54,8 @@ of 44; answered ones are listed there by number and live whole in the archive.
 
 - **Last nightly:** 0.2.0-nightly.94. Numbers count builds, not workflow runs, and since entry 168 a
   night with no application change builds nothing.
-- **The site was current with main** at `a33be90` when this was written; entry 171's push publishes the
-  community page's channels and rules, the corrected print scale wording, and the tour's print page.
+- **The site serves `9ade3bf`**, entry 171. Entry 173's push publishes the open upload page and the top
+  bar's "Send a target".
 - **Windows, Linux and both macOS downloads answer 200.** What was checked on a real Mac is being
   rewritten under entry 166.
 
@@ -68,7 +64,7 @@ of 44; answered ones are listed there by number and live whole in the archive.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ, because this was the fact that was wrong last time.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 164, 165, 166, 169, 170, 172, 173
+**Holds:** 154, 155, 156, 157, 158, 159, 164, 165, 166, 169, 170, 172
 
 ## Things that would surprise somebody who was not here yesterday
 
