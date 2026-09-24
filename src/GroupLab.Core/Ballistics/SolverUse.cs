@@ -144,6 +144,34 @@ public static class SolverUse
         return new CarriedZero(fromYards, toYards, Axis(zero.Windage, windage), Axis(zero.Elevation, elevation), windage, elevation);
     }
 
+    /// <summary>
+    /// The correction for the rifle's own zero distance, from a group shot at another, NOTES-FROM-PLANNING.md entry 170 section 1.2.
+    /// <para>
+    /// <b>Not the same as <see cref="Carry"/>.</b> A rifle zeroed at 100 yards and shot at 25 is not meant to hit the aim at 25: its bullet is
+    /// still climbing there, below the line of sight by the trajectory's own height. So only the part of the offset that is not that height is
+    /// the sight's error, and it is that part that is carried to the zero distance, elevation along the solver's path and windage in
+    /// proportion to range. <paramref name="zeroed"/> is the solver's input with its zero range at the rifle's zero distance.
+    /// </para>
+    /// </summary>
+    public static (CarriedZero Carried, double ExpectedLowInches) ToZeroDistance(BallisticInput zeroed, ZeroCorrection zero, double shotYards, Rifle? rifle)
+    {
+        ArgumentNullException.ThrowIfNull(zero);
+        ArgumentNullException.ThrowIfNull(zeroed);
+
+        // The zero's elevation is positive low, and the solver's path is positive up: a correctly zeroed rifle hits this far low of the aim here.
+        double expectedLow = -PathAt(zeroed, shotYards);
+        double error = zero.Elevation.OffsetInches - expectedLow;
+        var elevation = zero.Elevation with
+        {
+            OffsetInches = error,
+            Distinguishable = Math.Abs(error) > zero.Elevation.HalfWidthInches,
+            Dial = error >= 0 ? "up" : "down",
+            Sits = error >= 0 ? "low" : "high",
+            Clicks = null,
+        };
+        return (Carry(zeroed, zero with { Elevation = elevation }, shotYards, zeroed.ZeroRangeYards, rifle), expectedLow);
+    }
+
     /// <summary>A dope table: every row to <paramref name="maxYards"/>, with a full-value crosswind of <see cref="DopeWindMph"/> for its wind column.</summary>
     public static Trajectory Dope(BallisticInput input, double maxYards, double stepYards)
     {

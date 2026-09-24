@@ -104,7 +104,7 @@ public sealed partial class MainWindow
 
         var zero = ZeroFor(state);
         var zeroCard = new ReportCard("Zero correction", zero.Verdict,
-            [.. zero.Rows.Select(r => string.Join("  ", new[] { r.Label + ":", r.Linear, r.Angular, r.Sits }.Where(t => t.Length > 0))), .. zero.Note is { } note ? [note] : Array.Empty<string>()],
+            [.. zero.Rows.Select(r => string.Join("  ", new[] { r.Label + ":", r.Linear, r.Angular, r.Sits }.Where(t => t.Length > 0))), .. zero.Note is { } note ? [note] : Array.Empty<string>(), .. zero.AtZero is { } atZero ? [atZero] : Array.Empty<string>()],
             zero.Why);
         if (zero.Why.Count > 0)
         {

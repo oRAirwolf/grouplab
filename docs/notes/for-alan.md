@@ -14,6 +14,24 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 9. Mark one scan by hand, twice, so a person's click has a number too
+
+**Opened 2026-09-24. Entry 170 section 4.4. Waiting.**
+
+**What is needed.** On the friend's scan `Scan_20260923.png` (the one in your Downloads folder), in GroupLab: detect, then drag each
+of the ten hole marks to where you judge the centre of the hole to be, at the zoom you would normally use, and save the session. Then
+close it, open the scan fresh, and do the same again without looking at the first session, and save that as a second file. Send the
+two session files the way you send anything else, or put them in `C:\Dev\grouplab-submissions\hand-marked\` and say so.
+
+**Why.** The outside user moved nearly every hole centre by a few thousandths of an inch, and that changed his extreme spread by 0.11 MOA.
+A person placing a centre by eye is uncertain too, so his corrections are evidence and not ground truth. Two markings of the same scan
+by the same person say how uncertain, and the detector is then held to that standard rather than to zero. It cannot be done by
+software, because the thing being measured is a person's eye.
+
+**A good answer.** The two session files. Ten minutes, roughly.
+
+---
+
 ## 8. The friend's 2026-09-23 scan is 56 MB: publish it whole, or smaller?
 
 **Opened 2026-09-24. Entry 162 section 1. Answered 2026-09-24**, by entry 171 section 6: Alan left it to the planning session on one
@@ -154,7 +172,8 @@ expectations, written here, not a copy of the server's.
 
 ## 3. The photograph annotations, for the paper-tearing program
 
-**Opened 2026-09-23. Entry 158 section 2. Waiting.**
+**Opened 2026-09-23. Entry 158 section 2. Answered 2026-09-24**, by entry 172: the ST-4 target's annotated photograph is the only
+annotated material, and program A runs on it. The twenty six photographs stay available without ground truth.
 
 **What is needed.** For the 100 yard precision rifle photographs, which shot is which in each group, and
 the load behind it: most were five shots with a 6.5 Creedmoor, and the annotations say which photograph

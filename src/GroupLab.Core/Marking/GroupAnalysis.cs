@@ -140,6 +140,23 @@ public static class GroupAnalysis
     private const string RayleighBasis = "exact under the circular normal model: docs/STATISTICS.md section 3.3's chi-square interval with the c4 correction on both endpoints";
     private const string RangeBasis = "the simulated range-statistic table under the circular normal model, docs/STATISTICS.md section 5";
 
+    /// <summary>
+    /// Works out, and keeps, what the figures for a group of <paramref name="shots"/> need that depends on the count alone: the circular
+    /// aspect's median and the simulated worst shot. NOTES-FROM-PLANNING.md entry 170 section 3: each is about a tenth of a second the first
+    /// time and nothing after, so the screen asks for the counts one edit away, one fewer for an exclusion and one more for a shot added, on
+    /// a background thread, and the edit itself never pays.
+    /// </summary>
+    public static void Prepare(int shots)
+    {
+        if (shots < MinimumShotsForDispersion || shots < CircularAspect.MinimumShots)
+        {
+            return;
+        }
+
+        _ = CircularAspect.Median(shots);
+        _ = Flyers.CalibrateWorst(shots, 0);
+    }
+
     public static GroupReport Analyse(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);

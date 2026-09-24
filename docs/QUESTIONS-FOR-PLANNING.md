@@ -12,6 +12,43 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-24, question 50: question 37's D cannot find the offset without being told the bulls
+
+**Status: open. Nothing is blocked: A is built, and D is not, for the reason below.**
+
+### What entry 149 section 3 asks
+
+> **D, offering it where it would change the answer.** When a certain offset exists that would move shots, the review queue says so in
+> plain words and offers to apply it. That is what makes A discoverable.
+
+### Why it cannot be built as written
+
+I built it: with no bulls named, work out what naming every scoring bull would do, and offer "Every bull" where a certain offset would
+move shots. On `SheetOffsetAssignmentTests`' shifted sheet, twenty shots aimed at columns 2 to 5 and landing one bull to the left, it
+finds **nothing**: every bull named moves no shot and the offset is not certain.
+
+That is geometry, not a bug. If every bull was aimed at, a group shifted one whole bull to the left is exactly the same sheet as the same
+group aimed one bull to the left with no shift. The two readings cannot be told apart from the holes, so the solver is rightly uncertain,
+which is what question 46 measured on scan 5. **The offset that matters is only certain once the shooter has said which bulls**, and at
+that point the matching already applies it. So there is no case where D has something certain to offer that A has not already been told.
+
+What D could honestly say without the fact, "the shots sit 0.4 in left of their bulls, all by the same amount", is a partial shift, which
+the zero correction already reports, and it is blind to the whole-bull shift that is the actual defect.
+
+### The options
+
+1. **Leave D out.** A, the row and column selection and the "Bulls you fired at" control are how the fact gets in.
+2. **Make D a prompt, not a finding.** Where nobody has said which bulls and the sheet has more bulls than shots, one review item asks
+   "Which bulls did you fire at?" and points at the control, with no claim that anything would move. It is discoverability without a
+   guess, and it would appear on nearly every partly used sheet.
+
+### What I would choose
+
+**Option 2, but only where the sheet has more scoring bulls than shots**, because that is exactly the case where the one-to-one matching
+has room to pick the wrong bulls and nothing on the screen says so.
+
+---
+
 ## 2026-09-24, question 44, the part still open: the bent-sheet model throws outside the page
 
 **Status: open, and nothing a person can reach is affected.** Entry 171 section 4 closed the rest of question 44, which is in the answered archive.

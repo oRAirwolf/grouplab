@@ -27,8 +27,19 @@ public static class CircularAspect
         return aspect <= 1 ? 1 : Integral(n, 1 / aspect) / Integral(n, 1);
     }
 
-    /// <summary>The aspect ratio n circular shots exceed with probability <paramref name="p"/>; 0.5 gives the median.</summary>
-    public static double Quantile(int n, double p)
+    /// <summary>
+    /// The aspect ratio n circular shots exceed with probability <paramref name="p"/>; 0.5 gives the median.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 170 section 3: sixty bisections of two Simpson integrals is a tenth of a second, the answer depends only
+    /// on n and p, and the analysis asked for it on every edit. It is worked out once for each pair and kept, so every edit after the first
+    /// at a shot count is free and the number is the same one.
+    /// </para>
+    /// </summary>
+    public static double Quantile(int n, double p) => Quantiles.GetOrAdd((n, p), key => Solve(key.N, key.P));
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<(int N, double P), double> Quantiles = new();
+
+    private static double Solve(int n, double p)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(n, MinimumShots);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(p);

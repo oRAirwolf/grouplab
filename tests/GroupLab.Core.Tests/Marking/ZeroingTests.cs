@@ -1,5 +1,6 @@
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Statistics;
 
 namespace GroupLab.Core.Tests.Marking;
 
@@ -61,6 +62,27 @@ public class ZeroingTests
     {
         Assert.Null(Zeroing.For(Group(offsetInches: 1.0, sigmaInches: 0.27, shots: 3).State));
         Assert.Null(Zeroing.For(new MarkingSession().State));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 170 section 1.4: the outside user's numbers at 25.4 yd. A group centre 0.221 in off at 25.4 yd is 0.83 MOA,
+    /// because one MOA there is 0.266 in, and 0.241 mil, so a scope of 0.1 mil clicks dials two and leaves 0.04 mil. At 100 yd the same offset
+    /// would be 0.21 MOA. The calculation used his distance; what was missing was the screen saying so.
+    /// </summary>
+    [Fact]
+    public void AtTwentyFivePointFourYardsTheCorrectionIsTwoClicksAndPointEightThreeMoa()
+    {
+        var session = Group(offsetInches: 0.221, sigmaInches: 0.02, shots: 10);
+        session.SetShotDistance(25.4 * 36);
+        session.SetEquipment(new Rifle("Friend's rifle", 0.1, AngularUnit.Mrad), null, null);
+
+        var zero = Zeroing.For(session.State)!;
+        double moa = Angular.Constant(AngularUnit.Moa) / 2 * Math.Atan(zero.Windage.OffsetInches / (25.4 * 36));
+        Assert.Equal(0.83, moa, 2);
+        var clicks = zero.Windage.Clicks!;
+        Assert.Equal(2, clicks.Count);
+        Assert.Equal(AngularUnit.Mrad, clicks.Unit);
+        Assert.Equal(0.04, Math.Abs(clicks.ResidualAngle), 2);
     }
 
     /// <summary>

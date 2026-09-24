@@ -202,7 +202,13 @@ public static class GroupStatistics
     /// <paramref name="minor"/> falls within <paramref name="r"/>: the Hoyt CDF, section 4, as an integral over angle of the
     /// radial integral in closed form, (1 / (2 pi sqrt(major minor))) int (1 - exp(-a r^2 / 2)) / a dtheta with a =
     /// cos^2 / major + sin^2 / minor. The integrand is smooth and periodic, so the trapezoid rule converges geometrically;
-    /// the rule is doubled until two estimates agree to machine precision.
+    /// the rule is doubled until two estimates agree to 1e-14.
+    /// <para>
+    /// NOTES-FROM-PLANNING.md entry 170 section 3: it used to ask for 1e-16, which is below a double's own rounding, so two sums of the
+    /// same integral hardly ever agreed that closely and the rule doubled to a million points. The analysis screen asks for this twelve
+    /// times over on every refresh, and that was most of the three seconds an exclusion froze the window for. At 1e-14 it stops at a
+    /// few hundred points with every digit the screen shows, and many more, unchanged.
+    /// </para>
     /// </summary>
     public static double HoytCdf(double r, double major, double minor)
     {
@@ -223,7 +229,7 @@ public static class GroupStatistics
             }
 
             double value = scale * sum * 2 * Math.PI / points;
-            if (Math.Abs(value - previous) <= 1e-16 * Math.Abs(value))
+            if (Math.Abs(value - previous) <= 1e-14 * Math.Abs(value))
             {
                 return value;
             }
@@ -274,7 +280,8 @@ public static class GroupStatistics
                 next = double.IsFinite(high) ? (low + high) / 2 : r * 2;
             }
 
-            if (Math.Abs(next - r) <= 1e-15 * r)
+            // Entry 170 section 3: to 1e-13, which the CDF can deliver. At 1e-15 Newton chased its own rounding for all 200 steps.
+            if (Math.Abs(next - r) <= 1e-13 * r)
             {
                 return next;
             }

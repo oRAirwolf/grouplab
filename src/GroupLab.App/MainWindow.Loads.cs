@@ -25,8 +25,13 @@ public sealed partial class MainWindow
     private readonly StackPanel aimedAtLines = new() { Spacing = Tokens.Space4 };
     private HashSet<int> bullSelection = [];
 
+    /// <summary>The bull clicked last, which "Its row" and "Its column" extend from.</summary>
+    private int? lastBull;
+
     private void BuildBullLoads(StackPanel panel)
     {
+        // Entry 149 section 3, question 37's A: a shooter who used a whole row or column should not click each bull of it.
+        panel.Children.Add(Row(Button("Its row", () => ChooseLine(row: true)), Button("Its column", () => ChooseLine(row: false))));
         panel.Children.Add(FieldLabel("Load on the chosen bulls"));
         panel.Children.Add(bullLoad);
         panel.Children.Add(Row(Button("Set", () => SetLoadOnChosenBulls(bullLoad.SelectedIndex > 0 ? bullLoad.SelectedItem as string : null)), Button("Clear", () => SetLoadOnChosenBulls(null))));
@@ -45,6 +50,7 @@ public sealed partial class MainWindow
 
         canvas.BullClicked += (_, chosen) =>
         {
+            lastBull = chosen.Bull;
             if (!chosen.Add)
             {
                 bullSelection = bullSelection.Contains(chosen.Bull) && bullSelection.Count == 1 ? [] : [chosen.Bull];
@@ -130,6 +136,39 @@ public sealed partial class MainWindow
     internal IReadOnlySet<int> ChosenBulls => bullSelection;
 
     /// <summary>
+    /// Adds to the chosen bulls every scoring bull in the same row, or column, as the one clicked last, entry 149 section 3. A row is the
+    /// bulls whose printed centres are within half the closest spacing of its height, so a staggered layout's rows still read as rows.
+    /// </summary>
+    internal void ChooseLine(bool row)
+    {
+        var state = session.State;
+        var anchor = state.Bulls.FirstOrDefault(b => b.Index == (lastBull ?? bullSelection.LastOrDefault(-1)));
+        if (anchor?.Declared is not { } at)
+        {
+            problem.Text = "Click a bull first, then choose its row or its column.";
+            return;
+        }
+
+        var scoring = state.Bulls.Where(b => b.Scoring && b.Declared is not null).ToList();
+        double gap = scoring.SelectMany(a => scoring.Where(b => b.Index != a.Index).Select(b => Math.Abs(row ? b.Declared!.Value.Y - a.Declared!.Value.Y : b.Declared!.Value.X - a.Declared!.Value.X)))
+            .Where(d => d > 1).DefaultIfEmpty(double.PositiveInfinity).Min();
+        foreach (var bull in scoring.Where(b => Math.Abs(row ? b.Declared!.Value.Y - at.Y : b.Declared!.Value.X - at.X) < gap / 2))
+        {
+            bullSelection.Add(bull.Index);
+        }
+
+        Refresh();
+    }
+
+    /// <summary>For the headless tests: the bull a click chose last.</summary>
+    internal void ClickedBull(int bull)
+    {
+        lastBull = bull;
+        bullSelection = [bull];
+        Refresh();
+    }
+
+    /// <summary>
     /// Says which bulls the shooter fired at, so the offset solver can run (question 37, entry 130 section 3.1). Every bull takes one shot,
     /// which is what a sheet of bulls means unless the doubles rule says otherwise.
     /// </summary>
@@ -158,7 +197,9 @@ public sealed partial class MainWindow
                 ? "Cleared which bulls you fired at."
                 : string.Create(CultureInfo.InvariantCulture, $"{rule.PerBull.Count} bull{(rule.PerBull.Count == 1 ? "" : "s")} marked as fired at."),
             session.CanUndo ? () => session.Undo() : null));
-        Refresh();
+
+        // Entry 170 section 2: no second Refresh here. The session's own change already rebuilt the screen, and doing it twice doubled the
+        // wait after "These ones".
     }
 
     /// <summary>What the panel says about the rule, rebuilt on every refresh.</summary>

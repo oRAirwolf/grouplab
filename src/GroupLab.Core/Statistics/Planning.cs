@@ -171,9 +171,35 @@ public static class Flyers
             throw new ArgumentOutOfRangeException(nameof(shots), "a worst shot needs a group of at least three");
         }
 
+        // NOTES-FROM-PLANNING.md entry 170 section 3: the simulated distribution depends on the shot count, the resamples and the seed, and
+        // not on the group, so it is made once for each and kept. Excluding a shot used to simulate these 9999 groups again on every edit,
+        // twice, which was a tenth of a second each time on the interface thread. The same draws in the same order give the same mean, and
+        // the count of simulated groups at least as extreme is read from the sorted values, so every figure is exactly what it was.
+        var (sorted, mean) = WorstDistributions.GetOrAdd((shots, resamples, seed), key => SimulateWorst(key.Shots, key.Resamples, key.Seed));
+        int first = Array.BinarySearch(sorted, observed);
+        if (first < 0)
+        {
+            first = ~first;
+        }
+        else
+        {
+            while (first > 0 && sorted[first - 1] >= observed)
+            {
+                first--;
+            }
+        }
+
+        int atLeast = sorted.Length - first;
+        return new WorstShotCalibration(shots, observed, (1.0 + atLeast) / (resamples + 1.0), mean, resamples, seed);
+    }
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<(int Shots, int Resamples, ulong Seed), (double[] Sorted, double Mean)> WorstDistributions = new();
+
+    private static (double[] Sorted, double Mean) SimulateWorst(int shots, int resamples, ulong seed)
+    {
         var random = new StatisticsRandom(seed);
         var group = new PointD[shots];
-        int atLeast = 0;
+        var values = new double[resamples];
         double sum = 0;
         for (int r = 0; r < resamples; r++)
         {
@@ -184,13 +210,11 @@ public static class Flyers
 
             double worst = WorstInSampleMeanRadii(group);
             sum += worst;
-            if (worst >= observed)
-            {
-                atLeast++;
-            }
+            values[r] = worst;
         }
 
-        return new WorstShotCalibration(shots, observed, (1.0 + atLeast) / (resamples + 1.0), sum / resamples, resamples, seed);
+        Array.Sort(values);
+        return (values, sum / resamples);
     }
 }
 

@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
+using GroupLab.Core.Ballistics;
 using GroupLab.Core.Trace;
 using GroupLab.Core.Updates;
 using GroupLab.Core.Gltd.Json;
@@ -371,7 +372,7 @@ public sealed partial class MainWindow : Window
     private readonly ComboBox linearUnit = new() { ItemsSource = Enum.GetValues<LinearUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
     private readonly ComboBox angularUnit = new() { ItemsSource = UnitSettings.AngularChoices.Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 90 };
     private readonly ComboBox distanceUnit = new() { ItemsSource = Enum.GetValues<DistanceUnit>().Select(u => UnitSettings.Symbol(u)).ToList(), MinWidth = 70 };
-    private readonly TextBox shotDistance = new() { Width = 90 };
+    private readonly TextBox shotDistance = new() { Width = 90, Name = "ShotDistance" };
 
     /// <summary>
     /// The rifle, barrel and load the sheet was shot with, from the person's record book (NOTES-FROM-PLANNING.md entry 97 section 2). The book
@@ -595,6 +596,15 @@ public sealed partial class MainWindow : Window
             }));
         calibreBox.TextChanged += (_, _) => calibreBox.ItemsSource = CartridgeTable.Suggest(calibreBox.Text);
         shotDistanceUnit.SelectionChanged += (_, _) => ShotDistanceUnitChosen();
+        shotDistance.KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                CommitShotDistanceIfChanged();
+                e.Handled = true;
+            }
+        };
+        shotDistance.LostFocus += (_, _) => CommitShotDistanceIfChanged();
         setup.Children.Add(Needed("Shot distance", distanceNeeded, "Gives every figure in MOA and mil as well as inches.", distanceFrame,
             Row(shotDistance, shotDistanceUnit, Button("Set", SetShotDistanceFromBox), Button("Not known", () =>
             {
@@ -1127,6 +1137,20 @@ public sealed partial class MainWindow : Window
         }
 
         SetUnits(new UnitSettings((LinearUnit)linearUnit.SelectedIndex, UnitSettings.AngularChoices[angularUnit.SelectedIndex], (DistanceUnit)distanceUnit.SelectedIndex));
+    }
+
+    /// <summary>
+    /// Entry 170 section 1.3: a number typed into the distance box and left there without pressing Set used to show on screen while the marking
+    /// kept the old distance, which is exactly how a setup copied from the last target at 100 yd could go on being used at 100 yd. Enter and
+    /// leaving the box now take it too; an unchanged box takes nothing, so leaving it cannot raise a complaint about an empty field.
+    /// </summary>
+    private void CommitShotDistanceIfChanged()
+    {
+        string shown = session.State.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";
+        if ((shotDistance.Text ?? "").Trim() != shown && !string.IsNullOrWhiteSpace(shotDistance.Text))
+        {
+            SetShotDistanceFromBox();
+        }
     }
 
     internal void SetShotDistanceFromBox()
@@ -1818,6 +1842,17 @@ public sealed partial class MainWindow : Window
         canvas.InvalidateVisual();
         var state = session.State;
         var report = GroupAnalysis.Analyse(state);
+        if (report.AllShots?.Shots is { } shotCount)
+        {
+            // Entry 170 section 3: the counts one edit away, worked out on a background thread so an exclusion or an added shot is not
+            // the first to ask for them.
+            _ = Task.Run(() =>
+            {
+                GroupAnalysis.Prepare(shotCount - 1);
+                GroupAnalysis.Prepare(shotCount + 1);
+            });
+        }
+
         problem.Text = report.Problem ?? "";
         ShowNeeded();
         ShowReview(state);
@@ -4687,6 +4722,10 @@ public sealed partial class MainWindow : Window
         }
 
         zeroPanel.Children.Add(Explained(verdict, item, [.. view.Why]));
+        if (view.AtZero is { } atZero)
+        {
+            zeroPanel.Children.Add(new TextBlock { Text = atZero, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, 0, Tokens.Space4) });
+        }
 
         // Entry 131 section 6.2: where the group actually landed against where it was aimed. It sits behind a disclosure because the numbers
         // above already answer the question for most sheets, and the picture is for the sheet where they do not: it shows at a glance whether
@@ -4725,6 +4764,9 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private sealed record ZeroView(string? Refusal, IReadOnlyList<(string Label, string Linear, string Angular, string Sits)> Rows, string? Note, string Verdict, bool Dial, IReadOnlyList<string> Why)
     {
+        /// <summary>Entry 170 section 1.2: the correction for the rifle's own zero distance, or why it cannot be given; null where it is the same.</summary>
+        public string? AtZero { get; init; }
+
         /// <summary>Entry 131 section 6.2: what the picture draws, in inches, or null where there is nothing to draw.</summary>
         public PointD? Offset { get; init; }
 
@@ -4733,6 +4775,42 @@ public sealed partial class MainWindow : Window
         public string? AcrossSays { get; init; }
 
         public string? DownSays { get; init; }
+    }
+
+    /// <summary>
+    /// The correction for the rifle's own zero distance, where it differs from the distance shot, NOTES-FROM-PLANNING.md entry 170 section 1.2:
+    /// carried through the solver where the records hold what it needs, and otherwise the plain statement that the correction above is for the
+    /// distance shot, with what carrying it would need. Null where the rifle names no zero distance, or names the distance shot.
+    /// </summary>
+    private string? AtRifleZero(MarkingState state, ZeroCorrection zero)
+    {
+        if (state.ShotDistanceInches is not { } shotInches || state.Rifle is null)
+        {
+            return null;
+        }
+
+        var rifle = book.FindRifle(state.Rifle.Name) ?? state.Rifle;
+        if (rifle.ZeroDistanceYards is not { } zeroYards || Math.Abs((zeroYards * 36) - shotInches) < 18)
+        {
+            return null;
+        }
+
+        string zeroAt = units.DistanceText(zeroYards * 36), shotAt = units.DistanceText(shotInches);
+        var load = book.FindLoad(state.Load);
+        var missing = SolverUse.Missing(rifle, load);
+        if (missing.Count > 0)
+        {
+            // Section 1.2 names the three values carrying needs; a missing load is said as the two of them it would bring.
+            var needs = missing.Select(m => m == "a load" ? "a load with its muzzle velocity and BC" : m).ToList();
+            return $"This correction is for a zero at {shotAt}, not {rifle.Name}'s {zeroAt} zero. Carrying it there needs {Joined(needs)}.";
+        }
+
+        var (carried, _) = SolverUse.ToZeroDistance(SolverUse.Input(rifle, load, Air())!, zero, shotInches / 36, rifle);
+        string Say(CarriedAxis axis) => $"{units.Length(Math.Abs(axis.OffsetInches))} {axis.Dial}" + (axis.Clicks is { } clicks ? $", {clicks.Describe()}" : "");
+        var parts = new[] { carried.Windage, carried.Elevation }.Where(a => a.Distinguishable).Select(Say).ToList();
+        return parts.Count > 0
+            ? $"For {rifle.Name}'s {zeroAt} zero: dial {string.Join(" and ", parts)}. Carried from {shotAt} by the ballistic solver, allowing for where the bullet should be at {shotAt}."
+            : $"For {rifle.Name}'s {zeroAt} zero: nothing to dial. At {shotAt} the group sits where a {zeroAt} zero puts it, within its uncertainty.";
     }
 
     private ZeroView ZeroFor(MarkingState state)
@@ -4780,7 +4858,9 @@ public sealed partial class MainWindow : Window
         var why = new List<string>();
         if (dial.Count > 0)
         {
-            verdict = "Dial " + string.Join(" and ", dial) + ".";
+            // Entry 170 section 1.1: the correction is for the distance shot, and the verdict says which, because a shooter reads it as the
+            // correction for his usual zero otherwise.
+            verdict = "Dial " + string.Join(" and ", dial) + (distance is { } at ? $", for a zero at {units.DistanceText(at)}" : "") + ".";
         }
         else
         {
@@ -4800,6 +4880,7 @@ public sealed partial class MainWindow : Window
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
         return new ZeroView(null, rows, note, verdict, dial.Count > 0, why)
         {
+            AtZero = AtRifleZero(state, zero),
             Offset = offset,
             Uncertainty = uncertainty,
             AcrossSays = zero.Windage.Distinguishable ? Dial(zero.Windage) : null,

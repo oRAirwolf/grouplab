@@ -71,6 +71,35 @@ public class SolverUseTests
         Assert.Equal(0.1 * carried.ElevationTransfer, carried.Elevation.HalfWidthInches, 12);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 170 section 1.2: a group shot at 25 yd with a rifle zeroed at 100 is not meant to be on the aim. A group
+    /// sitting exactly where the 100 yd path puts it at 25 yd needs no elevation at 100, where carrying the whole offset would dial the
+    /// rifle off its zero; and an error on top of that path is carried by the solver's transfer, with windage in proportion to range.
+    /// </summary>
+    [Fact]
+    public void ACorrectionForTheRiflesOwnZeroAllowsForWhereTheBulletShouldBe()
+    {
+        var input = SolverUse.Input(Rifle, Load, new AirInput())!;
+        double path = BallisticSolver.Solve(input, 25, 25).Points[^1].DropInches;
+        Assert.True(path < -0.3, $"a 100 yd zero is {path:0.00} in above the aim at 25 yd, where it should be below");
+
+        ZeroCorrection At(double windage, double lowInches) => new(10, 0.05, 18, true,
+            new ZeroAxis(windage, 0.03, Math.Abs(windage) > 0.03, null, windage >= 0 ? "left" : "right", windage >= 0 ? "right" : "left"),
+            new ZeroAxis(lowInches, 0.03, true, null, "up", "low"), 0.05, 0.05);
+
+        var (onPath, expectedLow) = SolverUse.ToZeroDistance(input, At(0, -path), 25, Rifle);
+        Assert.Equal(-path, expectedLow, 9);
+        Assert.False(onPath.Elevation.Distinguishable);
+        Assert.Equal(0, onPath.Elevation.OffsetInches, 9);
+
+        var (off, _) = SolverUse.ToZeroDistance(input, At(0.25, -path + 0.2), 25, Rifle);
+        Assert.Equal(4, off.WindageTransfer, 9);
+        Assert.Equal(1.0, off.Windage.OffsetInches, 9);
+        Assert.Equal(0.2 * SolverUse.VerticalTransfer(input, 25, 100), off.Elevation.OffsetInches, 9);
+        Assert.Equal("up", off.Elevation.Dial);
+        Assert.NotNull(off.Elevation.Clicks);
+    }
+
     [Fact]
     public void ADopeTableCarriesItsWindAndSaysWhatIsNotModelled()
     {
