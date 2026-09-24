@@ -142,6 +142,26 @@ jobs:
   # why it is here and not in package.yml: entry 119's test-build.yml runs after this workflow succeeds, so a packaging fault caught here is
   # caught before anything reaches a download. The packaging script checks the package carries its own runtime and its OpenCV native
   # library by analysing its own sample with its own grouplab.exe, so a package that cannot analyse fails the build rather than a person.
+  # NOTES-FROM-PLANNING.md entry 176 section 7: the intake worker run for real, with a real ClamAV daemon and clamdscan, under the same
+  # systemd memory limit as the server, on the Ubuntu release the server runs. The worker was killed for memory on every run once real
+  # submissions arrived, and nothing had caught it because no test had ever run the scanner.
+  intake-worker:
+    if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: The server's packages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clamav-daemon clamdscan libheif-examples libheif-plugin-libde265 libheif-plugin-x265 python3-pil
+          # The packaged services start on install; the test runs its own clamd with its own signature instead.
+          sudo systemctl stop clamav-daemon clamav-freshclam || true
+
+      - name: The worker, run for real
+        run: python3 tests/python/worker-tests.py
+
   # Entry 171 section 6: the release the large test files hang from, created once by the workflow that uses them rather than by the
   # nightly, so nothing that prunes or rewrites nightly releases can reach it. It is a pre-release that is never latest, so GitHub's
   # releases/latest and the update manifest never see it. Creating it is the whole job; files are attached to it by hand, each with its

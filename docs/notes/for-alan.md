@@ -14,6 +14,61 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 11. The virus scanner as a daemon, HEIC, and the committed intake worker
+
+**Opened 2026-09-24. Entry 176. Waiting, and it needs a shell.**
+
+**What is needed, in the server's shell, in this order.**
+
+1. The scanner's daemon and client, and HEIC decoding. Your server has the room: 11,927 MB, and clamd keeps about a gigabyte.
+
+   ```bash
+   sudo apt-get install -y clamav-daemon clamdscan libheif-examples
+   sudo systemctl enable --now clamav-daemon
+   until clamdscan --ping=1 >/dev/null 2>&1; do sleep 5; done; echo "clamd is answering"
+   echo hello > /tmp/grouplab-clamd-check.txt && clamdscan --fdpass --no-summary /tmp/grouplab-clamd-check.txt; echo "exit $?"
+   heif-convert --version | head -1
+   free -m
+   ```
+
+   **A good result:** "clamd is answering" within a minute or two, then a line ending `OK` and `exit 0`, a version from heif-convert, and
+   `free -m` showing about a gigabyte less available than before.
+
+2. The committed worker, its unit and the installer. Copy `website/server/grouplab-intake-worker.py`,
+   `website/server/grouplab-intake-worker.service` and `website/server/install.py` from the repository to `/home/ubuntu/grouplab-server/`,
+   then:
+
+   ```bash
+   cd /home/ubuntu/grouplab-server
+   sudo python3 install.py --intake --dry-run
+   sudo python3 install.py --intake
+   ```
+
+   **A good result:** the dry run lists the worker and its unit as the files it would replace and nothing about missing packages. If it
+   names a missing package, install that one and run it again.
+
+3. The hot fix out, so the committed limit applies:
+
+   ```bash
+   sudo rm /etc/systemd/system/grouplab-intake-worker.service.d/memory.conf
+   sudo rmdir /etc/systemd/system/grouplab-intake-worker.service.d
+   sudo systemctl daemon-reload
+   systemctl show grouplab-intake-worker -p MemoryMax -p RestrictAddressFamilies
+   sudo systemctl start grouplab-intake-worker.service
+   journalctl -u grouplab-intake-worker.service -n 20 --no-pager
+   ```
+
+   **A good result:** `MemoryMax=1677721600`, `RestrictAddressFamilies=AF_UNIX`, and a journal with no `oom-kill`, ending in the worker's
+   own lines.
+
+**Why.** The worker was killed for memory on every run, because standalone clamscan loads its whole database into the worker's 1 GB.
+With the daemon the database lives once in clamd, and the worker keeps a tight limit that is now derived from its pixel cap. Phones send
+HEIC, which Ubuntu's Pillow cannot read. And a scanner that does not complete is now said in each file's record and by the pull script.
+
+**A good answer.** The outputs of the three blocks.
+
+---
+
 ## 10. Replace the site sync's hot fix with the committed version
 
 **Opened 2026-09-24. Entries 174 and 175. Waiting, and it needs a shell.**

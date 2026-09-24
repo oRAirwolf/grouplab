@@ -267,8 +267,26 @@ $remote = @(Invoke-Remote "sudo ls -1 '$RemoteRoot'" |
             Where-Object { $_ -match '^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$' } |
             Sort-Object)
 
+# NOTES-FROM-PLANNING.md entry 176 section 5.2: what is still waiting for the worker, and for how long.
+# "No submissions on the server yet" was untrue on the night the worker was being killed: there were two,
+# stuck in quarantine. grouplab.org's ready folder has a quarantine beside it; each submission's folder
+# time is when it arrived, in seconds since 1970, and the age is worked out here.
+if ($RemoteRoot -match '/ready$') {
+    $quarantine = $RemoteRoot -replace '/ready$', '/quarantine'
+    $stamps = @(Invoke-Remote "sudo find '$quarantine' -mindepth 1 -maxdepth 1 -type d -printf '%T@\n'" |
+                Where-Object { $_ -match '^\d+(\.\d+)?$' } | ForEach-Object { [double]$_ })
+    if ($stamps.Count -gt 0) {
+        $oldest = [DateTimeOffset]::FromUnixTimeSeconds([long]($stamps | Measure-Object -Minimum).Minimum)
+        $age = [DateTimeOffset]::UtcNow - $oldest
+        Write-Host ("{0} waiting in quarantine for the worker, the oldest for {1:N0} minutes." -f $stamps.Count, $age.TotalMinutes) -ForegroundColor Yellow
+        if ($age.TotalMinutes -gt 10) {
+            Write-Host "  The worker runs every two minutes, so anything older than ten is stuck: read its journal on the server." -ForegroundColor Yellow
+        }
+    }
+}
+
 if ($remote.Count -eq 0) {
-    Write-Host "No ${itemNoun}s on the server yet." -ForegroundColor Yellow
+    Write-Host "No ${itemNoun}s ready on the server." -ForegroundColor Yellow
     return
 }
 
@@ -341,7 +359,7 @@ foreach ($dir in $new) {
 # disagrees now, something changed the bytes between there and here.
 $toCheck = if ($VerifyAll) { $remote | Where-Object { Test-Path (Join-Path $LocalRoot $_) } } else { $pulled }
 
-$bad = @(); $checked = 0; $optOut = @()
+$bad = @(); $checked = 0; $optOut = @(); $notScanned = 0
 foreach ($dir in $toCheck) {
     $metaPath = Join-Path $LocalRoot "$dir\meta.json"
     if (-not (Test-Path $metaPath)) {
@@ -383,6 +401,20 @@ if ($bad.Count) {
     $bad | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
 } else {
     Write-Host "All checksums match." -ForegroundColor Green
+}
+
+# Entry 176 section 9.2: a scanner that did not complete a scan is a broken installation, and the worker
+# records it per file. It is said here so it cannot go unnoticed for weeks.
+foreach ($dir in $toCheck) {
+    $metaPath = Join-Path $LocalRoot "$dir\meta.json"
+    if (Test-Path $metaPath -PathType Leaf) {
+        $m = Get-Content $metaPath -Raw | ConvertFrom-Json
+        if ($m.PSObject.Properties.Name -contains 'notScanned') { $notScanned += [int]$m.notScanned }
+    }
+}
+if ($notScanned -gt 0) {
+    Write-Host ""
+    Write-Host "The scanner did not run on $notScanned file(s). They were rebuilt from their pixels, but ClamAV on the server is not working: read the worker's journal." -ForegroundColor Red
 }
 
 if ($optOut.Count) {

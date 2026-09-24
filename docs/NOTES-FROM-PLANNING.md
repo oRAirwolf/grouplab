@@ -24,6 +24,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 176: the intake worker was killed for memory, so no submission reached ready
+
+**Status: actioned 2026-09-24**, sections 1 to 9 in the repository. The server side, the ClamAV daemon, HEIC decoding, the committed
+worker and removing the 3G drop-in, is request 11 and commands in the panel. Section 7's real worker test runs in CI; this machine has no
+systemd or ClamAV, so CI is its first run.
+
+- **Sections 2 to 4.** The daemon, as section 8 settles: the worker uses `clamdscan --fdpass`, so clamd never needs to read quarantine, and
+  the unit allows Unix sockets only. The pixel cap and the memory limit are derived together: three copies at four bytes a pixel, 120
+  megapixels, `MemoryMax=1600M`. `WorkerLimitTests` holds them to each other.
+- **Section 5.** Attempts are counted before each run, so a kill counts; three and the submission goes to refused with `refused.txt`.
+  One log line per submission per run. The pull script says how many wait in quarantine and how old the oldest is.
+- **Section 9.** The installer checks Pillow, heif-convert, clamdscan and a daemon that answers, naming the package for each. HEIC goes
+  through `heif-convert` from `libheif-examples`, because Ubuntu 24.04 has no Pillow HEIC plugin. A scanner that did not complete is
+  recorded per file and counted by the pull script. Nothing in quarantine is ever deleted for age.
+
+---
+
 ## 2026-09-24, entry 175: the site sync rolled back every deploy from 02:36 Mountain, and why
 
 **Status: actioned 2026-09-24**, sections 1 to 5. Section 4.5, replacing Alan's hot fix with the committed script, is request 10 and a

@@ -86,6 +86,30 @@ def missing_tools() -> list[str]:
     return [t for t in NEEDED if shutil.which(t) is None]
 
 
+# NOTES-FROM-PLANNING.md entry 176 section 9.1: everything the intake worker needs, each with the Ubuntu package that provides it. The
+# worker's whole job is rebuilding images with Pillow, and the first install finished without it: every submission then failed to
+# decode. So the intake install checks each of these and refuses to finish, naming the package, where one is missing.
+WORKER_NEEDS = [
+    ("Pillow, which rebuilds every image from its pixels", [sys.executable, "-c", "import PIL.Image"], "python3-pil"),
+    ("heif-convert, which decodes the HEIC photographs phones send", ["heif-convert", "--version"], "libheif-examples"),
+    ("clamdscan, the virus scanner's client", ["clamdscan", "--version"], "clamdscan"),
+    ("clamd, the virus scanner's daemon, answering on its socket", ["clamdscan", "--ping=3"], "clamav-daemon"),
+]
+
+
+def worker_missing() -> list[str]:
+    """What the intake worker would fail without, as the package to install for each."""
+    missing = []
+    for what, command, package in WORKER_NEEDS:
+        try:
+            ok = subprocess.run(command, capture_output=True, timeout=60).returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            ok = False
+        if not ok:
+            missing.append(f"{what}: sudo apt-get install -y {package}")
+    return missing
+
+
 # Every file this run wrote, or in a dry run would write, so the closing lines can say only what is still to do.
 # NOTES-FROM-PLANNING.md entry 171 section 6: the reminder used to say "set the secret and reload nginx" every time.
 CHANGED: set[Path] = set()
@@ -181,6 +205,13 @@ def intake(dry_run: bool) -> int:
     """
     if not SITE.is_dir():
         say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    gone = worker_missing()
+    if gone:
+        say("The worker would fail on every submission without these, so nothing was changed:")
+        for line in gone:
+            say("  " + line)
         return 2
 
     say("the folders an upload passes through, outside public_html and never served")

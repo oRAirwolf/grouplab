@@ -39,10 +39,17 @@ RestrictNamespaces=yes
 LockPersonality=yes
 MemoryDenyWriteExecute=yes
 
+# Entry 176: Unix sockets only. The worker talks to clamd's local socket with clamdscan --fdpass, and has no
+# use for any other kind of socket, so none is allowed; PrivateNetwork already takes the network away.
+RestrictAddressFamilies=AF_UNIX
+
+# MemoryMax is derived with MAX_PIXELS in the worker, entry 176 section 3: three copies of 120 megapixels at
+# four bytes, and the interpreter. WorkerLimitTests holds the two together. It is the limit on decoding a
+# stranger's file, not on the virus scanner, which runs in clamd with its own memory.
 # A decompression bomb is a small file that asks for an enormous amount of memory and time. The worker caps
 # the pixel count itself; these are the belt to that brace, and they are what stops a bad file taking the
 # web server down with it.
-MemoryMax=1G
+MemoryMax=1600M
 CPUQuota=80%
 RuntimeMaxSec=900
 TasksMax=64

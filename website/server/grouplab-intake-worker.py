@@ -38,16 +38,31 @@ READY = PRIVATE / "ready"
 REFUSED = PRIVATE / "refused"
 LOG = Path("/home/airwolf/logs/grouplab-intake-worker.log")
 
-# A decompression bomb is a small file that decodes to something enormous. 600 megapixels is far
-# beyond any camera or flatbed scan this project will ever see, and small enough that a refusal
-# costs a moment rather than the machine.
-MAX_PIXELS = 600_000_000
+# A decompression bomb is a small file that decodes to something enormous, so the pixel count is capped
+# before anything is decoded. NOTES-FROM-PLANNING.md entry 176 section 3: the cap and the unit's memory
+# limit are one decision, derived here and held together by a test. The rebuild holds at most three whole
+# copies of the image at once, the decoded one, the one turned upright and the one converted to RGB, at up
+# to four bytes a pixel: twelve bytes a pixel. 120 megapixels takes 1.44 GB that way, and the interpreter
+# and Pillow about 100 MB more, so the unit's MemoryMax is 1600M. 120 megapixels takes a 108 megapixel
+# phone and a 1200 dpi scan of a letter sheet; a 200 megapixel phone photograph is refused with the reason.
+# It used to be 600 megapixels, which needs 7 GB this way and would have been killed by the 1 GB limit on a
+# file it had already accepted.
+MAX_PIXELS = 120_000_000
+BYTES_PER_PIXEL_AT_PEAK = 12
+MEMORY_MAX_MB = 1600
+
+# A submission the worker has started three times and never finished, because it was killed or crashed, is
+# refused with that reason rather than tried every two minutes for ever. Entry 176 section 5.
+MAX_ATTEMPTS = 3
+ATTEMPTS = ".attempts"
 
 # Nothing bigger than the receiver would have accepted in the first place.
 MAX_BYTES = 30 * 1024 * 1024
 
-# Quarantine is a waiting room, not a store. Entry 129 section 3.7.
-QUARANTINE_HOURS = 1
+# Quarantine is a waiting room, not a store. Entry 129 section 3.7. But entry 176 section 9.3: nothing is
+# deleted from it for age. A folder still in quarantine is one the worker has not finished, and deleting it
+# for sitting there an hour would have destroyed the first two real submissions on the night the worker was
+# being killed. What cannot be finished goes to refused, with its reason, after MAX_ATTEMPTS.
 REFUSED_DAYS = 7
 
 # The camera facts GroupLab measures with, and nothing else.
@@ -120,7 +135,13 @@ def sha256_of(path: Path) -> str:
 
 
 def clamav() -> str | None:
-    """Which ClamAV is usable here, if either. Reported rather than assumed."""
+    """
+    Which ClamAV is usable here, if either. Reported rather than assumed.
+
+    Entry 176: the daemon's client first. Standalone clamscan loads the whole signature database into its
+    own memory every run, about a gigabyte, which the worker's memory limit killed every time. With the
+    daemon the database lives once, in clamd, and the worker stays small.
+    """
     if shutil.which("clamdscan"):
         return "clamdscan"
     if shutil.which("clamscan"):
@@ -128,18 +149,64 @@ def clamav() -> str | None:
     return None
 
 
-def scan(path: Path, tool: str | None) -> bool:
-    """True where the file is clean or there is nothing to scan with."""
+def scan(path: Path, tool: str | None) -> tuple[bool, str]:
+    """
+    Whether the file may go on, and what the scan did, for the file's record.
+
+    0 is clean and 1 is found. Anything else is the scanner not completing a scan, killed, broken or not
+    reachable. Entry 129 accepted the rebuild from pixels as the real defence, so the file still goes on, but
+    entry 176 section 9.2: a scanner that did not scan is a broken installation, so it is said in the file's
+    record, where the pull script counts it, and loudly in the log.
+    """
     if tool is None:
-        return True
-    result = subprocess.run([tool, "--no-summary", str(path)], capture_output=True, text=True, timeout=300)
-    # 0 clean, 1 found, anything else is the scanner itself failing, which is not the file's fault.
+        return True, "not scanned: no ClamAV on the server"
+
+    # --fdpass hands clamd an open file rather than a path: clamd runs as its own user and cannot read
+    # quarantine, which stays 0750 airwolf. Section 8.1.
+    command = [tool, "--fdpass", "--no-summary", str(path)] if tool == "clamdscan" else [tool, "--no-summary", str(path)]
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        log(f"  SCANNER DID NOT RUN on {path.name}: {type(e).__name__}")
+        return True, f"not scanned: {tool} did not run, {type(e).__name__}"
+
     if result.returncode == 1:
         log(f"  {tool} found something in {path.name}")
-        return False
-    if result.returncode not in (0, 1):
-        log(f"  {tool} could not scan {path.name}, exit {result.returncode}; letting it through on the rebuild instead")
-    return True
+        return False, f"{tool} found something"
+    if result.returncode != 0:
+        why = (result.stderr or result.stdout or "").strip().splitlines()
+        detail = why[0][:120] if why else ""
+        log(f"  SCANNER DID NOT COMPLETE on {path.name}: {tool} exit {result.returncode} {detail}; the rebuild is the only check on it")
+        return True, f"not scanned: {tool} exit {result.returncode}"
+    return True, f"clean, {tool}"
+
+
+def is_heic(path: Path) -> bool:
+    """HEIC and HEIF, by their own bytes: an ISO media box whose brand is one of HEIF's."""
+    with path.open("rb") as f:
+        head = f.read(12)
+    return len(head) == 12 and head[4:8] == b"ftyp" and head[8:12] in (b"heic", b"heix", b"hevc", b"hevx", b"mif1", b"msf1")
+
+
+def decodable(original: Path, work: Path) -> Path:
+    """
+    The file Pillow is to decode: the original, or for HEIC, a PNG made from it by heif-convert.
+
+    Entry 176 section 9.1: phones send HEIC, and Ubuntu's Pillow cannot read it. libheif's own converter,
+    from the distribution's libheif-examples, decodes it to pixels with the image already turned upright, and
+    the PNG it writes is decoded and rebuilt like any other file, so nothing of the HEIC travels. Its camera
+    facts do not come across that way, and the record says the file was HEIC.
+    """
+    if not is_heic(original):
+        return original
+    converter = shutil.which("heif-convert")
+    if converter is None:
+        raise RuntimeError("a HEIC photograph, and heif-convert is not installed; the installer should have refused")
+    out = work / (original.stem + ".heic.png")
+    result = subprocess.run([converter, str(original), str(out)], capture_output=True, text=True, timeout=300)
+    if result.returncode != 0 or not out.is_file():
+        raise ValueError(f"heif-convert could not decode it, exit {result.returncode}")
+    return out
 
 
 def facts_from(image) -> dict[str, object]:
@@ -203,7 +270,7 @@ def rebuild(original: Path, into: Path) -> dict[str, object]:
 
     Image.MAX_IMAGE_PIXELS = MAX_PIXELS
 
-    with Image.open(original) as image:
+    with Image.open(decodable(original, into.parent)) as image:
         width, height = image.size
         if width * height > MAX_PIXELS:
             raise ValueError(f"{width} by {height} is more pixels than this will decode")
@@ -273,23 +340,41 @@ def build_exif(facts: dict[str, object]):
     return exif if written else None
 
 
-def one(folder: Path, tool: str | None) -> bool:
-    """One submission. True where every file in it passed and it moved to ready."""
-    files = sorted(p for p in folder.iterdir() if p.is_file() and p.name != "meta.json")
+def attempts(folder: Path) -> int:
+    """How many times the worker has started this submission, counted before it starts, so a kill still counts."""
+    marker = folder / ATTEMPTS
+    try:
+        n = int(marker.read_text(encoding="utf-8").strip() or "0")
+    except (OSError, ValueError):
+        n = 0
+    return n
+
+
+def refuse(folder: Path, reason: str) -> None:
+    """To refused, with the reason beside it, where the seven day rule applies."""
+    REFUSED.mkdir(parents=True, exist_ok=True)
+    (folder / "refused.txt").write_text(reason + "\n", encoding="utf-8")
+    shutil.move(str(folder), str(REFUSED / folder.name))
+    log(f"{folder.name}: refused, {reason}")
+
+
+def one(folder: Path, tool: str | None) -> tuple[bool, str]:
+    """One submission. True where every file in it passed and it moved to ready; otherwise the reason."""
+    files = sorted(p for p in folder.iterdir() if p.is_file() and p.name not in ("meta.json", ATTEMPTS))
     if not files:
-        log(f"{folder.name}: nothing in it")
-        return False
+        return False, "nothing in it"
 
     rebuilt = []
     for original in files:
         if original.stat().st_size > MAX_BYTES:
-            log(f"{folder.name}: {original.name} is larger than the receiver accepts")
-            return False
+            return False, f"{original.name} is larger than the receiver accepts"
 
-        if not scan(original, tool):
-            return False
+        passed, scanned = scan(original, tool)
+        if not passed:
+            return False, f"{original.name}: {scanned}"
 
         before = sha256_of(original)
+        was_heic = is_heic(original)
         target = original.with_suffix(".png")
         if target == original:
             target = original.with_name(original.stem + "-rebuilt.png")
@@ -297,13 +382,16 @@ def one(folder: Path, tool: str | None) -> bool:
         try:
             facts = rebuild(original, target)
         except Exception as e:  # noqa: BLE001 - any failure to decode cleanly is a refusal
-            log(f"{folder.name}: {original.name} would not decode cleanly: {type(e).__name__}: {e}")
             target.unlink(missing_ok=True)
-            return False
+            return False, f"{original.name} would not decode cleanly: {type(e).__name__}: {e}"
+        finally:
+            for made in folder.glob("*.heic.png"):
+                made.unlink(missing_ok=True)
 
-        if not scan(target, tool):
+        passed, rescanned = scan(target, tool)
+        if not passed:
             target.unlink(missing_ok=True)
-            return False
+            return False, f"{target.name}: {rescanned}"
 
         # The original bytes go. From here on nothing of the uploaded file exists but its hash.
         original.unlink()
@@ -312,9 +400,11 @@ def one(folder: Path, tool: str | None) -> bool:
             "stored": target.name,
             "originalSha256": before,
             "sha256": sha256_of(target),
+            "scan": scanned,
+            "heic": True if was_heic else None,
             "facts": facts,
         })
-        log(f"{folder.name}: rebuilt {original.name} as {target.name}, original deleted")
+        log(f"{folder.name}: rebuilt {original.name} as {target.name}, original deleted, {scanned}")
 
     meta = folder / "meta.json"
     record = {}
@@ -324,24 +414,21 @@ def one(folder: Path, tool: str | None) -> bool:
         except (OSError, json.JSONDecodeError):
             record = {}
 
-    record["files"] = rebuilt
+    record["files"] = [{k: v for k, v in f.items() if v is not None} for f in rebuilt]
+    record["notScanned"] = sum(1 for f in rebuilt if str(f["scan"]).startswith("not scanned"))
     record["rebuiltUtc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     meta.write_text(json.dumps(record, indent=2), encoding="utf-8")
+    (folder / ATTEMPTS).unlink(missing_ok=True)
 
     READY.mkdir(parents=True, exist_ok=True)
     shutil.move(str(folder), str(READY / folder.name))
-    log(f"{folder.name}: ready, {len(rebuilt)} files")
-    return True
+    log(f"{folder.name}: ready, {len(rebuilt)} files" + (f", {record['notScanned']} NOT SCANNED" if record["notScanned"] else ""))
+    return True, "ready"
 
 
 def sweep() -> None:
-    """Entry 129 section 3.7: quarantine is a waiting room, and refused files do not pile up."""
+    """Refused folders go after seven days. Nothing in quarantine is ever deleted for age: entry 176 section 9.3."""
     now = time.time()
-    for folder in QUARANTINE.iterdir() if QUARANTINE.is_dir() else []:
-        if folder.is_dir() and now - folder.stat().st_mtime > QUARANTINE_HOURS * 3600:
-            shutil.rmtree(folder, ignore_errors=True)
-            log(f"{folder.name}: deleted, it sat in quarantine for more than {QUARANTINE_HOURS} hour")
-
     for folder in REFUSED.iterdir() if REFUSED.is_dir() else []:
         if folder.is_dir() and now - folder.stat().st_mtime > REFUSED_DAYS * 86400:
             shutil.rmtree(folder, ignore_errors=True)
@@ -367,13 +454,19 @@ def main() -> int:
         return 0
 
     for folder in waiting:
+        # Counted before it starts, so a run the kernel kills part way still counts. Entry 176 section 5.1.
+        n = attempts(folder) + 1
+        if n > MAX_ATTEMPTS:
+            refuse(folder, f"the worker started it {MAX_ATTEMPTS} times and never finished, killed or crashed each time")
+            continue
+        (folder / ATTEMPTS).write_text(str(n), encoding="utf-8")
+        log(f"{folder.name}: attempt {n} of {MAX_ATTEMPTS}")
         try:
-            if not one(folder, tool):
-                REFUSED.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(folder), str(REFUSED / folder.name))
-                log(f"{folder.name}: refused")
+            done, why = one(folder, tool)
+            if not done:
+                refuse(folder, why)
         except Exception as e:  # noqa: BLE001 - one bad submission never stops the rest
-            log(f"{folder.name}: unexpected failure, {type(e).__name__}: {e}")
+            log(f"{folder.name}: unexpected failure on attempt {n}, {type(e).__name__}: {e}; left in quarantine for the next run")
 
     sweep()
     return 0

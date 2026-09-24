@@ -37,7 +37,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   tools Alan already uses. Request 2.
 - **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
 
-Open requests in `docs/notes/for-alan.md`: **5** (1, 2, 9, 10, and 5, which Alan is applying).
+Open requests in `docs/notes/for-alan.md`: **6** (1, 2, 9, 10, 11, and 5, which Alan is applying).
 
 ## Open questions
 
@@ -63,7 +63,7 @@ of 44; answered ones are listed there by number and live whole in the archive.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ, because this was the fact that was wrong last time.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172, 176, 177
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172, 177
 
 ## Things that would surprise somebody who was not here yesterday
 

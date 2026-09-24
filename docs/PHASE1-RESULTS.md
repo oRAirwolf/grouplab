@@ -759,6 +759,38 @@ back to 12. It only reads: nothing reloads nginx or changes its settings, which 
 **First deploy through.** `317932e` at 02:54 Mountain, first attempt, then `a77a1c7` at 02:59, first attempt. Whether the hot fix was in
 by then the log cannot say. The live `/targets/` page carries `name="photos[]"`.
 
+## Entry 176: the intake worker, made to finish
+
+**What killed it.** `clamscan` loads the whole signature database into its own memory, about a gigabyte, inside the worker's 1 GB
+limit. Every run was killed about 13 seconds in, and the worker tried again every two minutes. Nothing had caught it because no test had
+run the scanner.
+
+**What changed in the worker.**
+
+1. **The daemon.** `clamdscan --fdpass`, so clamd, which runs as its own user, is handed an open file and quarantine stays `0750 airwolf`.
+   The unit now has `RestrictAddressFamilies=AF_UNIX` beside `PrivateNetwork=yes`: the only socket it may open is clamd's.
+2. **Limits that agree.** The cap was 600 megapixels, which needs about 7 GB to rebuild; it is 120 megapixels, 1.44 GB at the worker's
+   peak of three copies at four bytes a pixel, and `MemoryMax=1600M`. A 108 megapixel phone and a 1200 dpi letter scan fit; a 200
+   megapixel phone photograph is refused with the reason.
+3. **Nothing stuck in silence.** The attempt count is written before each run, so a run the kernel kills still counts, and the third
+   failed start sends the submission to `refused/` with `refused.txt`. Each submission gets one log line per run. The sweep no longer
+   touches quarantine at all: a folder there is one the worker has not finished, and the hour rule would have deleted the first two real
+   submissions.
+4. **A scanner that did not scan is loud.** Each file's record says `clean, clamdscan` or `not scanned: ...`, the submission carries
+   `notScanned`, the log says SCANNER DID NOT COMPLETE, and `Get-TargetSubmissions.ps1` prints how many files the scanner did not run on.
+5. **HEIC.** Ubuntu 24.04 has no Pillow plugin for it, so `heif-convert` from `libheif-examples` decodes it to a PNG with the image
+   already upright, and that is rebuilt like any file. Its camera facts do not come across; the record says it was HEIC.
+
+**The installer** refuses `--intake` while Pillow, heif-convert, clamdscan or an answering clamd is missing, naming the package.
+
+**The pull script** also reports what is waiting in quarantine and how long the oldest has waited.
+
+**The test entry 176 section 7 asks for.** `tests/python/worker-tests.py`, in a CI job on `ubuntu-24.04`: the real worker, the real
+clamd and clamdscan with a test signature, under `systemd-run -p MemoryMax=1600M -p RestrictAddressFamilies=AF_UNIX -p PrivateNetwork=yes`.
+A phone-shaped JPEG with Orientation 6 and a GPS block must come out upright, without GPS, recorded as scanned; a HEIC must come out;
+a file carrying the signature must be refused with the reason. It uses a generated photograph rather than a real one, because a real phone
+file carries a location and would put it in the repository.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
