@@ -12,6 +12,25 @@ Builds before 2026-09-23 use the older headings **New**, **Fixed** and **Changed
 
 ---
 
+## 0.2.0-nightly.94
+
+**2026-09-24**, commit `227917a`. Nightly.
+
+**What you will notice**
+
+- The website and the guides now agree on how many target sheets
+
+**Under the hood**
+
+- The research article about hole size now shows three real
+- Nothing in this changes the application. The project's own
+- [notes] 0.2.0-nightly.93.
+- Every research article on grouplab.org now ends with what its
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.94)
+
+---
+
 ## 0.2.0-nightly.93
 
 **2026-09-23**, commit `aa8c559`. Nightly.
