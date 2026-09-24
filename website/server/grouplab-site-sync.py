@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -216,12 +218,44 @@ def own_address() -> str | None:
 # It still rolls back on a real failure. Nothing here weakens that: it only stops the check calling a slow answer
 # a wrong one.
 #
-# NOTES-FROM-PLANNING.md entry 174: fifteen seconds was not a moment. The server's nginx keeps open_file_cache_valid at 60 seconds, so a
-# page requested twice within 30 seconds goes on being served from the old file's handle for up to a minute after the swap. With a
-# visitor, or a person watching for the deploy, reading the home page that often, every check read the old page and the good parcel
-# was rolled back four times running. The check now spans seventy seconds, longer than nginx can hold the old file.
-CHECK_TRIES = 8
+# NOTES-FROM-PLANNING.md entries 174 and 175: fifteen seconds was not a moment. The server's /etc/nginx/nginx.conf has
+#
+#     open_file_cache                 max=10000 inactive=30s;
+#     open_file_cache_valid           60s;
+#     open_file_cache_min_uses        2;
+#
+# rsync replaces each file by renaming a new one over it, so it gets a new inode, and nginx goes on serving the old, already replaced
+# file for up to open_file_cache_valid before it looks again. The check requests the home page every few seconds, which keeps that
+# entry in use, so it could never expire inside a fifteen second window: every deploy from 02:36 Mountain on 2026-09-24 rolled back.
+#
+# So the window is derived from nginx rather than guessed. It is read from the configuration when the sync runs, and the check waits that
+# long plus a margin. Where the file cannot be read, the fixed window below is used, about two minutes, which is what Alan set on the
+# server as the hot fix and more than twice the sixty seconds found there. Nothing here reloads nginx or changes its settings: they
+# belong to the whole server, and pissinhot.com shares them.
+CHECK_TRIES = 12
 CHECK_WAIT_SECONDS = 10
+CHECK_MARGIN_SECONDS = 30
+WEB_SERVER_CONF = Path("/etc/nginx/nginx.conf")
+
+
+def server_holds_seconds(conf: Path = WEB_SERVER_CONF) -> int | None:
+    """How long nginx may serve a replaced file, open_file_cache_valid, in seconds; None where it cannot be read."""
+    try:
+        text = conf.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    m = re.search(r"^\s*open_file_cache_valid\s+(\d+)(ms|s|m|h)?\s*;", text, re.MULTILINE)
+    if not m:
+        return None
+    scale = {"ms": 0.001, "s": 1, None: 1, "m": 60, "h": 3600}[m.group(2)]
+    return math.ceil(int(m.group(1)) * scale)
+
+
+def check_tries(held: int | None) -> int:
+    """The tries the live check makes: enough to outlast nginx's hold plus the margin, and never fewer than the fixed window."""
+    if held is None:
+        return CHECK_TRIES
+    return max(CHECK_TRIES, math.ceil((held + CHECK_MARGIN_SECONDS) / CHECK_WAIT_SECONDS) + 1)
 
 
 def asked_once(address: str, commit: str | None) -> str | None:
@@ -253,17 +287,18 @@ def serving(commit: str | None) -> bool:
         return True
 
     wrong = None
-    for attempt in range(1, CHECK_TRIES + 1):
+    tries = check_tries(server_holds_seconds())
+    for attempt in range(1, tries + 1):
         wrong = asked_once(address, commit)
         if wrong is None:
             if attempt > 1:
                 log(f"the live check passed on attempt {attempt}")
             return True
 
-        if attempt < CHECK_TRIES:
+        if attempt < tries:
             time.sleep(CHECK_WAIT_SECONDS)
 
-    log(f"the live check failed after {CHECK_TRIES} attempts: {wrong}")
+    log(f"the live check failed after {tries} attempts: {wrong}")
     return False
 
 

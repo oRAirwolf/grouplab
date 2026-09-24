@@ -14,12 +14,14 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
-## 10. Put the new site sync on the server, so a deploy is not rolled back while somebody is reading the site
+## 10. Replace the site sync's hot fix with the committed version
 
-**Opened 2026-09-24. Entry 174. Waiting, and it needs a shell.**
+**Opened 2026-09-24. Entries 174 and 175. Waiting, and it needs a shell.**
 
-**What is needed.** Copy `website/server/grouplab-site-sync.py` from the repository to `/home/ubuntu/grouplab-server/` on the server, as you
-did on 2026-09-24 for entry 171, then in the server's shell:
+**What is needed.** Your hot fix of entry 175, `CHECK_TRIES = 12` and `CHECK_WAIT_SECONDS = 10` edited into
+`/usr/local/sbin/grouplab-site-sync.py`, is now what the repository says, and the repository's copy also reads nginx's
+`open_file_cache_valid` when it runs and waits that long plus half a minute. Copy `website/server/grouplab-site-sync.py` from the
+repository to `/home/ubuntu/grouplab-server/`, then in the server's shell:
 
 ```bash
 cd /home/ubuntu/grouplab-server
@@ -28,16 +30,12 @@ sudo python3 install.py
 sha256sum /usr/local/sbin/grouplab-site-sync.py grouplab-site-sync.py
 ```
 
-**A good result:** the dry run says it would replace the sync script and nothing else, the real run says it wrote it, and the two hashes
-at the end are the same.
+**A good result:** the dry run says it would replace the sync script and nothing else, the real run says it wrote it and kept the old one,
+and the two hashes at the end are the same. The hot fix's backup, `grouplab-site-sync.py.before-window`, can stay where it is.
 
-**Why.** The entry 174 fix was rolled back four times before it went live. The sync installs a new site and then checks the server is
-serving it, for fifteen seconds. nginx on the server keeps a file it has served twice in half a minute open for up to sixty seconds
-(`open_file_cache_valid 60s`), so while anybody reads the home page steadily, and I was, checking for the deploy every twenty seconds,
-the check sees the old page, calls the good install a failure and rolls it back. The new script waits seventy seconds, longer than
-nginx can hold the old file. Until it is installed, a deploy goes live at the first five minute sync nobody is reading the site through.
+**Why.** So the server runs what the repository says again, and the next change to the sync is not undone by an edit made by hand.
 
-**A good answer.** The four lines above ran, and the hashes match.
+**A good answer.** The four lines ran, and the hashes match.
 
 ---
 

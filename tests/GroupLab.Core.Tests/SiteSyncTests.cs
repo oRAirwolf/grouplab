@@ -253,6 +253,11 @@ with tempfile.TemporaryDirectory() as tmp:
     {
         string text = CodeOnly(File.ReadAllText(Script));
 
+        // Entry 175: the one exception, read only. The live check reads nginx's open_file_cache_valid so it waits longer than nginx can serve
+        // a replaced file. Reading the setting is allowed; nothing else about nginx is, and the path must be exactly this once.
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, System.Text.RegularExpressions.Regex.Escape("Path(\"/etc/nginx/nginx.conf\")")));
+        text = text.Replace("Path(\"/etc/nginx/nginx.conf\")", "", StringComparison.Ordinal);
+
         // Read as code, not as prose: the script's own docstring says it never changes nginx, and a check that failed on that would be a
         // check that punishes saying so.
         foreach (string forbidden in new[] { "nginx", "pissinhot", "systemctl reload", "v-restart", "certbot" })
@@ -485,5 +490,16 @@ with tempfile.TemporaryDirectory() as tmp:
         int tries = int.Parse(System.Text.RegularExpressions.Regex.Match(sync, @"(?m)^CHECK_TRIES = (\d+)").Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
         int wait = int.Parse(System.Text.RegularExpressions.Regex.Match(sync, @"(?m)^CHECK_WAIT_SECONDS = (\d+)").Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
         Assert.True((tries - 1) * wait > 60, $"the live check spans {(tries - 1) * wait} s, and nginx can serve the old page for 60");
+
+        // Entry 175: the same values Alan set on the server as the hot fix, so a reinstall makes the two match, and a margin of half a minute
+        // over nginx's sixty seconds, not a window that only just clears it.
+        Assert.Equal((12, 10), (tries, wait));
+        Assert.True((tries - 1) * wait >= 60 + 30, $"the live check spans {(tries - 1) * wait} s, with no margin over nginx's 60");
+
+        // And the window follows the server where it can: nginx's own setting is read when the sync runs, and nothing reloads nginx.
+        Assert.Contains("open_file_cache_valid", sync, StringComparison.Ordinal);
+        Assert.Contains("tries = check_tries(server_holds_seconds())", sync, StringComparison.Ordinal);
+        Assert.DoesNotContain("nginx -s reload", sync, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"reload\", \"nginx\"", sync, StringComparison.Ordinal);
     }
 }

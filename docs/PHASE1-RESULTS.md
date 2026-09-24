@@ -745,6 +745,20 @@ the steady reader, polling the home page every twenty seconds to see the deploy.
 lesson for me: watch a deploy through the sync log or a single request, never by polling the home page.** The repository's sync now
 checks for seventy seconds and `SiteSyncTests` holds it above nginx's minute; request 10 puts it on the server.
 
+## Entry 175: the site sync's window follows nginx
+
+The planning session confirmed on the server what the sync log had shown under entry 174: nginx's `open_file_cache_valid 60s` lets it
+serve a file rsync has already replaced for up to a minute, the check requested the home page every three seconds for fifteen, and so it
+kept the stale entry warm and read it every time. Alan applied a hot fix on the server, 12 tries 10 seconds apart.
+
+**The repository now matches and goes further.** `grouplab-site-sync.py` has the same two values as its floor, and reads
+`open_file_cache_valid` from the nginx configuration when it runs, in any unit nginx accepts, and makes enough tries to wait that long plus
+30 seconds. A server set to 60 seconds gets the 12 tries the hot fix set; one set to three minutes would get 22. An unreadable file falls
+back to 12. It only reads: nothing reloads nginx or changes its settings, which the whole server and pissinhot.com share.
+
+**First deploy through.** `317932e` at 02:54 Mountain, first attempt, then `a77a1c7` at 02:59, first attempt. Whether the hot fix was in
+by then the log cannot say. The live `/targets/` page carries `name="photos[]"`.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

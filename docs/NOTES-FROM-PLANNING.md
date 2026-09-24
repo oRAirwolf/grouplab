@@ -24,6 +24,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 175: the site sync rolled back every deploy from 02:36 Mountain, and why
+
+**Status: actioned 2026-09-24**, sections 1 to 5. Section 4.5, replacing Alan's hot fix with the committed script, is request 10 and a
+command in the panel.
+
+- **Sections 1 to 3.** Recorded as found. I had reached the same cause from the sync log under entry 174 and set the window to 80
+  seconds in `a77a1c7`; this entry's values replace that.
+- **Section 4.** `CHECK_TRIES = 12` and `CHECK_WAIT_SECONDS = 10`, exactly as on the server. The window is derived, not guessed: the sync
+  reads `open_file_cache_valid` from `/etc/nginx/nginx.conf` when it runs and waits that long plus 30 seconds, falling back to the fixed
+  window where it cannot read it. Nothing reloads nginx or changes its settings. `SiteSyncTests` holds the values, the margin, the read,
+  and that the one nginx path is read and nothing else about nginx appears in the code.
+- **Section 5.** `317932e` was the first deploy to pass, at 02:54 Mountain on its first attempt, and `a77a1c7` passed at 02:59 the same
+  way. The log does not say whether the hot fix was in place by then, because a first-attempt pass reads the same with either window;
+  it passed because nobody had read the home page in the half minute before. `/targets/` carries `name="photos[]"`.
+
+---
+
 ## 2026-09-24, entry 174: the upload page refused every photograph, because the file field had no brackets
 
 **Status: actioned 2026-09-24**, sections 1 to 3. Section 4, the live test again, is Alan's, and the planning session asks for it once the
