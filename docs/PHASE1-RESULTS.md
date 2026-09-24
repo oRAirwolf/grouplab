@@ -997,6 +997,43 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 154: every word a shooter may not know explains itself
+
+**One list.** `src/GroupLab.Core/Marking/glossary.json` holds 54 terms: section 1.2's starting list, the ten figures that were already
+explained, and the words the sweep found, such as the circularity and stringing tests, the error ellipse and the load comparison. Each has
+the forms it is found by, a plain sentence, an optional precise one and a link to the published article that covers it. The application
+reads it through `Glossary` and `FigureExplanations`, the report through those, `docs/GLOSSARY.md` is generated from it by `grouplab
+glossary`, and the site builder reads the same file for its glossary page and its tooltips. There is no second copy anywhere.
+
+**On the website.** The first appearance of each term in a page's body becomes a link to its entry at `/guides/glossary/`, a new page,
+drawn with a dotted underline and carrying the plain sentence. `terms.js` shows it on hover and on tap, below the line so it never covers
+the sentence, with a way to the full entry and a Close button; Escape and a tap elsewhere dismiss it. A second tap or click follows the
+link. Without scripts the word is still the link. Headings, links, code and controls are never marked. The build fails if a page names a
+term without explaining it, or explains it in words that are not the list's, and reports the terms no page uses yet (eleven, such as bullet
+drop and hit probability, whose screens are not described on the site).
+
+**In the application.** A label or heading that names a term is itself the affordance, drawn with the same dotted underline: the plain
+sentence on hover; Tab reaches it and shows the sentence; Enter, Space or a click opens the entry, with the precise definition and More in
+the glossary. It is decorated in place after every refresh, so no screen can be built without it. The review keys let a focused term keep
+its Enter and Space.
+
+**Plainer words instead.** "Bivariate fit" became "the fitted ellipse", the full table's note says "the group's own shape" for "covariance",
+Show work says the markers "fit to within" a figure rather than "residual", and the home page and README say "true spread" for "true
+dispersion".
+
+**Tests.** `GlossaryTests`: every plain sentence has no symbol and no capitalized word mid-sentence, two to four sentences, each word
+belongs to one term, section 1.2's list is all there, article links go to published articles, and the document says what the list says.
+`Entry154Tests`: every label and heading on the analysis, its Advanced section, the marking screen and the settings that names a term is
+explained, in the list's words, and reachable by keyboard; focus shows the sentence and Enter opens the entry. The site's own build check
+covers every page. The user guide now describes the dotted underline where it described a question mark that had never been built, which
+the claims register had not caught because that sentence has no checkable shape.
+
+**Also in this commit.** Nightly 95 published at 12:15 UTC: its notes list nineteen changes under What you will notice, the rolling
+release reads "Latest nightly (always the newest build, moves with every build)" with one line pointing at it, and #builds answered HTTP 200
+to its embed. Entries 184 section 3.3 and 185 section 3 are closed by that. Its publishing also showed two faults, fixed in c107fab: the C#
+copy of the notes path check still refused grouplab.org, and the thirty-release rule had deleted nightly 16's release while its entry still
+linked to it.
+
 ## Entry 159: every published claim, and what backs it
 
 **The register.** `scripts/claims.py` reads what a reader sees, the built site, the README, the root documents and `docs/`, and finds

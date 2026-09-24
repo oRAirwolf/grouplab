@@ -71,8 +71,13 @@ COUNTED = re.compile(
     r"built-in sheets|built in sheets|platforms|operating systems|guides|bulls|tour pages)\b", re.IGNORECASE)
 
 
+# Entry 154: a glossary word is wrapped in a link that carries its explanation. The word is part of its sentence, so the link is
+# unwrapped before the other tags are replaced by spaces.
+TERM = re.compile(r'<a class="term"[^>]*>(.*?)</a>')
+
+
 def sentences(text: str) -> list[str]:
-    text = WS.sub(" ", TAG.sub(" ", text))
+    text = WS.sub(" ", TAG.sub(" ", TERM.sub(r"\1", text)))
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
 
 

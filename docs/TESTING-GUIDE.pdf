@@ -201,7 +201,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 4303 >>
+<< /Length 4578 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -233,27 +233,29 @@ BT /F1 71 Tf 1 0 0 -1 395 1841 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 1841 Tm (Sending in sheets is coming. grouplab.org/upload is written and its address is reserved, but the server is not) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 1929 Tm (installed yet, so the link does not work.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 2031 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2031 Tm (Several of the project's own gates have no material yet: no mounted photograph set, no 25-shot editor timing,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2119 Tm (no blank-paper photograph. So GroupLab is careful software that has not yet been proved against a large) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2207 Tm (body of real targets.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2309 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2309 Tm (Linux and macOS are built and tested on every push. Nobody uses either day to day, and the macOS build is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2397 Tm (not offered for download.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2031 Tm (Two of the project's own gates have no material yet: no 25-shot editor timing and no blank-paper photograph.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2119 Tm (The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2207 Tm (could not read about half of them. So GroupLab is careful software that has not yet been proved against a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2295 Tm (large body of real targets.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2397 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2397 Tm (Linux and macOS are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2485 Tm (Mac build has been run on one Mac; the platform statement on the download page says exactly what has) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2573 Tm (been checked.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2583 Tm (Telling somebody when it is wrong) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 2759 Tm (Telling somebody when it is wrong) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2613 3556 3 re
+381 2789 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2713 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2801 Tm (report, because a test build changes whenever the code does. Report a problem there writes a report package: a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2889 Tm (zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2977 Tm (Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3065 Tm (support@grouplab.org. Either way, add a line about what you were doing. The support page at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3153 Tm (<https://grouplab.org/support/> says the same and is easier to find again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3276 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab: settings, your sessions database, any sheet you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3364 Tm (design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3452 Tm (want the data gone.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2889 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2977 Tm (report, because a test build changes whenever the code does. Report a problem there writes a report package: a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3065 Tm (zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3153 Tm (Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3241 Tm (support@grouplab.org. Either way, add a line about what you were doing. The support page at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3329 Tm (<https://grouplab.org/support/> says the same and is easier to find again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3452 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab: settings, your sessions database, any sheet you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3540 Tm (design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3628 Tm (want the data gone.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 4 of 4) Tj ET
 Q
 endstream
@@ -1143,9 +1145,9 @@ xref
 0000010554 00000 n 
 0000014246 00000 n 
 0000014374 00000 n 
-0000018730 00000 n 
+0000019005 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-244768
+245043
 %%EOF

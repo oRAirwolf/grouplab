@@ -120,7 +120,7 @@ Flyer and "leave out" are deliberately two different things. Pointing at a shot 
 
 Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the same undo.
 
-**A ? beside every figure.** Two or three plain sentences saying what the figure means, what it is good for, and what the number of shots does to it, with **More** going to the glossary. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
+**Every word you may not know is underlined with dots,** a figure's name or a word like sigma, MOA or bull, here and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means; click it or press Enter for the whole entry, with **More in the glossary**. For a figure the sentences say what it is good for and what the number of shots does to it. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
 
 **Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
@@ -143,7 +143,7 @@ It says what to dial when the group's center is far enough from the aim to be to
 - **Worst shot:** how far out the worst shot sits in the group's own mean radii, against where simulated round groups put theirs.
 - **Decisions left unmade:** every figure here inherits the decisions still open.
 
-**The full CEP table and bivariate fit** are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
+**The full CEP table and the fitted ellipse** are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
 
 **Export** writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it asks which column is across, which is up and down, and what unit they are in, then shows the analysis. There is no image with an import, so the figures are the whole of it.
 

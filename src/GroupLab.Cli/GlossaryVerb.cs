@@ -26,10 +26,11 @@ public static class GlossaryVerb
         }
 
         var text = new StringBuilder();
-        text.AppendLine("# What the figures mean");
+        text.AppendLine("# What the words mean");
         text.AppendLine();
-        text.AppendLine("Every figure GroupLab shows, in plain words. The same text appears beside the figure in the application, so this page and");
-        text.AppendLine("the screen can never say different things: both are written from one list in the source.");
+        text.AppendLine("Every figure GroupLab shows, and every word a shooter may not know, in plain words. The same text appears wherever the word");
+        text.AppendLine("does, in the application and on the website, so no two places can say different things: all are written from one list,");
+        text.AppendLine("`src/GroupLab.Core/Marking/glossary.json`.");
         text.AppendLine();
         text.AppendLine("**Every one of these is an estimate from the shots you fired.** That is not a disclaimer, it is the single most useful thing");
         text.AppendLine("to know about them. One five shot group is not a measurement of a rifle; it is one sample of what the rifle does, and every");
@@ -37,19 +38,30 @@ public static class GlossaryVerb
         text.AppendLine("of what you actually know.");
         text.AppendLine();
 
-        foreach (var (_, explanation) in FigureExplanations.All.OrderBy(e => e.Value.Name, StringComparer.Ordinal))
+        foreach (var term in Glossary.All.OrderBy(e => e.Name, StringComparer.Ordinal))
         {
-            text.AppendLine($"## {explanation.Name}");
+            text.AppendLine($"## {term.Name}");
             text.AppendLine();
-            text.AppendLine($"<a id=\"{explanation.Term}\"></a>");
+            text.AppendLine($"<a id=\"{term.Term}\"></a>");
             text.AppendLine();
-            text.AppendLine(explanation.Plain);
+            text.AppendLine(term.Plain);
             text.AppendLine();
+            if (term.Precise is { } precise)
+            {
+                text.AppendLine($"*Precisely:* {precise}");
+                text.AppendLine();
+            }
+
+            if (term.Article is { } article)
+            {
+                text.AppendLine($"More in [the research article](https://grouplab.org{article}).");
+                text.AppendLine();
+            }
         }
 
         string path = Path.Combine(folder.FullName, "GLOSSARY.md");
         File.WriteAllText(path, text.ToString().Replace("\r\n", "\n"), new UTF8Encoding(false));
-        output.WriteLine($"Wrote {path}: {FigureExplanations.All.Count} figures.");
+        output.WriteLine($"Wrote {path}: {Glossary.All.Count} terms, {FigureExplanations.All.Count} of them figures.");
         return 0;
     }
 }

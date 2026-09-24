@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 851 |
+| code | 895 |
 | measured | 1279 |
-| decided | 1031 |
+| decided | 1051 |
 | unbacked | 0 |
-| **total** | **3161** |
+| **total** | **3225** |
 
-**389** of them were read one sentence at a time and their backing written against the sentence. The other **2772** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**390** of them were read one sentence at a time and their backing written against the sentence. The other **2835** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -339,7 +339,7 @@ one that matters.
 - *decided* (entries 147 and 166: the command, confirmed on a Mac by the first tester): That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - *code* (README.md's generated platform section and the download page): - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
-- *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the rifle's true dispersion is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.
+- *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the rifle's true spread is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups are statistically indistinguishable.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures the same thing far more carefully, and then tells you what the number is worth.
 - *code* (GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9): Between five and twenty it prints the figure with the interval's **real** coverage rather than a comfortable "95 percent".
@@ -903,7 +903,16 @@ one that matters.
 
 ### docs/GLOSSARY.md
 
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
 
 ### docs/OVERNIGHT-2026-09-21.md
 
@@ -1540,7 +1549,29 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Two builds, nightly 25 and nightly 12, keep the text they were published with, because their notes were written before today's checks existed.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): **Why the nightly numbers skip.** Up to nightly 91 a nightly was numbered by the workflow run that built it, and a run that was cancelled or skipped still took its number.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): From nightly 92 the number is the last published build plus one, so from there a gap means a number was never used, and a build that should not have been made is named as such below rather than hidden.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.2.0-nightly.94 **2026-09-24**, commit `227917a`.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.2.0-nightly.95 **2026-09-24**, commit `dbdb3a3`.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) - Pinch to zoom now works on a trackpad or touch screen; a touchpad's two finger drag moves the sheet, and Ctrl or Command with a scroll zooms.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 166) - The bulls you fired at can be chosen a whole row or column at a time from one bull.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 149, 3) - Target photographs can now be sent from grouplab.org/targets, and the website's top bar says Send a target.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 173) - Typing a cartridge name in the calibre box now works, so 6.5 Creedmoor gives 0.264 in and GroupLab warns you it is not the .25 calibre; only cartridges two published sources agree on are offered.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 3) - You can now record the paper a target was printed on and what was behind it, two optional choices on the marking screen, because how big a bullet hole looks depends on both.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 162, 3.2) - On a Mac, Command Z, Shift Command Z and the other shortcuts now use the Command key, and the undo button says what it will undo.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 166) - Naming the bulls you fired at and excluding a shot no longer freeze the window for seconds, and the zero correction now says the distance it is for and what it means for your rifle's own zero distance.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 170) - A build's notes now say only what changed in the application, in whole sentences, and a build that changed nothing in the application is no longer made.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 168, 2 to 4) - Naming the right calibre no longer makes GroupLab call good holes possibly two; it judges one hole from two against the other holes on your sheet, and tells you when they are a different size from what the calibre suggests.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 3) - A sheet printed smaller than it should be makes every group read larger, and GroupLab now says so and by how much, instead of wrongly saying the figures were corrected.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 6) - The analysis screen shows the six figures you read off a target and the zero correction in inches, MOA and mil with the clicks to dial; everything else is under Advanced, and the plot is high contrast.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) - Every word in the application and on the website now uses American spelling: center, caliber, analyze, color.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) - A diagnostics report no longer contains the names of the files you opened, only their type and an anonymous identifier, so a report can be shared without showing what your files are called.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 164, 4) - A scanned target now reports real inches: if the sheet was printed smaller or larger than it should be, the scan measures that and corrects every size, and a photograph says its figures are in the sheet's own inches.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 171, 1) - The Equipment button in the left rail now shows a cartridge instead of a rifle that was too thin to read at that size.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 167, 1) - The calibre, shot distance and rounds fired now sit at the top of the marking panel, marked needed until you answer them or say you do not know.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 4) - The pan tool, which is the one you start with, now also selects a mark you click, and C switches to it next to V for select.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 1 and 2) - The analysis screen opens with each judgement as one line, and the reasoning behind it is one click away instead of in the way.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 5) - GroupLab no longer guesses a cartridge from the size of the holes, which can be wrong by a whole calibre; it tells you what the holes measure and asks what you fired.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 4) **Under the hood** - GroupLab's hole centres on scans are now measured against each hole's edge, and a change that moves them further off fails its checks; which centre to report is waiting on a hand-marked comparison.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 170, 4) - The website's community page now lists the Discord channels and the server's rules, and an article shows a photographed bullet hole whose shadow makes it measure half again the bullet.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 171, 3 and 6) [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.95) --- ## 0.2.0-nightly.94 **2026-09-24**, commit `227917a`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): This build has no change to the application; it behaves exactly as nightly 93 does.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.94) --- ## 0.2.0-nightly.93 **2026-09-23**, commit `aa8c559`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 152, 3) - The calibre list now offers 0.222 for a rimfire 22, which was missing: the nearest thing it had was the centrefire 0.224, almost one percent too wide.
@@ -1622,7 +1653,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): **Under the hood** - Entries 126 and 127: the support address, and saying plainly when work is done.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.18) --- ## 0.2.0-nightly.16 **2026-09-21**, commit `b39b7af`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): - The write-up, question 33, and two states nothing reached.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.16) --- ## 0.2.0-nightly.14 **2026-09-21**, commit `9db6500`.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.2.0-nightly.14 **2026-09-21**, commit `9db6500`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): This build has no change to the application; it behaves exactly as nightly 12 does.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.2.0-nightly.12 **2026-09-21**, commit `862aab2`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.1.0 **2026-09-21**, commit `5a4cd07`.
@@ -2663,6 +2694,20 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request.
 - *code* (LICENSE, and the footer in website/build.py shell()): What changed in each build Every build on GitHub Free and open source under GPL-3.0.
 
+### site:guides/glossary/index.html
+
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
+- *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): The research article on it Free and open source under GPL-3.0.
+
 ### site:guides/index.html
 
 - *code* (website/build.py shell(): the page frame and navigation): Guides | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.
@@ -2689,7 +2734,7 @@ one that matters.
 
 ### site:guides/user-guide/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation): User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Download as PDF On this page 1.
+- *code* (website/build.py shell(): the page frame and navigation): User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page 1.
 - *code* (website/build.py: the guide's contents, generated from its headings): Mark it and settle the review queue 5.
 - *code* (website/build.py: the guide's contents, generated from its headings): Sessions and the report 7.
 - *code* (website/build.py: the guide's contents, generated from its headings): The zero correction at another distance, and the dope table 9.
@@ -2728,7 +2773,7 @@ one that matters.
 - *code* (AutomaticMarking.Run and GroupAnalysis): GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
-- *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true dispersion lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
+- *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
 - *code* (GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9): 5 to 20 Prints each figure with its interval's real coverage, not a comfortable 95 percent.
 - *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): 01 Print a GroupLab sheet Twenty built-in sheets, printed at actual size.
 - *decided* (how the sheets are designed to be shot, docs/TARGET-LIBRARY.md): 02 Shoot it One shot per bull, in order.
@@ -2742,7 +2787,29 @@ one that matters.
 
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab is unreleased, so every one of these is a pre-release.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.94 2026-09-24 , commit 227917a .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.95 2026-09-24 , commit dbdb3a3 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) Pinch to zoom now works on a trackpad or touch screen; a touchpad's two finger drag moves the sheet, and Ctrl or Command with a scroll zooms.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 166) The bulls you fired at can be chosen a whole row or column at a time from one bull.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 149, 3) Target photographs can now be sent from grouplab.org/targets, and the website's top bar says Send a target.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 173) Typing a cartridge name in the calibre box now works, so 6.5 Creedmoor gives 0.264 in and GroupLab warns you it is not the .25 calibre; only cartridges two published sources agree on are offered.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 3) You can now record the paper a target was printed on and what was behind it, two optional choices on the marking screen, because how big a bullet hole looks depends on both.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 162, 3.2) On a Mac, Command Z, Shift Command Z and the other shortcuts now use the Command key, and the undo button says what it will undo.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 166) Naming the bulls you fired at and excluding a shot no longer freeze the window for seconds, and the zero correction now says the distance it is for and what it means for your rifle's own zero distance.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 170) A build's notes now say only what changed in the application, in whole sentences, and a build that changed nothing in the application is no longer made.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 168, 2 to 4) Naming the right calibre no longer makes GroupLab call good holes possibly two; it judges one hole from two against the other holes on your sheet, and tells you when they are a different size from what the calibre suggests.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 3) A sheet printed smaller than it should be makes every group read larger, and GroupLab now says so and by how much, instead of wrongly saying the figures were corrected.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 6) The analysis screen shows the six figures you read off a target and the zero correction in inches, MOA and mil with the clicks to dial; everything else is under Advanced, and the plot is high contrast.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) Every word in the application and on the website now uses American spelling: center, caliber, analyze, color.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 169) A diagnostics report no longer contains the names of the files you opened, only their type and an anonymous identifier, so a report can be shared without showing what your files are called.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 164, 4) A scanned target now reports real inches: if the sheet was printed smaller or larger than it should be, the scan measures that and corrects every size, and a photograph says its figures are in the sheet's own inches.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 171, 1) The Equipment button in the left rail now shows a cartridge instead of a rifle that was too thin to read at that size.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 167, 1) The calibre, shot distance and rounds fired now sit at the top of the marking panel, marked needed until you answer them or say you do not know.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 4) The pan tool, which is the one you start with, now also selects a mark you click, and C switches to it next to V for select.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 1 and 2) The analysis screen opens with each judgement as one line, and the reasoning behind it is one click away instead of in the way.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 163, 5) GroupLab no longer guesses a cartridge from the size of the holes, which can be wrong by a whole calibre; it tells you what the holes measure and asks what you fired.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 161, 4) Under the hood GroupLab's hole centres on scans are now measured against each hole's edge, and a change that moves them further off fails its checks; which centre to report is waiting on a hand-marked comparison.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 170, 4) The website's community page now lists the Discord channels and the server's rules, and an article shows a photographed bullet hole whose shadow makes it measure half again the bullet.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 171, 3 and 6) Downloads for this build 0.2.0-nightly.94 2026-09-24 , commit 227917a .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): This build has no change to the application; it behaves exactly as nightly 93 does.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.93 2026-09-23 , commit aa8c559 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 152, 3) The calibre list now offers 0.222 for a rimfire 22, which was missing: the nearest thing it had was the centrefire 0.224, almost one percent too wide.
@@ -2824,7 +2891,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Under the hood Entries 126 and 127: the support address, and saying plainly when work is done.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.16 2026-09-21 , commit b39b7af .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): The write-up, question 33, and two states nothing reached.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.14 2026-09-21 , commit 9db6500 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.14 2026-09-21 , commit 9db6500 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): This build has no change to the application; it behaves exactly as nightly 12 does.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.12 2026-09-21 , commit 862aab2 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.1.0 2026-09-21 , commit 5a4cd07 .

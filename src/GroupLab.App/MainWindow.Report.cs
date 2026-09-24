@@ -130,7 +130,7 @@ public sealed partial class MainWindow
             state.Scale switch
             {
                 null => "No scale: the figures are in image pixels only.",
-                SheetReference when registrationResidual is { } residual => "Registered from the sheet's markers, residual " + units.Length(residual) + ".",
+                SheetReference when registrationResidual is { } residual => "Registered from the sheet's markers, which fit to within " + units.Length(residual) + ".",
                 SheetReference => "Registered from the sheet's markers.",
                 _ => "Scale set by hand.",
             },

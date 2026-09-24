@@ -245,6 +245,145 @@ def logo(cls: str = "logo") -> str:
     )
 
 
+
+# ---------------------------------------------------------------- glossary
+
+# NOTES-FROM-PLANNING.md entry 154. Alan: "anything like the word Sigma that is not commonly understood by a layman in either the
+# website or application should create a tooltip popup that explains what it means." The words and their plain sentences are the
+# application's own list, read here from the same file, so the site and the screen cannot say different things.
+GLOSSARY_FILE = REPO / "src" / "GroupLab.Core" / "Marking" / "glossary.json"
+GLOSSARY_PATH = "/guides/glossary/"
+
+
+def glossary() -> list[dict]:
+    return json.loads(GLOSSARY_FILE.read_text(encoding="utf-8"))["terms"]
+
+
+def _glossary_words() -> tuple[re.Pattern, dict]:
+    by_word = {}
+    for term in glossary():
+        for word in term["words"]:
+            by_word.setdefault(word.lower(), term)
+    words = sorted(by_word, key=len, reverse=True)
+    return re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in words) + r")(?![\w-])", re.IGNORECASE), by_word
+
+
+GLOSSARY_WORDS, GLOSSARY_BY_WORD = _glossary_words()
+
+# Text inside these is never marked: a link is already a link, a heading is a label rather than a sentence, code is literal, and a
+# control or a navigation list is not prose.
+TERM_SKIP = {"a", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "script", "style", "button", "summary", "label", "svg", "nav",
+             "select", "option", "textarea", "figcaption", "title"}
+VOID = {"br", "img", "hr", "input", "meta", "link", "source", "wbr", "col", "area", "base", "embed", "param", "track"}
+
+
+def explain(body: str) -> str:
+    """Entry 154 section 2: the first appearance of each glossary term in a page's body becomes a link to its entry, carrying the plain
+    sentence, which terms.js shows on hover and on tap. Only the first appearance, because a page with every "sigma" underlined is
+    unreadable, and a link, because a reader with scripts off still reaches the explanation."""
+    out, skip, done = [], [], set()
+    for token in re.split(r"(<[^>]+>)", body):
+        if token.startswith("<"):
+            m = re.match(r"<(/?)([a-zA-Z0-9]+)", token)
+            if m and not token.startswith("<!"):
+                name = m.group(2).lower()
+                if m.group(1):
+                    if skip and skip[-1] == name:
+                        skip.pop()
+                elif name in TERM_SKIP and name not in VOID and not token.endswith("/>"):
+                    skip.append(name)
+            out.append(token)
+            continue
+        if skip or not token.strip():
+            out.append(token)
+            continue
+        pieces, last = [], 0
+        for m in GLOSSARY_WORDS.finditer(token):
+            term = GLOSSARY_BY_WORD[m.group(1).lower()]
+            if term["term"] in done:
+                continue
+            done.add(term["term"])
+            pieces.append(token[last:m.start()])
+            pieces.append(f'<a class="term" href="{GLOSSARY_PATH}#{term["term"]}" data-term="{term["term"]}" data-name="{esc(term["name"])}" '
+                          f'data-plain="{esc(term["plain"])}">{m.group(1)}</a>')
+            last = m.end()
+        pieces.append(token[last:])
+        out.append("".join(pieces))
+    return "".join(out)
+
+
+def page_glossary() -> str:
+    entries = []
+    for term in sorted(glossary(), key=lambda x: x["name"].lower()):
+        more = [f'<p class="small"><span class="mono faint">Precisely:</span> {esc(term["precise"])}</p>'] if term.get("precise") else []
+        if term.get("article"):
+            more.append(f'<p class="small"><a href="{term["article"]}">The research article on it</a></p>')
+        entries.append(f"""<section class="glossary-entry" id="{term["term"]}">
+<h2 class="h3">{esc(term["name"])}</h2>
+<p>{esc(term["plain"])}</p>
+{"".join(more)}
+</section>""")
+    body = f"""
+<section class="wrap guide-bar">
+<nav class="tabs" aria-label="Guides">{guide_tabs("glossary")}</nav>
+</section>
+<section class="wrap page-head">
+<p class="eyebrow">Glossary</p>
+<h1>What the words mean</h1>
+<p class="lead">Every figure GroupLab shows, and every word a shooter may not know, in plain words. The application says the same thing
+beside the same word, because both are written from one list.</p>
+</section>
+<section class="wrap prose glossary last">
+{"".join(entries)}
+</section>
+"""
+    return shell(GLOSSARY_PATH, "Glossary", "What the words GroupLab uses mean, in plain words: sigma, mean radius, CEP, MOA, mil and the rest.", body, "Guides")
+
+
+def term_problems() -> list[str]:
+    """Entry 154 section 5: a glossary word in a page's text with no explanation on that page is a failure, and so is an explanation that
+    does not say what the list says. A word that appears on no page is reported, not failed: it may be waiting for its feature."""
+    problems, seen = [], set()
+    plains = {term["term"]: esc(term["plain"]) for term in glossary()}
+    for f in sorted(OUT.rglob("*.html")):
+        rel = f.relative_to(OUT).as_posix()
+        if rel == GLOSSARY_PATH.strip("/") + "/index.html":
+            continue
+        text = f.read_text(encoding="utf-8")
+        main = text.split('<main id="main">', 1)[-1].split("</main>", 1)[0] if '<main id="main">' in text else ""
+        marked = {}
+        for m in re.finditer(r'<a class="term" href="[^"]*" data-term="([^"]+)" data-name="[^"]*" data-plain="([^"]*)">', main):
+            marked[m.group(1)] = m.group(2)
+            if m.group(2) != plains.get(m.group(1)):
+                problems.append(f"{rel}: the explanation of {m.group(1)} is not what the glossary says")
+        skip = []
+        for token in re.split(r"(<[^>]+>)", main):
+            if token.startswith("<"):
+                m = re.match(r"<(/?)([a-zA-Z0-9]+)", token)
+                if m and not token.startswith("<!"):
+                    name = m.group(2).lower()
+                    if m.group(1):
+                        if skip and skip[-1] == name:
+                            skip.pop()
+                    elif name in TERM_SKIP and name not in VOID and not token.endswith("/>"):
+                        skip.append(name)
+                continue
+            if skip:
+                continue
+            for m in GLOSSARY_WORDS.finditer(token):
+                term = GLOSSARY_BY_WORD[m.group(1).lower()]["term"]
+                seen.add(term)
+                if term not in marked:
+                    problems.append(f"{rel}: \"{m.group(1)}\" is a glossary word with no explanation on the page")
+                    marked[term] = "reported"
+        seen.update(marked)
+    unused = sorted(term["term"] for term in glossary() if term["term"] not in seen)
+    if unused:
+        print("glossary words on no page yet: " + ", ".join(unused))
+    return problems
+
+
+
 def shell(path: str, title: str, description: str, body: str, active: str = "") -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
     links = []
@@ -279,6 +418,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <link rel="preload" href="/assets/fonts/plex-sans-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script src="/assets/js/theme.js"></script>
+<script src="/assets/js/terms.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -302,7 +442,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 </div>
 </header>
 <main id="main">
-{body}
+{body if path == GLOSSARY_PATH else explain(body)}
 </main>
 <footer class="site-footer">
 <div class="wrap footer-row">
@@ -373,7 +513,7 @@ def page_home() -> str:
 </div>
 <div class="panel figure-panel">
 <div class="figure-top">
-<p class="mono dim small">From five shots, the true dispersion lies between</p>
+<p class="mono dim small">From five shots, the true spread lies between</p>
 <p class="mono big-figure">0.68 <span class="faint">and</span> 1.92 &#215;</p>
 <p class="mono dim small">what was measured, a factor of 2.8</p>
 </div>
@@ -569,7 +709,7 @@ def page_shoot() -> str:
 </section>
 <section class="wrap section two-col top last">
 <ol class="step-list">
-{st("1", "Print it at actual size", "Letter or A4 paper, Actual size or 100 percent. Never Fit to page. Then measure between the centres of the first and last bull in the top row.", "It must be 152.0 mm, or 5.98 in")}
+{st("1", "Print it at actual size", "Letter or A4 paper, Actual size or 100 percent. Never Fit to page. Then measure between the centers of the first and last bull in the top row.", "It must be 152.0 mm, or 5.98 in")}
 {st("2", "Fill in the block", "At least the date, the distance and the cartridge. Write only inside the block: pen marks anywhere else can be mistaken for bullet holes.")}
 {st("3", "Mount it flat and shoot it", "Staple or tape it flat onto cardboard at the four corners. One shot per bull, in number order. A pulled shot or a wrong bull goes in the Notes box.")}
 </ol>
@@ -866,6 +1006,8 @@ def guide_tabs(current: str) -> str:
     for key, _, _, label, _ in GUIDES:
         cur = ' aria-current="page"' if key == current else ""
         tabs.append(f'<a class="tab" href="/guides/{key}/"{cur}>{label}</a>')
+    cur = ' aria-current="page"' if current == "glossary" else ""
+    tabs.append(f'<a class="tab" href="{GLOSSARY_PATH}"{cur}>Glossary</a>')
     return "".join(tabs)
 
 
@@ -1597,6 +1739,65 @@ def page_404() -> str:
 
 # ---------------------------------------------------------------- css and js
 
+TERMS_JS = """// NOTES-FROM-PLANNING.md entry 154: a glossary word explains itself on hover, on tap and on keyboard focus. Without this script the
+// word is a link to its glossary entry, which is the mechanism; this is the enhancement.
+(() => {
+  let pop = null, owner = null;
+  const close = () => {
+    if (!pop) return;
+    pop.remove(); pop = null;
+    if (owner) owner.setAttribute("aria-expanded", "false");
+    owner = null;
+  };
+  const open = (a) => {
+    if (owner === a) return;
+    close();
+    owner = a;
+    pop = document.createElement("div");
+    pop.className = "term-pop";
+    pop.setAttribute("role", "dialog");
+    pop.setAttribute("aria-label", a.dataset.name);
+    const text = document.createElement("p");
+    text.textContent = a.dataset.plain;
+    const row = document.createElement("div");
+    row.className = "term-pop-row";
+    const more = document.createElement("a");
+    more.href = a.href;
+    more.textContent = "More in the glossary";
+    const shut = document.createElement("button");
+    shut.type = "button";
+    shut.textContent = "Close";
+    shut.addEventListener("click", close);
+    row.append(more, shut);
+    pop.append(text, row);
+    document.body.append(pop);
+    const r = a.getBoundingClientRect(), view = document.documentElement.clientWidth;
+    const width = Math.min(352, view - 24);
+    pop.style.width = width + "px";
+    pop.style.left = Math.max(12, Math.min(r.left, view - width - 12)) + window.scrollX + "px";
+    // Below the line the word is on, so it never covers the sentence it explains.
+    pop.style.top = r.bottom + window.scrollY + 8 + "px";
+    a.setAttribute("aria-expanded", "true");
+  };
+  const term = (e) => e.target instanceof Element ? e.target.closest("a.term") : null;
+  document.addEventListener("click", (e) => {
+    const a = term(e);
+    if (a) {
+      // The first tap explains; a second follows the link to the full entry.
+      if (owner !== a) { e.preventDefault(); open(a); }
+      return;
+    }
+    if (pop && !pop.contains(e.target)) close();
+  });
+  document.addEventListener("mouseover", (e) => {
+    const a = term(e);
+    if (a && window.matchMedia("(hover: hover)").matches) open(a);
+  });
+  document.addEventListener("focusin", (e) => { const a = term(e); if (a) open(a); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+})();
+"""
+
 CSS = r"""
 @font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-400.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-500.woff2) format("woff2")}
@@ -1637,6 +1838,13 @@ a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
 code,.mono{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace}
 code{font-size:.88em;background:var(--panel2);padding:1px 6px;border-radius:3px}
+a.term{color:inherit;font-weight:inherit;text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+a.term:hover{text-decoration:underline dotted}
+.term-pop{position:absolute;z-index:20;background:var(--panel);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:.92rem;line-height:1.5}
+.term-pop p{margin:0 0 8px}
+.term-pop-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.term-pop button{background:none;border:1px solid var(--line2);color:var(--dim);border-radius:4px;padding:2px 10px;font:inherit;cursor:pointer}
+.glossary-entry{scroll-margin-top:80px;border-bottom:1px solid var(--line);padding:6px 0 10px}
 h1,h2,.display{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.08;margin:0;color:var(--text)}
 h1{font-size:clamp(36px,5vw,52px)}
 .display{font-size:clamp(38px,6vw,64px);line-height:1.04}
@@ -2106,6 +2314,7 @@ def main() -> None:
     build_downloads()
     write("assets/css/site.css", CSS.strip() + "\n")
     write("assets/js/theme.js", JS)
+    write("assets/js/terms.js", TERMS_JS)
 
     write("index.html", page_home())
     write("download/index.html", page_download())
@@ -2124,6 +2333,7 @@ def main() -> None:
     write("guides/index.html", page_guides_index())
     for g in GUIDES:
         write(f"guides/{g[0]}/index.html", page_guide(*g))
+    write("guides/glossary/index.html", page_glossary())
     write("what-can-be-measured/index.html", page_what_can_be_measured())
     write("releases/index.html", page_releases())
     figure_problems = build_research_figures()
@@ -2140,7 +2350,7 @@ def main() -> None:
     write("discord/index.html", page_discord())
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/releases/", "/support/"]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/"]
     pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)
@@ -2168,6 +2378,7 @@ def main() -> None:
     problems += link_problems()
     problems += php_problems()
     problems += send_problems()
+    problems += term_problems()
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")

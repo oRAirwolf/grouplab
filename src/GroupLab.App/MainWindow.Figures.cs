@@ -22,7 +22,7 @@ public sealed partial class MainWindow
 {
     private readonly SheetThumbnail thumbnail = new();
     private readonly StackPanel fullFigures = new() { Spacing = Tokens.Space4 };
-    private readonly Expander fullFiguresPanel = new() { Header = "Full CEP table and bivariate fit", HorizontalAlignment = HorizontalAlignment.Stretch };
+    private readonly Expander fullFiguresPanel = new() { Header = "Full CEP table and the fitted ellipse", HorizontalAlignment = HorizontalAlignment.Stretch };
     private TargetDefinition? thumbnailDefinition;
 
     /// <summary>The name the panel's open state is remembered by, with the "why" disclosures.</summary>
@@ -112,7 +112,7 @@ public sealed partial class MainWindow
             }
         }
 
-        fullFigures.Children.Add(Note("The circular estimate assumes the group round and gives its interval. The correlated normal and Grubbs-Patnaik estimates use the group's own covariance, so they allow for an elliptical group, and have no interval here. All three are about the group's own center."));
+        fullFigures.Children.Add(Note("The circular estimate assumes the group round and gives its interval. The correlated normal and Grubbs-Patnaik estimates follow the group's own shape, so they allow for a group that is not round, and have no interval here. All three are about the group's own center."));
     }
 
     private void FullFigures(IReadOnlyList<PointD> offsets, string heading)

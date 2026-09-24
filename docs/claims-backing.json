@@ -249,10 +249,6 @@
    "kind": "decided",
    "where": "entries 147 and 166, the platform statement"
   },
-  "User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Download as PDF On this page 1.": {
-   "kind": "code",
-   "where": "website/build.py shell(): the page frame and navigation"
-  },
   "Mark it and settle the review queue 5.": {
    "kind": "code",
    "where": "website/build.py: the guide's contents, generated from its headings"
@@ -388,10 +384,6 @@
   "GroupLab measures far more carefully, and then tells you what the number is worth.": {
    "kind": "decided",
    "where": "what GroupLab is for, DESIGN.md section 1"
-  },
-  "From five shots, the true dispersion lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.": {
-   "kind": "measured",
-   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
   },
   "5 to 20 Prints each figure with its interval's real coverage, not a comfortable 95 percent.": {
    "kind": "code",
@@ -780,10 +772,6 @@
   "- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.": {
    "kind": "code",
    "where": "README.md's generated platform section and the download page"
-  },
-  "From five shots, the rifle's true dispersion is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.": {
-   "kind": "measured",
-   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
   },
   "Two loads that differ by 20 percent on five-shot groups are statistically indistinguishable.": {
    "kind": "measured",
@@ -1344,9 +1332,26 @@
   "- **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.": {
    "kind": "code",
    "where": "samples/ and samples/PROVENANCE.md, packaged by scripts/package-windows.ps1"
+  },
+  "User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation"
+  },
+  "From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
+  },
+  "From five shots, the rifle's true spread is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
   }
  },
  "rules": [
+  {
+   "surface": "^site:guides/glossary/|^docs/GLOSSARY\\.md$",
+   "kind": "decided",
+   "where": "src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)"
+  },
   {
    "surface": "^docs/RELEASE-NOTES\\.md$|^site:releases/",
    "kind": "code",

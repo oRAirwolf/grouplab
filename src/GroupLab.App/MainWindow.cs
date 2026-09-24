@@ -2123,6 +2123,10 @@ public sealed partial class MainWindow : Window
         ShowSighters(state);
         canvas.SetAside = analyseSighters ? new HashSet<int>() : state.Shots.Where(s => GroupAnalysis.OnSighter(state, s)).Select(s => s.Id).ToHashSet();
         ShowAnalysis(state);
+
+        // Entry 154 section 3: every label and heading on every screen that names a glossary word explains it, from the same list the
+        // website reads. Done here because every screen, and every change to one, comes through here.
+        TermHelp.ExplainAll(this);
     }
 
     /// <summary>
@@ -2271,7 +2275,7 @@ public sealed partial class MainWindow : Window
         };
         ToolTip.SetTip(registrationPill, null);
         registrationWork.Text = state.Scale is null ? "No scale is set."
-            : "Scale: from " + state.Scale.Describe(units) + (state.Scale is SheetReference && registrationResidual is { } residual ? $", residual {units.Length(residual)}." : ".");
+            : "Scale: from " + state.Scale.Describe(units) + (state.Scale is SheetReference && registrationResidual is { } residual ? $"; the markers fit to within {units.Length(residual)}." : ".");
         foreach (var classes in new[] { registrationPill.Classes, registrationText.Classes })
         {
             classes.Remove(AppStyles.Good);
@@ -3796,7 +3800,9 @@ public sealed partial class MainWindow : Window
     internal void OnReviewKey(object? sender, KeyEventArgs e)
     {
         // Any modifier but Shift means a shortcut, never a typed label: Control, Alt, and the Mac's Command key (entry 166).
-        if (e.Source is TextBox || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None)
+        // Entry 154: a glossary word that has the focus takes its own Enter and Space, which open its explanation.
+        if (e.Source is TextBox || (e.Source is TextBlock focused && focused.Classes.Contains(TermHelp.Class))
+            || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None)
         {
             return;
         }
