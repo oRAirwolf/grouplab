@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.98
+
+**2026-09-24**, commit `099c270`. Nightly.
+
+**Under the hood**
+
+- The article on why a photo cannot tell you your bullet's size now says what a .22 hole's smaller size could be down to, and the test that would tell. (Entry 158)
+- GroupLab can now find the printed grid on a commercial gridded target and correct the photograph's perspective and lens from it; it is measured, not yet on a screen. (Entry 158)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.98)
+
+---
+
 ## 0.2.0-nightly.97
 
 **2026-09-24**, commit `88dbc25`. Nightly.
