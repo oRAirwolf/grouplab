@@ -64,6 +64,16 @@ CLAMD_LIMIT_MB = 400
 MAX_ATTEMPTS = 3
 ATTEMPTS = ".attempts"
 
+# NOTES-FROM-PLANNING.md entry 183. The receiver writes this marker beside meta.json when the contributor ticks "Do not include my
+# photos in the public data set", so somebody listing the folder sees it without opening a file. It is not an image, and the worker
+# once tried to decode it and refused every opted out submission. It travels with the folder to ready, and it must agree with
+# meta.json's exclude_from_public_dataset, or the submission is refused rather than guessed at.
+DO_NOT_PUBLISH = "DO-NOT-PUBLISH"
+
+# Everything in a submission folder that is not an upload: the receiver's record and marker, and the worker's own bookkeeping. A folder
+# moved back from refused carries refused.txt, which is dropped when it is tried again.
+BOOKKEEPING = ("meta.json", ATTEMPTS, DO_NOT_PUBLISH, "refused.txt")
+
 # Nothing bigger than the receiver would have accepted in the first place.
 MAX_BYTES = 30 * 1024 * 1024
 
@@ -379,27 +389,101 @@ def refuse(folder: Path, reason: str) -> None:
     log(f"{folder.name}: refused, {reason}")
 
 
+def rebuilt_name(uploaded: str) -> str:
+    """The name the rebuilt PNG of an upload takes: its own stem, and "-rebuilt" where the upload was a PNG already."""
+    stem = Path(uploaded)
+    target = stem.with_suffix(".png")
+    return (stem.stem + "-rebuilt.png") if target.name == uploaded else target.name
+
+
+def read_record(folder: Path) -> tuple[dict | None, str | None]:
+    """The receiver's meta.json, or why it cannot be used. Without it neither the uploads nor the consent are known."""
+    meta = folder / "meta.json"
+    if not meta.is_file():
+        return None, "there is no meta.json, so neither its files nor its consent are known"
+    try:
+        record = json.loads(meta.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+        return None, f"meta.json would not read: {type(e).__name__}"
+    if not isinstance(record, dict):
+        return None, "meta.json is not a record"
+    return record, None
+
+
+def opted_out(folder: Path, record: dict) -> tuple[bool | None, str | None]:
+    """
+    Entry 183 section 3.1: the opt out, from meta.json and the marker together. They are written by the same request, so they agree on
+    every submission the receiver made; where they do not, something has been changed by hand or lost, and the worker says so and stops
+    rather than choosing one.
+    """
+    flag = record.get("exclude_from_public_dataset")
+    marker = (folder / DO_NOT_PUBLISH).is_file()
+    if not isinstance(flag, bool):
+        return None, "meta.json does not say whether the contributor opted out of the public data set"
+    if flag != marker:
+        return None, (f"the {DO_NOT_PUBLISH} marker and meta.json disagree about the opt out: meta.json says "
+                      f"exclude_from_public_dataset is {str(flag).lower()} and the marker is {'present' if marker else 'absent'}")
+    return flag, None
+
+
 def one(folder: Path, tool: str | None) -> tuple[bool, str]:
     """One submission. True where every file in it passed and it moved to ready; otherwise the reason."""
-    files = sorted(p for p in folder.iterdir() if p.is_file() and p.name not in ("meta.json", ATTEMPTS))
-    if not files:
-        return False, "nothing in it"
+    record, problem = read_record(folder)
+    if record is None:
+        return False, problem or "meta.json would not read"
+
+    opt_out, problem = opted_out(folder, record)
+    if opt_out is None:
+        return False, problem or "the opt out is not known"
+
+    # Entry 183 section 3.2: the uploads are what the receiver recorded, never whatever is in the folder.
+    uploads = record.get("files")
+    if not isinstance(uploads, list) or not uploads:
+        return False, "meta.json records no uploaded files"
+    expected: list[tuple[str, dict]] = []
+    for entry in uploads:
+        name = entry.get("stored_name") if isinstance(entry, dict) else None
+        if not isinstance(name, str) or not name or name != Path(name).name or name.startswith(".") or name in BOOKKEEPING:
+            return False, "meta.json records an upload by a name the worker will not use: " + repr(name)[:80]
+        expected.append((name, entry))
+
+    allowed = set(BOOKKEEPING) | {name for name, _ in expected} | {rebuilt_name(name) for name, _ in expected}
+    for present in sorted(folder.iterdir()):
+        if present.name not in allowed or not present.is_file():
+            return False, f"{present.name} is in the folder and the receiver did not record it"
+
+    if (folder / "refused.txt").is_file():
+        log(f"{folder.name}: back from refused, tried again")
+        (folder / "refused.txt").unlink()
 
     rebuilt = []
-    for original in files:
-        if original.stat().st_size > MAX_BYTES:
+    for name, entry in expected:
+        original = folder / name
+        target = folder / rebuilt_name(name)
+        again = False
+        if not original.is_file():
+            # Entry 183 section 4: a folder moved back from refused after its original was already rebuilt and deleted. The worker's
+            # own PNG is all that is left, and it goes through exactly the same scan and rebuild as an upload would.
+            if not target.is_file():
+                return False, f"{name} is recorded by the receiver and is not in the folder"
+            again = True
+            original = target
+            target = folder / (Path(rebuilt_name(name)).stem + ".again.png")
+            log(f"{folder.name}: {name} was rebuilt by an earlier run and its original deleted; rebuilding again from {original.name}")
+
+        if original.stat().st_size > MAX_BYTES and not again:
             return False, f"{original.name} is larger than the receiver accepts"
+
+        before = sha256_of(original)
+        received = entry.get("sha256")
+        if not again and isinstance(received, str) and received and received.lower() != before:
+            return False, f"{original.name} is not the file the receiver stored: its SHA-256 has changed"
 
         passed, scanned = scan(original, tool)
         if not passed:
             return False, f"{original.name}: {scanned}"
 
-        before = sha256_of(original)
         was_heic = is_heic(original)
-        target = original.with_suffix(".png")
-        if target == original:
-            target = original.with_name(original.stem + "-rebuilt.png")
-
         try:
             facts = rebuild(original, target)
         except Exception as e:  # noqa: BLE001 - any failure to decode cleanly is a refusal
@@ -414,27 +498,28 @@ def one(folder: Path, tool: str | None) -> tuple[bool, str]:
             target.unlink(missing_ok=True)
             return False, f"{target.name}: {rescanned}"
 
-        # The original bytes go. From here on nothing of the uploaded file exists but its hash.
-        original.unlink()
+        if again:
+            # The worker's earlier PNG is replaced by the one just made from it, under the same name.
+            target.replace(original)
+            target = original
+            log(f"{folder.name}: rebuilt {name} again as {target.name}, {scanned}")
+        else:
+            # The original bytes go. From here on nothing of the uploaded file exists but its hash.
+            original.unlink()
+            log(f"{folder.name}: rebuilt {original.name} as {target.name}, original deleted, {scanned}")
 
         rebuilt.append({
             "stored": target.name,
-            "originalSha256": before,
+            "uploaded": name,
+            "originalSha256": received if again else before,
             "sha256": sha256_of(target),
             "scan": scanned,
             "heic": True if was_heic else None,
+            "rebuiltAgain": True if again else None,
             "facts": facts,
         })
-        log(f"{folder.name}: rebuilt {original.name} as {target.name}, original deleted, {scanned}")
 
     meta = folder / "meta.json"
-    record = {}
-    if meta.is_file():
-        try:
-            record = json.loads(meta.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            record = {}
-
     record["files"] = [{k: v for k, v in f.items() if v is not None} for f in rebuilt]
     record["notScanned"] = sum(1 for f in rebuilt if str(f["scan"]).startswith("not scanned"))
     record["rebuiltUtc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -443,7 +528,8 @@ def one(folder: Path, tool: str | None) -> tuple[bool, str]:
 
     READY.mkdir(parents=True, exist_ok=True)
     shutil.move(str(folder), str(READY / folder.name))
-    log(f"{folder.name}: ready, {len(rebuilt)} files" + (f", {record['notScanned']} NOT SCANNED" if record["notScanned"] else ""))
+    log(f"{folder.name}: ready, {len(rebuilt)} files" + (f", {record['notScanned']} NOT SCANNED" if record["notScanned"] else "")
+        + (", opted out of the public data set" if opt_out else ""))
     return True, "ready"
 
 

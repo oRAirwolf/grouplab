@@ -955,6 +955,38 @@ These are what entry 157 section 4 and entry 158 program A are for, and they are
 check of section 2 item 4 wait for them: each needs the position of every hole on this sheet, and today those come only from a person
 clicking 115 of them.
 
+## Entry 183: the opt out travels with the submission
+
+**Scanning works.** After request 14 the first upload's log read `clean, clamdscan`: the stream through clamd's own socket, at the
+new limits. Request 14 is closed.
+
+**The fault.** The receiver writes a `DO-NOT-PUBLISH` marker beside `meta.json` when the opt out is ticked. The worker took every file
+in the folder but `meta.json` for an upload, tried to decode the marker, and refused the submission. Every opted out submission was
+refused; the three before it had the box clear.
+
+**The marker is kept**, because a person listing the folder should see it without opening a file, and because the publishing build
+already withholds on either record. So the worker knows it now:
+
+- It reads `meta.json` first and refuses a submission without one, since neither its files nor its consent are then known.
+- It rebuilds only the uploads the receiver recorded by `stored_name`. Anything else in the folder, except the receiver's record and
+  marker and its own bookkeeping, is a refusal naming the file, never a decode attempt.
+- `exclude_from_public_dataset` must be true or false, and must agree with the marker. Where they disagree it refuses and says which
+  way, rather than choosing one.
+- The marker moves with the folder to ready, and the log's ready line says the submission opted out.
+- An upload whose bytes no longer match the SHA-256 the receiver recorded is refused.
+- A folder moved back from refused, whose original the worker already rebuilt and deleted, is rebuilt again from the worker's own PNG,
+  through the same scan, and recorded as `rebuiltAgain`; `refused.txt` is dropped.
+
+**The pull script's check** reads the opt out from either record, treats a missing flag as opted out rather than as false, and
+reports the two disagreeing. The publishing build already withheld on either record, and its tests already covered each case.
+
+**The consent test.** CI's worker job now runs the real receiver, through the harness its own tests use, which moved to one shared
+file so the two cannot drift. It sends one photograph with the opt out ticked and one without, and one more that is left as the refused
+submission was. The real worker then runs under the unit's sandbox and the real clamd, and the pull script's own check reads each
+result. Each must arrive with its flag, its marker or lack of one, one scanned PNG and no original. A disagreeing pair of records and an
+unrecorded file must each be refused with its reason. Run on Windows without clamd against the same shapes, the worker did exactly
+that. This test would have caught this fault, entry 174's field name and entry 177's key.
+
 ## Entry 182: the scanner takes a stream
 
 **Why nothing was scanned.** The worker runs in its own mount namespace, from `ProtectSystem=strict`, `ProtectHome=read-only`,

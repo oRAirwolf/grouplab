@@ -169,6 +169,8 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq clamav-daemon clamdscan libheif-examples libheif-plugin-libde265 libheif-plugin-x265 python3-pil
+          # Entry 183: the receiver runs too, so the consent test follows a submission from the form's own receiver to the pull script.
+          sudo apt-get install -y -qq php-cli php-sqlite3 php-mbstring
           # The packaged services start on install; the test runs its own clamd with its own signature instead.
           sudo systemctl stop clamav-daemon clamav-freshclam || true
 

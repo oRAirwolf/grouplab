@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 182.
+**Last rewritten:** 2026-09-24, after entry 183.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 182, 170 (its choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 183, 170 (its choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -31,11 +31,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **No upload is virus scanned yet.** Request 14: clamd's limits and the worker that streams (entry 182). The rebuild
-  from pixels still runs, and every unscanned file is reported by the worker and the pull script.
+- **Every opted out submission is refused** until request 15 installs entry 183's worker; one waits in refused
+  to be moved back.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 
-Open requests in `docs/notes/for-alan.md`: **4** (14 most urgent, then 9, 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **4** (15 most urgent, then 9, 12, and 5 being applied).
 
 ## Open questions
 
@@ -64,6 +64,7 @@ they differ.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Every upload is virus scanned**, streamed to clamd, since request 14 (entries 182 and 183).
 - **The web upload path works end to end**, desktop and phone. Entry 129 is complete.
 - **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
 - **Temporary files clean themselves up.** Tests write into one folder per run, CI fails on a leak, and

@@ -91,4 +91,27 @@ public class WorkerLimitTests
             Assert.Contains(key, installer, StringComparison.Ordinal);
         }
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 183: the worker tried to decode the receiver's DO-NOT-PUBLISH marker as an image and refused every opted
+    /// out submission. It rebuilds only what the receiver recorded in meta.json, knows the marker, and refuses where the two disagree; the pull
+    /// script's check reads the opt out from either record. The real receiver, worker and check run together in CI's worker test.
+    /// </summary>
+    [Fact]
+    public void TheWorkerRebuildsOnlyWhatTheReceiverRecordedAndKeepsTheOptOut()
+    {
+        string worker = Worker;
+        Assert.DoesNotContain("p.name not in (\"meta.json\", ATTEMPTS)", worker, StringComparison.Ordinal);
+        Assert.Contains("DO_NOT_PUBLISH = \"DO-NOT-PUBLISH\"", worker, StringComparison.Ordinal);
+        Assert.Contains("record.get(\"files\")", worker, StringComparison.Ordinal);
+        Assert.Contains("disagree about the opt out", worker, StringComparison.Ordinal);
+        Assert.Contains("the receiver did not record it", worker, StringComparison.Ordinal);
+        Assert.Contains("DO-NOT-PUBLISH", File.ReadAllText(Repo.PathTo("scripts/SubmissionCheck.ps1")), StringComparison.Ordinal);
+        Assert.Contains("DO-NOT-PUBLISH", File.ReadAllText(Repo.PathTo("website/api/upload.php")), StringComparison.Ordinal);
+
+        string test = File.ReadAllText(Repo.PathTo("tests/python/worker-tests.py"));
+        Assert.Contains("tests/php/receive-one.php", test, StringComparison.Ordinal);
+        Assert.Contains("SubmissionCheck.ps1", test, StringComparison.Ordinal);
+        Assert.True(File.Exists(Repo.PathTo("tests/php/receiver-harness.php")));
+    }
 }

@@ -14,6 +14,11 @@ Three submissions go in: a phone-shaped JPEG stored on its side with EXIF Orient
 HEIC file, and a JPEG carrying a test signature the daemon is given. The first two must come out in ready,
 rebuilt, upright and with no GPS, each file recorded as scanned; the third must be refused because the
 scanner found it.
+
+Entry 183 adds the consent contract: submissions made by the real receiver, one with "Do not include my
+photos in the public data set" ticked and one without, go through the real worker and then the pull
+script's own check, and each must arrive with its consent intact. One more is left as a refused submission
+is after the worker deleted its original, to be moved back and done again.
 """
 
 from __future__ import annotations
@@ -37,6 +42,34 @@ def check(what: str, ok: bool, detail: str = "") -> None:
     print(("ok      " if ok else "FAILED  ") + what + ("" if ok or not detail else "\n        " + detail))
     if not ok:
         failed += 1
+
+
+def hashed(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def record(folder: Path, opt_out: bool = False) -> None:
+    """meta.json as the receiver writes it for the files already in the folder: each upload named and hashed, and the opt out."""
+    files = [{"index": i, "stored_name": f.name, "original_name": f.name, "bytes": f.stat().st_size, "sha256": hashed(f)}
+             for i, f in enumerate(sorted(p for p in folder.iterdir() if p.is_file()))]
+    meta = {"schema_version": 1, "submission_id": folder.name.split("_")[-1], "exclude_from_public_dataset": opt_out,
+            "consent": {"agreed": True, "version": "consent_v1"}, "files": files, "stage": "quarantine"}
+    (folder / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+    if opt_out:
+        (folder / "DO-NOT-PUBLISH").write_text("The contributor asked that these photos are not published." + chr(10), encoding="utf-8")
+
+
+def receive(root: Path, photo: Path, opt_out: bool) -> Path | None:
+    """Entry 183 section 3.4: one submission through the real receiver, website/api/upload.php, as a request runs it."""
+    run = subprocess.run(["php", str(REPO / "tests/php/receive-one.php"), str(root), str(photo), "1" if opt_out else "0"], capture_output=True, text=True)
+    check(f"the receiver took {photo.name}{' with the opt out ticked' if opt_out else ''}", run.returncode == 0, (run.stdout + run.stderr)[-400:])
+    try:
+        sid = json.loads(run.stdout.strip().splitlines()[-1])["id"]
+    except (ValueError, KeyError, IndexError):
+        return None
+    found = sorted((root / "private" / "quarantine").glob(f"*_{sid}"))
+    return found[0] if found else None
 
 
 def main() -> int:
@@ -70,7 +103,7 @@ def main() -> int:
     folder = quarantine / "2026-09-24_aaaaaaa1"
     folder.mkdir()
     phone.save(folder / "001_phone.jpg", "JPEG", quality=90, exif=exif)
-    (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
+    record(folder)
 
     # A HEIC, as an iPhone sends, made by libheif's own encoder from a PNG.
     folder = quarantine / "2026-09-24_aaaaaaa2"
@@ -78,7 +111,7 @@ def main() -> int:
     Image.new("RGB", (1200, 900), (180, 190, 200)).save(root / "source.png")
     made = subprocess.run(["heif-enc", "-o", str(folder / "001_phone.heic"), str(root / "source.png")], capture_output=True, text=True)
     check("heif-enc made a HEIC file", made.returncode == 0 and (folder / "001_phone.heic").is_file(), made.stderr[-300:])
-    (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
+    record(folder)
 
     # A file the scanner is told to find: a valid JPEG with a marker after it, and a signature for the marker.
     marker = b"GroupLab-intake-worker-test-marker"
@@ -87,7 +120,7 @@ def main() -> int:
     Image.new("RGB", (64, 64), (1, 2, 3)).save(folder / "001_marked.jpg", "JPEG")
     with (folder / "001_marked.jpg").open("ab") as f:
         f.write(marker)
-    (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
+    record(folder)
 
     # Entry 182: a photograph whose rebuilt PNG is over 25 MB, Ubuntu's default StreamMaxLength, so the stream is proved above it.
     import random as _random
@@ -96,7 +129,38 @@ def main() -> int:
     rng = _random.Random(182)
     noisy = Image.frombytes("RGB", (4000, 3000), bytes(rng.getrandbits(8) for _ in range(4000 * 3000 * 3)))
     noisy.save(folder / "001_large.jpg", "JPEG", quality=90)
-    (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
+    record(folder)
+
+    # Entry 183: the consent contract, with the real receiver writing the submissions. The receiver finds its way into quarantine by
+    # the same SITE_PRIVATE the worker reads, so nothing is copied between them by hand.
+    photo = root / "range-target.jpg"
+    Image.new("RGB", (1600, 1200), (235, 235, 230)).save(photo, "JPEG", quality=90)
+    opted_out = receive(root, photo, opt_out=True)
+    published = receive(root, photo, opt_out=False)
+    check("the opted out submission carries the marker from the receiver", opted_out is not None and (opted_out / "DO-NOT-PUBLISH").is_file())
+    check("and the other does not", published is not None and not (published / "DO-NOT-PUBLISH").exists())
+
+    # Entry 183 section 4: an opted out submission as it sat in refused, its original rebuilt and deleted by the worker before the marker
+    # stopped it, moved back to quarantine. Only the worker's own PNG is left, beside the receiver's meta.json, the marker and refused.txt.
+    moved_back = receive(root, photo, opt_out=True)
+    if moved_back is not None:
+        uploaded = json.loads((moved_back / "meta.json").read_text(encoding="utf-8"))["files"][0]["stored_name"]
+        with Image.open(moved_back / uploaded) as im:
+            im.save(moved_back / (Path(uploaded).stem + ".png"), "PNG")
+        (moved_back / uploaded).unlink()
+        (moved_back / "refused.txt").write_text("DO-NOT-PUBLISH would not decode cleanly" + chr(10), encoding="utf-8")
+
+    # The two records disagreeing, and a file the receiver never recorded: each refused with its reason, never decoded.
+    folder = quarantine / "2026-09-24_aaaaaaa5"
+    folder.mkdir()
+    Image.new("RGB", (64, 64), (9, 9, 9)).save(folder / "001_target.jpg", "JPEG")
+    record(folder, opt_out=True)
+    (folder / "DO-NOT-PUBLISH").unlink()
+    folder = quarantine / "2026-09-24_aaaaaaa6"
+    folder.mkdir()
+    Image.new("RGB", (64, 64), (9, 9, 9)).save(folder / "001_target.jpg", "JPEG")
+    record(folder)
+    (folder / "notes.txt").write_text("not an upload" + chr(10), encoding="utf-8")
 
     # clamd as the server runs it: the packaged clamav-daemon service, with its own configuration, socket and AppArmor profile, given the
     # one test signature and nothing else. A clamd started by hand in the test tree was refused its log file by that profile, which is
@@ -178,6 +242,27 @@ def main() -> int:
     check("the file the scanner found is refused", marked_dir.is_dir(), log[-800:])
     if marked_dir.is_dir():
         check("with the reason beside it", "found" in (marked_dir / "refused.txt").read_text(encoding="utf-8"))
+
+    for name, why in (("2026-09-24_aaaaaaa5", "disagree"), ("2026-09-24_aaaaaaa6", "did not record")):
+        reason = (refused / name / "refused.txt").read_text(encoding="utf-8") if (refused / name / "refused.txt").is_file() else ""
+        check(f"{name} is refused because the records {why}" if why == "disagree" else f"{name} is refused for a file the receiver {why}", why in reason, reason or log[-600:])
+
+    # Entry 183: consent intact at the far end, for each of the receiver's submissions.
+    for made, opt_out, what in ((opted_out, True, "the opted out submission"), (published, False, "the published submission"), (moved_back, True, "the submission moved back from refused")):
+        arrived = ready / made.name if made is not None else None
+        check(f"{what} is in ready", arrived is not None and arrived.is_dir(), log[-800:])
+        if arrived is None or not arrived.is_dir():
+            continue
+        meta = json.loads((arrived / "meta.json").read_text(encoding="utf-8"))
+        check(f"{what} still says exclude_from_public_dataset {str(opt_out).lower()}", meta.get("exclude_from_public_dataset") is opt_out, str(meta.get("exclude_from_public_dataset")))
+        check(f"{what} {'keeps' if opt_out else 'has no'} DO-NOT-PUBLISH marker", (arrived / "DO-NOT-PUBLISH").is_file() is opt_out)
+        check(f"{what} holds one rebuilt, scanned PNG and no original", len(meta["files"]) == 1 and meta["files"][0]["stored"].endswith(".png")
+              and str(meta["files"][0].get("scan", "")).startswith("clean") and not any(p.suffix == ".jpg" for p in arrived.iterdir()), str(meta["files"]))
+        check(f"{what} has no refused.txt left", not (arrived / "refused.txt").exists())
+        script = f". '{REPO / 'scripts' / 'SubmissionCheck.ps1'}'; Test-SubmissionFolder -Folder '{arrived}' | ConvertTo-Json -Compress"
+        out = subprocess.run(["pwsh", "-NoProfile", "-NonInteractive", "-Command", script], capture_output=True, text=True)
+        verdict = json.loads(out.stdout) if out.returncode == 0 and out.stdout.strip() else None
+        check(f"the pull script's check reads {what} as {'opted out' if opt_out else 'publishable'}", verdict is not None and verdict["OptOut"] is opt_out and not verdict["Bad"], (out.stdout + out.stderr)[-400:])
 
     check("nothing is left in quarantine", not any(quarantine.iterdir()))
 

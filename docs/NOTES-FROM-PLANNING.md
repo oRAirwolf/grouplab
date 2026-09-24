@@ -24,6 +24,65 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 183: virus scanning works, and every opted out submission is refused
+
+**Status: actioned 2026-09-24**, sections 1 to 4 in the repository. **Not done here:** installing the worker and moving the refused submission back, which run on the server and are request 15. The pull script's own check runs in the consent test; its SSH transfer does not, because nothing in CI can reach the server.
+
+Do this **immediately**. It is a one line class of fault, and until it is fixed nobody who ticks "Do not
+include my photos in the public data set" can send a target.
+
+## 1. What happened
+
+After request 14 (clamd's limits to 400M, debconf management off, the streaming worker installed), Alan
+sent a photograph through grouplab.org/targets with **both** boxes ticked, at 04:25 Mountain. The worker's
+log:
+
+    2026-09-24_272b33e2: rebuilt 001_20260921_231821.jpg as 001_20260921_231821.png, original deleted, clean, clamdscan
+    2026-09-24_272b33e2: refused, DO-NOT-PUBLISH would not decode cleanly: UnidentifiedImageError: cannot identify image file '.../DO-NOT-PUBLISH'
+
+**The first line is the good news: the scan ran and came back clean, through `clamdscan --stream`.** Entry
+182 works, and every upload from now on is virus scanned. Close request 14 and record it.
+
+## 2. The fault
+
+`website/api/upload.php` line 705 writes a marker file named `DO-NOT-PUBLISH` into the submission folder
+when the opt out box is ticked. The worker treats every file in the folder except `meta.json` as an image to
+rebuild, so it tries to decode the marker, fails, and refuses the whole submission. **Every opted out
+submission is refused, always.** None of the earlier tests had the box ticked; the first three uploads
+tonight did not, which is why this is only appearing now.
+
+Two different pieces of code disagree about what a submission folder may contain, which is the same class
+of fault as entry 174's field name and entry 177's `stored` against `stored_name`.
+
+## 3. The fix
+
+1. **One source of truth for the opt out.** `meta.json` already carries `exclude_from_public_dataset`. Decide
+   whether the marker file is needed at all. If it is kept, as a belt and braces flag that survives a lost
+   `meta.json`, the worker must know it: skip it when choosing files to rebuild, carry it through to
+   `ready`, and fail loudly if the marker and `meta.json` ever disagree.
+2. **The worker only rebuilds files the receiver recorded as uploads**, from the list in `meta.json`, never
+   "every file in the folder". An unexpected file is a refusal with a clear reason, not a decode attempt.
+3. `Get-TargetSubmissions.ps1` and the build that publishes images both honor the opt out, and the build
+   refuses to publish anything from an opted out submission, whichever of the two records says so.
+4. **A contract test** that runs the real receiver, then the real worker, then the real pull script on one
+   submission with the opt out ticked and one without, and checks each arrives with its consent intact.
+   That single test would have caught this fault, entry 174's and entry 177's.
+
+## 4. The refused submission
+
+`2026-09-24_272b33e2` is in `refused/` now, with its rebuilt and scanned PNG, its `meta.json` and the marker.
+Refused folders are kept seven days. After the fix is installed, give Alan the commands to move it back to
+`quarantine/` and touch it, so the worker processes it again. Its original was already deleted, so the
+worker will be rebuilding the PNG it produced itself; make sure that path works, or pass it straight to
+`ready` if the worker can tell it has already been rebuilt and scanned.
+
+## 5. For Alan
+
+The fixed worker, and the receiver if it changes, need copying up and installing the same way as request 14.
+Put the commands in the panel and in `panel.md`, with the move back of section 4 after them.
+
+---
+
 ## 2026-09-24, entry 182: clamd cannot scan a file handed over from the worker's sandbox
 
 **Status: actioned 2026-09-24**, sections 1 to 4 in the repository. The server side, clamd's limits and the new worker, is request 14.

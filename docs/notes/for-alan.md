@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 4.** Most urgent: **14**, clamd's limits and the worker that streams, because until it is done no upload is virus scanned.
+**Open: 4.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
 Then 9, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
@@ -17,9 +17,57 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 15. Install the worker that keeps the opt out, and send back the one it refused
+
+**Opened 2026-09-24. Entry 183. Waiting, and it needs a shell. Most urgent: until it is done every submission with "Do not include my photos in the public data set" ticked is refused.**
+
+**What is needed, in the server's shell.** First the fixed worker. Copy `website/server/grouplab-intake-worker.py` from the
+repository to `/home/ubuntu/grouplab-server/`, then:
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --intake --dry-run
+sudo python3 install.py --intake
+```
+
+**A good result:** the dry run names the worker as the one file it would replace and nothing missing, and the second
+line installs it. The receiver has not changed.
+
+Then the submission it refused, back to quarantine so the worker does it again. The first line shows what is there: a
+PNG, `meta.json`, `DO-NOT-PUBLISH`, `refused.txt` and `.attempts`.
+
+```bash
+sudo ls -la /home/airwolf/web/grouplab.org/private/refused/2026-09-24_272b33e2
+sudo mv /home/airwolf/web/grouplab.org/private/refused/2026-09-24_272b33e2 /home/airwolf/web/grouplab.org/private/quarantine/
+sudo touch /home/airwolf/web/grouplab.org/private/quarantine/2026-09-24_272b33e2
+```
+
+Within two minutes the worker's timer runs. Then:
+
+```bash
+sudo tail -n 6 /home/airwolf/logs/grouplab-intake-worker.log
+sudo ls -la /home/airwolf/web/grouplab.org/private/ready/2026-09-24_272b33e2
+```
+
+**A good result:** the log's last lines say `back from refused, tried again`, then that the photograph `was rebuilt by an
+earlier run`, `rebuilt ... again`, `clean, clamdscan`, and `ready, 1 files, opted out of the public data set`; and the
+folder in ready holds the PNG, `meta.json` and `DO-NOT-PUBLISH`, with no `refused.txt`.
+
+**Why.** The receiver writes a `DO-NOT-PUBLISH` marker beside `meta.json` when the box is ticked, and the worker tried to
+decode every file in the folder as an image, the marker included, so it refused the whole submission. The worker now
+rebuilds only the files the receiver recorded, carries the marker through to ready, and refuses loudly if the marker and
+`meta.json` ever disagree. That submission's original was already deleted by the run that refused it, so the worker
+rebuilds again from its own PNG, through the same scan.
+
+**A good answer.** The output of the three blocks.
+
+---
+
 ## 14. Let the virus scanner take whole files as a stream
 
-**Opened 2026-09-24. Entry 182. Waiting, and it needs a shell. Most urgent: until it is done no upload is scanned.**
+**Answered 2026-09-24.** Entry 183: Alan made the change, and the next upload's log read `clean, clamdscan`. Every upload is virus scanned from here on.
+
+**Opened 2026-09-24. Entry 182.**
 
 **What is needed, in the server's shell.** First clamd's limits. The backup goes to your server folder, which nothing reads as
 configuration; the first line shows whether the package manages `clamd.conf` from debconf, and the fourth stops it doing so, so a package

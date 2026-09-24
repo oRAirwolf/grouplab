@@ -23,7 +23,20 @@ function Test-SubmissionFolder {
     }
 
     $meta = Get-Content $metaPath -Raw | ConvertFrom-Json
-    if ($meta.PSObject.Properties.Name -contains 'exclude_from_public_dataset' -and $meta.exclude_from_public_dataset) { $result.OptOut = $true }
+    # Entry 183 section 3.3: the opt out from either record. The receiver writes meta.json's flag and a DO-NOT-PUBLISH marker in the
+    # same request, so either one alone withholds the submission, a missing flag is unknown rather than false, and the two disagreeing
+    # is reported, because it means one of them was changed or lost after the contributor sent it.
+    $marker = Test-Path (Join-Path $Folder 'DO-NOT-PUBLISH') -PathType Leaf
+    $hasFlag = $meta.PSObject.Properties.Name -contains 'exclude_from_public_dataset' -and $meta.exclude_from_public_dataset -is [bool]
+    if (-not $hasFlag) {
+        $result.OptOut = $true
+        $result.Bad += "$name : meta.json does not say whether the contributor opted out, so it is treated as opted out"
+    } elseif ($meta.exclude_from_public_dataset -or $marker) {
+        $result.OptOut = $true
+    }
+    if ($hasFlag -and [bool]$meta.exclude_from_public_dataset -ne $marker) {
+        $result.Bad += "$name : the DO-NOT-PUBLISH marker and meta.json disagree about the opt out; it is withheld either way"
+    }
     if ($meta.PSObject.Properties.Name -contains 'notScanned') { $result.NotScanned = [int]$meta.notScanned }
 
     foreach ($f in @($meta.files)) {
