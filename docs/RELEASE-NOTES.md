@@ -462,7 +462,7 @@ This build has no change to the application; it behaves exactly as nightly 29 do
 - GroupLab now reads the likely calibre from your holes and asks you to confirm or correct it, because knowing it lets GroupLab find holes it would otherwise refuse.
 - The shot distance now has its own yards or metres choice beside it, so you can type it in the unit you think in without changing a setting.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.29)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
