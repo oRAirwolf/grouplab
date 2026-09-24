@@ -48,10 +48,22 @@ public static class Icons
 
     public const string Reports = "M1,14 H15 V15.5 H1 Z M2,8 H5 V13 H2 Z M6.5,4 H9.5 V13 H6.5 Z M11,9 H14 V13 H11 Z";
 
-    /// <summary>A trajectory's arc over the ground, for the Ballistics screen.</summary>
-    /// <summary>Equipment: a rifle's outline, for the screen that holds rifles, barrels and loads (entry 131 section 7).</summary>
-    public const string Equipment = "M1,7 H10 L12,5 H15 V7.5 H12.5 L11,9 H8 V11 H6.5 V9 H5 L3.5,12 H1.8 L3,9 H1 Z";
+    /// <summary>
+    /// Equipment: a cartridge, tilted, for the screen that holds rifles, barrels and loads (entry 131 section 7). NOTES-FROM-PLANNING.md
+    /// entry 167 replaced a rifle outline that could not hold its proportions at 16 pixels; Alan said it looked like a Lego RPG, and it did.
+    /// <para>
+    /// The first subpath is the bullet and the second is the case: neck, shoulder, body, extractor groove and rim. The thin gap between them
+    /// is what makes it read as a loaded cartridge rather than a bottle. The path is baked, scaled to 97 percent about the centre and turned
+    /// 40 degrees, so every point sits between 0.9 and 15.6 and nothing clips at the square's corners; it is not rotated at run time, because
+    /// the baked path is the one that was checked for clipping. Anything long and thin needs a detail of it at this size, never the whole.
+    /// </para>
+    /// </summary>
+    public const string Equipment =
+        "M12.68,2.43 C12.94,4.3 12.34,5.69 11.47,6.73 L8.65,4.36 C9.52,3.32 10.79,2.49 12.68,2.43 Z " +
+        "M8.2,4.75 L11.17,7.24 L10.42,8.13 L10.24,10.01 L6.69,14.24 L5.87,14.31 L5.94,15.13 L5.56,15.58 " +
+        "L0.96,11.71 L1.33,11.27 L2.15,11.2 L2.08,10.38 L5.63,6.14 L7.45,5.64 Z";
 
+    /// <summary>A trajectory's arc over the ground, for the Ballistics screen.</summary>
     public const string Ballistics = "M1,5 C6,1.5 11,3 15,11.5 L13.6,12.2 C10.2,4.9 6,3.4 1.6,6.4 Z M1,14 H15 V15.5 H1 Z";
 
     /// <summary>An icon as a control, at 16 pixels, drawn in the foreground of whatever holds it.</summary>
