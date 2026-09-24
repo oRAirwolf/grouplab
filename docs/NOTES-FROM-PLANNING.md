@@ -24,6 +24,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 170: two freezes, a zero correction that did not say its distance, and hole centres a person had to move
+
+**Status: actioned 2026-09-24**, all four sections, with section 4's choice of centre left open. Section 4.4, a person's click measured, is
+request 9, and which centre GroupLab reports is question 51, which waits on it. Entry 149 section 3 A is built here; D is question 50.
+
+- **Section 1.** The verdict says the distance: "Dial 2 clicks left ..., for a zero at 25.4 yd." Where the rifle is zeroed elsewhere, a
+  second line carries the correction to that zero through the solver, allowing for where the bullet should be at the distance shot, or
+  names what carrying it needs. Nothing on the screen said 100 yards; the arithmetic used his 25.4, and what he read as a 100 yd
+  correction was a 25.4 yd zero correction with no distance on it. The distance box took a typed number only on Set, so a copied 100 yd
+  could stay in use; Enter and leaving the box take it now. 0.83 MOA and two 0.1 mil clicks are pinned by a test.
+- **Sections 2 and 3.** Profiled on the friend's scan. Refresh took 1.3 s, naming the bulls 2.5 s, an exclusion 5.5 s. The cost was the
+  correlated normal CEP asking for more precision than a double holds (a million-point integral, 0.29 s a call, twelve a refresh), the
+  worst-shot simulation (0.11 s) and the aspect median (0.11 s) redone on every edit, and a second refresh after naming the bulls. Now
+  refresh takes about 0.1 s, the naming 0.2 s and an exclusion 0.18 s; a test holds each under 400 ms on any runner. The rule solve is not
+  combinatorial: 22 ms for ten bulls, 14 ms for twenty five.
+- **Section 4.** Systematic, not random: the reported centre leans toward the scanner's shadow on all six scans, 0.011 in on average.
+  `HoleEdgeFit` measures it, `HoleCentreAgreementTests` holds today's agreement so a change that worsens it fails, and question 51 has the
+  two replacements tried and why neither is adopted before request 9's hand markings.
+
+---
+
 ## 2026-09-24, entry 181: Windows line endings broke the intake worker on the server
 
 **Status: actioned 2026-09-24**, sections 1 to 4. Alan's hot fix of section 3 put the server right; nothing more is needed there.

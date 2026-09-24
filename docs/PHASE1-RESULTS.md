@@ -878,6 +878,61 @@ showed it. `.gitattributes` now forces LF for `website/server/**` and shell scri
 LF, the installer refuses a file with a carriage return and says which and how to strip it (tried on a CRLF file and an LF one), and a
 test fails if any file in that folder holds one. My own edit scripts write bytes from now on.
 
+## Entry 170: the zero's distance, two freezes, and where a hole's centre is
+
+### Section 1: the zero correction
+
+The numbers on his screen were right for 25.4 yd: 0.221 in there is 0.83 MOA, 0.241 mil, two 0.1 mil clicks leaving 0.04. What was
+missing was the distance. The verdict now ends "for a zero at 25.4 yd". Where the rifle names a zero distance that differs, a second
+line gives the correction for that zero: `SolverUse.ToZeroDistance` subtracts where a correctly zeroed rifle's bullet should be at the
+distance shot, below the aim at 25 yd for a 100 yd zero, and carries only the rest, elevation along the solver's path and windage in
+proportion to range. Where the records lack sight height, velocity or BC, the line says the correction is for the distance shot and names
+what carrying it needs. **What said 100 yards:** nothing on the screen. The one real hazard found was the distance box, which took a typed
+number only when Set was pressed, so a distance copied from the last target could stay in use while the box showed another; Enter and
+leaving the box now take it.
+
+### Sections 2 and 3: the freezes
+
+| step on the friend's scan | before | after |
+|---|---|---|
+| one refresh | 1.3 s | about 0.1 s |
+| naming bulls 1 to 10, These ones | 2.5 s | 0.2 s |
+| excluding a shot | 5.5 s | 0.18 s |
+
+What it was, found by timing rather than reading: `GroupStatistics.HoytCdf` doubled its rule until two sums agreed to 1e-16, below a
+double's rounding, so it ran to a million points, and the correlated normal CEP called it through a Newton loop that asked for 1e-15; four
+CEPs took 1.15 s and the full figures table asked for twelve. At 1e-14 and 1e-13 they take 2 ms, every shown digit unchanged. The simulated
+worst-shot distribution and the circular aspect's median depended only on the shot count and were recomputed every edit, 0.11 s each; they
+are cached by count, identical values, and the counts one edit away are worked out on a background thread. "These ones" refreshed twice.
+The rule solve itself was never the cost.
+
+### Section 4: where the centre of a hole is
+
+| scan | reported against edge-fitted centre, mean | extreme spread, reported / edge | mean radius, reported / edge |
+|---|---|---|---|
+| friend's 2026-09-23 | 0.0057 left, 0.0091 low | 0.4217 / 0.4504 | 0.1098 / 0.1133 |
+| sample, scan 3 | 0.0074 left, 0.0062 low | 0.8491 / 0.8130 | 0.2313 / 0.2264 |
+| range scan 1 | 0.0080 left, 0.0108 low | 0.8358 / 0.7991 | 0.2462 / 0.2410 |
+| range scan 4 | 0.0079 left, 0.0113 low | 2.9536 / 2.9045 | 0.6807 / 0.6784 |
+| range scan 5 | 0.0137 left, 0.0075 low | 5.3055 / 5.3374 | 0.8705 / 0.8732 |
+| range scan 6 | 0.0084 left, 0.0089 low | 1.3320 / 1.3255 | 0.4335 / 0.4335 |
+
+**It is systematic.** The same direction on every scan, which is the direction of the shadow the lamp throws: the detector's centre is
+the residual-weighted centroid, and the shadow differs from paper far more than the lid seen through the hole, so it carries the weight.
+A shift the same for every hole moves the group's centre, and so the zero correction, by about 0.01 in, and changes the size figures by
+up to 0.04 in where the extreme holes lean differently. On the friend's scan the edge-fitted extreme spread is 0.029 in larger, which is
+the 0.11 MOA he found by moving the holes.
+
+**Not adopted yet, and why.** The edge fit moved some synthetic holes, whose centres are known, by up to 0.039 in; the plain area centroid
+passed the synthetic tests but was no closer to the edges on the sample. Neither is ground truth, and choosing between them without a
+person's clicks is how the weighted centroid was chosen. Request 9 asks for the same scan marked twice by hand; question 51 decides by it.
+`HoleEdgeFit` stays as the measuring tool, with a drawn-hole test that shows the mechanism, and `HoleCentreAgreementTests` holds today's
+agreement on the sample and the friend's scan, 0.0080 in and 0.0069 in, so a change that makes it worse fails.
+
+### Entry 149 section 3, done here
+
+A: a row or a column is chosen from one clicked bull. D: question 50, because the offset cannot be found without being told the bulls.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

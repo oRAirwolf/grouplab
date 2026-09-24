@@ -12,6 +12,41 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
+
+**Status: open. Nothing is changed yet; request 9's hand markings are the evidence that decides it.**
+
+### What was measured, entry 170 section 4
+
+The detector reports each hole's **residual-weighted centroid**: every pixel inside the hole's hull, weighted by how far it is from paper.
+On a scan the lid seen through a hole is light grey and the shadow of the torn edge is nearly black, so the shadow carries most of the
+weight. Against a circle fitted to each hole's edge, `HoleEdgeFit`, the reported centre sits toward the shadow **the same way on all six
+scans measured**, down and to the left on these, by about 0.011 in on average and up to 0.043 in on one hole. On the friend's scan, the
+edge-fitted centres give an extreme spread 0.029 in larger than the detector's, which at 25.4 yd is the 0.11 MOA the outside user found
+after moving the holes by hand.
+
+### What was tried
+
+1. **The edge fit as the reported centre.** It brings every real scan into agreement with itself, but on the synthetic sheets, whose true
+   centres are known, it moved some holes by up to 0.039 in and failed three tests: a synthetic hole's rim is lobed and its edge fades,
+   and the fit follows that. No quality gate separated its good fits from its bad ones, because real torn edges are just as ragged.
+2. **The plain area centroid**, every hole pixel counted once. It passed every synthetic test, but on the sample scan it sat no closer to
+   the edge fits than the weighted one did, 0.012 in.
+
+### The options
+
+1. **Keep the weighted centroid** until the hand markings say otherwise. What happens now.
+2. **The area centroid.** Unbiased where the hole is symmetric, cannot be moved by shadow depth, and passes the synthetic truth.
+3. **The edge fit, with a better model of a synthetic hole** so it can be tested honestly first.
+
+### What I would choose
+
+**Wait for request 9, then choose by it.** Two markings of the same scan by the same person say how far a person's click wanders; where the
+three centres sit against those clicks says which one a person means by the centre of a hole. Choosing before that is choosing between two
+estimates with no reference, which is how the weighted centroid was chosen in the first place.
+
+---
+
 ## 2026-09-24, question 50: question 37's D cannot find the offset without being told the bulls
 
 **Status: open. Nothing is blocked: A is built, and D is not, for the reason below.**

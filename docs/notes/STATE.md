@@ -9,27 +9,24 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 181.
+**Last rewritten:** 2026-09-24, after entry 170.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 181, and entry 170 sections 1 to 3.
-- **Entry 170 section 4, the hole centres, is part done and set aside**, uncommitted, in this session's
-  scratchpad (`e170-s4`). The finding: the detector's centre is pulled toward the scanner's shadow, 0.011 in
-  on average, the same way on every scan. The area centroid halves it; an edge fit removes it on real scans
-  but moved some synthetic holes up to 0.039 in, so neither is committed yet.
-- Alan's order from here: **170 (section 4), 172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
+- Done this run: 171, 173, 164, 174 to 181, and 170, whose choice of hole centre is question 51.
+- **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
+  same way on every scan; the choice of a replacement waits on request 9's hand markings.
+- Alan's order from here: **172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 section 3 A is built; D is question 50. Section 4 goes with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 170 section 4.** Decide between the area centroid and an edge fit with a better gate, against
-   the synthetic truth and the real scans, then request 9's hand markings when they come.
-2. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures detection and hole centres.
-3. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, what was checked on a Mac.
+1. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures detection and hole centres.
+2. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, what was checked on a Mac.
+3. **Entry 169.** The analysis screen cut down, and the rest of that user's review.
 
 ## Blocked, and on what
 
@@ -41,8 +38,9 @@ Open requests in `docs/notes/for-alan.md`: **3** (9 most urgent, then 12, and 5 
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **51** which hole centre GroupLab should report; waits on request 9
 - **50** question 37's D cannot find the offset without being told the bulls
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -61,7 +59,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 170, 172
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 172
 
 ## Things that would surprise somebody who was not here yesterday
 
