@@ -12,6 +12,42 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.95
+
+**2026-09-24**, commit `dbdb3a3`. Nightly.
+
+**What you will notice**
+
+- Shot coordinates can be exported as a CSV file for a spreadsheet, and imported from other target software's CSV by choosing which columns hold the shots. (Entry 169)
+- Pinch to zoom now works on a trackpad or touch screen; a touchpad's two finger drag moves the sheet, and Ctrl or Command with a scroll zooms. (Entry 166)
+- The bulls you fired at can be chosen a whole row or column at a time from one bull. (Entry 149, 3)
+- Target photographs can now be sent from grouplab.org/targets, and the website's top bar says Send a target. The printed volunteer pack gives the new address. (Entry 173)
+- Typing a cartridge name in the calibre box now works, so 6.5 Creedmoor gives 0.264 in and GroupLab warns you it is not the .25 calibre; only cartridges two published sources agree on are offered. (Entry 163, 3)
+- You can now record the paper a target was printed on and what was behind it, two optional choices on the marking screen, because how big a bullet hole looks depends on both. (Entry 162, 3.2)
+- On a Mac, Command Z, Shift Command Z and the other shortcuts now use the Command key, and the undo button says what it will undo. (Entry 166)
+- Naming the bulls you fired at and excluding a shot no longer freeze the window for seconds, and the zero correction now says the distance it is for and what it means for your rifle's own zero distance. (Entry 170)
+- A build's notes now say only what changed in the application, in whole sentences, and a build that changed nothing in the application is no longer made. (Entry 168, 2 to 4)
+- Naming the right calibre no longer makes GroupLab call good holes possibly two; it judges one hole from two against the other holes on your sheet, and tells you when they are a different size from what the calibre suggests. (Entry 161, 3)
+- A sheet printed smaller than it should be makes every group read larger, and GroupLab now says so and by how much, instead of wrongly saying the figures were corrected. (Entry 161, 6)
+- The analysis screen shows the six figures you read off a target and the zero correction in inches, MOA and mil with the clicks to dial; everything else is under Advanced, and the plot is high contrast. (Entry 169)
+- Every word in the application and on the website now uses American spelling: center, caliber, analyze, color. (Entry 169)
+- A diagnostics report no longer contains the names of the files you opened, only their type and an anonymous identifier, so a report can be shared without showing what your files are called. (Entry 164, 4)
+- A scanned target now reports real inches: if the sheet was printed smaller or larger than it should be, the scan measures that and corrects every size, and a photograph says its figures are in the sheet's own inches. (Entry 171, 1)
+- The Equipment button in the left rail now shows a cartridge instead of a rifle that was too thin to read at that size. (Entry 167, 1)
+- The calibre, shot distance and rounds fired now sit at the top of the marking panel, marked needed until you answer them or say you do not know. (Entry 163, 4)
+- The pan tool, which is the one you start with, now also selects a mark you click, and C switches to it next to V for select. (Entry 163, 1 and 2)
+- The analysis screen opens with each judgement as one line, and the reasoning behind it is one click away instead of in the way. (Entry 163, 5)
+- GroupLab no longer guesses a cartridge from the size of the holes, which can be wrong by a whole calibre; it tells you what the holes measure and asks what you fired. (Entry 161, 4)
+
+**Under the hood**
+
+- GroupLab's hole centres on scans are now measured against each hole's edge, and a change that moves them further off fails its checks; which centre to report is waiting on a hand-marked comparison. (Entry 170, 4)
+- The website's community page now lists the Discord channels and the server's rules, and an article shows a photographed bullet hole whose shadow makes it measure half again the bullet. (Entry 171, 3 and 6)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.95)
+
+---
+
 ## 0.2.0-nightly.94
 
 **2026-09-24**, commit `227917a`. Nightly.
