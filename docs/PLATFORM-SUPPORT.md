@@ -1,6 +1,6 @@
 # What is supported, and what is not
 
-NOTES-FROM-PLANNING.md entry 147 section 3. **This file is the one source of this statement.** It is word for word as Alan settled it, and it is not to be reworded. It avoids the first and second person on purpose, and it says "they" of the author on purpose.
+NOTES-FROM-PLANNING.md entry 147 section 3. **This file is the one source of this statement.** It is word for word as Alan settled it, and it is not to be reworded; entry 166 section 4 replaced the macOS paragraph with what the first tester on a real Mac checked, and nothing more. It avoids the first and second person on purpose, and it says "they" of the author on purpose.
 
 Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears on the download page and in `README.md`, both generated from here, and every release that carries a macOS asset gets one line generated from its lead sentences with a link to the download page, because a published release is frozen and a whole copy on it goes stale. Nothing else may restate it, because a second copy is a copy that goes stale and nobody notices which one is wrong.
 
@@ -14,7 +14,7 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 
 **Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
 
-**macOS builds are published and have never been run on a Mac.** The tests run on macOS on every build, so the code works at that level, but nobody has opened the window, printed a target or saved a session on real hardware. These builds are an experiment rather than a release.
+**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch, and the Terminal command below cleared it. Opening, detecting and analysing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
 
 ## What happens once the application settles
 

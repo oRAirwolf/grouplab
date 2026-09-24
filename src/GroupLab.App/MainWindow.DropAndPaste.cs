@@ -129,7 +129,7 @@ public sealed partial class MainWindow
 
         if (clipboard.Bytes is not { Length: > 0 } bytes)
         {
-            status.Text = $"There is no image on the clipboard. Copy an image file or an image itself, then press Ctrl+V. GroupLab opens {ImageWords}.";
+            status.Text = $"There is no image on the clipboard. Copy an image file or an image itself, then press {CommandKey.Label("V")}. GroupLab opens {ImageWords}.";
             return;
         }
 

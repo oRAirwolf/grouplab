@@ -955,6 +955,48 @@ These are what entry 157 section 4 and entry 158 program A are for, and they are
 check of section 2 item 4 wait for them: each needs the position of every hole on this sheet, and today those come only from a person
 clicking 115 of them.
 
+## Entry 166: Command on a Mac, pinch zoom, and what the first Mac run checked
+
+**Command Z.** Every shortcut read `KeyModifiers.Control`, and a Mac's Command key arrives as Meta. The application now asks one
+place, `CommandKey`, which takes Avalonia's platform hotkey configuration and falls back to Meta on macOS and Control elsewhere. Undo is
+Command Z without Shift; redo is Command Y and Shift Command Z, which is what a Mac user presses. The review keys ignore any modifier but
+Shift, so Command with a number is never typed as a bull's label. Every label that named Ctrl, the undo and redo tooltips, the key strip,
+the menu's New target and Paste, the empty sheet's paste line and the clipboard message, now shows the Command symbol on a Mac. A source
+test fails on any direct read of the Control key, or a string saying Ctrl, anywhere in the application outside that one class.
+
+**Undo says what it will undo.** The buttons are disabled when there is nothing to take back or put back, and the tooltip names the step,
+"Undo: move shot 6". The words are read from the two markings either side of the step, by the label the shot wears on the sheet, so no
+operation has to describe itself.
+
+**Pinch, scroll, and what Avalonia delivers.** Read from Avalonia 12.1.2 as shipped, not measured on hardware:
+
+| input | what arrives |
+|---|---|
+| Mac trackpad pinch | its own magnify gesture; the native library handles `magnification` |
+| Mac trackpad two finger drag | a wheel event with fractional steps; the native library reads `hasPreciseScrollingDeltas` and scales precise and line steps differently |
+| Mac mouse wheel | a wheel event, in steps the same code scales from lines, so not whole units |
+| Windows wheel notch | a wheel event of exactly one unit; the Windows backend divides by 120 |
+| Windows precision touchpad two finger drag | wheel events in fractions of a unit |
+| Windows precision touchpad pinch | Control with a wheel event: the Windows backend has no gesture handling, and Windows sends a pinch that way to an application that does not ask for it |
+| touch screen pinch | Avalonia's pinch recognizer, a scale against where the fingers started and the point between them, touch pointers only |
+
+No wheel event carries a pointer type, so on Windows and Linux the size of the step is the only thing that tells a wheel from a touchpad,
+and on a Mac it tells nothing, because a mouse's steps are fractional too.
+
+**Chosen.** Command or Control with any scroll zooms everywhere, which also makes a Windows touchpad's pinch zoom. On a Mac a plain scroll
+pans, trackpad or mouse, and the trackpad's pinch zooms about the pointer. On Windows and Linux a whole notch zooms, as it always has, and a
+fractional scroll pans, so a touchpad's two finger drag pans; a free-spinning or high resolution wheel will pan too, and Control with it
+still zooms. A touch screen's pinch zooms about the point between the fingers. Every scroll, magnify and pinch goes into the detailed log
+with its numbers and what it did, so request 16 measures a real Mac instead of this table being trusted.
+
+**The platform statement** says what the tester checked, that the two defects are fixed in builds after nightly 94 and not yet checked on
+a Mac, and that the Intel build has never been run on one. The download page's Apple silicon card says it has been run on one real Mac;
+the Intel card still says untested. The line in the statement that said the updater never offers Mac builds would not have been true:
+it tells a Mac user a newer build exists and does not install it, so the statement says it does not install them. The user and testing
+guides say Command on a Mac and how scrolling and pinching move the sheet, and both PDFs are regenerated.
+
+**Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
+of testers to add him to, and no name is invented.
 ## Entry 183: the opt out travels with the submission
 
 **Scanning works.** After request 14 the first upload's log read `clean, clamdscan`: the stream through clamd's own socket, at the

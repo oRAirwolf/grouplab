@@ -139,3 +139,21 @@ and the reason is shown.
 Add to `docs/notes/for-alan.md`: whatever this needs on the server beyond entry 129's five steps,
 written as commands to paste, if anything. The hope is nothing, because it reuses entry 129's quarantine,
 worker and folders.
+
+## 9. The Settings section, spelled out (added 2026-09-24)
+
+Alan: "There should be a section on the settings page to change this setting as well." Section 1 item 3 and
+section 1.1 already put the choice in Settings; this makes the section itself explicit.
+
+A **Sending targets** section in Settings, not a single toggle buried among other options, showing:
+
+1. The current choice, **Send every target automatically**, **Ask me each time** or **Never**, changeable at
+   any time, taking effect on the next target.
+2. The consent level, **testing only** or **may be published**, changeable the same way. A change applies to
+   targets sent from then on and never silently re-labels ones already sent.
+3. What is sent, in the same plain list the first run screen shows.
+4. How many targets have been sent from this machine, and how to ask for one to be removed: the submission
+   identifier and `support@grouplab.org`.
+5. Anything waiting to be retried under section 6, with a button to send it now or discard it.
+
+The first run screen and this section read and write the same setting, so they cannot disagree.

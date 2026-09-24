@@ -121,7 +121,7 @@ public class NewTargetTests
         window.Show();
         Mark(window);
 
-        window.KeyPressQwerty(PhysicalKey.N, RawInputModifiers.Control);
+        window.KeyPressQwerty(PhysicalKey.N, (RawInputModifiers)CommandKey.Modifier);
         Dispatcher.UIThread.RunJobs();
 
         Assert.True(window.AskingAboutUnsavedWork);

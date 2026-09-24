@@ -108,7 +108,35 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         ClipToBounds = true;
         Focusable = true;
         ActualThemeVariantChanged += (_, _) => InvalidateVisual();
+
+        // Entry 166 section 3: a Mac trackpad's pinch, and a touch screen's two finger pinch.
+        AddHandler(PointerTouchPadGestureMagnifyEvent, (_, e) =>
+        {
+            double magnification = e.Delta.X != 0 ? e.Delta.X : e.Delta.Y;
+            DiagnosticLog.Debug("input.magnify", ("delta", magnification));
+            Magnify(magnification, e.GetPosition(this));
+            e.Handled = true;
+        });
+        GestureRecognizers.Add(new PinchGestureRecognizer());
+        AddHandler(PinchEvent, (_, e) =>
+        {
+            DiagnosticLog.Debug("input.pinch", ("scale", e.Scale));
+            if (pinchScale > 0 && e.Scale > 0)
+            {
+                ZoomBy(e.Scale / pinchScale, e.ScaleOrigin);
+            }
+
+            pinchScale = e.Scale;
+            e.Handled = true;
+        });
+        AddHandler(PinchEndedEvent, (_, _) => pinchScale = 1);
     }
+
+    /// <summary>The pinch's scale at its last step: Avalonia reports it against where the fingers started, and the zoom takes the change.</summary>
+    private double pinchScale = 1;
+
+    /// <summary>A trackpad's magnify step, zoomed about the pointer.</summary>
+    internal void Magnify(double magnification, Point about) => ZoomBy(SheetGestures.MagnifyFactor(magnification), about);
 
     public MarkingSession? Session { get; set; }
 
@@ -272,7 +300,6 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
     }
 
-    /// <summary>Zooms by a factor about a point of the control, the centre when none is given.</summary>
     /// <summary>Brings an image point to the centre of the control at the current zoom, for the review queue.</summary>
     public void CentreOn(PointD image)
     {
@@ -281,6 +308,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         InvalidateVisual();
     }
 
+    /// <summary>Zooms by a factor about a point of the control, the centre when none is given.</summary>
     public void ZoomBy(double factor, Point? about = null)
     {
         EnsureView();
@@ -684,8 +712,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 e.Pointer.Capture(this);
                 break;
 
-            case MarkingTool.Select when e.KeyModifiers.HasFlag(KeyModifiers.Shift) || e.KeyModifiers.HasFlag(KeyModifiers.Control):
-                // Entry 115 section 2: shift or control with the select tool chooses bulls, for the load field, and never a hole. On a shot
+            case MarkingTool.Select when e.KeyModifiers.HasFlag(KeyModifiers.Shift) || CommandKey.Held(e.KeyModifiers):
+                // Entry 115 section 2: shift or the command key with the select tool chooses bulls, for the load field, and never a hole. On a shot
                 // sheet every bull has a hole on it, so a plain click there is the hole, which is what the editor has always done with it.
                 if (BullAt(session.State, point.Position) is { } picked)
                 {
@@ -864,8 +892,33 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
     {
         base.OnPointerWheelChanged(e);
-        ZoomBy(e.Delta.Y > 0 ? 1.2 : 1 / 1.2, e.GetPosition(this));
+        Scroll(e.Delta, e.KeyModifiers, e.GetPosition(this));
         e.Handled = true;
+    }
+
+    /// <summary>A scroll, zooming or panning as <see cref="SheetGestures"/> decides for this platform.</summary>
+    internal WheelAction Scroll(Vector delta, KeyModifiers modifiers, Point about)
+    {
+        var action = SheetGestures.ForWheel(delta, CommandKey.Held(modifiers), OperatingSystem.IsMacOS());
+        DiagnosticLog.Debug("input.wheel", ("dx", delta.X), ("dy", delta.Y), ("modifiers", modifiers), ("action", action));
+        if (action == WheelAction.Zoom)
+        {
+            ZoomBy(SheetGestures.ZoomFactor(delta.Y), about);
+        }
+        else
+        {
+            PanBy(delta * SheetGestures.PixelsPerUnit);
+        }
+
+        return action;
+    }
+
+    /// <summary>Moves the sheet by a distance on screen, the way the content of any scrolled view follows the fingers.</summary>
+    public void PanBy(Vector by)
+    {
+        EnsureView();
+        offset += by;
+        InvalidateVisual();
     }
 
     private static double Distance(Point a, Point b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));

@@ -222,6 +222,12 @@ public sealed class MarkingSession
 
     public bool CanRedo => redo.Count > 0;
 
+    /// <summary>What undo would take back, "move shot 6", or null when there is nothing to undo. Entry 166 section 2.</summary>
+    public string? UndoWords => undo.Count > 0 ? ChangeWords.Describe(undo.Peek(), State) : null;
+
+    /// <summary>What redo would put back, or null when there is nothing to redo.</summary>
+    public string? RedoWords => redo.Count > 0 ? ChangeWords.Describe(State, redo.Peek()) : null;
+
     /// <summary>Raised after every change, undo and redo included.</summary>
     public event EventHandler? Changed;
 

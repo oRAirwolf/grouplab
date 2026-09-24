@@ -89,7 +89,9 @@ The tools have keys too:
 - C or P pan, V select, I impact, A aim, L length and R rectangle;
 - the square brackets turn the view;
 - Delete removes the selected mark;
-- Ctrl+Z and Ctrl+Y undo and redo.
+- Ctrl+Z and Ctrl+Y undo and redo, and on a Mac Command Z and Shift Command Z. The undo button's tooltip says what it will undo.
+
+To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad's two finger drag moves the sheet. A pinch zooms, on a touchpad or a touch screen, and so does Ctrl, or Command on a Mac, with any scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.
 
 In the side panel you also set:
 - the calibre, as the bullet's diameter;
@@ -116,7 +118,7 @@ The analysis has three columns:
 
 Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are two different decisions, and GroupLab will not quietly make the second one for you because you made the first.
 
-Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, and the Undo on the message is the same undo.
+Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the same undo.
 
 **A ? beside every figure.** Two or three plain sentences saying what the figure means, what it is good for, and what the number of shots does to it, with **More** going to the glossary. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
 

@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 4.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 5.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
+Then 9, 16, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,28 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 16. The macOS tester: a name for the thanks, and ten minutes on a newer build
+
+**Opened 2026-09-24. Entry 166. Waiting. Not urgent; either half can come back on its own.**
+
+**What is needed.** Two things from the tester who ran nightly 93 on the M5 Max, passed on by Alan.
+
+1. **A name, or none.** The project has no list of testers or contributors yet. Would Alan like one, in the README, and
+   if so what name should this tester go by: his own, a handle, or "a macOS tester"? Nothing is invented meanwhile.
+2. **What his trackpad actually sends.** On any build newer than nightly 94: Settings, tick **Detailed logging**; open
+   the sample; press Command Z after moving a shot, and Shift Command Z; drag with two fingers on the sheet; pinch; scroll
+   with Command held; and a mouse wheel, if he has a mouse. Then **Report a problem** and send the report.
+
+**Why.** Command Z did nothing on his Mac because every shortcut read the Control key, and pinch zoom was never built.
+Both are fixed, and neither fix has been checked on a Mac. The second half also measures what Avalonia delivers for a
+trackpad scroll against a wheel on a Mac, which entry 166 asked to measure rather than assume and which nobody here can
+measure without a Mac. The report carries each scroll and pinch as numbers, and no path or picture.
+
+**A good answer.** For 1, a name or "anonymous", or "no list". For 2, "Command Z undid it, the drag moved the sheet,
+the pinch zoomed", or which of those did not, and the report.
 
 ---
 

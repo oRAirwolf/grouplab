@@ -487,6 +487,7 @@ public sealed partial class MainWindow : Window
         Height = 900;
         canvas.Session = session;
         session.Changed += (_, _) => Refresh();
+        session.Changed += (_, _) => ShowUndoSteps();
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, _) => AskLength();
         canvas.RectangleTapped += (_, _) => AskRectangle();
@@ -522,11 +523,16 @@ public sealed partial class MainWindow : Window
         }
 
         tools.Children.Add(new Border { Width = 1, Margin = new Thickness(Tokens.Space8, Tokens.Space4), Classes = { AppStyles.Divider } });
-        tools.Children.Add(IconButton(Icons.Undo, "Undo (Ctrl+Z)", () => session.Undo()));
-        tools.Children.Add(IconButton(Icons.Redo, "Redo (Ctrl+Y)", () => session.Redo()));
+        // Entry 166 section 2: the tester was not sure what undo would undo. Each button is disabled when there is nothing to take back or
+        // put back, and its tooltip names the step, read from the two markings either side of it.
+        undoButton = IconButton(Icons.Undo, $"Undo ({CommandKey.Label("Z")})", () => session.Undo());
+        redoButton = IconButton(Icons.Redo, $"Redo ({CommandKey.RedoLabel})", () => session.Redo());
+        tools.Children.Add(undoButton);
+        tools.Children.Add(redoButton);
+        ShowUndoSteps();
         var hints = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         // Entry 163 section 2: pan and select sit on neighbouring keys under the left hand, and the strip shows both.
-        foreach (var (key, what) in new[] { ("C", "pan"), ("V", "select"), ("Space", "next item"), ("Enter", "first choice"), ("N", "not a shot"), ("Ctrl Z", "undo") })
+        foreach (var (key, what) in new[] { ("C", "pan"), ("V", "select"), ("Space", "next item"), ("Enter", "first choice"), ("N", "not a shot"), (CommandKey.Label("Z"), "undo") })
         {
             hints.Children.Add(Keycap(key));
             hints.Children.Add(new TextBlock { Text = what, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space4, 0, Tokens.Space8, 0), Classes = { AppStyles.Secondary } });
@@ -783,7 +789,7 @@ public sealed partial class MainWindow : Window
         emptyCanvas.Children.Add(new TextBlock { Text = "A GroupLab sheet is read and its holes found on its own; any other target is marked by hand.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Label } });
         emptyCanvas.Children.Add(openFirst);
         // Entry 137 section 5: the two ways in that have no button are said here, where somebody with an empty window is looking.
-        emptyCanvas.Children.Add(new TextBlock { Text = "Or drop an image here, or paste one with Ctrl+V.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Secondary } });
+        emptyCanvas.Children.Add(new TextBlock { Text = $"Or drop an image here, or paste one with {CommandKey.Label("V")}.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Secondary } });
         var canvasArea = new Panel();
         canvasArea.Children.Add(canvas);
         canvasArea.Children.Add(emptyCanvas);
@@ -3676,7 +3682,8 @@ public sealed partial class MainWindow : Window
     /// </summary>
     internal void OnReviewKey(object? sender, KeyEventArgs e)
     {
-        if (e.Source is TextBox || e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        // Any modifier but Shift means a shortcut, never a typed label: Control, Alt, and the Mac's Command key (entry 166).
+        if (e.Source is TextBox || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None)
         {
             return;
         }
@@ -3763,14 +3770,19 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        bool control = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+        // Entry 166 section 2: the platform's command key, Command on a Mac, where it arrives as Meta, and Control elsewhere.
+        bool control = CommandKey.Held(e.KeyModifiers);
+        if (CommandKey.IsRedo(e))
+        {
+            session.Redo();
+            e.Handled = true;
+            return;
+        }
+
         switch (e.Key)
         {
-            case Key.Z when control:
+            case Key.Z when CommandKey.IsUndo(e):
                 session.Undo();
-                break;
-            case Key.Y when control:
-                session.Redo();
                 break;
             case Key.N when control:
                 NewTarget();
@@ -4382,7 +4394,7 @@ public sealed partial class MainWindow : Window
         var menu = new MenuFlyout();
         foreach (var (label, action) in new (string, Func<Task>)[]
         {
-            ("New target (Ctrl+N)", () =>
+            ($"New target ({CommandKey.Label("N")})", () =>
             {
                 NewTarget();
                 return Task.CompletedTask;
@@ -4390,7 +4402,7 @@ public sealed partial class MainWindow : Window
             ("Open image\u2026", OpenImageDialog),
             // Entry 137 section 5: Paste is offered here as well as on Ctrl+V, because a way in that only exists as a key is a way in that
             // only people who already knew about it can use.
-            ("Paste an image (Ctrl+V)", PasteImage),
+            ($"Paste an image ({CommandKey.Label("V")})", PasteImage),
             ("Open marking\u2026", OpenMarkingDialog),
             ("Export\u2026", ExportDialog),
             ("Report a problem\u2026", () =>
@@ -4417,6 +4429,27 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The header menu's items, for the headless tests.</summary>
     internal IReadOnlyList<string> MenuItems => [.. editorActions.Children.OfType<Button>().Last().Flyout is MenuFlyout menu ? menu.Items.OfType<MenuItem>().Select(i => i.Header as string ?? "") : []];
+
+    private Button? undoButton;
+
+    private Button? redoButton;
+
+    /// <summary>Undo and redo say what they would do, "Undo: move shot 6", and are disabled when there is nothing to do.</summary>
+    private void ShowUndoSteps()
+    {
+        if (undoButton is null || redoButton is null)
+        {
+            return;
+        }
+
+        undoButton.IsEnabled = session.CanUndo;
+        redoButton.IsEnabled = session.CanRedo;
+        ToolTip.SetTip(undoButton, session.UndoWords is { } undo ? $"Undo: {undo} ({CommandKey.Label("Z")})" : $"Nothing to undo yet ({CommandKey.Label("Z")})");
+        ToolTip.SetTip(redoButton, session.RedoWords is { } redo ? $"Redo: {redo} ({CommandKey.RedoLabel})" : $"Nothing to redo ({CommandKey.RedoLabel})");
+    }
+
+    /// <summary>The undo button's tooltip and whether it can be pressed, for the headless tests.</summary>
+    internal (string Tip, bool Enabled) UndoButtonState => (ToolTip.GetTip(undoButton!) as string ?? "", undoButton!.IsEnabled);
 
     /// <summary>An icon alone as a button, entry 109 section 2, named in its tooltip.</summary>
     private static Button IconButton(string icon, string name, Action action)

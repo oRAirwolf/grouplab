@@ -48,7 +48,10 @@ public partial class MacBuildsTests
             return;
         }
 
+        // Entry 166 section 4: the Apple silicon build has been run by one tester on one Mac, and the Intel build by nobody. Each card says
+        // which, and the Intel one still says untested.
         Assert.Contains("Untested on a real Mac", page, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Run on one real Mac", page, StringComparison.OrdinalIgnoreCase);
 
         // Entry 147's own instruction: a test fails if the section's macOS wording, or the sentence saying nobody has run it on a Mac,
         // disappears while a macOS asset is still published. The wording is Alan's and is not to be reworded, so it is checked literally
@@ -67,10 +70,11 @@ public partial class MacBuildsTests
                 Assert.Contains(asset, built, StringComparison.Ordinal);
             }
 
-            // Twice: once on each card. A single note somewhere down the page is not the same as the words beside the button.
-            int said = Regex.Matches(built, "Untested on a real Mac", RegexOptions.IgnoreCase).Count;
+            // Once on each card: what has been run on a Mac and what has not. A single note somewhere down the page is not the same as the
+            // words beside the button.
+            int said = Regex.Matches(built, "Untested on a real Mac|Run on one real Mac", RegexOptions.IgnoreCase).Count;
             Assert.True(said >= assets.Count,
-                $"the page offers {assets.Count} Mac builds and says they are untested {said} times. It belongs beside each button.");
+                $"the page offers {assets.Count} Mac builds and says how far each was tested {said} times. It belongs beside each button.");
         }
     }
 
@@ -192,8 +196,9 @@ public partial class MacBuildsTests
     private static readonly string[] TheStatement =
     [
         "Windows is the supported platform.",
-        "macOS builds are published and have never been run on a Mac.",
-        "nobody has opened the window, printed a target or saved a session on real hardware",
+        "the Apple silicon build has been run on one Mac.",
+        "The Intel build has never been run on a Mac.",
+        "The updater does not install them, and the developer still does not own a Mac.",
         "These builds are an experiment rather than a release.",
         "does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own",
         "donate a Mac for testing and cover the developer fees",
