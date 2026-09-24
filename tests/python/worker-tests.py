@@ -89,20 +89,22 @@ def main() -> int:
         f.write(marker)
     (folder / "meta.json").write_text(json.dumps({"consent": {"version": "consent_v1"}}), encoding="utf-8")
 
-    # clamd with only that signature, on a socket in the test tree, and clamdscan's configuration pointed at it.
-    db = root / "db"
-    db.mkdir()
-    (db / "grouplab-test.ndb").write_text(f"GroupLab.Test.Marker:0:*:{marker.hex()}\n", encoding="ascii")
-    socket = root / "clamd.sock"
-    conf = root / "clamd.conf"
-    conf.write_text(f"LocalSocket {socket}\nDatabaseDirectory {db}\nLogFile {root / 'clamd.log'}\nPidFile {root / 'clamd.pid'}\nForeground no\n", encoding="ascii")
-    subprocess.run(["sudo", "cp", str(conf), "/etc/clamav/clamd.conf"], check=True)
-    started = subprocess.run(["clamd", f"--config-file={conf}"], capture_output=True, text=True)
-    for _ in range(60):
-        if socket.exists():
+    # clamd as the server runs it: the packaged clamav-daemon service, with its own configuration, socket and AppArmor profile, given the
+    # one test signature and nothing else. A clamd started by hand in the test tree was refused its log file by that profile, which is
+    # exactly the difference between a test and the server that this test exists to close.
+    subprocess.run(["sudo", "systemctl", "stop", "clamav-daemon", "clamav-freshclam"], check=False)
+    subprocess.run(["sudo", "sh", "-c", "rm -f /var/lib/clamav/*.cvd /var/lib/clamav/*.cld /var/lib/clamav/*.ndb"], check=False)
+    (root / "grouplab-test.ndb").write_text(f"GroupLab.Test.Marker:0:*:{marker.hex()}" + chr(10), encoding="ascii")
+    subprocess.run(["sudo", "install", "-m", "0644", str(root / "grouplab-test.ndb"), "/var/lib/clamav/grouplab-test.ndb"], check=True)
+    subprocess.run(["sudo", "systemctl", "restart", "clamav-daemon"], check=False)
+    answering = False
+    for _ in range(90):
+        if subprocess.run(["clamdscan", "--ping=1"], capture_output=True).returncode == 0:
+            answering = True
             break
-        time.sleep(1)
-    check("clamd started with the test signature", socket.exists(), started.stderr[-300:] + (root / "clamd.log").read_text(errors="replace")[-300:] if (root / "clamd.log").exists() else started.stderr[-300:])
+        time.sleep(2)
+    status = subprocess.run(["sudo", "journalctl", "-u", "clamav-daemon", "-n", "15", "--no-pager"], capture_output=True, text=True).stdout
+    check("the packaged clamd answers with the test signature", answering, status[-600:])
 
     # The worker, as the server runs it: its own memory limit, Unix sockets only, no network.
     run = subprocess.run([
@@ -156,7 +158,6 @@ def main() -> int:
         out = subprocess.run(["pwsh", "-NoProfile", "-NonInteractive", "-Command", script], capture_output=True, text=True)
         verdict = json.loads(out.stdout) if out.returncode == 0 and out.stdout.strip() else None
         check(f"the pull script's check passes {folder.name}", verdict is not None and not verdict["Bad"] and verdict["Checked"] >= 1, (out.stdout + out.stderr)[-400:])
-    subprocess.run(["pkill", "-F", str(root / "clamd.pid")], check=False)
     shutil.rmtree(root, ignore_errors=True)
     print("all checks passed" if failed == 0 else f"{failed} failed")
     return 0 if failed == 0 else 1
