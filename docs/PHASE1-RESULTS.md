@@ -592,6 +592,16 @@ The tour's marking page named neither the setup block nor the new keys nor that 
 
 `c8bbf9e` was committed after running only its new tests. Two older tests failed on it: the detection trace's calibre wording, fixed in `c09ad1e`, and the bench coverage test, which wanted `TargetMaterial` either benched or named as not worth benching, fixed in this commit. **The rule this repeats is to run the full Core suite before every commit**, not the tests that look related.
 
+## Entry 167: the Equipment icon is a tilted cartridge
+
+Alan: *"The equipment icon is cursed and needs to be replaced. Was it supposed to be a rifle? If so, it is bad and looks like a lego rpg."* It was a rifle, and at 16 pixels a rifle's long thin shape leaves no room for proportion.
+
+The new `Icons.Equipment` is the planning session's baked path exactly: a bullet and its case with the gap between them that makes it read as loaded, scaled to 97 percent and turned 40 degrees in the path itself rather than at run time, because the baked path is the one checked for clipping. Its bounds are 0.96 to 12.74 across and 2.43 to 15.58 down, inside the square. Rendered at 16, 32 and 128 pixels in both themes, it reads as a cartridge at every size.
+
+`EquipmentIconTests` holds it inside the square with its two parts, and checks the rail draws it in the theme's foreground rather than a colour of its own, so the contrast the theme tests hold for the rail holds for it in both states. The weekly screenshot job and the tour pick it up on their own; the Equipment tour page is to be checked after the next run.
+
+The Ballistics icon's summary comment had sat above Equipment's, so each read as the other's; each is above its own now.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

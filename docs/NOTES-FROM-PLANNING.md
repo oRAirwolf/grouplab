@@ -24,6 +24,16 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 167: replace the Equipment icon
+
+**Status: actioned 2026-09-24**, all three sections. Section 2.3, the tour page showing the new icon, is confirmed after the next weekly screenshot run.
+
+- **Section 1.** The baked tilted cartridge, exactly as given, with no run-time rotation.
+- **Section 2.** Rendered at 16, 32 and 128 in both themes and looked at; a test holds its bounds, its two parts and its colour.
+- **Section 3.** The lesson is written in the icon's own comment: draw a detail of anything long and thin at this size.
+
+---
+
 ## 2026-09-24, entry 163: a first real user's feedback on the marking screen, and a cartridge list
 
 **Status: actioned 2026-09-24**, all seven sections, with section 1's trackpad rule and section 6's two Mac defects done under entry 166, which corrects them.
