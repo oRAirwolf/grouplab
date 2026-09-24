@@ -71,6 +71,9 @@ public static class MarkingFile
             rifle = state.Rifle is { } rifle ? new { name = rifle.Name, clickValue = rifle.ClickValue, clickUnit = rifle.ClickUnit.ToString() } : null,
             barrel = state.Barrel,
             load = state.Load,
+            // Entry 162 section 3.2: what the sheet was shot on, because what a hole measures depends on it.
+            paper = state.Paper,
+            backing = state.Backing,
             // Entry 113 section 4: how the sheet's shots are read against its bulls, when it is not one a bull.
             assignmentRule = state.Rule is { } rule
                 ? new { nearestBull = rule.NearestOnly, perBull = rule.PerBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, shots = p.Value }) }
@@ -218,6 +221,8 @@ public static class MarkingFile
                 : null,
             Barrel: (string?)file["barrel"],
             Load: (string?)file["load"],
+            Paper: TargetMaterial.Paper((string?)file["paper"]),
+            Backing: TargetMaterial.Backing((string?)file["backing"]),
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
                 : null,

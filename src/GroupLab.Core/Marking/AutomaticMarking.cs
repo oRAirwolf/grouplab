@@ -82,6 +82,22 @@ public static class AutomaticMarking
     /// </summary>
     public const double HoleToCalibre = 0.945;
 
+    /// <summary>
+    /// The range a hole has measured over the bullet that made it, on scans of sheets of known calibre: 0.76 on the .22 LR range scan, 1.14
+    /// on the friend's card stock over cardboard. NOTES-FROM-PLANNING.md entry 162 section 3: the ratio depends on the paper and the backing
+    /// at least, with velocity and the bullet's nose not yet separable from them, so no constant describes it and none replaces
+    /// <see cref="HoleToCalibre"/>.
+    /// <para>
+    /// Where a calibre is still used without the sheet's own marks, it has to hold across this whole range, and it does, which
+    /// <c>CalibreRangeTests</c> holds: the smallest hole accepted is well below the low end, and a single hole at the high end is still
+    /// too small to be split. The calibre judges nothing else, because nothing else survives a range this wide.
+    /// </para>
+    /// </summary>
+    public const double HoleToCalibreLow = 0.76;
+
+    /// <inheritdoc cref="HoleToCalibreLow"/>
+    public const double HoleToCalibreHigh = 1.14;
+
     /// <param name="grey">The image as grey, for the markers.</param>
     /// <param name="value">The image as HSV value, max(R, G, B), for the holes.</param>
     /// <param name="trace">
@@ -162,7 +178,7 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("calibre", calibre is null ? "none named, so a single hole is the sheet's own 25th percentile mark once it has five, and shape alone decides before that" : string.Create(CultureInfo.InvariantCulture,
-                $"{calibre.Name}, {calibre.DiameterInches:0.000} in, a hole of about {calibre.DiameterInches * HoleToCalibre:0.000} in: a blob under {new RenderDifferenceOptions().SplitMinimumHoles:0.0} such holes is not split"));
+                $"{calibre.Name}, {calibre.DiameterInches:0.000} in; a hole of it has measured {calibre.DiameterInches * HoleToCalibreLow:0.000} to {calibre.DiameterInches * HoleToCalibreHigh:0.000} in on the scans so far, depending on the paper and the backing, so it keeps a single hole from being split and sets the smallest hole accepted, and does not judge one hole from two"));
             stage.Metric("ink fraction", holes.InkFraction, "of paper");
             stage.Metric("holes", holes.Holes.Count, "count");
             stage.Metric("rejected", holes.Rejected.Count, "count");

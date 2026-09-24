@@ -512,6 +512,26 @@ That macOS sentence is out of date since the tester, and entry 166 changes the s
 - **The website had failed to publish on four pushes in a row, from `06b6afb` on**, and I had reported each as publishing without confirming it, which the rule requires within 20 minutes. So entry 153 section 5's crops, entry 159's corrections and entries 161 and 168 were not live. The cause was not in any of them: `docs/RELEASE-NOTES.md` lists nightlies 12 and 14, whose tags and GitHub releases no longer exist, and the check that every listed build has a tag passed on this machine, which still has the two tags, and failed in the site build, which does not. I did not remove them and do not know who did. **Nothing is deleted**: both entries stay, each says its release no longer exists in place of a download link that would lead nowhere, and the check accepts exactly that.
 - **Nightly 93 still carries entry 152's false note** that a shrunk sheet measures correctly. It is regenerated as it was written, because a published release is not edited to hide a mistake; entry 161's note in the next build is the correction.
 
+## Entry 162: consent for the friend's 2026-09-23 scan, and what it was shot on
+
+### Section 1: consent, and the one thing not done with it yet
+
+The consent record is in `samples/PROVENANCE.md`, in the same form as scan 3's, with Alan's relayed words quoted exactly, the date 2026-09-24, and the fact that Alan relayed it on the friend's behalf. The friend is not named. **It says in as many words that it is not the 2026-09-16 friend scan**, which is never published, and names each by file and date, because two scans from one person with different consent is the case where one gets published by mistake.
+
+**The scan is not committed yet.** Rebuilt from its pixels with only the resolution chunk, it is still 55,971,430 bytes, because scanner noise does not compress; scan 3 is 16.8 MB. A file in git is in every clone for ever and can only be removed by rewriting history, which this project has done once already. The entry permits publishing and does not require it, so the choice between committing it whole, at 300 dpi, or as a release download is **request 8** in `docs/notes/for-alan.md`. The tests already run it wherever it is on the machine.
+
+The consent record and request 8 were committed inside entry 168's commit, `8270d11`, because they were already written when that commit swept the working tree. Nothing about them changed.
+
+### Section 2: what it was shot on
+
+Card stock, cardboard behind it, 6.5 Creedmoor at 0.264 in, printed with no scaling and measured by GroupLab at 100.3 percent. Recorded in the consent record and in the fixture file the tests read, `tests/GroupLab.Core.Tests/Analysis/friend-scan-2026-09-23.json`.
+
+### Section 3: the ratio depends on paper and backing at least
+
+**3.1.** Where a calibre is still used without the sheet's own marks, it now holds across 0.76 to 1.14 and says so. Only two things still use it: the smallest mark accepted as a hole, which is 0.43 of the bullet and so below the low end, and the split veto, which keeps a single hole whole up to 1.16 of the bullet by area and so includes the high end. `CalibreRangeTests` holds both against `AutomaticMarking.HoleToCalibreLow` and `HoleToCalibreHigh`, and the detection trace now says the range rather than one figure. No constant replaced 0.945.
+
+**3.2.** Paper and backing are recorded fields on a marking, saved and read back with it: paper is copy paper, card stock or other, backing is cardboard, foam board, none or other, both optional and never guessed. A value outside the choices is recorded as not said. They are two optional choices on the marking screen under "Rounds fired at the group". The tour's marking page does not name every field on that panel and still describes it truthfully.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

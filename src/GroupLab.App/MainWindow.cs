@@ -387,6 +387,10 @@ public sealed partial class MainWindow : Window
     /// <summary>How many rounds the person fired at the group, NOTES-FROM-PLANNING.md entry 95 section 2: the one fact the detector never has.</summary>
     private readonly TextBox roundsFired = new() { Width = 90 };
 
+    // Entry 162 section 3.2: what the sheet was shot on. Optional, plain choices, and never guessed.
+    private readonly ComboBox paperChoice = new() { ItemsSource = TargetMaterial.Papers, PlaceholderText = "not said", MinWidth = 160, Name = "PaperChoice" };
+    private readonly ComboBox backingChoice = new() { ItemsSource = TargetMaterial.Backings, PlaceholderText = "not said", MinWidth = 160, Name = "BackingChoice" };
+
     /// <summary>
     /// What the last sheet was shot with, NOTES-FROM-PLANNING.md entry 140 section 1.3: the equipment and the conditions, and nothing about
     /// where any shot landed. It is offered on the next sheet and never applied on its own.
@@ -606,6 +610,12 @@ public sealed partial class MainWindow : Window
             roundsFired.Text = "";
             session.SetExpectedShots(null);
         })));
+        panel.Children.Add(FieldLabel("Paper it was printed on, optional"));
+        panel.Children.Add(paperChoice);
+        panel.Children.Add(FieldLabel("What was behind it, optional"));
+        panel.Children.Add(backingChoice);
+        paperChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+        backingChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
         BuildShotsPerBull(panel);
         BuildBullLoads(panel);
         sheetChooser.Children.Add(FieldLabel("Which sheet is this?"));
@@ -1214,6 +1224,8 @@ public sealed partial class MainWindow : Window
         roundsFired.Text = "";
         calibreBox.Text = "";
         shotDistance.Text = "";
+        paperChoice.SelectedIndex = -1;
+        backingChoice.SelectedIndex = -1;
 
         detectedState = null;
         plotDefinition = null;

@@ -24,6 +24,16 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 162: consent for the 2026-09-23 friend scan, and what it was shot on
+
+**Status: actioned 2026-09-24**, all three sections, with one part of section 1 waiting on a choice: publishing the scan itself.
+
+- **Section 1.** The consent record is written, distinguishing this scan from the 2026-09-16 one by file and date. The published copy, rebuilt from pixels, is 56 MB, so how to publish it is request 8 rather than a commit that every clone carries for ever.
+- **Section 2.** Card stock over cardboard, 6.5 Creedmoor, printed at 100.3 percent, recorded with the scan and in its fixture.
+- **Section 3.** The calibre's two remaining jobs hold across 0.76 to 1.14 and a test says so; paper and backing are recorded fields on every marking.
+
+---
+
 ## 2026-09-24, entry 168: nightly 94 should not exist, its notes are cut off, and the platform statement leaves the releases
 
 **Status: actioned 2026-09-24**, all seven sections.

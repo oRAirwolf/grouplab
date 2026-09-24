@@ -187,7 +187,9 @@ public sealed record MarkingState(
     Rifle? Rifle = null,
     string? Barrel = null,
     string? Load = null,
-    AssignmentRule? Rule = null)
+    AssignmentRule? Rule = null,
+    string? Paper = null,
+    string? Backing = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -467,6 +469,19 @@ public sealed class MarkingSession
     /// entry 95 section 2). The detector can never know this and the shooter always does, so it turns "is this mark two holes", which the
     /// image cannot answer, into "you fired ten and nine are marked", which arithmetic can.
     /// </summary>
+    /// <summary>
+    /// What the sheet was shot on, NOTES-FROM-PLANNING.md entry 162 section 3.2: the paper and the backing, each one of
+    /// <see cref="TargetMaterial"/>'s choices or null. Anything else is recorded as null rather than kept, so no sixth word appears.
+    /// </summary>
+    public void SetMaterial(string? paper, string? backing)
+    {
+        string? p = TargetMaterial.Paper(paper), b = TargetMaterial.Backing(backing);
+        if (p != State.Paper || b != State.Backing)
+        {
+            Apply(State with { Paper = p, Backing = b });
+        }
+    }
+
     public void SetExpectedShots(int? shots)
     {
         int? value = shots is > 0 ? shots : null;
