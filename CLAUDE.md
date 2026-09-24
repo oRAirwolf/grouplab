@@ -169,6 +169,13 @@ Writing the trailer is part of writing the change, not a step afterwards. If I c
 
 **A note promises what a person can actually reach.** Nightly 27 told people GroupLab "now works out where your group actually landed before deciding which bull each shot belongs to". The code to do it existed and was wired to nothing, so the sentence was untrue on the day it was published, and nobody reading it could have known. A note describes what somebody can do after installing the build, not what is in the repository: if the working part cannot be reached from any screen, the note says so in the same breath or there is no note. A published release is never edited to cover this up; the correction goes in the next one.
 
+## Is it worth an article? NOTES-FROM-PLANNING.md entry 158
+
+After any research, measurement or investigation, decide whether it is worth an article and record the decision either way, in
+`docs/RESEARCH.md` under "Worth an article?". **The test: would this change what another shooter does, or what another developer builds?**
+If yes, write it; a negative result is no reason to skip it. The two reasons expected most often for not writing are "the data cannot
+separate the effect from the confounds" and "already covered by article N".
+
 ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160
 
 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.

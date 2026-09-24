@@ -113,6 +113,8 @@ That change is worth a number. On the photograph that started all this, a 6.5 Cr
 
 The .22 LR scan reads 0.765 where the three centerfire scans read 0.92 to 0.95. A rimfire hole in paper closes up far more than a centerfire one, which makes sense, and means the "holes are about 0.94 of the bullet" figure that works for .264, .308 and .338 is not a law. We have exactly one rimfire sheet, which is not enough to say what the right number is.
 
+Nor can we say why. The .22 LR differs from the centerfire rounds in every way at once: it is slower, about 1080 against 2500 to 2845 feet a second, round nosed where they are pointed, bare lead where they are jacketed, and narrower. Any one of those could close a hole up. The test that would separate them holds everything else still: one batch of paper, one backing, one distance, one scanner, and only the cartridge changing, with a set of subsonic rounds from .22 to .510 beside supersonic ones. If the slow rounds' holes agree with each other whatever their width, and differ from the fast ones, it is the speed. About fifty holes a cartridge, one to a bull so none touch, is enough to see a difference the size of the one here.
+
 We also cannot tell you how to photograph a target so that its holes measure true, because we do not know that a way exists. What we can tell you is that scanning works, and that if you photograph, GroupLab will read your sheet against itself and not against an assumption.
 
 ## What this means

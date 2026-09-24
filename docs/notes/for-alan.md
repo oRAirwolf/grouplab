@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 16, 17, 18, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 9.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
+Then 9, 16, 17, 19, 20, 18, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,37 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 20. The hole size test, when you can shoot it
+
+**Opened 2026-09-24. Entry 158 program B. Nothing waits on it but the article it would make.**
+
+**What is needed.** One afternoon's shooting, set out in full in `docs/RESEARCH.md`, "Program B". In short: one printed batch of GroupLab
+25-bull Letter sheets, one backing stapled the same way, 50 yards, **two sheets of one shot to a bull for each cartridge**, and every sheet
+scanned at 600 dpi on the same flatbed. The cartridges: subsonic .22 LR, .300 Blackout subsonic, 8.6 Blackout subsonic, .510 Whisper,
+high velocity .22 LR, 6 ARC, 6.5 Creedmoor, and .300 Blackout supersonic. Shoot the sheets in a mixed order rather than one cartridge
+after another. Any subset helps; the four subsonic ones and the two .300 Blackouts are the heart of it.
+
+**Why.** A .22 LR hole measures 0.765 of the bullet where centerfire holes measure 0.92 to 0.95, and the one rimfire sheet cannot say
+whether that is speed, nose shape, lead against a jacket, or width. This set separates speed from width.
+
+**A good answer.** "The scans are in <folder>", with which sheet is which cartridge.
+
+---
+
+## 19. Can the ST-4 sheet of 2026-09-20 still be scanned?
+
+**Opened 2026-09-24. Entry 158 program A. Steps 3 and 4 wait on it.**
+
+**What is needed.** If you still have the orange ST-4 sheet with the twenty groups, a 600 dpi scan of it, on the flatbed you used for the
+GroupLab sheets. It is larger than Letter, so two overlapping scans are fine; say which half is which.
+
+**Why.** What five shots tell you needs every shot placed, and in the photographs the holes of a group touch and merge: GroupLab found about
+one shot in seven as a mark of its own. On a scan it tells one hole from two by their size.
+
+**A good answer.** "The scan is <file>", or "the sheet is gone", which settles that program A needs another sheet shot for it.
 
 ---
 

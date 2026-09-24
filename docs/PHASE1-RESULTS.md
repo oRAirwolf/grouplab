@@ -997,6 +997,37 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 158: two research programs, and what is worth an article
+
+**The standing rule** is in `CLAUDE.md` and `docs/RESEARCH.md`, "Worth an article?": would it change what a shooter does or a developer
+builds. Question 38 and entry 130 are already articles; question 44 is not written, because the bent-sheet model helped the bulls and hurt
+the holes on seven of seven photographs; entry 157's off-square finding is worth an article once request 18's steeper photographs say where
+it stops working.
+
+**Program A, on the ST-4** (entry 172 replaced step 1 with it), `grouplab st4`:
+
+- **The sheet's own grid registered.** A new `GridRegistration` finds the printed grid's crossings, votes for the lattice's step by the
+  crossings each step joins, and walks the lattice. It registered eight of the nine frames.
+- **The lens terms lower the crossings' residual on every frame**: close ups from 0.018 to 0.044 in down to 0.012 to 0.029, whole sheet
+  frames from 0.018 to 0.050 down to 0.013 to 0.045. This is entry 172 section 3 item 4.
+- **Detection on overlapping holes, step 2**: the scan detector finds 54 of the 400 shots in view as a mark of their own, about one in
+  seven. A five shot group reads as one or two merged marks 0.3 to 0.6 in across. Two close ups and the oblique frame misaligned their
+  lattice to the groups and are not to be read.
+- **The same group across frames** agreed within 0.006 to 0.17 in where the frames aligned.
+- **Steps 3 and 4 wait** for every shot to be placed. Request 19 asks for a scan of the sheet.
+
+**Program B**:
+
+- **Step 1** is already articles 1 and 2: 0.765 of the bullet for the .22 LR against 0.92 to 0.95 centerfire.
+- **Step 2.** The confounds: speed, nose, lead against a jacket, width.
+- **Step 3.** The test that separates them, sized by the per-hole spread: 50 holes a cartridge on two sheets, the subsonic set beside the
+  supersonic.
+
+Both are in `docs/RESEARCH.md` and in article 1's "What we still do not know". The article waits for the data; request 20 asks for it.
+
+**Tests.** `GridRegistrationTests`, 2: a grid drawn through a known lens with a thick bar across it is found, counted without a skip, and
+fitted, the lens's residual under half the homography's. App 275 passed; Core 1617 passed, 2 skipped.
+
 ## Entry 157: how the mobile application takes the photograph
 
 **The specification**, `docs/MOBILE-CAPTURE.md`: the capture screen's conditions, one instruction at a time and the outline that

@@ -93,3 +93,96 @@ Entry 143 section 1.3. Front matter said `status: published` on articles that we
 - `state: published` is on the site.
 
 **The third one is not a thing an article can say about itself.** `website/research/PUBLISHED.md` is the record of publishing having happened, with a date and a batch, and the build refuses both halves of a disagreement: a page claiming to be published that is not listed, and a page listed there that does not claim it. So publishing stays a decision somebody took on a day.
+
+## Worth an article? The standing rule, and what was decided
+
+NOTES-FROM-PLANNING.md entry 158 section 1. After any research, measurement or investigation, decide whether it is worth an article and
+record the decision either way. **The test: would this change what another shooter does, or what another developer builds?** If yes, it
+is written, and a negative result is no reason to skip it. The two reasons expected most often for not writing are "the data cannot
+separate the effect from the confounds" and "already covered by article N".
+
+| investigation | decision | why |
+|---|---|---|
+| Question 38: a photographed hole has no size constant | **already covered** | Articles 1, `photo-hole-size`, and 2, `hole-is-not-the-bullet`, are that finding. |
+| Question 44: the bent-sheet model predicts a held-out marker as well as a fitted one | **not written** | It improved the bull centers on seven of seven photographs and worsened the hole positions on seven of seven, so there is no conclusion yet that a developer could build on, and the model is not adopted. Revisit if a model improves both. |
+| Entry 130: photographs against scans of the same sheets | **already covered** | `scans-against-photos` is that comparison. |
+| Entry 157: how far off square a photograph can be | **worth an article, not yet written** | Up to 32 degrees the holes in a photograph kept the square-on photographs' error, while the bull centers grew three times worse. That changes how a shooter holds the phone. But nothing past 35 degrees has been measured against a scan, and the article's useful sentence is where it stops working; request 18 asks for the photographs that would say. |
+| Entry 157: a white sheet on a white board cannot be outlined | **not written** | A limit of GroupLab's own outline finder, with nothing a shooter would do differently beyond what the application already tells them. |
+| Entry 158 program A step 2: the scan detector on overlapping holes in photographs | **not written yet**, see below | It measures a detector built for scans on a case it was never meant for; the article worth writing is program A's, which needs the holes placed. |
+| Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2. What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know". |
+
+## Program A: the ST-4, 5 and 10 shot groups
+
+Entry 158 section 2, run on the 2026-09-20 ST-4 sheet with Alan's twenty groups and 115 shots, as entry 172 replaced step 1. The ST-4 is the
+orange commercial target, so under the rules above no article names or shows it.
+
+**Registration from the sheet's own grid**, `grouplab st4`, `GridRegistration`. The printed 1 in grid's crossings are found from the
+orange lines and counted into a lattice, so every crossing's true place is known. Eight of the nine frames registered; the ninth, the whole
+sheet from furthest back, gives the grid at 48 pixels an inch and too few crossings. The root mean square residual of the crossings, in grid
+inches:
+
+| frame | pixels an inch | homography | with the lens's radial terms |
+|---|---|---|---|
+| 185950, close | 480 | 0.019 | 0.013 |
+| 185953, close | 456 | 0.028 | 0.021 |
+| 185956, close | 444 | 0.031 | 0.021 |
+| 185958, close | 504 | 0.018 | 0.012 |
+| 190001, close | 396 | 0.044 | 0.029 |
+| 190005, whole sheet | 180 | 0.018 | 0.013 |
+| 190009, whole sheet, oblique | 180 | 0.048 | 0.045 |
+| 185944, whole sheet, square on | 168 | 0.050 | 0.044 |
+
+The lens's terms lower the residual on every frame, by a third on the close ups, as entry 157 section 4.4 found on GroupLab's own sheets.
+What remains, 0.012 to 0.045 in, holds the crossing finder's own error, a few pixels, and a sheet that is not flat on its board, which a
+homography with two radial terms cannot follow.
+
+**Detection on overlapping holes, step 2.** The neutral darkness detector, built for scans, with the 0.264 in calibre, finds **54 of the
+400 shots in view across the eight frames as a mark of their own**, about one in seven; every other shot is merged into a neighbour's mark,
+or not found. A five shot group is typically one or two marks between 0.3 and 0.6 in across, which is two or three touching holes read as
+one. Marks found on the printed grid away from every group are few, 13 in all. Two close ups, 185950 and 185958, and the oblique frame
+placed their marks away from the groups they show, because their lattice was offset or miscounted; their counts are not to be read.
+
+**The same group in several frames**, entry 172 section 3 item 2. Where a group's marks were found in more than one frame, their center
+agreed within 0.006 to 0.17 in on the frames that aligned, and by up to 0.77 in where a frame found a different subset of the merged holes.
+So the photograph does not move a group by much; what it changes is which holes the detector can see.
+
+**Steps 3 and 4 wait.** What five shots tell you needs every shot placed, and this detector cannot place overlapping holes in a photograph.
+A 600 dpi scan of the same sheet might: on a scan GroupLab tells one hole from two by their size, which is what that part was built for.
+Request 19 asks Alan whether the sheet can still be scanned. Entry 172's zero offsets, section 2 item 4, wait for the same reason, and also
+need the aiming marks' own positions measured rather than read off the annotated photograph.
+
+## Program B: what would separate speed from everything else
+
+Entry 158 section 3. **Step 1 is measured and published**: on the 2026-09-20 scans a hole measures 0.765 of the bullet for the .22 LR,
+0.92 to 0.95 for the 6 ARC and the two 6.5 Creedmoor sheets, articles 1 and 2. The spread of a single hole about its sheet's median is
+large: `docs/SCAN-MEASUREMENTS.md` section 3.5 measured a standard deviation of 0.024 to 0.043 in in hull diameter on four of its five groups of 29 to
+104 holes, about 0.09 to 0.16 of the bullet.
+
+**Step 2, what is confounded.** The .22 LR differs from the centerfire sheets in every way at once: speed, about 1080 against 2500 to
+2845 ft/s; nose, round against spitzer; construction, bare lead against a jacket; and diameter, 0.222 against 0.243 and 0.264. The paper,
+the scanner and the afternoon were the same, but the distance each was shot at and its backing were not recorded as the same. So the data
+says a .22 LR hole closes up more and cannot say why. Question 38 already showed how strongly the light moves a photographed hole, which is
+why only scans are used here.
+
+**Step 3, the test that would settle it.** Everything held but the cartridge:
+
+- One printed batch of GroupLab 25-bull Letter sheets, one backing, stapled the same way, one distance, 50 yd, and one flatbed at 600 dpi.
+- The cartridges, the subsonic set at about 1000 to 1080 ft/s beside the supersonic ones: subsonic .22 LR, .300 Blackout subsonic, 8.6
+  Blackout subsonic, .510 Whisper; and supersonic .22 LR, 6 ARC, 6.5 Creedmoor, and .300 Blackout supersonic, which gives one diameter at
+  two speeds.
+- One shot to a bull, so no hole touches another, **two sheets, 50 holes, for each cartridge**, the sheets shot in an interleaved order so
+  the light and the paper's age are not on one cartridge's side.
+
+**How many holes.** With a per-hole standard deviation of 0.12 of the bullet, the middle of section 3.5's range, comparing two cartridges'
+mean ratios at the 5 percent level with 80 percent power needs 2 (1.96 + 0.84)^2 (0.12 / d)^2 holes each to see a difference d: 90 for
+0.05, 23 for 0.10, 10 for 0.15. The .22 LR sits 0.17 below the centerfire mean, so 50 each sees a difference that size with room to spare
+and one of 0.067 at the 80 percent power. Two sheets per cartridge, rather than one of 50, keep a single sheet's paper or backing from
+passing as the cartridge's.
+
+**The two comparisons that decide it:** the four subsonic cartridges against each other, 0.222 to 0.510 in at one speed, which is diameter
+alone; and .300 Blackout subsonic against supersonic, and .22 LR subsonic against high velocity, which is speed alone at one diameter. If
+the subsonic ratios agree whatever their diameter and differ from the supersonic ones, it is speed. The round nose against spitzer cannot
+be separated by this set and is said so.
+
+**Step 4.** The article waits for the data. Until then article 1 says what can and cannot be separated. Request 20 asks Alan to shoot the
+test when he can.

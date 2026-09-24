@@ -64,6 +64,7 @@ return args switch
     ["timing", var log] => GroupLab.Cli.FolderVerbs.Timing(log, Console.Out, Console.Error),
     ["compare-photos", .. var rest] => GroupLab.Cli.PhotoVerb.Run(rest, Console.Out, Console.Error),
     ["capture-check", .. var rest] => GroupLab.Cli.CaptureVerb.Run(rest, Console.Out, Console.Error),
+    ["st4", .. var rest] => GroupLab.Cli.Spike.St4Verb.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),
     ["bench", .. var rest] => GroupLab.Cli.BenchVerb.Run(rest, Console.Out, Console.Error),
     ["update-key"] => GroupLab.Cli.UpdateVerbs.Key(Console.Out),
@@ -526,6 +527,7 @@ static int Usage()
         grouplab timing <grouplab-log-file>
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab capture-check <image>... [--library <directory>] [--sweep]
+        grouplab st4 <st4-2026-09-20.json> [--frames <folder>]
         grouplab user-guide [<docs directory>]
         grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
