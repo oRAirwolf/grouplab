@@ -293,7 +293,17 @@ of it he actually looks at. The parts he ignores are as useful as the parts he u
 
 ## 1. The target upload page: the end to end test, then the redirect
 
-**Opened 2026-09-23. Rewritten 2026-09-24 by entries 171 and 173. Waiting, and two steps need a shell.**
+**Opened 2026-09-23. Rewritten 2026-09-24 by entries 171 and 173. Steps 1 to 3 done 2026-09-24**, entry 177 section 4: the end to end
+test went through from a desktop browser and from a phone. What remains is steps 4 and 5, the redirect and the last pull from
+pissinhot.com, and removing the two read submissions from the server, in PowerShell on this machine:
+
+```powershell
+cd C:\Dev\grouplab\scripts
+.\Remove-ReadSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -Only 2026-09-24_58d94b23,2026-09-24_c80e45a7
+```
+
+**A good result:** it asks to confirm each, then says `removed submission` for both and `done: 2 removed, 0 left alone`. Both are
+verified against their own meta.json first and recorded in the ledger, and the test image is marked never to be published.
 
 **Where it stands.** The server side of entry 129 is finished and the Turnstile secret is present. Entry 173 opened the page at
 **https://grouplab.org/targets/**, and the top bar says "Send a target". The old `/shoot-a-target/send/` answers with a plain page

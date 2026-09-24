@@ -285,6 +285,13 @@ def rebuild(original: Path, into: Path) -> dict[str, object]:
         if upright is None:
             upright = image
 
+        # NOTES-FROM-PLANNING.md entry 177 section 2: the pixels are upright now, so the new file says so. Copying the original value onto
+        # turned pixels told everything that honours the tag, GroupLab included, to turn them a second time, and a portrait phone photograph
+        # showed on its side. The value the camera wrote is kept in the record, never in the file.
+        if "Orientation" in facts:
+            facts["OriginalOrientation"] = facts["Orientation"]
+            facts["Orientation"] = 1
+
         # sRGB, and the profile dropped: a colour profile is another block of somebody else's data.
         if upright.mode not in ("RGB", "L"):
             upright = upright.convert("RGB")

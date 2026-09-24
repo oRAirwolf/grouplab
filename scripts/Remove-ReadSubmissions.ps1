@@ -23,6 +23,8 @@
 
 .PARAMETER RemoteRoot
     The folder on the server to remove from. grouplab.org's is /home/airwolf/web/grouplab.org/private/ready.
+.PARAMETER Only
+    Only these submission IDs. Name them when removing from grouplab.org, whose ready folder holds none of the old ones.
 .PARAMETER WhatIf
     Say what would be deleted and delete nothing.
 
@@ -41,11 +43,15 @@ param(
     [string]$LogPath = 'C:\Dev\grouplab-submissions\removed.log',
     # Entry 173: grouplab.org's receiver keeps what it has read in /home/airwolf/web/grouplab.org/private/ready. Name it here to
     # remove from there; left out, the two pissinhot.com stores are used as before.
-    [string]$RemoteRoot
+    [string]$RemoteRoot,
+    # Only these IDs, where given: grouplab.org's ready folder holds only its own submissions, not the old pissinhot.com ones.
+    [string[]]$Only
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+. (Join-Path $PSScriptRoot 'SubmissionCheck.ps1')
 
 # The two stores on the server. Nothing else is ever touched.
 $remoteRoot = if ($RemoteRoot) {
@@ -76,8 +82,11 @@ if (-not (Test-Path $KeyPath)) {
     exit 1
 }
 
-$entries = Get-Content -Path $Ledger -Raw -Encoding UTF8 | ConvertFrom-Json
-if ($null -eq $entries) { $entries = @() }
+# Entry 177: the ledger is an object with a submissions list and a crash_reports list, not a bare list. This used to loop over the
+# object itself, which under strict mode stopped at the first ".id", so it had never run against the ledger as written.
+$ledgerRecord = Get-Content -Path $Ledger -Raw -Encoding UTF8 | ConvertFrom-Json
+$listName = if ($CrashReports) { 'crash_reports' } else { 'submissions' }
+$entries = if ($null -ne $ledgerRecord -and $ledgerRecord.PSObject.Properties.Name -contains $listName) { @($ledgerRecord.$listName) } else { @() }
 
 # An ID is a date and eight hex characters, and nothing else is ever sent to the server. This is
 # the one check that makes "delete by exact path" true: no dots, no slashes, no wildcards.
@@ -89,17 +98,17 @@ $skipped = @()
 foreach ($entry in $entries) {
     $id = [string]$entry.id
 
+    if ($Only -and ($Only -notcontains $id)) {
+        continue
+    }
+
     if ($id -notmatch $shape) {
         $skipped += "$id (not an identifier this script will send anywhere)"
         continue
     }
 
-    if (-not $entry.ingested) {
+    if (-not ($entry.PSObject.Properties.Name -contains 'ingested' -and $entry.ingested)) {
         $skipped += "$id (not ingested yet)"
-        continue
-    }
-
-    if ($CrashReports -ne [bool]$entry.crashReport) {
         continue
     }
 
@@ -112,14 +121,10 @@ foreach ($entry in $entries) {
         continue
     }
 
-    $ok = $true
-    $record = Get-Content -Path $meta -Raw -Encoding UTF8 | ConvertFrom-Json
-    foreach ($file in $record.files) {
-        $path = Join-Path $folder ([string]$file.stored)
-        if (-not (Test-Path $path)) { $ok = $false; break }
-        $hash = (Get-FileHash -Path $path -Algorithm SHA256).Hash.ToLowerInvariant()
-        if ($hash -ne ([string]$file.sha256).ToLowerInvariant()) { $ok = $false; break }
-    }
+    # Entry 177: the same check the pull script runs, which reads the worker's "stored" and the old receiver's "stored_name" and never
+    # lets a folder pass as a file. This one read only "stored", so an old submission would have crashed it the same way.
+    $check = Test-SubmissionFolder -Folder $folder
+    $ok = ($check.Bad.Count -eq 0) -and ($check.Checked -ge 1)
 
     if (-not $ok) {
         $skipped += "$id (the local copy does not match its own meta.json, so the server's copy is kept)"

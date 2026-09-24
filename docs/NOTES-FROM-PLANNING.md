@@ -24,6 +24,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 177: the first real submissions arrived, and two defects on the way
+
+**Status: actioned 2026-09-24**, sections 1 to 4. Removing the two read submissions from the server runs sudo there, so it is Alan's,
+in request 1 with the command; the orientation and contract checks on real worker output run in CI's new worker job.
+
+- **Section 1.** One check, `scripts/SubmissionCheck.ps1`, reads `stored` or `stored_name` and never lets a folder pass as a file. The
+  pull script and the removal script both use it, and CI runs it on meta.json as the real worker writes it. The removal script had the
+  same fault reading only `stored`, and a second one: it looped over the ledger object instead of its submissions list, so it had never
+  run against the ledger as written. It gains `-Only` for naming the submissions to remove. Both pulled submissions verify and are in
+  the ledger.
+- **Section 2.** The worker writes Orientation 1 on the pixels it turned upright and keeps the camera's value only in the record.
+  `ImageScrubber` does not have the fault: it copies the compressed pixels untouched, so the original tag is right there. The pulled
+  photograph's tag is rewritten to 1 locally, pixels unchanged, with `orientation-fix.json` beside it.
+- **Section 3.** The test image is marked a test and never to be published; the phone photograph is not added to any public set.
+- **Section 4.** Request 1's steps 1 to 3 are closed.
+
+---
+
 ## 2026-09-24, entry 176: the intake worker was killed for memory, so no submission reached ready
 
 **Status: actioned 2026-09-24**, sections 1 to 9 in the repository. The server side, the ClamAV daemon, HEIC decoding, the committed

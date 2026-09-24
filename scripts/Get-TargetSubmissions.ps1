@@ -76,6 +76,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+. (Join-Path $PSScriptRoot 'SubmissionCheck.ps1')
+
 # ------------------------------------------------------------------- mode --
 if ($CrashReports) {
     $itemNoun  = 'crash report'
@@ -372,24 +374,18 @@ foreach ($dir in $toCheck) {
         # A crash report is one zip carrying one hash, written by the receiver
         # the moment it arrived. Same promise as a submission, fewer files.
         $p = Join-Path $LocalRoot "$dir\report.zip"
-        if (-not (Test-Path $p)) { $bad += "$dir/report.zip : missing"; continue }
+        if (-not (Test-Path $p -PathType Leaf)) { $bad += "$dir/report.zip : missing"; continue }
         $checked++
         $h = (Get-FileHash $p -Algorithm SHA256).Hash.ToLower()
         if ($h -ne "$($meta.sha256)".ToLower()) { $bad += "$dir/report.zip : sha256 differs" }
         continue
     }
 
-    if ($meta.exclude_from_public_dataset) { $optOut += $dir }
-
-    foreach ($f in $meta.files) {
-        $p = Join-Path $LocalRoot "$dir\$($f.stored_name)"
-        if (-not (Test-Path $p)) { $bad += "$dir/$($f.stored_name) : missing"; continue }
-        $h = (Get-FileHash $p -Algorithm SHA256).Hash.ToLower()
-        $checked++
-        if ($h -ne $f.sha256.ToLower()) {
-            $bad += "$dir/$($f.stored_name) : sha256 differs"
-        }
-    }
+    # Entry 177: one check, shared with CI's run of the real worker, so the two cannot drift apart again.
+    $r = Test-SubmissionFolder -Folder (Join-Path $LocalRoot $dir)
+    $bad += $r.Bad
+    $checked += $r.Checked
+    if ($r.OptOut) { $optOut += $dir }
 }
 
 # ------------------------------------------------------------------ summary --

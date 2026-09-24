@@ -128,6 +128,8 @@ def main() -> int:
             tags = rebuilt.getexif()
             check("no GPS survives", 0x8825 not in tags and not tags.get_ifd(0x8825), str(dict(tags)))
             check("the camera's make survives", tags.get(0x010F) == "TestMake", str(dict(tags)))
+            # Entry 177 section 2: upright pixels say they are upright, so nothing turns them a second time.
+            check("the orientation tag says upright", tags.get(0x0112, 1) == 1, str(tags.get(0x0112)))
         check("the file is recorded as scanned", str(meta["files"][0].get("scan", "")).startswith("clean"), str(meta["files"][0]))
         check("and nothing on the submission went unscanned", meta.get("notScanned") == 0)
         check("the original bytes are gone", not (phone_dir / "001_phone.jpg").exists())
@@ -146,6 +148,14 @@ def main() -> int:
         check("with the reason beside it", "found" in (marked_dir / "refused.txt").read_text(encoding="utf-8"))
 
     check("nothing is left in quarantine", not any(quarantine.iterdir()))
+
+    # Entry 177 section 1.3: the pull script's own check, run on meta.json exactly as the worker wrote it. The two were written apart and
+    # the pull script crashed on the first real submissions because they disagreed about one key.
+    for folder in sorted(ready.iterdir()) if ready.is_dir() else []:
+        script = f". '{REPO / 'scripts' / 'SubmissionCheck.ps1'}'; Test-SubmissionFolder -Folder '{folder}' | ConvertTo-Json -Compress"
+        out = subprocess.run(["pwsh", "-NoProfile", "-NonInteractive", "-Command", script], capture_output=True, text=True)
+        verdict = json.loads(out.stdout) if out.returncode == 0 and out.stdout.strip() else None
+        check(f"the pull script's check passes {folder.name}", verdict is not None and not verdict["Bad"] and verdict["Checked"] >= 1, (out.stdout + out.stderr)[-400:])
     subprocess.run(["pkill", "-F", str(root / "clamd.pid")], check=False)
     shutil.rmtree(root, ignore_errors=True)
     print("all checks passed" if failed == 0 else f"{failed} failed")

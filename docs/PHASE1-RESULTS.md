@@ -791,6 +791,28 @@ A phone-shaped JPEG with Orientation 6 and a GPS block must come out upright, wi
 a file carrying the signature must be refused with the reason. It uses a generated photograph rather than a real one, because a real phone
 file carries a location and would put it in the repository.
 
+## Entry 177: the pull script, the removal script and the upright photograph
+
+**The web path works end to end**, from a desktop browser and a phone, entry 173 section 1.3.
+
+**The pull crash, and what else had it.** The worker writes each file under `stored`; the pull script read `stored_name`, joined the
+null to the submission's folder, and a folder passed `Test-Path`. The check is now one function, `Test-SubmissionFolder` in
+`scripts/SubmissionCheck.ps1`, which reads either key and requires a file. `Remove-ReadSubmissions.ps1` had the mirror fault, reading only
+`stored`, which the old pissinhot.com submissions do not have, and a worse one: it iterated over the ledger object rather than its
+`submissions` list, so under strict mode it stopped at the first `.id` and had never worked against the ledger as written. It now uses
+the same check, reads the right list, and takes `-Only` to name submissions; a parameter called `-Id` would have been silently overwritten
+by the loop's `$id`, because PowerShell names ignore case. CI's worker job runs the shared check on meta.json from a real worker run.
+
+**Orientation.** The worker turned the pixels upright and then wrote the camera's Orientation, 6, into the new file, so GroupLab and
+any viewer turned the photograph a second time. It now writes 1 and keeps the camera's value as `OriginalOrientation` in the JSON
+record, which never reaches the file. The worker test asserts a phone JPEG with Orientation 6 comes out upright with the tag saying 1.
+`ImageScrubber` keeps the original tag correctly, because it does not touch the pixels.
+
+**The two submissions.** Both verify against their meta.json with the fixed check. `2026-09-24_58d94b23`'s tag is rewritten 6 to 1 on
+this machine with every pixel and every other tag unchanged; its `meta.json` keeps the pulled hash as `sha256AsPulled` beside the new
+one, and `orientation-fix.json` records why. The ledger records both: the test image as a test that is never published, the photograph
+as Alan's own duplicate of a range frame, not added to any public set. Removing them from the server is Alan's command in request 1.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
