@@ -466,7 +466,7 @@ This build has no change to the application; it behaves exactly as nightly 29 do
 - The real update ran, and found one more defect.
 - A hole cut by the scan edge is still a hole.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.27)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
