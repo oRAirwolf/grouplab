@@ -447,6 +447,7 @@ with tempfile.TemporaryDirectory() as tmp:
             "SITE_ROOT.mkdir(parents=True, exist_ok=True)",
             "ERROR_PAGES.mkdir(parents=True, exist_ok=True)",
             "target.parent.mkdir(parents=True, exist_ok=True)",
+            "backup.parent.mkdir(parents=True, exist_ok=True)",
             "unpacked.mkdir()",
         ];
 
@@ -501,5 +502,19 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Contains("tries = check_tries(server_holds_seconds())", sync, StringComparison.Ordinal);
         Assert.DoesNotContain("nginx -s reload", sync, StringComparison.Ordinal);
         Assert.DoesNotContain("\"reload\", \"nginx\"", sync, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 178: HestiaCP loads every nginx.conf_ and nginx.ssl.conf_ file in a domain's conf/web folder, so a backup
+    /// written beside the include is live configuration. The installer's backups of anything in that folder go to the backups folder instead.
+    /// </summary>
+    [Fact]
+    public void NoBackupIsWrittenWhereHestiaLoadsConfiguration()
+    {
+        string installer = File.ReadAllText(Repo.PathTo("website/server/install.py"));
+        Assert.Contains("HESTIA_CONF = Path(\"/home/airwolf/conf/web\")", installer, StringComparison.Ordinal);
+        Assert.Matches(@"if target\.is_relative_to\(HESTIA_CONF\):\s+return CONFIG_BACKUPS", installer);
+        Assert.DoesNotContain("target.with_name(target.name + \".\" + time.strftime", installer, StringComparison.Ordinal);
+        Assert.DoesNotContain("CONFIG_BACKUPS = Path(\"/home/airwolf/conf", installer, StringComparison.Ordinal);
     }
 }

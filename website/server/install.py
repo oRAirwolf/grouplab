@@ -118,6 +118,23 @@ CHANGED: set[Path] = set()
 TURNSTILE_SECRET = Path("/home/airwolf/web/grouplab.org/private/turnstile-secret.txt")
 
 
+# NOTES-FROM-PLANNING.md entry 178: HestiaCP loads every file in /home/<user>/conf/web/<domain>/ whose name starts with nginx.conf_ or
+# nginx.ssl.conf_, so a backup written beside nginx.ssl.conf_grouplab, as nginx.ssl.conf_grouplab.<time>.bak, is live configuration: the
+# next nginx -t fails on a duplicate directive, and so does any reload in between, a certificate renewal's included. Request 1's own
+# instructions did exactly that to pissinhot.com's include. Nothing is ever written into that folder but the include itself; its
+# backups go here, where nothing reads them.
+HESTIA_CONF = Path("/home/airwolf/conf/web")
+CONFIG_BACKUPS = Path("/home/airwolf/backups/grouplab.org/config")
+
+
+def backup_path(target: Path) -> Path:
+    """Where the old copy of a replaced file is kept: beside it, except in a HestiaCP web configuration folder, where it would be loaded."""
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    if target.is_relative_to(HESTIA_CONF):
+        return CONFIG_BACKUPS / f"{target.parent.name}-{target.name}.{stamp}.bak"
+    return target.with_name(f"{target.name}.{stamp}.bak")
+
+
 def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
     """Copies one file into place, backing up anything different that is already there."""
     source = HERE / name
@@ -135,12 +152,13 @@ def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
         what = "replace" if target.exists() else "create"
         say(f"  would {what} {target} (mode {oct(mode)[2:]})")
         if target.exists():
-            say(f"  would back it up beside itself first")
+            say(f"  would keep the old one first, {'in ' + str(CONFIG_BACKUPS) if target.is_relative_to(HESTIA_CONF) else 'beside it'}")
         return True
 
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists():
-        backup = target.with_name(target.name + "." + time.strftime("%Y%m%d-%H%M%S") + ".bak")
+        backup = backup_path(target)
+        backup.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(target, backup)
         say(f"  kept the old one as {backup}")
 

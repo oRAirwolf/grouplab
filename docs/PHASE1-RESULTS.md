@@ -813,6 +813,24 @@ this machine with every pixel and every other tag unchanged; its `meta.json` kee
 one, and `orientation-fix.json` records why. The ledger records both: the test image as a test that is never published, the photograph
 as Alan's own duplicate of a range frame, not added to any public set. Removing them from the server is Alan's command in request 1.
 
+## Entry 178: the move from pissinhot.com is done, and a rule about HestiaCP's folders
+
+**Entry 129 is complete.** `pissinhot.com/targets` and `www.pissinhot.com/targets` answer 301 to `https://grouplab.org/targets/`, the old
+receiver answers 410, both sites answer 200, and the last pull from pissinhot.com found 18 on the server and 18 here.
+
+**The fault was in my instructions.** Request 1 told Alan to back the include up beside itself. HestiaCP loads every `nginx.conf_` and
+`nginx.ssl.conf_` file in a domain's `conf/web` folder, so the backup was loaded too and `nginx -t` failed on a duplicate
+`client_max_body_size`. The `&&` kept the reload from running, so nothing live broke, but any other reload in between, a certificate
+renewal for one, would have failed.
+
+**The same fault was waiting in `install.py`.** Its `put` kept the old copy of anything it replaced as `<name>.<time>.bak` beside it, and
+one of the files it installs is `nginx.ssl.conf_grouplab` in exactly such a folder. It has never fired, because the include was installed
+fresh each time, but the second install that changed it would have left a live duplicate. Backups of anything under
+`/home/airwolf/conf/web` now go to `/home/airwolf/backups/grouplab.org/config/`, named with the domain, and the dry run says where.
+
+**The rule is written down** in `CLAUDE.md`'s standing constraints and in `docs/WEBSITE.md`, and request 1 now carries the commands that
+worked, with a minute's wait before the checks, because a graceful reload lets an old worker answer a request or two.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

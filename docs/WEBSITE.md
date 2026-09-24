@@ -132,6 +132,8 @@ So a payload hidden in an upload never reaches anybody. Not data appended after 
 
 A short whitelist of camera facts crosses, as validated numbers written freshly into the new file rather than copied as bytes: resolution, orientation, camera make and model, focal length and its 35 mm equivalent, f-number, digital zoom, lens model, ISO and exposure time. **GPS, location, dates and times, maker notes, thumbnails, XMP, comments, serial numbers and owner fields do not, and cannot**, because the new file is built from pixels and a list of numbers. That is what makes the consent text's promise about GPS true on the server rather than only in the intake on one machine.
 
+**Never write a backup, a temporary file or anything else into a HestiaCP `conf/web/<domain>/` folder.** HestiaCP loads every file there whose name starts with `nginx.conf_` or `nginx.ssl.conf_` as live configuration, so a backup beside an include is loaded with it and the next `nginx -t` or reload fails. Entry 178: request 1's own instructions did it to pissinhot.com. Backups go to `/home/ubuntu/grouplab-server/` or `/home/airwolf/backups/grouplab.org/config/`, and `install.py` keeps its own there.
+
 **How the worker runs, entry 176.** It scans each file through the ClamAV daemon with `clamdscan --fdpass`, so the database lives once in
 clamd and the worker keeps a tight memory limit, 1600 MB, derived from its 120 megapixel cap. HEIC is decoded by libheif's own
 `heif-convert` and rebuilt like any other file. A scanner that did not complete is recorded in the file's `scan` field and counted by the

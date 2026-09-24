@@ -24,6 +24,21 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 178: pissinhot.com/targets redirects to grouplab.org, and a backup nginx loaded
+
+**Status: actioned 2026-09-24**, sections 1 to 4. **Entry 129 is complete.** Removing the 18 old submissions from pissinhot.com is
+Alan's, when he chooses: request 12.
+
+- **Section 1.** Recorded, including the one 200 straight after the graceful reload.
+- **Section 2.** The rule is in `CLAUDE.md` and `docs/WEBSITE.md`: nothing but the include is ever written into a HestiaCP
+  `conf/web/<domain>/` folder. `install.py` had the fault waiting: it backed up what it replaced beside itself, which for
+  `nginx.ssl.conf_grouplab` would have been a live `nginx.ssl.conf_grouplab.<time>.bak`. No such file exists today, as Alan's listing
+  shows, because the include has only ever been installed fresh. Its backups of anything in that folder now go to
+  `/home/airwolf/backups/grouplab.org/config/`, and `SiteSyncTests` holds it. Request 1 is corrected to the commands that worked.
+- **Sections 3 and 4.** Request 1 is closed, and the last pull found nothing new.
+
+---
+
 ## 2026-09-24, entry 177: the first real submissions arrived, and two defects on the way
 
 **Status: actioned 2026-09-24**, sections 1 to 4. Removing the two read submissions from the server runs sudo there, so it is Alan's,

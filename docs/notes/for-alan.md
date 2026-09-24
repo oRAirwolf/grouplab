@@ -14,6 +14,29 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 12. Remove the old pissinhot.com submissions from that server, when you choose
+
+**Opened 2026-09-24. Entry 178 section 4. Waiting, optional, and it needs PowerShell on this machine.**
+
+**What is needed.** Your entry 129 decision is that the server keeps nothing once it has been read. The 18 old submissions are still on
+pissinhot.com. In PowerShell:
+
+```powershell
+cd C:\Dev\grouplab\scripts
+.\Remove-ReadSubmissions.ps1 -WhatIf
+.\Remove-ReadSubmissions.ps1
+```
+
+**A good result:** the dry run lists what it would remove and what it would leave alone and why; the real run removes those and ends with
+`done: N removed`. **It removes only what the ledger marks ingested**, after checking the copy here still matches, and the ledger marks 6 of
+the 18: the other 12 are left alone, and say so, until they are ingested. That is the rule working, not a fault.
+
+**Why.** A photograph somebody sent, sitting on a web server that no longer receives any, is a risk nobody agreed to.
+
+**A good answer.** "Done", or "not yet".
+
+---
+
 ## 11. The virus scanner as a daemon, HEIC, and the committed intake worker
 
 **Opened 2026-09-24. Entry 176. Waiting, and it needs a shell.**
@@ -293,71 +316,34 @@ of it he actually looks at. The parts he ignores are as useful as the parts he u
 
 ## 1. The target upload page: the end to end test, then the redirect
 
-**Opened 2026-09-23. Rewritten 2026-09-24 by entries 171 and 173. Steps 1 to 3 done 2026-09-24**, entry 177 section 4: the end to end
-test went through from a desktop browser and from a phone. What remains is steps 4 and 5, the redirect and the last pull from
-pissinhot.com, and removing the two read submissions from the server, in PowerShell on this machine:
+**Opened 2026-09-23. Answered 2026-09-24**, entries 177 and 178. The end to end test went through from a desktop browser and a phone,
+`pissinhot.com/targets` redirects to `grouplab.org/targets/` and the old receiver answers 410, and the last pull from pissinhot.com found
+nothing new. **Entry 129 is complete.** Request 12 is the one thing left from it, and it is optional.
 
-```powershell
-cd C:\Dev\grouplab\scripts
-.\Remove-ReadSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -Only 2026-09-24_58d94b23,2026-09-24_c80e45a7
+**The redirect as it was actually run, which is the version to follow if it is ever done again.** Entry 178: the first version of these
+instructions put the backup beside the include, and HestiaCP loads every `nginx.ssl.conf_` file in that folder, so nginx loaded the backup
+too and `nginx -t` failed on a duplicate directive. The backup goes outside the folder:
+
+```bash
+sudo cp -p /home/airwolf/conf/web/pissinhot.com/nginx.ssl.conf_targets /home/ubuntu/grouplab-server/pissinhot-nginx.ssl.conf_targets.before-redirect
+sudo tee /home/airwolf/conf/web/pissinhot.com/nginx.ssl.conf_targets >/dev/null <<'EOF'
+# pissinhot.com/targets moved to grouplab.org/targets. NOTES-FROM-PLANNING.md entries 129 and 173.
+client_max_body_size 96m;
+
+location = /targets      { return 301 https://grouplab.org/targets/; }
+location = /targets.html { return 301 https://grouplab.org/targets/; }
+location = /api/upload.php {
+    default_type text/plain;
+    return 410 "Target uploads have moved to https://grouplab.org/targets/\n";
+}
+EOF
+sudo nginx -t && sudo systemctl reload nginx
+sleep 60
+curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://pissinhot.com/targets
+curl -s -o /dev/null -w '%{http_code}\n' -X POST https://pissinhot.com/api/upload.php
+curl -s -o /dev/null -w '%{http_code}\n' https://pissinhot.com/
 ```
 
-**A good result:** it asks to confirm each, then says `removed submission` for both and `done: 2 removed, 0 left alone`. Both are
-verified against their own meta.json first and recorded in the ledger, and the test image is marked never to be published.
+The minute's wait is on purpose: a graceful reload lets an old nginx worker answer a request or two before it exits, and the first check
+straight after the reload read 200 for `/targets` before every later one read 301. It had not failed.
 
-**Where it stands.** The server side of entry 129 is finished and the Turnstile secret is present. Entry 173 opened the page at
-**https://grouplab.org/targets/**, and the top bar says "Send a target". The old `/shoot-a-target/send/` answers with a plain page
-linking to it.
-
-**What is needed, in this order.**
-
-1. **Send the test image through the page, from a browser.** A script cannot do this step, because Turnstile is there to stop scripts.
-   The image is generated, not a target: `C:\Users\Airwolf\AppData\Local\Temp\claude\c--Dev-grouplab\25df80e1-3782-4339-9fd2-f7dce06d9933\scratchpad\grouplab-e2e-test-173.png`.
-   On https://grouplab.org/targets/ choose it, write **TEST, entry 173, not a target** in "Anything else worth knowing", tick the
-   consent box **and** "Do not include my photos in the public data set", pass the check and send. **A good result:** the page says it
-   was received and gives an identifier. Send me the identifier, or say what the page said instead.
-2. **Pull it**, in PowerShell on this machine:
-
-   ```powershell
-   cd C:\Dev\grouplab\scripts
-   .\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready
-   ```
-
-   **A good result:** one new submission, its hashes verified. I then check it was rebuilt from pixels with no metadata and that its
-   consent was recorded, mark it read in the ledger, and give you the one command that removes it from the server.
-3. **A photograph from your phone**, which the planning session will ask for separately: a test from this machine does not prove the
-   path works for a phone's photo formats.
-4. **The redirect, the one change to pissinhot.com you approved.** `pissinhot.com/targets` becomes a 301 to the new page and the old
-   receiver refuses uploads with a message naming it. **Only after the six waiting submissions have been pulled from pissinhot.com**,
-   because afterwards nothing new can arrive there. It replaces the one include the old page installed and touches nothing else. In the
-   server's shell:
-
-   ```bash
-   cd /home/airwolf/conf/web/pissinhot.com
-   sudo cp -p nginx.ssl.conf_targets nginx.ssl.conf_targets.before-redirect
-   sudo tee nginx.ssl.conf_targets >/dev/null <<'EOF'
-   # pissinhot.com/targets moved to grouplab.org/targets. NOTES-FROM-PLANNING.md entries 129 and 173.
-   # The body limit is kept exactly as it was, so nothing else about the site changes.
-   client_max_body_size 96m;
-
-   location = /targets      { return 301 https://grouplab.org/targets/; }
-   location = /targets.html { return 301 https://grouplab.org/targets/; }
-   location = /api/upload.php {
-       default_type text/plain;
-       return 410 "Target uploads have moved to https://grouplab.org/targets/\n";
-   }
-   EOF
-   sudo nginx -t && sudo systemctl reload nginx
-   curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://pissinhot.com/targets
-   curl -s -o /dev/null -w '%{http_code}\n' -X POST https://pissinhot.com/api/upload.php
-   curl -s -o /dev/null -w '%{http_code}\n' https://pissinhot.com/
-   ```
-
-   **A good result:** `nginx -t` says the syntax is ok and the test is successful, then the three lines read
-   `301 https://grouplab.org/targets/`, `410` and `200`. If `nginx -t` fails, do not reload: put the old file back with
-   `sudo cp -p nginx.ssl.conf_targets.before-redirect nginx.ssl.conf_targets` and send me what it said.
-5. **One last pull from pissinhot.com** after the redirect, for anything that arrived in between.
-
-**Why.** The page is live for anybody now, and nothing has yet gone through it end to end.
-
-**A good answer.** Step 1's identifier, step 2's output, and later step 4's three lines.
