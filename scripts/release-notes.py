@@ -435,6 +435,32 @@ def missing(version, head, previous):
     return 0
 
 
+GONE = ("**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record "
+        "of what the build was.")
+
+
+def mark_gone(path="docs/RELEASE-NOTES.md"):
+    """
+    Entry 185: the nightly keeps its newest thirty releases and deletes the rest with their tags, and a build whose release is gone kept a
+    download link to a page that no longer exists, which ReleaseNotesTests caught as a version no tag names. Each such link becomes the
+    sentence entry 168 wrote for nightlies 12 and 14. Where no tag can be seen at all, nothing is changed: that is a checkout without its
+    tags, not thirty deletions.
+    """
+    tags = set(subprocess.run(["git", "tag", "-l", "v*"], capture_output=True, text=True).stdout.split())
+    if not tags:
+        print("no tags in this checkout, so no release is marked gone")
+        return 0
+    file = Path(path)
+    text = file.read_text(encoding="utf-8")
+    link = re.compile(r"^\[Downloads for this build\]\(https://github\.com/[^)]*/releases/tag/v([^)\s]+)\)$", re.M)
+    gone = [m.group(1) for m in link.finditer(text) if "v" + m.group(1) not in tags]
+    if gone:
+        text = link.sub(lambda m: GONE if "v" + m.group(1) not in tags else m.group(0), text)
+        file.write_bytes(text.encode("utf-8"))
+    print("marked gone: " + (", ".join(gone) if gone else "none"))
+    return 0
+
+
 def self_test():
     """The trailer reader and the contradiction check against known cases, entry 168 section 3.2. Prints and exits 0 or 1."""
     docstring = [l for l in __doc__.splitlines() if l.startswith("    Release-note") or l.startswith("    bulls with")]
@@ -486,6 +512,9 @@ def self_test():
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
         return self_test()
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--mark-gone":
+        return mark_gone()
 
     if len(sys.argv) > 1 and sys.argv[1] == "--missing":
         version = sys.argv[2] if len(sys.argv) > 2 else "this build"

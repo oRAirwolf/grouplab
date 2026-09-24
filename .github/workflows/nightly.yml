@@ -466,8 +466,17 @@ jobs:
           git fetch --quiet origin main
           git checkout --quiet -B main origin/main
 
+          # Entry 185: the thirty-release rule above deleted the oldest releases and their tags; their entries stop linking to them.
+          git fetch --quiet --tags --prune --prune-tags origin
+          python3 scripts/release-notes.py --mark-gone
+          if [ -n "$(git status --porcelain -- docs/RELEASE-NOTES.md)" ]; then
+            git add docs/RELEASE-NOTES.md
+            git commit -m "[notes] The builds the thirty-release rule removed" -m "Their entries no longer link to releases that are gone, NOTES-FROM-PLANNING.md entry 185."
+          fi
+
           if grep -q "^## $VERSION$" docs/RELEASE-NOTES.md; then
             echo "$VERSION is already in the file, so nothing is appended."
+            git push origin main
             exit 0
           fi
 

@@ -173,7 +173,8 @@ public partial class PlainReleaseNotesTests
     [GeneratedRegex("(?i)\\b(?:plus|and)\\s+\\d+\\s+(?:more\\s+)?(?:internal|other)\\b[^.]*\\.")]
     private static partial Regex Counted();
 
-    [GeneratedRegex("\\b[\\w.-]+/[\\w./-]+|\\b[\\w-]+\\.(?:md|py|cs|json|ya?ml|html|css|js|txt|pdf|png)\\b", RegexOptions.IgnoreCase)]
+    // Entry 185 section 3, as scripts/release-notes.py has it: an address on grouplab.org is somewhere a shooter can go, not a path here.
+    [GeneratedRegex("(?<![\\w.])(?!grouplab\\.org/)[\\w.-]+/[\\w./-]+|\\b[\\w-]+\\.(?:md|py|cs|json|ya?ml|html|css|js|txt|pdf|png)\\b", RegexOptions.IgnoreCase)]
     private static partial Regex FilePath();
 
     [GeneratedRegex("\\b(?=[0-9a-f]{7,40}\\b)(?=[^\\s]*\\d)[0-9a-f]{7,40}\\b")]
