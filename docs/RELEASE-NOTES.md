@@ -478,7 +478,7 @@ This build has no change to the application; it behaves exactly as nightly 29 do
 - **Cannot update itself.** It refuses its own update as unsigned. Install a later build by hand once.
 - The notes on the release itself are commit subjects and say nothing useful.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.18)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
