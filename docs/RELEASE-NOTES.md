@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.97
+
+**2026-09-24**, commit `88dbc25`. Nightly.
+
+**What you will notice**
+
+- A photograph taken more than 40 degrees off square to the sheet is now refused with the angle named, and every photograph keeps how far off square it was and whether it is good, usable or poor. (Entry 157)
+- With the rectangle scale, Find the paper's edges places the four corners on the paper itself when the sheet stands out from what is behind it. (Entry 157)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.97)
+
+---
+
 ## 0.2.0-nightly.96
 
 **2026-09-24**, commit `a70338a`. Nightly.
