@@ -714,6 +714,29 @@ The three things the section asked to check, each answered from the repository:
 
 **Decided: the hash and the extension only.** The log recorded an opened image's name beside its salted path hash. A report is saved and shared by hand, so the risk is small, but a file name can carry a person's name or a place, and nothing the log is for needs it: the hash ties one report's lines to the same file and the extension says what kind of file it was. Somebody helping can ask for the name, which leaves it the owner's to give. `DiagnosticLog.File` now records `ext` and `pathid`, amending entry 41 section 3, and `docs/CRASH-REPORTING.md` says so. The two log tests check the name is gone, not only that the extension is there.
 
+## Entry 174: the upload page refused every photograph
+
+**The fault.** The send page's file input was `name="photos"`. PHP builds the per-file arrays `$_FILES['photos']['name'][0..n]` only for
+a field whose name ends in `[]`; for a plain name it keeps one file and makes `name` a string. The receiver checks `is_array(name)`, so
+every submission, one photograph or ten, was answered "No photos were attached to that submission." It was live from entry 173's
+`423e1c2` until this commit. **Nothing was lost**: the receiver refuses before it writes, so no photograph reached the server.
+
+**Why 31 receiver tests passed.** They build `$_FILES` themselves, in the array shape the receiver hoped for, so they tested the receiver
+against its own expectations rather than against what PHP makes of the real form. My entry 173 checks tested the page's words and links,
+not whether the form and the receiver agreed on a field name.
+
+**The fix and what now holds it.**
+
+1. The input is `name="photos[]"`.
+2. The receiver turns the single-file shape into a one-element array before its checks, so a form that sends one file without brackets
+   is taken rather than refused.
+3. The site build reads the file input's name out of the page it has just built and fails if it does not end in `[]`, and
+   `SendATargetTests` asserts the same.
+4. `tests/php/multipart-tests.php` serves the real receiver under `php -S`, sends real multipart bodies built from the page's own field
+   name, with Turnstile faked by a file as the receiver tests fake it, and checks one photo, two photos and the plain name all reach
+   quarantine. That is PHP's own parsing under test, the part that failed. CI runs it on Linux after the receiver tests.
+5. `crash-report.php` reads one file named `report`, which is what the application sends, and it checks that shape, so it is not affected.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

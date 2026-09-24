@@ -24,6 +24,22 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 174: the upload page refused every photograph, because the file field had no brackets
+
+**Status: actioned 2026-09-24**, sections 1 to 3. Section 4, the live test again, is Alan's, and the planning session asks for it once the
+fix is published.
+
+- **Section 1.** Confirmed as the entry says: `name="photos"` gave PHP one file's strings, and the receiver refused every submission as
+  having no photos. **The page refused every submission from entry 173 opening it until this fix, and no submission was lost, because
+  none was ever accepted.**
+- **Section 2.** The input is `photos[]`, and the receiver also takes one file under the plain name. The crash receiver reads a single
+  file named `report`, which is what the application sends, so it does not have the fault.
+- **Section 3.** The site build fails if the built page's file input is not named with `[]`, and `SendATargetTests` says the same. A new
+  PHP test serves the real receiver with `php -S` and sends it a real multipart POST built from the page's field name, one file, two
+  files and the plain name; CI runs it beside the receiver tests. PHP is not installed on this machine, so CI is its first run.
+
+---
+
 ## 2026-09-24, entry 164: the first macOS log, and two things it raises that need no tester
 
 **Status: actioned 2026-09-24**, all four sections.

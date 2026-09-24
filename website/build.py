@@ -677,7 +677,7 @@ def page_send() -> str:
 
 <h2 class="h3">The photos</h2>
 <p class="small faint">Up to {limit["maxFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSubmissionMegabytes"]} MB in total. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
-<input type="file" id="photos" name="photos" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
+<input type="file" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
 
 <h2 class="h3">About the target</h2>
 <p class="small faint">Answer what you can be bothered to answer and leave the rest. Every question here is one that cannot be read off the image.</p>
@@ -1968,6 +1968,11 @@ def send_problems() -> list[str]:
             for words in ["rebuilt from its pixels", "Location, GPS and the date and time are not", "until the developer has read them", "deleted from the server"]:
                 if words not in text:
                     problems.append(f"targets/index.html: does not say {words!r}")
+        # Entry 174: PHP builds the per-file arrays the receiver reads only for a field whose name ends in [], so a file input named
+        # "photos" had every submission refused as having no photos. The name is read out of the page as built, not out of this source.
+        names = re.findall(r'<input type="file"[^>]* name="([^"]+)"', page.read_text(encoding="utf-8")) if page.exists() else []
+        if not names or not all(n.endswith("[]") for n in names):
+            problems.append(f"targets/index.html: the file input is named {names}, and PHP needs a name ending in [] to receive several files")
         moved = OUT / "shoot-a-target" / "send" / "index.html"
         if not moved.exists() or f'href="{SEND}"' not in moved.read_text(encoding="utf-8"):
             problems.append("shoot-a-target/send/index.html: the old address does not answer with a link to /targets/")

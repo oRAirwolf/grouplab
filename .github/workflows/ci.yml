@@ -290,6 +290,12 @@ jobs:
       - name: The receiver refuses what it should
         run: php tests/php/receiver-tests.php
 
+      # Entry 174: the checks above build $_FILES themselves, so they could not see that the page's file input needed a name ending in
+      # [] for PHP to build the per-file arrays, and every real submission was refused. This serves the receiver with PHP's own server and
+      # sends it a real multipart POST built from the page's field name, one file and two, so PHP's parsing is what is tested.
+      - name: The receiver takes what the real form sends
+        run: php tests/php/multipart-tests.php
+
       # Entry 147 section 3.2: the platform statement is generated into README.md from docs/PLATFORM-SUPPORT.md. A person editing the
       # README by hand between the markers would leave two versions of what the project promises about macOS, and no way to tell which
       # is the real one. This says so at the time rather than months later.

@@ -512,6 +512,14 @@ if (stored_total_bytes($pdo) >= DISK_CAP_BYTES || ($free !== false && $free < DI
 // ---------------------------------------------------------------------
 
 $incoming = $_FILES['photos'] ?? null;
+
+// NOTES-FROM-PLANNING.md entry 174: PHP builds per-file arrays only when the field is named photos[]. A form that sends one file under
+// the plain name arrives as one file's strings, and that used to be refused as no photos at all. It is made the one-element shape here, so
+// the receiver does not depend on one character in another file.
+if (is_array($incoming) && isset($incoming['name']) && !is_array($incoming['name'])) {
+    $incoming = array_map(static fn ($value) => [$value], $incoming);
+}
+
 if (!is_array($incoming) || !isset($incoming['name']) || !is_array($incoming['name'])) {
     fail(400, 'No photos were attached to that submission.', 'no_files');
 }
