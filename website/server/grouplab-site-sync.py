@@ -231,7 +231,7 @@ def own_address() -> str | None:
 # So the window is derived from nginx rather than guessed. It is read from the configuration when the sync runs, and the check waits that
 # long plus a margin. Where the file cannot be read, the fixed window below is used, about two minutes, which is what Alan set on the
 # server as the hot fix and more than twice the sixty seconds found there. Nothing here reloads nginx or changes its settings: they
-# belong to the whole server, and pissinhot.com shares them.
+# belong to the whole server, and the other site on it shares them.
 CHECK_TRIES = 12
 CHECK_WAIT_SECONDS = 10
 CHECK_MARGIN_SECONDS = 30
