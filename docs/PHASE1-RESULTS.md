@@ -737,6 +737,14 @@ not whether the form and the receiver agreed on a field name.
    quarantine. That is PHP's own parsing under test, the part that failed. CI runs it on Linux after the receiver tests.
 5. `crash-report.php` reads one file named `report`, which is what the application sends, and it checks that shape, so it is not affected.
 
+**Published at 08:54 UTC, nineteen minutes after the publish, and why it took that long.** The server installed the parcel four
+times and rolled it back each time, because its live check read the old home page. The parcel was right, its home page carried the new
+commit. nginx on the server has `open_file_cache_valid 60s` with `inactive=30s`: a file served twice within half a minute keeps being
+served from its old handle for up to a minute after the web root is swapped, and the sync's check gave up after fifteen seconds. I was
+the steady reader, polling the home page every twenty seconds to see the deploy. When I stopped, the next sync installed it. **The
+lesson for me: watch a deploy through the sync log or a single request, never by polling the home page.** The repository's sync now
+checks for seventy seconds and `SiteSyncTests` holds it above nginx's minute; request 10 puts it on the server.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

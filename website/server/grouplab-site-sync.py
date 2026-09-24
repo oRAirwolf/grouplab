@@ -215,8 +215,13 @@ def own_address() -> str | None:
 #
 # It still rolls back on a real failure. Nothing here weakens that: it only stops the check calling a slow answer
 # a wrong one.
-CHECK_TRIES = 5
-CHECK_WAIT_SECONDS = 3
+#
+# NOTES-FROM-PLANNING.md entry 174: fifteen seconds was not a moment. The server's nginx keeps open_file_cache_valid at 60 seconds, so a
+# page requested twice within 30 seconds goes on being served from the old file's handle for up to a minute after the swap. With a
+# visitor, or a person watching for the deploy, reading the home page that often, every check read the old page and the good parcel
+# was rolled back four times running. The check now spans seventy seconds, longer than nginx can hold the old file.
+CHECK_TRIES = 8
+CHECK_WAIT_SECONDS = 10
 
 
 def asked_once(address: str, commit: str | None) -> str | None:

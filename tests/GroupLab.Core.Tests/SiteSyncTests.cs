@@ -473,4 +473,17 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Contains("if include in CHANGED:", installer, StringComparison.Ordinal);
         Assert.Contains("needs no reload", installer, StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 174: the live check has to outlast nginx's hold on the old file, open_file_cache_valid 60s on the server,
+    /// or a good deploy is rolled back whenever somebody is reading the home page steadily. It rolled entry 174's fix back four times.
+    /// </summary>
+    [Fact]
+    public void TheLiveCheckOutlastsNginxsHoldOnTheOldPage()
+    {
+        string sync = File.ReadAllText(Repo.PathTo("website/server/grouplab-site-sync.py"));
+        int tries = int.Parse(System.Text.RegularExpressions.Regex.Match(sync, @"(?m)^CHECK_TRIES = (\d+)").Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+        int wait = int.Parse(System.Text.RegularExpressions.Regex.Match(sync, @"(?m)^CHECK_WAIT_SECONDS = (\d+)").Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+        Assert.True((tries - 1) * wait > 60, $"the live check spans {(tries - 1) * wait} s, and nginx can serve the old page for 60");
+    }
 }

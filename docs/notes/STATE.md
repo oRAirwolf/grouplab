@@ -37,7 +37,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   tools Alan already uses. Request 2.
 - **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
 
-Open requests in `docs/notes/for-alan.md`: **4** (1, 2, 3, and 5, which Alan is applying).
+Open requests in `docs/notes/for-alan.md`: **5** (1, 2, 9, 10, and 5, which Alan is applying).
 
 ## Open questions
 
