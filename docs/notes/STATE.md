@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 180.
+**Last rewritten:** 2026-09-24, after entry 181.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174, 175, 176, 177, 178, 179, 180, and entry 170 sections 1 to 3.
+- Done this run: 171, 173, 164, 174 to 181, and entry 170 sections 1 to 3.
 - **Entry 170 section 4, the hole centres, is part done and set aside**, uncommitted, in this session's
   scratchpad (`e170-s4`). The finding: the detector's centre is pulled toward the scanner's shadow, 0.011 in
   on average, the same way on every scan. The area centroid halves it; an edge fit removes it on real scans
@@ -33,11 +33,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **The server's virus scanner.** Request 11: clamav-daemon, HEIC decoding and the committed intake worker.
-  Until then uploads are rebuilt from pixels but not scanned, and the pull script says so.
+- **The server's intake worker** is installed with the ClamAV daemon and HEIC (request 11, entry 181's
+  line ending hot fix applied). Confirm from the next submission that it scans.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 
-Open requests in `docs/notes/for-alan.md`: **4** (11 most urgent, then 9, 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **3** (9 most urgent, then 12, and 5 being applied).
 
 ## Open questions
 
@@ -69,6 +69,7 @@ they differ.
 - **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
 - **Temporary files clean themselves up.** Tests write into one folder per run, CI fails on a leak, and
   each run starts with `scripts/clean-scratch.py`. The scratch area had reached 18 GB.
+- **Nothing under `website/server/` may hold a carriage return**: it is copied to Linux as it is.
 - **Nothing is written into a HestiaCP `conf/web/<domain>/` folder** but the include itself: anything named
   `nginx.ssl.conf_` there is live configuration, and a backup beside it broke `nginx -t` once.
 - **Alan's own photographs and scans may be published**, by his standing consent in `samples/PROVENANCE.md`;

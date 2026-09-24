@@ -869,6 +869,15 @@ approval has its reason written there first. `docs/notes/for-alan.md` starts wit
 requests 1, 2 and 10 were finished and still read as open, and are closed. `ForAlanTests` fails if the count and the requests disagree.
 STATE.md is rewritten at the end of every entry.
 
+## Entry 181: nothing copied to the server can carry a carriage return
+
+The worker would not start after request 11 because its shebang read `python3` followed by a carriage return. The files under
+`website/server/` were CRLF in the working tree Alan copies from. **The cause was this session's editing**: Python's `write_text` on
+Windows translates line endings, so each script edit wrote CRLF, and git's `text=auto` normalised it on commit, so the repository never
+showed it. `.gitattributes` now forces LF for `website/server/**` and shell scripts in every working tree, the copies here are rewritten
+LF, the installer refuses a file with a carriage return and says which and how to strip it (tried on a CRLF file and an LF one), and a
+test fails if any file in that folder holds one. My own edit scripts write bytes from now on.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

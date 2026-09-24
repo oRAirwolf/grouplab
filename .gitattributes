@@ -16,3 +16,9 @@ scans/phase1/** text eol=lf
 # its Node run produces is compared byte for byte in CI.
 reference/ballistics-js/ballistics.js -text
 tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json -text
+
+# NOTES-FROM-PLANNING.md entry 181: everything under website/server is copied to a Linux server straight from the working tree, and a
+# Windows checkout left it CRLF, so the intake worker's shebang read "python3" and it would not start. LF in every working tree.
+website/server/** text eol=lf
+*.sh text eol=lf
+

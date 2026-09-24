@@ -24,6 +24,19 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 181: Windows line endings broke the intake worker on the server
+
+**Status: actioned 2026-09-24**, sections 1 to 4. Alan's hot fix of section 3 put the server right; nothing more is needed there.
+
+- **The cause was my editing, and it is worth knowing.** Python's `write_text` on Windows writes CRLF, so every file under
+  `website/server/` I changed through a script this session came out CRLF in the working tree while git stored LF. Alan copies the
+  working tree, so the server got CRLF.
+- **Section 4.** `website/server/** text eol=lf` and `*.sh text eol=lf` in `.gitattributes`, the working copies rewritten LF, the
+  installer refuses any file holding a carriage return, naming it, and `SiteSyncTests.EverythingCopiedToTheServerIsLf` fails on one. No
+  script in `scripts/` goes to the server. No request in `for-alan.md` needs to mention line endings.
+
+---
+
 ## 2026-09-24, entry 180: Alan does not read the panel, so everything he needs goes where the planning session reads it
 
 **Status: actioned 2026-09-24**, sections 1 to 4.

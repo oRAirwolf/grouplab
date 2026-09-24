@@ -1,8 +1,7 @@
 # Requests for Alan
 
-**Open: 4.** Most urgent: **11**, the virus scanner's daemon and the committed intake worker, because until it is installed the server's
-scanner is not scanning uploads, only the rebuild from pixels is. Then 9, 12, and 5 which Alan is applying. Entry 180: this line is
-rewritten whenever a request opens or closes.
+**Open: 3.** Most urgent: **9**, marking one scan by hand twice, which decides how GroupLab places hole centres (entry 170 section 4).
+Then 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -51,7 +50,9 @@ the 18: the other 12 are left alone, and say so, until they are ingested. That i
 
 ## 11. The virus scanner as a daemon, HEIC, and the committed intake worker
 
-**Opened 2026-09-24. Entry 176. Waiting, and it needs a shell.**
+**Opened 2026-09-24. Entry 176. Answered 2026-09-24**, entry 181: installed at 03:57 Mountain, the ClamAV daemon and HEIC support
+in cleanly and the drop-in out; the worker then would not start on Windows line endings, which Alan's hot fix removed and entry 181
+stops for good.
 
 **What is needed, in the server's shell, in this order.**
 

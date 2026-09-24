@@ -157,6 +157,15 @@ def put(name: str, target: Path, mode: int, dry_run: bool) -> bool:
         return False
 
     wanted = source.read_bytes()
+
+    # NOTES-FROM-PLANNING.md entry 181: a file copied from a Windows working tree carried CRLF, the worker's shebang read "python3\r",
+    # and it was installed and would not start. A carriage return in anything this installs is refused, naming the file, rather than
+    # installing something that cannot run.
+    if b"\r" in wanted:
+        say(f"  {name} has Windows line endings, which would not run here, so it was not installed and nothing after it was.")
+        say(f"  Copy it again from a checkout made after entry 181, or strip them: sed -i 's/\\r$//' {source}")
+        return False
+
     if target.is_file() and target.read_bytes() == wanted:
         say(f"  {target} is already what it should be")
         return True

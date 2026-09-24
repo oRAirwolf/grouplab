@@ -527,4 +527,21 @@ with tempfile.TemporaryDirectory() as tmp:
         Assert.Contains("keep_newest_backup(backup)", installer, StringComparison.Ordinal);
         Assert.Contains(@"\d{8}-\d{6}\.bak", installer, StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 181: everything under website/server is copied to a Linux server straight from the working tree, and a
+    /// CRLF copy of the worker would not start, its shebang reading "python3" and a carriage return. So no file there may hold a carriage
+    /// return in the working tree, .gitattributes keeps them LF on a Windows checkout, and the installer refuses one that does.
+    /// </summary>
+    [Fact]
+    public void EverythingCopiedToTheServerIsLf()
+    {
+        var crlf = Directory.EnumerateFiles(Repo.PathTo("website", "server"))
+            .Where(f => File.ReadAllBytes(f).Contains((byte)13))
+            .Select(Path.GetFileName)
+            .ToList();
+        Assert.True(crlf.Count == 0, "these files under website/server hold carriage returns and would not run on the server: " + string.Join(", ", crlf));
+        Assert.Contains("website/server/** text eol=lf", File.ReadAllText(Repo.PathTo(".gitattributes")), StringComparison.Ordinal);
+        Assert.Contains(@"if b""\r"" in wanted:", File.ReadAllText(Repo.PathTo("website/server/install.py")), StringComparison.Ordinal);
+    }
 }
