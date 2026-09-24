@@ -12,6 +12,27 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-24, question 55: when to switch on sending from the application
+
+Status: open. Built and switched off; nothing else waits on the answer.
+
+Entry 165: "Build the application side and the receiver now; keep the question hidden until `open` is true in
+`website/api/limits.json`, exactly as the upload page is." The upload page's `open` has been true since entry 129 finished, so read
+literally the question would already show. I gave the application its own switch, `appOpen`, set false, for two reasons.
+
+1. **The receiver has not taken a real package on the server.** Its checks run in CI against a stand-in; on the live site at 16:58 UTC
+   an empty post was answered 400, "The target arrived without its package", so it is reachable through the server's nginx as it
+   stands. A real package would land in the real quarantine and go through the worker, which is the end to end test entry 129 ran for
+   the upload page, and I did not make one without being asked, because it leaves a submission on the server for Alan to clear.
+2. **It asks strangers for their photographs.** Turning it on is the moment the first run screen appears for every tester on the
+   nightly train, and that seemed worth a decision rather than a default.
+
+The options: switch it on in the next build, with one end to end package sent by me and removed through Alan's usual pull; switch it on
+after Alan sends one from his own copy; or leave it off until a stable release. I would send one test package, have Alan confirm it
+reached ready, then set `appOpen` true. Request 21, the include's longer timeouts, is optional either way.
+
+---
+
 ## 2026-09-24, question 54: entry 157's angle limit, and a white board behind the sheet
 
 Status: open. Built as described; nothing waits on the answer.

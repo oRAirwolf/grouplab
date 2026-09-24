@@ -26,7 +26,7 @@ only written record of why much of this project is the way it is.
 
 ## 2026-09-24, entry 165: the analysis screen offers to send the target to the project
 
-**Status: actioned 2026-09-24**, every section, built and tested, **and switched off**: `appOpen` is false in `website/api/limits.json`, so the question, the first run screen and the Settings choice do not appear and nothing is sent. **Not done:** turning it on. Section 8 hoped for nothing on the server, and there is one step: the nginx include needs a block for the new receiver, request 21. Once that answers 400 to an empty post, a later entry sets `appOpen` true. The receiver's own tests (section 7 item 5) and the worker's run in CI, because PHP is not installed here.
+**Status: actioned 2026-09-24**, every section, built and tested, **and switched off**: `appOpen` is false in `website/api/limits.json`, so the question, the first run screen and the Settings choice do not appear and nothing is sent. **Not done:** turning it on, question 55: the live receiver answers through the server's nginx as it stands, so section 8's hope of nothing on the server held, and request 21's longer timeouts are optional; what waits is one real package end to end and the decision to show the question. The receiver's own tests (section 7 item 5) and the worker's run in CI, because PHP is not installed here.
 
 Alan: "We should add a question to the analysis screen that will send a copy of the picture or scan of
 the target along with the logs and analysis of the target to help refine the software and detection. It

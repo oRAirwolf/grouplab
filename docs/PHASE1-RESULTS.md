@@ -1024,7 +1024,7 @@ receivers, `CONSENT.txt` from the pull script, and a refusal from the intake tha
 seven days and then let go with a line in the log; a refusal that retrying cannot fix is let go at once and the reason shown.
 
 **Switched off.** `appOpen` is false. Nothing is shown and nothing is sent while it is, which a test holds, and the guide, the tour and
-the "what GroupLab sends" article say so. The receiver publishes with the site; nginx answers it 404 until request 21 adds its block.
+the "what GroupLab sends" article say so. The receiver publishes with the site, and the live one answered an empty post with its own 400 through the server's nginx as it stands; question 55 asks when to switch it on.
 
 **Tests.** Core `TargetSendingTests`, 3, and an `IntakeTests` case; App `Entry165Tests`, 6: nothing without a yes, Never and Always,
 Not this time, nothing while closed, the first run screen and Settings, kept then sent. `receiver-tests.php` gains the consent_v2 checks

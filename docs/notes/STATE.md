@@ -20,13 +20,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
 - Alan's list is done. The inbox is empty.
-- **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until request 21's
-  nginx block is in and a later entry turns it on.
+- **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until question 55
+  is answered. The live receiver already answers; request 21's longer timeouts are optional.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Turn on sending from the application** once request 21 answers 400: `appOpen` true, and a check against the live receiver.
+1. **Turn on sending from the application** when question 55 is answered: one real package end to end, then `appOpen` true.
 2. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 3. Program B's article when request 20's test is shot.
 
@@ -37,13 +37,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
-- **Entry 165, switching it on.** Request 21: one nginx block for the application's receiver.
+- **Entry 165, switching it on.** Question 55: when, and after what end to end test.
 
-Open requests in `docs/notes/for-alan.md`: **10** (15 most urgent, then 21, 9, 16, 17, 19, 20, 18, 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **10** (15 most urgent, then 9, 16, 17, 19, 20, 18, 12, 5 being applied, and 21, optional).
 
 ## Open questions
 
-Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+
+- **55** when to switch on sending from the application, and after what end to end test
 
 - **54** entry 157's 40 degree limit, the quality score's levels, a white board behind the sheet
 - **53** entry 156's presets, its refusal threshold and a pooled group's velocity share
