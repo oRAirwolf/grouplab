@@ -509,6 +509,7 @@ That macOS sentence is out of date since the tester, and entry 166 changes the s
 - **30 entries rewritten** in `docs/RELEASE-NOTES.md`. Nine say they changed nothing in the application.
 - **Two kept as published, and named in the file**: nightly 12, the first tagged build, which has no earlier build to diff against, and nightly 25, whose trailer uses "manifest", a word today's checks refuse. `0.1.0` is not a nightly and is untouched.
 - **Known issues** are kept exactly: 13 before, 13 after.
+- **The website had failed to publish on four pushes in a row, from `06b6afb` on**, and I had reported each as publishing without confirming it, which the rule requires within 20 minutes. So entry 153 section 5's crops, entry 159's corrections and entries 161 and 168 were not live. The cause was not in any of them: `docs/RELEASE-NOTES.md` lists nightlies 12 and 14, whose tags and GitHub releases no longer exist, and the check that every listed build has a tag passed on this machine, which still has the two tags, and failed in the site build, which does not. I did not remove them and do not know who did. **Nothing is deleted**: both entries stay, each says its release no longer exists in place of a download link that would lead nowhere, and the check accepts exactly that.
 - **Nightly 93 still carries entry 152's false note** that a shrunk sheet measures correctly. It is regenerated as it was written, because a published release is not edited to hide a mistake; entry 161's note in the next build is the correction.
 
 ## The archive

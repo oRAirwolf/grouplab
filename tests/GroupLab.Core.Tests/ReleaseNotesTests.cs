@@ -79,7 +79,14 @@ public class ReleaseNotesTests
         }
 
         var published = tags.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var invented = Versions().Where(v => !published.Contains(v)).ToList();
+
+        // Entry 168: a build that was published and whose release has since been removed from GitHub stays in the file as the record of
+        // what it was, and says so in place of its download link. Nightlies 12 and 14 are the two; their tags are gone from the repository,
+        // so this passed on a machine that still had them and failed in the site build that did not.
+        string notes = Notes();
+        bool Gone(string v) => Regex.Match(notes, $@"^## {Regex.Escape(v)}\r?\n(?:(?!^## ).)*release no longer exists on GitHub",
+            RegexOptions.Multiline | RegexOptions.Singleline).Success;
+        var invented = Versions().Where(v => !published.Contains(v) && !Gone(v)).ToList();
 
         Assert.True(invented.Count == 0, $"docs/RELEASE-NOTES.md lists {string.Join(", ", invented)}, which no tag in this repository names");
     }
