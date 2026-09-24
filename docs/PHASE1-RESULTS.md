@@ -997,6 +997,14 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 190: Alan's standing consent covers Unholy and his other friends
+
+Alan's words, 2026-09-24, are now in the three places the consent rules live: `samples/PROVENANCE.md` has a record of its own for what
+he passes on from Unholy, who is also TNA, and his other friends; `CLAUDE.md` has a short section on what may be published and on whose
+word, and its "never publish" line points at the consent records rather than naming one scan; and STATE.md says so. The 2026-09-23 scan's
+record names Unholy now. The 2026-09-16 scan stays never published, and a stranger's submission is still governed by the level its sender
+chose. The correction to entry 189 section 4.2 means Unholy's zeroing grid scan may be used and published, as entry 191 does.
+
 ## Entry 189: Unholy's feedback: the zeroing grids, the caliber box, the scale, and angles first
 
 **The zeroing grids found no holes, from their own renders.** A new test renders every sheet in the library at 300 dpi with holes on

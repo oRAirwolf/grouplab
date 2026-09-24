@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 929 |
 | measured | 1343 |
-| decided | 1106 |
+| decided | 1107 |
 | unbacked | 0 |
-| **total** | **3378** |
+| **total** | **3379** |
 
-**400** of them were read one sentence at a time and their backing written against the sentence. The other **2978** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**400** of them were read one sentence at a time and their backing written against the sentence. The other **2979** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -41,7 +41,8 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **The tour is words about pictures, so a picture changing is not enough.** Entry 146 section 4.4: the weekly screenshot job replaces the picture on its own, and nothing replaces the words.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **After a push that publishes**, I confirm within 20 minutes that the new commit is live in the `grouplab-site-build` meta tag, and record in the task's report what was published and why.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): If the workflow fails, or the commit is not live after 30 minutes, I report it with the evidence rather than retrying blindly.
-- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Never:** change the look without Alan, put an address, key or password in the repository, touch pissinhot.com, or publish anything but synthetic renders and scan 3 under its consent record.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): In short, as of 2026-09-24: - **Alan's own photographs and scans** may be used and published unless he names one as an exception (entry 171 section 6).
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Alan, entry 190, 2026-09-24: "Anything from Unholy/TNA (same person) or another friend can be used for testing or publication unless I specify otherwise." - **The exception already named stays:** the friend's 2026-09-16 scan is never published.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Release notes: say what changed, to a person who shoots NOTES-FROM-PLANNING.md entry 132 section 1.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Alan read the notes for a nightly and they told him nothing, because they were commit subjects: "Entry 130 item 3.3: doubt travels with the number".
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Every commit carries a `Release-note:` trailer**, entry 145 section 3.1, not only the ones a person notices.

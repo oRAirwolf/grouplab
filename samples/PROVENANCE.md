@@ -51,7 +51,7 @@ Analysed at 600 dpi with no calibre named, GroupLab reads the sheet's codes, reg
 | **Given how** | In writing, to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 171 section 6 |
 | **What was said** | "Yes any of my photographs or scans can be published unless I specify one cannot." |
 | **Covers** | Every photograph and scan Alan took himself, of his own targets, unless he names one as an exception. None is named yet. |
-| **Does not cover** | Anything anybody else shot. Each friend's sheet keeps its own record, and **the 2026-09-16 friend scan is never published.** |
+| **Does not cover** | Anything anybody else shot, which has its own record: what Alan passes on from his friends is below. **The 2026-09-16 friend scan is never published.** |
 | **Licence** | The repository's, GPL-3.0 |
 
 **What does not change.** Every published copy is rebuilt from its pixels and carries no metadata. GPS, location and timestamps are never
@@ -61,20 +61,36 @@ something a reader needs, and the rest stays where it is.
 **Exceptions.** When Alan names a photograph or scan that cannot be published, it is listed here with the date he said so, and nothing
 published from it before that date is kept on the site.
 
-# The 2026-09-23 friend scan, and the consent that lets it be used
+# What Alan passes on from Unholy and his other friends: a standing consent
 
-`Scan_20260923.png`, **shot 2026-09-23**, is a scan of a GroupLab sheet shot by a friend of Alan's. It is the sheet that exposed the
+| | |
+|---|---|
+| **Given by** | Alan Hayes, for the friends whose targets and feedback he passes on |
+| **Given on** | 2026-09-24 |
+| **Given how** | In writing, to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 190 |
+| **What was said** | "Anything from Unholy/TNA (same person) or another friend can be used for testing or publication unless I specify otherwise." |
+| **Covers** | Photographs, scans, sessions and feedback that come through Alan from Unholy, who is also TNA, or from another friend of his: for testing, and published, including as a test fixture, the same as Alan's own. |
+| **Does not cover** | Anything Alan names as an exception. **The 2026-09-16 friend scan is never published**, and this consent does not change that. A submission a stranger sends through the upload page or the application, which is governed by the consent level its sender chose. |
+| **Licence** | The repository's, GPL-3.0 |
+
+**What does not change.** Everything that arrives is untrusted data until the intake worker or the pull has handled it. GPS, location and
+time metadata are never read, printed or logged. Unholy is credited by that name.
+
+# The 2026-09-23 scan by Unholy, and the consent that lets it be used
+
+`Scan_20260923.png`, **shot 2026-09-23**, is a scan of a GroupLab sheet shot by Unholy, a friend of Alan's. It is the sheet that exposed the
 defect in `NOTES-FROM-PLANNING.md` entry 161: naming the correct calibre made the reading worse.
 
-**It is not the 2026-09-16 friend scan.** Both are from the same friend and the two have different consent. The 2026-09-16 scan is
+**It is not the 2026-09-16 friend scan.** Both are from Unholy and the two have different consent. The 2026-09-16 scan is
 **never published**, and nothing in this record applies to it. Two scans from one person with different consent is exactly the case where
-one gets published by mistake, so each is named here by its file name and its date, and neither by the friend's name.
+one gets published by mistake, so each is always named by its file name and its date, never by his name alone. Entry 190's standing
+consent, above, does not reach the 2026-09-16 scan.
 
 ## Consent
 
 | | |
 |---|---|
-| **Given by** | The friend who shot the sheet, **relayed by Alan on the friend's behalf**; the friend is not named |
+| **Given by** | Unholy, who shot the sheet, **relayed by Alan on his behalf** |
 | **Given on** | 2026-09-24 |
 | **Given how** | In writing, relayed to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 162 section 1 |
 | **What was said** | "Yes he is willing to have his target used as a test fixture and yes it can be published." |
