@@ -263,7 +263,7 @@ The record is now current. **The gate fires on artwork and not on counts**, whic
 
 ## Entry 153: the standard every research article is held to, sections 1 to 4
 
-**In progress.** Sections 1 to 4 are complete, sections 2 and 3 for **all thirty articles**, published and draft. Section 5, the three hole crops with measurements drawn on them, is not started, so the inbox file stays.
+**Done, all six sections.** Section 5 is complete within the one limit this project has on publishing real material, which is stated below rather than worked around.
 
 ### Section 1: the developer is not named
 
@@ -297,7 +297,27 @@ Every published article now ends with **"What this means"**, and it is about wha
 
 ### Not done
 
-- **Section 5**, the three hole crops with measurements drawn on them for `photo-hole-size`. It needs real material and image work, and it is the section most worth doing properly rather than quickly.
+### Section 5: three real holes, with the measurement drawn on
+
+The article said a hole measures 0.9 to 1.5 times the bullet and showed nobody a hole. It now carries three crops from the sample scan, each with the caliper line across what GroupLab measured and a tenth-inch bar so every other length can be checked:
+
+| crop | measured | of the 0.264 in bullet |
+|---|---|---|
+| smallest on the sheet | 0.237 in | 0.897 |
+| the median hole | 0.251 in | 0.949 |
+| largest on the sheet | 0.274 in | 1.039 |
+
+The median crop is the 0.949 the results table quotes for that sheet, so the picture and the number cannot drift. The numbers are not typed into the script: `grouplab analyze` produced them once and they are committed as `hole-crops.json`, which the article also offers for download, and the figure script reads that rather than re-deriving them on every site build.
+
+**What the pictures show that the numbers could not.** The smallest hole has closed back in behind the bullet with no torn edge; the largest has a tear that is inside the measurement. Nothing about the two shots differed. That is the mechanism the article had only asserted.
+
+**Two of the three cases section 5 names are not what it asked for, and the reason is a rule rather than an oversight.** The only real material this project may publish is that one scan, under the consent record in `samples/PROVENANCE.md`; every photograph from that range day stays private. So:
+
+- **The shadow case cannot be shown.** It is the whole finding of question 38 and it exists only in a photograph. The article says so in a line where the picture would be, and **request 6** in `docs/notes/for-alan.md` asks whether one crop of one photographed hole may be published.
+- **A synthetic shadow was not drawn instead.** Entry 153 section 3.1 says a chart of simulated data is not a substitute where real material exists, and a simulated hole would be evidence of nothing at all.
+
+### Not done
+
 - **Section 3.1 and 3.2 for the articles that carry `no_figure`.** Each exemption is honest today, and several of them would be better served by a figure that does not exist yet: the six steps of reading a target, the two ways of pooling. The exemption is a statement that nothing exists to show, not that nothing could.
 
 ## Entry 160: both sessions spend fewer tokens, without doing less work

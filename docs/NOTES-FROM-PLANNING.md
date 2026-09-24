@@ -24,6 +24,19 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-23, entry 153: the standard every research article is held to
+
+**Status: actioned 2026-09-23**, all six sections, section 5 within the one limit this project has on publishing real material.
+
+- **Section 1.** The developer's name is gone from every file under `website/research/`: fourteen articles, two figure scripts and one data file. The sweep also caught the pronouns, which is the half a name search would have missed. One byline everywhere. Scoped to that directory, so the licence, the commit history and `samples/PROVENANCE.md` are untouched.
+- **Section 2.** All thirty articles end with "What this means", about what to do differently or stop believing rather than the result again in words. Two that already had the section under their own headings are normalised to the one heading.
+- **Section 3.** A figure with no caption fails the build, and an article with no figure fails unless its front matter carries `no_figure` with a written reason, which the page prints where the picture would be.
+- **Section 4.** A rimfire 22 is 0.222 and **was not in the pick list at all**: 0.2215 is 5.45x39 and 0.224 is the centrefire 22. Two articles were recomputed rather than edited. `HoleToCalibre` does not move, because the two sheets behind it are 6.5 Creedmoor.
+- **Section 5, and the limit is stated rather than worked around.** Three crops of real holes with the caliper line and a scale bar drawn on, at 0.897, 0.949 and 1.039 of the bullet, all from the sample scan, which is the only real material this project may publish. **The shadow case exists only in a photograph and no photograph has a consent record**, so the article says so in a line instead of showing it. Request 6 in `docs/notes/for-alan.md` asks whether one crop of one photographed hole may be published.
+- **Section 6.** Four batches, three then three then seven then twelve, gated on a list in the site build that grew to cover every article and was then removed, because a backlog list that outlives its backlog becomes a way to opt out.
+
+---
+
 ## 2026-09-24, entry 160: both sessions spend fewer tokens, without doing less work
 
 **Status: actioned 2026-09-23**, all seven sections.

@@ -11,6 +11,7 @@ found: A hole in paper photographed with a phone measures anywhere from nine ten
 sure: Four sheets, nine photographs, 176 holes, one shooter, one afternoon. Enough to show that no single correction exists; not enough to tell you what the correction would be if one did.
 data:
   - hole-ratios.csv
+  - hole-crops.json
 sources:
   - "The measurement and what it changed: `docs/PHASE1-RESULTS.md`, \"What a hole measures in a photograph\"."
   - "The question it answered: `docs/QUESTIONS-FOR-PLANNING.md`, question 38."
@@ -45,6 +46,26 @@ Every sheet registered cleanly. The scans came out at 0.0023 to 0.0026 inches of
 | 6 ARC block | 0.243 in | 0.923 | 1.256, 1.333, 1.360 |
 | 6.5 Creedmoor, 25 shots | 0.264 in | 0.949 | 0.898 |
 | 6.5 Creedmoor, 15 shots | 0.264 in | 0.937 | 1.452, 1.405, 1.449 |
+
+## What a hole actually looks like
+
+These three are from one sheet, the 6.5 Creedmoor scanned at 600 dpi, and they are the same three numbers the row above reports, drawn where they came from. The bullet was 0.264 in across. The red line is what GroupLab measured; the bar at the corner is a tenth of an inch, so every other length in the picture can be checked against something.
+
+![A bullet hole in paper, 0.237 inches across, with a caliper line drawn across the width GroupLab measured and a tenth-inch scale bar](/research/photo-hole-size/figures/hole-smallest.png)
+
+The smallest hole on the sheet, 0.237 in, which is **0.897 of the bullet that made it**. Look at the rim: the paper has closed back in behind the bullet rather than been punched out cleanly, and there is no torn edge to add width. This is the end of the range that makes a hole measure small.
+
+![The same kind of hole, 0.251 inches across, with the caliper line crossing a ragged rim](/research/photo-hole-size/figures/hole-typical.png)
+
+The median hole, 0.251 in, **0.949 of the bullet**, and it is the number the table quotes for this sheet. Look at the ring of torn fibres around the top of it: that fringe is paper that has been pushed aside rather than removed, and whether a measurement includes it is exactly what makes one hole read wider than another.
+
+![A hole 0.274 inches across, wider than the bullet, with the caliper line spanning a torn edge](/research/photo-hole-size/figures/hole-largest.png)
+
+The largest, 0.274 in, **1.039 of the bullet**, so this one measures wider than the bullet that made it. Nothing about the shot was different. The paper tore instead of closing, and the tear is inside the measurement.
+
+**That is the whole finding in three pictures, and these are scans.** The spread from 0.897 to 1.039 is what one sheet does under a flatbed, with the light constant and the scale absolute. A photograph adds the shadow on top of this, which is how the same holes reach 1.45.
+
+**There is no photographed crop here, and that is a limit rather than an oversight.** The only real material this project may publish is this one scan, under the consent record in `samples/PROVENANCE.md`. Every photograph from that range day stays private, so the shadow that does the damage is described and not shown.
 
 The three centrefire scans agree with each other to within three percent. The photographs do not agree with anything: they run from 0.90 to 1.45, a spread of more than half the bullet's width.
 

@@ -14,6 +14,28 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 6. May one crop of one photographed hole be published?
+
+**Opened 2026-09-23. Entry 153 section 5. Waiting.**
+
+**What is needed.** Permission to publish a crop of a single bullet hole from one of the photographs from
+the 2026-09-20 range day, about three quarters of an inch square, showing the hole and the paper around
+it. Not the sheet, not the load block, not anything that identifies the place.
+
+**Why.** Entry 153 section 5 asks for three crops of real holes with their measurements drawn on: a clean
+one, one with a shadow on one edge, and a torn or overlapping pair. Three crops are now on the article and
+all three are from the sample scan, because that scan is the only real material with a consent record. The
+shadow case is the whole finding of question 38, it is the reason a photographed hole measures anywhere
+from 0.9 to 1.45 times the bullet, and it exists only in a photograph. The article currently describes it
+and cannot show it, which is exactly the gap this entry was written to close.
+
+**A good answer.** Yes or no. If yes, a line saying so, and the crop is made the same way the others were:
+rebuilt from pixels, no metadata carried, no location read at any point, and a consent record committed
+before the image is. If no, the article keeps the line explaining why there is no photograph there, which
+is honest and costs nothing.
+
+---
+
 ## 5. Pre-approve the commands ordinary work needs, so you are asked once instead of fifty times
 
 **Opened 2026-09-23. Entry 160 section 6. Waiting.**

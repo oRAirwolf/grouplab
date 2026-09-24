@@ -1,0 +1,40 @@
+{
+  "_": [
+    "NOTES-FROM-PLANNING.md entry 153 section 5. Three holes from the sample scan, with what GroupLab measured",
+    "for each, so the crops beside the article are drawn from a recorded measurement rather than re-derived on",
+    "every site build. Produced by: grouplab analyze samples/gl-cf25-ltr-d-25-shots-600-dpi.png --calibre .264",
+    "--json <out>, then make_crops.py --record.",
+    "",
+    "The scan is the only real material this project may publish, under the consent record in samples/PROVENANCE.md."
+  ],
+  "scan": "samples/gl-cf25-ltr-d-25-shots-600-dpi.png",
+  "dpi": 600,
+  "nominalBulletInches": 0.264,
+  "cartridge": "6.5 Creedmoor",
+  "holes": [
+    {
+      "name": "hole-smallest",
+      "shot": 22,
+      "x": 586.07,
+      "y": 4760.93,
+      "measuredInches": 0.2368,
+      "fractionOfBullet": 0.897
+    },
+    {
+      "name": "hole-typical",
+      "shot": 21,
+      "x": 1634.17,
+      "y": 4729.33,
+      "measuredInches": 0.2506,
+      "fractionOfBullet": 0.949
+    },
+    {
+      "name": "hole-largest",
+      "shot": 18,
+      "x": 1726.73,
+      "y": 3994.33,
+      "measuredInches": 0.2743,
+      "fractionOfBullet": 1.039
+    }
+  ]
+}

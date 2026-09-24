@@ -1118,7 +1118,9 @@ def build_research_figures() -> list[str]:
 
 # Entry 143 section 1.2: figures a script drew as artwork of white paper. These are pictures of a scanned sheet, so
 # white is the subject and not the theme, and they are the same in both. Everything else must have a dark version.
-PAPER = {"scanner-traps/settings.png", "can-you-see-the-bull/test-card.png"}
+PAPER = {"scanner-traps/settings.png", "can-you-see-the-bull/test-card.png",
+         "photo-hole-size/hole-smallest.png", "photo-hole-size/hole-typical.png",
+         "photo-hole-size/hole-largest.png"}
 
 # The surface _style.py draws a dark figure on. Held here as well so a figure saved by something that did not use the
 # shared style, or a light figure copied to a dark name, is caught rather than published.

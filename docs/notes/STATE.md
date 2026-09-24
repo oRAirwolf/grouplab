@@ -15,21 +15,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- **Entry 160**, this one: the logs are split, `STATE.md` exists, and the discipline sections are in
-  `CLAUDE.md`. Section 6's one setting change is a request for Alan, in `docs/notes/for-alan.md`.
+- **Entry 153 is closed**, section 5 included, within the one limit on publishing real material.
+- **Entry 159 is next**, then 154, 155, 156, 157, 158, and entry 161, which arrived during this run.
 
 ## The next three
 
-1. **Entry 153 section 5.** Three crops of real holes for `photo-hole-size`, with the scale, the
-   measured diameter and the nominal bullet diameter drawn on each. Everything else in entry 153 is
-   done. It is the only reason that inbox file is still there.
-2. **Entry 159.** Audit the website, the README and the application for claims that are not true, and
+1. **Entry 159.** Audit the website, the README and the application for claims that are not true, and
    build the claims register the audit produces.
-3. **Entry 154.** A word a shooter does not know gets an explanation where they meet it: one glossary
+2. **Entry 154.** A word a shooter does not know gets an explanation where they meet it: one glossary
    source, tooltips on the site that work on tap as well as hover, and the same text in the
    application.
+3. **Entry 155.** One Targets screen, because the library and the print dialog do the same job.
 
-Then, in this order and not reordered: 155, 156, 157, 158.
+Then, in this order and not reordered: 156, 157, 158, and 161.
 
 ## Blocked, and on what
 
@@ -41,6 +39,8 @@ Then, in this order and not reordered: 155, 156, 157, 158.
 - **Entry 158, the paper-tearing program.** Step 1 needs the photograph annotations. Request 3.
 - **Entry 151, the community page.** Live and honest, and it names the five channel groups without
   naming the channels, because nobody has read them out of the server. Request 4.
+- **The shadow crop entry 153 section 5 asks for.** It exists only in a photograph and no photograph has
+  a consent record. Request 6 asks whether one crop of one photographed hole may be published.
 
 Nothing else is blocked. Everything in the queue can proceed today.
 
@@ -69,8 +69,8 @@ and live whole in `docs/notes/archive/questions-answered.md`.
 
 ## The inbox
 
-`docs/notes/inbox/` holds entries **153 to 160**. 160 is being actioned now; 153 is open only for its
-section 5.
+`docs/notes/inbox/` holds entries **154 to 159 and 161**. 161 arrived during this run and has not been
+read yet.
 
 ## Things that would surprise somebody who was not here yesterday
 
