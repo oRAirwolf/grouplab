@@ -53,7 +53,7 @@ The governing principle is that the software should never help a shooter believe
 - Chronograph import, beginning with Garmin Xero (Phase 5)
 - A ported ballistic trajectory solver, used by hit probability, distance normalisation, and velocity-to-vertical analysis (Phase 5, and distance normalisation is named in that phase rather than assumed inside it)
 - An unobtrusive link for supporting the project financially (Phase 4, one menu item, on the terms in section 20)
-- Optional synchronisation through the user's own cloud storage (Phase 7)
+- Optional synchronization through the user's own cloud storage (Phase 7)
 
 ### Out of scope
 
@@ -462,7 +462,7 @@ Other imports worth building:
 - Kestrel or similar for environmental conditions
 - Generic CSV, since most users migrating to GroupLab will arrive from a spreadsheet
 
-## 18. Storage and synchronisation
+## 18. Storage and synchronization
 
 ### The size problem
 
@@ -486,13 +486,13 @@ In the Windows application today, the geometry is the saved marking, which carri
 
 ### Provider model
 
-Synchronisation uses the user's own Google Drive, OneDrive, or iCloud rather than project-operated storage. Free tiers of 15 GB, 5 GB, and 5 GB respectively hold hundreds of full scans and effectively unlimited geometry. This costs the project nothing, removes any custody of other people's data, has no scaling cliff, and survives indefinitely without anyone paying a hosting bill.
+Synchronization uses the user's own Google Drive, OneDrive, or iCloud rather than project-operated storage. Free tiers of 15 GB, 5 GB, and 5 GB respectively hold hundreds of full scans and effectively unlimited geometry. This costs the project nothing, removes any custody of other people's data, has no scaling cliff, and survives indefinitely without anyone paying a hosting bill.
 
 Authentication is Google, Microsoft, or Apple OIDC using PKCE with a loopback redirect, so no client secret is embedded in a downloadable binary. Simple accounts are a fallback.
 
 Identity and storage are separate concerns. Sign in with Apple is standard OIDC and works on Windows and Android as well as Apple devices, so it is available everywhere. iCloud Drive, by contrast, has no supported third-party API on Windows or Android, so Apple can serve as an identity provider on every platform but as a storage backend only on Apple hardware. Sign in with Apple also requires the Apple Developer Program, so it arrives alongside the iOS work rather than before it.
 
-**The application is fully functional with no account, forever.** Synchronisation is an opt-in convenience and never a gate.
+**The application is fully functional with no account, forever.** Synchronization is an opt-in convenience and never a gate.
 
 A small project-operated service remains useful for distributing the target definition library and for share links in the pattern already used by the BVA tool. Both are measured in kilobytes.
 
@@ -611,7 +611,7 @@ G3 is the one the naive methods fail and the one that actually distinguishes a s
 
 **Phase 6: Android.** Camera capture path, distortion fitting on device. Package ID chosen here and permanent thereafter.
 
-**Phase 7: Synchronisation.** Cloud provider adapters, three-tier storage.
+**Phase 7: Synchronization.** Cloud provider adapters, three-tier storage.
 
 **Phase 8: iOS.** CI-based build and signing.
 
