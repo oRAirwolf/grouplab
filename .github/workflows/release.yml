@@ -63,6 +63,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/download-artifact@v6
         with:
@@ -93,3 +95,33 @@ jobs:
             **macOS** is built and tested but nobody has run it, so it is not offered here.
 
             What is done and what is not is in the repository's README, which is the authority on states.
+
+      # NOTES-FROM-PLANNING.md entry 184: a published release, never a draft, announces itself in #builds and in #announcements, with its
+      # notes from the same generator as a nightly's. Nothing here can fail the release, and a missing secret skips its channel.
+      - name: Announce the release in Discord
+        if: github.ref_type == 'tag'
+        continue-on-error: true
+        env:
+          DISCORD_BUILDS_WEBHOOK: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
+          DISCORD_ANNOUNCE_WEBHOOK: ${{ secrets.DISCORD_ANNOUNCE_WEBHOOK }}
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.work-out-the-version.outputs.version }}
+        run: |
+          for secret in "$DISCORD_BUILDS_WEBHOOK" "$DISCORD_ANNOUNCE_WEBHOOK"; do
+            if [ -n "$secret" ]; then echo "::add-mask::$secret"; fi
+          done
+          git fetch --quiet --tags origin
+          python3 scripts/release-notes.py "$VERSION" "$GITHUB_SHA" > announce.md
+          { echo "### Discord"; echo; python3 scripts/discord-announce.py "$VERSION" announce.md --stable; } | tee -a "$GITHUB_STEP_SUMMARY"
+          rm -f announce.md
+          if [ -n "$(git status --porcelain -- .github/announced-builds.txt)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git fetch --quiet origin main
+            git stash --quiet
+            git checkout --quiet -B main origin/main
+            git stash pop --quiet
+            git add .github/announced-builds.txt
+            git commit -m "[notes] Announced $VERSION" -m "Recorded by the release workflow so a rerun does not post it twice, NOTES-FROM-PLANNING.md entry 184."
+            git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
+          fi

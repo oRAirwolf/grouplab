@@ -997,6 +997,20 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 184: each published build in #builds
+
+`scripts/discord-announce.py` builds one embed: the version as its title, linked to the build's release page; the notes from
+`scripts/release-notes.py`, the generator of the release body, less the platform line, with both headings kept; and the download page.
+A description over Discord's 4096 characters ends at a whole line with "Full notes on the release page". Nobody is pinged. The
+nightly runs it after its release is published, in a step that cannot fail the build; a night the gate skips never reaches it. A tagged
+release, and never a draft, posts to #builds and #announcements. The webhook addresses come only from the two secrets Alan added,
+masked in the log, and the script never prints one; with a secret missing it says so and posts nothing to that channel.
+`.github/announced-builds.txt` records each version once posted, and a rerun posts nothing.
+
+Tested: the script's self-test (normal notes, notes over the limit, only Under the hood, no notes at all, no address in a message);
+`DiscordAnnounceTests` for the ordering, the masking, the stable-only channel and no webhook address anywhere in the repository. The
+dry run on nightly 95's real notes printed a 25 line embed. Question 52: a stable release's own body is fixed text, not these notes.
+
 ## Entry 169: the analysis screen, cut down
 
 **What stays in view** is what the first outside user named: center from aim, extreme spread, group width by height, mean radius, CEP

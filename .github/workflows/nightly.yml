@@ -500,6 +500,27 @@ jobs:
           git push origin main
           echo "appended $VERSION and pushed it; website.yml's paths filter picks it up"
 
+      # NOTES-FROM-PLANNING.md entry 184: the build announces itself in #builds, only now that it is published, with the same notes as
+      # the release body from the same generator, less the platform line. The webhook is a repository secret Alan added; without it the
+      # step says so and posts nothing, and nothing here can fail the build. .github/announced-builds.txt records the version once it
+      # is posted, so a rerun of this workflow does not post it twice.
+      - name: Announce the build in Discord
+        continue-on-error: true
+        env:
+          DISCORD_BUILDS_WEBHOOK: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
+        run: |
+          if [ -n "$DISCORD_BUILDS_WEBHOOK" ]; then echo "::add-mask::$DISCORD_BUILDS_WEBHOOK"; fi
+          git fetch --quiet origin main
+          git checkout --quiet -B main origin/main
+          python3 scripts/release-notes.py "$VERSION" "$SHA" > announce.md
+          { echo "### Discord"; echo; python3 scripts/discord-announce.py "$VERSION" announce.md; } | tee -a "$GITHUB_STEP_SUMMARY"
+          rm -f announce.md
+          if [ -n "$(git status --porcelain -- .github/announced-builds.txt)" ]; then
+            git add .github/announced-builds.txt
+            git commit -m "[notes] Announced $VERSION" -m "Recorded by the nightly so a rerun does not post it twice, NOTES-FROM-PLANNING.md entry 184."
+            git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
+          fi
+
       - name: Say what it is
         run: |
           {

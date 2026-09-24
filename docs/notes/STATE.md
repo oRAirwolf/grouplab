@@ -9,26 +9,27 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 169.
+**Last rewritten:** 2026-09-24, after entry 184.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 183, 166, 169, 170 (its choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 184, 166, 169, 170 (its choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's order from here: **184 (Discord build announcements), 185 (the duplicate nightly release and the
-  test-data release among the builds), then 159, 154, 155, 156, 157, 158, 165**, as he gave it. Entries 156
+- Alan's order from here: **185 (the duplicate nightly release and the test-data release among the builds;
+  its section 3 is done), then 159, 154, 155, 156, 157, 158, 165**, as he gave it.
+- **The first Discord post** comes with the next published nightly; entry 184 section 3.3 quotes it then. Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 184.** Each published build announces itself in #builds; Alan has added the secret.
-2. **Entry 185.** The duplicate nightly 94 release and the test data release among the builds.
-3. **Entry 159.** The claims register; it also takes entry 166's platform statement with its evidence.
+1. **Entry 185.** The duplicate nightly 94 release and the test data release among the builds.
+2. **Entry 159.** The claims register; it also takes entry 166's platform statement with its evidence.
+3. **Entry 154.** A word a shooter does not know gets an explanation where they meet it.
 
 ## Blocked, and on what
 
@@ -41,8 +42,9 @@ Open requests in `docs/notes/for-alan.md`: **5** (15 most urgent, then 9, 16, 12
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **52** a stable release's body is fixed text, not the generated notes its announcement uses
 - **51** which hole centre GroupLab should report; waits on request 9
 - **50** question 37's D cannot find the offset without being told the bulls
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -62,7 +64,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 184, 185
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 185
 
 ## Things that would surprise somebody who was not here yesterday
 
