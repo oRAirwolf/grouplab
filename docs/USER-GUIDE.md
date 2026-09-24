@@ -22,21 +22,21 @@ Print opens the print screen on the sheet you chose.
 
 ![The print screen](figures/screens/current/print-light-1400x900.png)
 
-**Check the size before you shoot.** Measure from the centre of bull 1 to the centre of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
+**Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
 
 **Your own sheet.** Design your own sheet, in the library or on the print screen, lays out a grid of bulls:
 - you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;
 - a layout that cannot register or fit is refused;
 - if you give your five-shot group, a spacing tight for it is warned about.
 
-Save to your own sheets keeps a design in the library. There you can rename it, duplicate it, or delete it after GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never makes a session unreadable, because every session keeps its own copy of the sheet it was analysed against.
+Save to your own sheets keeps a design in the library. There you can rename it, duplicate it, or delete it after GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.
 
 **A volunteer pack.** Print a volunteer pack, on the print screen, gives the sheet and one page of instructions together, for someone shooting a sheet for the project.
 
 ## 2. Shoot it
 
 - Mount the sheet flat, supported all over.
-- For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for sighters, and GroupLab keeps them out of the group unless you ask for them to be analysed.
+- For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.
 - Write only in the load block.
 
 Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two shots on the bulls you name.
@@ -74,7 +74,7 @@ The pill in the header counts the marks that need you. The review queue in the s
 - **Refused candidate:** something the detector saw and did not take as a hole.
 - **Bulls with nothing on them:** when you have said how many rounds you fired and GroupLab finds fewer, it names the bulls that are empty. **A shortfall is never allowed to pass as a clean result.**
 
-**Name the calibre if you know it.** It sets the smallest hole GroupLab will accept, which matters most for small calibres, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the calibre the detector has only the shape of a mark to go on.
+**Name the caliber if you know it.** It sets the smallest hole GroupLab will accept, which matters most for small calibers, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
 
 **Holes between bulls, and marks off the grid.** A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.**
 
@@ -94,19 +94,19 @@ The tools have keys too:
 To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad's two finger drag moves the sheet. A pinch zooms, on a touchpad or a touch screen, and so does Ctrl, or Command on a Mac, with any scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.
 
 In the side panel you also set:
-- the calibre, as the bullet's diameter;
+- the caliber, as the bullet's diameter;
 - the shot distance;
 - the rifle, barrel and load, from your records;
 - the rounds fired, as a check on the count.
 
-When the marks are right, Accept and analyse. Anything still open stays open: the analysis names it, and the sheet crumb goes back to it.
+When the marks are right, Accept and analyze. Anything still open stays open: the analysis names it, and the sheet crumb goes back to it.
 
 ## 5. Read the analysis
 
 The analysis has three columns:
 - **On the left:** the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A click on a bull in the small sheet selects its shots.
-- **In the centre:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's centre, with the group's centre and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never removed.
-- **On the right:** the zero correction, the figures and the two judgement cards.
+- **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never removed.
+- **On the right:** the zero correction, the figures and the two judgment cards.
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 
@@ -122,28 +122,34 @@ Every edit shows a small message at the bottom of the screen saying what changed
 
 **A ? beside every figure.** Two or three plain sentences saying what the figure means, what it is good for, and what the number of shots does to it, with **More** going to the glossary. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
 
-**Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers. When you have excluded a shot, each figure is also given without the exclusion, so an exclusion is never hidden.
+**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
-**The zero correction** is given in MOA, mils, inches and centimetres at once. Where your rifle records its scope's units, that unit leads and the correction is also spelled out in clicks: "Up 8 clicks at 0.1 mil". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches every figure between inches with MOA and centimetres with mils, and changes nothing that is stored.
+**Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it.
 
-It says what to dial when the group's centre is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialling an offset nobody can distinguish from zero only chases noise.
+**Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 
-**The two cards:**
+**The zero correction** gives the group center's offset across and up and down in your length unit, MOA and mil side by side, whichever your scope is marked in, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
+
+It says what to dial when the group's center is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialing an offset nobody can distinguish from zero only chases noise.
+
+**The two cards,** in Advanced:
 - **Shape** says whether the group is round, as far as its shots can tell. It also says whether it strings vertically, and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is not evidence of none.
 - **Worst shot** says whether the shot furthest out is further than groups of that size usually put their worst. Even when it is, that makes it worth a look, not a flyer. Whether it was called or pulled is yours to say.
 
 **What each "why" says, in plain words:**
 - **Zero correction:** the smallest offset these shots can call; how the spread was estimated; and that moving a zero between distances needs the ballistics screen.
-- **CEP:** these circles come from the group's sigma, assuming the shots scatter evenly about the centre.
+- **CEP:** these circles come from the group's sigma, assuming the shots scatter evenly about the center.
 - **Shape:** how often a truly round group would look this far from round, and the shape of the group's error ellipse.
 - **Worst shot:** how far out the worst shot sits in the group's own mean radii, against where simulated round groups put theirs.
 - **Decisions left unmade:** every figure here inherits the decisions still open.
 
-**The full CEP table and bivariate fit** are one click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the centre and the spread on each axis with their intervals, and the error ellipse.
+**The full CEP table and bivariate fit** are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
+
+**Export** writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it asks which column is across, which is up and down, and what unit they are in, then shows the analysis. There is no image with an import, so the figures are the whole of it.
 
 ## 6. Sessions and the report
 
-Accept and analyse saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. Session records, in the rail, lists them newest first:
+Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. Session records, in the rail, lists them newest first:
 - filter them by rifle and by load;
 - open one back to its analysis, which needs no image;
 - delete one, after GroupLab asks.
@@ -176,11 +182,11 @@ All of it is optional. A record without what the solver needs says which field i
 
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
 
-**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter. Aerodynamic jump is not modelled, and the table says so.
+**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
 
 **At another distance.** On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
 
-The ballistics screen also carries the analysed group to another distance, and gives the chance of hitting a circle or a rectangle there:
+The ballistics screen also carries the analyzed group to another distance, and gives the chance of hitting a circle or a rectangle there:
 - It is a prediction, never a measurement.
 - The chance is given as a range across the group's sigma interval.
 - With neither a velocity spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
@@ -195,7 +201,7 @@ If an update ever fails, the build you had is still installed and still works. N
 
 ## 10. Comparing several sheets at once
 
-Where several sheets were shot with the same load, GroupLab can read them as one group. It is not a matter of adding the numbers up: several sheets have several centres, and what a pooled figure means depends on which centre you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.
+Where several sheets were shot with the same load, GroupLab can read them as one group. It is not a matter of adding the numbers up: several sheets have several centers, and what a pooled figure means depends on which center you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.
 
 ## 11. If something goes wrong
 

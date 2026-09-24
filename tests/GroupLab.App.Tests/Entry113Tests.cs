@@ -186,7 +186,7 @@ public class Entry113Tests
             Assert.Contains(text, t => t.StartsWith("Of that, the load's velocity SD of 10 ft/s gives ", StringComparison.Ordinal));
             var hit = Assert.Single(text, t => t.StartsWith("Chance of a hit on a 4.000 in circle at 600 yd: ", StringComparison.Ordinal));
             Assert.Matches(@": \d+ percent, between \d+ and \d+ percent across the sigma interval", hit);
-            Assert.Contains("Aerodynamic jump is not modelled.", text);
+            Assert.Contains("Aerodynamic jump is not modeled.", text);
 
             window.Book = window.Book.With(load with { MuzzleVelocitySdFps = null });
             window.ProjectGroup("600", 1, "6", "12", "");
@@ -328,7 +328,7 @@ public class Entry113Tests
                 }
             }
 
-            Assert.True(checkedTexts > 500, $"only {checkedTexts} texts had a colour to check");
+            Assert.True(checkedTexts > 500, $"only {checkedTexts} texts had a color to check");
             Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures.Distinct().Take(40)));
             Assert.True(unfocusable.Count == 0, string.Join(Environment.NewLine, unfocusable.Distinct()));
             window.Close();

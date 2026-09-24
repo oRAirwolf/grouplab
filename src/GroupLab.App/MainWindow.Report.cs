@@ -51,11 +51,11 @@ public sealed partial class MainWindow
             if (all.CentreFromAim is { } offset)
             {
                 var (value, detail) = CentreTexts(AsDisplayed(offset));
-                figures.Add(new ReportFigure("Centre from aim", value, detail is null ? [] : [detail]));
+                figures.Add(new ReportFigure("Center from aim", value, detail is null ? [] : [detail]));
             }
             else
             {
-                summary.Add($"Centre from aim: {all.CentreFromAimUnavailable}.");
+                summary.Add($"Center from aim: {all.CentreFromAimUnavailable}.");
             }
 
             if (all.DispersionWithheld is { } withheld)
@@ -159,7 +159,7 @@ public sealed partial class MainWindow
             plot.Centre,
             plot.Cep50Inches,
             plot.Cep90Inches,
-            "Every scoring shot on one bull, each from its own bull's centre. Hollow: excluded, drawn and not counted. Blue: the centre of the counted shots, with CEP 50 and CEP 90 about it.",
+            "Every scoring shot on one bull, each from its own bull's center. Hollow: excluded, drawn and not counted. Blue: the center of the counted shots, with CEP 50 and CEP 90 about it.",
             UnitSettings.Symbol(units.Linear),
             UnitSettings.FromInches(1, units.Linear));
         return new SessionReport(sheet, particulars, reportPlot, summary, figures, zeroCard, cards, headings, rows, exclusions, unmade, registration, why, identity);

@@ -267,7 +267,7 @@ public static class Projection
             if (_colours.Count > 15)
             {
                 Refuse("encode.tooManyColours", "/inks",
-                    $"{_colours.Count} distinct colours exceeds the 15 an ink index can address (section 3.3).");
+                    $"{_colours.Count} distinct colors exceeds the 15 an ink index can address (section 3.3).");
             }
         }
 

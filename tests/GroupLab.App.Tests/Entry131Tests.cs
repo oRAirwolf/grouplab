@@ -103,30 +103,18 @@ public class Entry131Tests
         }
     }
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 131 section 6.2: the zero block can show where the group landed against where it was aimed.
-    /// <para>
-    /// The numbers above it already say the correction. What this adds is the comparison a number cannot make: how far the centre sits from
-    /// the aim against how well that centre is known. So the test asks for both halves of that, and for the honest ending where the
-    /// uncertainty covers the aim.
-    /// </para>
+    /// NOTES-FROM-PLANNING.md entry 131 section 6.2 put a picture of where the group landed under the zero block, and entry 169 section 2.5
+    /// took it out: the first outside user called it basically useless, because it drew what the plot beside it already draws.
     /// </summary>
     [AvaloniaFact]
-    public void TheZeroBlockShowsWhereTheGroupLanded()
+    public void TheZeroBlockNoLongerDrawsWhereTheGroupLanded()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         try
         {
             window.Session.SetShotDistance(3600);
             Settle();
-
-            string? says = window.ZeroPictureSays;
-            Assert.NotNull(says);
-            Assert.Contains("The group's centre is", says, StringComparison.Ordinal);
-            Assert.Matches(@"0\.\d+ in (right|left)", says!);
-            Assert.Matches(@"0\.\d+ in (low|high)", says!);
-
-            // This sheet's group sits close to its aim, so the honest ending is the one that says so rather than an instruction to dial.
-            Assert.Contains("cannot be told from chance", says!, StringComparison.Ordinal);
+            Assert.DoesNotContain(window.GetLogicalDescendants().OfType<Expander>(), e => e.Header as string == "Where it landed");
         }
         finally
         {

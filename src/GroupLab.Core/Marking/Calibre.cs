@@ -56,10 +56,10 @@ public sealed partial record Calibre(string Name, double DiameterInches)
     public static IReadOnlyList<decimal> MillimetreDesignations { get; } = [5.45m, 5.56m, 6m, 6.5m, 6.8m, 7m, 7.5m, 7.62m, 7.65m, 8m, 9m, 10m];
 
     /// <summary>The refusal of a designation, entry 108 section 2: it names the problem and never guesses which bullet was meant.</summary>
-    public static string DesignationRefusal(string typed) => typed + " is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.";
+    public static string DesignationRefusal(string typed) => typed + " is a caliber's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.";
 
     /// <summary>The one sentence a refusal gives, entry 107 section 1: what to type, not what was wrong with what was typed.</summary>
-    public const string Refusal = "Enter the bullet diameter in inches, such as 0.308, or in millimetres with mm, such as 7.82 mm.";
+    public const string Refusal = "Enter the bullet diameter in inches, such as 0.308, or in millimeters with mm, such as 7.82 mm.";
 
     /// <summary>A diameter in both units, as the pick list, the load panel and the calibre box all show it: ".308 in (7.82 mm)".</summary>
     public static string Shown(double inches) => string.Create(CultureInfo.InvariantCulture, $"{inches.ToString(".000#", CultureInfo.InvariantCulture)} in ({inches * 25.4:0.00} mm)");

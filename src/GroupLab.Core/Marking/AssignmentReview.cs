@@ -32,7 +32,7 @@ public sealed record DetectedOversize(double Holes, bool Tentative, PointD? Spli
     /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
     public string Describe(string shot) => Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Name the calibre to check it.")
+            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Name the caliber to check it.")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.");
 }

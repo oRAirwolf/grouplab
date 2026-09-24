@@ -21,7 +21,7 @@ sources:
 
 ## Two kinds of unit
 
-**Linear units** (inches, millimetres, centimetres) measure the paper. A half-inch group is half an inch across, whatever the distance.
+**Linear units** (inches, millimeters, centimeters) measure the paper. A half-inch group is half an inch across, whatever the distance.
 
 **Angular units** (MOA, mils) measure the angle the group covers as seen from the rifle. A 1 MOA group at 100 yards and a 1 MOA group at 500 yards are equally good shooting, even though the second is five times larger on paper. That is why angular units are the fair way to compare groups shot at different distances, and why scope adjustments are made in them.
 
@@ -31,7 +31,7 @@ The same ten shots, measured four ways. The dots do not move. Mean radius reads 
 
 ## The units
 
-| Unit | What it is | Size at 100 yards | Size at 100 metres |
+| Unit | What it is | Size at 100 yards | Size at 100 meters |
 |---|---|---|---|
 | **MOA** (minute of angle) | 1/60 of a degree | 1.047 in | 2.91 cm |
 | **IPHY** (inches per hundred yards, "shooter's MOA") | exactly 1 inch at 100 yards | 1.000 in | 2.78 cm |
@@ -41,7 +41,7 @@ A few points that trip people up:
 
 - **MOA is not an inch.** 1 MOA at 100 yards is 1.047 inches. Calling it an inch is close at 100 yards and adds up at distance: at 1,000 yards, 10 MOA is 104.7 inches, not 100.
 - **"Mil" on a scope means milliradian.** There is also a military "mil" used for artillery (6,400 to the circle), which is slightly different. GroupLab knows both, but when a shooter or a scope says mil, it means milliradian.
-- **Mils are neat in metric.** One mil is 10 centimetres at 100 metres, 1 metre at 1,000 metres. That is why mil scopes and metric distances pair so well.
+- **Mils are neat in metric.** One mil is 10 centimeters at 100 meters, 1 meter at 1,000 meters. That is why mil scopes and metric distances pair so well.
 
 ## What one unit covers at distance
 
@@ -69,7 +69,7 @@ GroupLab does these conversions with the exact trigonometric form, not the small
 
 An angle needs a distance. Without one, a half-inch group could be 0.5 MOA at 100 yards or 0.1 MOA at 500. So GroupLab stores everything as a real distance on the paper and only shows MOA or mil once it knows how far away the target was. With no distance, the angular columns are not shown at all, rather than shown as zero or guessed.
 
-GroupLab can show inches, centimetres, MOA and mil side by side. It uses true MOA by default and offers IPHY for those who prefer it, and the metric and imperial switch changes every figure in the application at once.
+GroupLab can show inches, centimeters, MOA and mil side by side. It uses true MOA by default and offers IPHY for those who prefer it, and the metric and imperial switch changes every figure in the application at once.
 
 ## What this means
 

@@ -112,7 +112,7 @@ public sealed partial class MainWindow
     {
         if (sessions is null || currentSession is not { } session_)
         {
-            problem.Text = "Accept and analyse the sheet first: a chronograph string belongs to a session.";
+            problem.Text = "Accept and analyze the sheet first: a chronograph string belongs to a session.";
             return;
         }
 
@@ -159,7 +159,7 @@ public sealed partial class MainWindow
         FillVelocityPicture();
         if (sessions is null || currentSession is not { } id)
         {
-            chronoLines.Children.Add(Line("Accept and analyse a sheet first: a chronograph string belongs to a session."));
+            chronoLines.Children.Add(Line("Accept and analyze a sheet first: a chronograph string belongs to a session."));
             return;
         }
 

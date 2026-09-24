@@ -53,7 +53,7 @@ GroupLab's own debug symbols stay. They are 0.4 MB, and a crash record that name
 
 A size cut is exactly the kind of change that quietly breaks something, and "it still starts" is not a check.
 
-The trimmed build was made to validate a target definition and analyse the standard 25 shot sample. It read 25 holes on 25 bulls with a mean radius of 0.232 in, which is what it read before, to the last digit.
+The trimmed build was made to validate a target definition and analyze the standard 25 shot sample. It read 25 holes on 25 bulls with a mean radius of 0.232 in, which is what it read before, to the last digit.
 
 ## The general point
 

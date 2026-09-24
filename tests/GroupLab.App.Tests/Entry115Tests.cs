@@ -121,7 +121,7 @@ public class Entry115Tests
             window.Session.SetEquipment(null, null, "H4350 41.5");
             window.ShowBallistics();
             Settle();
-            Assert.Contains(window.ChronographText, t => t.StartsWith("Accept and analyse a sheet first", StringComparison.Ordinal));
+            Assert.Contains(window.ChronographText, t => t.StartsWith("Accept and analyze a sheet first", StringComparison.Ordinal));
 
             window.ShowBallistics(false);
             window.CalibreAnswered();

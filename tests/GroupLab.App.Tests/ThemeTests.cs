@@ -162,6 +162,39 @@ public partial class ThemeTests
         Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 169 section 3: the composite plot is high contrast in both themes. Every mark is in the ink, black on white
+    /// or white on black, at AAA's 7:1; the ring grey and the one accent are held to 4.5:1, the ratio for text, although they are strokes; and
+    /// the plot draws nothing faded or translucent, which is what made its rings pastel.
+    /// </summary>
+    [Fact]
+    public void ThePlotsMarksHoldTheirContrastInBothThemes()
+    {
+        var failures = new List<string>();
+        foreach (var (name, variant) in new[] { ("light", Avalonia.Styling.ThemeVariant.Light), ("dark", Avalonia.Styling.ThemeVariant.Dark), ("high contrast", Tokens.HighContrastVariant) })
+        {
+            var inks = Tokens.Plot(variant);
+            foreach (var (role, colour, ratio) in new[] { ("ink", inks.Ink, 7.0), ("rings", inks.Ring, 4.5), ("accent", inks.Accent, 4.5) })
+            {
+                if (Contrast(colour, inks.Paper) < ratio)
+                {
+                    failures.Add($"{name} {role} on the plot's paper: {Contrast(colour, inks.Paper):0.00}, wanted {ratio:0.0}");
+                }
+            }
+        }
+
+        string plot = File.ReadAllText(Path.Combine(Repository(), "src", "GroupLab.App", "CompositePlot.cs"));
+        foreach (string faded in new[] { "Faded(", "Opacity", "Marks.Teal", "Marks.Faint" })
+        {
+            if (plot.Contains(faded, StringComparison.Ordinal))
+            {
+                failures.Add($"the plot still draws with {faded}");
+            }
+        }
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
     /// <summary>Entry 42 section 6: a crude test that saves the light theme from dying by a thousand hard coded greys.</summary>
     [Fact]
     public void NoColourLiteralAppearsOutsideTheTokens()

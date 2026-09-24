@@ -33,7 +33,7 @@ That is a tempting design. It survives reformatting, different line endings, and
 
 It has one fatal property: **a build that does not know about a field drops it on the way back out.** The bytes it checks are then not the bytes that were signed.
 
-So when one field was added to the manifest, and a nightly published with it, every build already on somebody's machine read the new manifest, serialised it back without the field it had never heard of, compared the result against the signature, and refused:
+So when one field was added to the manifest, and a nightly published with it, every build already on somebody's machine read the new manifest, serialized it back without the field it had never heard of, compared the result against the signature, and refused:
 
 ```
 update.check result=Refused refusal=BadSignature
@@ -43,7 +43,7 @@ update.check result=Refused refusal=BadSignature
 
 ## What replaced it
 
-The signature now covers the **exact bytes that were published**. The manifest carries its payload as an opaque blob; GroupLab verifies the signature over those bytes as received, and only then parses them. Fields it does not recognise are ignored rather than dropped and re-serialised.
+The signature now covers the **exact bytes that were published**. The manifest carries its payload as an opaque blob; GroupLab verifies the signature over those bytes as received, and only then parses them. Fields it does not recognize are ignored rather than dropped and re-serialized.
 
 That is the whole lesson, and it is not specific to this program: **sign what you send, not what you understood.** A verification step that involves rebuilding the thing you are verifying is not a verification step.
 

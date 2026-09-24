@@ -151,7 +151,7 @@ public class FrameDecodingTests
         var (model, _) = Projection.ToBody(GltdJsonReader.Read(Encoding.UTF8.GetBytes(Spec.Section4Example)).Definition!);
         var (body, flags) = BodyCodec.Write(model! with { Inks = [model.Inks[0], model.Inks[0]] });
 
-        AssertRejected(FrameCodec.Replicated(body, flags), "repeats a colour");
+        AssertRejected(FrameCodec.Replicated(body, flags), "repeats a color");
     }
 
     [Fact]

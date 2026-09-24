@@ -341,7 +341,7 @@ public static class EdgeFitBullLocator
             var (fitted, fittedSpread, count, _, _) = Fit(observations, centre, spread);
             if (!double.IsFinite(fitted.X) || !double.IsFinite(fitted.Y) || !double.IsFinite(fittedSpread))
             {
-                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "the centre fit diverged"), null, declared, 0);
+                return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: "the center fit diverged"), null, declared, 0);
             }
 
             double shift = Math.Sqrt(Math.Pow(fitted.X - centre.X, 2) + Math.Pow(fitted.Y - centre.Y, 2));

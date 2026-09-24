@@ -146,7 +146,7 @@
    "parts": [
     [
      "Setup, at the top of the panel",
-     "Calibre, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle, barrel and load, the paper and what was behind it sit under them."
+     "Caliber, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle, barrel and load, the paper and what was behind it sit under them."
     ],
     [
      "The count at the top",
@@ -182,19 +182,19 @@
     ],
     [
      "Detect on a GroupLab sheet",
-     "Runs the detection again, for instance after you have entered the calibre."
+     "Runs the detection again, for instance after you have entered the caliber."
     ],
     [
-     "Accept and analyse",
+     "Accept and analyze",
      "When you are satisfied. It saves the session and takes you to the analysis."
     ]
    ],
    "steps": [
     "Open your photograph or scan, by dragging it onto the window or from the file menu.",
-    "Answer the setup at the top: the calibre, the distance and how many rounds you fired, or say not known.",
+    "Answer the setup at the top: the caliber, the distance and how many rounds you fired, or say not known.",
     "Answer each review item in turn, using the buttons or the keys shown.",
     "Drag any mark that sits off a hole with the select tool, V, and use a bull's number to move a shot to the right bull.",
-    "Mark anything you called as a flyer, then press Accept and analyse."
+    "Mark anything you called as a flyer, then press Accept and analyze."
    ],
    "fits": "After you have shot and photographed a sheet from <a href=\"/tour/print/\">printing</a>. It leads to <a href=\"/tour/analysis/\">the analysis</a>.",
    "links": [
@@ -214,56 +214,55 @@
   },
   "analysis": {
    "name": "The analysis",
-   "blurb": "Every shot on one bull, with mean radius, sigma, extreme spread and CEP, each carrying the range it could really be.",
+   "blurb": "Every shot on one bull, with the six figures a shooter reads in view and everything else one click away.",
    "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is.",
    "withoutASheet": "No difference. Every figure here is worked out from the marks and the scale, and it does not matter whether a detector placed them or you did.",
    "parts": [
     [
+     "Back, top left",
+     "Returns to marking with every edit as you left it."
+    ],
+    [
      "The composite, in the middle",
-     "A dot at each shot's centre, drawn where it landed relative to its own bull. The circle around each dot is the calibre outline, so you can see how much of the group is bullet and how much is dispersion."
+     "A dot at each shot's center, drawn where it landed relative to its own bull, on white with dark outlines at the hole size, so it reads on a laptop in daylight. The group center and the extreme spread line are the one color that stands out."
     ],
     [
      "The key, top left",
-     "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group centre."
+     "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group center."
     ],
     [
      "Zero correction",
-     "How far the group centre is from where you aimed, across and up and down, in inches and in your angle unit, with the give or take. Underneath, in plain words, whether that offset is distinguishable from zero at all with this many shots."
-    ],
-    [
-     "Carried to another distance",
-     "The same correction worked out for a different range."
+     "How far the group center is from where you aimed, across and up and down, in inches, MOA and mil side by side, and the distance the correction is for. Beneath it one line says what to dial, in clicks of your scope with the click value, or that the offset cannot yet be told from chance. Its why holds the give or take."
     ],
     [
      "Group",
-     "How many shots you said, how many were detected, and then the measurements. Mean radius is shown largest because it is the one that settles down fastest with few shots."
+     "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. Hover over a figure for its angle, the range it could really be, and the figure without any shot you left out."
     ],
     [
-     "The intervals under every number",
-     "Mean radius 0.132 inches with an interval of 0.110 to 0.166 is not the same claim as 0.132. Two loads whose intervals overlap have not been told apart."
+     "Advanced, closed until you open it",
+     "Sigma, the strips across and up and down, the order fired, the shape and flyer tests, the full CEP table, sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it."
     ],
     [
-     "Across, and up and down",
-     "The same shots seen one axis at a time, which shows a vertical or horizontal string that the round picture hides."
+     "The scale badge",
+     "Scale checked, with a tick, when the sheet's own markers set the scale. The detail is behind Show work."
     ],
     [
      "The load block, left",
-     "Which rifle, barrel, load and calibre this sheet was shot with, and where the calibre came from."
+     "Which rifle, barrel, load and caliber this sheet was shot with, and where the caliber came from."
     ],
     [
      "Shots, from their own bull",
      "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold."
     ],
     [
-     "Show work, Report and Export",
-     "Show work opens the reasoning behind every figure. Report makes a printable page. Export writes the numbers out."
+     "Own window, Show work, Report and Export",
+     "Own window moves the figures to a window of their own for a second monitor. Show work opens how the sheet was read. Report makes a printable page. Export writes the complete record, or the shot coordinates as CSV for a spreadsheet."
     ]
    ],
    "steps": [
-    "Read the mean radius and its interval before anything else.",
-    "Check the zero correction, and read the sentence under it saying whether the offset is real at this many shots.",
-    "Look at Across, and up and down for a string in one axis.",
-    "Press Show work on anything you want the reasoning for.",
+    "Read the mean radius, and hover over it for the range it could really be.",
+    "Check the zero correction and the line under it saying what to dial, or that the offset is not real yet at this many shots.",
+    "Open Advanced for the strips across and up and down, and the tests.",
     "Report or Export if you want to keep it outside GroupLab."
    ],
    "fits": "After <a href=\"/tour/marking/\">marking</a>. The session is saved to <a href=\"/tour/sessions/\">session records</a>, where two can be sent to <a href=\"/tour/compare/\">compare loads</a>.",
@@ -374,7 +373,7 @@
    "parts": [
     [
      "The plots along the top",
-     "One per load. Dots are the shots about their own bulls, excluded ones left out, the cross is the group centre, the dotted circle CEP 50 and the dashed circle CEP 90."
+     "One per load. Dots are the shots about their own bulls, excluded ones left out, the cross is the group center, the dotted circle CEP 50 and the dashed circle CEP 90."
     ],
     [
      "The figures under each plot",
@@ -520,7 +519,7 @@
   "settings": {
    "name": "Settings",
    "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
-   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimetres without touching a single record. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
+   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [

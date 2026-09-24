@@ -102,7 +102,7 @@ public static class DetectionAdvice
         // The detector's figures are the sheet's own inches; on a scan they are said in real ones, like every other size. Entry 171.
         double k = result.Scale?.PrintScale ?? 1;
         return string.Create(CultureInfo.InvariantCulture,
-            $"These holes measure {marks * k:0.000} in across, and a {calibre.Name} bullet would be expected to make about {expected * k:0.000} in. GroupLab is judging one hole from two against the sheet's own marks, not the calibre.");
+            $"These holes measure {marks * k:0.000} in across, and a {calibre.Name} bullet would be expected to make about {expected * k:0.000} in. GroupLab is judging one hole from two against the sheet's own marks, not the caliber.");
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public static class DetectionAdvice
     public static string WrongSheet(string codesSay, TargetDefinition chosen)
     {
         ArgumentNullException.ThrowIfNull(chosen);
-        return $"This sheet's own codes say it is {codesSay}, and {chosen.Name} was chosen. Analysing it as {chosen.Name} would measure the wrong bulls, so nothing was analysed. Choose {codesSay}, or open the sheet this image really is.";
+        return $"This sheet's own codes say it is {codesSay}, and {chosen.Name} was chosen. Analyzing it as {chosen.Name} would measure the wrong bulls, so nothing was analyzed. Choose {codesSay}, or open the sheet this image really is.";
     }
 
     /// <summary>

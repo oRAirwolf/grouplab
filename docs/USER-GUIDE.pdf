@@ -73,7 +73,7 @@ q
 q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
 BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The print screen) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2878 Tm (Check the size before you shoot. Measure from the centre of bull 1 to the centre of bull 5 with a ruler. On the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2878 Tm (Check the size before you shoot. Measure from the center of bull 1 to the center of bull 5 with a ruler. On the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2966 Tm (Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the printer scaled the sheet, and it should be printed again.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3089 Tm (Your own sheet. Design your own sheet, in the library or on the print screen, lays out a grid of bulls:) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3212 Tm (-) Tj ET
@@ -84,7 +84,7 @@ BT /F1 71 Tf 1 0 0 -1 395 3416 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3416 Tm (if you give your five-shot group, a spacing tight for it is warned about.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3518 Tm (Save to your own sheets keeps a design in the library. There you can rename it, duplicate it, or delete it after) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3606 Tm (GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3694 Tm (makes a session unreadable, because every session keeps its own copy of the sheet it was analysed against.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3694 Tm (makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3817 Tm (A volunteer pack. Print a volunteer pack, on the print screen, gives the sheet and one page of instructions) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3905 Tm (together, for someone shooting a sheet for the project.) Tj ET
 0.078431 0.078431 0.078431 rg
@@ -97,7 +97,7 @@ BT /F1 71 Tf 1 0 0 -1 395 4242 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4242 Tm (Mount the sheet flat, supported all over.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 4344 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4344 Tm (For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4432 Tm (sighters, and GroupLab keeps them out of the group unless you ask for them to be analysed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4432 Tm (sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 4534 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4534 Tm (Write only in the load block.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4636 Tm (Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you) Tj ET
@@ -170,7 +170,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 6030 >>
+<< /Length 6029 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -186,10 +186,10 @@ BT /F1 71 Tf 1 0 0 -1 494 758 Tm (Refused candidate: something the detector saw 
 BT /F1 71 Tf 1 0 0 -1 395 860 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 860 Tm (Bulls with nothing on them: when you have said how many rounds you fired and GroupLab finds fewer, it) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 948 Tm (names the bulls that are empty. A shortfall is never allowed to pass as a clean result.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1050 Tm (Name the calibre if you know it. It sets the smallest hole GroupLab will accept, which matters most for small) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1138 Tm (calibres, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1050 Tm (Name the caliber if you know it. It sets the smallest hole GroupLab will accept, which matters most for small) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1138 Tm (calibers, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1226 Tm (holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1314 Tm (finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the calibre the detector has) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1314 Tm (finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1402 Tm (only the shape of a mark to go on.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1525 Tm (Holes between bulls, and marks off the grid. A hole that lands between two bulls, or beside the grid rather than) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1613 Tm (on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not) Tj ET
@@ -221,14 +221,14 @@ BT /F1 71 Tf 1 0 0 -1 381 3252 Tm (sheet. A pinch zooms, on a touchpad or a touc
 BT /F1 71 Tf 1 0 0 -1 381 3340 Tm (scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3463 Tm (In the side panel you also set:) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3586 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3586 Tm (the calibre, as the bullet's diameter;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3586 Tm (the caliber, as the bullet's diameter;) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3688 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3688 Tm (the shot distance;) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3790 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3790 Tm (the rifle, barrel and load, from your records;) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3892 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3892 Tm (the rounds fired, as a check on the count.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3994 Tm (When the marks are right, Accept and analyse. Anything still open stays open: the analysis names it, and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3994 Tm (When the marks are right, Accept and analyze. Anything still open stays open: the analysis names it, and the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4082 Tm (sheet crumb goes back to it.) Tj ET
 0.078431 0.078431 0.078431 rg
 BT /F1 99 Tf 1 0 0 -1 381 4289 Tm (5. Read the analysis) Tj ET
@@ -241,11 +241,11 @@ BT /F1 71 Tf 1 0 0 -1 395 4542 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4542 Tm (On the left: the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4630 Tm (click on a bull in the small sheet selects its shots.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 4732 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4732 Tm (In the centre: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's centre, with) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4820 Tm (the group's centre and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4732 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, with) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4820 Tm (the group's center and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4908 Tm (removed.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 5010 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5010 Tm (On the right: the zero correction, the figures and the two judgement cards.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5010 Tm (On the right: the zero correction, the figures and the two judgment cards.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 4 of 10) Tj ET
 Q
 endstream
@@ -254,7 +254,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 27 0 R >> >> /Contents 13 0 R >>
 endobj
 13 0 obj
-<< /Length 3655 >>
+<< /Length 3604 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -282,13 +282,13 @@ BT /F1 71 Tf 1 0 0 -1 381 4183 Tm (A ? beside every figure. Two or three plain s
 BT /F1 71 Tf 1 0 0 -1 381 4271 Tm (the number of shots does to it, with More going to the glossary. Every explanation says something about sample) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4359 Tm (size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4447 Tm (one five shot group as a measurement of a rifle.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4570 Tm (Every figure carries its interval, the range the true value is likely to lie in, and the percentage it covers. When you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4658 Tm (have excluded a shot, each figure is also given without the exclusion, so an exclusion is never hidden.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4781 Tm (The zero correction is given in MOA, mils, inches and centimetres at once. Where your rifle records its scope's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4869 Tm (units, that unit leads and the correction is also spelled out in clicks: "Up 8 clicks at 0.1 mil". The clicks are never) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4957 Tm (guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5045 Tm (assuming either would send you the wrong way. A metric and imperial toggle on the page switches every figure) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5133 Tm (between inches with MOA and centimetres with mils, and changes nothing that is stored.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4570 Tm (Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4658 Tm (90. Every figure carries its interval, the range the true value is likely to lie in, and the percentage it covers: hold) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4746 Tm (the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4834 Tm (also gives the figure without the exclusion, so an exclusion is never hidden.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4957 Tm (Advanced holds everything else, closed until you open it: sigma, the strips across and up and down, the order the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5045 Tm (shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5133 Tm (distance. GroupLab remembers whether you opened it.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 5 of 10) Tj ET
 Q
 endstream
@@ -297,53 +297,67 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 15 0 R >>
 endobj
 15 0 obj
-<< /Length 3711 >>
+<< /Length 5773 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (It says what to dial when the group's centre is far enough from the aim to be told from chance. When it is not, it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (says so and how many shots would settle it. Dialling an offset nobody can distinguish from zero only chases) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (noise.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 751 Tm (The two cards:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 874 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 874 Tm (Shape says whether the group is round, as far as its shots can tell. It also says whether it strings vertically,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 962 Tm (and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1050 Tm (not evidence of none.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1152 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1152 Tm (Worst shot says whether the shot furthest out is further than groups of that size usually put their worst. Even) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1240 Tm (when it is, that makes it worth a look, not a flyer. Whether it was called or pulled is yours to say.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1342 Tm (What each "why" says, in plain words:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1465 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1465 Tm (Zero correction: the smallest offset these shots can call; how the spread was estimated; and that moving a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1553 Tm (zero between distances needs the ballistics screen.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1655 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1655 Tm (CEP: these circles come from the group's sigma, assuming the shots scatter evenly about the centre.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1757 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1757 Tm (Shape: how often a truly round group would look this far from round, and the shape of the group's error) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1845 Tm (ellipse.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1947 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1947 Tm (Worst shot: how far out the worst shot sits in the group's own mean radii, against where simulated round) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2035 Tm (groups put theirs.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2137 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2137 Tm (Decisions left unmade: every figure here inherits the decisions still open.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2239 Tm (The full CEP table and bivariate fit are one click away, and GroupLab remembers whether you opened them. The) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2327 Tm (table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the centre and the spread on each) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2415 Tm (axis with their intervals, and the error ellipse.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (Back, top left, returns to marking with every edit as you left it. The badge beside Show work reads Scale checked) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (when the sheet's own markers set the scale; Show work has the detail. Own window moves the figures to a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (window of their own, for a second monitor, and closing that window puts them back.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 751 Tm (The zero correction gives the group center's offset across and up and down in your length unit, MOA and mil side) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 839 Tm (by side, whichever your scope is marked in, and the distance it is for. Where your rifle records its scope's click) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 927 Tm (value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1103 Tm (are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1191 Tm (switches the length unit between inches and centimeters, and changes nothing that is stored.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1314 Tm (It says what to dial when the group's center is far enough from the aim to be told from chance. When it is not, it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1402 Tm (says so and how many shots would settle it. Dialing an offset nobody can distinguish from zero only chases) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1490 Tm (noise.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1613 Tm (The two cards, in Advanced:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1736 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1736 Tm (Shape says whether the group is round, as far as its shots can tell. It also says whether it strings vertically,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1824 Tm (and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1912 Tm (not evidence of none.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2014 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2014 Tm (Worst shot says whether the shot furthest out is further than groups of that size usually put their worst. Even) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2102 Tm (when it is, that makes it worth a look, not a flyer. Whether it was called or pulled is yours to say.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2204 Tm (What each "why" says, in plain words:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2327 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2327 Tm (Zero correction: the smallest offset these shots can call; how the spread was estimated; and that moving a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2415 Tm (zero between distances needs the ballistics screen.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2517 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2517 Tm (CEP: these circles come from the group's sigma, assuming the shots scatter evenly about the center.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2619 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2619 Tm (Shape: how often a truly round group would look this far from round, and the shape of the group's error) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2707 Tm (ellipse.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2809 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2809 Tm (Worst shot: how far out the worst shot sits in the group's own mean radii, against where simulated round) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2897 Tm (groups put theirs.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2999 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2999 Tm (Decisions left unmade: every figure here inherits the decisions still open.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3101 Tm (The full CEP table and bivariate fit are in Advanced, one more click away, and GroupLab remembers whether) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3189 Tm (you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3277 Tm (the spread on each axis with their intervals, and the error ellipse.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3400 Tm (Export writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3488 Tm (a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. Import shots) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3576 Tm (from a CSV, in the menu, reads coordinates exported by other software: it asks which column is across, which is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3664 Tm (up and down, and what unit they are in, then shows the analysis. There is no image with an import, so the figures) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3752 Tm (are the whole of it.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2622 Tm (6. Sessions and the report) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 3959 Tm (6. Sessions and the report) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2652 3556 3 re
+381 3989 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2752 Tm (Accept and analyse saves the sheet as a session: the marking with every edit, its figures, a proof image and its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2840 Tm (own copy of the sheet. Session records, in the rail, lists them newest first:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2963 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2963 Tm (filter them by rifle and by load;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3065 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3065 Tm (open one back to its analysis, which needs no image;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3167 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3167 Tm (delete one, after GroupLab asks.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4089 Tm (Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4177 Tm (own copy of the sheet. Session records, in the rail, lists them newest first:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4300 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4300 Tm (filter them by rifle and by load;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4402 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4402 Tm (open one back to its analysis, which needs no image;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4504 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4504 Tm (delete one, after GroupLab asks.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 6 of 10) Tj ET
 Q
 endstream
@@ -418,7 +432,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 30 0 R >> >> /Contents 21 0 R >>
 endobj
 21 0 obj
-<< /Length 2809 >>
+<< /Length 2808 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -426,10 +440,10 @@ q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
 BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The ballistics screen) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2878 Tm (The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2966 Tm (clicks, in the air you enter. Aerodynamic jump is not modelled, and the table says so.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2966 Tm (clicks, in the air you enter. Aerodynamic jump is not modeled, and the table says so.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3089 Tm (At another distance. On the analysis, the zero correction can be carried to a second distance, with its uncertainty) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3177 Tm (carried with it. An offset that could not be told from zero is not carried.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3300 Tm (The ballistics screen also carries the analysed group to another distance, and gives the chance of hitting a circle) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3300 Tm (The ballistics screen also carries the analyzed group to another distance, and gives the chance of hitting a circle) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3388 Tm (or a rectangle there:) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3511 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3511 Tm (It is a prediction, never a measurement.) Tj ET
@@ -472,8 +486,8 @@ BT /F1 99 Tf 1 0 0 -1 381 536 Tm (10. Comparing several sheets at once) Tj ET
 f
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 666 Tm (Where several sheets were shot with the same load, GroupLab can read them as one group. It is not a matter of) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 754 Tm (adding the numbers up: several sheets have several centres, and what a pooled figure means depends on which) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 842 Tm (centre you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 754 Tm (adding the numbers up: several sheets have several centers, and what a pooled figure means depends on which) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 842 Tm (center you measure from. GroupLab says which it used and will not pool sheets that cannot honestly be pooled.) Tj ET
 0.078431 0.078431 0.078431 rg
 BT /F1 99 Tf 1 0 0 -1 381 1049 Tm (11. If something goes wrong) Tj ET
 0.745098 0.745098 0.745098 rg
@@ -7071,28 +7085,28 @@ xref
 0000007216 00000 n 
 0000010480 00000 n 
 0000010608 00000 n 
-0000016691 00000 n 
-0000016846 00000 n 
-0000020554 00000 n 
-0000020682 00000 n 
-0000024446 00000 n 
-0000024601 00000 n 
-0000026029 00000 n 
-0000026184 00000 n 
-0000028013 00000 n 
-0000028168 00000 n 
-0000031030 00000 n 
-0000031185 00000 n 
-0000034285 00000 n 
-0000219154 00000 n 
-0000440741 00000 n 
-0000648667 00000 n 
-0000881678 00000 n 
-0000950086 00000 n 
-0001071061 00000 n 
-0001169190 00000 n 
+0000016690 00000 n 
+0000016845 00000 n 
+0000020502 00000 n 
+0000020630 00000 n 
+0000026456 00000 n 
+0000026611 00000 n 
+0000028039 00000 n 
+0000028194 00000 n 
+0000030023 00000 n 
+0000030178 00000 n 
+0000033039 00000 n 
+0000033194 00000 n 
+0000036294 00000 n 
+0000221163 00000 n 
+0000442750 00000 n 
+0000650676 00000 n 
+0000883687 00000 n 
+0000952095 00000 n 
+0001073070 00000 n 
+0001171199 00000 n 
 trailer
 << /Size 32 /Root 1 0 R >>
 startxref
-1248502
+1250511
 %%EOF

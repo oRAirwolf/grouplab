@@ -507,7 +507,7 @@ public class MarkingScreenTests
             Assert.Equal(MainWindow.CancellingText, window.StatusText);
             Pump(window);
             Assert.Null(window.Session.State.Scale);
-            Assert.StartsWith("Detection cancelled", window.StatusText, StringComparison.Ordinal);
+            Assert.StartsWith("Detection canceled", window.StatusText, StringComparison.Ordinal);
             window.Close();
         }
         finally

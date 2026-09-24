@@ -142,7 +142,7 @@ public class BallisticSolverTests
         Assert.Null(plain.Stability);
         Assert.All(plain.Points, p => Assert.Null(p.SpinDriftInches));
         Assert.All(plain.Points, p => Assert.Null(p.CoriolisInches));
-        Assert.Equal(["Aerodynamic jump is not modelled."], plain.NotModelled);
+        Assert.Equal(["Aerodynamic jump is not modeled."], plain.NotModelled);
         Assert.All(plain.Points, p => Assert.Null(p.CoriolisVerticalInches));
 
         var spun = BallisticSolver.Solve(Case with { TwistInches = 10, BulletDiameterInches = 0.308, BulletLengthInches = 1.24, LatitudeDegrees = 45 }, 1000, 500);
@@ -167,7 +167,7 @@ public class BallisticSolverTests
         Assert.Contains("G7 BC 0.243 (ICAO), 2700 fps, 175 gr, sight 1.50 in, zeroed at 100 yd", text, StringComparison.Ordinal);
         Assert.Contains("59 F, 29.92 inHg, 50% humidity, crosswind 10 mph from the left, angle 0 degrees", text, StringComparison.Ordinal);
         Assert.Contains("   1000 ", text, StringComparison.Ordinal);
-        Assert.Contains("Aerodynamic jump is not modelled.", text, StringComparison.Ordinal);
+        Assert.Contains("Aerodynamic jump is not modeled.", text, StringComparison.Ordinal);
         Assert.DoesNotContain("Coriolis vertical", text, StringComparison.Ordinal);
 
         Assert.Equal(2, GroupLab.Cli.TrajectoryVerb.Run(["--bc", "0.243"], new StringWriter(), error));

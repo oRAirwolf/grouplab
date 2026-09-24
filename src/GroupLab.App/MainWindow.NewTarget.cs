@@ -120,25 +120,7 @@ public sealed partial class MainWindow
         Leaving(() =>
         {
             var was = session.State;
-            session.Load(MarkingState.Empty);
-            grey = null;
-            valueImage = null;
-            metadata = null;
-            artwork = null;
-            statedSize = null;
-            detectedState = null;
-            plotDefinition = null;
-            registrationResidual = null;
-            pendingDetection = null;
-            currentSession = null;
-            savedMarking = null;
-            calibreConfirmed = false;
-            sheetChooser.IsVisible = false;
-            roundsFired.Text = "";
-            calibreBox.Text = "";
-            shotDistance.Text = "";
-            SetAnalysing(false);
-            canvas.SetImage(null, null);
+            ClearSheet(MarkingState.Empty);
             status.Text = "New target. Open a photograph or scan when you are ready.";
             DiagnosticLog.Info("target.new");
             Refresh();
@@ -149,5 +131,29 @@ public sealed partial class MainWindow
                 status.Text = "The last target is back. Its image is not reopened, so open it again to mark on it.";
             }));
         });
+    }
+
+    /// <summary>Everything New target clears, with the marking it starts from: empty, or shots imported from a CSV (entry 169 section 8).</summary>
+    private void ClearSheet(MarkingState start)
+    {
+        session.Load(start);
+        grey = null;
+        valueImage = null;
+        metadata = null;
+        artwork = null;
+        statedSize = null;
+        detectedState = null;
+        plotDefinition = null;
+        registrationResidual = null;
+        pendingDetection = null;
+        currentSession = null;
+        savedMarking = null;
+        calibreConfirmed = false;
+        sheetChooser.IsVisible = false;
+        roundsFired.Text = "";
+        calibreBox.Text = "";
+        shotDistance.Text = "";
+        SetAnalysing(false);
+        canvas.SetImage(null, null);
     }
 }

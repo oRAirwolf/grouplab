@@ -75,7 +75,7 @@ public class CalibreConfirmationTests
 
         var none = CalibreConfirmation.Guess(MarkingState.Empty);
         Assert.Null(none.DiameterInches);
-        Assert.Contains("nothing to read a calibre from", none.Why, StringComparison.Ordinal);
+        Assert.Contains("nothing to read a caliber from", none.Why, StringComparison.Ordinal);
     }
 
     /// <summary>A hole size a person set by hand counts as a measurement, because they measured it.</summary>

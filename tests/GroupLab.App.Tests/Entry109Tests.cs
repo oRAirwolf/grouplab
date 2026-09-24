@@ -118,7 +118,7 @@ public class Entry109Tests
             // Entry 140 section 2 put New target at the head of the menu: it is the document action that comes before opening one. Entry 137
             // section 5 put Paste under Open image, because it is the same act with a different source.
             Assert.Equal(
-                ["New target (Ctrl+N)", "Open image…", "Paste an image (Ctrl+V)", "Open marking…", "Export…", "Report a problem…"],
+                [$"New target ({CommandKey.Label("N")})", "Open image…", $"Paste an image ({CommandKey.Label("V")})", "Open marking…", "Export…", "Import shots from a CSV…", "Report a problem…"],
                 window.MenuItems);
             // Only what is on this screen: the library has worded Zoom in, Zoom out and Fit buttons of its own (entry 120 section 10.3),
             // and they are in the window's tree whichever screen is showing.
@@ -129,10 +129,11 @@ public class Entry109Tests
             }
 
             Assert.Contains("Detect on a GroupLab sheet", words);
-            Assert.Contains("Accept and analyse", words);
+            Assert.Contains("Accept and analyze", words);
             var tools = window.GetLogicalDescendants().OfType<Avalonia.Controls.Primitives.ToggleButton>().Where(t => t.Classes.Contains(AppStyles.IconButton)).ToList();
             Assert.Equal(6, tools.Count);
-            Assert.All(tools, t => Assert.IsType<PathIcon>(t.Content));
+            // Entry 169 section 7.2: the icon, with the tool's key beneath it that Alt shows.
+            Assert.All(tools, t => Assert.IsType<PathIcon>(Assert.IsType<StackPanel>(t.Content).Children[0]));
             Assert.Equal(["Pan, and click a mark to select it (C or P)", "Scale: length (L)", "Scale: rectangle (R)", "Point of aim (A)", "Impact (I)", "Select (V)"], tools.Select(t => ToolTip.GetTip(t) as string));
             window.Close();
         }
@@ -217,7 +218,7 @@ public class Entry109Tests
 
             // One number per shot: shots are named by their bull, so no bull column when every shot sits on its own.
             Assert.DoesNotContain(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == "bull" && Shown(t));
-            Assert.Contains(window.Plot.Legend, l => l.Contains("a dot at each centre", StringComparison.Ordinal));
+            Assert.Contains(window.Plot.Legend, l => l.Contains("a dot at each center", StringComparison.Ordinal));
             window.Plot.ShowOutlines = false;
             Assert.Contains(window.Plot.Legend, l => l.Contains("outlines are hidden", StringComparison.Ordinal));
 

@@ -38,7 +38,9 @@ public sealed partial class MainWindow
         fullFiguresPanel.IsExpanded = WhyOpen(FullFiguresItem);
         fullFiguresPanel.Expanded += (_, _) => RememberFullFigures(true);
         fullFiguresPanel.Collapsed += (_, _) => RememberFullFigures(false);
-        figures.Children.Insert(figures.Children.IndexOf(flags) + 1, fullFiguresPanel);
+        // Entry 169 section 1: the full tables sit with the flags, in the Advanced section.
+        var holder = (Panel)flags.Parent!;
+        holder.Children.Insert(holder.Children.IndexOf(flags) + 1, fullFiguresPanel);
     }
 
     private void RememberFullFigures(bool open)
@@ -110,7 +112,7 @@ public sealed partial class MainWindow
             }
         }
 
-        fullFigures.Children.Add(Note("The circular estimate assumes the group round and gives its interval. The correlated normal and Grubbs-Patnaik estimates use the group's own covariance, so they allow for an elliptical group, and have no interval here. All three are about the group's own centre."));
+        fullFigures.Children.Add(Note("The circular estimate assumes the group round and gives its interval. The correlated normal and Grubbs-Patnaik estimates use the group's own covariance, so they allow for an elliptical group, and have no interval here. All three are about the group's own center."));
     }
 
     private void FullFigures(IReadOnlyList<PointD> offsets, string heading)
@@ -168,7 +170,7 @@ public sealed partial class MainWindow
         string unit = UnitSettings.Symbol(units.Linear);
         foreach (string line in new[]
         {
-            $"Centre {units.Number(cx.Value)} across ({units.Number(cx.Lower)} to {units.Number(cx.Upper)}), {units.Number(-cy.Value)} up ({units.Number(-cy.Upper)} to {units.Number(-cy.Lower)}) {unit}, 95% intervals",
+            $"Center {units.Number(cx.Value)} across ({units.Number(cx.Lower)} to {units.Number(cx.Upper)}), {units.Number(-cy.Value)} up ({units.Number(-cy.Upper)} to {units.Number(-cy.Lower)}) {unit}, 95% intervals",
             $"sd across {units.Length(sx.Value)} ({units.Number(sx.Lower)} to {units.Number(sx.Upper)}), sd up and down {units.Length(sy.Value)} ({units.Number(sy.Lower)} to {units.Number(sy.Upper)})",
             string.Create(CultureInfo.InvariantCulture, $"correlation across with up {correlation:0.00}; error ellipse sd {units.Number(Math.Sqrt(ellipse.Shape.Major))} by {units.Length(Math.Sqrt(ellipse.Shape.Minor))}, major axis at {DisplayedAngle(ellipse.Shape.AngleDegrees):0} degrees"),
             $"95% of shots fall in an ellipse {units.Number(2 * ellipse.SemiMajor)} by {units.Length(2 * ellipse.SemiMinor)} across its axes",

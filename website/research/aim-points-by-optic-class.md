@@ -21,7 +21,7 @@ sources:
 
 | Class | What limits your aim | The target should |
 |---|---|---|
-| **1x** (red dots, prisms) | The dot's own size: a 2 MOA dot covers about 2 inches at 100 yards | Give the dot a shape to centre in |
+| **1x** (red dots, prisms) | The dot's own size: a 2 MOA dot covers about 2 inches at 100 yards | Give the dot a shape to center in |
 | **Low power variable** (1-6x to 1-10x) | Magnification, and on first focal plane scopes a reticle that is tiny at low power | Have bold features and work with a small reticle |
 | **Medium power variable** (up to about 20x) | Magnification and glass | Have features sized for 10x to 15x |
 | **High power variable** (25x and up) | Glass quality, mirage and the reticle covering small features | Avoid fine lines; bold symmetric shapes |
@@ -49,13 +49,13 @@ The developer's optics span every class and several price points. The tier is th
 
 Several pairs share a magnification range at different prices: the two 1-6x scopes, and the Venom and Strike Eagle 5-25x. Comparing them at the same settings separates what the glass does from what the magnification does.
 
-## 1x optics: centring a dot
+## 1x optics: centering a dot
 
-A red dot has a fixed angular size. A 2 MOA dot covers about 0.5 inch at 25 yards, 1 inch at 50 and 2 inches at 100. You will not see a small printed feature through it at any distance, because the dot sits on top of it. What you can do very well is centre a dot inside a ring, using the same vernier ability that lets you centre a crosshair on a diamond.
+A red dot has a fixed angular size. A 2 MOA dot covers about 0.5 inch at 25 yards, 1 inch at 50 and 2 inches at 100. You will not see a small printed feature through it at any distance, because the dot sits on top of it. What you can do very well is center a dot inside a ring, using the same vernier ability that lets you center a crosshair on a diamond.
 
 ![A 2 MOA dot in rings of 2 to 6 times its size](/research/aim-points-by-optic-class/figures/dot-in-rings.png)
 
-Too small a ring and the dot swallows it; too large and centring gets loose. Somewhere between two and four times the dot is likely best. The 1x test card will have rings at 2, 3, 4 and 6 times a 2 MOA dot, sized by angle so they look the same at 25 and 50 yards, plus a ring matched to the Holosun MRS's own circle reticle. Etched prism reticles (the SLx) behave differently for shooters with astigmatism, which is worth recording.
+Too small a ring and the dot swallows it; too large and centering gets loose. Somewhere between two and four times the dot is likely best. The 1x test card will have rings at 2, 3, 4 and 6 times a 2 MOA dot, sized by angle so they look the same at 25 and 50 yards, plus a ring matched to the Holosun MRS's own circle reticle. Etched prism reticles (the SLx) behave differently for shooters with astigmatism, which is worth recording.
 
 ## Low power variables: the focal plane matters
 
@@ -70,7 +70,7 @@ The chart is illustrative, with typical rather than measured values, but it show
 1. **Cards sized by angle.** Each design is drawn in angular units, then printed for 25, 50 or 100 yards, so it looks the same through the scope at any of them.
 2. **Equal magnifications.** Every magnified optic is scored at the same settings where its range allows: 1x, 4x, 6x, 8x, 10x, 15x, 20x, 25x and its maximum.
 3. **Distances by class.** 1x at 25 and 50 yards; LPVOs at 50 and 100; MPVOs and HPVOs at 100.
-4. **The same scoring.** 0 cannot see the centre, 1 can see but not centre confidently, 2 centre confidently; light, mirage, time and sun direction recorded.
+4. **The same scoring.** 0 cannot see the center, 1 can see but not center confidently, 2 center confidently; light, mirage, time and sun direction recorded.
 5. **More than one pair of eyes.** At least two observers, because eyesight varies.
 6. **Then shoot it.** For the top designs in each class, a group on the old bull and a group on the new, same rifle and load, to check that easier aiming shows up on paper.
 

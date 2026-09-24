@@ -105,7 +105,7 @@ public class AssignmentCertaintyTests
     public void TheZeroCorrectionRefusesRatherThanCarryingAWarning()
     {
         Assert.Contains("No zero correction", AssignmentCertainties.ZeroWithheld, StringComparison.Ordinal);
-        Assert.Contains("worse than not dialling it at all", AssignmentCertainties.ZeroWithheld, StringComparison.Ordinal);
+        Assert.Contains("worse than not dialing it at all", AssignmentCertainties.ZeroWithheld, StringComparison.Ordinal);
 
         // And the short label that sits beside a number is short, because it sits beside the number rather than replacing it.
         Assert.True(AssignmentCertainties.BesideAFigure.Length <= 20);

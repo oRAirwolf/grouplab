@@ -18,13 +18,13 @@ sources:
   - "David Wollschlaeger, shotGroups R package, group centre and its confidence region. https://cran.r-project.org/package=shotGroups"
 ---
 
-## The centre of a group is an estimate
+## The center of a group is an estimate
 
-When you zero, you shoot a group, find its centre, and move the reticle by the distance from the centre to your aim point. The catch is that a group's centre moves around from group to group just as its size does. With a small group, the centre you measured is not exactly where the rifle really shoots.
+When you zero, you shoot a group, find its center, and move the reticle by the distance from the center to your aim point. The catch is that a group's center moves around from group to group just as its size does. With a small group, the center you measured is not exactly where the rifle really shoots.
 
-How far off can it be? For shots with a spread of sigma in each direction, the centre of n shots has a spread of sigma divided by the square root of n. Averaged over direction:
+How far off can it be? For shots with a spread of sigma in each direction, the center of n shots has a spread of sigma divided by the square root of n. Averaged over direction:
 
-| Shots in the zeroing group | Average error of the measured centre |
+| Shots in the zeroing group | Average error of the measured center |
 |---|---|
 | 3 | 0.72 sigma |
 | 5 | 0.56 sigma |
@@ -56,21 +56,21 @@ The better question is not "where is the centre?" but "is my aim point inside th
 
 ![Deciding whether to adjust](/research/when-to-adjust-zero/figures/decide.png)
 
-- **Left:** five shots. The blue area is where the true centre lies, 95 percent of the time, which is the level every zero figure GroupLab shows is quoted at. The aim point is inside it. The data cannot tell a real error from noise, so leave the scope alone and shoot more.
-- **Right:** ten shots, a group centre further from the aim, and a smaller blue area because there are more shots. The aim point is outside it. The error is real: adjust.
+- **Left:** five shots. The blue area is where the true center lies, 95 percent of the time, which is the level every zero figure GroupLab shows is quoted at. The aim point is inside it. The data cannot tell a real error from noise, so leave the scope alone and shoot more.
+- **Right:** ten shots, a group center further from the aim, and a smaller blue area because there are more shots. The aim point is outside it. The error is real: adjust.
 
-This is what GroupLab's zero offset picture shows: the aim as a cross, the group centre with its uncertainty, and an arrow with the clicks to move only when the uncertainty does not cover the aim. When it does, there is no arrow, because there is nothing honest to tell you to do.
+This is what GroupLab's zero offset picture shows: the aim as a cross, the group center with its uncertainty, and an arrow with the clicks to move only when the uncertainty does not cover the aim. When it does, there is no arrow, because there is nothing honest to tell you to do.
 
 ## Practical rules
 
-- **Zero on more shots.** Five is better than three, ten better than five. The error of the measured centre falls with the square root of the shot count.
+- **Zero on more shots.** Five is better than three, ten better than five. The error of the measured center falls with the square root of the shot count.
 - **Adjust once, then confirm.** Make one correction from a decent group, then shoot to confirm rather than correcting again straight away.
 - **Know your click size.** A 0.1 mil click is 0.36 inch at 100 yards and a 1/4 MOA click is 0.26 inch. A zero error smaller than one click cannot be corrected anyway.
 - **Pool zero groups.** Shots from several sessions with the same zero, rifle and load all count towards knowing where it really shoots.
 
 ## What this means
 
-**Do not correct your zero on three shots if your zero is already good.** The centre of a three-shot group is itself uncertain by about 0.72 sigma, so a full correction based on it leaves you that far out on average, whatever you started from. A rifle that begins perfectly zeroed and is corrected after every three-shot group settles at that error permanently.
+**Do not correct your zero on three shots if your zero is already good.** The center of a three-shot group is itself uncertain by about 0.72 sigma, so a full correction based on it leaves you that far out on average, whatever you started from. A rifle that begins perfectly zeroed and is corrected after every three-shot group settles at that error permanently.
 
 **Shoot more before you touch the turret, or correct less than the full amount.** Both work. What does not work is a full correction on a small group, repeated.
 

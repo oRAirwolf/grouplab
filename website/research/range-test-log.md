@@ -34,7 +34,7 @@ data:
 
 ## Range day, 2026-09-20
 
-**Question:** how does GroupLab do across calibres, with shots that land between bulls, with a blank zero sheet, and with phone photos against scans of the same sheets?
+**Question:** how does GroupLab do across calibers, with shots that land between bulls, with a blank zero sheet, and with phone photos against scans of the same sheets?
 
 **What was done:** five 25-bull load development sheets (GL-CF25-LTR-D), one blank zero sheet and one commercial target, all at 100 yards. Every sheet was scanned at 600 dpi and photographed with a phone in several bursts through the afternoon, 59 photos in all. A second phone photographed the 6mm Creedmoor sheet.
 
@@ -59,7 +59,7 @@ data:
 
 ## Aim point test, 2026-09-23
 
-**Question:** which aim point designs can shooters see and centre on at 100 yards, across scopes of different magnification and glass?
+**Question:** which aim point designs can shooters see and center on at 100 yards, across scopes of different magnification and glass?
 
 **What was done:** a card of nine designs at 100 yards, scored through a Vortex Razor HD Gen III 6-36x56, a DNT TheOne 7-35x56, a Vortex Strike Eagle 5-25x56 and a Primary Arms PLxC 1-8x24, plus a friend's scope, by two observers.
 

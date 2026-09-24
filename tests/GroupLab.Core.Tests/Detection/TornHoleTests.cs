@@ -87,6 +87,6 @@ public class TornHoleTests
 
         Assert.Contains("torn", said, StringComparison.Ordinal);
         Assert.Contains("0.54", said, StringComparison.Ordinal);
-        Assert.Contains("calibre's size", said, StringComparison.Ordinal);
+        Assert.Contains("caliber's size", said, StringComparison.Ordinal);
     }
 }

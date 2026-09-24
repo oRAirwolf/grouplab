@@ -124,7 +124,7 @@ public class CalibreTests
         foreach (string text in new[] { "7.62mm", ".22", ".45", "5.56 mm" })
         {
             Assert.Null(Calibre.Parse(text, out string? problem));
-            Assert.Contains("is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", problem, StringComparison.Ordinal);
+            Assert.Contains("is a caliber's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", problem, StringComparison.Ordinal);
         }
 
         // And the ones that name a family now read as it: .38 is 0.357 in, not 0.380, which is the case entry 108 existed for.
@@ -132,7 +132,7 @@ public class CalibreTests
         Assert.Equal(0.355, Calibre.Parse("9mm", out _)!.DiameterInches, 6);
         Assert.Equal(0.277, Calibre.Parse(".270", out _)!.DiameterInches, 6);
 
-        Assert.Equal("7.62 mm is a calibre's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", Calibre.DesignationRefusal("7.62 mm"));
+        Assert.Equal("7.62 mm is a caliber's name, not the bullet's diameter. Enter the bullet's diameter, such as 7.82 mm or 0.308.", Calibre.DesignationRefusal("7.62 mm"));
     }
 
     /// <summary>Entry 108 section 2: the real diameters beside the designations still read, including those deliberately left off the lists.</summary>
@@ -203,7 +203,7 @@ public class CalibreTests
         var figures = GroupAnalysis.Analyse(session.State).AllShots!;
         Assert.NotNull(figures.MeanRadius);
         Assert.Null(figures.ExtremeSpreadEdgeToEdge);
-        Assert.Equal("needs the group's calibre", figures.ExtremeSpreadEdgeToEdgeUnavailable);
+        Assert.Equal("needs the group's caliber", figures.ExtremeSpreadEdgeToEdgeUnavailable);
 
         // NOTES-FROM-PLANNING.md entry 98 section 2: without a calibre the snap is still sized in sheet units, to a nominal .30 hole, so no zoom
         // or layout can move it; before, it fell back to screen pixels.

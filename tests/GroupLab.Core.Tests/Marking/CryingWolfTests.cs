@@ -148,7 +148,7 @@ public class CryingWolfTests
         var (holes, definition, truth) = GeneratedSheet.Detect(Shots, doubledBulls: 5);
 
         Assert.Equal(HoleSizeSource.TwoSizes, holes.HoleSize!.Source);
-        Assert.Contains("name the calibre", holes.HoleSize.Description, StringComparison.Ordinal);
+        Assert.Contains("name the caliber", holes.HoleSize.Description, StringComparison.Ordinal);
 
         // A size is read, and it is the smaller group's, so it sits below the doubles rather than between the two groups.
         Assert.NotNull(holes.HoleSize.FlagInches);

@@ -433,7 +433,7 @@ public static class GroupAnalysis
             ExtremeSpread: Reported(spreadInterval, 0.95, RangeBasis, "beyond the range-statistic table's 100 shots"),
             ExtremeSpreadUnavailable: null,
             ExtremeSpreadEdgeToEdge: state.Calibre is { } calibre ? spread + calibre.DiameterInches : null,
-            ExtremeSpreadEdgeToEdgeUnavailable: state.Calibre is null ? "needs the group's calibre" : null,
+            ExtremeSpreadEdgeToEdgeUnavailable: state.Calibre is null ? "needs the group's caliber" : null,
             TrueSizeRange: new TrueSizeRange(lower, upper),
             TrueSizeRangeUnavailable: null,
             AspectRatio: shapeDefined ? ellipse.AspectRatio : null,

@@ -209,7 +209,7 @@ public class Entry112Tests
 
                 // Nothing on paper the screen does not say: every figure's lines and every card's verdict and evidence are on the screen as written.
                 var screen = window.StatisticsText.Concat(window.JudgementCards.SelectMany(c => c)).Concat(window.ZeroText).ToHashSet();
-                foreach (var figure in report.Figures.Where(f => f.Label != "Centre from aim"))
+                foreach (var figure in report.Figures.Where(f => f.Label != "Center from aim"))
                 {
                     Assert.Contains(figure.Value, screen);
                     Assert.All(figure.Details, d => Assert.Contains(d, screen));
@@ -224,7 +224,7 @@ public class Entry112Tests
 
                 Assert.All(Strings(report), text => Assert.True(ReportWriter.Printable(text), text));
 
-                var withBoth = report.Figures.Where(f => f.Label != "Centre from aim").ToList();
+                var withBoth = report.Figures.Where(f => f.Label != "Center from aim").ToList();
                 if (withExclusion)
                 {
                     Assert.All(withBoth, f => Assert.Contains(f.Details, d => d.StartsWith("without exclusions: ", StringComparison.Ordinal)));
@@ -333,7 +333,7 @@ public class Entry112Tests
             window.ChooseLibrarySheet("My 5x5");
             Named(window.LibraryDetail, "Delete\u2026").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Settle();
-            Assert.Contains(window.LibraryDetailText, t => t == "Delete My 5x5? One session was analysed against it. It keeps its own copy of the sheet, so it stays readable.");
+            Assert.Contains(window.LibraryDetailText, t => t == "Delete My 5x5? One session was analyzed against it. It keeps its own copy of the sheet, so it stays readable.");
             Named(window.LibraryDetail, "Keep it").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Settle();
             Assert.Contains("My 5x5", window.LibraryRows);
@@ -402,7 +402,7 @@ public class Entry112Tests
             }
 
             Assert.EndsWith("clicks up", rows[6].Split(" | ")[3], StringComparison.Ordinal);
-            Assert.Contains(rows, r => r == "Aerodynamic jump is not modelled.");
+            Assert.Contains(rows, r => r == "Aerodynamic jump is not modeled.");
             Assert.Contains(rows, r => r.StartsWith("No spin drift", StringComparison.Ordinal));
 
             // Carried to 300 yd: this sheet's centre cannot be told from zero on either axis, so nothing is carried, and it says so.
@@ -412,7 +412,7 @@ public class Entry112Tests
             var zero = window.ZeroText.ToList();
             Assert.Contains(zero, t => t.StartsWith("Windage: not distinguishable from zero at ", StringComparison.Ordinal) && t.EndsWith("so there is nothing to carry to 300 yd.", StringComparison.Ordinal));
             Assert.Contains(zero, t => t.StartsWith("Elevation: not distinguishable from zero at ", StringComparison.Ordinal));
-            Assert.Contains(zero, t => t.Contains("Elevation carries along the solver's path, by ", StringComparison.Ordinal) && t.EndsWith("Aerodynamic jump is not modelled.", StringComparison.Ordinal));
+            Assert.Contains(zero, t => t.Contains("Elevation carries along the solver's path, by ", StringComparison.Ordinal) && t.EndsWith("Aerodynamic jump is not modeled.", StringComparison.Ordinal));
             window.Close();
         }
         finally

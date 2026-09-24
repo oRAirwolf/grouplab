@@ -20,12 +20,12 @@ sources:
 
 ## A circle that answers a practical question
 
-Mean radius tells you the average distance of a shot from the group centre. CEP answers a question that is often more useful in the field: **how big a circle do I need to hold a given share of my shots?**
+Mean radius tells you the average distance of a shot from the group center. CEP answers a question that is often more useful in the field: **how big a circle do I need to hold a given share of my shots?**
 
-- **CEP 50** is the radius of the circle, centred on the group, that holds half your shots.
+- **CEP 50** is the radius of the circle, centered on the group, that holds half your shots.
 - **CEP 90** holds nine shots in ten.
 
-If your CEP 90 at 100 yards is 0.6 inch, you can expect nine shots in ten inside a 1.2 inch circle around your group centre, as long as nothing changes.
+If your CEP 90 at 100 yards is 0.6 inch, you can expect nine shots in ten inside a 1.2 inch circle around your group center, as long as nothing changes.
 
 ## Three circles, one number
 
@@ -68,7 +68,7 @@ The shotGroups package, which GroupLab validates against, offers eleven ways to 
 
 ## What GroupLab shows
 
-- CEP 50 as a dotted circle and CEP 90 as a dashed one on the group plot, centred on the group centre, next to the mean radius. CEP 95 is in the figures beside them.
+- CEP 50 as a dotted circle and CEP 90 as a dashed one on the group plot, centered on the group center, next to the mean radius. CEP 95 is in the figures beside them.
 - Each with a confidence interval from the same Rayleigh estimate as mean radius.
 - Width and height of the group, so a stretched group is visible as stretched rather than hidden inside a circle, with the spread across and up and down drawn on one scale.
 - A verdict on whether the group is round at all: not a warning at some aspect ratio, but a circularity test, which says "Round, as far as 24 shots can tell" when the shots cannot separate the two axes and "Not round" when they can. The error ellipse's aspect and the angle of its major axis are given beside it. That distinction matters here, because with few shots almost every group measures oval and almost none of them is.

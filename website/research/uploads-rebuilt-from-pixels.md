@@ -17,7 +17,7 @@ sources:
 
 ## What is in a photograph besides the photograph
 
-A picture from a phone carries a great deal that is not the picture. Where it was taken, to a few metres. When, to the second. Which phone, by serial number. What the owner called the device. Sometimes a thumbnail that survives edits to the main image. Sometimes several seconds of video, appended after the end of the image data, because the phone takes a motion photo and hides it there.
+A picture from a phone carries a great deal that is not the picture. Where it was taken, to a few meters. When, to the second. Which phone, by serial number. What the owner called the device. Sometimes a thumbnail that survives edits to the main image. Sometimes several seconds of video, appended after the end of the image data, because the phone takes a motion photo and hides it there.
 
 A target photograph is usually taken where somebody shoots. That is not information this project wants to hold.
 
@@ -44,7 +44,7 @@ Removed, which is everything else:
 - **Every date and time.**
 - **Maker notes and serial numbers**, which on some cameras identify the individual body.
 - **XMP**, which can carry its own copy of the location and dates.
-- **IPTC** and every other application segment except the basic header and a colour profile.
+- **IPTC** and every other application segment except the basic header and a color profile.
 - **Comments**, and anything a person typed.
 - **The embedded thumbnail**, which can outlive edits to the main image.
 - **Anything after the image's end marker**, which is where motion-photo video lives.
@@ -53,7 +53,7 @@ Removed, which is everything else:
 
 This is the part worth copying if you are building something similar.
 
-A **remove list** is a promise you have to keep updating. Every new camera, every new phone, every revision of a metadata standard can add a field, and your list does not know about it. The field arrives, your code does not recognise it, and it passes straight through. You find out when somebody notices their address in a published file.
+A **remove list** is a promise you have to keep updating. Every new camera, every new phone, every revision of a metadata standard can add a field, and your list does not know about it. The field arrives, your code does not recognize it, and it passes straight through. You find out when somebody notices their address in a published file.
 
 A **keep list** fails the other way. A field nobody has heard of is not on the list, so it is dropped. The cost of being wrong is losing something mildly useful. The cost of the other design being wrong is publishing where somebody lives.
 

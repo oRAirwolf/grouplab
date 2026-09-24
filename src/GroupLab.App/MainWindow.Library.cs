@@ -302,9 +302,9 @@ public sealed partial class MainWindow
         int used = id is null || sessions is null ? 0 : sessions.CountUsing(id);
         return $"Delete {sheet.Definition.Name}? " + used switch
         {
-            0 => "No session was analysed against it.",
-            1 => "One session was analysed against it. It keeps its own copy of the sheet, so it stays readable.",
-            _ => $"{used} sessions were analysed against it. Each keeps its own copy of the sheet, so they stay readable.",
+            0 => "No session was analyzed against it.",
+            1 => "One session was analyzed against it. It keeps its own copy of the sheet, so it stays readable.",
+            _ => $"{used} sessions were analyzed against it. Each keeps its own copy of the sheet, so they stay readable.",
         };
     }
 

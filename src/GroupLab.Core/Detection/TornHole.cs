@@ -72,5 +72,5 @@ public static class TornHole
 
     /// <summary>How a rescued mark reads in the record, so a torn hole is never counted silently.</summary>
     public static string Describe(double solidity) =>
-        System.FormattableString.Invariant($"torn, hull solidity {solidity:0.00}, kept because it is the calibre's size and on a bull");
+        System.FormattableString.Invariant($"torn, hull solidity {solidity:0.00}, kept because it is the caliber's size and on a bull");
 }

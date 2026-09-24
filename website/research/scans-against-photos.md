@@ -51,7 +51,7 @@ Set that against a group. Scan 6's mean radius is about 0.17 in. So a shot's pos
 
 **Seeing a flyer: yes.** A shot an inch from the others is an inch from the others in a photograph too. Three hundredths of an inch does not hide that.
 
-**Zeroing: probably.** A zero correction is the group's centre, and averaging twenty shots shrinks a random error considerably. This was not measured directly, so "probably" is the honest word.
+**Zeroing: probably.** A zero correction is the group's center, and averaging twenty shots shrinks a random error considerably. This was not measured directly, so "probably" is the honest word.
 
 **Comparing two loads: no.** The differences people are trying to detect between loads are smaller than the error a photograph adds. You would be comparing photographs, not ammunition.
 
@@ -85,6 +85,6 @@ What is not established: how a different phone compares, how much of the 0.03 in
 
 **For a group size, a readable photograph is good enough.** A median position error of about 0.03 in against a mean radius of about 0.17 in does not change which load is tighter.
 
-**For anything at the scale of a single hole, it is not.** Hole sizes, edge-to-edge figures, and any judgement that turns on a few hundredths belong on a scan.
+**For anything at the scale of a single hole, it is not.** Hole sizes, edge-to-edge figures, and any judgment that turns on a few hundredths belong on a scan.
 
 **Stop believing the camera is the limit.** It is not the megapixels. It is the light and the angle, both of which are free to fix.

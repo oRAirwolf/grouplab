@@ -255,8 +255,8 @@ public class MarkingSessionTests
         {
             var detection = json.RootElement.GetProperty("detection");
             Assert.Equal(JsonValueKind.Null, detection.GetProperty("calibre").ValueKind);
-            Assert.Contains("without a calibre", detection.GetProperty("description").GetString(), StringComparison.Ordinal);
-            Assert.Contains("without a calibre", json.RootElement.GetProperty("report").GetProperty("detection").GetString(), StringComparison.Ordinal);
+            Assert.Contains("without a caliber", detection.GetProperty("description").GetString(), StringComparison.Ordinal);
+            Assert.Contains("without a caliber", json.RootElement.GetProperty("report").GetProperty("detection").GetString(), StringComparison.Ordinal);
         }
 
         var named = new MarkingSession();
@@ -268,7 +268,7 @@ public class MarkingSessionTests
         Assert.Equal(new DetectionRecord(calibre, 0.2908), read.Detection);
         Assert.Equal(new DetectedOversize(1.87, true), read.Shots.Single().Oversize);
         Assert.Equal(0.224, read.Calibre!.DiameterInches, 9);
-        Assert.Contains("with the calibre .308", GroupAnalysis.Analyse(read).Detection, StringComparison.Ordinal);
+        Assert.Contains("with the caliber .308", GroupAnalysis.Analyse(read).Detection, StringComparison.Ordinal);
 
         var manual = new MarkingSession();
         manual.Open("group.jpg");

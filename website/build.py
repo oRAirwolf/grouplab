@@ -312,7 +312,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 </div>
 <nav class="footer-links" aria-label="Footer">
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
-<a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">Licence, GPL-3.0</a>
+<a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">License, GPL-3.0</a>
 <a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
 <a href="/support/">Support</a><a href="{DISCORD}">Community</a>
 </nav>
@@ -1366,7 +1366,7 @@ def page_releases() -> str:
 <section class="wrap stack">
 <h1>Release notes</h1>
 <p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
-<p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was cancelled or skipped still took its number, which is why the older gaps are wider.</p>
+<p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.</p>
 <div class="stack tight releases">
 {"".join(blocks)}
 </div>

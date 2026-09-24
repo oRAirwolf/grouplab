@@ -60,6 +60,6 @@ public static class HoleSizeGate
         double floor = MinimumDiameter(calibreInches, fallbackInches);
         return calibreInches is { } calibre && calibre > 0
             ? FormattableString.Invariant($"{floor:0.000} in, from the {calibre:0.000} in bullet named")
-            : FormattableString.Invariant($"{floor:0.000} in, with no calibre named");
+            : FormattableString.Invariant($"{floor:0.000} in, with no caliber named");
     }
 }

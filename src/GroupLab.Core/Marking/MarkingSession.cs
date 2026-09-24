@@ -153,8 +153,8 @@ public sealed record AssignmentRule(bool NearestOnly, ImmutableDictionary<int, i
 public sealed record DetectionRecord(Calibre? Calibre, double? HoleSizeInches)
 {
     public string Describe() => Calibre is { } calibre
-        ? string.Create(System.Globalization.CultureInfo.InvariantCulture, $"detected with the calibre {calibre.Name}, whose holes were taken to measure {HoleSizeInches:0.000} in")
-        : "detected without a calibre, so whether a mark was one hole or two was judged by its shape alone";
+        ? string.Create(System.Globalization.CultureInfo.InvariantCulture, $"detected with the caliber {calibre.Name}, whose holes were taken to measure {HoleSizeInches:0.000} in")
+        : "detected without a caliber, so whether a mark was one hole or two was judged by its shape alone";
 }
 
 /// <summary>

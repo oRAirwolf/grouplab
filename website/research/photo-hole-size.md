@@ -5,7 +5,7 @@ group: Reading targets
 number: 1
 written: 2026-09-22
 data_date: 2026-09-20
-samples: 176 holes photographed and 78 scanned, over four sheets of known calibre
+samples: 176 holes photographed and 78 scanned, over four sheets of known caliber
 state: published
 found: A hole in paper photographed with a phone measures anywhere from nine tenths to one and a half times the bullet that made it, and which end you land on depends on the light rather than on the bullet. Scanned, the same four sheets all read between 0.92 and 0.95.
 sure: Four sheets, nine photographs, 176 holes, one shooter, one afternoon. Enough to show that no single correction exists; not enough to tell you what the correction would be if one did.
@@ -26,9 +26,9 @@ Every dot is one image of one sheet. Left of the dashed line the holes measured 
 
 If you photograph a target and GroupLab measures the holes, can it tell you what you were shooting?
 
-It is a fair thing to want. The hole is right there, the software has already measured it to a thousandth of an inch, and a calibre is one more number it could hand you. It would also be useful in the other direction: if GroupLab knows the calibre, it can tell one hole from two, because two bullets through one hole make a mark about twice the area of one.
+It is a fair thing to want. The hole is right there, the software has already measured it to a thousandth of an inch, and a caliber is one more number it could hand you. It would also be useful in the other direction: if GroupLab knows the caliber, it can tell one hole from two, because two bullets through one hole make a mark about twice the area of one.
 
-So we measured it, on four sheets whose calibre we knew for certain because the developer loaded them.
+So we measured it, on four sheets whose caliber we knew for certain because the developer loaded them.
 
 ## What we did
 
@@ -67,7 +67,7 @@ The largest, 0.274 in, **1.039 of the bullet**, so this one measures wider than 
 
 ![A photographed hole measured at 0.383 inches, its torn crown in shadow, with the caliper line reaching well past the dark core](/research/photo-hole-size/figures/hole-shadow.png)
 
-**And this is a photograph.** One of the developer's, of the 6.5 Creedmoor 15 shot sheet, square on and close, and published under the developer's standing consent. GroupLab measured this hole at 0.383 in, **1.452 of the bullet**, which is the median hole on that sheet and not an outlier. Look at what is dark: the core, and around it a ring of torn paper standing up out of the sheet and throwing its own shadow into the hole. To the camera, that shadow is hole. On the scanner, whose lamp sits two centimetres away at a fixed angle, the same sheet's holes measured 0.937 of the bullet.
+**And this is a photograph.** One of the developer's, of the 6.5 Creedmoor 15 shot sheet, square on and close, and published under the developer's standing consent. GroupLab measured this hole at 0.383 in, **1.452 of the bullet**, which is the median hole on that sheet and not an outlier. Look at what is dark: the core, and around it a ring of torn paper standing up out of the sheet and throwing its own shadow into the hole. To the camera, that shadow is hole. On the scanner, whose lamp sits two centimeters away at a fixed angle, the same sheet's holes measured 0.937 of the bullet.
 
 The three centrefire scans agree with each other to within three percent. The photographs do not agree with anything: they run from 0.90 to 1.45, a spread of more than half the bullet's width.
 
@@ -93,7 +93,7 @@ Look at the two 6.5 Creedmoor sheets. Same rifle, same load, same box of bullets
 
 The difference between them is not the hole. It is that one was photographed at 15:33 and the other at 16:56, an hour and twenty minutes later, with the sun that much lower.
 
-A hole in paper is not a flat black disc. It is a torn crown with a shadow in it, and the size of that shadow depends entirely on where the light is coming from. A scanner has a lamp at a fixed angle two centimetres from the paper and a white lid behind it, which is why its numbers are boring and repeatable. An afternoon is not like that.
+A hole in paper is not a flat black disc. It is a torn crown with a shadow in it, and the size of that shadow depends entirely on where the light is coming from. A scanner has a lamp at a fixed angle two centimeters from the paper and a white lid behind it, which is why its numbers are boring and repeatable. An afternoon is not like that.
 
 So the thing being measured in a photograph is not the hole. It is the hole plus however much shadow was in it, and no constant can carry that.
 
@@ -101,13 +101,13 @@ So the thing being measured in a photograph is not the hole. It is the hole plus
 
 Three things, all of them consequences of the table above.
 
-**It does not guess a calibre from a photograph.** It says so plainly and asks you what you were shooting, rather than offering a number it cannot support.
+**It does not guess a caliber from a photograph.** It says so plainly and asks you what you were shooting, rather than offering a number it cannot support.
 
-**It works out what one hole looks like from the sheet itself.** When a sheet has enough holes, GroupLab takes the size of a single hole from the holes on that sheet rather than from the calibre you typed. Whatever the light did to one hole, it did to all of them, so the sheet carries its own correction.
+**It works out what one hole looks like from the sheet itself.** When a sheet has enough holes, GroupLab takes the size of a single hole from the holes on that sheet rather than from the caliber you typed. Whatever the light did to one hole, it did to all of them, so the sheet carries its own correction.
 
-That change is worth a number. On the photograph that started all this, a 6.5 Creedmoor sheet with fifteen shots, GroupLab used to flag **all fifteen holes** as possibly two shots when the correct calibre was entered, because each hole measured about twice the area a 6.5 mm hole "should" be. Measured against the sheet's own holes instead, it flags **one**, which is the widest mark on the sheet and worth a look.
+That change is worth a number. On the photograph that started all this, a 6.5 Creedmoor sheet with fifteen shots, GroupLab used to flag **all fifteen holes** as possibly two shots when the correct caliber was entered, because each hole measured about twice the area a 6.5 mm hole "should" be. Measured against the sheet's own holes instead, it flags **one**, which is the widest mark on the sheet and worth a look.
 
-**It still wants your calibre**, for a different job. On the .22 LR scan, GroupLab finds 24 marks when it knows the calibre and 19 when it does not: knowing that a .22 hole is small is what stops it throwing small marks away. What the calibre no longer does is decide whether a mark is one hole or two.
+**It still wants your caliber**, for a different job. On the .22 LR scan, GroupLab finds 24 marks when it knows the caliber and 19 when it does not: knowing that a .22 hole is small is what stops it throwing small marks away. What the caliber no longer does is decide whether a mark is one hole or two.
 
 ## What we still do not know
 

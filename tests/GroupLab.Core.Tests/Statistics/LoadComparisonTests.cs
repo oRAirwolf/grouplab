@@ -33,8 +33,8 @@ public class LoadComparisonTests
         string detectable = (100 * (SampleSize.MinimumDetectableRatio(10) - 1)).ToString("0", CultureInfo.InvariantCulture);
         Assert.Equal($"With 10 shots a load, this test detects a difference in dispersion of about {detectable} percent or more 80 percent of the time, at the 5 percent level; smaller differences it will usually miss.", report.Tests[0].Power);
         Assert.EndsWith("That is not evidence that they are the same.", report.Tests[0].Verdict, StringComparison.Ordinal);
-        Assert.Equal("Group centre, Hotelling's T squared", report.Tests[1].Name);
-        Assert.StartsWith("It detects a shift between centres of about ", report.Tests[1].Power, StringComparison.Ordinal);
+        Assert.Equal("Group center, Hotelling's T squared", report.Tests[1].Name);
+        Assert.StartsWith("It detects a shift between centers of about ", report.Tests[1].Power, StringComparison.Ordinal);
         Assert.All(report.Tests, t => Assert.False(string.IsNullOrEmpty(t.Power)));
         Assert.Equal([434, 81, 26], report.Resolve.Select(r => r.ShotsPerLoad));
     }
@@ -54,7 +54,7 @@ public class LoadComparisonTests
     {
         var report = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
         Assert.Equal("Dispersion, Fligner-Killeen across all the groups", report.Tests[0].Name);
-        Assert.Equal("Group centres, MANOVA", report.Tests[1].Name);
+        Assert.Equal("Group centers, MANOVA", report.Tests[1].Name);
         Assert.Equal(3, report.Pairs.Count);
         Assert.All(report.Pairs, p => Assert.True(p.HolmPValue >= p.PValue));
         Assert.Contains(report.Explanation, e => e.Contains("Holm's method", StringComparison.Ordinal));

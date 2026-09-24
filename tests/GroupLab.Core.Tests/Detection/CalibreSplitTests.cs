@@ -179,7 +179,7 @@ public class CalibreSplitTests
             for (int k = 0; k < 20; k++)
             {
                 var mark = Assert.Single(Assert.Single(blobs, b => b.Bull == k).Holes);
-                Assert.True(mark.Oversized == pairs.Contains(k), $"bull {k}, calibre {calibre}: {mark.DiameterInches:0.000} in, oversized {mark.Oversized}");
+                Assert.True(mark.Oversized == pairs.Contains(k), $"bull {k}, caliber {calibre}: {mark.DiameterInches:0.000} in, oversized {mark.Oversized}");
             }
         }
     }
@@ -255,7 +255,7 @@ public class CalibreSplitTests
         // is still asked for, because which group a single shot belongs to is the thing that is not known.
         Assert.Equal(twoCalibres[2], two.FlagInches!.Value, 9);
         Assert.True(two.FlagInches!.Value < twoCalibres[8], "the reference has to sit below the larger group or it flags nothing");
-        Assert.Contains("name the calibre", two.Description, StringComparison.Ordinal);
+        Assert.Contains("name the caliber", two.Description, StringComparison.Ordinal);
 
         double[] spread = [.. Enumerable.Range(0, 20).Select(i => 0.20 + (0.01 * i))];
         Assert.Equal(HoleSizeSource.Sheet, RenderDifferenceHoleDetector.SizeReference(spread, options).Source);

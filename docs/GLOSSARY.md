@@ -14,11 +14,11 @@ of what you actually know.
 
 The radius of a circle that would hold that share of your shots: CEP50 holds half of them, CEP90 nine in ten. It answers "where will the next shot go" rather than "how big was this group". It is estimated from your shots, so it is less certain with fewer of them.
 
-## Centre from aim
+## Center from aim
 
 <a id="centre-from-aim"></a>
 
-How far the middle of your group is from where you aimed, and in which direction. This is what a zero correction is worked out from. With few shots the centre itself is uncertain, so a small offset may be the group moving about rather than the rifle being off.
+How far the middle of your group is from where you aimed, and in which direction. This is what a zero correction is worked out from. With few shots the center itself is uncertain, so a small offset may be the group moving about rather than the rifle being off.
 
 ## Extreme spread
 
@@ -30,7 +30,7 @@ The distance between the two shots furthest apart. It is the number most people 
 
 <a id="mean-radius"></a>
 
-The average distance from each shot to the centre of the group. It uses every shot, so it is the steadiest measure of how well a rifle and load shoot, and it changes less from group to group than the extreme spread does. With few shots it is still an estimate: the interval beside it says how much it could move if you shot the same group again.
+The average distance from each shot to the center of the group. It uses every shot, so it is the steadiest measure of how well a rifle and load shoot, and it changes less from group to group than the extreme spread does. With few shots it is still an estimate: the interval beside it says how much it could move if you shot the same group again.
 
 ## Shape
 
@@ -42,7 +42,7 @@ Whether the group is round or stretched in one direction, and by how much. A str
 
 <a id="sigma"></a>
 
-The spread of the shots around their centre, in the same units as the group. It describes the pattern the shots are drawn from rather than the particular shots you fired. Like every figure here it is estimated from the shots you have, so fewer shots means a wider interval.
+The spread of the shots around their center, in the same units as the group. It describes the pattern the shots are drawn from rather than the particular shots you fired. Like every figure here it is estimated from the shots you have, so fewer shots means a wider interval.
 
 ## The interval
 
@@ -60,11 +60,11 @@ What the group would likely measure if you fired it again, given what these shot
 
 <a id="worst-shot"></a>
 
-How far the furthest shot was from the centre, measured in mean radii. It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgement only you can make. Expect the worst of twenty shots to be further out than the worst of five, simply because there are more of them.
+How far the furthest shot was from the center, measured in mean radii. It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make. Expect the worst of twenty shots to be further out than the worst of five, simply because there are more of them.
 
 ## Zero correction
 
 <a id="zero-correction"></a>
 
-How far to move your scope so the group's centre lands where you aimed, in the units your scope adjusts in. It is worked out from where the group is now, so it is only as good as the centre it came from: with a handful of shots, dialling a small correction can easily move you further from where you want to be.
+How far to move your scope so the group's center lands where you aimed, in the units your scope adjusts in. It is worked out from where the group is now, so it is only as good as the center it came from: with a handful of shots, dialing a small correction can easily move you further from where you want to be.
 

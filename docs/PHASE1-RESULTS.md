@@ -997,6 +997,46 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 169: the analysis screen, cut down
+
+**What stays in view** is what the first outside user named: center from aim, extreme spread, group width by height, mean radius, CEP
+50 and CEP 90, and the zero block. Each is its value alone, at a larger size than before (22 against 18; mean radius stays at the lead
+size), with its angle, its interval and the figure without exclusions in a tooltip. Everything else is in one section, **Advanced**,
+closed until it is opened and remembered once it is: sigma, the strips across and up and down, the order fired, the shape and flyer
+cards, the flags, the full CEP table and bivariate fit, the sighters, and carrying the correction to another distance. Nothing was
+deleted. The report is unchanged and still prints every line.
+
+**The zero block** is one grid: a row an axis, in the length unit, MOA and mil side by side whatever the angular setting; the distance
+it is for on a line of its own; and one line saying what to dial, in clicks with the click value stated, "Dial 2 clicks left, at 0.1 mil
+a click", or the refusal with the shots that would settle it. The give or take, what rounding to clicks leaves and the degrees of
+freedom are behind that line's why. **Where it landed is gone**; its class went with it.
+
+**The plot** draws on white with black marks, or on black with white ones, never a dimmed copy: rings as outlines in a grey, the holes
+as dark outlines at the hole size, CEP circles in the ink, and one accent, red, for the group center, the extreme spread line and a
+picked shot. Nothing is faded or translucent. `ThemeTests` holds the ink to 7:1 and the ring grey and accent to 4.5:1 on the plot's
+paper in every theme, and fails if the plot draws with an opacity again.
+
+**The badge** reads "Scale checked" with a tick when the sheet's markers set the scale, and a plain warning otherwise; the markers, the
+residual and the rest sit at the top of Show work. **Back** is top left. **The right button** drags the sheet in every tool, and a right
+click that does not move is left free. **Alt** shows each tool button's key under it, and undo, redo and the rotations', until it is let go.
+
+**CSV.** Export offers the complete record or the shot coordinates: one row a shot, its label and bull, across and up from the aim point
+in inches, MOA and mil, a header naming the units and the distance, and whether it was excluded. Import reads comma, semicolon or tab
+separated files, guesses the across and up columns from their headers, and asks: which column is across, which is up and down, the unit
+(inches, millimeters, centimeters, MOA, mil), which way is up, and the distance for an angle. Rows without two numbers are counted and
+left out. The marking it makes has no image, a scale of a thousand pixels an inch and the aim point placed by hand, so every figure works
+on it. No other program's format is named anywhere.
+
+**Own window** moves the figure column into a window of its own and back when that window closes.
+
+**American spelling.** `scripts/american-spelling.py` changed 352 British forms in what a user reads: string literals holding a space in
+the application and its engine, outside interpolation holes; the research articles, the guides and glossary the site renders, the tour,
+and the site builder's text. Left alone: identifiers, comments, keys and file formats (a literal with no space), quoted material, block
+quotes and code, the command line tool, whose usage names options its parser reads, and the published release notes. Two lines had to
+keep a British form and say so: the cartridge table strips a typed " calibre", and the session store's SQL names a `$calibre`
+parameter; the first pass changed that parameter, and the round-trip tests caught it. `AmericanSpellingTests` runs the script's check.
+The guide PDFs and the caliber list are regenerated. The tour's analysis page and the user guide describe the new screen.
+
 ## Entry 183: the opt out travels with the submission
 
 **Scanning works.** After request 14 the first upload's log read `clean, clamdscan`: the stream through clamd's own socket, at the

@@ -124,7 +124,7 @@ public static class PhotoComparison
         }
 
         lines.Add(string.Create(inv,
-            $"Lengths in inches on the page. Read against {BullThresholdInches:0.000} in for bull centres and {HoleMatchInches:0.00} in for hole matching, the gates' thresholds; this table decides neither gate."));
+            $"Lengths in inches on the page. Read against {BullThresholdInches:0.000} in for bull centers and {HoleMatchInches:0.00} in for hole matching, the gates' thresholds; this table decides neither gate."));
         return lines;
     }
 }

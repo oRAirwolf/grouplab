@@ -18,7 +18,7 @@ public class ChronographTests
         Assert.Equal(Shots.Select(s => (int?)s), pairs.Select(p => p.ShotId));
         Assert.Equal(new int?[] { 0, 1, 2, 3, 4 }, pairs.Select(p => p.Reading));
         Assert.Equal(
-            "5 of 5 readings sit beside a shot. The counts agree; check the order before accepting it, because a chronograph can miss a shot and record a neighbour's.",
+            "5 of 5 readings sit beside a shot. The counts agree; check the order before accepting it, because a chronograph can miss a shot and record a neighbor's.",
             Chronograph.Describe(pairs, readings.Length));
     }
 

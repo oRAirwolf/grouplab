@@ -48,7 +48,7 @@ This is why GroupLab can find a hole sitting on a black ring, which is the case 
 
 What survives the subtraction gets judged on its size, its shape, how round it is, and how much of it is solid rather than a thin smear. Residue from a printed edge is long and thin; a hole is compact. A staple is small and hard; a hole has a torn crown.
 
-**Deciding one hole from two** is the hardest judgement here, and it has its own article. The short version: GroupLab works out what a single hole looks like **on this sheet, from this sheet's own holes**, rather than from the calibre you typed, because what a hole measures depends on the paper, the backing and, in a photograph, the light. On one sheet the difference between those two methods was fifteen marks flagged as possible doubles against one.
+**Deciding one hole from two** is the hardest judgment here, and it has its own article. The short version: GroupLab works out what a single hole looks like **on this sheet, from this sheet's own holes**, rather than from the caliber you typed, because what a hole measures depends on the paper, the backing and, in a photograph, the light. On one sheet the difference between those two methods was fifteen marks flagged as possible doubles against one.
 
 ## 6. Decide which bull each shot belongs to
 

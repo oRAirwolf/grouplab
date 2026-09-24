@@ -93,7 +93,7 @@ public class HoleSizeGateTests
 
         string unnamed = HoleSizeGate.Describe(null, HoleSizeGate.WithoutACalibreInches);
         Assert.Contains("0.150 in", unnamed, StringComparison.Ordinal);
-        Assert.Contains("no calibre named", unnamed, StringComparison.Ordinal);
+        Assert.Contains("no caliber named", unnamed, StringComparison.Ordinal);
     }
 
     /// <summary>

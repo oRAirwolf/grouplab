@@ -25,7 +25,7 @@ Every figure depends on getting that right. A scale that is out by a factor of t
 
 ## What a scanner already knows
 
-A flatbed scanner knows its own resolution, and it writes it into the file. A PNG carries a `pHYs` chunk; one of the developer's blank sheets carries 23622 pixels per metre, which is exactly 600 dots per inch.
+A flatbed scanner knows its own resolution, and it writes it into the file. A PNG carries a `pHYs` chunk; one of the developer's blank sheets carries 23622 pixels per meter, which is exactly 600 dots per inch.
 
 If a scan is 600 dpi, then 600 pixels is one inch of paper. That is a complete scale, from the device that made the image, with no ruler in the picture and nothing for you to measure.
 

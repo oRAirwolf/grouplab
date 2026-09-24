@@ -27,17 +27,17 @@ That is the easy description. The interesting parts are the three things that we
 
 The build was triggered by a successful test run, which only happens when somebody pushes.
 
-So a day with no pushes produced no build. So did a day whose runs were all cancelled, which happens more than you would think. Anybody following the nightly train would see it simply stop, with no explanation, because nothing had failed.
+So a day with no pushes produced no build. So did a day whose runs were all canceled, which happens more than you would think. Anybody following the nightly train would see it simply stop, with no explanation, because nothing had failed.
 
 There is now a **scheduled run** as well, once a day. It finds the newest commit on main that passed its tests, and builds that. If that commit already has a nightly it does nothing and says so, so a quiet day produces one build or none rather than a duplicate.
 
 The general shape of the bug: *a trigger that depends on activity is silent about inactivity.* Anything that is supposed to happen regularly needs a clock somewhere, not only an event.
 
-## Mistake two: half the builds were cancelling each other
+## Mistake two: half the builds were canceling each other
 
-Pushes went to two branches at once, at the same commit. The test workflow ran twice on identical code, each run triggered a nightly, and a rule that keeps only the newest nightly cancelled the first.
+Pushes went to two branches at once, at the same commit. The test workflow ran twice on identical code, each run triggered a nightly, and a rule that keeps only the newest nightly canceled the first.
 
-The logs looked alarming: on one day, half the nightly runs were cancellations. Nothing was broken and nothing was lost, because the run being cancelled was building the same commit as the one replacing it. But it was impossible to tell that from the outside, and a log full of cancellations is a log nobody reads carefully.
+The logs looked alarming: on one day, half the nightly runs were cancellations. Nothing was broken and nothing was lost, because the run being canceled was building the same commit as the one replacing it. But it was impossible to tell that from the outside, and a log full of cancellations is a log nobody reads carefully.
 
 Fixed by triggering on one branch only. The rule that keeps the newest push stays, because two quick pushes genuinely should not interleave.
 
@@ -74,7 +74,7 @@ So: if the working part cannot be reached from any screen, the note says so in t
 
 - The installer, per-user, needing no administrator rights.
 - A manifest listing every file with its size and SHA-256, signed, so the updater can refuse a tampered download.
-- The release notes for that version only, meaning the changes since the previous **published** build. A cancelled or skipped nightly never got a tag, so its changes roll into the next real one rather than vanishing.
+- The release notes for that version only, meaning the changes since the previous **published** build. A canceled or skipped nightly never got a tag, so its changes roll into the next real one rather than vanishing.
 - The notes of the last several versions as well, so somebody who skipped five builds can be shown everything they missed rather than only the newest.
 
 ## What this means

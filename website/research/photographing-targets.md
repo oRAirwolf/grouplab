@@ -21,7 +21,7 @@ sources:
 When GroupLab reads a photo it answers two different questions:
 
 1. **Where is each shot?** It finds the sheet's printed markers, works out exactly how the paper sits in the picture (angle, distance, perspective) and maps every hole back onto the flat sheet. This is where your group size, mean radius and zero come from.
-2. **How big is each hole?** This helps GroupLab tell one hole from two overlapping ones, and it feeds the calibre guess.
+2. **How big is each hole?** This helps GroupLab tell one hole from two overlapping ones, and it feeds the caliber guess.
 
 The first holds up well in photos. The second is where light gets in the way.
 
@@ -56,7 +56,7 @@ The scans of the three centrefire sheets agree within a few percent. The photos 
 
 ## What GroupLab does about it
 
-Because of this finding, GroupLab no longer judges hole size in a photo against a fixed factor. Where a sheet has enough clean single holes, it uses the sheet's own holes as the reference for what one hole looks like on that image, so shadow that enlarges every hole equally stops mattering. The stated calibre is the fallback. On all thirteen images from this range day, that approach flagged at most one hole, including the photo where the old method flagged all fifteen. The calibre guess from a photo is shown as rough and is never preselected with more confidence than the image allows.
+Because of this finding, GroupLab no longer judges hole size in a photo against a fixed factor. Where a sheet has enough clean single holes, it uses the sheet's own holes as the reference for what one hole looks like on that image, so shadow that enlarges every hole equally stops mattering. The stated caliber is the fallback. On all thirteen images from this range day, that approach flagged at most one hole, including the photo where the old method flagged all fifteen. The caliber guess from a photo is shown as rough and is never preselected with more confidence than the image allows.
 
 ## A checklist for a good photo
 
@@ -67,7 +67,7 @@ Because of this finding, GroupLab no longer judges hole size in a photo against 
 5. **Hold still and focus on the paper.** Tap to focus on the middle of the sheet. A blurred edge blurs every hole.
 6. **Use the main camera, not digital zoom.** Step closer instead of zooming.
 7. **One sheet per photo.** Several sheets in one frame make identification harder and give each sheet fewer pixels.
-8. **If it matters, scan it.** For hole sizes, for calibre, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
+8. **If it matters, scan it.** For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
 
 ## What this means
 

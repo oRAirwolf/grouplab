@@ -33,12 +33,12 @@ public static class FigureExplanations
     public static IReadOnlyDictionary<string, FigureExplanation> All { get; } = new Dictionary<string, FigureExplanation>(StringComparer.Ordinal)
     {
         ["meanRadius"] = new("mean-radius", "Mean radius",
-            "The average distance from each shot to the centre of the group. It uses every shot, so it is the steadiest measure of how well "
+            "The average distance from each shot to the center of the group. It uses every shot, so it is the steadiest measure of how well "
             + "a rifle and load shoot, and it changes less from group to group than the extreme spread does. With few shots it is still an "
             + "estimate: the interval beside it says how much it could move if you shot the same group again."),
 
         ["sigma"] = new("sigma", "Sigma",
-            "The spread of the shots around their centre, in the same units as the group. It describes the pattern the shots are drawn from "
+            "The spread of the shots around their center, in the same units as the group. It describes the pattern the shots are drawn from "
             + "rather than the particular shots you fired. Like every figure here it is estimated from the shots you have, so fewer shots "
             + "means a wider interval."),
 
@@ -47,14 +47,14 @@ public static class FigureExplanations
             + "uses only two shots and throws the rest away. Adding shots can only make it larger, so groups of different sizes cannot be "
             + "compared by it at all."),
 
-        ["centreFromAim"] = new("centre-from-aim", "Centre from aim",
+        ["centreFromAim"] = new("centre-from-aim", "Center from aim",
             "How far the middle of your group is from where you aimed, and in which direction. This is what a zero correction is worked out "
-            + "from. With few shots the centre itself is uncertain, so a small offset may be the group moving about rather than the rifle "
+            + "from. With few shots the center itself is uncertain, so a small offset may be the group moving about rather than the rifle "
             + "being off."),
 
         ["zero"] = new("zero-correction", "Zero correction",
-            "How far to move your scope so the group's centre lands where you aimed, in the units your scope adjusts in. It is worked out "
-            + "from where the group is now, so it is only as good as the centre it came from: with a handful of shots, dialling a small "
+            "How far to move your scope so the group's center lands where you aimed, in the units your scope adjusts in. It is worked out "
+            + "from where the group is now, so it is only as good as the center it came from: with a handful of shots, dialing a small "
             + "correction can easily move you further from where you want to be."),
 
         ["cep"] = new("cep", "CEP",
@@ -67,8 +67,8 @@ public static class FigureExplanations
             + "wrong; it means a handful of shots cannot pin it down. Firing more shots narrows it, and nothing else does."),
 
         ["worstShot"] = new("worst-shot", "Worst shot",
-            "How far the furthest shot was from the centre, measured in mean radii. It says whether one shot was unusual for this group "
-            + "rather than whether it was a flyer, which is a judgement only you can make. Expect the worst of twenty shots to be further "
+            "How far the furthest shot was from the center, measured in mean radii. It says whether one shot was unusual for this group "
+            + "rather than whether it was a flyer, which is a judgment only you can make. Expect the worst of twenty shots to be further "
             + "out than the worst of five, simply because there are more of them."),
 
         ["aspect"] = new("aspect-ratio", "Shape",

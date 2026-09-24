@@ -43,14 +43,13 @@ internal sealed class CompositePlot : Control
     private const double FrameMargin = 0.1;
 
     /// <summary>
-    /// How strongly the bull's inked rings are drawn, entry 104 section 4: they are context for the shots and recede behind them, where at
-    /// full strength the black ring was the heaviest mark on the screen. The paper stays at full strength, because a paper-white document on
-    /// dark chrome is most of the concept's character, and the concept draws the rings lighter too.
+    /// Entry 169 section 3: every stroke at least this wide, and every mark at full strength in one of four inks, so nothing on the plot is
+    /// thinner or lighter than can be read on a laptop in daylight. The rings are outlines in the ring grey, not faded fills.
     /// </summary>
-    private const double ArtworkOpacity = 0.18;
+    private const double Stroke = 1.5;
 
-    /// <summary>How strongly a calibre outline is drawn behind its dot: context for the dot, never competing with it.</summary>
-    private const double OutlineOpacity = 0.4;
+    /// <summary>The inks of the theme last drawn in; the key's swatches use them too.</summary>
+    private PlotInks inks = Tokens.Plot(null);
 
     /// <summary>The smallest extent the view frames, in inches, so one shot or a tight cluster is not magnified without limit.</summary>
     private const double MinimumExtentInches = 0.25;
@@ -145,7 +144,7 @@ internal sealed class CompositePlot : Control
         {
             var o = shot.Offset;
             string place = $"{Length(Math.Abs(o.X))} {(o.X >= 0 ? "right" : "left")} and {Length(Math.Abs(o.Y))} {(o.Y > 0 ? "low" : "high")} of its bull's aim point";
-            string fromCentre = Centre is { } c ? $", {Length(Distance(o, c))} from the group centre" : "";
+            string fromCentre = Centre is { } c ? $", {Length(Distance(o, c))} from the group center" : "";
             string bull = shot.Bull is { } b ? $", bull {b}" : "";
             return $"Shot {shot.Label}{bull}. {Capital(place)}{fromCentre}."
                 + (shot.Excluded ? " Excluded: drawn hollow, and left out of every figure except the side-by-side ones that show it both ways." : "");
@@ -162,14 +161,14 @@ internal sealed class CompositePlot : Control
             double fromCentre = Distance(cp, at);
             if (fromCentre <= StrokeReach + 3)
             {
-                return $"Group centre: the mean of the {Shots.Count(s => !s.Excluded)} shots not excluded, {Length(Math.Abs(centre.X))} {(centre.X >= 0 ? "right" : "left")} and {Length(Math.Abs(centre.Y))} {(centre.Y > 0 ? "low" : "high")} of the aim point.";
+                return $"Group center: the mean of the {Shots.Count(s => !s.Excluded)} shots not excluded, {Length(Math.Abs(centre.X))} {(centre.X >= 0 ? "right" : "left")} and {Length(Math.Abs(centre.Y))} {(centre.Y > 0 ? "low" : "high")} of the aim point.";
             }
 
             foreach (var (radius, percent, often) in new[] { (Cep50Inches, 50, "half the time"), (Cep90Inches, 90, "nine times in ten") })
             {
                 if (radius is { } r && Math.Abs(fromCentre - (r * scale)) <= StrokeReach)
                 {
-                    return $"CEP {percent}, {Length(r)} in radius about the group centre: a shot from this rifle would land inside it {often}, reckoned from sigma under the circular normal model.";
+                    return $"CEP {percent}, {Length(r)} in radius about the group center: a shot from this rifle would land inside it {often}, reckoned from sigma under the circular normal model.";
                 }
             }
         }
@@ -191,33 +190,35 @@ internal sealed class CompositePlot : Control
     public override void Render(DrawingContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var palette = Tokens.For(ActualThemeVariant);
-        context.FillRectangle(new SolidColorBrush(palette.Sunk), new Rect(Bounds.Size));
+        inks = Tokens.Plot(ActualThemeVariant);
+        var ink = new SolidColorBrush(inks.Ink);
+        var accent = new SolidColorBrush(inks.Accent);
+        context.FillRectangle(new SolidColorBrush(inks.Paper), new Rect(Bounds.Size));
         var area = new Rect(Bounds.Size);
         var (scale, origin) = Frame(area);
         using (context.PushClip(area))
         {
-            // The bull at true relative scale, centred on the aim point, whether or not it fits: each inked disc faded over the paper, so the
-            // shots lead and the sheet still reads as paper.
-            foreach (var disc in Discs)
+            // The bull at true relative scale, centred on the aim point, whether or not it fits: each ring's edge as a line on the paper, so
+            // the shots lead and the rings still say where the bull is.
+            var ringPen = new Pen(new SolidColorBrush(inks.Ring), 1);
+            foreach (var disc in Discs.Where(d => !d.Paper))
             {
-                var colour = disc.Paper ? disc.Colour : Tokens.Faded(disc.Colour, Discs.FirstOrDefault(d => d.Paper)?.Colour ?? Tokens.Paper, ArtworkOpacity);
-                context.DrawEllipse(new SolidColorBrush(colour), null, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
+                context.DrawEllipse(null, ringPen, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
             }
 
-            Marks.Cross(context, Marks.Faint, origin, 6, 1);
+            Marks.Cross(context, ink, origin, 6, Stroke);
 
             if (Centre is { } centre)
             {
                 var c = ToScreen(centre);
                 if (Cep50Inches is { } r50)
                 {
-                    Marks.Ring(context, Marks.Teal, c, r50 * scale, 1, Cep50Dash);
+                    Marks.Ring(context, ink, c, r50 * scale, Stroke, Cep50Dash);
                 }
 
                 if (Cep90Inches is { } r90)
                 {
-                    Marks.Ring(context, Marks.Teal, c, r90 * scale, 1, Cep90Dash);
+                    Marks.Ring(context, ink, c, r90 * scale, Stroke, Cep90Dash);
                 }
             }
 
@@ -234,22 +235,22 @@ internal sealed class CompositePlot : Control
 
             if (SpreadPair is { } pair && Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b)
             {
-                Marks.Line(context, Marks.Selected, ToScreen(a.Offset), ToScreen(b.Offset), 1.5, Marks.Dashed);
+                Marks.Line(context, accent, ToScreen(a.Offset), ToScreen(b.Offset), 2, Marks.Dashed);
             }
 
             if (Centre is { } groupCentre)
             {
-                Marks.Cross(context, Marks.Teal, ToScreen(groupCentre), 8, 1.5);
+                Marks.Cross(context, accent, ToScreen(groupCentre), 9, 2.5);
             }
         }
 
         if (ShowKey)
         {
-            DrawKey(context, palette);
+            DrawKey(context);
         }
     }
 
-    /// <summary>A shot's calibre outline, thin and faint behind every dot, so twenty-five of them never merge into one mass.</summary>
+    /// <summary>A shot's hole at the calibre's size, a dark outline on the paper with no fill, so twenty-five of them never merge into one mass.</summary>
     private void DrawOutline(DrawingContext context, PlotShot shot, double scale)
     {
         if (CalibreInches is not { } calibre || !ShowOutlines)
@@ -258,8 +259,8 @@ internal sealed class CompositePlot : Control
         }
 
         bool selected = Selected.Contains(shot.Id);
-        var colour = selected ? Tokens.MarkSelected : shot.Excluded ? Tokens.MarkExcluded : Tokens.MarkImpact;
-        var pen = new Pen(new SolidColorBrush(colour, selected ? 0.9 : OutlineOpacity), selected ? Tokens.MarkCoreWidth : 1, shot.Excluded ? Marks.Dashed : null);
+        var colour = selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink;
+        var pen = new Pen(new SolidColorBrush(colour), selected ? 2.5 : Stroke, shot.Excluded ? Marks.Dashed : null);
         double radius = Math.Max(2, calibre * scale / 2);
         context.DrawEllipse(null, pen, ToScreen(shot.Offset), radius, radius);
     }
@@ -269,14 +270,14 @@ internal sealed class CompositePlot : Control
     {
         var at = ToScreen(shot.Offset);
         bool selected = Selected.Contains(shot.Id);
-        IBrush brush = selected ? Marks.Selected : shot.Excluded ? Marks.Excluded : Marks.Impact;
+        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink);
         if (shot.Excluded)
         {
-            Marks.Ring(context, brush, at, 3.5, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, Marks.Dashed);
+            Marks.Ring(context, brush, at, 3.5, selected ? 2.5 : Stroke, Marks.Dashed);
         }
         else
         {
-            Marks.Dot(context, brush, at, selected ? 4.5 : 3.5);
+            Marks.Dot(context, brush, at, selected ? 4.5 : 3);
         }
     }
 
@@ -293,34 +294,34 @@ internal sealed class CompositePlot : Control
         var entries = new List<KeyEntry>
         {
             CalibreInches is { } calibre && ShowOutlines
-                ? new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"{kept} shots, a dot at each centre, the outline drawn at the {calibre:0.000} in calibre"), (c, p) =>
+                ? new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"{kept} shots, a dot at each center, the outline drawn at the {calibre:0.000} in caliber"), (c, p) =>
                 {
-                    c.DrawEllipse(null, new Pen(new SolidColorBrush(Tokens.MarkImpact, OutlineOpacity), 1), p, 6, 6);
-                    Marks.Dot(c, Marks.Impact, p, 3.5);
+                    c.DrawEllipse(null, new Pen(new SolidColorBrush(inks.Ink), Stroke), p, 6, 6);
+                    Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3);
                 })
                 : CalibreInches is not null
-                    ? new KeyEntry($"{kept} shots, a dot at each centre; the calibre outlines are hidden", (c, p) => Marks.Dot(c, Marks.Impact, p, 3.5))
-                    : new KeyEntry($"{kept} shots, drawn as points: no calibre is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, Marks.Impact, p, 3.5)),
+                    ? new KeyEntry($"{kept} shots, a dot at each center; the caliber outlines are hidden", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3))
+                    : new KeyEntry($"{kept} shots, drawn as points: no caliber is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3)),
         };
         if (excluded > 0)
         {
-            entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, Marks.Excluded, p, 3.5, Tokens.MarkCoreWidth, Marks.Dashed)));
+            entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ring), p, 3.5, Stroke, Marks.Dashed)));
         }
 
         if (SpreadPair is { } pair)
         {
-            entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}", (c, p) => Marks.Line(c, Marks.Selected, p + new Vector(-7, 0), p + new Vector(7, 0), 1.5, Marks.Dashed)));
+            entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), 2, Marks.Dashed)));
         }
 
         if (Cep50Inches is not null)
         {
-            entries.Add(new KeyEntry("CEP 50, the dotted circle", (c, p) => Marks.Ring(c, Marks.Teal, p, 6, 1, Cep50Dash)));
-            entries.Add(new KeyEntry("CEP 90, the dashed circle", (c, p) => Marks.Ring(c, Marks.Teal, p, 6, 1, Cep90Dash)));
+            entries.Add(new KeyEntry("CEP 50, the dotted circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ink), p, 6, Stroke, Cep50Dash)));
+            entries.Add(new KeyEntry("CEP 90, the dashed circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ink), p, 6, Stroke, Cep90Dash)));
         }
 
         if (Centre is not null)
         {
-            entries.Add(new KeyEntry("group centre", (c, p) => Marks.Cross(c, Marks.Teal, p, 6, 1.5)));
+            entries.Add(new KeyEntry("group center", (c, p) => Marks.Cross(c, new SolidColorBrush(inks.Accent), p, 6, 2.5)));
         }
 
         if (Discs.Count == 0)
@@ -331,14 +332,14 @@ internal sealed class CompositePlot : Control
         return entries;
     }
 
-    private void DrawKey(DrawingContext context, Palette palette)
+    private void DrawKey(DrawingContext context)
     {
         var entries = Key();
         const double line = 20, swatch = 22, pad = 10;
-        var texts = entries.Select(e => new FormattedText(e.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(palette.Dim))).ToList();
+        var texts = entries.Select(e => new FormattedText(e.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(inks.Ink))).ToList();
         double width = Math.Min(Math.Max(0, Bounds.Width - (2 * pad)), swatch + texts.Max(t => t.Width) + (2 * pad));
         var box = new Rect(pad, pad, width, (entries.Count * line) + pad);
-        context.DrawRectangle(new SolidColorBrush(palette.Panel, 0.9), new Pen(new SolidColorBrush(palette.Line2), 1), box, 3, 3);
+        context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), box, 3, 3);
         for (int i = 0; i < entries.Count; i++)
         {
             double y = box.Y + (pad / 2) + (i * line) + (line / 2);

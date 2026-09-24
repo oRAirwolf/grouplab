@@ -56,7 +56,7 @@ Two things separated them:
 
 **Identifiers.** 587 against 250. A large sheet, or a multi-page assembly, uses a lot of markers, and running out of unique identifiers is an unpleasant constraint to discover late.
 
-**Two independent readers.** AprilTag 36h11 is the only strong family that both OpenCV and the BSD-licensed AprilTag reference implementation can read. That removed a licence conflict from the critical path and means the format does not depend on one library's continued existence.
+**Two independent readers.** AprilTag 36h11 is the only strong family that both OpenCV and the BSD-licensed AprilTag reference implementation can read. That removed a license conflict from the critical path and means the format does not depend on one library's continued existence.
 
 Choosing it cost nothing and removed a problem. That is the easiest kind of decision, and it only looked easy because the hard part, the false-positive measurement, had already been done.
 

@@ -67,7 +67,7 @@ public static partial class CartridgeTable
 
     /// <summary>Case, surrounding space, runs of space and a trailing "calibre" or "cal" do not change which cartridge was meant.</summary>
     private static string Key(string text) =>
-        Spaces().Replace(text.Trim().TrimEnd('.').ToLowerInvariant(), " ").Replace(" caliber", "").Replace(" calibre", "").Replace(" cal", "");
+        Spaces().Replace(text.Trim().TrimEnd('.').ToLowerInvariant(), " ").Replace(" caliber", "").Replace(" calibre", "").Replace(" cal", ""); // British on purpose: what a person types.
 
     private static IEnumerable<string> Words(CartridgeFamily family) =>
         family.Shorthand.Concat(family.Cartridges.SelectMany(c => c.Shorthand.Prepend(c.Name))).Append(family.Name);

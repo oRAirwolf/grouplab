@@ -123,12 +123,12 @@ public static class LoadComparison
             int second = compared.Select(g => g.Shots).Order().Skip(1).First();
             double shift = Math.Sqrt(CentreNoncentrality * ((1.0 / fewest) + (1.0 / second))) * pooledSigma;
             tests.Add(new ComparisonTest(
-                compared.Count == 2 ? "Group centre, Hotelling's T squared" : "Group centres, MANOVA",
+                compared.Count == 2 ? "Group center, Hotelling's T squared" : "Group centers, MANOVA",
                 manova.PValue,
                 manova.PValue < 0.05
-                    ? $"The centres differ beyond chance, {P(manova.PValue)}: the loads put their groups in different places."
-                    : $"No evidence the centres differ, {P(manova.PValue)}. That is not evidence that they are in the same place.",
-                $"It detects a shift between centres of about {length(shift)} or more 80 percent of the time, at this spread and these shot counts."));
+                    ? $"The centers differ beyond chance, {P(manova.PValue)}: the loads put their groups in different places."
+                    : $"No evidence the centers differ, {P(manova.PValue)}. That is not evidence that they are in the same place.",
+                $"It detects a shift between centers of about {length(shift)} or more 80 percent of the time, at this spread and these shot counts."));
         }
 
         // The headline. Never a ranking by point estimate: when the intervals overlap the loads are not separated, whatever the estimates say.

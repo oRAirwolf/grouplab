@@ -91,6 +91,6 @@ public static class AssignmentCertainties
     /// shots may belong to other bulls has no point of impact to correct from, and a wrong correction is worse than none.
     /// </summary>
     public const string ZeroWithheld =
-        "No zero correction while the assignment is unsettled. It would be worked out from shots that may belong to other bulls, and dialling "
-        + "a rifle on that is worse than not dialling it at all. Settle the review queue first.";
+        "No zero correction while the assignment is unsettled. It would be worked out from shots that may belong to other bulls, and dialing "
+        + "a rifle on that is worse than not dialing it at all. Settle the review queue first.";
 }

@@ -662,7 +662,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
         var point = e.GetCurrentPoint(this);
         var image = ToImage(point.Position);
-        if (Tool == MarkingTool.Pan || point.Properties.IsMiddleButtonPressed)
+        // Entry 169 section 7: the right button drags the sheet in every tool, as the middle one already did (entry 163). A right click that
+        // does not move pans nowhere, so it stays free for a context menu later.
+        if (Tool == MarkingTool.Pan || point.Properties.IsMiddleButtonPressed || point.Properties.IsRightButtonPressed)
         {
             panFrom = point.Position;
 

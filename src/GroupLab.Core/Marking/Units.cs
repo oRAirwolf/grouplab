@@ -148,6 +148,10 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
     public double? Angle(double inches, double? distanceInches) =>
         distanceInches is { } d && d > 0 ? Statistics.Angular.ToAngle(inches, d, 1, Angular) : null;
 
+    /// <summary>A length at the target in one named angular unit, or null without a shot distance: the zero block shows MOA and mil both.</summary>
+    public static double? AngleIn(double inches, double? distanceInches, AngularUnit unit) =>
+        distanceInches is { } d && d > 0 ? Statistics.Angular.ToAngle(inches, d, 1, unit) : null;
+
     /// <summary>A length at the target as an angle with its symbol, or null without a shot distance.</summary>
     public string? AngleText(double inches, double? distanceInches) =>
         Angle(inches, distanceInches) is { } angle ? angle.ToString("0.00", CultureInfo.InvariantCulture) + " " + Symbol(Angular) : null;

@@ -24,7 +24,7 @@ On 2026-09-20 the developer shot five 25-bull GroupLab sheets at 100 yards with 
 
 | Rifle | Scope | What the developer saw |
 |---|---|---|
-| 6.5 Creedmoor | Vortex Razor HD Gen III 6-36x56 FFP, EBR-7D Mil | Could make out the bull centres |
+| 6.5 Creedmoor | Vortex Razor HD Gen III 6-36x56 FFP, EBR-7D Mil | Could make out the bull centers |
 | 6 ARC | DNT TheOne 7-35x56 FFP, TOR Mil | Slightly harder |
 | .22 LR | Vortex Strike Eagle 5-25x56 FFP, EBR-7C Mil | Very difficult, from glass quality and lower magnification |
 
@@ -38,23 +38,23 @@ What matters is not how big a feature is on paper but how big it looks at your e
 
 ![Apparent size of printed features through a scope](/research/can-you-see-the-bull/figures/apparent-size.png)
 
-GroupLab's original bull is a 1 inch ring and a half inch ring, each drawn with a line about 0.03 inch wide, and a 0.10 inch centre dot.
+GroupLab's original bull is a 1 inch ring and a half inch ring, each drawn with a line about 0.03 inch wide, and a 0.10 inch center dot.
 
 | Feature | At 25x | At 35x | At 36x |
 |---|---|---|---|
 | 0.03 in ring line | 0.72 arcmin | 1.00 | 1.03 |
-| 0.10 in centre dot | 2.39 | 3.34 | 3.44 |
+| 0.10 in center dot | 2.39 | 3.34 | 3.44 |
 | 0.25 in feature | 5.97 | 8.36 | 8.59 |
 
-A healthy eye resolves detail down to about 1 arcminute when contrast is perfect, the light is good and the air is still. On a range there is mirage, glass that loses a little contrast, and a reticle sitting on top of the target. So the rings sit exactly at the limit through a 36x scope and below it through a 25x scope. The centre dot is bigger, but at high magnification it is about the size of the reticle's own centre, which covers it.
+A healthy eye resolves detail down to about 1 arcminute when contrast is perfect, the light is good and the air is still. On a range there is mirage, glass that loses a little contrast, and a reticle sitting on top of the target. So the rings sit exactly at the limit through a 36x scope and below it through a 25x scope. The center dot is bigger, but at high magnification it is about the size of the reticle's own center, which covers it.
 
 ## Bigger does not mean less precise
 
 It is natural to think a smaller aim point means more precise aiming. It does not, and the reason is how the eye works.
 
-Seeing a tiny detail uses **resolution acuity**, about 1 arcminute. Centring a crosshair on a symmetric shape uses a different ability, **vernier acuity**: judging whether two edges line up or whether gaps are equal. Vernier acuity is 5 to 10 times finer than resolution acuity. You can centre a reticle on a bold 1 inch diamond by judging the four corners far more finely than 1 inch. This is why benchrest and load development shooters favour bold squares and diamonds.
+Seeing a tiny detail uses **resolution acuity**, about 1 arcminute. Centering a crosshair on a symmetric shape uses a different ability, **vernier acuity**: judging whether two edges line up or whether gaps are equal. Vernier acuity is 5 to 10 times finer than resolution acuity. You can center a reticle on a bold 1 inch diamond by judging the four corners far more finely than 1 inch. This is why benchrest and load development shooters favor bold squares and diamonds.
 
-So the design rule is not "make it small". It is **make every feature you need to see large enough to see clearly, and make the shape symmetric so you can centre on it.**
+So the design rule is not "make it small". It is **make every feature you need to see large enough to see clearly, and make the shape symmetric so you can center on it.**
 
 ## A working rule to test
 
@@ -79,17 +79,17 @@ The developer took this card to the range on 2026-09-23. Every design except I f
 |---|---|---|
 | A | Original GroupLab bull | The control |
 | B | Same rings, bold lines, bigger dot | Does line weight alone fix it? |
-| C | Black diamond, white centre | The classic load development shape |
-| D | Black square with a thin white cross | Centre by the four quadrants |
-| E | Black square, white centre square, small dot | Holes near the aim stay visible |
-| F | Square outline, centre dot | Less ink, bold edges |
-| G | Open cross with no centre | The reticle sits in the gap |
-| H | Four pointers aimed at the centre | Symmetry without a centre to cover |
+| C | Black diamond, white center | The classic load development shape |
+| D | Black square with a thin white cross | Center by the four quadrants |
+| E | Black square, white center square, small dot | Holes near the aim stay visible |
+| F | Square outline, center dot | Less ink, bold edges |
+| G | Open cross with no center | The reticle sits in the gap |
+| H | Four pointers aimed at the center | Symmetry without a center to cover |
 | I | 2 inch bull | Fewer bulls per page |
 
 ## The test
 
-Four optics at 100 yards, each scored 0 (cannot see the centre), 1 (can see it but cannot centre confidently) or 2 (can centre confidently) for every design:
+Four optics at 100 yards, each scored 0 (cannot see the center), 1 (can see it but cannot center confidently) or 2 (can center confidently) for every design:
 
 - Vortex Razor HD Gen III 6-36x56 at 10x, 18x, 25x and 36x
 - DNT TheOne 7-35x56 at 10x, 18x, 25x and 35x
@@ -100,7 +100,7 @@ Four optics at 100 yards, each scored 0 (cannot see the centre), 1 (can see it b
 
 ## Results
 
-**[Placeholder: results from 2026-09-23. Table of scores by design, scope and magnification; light and mirage; each observer's preferred design; any shots fired at A and the favourite.]**
+**[Placeholder: results from 2026-09-23. Table of scores by design, scope and magnification; light and mirage; each observer's preferred design; any shots fired at A and the favorite.]**
 
 ## What happens next
 

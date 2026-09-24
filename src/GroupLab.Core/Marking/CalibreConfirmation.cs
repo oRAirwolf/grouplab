@@ -133,9 +133,9 @@ public static class CalibreConfirmation
         {
             return new CalibreGuess(null, null, measured.Count, null,
                 measured.Count == 0
-                    ? "No hole on this sheet was measured, so GroupLab has nothing to read a calibre from. Enter the bullet's diameter."
+                    ? "No hole on this sheet was measured, so GroupLab has nothing to read a caliber from. Enter the bullet's diameter."
                     : string.Create(CultureInfo.InvariantCulture,
-                        $"Only {measured.Count} hole{(measured.Count == 1 ? " was" : "s were")} measured, which is too few to read a calibre from. Enter the bullet's diameter."));
+                        $"Only {measured.Count} hole{(measured.Count == 1 ? " was" : "s were")} measured, which is too few to read a caliber from. Enter the bullet's diameter."));
         }
 
         double median = measured[measured.Count / 2];
@@ -150,9 +150,9 @@ public static class CalibreConfirmation
         // is the rule question 37 settled. The photograph wording is kept because its range is wider still, and it says why.
         string why = fromPhotograph
             ? string.Create(CultureInfo.InvariantCulture,
-                $"These {measured.Count} holes measure {median:0.000} in across the middle, but this is a photograph, and a hole photographed in low light reads far wider than the same hole scanned: on sheets of known calibre the reading ran from 0.9 to 1.45 times the bullet depending on the light. So GroupLab will not guess a calibre from it. Say what you were shooting.")
+                $"These {measured.Count} holes measure {median:0.000} in across the middle, but this is a photograph, and a hole photographed in low light reads far wider than the same hole scanned: on sheets of known caliber the reading ran from 0.9 to 1.45 times the bullet depending on the light. So GroupLab will not guess a caliber from it. Say what you were shooting.")
             : string.Create(CultureInfo.InvariantCulture,
-                $"These {measured.Count} holes measure {median:0.000} in across the middle. A hole is not the bullet: the reading moves with the paper, the backing and how fast the bullet was going, and on scanned sheets of known calibre it has run from about three quarters of the bullet to more than the bullet. So GroupLab does not guess a calibre from it. Name what you fired.");
+                $"These {measured.Count} holes measure {median:0.000} in across the middle. A hole is not the bullet: the reading moves with the paper, the backing and how fast the bullet was going, and on scanned sheets of known caliber it has run from about three quarters of the bullet to more than the bullet. So GroupLab does not guess a caliber from it. Name what you fired.");
 
         return new CalibreGuess(null, null, measured.Count, median, why, [], true);
     }
@@ -182,7 +182,7 @@ public static class CalibreConfirmation
         }
 
         return state.Calibre is null
-            ? "Say what you were shooting before this is accepted. GroupLab reads smaller holes when it knows the calibre, and on one of the "
+            ? "Say what you were shooting before this is accepted. GroupLab reads smaller holes when it knows the caliber, and on one of the "
               + "test scans that was five holes it would otherwise have refused."
             : null;
     }

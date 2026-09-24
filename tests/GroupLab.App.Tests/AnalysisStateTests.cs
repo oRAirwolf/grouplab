@@ -85,10 +85,10 @@ public class AnalysisStateTests
 
             // Entry 131 section 6.3 holds Accept until the calibre question is answered; this test is about the crumb, not the calibre.
             window.CalibreAnswered();
-            Named(window, "Accept and analyse").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Named(window, "Accept and analyze").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.True(window.Analysing);
-            Assert.Equal("scale set by hand", window.PillText);
+            Assert.Equal("\u26a0 Scale set by hand", window.PillText);
 
             // The breadcrumb's sheet crumb is the file's name, and one click goes back to the marks with nothing lost.
             var crumb = Named(window, Path.GetFileName(path));
@@ -178,7 +178,7 @@ public class AnalysisStateTests
             window.Session.SetCalibre(new Calibre(".308", 0.308));
             Dispatcher.UIThread.RunJobs();
             Assert.Equal(0.308, window.Plot.CalibreInches);
-            Assert.Contains(window.Plot.Legend, l => l.Contains("drawn at the 0.308 in calibre", StringComparison.Ordinal));
+            Assert.Contains(window.Plot.Legend, l => l.Contains("drawn at the 0.308 in caliber", StringComparison.Ordinal));
             window.Close();
         }
         finally
@@ -261,7 +261,8 @@ public class AnalysisStateTests
 
             var text = window.StatisticsText.ToList();
             int meanRadius = text.IndexOf("Mean radius"), cep = text.IndexOf("CEP 90"), size = text.IndexOf("Group width × height");
-            Assert.True(meanRadius >= 0 && cep > meanRadius && size > cep, string.Join(" | ", text));
+            // Entry 169 section 1: in the order a shooter reads them, width by height, then mean radius, then the CEPs.
+            Assert.True(size >= 0 && meanRadius > size && cep > meanRadius, string.Join(" | ", text));
             window.Close();
         }
         finally

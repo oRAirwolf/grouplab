@@ -52,6 +52,7 @@ public class BenchCoverageTests
         ["MarkingFile"] = "Measured as part of saving and reopening a session, which is what writes and reads it.",
         ["ShotLabels"] = "A few dozen string comparisons inside the analysis, below the resolution of any figure here.",
         ["ChangeWords"] = "The undo tooltip's words, read from two markings once per edit, below the resolution of any figure here.",
+        ["ShotCsv"] = "Reading or writing one CSV of shot coordinates when a person asks, a few hundred rows at most.",
         ["Snapping"] = "It runs under a person's finger on the marking canvas, so it is measured as a control and not here.",
         ["ViewRotation"] = "The same: it is what the rotate buttons do, and those are measured as controls.",
         ["PointInches"] = "A point on the page, carried by the stage records that are already timed.",

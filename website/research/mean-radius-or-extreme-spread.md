@@ -21,9 +21,9 @@ sources:
 
 ## Two ways to say how big a group is
 
-**Extreme spread** is the distance between the two shots that are furthest apart, centre to centre. It is quick to measure with calipers and it is what almost every shooter, magazine and forum quotes.
+**Extreme spread** is the distance between the two shots that are furthest apart, center to center. It is quick to measure with calipers and it is what almost every shooter, magazine and forum quotes.
 
-**Mean radius** is the average distance of every shot from the centre of the group. You cannot measure it with calipers, which is why it was rare before software did the arithmetic.
+**Mean radius** is the average distance of every shot from the center of the group. You cannot measure it with calipers, which is why it was rare before software did the arithmetic.
 
 Both answer the same question: how much does this rifle and load scatter? They answer it with very different amounts of evidence.
 
@@ -62,7 +62,7 @@ There is a second problem. Extreme spread is the largest of many distances, and 
 
 In the simulation, the average extreme spread goes from about 3.1 sigma at five shots to 4.4 sigma at twenty. Mean radius barely moves. This is why a "half-MOA rifle" by five-shot extreme spread is rarely half-MOA over twenty shots, and why extreme spreads from groups of different sizes cannot be compared at all.
 
-(The small rise in mean radius at low shot counts is because the centre of a small group is itself estimated from those same few shots. GroupLab's headline figure corrects for this; the chart shows the raw measurement.)
+(The small rise in mean radius at low shot counts is because the center of a small group is itself estimated from those same few shots. GroupLab's headline figure corrects for this; the chart shows the raw measurement.)
 
 ## What GroupLab shows
 

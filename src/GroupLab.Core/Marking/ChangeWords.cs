@@ -66,7 +66,7 @@ public static class ChangeWords
             _ when before.PointOfAim != after.PointOfAim => "move the point of aim",
             _ when !before.Bulls.SequenceEqual(after.Bulls) => "change the bulls",
             _ when before.ViewQuarterTurns != after.ViewQuarterTurns => "turn the view",
-            _ when before.Calibre != after.Calibre => "set the calibre",
+            _ when before.Calibre != after.Calibre => "set the caliber",
             _ when before.ShotDistanceInches != after.ShotDistanceInches => "set the distance",
             _ when before.ExpectedShots != after.ExpectedShots => "set the number of shots",
             _ when before.Subgroups != after.Subgroups => "change the strings",

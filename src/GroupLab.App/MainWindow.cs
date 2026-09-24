@@ -121,7 +121,7 @@ public sealed partial class MainWindow : Window
 
     private readonly StackPanel analysisActions = new() { Orientation = Orientation.Horizontal, IsVisible = false };
 
-    private readonly Button acceptButton = new() { Content = "Accept and analyse", Margin = new Thickness(2), Classes = { AppStyles.Primary } };
+    private readonly Button acceptButton = new() { Content = "Accept and analyze", Margin = new Thickness(2), Classes = { AppStyles.Primary } };
 
     private readonly Button discardButton = new() { Content = "Discard edits", Margin = new Thickness(2) };
 
@@ -211,7 +211,7 @@ public sealed partial class MainWindow : Window
     private Button railSettings = null!;
 
     /// <summary>The composite plot's toggle for the calibre outlines, entry 109 section 3: on by default, shown only when a calibre is set.</summary>
-    private readonly CheckBox outlinesBox = new() { Content = "Calibre outlines", IsChecked = true };
+    private readonly CheckBox outlinesBox = new() { Content = "Caliber outlines", IsChecked = true };
 
     private readonly Border outlinesToggle = new() { HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.ViewCluster } };
 
@@ -263,7 +263,7 @@ public sealed partial class MainWindow : Window
     /// <summary>Whether sighters are analysed, entry 105 section 8: off unless chosen, remembered.</summary>
     private bool analyseSighters;
 
-    private readonly CheckBox analyseSightersBox = new() { Content = "Analyse sighters" };
+    private readonly CheckBox analyseSightersBox = new() { Content = "Analyze sighters" };
 
     /// <summary>The sighters' own group, when they are analysed: their zero readout and what their count allows.</summary>
     private readonly StackPanel sighterPanel = new() { Spacing = Tokens.Space4 };
@@ -282,7 +282,64 @@ public sealed partial class MainWindow : Window
     // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
     // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
     /// <summary>The zero offset pictures by block, entry 131 section 6.2, so a headless test can read what each one is showing.</summary>
-    private readonly Dictionary<string, ZeroOffsetPicture> zeroOffsetPictures = [];
+    /// <summary>
+    /// Entry 169 section 1: everything on the analysis panel but the six things a shooter reads, in one collapsed section that remembers it
+    /// was opened. Sigma, the strips, the order fired, the judgement cards, the flags, the full tables, the sighters and the carry.
+    /// </summary>
+    private readonly Expander advancedPanel = new() { Header = "Advanced", HorizontalAlignment = HorizontalAlignment.Stretch };
+
+    private readonly StackPanel advancedFigures = new() { Spacing = Tokens.Space12 };
+
+    private readonly StackPanel carryPanel = new() { Spacing = Tokens.Space4 };
+
+    /// <summary>Entry 169 section 5: what the scale badge used to say on hover, behind Show work.</summary>
+    private readonly TextBlock registrationWork = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+
+    private const string AdvancedItem = "analysis-advanced";
+
+    private Border? figureBorder;
+
+    private Window? figuresWindow;
+
+    /// <summary>
+    /// Entry 169 section 4.2: moves the figure column into a window of its own, leaving a line in its place that brings it back. Closing the
+    /// window brings it back too, so the figures are never in neither place.
+    /// </summary>
+    internal void PopOutFigures()
+    {
+        if (figuresWindow is not null)
+        {
+            figuresWindow.Activate();
+            return;
+        }
+
+        if (figureBorder?.Child is not { } content)
+        {
+            return;
+        }
+
+        var column = figureBorder;
+        var window = new Window { Title = "GroupLab figures", Width = 480, Height = 820 };
+        var here = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
+        here.Children.Add(new TextBlock { Text = "The figures are in their own window.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        here.Children.Add(Link("Bring them back", window.Close));
+        column.Child = here;
+        window.Content = content;
+        window.Closed += (_, _) =>
+        {
+            window.Content = null;
+            column.Child = content;
+            figuresWindow = null;
+        };
+        figuresWindow = window;
+        window.Show(this);
+    }
+
+    /// <summary>Whether the figures are in their own window, for the headless tests.</summary>
+    internal bool FiguresPoppedOut => figuresWindow is not null;
+
+    /// <summary>Closes the figures' own window, for the headless tests.</summary>
+    internal void CloseFiguresWindow() => figuresWindow?.Close();
 
     /// <summary>What Settings says about an update that installed and did not reopen, empty where the last one came back on its own.</summary>
     private readonly TextBlock settingsRelaunch = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Alert } };
@@ -488,6 +545,7 @@ public sealed partial class MainWindow : Window
         canvas.Session = session;
         session.Changed += (_, _) => Refresh();
         session.Changed += (_, _) => ShowUndoSteps();
+        Deactivated += (_, _) => ShowShortcuts(false);
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, _) => AskLength();
         canvas.RectangleTapped += (_, _) => AskRectangle();
@@ -518,6 +576,7 @@ public sealed partial class MainWindow : Window
             ToolTip.SetTip(button, $"{name} ({key})");
             Avalonia.Automation.AutomationProperties.SetName(button, name);
             button.Click += (_, _) => SetTool(tool);
+            WithShortcut(button, key);
             toolButtons[tool] = button;
             tools.Children.Add(button);
         }
@@ -527,6 +586,8 @@ public sealed partial class MainWindow : Window
         // put back, and its tooltip names the step, read from the two markings either side of it.
         undoButton = IconButton(Icons.Undo, $"Undo ({CommandKey.Label("Z")})", () => session.Undo());
         redoButton = IconButton(Icons.Redo, $"Redo ({CommandKey.RedoLabel})", () => session.Redo());
+        WithShortcut(undoButton, CommandKey.Label("Z"));
+        WithShortcut(redoButton, CommandKey.RedoLabel);
         tools.Children.Add(undoButton);
         tools.Children.Add(redoButton);
         ShowUndoSteps();
@@ -707,6 +768,10 @@ public sealed partial class MainWindow : Window
         {
             toggle.Click += (_, _) => SetShowWork(!workShown);
         }
+        // Entry 169 section 4.2: the figures in a window of their own, for a second monitor.
+        var ownWindow = Button("Own window", PopOutFigures);
+        ToolTip.SetTip(ownWindow, "Open the figures in a window of their own, for a second monitor");
+        analysisActions.Children.Add(ownWindow);
         analysisActions.Children.Add(Button("Report", async () => await ReportDialog()));
         analysisActions.Children.Add(Button("Export", async () => await ExportDialog()));
         analysisActions.Children.Add(Overflow());
@@ -715,6 +780,10 @@ public sealed partial class MainWindow : Window
         DockPanel.SetDock(actions, Dock.Right);
         crumbs.Children.Add(actions);
         sheetCrumb.Click += (_, _) => BackToEditor();
+        // Entry 169 section 6: a plain way back, top left, where the breadcrumb was the only one.
+        var back = Button("\u2039 Back", BackToEditor);
+        ToolTip.SetTip(back, "Back to marking, with every edit as you left it");
+        analysisCrumbs.Children.Add(back);
         analysisCrumbs.Children.Add(new TextBlock { Text = "\u203a", VerticalAlignment = VerticalAlignment.Center });
         analysisCrumbs.Children.Add(sheetCrumb);
         analysisCrumbs.Children.Add(new TextBlock { Text = "\u203a  analysis", VerticalAlignment = VerticalAlignment.Center });
@@ -749,10 +818,11 @@ public sealed partial class MainWindow : Window
         // One row while closed, so the image keeps its height: the slider and the stage it is on. The stages and their work open beneath it.
         var timelineBody = new StackPanel { Spacing = 0, Margin = new Thickness(Tokens.Space12, 0) };
         var opened = new StackPanel { Spacing = Tokens.Space4 };
+        opened.Children.Add(registrationWork);
         opened.Children.Add(stageButtons);
         opened.Children.Add(new ScrollViewer { Content = stageDetail, MaxHeight = 220 });
         var scrub = new DockPanel();
-        var label = new TextBlock { Text = "How it was analysed", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space12, 0), Classes = { AppStyles.Section } };
+        var label = new TextBlock { Text = "How it was analyzed", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space12, 0), Classes = { AppStyles.Section } };
         DockPanel.SetDock(label, Dock.Left);
         DockPanel.SetDock(stageSlider, Dock.Left);
         scrub.Children.Add(label);
@@ -780,8 +850,8 @@ public sealed partial class MainWindow : Window
         view.Children.Add(IconButton(Icons.ZoomIn, "Zoom in", () => canvas.ZoomBy(1.25)));
         view.Children.Add(IconButton(Icons.ZoomOut, "Zoom out", () => canvas.ZoomBy(0.8)));
         view.Children.Add(IconButton(Icons.Fit, "Fit the image to the view", canvas.FitToView));
-        view.Children.Add(IconButton(Icons.RotateLeft, "Rotate left ([)", () => session.Rotate(-1)));
-        view.Children.Add(IconButton(Icons.RotateRight, "Rotate right (])", () => session.Rotate(1)));
+        view.Children.Add(WithShortcut(IconButton(Icons.RotateLeft, "Rotate left ([)", () => session.Rotate(-1)), "["));
+        view.Children.Add(WithShortcut(IconButton(Icons.RotateRight, "Rotate right (])", () => session.Rotate(1)), "]"));
         var openFirst = Button("Open image\u2026", async () => await OpenImageDialog());
         openFirst.Classes.Add(AppStyles.Primary);
         openFirst.HorizontalAlignment = HorizontalAlignment.Center;
@@ -814,10 +884,19 @@ public sealed partial class MainWindow : Window
         figures.Children.Add(zeroPanel);
         figures.Children.Add(Ruled("Group"));
         figures.Children.Add(statistics);
-        figures.Children.Add(judgements);
-        figures.Children.Add(flags);
-        figures.Children.Add(sighterPanel);
+        var advanced = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, Tokens.Space8, 0, 0) };
+        advanced.Children.Add(advancedFigures);
+        advanced.Children.Add(judgements);
+        advanced.Children.Add(flags);
+        advanced.Children.Add(sighterPanel);
+        advanced.Children.Add(carryPanel);
+        advancedPanel.Content = advanced;
+        advancedPanel.IsExpanded = WhyOpen(AdvancedItem);
+        advancedPanel.Expanded += (_, _) => RememberOpen(AdvancedItem, true);
+        advancedPanel.Collapsed += (_, _) => RememberOpen(AdvancedItem, false);
+        figures.Children.Add(advancedPanel);
         var figureColumn = new Border { Child = new ScrollViewer { Content = figures }, Classes = { AppStyles.Side } };
+        figureBorder = figureColumn;
         var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         shotsColumn.Children.Add(Heading("Load"));
         shotsColumn.Children.Add(loadLines);
@@ -1010,7 +1089,7 @@ public sealed partial class MainWindow : Window
         // measured, not whether a diameter was guessed.
         calibreNote.Text = guess.DiameterInches is not null || guess.MedianHoleInches is not null
             ? guess.Why
-            : "No calibre: extreme spread is centre to centre only, and a tap snaps within its default reach.";
+            : "No caliber: extreme spread is center to center only, and a tap snaps within its default reach.";
 
         // A photograph offers the whole list rather than a preselection, so the buttons would be a wall of them: it asks instead.
         var offered = guess.Rough && guess.Nearest is null ? [] : guess.Offered;
@@ -1064,9 +1143,9 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        statistics.Children.Add(Ruled("In the order fired"));
-        statistics.Children.Add(shotOrder);
-        statistics.Children.Add(Note(shotOrder.Description));
+        advancedFigures.Children.Add(Ruled("In the order fired"));
+        advancedFigures.Children.Add(shotOrder);
+        advancedFigures.Children.Add(Note(shotOrder.Description));
     }
 
     /// <summary>What the shot order chart says, for the headless tests.</summary>
@@ -1195,7 +1274,7 @@ public sealed partial class MainWindow : Window
     {
         double? distance = session.State.ShotDistanceInches;
         string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
-        string text = $"Centre from aim: {units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
+        string text = $"Center from aim: {units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
         return units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{text} ({x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down})" : text;
     }
 
@@ -1203,14 +1282,39 @@ public sealed partial class MainWindow : Window
     private Control CentreRow(PointD centre)
     {
         var (value, detail) = CentreTexts(centre);
-        var row = new StackPanel { Spacing = 0 };
-        row.Children.Add(Readout("Centre from aim", value));
-        if (detail is not null)
+        return Kept("Center from aim", value, detail is null ? [] : [detail]);
+    }
+
+    /// <summary>
+    /// A figure kept in view on the analysis panel, NOTES-FROM-PLANNING.md entry 169 sections 1 and 4: its value at the panel's figure size,
+    /// and its angle, interval and the figure without exclusions in a tooltip rather than on lines of their own. The report still prints
+    /// those lines in full.
+    /// </summary>
+    private static Control Kept(string name, string value, IEnumerable<string?> details, bool headline = false)
+    {
+        var row = Readout(name, value, headline ? Tokens.LeadValueSize : Tokens.ValueSize, FontWeight.Medium, labelAtTop: true, headline: headline);
+        string tip = string.Join("\n", details.Where(d => !string.IsNullOrWhiteSpace(d)));
+        if (tip.Length > 0)
         {
-            row.Children.Add(Detail(detail));
+            ToolTip.SetTip(row, tip);
+            Avalonia.Automation.AutomationProperties.SetHelpText(row, tip);
         }
 
         return row;
+    }
+
+    /// <summary>The "figure" readouts kept in view and their tooltips, for the headless tests.</summary>
+    internal IReadOnlyList<(string Name, string Value, string? Tip)> KeptFigures => [.. statistics.GetLogicalDescendants().OfType<DockPanel>()
+        .Where(d => d.Children.Count == 2 && d.Children[0] is TextBlock && d.Children[1] is TextBlock)
+        .Select(d => (((TextBlock)d.Children[0]).Text ?? "", ((TextBlock)d.Children[1]).Text ?? "", ToolTip.GetTip(d) as string))];
+
+    /// <summary>The Advanced section, for the headless tests.</summary>
+    internal Expander AdvancedPanel => advancedPanel;
+
+    private void RememberOpen(string item, bool open)
+    {
+        whyOpen[item] = open;
+        settingsStore.SaveWhyOpen(item, open);
     }
 
     /// <summary>The canvas, for the headless tests.</summary>
@@ -1328,7 +1432,7 @@ public sealed partial class MainWindow : Window
     /// the text names the longest a stage runs, lest a Cancel that has worked look ignored. The longest measured is hole detection on Alan's
     /// 35 megapixel scan at 600 DPI, 5.6 s on the development machine.
     /// </summary>
-    internal const string CancellingText = "Cancelling. The step in progress finishes first, which can take up to about 6 seconds on a 600 DPI scan.";
+    internal const string CancellingText = "Canceling. The step in progress finishes first, which can take up to about 6 seconds on a 600 DPI scan.";
 
     /// <summary>Stops the detection in progress at its next stage; what it had not yet applied is dropped.</summary>
     internal void CancelDetection()
@@ -1433,9 +1537,9 @@ public sealed partial class MainWindow : Window
         SetCalibreFromBox();
     }
 
-    internal const string CalibreRedetectText = "Detecting again with the calibre, which keeps a mark too small to be two holes in one piece.";
+    internal const string CalibreRedetectText = "Detecting again with the caliber, which keeps a mark too small to be two holes in one piece.";
 
-    internal const string CalibreAfterCorrectionsText = "The calibre is used in finding holes from the next Detect, which would replace the corrections made here.";
+    internal const string CalibreAfterCorrectionsText = "The caliber is used in finding holes from the next Detect, which would replace the corrections made here.";
 
     private async Task OpenMarkingDialog()
     {
@@ -1531,7 +1635,7 @@ public sealed partial class MainWindow : Window
             DiagnosticLog.Info("detect.cancel", ("automatic", automatic));
             if (ReferenceEquals(g, grey))
             {
-                status.Text = "Detection cancelled. Choose Detect on a GroupLab sheet to run it again.";
+                status.Text = "Detection canceled. Choose Detect on a GroupLab sheet to run it again.";
             }
         }
         finally
@@ -1565,7 +1669,7 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        status.Text = automatic ? $"Recognised {named.Name}. Registering and detecting…" : "Registering and detecting…";
+        status.Text = automatic ? $"Recognized {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
         var calibre = session.State.Calibre;
         // An interactive run keeps each stage's picture for the timeline; a batch run never asks, so it pays nothing (DESIGN.md section 19).
@@ -1706,9 +1810,19 @@ public sealed partial class MainWindow : Window
             Title = "Export the marking",
             SuggestedFileName = Path.GetFileNameWithoutExtension(session.State.ImagePath ?? "group") + ".grouplab.json",
             DefaultExtension = "json",
+            // Entry 169 section 8: the complete record as JSON, or the shots as CSV for a spreadsheet or another program.
+            FileTypeChoices =
+            [
+                new FilePickerFileType("GroupLab marking, the complete record") { Patterns = ["*.json"] },
+                new FilePickerFileType("Shot coordinates for a spreadsheet (CSV)") { Patterns = ["*.csv"] },
+            ],
         });
         DiagnosticLog.Info("dialog.result", ("dialog", "export"), ("chosen", file is not null));
-        if (file?.TryGetLocalPath() is { } path)
+        if (file?.TryGetLocalPath() is { } csv && csv.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            await WriteCsv(csv);
+        }
+        else if (file?.TryGetLocalPath() is { } path)
         {
             await File.WriteAllTextAsync(path, MarkingFile.Write(session.State, units));
             status.Text = "Exported to " + path;
@@ -1892,6 +2006,8 @@ public sealed partial class MainWindow : Window
         moreFigures.Children.Clear();
         judgements.Children.Clear();
         flags.Children.Clear();
+        advancedFigures.Children.Clear();
+        carryPanel.Children.Clear();
         ShowBreadcrumb(state);
         ShowEquipment(state);
         ShowAimedAt(state);
@@ -1908,7 +2024,8 @@ public sealed partial class MainWindow : Window
                 + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}."))));
             statistics.Children.Add(Rowed(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
                 ? CentreRow(centre)
-                : Line($"Centre from aim: {all.CentreFromAimUnavailable}.")));
+                : Line($"Center from aim: {all.CentreFromAimUnavailable}.")));
+            var reducedOrNull = excluded ? reduced : null;
 
             if (all.DispersionWithheld is { } withheld)
             {
@@ -1920,32 +2037,26 @@ public sealed partial class MainWindow : Window
                 // Entry 92 section 3: one row per figure, label left and value right, with the angular conversion beneath its linear value.
                 // Mean radius keeps its lead size, entries 73 and 92; the others are the value size. Extreme spread is dimmer: present, and
                 // visibly subordinate, its interval behind the More figures disclosure because it changes no decision.
-                statistics.Children.Add(Rowed(Figure("Mean radius", all.MeanRadius!, excluded ? reduced : null, f => f.MeanRadius, Tokens.LeadValueSize, FontWeight.Medium, headline: true)));
-                statistics.Children.Add(Rowed(Figure("Sigma", all.Sigma!, excluded ? reduced : null, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
-                statistics.Children.Add(Rowed(Figure("Extreme spread", all.ExtremeSpread!, excluded ? reduced : null, f => f.ExtremeSpread, Tokens.ValueSize, FontWeight.Normal, subordinate: true, interval: false)));
-
-                // Entry 103 section 1: the two figures the concept's stack has and the screen lacked, after the existing ones.
-                if (all is { Cep90: { } cep90, Cep50: not null, Cep95: not null })
-                {
-                    var cep = new StackPanel { Spacing = 0 };
-                    cep.Children.Add(Readout("CEP 90", units.Length(cep90.Value), Tokens.ValueSize));
-                    var cepLines = CepDetails(all, excluded ? reduced : null);
-                    // Entry 163 section 5: the first line in view, the rest behind its "why", collapsed until somebody opens it.
-                    cep.Children.Add(Explained(Detail(cepLines[0]), "cep", [.. cepLines.Skip(1), CepWhy]));
-
-                    statistics.Children.Add(Rowed(cep));
-                }
-
+                // Entry 169 section 1: the figures a shooter reads off any target, in the order he named them, each a value in view with its
+                // angle, interval and the figure without exclusions in its tooltip rather than on a second line. Sigma goes to Advanced.
+                statistics.Children.Add(Rowed(Kept("Extreme spread", units.Length(all.ExtremeSpread!.Value), FigureDetails(all.ExtremeSpread, reducedOrNull, f => f.ExtremeSpread, interval: false))));
                 if (all is { SdX: not null, SdY: not null } && SizeValue(all) is { } widthByHeight)
                 {
-                    var size = new StackPanel { Spacing = 0 };
-                    size.Children.Add(Readout("Group width \u00d7 height", widthByHeight, Tokens.ValueSize));
-                    foreach (string line in SizeDetails(all, excluded ? reduced : null))
-                    {
-                        size.Children.Add(Detail(line));
-                    }
+                    statistics.Children.Add(Rowed(Kept("Group width \u00d7 height", widthByHeight, SizeDetails(all, reducedOrNull))));
+                }
 
-                    statistics.Children.Add(Rowed(size));
+                statistics.Children.Add(Rowed(Kept("Mean radius", units.Length(all.MeanRadius!.Value), FigureDetails(all.MeanRadius, reducedOrNull, f => f.MeanRadius, interval: true), headline: true)));
+                if (all is { Cep90: { } cep90, Cep50: { } cep50, Cep95: not null })
+                {
+                    var cepLines = CepDetails(all, reducedOrNull);
+                    cepLines.Add(CepWhy);
+                    statistics.Children.Add(Rowed(Kept("CEP 50", units.Length(cep50.Value), cepLines)));
+                    statistics.Children.Add(Rowed(Kept("CEP 90", units.Length(cep90.Value), cepLines)));
+                }
+
+                advancedFigures.Children.Add(Rowed(Figure("Sigma", all.Sigma!, reducedOrNull, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
+                if (all is { SdX: not null, SdY: not null } && SizeValue(all) is not null)
+                {
 
                     // Entry 141 section 5.2.2: the two spreads drawn, so "is my group wider than it is tall" is a picture rather than two
                     // numbers a person has to hold in their head and compare. The caption is what stops it being a trap: every group is
@@ -1958,9 +2069,9 @@ public sealed partial class MainWindow : Window
                     spread.RoundPValue = all.Circularity?.PValue;
                     spread.Length = inches => units.Length(inches);
                     spread.InvalidateVisual();
-                    statistics.Children.Add(Ruled("Across, and up and down"));
-                    statistics.Children.Add(spread);
-                    statistics.Children.Add(Note(spread.Description));
+                    advancedFigures.Children.Add(Ruled("Across, and up and down"));
+                    advancedFigures.Children.Add(spread);
+                    advancedFigures.Children.Add(Note(spread.Description));
 
                     // Entry 141 section 5.2.3: only where a chronograph string says what order the shots were fired in. A sheet does not
                     // record that, and numbering the holes left to right would draw a chart that looks the same and means nothing.
@@ -2059,7 +2170,7 @@ public sealed partial class MainWindow : Window
         }
         else if (all.ShapeTestsUnavailable is { } why)
         {
-            cards.Add(new("shape", "No shape judgement.", [$"The shape tests are {why}."], []));
+            cards.Add(new("shape", "No shape judgment.", [$"The shape tests are {why}."], []));
         }
 
         // Entry 104 section 2: judged against circular groups measured the way this one is, by its own mean radius about its own centre,
@@ -2069,7 +2180,7 @@ public sealed partial class MainWindow : Window
             double beyond = calibrated.PValue;
             string label = ShotLabel(worstId);
             string sits = string.Create(CultureInfo.InvariantCulture,
-                $"It sits at {calibrated.Observed:0.00} of the group's own mean radii from its centre. Circular groups of {n}, measured the same way, put their worst at {calibrated.Expected:0.00} on average, and this far out or farther {HowOften(beyond)}, from {calibrated.Resamples} simulated groups.");
+                $"It sits at {calibrated.Observed:0.00} of the group's own mean radii from its center. Circular groups of {n}, measured the same way, put their worst at {calibrated.Expected:0.00} on average, and this far out or farther {HowOften(beyond)}, from {calibrated.Resamples} simulated groups.");
             string evidence = string.Create(CultureInfo.InvariantCulture, $"Worst shot against {calibrated.Resamples} simulated circular groups: p = {beyond:0.000}");
             // The hedge stays in view with the verdict: without it "not a flyer" would say more than the test can.
             cards.Add(beyond >= 0.05
@@ -2150,14 +2261,17 @@ public sealed partial class MainWindow : Window
         // the sheet's name for a marking with no image recorded.
         sheetCrumb.Content = state.ImagePath is { } path ? Path.GetFileName(path) : plotDefinition?.Name ?? "the sheet";
         ToolTip.SetTip(sheetCrumb, "Back to the sheet, with every edit as you left it");
+        // Entry 169 section 5: the badge says the one thing a shooter needs from it, and the markers, the residual and the rest are behind Show
+        // work for whoever wants them.
         registrationText.Text = state.Scale switch
         {
-            null => "no scale",
-            SheetReference when registrationResidual is { } residual => "registered, residual " + units.Length(residual),
-            SheetReference => "registered from the sheet's markers",
-            _ => "scale set by hand",
+            null => "\u26a0 No scale",
+            SheetReference => "\u2713 Scale checked",
+            _ => "\u26a0 Scale set by hand",
         };
-        ToolTip.SetTip(registrationPill, state.Scale is null ? null : "From " + state.Scale.Describe(units) + ".");
+        ToolTip.SetTip(registrationPill, null);
+        registrationWork.Text = state.Scale is null ? "No scale is set."
+            : "Scale: from " + state.Scale.Describe(units) + (state.Scale is SheetReference && registrationResidual is { } residual ? $", residual {units.Length(residual)}." : ".");
         foreach (var classes in new[] { registrationPill.Classes, registrationText.Classes })
         {
             classes.Remove(AppStyles.Good);
@@ -2505,7 +2619,7 @@ public sealed partial class MainWindow : Window
     {
         var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12 };
         column.Children.Add(new TextBlock { Text = "Session records", Classes = { AppStyles.Title } });
-        column.Children.Add(Line("Every sheet saved by Accept and analyse, newest first. A row opens its analysis."));
+        column.Children.Add(Line("Every sheet saved by Accept and analyze, newest first. A row opens its analysis."));
         var filters = Row(FieldLabel("Rifle"), sessionRifle, FieldLabel("Load"), sessionLoad);
         foreach (var combo in new[] { sessionRifle, sessionLoad })
         {
@@ -2556,7 +2670,7 @@ public sealed partial class MainWindow : Window
         FillSessionTrend(load, list);
         if (list.Count == 0)
         {
-            sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyse on a marked sheet saves one." : "No session matches the rifle and load chosen."));
+            sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyze on a marked sheet saves one." : "No session matches the rifle and load chosen."));
             return;
         }
 
@@ -2836,7 +2950,6 @@ public sealed partial class MainWindow : Window
     internal bool Analysing => analysing;
 
     /// <summary>What the zero block's picture is showing, entry 131 section 6.2, or null where there is none.</summary>
-    internal string? ZeroPictureSays => zeroOffsetPictures.TryGetValue("zero", out var p) ? p.Description : null;
 
     /// <summary>The alert line, for tests: what the window is telling the person is wrong.</summary>
     internal string ProblemText => problem.Text ?? "";
@@ -3772,6 +3885,12 @@ public sealed partial class MainWindow : Window
 
         // Entry 166 section 2: the platform's command key, Command on a Mac, where it arrives as Meta, and Control elsewhere.
         bool control = CommandKey.Held(e.KeyModifiers);
+        if (e.Key is Key.LeftAlt or Key.RightAlt)
+        {
+            ShowShortcuts(true);
+            return;
+        }
+
         if (CommandKey.IsRedo(e))
         {
             session.Redo();
@@ -3941,10 +4060,13 @@ public sealed partial class MainWindow : Window
     internal static string BuildLine() => ThisBuild.Line;
 
     /// <summary>The text of the statistics panel, for the headless tests.</summary>
-    internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
+    internal IEnumerable<string> StatisticsText => statistics.GetLogicalDescendants().Concat(advancedFigures.GetLogicalDescendants()).Concat(flags.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "").Concat(KeptFigures.SelectMany(k => (k.Tip ?? "").Split('\n')));
 
     /// <summary>The zero correction section's lines, for the headless tests (NOTES-FROM-PLANNING.md entries 91 and 92).</summary>
-    internal IEnumerable<string> ZeroText => zeroPanel.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+    internal IEnumerable<string> ZeroText => zeroPanel.GetLogicalDescendants().Concat(carryPanel.GetLogicalDescendants()).OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>The zero block alone, without its carry in Advanced, for the headless tests of entry 169.</summary>
+    internal IEnumerable<string> ZeroBlockText => zeroPanel.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 
     /// <summary>The breadcrumb header's line, for the headless tests (entry 93 section 2).</summary>
     internal string BreadcrumbText => breadcrumb.Text ?? "";
@@ -4036,10 +4158,10 @@ public sealed partial class MainWindow : Window
         var lines = new List<string>
         {
             all.ExtremeSpread is { Lower: { } esLower, Upper: { } esUpper, Coverage: { } esCoverage }
-                ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is centre to centre, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
+                ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is center to center, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
                 : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}.",
             all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
-                ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is centre to centre plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
+                ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is center to center plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
                 : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
         };
         if (state.ShotDistanceInches is null)
@@ -4405,6 +4527,7 @@ public sealed partial class MainWindow : Window
             ($"Paste an image ({CommandKey.Label("V")})", PasteImage),
             ("Open marking\u2026", OpenMarkingDialog),
             ("Export\u2026", ExportDialog),
+            ("Import shots from a CSV\u2026", ImportCsvDialog),
             ("Report a problem\u2026", () =>
             {
                 OpenReport(null);
@@ -4431,6 +4554,41 @@ public sealed partial class MainWindow : Window
     internal IReadOnlyList<string> MenuItems => [.. editorActions.Children.OfType<Button>().Last().Flyout is MenuFlyout menu ? menu.Items.OfType<MenuItem>().Select(i => i.Header as string ?? "") : []];
 
     private Button? undoButton;
+
+    /// <summary>Entry 169 section 7.2: each button's shortcut, shown under it while Alt is held.</summary>
+    private readonly List<TextBlock> shortcutLabels = [];
+
+    /// <summary>Puts a button's shortcut under its icon, hidden until Alt is held, and returns the button.</summary>
+    private T WithShortcut<T>(T button, string key)
+        where T : ContentControl
+    {
+        var label = new TextBlock { Text = key, FontSize = Tokens.DetailSize, HorizontalAlignment = HorizontalAlignment.Center, IsVisible = false, Classes = { AppStyles.Dim } };
+        object? content = button.Content;
+        button.Content = null;
+        button.Content = new StackPanel { Spacing = 0, Children = { content is Control icon ? icon : new TextBlock { Text = content as string ?? "" }, label } };
+        shortcutLabels.Add(label);
+        return button;
+    }
+
+    private void ShowShortcuts(bool shown)
+    {
+        foreach (var label in shortcutLabels)
+        {
+            label.IsVisible = shown;
+        }
+    }
+
+    /// <summary>The shortcut labels in view, for the headless tests.</summary>
+    internal IReadOnlyList<string> ShortcutsShown => [.. shortcutLabels.Where(l => l.IsVisible).Select(l => l.Text ?? "")];
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        base.OnKeyUp(e);
+        if (e.Key is Key.LeftAlt or Key.RightAlt)
+        {
+            ShowShortcuts(false);
+        }
+    }
 
     private Button? redoButton;
 
@@ -4634,7 +4792,7 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        sighterPanel.Children.Add(Line(sighters.CentreFromAim is { } centre ? CentreLine(AsDisplayed(centre)) : $"Centre from aim: {sighters.CentreFromAimUnavailable}."));
+        sighterPanel.Children.Add(Line(sighters.CentreFromAim is { } centre ? CentreLine(AsDisplayed(centre)) : $"Center from aim: {sighters.CentreFromAimUnavailable}."));
         if (sighters.DispersionWithheld is { } withheld)
         {
             sighterPanel.Children.Add(Line(withheld));
@@ -4716,77 +4874,72 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        // Entry 105 section 2: the two readouts in columns, linear under linear and angular under angular, where laid out as text they
-        // started at different places; the uncertainty is a sentence, set as one.
-        //
-        // Entry 131 section 1.2: the direction used to be a fourth column, and four columns do not fit the right-hand panel at 1280 by 720.
-        // The word was cut off at the edge, so "0.012 in low" read as "0.012 in lo". It rides with the angular figure now, which is where a
-        // person reads it anyway, and three columns fit.
-        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto") };
-        int row = 0;
-        foreach (var (label, linear, angular, sits) in view.Rows)
+        // Entry 169 section 2: one compact block. The offset in the length unit, MOA and mil side by side, both always, whatever the angular
+        // setting, because a shooter works in whichever his scope is marked in; the distance it is for; and one line saying what to dial,
+        // in clicks of the rifle's scope with the click value stated. The give or take, the degrees of freedom and the rounding are behind
+        // the line's "why", and carrying it to another distance is in Advanced. "Where it landed" is gone: it drew what the plot draws.
+        var zero = Zeroing.For(state)!;
+        double? distance = state.ShotDistanceInches;
+        string Angle(double inches, AngularUnit unit) => UnitSettings.AngleIn(Math.Abs(inches), distance, unit) is { } a ? a.ToString("0.00", CultureInfo.InvariantCulture) : "\u2013";
+        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto") };
+        void Cell(string text, int row, int column, bool heading)
         {
-            var cells = new Control[]
-            {
-                new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } },
-                ZeroCell(linear),
-                ZeroCell(string.IsNullOrWhiteSpace(sits) ? angular : angular + " " + sits.Trim()),
-            };
-            for (int c = 0; c < cells.Length; c++)
-            {
-                Grid.SetRow(cells[c], row);
-                Grid.SetColumn(cells[c], c);
-                readouts.Children.Add(cells[c]);
-            }
+            var cell = heading
+                ? new TextBlock { Text = text, HorizontalAlignment = column == 0 ? HorizontalAlignment.Left : HorizontalAlignment.Right, Classes = { AppStyles.Dim } }
+                : column == 0 ? new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } } : ZeroCell(text);
+            cell.Margin = new Thickness(column == 0 ? 0 : Tokens.Space12, 0, 0, 0);
+            Grid.SetRow(cell, row);
+            Grid.SetColumn(cell, column);
+            readouts.Children.Add(cell);
+        }
 
-            row++;
+        Cell("Center from aim", 0, 0, heading: true);
+        Cell(UnitSettings.Symbol(units.Linear), 0, 1, heading: true);
+        Cell("MOA", 0, 2, heading: true);
+        Cell("mil", 0, 3, heading: true);
+        int line = 1;
+        foreach (var (label, axis) in new[] { ("Windage", zero.Windage), ("Elevation", zero.Elevation) })
+        {
+            Cell($"{label}, {axis.Sits.Trim()}", line, 0, heading: false);
+            Cell(units.Number(Math.Abs(axis.OffsetInches)), line, 1, heading: false);
+            Cell(Angle(axis.OffsetInches, AngularUnit.Moa), line, 2, heading: false);
+            Cell(Angle(axis.OffsetInches, AngularUnit.Mrad), line, 3, heading: false);
+            line++;
         }
 
         zeroPanel.Children.Add(readouts);
-        zeroPanel.Children.Add(Note(view.Note!));
+        zeroPanel.Children.Add(new TextBlock
+        {
+            Text = distance is { } at ? $"For a zero at {units.DistanceText(at)}." : "Set the shot distance to see MOA, mil and clicks.",
+            TextWrapping = TextWrapping.Wrap,
+            Classes = { AppStyles.Secondary },
+        });
 
-        // The block's finding, at the label size and full strength: the line that matters. Entry 109 section 3a: one line in view, "Not
-        // distinguishable from zero at 25 shots. About 90 shots would settle it.", and the rest of it, the degrees of freedom and the solver,
-        // behind its "why".
-        var verdict = new TextBlock { Text = view.Verdict, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
+        var dialAxes = new[] { zero.Windage, zero.Elevation }.Where(a => a.Distinguishable).ToList();
+        string verdictText = dialAxes.Count == 0
+            ? view.Verdict
+            : dialAxes.All(a => a.Clicks is not null) && state.Rifle is { } rifle
+                ? $"Dial {string.Join(" and ", dialAxes.Select(a => a.Clicks!.Describe()))}, at {rifle.DescribeClick()}."
+                : $"Dial {string.Join(" and ", dialAxes.Select(a => a.Dial))} by the figures above." + (state.Rifle is null ? " Choose a rifle to have it in clicks." : "");
+        var verdict = new TextBlock { Text = verdictText, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
         if (view.Dial)
         {
             verdict.Classes.Add(AppStyles.Good);
         }
 
-        zeroPanel.Children.Add(Explained(verdict, item, [.. view.Why]));
+        var why = new List<string> { "The group center is known to within " + view.Note! + "." };
+        why.AddRange(dialAxes.Where(a => a.Clicks is not null).Select(a => string.Create(CultureInfo.InvariantCulture,
+            $"Rounding {a.Dial} to whole clicks leaves {Math.Abs(a.Clicks!.ResidualAngle):0.00} {(a.Clicks.Unit == AngularUnit.Mrad ? "mil" : "MOA")}.")));
+        why.AddRange(view.Why);
+        zeroPanel.Children.Add(Explained(verdict, item, [.. why]));
         if (view.AtZero is { } atZero)
         {
             zeroPanel.Children.Add(new TextBlock { Text = atZero, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, 0, Tokens.Space4) });
         }
 
-        // Entry 131 section 6.2: where the group actually landed against where it was aimed. It sits behind a disclosure because the numbers
-        // above already answer the question for most sheets, and the picture is for the sheet where they do not: it shows at a glance whether
-        // the uncertainty covers the aim, which is the thing that decides whether dialling is worth anything.
-        if (view.Offset is { } offset)
-        {
-            var picture = new ZeroOffsetPicture
-            {
-                Centre = offset,
-                Uncertainty = view.Uncertainty,
-                AcrossSays = view.AcrossSays,
-                DownSays = view.DownSays,
-                Worth = view.Dial,
-                BullInches = PlotDiscs(state).Where(d => !d.Paper).Select(d => (double?)d.DiameterInches).LastOrDefault(),
-            };
-            zeroOffsetPictures[item] = picture;
-            zeroPanel.Children.Add(new Expander
-            {
-                Header = "Where it landed",
-                Content = picture,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                IsExpanded = false,
-            });
-        }
-
         if (item == "zero")
         {
-            ShowCarry(state, zeroPanel);
+            ShowCarry(state, carryPanel);
         }
     }
 
@@ -4862,7 +5015,7 @@ public sealed partial class MainWindow : Window
             : units.Length(Math.Abs(inches));
 
         var rows = new List<(string, string, string, string)>();
-        foreach (var (label, axis) in new[] { ("Group centre, windage", zero.Windage), ("Group centre, elevation", zero.Elevation) })
+        foreach (var (label, axis) in new[] { ("Group center, windage", zero.Windage), ("Group center, elevation", zero.Elevation) })
         {
             rows.Add((label, units.Length(Math.Abs(axis.OffsetInches)), units.AngleText(Math.Abs(axis.OffsetInches), distance) ?? "", axis.Sits));
         }

@@ -161,7 +161,7 @@ public static class ReviewQueue
                 flagged[0].Bull,
                 flagged[0].Image,
                 string.Create(CultureInfo.InvariantCulture,
-                    $"{flagged.Count} of the {judged.Count} marks on this sheet read as more than one hole, which usually means the calibre is wrong rather than that you fired twice at every bull. Check what you were shooting."),
+                    $"{flagged.Count} of the {judged.Count} marks on this sheet read as more than one hole, which usually means the caliber is wrong rather than that you fired twice at every bull. Check what you were shooting."),
                 [new ReviewChoice("One shot each", ReviewAction.Keep)],
                 Dismissed(key)));
             flagged = [];

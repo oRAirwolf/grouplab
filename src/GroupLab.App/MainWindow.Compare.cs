@@ -225,7 +225,7 @@ public sealed partial class MainWindow
         }
 
         compareColumn.Children.Add(cards);
-        compareColumn.Children.Add(Note("Each plot: the dots are the shots about their own bulls, excluded ones left out; the cross is the group's centre, the dotted circle CEP 50 and the dashed circle CEP 90."));
+        compareColumn.Children.Add(Note("Each plot: the dots are the shots about their own bulls, excluded ones left out; the cross is the group's center, the dotted circle CEP 50 and the dashed circle CEP 90."));
 
         // Entry 131 section 10: the figures with their intervals, drawn. This is the one picture that makes the project's whole argument
         // visible. Two loads reading 0.42 in and 0.51 in look like a winner and a loser in a table; drawn with their intervals, anybody can

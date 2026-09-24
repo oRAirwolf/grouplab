@@ -124,9 +124,9 @@ BT /F1 71 Tf 1 0 0 -1 409 1890 Tm (3.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 508 1890 Tm (GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and) Tj ET
 BT /F1 71 Tf 1 0 0 -1 508 1978 Tm (puts each on its bull. Watch the status line.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 409 2080 Tm (4.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 2080 Tm (Settle anything the review queue raises in the side panel, then press Accept and analyse.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2182 Tm (Tell it the calibre if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2270 Tm (one small-calibre test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 2080 Tm (Settle anything the review queue raises in the side panel, then press Accept and analyze.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2182 Tm (Tell it the caliber if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2270 Tm (one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2358 Tm (another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2446 Tm (paper is a good deal smaller than the bullet that made it.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2569 Tm (Then click a hole. A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by) Tj ET
@@ -155,13 +155,13 @@ q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
 BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The analysis) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 2878 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2878 Tm (The plot draws every shot on one bull, each from its own bull's centre, with the group's centre and its CEP 50) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2878 Tm (The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 2966 Tm (and CEP 90 circles.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3068 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3068 Tm (Every figure carries its interval: the range the true value is likely to lie in. That interval is the point of the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3156 Tm (software. A five-shot group's mean radius could easily be half or double what it measures.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3258 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3258 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's centre is too close) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3258 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's center is too close) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3346 Tm (to the aim to tell from chance, saying how many shots would settle it.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3448 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3448 Tm (The two cards judge the group's shape and its worst shot, each naming the test it used and what that test) Tj ET
@@ -170,7 +170,7 @@ BT /F1 71 Tf 1 0 0 -1 395 3638 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3638 Tm (Every "why" opens the reasoning behind a figure, and there is now a ? beside every single figure giving two) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3726 Tm (or three plain sentences, including what the number of shots does to it.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3828 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3828 Tm (The zero correction is given in MOA, mils, inches and centimetres at once, with your scope's own unit leading) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3828 Tm (The zero correction is given in MOA, mils, inches and centimeters at once, with your scope's own unit leading) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3916 Tm (and the clicks spelled out where the rifle records a click value. The clicks are never guessed.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 4018 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 4018 Tm (Holes between bulls and off the grid are kept, counted and offered to you rather than dropped. Where) Tj ET

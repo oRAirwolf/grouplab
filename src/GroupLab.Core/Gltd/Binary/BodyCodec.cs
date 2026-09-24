@@ -206,11 +206,11 @@ public static class BodyCodec
         var inks = new Rgb[inkCount];
         for (int i = 0; i < inkCount; i++)
         {
-            inks[i] = new Rgb(r.U8("an ink colour"), r.U8("an ink colour"), r.U8("an ink colour"));
+            inks[i] = new Rgb(r.U8("an ink color"), r.U8("an ink color"), r.U8("an ink color"));
         }
 
         Require(inks.Distinct().Count() == inks.Length,
-            "The ink table repeats a colour; a canonical body stores each distinct colour once (TARGET-SCHEMA.md section 6).");
+            "The ink table repeats a color; a canonical body stores each distinct color once (TARGET-SCHEMA.md section 6).");
 
         byte setCount = r.U8("the ring set count");
         Require(setCount is >= 1 and <= 15, $"{setCount} ring sets is outside 1 to 15.");
@@ -337,7 +337,7 @@ public static class BodyCodec
             for (int i = 0; i < gridCount; i++)
             {
                 var m = new BodyMeasurementGrid(
-                    r.U16("a grid centre"), r.U16("a grid centre"), r.U16("a grid half-extent"),
+                    r.U16("a grid center"), r.U16("a grid center"), r.U16("a grid half-extent"),
                     r.U8("the grid divisions"), r.U8("the grid major step"), r.U8("the grid unit"),
                     r.U16("the grid distance"), r.U8("the grid distance unit"), r.U8("the grid inks"),
                     r.U8("the grid style"), r.U8("the grid label step"));

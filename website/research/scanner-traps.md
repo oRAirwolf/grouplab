@@ -41,9 +41,9 @@ Scanners made for paperwork often default to a black-and-white "document" or "te
 
 ![One hole through three scanner settings](/research/scanner-traps/figures/settings.png)
 
-That destroys exactly what GroupLab reads: the grey edge of a hole, the grey ring of bullet wipe around it, and the difference between a hole and a pencil line. In the middle panel the wipe ring has vanished, the hole's edge is decided by a threshold nobody chose, and the pencil line has disappeared. On another sheet the threshold might instead turn the pencil line into a black bar.
+That destroys exactly what GroupLab reads: the gray edge of a hole, the gray ring of bullet wipe around it, and the difference between a hole and a pencil line. In the middle panel the wipe ring has vanished, the hole's edge is decided by a threshold nobody chose, and the pencil line has disappeared. On another sheet the threshold might instead turn the pencil line into a black bar.
 
-**What to do:** scan in greyscale or colour ("photo" mode). Colour costs nothing but file size.
+**What to do:** scan in grayscale or color ("photo" mode). Color costs nothing but file size.
 
 ## Trap 3: heavy compression
 
@@ -59,19 +59,19 @@ Some scanner software offers "interpolated" resolutions far beyond the sensor's 
 
 ## Trap 5: automatic "enhancement"
 
-Auto-contrast, sharpening, descreening, dust removal and "auto colour" all change edges and greys in ways that vary from sheet to sheet. Some also auto-crop to what they think is the page, which can clip markers.
+Auto-contrast, sharpening, descreening, dust removal and "auto colour" all change edges and grays in ways that vary from sheet to sheet. Some also auto-crop to what they think is the page, which can clip markers.
 
-**What to do:** turn off every automatic correction you can find, and turn off auto-crop in favour of the full bed.
+**What to do:** turn off every automatic correction you can find, and turn off auto-crop in favor of the full bed.
 
 ## Trap 6: light through the paper
 
-Holes are holes because light (or the lid's white backing) shows through them. If the lid is open, or a dark backer sheet is still stuck to the target, holes may look grey or black depending on what is behind them.
+Holes are holes because light (or the lid's white backing) shows through them. If the lid is open, or a dark backer sheet is still stuck to the target, holes may look gray or black depending on what is behind them.
 
 **What to do:** close the lid, remove any backer or tape from behind the target, and scan every sheet the same way.
 
 ## A good scan in one line
 
-Greyscale or colour, 600 dpi optical, PNG, no automatic corrections, full bed, lid closed, all markers visible in the preview.
+Grayscale or color, 600 dpi optical, PNG, no automatic corrections, full bed, lid closed, all markers visible in the preview.
 
 ## What this means
 

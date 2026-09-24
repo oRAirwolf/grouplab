@@ -473,7 +473,7 @@ public static class RenderDifferenceHoleDetector
         double? median = n > 0 ? order[n / 2] : null;
         string Against(string said) =>
             named is { } c && median is { } m && Math.Abs((m / c) - 1) > CalibreDisagrees
-                ? said + string.Create(inv, $"; these marks measure {m:0.000} in across the middle and the calibre named would make about {c:0.000} in, so the sheet's own marks are used")
+                ? said + string.Create(inv, $"; these marks measure {m:0.000} in across the middle and the caliber named would make about {c:0.000} in, so the sheet's own marks are used")
                 : said;
 
         if (n >= options.MarksForSheetSize && TwoSizes(order) is { } groups)
@@ -487,7 +487,7 @@ public static class RenderDifferenceHoleDetector
             // The calibre still vetoes a split here, which is the one job it does that the sheet cannot: a stroke of hand ink joined to a
             // single hole is one hole, and on a sheet of two sizes the sheet's own marks are the thing in doubt.
             return new HoleSizeReference(HoleSizeSource.TwoSizes, named ?? bound, smaller, n, string.Create(inv,
-                $"the marks fall into two sizes, about {groups.Small:0.00} and {groups.Large:0.00} in across; a hole is taken as {smaller:0.000} in, the quarter-point of the {groups.Cut} smaller marks, so the larger ones are flagged: name the calibre to be sure which of the two sizes a single shot makes"),
+                $"the marks fall into two sizes, about {groups.Small:0.00} and {groups.Large:0.00} in across; a hole is taken as {smaller:0.000} in, the quarter-point of the {groups.Cut} smaller marks, so the larger ones are flagged: name the caliber to be sure which of the two sizes a single shot makes"),
                 median, named);
         }
 
@@ -503,7 +503,7 @@ public static class RenderDifferenceHoleDetector
             // A handful of marks is enough to flag against, tentatively, and not enough to veto a split with. The calibre is the better
             // veto here where there is one, because a veto only needs it to be roughly right.
             return new HoleSizeReference(HoleSizeSource.SheetTentative, named ?? bound, quarter, n, Against(named is null
-                ? string.Create(inv, $"a hole is taken as about {quarter:0.000} in from only {n} round marks, so oversized marks are flagged tentatively; name the calibre to be sure")
+                ? string.Create(inv, $"a hole is taken as about {quarter:0.000} in from only {n} round marks, so oversized marks are flagged tentatively; name the caliber to be sure")
                 : string.Create(inv, $"a hole is taken as about {quarter:0.000} in from only {n} round marks, so oversized marks are flagged tentatively")), median, named);
         }
 
@@ -512,12 +512,12 @@ public static class RenderDifferenceHoleDetector
         if (named is { } calibre)
         {
             return new HoleSizeReference(HoleSizeSource.Calibre, calibre, null, n, string.Create(inv,
-                $"this sheet has {n} round mark{(n == 1 ? "" : "s")} of its own, too few to measure a hole from, so no mark is judged oversized; the calibre named keeps a single hole from being split"),
+                $"this sheet has {n} round mark{(n == 1 ? "" : "s")} of its own, too few to measure a hole from, so no mark is judged oversized; the caliber named keeps a single hole from being split"),
                 median, named);
         }
 
         return new HoleSizeReference(HoleSizeSource.Bound, bound, null, n, string.Create(inv,
-            $"with {n} round mark{(n == 1 ? "" : "s")} and no calibre, a hole is only known to be at least {bound:0.00} in, so no mark is judged oversized"), median, named);
+            $"with {n} round mark{(n == 1 ? "" : "s")} and no caliber, a hole is only known to be at least {bound:0.00} in, so no mark is judged oversized"), median, named);
     }
 
     /// <summary>

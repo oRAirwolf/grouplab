@@ -152,6 +152,16 @@ public static class Tokens
     public static ThemeVariant HighContrastVariant { get; } = new("GroupLabHighContrast", ThemeVariant.Dark);
 
     /// <summary>The palette for a resolved theme variant. Follow-system resolves to one of the three before it reaches here.</summary>
+    /// <summary>
+    /// The composite plot's inks, NOTES-FROM-PLANNING.md entry 169 section 3: paper, one ink for every mark, a ring grey that still reads in
+    /// daylight, and one accent for the group centre, the extreme spread and a picked shot. The first outside user found the plot's pastel
+    /// rings and faint outlines hard to read, and the lesson he took from another program was its contrast. The dark version is as stark as
+    /// the light one, white on black, not a dimmed copy. ThemeTests holds each ink to its ratio on the paper.
+    /// </summary>
+    public static PlotInks Plot(ThemeVariant? variant) => variant == ThemeVariant.Light
+        ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e))
+        : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f));
+
     public static Palette For(ThemeVariant? variant) =>
         variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
 
@@ -238,7 +248,8 @@ public static class Tokens
     public const double TitleSize = 16;
     public const double HeadingSize = 14;
     public const double LabelSize = 13;
-    public const double ValueSize = 18;
+    /// <summary>Entry 169 section 4 raised it from 18: the figures are the product, and the largest text beside the lead figure.</summary>
+    public const double ValueSize = 22;
     public const double DetailSize = 11.5;
     public const double LeadValueSize = 29;
 
@@ -330,3 +341,6 @@ public static class Tokens
 
     private static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
 }
+
+/// <summary>The composite plot's four inks, entry 169 section 3.</summary>
+public sealed record PlotInks(Color Paper, Color Ink, Color Ring, Color Accent);

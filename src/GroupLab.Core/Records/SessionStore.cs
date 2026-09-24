@@ -326,7 +326,7 @@ public sealed class SessionStore
             ("$mru", s.MeanRadiusUpperInches), ("$image", s.ImagePath), ("$hash", s.ImageSha256), ("$proof", s.ProofImage), ("$proofType", s.ProofImageType),
         };
         const string columns = "created_utc, shot_date, sheet_name, definition_id, definition_json, distance_in, rifle, barrel, load, calibre_in, marking_json, shot_count, mean_radius_in, mean_radius_lower_in, mean_radius_upper_in, image_path, image_sha256, proof_image, proof_image_type";
-        const string parameters = "$created, $date, $sheet, $defid, $def, $distance, $rifle, $barrel, $load, $calibre, $marking, $count, $mr, $mrl, $mru, $image, $hash, $proof, $proofType";
+        const string parameters = "$created, $date, $sheet, $defid, $def, $distance, $rifle, $barrel, $load, $calibre, $marking, $count, $mr, $mrl, $mru, $image, $hash, $proof, $proofType"; // British on purpose: SQL parameter names.
         if (s.Id > 0)
         {
             Execute(db, $"INSERT OR REPLACE INTO sessions (id, {columns}) VALUES ($id, {parameters})", [.. values, ("$id", s.Id)]);

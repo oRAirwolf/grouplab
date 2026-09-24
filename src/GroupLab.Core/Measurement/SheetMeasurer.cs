@@ -354,7 +354,7 @@ public static class SheetMeasurer
         string modelName = model switch
         {
             RegistrationModel.Radial => "homography with radial distortion",
-            RegistrationModel.Surface => metadata.IsCamera ? "generalised cylinder through the camera" : "generalised cylinder, orthographic",
+            RegistrationModel.Surface => metadata.IsCamera ? "generalized cylinder through the camera" : "generalized cylinder, orthographic",
             _ => "homography",
         };
         stage.Decide("model", modelName,
@@ -540,7 +540,7 @@ public static class SheetMeasurer
         {
             s1.Metric("resolutionX", scale.PixelsPerDmmX * 254, "DPI");
             s1.Metric("resolutionY", scale.PixelsPerDmmY * 254, "DPI");
-            s1.Done(StageStatus.Ok, string.Create(inv, $"{scale.PixelsPerDmmX * 254:0.0} DPI x, {scale.PixelsPerDmmY * 254:0.0} DPI y from fiducials at the page centre")
+            s1.Done(StageStatus.Ok, string.Create(inv, $"{scale.PixelsPerDmmX * 254:0.0} DPI x, {scale.PixelsPerDmmY * 254:0.0} DPI y from fiducials at the page center")
                 + (scale.NominalDpi is { } n ? string.Create(inv, $"; the file stated {n:0.0}") : ""));
         }
 
@@ -581,7 +581,7 @@ public static class SheetMeasurer
         }
         else
         {
-            s4.Done(StageStatus.Ok, string.Create(inv, $"photograph, no stated resolution; {scale.PixelsPerDmmArea * 254:0} px per inch at the page centre"));
+            s4.Done(StageStatus.Ok, string.Create(inv, $"photograph, no stated resolution; {scale.PixelsPerDmmArea * 254:0} px per inch at the page center"));
         }
 
         return (scale, lens);

@@ -370,7 +370,7 @@ public sealed class SurfaceMapping : IPageMapping
 
     public SurfaceModel Parameters { get; }
 
-    public string Model => (Parameters.Family == SurfaceFamily.General ? "general developable surface" : "generalised cylinder")
+    public string Model => (Parameters.Family == SurfaceFamily.General ? "general developable surface" : "generalized cylinder")
         + (Parameters.Projection == SurfaceProjection.Perspective ? " through a camera with radial distortion" : ", orthographic");
 
     public PointD ToImage(PointD page)

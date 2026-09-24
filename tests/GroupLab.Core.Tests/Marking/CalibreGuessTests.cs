@@ -93,7 +93,7 @@ public class CalibreGuessTests
         Assert.Null(guess.Nearest);
         Assert.True(guess.Rough);
         Assert.Contains("this is a photograph", guess.Why, StringComparison.Ordinal);
-        Assert.Contains("will not guess a calibre from it", guess.Why, StringComparison.Ordinal);
+        Assert.Contains("will not guess a caliber from it", guess.Why, StringComparison.Ordinal);
         Assert.Empty(guess.Offered);
     }
 

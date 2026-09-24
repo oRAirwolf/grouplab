@@ -56,8 +56,9 @@ public class Entry170Tests
         try
         {
             var zero = window.ZeroText.ToList();
-            Assert.Contains(zero, t => t.StartsWith("Dial ", StringComparison.Ordinal) && t.Contains("2 clicks", StringComparison.Ordinal)
-                && t.EndsWith(", for a zero at 25.4 yd.", StringComparison.Ordinal));
+            // Entry 169 section 2.3 moved the distance into a line of its own in the block, beside the clicks.
+            Assert.Contains(zero, t => t.StartsWith("Dial ", StringComparison.Ordinal) && t.Contains("2 clicks", StringComparison.Ordinal));
+            Assert.Contains("For a zero at 25.4 yd.", zero);
             Assert.Contains(zero, t => t.StartsWith("This correction is for a zero at 25.4 yd, not Friend's rifle's 100 yd zero. Carrying it there needs ", StringComparison.Ordinal)
                 && t.Contains("sight height", StringComparison.Ordinal) && t.Contains("muzzle velocity", StringComparison.Ordinal) && t.Contains("BC", StringComparison.Ordinal));
         }

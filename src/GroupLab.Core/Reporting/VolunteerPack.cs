@@ -46,7 +46,7 @@ public static class VolunteerPack
     public static Scene Page(TargetDefinition definition, long width, long height, string? markdown = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
-        string text = (markdown ?? Source()).Replace("{bull-1-to-5}", BullOneToFive(definition) ?? "four times the distance between neighbouring bulls", StringComparison.Ordinal);
+        string text = (markdown ?? Source()).Replace("{bull-1-to-5}", BullOneToFive(definition) ?? "four times the distance between neighboring bulls", StringComparison.Ordinal);
         var items = new List<SceneItem>();
         long margin = 3 * Inch / 5, right = width - margin, y = margin;
         var ink = new Rgb(20, 20, 20);

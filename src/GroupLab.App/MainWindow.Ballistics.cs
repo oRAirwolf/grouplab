@@ -133,7 +133,7 @@ public sealed partial class MainWindow
         column.Children.Add(dopeTable);
 
         // Entry 113 section 3: the analysed group carried to another distance, its hit probability there and its predicted size.
-        column.Children.Add(Heading("The analysed group at another distance"));
+        column.Children.Add(Heading("The analyzed group at another distance"));
         column.Children.Add(Line("A prediction from the group open in the analysis, the rifle and load it names, and the air above: its sigma carried through the solver, with the load's velocity SD and the crosswind's uncertainty added where they are given. It is never a measurement."));
         column.Children.Add(Row(Distanced("At"), projectTo, Measured("Crosswind uncertainty", BallisticMeasure.WindSpeed), windSd));
         column.Children.Add(Row(FieldLabel("Target"), targetShape, Lengthed("Size"), targetWidth, targetHeight, Button("Work it out", FillProjection)));
@@ -564,7 +564,7 @@ public sealed partial class MainWindow
         var figures = GroupAnalysis.Analyse(state);
         var group = figures.Excluded > 0 ? figures.WithoutExclusions : figures.AllShots;
         var missing = SolverUse.Missing(rifle, load);
-        string? refusal = state.ShotDistanceInches is null ? "The analysed group has no shot distance; set it in the marking."
+        string? refusal = state.ShotDistanceInches is null ? "The analyzed group has no shot distance; set it in the marking."
             : group?.Sigma is null ? "The analysis has no group with a sigma to carry; mark at least " + GroupAnalysis.MinimumShotsForDispersion.ToString(CultureInfo.InvariantCulture) + " shots and accept them."
             : missing.Count > 0 ? "The solver needs " + Joined(missing) + ", for the rifle and load the analysis names."
             : Number(projectTo) is null ? "Enter the distance to carry the group to."
@@ -593,7 +593,7 @@ public sealed partial class MainWindow
         projectionLines.Children.Add(new TextBlock { Text = $"Predicted at {at}, not measured", FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Warn } });
         projectionLines.Children.Add(Line($"Sigma across {Axis(p => p.AcrossInches)}, up and down {Axis(p => p.UpDownInches)}, the brackets from the ends of the sigma interval measured at {units.DistanceText(from * 36)}."));
         double cep = GroupStatistics.CepCorrNormal(projection.Point.AcrossInches * projection.Point.AcrossInches, 0, projection.Point.UpDownInches * projection.Point.UpDownInches, 0.5);
-        projectionLines.Children.Add(Line($"CEP 50 about {units.Length(cep)} there, about the group's own centre."));
+        projectionLines.Children.Add(Line($"CEP 50 about {units.Length(cep)} there, about the group's own center."));
         projectionLines.Children.Add(Line(projection.AngularOnly
             ? "No velocity SD or crosswind uncertainty is given, so this is the group scaled by angle and nothing more."
             : $"Of that, the load's velocity SD of {units.Speed(load.MuzzleVelocitySdFps ?? 0)} gives {units.Length(projection.VelocityAtToInches)} up and down at {at}, having been taken out of the group measured, where it gave {units.Length(projection.VelocityAtFromInches)}; the crosswind's uncertainty gives {units.Length(projection.WindAtToInches)} across."));
@@ -610,7 +610,7 @@ public sealed partial class MainWindow
             var carried = SolverUse.Carry(input, zero, from, to, rifle);
             muX = carried.Windage.OffsetInches;
             muY = carried.Elevation.OffsetInches;
-            centred = $"about the group's centre carried there, {units.Length(Math.Abs(muX))} {(muX >= 0 ? "right" : "left")} and {units.Length(Math.Abs(muY))} {(muY >= 0 ? "low" : "high")} of the aim";
+            centred = $"about the group's center carried there, {units.Length(Math.Abs(muX))} {(muX >= 0 ? "right" : "left")} and {units.Length(Math.Abs(muY))} {(muY >= 0 ? "low" : "high")} of the aim";
         }
 
         double width = UnitSettings.ToInches(Number(targetWidth)!.Value, units.Linear);

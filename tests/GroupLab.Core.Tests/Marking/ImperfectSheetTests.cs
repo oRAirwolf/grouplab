@@ -171,7 +171,7 @@ public class ImperfectSheetTests
         // The sheet's own codes are its word for what it is, and that is said before anything is analysed.
         string codes = DetectionAdvice.WrongSheet(own.Name, BuiltIns.Load("GL-RF36-LTR.gltd.json"));
         Assert.Contains($"codes say it is {own.Name}", codes, StringComparison.Ordinal);
-        Assert.Contains("nothing was analysed", codes, StringComparison.Ordinal);
+        Assert.Contains("nothing was analyzed", codes, StringComparison.Ordinal);
     }
 
     /// <summary>Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, and on a scan its sizes are corrected.</summary>

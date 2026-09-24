@@ -33,11 +33,11 @@ This sounds like giving up. It is the opposite: it is the only part of the probl
 
 **A declared rectangle is free and perfectly reliable. Classification is neither.** That trade is available because the sheet is generated rather than bought, and it is most of the reason a generated sheet is worth having.
 
-## Colour, and why the rings are what they are
+## Color, and why the rings are what they are
 
-Printed ink has colour. A bullet hole does not: it is a hole, and what shows through is neutral whatever its darkness.
+Printed ink has color. A bullet hole does not: it is a hole, and what shows through is neutral whatever its darkness.
 
-So the detector can use chroma to separate ink from holes, which works well and is one of the reasons the sheets are printed in colour rather than black. It stops working where the ring is dark enough that its colour is swamped, which is why the ring design matters as much as the detection does.
+So the detector can use chroma to separate ink from holes, which works well and is one of the reasons the sheets are printed in color rather than black. It stops working where the ring is dark enough that its color is swamped, which is why the ring design matters as much as the detection does.
 
 ## Sighters are a different pool, and that is not a nicety
 
@@ -51,7 +51,7 @@ Sighters are ignored unless you ask for them, but the matching still runs over t
 
 ## What the markers need from the layout
 
-The markers sit on the boundaries between cells, where they do not interfere with the bulls and where the lattice gives them positions known to a fraction of a millimetre.
+The markers sit on the boundaries between cells, where they do not interfere with the bulls and where the lattice gives them positions known to a fraction of a millimeter.
 
 They need a quiet zone around them, 1.0 mm on a 4.0 mm marker. A marker with something printed against its edge is a marker that may not decode, and a sheet that loses too many markers cannot be registered at all.
 
@@ -61,7 +61,7 @@ There is a whole article on the marker choice itself: [Choosing the markers](cho
 
 A bull has two jobs that pull in opposite directions.
 
-It has to be **aimable**: big enough to see and centre on at the distance you are shooting. And it has to be **small enough that a sheet holds many of them**, because the whole point of a twenty-five bull sheet is that you get a twenty-five shot group out of one-shot-per-bull, without the holes overlapping and without the group being about your aim instead of your rifle.
+It has to be **aimable**: big enough to see and center on at the distance you are shooting. And it has to be **small enough that a sheet holds many of them**, because the whole point of a twenty-five bull sheet is that you get a twenty-five shot group out of one-shot-per-bull, without the holes overlapping and without the group being about your aim instead of your rifle.
 
 That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centrefire at 300, and the built-in library is twenty-two sheets rather than one because those are genuinely different problems.
 

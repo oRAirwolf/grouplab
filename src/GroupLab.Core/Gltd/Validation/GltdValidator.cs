@@ -417,7 +417,7 @@ public static class GltdValidator
                     if (c.Positions.Count > 0 && !c.Positions.SequenceEqual(derived))
                     {
                         Error("validate.codePositions", "/codes/positions",
-                            $"The stored code positions differ from the corners-1 centres {string.Join(" ", derived.Select(p => $"({p.X},{p.Y})"))}; a mismatch is an error, not a repair (section 3.8).", "26d");
+                            $"The stored code positions differ from the corners-1 centers {string.Join(" ", derived.Select(p => $"({p.X},{p.Y})"))}; a mismatch is an error, not a repair (section 3.8).", "26d");
                     }
 
                     positions = derived;

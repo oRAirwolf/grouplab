@@ -109,6 +109,6 @@ public class SolverUseTests
         Assert.Equal(0, table.Points[1].DropInches, 2);
         Assert.True(table.Points[^1].DropInches < -50);
         Assert.True(Math.Abs(table.Points[^1].WindInches) > Math.Abs(table.Points[3].WindInches));
-        Assert.Contains("Aerodynamic jump is not modelled.", table.NotModelled);
+        Assert.Contains("Aerodynamic jump is not modeled.", table.NotModelled);
     }
 }

@@ -71,4 +71,4 @@ And if a group looks better than you shot, look at the assignment before you bel
 
 **Be suspicious of a result that is too good.** Reading shots to the nearest bull turns a consistent offset into twenty small groups, each one clustered around a bull. The numbers look better than the shooting was. That is the dangerous shape of this failure: it does not look like an error.
 
-**Until GroupLab lets you say which bulls you aimed at**, the defence is your own record. Write the bulls down at the bench. It takes a moment and it is the only thing that survives a wrong assumption about the zero.
+**Until GroupLab lets you say which bulls you aimed at**, the defense is your own record. Write the bulls down at the bench. It takes a moment and it is the only thing that survives a wrong assumption about the zero.

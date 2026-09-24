@@ -59,7 +59,7 @@ public static class Chronograph
         string counts = string.Create(inv, $"{matched} of {readings} readings sit beside a shot");
         if (withoutReading == 0 && withoutShot == 0)
         {
-            return counts + ". The counts agree; check the order before accepting it, because a chronograph can miss a shot and record a neighbour's.";
+            return counts + ". The counts agree; check the order before accepting it, because a chronograph can miss a shot and record a neighbor's.";
         }
 
         var parts = new List<string>();

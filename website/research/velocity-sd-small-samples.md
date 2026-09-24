@@ -77,4 +77,4 @@ So an ES of 25 ft/s over five shots and an ES of 40 ft/s over twenty shots can d
 
 **Twenty shots is where the number starts to mean something**, narrowing the same reading to 7.6 to 14.6. Still wide, and honest.
 
-**So do not chase a load on SD alone from short strings**, and be sceptical of anybody quoting one. The claim is not usually dishonest; it is just a reading that has not been given enough shots to become a measurement.
+**So do not chase a load on SD alone from short strings**, and be skeptical of anybody quoting one. The claim is not usually dishonest; it is just a reading that has not been given enough shots to become a measurement.

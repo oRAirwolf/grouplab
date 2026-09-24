@@ -22,7 +22,7 @@ sources:
 3. **A crash report**, if you choose to send one.
 4. **A target photograph**, if you submit one to the research collection.
 
-That is all of it. There is no analytics, no usage reporting, no licence check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
+That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
 
 ## The update check
 

@@ -101,7 +101,7 @@ public static class BallisticSolver
     /// </summary>
     public static IReadOnlyList<string> NotModelled { get; } =
     [
-        "Aerodynamic jump is not modelled.",
+        "Aerodynamic jump is not modeled.",
     ];
 
     /// <summary>The drag deceleration in ft/s² at a speed, Mach number and density ratio.</summary>

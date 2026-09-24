@@ -48,8 +48,9 @@ public class ZeroSectionTests
 
         var lines = window.ZeroText.ToList();
 
-        Assert.Contains(lines, t => t.Contains("Group centre, windage", StringComparison.Ordinal));
-        Assert.Contains(lines, t => t.Contains("Group centre, elevation", StringComparison.Ordinal));
+        // Entry 169 section 2: the offset in a compact block, one row an axis, in the length unit, MOA and mil.
+        Assert.Contains(lines, t => t.StartsWith("Windage, ", StringComparison.Ordinal));
+        Assert.Contains(lines, t => t.StartsWith("Elevation, ", StringComparison.Ordinal));
         Assert.Contains(lines, t => t.StartsWith("Not distinguishable from zero at 10 shots", StringComparison.Ordinal));
         Assert.Contains(lines, t => t.Contains("shots would settle it", StringComparison.Ordinal));
         Assert.DoesNotContain(lines, t => t.StartsWith("Dial", StringComparison.Ordinal));
@@ -67,7 +68,7 @@ public class ZeroSectionTests
 
         var dial = Assert.Single(lines, t => t.StartsWith("Dial", StringComparison.Ordinal));
         Assert.Contains("left", dial, StringComparison.Ordinal);
-        Assert.Contains(lines, t => t.Contains("right", StringComparison.Ordinal) && t.Contains("Group centre", StringComparison.Ordinal) is false);
+        Assert.Contains(lines, t => t.StartsWith("Windage, right", StringComparison.Ordinal));
         window.Close();
     }
 
@@ -78,17 +79,18 @@ public class ZeroSectionTests
         var window = NewWindow();
         window.Show();
         Mark(window, offsetInches: 1.2, sigmaInches: 0.27);
-        Assert.Contains(window.ZeroText, t => t.StartsWith("Angular figures and clicks need the shot distance", StringComparison.Ordinal));
+        Assert.Contains(window.ZeroText, t => t.StartsWith("Set the shot distance to see MOA, mil and clicks", StringComparison.Ordinal));
 
         window.Session.SetShotDistance(3600);
         Dispatcher.UIThread.RunJobs();
-        Assert.Contains(window.ZeroText, t => t.StartsWith("Choose a rifle to have this in clicks", StringComparison.Ordinal));
+        Assert.Contains(window.ZeroText, t => t.EndsWith("Choose a rifle to have it in clicks.", StringComparison.Ordinal));
 
         window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa), null, null);
         Dispatcher.UIThread.RunJobs();
         var dial = Assert.Single(window.ZeroText, t => t.StartsWith("Dial", StringComparison.Ordinal));
-        Assert.StartsWith("Dial 5 clicks left (", dial, StringComparison.Ordinal);
-        Assert.Contains("leaving", dial, StringComparison.Ordinal);
+        // Entry 169 section 2.2: the clicks with the click value stated, and what rounding leaves behind the line's "why".
+        Assert.Equal("Dial 5 clicks left, at 0.25 MOA a click.", dial);
+        Assert.Contains(window.ZeroText, t => t.StartsWith("Rounding left to whole clicks leaves", StringComparison.Ordinal));
         window.Close();
     }
 

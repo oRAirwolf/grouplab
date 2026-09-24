@@ -168,7 +168,7 @@ public class Entry105Tests
             Assert.Equal(2, window.Canvas.SetAside.Count);
             Assert.DoesNotContain(window.FigureColumnHeadings, h => h.StartsWith("Sighters", StringComparison.Ordinal));
 
-            var box = window.GetLogicalDescendants().OfType<CheckBox>().Single(c => Equals(c.Content, "Analyse sighters"));
+            var box = window.GetLogicalDescendants().OfType<CheckBox>().Single(c => Equals(c.Content, "Analyze sighters"));
             Assert.True(box.IsVisible);
             box.IsChecked = true;
             Dispatcher.UIThread.RunJobs();
@@ -208,7 +208,7 @@ public class Entry105Tests
             var first = plot.Shots.First(s => !s.Excluded);
             string shot = plot.Describe(plot.ToScreen(first.Offset))!;
             Assert.StartsWith($"Shot {first.Label}, bull {first.Bull}.", shot, StringComparison.Ordinal);
-            Assert.Contains("from the group centre", shot, StringComparison.Ordinal);
+            Assert.Contains("from the group center", shot, StringComparison.Ordinal);
 
             var excluded = plot.Shots.Single(s => s.Excluded);
             Assert.Contains("Excluded", plot.Describe(plot.ToScreen(excluded.Offset)), StringComparison.Ordinal);
@@ -313,19 +313,18 @@ public class Entry105Tests
         {
             window.Session.SetShotDistance(3600);
             Dispatcher.UIThread.RunJobs();
-            var text = window.StatisticsText.ToList();
-            int meanRadius = text.IndexOf("Mean radius");
-            Assert.EndsWith(" in", text[meanRadius + 1], StringComparison.Ordinal);
-            Assert.Contains("MOA", text[meanRadius + 2], StringComparison.Ordinal);
+            // Entry 169 section 1: the value alone beside its label, and the angle with the interval in its tooltip rather than a line beneath.
+            var mean = window.KeptFigures.Single(k => k.Name == "Mean radius");
+            Assert.EndsWith(" in", mean.Value, StringComparison.Ordinal);
+            Assert.Contains("MOA", mean.Tip, StringComparison.Ordinal);
 
-            // Entry 131 section 1.2: the direction used to sit in a fourth column, and four columns do not fit the right-hand panel at
-            // 1280 by 720, so the word was cut off at the edge and "0.012 in low" read as "0.012 in lo". It rides with the angular figure
-            // now. What this test is for is unchanged: the linear figure and the angular one are each in a column of their own, and both
-            // axes say which way to go.
+            // Entry 169 section 2: the zero readouts are cells in columns headed by their units, the length unit, MOA and mil, and each
+            // axis's row says which way the group sits.
             var zero = window.ZeroText.ToList();
             Assert.Contains(zero, t => t.EndsWith(" right", StringComparison.Ordinal) || t.EndsWith(" left", StringComparison.Ordinal));
             Assert.Contains(zero, t => t.EndsWith(" high", StringComparison.Ordinal) || t.EndsWith(" low", StringComparison.Ordinal));
-            Assert.Contains(zero, t => t.Contains(" MOA", StringComparison.Ordinal) && !t.Contains(" in", StringComparison.Ordinal));
+            Assert.Contains("MOA", zero);
+            Assert.Contains("mil", zero);
             window.Close();
         }
         finally

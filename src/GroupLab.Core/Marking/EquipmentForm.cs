@@ -90,7 +90,7 @@ public static class EquipmentForm
     public static ImmutableList<EquipmentField> Load { get; } =
     [
         new("name", "Name", FieldKind.Words, Required: true),
-        new("bulletDiameterInches", "Bullet calibre", FieldKind.Number, "in"),
+        new("bulletDiameterInches", "Bullet caliber", FieldKind.Number, "in"),
         new("bulletWeightGrains", "Bullet weight", FieldKind.Number, "gr"),
         new("bulletName", "Bullet", FieldKind.Words),
         new("bulletLengthInches", "Bullet length", FieldKind.Number, "in"),
