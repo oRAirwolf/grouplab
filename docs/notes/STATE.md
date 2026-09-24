@@ -57,9 +57,9 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.98, published 16:16 UTC.
-- **The site serves `099c270`**, and entry 165 changes the guide, the tour, one article and the upload page's consent. The upload page is live at
-  `grouplab.org/targets/` and takes photographs; `pissinhot.com/targets` redirects there.
+- **Last nightly:** 0.2.0-nightly.101, published from 98da32d, carrying entries 187 to 194. Nightly 100 carried 187 and 189.
+- **The site serves `98da32d`**, current with main; the upload page is live at `grouplab.org/targets/`, `pissinhot.com/targets` redirects there, and the error report
+  and application receivers publish with it, both switched off in the application until requests 22 and 24.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox
