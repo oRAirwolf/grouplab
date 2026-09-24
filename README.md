@@ -17,7 +17,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 | **[Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs. It keeps itself up to date. |
 | **[Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe`. It tells you when there is a newer build and you download it yourself. |
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
-| **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later. **Untested on a real Mac.** |
+| **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later. **Run on one real Mac**, by one tester; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
 
 **Every build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
@@ -53,7 +53,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 - [Repository layout](#repository-layout)
 - [Test data](#test-data)
 - [Building](#building)
-- [Licence](#licence)
+- [License](#license)
 
 ---
 
@@ -69,7 +69,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 ## How it works
 
-You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyse it correctly.
+You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
 You shoot it, then scan or photograph the sheet, still stapled to the board if you like.
 
@@ -92,11 +92,11 @@ The one-shot-per-bull design is what makes the accuracy possible. Holes never ov
 
 ## Concept screens
 
-These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with the analysis, the target library, the print screen and the session records behind it, load comparison behind its chart slot, a Ballistics slot for the solver, and a settings screen behind the gear at its foot. Behind the first destination are the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgement cards. Renders of the build as it stands, every screen in both themes at two sizes, are in `docs/figures/screens/current/` beside these. Not built yet: velocity regression.
+These are design mockups, not screenshots of the current build. Every figure on the analysis screen is computed from one real 25-shot sample, so the numbers are internally consistent rather than decorative. The application today has the rail, with the analysis, the target library, the print screen and the session records behind it, load comparison behind its chart slot, a Ballistics slot for the solver, and a settings screen behind the gear at its foot. Behind the first destination are the two screens above as two states of one document: the assignment editor, and the analysis with its composite plot, figure stack and judgment cards. Renders of the build as it stands, every screen in both themes at two sizes, are in `docs/figures/screens/current/` beside these. Not built yet: velocity regression.
 
 ![Analysis screen](docs/figures/screens/analysis-dark.png)
 
-*The analysis screen. Twenty-five bulls composited into one group, the statistics that matter with their confidence intervals, and two plain-language judgements: whether the group is round, and whether that one wide shot is really a flyer.*
+*The analysis screen. Twenty-five bulls composited into one group, the statistics that matter with their confidence intervals, and two plain-language judgments: whether the group is round, and whether that one wide shot is really a flyer.*
 
 | | |
 |---|---|
@@ -169,7 +169,7 @@ flowchart TB
 
 **Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
 
-**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch, and the Terminal command below cleared it. Opening, detecting and analysing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
+**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch, and the Terminal command below cleared it. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
 
 ### What happens once the application settles
 
@@ -189,7 +189,7 @@ Anyone not comfortable running that command should not run this build.
 
 ### Why it is not signed
 
-Signing a macOS application requires the Apple developer programme, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+Signing a macOS application requires the Apple developer program, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
 
 That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
 
@@ -199,7 +199,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer programme, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
 
 ### Other Linux builds
 
@@ -252,15 +252,15 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 | Phase | State | Gate |
 |---|---|---|
-| **0a. Format and renderer** | **Done** | conformance test 43: a rendered definition analysed as a scan recovers every bull centre within 0.001 in |
-| **0. Registration spike** | **Built, not proven** | worst bull centre within 0.005 in on a 600 DPI scan of a printed sheet, and on an off-axis photograph of a sheet held flat |
+| **0a. Format and renderer** | **Done** | conformance test 43: a rendered definition analyzed as a scan recovers every bull center within 0.001 in |
+| **0. Registration spike** | **Built, not proven** | worst bull center within 0.005 in on a 600 DPI scan of a printed sheet, and on an off-axis photograph of a sheet held flat |
 | **1. Detection spike** | **Built, not proven** | at least 99 percent of holes found with no false positives, matched at 0.15 in, and the mounted photograph gate at 0.005 in |
 | **2. Core and statistics** | **Built, not proven** | statistical output matches the R package `shotGroups` to numerical tolerance on shared test data |
 | **3. Editor** | **Built, not proven** | a full 25-shot target with several misassignments corrected in under two minutes |
 | **4. Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application |
 | **5. Chronograph, solver, and comparison** | **Not started** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
 | **6. Android** | **Not started** | camera capture and lens distortion fitted on the device |
-| **7. Synchronisation** | **Not started** | cloud provider adapters over three-tier storage |
+| **7. Synchronization** | **Not started** | cloud provider adapters over three-tier storage |
 | **8. iOS** | **Not started** | built and signed on CI |
 | **9. Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
 
@@ -289,23 +289,23 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** Hit probability inside a radius at the distance shot, by three estimators, with the CEP table behind it.
 - **Done.** Every figure with the interval it actually has, and the reference a figure needs to be read against.
 - **Done.** Composite groups, pooled groups and load comparison in the engine.
-- **Done.** Calibre-aware edge-to-edge extreme spread, with the reason printed in place of the figure when no calibre is set.
-- **Built, not proven.** Subgroups within one sheet: on the marking screen, shift and click chooses bulls and one field puts a load on all of them, so a ladder sheet is set five bulls at a time. Each subgroup has its own figures and they are compared by dispersion and by centre, so one sheet can carry six charge weights.
-- **Done.** The zero correction: the group centre's offset from the point of aim with its uncertainty, and, where the offset is smaller than the shots can resolve, the number of shots that would settle it instead of a correction.
+- **Done.** Caliber-aware edge-to-edge extreme spread, with the reason printed in place of the figure when no caliber is set.
+- **Built, not proven.** Subgroups within one sheet: on the marking screen, shift and click chooses bulls and one field puts a load on all of them, so a ladder sheet is set five bulls at a time. Each subgroup has its own figures and they are compared by dispersion and by center, so one sheet can carry six charge weights.
+- **Done.** The zero correction: the group center's offset from the point of aim with its uncertainty, and, where the offset is smaller than the shots can resolve, the number of shots that would settle it instead of a correction.
 
 **Phase 3. Editor.**
 - **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
-- **Built, not proven.** Shots per bull for a sheet that breaks one a bull on purpose: every shot to its nearest bull, or two on the bulls named, matched that way. Without it, one-to-one matching pushes each second shot onto an empty neighbour and the review queue raises every one, which a synthetic doubles sheet tests both ways.
-- **Built, not proven.** `grouplab compare-photos`: photographs of a sheet against its flat scan, the scan's corrected marking or its own detection as the truth, saying which. For each photograph it gives the registration model, the bull-centre error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
+- **Built, not proven.** Shots per bull for a sheet that breaks one a bull on purpose: every shot to its nearest bull, or two on the bulls named, matched that way. Without it, one-to-one matching pushes each second shot onto an empty neighbor and the review queue raises every one, which a synthetic doubles sheet tests both ways.
+- **Built, not proven.** `grouplab compare-photos`: photographs of a sheet against its flat scan, the scan's corrected marking or its own detection as the truth, saying which. For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - **Built, not proven.** The rounds fired as a check on the count: when the marks disagree with them, the queue names the marks most likely to be two, or least like a hole, and offers the first as a key press.
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
-- **Done.** Sighters found and matched and then set aside unless a person asks for them, and analysed as a group of their own when they do, never pooled with the scoring shots.
-- **Done.** The calibre entered as the bullet's diameter and nothing else, in inches or in millimetres marked mm, with the common diameters in a pick list in both units, by decision: a calibre's name is usually not its diameter, so a designation typed as a number, such as .38 or 7.62 mm, is refused too.
-- **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a calibre-sized reach, with no definition needed.
+- **Done.** Sighters found and matched and then set aside unless a person asks for them, and analyzed as a group of their own when they do, never pooled with the scoring shots.
+- **Done.** The caliber entered as the bullet's diameter and nothing else, in inches or in millimeters marked mm, with the common diameters in a pick list in both units, by decision: a caliber's name is usually not its diameter, so a designation typed as a number, such as .38 or 7.62 mm, is refused too.
+- **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a caliber-sized reach, with no definition needed.
 - **Done.** Move, delete, reassign, exclude with a reason, mark not a shot, and undo throughout.
 - **Done.** The concept screen's appearance: the tool strip as icons, each named with its key, the review's keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
-- **Done.** A layout and readability pass on both screens: five text styles, one row shape for every figure, the reasoning behind each figure and judgement one click away under "why", a header on one line with the document's actions in a menu, the view controls over the canvas, and the units, theme and log on a settings screen of their own.
+- **Done.** A layout and readability pass on both screens: five text styles, one row shape for every figure, the reasoning behind each figure and judgment one click away under "why", a header on one line with the document's actions in a menu, the view controls over the canvas, and the units, theme and log on a settings screen of their own.
 
 **Phase 4. Windows application.**
 - **Done.** A print screen that renders any built-in sheet to PDF at actual size.
@@ -313,12 +313,12 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Done.** The parametric target editor: page, rows and columns, spacing, ring, sighters and load block, laid out by the rule the library was, with a layout that cannot register or fit refused and a spacing tight for your rifle's group warned with its misassignment rate.
 - **Done.** An intake tool that verifies donated photographs, refuses opt-outs and strips location data.
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
-- **Done.** The three-axis unit setting: inches, centimetres and millimetres, MOA, mil and SMOA, yards and metres, each chosen independently and display only.
-- **Done.** The analysis screen shown above: the editor and the analysis as two states of one document, forward by Accept and analyse and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the calibre, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; the two judgement cards, round and flyer, each naming its test; the sheet's thumbnail, drawn from its definition with every shot on it, where a click on a bull selects its shots; and the full CEP table and bivariate fit behind one disclosure that remembers it was opened.
+- **Done.** The three-axis unit setting: inches, centimeters and millimeters, MOA, mil and SMOA, yards and meters, each chosen independently and display only.
+- **Done.** The analysis screen shown above: the editor and the analysis as two states of one document, forward by Accept and analyze and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the caliber, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; the two judgment cards, round and flyer, each naming its test; the sheet's thumbnail, drawn from its definition with every shot on it, where a click on a bull selects its shots; and the full CEP table and bivariate fit behind one disclosure that remembers it was opened.
 - **Not started.** Hole detection on blank paper, with no definition to difference against. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
-- **Built, not proven.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyse saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one.
+- **Built, not proven.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyze saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one.
 - **Built, not proven.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval and without exclusions, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every "why", and the version and identifiers on page 2. Every line on it is one the analysis screen shows.
-- **Built, not proven.** The target library: the built-in sheets, read only, and your own sheets from the designer, saved as GLTD files in the data folder, renamed, duplicated from any sheet, and deleted after asking. The print screen lists both. A session keeps its own copy of the sheet it was analysed against, so deleting a sheet never makes a session unreadable.
+- **Built, not proven.** The target library: the built-in sheets, read only, and your own sheets from the designer, saved as GLTD files in the data folder, renamed, duplicated from any sheet, and deleted after asking. The print screen lists both. A session keeps its own copy of the sheet it was analyzed against, so deleting a sheet never makes a session unreadable.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
 - **Done.** GroupLab's mark in the header and the rail, and as the application's icon for Windows, Linux and macOS, drawn from one committed source.
@@ -333,21 +333,21 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Built, not proven.** A ballistic solver, validated against an independent implementation: the point-mass solver ported from ballistics.js and corrected in five places, and `grouplab trajectory`, which prints a table from stated inputs. G1 and G7 agree with py-ballisticcalc well inside tolerances written down before the comparison. On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
 - **Built, not proven.** Load against load on screen: sessions chosen in Session records, or one sheet's subgroups, side by side with their plots, figures and intervals, the tests with their verdicts and what each could have detected, and the shots it would take to resolve a smaller difference. The loads are never ranked by a point estimate, and overlapping intervals are said to leave them unseparated.
 - **Not started.** Velocity regression, and predicted against measured vertical.
-- **Built, not proven.** Hit probability at a distance other than the one shot, and distance normalisation, both propagated through the solver rather than by scaling a group linearly: the load's velocity SD and the crosswind's uncertainty add their own spread at the new distance, the velocity's share at the distance shot is taken out first and refused when it is larger than the group, and the chance of a hit on a circle or a rectangle is given at both ends of the sigma interval as well as its estimate. With neither spread given it is angular scaling, and says so. Every figure is labelled a prediction.
+- **Built, not proven.** Hit probability at a distance other than the one shot, and distance normalization, both propagated through the solver rather than by scaling a group linearly: the load's velocity SD and the crosswind's uncertainty add their own spread at the new distance, the velocity's share at the distance shot is taken out first and refused when it is larger than the group, and the chance of a hit on a circle or a rectangle is given at both ends of the sigma interval as well as its estimate. With neither spread given it is angular scaling, and says so. Every figure is labeled a prediction.
 
 **Phase 6. Android.**
 - **Not started.** The camera capture path, with lens distortion fitted on the device.
 
-**Phase 7. Synchronisation.**
+**Phase 7. Synchronization.**
 - **Not started.** Cloud provider adapters over three-tier storage.
 
 **Phase 8. iOS.**
-- **Not started.** A CI build, signed. It waits on the licence permission under Licence, for distribution rather than for development.
+- **Not started.** A CI build, signed. It waits on the license permission under License, for distribution rather than for development.
 
 **Phase 9. Performance.**
 - **Not started.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. It starts only when the application works as intended, because a fast wrong answer is worthless.
 - **Built, not proven.** `grouplab bench`, which measures GroupLab against material it generates itself and needs nothing from anybody, and the interface benchmark that walks every screen and times every control from the click to the moment nothing further is coming. [docs/PERFORMANCE.md](docs/PERFORMANCE.md) holds the first record, the method, and the wasteful things found while measuring.
-- **Not started.** The gate, which is written from that baseline rather than guessed, and the optimisations themselves. Nothing has been optimised.
+- **Not started.** The gate, which is written from that baseline rather than guessed, and the optimizations themselves. Nothing has been optimized.
 
 ### Deferred, and why
 
@@ -369,17 +369,17 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 | Linux | every push | **yes** | **yes**, a tarball | no |
 | macOS | every push | **yes** | **yes**, two `.app` bundles, arm64 and x64 | no, and nobody has ever run one |
 
-**The macOS builds are published and labelled untested, which is the honest position.** Entry 147: withholding a build nobody has run does not make it more tested, it just means nobody can run it. Both are attached to every release, both are unsigned, and the download page says in Alan's own words why there will be no signed Mac build unless somebody donates a Mac and pays the developer fees. Both platforms reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
+**The macOS builds are published and labeled untested, which is the honest position.** Entry 147: withholding a build nobody has run does not make it more tested, it just means nobody can run it. Both are attached to every release, both are unsigned, and the download page says in Alan's own words why there will be no signed Mac build unless somebody donates a Mac and pays the developer fees. Both platforms reproduce the record: on every platform every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it. The raw records behind the tables are compared and reported rather than gated, so differences below the printed precision may remain there, and they are not failures.
 
 **Neither is used as a test platform, deliberately.** Targets are printed, shot, photographed and marked on Windows, so that is where the application meets real data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
-**Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and needs the GPL section 7 additional permission described under Licence, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
+**Mobile comes after the desktop, Android first.** Android is Phase 6. iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
 
 ## What GroupLab is not
 
 - **Not compatible with OnTarget, in any way.** No OnTarget PC or OnTarget TDS file format, target design or import path, and never will be. The files under `reference/ontarget-output/` record what the incumbent produces; they are not something to replicate.
 - **Not a home for pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They appear nowhere in GroupLab: not in the solver, the statistics, the documentation, the interface or the code comments.
-- **Not a commercial product.** No paid tier, no licence key, no upsell.
+- **Not a commercial product.** No paid tier, no license key, no upsell.
 - **Not an electronic target system.** No acoustic scoring, no target hardware integration.
 
 ## Where to start
@@ -418,7 +418,7 @@ A state changes in the same commit as the thing it describes, and `ReadmeTests` 
 
 ## Test data
 
-Donated target photographs do not live in this repository. They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the licence named in the consent text contributors agreed to. It is at [github.com/oRAirwolf/grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata), and this repository was last checked against its commit `d35ef99`. Its own README says what was done to the photographs, what contributors agreed to, and what is deliberately not there.
+Donated target photographs do not live in this repository. They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the license named in the consent text contributors agreed to. It is at [github.com/oRAirwolf/grouplab-testdata](https://github.com/oRAirwolf/grouplab-testdata), and this repository was last checked against its commit `d35ef99`. Its own README says what was done to the photographs, what contributors agreed to, and what is deliberately not there.
 
 - **Getting into the public data:** only through `grouplab intake`, which checks the opt-out, the consent record and the upload hashes, removes location metadata without changing a pixel, and writes a provenance record beside the files.
 - **How the tests find it:** a checkout beside this one at `../grouplab-testdata`, or the directory named by `GROUPLAB_TESTDATA`. `PublicationTests` then checks every submission and the owner's photographs there for location data, an opt-out, complete provenance and published hashes.
@@ -438,9 +438,9 @@ dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o
 
 GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
 
-## Licence
+## License
 
-**GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the licence in force today for every copy of GroupLab from every source.
+**GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.
 
 **An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this. The permission is the standard resolution, and it can only be granted by the copyright holders, so it is far cheaper to add before there are outside contributors than after. It is not in force yet and this README will say so until it is. **Do not rely on it.**
 

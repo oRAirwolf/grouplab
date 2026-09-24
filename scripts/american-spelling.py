@@ -18,7 +18,7 @@ What counts as something a user reads:
 - The command line tool is not swept: its usage names options such as --calibre that its parser reads,
   and the rest of its output is research tables for this repository.
 - On the site, the prose of the research articles, the guides and glossary it renders, the tour, and the
-  text in the site builder's string literals.
+  text in the site builder's string literals; and README.md, the repository's front page.
 
 Quoted material is left as it was written: anything between double quotes or curly quotes in prose, and any
 line of a Markdown block quote or code block. docs/RELEASE-NOTES.md is not swept: every entry in it is a
@@ -260,6 +260,7 @@ def targets() -> list[tuple[Path, str]]:
                 files.append((p, "cs"))
     for p in sorted((REPO / "website/research").rglob("*.md")):
         files.append((p, "md"))
+    files.append((REPO / "README.md", "md"))
     for name in ("USER-GUIDE.md", "TESTING-GUIDE.md", "GLOSSARY.md", "PLATFORM-SUPPORT.md"):
         if (REPO / "docs" / name).is_file():
             files.append((REPO / "docs" / name, "md"))
