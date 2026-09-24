@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.96
+
+**2026-09-24**, commit `a70338a`. Nightly.
+
+**What you will notice**
+
+- The Ballistics screen now works out your chance of a hit on a circle, rectangle or IPSC target from your own measured group, first shot and follow-up side by side, with how sure it is and which error is costing you the most hits. (Entry 156)
+- Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one, or tab to it, for a plain explanation, and click for the whole glossary entry. (Entry 154)
+- The user guide no longer says GroupLab can read several sheets of one load as one group, which it cannot yet; the guides and project page now match what each build does. (Entry 159)
+- The target library and printing are now one screen, Targets: choose a sheet and everything it takes to print it is beside the list, with no second window. (Entry 155)
+- The cartridge list shows .22 centerfire, and the target library's families are spelled the same American way as everything else. (Entry 159)
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.96)
+
+---
+
 ## 0.2.0-nightly.95
 
 **2026-09-24**, commit `dbdb3a3`. Nightly.
