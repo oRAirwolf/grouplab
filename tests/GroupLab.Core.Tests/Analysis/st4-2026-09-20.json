@@ -1,0 +1,356 @@
+{
+  "why": [
+    "NOTES-FROM-PLANNING.md entry 172. Alan's shot count for every group on a National Target Company ST-4, a commercial 100 yard",
+    "precision rifle target, shot on 2026-09-20 and photographed nine ways. Positions are read off his annotated photograph in the",
+    "grid's inches from the center of the middle diamond, x right and y up, to about half an inch: they identify the groups, they are",
+    "not measurements. Every red grid line is exactly one inch apart. The photographs are Alan's own and his standing consent of",
+    "2026-09-24 covers them; they are not committed, and GPS, location and timestamps are never read from them."
+  ],
+  "folder": "C:\\Dev\\grouplab-range-2026-09-20\\photos",
+  "target": "National Target Company ST-4, 100-yard precision rifle target",
+  "gridInches": 1.0,
+  "gridExtentInches": 6,
+  "cartridge": "6.5 Creedmoor",
+  "bulletInches": 0.264,
+  "distanceYards": 100,
+  "pointOfAim": "each group was aimed at the orange tab or diamond point it sits beside",
+  "primers": {
+    "note": "Alan did not record which shots used which primer. Treat the sheet as one load with a known, unlocated mix, and never infer which groups used which (entry 172 section 2 item 2).",
+    "Remington 7 1/2 BR": 15,
+    "CCI BR-4": 100
+  },
+  "evidence": {
+    "file": "ST-4-2026-09-20-annotated.png",
+    "sha256": "dcb6e5e984ee93bbe748204eb9e500356906065a2bce02cc416ff5ef22493656",
+    "what": "Alan's markup of the whole sheet with the count beside every group"
+  },
+  "frames": [
+    {
+      "file": "20260920_185950.jpg",
+      "sha256": "459fae600f32e2109d983af33790207101ee7a63169bddf2c0104355a56118df",
+      "shows": "top left quadrant, close"
+    },
+    {
+      "file": "20260920_185953.jpg",
+      "sha256": "daefbcb796514f7ecbd0544c421738f66e16a38ef6407fcacc9c0df29e4259b8",
+      "shows": "bottom left quadrant, close"
+    },
+    {
+      "file": "20260920_185956.jpg",
+      "sha256": "2605c5635e3943a2ef303c733a6947c7ad36936019982cfbc700826660047add",
+      "shows": "bottom right quadrant, close"
+    },
+    {
+      "file": "20260920_185958.jpg",
+      "sha256": "9b070c55f273e35d9b3ca0692b1a057bb06d21931c580ac284ea5e71a52f9ff8",
+      "shows": "top right quadrant, close"
+    },
+    {
+      "file": "20260920_190001.jpg",
+      "sha256": "259ed27cf82dbc867434ecbd6a177f83d31b78f0af09bb829e343f5fa38874ab",
+      "shows": "the center diamond, close"
+    },
+    {
+      "file": "20260920_190005.jpg",
+      "sha256": "3857251f326805d056b1684ea6f8061878b4150727298108909de28f685c6c76",
+      "shows": "the whole sheet, near square on"
+    },
+    {
+      "file": "20260920_190009.jpg",
+      "sha256": "41be7dc909a78602a43a4b321d05e9de15931d5663874c5298c1f98a7021e1d4",
+      "shows": "the whole sheet, strongly oblique from the right"
+    },
+    {
+      "file": "20260920_185944.jpg",
+      "sha256": "b98b513236c135dce91facc803477f613159ec286880d34c3437ec11e8ba2567",
+      "shows": "the whole sheet, near square on, from the same burst; checked under entry 172 section 1"
+    },
+    {
+      "file": "20260920_185946.jpg",
+      "sha256": "1b914cff1d39e2d0156b46b00d88a7597140d85d029e0cc30fbb272dd08190e8",
+      "shows": "the whole sheet and the board around it, from further back; checked under entry 172 section 1"
+    }
+  ],
+  "groups": [
+    {
+      "group": 1,
+      "region": "top left, above the top tab",
+      "xInches": -5.2,
+      "yInches": 7.1,
+      "shots": 5,
+      "closeUp": "20260920_185950.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 2,
+      "region": "top left, upper right",
+      "xInches": -4.0,
+      "yInches": 5.6,
+      "shots": 5,
+      "closeUp": "20260920_185950.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 3,
+      "region": "top left, at the bottom tab",
+      "xInches": -5.3,
+      "yInches": 3.9,
+      "shots": 5,
+      "closeUp": "20260920_185950.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 4,
+      "region": "top right, above the top tab",
+      "xInches": 4.8,
+      "yInches": 6.8,
+      "shots": 5,
+      "closeUp": "20260920_185958.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 5,
+      "region": "top right, left",
+      "xInches": 3.2,
+      "yInches": 5.4,
+      "shots": 5,
+      "closeUp": "20260920_185958.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 6,
+      "region": "top right, right",
+      "xInches": 6.0,
+      "yInches": 5.2,
+      "shots": 5,
+      "closeUp": "20260920_185958.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 7,
+      "region": "top right, at the bottom tab",
+      "xInches": 4.8,
+      "yInches": 3.8,
+      "shots": 5,
+      "closeUp": "20260920_185958.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 8,
+      "region": "center, top point of the large diamond",
+      "xInches": -0.3,
+      "yInches": 3.1,
+      "shots": 10,
+      "closeUp": "20260920_190001.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 9,
+      "region": "center, left point of the large diamond",
+      "xInches": -3.2,
+      "yInches": 0.4,
+      "shots": 10,
+      "closeUp": "20260920_190001.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 10,
+      "region": "center, in the middle square",
+      "xInches": -0.3,
+      "yInches": 0.2,
+      "shots": 10,
+      "closeUp": "20260920_190001.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 11,
+      "region": "center, right point of the large diamond",
+      "xInches": 2.1,
+      "yInches": 0.3,
+      "shots": 5,
+      "closeUp": "20260920_190001.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 12,
+      "region": "center, bottom point of the large diamond",
+      "xInches": -0.5,
+      "yInches": -2.5,
+      "shots": 5,
+      "closeUp": "20260920_190001.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 13,
+      "region": "bottom left, above the top tab",
+      "xInches": -5.2,
+      "yInches": -2.8,
+      "shots": 5,
+      "closeUp": "20260920_185953.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 14,
+      "region": "bottom left, left, at the sheet edge",
+      "xInches": -6.5,
+      "yInches": -4.1,
+      "shots": 5,
+      "closeUp": "20260920_185953.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 15,
+      "region": "bottom left, right",
+      "xInches": -3.7,
+      "yInches": -4.2,
+      "shots": 5,
+      "closeUp": "20260920_185953.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 16,
+      "region": "bottom left, at the bottom tab",
+      "xInches": -5.1,
+      "yInches": -5.3,
+      "shots": 5,
+      "closeUp": "20260920_185953.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 17,
+      "region": "bottom right, above the top tab",
+      "xInches": 4.1,
+      "yInches": -3.1,
+      "shots": 5,
+      "closeUp": "20260920_185956.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 18,
+      "region": "bottom right, right",
+      "xInches": 5.2,
+      "yInches": -4.3,
+      "shots": 5,
+      "closeUp": "20260920_185956.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 19,
+      "region": "bottom right, left",
+      "xInches": 2.6,
+      "yInches": -4.4,
+      "shots": 5,
+      "closeUp": "20260920_185956.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    },
+    {
+      "group": 20,
+      "region": "bottom right, at the bottom tab",
+      "xInches": 4.0,
+      "yInches": -5.8,
+      "shots": 5,
+      "closeUp": "20260920_185956.jpg",
+      "alsoIn": [
+        "20260920_190005.jpg",
+        "20260920_190009.jpg",
+        "20260920_185944.jpg",
+        "20260920_185946.jpg"
+      ]
+    }
+  ]
+}

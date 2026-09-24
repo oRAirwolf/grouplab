@@ -9,24 +9,25 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 170.
+**Last rewritten:** 2026-09-24, after entry 172.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 181, and 170, whose choice of hole centre is question 51.
+- Done this run: 171, 173, 164, 174 to 181, 170 (its choice of hole centre is question 51), and 172 in part:
+  its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's order from here: **172, 166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
+- Alan's order from here: **166, 169, 159, 154, 155, 156, 157, 158, 165.** Entries 156
   and 165 were amended after they were first read, so each is read again before it starts.
-- Entry 149 section 3 A is built; D is question 50. Section 4 goes with entry 172 section 3 item 1.
+- Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 172.** Ground truth for the 2026-09-20 ST-4 target, which measures detection and hole centres.
-2. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, what was checked on a Mac.
-3. **Entry 169.** The analysis screen cut down, and the rest of that user's review.
+1. **Entry 166.** The Mac tester's answers: Command shortcuts, pinch zoom, what was checked on a Mac.
+2. **Entry 169.** The analysis screen cut down, and the rest of that user's review.
+3. **Entry 159.** The claims register.
 
 ## Blocked, and on what
 
@@ -59,7 +60,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169, 172
+**Holds:** 154, 155, 156, 157, 158, 159, 165, 166, 169
 
 ## Things that would surprise somebody who was not here yesterday
 

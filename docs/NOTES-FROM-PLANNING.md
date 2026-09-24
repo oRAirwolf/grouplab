@@ -24,6 +24,21 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 172: ground truth for the 2026-09-20 ST-4 target, the first real material for entry 158 program A
+
+**Status: actioned 2026-09-24 in part.** Sections 1, 2 and 3.3 are done. **Not done: section 2 item 4 and section 3 items 1, 2, 4 and 5**,
+and with section 3 item 1 the entry 149 section 4 re-run that entry 171 attached to it. Every one of them needs hole positions on a
+commercial sheet, and GroupLab has no way to find them on a sheet it did not print: no hole detection for it and no grid registration.
+Entry 157 section 4 builds the grid registration and entry 158 program A the rest; they carry these, in the queue.
+
+- **Sections 1 and 2.** `tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json` holds the twenty groups, 115 shots, the answers and
+  the unlocated primer mix, the annotated photograph as evidence by hash, and every frame by hash. `185944` and `185946` are the same
+  sheet, near square on and from further back, and are included. `St4GroundTruthTests` holds it. Request 3 was closed under entry 171.
+- **Section 3.3.** What a shooter must do by hand on this sheet today is recorded in `docs/PHASE1-RESULTS.md`: twenty separate markings,
+  about 215 clicks, because a sheet GroupLab did not print has one point of aim.
+
+---
+
 ## 2026-09-24, entry 170: two freezes, a zero correction that did not say its distance, and hole centres a person had to move
 
 **Status: actioned 2026-09-24**, all four sections, with section 4's choice of centre left open. Section 4.4, a person's click measured, is

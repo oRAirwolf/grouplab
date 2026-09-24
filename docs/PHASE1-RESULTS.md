@@ -933,6 +933,28 @@ agreement on the sample and the friend's scan, 0.0080 in and 0.0069 in, so a cha
 
 A: a row or a column is chosen from one clicked bull. D: question 50, because the offset cannot be found without being told the bulls.
 
+## Entry 172: the ST-4 target, its ground truth, and what GroupLab can do with a sheet it did not print
+
+**The ground truth** is in `tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json`: twenty groups, seventeen of five and three of ten,
+115 shots of 6.5 Creedmoor at 100 yd, each aimed at its own orange tab or diamond point, positions in grid inches read off Alan's
+annotated photograph, the 15 and 100 primer mix recorded as unlocated, and all nine frames and the annotated image by SHA-256. The two
+extra burst frames are the same sheet: `185944` whole and near square on, `185946` from further back with the board around it.
+
+**Section 3.3, a sheet GroupLab did not print, as it stands.** A person can open the photograph, set the scale by two taps and a length
+or by the four corners of a known rectangle, which the one inch grid makes easy, set one point of aim, and click each hole. What the
+application cannot do on this sheet:
+
+1. **More than one point of aim.** Bulls, and so aiming marks, come only from GroupLab's own definitions, so twenty groups at twenty marks
+   are twenty separate markings of the same photograph: the scale set twenty times and 115 holes clicked, about 215 clicks.
+2. **Find the holes.** There is no hole detection for a sheet GroupLab did not print; `NeutralDarknessHoleDetector` exists only as a
+   research spike.
+3. **Read the grid.** A printed one inch grid is the best scale and perspective reference a photograph could have, and nothing uses it.
+4. **Correct perspective or the lens** on the known-length path; the rectangle path corrects perspective only.
+
+These are what entry 157 section 4 and entry 158 program A are for, and they are why the measurements of section 3 and the zero-offset
+check of section 2 item 4 wait for them: each needs the position of every hole on this sheet, and today those come only from a person
+clicking 115 of them.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
