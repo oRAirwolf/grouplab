@@ -126,7 +126,9 @@ SPELL = {
 # Entry 145 section 4: write for a shooter who has never read this repository. Name the thing on screen, not the class.
 # "GroupLab" is the one word shaped like a class name that belongs in a note.
 CODE_SHAPED = [
-    ("a file path", re.compile(r"\b[\w.-]+/[\w./-]+|\b[\w-]+\.(?:md|py|cs|json|ya?ml|html|css|js|txt|pdf|png)\b", re.IGNORECASE)),
+    # Entry 185 section 3: an address on grouplab.org is somewhere a shooter can go, not a path in this repository. Nightly 95 was refused
+    # for "grouplab.org/targets", the upload page's own address, which the note was right to name.
+    ("a file path", re.compile(r"(?<![\w.])(?!grouplab\.org/)[\w.-]+/[\w./-]+|\b[\w-]+\.(?:md|py|cs|json|ya?ml|html|css|js|txt|pdf|png)\b", re.IGNORECASE)),
     ("a commit hash", re.compile(r"\b(?=[0-9a-f]{7,40}\b)(?=[^\s]*\d)[0-9a-f]{7,40}\b")),
     ("a class or method name", re.compile(r"\b(?!GroupLab\b)[A-Z][a-z0-9]+(?:[A-Z][A-Za-z0-9]*)+\b")),
     ("a name in code style", re.compile(r"`[^`]+`")),
@@ -462,6 +464,13 @@ def self_test():
         ok = got == want
         failed += not ok
         print(("ok   " if ok else "FAIL ") + name + ("" if ok else f": got {got!r}"))
+
+    for note, path in [("Photographs can be sent from the page at grouplab.org/targets, which checks each one before it is kept.", False),
+                       ("The notes now come from docs/RELEASE-NOTES.md on every build of the application.", True)]:
+        said = [s for s in problems("0000000", note) if "a file path" in s]
+        ok = bool(said) == path
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + ("refused as a path: " if path else "an address on grouplab.org is not a path: ") + note[:50])
 
     for note in ["Nothing in this changes the application. The project's own records were split so reading them is cheaper.",
                  "Nothing in this nightly changes what you see or do, it carries internal work only.",
