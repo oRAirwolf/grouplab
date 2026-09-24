@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
-Then 9, 16, 17, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 7.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
+Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -145,7 +145,9 @@ the scan.
 
 ## 17. Take the test data release off the releases page
 
-**Opened 2026-09-24. Entry 185. Waiting, and it needs one command. Not urgent: nothing breaks meanwhile.**
+**Opened 2026-09-24. Entry 185. Answered 2026-09-24**, entry 188: Alan made the release a draft and it has left the releases page. The
+`test-data` tag is still there; CI finds the draft through the API by that tag and the tests that read the file ran. If it ever has to
+be undone, the command is `gh release edit test-data --draft=false`.
 
 **What is needed**, in Git Bash on your machine, once the checks on the newest commit on main are green:
 

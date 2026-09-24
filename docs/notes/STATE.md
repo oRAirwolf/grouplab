@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 187.
+**Last rewritten:** 2026-09-24, after entry 188.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186, 187 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 188 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entries 188, 189 and 190 are next, in that order; 190 corrects 189 section 4.
+- Entries 189 to 194 are next, in number order; 190 corrects 189 section 4.
 - **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
   (question 52, option A).
@@ -37,10 +37,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
-- **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
 - **Entry 165, switching it on.** Request 22: Alan's one test target and pull.
 
-Open requests in `docs/notes/for-alan.md`: **8** (22 most urgent, then 9, 16, 17, 20, 18, 12, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **7** (22 most urgent, then 9, 16, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
@@ -64,7 +63,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 188, 189, 190, 191, 192, 193, 194
+**Holds:** 189, 190, 191, 192, 193, 194
 
 ## Things that would surprise somebody who was not here yesterday
 

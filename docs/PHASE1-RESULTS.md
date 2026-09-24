@@ -997,6 +997,24 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 188: the test data release is a draft, and CI still reads it
+
+**Request 17 is answered.** The release is a draft, off the releases page.
+
+1. **The tag is still there**: `git ls-remote --tags origin test-data` names `refs/tags/test-data`. There is one release with that tag,
+   a draft, and no second one was made: the job's `gh release view test-data` found the draft, so it said "already exists" rather than
+   creating another.
+2. **CI reads it through the API, by its tag.** `scripts/test-data.py` lists the repository's releases through the API with the job's
+   token, which sees drafts, picks the one whose tag is `test-data`, and downloads each file by its API address, never the public
+   one. The run on a7c67cd said `reading the release through the API, which sees it as a draft too`, and its file came from the cache
+   with its hash verified. So the download itself was exercised once from here with the same script and a token that can see the
+   draft: 59,215,934 bytes, hash verified.
+3. **The tests that read the file ran.** On Windows and Ubuntu the only Core tests skipped were the printer tests that need Windows
+   drivers; `CalibreNeverMakesItWorseTests`, `HoleCentreAgreementTests` and the scan cases in `CaptureTests` ran and passed.
+
+**The red check on a7c67cd** was the Windows App suite, whose test runner failed before any test started ("Test process did not return
+valid JSON"); Core passed on the same runner and nothing in that commit touched the App. The next commit's run is the check.
+
 ## Entry 187: the answers to questions 50 to 55, and sending waits on one test
 
 **Sending, question 55.** The one package is ready: the published sample scan, 25 marks detected, testing only, 17.6 MB, built by
