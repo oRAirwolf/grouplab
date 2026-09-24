@@ -163,6 +163,33 @@ public static class DetectionAdvice
     /// that grid does not have. Each of those is said here. It is a warning and not a refusal, because a damaged or marked-up sheet can look
     /// like this too, and the person can see the sheet and GroupLab cannot.
     /// </summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 193 section 4: a sheet found and no hole on it is never a blank result. Unholy's zeroing grid came back
+    /// "detected the bull but 0 shots" with nothing to say why or what to do. This names the sheet, says no holes were found, gives the
+    /// likely reason where there is one, and says how to mark them by hand. Null where holes were found.
+    /// </summary>
+    public static string? NoHoles(AutomaticResult result, Calibre? calibre)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        if (result.Failure is not null || result.Detections.Count > 0)
+        {
+            return null;
+        }
+
+        string sheet = result.Definition?.Name is { Length: > 0 } name ? name : "the sheet";
+        int setAside = result.Rejected?.Count ?? 0;
+        string reason = setAside > 0
+            ? string.Create(CultureInfo.InvariantCulture,
+                $" {setAside} {(setAside == 1 ? "mark was" : "marks were")} seen and set aside as not a hole; Show work lists each with the reason.")
+            : "";
+        if (calibre is null)
+        {
+            reason += " No caliber was entered, so a hole is judged against the sheet's own marks; entering it and detecting again can change that.";
+        }
+
+        return $"GroupLab found {sheet} and no holes on it.{reason} If there are shots on it, mark them by hand: choose Impact, or press I, and click each hole.";
+    }
+
     public static string? Suspect(SheetMeasurement measurement, TargetDefinition definition)
     {
         ArgumentNullException.ThrowIfNull(measurement);

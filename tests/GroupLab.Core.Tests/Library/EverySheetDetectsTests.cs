@@ -72,4 +72,51 @@ public class EverySheetDetectsTests
         Assert.True(result.Failure is null, $"{file} was not analyzed: {result.Failure}");
         Assert.True(result.Detections.Count == holes.Count, $"{file}: {result.Detections.Count} holes found of {holes.Count}. {result.Summary}");
     }
+
+    /// <summary>
+    /// Entry 193 section 3: on a zeroing grid the shots land on the lines as often as between them. Five holes on each of the four grids,
+    /// one centered on a thin line, one on the other direction's, one on a crossing, and one on each thick axis, are all found.
+    /// </summary>
+    [Theory]
+    [InlineData("GL-ZERO-MIL-100Y.gltd.json")]
+    [InlineData("GL-ZERO-MIL-100M.gltd.json")]
+    [InlineData("GL-ZERO-MOA-100Y.gltd.json")]
+    [InlineData("GL-ZERO-MOA-100M.gltd.json")]
+    public void HolesOnAZeroingGridsLinesAreFound(string file)
+    {
+        var definition = BuiltIns.Load(file);
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
+        var random = new Random(193);
+        var grid = definition.Grids![0];
+        double pitch = (double)grid.Half / grid.Divisions;
+        var at = new (double, double)[] { (1.0, 0.4), (0.4, -1.0), (2.0, 2.0), (0.0, 1.6), (-1.6, 0.0) }
+            .Select(c => (X: grid.CentreX + (c.Item1 * pitch), Y: grid.CentreY + (c.Item2 * pitch))).ToList();
+        bool OnInk(double x, double y) => render[(int)(x * Dpi / 254), (int)(y * Dpi / 254)] < 128;
+        var holes = at.Select(p => SyntheticSheet.SampleHole(random, p.X, p.Y, OnInk(p.X, p.Y), HoleBacking.ScannerLid, 0.871)).ToList();
+        double s = 254 / Dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var image = SyntheticSheet.Compose(render, Dpi, truth, render.Width, render.Height, holes, [], random);
+        var metadata = new ImageMetadata("PNG", image.Width, image.Height, Dpi, Dpi, null, null, null, null, null);
+        var result = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend());
+        Assert.True(result.Failure is null, $"{file} was not analyzed: {result.Failure}");
+        Assert.True(result.Detections.Count == holes.Count, $"{file}: {result.Detections.Count} holes found of {holes.Count} on and across its lines. {result.Summary}");
+    }
+
+    /// <summary>Entry 193 section 4: a sheet found with no holes on it says so, with how to mark them by hand, never a blank result.</summary>
+    [Fact]
+    public void ASheetWithNoHolesSaysSoAndHowToMarkThem()
+    {
+        var definition = BuiltIns.Load("GL-ZERO-MIL-100Y.gltd.json");
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
+        var metadata = new ImageMetadata("PNG", render.Width, render.Height, Dpi, Dpi, null, null, null, null, null);
+        var result = AutomaticMarking.Run(render, render, metadata, definition, new OpenCvSharpBackend());
+        Assert.Null(result.Failure);
+        Assert.Empty(result.Detections);
+        string? said = DetectionAdvice.NoHoles(result, calibre: null);
+        Assert.NotNull(said);
+        Assert.StartsWith($"GroupLab found {definition.Name} and no holes on it.", said, StringComparison.Ordinal);
+        Assert.Contains("No caliber was entered", said, StringComparison.Ordinal);
+        Assert.EndsWith("mark them by hand: choose Impact, or press I, and click each hole.", said, StringComparison.Ordinal);
+        Assert.DoesNotContain("No caliber", DetectionAdvice.NoHoles(result, Calibre.Of(0.308))!, StringComparison.Ordinal);
+    }
 }

@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 192.
+**Last rewritten:** 2026-09-24, after entry 193.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 192 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 193 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entries 193 and 194 are next, in number order. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
+- Entry 194 is next: error reports sent through grouplab.org to a private repository. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
   194 sends error reports to a private repository and ends in one request for Alan.
 - **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
@@ -66,7 +66,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 193, 194
+**Holds:** 194
 
 ## Things that would surprise somebody who was not here yesterday
 

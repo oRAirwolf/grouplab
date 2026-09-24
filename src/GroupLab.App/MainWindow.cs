@@ -1926,6 +1926,12 @@ public sealed partial class MainWindow : Window
         printScale.IsVisible = printScale.Text.Length > 0;
         // Entry 115 section 4: a sheet whose evidence says it may be another sheet is doubted out loud, rather than measured silently.
         problem.Text = result.Definition is { } against ? DetectionAdvice.Suspect(result.Measurement, against) ?? "" : "";
+        // Entry 193 section 4: a sheet with no holes found says so, why if it knows, and how to mark them, rather than a blank result.
+        if (problem.Text.Length == 0 && DetectionAdvice.NoHoles(result, session.State.Calibre) is { } none)
+        {
+            problem.Text = none;
+        }
+
         status.Text = DetectedLine(result);
     }
 
@@ -1937,6 +1943,12 @@ public sealed partial class MainWindow : Window
     {
         ArgumentNullException.ThrowIfNull(result);
         int holes = result.Detections.Count, bulls = result.Bulls.Count(b => b.Scoring), sighters = result.Bulls.Count(b => !b.Scoring);
+        if (holes == 0)
+        {
+            return $"Found {result.Definition?.Name ?? "the sheet"} and no holes on it. What to do is in the panel." + (result.MissingMarkers.Count > 0
+                ? string.Create(CultureInfo.InvariantCulture, $" {result.MissingMarkers.Count} markers not found, crossed out.") : "");
+        }
+
         string line = string.Create(CultureInfo.InvariantCulture, $"Detected {holes} {(holes == 1 ? "hole" : "holes")} on {bulls} {(bulls == 1 ? "bull" : "bulls")}{(sighters > 0 ? $" and {sighters} {(sighters == 1 ? "sighter" : "sighters")}" : "")}");
         return line + (result.MissingMarkers.Count > 0 ? string.Create(CultureInfo.InvariantCulture, $"; {result.MissingMarkers.Count} markers not found, crossed out") : "") + ".";
     }

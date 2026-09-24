@@ -997,6 +997,28 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 193: the zeroing grid found, no shots, and never a blank result
+
+**Section 1: 95 against 99.** Both were checked out and run on Unholy's scan. Both read none of its codes and ask which sheet it is;
+with the sheet chosen both register all 16 markers at 0.0025 in and find no hole. No commit between them touches how a sheet is named,
+chosen or searched for holes, so there is no commit that made 99 find the sheet: what Unholy saw differ between the two is the same
+behavior, and entry 191's test holds the part that matters.
+
+**Section 2: why the bull was found and no shots.** Not the grid lines masking the holes, not a hole on a line, not the hole size and not
+the caliber: the zeroing grid's one bull had a cell of no size, because a cell was sized from the spacing between bulls and one bull has
+none, so every hole on the sheet was refused as out in the margins. Entry 189 found it from the renders and fixed it.
+
+**Section 3: his scan and the other three.** His scan now finds **one** hole, 0.266 in, just below and right of the point of aim, which
+is what the scan shows by eye; `UnholyZeroingGridTests` holds that count. All four zeroing grids, from renders with five holes each in
+open cells and, new here, five each on the lines, one on a thin line in each direction, one on a crossing and one on each thick axis,
+find every hole.
+
+**Section 4: never a blank result.** A sheet found with no holes now says "GroupLab found GroupLab Zeroing Grid, mil at 100 yd and no
+holes on it", gives the likely reason where there is one, marks set aside with Show work's reasons, or no caliber entered, and says how to
+mark them by hand, choose Impact or press I and click each hole. The status line says the same in one line and points at the panel.
+
+**Tests.** Core `EverySheetDetectsTests.HolesOnAZeroingGridsLinesAreFound`, 4, and `ASheetWithNoHolesSaysSoAndHowToMarkThem`.
+
 ## Entry 192: the caliber Set error, and a survived error is not a close
 
 **The error.** Unholy's report holds two logs and one crash record, five `app.crash` lines between them, every one the same
