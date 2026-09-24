@@ -24,6 +24,57 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-24, entry 186: request 15 is installed and the refused submission is in ready; request 5 is done
+
+**Status: actioned 2026-09-24**, every section. Section 1.1: a folder moved back keeps its count, and the worker's comment says why. Section 1.2: the installer's pruning should leave one backup; the server cannot be listed from here, so request 15 carries the one `ls` line. Section 3: already covered by tests, named in the results, so none was written.
+
+Small. Do it before anything else in the next run; it is bookkeeping and one check.
+
+## 1. Request 15 is done
+
+Alan ran request 15 exactly as written on 2026-09-24 at 11:10 MDT. What the server printed:
+
+- The dry run named `/usr/local/sbin/grouplab-intake-worker.py` as the only file it would replace. Everything else was
+  "already what it should be", the Turnstile secret was already set and not read, and nginx needed no reload.
+- The real install kept the old worker as `/usr/local/sbin/grouplab-intake-worker.py.20260924-111036.bak`, wrote the new one,
+  ran daemon-reload and re-enabled the timer.
+- The refused folder held `.attempts`, the PNG, `DO-NOT-PUBLISH`, `meta.json` and `refused.txt`, as the request said. He moved
+  it to quarantine and touched it.
+- The log, at 11:13: `attempt 2 of 3`, `back from refused, tried again`, `001_20260921_231821.jpg was rebuilt by an earlier run and
+  its original deleted; rebuilding again from 001_20260921_231821.png`, `rebuilt ... again as 001_20260921_231821.png, clean,
+  clamdscan`, `ready, 1 files, opted out of the public data set`.
+- `ready/2026-09-24_272b33e2` holds the PNG (11768176 bytes, the same size as before), `DO-NOT-PUBLISH` and `meta.json` (now 1708
+  bytes), and no `refused.txt`.
+
+Mark request 15 answered with this, remove "every opted out submission is refused" from STATE.md's blocked list, and rewrite
+the open count line in for-alan.md.
+
+Two small things to look at, not to fix unless they are wrong:
+
+1. `.attempts` was carried back to quarantine and read as attempt 2 of 3. That is right for a folder a person moved back
+   deliberately, but say in the worker's comment whether a moved-back folder should start at 1 instead, so a person moving a
+   folder back twice does not hit the limit because of the bug that refused it. Your call.
+2. The backup the installer kept is now the third or fourth file in `/usr/local/sbin` for the worker. `keep_newest_backup`
+   should have left one. If more than one `grouplab-intake-worker.py.*.bak` is there after this install, say so in for-alan.md
+   with the one `ls` line Alan would run to check, rather than asking him to delete anything.
+
+## 2. Request 5 is done
+
+Alan applied the pre-approved commands earlier. Mark request 5 answered, 2026-09-24.
+
+## 3. Pull the submission, and keep it out of anything published
+
+The submission is Alan's own photograph, opted out. When it is next pulled with `Get-TargetSubmissions.ps1`, check that the
+local copy keeps `DO-NOT-PUBLISH` and that nothing that builds public data, fixtures or releases reads a folder that carries it.
+If a test already proves that, name the test in the report. If none does, write one.
+
+## 4. Still waiting on Alan, unchanged
+
+Requests 9, 16, 17, 19, 20, 18, 12 and 21, and question 55. I will send the answers to questions 50 to 55 and the British
+spellings left in the release notes in the next entry, once Alan has answered question 55.
+
+---
+
 ## 2026-09-24, entry 165: the analysis screen offers to send the target to the project
 
 **Status: actioned 2026-09-24**, every section, built and tested, **and switched off**: `appOpen` is false in `website/api/limits.json`, so the question, the first run screen and the Settings choice do not appear and nothing is sent. **Not done:** turning it on, question 55: the live receiver answers through the server's nginx as it stands, so section 8's hope of nothing on the server held, and request 21's longer timeouts are optional; what waits is one real package end to end and the decision to show the question. The receiver's own tests (section 7 item 5) and the worker's run in CI, because PHP is not installed here.

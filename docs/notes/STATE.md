@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 165.
+**Last rewritten:** 2026-09-24, after entry 186.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's list is done. The inbox is empty.
+- Entry 187 is next: sending switched on after one test package, and the answers to questions 50 to 55.
 - **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until question 55
   is answered. The live receiver already answers; request 21's longer timeouts are optional.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
@@ -32,14 +32,12 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **Every opted out submission is refused** until request 15 installs entry 183's worker; one waits in refused
-  to be moved back.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
 - **Entry 165, switching it on.** Question 55: when, and after what end to end test.
 
-Open requests in `docs/notes/for-alan.md`: **10** (15 most urgent, then 9, 16, 17, 19, 20, 18, 12, 5 being applied, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **8** (9 most urgent, then 16, 17, 19, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
@@ -69,14 +67,14 @@ Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** none
+**Holds:** 187, 188
 
 ## Things that would surprise somebody who was not here yesterday
 
 - **The upload page asks for one of two consent levels**, testing only or may be published (`consent_v2`), and a
   testing only target can never reach `samples/`, the research build or the site (entry 165).
 - **Every upload is virus scanned**, streamed to clamd, since request 14 (entries 182 and 183).
-- **The web upload path works end to end**, desktop and phone. Entry 129 is complete.
+- **The web upload path works end to end**, desktop and phone, and opted out submissions are accepted again (entry 186).
 - **Command Z works on a Mac now, and pinch zoom exists**, on no hardware checked yet; a plain scroll pans on a Mac.
 - **A printed grid registers a target GroupLab did not print** (`GridRegistration`, entry 158), and the scan detector finds only about one shot in seven in photographs of overlapping groups.
 - **A photograph over 40 degrees off square is refused**, naming the angle, and every photograph keeps its angle and a quality score (entry 157).

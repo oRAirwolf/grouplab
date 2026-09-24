@@ -997,6 +997,30 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 186: request 15 is installed, request 5 is done, and an opted out pull stays out
+
+**Requests 15 and 5 are answered** in `docs/notes/for-alan.md`, and opted out submissions are accepted again: the one the old worker
+refused went back to quarantine and reached ready with its PNG, `meta.json` and `DO-NOT-PUBLISH`. Eight requests are open.
+
+**A folder moved back keeps its attempt count.** The count is what stops a submission that kills the worker from being tried for ever,
+so a move back must not reset it; the cost is two moves back and no more, and the worker's comment says to delete `.attempts` before a
+third. Only a comment changed, so the next install replaces the server's worker for nothing but that.
+
+**The installer's backups.** `keep_newest_backup` removes the installer's own older `name.YYYYMMDD-HHMMSS.bak` files of the same name,
+which the backup it kept on 2026-09-24 matches, so one should be left. It cannot be listed from here; request 15 carries the one `ls`
+line to check, and asks for nothing to be deleted.
+
+**An opted out submission stays out when it is pulled**, and tests already prove each step, so none was written:
+
+- `worker-tests.py` takes an opted out submission, and one moved back from refused, through the real worker to ready and checks each
+  keeps `DO-NOT-PUBLISH` and `exclude_from_public_dataset` true, then runs the pull script's own `Test-SubmissionFolder` on it and
+  checks it reads as opted out.
+- The pull copies each folder whole with `tar`, so the marker arrives with it, into `C:\Dev\grouplab-submissions`, outside the
+  repository.
+- Nothing that builds public data, fixtures or releases reads that folder. The only way in is `grouplab intake`, and
+  `IntakeTests.OptedOutUnconsentedUnprovenancedAlteredOrUnknownSubmissionsAreRefusedAndNothingIsWritten` refuses the marker by
+  itself, the field by itself, and a testing only consent. `scripts/release-notes.py` refuses a note naming a submission folder.
+
 ## Entry 165: sending a target to the project, built and switched off
 
 **What a person will see, once it is switched on.** After Accept and analyze, a panel at the foot of the figures asks "Help improve

@@ -61,6 +61,10 @@ CLAMD_LIMIT_MB = 400
 
 # A submission the worker has started three times and never finished, because it was killed or crashed, is
 # refused with that reason rather than tried every two minutes for ever. Entry 176 section 5.
+#
+# A folder a person moves back from refused keeps its count, deliberately (entry 186 section 1.1): the count is what stops a submission
+# that kills the worker from being tried for ever, and a folder moved back by a script or by mistake must not reset it. The cost is that
+# a folder refused for a bug can be moved back twice and no more; a person moving one back a third time deletes its .attempts first.
 MAX_ATTEMPTS = 3
 ATTEMPTS = ".attempts"
 

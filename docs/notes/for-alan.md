@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 16, 17, 19, 20, 18, 12, which is optional, and 5, which Alan is applying. 21 is optional. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 8.** Most urgent: **9**, the same scan marked by hand twice, because the choice of where a hole's center is waits on it.
+Then 16, 17, 19, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -152,7 +152,19 @@ the pinch zoomed", or which of those did not, and the report.
 
 ## 15. Install the worker that keeps the opt out, and send back the one it refused
 
-**Opened 2026-09-24. Entry 183. Waiting, and it needs a shell. Most urgent: until it is done every submission with "Do not include my photos in the public data set" ticked is refused.**
+**Opened 2026-09-24. Entry 183. Answered 2026-09-24**, entry 186: Alan ran it as written at 11:10 MDT. The dry run named the worker as
+the one file to replace; the install kept the old one as a dated backup and re-enabled the timer; the refused submission went back to
+quarantine and at 11:13 the log read `back from refused, tried again`, `rebuilt ... again`, `clean, clamdscan` and `ready, 1 files,
+opted out of the public data set`. Its folder in ready holds the PNG, `meta.json` and `DO-NOT-PUBLISH`, and no `refused.txt`.
+Opted out submissions are accepted from here on.
+
+**One check, only if you are curious.** The installer removes its own older dated backups of a file when it makes a new one, so
+`/usr/local/sbin` should hold exactly one `grouplab-intake-worker.py.*.bak`. This line lists them; one line of output is right,
+and more than one means the pruning missed, which is worth a line back and nothing else. Do not delete anything.
+
+```bash
+ls -la /usr/local/sbin/grouplab-intake-worker.py.*.bak
+```
 
 **What is needed, in the server's shell.** First the fixed worker. Copy `website/server/grouplab-intake-worker.py` from the
 repository to `/home/ubuntu/grouplab-server/`, then:
@@ -455,7 +467,7 @@ is honest and costs nothing.
 
 ## 5. Pre-approve the commands ordinary work needs, so you are asked once instead of fifty times
 
-**Opened 2026-09-23. Entry 160 section 6. Being applied**, entry 171 section 6: Alan is applying it with one change. The existing
+**Opened 2026-09-23. Entry 160 section 6. Answered 2026-09-24**, entry 186: Alan applied the commands. Before that, entry 171 section 6: Alan applied it with one change. The existing
 `settings.local.json` allowed `git push *`, which covers a force push and contradicted this request's own promise that a force push
 would still ask, so that rule is removed and the narrow push rule below replaces it. Closed when Alan confirms.
 
