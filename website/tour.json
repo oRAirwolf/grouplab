@@ -34,7 +34,7 @@
  "screens": {
   "library": {
    "name": "Target library",
-   "blurb": "The twenty sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.",
+   "blurb": "The {count:sheets} sheets GroupLab comes with, from rimfire at 50 yards to tiled long range, and any you design yourself.",
    "purpose": "The library is where you choose which sheet to print. Every one of them is designed for a particular job at a particular distance, and the description under each says which. A GroupLab sheet is the easy path, because it carries its own scale, its own orientation and the positions of its bulls in the markers printed around them, so nothing has to be set by hand. Any other target can be measured too, once you have set the scale yourself and marked the shots yourself.",
    "withoutASheet": "Nothing on this screen applies. The library holds the sheets GroupLab prints; a target from anywhere else is opened on the marking screen instead.",
    "parts": [

@@ -43,9 +43,12 @@ public partial class ReadmeTests
     [Fact]
     public void TheStatedNumberOfBuiltInSheetsMatchesTargets()
     {
-        int actual = Directory.GetFiles(Repo.PathTo("targets"), "*.gltd.json").Length;
+        // NOTES-FROM-PLANNING.md entry 159: a tiled sheet's 3x2 layout is the same sheet on six pages. The library lists it as a row of
+        // its own, so it is an entry and not a sheet, and counting it made the README say 22 while the tour said 20. The count is the one
+        // scripts/counts.py computes, which the site builder uses too.
+        int actual = Directory.GetFiles(Repo.PathTo("targets"), "*.gltd.json").Count(f => !Path.GetFileName(f).Contains(".3x2.", StringComparison.Ordinal));
         var stated = Lines.Select((line, i) => (Line: i + 1, Match: SheetCount().Match(line))).Where(x => x.Match.Success).ToList();
-        Assert.True(stated.Count > 0, "README.md no longer states the number of built-in sheets between <!--count:sheets--> and <!--/count--> markers, so this test cannot check it. Put the markers back around the number.");
+        Assert.True(stated.Count > 0, "README.md no longer states the number of built-in sheets between <!--count:sheets:digits--> and <!--/count--> markers, so this test cannot check it. Put the markers back around the number.");
         foreach (var (line, match) in stated)
         {
             int claimed = int.Parse(match.Groups["n"].Value, System.Globalization.CultureInfo.InvariantCulture);
@@ -345,7 +348,7 @@ public partial class ReadmeTests
     [GeneratedRegex(@"(?<bang>!)?\[[^\]]*\]\((?<target>[^)\s]+)\)")]
     private static partial Regex Link();
 
-    [GeneratedRegex(@"<!--count:sheets-->(?<n>\d+)<!--/count-->")]
+    [GeneratedRegex(@"<!--count:sheets(?::digits)?-->(?<n>\d+)<!--/count-->")]
     private static partial Regex SheetCount();
 
     [GeneratedRegex(@"<!--framework-->\.NET (?<v>\d+)<!--/framework-->")]

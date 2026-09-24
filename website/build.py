@@ -34,6 +34,20 @@ import markdown
 from fontTools.ttLib import TTFont
 from PIL import Image
 
+# NOTES-FROM-PLANNING.md entry 159 section 5.2: a number that counts a thing in this repository is computed from
+# the thing it counts. The home page said twenty-two built-in sheets while the tour said twenty, both typed by hand.
+import importlib.util as _importlib_util
+
+_spec = _importlib_util.spec_from_file_location("counts", Path(__file__).resolve().parent.parent / "scripts" / "counts.py")
+_counts = _importlib_util.module_from_spec(_spec)
+_spec.loader.exec_module(_counts)
+COUNTS = _counts.counts()
+
+
+def count_words(name: str, capital: bool = False) -> str:
+    said = _counts.words(COUNTS[name])
+    return said[:1].upper() + said[1:] if capital else said
+
 # ---------------------------------------------------------------- settings
 
 SITE_URL = "https://grouplab.org"
@@ -365,7 +379,7 @@ def page_home() -> str:
 <p>Each hole is measured against its own aiming point, so holes never overlap, and the offsets are pooled into one group far larger than you could shoot into a single bullseye.</p>
 </div>
 <ol class="steps">
-<li class="panel"><span class="mono num">01</span><h3>Print a GroupLab sheet</h3><p>Twenty-two built-in sheets, printed at actual size. Registration markers and QR codes carry the sheet's full definition.</p></li>
+<li class="panel"><span class="mono num">01</span><h3>Print a GroupLab sheet</h3><p>{count_words('sheets', True)} built-in sheets, printed at actual size. Registration markers and QR codes carry the sheet's full definition.</p></li>
 <li class="panel"><span class="mono num">02</span><h3>Shoot it</h3><p>One shot per bull, in order. Write your load in the block at the bottom, or print it filled in.</p></li>
 <li class="panel"><span class="mono num">03</span><h3>Scan or photograph it</h3><p>A flat 600 dpi scan is best. A photograph works too, even with the sheet still stapled to the board.</p></li>
 <li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, sigma, CEP, extreme spread and the zero correction, each with its interval and the reasoning one click away.</p></li>
@@ -1365,7 +1379,10 @@ def tour() -> dict:
     in both themes at 1400 by 900, and those files are the evidence; ``tour_problems`` holds the two lists to each
     other in both directions.
     """
-    return json.loads(need(REPO / "website" / "tour.json").read_text(encoding="utf-8"))
+    text = need(REPO / "website" / "tour.json").read_text(encoding="utf-8")
+    # Entry 159 section 5.2: a count in the tour is a token, filled from the repository, never typed.
+    text = re.sub(r"\{count:([a-z-]+)\}", lambda m: count_words(m.group(1)), text)
+    return json.loads(text)
 
 
 def rendered_screens() -> set:

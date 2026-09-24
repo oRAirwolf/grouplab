@@ -222,7 +222,7 @@ A report is useful even when the answer is that it crashed on startup. "It opene
 What exists and is tested:
 
 - the GLTD target definition format, in JSON (GLTD-J) and as a binary QR payload (GLTD-B)
-- a validator, and <!--count:sheets-->22<!--/count--> built-in target sheets
+- a validator, and <!--count:sheets:digits-->20<!--/count--> built-in target sheets
 - a PDF renderer, and a print screen that drives it
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
@@ -268,7 +268,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 0a. Format and renderer.**
 - **Done.** The GLTD definition format, in JSON and as a binary QR payload.
-- **Done.** A validator, and <!--count:sheets-->22<!--/count--> built-in target sheets.
+- **Done.** A validator, and <!--count:sheets:digits-->20<!--/count--> built-in target sheets.
 - **Done.** A PDF renderer, with the printed name and identifier on every sheet.
 
 **Phase 0. Registration spike.**
@@ -436,7 +436,7 @@ dotnet test
 dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf
 ```
 
-GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. The desktop application is offered as a build for Windows today. The Phase 0 gate record reproduces on all three, so what remains before Linux or macOS is offered is packaging.
+GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
 
 ## Licence
 

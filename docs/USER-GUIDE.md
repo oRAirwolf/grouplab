@@ -74,7 +74,7 @@ The pill in the header counts the marks that need you. The review queue in the s
 - **Refused candidate:** something the detector saw and did not take as a hole.
 - **Bulls with nothing on them:** when you have said how many rounds you fired and GroupLab finds fewer, it names the bulls that are empty. **A shortfall is never allowed to pass as a clean result.**
 
-**Name the calibre.** It is the single most useful thing you can tell GroupLab about a sheet. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the calibre the detector has only the shape of a mark to go on.
+**Name the calibre if you know it.** It sets the smallest hole GroupLab will accept, which matters most for small calibres, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the calibre the detector has only the shape of a mark to go on.
 
 **Holes between bulls, and marks off the grid.** A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.**
 

@@ -92,7 +92,7 @@ against this project than any compatibility question.
 Deleting them in a new commit is **not sufficient**, because GitHub serves
 history and the old commits still contain the files. They have to be removed
 from every commit, with `git filter-repo` or BFG, followed by a force push. That
-is a ten minute job today with 23 commits and one contributor. It gets worse
+was a ten minute job when this was written, at 23 commits and one contributor. It gets worse
 with every commit, and it becomes impossible to do quietly once anyone has
 cloned the repository.
 
