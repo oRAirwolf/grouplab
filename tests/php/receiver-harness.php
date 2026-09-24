@@ -38,6 +38,8 @@ function request(string $root, string $source, array $post, array $files, array 
     // against, a path outside the upload area, cannot happen when the harness makes the paths.
     $patched = str_replace('!is_uploaded_file($tmp)', '!is_file($tmp)', $patched);
     $patched = str_replace("move_uploaded_file(\$c['tmp'], \$dest)", "rename(\$c['tmp'], \$dest)", $patched);
+    // The application's receiver moves its one image by the plainer name.
+    $patched = str_replace('move_uploaded_file($tmp, $dest)', 'rename($tmp, $dest)', $patched);
 
     $script = $root . '/receiver-' . bin2hex(random_bytes(3)) . '.php';
     file_put_contents($script, $patched);
@@ -108,4 +110,27 @@ function files_array(array $made): array
         $out['error'][]    = $m['error'] ?? UPLOAD_ERR_OK;
     }
     return ['photos' => $out];
+}
+
+/**
+ * A package as the application builds it, NOTES-FROM-PLANNING.md entry 165 section 3: the image named by its size and SHA-256, the consent
+ * in limits.json's words for the level, and every part present. $change is applied last, so a case can break exactly one thing.
+ */
+function app_package(array $limits, string $image, string $name, string $level, ?callable $change = null): string
+{
+    $package = [
+        'schema'   => 'grouplab-app-submission-1',
+        'consent'  => ['version' => $limits['consentVersion'], 'level' => $level, 'text' => $limits['consentTexts'][$level] ?? ''],
+        'manifest' => ['image' => ['name' => $name, 'bytes' => filesize($image), 'sha256' => hash_file('sha256', $image)], 'parts' => ['detected', 'corrected', 'told', 'analysis', 'environment', 'log']],
+        'detected'    => ['marks' => [['x' => 10.5, 'y' => 20.25, 'diameterInches' => 0.26]]],
+        'corrected'   => ['marks' => [['x' => 10.5, 'y' => 20.25, 'change' => 'kept']]],
+        'told'        => ['calibre' => '0.264'],
+        'analysis'    => ['meanRadiusInches' => 0.2],
+        'environment' => ['version' => '0.2.0-test'],
+        'log'         => '2026-09-24T00:00:00Z INFO test.run' . PHP_EOL,
+    ];
+    if ($change !== null) {
+        $package = $change($package);
+    }
+    return (string) json_encode($package, JSON_UNESCAPED_SLASHES);
 }

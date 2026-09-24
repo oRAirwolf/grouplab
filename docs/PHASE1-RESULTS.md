@@ -997,6 +997,40 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 165: sending a target to the project, built and switched off
+
+**What a person will see, once it is switched on.** After Accept and analyze, a panel at the foot of the figures asks "Help improve
+GroupLab's detection?" with Send, Not this time and What gets sent. Send cannot be pressed until a consent level is chosen, testing only or
+may be published, in the words of `limits.json`; Not this time is final for that target. The first time GroupLab opens after the receiver
+does, one screen asks once: Send every target automatically, Ask me each time or Never, nothing preselected, and automatic sending refused
+until a level is chosen. Settings has its own Sending targets section reading and writing the same setting, with what is sent, the
+references sent from this computer and support@grouplab.org, and anything waiting with Send them now and Discard them.
+
+**What is sent.** One multipart POST: the image as the file field and one JSON package, schema `grouplab-app-submission-1`, with a
+manifest naming the image by size and SHA-256, the consent level and its text, and the parts detected, corrected, told, analysis,
+environment and log. The corrected list marks each shot kept, moved, reassigned, excluded or added, and lists what was removed; a test
+rebuilds the person's final marks from it exactly. The image goes through the scrubber that already cleans photographs for publication,
+so location, time and serial are gone and the pixels are the original's; a file the scrubber does not rewrite is saved again as PNG
+without loss, and one too large even then is not sent, with the reason.
+
+**The receiver**, `website/api/app-submission.php`, has no Turnstile and no key, and says why in its own header, as the crash receiver
+does. It has a 30 MB image and a 4 MB package limit, 10 an hour and 40 a day for each address, the upload page's hourly cap and disk floor,
+and a kill switch file. The package is checked against its manifest and stored in the same quarantine, with the parts in `meta.json`
+under `app` and `source: app`, so the worker takes it unchanged. The upload page now records `source: web` and the level. Consent is
+`consent_v2` with two texts, and the page offers the two levels as a choice. A testing only submission gets `DO-NOT-PUBLISH` from both
+receivers, `CONSENT.txt` from the pull script, and a refusal from the intake that feeds `samples/`, the research build and the site.
+
+**When it cannot go**: no answer, a limit or a closed receiver keeps the package beside the settings file, tried again at each start for
+seven days and then let go with a line in the log; a refusal that retrying cannot fix is let go at once and the reason shown.
+
+**Switched off.** `appOpen` is false. Nothing is shown and nothing is sent while it is, which a test holds, and the guide, the tour and
+the "what GroupLab sends" article say so. The receiver publishes with the site; nginx answers it 404 until request 21 adds its block.
+
+**Tests.** Core `TargetSendingTests`, 3, and an `IntakeTests` case; App `Entry165Tests`, 6: nothing without a yes, Never and Always,
+Not this time, nothing while closed, the first run screen and Settings, kept then sent. `receiver-tests.php` gains the consent_v2 checks
+and the application receiver's refusals, over size, over rate, a malformed or mismatched manifest, closed; `worker-tests.py` takes two
+application packages through the worker. App 281 passed; Core 1620 passed, 2 skipped.
+
 ## Entry 158: two research programs, and what is worth an article
 
 **The standing rule** is in `CLAUDE.md` and `docs/RESEARCH.md`, "Worth an article?": would it change what a shooter does or a developer

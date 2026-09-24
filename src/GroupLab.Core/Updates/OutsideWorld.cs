@@ -17,6 +17,9 @@ namespace GroupLab.Core.Updates;
 /// <param name="Files">Paths of image files copied in a file manager, in the order the clipboard gives them. Empty where there are none.</param>
 /// <param name="Bytes">Image data with no file behind it, such as a screenshot or an image copied from a browser. Null where there is none.</param>
 /// <param name="Extension">The extension the data should be written with, including its dot, such as ".png". Null with no data.</param>
+/// <summary>What a receiver answered to a POST: its HTTP status and its body.</summary>
+public sealed record PostAnswer(int Status, string Body);
+
 public sealed record ClipboardContents(IReadOnlyList<string> Files, byte[]? Bytes, string? Extension)
 {
     /// <summary>Nothing on the clipboard that could be an image.</summary>
@@ -39,6 +42,13 @@ public interface IOutsideWorld
 
     /// <summary>Reads a small public file, which is how an update check asks a train what its newest build is. Null where it cannot be read.</summary>
     Task<string?> GetTextAsync(string address, CancellationToken token);
+
+    /// <summary>
+    /// Sends a target to the project, NOTES-FROM-PLANNING.md entry 165: one multipart POST of the package's JSON in the field
+    /// <c>package</c> and the image in the file field <c>image</c>. The answer is the status and the body as the receiver wrote them, or
+    /// null where nothing answered at all.
+    /// </summary>
+    Task<PostAnswer?> PostTargetAsync(string address, string package, byte[] image, string imageName, CancellationToken token);
 
     /// <summary>
     /// Downloads a file, reporting the share done as it goes. It returns the bytes written, so a caller can tell a short download from a
@@ -91,6 +101,27 @@ public sealed class TheOutsideWorld : IOutsideWorld
             request.Headers.UserAgent.ParseAdd(UserAgent);
             using var response = await Http.SendAsync(request, token).ConfigureAwait(false);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync(token).ConfigureAwait(false) : null;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or UriFormatException)
+        {
+            return null;
+        }
+    }
+
+    public async Task<PostAnswer?> PostTargetAsync(string address, string package, byte[] image, string imageName, CancellationToken token)
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Post, address);
+            request.Headers.UserAgent.ParseAdd(UserAgent);
+            using var form = new MultipartFormDataContent();
+            form.Add(new StringContent(package, System.Text.Encoding.UTF8), "package");
+            var file = new ByteArrayContent(image);
+            file.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            form.Add(file, "image", imageName);
+            request.Content = form;
+            using var response = await Http.SendAsync(request, token).ConfigureAwait(false);
+            return new PostAnswer((int)response.StatusCode, await response.Content.ReadAsStringAsync(token).ConfigureAwait(false));
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or UriFormatException)
         {
@@ -186,6 +217,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>Stop a download part way, to test cancelling and a connection that drops.</summary>
     public Func<double, CancellationToken, Task>? WhileDownloading { get; set; }
 
+    /// <summary>What a POST is answered with, from what was sent. Nothing set answers nothing, which is an unreachable receiver.</summary>
+    public Func<string, string, byte[], PostAnswer?>? Answer { get; set; }
+
+    /// <summary>Every target posted: the address, the package's JSON and the image, in order.</summary>
+    public List<(string Address, string Package, byte[] Image)> Posted { get; } = [];
+
     /// <summary>Written down when an installer is started: the file and its switches.</summary>
     public (string Path, string Arguments)? Installer { get; private set; }
 
@@ -203,6 +240,8 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         Download.Clear();
         WhileDownloading = null;
         Installer = null;
+        Answer = null;
+        Posted.Clear();
         Clipboard = ClipboardContents.Nothing;
     }
 
@@ -222,6 +261,13 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     {
         _asked.Add(("get", address));
         return Task.FromResult(Text.TryGetValue(address, out string? text) ? text : null);
+    }
+
+    public Task<PostAnswer?> PostTargetAsync(string address, string package, byte[] image, string imageName, CancellationToken token)
+    {
+        _asked.Add(("post", address));
+        Posted.Add((address, package, image));
+        return Task.FromResult(Answer?.Invoke(address, package, image));
     }
 
     public async Task<long?> DownloadAsync(string address, string into, IProgress<double>? progress, CancellationToken token)

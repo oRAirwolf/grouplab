@@ -767,10 +767,23 @@ def limit_problems() -> list:
         elif not got.startswith(expected):
             found.append(f"website/api/upload.php: {name} is {got!r} and limits.json says {expected!r}")
 
-    if f"const CONSENT_VERSION = '{limit['consentVersion']}'" not in php:
-        found.append(f"website/api/upload.php: the consent version is not {limit['consentVersion']}")
-    if limit["consentText"] not in php:
-        found.append("website/api/upload.php: the consent text differs from limits.json, and the page shows one while the receiver records the other")
+    # Entry 165 section 2: both receivers record the two consent levels in the page's own words, from this one file.
+    app = need(REPO / "website" / "api" / "app-submission.php").read_text(encoding="utf-8")
+    for name, source in [("upload.php", php), ("app-submission.php", app)]:
+        if f"const CONSENT_VERSION = '{limit['consentVersion']}'" not in source:
+            found.append(f"website/api/{name}: the consent version is not {limit['consentVersion']}")
+        for level, text in limit["consentTexts"].items():
+            if f"'{level}'" not in source or text not in source:
+                found.append(f"website/api/{name}: the {level} consent text differs from limits.json, and the page shows one while the receiver records the other")
+
+    def app_constant(name: str) -> str | None:
+        m = re.search(r"const\s+" + name + r"\s*=\s*([^;]+);", app)
+        return m.group(1).strip() if m else None
+
+    for name, expected in [("MAX_FILE_BYTES", f'{limit["maxFileMegabytes"]} * 1024 * 1024'), ("MAX_PACKAGE_BYTES", f'{limit["maxAppPackageMegabytes"]} * 1024 * 1024')]:
+        got = app_constant(name)
+        if got is None or not got.startswith(expected):
+            found.append(f"website/api/app-submission.php: {name} is {got!r} and limits.json says {expected!r}")
 
     # Entry 129, Alan's decision 6: no PDF. The refusal has to be in the receiver, not only on the page.
     if "'application/pdf'" in php.split("const ACCEPTED")[-1].split("];")[0]:
@@ -841,10 +854,11 @@ def page_send() -> str:
 <input type="text" id="contact_reason" name="contact_reason" tabindex="-1" autocomplete="off">
 </div>
 
-<div class="panel pad stack tight consent">
-<label class="tick"><input type="checkbox" id="consent" name="consent" value="1" required><span>{esc(limit["consentText"])}</span></label>
-<label class="tick"><input type="checkbox" id="exclude_public" name="exclude_public" value="1"><span>Do not include my photos in the public data set. Use them for testing only.</span></label>
-</div>
+<fieldset class="panel pad stack tight consent">
+<legend>How may GroupLab use them? Choose one.</legend>
+<label class="tick"><input type="radio" id="level_testing" name="level" value="testing" required><span><strong>Testing only.</strong> {esc(limit["consentTexts"]["testing"])}</span></label>
+<label class="tick"><input type="radio" id="level_publishable" name="level" value="publishable"><span><strong>May be published.</strong> {esc(limit["consentTexts"]["publishable"])}</span></label>
+</fieldset>
 
 <div class="cf-turnstile" data-sitekey="{esc(limit["turnstileSiteKey"])}"></div>
 
@@ -2193,8 +2207,9 @@ def send_problems() -> list[str]:
             problems.append("targets/index.html: the top bar links to it and it is not in the build")
         else:
             text = page.read_text(encoding="utf-8")
-            if esc(limits()["consentText"]) not in text:
-                problems.append("targets/index.html: the consent text is not the one in limits.json")
+            for level, words in limits()["consentTexts"].items():
+                if esc(words) not in text:
+                    problems.append(f"targets/index.html: the {level} consent text is not the one in limits.json")
             for words in ["rebuilt from its pixels", "Location, GPS and the date and time are not", "until the developer has read them", "deleted from the server"]:
                 if words not in text:
                     problems.append(f"targets/index.html: does not say {words!r}")
@@ -2271,9 +2286,9 @@ SEND_JS = """(function () {
       say('Choose at least one photo first.', true);
       return;
     }
-    if (!document.getElementById('consent').checked) {
-      say('Please read and tick the consent box. It is the one thing that is not optional.', true);
-      document.getElementById('consent').focus();
+    if (!form.querySelector('input[name="level"]:checked')) {
+      say('Please choose how GroupLab may use the photos. It is the one thing that is not optional.', true);
+      document.getElementById('level_testing').focus();
       return;
     }
 
@@ -2306,7 +2321,7 @@ SEND_JS = """(function () {
 """
 
 
-RECEIVERS = ["api/upload.php", "api/crash-report.php"]
+RECEIVERS = ["api/upload.php", "api/crash-report.php", "api/app-submission.php"]
 
 
 def php_problems() -> list[str]:
@@ -2347,6 +2362,9 @@ def main() -> None:
         # by the same pipeline as the pages rather than copied to the server by hand.
         copy(need(REPO / "website" / "api" / "upload.php"), "api/upload.php")
         copy(need(REPO / "website" / "api" / "crash-report.php"), "api/crash-report.php")
+        # Entry 165: the application's receiver ships with the site. Until nginx names it, the server answers it with the 404 every other
+        # .php file gets, and the application never uses it while limits.json's appOpen is false.
+        copy(need(REPO / "website" / "api" / "app-submission.php"), "api/app-submission.php")
         write("assets/js/send.js", SEND_JS)
     write("support/index.html", page_support())
     write("guides/index.html", page_guides_index())

@@ -456,6 +456,10 @@
      "Which train to follow and how often to check. A check is one request for one public file, and it sends nothing about you, your rifles or your targets."
     ],
     [
+     "Sending targets",
+     "Whether each target you analyze goes to the project, you are asked each time, or it never goes, and with which consent. Not switched on yet, and until it is this section says so and nothing is sent."
+    ],
+    [
      "Detailed logging",
      "Off by default. Turn it on before reproducing a problem, then send the report."
     ],

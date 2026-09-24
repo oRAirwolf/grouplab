@@ -160,6 +160,9 @@ public class IntakeTests : IDisposable
             ("not in meta.json", () => Submission(m => m["files"]!.AsArray().RemoveAt(1))),
             ("not a safe file name", () => Submission(m => m["files"]!.AsArray()[0]!["stored_name"] = "../escape.jpg")),
             ("not a safe directory name", () => Submission(m => m["submission_id"] = "../escape")),
+
+            // Entry 165 section 5: consent level 1 is never published, even where the flag and the marker were lost.
+            ("testing only: a submission at consent level 1 is never published", () => Submission(m => m["consent"]!["level"] = "testing")),
         ];
 
         foreach (var (why, make) in cases)

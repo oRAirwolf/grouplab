@@ -479,7 +479,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 23 0 R >>
 endobj
 23 0 obj
-<< /Length 5346 >>
+<< /Length 6094 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -531,24 +531,29 @@ BT /F1 71 Tf 1 0 0 -1 381 3370 Tm (send, and you can see what is in the package 
 BT /F1 71 Tf 1 0 0 -1 381 3493 Tm (Crash records are written to your own machine whether or not you ever send them. They name the version, the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3581 Tm (build train and the line it happened on, and they never contain a photograph, a location or anything read out of) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3669 Tm (one.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3792 Tm (Sending in sheets. The upload page at grouplab.org/upload takes scans and photographs that help GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3880 Tm (get better at reading them. It is coming: the address is reserved and the page is written, but the server it runs on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3968 Tm (is not installed yet, so the link will not work until it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3792 Tm (Sending in targets. The page at grouplab.org/targets/ takes scans and photographs of targets that help) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3880 Tm (GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3968 Tm (never published, or may be published in GroupLab's public test data and research. GroupLab can also send a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4056 Tm (target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4144 Tm (time unless you say otherwise in Settings. That part is built but not switched on yet: until it is, GroupLab asks) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4232 Tm (nothing and sends nothing.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4175 Tm (12. Settings) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 4439 Tm (12. Settings) Tj ET
 0.745098 0.745098 0.745098 rg
-381 4205 3556 3 re
+381 4469 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4305 Tm (The gear opens the settings:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4428 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4428 Tm (Units: length, angle and distance, each chosen on its own. They change only how figures are shown.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4530 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4530 Tm (Theme: dark, light, high contrast, or follow the system.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4632 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4632 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4734 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4734 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4569 Tm (The gear opens the settings:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4692 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4692 Tm (Units: length, angle and distance, each chosen on its own. They change only how figures are shown.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4794 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4794 Tm (Theme: dark, light, high contrast, or follow the system.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4896 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4896 Tm (Sending targets: send every target you analyze to the project, ask each time, or never, and which consent) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4984 Tm (goes with them. It also lists what is sent, how many targets have gone from this computer and how to have) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5072 Tm (one removed, and anything waiting to be tried again. Until sending is switched on, this section says only that.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 5174 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5174 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 10 of 11) Tj ET
 Q
 endstream
@@ -557,13 +562,15 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 32 0 R >> >> /Contents 25 0 R >>
 endobj
 25 0 obj
-<< /Length 213 >>
+<< /Length 376 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
-BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The settings) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 452 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 452 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
+q 3556 0 0 -2286 381 2797 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 2853 Tm (The settings) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 11 of 11) Tj ET
 Q
 endstream
@@ -5742,17 +5749,17 @@ xref
 0000031024 00000 n 
 0000034281 00000 n 
 0000034409 00000 n 
-0000039808 00000 n 
-0000039963 00000 n 
-0000040228 00000 n 
-0000297907 00000 n 
-0000493500 00000 n 
-0000757288 00000 n 
-0000825604 00000 n 
-0000946089 00000 n 
-0001044016 00000 n 
+0000040556 00000 n 
+0000040711 00000 n 
+0000041139 00000 n 
+0000298818 00000 n 
+0000494411 00000 n 
+0000758199 00000 n 
+0000826515 00000 n 
+0000947000 00000 n 
+0001044927 00000 n 
 trailer
 << /Size 33 /Root 1 0 R >>
 startxref
-1123138
+1124049
 %%EOF

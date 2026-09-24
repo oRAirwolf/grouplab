@@ -71,8 +71,13 @@ public class SendATargetTests
         }
 
         using var doc = JsonDocument.Parse(File.ReadAllText(Repo.PathTo("website", "api", "limits.json")));
-        string consent = System.Net.WebUtility.HtmlEncode(doc.RootElement.GetProperty("consentText").GetString()!);
-        Assert.Contains(consent, page.Replace("&#x27;", "&#39;", StringComparison.Ordinal), StringComparison.Ordinal);
+        // Entry 165 section 2: both consent levels, each in limits.json's words.
+        foreach (var level in doc.RootElement.GetProperty("consentTexts").EnumerateObject())
+        {
+            string consent = System.Net.WebUtility.HtmlEncode(level.Value.GetString()!);
+            Assert.Contains(consent, page.Replace("&#x27;", "&#39;", StringComparison.Ordinal), StringComparison.Ordinal);
+        }
+
         // Entry 174: PHP builds the per-file arrays the receiver reads only for a field named with [], and without them every photo was
         // refused. The name is read out of the page as built.
         var input = System.Text.RegularExpressions.Regex.Match(page, "<input type=\"file\"[^>]* name=\"([^\"]+)\"");

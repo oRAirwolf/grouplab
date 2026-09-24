@@ -1372,6 +1372,14 @@
   "**Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
    "kind": "code",
    "where": "the print screen's check line and targets/GL-CF25-LTR.gltd.json"
+  },
+  "GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes"
+  },
+  "GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab&#x27;s public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use.": {
+   "kind": "decided",
+   "where": "entry 165 section 2: the publishable consent level, in website/api/limits.json consentTexts"
   }
  },
  "rules": [

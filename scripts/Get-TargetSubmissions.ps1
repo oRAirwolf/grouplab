@@ -386,6 +386,14 @@ foreach ($dir in $toCheck) {
     $bad += $r.Bad
     $checked += $r.Checked
     if ($r.OptOut) { $optOut += $dir }
+
+    # Entry 165 section 5: the consent level beside every submission, so a testing only target is never published by mistake. A
+    # consent_v1 submission has no level: it is publishable unless its contributor opted out, which is what they agreed to.
+    $level = if ($r.OptOut) { 'testing' } elseif ($meta.consent -and ($meta.consent.PSObject.Properties.Name -contains 'level')) { "$($meta.consent.level)" } else { 'publishable' }
+    $from = if ($meta.PSObject.Properties.Name -contains 'source') { "$($meta.source)" } else { 'web' }
+    $words = if ($level -eq 'testing') { 'TESTING ONLY. Never publish this submission: its contributor agreed to testing and improving detection, and nothing more.' }
+             else { 'May be published: its contributor agreed to publication in the public test data and in research articles.' }
+    Set-Content -Path (Join-Path $LocalRoot "$dir\CONSENT.txt") -Encoding utf8 -Value @($words, "Consent level: $level. Consent version: $($meta.consent.version). Sent from: $from.")
 }
 
 # ------------------------------------------------------------------ summary --

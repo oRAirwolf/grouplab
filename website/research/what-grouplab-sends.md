@@ -20,7 +20,7 @@ sources:
 1. **An update check.** A plain request for a small file saying what the newest build is.
 2. **An update download**, if you accept one.
 3. **A crash report**, if you choose to send one.
-4. **A target photograph**, if you submit one to the research collection.
+4. **A target**, if you choose to send one to the project: from the page at `grouplab.org/targets/`, or from GroupLab itself after you analyze it.
 
 That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
 
@@ -46,7 +46,13 @@ Three things about that are deliberate:
 
 ## Your photographs, and what is stripped
 
-If you submit a target photograph to the research collection, that is an upload you started, to a page you visited, with a consent record written at the time.
+If you send a target from the page, that is an upload you started, to a page you visited, with a consent record written at the time.
+
+GroupLab can also send one itself, and it asks first. After you analyze a target, a short panel under the figures offers to send it: the image, the holes GroupLab found, the ones you moved, added or removed, what you told it, the figures and the log from that session. Nothing goes until you press Send and choose one of two levels of consent, testing only or may be published. Settings lets you say instead that every target should go, or none. **This is built but not switched on yet**: until the project's receiver for it opens, GroupLab asks nothing and sends nothing, and Settings says so.
+
+**Unlike a crash report, a target you agreed to send is tried again.** If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted. Settings shows anything waiting, with a button to discard it. That is the one thing GroupLab may send when it opens, and only because you already said yes to it.
+
+**The photograph leaves with its pixels and without its place.** GroupLab removes the location, the time, the camera's serial and everything else a phone writes beside the picture, and checks that the picture itself is untouched. Where it cannot do that without changing a pixel it saves the picture again without loss, and where even that would be too large it does not send it and tells you why.
 
 **Location is never read.** Not stripped on the way out: never read in the first place, at any point, by any part of GroupLab. A photograph taken on a phone usually carries where it was taken, and a target photograph usually means somewhere you shoot. That is not information this project wants to hold, so the code does not look at it.
 

@@ -45,6 +45,7 @@
     "src/GroupLab.App/MainWindow.Loads.cs",
     "src/GroupLab.App/MainWindow.NewTarget.cs",
     "src/GroupLab.App/MainWindow.Report.cs",
+    "src/GroupLab.App/MainWindow.Sending.cs",
     "src/GroupLab.App/MainWindow.ShotsPerBull.cs",
     "src/GroupLab.App/MainWindow.Updates.cs",
     "src/GroupLab.App/MainWindow.cs",
@@ -88,6 +89,7 @@
     "targets/GL-ZERO-MOA-100Y.gltd.json",
     "targets/frozen/phase0/GL-G8JP-FF4D-AE0T-GPMN.gltd.json",
     "targets/frozen/phase0/GL-R0T0-384Z-HRBE-M0EW.gltd.json",
-    "targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json"
+    "targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json",
+    "website/api/limits.json"
   ]
 }

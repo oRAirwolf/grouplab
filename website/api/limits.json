@@ -12,7 +12,12 @@
     "installer run by Alan is what makes it true.",
     "",
     "Entry 173 set it true on 2026-09-24, with the server side of entry 129 finished and the Turnstile secret confirmed present.",
-    "The page is at grouplab.org/targets/, and while this is true the top bar's Shoot a target becomes Send a target."
+    "The page is at grouplab.org/targets/, and while this is true the top bar's Shoot a target becomes Send a target.",
+    "",
+    "Entry 165 section 2: consent_v2, two levels from one text, shown on the page and by the application alike. testing is used to test",
+    "and improve detection and never published; publishable may also be published. A consent_v1 submission stays publishable.",
+    "appOpen is whether the application's own receiver, api/app-submission.php, is installed and answering: until it is, the application",
+    "never asks anybody to send a target. It is set true by the entry that follows Alan's installing it."
   ],
   "open": true,
   "maxFiles": 10,
@@ -27,7 +32,13 @@
   "typesRefused": [
     "PDF"
   ],
-  "consentVersion": "consent_v1",
-  "consentText": "I took these photos, or I have permission to share them. I understand they may be published as part of GroupLab's public test data on GitHub under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.",
-  "turnstileSiteKey": "0x4AAAAAAE-rzvtx_a4nBHHr"
+  "consentVersion": "consent_v2",
+  "turnstileSiteKey": "0x4AAAAAAE-rzvtx_a4nBHHr",
+  "consentTexts": {
+    "testing": "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.",
+    "publishable": "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published."
+  },
+  "appOpen": false,
+  "appReceiver": "https://grouplab.org/api/app-submission.php",
+  "maxAppPackageMegabytes": 4
 }

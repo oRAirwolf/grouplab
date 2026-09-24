@@ -65,8 +65,13 @@ const GLOBAL_PER_HOUR = 60;
 const DISK_CAP_BYTES  = 20 * 1024 * 1024 * 1024;
 const DISK_FREE_FLOOR = 3 * 1024 * 1024 * 1024;
 
-const CONSENT_VERSION = 'consent_v1';
-const CONSENT_TEXT    = "I took these photos, or I have permission to share them. I understand they may be published as part of GroupLab's public test data on GitHub under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.";
+// Entry 165 section 2: two levels, from the same text the page shows and the application offers. limits.json holds them and the build
+// holds this file to it. A consent_v1 submission already stored stays publishable, because that is what its contributor agreed to.
+const CONSENT_VERSION = 'consent_v2';
+const CONSENT_TEXTS = [
+    'testing'     => "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.",
+    'publishable' => "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.",
+];
 
 const MAX_STEM_LEN = 100;
 
@@ -451,8 +456,13 @@ if (($_POST['contact_reason'] ?? '') !== '') {
     respond(200, ['ok' => true, 'id' => bin2hex(random_bytes(4))]);
 }
 
-if (!checked('consent')) {
-    fail(400, 'The consent box has to be ticked before photos can be accepted.', 'consent');
+// Entry 165 section 2. A page loaded before the two levels arrived still posts the old pair of boxes, which mean the same two levels.
+$level = field('level', 20);
+if ($level === '' && checked('consent')) {
+    $level = checked('exclude_public') ? 'testing' : 'publishable';
+}
+if (!array_key_exists($level, CONSENT_TEXTS)) {
+    fail(400, 'Choose how GroupLab may use the photos before they can be accepted.', 'consent');
 }
 
 $ip = client_ip();
@@ -600,7 +610,7 @@ if (!@mkdir($dirPath, 0750) && !is_dir($dirPath)) {
     fail(500, 'Storage is not available right now. Please try again later.', 'storage');
 }
 
-$excludePublic = checked('exclude_public');
+$excludePublic = $level === 'testing';
 $stamp         = gmdate('Y-m-d\TH:i:s\Z');
 
 /**
@@ -669,11 +679,15 @@ $meta = [
     // the photos are for private testing only and never appear in the published data set.
     'exclude_from_public_dataset' => $excludePublic,
 
+    // Entry 165 section 4: where it came from, the upload page or the application.
+    'source' => 'web',
+
     'consent' => [
         'agreed'        => true,
         'version'       => CONSENT_VERSION,
+        'level'         => $level,
         'agreed_at_utc' => $stamp,
-        'text'          => CONSENT_TEXT,
+        'text'          => CONSENT_TEXTS[$level],
     ],
     'answers' => [
         // Camera distance was deliberately dropped from the form: it is recoverable from the

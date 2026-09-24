@@ -49,7 +49,16 @@ location = /api/crash-report.php {
     fastcgi_read_timeout 60s;
 }
 
-# Everything else with a .php name. This has to come after the two exact-match blocks above, which
+# Entry 165 section 4: targets sent from the application, which cannot run Turnstile, so it is protected by limits instead.
+location = /api/app-submission.php {
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php8.3-fpm-grouplab.org.sock;
+    fastcgi_read_timeout 300s;
+    fastcgi_send_timeout 300s;
+}
+
+# Everything else with a .php name. This has to come after the exact-match blocks above, which
 # nginx prefers over a regex location whatever the order in the file, so the receivers still run.
 location ~ \.php$ {
     return 404;

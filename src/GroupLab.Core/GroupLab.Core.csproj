@@ -6,6 +6,8 @@
     <EmbeddedResource Include="..\..\docs\VOLUNTEER-PACK.md" LogicalName="GroupLab.Core.Reporting.VolunteerPack.md" />
     <EmbeddedResource Include="Marking\cartridges.json" LogicalName="GroupLab.Core.Marking.cartridges.json" />
     <EmbeddedResource Include="Marking\glossary.json" LogicalName="GroupLab.Core.Marking.glossary.json" />
+    <!-- NOTES-FROM-PLANNING.md entry 165: the consent texts and the receiver's limits, from the one file the site and both receivers read. -->
+    <EmbeddedResource Include="..\..\website\api\limits.json" LogicalName="GroupLab.limits.json" />
   </ItemGroup>
 
   <ItemGroup>

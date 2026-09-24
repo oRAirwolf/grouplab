@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 16, 17, 19, 20, 18, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 10.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
+Then **21**, the one nginx block that lets GroupLab send targets, then 9, 16, 17, 19, 20, 18, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,39 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 21. One nginx block, so GroupLab can send targets
+
+**Opened 2026-09-24. Entry 165. Nothing is waiting on it tonight: sending from the application stays switched off until a later entry
+turns it on, and that entry will not be written until this is done.**
+
+**What is needed, in the server's shell.** Copy `website/server/nginx.ssl.conf_grouplab` from the repository to
+`/home/ubuntu/grouplab-server/`, then:
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --intake --dry-run
+sudo python3 install.py --intake
+sudo nginx -t && sudo systemctl reload nginx
+sleep 60
+curl -s -o /dev/null -w '%{http_code}\n' -X POST https://grouplab.org/api/app-submission.php
+curl -s -o /dev/null -w '%{http_code}\n' https://grouplab.org/targets/
+curl -s -o /dev/null -w '%{http_code}\n' https://pissinhot.com/
+```
+
+**A good result:** the dry run names the nginx include as the one file it would replace and nothing missing; `nginx -t` says the
+syntax is ok and the test is successful; and the three lines read **400**, **200** and **200**. The 400 is the new receiver
+answering an empty post with "The target arrived without its package", which is right. A **404** on the first line means nginx is
+still on the old include.
+
+**Why.** The application cannot run Turnstile, so it posts to its own receiver, `api/app-submission.php`, protected by the same size
+limits, rate limits, hourly cap and disk floor as the upload page, and landing in the same quarantine for the same worker. The receiver
+publishes with the site on its own. The include answers every `.php` name it does not list with a 404, so the new receiver needs its
+own block there, with a longer timeout because a phone photograph on a slow line takes a while. The worker does not change.
+
+**A good answer.** The output of the block.
 
 ---
 

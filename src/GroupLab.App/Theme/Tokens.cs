@@ -337,6 +337,9 @@ public static class Tokens
     /// <summary>A mark label's plate and text: near black at about 80 percent, and the dark theme's text colour, so a label reads on any photograph.</summary>
     public static Color MarkPlate { get; } = Color.FromArgb(200, 0x0b, 0x0c, 0x0e);
 
+    /// <summary>The dimming behind a screen that asks one question over the whole window, entry 165's first run question.</summary>
+    public static Color Scrim { get; } = Color.FromArgb(160, 0, 0, 0);
+
     public static Color MarkLabelText { get; } = Hex(0xe6e8ea);
 
     private static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);

@@ -257,6 +257,34 @@ public sealed class AppSettingsStore(string path)
     public bool ClearHandover() => Save(file => file.Remove("afterUpdate"));
 
     /// <summary>Reads one setting, or null when the file is missing or unreadable.</summary>
+    /// <summary>
+    /// Sending targets, NOTES-FROM-PLANNING.md entry 165: the choice, Unset until the person makes one, and the consent level, none until
+    /// they choose one. The first run screen and Settings read and write this one setting, so they cannot disagree.
+    /// </summary>
+    public (GroupLab.Core.Publication.SendingChoice Choice, GroupLab.Core.Publication.ConsentLevel? Level) LoadSending() => Read(file =>
+        (Enum.TryParse<GroupLab.Core.Publication.SendingChoice>((string?)file["sending"]?["choice"], out var choice) ? choice : GroupLab.Core.Publication.SendingChoice.Unset,
+         Enum.TryParse<GroupLab.Core.Publication.ConsentLevel>((string?)file["sending"]?["level"], out var level) ? level : (GroupLab.Core.Publication.ConsentLevel?)null));
+
+    public bool SaveSending(GroupLab.Core.Publication.SendingChoice choice, GroupLab.Core.Publication.ConsentLevel? level) => Save(file =>
+    {
+        var sending = file["sending"] as JsonObject ?? [];
+        sending["choice"] = choice.ToString();
+        sending["level"] = level?.ToString();
+        file["sending"] = sending;
+    });
+
+    /// <summary>The references of the targets sent from this computer, so a person can ask for one to be removed.</summary>
+    public IReadOnlyList<string> LoadSent() => Read(file => file["sending"]?["sent"] is JsonArray sent ? (IReadOnlyList<string>)[.. sent.Select(s => (string?)s).OfType<string>()] : null) ?? [];
+
+    public bool AddSent(string reference) => Save(file =>
+    {
+        var sending = file["sending"] as JsonObject ?? [];
+        var sent = sending["sent"] as JsonArray ?? [];
+        sent.Add(reference);
+        sending["sent"] = sent;
+        file["sending"] = sending;
+    });
+
     private T? Read<T>(Func<JsonObject, T?> get)
     {
         try

@@ -72,6 +72,18 @@ def receive(root: Path, photo: Path, opt_out: bool) -> Path | None:
     return found[0] if found else None
 
 
+def receive_app(root: Path, photo: Path, level: str) -> Path | None:
+    """Entry 165 section 4: one target from the application through its own receiver, website/api/app-submission.php."""
+    run = subprocess.run(["php", str(REPO / "tests/php/receive-app-one.php"), str(root), str(photo), level], capture_output=True, text=True)
+    check(f"the application's receiver took {photo.name} as {level}", run.returncode == 0, (run.stdout + run.stderr)[-400:])
+    try:
+        sid = json.loads(run.stdout.strip().splitlines()[-1])["id"]
+    except (ValueError, KeyError, IndexError):
+        return None
+    found = sorted((root / "private" / "quarantine").glob(f"*_{sid}"))
+    return found[0] if found else None
+
+
 def main() -> int:
     from PIL import Image
 
@@ -139,6 +151,13 @@ def main() -> int:
     published = receive(root, photo, opt_out=False)
     check("the opted out submission carries the marker from the receiver", opted_out is not None and (opted_out / "DO-NOT-PUBLISH").is_file())
     check("and the other does not", published is not None and not (published / "DO-NOT-PUBLISH").exists())
+
+    # Entry 165 section 4: targets from the application, which the worker has to take exactly as it takes the upload page's, with nothing
+    # changed on the server. Everything but the image is in meta.json, so the folder holds nothing the worker does not already know.
+    png = root / "app-target.png"
+    Image.new("RGB", (1200, 900), (236, 236, 232)).save(png, "PNG")
+    app_testing = receive_app(root, png, "testing")
+    app_published = receive_app(root, png, "publishable")
 
     # Entry 183 section 4: an opted out submission as it sat in refused, its original rebuilt and deleted by the worker before the marker
     # stopped it, moved back to quarantine. Only the worker's own PNG is left, beside the receiver's meta.json, the marker and refused.txt.
@@ -248,7 +267,8 @@ def main() -> int:
         check(f"{name} is refused because the records {why}" if why == "disagree" else f"{name} is refused for a file the receiver {why}", why in reason, reason or log[-600:])
 
     # Entry 183: consent intact at the far end, for each of the receiver's submissions.
-    for made, opt_out, what in ((opted_out, True, "the opted out submission"), (published, False, "the published submission"), (moved_back, True, "the submission moved back from refused")):
+    for made, opt_out, what in ((opted_out, True, "the opted out submission"), (published, False, "the published submission"), (moved_back, True, "the submission moved back from refused"),
+                                (app_testing, True, "the application's testing only target"), (app_published, False, "the application's publishable target")):
         arrived = ready / made.name if made is not None else None
         check(f"{what} is in ready", arrived is not None and arrived.is_dir(), log[-800:])
         if arrived is None or not arrived.is_dir():
@@ -257,8 +277,11 @@ def main() -> int:
         check(f"{what} still says exclude_from_public_dataset {str(opt_out).lower()}", meta.get("exclude_from_public_dataset") is opt_out, str(meta.get("exclude_from_public_dataset")))
         check(f"{what} {'keeps' if opt_out else 'has no'} DO-NOT-PUBLISH marker", (arrived / "DO-NOT-PUBLISH").is_file() is opt_out)
         check(f"{what} holds one rebuilt, scanned PNG and no original", len(meta["files"]) == 1 and meta["files"][0]["stored"].endswith(".png")
-              and str(meta["files"][0].get("scan", "")).startswith("clean") and not any(p.suffix == ".jpg" for p in arrived.iterdir()), str(meta["files"]))
+              and str(meta["files"][0].get("scan", "")).startswith("clean") and not any(p.name == meta["files"][0].get("uploaded") for p in arrived.iterdir()), str(meta["files"]))
         check(f"{what} has no refused.txt left", not (arrived / "refused.txt").exists())
+        if made in (app_testing, app_published):
+            check(f"{what} still says it came from the application, with what the person corrected", meta.get("source") == "app"
+                  and meta.get("app", {}).get("corrected", {}).get("marks", [{}])[0].get("change") == "kept", str(meta.get("app"))[:200])
         script = f". '{REPO / 'scripts' / 'SubmissionCheck.ps1'}'; Test-SubmissionFolder -Folder '{arrived}' | ConvertTo-Json -Compress"
         out = subprocess.run(["pwsh", "-NoProfile", "-NonInteractive", "-Command", script], capture_output=True, text=True)
         verdict = json.loads(out.stdout) if out.returncode == 0 and out.stdout.strip() else None

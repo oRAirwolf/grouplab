@@ -116,6 +116,13 @@ public static partial class Intake
         }
 
         string? id = Text(meta, "submission_id"), submitted = Text(meta, "submitted_utc");
+        // NOTES-FROM-PLANNING.md entry 165 section 5: consent_v2's testing level is never published, whatever else the record says. It is
+        // written with the opt out flag and the marker, so this is the third signal, and any one of them withholds.
+        if (meta["consent"]?["level"] is JsonValue level && level.GetValueKind() == JsonValueKind.String && (string?)level == "testing")
+        {
+            return Refuse("the contributor agreed to testing only: a submission at consent level 1 is never published");
+        }
+
         var consent = meta["consent"] as JsonObject;
         string? consentVersion = consent is null ? null : Text(consent, "version"), agreedAt = consent is null ? null : Text(consent, "agreed_at_utc"), consentText = consent is null ? null : Text(consent, "text");
         if (id is null || submitted is null)

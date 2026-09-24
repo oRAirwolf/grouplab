@@ -9,24 +9,24 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 158.
+**Last rewritten:** 2026-09-24, after entry 165.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154, 155, 156, 157, 158 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Alan's order from here: **165**, as he gave it; then the list is done.
-- **The first Discord post** comes with the next published nightly; entry 184 section 3.3 quotes it then. Entries 156
-  and 165 were amended after they were first read, so each is read again before it starts.
+- Alan's list is done. The inbox is empty.
+- **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until request 21's
+  nginx block is in and a later entry turns it on.
 - Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Entry 165.** Re-read first: it was amended after it was first read.
+1. **Turn on sending from the application** once request 21 answers 400: `appOpen` true, and a check against the live receiver.
 2. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 3. Program B's article when request 20's test is shot.
 
@@ -37,8 +37,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 185 section 2.** Request 17: one command makes the test data release a draft.
+- **Entry 165, switching it on.** Request 21: one nginx block for the application's receiver.
 
-Open requests in `docs/notes/for-alan.md`: **9** (15 most urgent, then 9, 16, 17, 19, 20, 18, 12, and 5 being applied).
+Open requests in `docs/notes/for-alan.md`: **10** (15 most urgent, then 21, 9, 16, 17, 19, 20, 18, 12, and 5 being applied).
 
 ## Open questions
 
@@ -56,8 +57,8 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.95, published 12:15 UTC and announced in #builds.
-- **The site serves `a77a1c7` or later**; nothing since has changed a page. The upload page is live at
+- **Last nightly:** 0.2.0-nightly.98, published 16:16 UTC.
+- **The site serves `099c270`**, and entry 165 changes the guide, the tour, one article and the upload page's consent. The upload page is live at
   `grouplab.org/targets/` and takes photographs; `pissinhot.com/targets` redirects there.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
@@ -66,10 +67,12 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 165
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The upload page asks for one of two consent levels**, testing only or may be published (`consent_v2`), and a
+  testing only target can never reach `samples/`, the research build or the site (entry 165).
 - **Every upload is virus scanned**, streamed to clamd, since request 14 (entries 182 and 183).
 - **The web upload path works end to end**, desktop and phone. Entry 129 is complete.
 - **Command Z works on a Mac now, and pinch zoom exists**, on no hardware checked yet; a plain scroll pans on a Mac.

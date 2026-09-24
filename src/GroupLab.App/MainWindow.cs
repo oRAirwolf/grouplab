@@ -554,6 +554,10 @@ public sealed partial class MainWindow : Window
         {
             CrashReporter.DisplayScale = RenderScaling;
             DiagnosticLog.Info("app.window", ("scale", RenderScaling), ("width", Width), ("height", Height));
+
+            // Entry 165: the one first run question, and whatever was waiting to be sent, only while the receiver is open.
+            ShowFirstRunIfDue();
+            _ = RetryPendingAsync();
         };
         CrashReporter.Recorded += OnCrashRecorded;
         Closed += (_, _) => CrashReporter.Recorded -= OnCrashRecorded;
@@ -895,6 +899,10 @@ public sealed partial class MainWindow : Window
         advancedPanel.Expanded += (_, _) => RememberOpen(AdvancedItem, true);
         advancedPanel.Collapsed += (_, _) => RememberOpen(AdvancedItem, false);
         figures.Children.Add(advancedPanel);
+
+        // Entry 165 section 1 item 5: the question to send the target sits at the foot of the figures, never over them.
+        figures.Children.Add(sendPanel);
+        figures.Children.Add(sentLine);
         var figureColumn = new Border { Child = new ScrollViewer { Content = figures }, Classes = { AppStyles.Side } };
         figureBorder = figureColumn;
         var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
@@ -956,6 +964,7 @@ public sealed partial class MainWindow : Window
         var layered = new Panel();
         layered.Children.Add(whole);
         layered.Children.Add(toaster.Layer);
+        layered.Children.Add(BuildFirstRun());
         Content = layered;
         SetTool(MarkingTool.Pan);
         ShowUnits();
@@ -2526,6 +2535,7 @@ public sealed partial class MainWindow : Window
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
         SaveSession();
+        OfferToSend();
     }
 
     /// <summary>
@@ -4529,6 +4539,8 @@ public sealed partial class MainWindow : Window
         Says(LastCheckLine());
         column.Children.Add(updateState);
         column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
+
+        BuildSendingSettings(column);
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));
