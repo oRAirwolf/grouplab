@@ -1,2 +1,3 @@
 # Builds already announced in Discord, one a line, written by the workflows. Entry 184.
 0.2.0-nightly.95
+0.2.0-nightly.96
