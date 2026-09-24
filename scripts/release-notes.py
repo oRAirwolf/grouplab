@@ -272,7 +272,7 @@ def reader_text(note):
     return text if text.endswith((".", "!", "?")) else text + "."
 
 
-def problems(sha, note, generated=False):
+def problems(sha, note, generated=False, new=True):
     """Everything wrong with one note, said so it can be fixed.
 
     ``generated`` is on for a line written from a commit subject rather than from a trailer. Such a line is held to
@@ -306,7 +306,9 @@ def problems(sha, note, generated=False):
         if pattern.search(note):
             found.append(f"it contains {what}")
 
-    _, british = AMERICAN.prose(note, False)
+    # Entry 189 section 2.3: a published release's notes are never edited, so only a new build's notes are held to the spelling; the
+    # older builds' notes the manifest carries are rebuilt from their commits as they were.
+    _, british = AMERICAN.prose(note, False) if new else (note, [])
     for word in british:
         found.append(f"it spells {word!r} the British way; a shooter reading it is most likely American, so write {AMERICAN.american(word)!r}")
 
@@ -345,7 +347,7 @@ def versions_file(out, version, head, count):
     tags = published_below(version)
     for tag, older in zip([None] + tags, tags + [""]):
         this = version if tag is None else tag.lstrip("v")
-        text, wrong = build_notes(this, head if tag is None else tag, older, heading=False)
+        text, wrong = build_notes(this, head if tag is None else tag, older, heading=False, new=tag is None)
         if wrong:
             print("The notes for " + this + " cannot be published:", file=sys.stderr)
             for line in wrong:
@@ -362,7 +364,7 @@ def versions_file(out, version, head, count):
     return 0
 
 
-def build_notes(version, head, previous, heading=True):
+def build_notes(version, head, previous, heading=True, new=True):
     """One build's notes as text, and everything wrong with the trailers behind them.
 
     ``heading`` is off for the per-version notes the second manifest carries, where the update bar writes the
@@ -386,12 +388,12 @@ def build_notes(version, head, previous, heading=True):
             line = plain(first)
             if not line:
                 continue
-            wrong += problems(sha, line, generated=True)
+            wrong += problems(sha, line, generated=True, new=new)
             notes["internal"].append(line)
             generated.append(sha)
             continue
         for note, kind in read_notes:
-            wrong += problems(sha, note)
+            wrong += problems(sha, note, new=new)
             notes[kind].append(reader_text(note))
 
     if wrong:
