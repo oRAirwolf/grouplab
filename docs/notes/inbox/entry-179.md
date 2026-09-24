@@ -7,8 +7,11 @@ Alan noticed his temp folder had grown very large and measured it:
 
 `c--Dev-grouplab` is this repository's Claude Code scratch area, one folder per session. The planning
 session writes nothing there; everything in it is this session's, or earlier Claude Code sessions' on this
-repository. Alan is clearing the old session folders himself. This entry is about it not happening again.
-Do it after entry 178; it is small.
+repository.
+
+**Alan wants Claude Code to do the cleanup itself**, deleting only what is no longer in use, and to keep it
+clean from now on. He will not delete anything by hand in case something is still needed. Do this entry
+right after entry 178.
 
 ## 1. Find out what filled it
 
@@ -17,6 +20,19 @@ Before changing anything, report the ten largest files and the five largest fold
 600 dpi test scans, the scratch profiling files (`ScratchFreezeProfile`, `ScratchCepProfile`), screenshot
 renders, downloaded release assets, or anything else. Report the same for any files the test suite leaves
 directly in `%TEMP%`.
+
+## 1.1 Clean up now, carefully
+
+1. **The current session's folder:** you know what in it is still in use. Delete every file that has served
+   its purpose, and keep only what a queued entry still needs. The entry 173 test image, for example, is no
+   longer needed now that entry 177 has recorded the test.
+2. **Earlier sessions' folders:** those sessions have ended, and only the current session is running. Delete
+   a folder only when its newest file is more than 24 hours old, so nothing touched recently is removed.
+3. **The empty random named folders in `%TEMP%`** of section 4: delete the ones your test runs created, and
+   only those. If a folder cannot be attributed to this suite, leave it.
+4. **One command, shown before it runs.** List what will be deleted and its total size in the panel, then
+   run the deletion as a single command, so Alan approves once, knowing what it removes.
+5. Report the size of `%LOCALAPPDATA%\Temp\claude\c--Dev-grouplab` before and after.
 
 ## 2. Make every temporary file clean itself up
 
