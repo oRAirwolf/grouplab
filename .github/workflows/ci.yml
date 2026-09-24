@@ -21,6 +21,8 @@ jobs:
     # writes it. An ordinary commit has no marker and runs everything, which the entry asks to be proved both ways round.
     if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
     name: ${{ matrix.os }}
+    # Entry 185 section 2: the test data comes from the job that can read the release as a draft, as an artifact.
+    needs: test-data-release
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
     strategy:
@@ -69,18 +71,18 @@ jobs:
         run: dotnet build GroupLab.slnx --configuration Release
 
       # NOTES-FROM-PLANNING.md entry 171 section 6: files over about 10 MB are downloads on the test-data release, never in the
-      # repository. They are cached by the manifest's hash, fetched by URL where the cache misses, and verified by SHA-256 before a test
-      # reads them. A file not uploaded yet is named in the log, and the tests that need it skip and say so.
-      - name: Test data cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/test-data
-          key: test-data-${{ hashFiles('tests/test-data.json') }}
-
+      # repository. Entry 185 section 2: the release is kept off the public releases page as a draft, which only a token that can write
+      # contents can see, so the one job holding that fetches the files, verifies each SHA-256 and hands them here as an artifact. A file
+      # not there is named in that job's log, and the tests that need it skip and say so.
       - name: Test data
-        run: |
-          python3 scripts/test-data.py fetch --to "$RUNNER_TEMP/test-data"
-          echo "GROUPLAB_TEST_DATA=$RUNNER_TEMP/test-data" >> "$GITHUB_ENV"
+        uses: actions/download-artifact@v6
+        continue-on-error: true
+        with:
+          name: test-data
+          path: ${{ runner.temp }}/test-data
+
+      - name: Where the test data is
+        run: echo "GROUPLAB_TEST_DATA=$RUNNER_TEMP/test-data" >> "$GITHUB_ENV"
 
       # NOTES-FROM-PLANNING.md entry 179: the suite must leave nothing in the temporary directory. Each test process writes into its own
       # folder and removes it (tests/Shared/TestTempRoot.cs), and dotnet test itself, which makes two empty randomly named folders on every
@@ -200,10 +202,32 @@ jobs:
           if gh release view test-data >/dev/null 2>&1; then
             echo "test-data release already exists"
           else
-            gh release create test-data --prerelease --latest=false --target "$GITHUB_SHA" \
+            gh release create test-data --draft --prerelease --latest=false --target "$GITHUB_SHA" \
               --title "Test data, not a build" \
-              --notes "Large files the tests read, kept out of the repository so no clone carries them. Nothing here is GroupLab. Each file is listed with its SHA-256 in tests/test-data.json and its consent in samples/PROVENANCE.md. Created by ci.yml, NOTES-FROM-PLANNING.md entry 171 section 6."
+              --notes "Large files the tests read, kept out of the repository so no clone carries them. Nothing here is GroupLab. Each file is listed with its SHA-256 in tests/test-data.json and its consent in samples/PROVENANCE.md. Created by ci.yml, NOTES-FROM-PLANNING.md entry 171 section 6, as a draft so it is not listed among the builds (entry 185 section 2)."
           fi
+
+      # Entry 185 section 2: this job's token can write contents, so it can see the release as a draft, which the test jobs' tokens
+      # cannot. It fetches through the API, verifies every file, and passes them on as an artifact that lasts a day.
+      - uses: actions/checkout@v5
+
+      - name: Test data cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/test-data
+          key: test-data-${{ hashFiles('tests/test-data.json') }}
+
+      - name: Fetch the test data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/test-data.py fetch --to "$RUNNER_TEMP/test-data"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: test-data
+          path: ${{ runner.temp }}/test-data
+          retention-days: 1
+          if-no-files-found: warn
 
   windows-package:
     if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"

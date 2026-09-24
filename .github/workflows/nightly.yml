@@ -416,12 +416,18 @@ jobs:
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
+      #
+      # Entry 185 section 1: it is needed, because the updater reads its manifest from this release's fixed address and the download page
+      # and README link its stable asset names. But it looked like a second copy of the build it points at, with the same title shape and
+      # the same notes. So it is named for what it is, and its body is one line pointing at the numbered release, which carries the notes
+      # and the platform line; nothing here can go stale.
       - name: Move the nightly release
         run: |
           gh release delete nightly --yes --cleanup-tag || true
+          echo "The newest build, **$VERSION**. Its notes, the platform statement and its versioned downloads are on [GroupLab $VERSION](https://github.com/oRAirwolf/grouplab/releases/tag/v$VERSION). This release moves to every new build, so its download addresses never change." > rolling.md
           gh release create nightly \
-            --title "GroupLab nightly, $VERSION" \
-            --notes-file notes.md \
+            --title "Latest nightly (always the newest build, moves with every build)" \
+            --notes-file rolling.md \
             --prerelease \
             --target "$SHA" \
             release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true)

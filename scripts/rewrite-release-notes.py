@@ -110,19 +110,37 @@ def body_for(version: str, has_mac: bool) -> str:
     return body
 
 
+ROLLING_TITLE = "Latest nightly (always the newest build, moves with every build)"
+
+
+def rolling_body(version: str) -> str:
+    """Entry 185 section 1: the rolling release says what it points at and repeats nothing, the same line the nightly writes."""
+    return (f"The newest build, **{version}**. Its notes, the platform statement and its versioned downloads are on "
+            f"[GroupLab {version}](https://github.com/oRAirwolf/grouplab/releases/tag/v{version}). "
+            "This release moves to every new build, so its download addresses never change.\n")
+
+
 def github(versions: list[str]) -> int:
     done = 0
     for version in versions + ["nightly"]:
         tag = "nightly" if version == "nightly" else "v" + version
+        title: list[str] = []
         if version == "nightly":
-            current = run("gh", "release", "view", "nightly", "--json", "name", "--jq", ".name").stdout.strip()
-            version = current.replace("GroupLab nightly, ", "").strip()
-        assets = run("gh", "release", "view", tag, "--json", "assets", "--jq", ".assets[].name").stdout
-        body = body_for(version, "grouplab-macos-" in assets)
+            said = run("gh", "release", "view", "nightly", "--json", "name,body", "--jq", '.name + " " + .body').stdout
+            named = re.search(r"GroupLab nightly, (\S+)", said) or re.search(r"The newest build, \*\*([^*]+)\*\*", said)
+            if not named:
+                print("nightly: not rewritten: its title and body name no build", file=sys.stderr)
+                continue
+            version = named.group(1).strip()
+            body = rolling_body(version)
+            title = ["--title", ROLLING_TITLE]
+        else:
+            assets = run("gh", "release", "view", tag, "--json", "assets", "--jq", ".assets[].name").stdout
+            body = body_for(version, "grouplab-macos-" in assets)
         with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as f:
             f.write(body)
             path = f.name
-        edited = run("gh", "release", "edit", tag, "--notes-file", path)
+        edited = run("gh", "release", "edit", tag, *title, "--notes-file", path)
         Path(path).unlink(missing_ok=True)
         if edited.returncode != 0:
             print(f"{tag}: not rewritten: {edited.stderr.strip()[:200]}", file=sys.stderr)

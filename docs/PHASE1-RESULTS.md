@@ -997,6 +997,26 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 185: the releases page, and the next nightly's notes
+
+**The rolling `nightly` release is needed.** The updater reads its manifest from
+`releases/download/nightly/update-manifest.json`, and the download page and the README link its stable asset names. So it stays, and
+the nightly now titles it "Latest nightly (always the newest build, moves with every build)" with one line naming the numbered release
+it points at. No notes, and no platform line, are repeated on it, so nothing there can go stale; `rewrite-release-notes.py --github`
+writes the same line. The rolling release that still shows nightly 94 and the old platform line is replaced by the next nightly.
+
+**The test data release.** A draft is off the public page, but its files are not at the public download address, and a workflow token
+with read access cannot see a draft at all. So `scripts/test-data.py` reads the release through the API when it has a token, which finds
+a draft too, and the one CI job that holds `contents: write` fetches and verifies the files and passes them to the test jobs as a one day
+artifact. Both routes fetched and verified the 59 MB scan here. The test jobs' own token is not widened. The release is created as a
+draft from now on; making the existing one a draft is request 17, with the command that undoes it.
+
+**The next nightly.** Nightly 95 had already failed, at Write the notes: entry 173's note names grouplab.org/targets, and the path check
+refused it as a file in this repository. A commit cannot be edited, and the note was right, so the check now passes an address on
+grouplab.org and still refuses any other path; the self-test holds both (42688df). The notes it will publish were checked before it
+did: nineteen lines under What you will notice, among them pan by default, the caliber names, the freezes, the zero correction's
+distance and the scan in real inches. The report quotes them once it has published.
+
 ## Entry 184: each published build in #builds
 
 `scripts/discord-announce.py` builds one embed: the version as its title, linked to the build's release page; the notes from

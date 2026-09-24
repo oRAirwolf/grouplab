@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
@@ -39,19 +40,53 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def release_assets(repository: str, release: str, token: str) -> dict[str, str] | None:
+    """
+    Entry 185 section 2: the release's assets through the API, which also finds it as a draft. A draft is off the public releases page,
+    and its files are not at the public download address, so a draft is read with a token that can see it: the workflow's, in the one job
+    that holds contents: write, or the person's own. Returns each asset's API address by name, or None where the release cannot be seen.
+    """
+    request = urllib.request.Request(f"https://api.github.com/repos/{repository}/releases?per_page=100",
+                                     headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "User-Agent": "grouplab-test-data"})
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            releases = json.load(response)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return None
+    for r in releases:
+        if r.get("tag_name") == release or r.get("name") == release:
+            return {a["name"]: a["url"] for a in r.get("assets", [])}
+    return None
+
+
+def download(address: str, target: Path, token: str | None) -> None:
+    headers = {"User-Agent": "grouplab-test-data"}
+    if token:
+        headers |= {"Authorization": f"Bearer {token}", "Accept": "application/octet-stream"}
+    with urllib.request.urlopen(urllib.request.Request(address, headers=headers), timeout=300) as response, target.open("wb") as out:
+        while block := response.read(1 << 20):
+            out.write(block)
+
+
 def fetch(to: Path) -> int:
     doc = json.loads(MANIFEST.read_text(encoding="utf-8"))
     to.mkdir(parents=True, exist_ok=True)
     base = f"https://github.com/{doc['repository']}/releases/download/{doc['release']}/"
+    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    assets = release_assets(doc["repository"], doc["release"], token) if token else None
+    print("reading the release through the API, which sees it as a draft too" if assets is not None else "reading the release at its public address")
     for item in doc["files"]:
         target = to / item["name"]
         if target.exists() and sha256(target) == item["sha256"]:
             print(f"{item['name']}: already here, hash verified")
             continue
         try:
-            with urllib.request.urlopen(base + item["name"], timeout=300) as response, target.open("wb") as out:
-                while block := response.read(1 << 20):
-                    out.write(block)
+            if assets is not None:
+                if item["name"] not in assets:
+                    raise urllib.error.HTTPError(base + item["name"], 404, "not attached", None, None)
+                download(assets[item["name"]], target, token)
+            else:
+                download(base + item["name"], target, None)
         except urllib.error.HTTPError as e:
             # Not uploaded yet, or the release not yet created: the tests that need it skip and say so.
             target.unlink(missing_ok=True)

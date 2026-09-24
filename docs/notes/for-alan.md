@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 5.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
-Then 9, 16, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
+**Open: 6.** Most urgent: **15**, the worker that keeps the opt out, because until it is installed every opted out submission is refused.
+Then 9, 16, 17, 12, which is optional, and 5, which Alan is applying. Entry 180: this line is rewritten whenever a request opens or closes.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,34 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 17. Take the test data release off the releases page
+
+**Opened 2026-09-24. Entry 185. Waiting, and it needs one command. Not urgent: nothing breaks meanwhile.**
+
+**What is needed**, in Git Bash on your machine, once the checks on the newest commit on main are green:
+
+```bash
+cd /c/Dev/grouplab
+gh release edit test-data --draft=true
+gh release list --limit 5
+```
+
+**A good result:** the list shows the builds and no longer shows "Test data, not a build". The release is not deleted: a draft is only
+hidden from the public page, and its file stays attached.
+
+**Why.** It sat among the builds, where people look for something to download. A draft is off that page. Its file is then no longer at
+the public download address, so the CI job that can see drafts now fetches it and hands it to the tests, which was pushed first so this
+command breaks nothing. The command needs your approval, which is why it is here.
+
+**A good answer.** "Done", and the next CI run's test data job saying it read the release through the API. If that run cannot read the
+file, this puts it back exactly as it was:
+
+```bash
+gh release edit test-data --draft=false
+```
 
 ---
 
