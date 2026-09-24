@@ -3,3 +3,4 @@
 0.2.0-nightly.96
 0.2.0-nightly.97
 0.2.0-nightly.98
+0.2.0-nightly.99
