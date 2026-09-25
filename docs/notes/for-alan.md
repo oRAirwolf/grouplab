@@ -1,7 +1,10 @@
 # Requests for Alan
 
-**Open: 6.** Most urgent: **9**, the same scan marked by hand twice. Then 16, 20, 18, 12, which is optional, and 21, which is
-optional.
+**Open: 7.** Most urgent: **29**, three minutes with the Fold 7, and then the phone is no longer needed. Then 9, 16, 20, 18,
+12, which is optional, and 21, which is optional.
+
+**After request 29's three steps the phone is no longer needed; Wireless debugging can be turned off and the screen timeout put
+back.** Nothing else is running on it.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +17,29 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 29. The Fold 7: three steps, then put it away
+
+**Opened 2026-09-25. Entry 209.** Everything that could be run over adb is done (entry 209: the resolutions, the cameras, the start up).
+These three need your hands. GroupLab spike is already installed and its screen shows a **Screen** list, a **Run detection** button and a
+**Choose a folder** button.
+
+1. **Folded, upside down.** With the phone folded, open GroupLab spike on the cover screen. Turn the phone upside down, so the USB-C port
+   is at the top, with rotation not locked. **Look for:** the spike's screen turns to read the right way up within a moment.
+2. **Unfolded, upside down.** Unfold it and do the same on the inner screen: turn it so the hinge side that was on your left is on your
+   right. **Look for:** the same, it turns. (Upside down was fixed in entry 205 and checked over adb with rotation locked at 180; this is
+   the sensor doing it by itself.)
+3. **The folder picker.** Press **Choose a folder**. Android's picker opens. Open its side menu (the three lines at the top left) and look
+   at what is listed. **Look for:** whether **Google Drive** and **OneDrive** appear there at all, and if you tap one, whether its
+   **Use this folder** button is offered or greyed out. Then press Back or cancel; there is no need to choose anything. If you do choose a
+   folder, the spike notes only which app it came from, never the folder's name.
+
+**A good answer.** Three short lines: "1 turned", "2 turned", and for 3 which of Google Drive and OneDrive appeared and whether either let
+you use a folder. Then the phone can be put away.
+
+**Why.** Step 3 decides whether the sync folder of `docs/ANDROID.md` section 8 is possible on Android at all.
 
 ---
 

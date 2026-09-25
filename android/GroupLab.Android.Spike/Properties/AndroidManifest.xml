@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
-  <!-- Entry 198 section 1.1: the spike needs no network, and asks for no permission at all. -->
+  <!-- Entry 198 section 1.1: the spike needs no network. Entry 209: the camera permission lets it read the cameras' calibration, which
+       Android keeps behind it; the spike never opens a camera, and the permission is granted over adb, not asked for. -->
+  <uses-permission android:name="android.permission.CAMERA" />
   <application android:label="GroupLab spike" android:resizeableActivity="true" />
 </manifest>

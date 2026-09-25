@@ -36,14 +36,17 @@ public sealed class SpikeView : UserControl
     private readonly TextBlock _sizes = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly TextBlock _runs = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly Avalonia.Controls.Button _run = new() { Content = "Run detection", MinHeight = 48, MinWidth = 160 };
+    private readonly Avalonia.Controls.Button _folder = new() { Content = "Choose a folder", MinHeight = 48, MinWidth = 160 };
     private readonly Grid _layout = new();
     private string? _widthClass;
 
     public SpikeView()
     {
         _run.Click += async (_, _) => await RunAll();
+        _folder.Click += (_, _) => MainActivity.Current?.StartActivityForResult(
+            new global::Android.Content.Intent(global::Android.Content.Intent.ActionOpenDocumentTree), MainActivity.FolderRequest);
         var sizes = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { new TextBlock { Text = "Screen", FontSize = 20 }, _sizes } };
-        var runs = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { _run, _runs } };
+        var runs = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { _run, _folder, _runs } };
         _layout.Children.Add(sizes);
         _layout.Children.Add(runs);
         Content = new ScrollViewer { Content = _layout };
@@ -67,6 +70,12 @@ public sealed class SpikeView : UserControl
         bool degenerate = size.Width < 2 || size.Height < 2 || Math.Abs(scale - density) > 0.01;
         Log(string.Create(CultureInfo.InvariantCulture,
             $"{DateTime.Now:HH:mm:ss} {size.Width:0} by {size.Height:0} dp, {(degenerate ? "ignored" : widthClass)}, {scale:0.###} pixels a dp, {size.Width * scale:0} by {size.Height * scale:0} pixels"), _sizes);
+        if (!degenerate && MainActivity.PendingTask is { } task)
+        {
+            MainActivity.PendingTask = null;
+            _ = RunTask(task);
+        }
+
         if (degenerate || widthClass == _widthClass)
         {
             return;
@@ -94,6 +103,27 @@ public sealed class SpikeView : UserControl
         }
 
         _layout.VerticalAlignment = VerticalAlignment.Top;
+    }
+
+    /// <summary>Entry 209: one named measurement, run once in a fresh process, its lines to the screen and the log.</summary>
+    private async Task RunTask(string task)
+    {
+        if (task == "cameras")
+        {
+            foreach (string line in await Task.Run(() => SpikeCameras.Report(global::Android.App.Application.Context).ToList()))
+            {
+                Log(line, _runs);
+            }
+
+            return;
+        }
+
+        if (task.StartsWith("scale:", StringComparison.Ordinal) && double.TryParse(task[6..], NumberStyles.Float, CultureInfo.InvariantCulture, out double scale))
+        {
+            var (targets, images) = await Task.Run(Prepare);
+            string sample = images.Last();
+            Log(await Task.Run(() => SpikeScaled.Run(sample, [targets], scale)), _runs);
+        }
     }
 
     private async Task RunAll()

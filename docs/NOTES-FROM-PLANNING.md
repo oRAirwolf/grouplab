@@ -24,6 +24,48 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 209: do every test that needs the Fold 7 now, first, while it is waiting
+
+**Status: actioned 2026-09-25, everything adb could do.** The phone was connected. Entry 205's build was already on it with the orientation and lifecycle checked. Measured: the sample at five working sizes, time, peak memory and hole offsets; every rear camera's characteristics. Built: a Choose a folder button. Request 29 holds the three steps that need Alan's hands, at the top of for-alan.md with the line that the phone can be put away after them. The spike's minimum is now Android 10, per entry 207.
+
+**Action this entry before 206, 207 and 208.** Alan, 2026-09-25: the Fold 7 is on the desk with Wireless debugging on and the screen set not
+to turn off, and he does not want to leave it like that longer than needed. Check `adb devices -l` lists it; if not, one line to Alan asking
+him to run the `adb connect` line with the address on the phone's Wireless debugging screen.
+
+## 1. What to run on the phone, in one sitting
+
+Everything already built that needs the phone, plus measurements the next stages will need, so the phone can be put away afterward:
+
+1. **Entry 205's build on the phone:** install it and confirm from the log that the activity follows all four orientations and that the
+   lifecycle logging works. The physical turning needs Alan (section 2).
+2. **Memory against image size (entry 206 section 2.2):** run the engine on the sample scan at several working resolutions (for example the
+   full 600 dpi, 400, 300 and 200 dpi, and a 12 MP and an 8 MP photograph size) and record time and peak memory for each, and whether the
+   holes and their positions agree with the full resolution result, and by how much. This is the measurement that decides the capped
+   resolution, and it needs the phone.
+3. **The cameras, for the capture screen:** list every rear camera the phone reports through Camera2, with focal lengths, sensor size, the
+   largest still size, and whether intrinsics and distortion terms are reported. Nothing is photographed and nothing is saved but those
+   numbers.
+4. **The folder picker question (entry 199, `docs/ANDROID.md` section 8 stage B):** a small screen in the spike that opens Android's folder
+   picker, so Alan can say in one look whether Google Drive or OneDrive offer a folder there. Only if it is quick to add.
+5. Anything else in `docs/ANDROID.md` that is waiting on the phone and can be run by adb alone.
+
+Run them unattended by adb where possible. Write every result into `docs/ANDROID.md`.
+
+## 2. What needs Alan's hands, as one short request
+
+Gather every step that needs him into one request, placed at the top of for-alan.md, that he can do in a few minutes in one go: for
+example turning the phone upside down in both screens, and one look at the folder picker. Say exactly what to do and what to look for,
+and number the steps.
+
+## 3. Then say he can put the phone away
+
+When nothing more needs the phone, say so plainly as the first line of the report and at the top of for-alan.md: "The phone is no longer
+needed; Wireless debugging can be turned off and the screen timeout put back." If something is still running, say how long it will take.
+
+Then carry on with entries 206, 207 and 208.
+
+---
+
 ## 2026-09-25, entry 205: request 27 done: the fold test passed, and upside down portrait does not rotate
 
 **Status: actioned 2026-09-25, except the tablet.** Request 27 closed; ANDROID.md sections 5 and 7 hold the results and Avalonia is confirmed. Upside down portrait: `FullUser`, checked on the Fold 7 over adb with rotation locked at 180 and the settings restored; the tablet waits until it is to hand, not blocking. MOBILE-CAPTURE.md item C5. The repeated start up was the activity made again after Back; degenerate sizes are ignored. Each image's own peak: photograph 635 MB, scan 721 MB.

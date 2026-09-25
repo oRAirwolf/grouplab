@@ -1,4 +1,5 @@
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Content.PM;
 using Android.Runtime;
@@ -30,11 +31,39 @@ public class MainActivity : AvaloniaMainActivity
 {
     private static int created;
 
+    /// <summary>The activity showing, for the folder picker, which is started from it.</summary>
+    internal static MainActivity? Current { get; private set; }
+
+    /// <summary>
+    /// Entry 209: a measurement to run by itself as soon as the screen has its size, named by the launch, so each runs unattended in a
+    /// fresh process: <c>adb shell am start -n ... --es task scale:0.5</c>, or <c>cameras</c>.
+    /// </summary>
+    internal static string? PendingTask { get; set; }
+
+    internal const int FolderRequest = 209;
+
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         created++;
+        Current = this;
+        PendingTask = Intent?.GetStringExtra("task");
         global::Android.Util.Log.Info(SpikeView.LogTag, $"{DateTime.Now:HH:mm:ss} activity created, the {created} time in this process{(savedInstanceState is null ? "" : ", restoring saved state")}");
         base.OnCreate(savedInstanceState);
+    }
+
+    /// <summary>
+    /// Entry 209 section 1.4: what the folder picker gave. Only the provider is logged, never the folder's name or path: which of Google
+    /// Drive, OneDrive or the phone's own storage offered a folder is the whole question.
+    /// </summary>
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
+    {
+        base.OnActivityResult(requestCode, resultCode, data);
+        if (requestCode == FolderRequest)
+        {
+            global::Android.Util.Log.Info(SpikeView.LogTag, resultCode == Result.Ok && data?.Data is { } uri
+                ? $"{DateTime.Now:HH:mm:ss} folder picker: a folder was chosen from the provider {uri.Authority}"
+                : $"{DateTime.Now:HH:mm:ss} folder picker: nothing chosen");
+        }
     }
 
     protected override void OnDestroy()

@@ -69,6 +69,19 @@ view hosted inside the Avalonia screen as a native Android view. What MOBILE-CAP
 - **The live preview** runs on the camera's own surface, so its speed does not depend on Avalonia; the checks the capture screen makes
   on it run on a smaller analysis stream beside it.
 
+**The Fold 7's rear cameras** (entry 209, read through Camera2 without opening a camera):
+
+| Camera | Focal length | 35 mm equivalent | Sensor | Largest still | Intrinsics and distortion |
+|---|---|---|---|---|---|
+| 0, the main one, made of 2, 5 and 6 | 6.25 mm | about 22 mm | 9.79 by 7.34 mm | 4080 by 3060, 12.5 MP | reported |
+| 2, ultrawide | 2.20 mm | about 14 mm | 5.60 by 4.20 mm | 4000 by 3000, 12.0 MP | reported |
+| 5, wide | 6.25 mm | about 22 mm | 9.79 by 7.34 mm | 4080 by 3060, 12.5 MP | reported |
+| 6, telephoto | 7.00 mm | about 66 mm | 3.65 by 2.74 mm | 3648 by 2736, 10.0 MP | reported |
+
+Every camera reports its intrinsics and radial distortion terms, so items L3 and L5 have what they need on this phone. The main camera's
+largest ordinary still is 12.5 MP; its full sensor needs Camera2's maximum resolution mode, which the capture screen does not need at an 8 MP
+working size. For item L2 the telephoto is the longest lens, at about 66 mm, and the wide the fallback when the sheet does not fit.
+
 If a MOBILE-CAPTURE.md item proves impossible on Android, it is named here with the reason. None is known yet.
 
 ## 5. Speed and memory
@@ -92,7 +105,25 @@ photograph goes through.
 
 Two further runs of the scan took 16.3 and 16.8 s, and Alan's own run on 2026-09-24 took 18.9 s at a peak of 716 MB. **Each image's
 own peak**, from a fresh process with the photograph run first (entry 205): the photograph 635 MB, the scan 721 MB; the 900 MB Alan saw
-was the process's highest so far, after the scan. **The phone is a little over twice the desktop's time**, all of it in the marking;
+was the process's highest so far, after the scan. ****Working resolution on the Fold 7** (entry 209, for entry 206 section 2.2): the sample brought to each size once, then measured in a fresh
+process on the smaller file alone, since a phone never decodes a 32 MP scan to work on 8 of it. Hole offsets are from the full resolution
+run on the same phone, in thousandths of an inch; the full resolution run is itself a measurement, not the truth.
+
+| Working size | As a Letter scan | In all | Holes | Peak memory | Offset from full, mean and largest |
+|---|---|---|---|---|---|
+| 32.0 MP, the scan as it is | 600 dpi | 16.1 s | 25 of 25 | 715 MB | |
+| 14.2 MP | 400 dpi | 6.6 s | 25 of 25 | 461 MB | 1.6 and 8.4 |
+| 12.0 MP, a camera's still | 367 dpi | 5.1 s | 25 of 25 | 427 MB | 1.2 and 6.4 |
+| 8.0 MP | 300 dpi | 3.3 s | 25 of 25 | 373 MB | 2.5 and 11.8 |
+| 3.6 MP | 200 dpi | 1.6 s | 25 of 25 | 307 MB | 2.9 and 8.2 |
+
+The spike at rest holds about 274 MB (`dumpsys meminfo`, total resident), so at 8 MP the engine adds about 100 MB. **What it says for the
+budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few
+thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest. Loading at full size and shrinking
+afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a
+photograph and a reduced decode does for a scan.
+
+The phone is a little over twice the desktop's time**, all of it in the marking;
 loading and naming are close to the desktop's. The peak is the whole process's highest so far, so it is read from the first run in a
 fresh process; the photograph ran after the scan and its own peak cannot be separated. **Memory held**: 714 MB, and 901 MB after three
 runs, and Android did not stop the application. It is still more than a phone application should hold, so the real application
@@ -153,7 +184,8 @@ today's rule on every route: no GPS, location or time metadata is read, printed,
    phone sends the session, photograph included, over the local network, and only something holding the key is accepted. Windows asks
    once whether GroupLab may take connections on private networks; the application says why before that prompt appears. On different
    networks, or a range network that keeps devices apart, it says so and offers the file route.
-4. **Stage B, a sync folder: doubtful on Android, to be tried on the Fold 7 before it is planned.** Picking a folder on Android uses the
+4. **Stage B, a sync folder: doubtful on Android, being tried on the Fold 7** (request 29 step 3: the spike's Choose a folder button
+   opens the picker, and the log records only which provider a chosen folder came from). Picking a folder on Android uses the
    Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I
    know, not whole folders. If that holds, Stage B works on the desktop side only. Their conflict handling is also their own: an edit
    made offline on both sides comes back as two files, which the revision rule above would at least catch.

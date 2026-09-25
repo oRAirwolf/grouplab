@@ -1612,6 +1612,30 @@
   "Alan's second start up sequence was the activity being made again: pressing Back finishes the activity while the process lives on, and opening it again creates a new one (the log reads \"activity destroyed, finishing\" and then \"activity created, the 2 time\").": {
    "kind": "measured",
    "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
+  },
+  "The main camera's largest ordinary still is 12.5 MP; its full sensor needs Camera2's maximum resolution mode, which the capture screen does not need at an 8 MP working size.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "For item L2 the telephoto is the longest lens, at about 66 mm, and the wide the fallback when the sheet does not fit.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "****Working resolution on the Fold 7** (entry 209, for entry 206 section 2.2): the sample brought to each size once, then measured in a fresh process on the smaller file alone, since a phone never decodes a 32 MP scan to work on 8 of it.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "**What it says for the budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "Loading at full size and shrinking afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a photograph and a reduced decode does for a scan.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "**Stage B, a sync folder: doubtful on Android, being tried on the Fold 7** (request 29 step 3: the spike's Choose a folder button opens the picker, and the log records only which provider a chosen folder came from).": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
   }
  },
  "rules": [

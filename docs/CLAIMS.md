@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 963 |
-| measured | 1357 |
-| decided | 1140 |
+| measured | 1363 |
+| decided | 1139 |
 | unbacked | 0 |
-| **total** | **3460** |
+| **total** | **3465** |
 
-**449** of them were read one sentence at a time and their backing written against the sentence. The other **3011** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**454** of them were read one sentence at a time and their backing written against the sentence. The other **3011** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -491,7 +491,12 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): | **Licenses.** OpenCV (since 4.5), opencv_contrib and OpenCvSharp are Apache-2.0; Sdcb's pipeline, read for how the build is done and not copied, is Apache-2.0 too.
 - *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): Apache-2.0 code may be combined into a GPL-3.0 work, which is the direction GroupLab needs.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): On the Fold 7 that is a choice between the wide, ultrawide and telephoto cameras.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): The main camera's largest ordinary still is 12.5 MP; its full sensor needs Camera2's maximum resolution mode, which the capture screen does not need at an 8 MP working size.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): For item L2 the telephoto is the longest lens, at about 66 mm, and the wide the fallback when the sheet does not fit.
 - *measured* (the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205): **Each image's own peak**, from a fresh process with the photograph run first (entry 205): the photograph 635 MB, the scan 721 MB; the 900 MB Alan saw was the process's highest so far, after the scan.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): ****Working resolution on the Fold 7** (entry 209, for entry 206 section 2.2): the sample brought to each size once, then measured in a fresh process on the smaller file alone, since a phone never decodes a 32 MP scan to work on 8 of it.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): **What it says for the budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): Loading at full size and shrinking afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a photograph and a reduced decode does for a scan.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202): **Memory held**: 714 MB, and 901 MB after three runs, and Android did not stop the application.
 - *decided* (NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5): It is still more than a phone application should hold, so the real application processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan in one pass without keeping earlier images.
 - *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): The lowest Android version: 7.0 (API 24) The native build is made for API 24, as Sdcb's is, and that sets the floor: CameraX and .NET 10 both go lower.
@@ -509,7 +514,7 @@ one that matters.
 - *measured* (android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index): Worked out, not yet measured: a shot takes about five bytes, so a 25-shot session with its load is a few hundred bytes compressed, well inside a mid-sized code.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): How large a code a phone reads off a laptop screen at arm's length is measured on the Fold 7; above that, the application says to share the file instead, rather than showing several codes in turn.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): Windows asks once whether GroupLab may take connections on private networks; the application says why before that prompt appears.
-- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **Stage B, a sync folder: doubtful on Android, to be tried on the Fold 7 before it is planned.** Picking a folder on Android uses the Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I know, not whole folders.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): **Stage B, a sync folder: doubtful on Android, being tried on the Fold 7** (request 29 step 3: the spike's Choose a folder button opens the picker, and the log records only which provider a chosen folder came from).
 - *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): Builds `.github/workflows/android.yml`, on every push to `main` that touches Core, the imaging code, the sheets or `android/`: 1.
 - *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): A signed release APK and an AAB for Play need the upload key, which Alan generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build needs them.
 

@@ -997,6 +997,23 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 209: the Fold 7 in one sitting
+
+**Resolution against memory and time**, the sample at 600, 400, 367 (12 MP), 300 (8 MP) and 200 dpi, each run in a fresh process on a
+file already at that size: 16.1, 6.6, 5.1, 3.3 and 1.6 s; 715, 461, 427, 373 and 307 MB; 25 of 25 holes at every size, with a mean shift
+from the full resolution run of 1.6, 1.2, 2.5 and 2.9 thousandths of an inch and at most 11.8. The first attempt shrank the image after
+loading it at full size and every size peaked near 530 MB, which is why the real application decodes at the working size. The spike at
+rest holds about 274 MB. Full table in `docs/ANDROID.md` section 5.
+
+**The cameras**, read through Camera2 with the camera permission granted over adb and no camera opened: a 22 mm equivalent main camera
+built from physical cameras 2 (ultrawide, 14 mm), 5 (wide, 22 mm) and 6 (telephoto, 66 mm); largest ordinary stills 12.5, 12.0, 12.5 and
+10.0 MP; every one reports intrinsics and distortion. `docs/ANDROID.md` section 4.
+
+**Built**: `SpikeScaled`, `SpikeCameras`, a launch extra naming a task to run unattended, and a Choose a folder button that logs only the
+provider. The spike's minimum is Android 10, entry 207's.
+
+**Request 29**: upside down on both screens and one look at the folder picker; then the phone is no longer needed.
+
 ## Entry 205: the Fold 7 passed folding; all four ways up; the start up lines explained
 
 **Request 27, Alan's hands**: folding, unfolding and turning kept every line and rearranged the panels as designed; the largest font size
