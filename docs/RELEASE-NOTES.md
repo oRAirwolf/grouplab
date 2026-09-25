@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.107
+
+**2026-09-25**, commit `27bd109`. Nightly.
+
+**What you will notice**
+
+- The command line analyzer can now work on a smaller copy of a very large image with --working-megapixels, which the phone application will always do; on the sample it moves each shot by about a thousandth of an inch.
+
+**Under the hood**
+
+- Error reports and the questions about what may be shared now come from code the desktop and the coming Android app share, so both ask in the same words and send in the same way.
+- Nothing in the desktop application changes; the Android test build now has a camera screen that says how to hold the phone and takes the picture itself.
+- Under the hood: the rules that will tell a phone user how to hold the camera, one instruction at a time, and when to take the picture, are built and tested; nothing on the desktop uses them yet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.107)
+
+---
+
 ## 0.2.0-nightly.106
 
 **2026-09-25**, commit `e7ef504`. Nightly.
