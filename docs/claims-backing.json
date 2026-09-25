@@ -1588,6 +1588,30 @@
   "Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them.": {
    "kind": "code",
    "where": "src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs"
+  },
+  "**Folding, unfolding, turning and the largest font size passed** (request 27, entry 205, section 7), so Avalonia is confirmed for the phone.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 205; android/GroupLab.Android.Spike/MainActivity.cs and SpikeView.cs"
+  },
+  "**Each image's own peak**, from a fresh process with the photograph run first (entry 205): the photograph 635 MB, the scan 721 MB; the 900 MB Alan saw was the process's highest so far, after the scan.": {
+   "kind": "measured",
+   "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
+  },
+  "**Measured on the Fold 7** (request 27, entry 205): compact 411 by 960 dp at 2.625 pixels a dp on the cover screen, medium 750 by 832 dp unfolded, 832 by 750 turned, and back, with every earlier line kept and the panels stacked or side by side as designed.": {
+   "kind": "measured",
+   "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
+  },
+  "Checked over adb on 2026-09-25: with rotation locked at 180 degrees the spike's screen turned to 180, the activity reports `SCREEN_ORIENTATION_FULL_USER`, and the phone's own rotation settings were put back.": {
+   "kind": "measured",
+   "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
+  },
+  "- **The start up sizes, and what repeated them.** Avalonia reports `1 by 1` and then the full size at 1 pixel a dp before the screen's density is known, and sizes of nothing during a fold; the spike logs them as ignored and never lays out from them, and the application does the same.": {
+   "kind": "measured",
+   "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
+  },
+  "Alan's second start up sequence was the activity being made again: pressing Back finishes the activity while the process lives on, and opening it again creates a new one (the log reads \"activity destroyed, finishing\" and then \"activity created, the 2 time\").": {
+   "kind": "measured",
+   "where": "the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205"
   }
  },
  "rules": [

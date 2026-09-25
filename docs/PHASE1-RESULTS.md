@@ -997,6 +997,24 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 205: the Fold 7 passed folding; all four ways up; the start up lines explained
+
+**Request 27, Alan's hands**: folding, unfolding and turning kept every line and rearranged the panels as designed; the largest font size
+cut nothing; his run of the sample took 18.9 s at 716 MB. Avalonia is confirmed for the phone.
+
+**Upside down portrait** did not turn, because Android leaves reverse portrait out unless the activity asks. The spike's activity now asks
+for `ScreenOrientation.FullUser`, all four directions while honoring the rotation lock, which `FullSensor` would ignore. Checked over adb:
+rotation locked at 180 degrees with the spike in front turned the display to 180, `dumpsys` gives the activity's requested orientation as
+`SCREEN_ORIENTATION_FULL_USER`, and the phone's own settings (rotation following the sensor, at 0) were put back straight after.
+`docs/MOBILE-CAPTURE.md` gains item C5: the photograph stored upright and the overlays turning, whichever way the device is held.
+
+**The repeated start up.** The spike now logs each create and destroy of its activity and each time its view is shown, with counts. Back
+finishes the activity with the process still alive, and opening it again creates a second one ("the 2 time in this process"); Avalonia's
+single view is the application's, so the list carried over. Going home and back, and opening recents, log nothing. The provisional sizes
+(1 by 1, and the full size at 1 pixel a dp) are logged as ignored and not laid out.
+
+**Each image's own peak memory**, in a fresh process with pushed photographs run before the sample: photograph 635 MB, scan 721 MB.
+
 ## Entry 204: the composite plot, quieter
 
 **What changed**, back to front as it is drawn: the bull's rings are a wide pale grey band (4 wide; 1.5:1 on white, 1.7:1 on the dark

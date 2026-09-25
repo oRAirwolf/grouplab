@@ -30,7 +30,9 @@ public sealed class App : Avalonia.Application
 /// </summary>
 public sealed class SpikeView : UserControl
 {
-    private const string LogTag = "GroupLabSpike";
+    internal const string LogTag = "GroupLabSpike";
+
+    private static int attached;
     private readonly TextBlock _sizes = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly TextBlock _runs = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly Avalonia.Controls.Button _run = new() { Content = "Run detection", MinHeight = 48, MinWidth = 160 };
@@ -46,6 +48,7 @@ public sealed class SpikeView : UserControl
         _layout.Children.Add(runs);
         Content = new ScrollViewer { Content = _layout };
         SizeChanged += (_, e) => Measured(e.NewSize);
+        AttachedToVisualTree += (_, _) => Log($"{DateTime.Now:HH:mm:ss} view shown, the {++attached} time in this process", _sizes);
     }
 
     /// <summary>
@@ -57,9 +60,14 @@ public sealed class SpikeView : UserControl
     {
         double scale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
         string widthClass = size.Width < 600 ? "compact" : size.Width < 840 ? "medium" : "expanded";
+
+        // Entry 205 section 3.2: while the view is being made, and during a fold, Avalonia reports sizes of nothing, and sizes at 1 pixel a
+        // dp before the screen's own density is known. They are logged as ignored and never laid out, not even for a frame.
+        float density = global::Android.App.Application.Context.Resources?.DisplayMetrics?.Density ?? 1;
+        bool degenerate = size.Width < 2 || size.Height < 2 || Math.Abs(scale - density) > 0.01;
         Log(string.Create(CultureInfo.InvariantCulture,
-            $"{DateTime.Now:HH:mm:ss} {size.Width:0} by {size.Height:0} dp, {widthClass}, {scale:0.###} pixels a dp, {size.Width * scale:0} by {size.Height * scale:0} pixels"), _sizes);
-        if (widthClass == _widthClass)
+            $"{DateTime.Now:HH:mm:ss} {size.Width:0} by {size.Height:0} dp, {(degenerate ? "ignored" : widthClass)}, {scale:0.###} pixels a dp, {size.Width * scale:0} by {size.Height * scale:0} pixels"), _sizes);
+        if (degenerate || widthClass == _widthClass)
         {
             return;
         }
@@ -119,6 +127,7 @@ public sealed class SpikeView : UserControl
         string targets = Path.Combine(cache, "targets");
         Directory.CreateDirectory(targets);
         var images = new List<string>();
+        var samples = new List<string>();
         foreach (string folder in new[] { "targets", "images" })
         {
             // The asset list for a folder also holds the system's own files of the same folder name (the Fold 7 listed clock_font.png
@@ -135,7 +144,7 @@ public sealed class SpikeView : UserControl
 
                 if (folder == "images")
                 {
-                    images.Add(to);
+                    samples.Add(to);
                 }
             }
         }
@@ -145,6 +154,9 @@ public sealed class SpikeView : UserControl
             images.AddRange(Directory.EnumerateFiles(pushed).Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".png", StringComparison.OrdinalIgnoreCase)).Order());
         }
 
+        // Pushed photographs first and the sample last: the peak memory is the whole process's highest so far, so an image run before the
+        // large scan reports its own peak (entry 205 section 1).
+        images.AddRange(samples);
         return (targets, images);
     }
 

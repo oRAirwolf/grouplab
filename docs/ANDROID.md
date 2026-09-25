@@ -8,7 +8,8 @@ the plan that report decides.
 `.github/workflows/android.yml`. **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system
 libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan. **Detection runs on the
 Fold 7** (entry 202, section 5): the desktop's engine, unchanged, names the sample scan from its codes and finds all 25 holes in
-17 seconds. Folding and turning wait on request 27, which needs Alan's hands.
+17 seconds. **Folding, unfolding, turning and the largest font size passed** (request 27, entry 205, section 7), so Avalonia is confirmed
+for the phone.
 
 ## 1. What Alan decided (entry 198 section 1)
 
@@ -89,7 +90,9 @@ photograph goes through.
 | The published sample scan, 600 dpi | 0.6 s | 1.5 s, 2 codes | 15.0 s | 25 of 25 | 17.1 s | 714 MB |
 | The same range photograph | 0.1 s | 1.0 s, 1 code | refused: no markers found, as on the desktop | | 1.2 s | |
 
-Two further runs of the scan took 16.3 and 16.8 s. **The phone is a little over twice the desktop's time**, all of it in the marking;
+Two further runs of the scan took 16.3 and 16.8 s, and Alan's own run on 2026-09-24 took 18.9 s at a peak of 716 MB. **Each image's
+own peak**, from a fresh process with the photograph run first (entry 205): the photograph 635 MB, the scan 721 MB; the 900 MB Alan saw
+was the process's highest so far, after the scan. **The phone is a little over twice the desktop's time**, all of it in the marking;
 loading and naming are close to the desktop's. The peak is the whole process's highest so far, so it is read from the first run in a
 fresh process; the photograph ran after the scan and its own peak cannot be separated. **Memory held**: 714 MB, and 901 MB after three
 runs, and Android did not stop the application. It is still more than a phone application should hold, so the real application
@@ -109,6 +112,19 @@ The native build is made for API 24, as Sdcb's is, and that sets the floor: Came
 - **Folding and turning are ordinary events.** The activity declares that it handles size, orientation, density and layout changes
   itself, so it is not destroyed and the photograph, marks, zoom, selection and a half-finished edit stay where they are while the view
   lays itself out again. The test to write when there is a review screen: a review in progress survives compact to medium and back.
+  **Measured on the Fold 7** (request 27, entry 205): compact 411 by 960 dp at 2.625 pixels a dp on the cover screen, medium 750 by 832 dp
+  unfolded, 832 by 750 turned, and back, with every earlier line kept and the panels stacked or side by side as designed.
+- **All four ways up**, upside down portrait included: the activity asks for `FullUser`, which follows the sensor in every direction and
+  still honors the rotation lock (`FullSensor` ignores the lock). Checked over adb on 2026-09-25: with rotation locked at 180 degrees the
+  spike's screen turned to 180, the activity reports `SCREEN_ORIENTATION_FULL_USER`, and the phone's own rotation settings were put back.
+  The capture screen's side of it is MOBILE-CAPTURE.md item C5. The tablet is checked when it is next to hand.
+- **The start up sizes, and what repeated them.** Avalonia reports `1 by 1` and then the full size at 1 pixel a dp before the screen's
+  density is known, and sizes of nothing during a fold; the spike logs them as ignored and never lays out from them, and the application
+  does the same. Alan's second start up sequence was the activity being made again: pressing Back finishes the activity while the process
+  lives on, and opening it again creates a new one (the log reads "activity destroyed, finishing" and then "activity created, the 2 time").
+  Avalonia's single view belongs to the application, not the activity, so it and its list carried over. **The design**: everything a
+  person is doing lives with the application, not the activity, and a session is written to disk whenever the application stops, so a
+  new activity, or a process Android has ended, opens where the person left off.
   **The hinge**: Android reports it through Jetpack WindowManager (`Xamarin.AndroidX.Window`), not through Avalonia, so a split layout
   reads it there and keeps controls off it.
 - **Density.** Avalonia works in density independent units and draws at the screen's real density, which the spike reports as pixels

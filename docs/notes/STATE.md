@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 204.
+**Last rewritten:** 2026-09-25, after entry 205.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 204 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 205 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -28,7 +28,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The roll sheets name themselves on every system** since 3c3fa98: they were the only sheets over the 8000 pixel working limit,
   so their codes were read at half resolution; the corners are now cut from the full image.
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
-  714 MB for the 600 dpi sample (desktop 8 s). Folding and turning are request 27. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
+  714 MB for the 600 dpi sample (desktop 8 s). Folding, turning and the font size passed (entry 205); all four ways up since. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
 - **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are on** (entry 200, 8725f91); the
   open issues in `oRAirwolf/grouplab-crash-reports` are read at the start of every run.
@@ -40,7 +40,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The next three
 
-1. **The Android fold and rotation results** when request 27 comes back; then the capture screen's CameraX spike.
+1. **The capture screen's CameraX spike on the Fold 7**, the next stage of Android, when an entry asks for it.
 2. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 3. Program B's article when request 20's test is shot.
 
@@ -49,8 +49,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **7** (27 most urgent, folding and turning the Android spike; then 9, 16, 20, 18, 12,
-  and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **6** (9 most urgent; then 16, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
@@ -79,7 +78,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 205
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 

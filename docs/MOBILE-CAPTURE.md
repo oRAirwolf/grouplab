@@ -32,6 +32,13 @@ below the resolution part's useless level), *less angle* (beyond the limit), *ho
 **C4. A visual outline** shows where the paper should sit, and it snaps to the detected sheet as it comes into position, so the user can
 see that the application has found it. *Test to write: `CaptureScreenTests.TheOutlineSnapsToTheFoundSheet`.*
 
+**C5. Any way up.** The capture screen works whichever of the four ways the phone or tablet is held, upside down portrait included (a
+phone on a bench or a tripod mount often is, and a foldable's inner screen is near square), while honoring the person's rotation lock:
+the activity asks for `FullUser`, not `FullSensor`, which ignores the lock (entry 205). The photograph is stored the right way up however
+the device was held, from the camera's own rotation of the frame and never from a file's tags that other software may drop, and the
+outline and guidance turn with the screen. *Test to write: `CaptureScreenTests.APhotographTakenUpsideDownIsStoredUpright`, and the same
+for the outline's corners at each of the four rotations.*
+
 ## 2. Light, lens and geometry
 
 **L1. Flash.** Use it only when the metered light is below a threshold, and prefer the torch at low power to a burst: a burst makes hard

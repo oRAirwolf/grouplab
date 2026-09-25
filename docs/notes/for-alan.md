@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **27**, five minutes of folding and turning the Android spike on the Fold 7. Then 9, 16, 20, 18,
-12, which is optional, and 21, which is optional.
+**Open: 6.** Most urgent: **9**, the same scan marked by hand twice. Then 16, 20, 18, 12, which is optional, and 21, which is
+optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -19,7 +19,7 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ## 27. Android: fold, unfold and turn the spike, about five minutes
 
-**Opened 2026-09-25. Entry 202.** GroupLab spike is installed on the Fold 7 (its icon says "GroupLab spike"). Its screen lists, under
+**Opened 2026-09-25. Entry 202. Answered 2026-09-25**, entry 205: all passed; upside down portrait is fixed since. GroupLab spike is installed on the Fold 7 (its icon says "GroupLab spike"). Its screen lists, under
 **Screen**, every size it has been given: the time, the size in dp, a word (compact, medium or expanded), and the pixels. This checks
 that folding and turning keep it working, which only hands can do.
 
