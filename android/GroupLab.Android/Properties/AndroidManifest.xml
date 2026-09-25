@@ -5,5 +5,11 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-feature android:name="android.hardware.camera" android:required="false" />
-  <application android:label="GroupLab" android:resizeableActivity="true" android:allowBackup="false" />
+  <application android:label="GroupLab" android:resizeableActivity="true" android:allowBackup="false">
+    <!-- Entry 219 item A5: session files handed to the share sheet, from the cache's shared folder only. -->
+    <provider android:name="androidx.core.content.FileProvider" android:authorities="org.grouplab.app.files" android:exported="false"
+              android:grantUriPermissions="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/share_paths" />
+    </provider>
+  </application>
 </manifest>

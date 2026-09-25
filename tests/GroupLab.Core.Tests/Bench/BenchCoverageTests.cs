@@ -64,6 +64,8 @@ public class BenchCoverageTests
         ["MeanRadiusScale"] = "One division to put a figure on a scale, and a sentence chosen by the shot count.",
         ["CalibreConfirmation"] = "A median over the holes already in memory, and a sentence built from it. It runs when a person opens the calibre field.",
         ["EquipmentForm"] = "It reads a few dozen fields off at most a few hundred records to offer earlier values back as a person types, which is a person's typing speed and not a measurement.",
+        ["SessionRecords"] = "One record built from a marking when a session is saved: the marking file and the figures, both already measured where they are made. Entry 219 item A4.",
+        ["SessionPackage"] = "Writing or reading one session file when a person shares or opens one; its time is the zip library's and the picture's size. Entry 219 item A5.",
         ["ShotEditor"] = "It builds the buttons of a popover from the state, looping over the bulls once, and converts an arrow key press through three calls to the scale. It runs under a person's finger like the canvas controls beside it.",
     };
 

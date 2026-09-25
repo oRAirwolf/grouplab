@@ -87,6 +87,8 @@ Remove-Item -Recurse -Force "$env:TEMP\gl-spike"
 6. **The application itself**, added by entry 219 item A4: open **GroupLab** (not the spike), answer its first questions, press **Take
    a picture**, allow the camera, and let it take the sheet. **Look for:** a result with the number of shots, the group's size, a plot
    and the photograph with a ring on each hole; drag a ring with **Move** and see the magnifier; then **Sessions** lists it.
+7. **Share this session**, and send it to yourself however is easiest (Drive, email, or a cable). On this computer, in GroupLab's menu,
+   **Open a session file** and choose it. **Look for:** the same marks on the same picture, and a line naming the phone it came from.
 
 **3. In PowerShell again**, to hand me the log:
 

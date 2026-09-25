@@ -47,6 +47,7 @@
     "src/GroupLab.App/MainWindow.NewTarget.cs",
     "src/GroupLab.App/MainWindow.Report.cs",
     "src/GroupLab.App/MainWindow.Sending.cs",
+    "src/GroupLab.App/MainWindow.SessionFiles.cs",
     "src/GroupLab.App/MainWindow.ShotsPerBull.cs",
     "src/GroupLab.App/MainWindow.Survey.cs",
     "src/GroupLab.App/MainWindow.Updates.cs",

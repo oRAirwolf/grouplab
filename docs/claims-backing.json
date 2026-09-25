@@ -1924,6 +1924,10 @@
   "A touch within 24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross where the hole will go.": {
    "kind": "code",
    "where": "android/GroupLab.Android/ResultView.cs SheetEditor Reach, Loupe, Magnify"
+  },
+  "**Built** (entry 219 item A5): a `.grouplab` file holds the marking, the sheet and the picture re-encoded from its pixels with no metadata at all, and says which device wrote which revision.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/SessionPackage.cs SessionPackage; src/GroupLab.Cli/Imaging/CleanImage.cs From; tests/GroupLab.Core.Tests/Records/SessionPackageTests.cs"
   }
  },
  "rules": [

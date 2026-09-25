@@ -59,6 +59,16 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 219, item A5: sharing a session file by hand
+
+`GroupLab.Core.Records.SessionPackage` writes and reads a `.grouplab` file: `session.json` (schema, revision, the writing device as
+"GroupLab version on the system or phone model", never a machine's own name), the desktop's marking file with no path from the writer's
+machine in it, the sheet, and the picture. `CleanImage.From` re-encodes the picture from its stored pixels, so a photograph's EXIF, GPS,
+XMP and comments stay behind; a test writes a location into a real JPEG and finds none of it in the file. Reading a stranger's file
+takes only the four known names, each within its size however small it claims to be. The desktop's menu shares and opens one, the
+phone's result shares through the share sheet and Sessions opens one; either way it becomes a session of its own, saved in the
+records. `SessionPackageTests` (five) and `SessionFileTests`. On a phone: request 33, step 7.
+
 ## Entry 219, item A4: capture to result on the phone, corrected by touch
 
 Take a picture or choose one; the working copy (8 MP) becomes the session's image, which settles the question item A1 left of storing a

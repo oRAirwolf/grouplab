@@ -4813,6 +4813,9 @@ public sealed partial class MainWindow : Window
             ($"Paste an image ({CommandKey.Label("V")})", PasteImage),
             ("Open marking\u2026", OpenMarkingDialog),
             ("Export\u2026", ExportDialog),
+            // Entry 219 item A5: a session as one file, to and from the phone by hand.
+            ("Share a session file\u2026", ShareSessionDialog),
+            ("Open a session file\u2026", OpenSessionFileDialog),
             ("Import shots from a CSV\u2026", ImportCsvDialog),
             ("Report a problem\u2026", () =>
             {

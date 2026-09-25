@@ -118,7 +118,7 @@ public class Entry109Tests
             // Entry 140 section 2 put New target at the head of the menu: it is the document action that comes before opening one. Entry 137
             // section 5 put Paste under Open image, because it is the same act with a different source.
             Assert.Equal(
-                [$"New target ({CommandKey.Label("N")})", "Open image…", $"Paste an image ({CommandKey.Label("V")})", "Open marking…", "Export…", "Import shots from a CSV…", "Report a problem…"],
+                [$"New target ({CommandKey.Label("N")})", "Open image…", $"Paste an image ({CommandKey.Label("V")})", "Open marking…", "Export…", "Share a session file…", "Open a session file…", "Import shots from a CSV…", "Report a problem…"],
                 window.MenuItems);
             // Only what is on this screen: the library has worded Zoom in, Zoom out and Fit buttons of its own (entry 120 section 10.3),
             // and they are in the window's tree whichever screen is showing.

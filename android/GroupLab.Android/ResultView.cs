@@ -91,6 +91,9 @@ public sealed class ResultView : UserControl
         }
 
         column.Children.Add(saved);
+        var shareSaid = Screens.Line("");
+        column.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
+        column.Children.Add(shareSaid);
         column.Children.Add(Screens.Choice("Another target", again));
         Refresh();
         Content = Screens.Page(column);

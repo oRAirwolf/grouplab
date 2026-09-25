@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 982 |
+| code | 983 |
 | measured | 1422 |
 | decided | 1153 |
 | unbacked | 0 |
-| **total** | **3557** |
+| **total** | **3558** |
 
-**532** of them were read one sentence at a time and their backing written against the sentence. The other **3025** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**533** of them were read one sentence at a time and their backing written against the sentence. The other **3025** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -555,6 +555,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): The Fold 7's cover screen is the case to test it on.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Sessions between phone and desktop (entry 198 section 1.4, entry 199 section 2) The session file is the unit whatever the route.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **The order, with one change from the planning session's reading:** 1.
+- *code* (src/GroupLab.Core/Records/SessionPackage.cs SessionPackage; src/GroupLab.Cli/Imaging/CleanImage.cs From; tests/GroupLab.Core.Tests/Records/SessionPackageTests.cs): **Built** (entry 219 item A5): a `.grouplab` file holds the marking, the sheet and the picture re-encoded from its pixels with no metadata at all, and says which device wrote which revision.
 - *measured* (android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index): Worked out, not yet measured: a shot takes about five bytes, so a 25-shot session with its load is a few hundred bytes compressed, well inside a mid-sized code.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): How large a code a phone reads off a laptop screen at arm's length is measured on the Fold 7; above that, the application says to share the file instead, rather than showing several codes in turn.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): Windows asks once whether GroupLab may take connections on private networks; the application says why before that prompt appears.

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Entry 219 item A5: the one folder the share sheet may read from, the cache's shared folder, which holds only the newest session file. -->
+<paths>
+  <cache-path name="shared" path="shared/" />
+</paths>

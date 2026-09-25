@@ -1,5 +1,6 @@
 using System.Globalization;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Marking;
@@ -22,6 +23,9 @@ public sealed class SessionsPage : UserControl
     {
         var column = new StackPanel { Spacing = 8 };
         column.Children.Add(Screens.Heading("Sessions"));
+        var said = Screens.Line("");
+        column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)));
+        column.Children.Add(said);
         IReadOnlyList<SessionSummary> saved;
         try
         {
@@ -47,6 +51,35 @@ public sealed class SessionsPage : UserControl
         }
 
         return Screens.Page(column);
+    }
+
+    /// <summary>Entry 219 item A5: a session file from the phone's files, a share, email or USB, opened as a session of its own.</summary>
+    private async Task OpenFile(TextBlock said)
+    {
+        if (TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
+        {
+            return;
+        }
+
+        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "Open a GroupLab session file", AllowMultiple = false });
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        await using var from = await files[0].OpenReadAsync();
+        using var copy = new MemoryStream();
+        await from.CopyToAsync(copy);
+        copy.Position = 0;
+        var units = App.Settings.LoadUnits();
+        var (result, why) = SessionFiles.Open(copy, units);
+        if (result is null)
+        {
+            said.Text = why ?? "";
+            return;
+        }
+
+        Content = new ResultView(result, new ShotSetup(result.State.Calibre, result.State.ShotDistanceInches), units, () => Content = List());
     }
 
     private void Open(long id)

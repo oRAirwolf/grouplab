@@ -268,6 +268,11 @@ today's rule on every route: no GPS, location or time metadata is read, printed,
 **The order, with one change from the planning session's reading:**
 
 1. **Stage A, the first version: share a session file by hand**, through Android's share sheet, a file manager, email or USB.
+   **Built** (entry 219 item A5): a `.grouplab` file holds the marking, the sheet and the picture re-encoded from its pixels with no
+   metadata at all, and says which device wrote which revision. **Share this session** on the phone's result hands it to the share
+   sheet; **Open a session file** on Sessions, and **Share a session file** and **Open a session file** in the desktop's menu, do the
+   rest. Opening one always makes a session of its own, so nothing is merged and nothing is lost. A file is read only as far as its
+   four known entries, each within its size.
 2. **The marks QR code, no account.** A photograph cannot go in a QR code; the marks can. The shots in sheet coordinates, the sheet's
    id, the caliber, the distance, the load and the review choices, in a compact binary frame of the kind `Gltd/Binary` already writes.
    Worked out, not yet measured: a shot takes about five bytes, so a 25-shot session with its load is a few hundred bytes compressed,

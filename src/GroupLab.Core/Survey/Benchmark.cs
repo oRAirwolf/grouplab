@@ -67,10 +67,13 @@ public static class Benchmark
         return [.. trace.Records.Select(r => new StageTime(r.Stage, r.DurationMs))];
     }
 
-    /// <summary>The most memory the process has held, in megabytes.</summary>
+    /// <summary>
+    /// The most memory the process has held, in megabytes. macOS does not report a peak, and .NET gives 0 there (CI on 5160a77), so the
+    /// memory held now stands in for it: never more than the peak, and never nothing.
+    /// </summary>
     public static long PeakMegabytes()
     {
         using var self = Process.GetCurrentProcess();
-        return self.PeakWorkingSet64 / (1024 * 1024);
+        return Math.Max(self.PeakWorkingSet64, self.WorkingSet64) / (1024 * 1024);
     }
 }
