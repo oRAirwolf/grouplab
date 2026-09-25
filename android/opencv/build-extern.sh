@@ -63,6 +63,13 @@ anchor = "#endif // NO_CONTRIB"
 assert anchor in text
 text = text.replace(anchor, anchor + "\n#include <opencv2/aruco.hpp>\n#include <opencv2/aruco/charuco.hpp>\n#include <opencv2/dnn.hpp>\n#include <opencv2/wechat_qrcode.hpp>\n", 1)
 header.write_text(text)
+# The two bindings' own headers are wrapped in the same switch, so with it set they compiled to nothing: the first build ran on the
+# Fold 7 and stopped at "EntryPointNotFoundException: wechat_qrcode_create1" (entry 202). Their wrappers are lifted, and only theirs.
+for name in ("aruco.h", "wechat_qrcode.h"):
+    binding = extern / name
+    text = binding.read_text()
+    assert text.count("#ifndef NO_CONTRIB") == 1, name
+    binding.write_text(text.replace("#ifndef NO_CONTRIB", "#if 1 // GroupLab: built on Android without the other contrib modules", 1))
 PY
 
 cmake -S opencvsharp/src -B opencvsharp-build -Wno-dev \

@@ -121,7 +121,9 @@ public sealed class SpikeView : UserControl
         var images = new List<string>();
         foreach (string folder in new[] { "targets", "images" })
         {
-            foreach (string name in context.Assets!.List(folder) ?? [])
+            // The asset list for a folder also holds the system's own files of the same folder name (the Fold 7 listed clock_font.png
+            // among the images), so only the spike's own are taken: the sheets, and the published sample.
+            foreach (string name in (context.Assets!.List(folder) ?? []).Where(n => n.EndsWith(".gltd.json", StringComparison.Ordinal) || n.StartsWith("gl-", StringComparison.Ordinal)))
             {
                 string to = Path.Combine(folder == "targets" ? targets : cache, name);
                 if (!File.Exists(to))
