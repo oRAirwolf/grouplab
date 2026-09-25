@@ -24,6 +24,78 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 212: the older phones only when absolutely needed; the Fold 7 is the development phone
+
+**Status: actioned 2026-09-25, every section.** Request 30 is a note, not counted open. `docs/ANDROID.md` has the reference devices, the milestone before the first closed test, the rule for an unreproducible problem, and the Fold 7 batching rule; the working size is chosen on the Fold 7. for-alan.md says the Fold 7 and the PH-1 can be put away.
+
+**Read before entry 211, and let this override its section 3.** Alan, 2026-09-25: "we should keep the testing on the older phones to an
+absolute minimum because I dont want to keep switching phones around. Do the primary development on the Fold 7 and the other phones we will
+test with once it is absolutely needed."
+
+1. **Do not ask Alan to connect the Essential PH-1 or the Galaxy S20 now.** Entry 211 section 3 items 1 and 2 are withdrawn. If request 30
+   (the older phones) asks him to set them up now, rewrite it as a note of what the phones are and when they will be needed, not as
+   something to do; it should not count as open or urgent.
+2. **All development and routine testing runs on the Fold 7.** Choose the capped working resolution from the Fold 7's measurements and
+   entry 206's market figures, and use the emulator with limited cores and memory to estimate the floor.
+3. **The older phones come out at named milestones only**, each a single sitting that does everything needing them at once, and never for
+   one small check:
+   - **Once before the first Play closed testing release:** the PH-1 (Android 10, the floor) and the S20 (Android 13). Install, start,
+     run detection at the chosen working size, time and peak memory, the capture screen once. This is also where Android 10 is confirmed or
+     the minimum is revisited.
+   - Otherwise only if a problem is reported that cannot be reproduced on the Fold 7 or the emulator.
+   Write these milestones in `docs/ANDROID.md` so they are not forgotten or expanded.
+4. **Keep entry 211's record of the phones** (models, Android versions, memory) in `docs/ANDROID.md` as the reference devices for those
+   milestones, and entry 211 section 1 (request 29's answers) stands.
+5. **For the Fold 7 too, batch.** When a stage needs the phone, gather everything that needs it into one sitting and tell Alan in advance
+   through for-alan.md, as entry 209 did, so he connects it once rather than repeatedly.
+
+---
+
+## 2026-09-25, entry 211: request 29 done; Alan's older phones become the test devices
+
+**Status: actioned 2026-09-25 as entry 212 narrowed it.** Request 29 closed; stage B is possible through Google Drive, OneDrive unknown; the phones are recorded as reference devices. The PH-1 was found connected: its model, Android 10 and 4 GB were read from it and nothing was installed or run. **Section 3 items 1 and 2 were withdrawn by entry 212**, not done.
+
+## 1. Request 29, answered 2026-09-25
+
+1. Folded, upside down: **turned.**
+2. Unfolded, upside down: **turned.**
+3. The folder picker: **Google Drive is listed, and Alan could choose a folder once he drilled down into his Drive.** He did not mention
+   OneDrive; it may not be installed on the Fold 7. So `docs/ANDROID.md` section 8 stage B, the sync folder, is possible on Android through
+   Google Drive. Record it, with OneDrive unknown. Whether writes into that folder sync reliably and what happens with an edit on both sides
+   is the next question for stage B, when the app has sessions to move; not now.
+
+Close request 29. **The Fold 7 is no longer needed for now**; say so in for-alan.md so Alan can turn Wireless debugging off.
+
+## 2. Alan's other test phones
+
+Entry 207 said Alan's older phones replace the Galaxy A16 and A06 classes as the low end references. What he has:
+
+1. **Essential PH-1**, on **Android 10**, turns on. As the planning session understands it: Snapdragon 835 from 2017 and 4 GB of memory,
+   and Android 10 was its last update. Confirm from the phone itself. If so it is exactly the floor: the approved minimum Android, the
+   approved minimum memory, and a processor in the same class as the budget phones (entry 206). **It is the device that decides whether
+   Android 10 can stay GroupLab's minimum** despite .NET 10 listing Android 14 (entry 207 section 2).
+2. **Samsung Galaxy S20 5G**, 8 GB and 128 GB, **Android 13** with One UI 5.1. A middle reference: Android below 14, a 2020 flagship
+   processor, 8 GB.
+3. **A OnePlus**, model not yet known, which needs charging before it turns on. Alan will send its model and Android version later.
+
+## 3. What to do
+
+1. A request in for-alan.md, at the top, to get the PH-1 and the S20 onto adb in one sitting. **Android 10 has no Wireless debugging
+   pairing**, so the PH-1 needs a USB cable (and possibly Google's USB driver on Windows; say if so, with the exact step). The S20 on Android
+   13 can pair wirelessly like the Fold 7. Write the Developer options steps for each phone's own menus, and what `adb devices -l` should
+   show.
+2. When they are connected, in one sitting as entry 209 did, so the phones are not left waiting:
+   - install the spike on both and confirm it starts on Android 10 and 13, which answers the .NET support question;
+   - the working resolution runs of entry 209 on both, with time and peak memory, so the capped resolution is chosen against the PH-1 and not
+     the Fold 7; say whether the 8 MP working size meets the approved budget (peak under about 400 MB, detection about 30 s on the floor
+     device) on the PH-1;
+   - the camera listing on both;
+   - then say plainly that the phones can be put away.
+3. Record all three phones in `docs/ANDROID.md` as the reference devices, with their measured results beside the Fold 7's, and replace the
+   A16 and A06 classes as the targets with the S20 and the PH-1, keeping the market figures of entry 206 as the reason.
+
+---
+
 ## 2026-09-25, entry 210: the composite plot, second pass: rings five times thicker and darker, and a whole target view
 
 **Status: actioned 2026-09-25, every section.** The rings' width is in page units, 0.05 in, about 19 pixels on the sample's group view, held between 4 and 40 pixels; they are a solid mid grey in both themes. Group and Whole target beside the plot, remembered, and in Compare; wheel, touchpad and touch pinch zoom, a drag on empty paper pans, a double click fits again. The saved report keeps the whole target, because its page cannot clip a ring at a group framing, and its caption says so. Pictures: `docs/figures/composite-plot-210-*`.

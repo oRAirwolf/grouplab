@@ -59,6 +59,16 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entries 211 and 212: request 29, and the older phones held back
+
+**Request 29**: upside down turned on both of the Fold 7's screens, and the folder picker offered Google Drive, where a folder could be
+chosen; OneDrive was not seen. Stage B of the sync plan is possible through Drive; its reliability is for later.
+
+**The older phones** are the reference devices, used only at named milestones (entry 212): once before the first Play closed testing
+release, and for a problem the Fold 7 and the emulator cannot show. The Essential PH-1 was already connected; its model, Android 10 (API
+29), Snapdragon 835 and 4 GB were read from it and nothing else was done. The Galaxy S20 5G is Android 13 with 8 GB; a OnePlus is to come.
+The working size stays the Fold 7's 8 MP. `docs/ANDROID.md`, "The phones it is tested on".
+
 ## Entry 210: the composite plot's rings, and the whole target
 
 **The rings** are drawn `CompositePlot.BullRingInches` wide, 0.05 in on the page, so they stay in proportion as the view zooms: about 19

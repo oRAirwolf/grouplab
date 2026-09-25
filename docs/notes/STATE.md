@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 210.
+**Last rewritten:** 2026-09-25, after entries 211 and 212.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 210 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 212 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -51,8 +51,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **8** (29 most urgent, three minutes with the Fold 7; then 30, the older phones; 9, 16,
-  20, 18, 12, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **6** (9 most urgent; then 16, 20, 18, 12, and 21, optional). Request 30 is a note
+  of the older phones, used only at the milestones in `docs/ANDROID.md`.
 
 ## Open questions
 
@@ -81,7 +81,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 211, 212
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 

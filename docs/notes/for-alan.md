@@ -1,10 +1,11 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **29**, three minutes with the Fold 7, and then the phone is no longer needed. Then 30, 9, 16, 20,
-18, 12, which is optional, and 21, which is optional.
+**Open: 6.** Most urgent: **9**, the same scan marked by hand twice. Then 16, 20, 18, 12, which is optional, and 21, which is
+optional.
 
-**After request 29's three steps the phone is no longer needed; Wireless debugging can be turned off and the screen timeout put
-back.** Nothing else is running on it.
+**The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
+Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
+first, in one request (entry 212).
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -20,24 +21,19 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
-## 30. Your older test phones: what they are
+## 30. Your older test phones: a note, nothing to do
 
-**Opened 2026-09-25. Entry 207 section 1.2.** No Galaxy A16 is to be bought, so your older phones become the slow end GroupLab is held
-to: detection in about 10 seconds on the ordinary low end, 30 on the slowest.
-
-**For each phone, one line:** its model (Settings, About phone, Model name or Model number), its Android version (Settings, About phone,
-Software information), and whether it still charges and starts. Nothing needs connecting yet.
-
-**Why.** The oldest one decides whether Android 10 to 13 really work, since .NET itself only answers for 14 and later, and the slowest one
-is where the 30 second limit is checked. When they are chosen, each is paired the way the Fold 7 was.
-
-**A good answer.** For example: "Galaxy S9, Android 10, charges and boots; Moto G7, Android 11, battery dead."
+**Opened 2026-09-25. Entry 207. Answered 2026-09-25**, entries 211 and 212, and kept as a note of what the phones are and when they are
+needed; nothing is asked now. The **Essential PH-1**, Android 10, Snapdragon 835, 4 GB, read from the phone itself; the **Galaxy S20 5G**,
+Android 13, 8 GB; and a **OnePlus**, model to come when it is charged. They come out only at the milestones in `docs/ANDROID.md`: once
+before the first Play closed testing release, in one sitting, and otherwise only for a problem the Fold 7 and the emulator cannot show.
 
 ---
 
 ## 29. The Fold 7: three steps, then put it away
 
-**Opened 2026-09-25. Entry 209.** Everything that could be run over adb is done (entry 209: the resolutions, the cameras, the start up).
+**Opened 2026-09-25. Entry 209. Answered 2026-09-25**, entry 211: both screens turned upside down, and Google Drive offered a
+folder in the picker. Everything that could be run over adb is done (entry 209: the resolutions, the cameras, the start up).
 These three need your hands. GroupLab spike is already installed and its screen shows a **Screen** list, a **Run detection** button and a
 **Choose a folder** button.
 

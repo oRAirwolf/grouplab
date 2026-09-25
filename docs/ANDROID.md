@@ -141,6 +141,31 @@ spike was built for API 24 and runs, and the application is built for API 29. So
 oldest phone Alan finds (request 30), not on Microsoft's. Android 14 and later alone would be about 55 percent of the Android phones in
 use, which is why GroupLab does not simply follow .NET's list.
 
+## The phones it is tested on (entries 211 and 212)
+
+**All development and routine testing runs on the Fold 7.** Alan's older phones replace the Galaxy A16 and A06 classes of entry 206 as the
+low end references; the market figures below stay as the reason for the budget. They are brought out only at named milestones, each one
+sitting that does everything needing them at once, never for one small check:
+
+- **Once before the first Play closed testing release:** the PH-1 and the S20. Install, start, detection at the chosen working size with
+  its time and peak memory, and the capture screen once. **This is where Android 10 is confirmed as the minimum** (.NET 10 answers only
+  for 14 and later, section 6) or the minimum is revisited.
+- **Otherwise only** for a reported problem that cannot be reproduced on the Fold 7 or the emulator.
+
+**The Fold 7 is batched too**: when a stage needs it, everything needing it is gathered into one sitting and put to Alan in advance in
+`docs/notes/for-alan.md`, as entry 209 did.
+
+| Phone | Android | Processor and memory | Role |
+|---|---|---|---|
+| Galaxy Z Fold 7, SM-F966U1 | 16 | Snapdragon 8 Elite | development, every day; measured in section 5 |
+| Galaxy S20 5G | 13 | 8 GB, 128 GB | the middle reference, below Android 14 |
+| Essential PH-1 | 10 (API 29), its last update | Snapdragon 835 (msm8998), 4 GB, read from the phone on 2026-09-25 | the floor: the minimum Android and memory, a processor in the budget phones' class |
+| OnePlus, model to come | not known yet | not known yet | to be placed when it is charged |
+
+**The working size is chosen on the Fold 7**: 8 MP, 300 dpi for a Letter sheet, at 373 MB and 3.3 s there (section 5). Scaled by the
+Geekbench figures below, that is roughly 25 s on the floor's class, inside the 30 s the budget allows; the emulator with limited cores and
+memory is the next estimate, and the PH-1 at the milestone is the measurement.
+
 ## The phones it must run on
 
 Entry 206, the planning session's study of 2026-09-25, in the spirit of the Steam hardware survey; approved by Alan in entry 207. **Where a
@@ -179,9 +204,9 @@ live; its formula is not published, and an application over it is ended.
 3. **Speed** (judgment): detection within about 10 s on a Galaxy A16 class phone and about 30 s on an A06 class, with progress and a
    cancel; the capture screen's live checks at 10 frames a second or better on the A06 class. The Fold 7 takes 3.3 s at 8 MP; scaled by
    the Geekbench figures that is roughly 10 to 17 s on the A16 class and 25 s or more on the A06 class, which is only an estimate until
-   it is run on a slower phone. **No Galaxy A16 will be bought**: Alan's older test phones become the low end reference devices when he
-   sends their models (request 30), and until then the Android emulator with limited cores and memory stands in, as a rough guide only,
-   since it runs on the desktop's processor.
+   it is run on a slower phone. **No Galaxy A16 will be bought**: the S20 and the PH-1 are the references (above), measured at the
+   milestone before the first closed test; the Android emulator with limited cores and memory stands in until then, as a rough guide
+   only, since it runs on the desktop's processor.
 4. **A rear camera of at least 8 MP with autofocus**, refused with the reason otherwise.
 5. **The installed application under about 100 MB**; a warning when free space falls under about 500 MB.
 6. **Screens down to 360 dp wide.**
@@ -243,8 +268,9 @@ today's rule on every route: no GPS, location or time metadata is read, printed,
    phone sends the session, photograph included, over the local network, and only something holding the key is accepted. Windows asks
    once whether GroupLab may take connections on private networks; the application says why before that prompt appears. On different
    networks, or a range network that keeps devices apart, it says so and offers the file route.
-4. **Stage B, a sync folder: doubtful on Android, being tried on the Fold 7** (request 29 step 3: the spike's Choose a folder button
-   opens the picker, and the log records only which provider a chosen folder came from). Picking a folder on Android uses the
+4. **Stage B, a sync folder: possible through Google Drive** (request 29, entry 211): in the spike's folder picker on the Fold 7, Google
+   Drive is listed and a folder in it can be chosen once opened. OneDrive is unknown; it may not be installed on the phone. Whether
+   writes there sync reliably, and what an edit on both sides does, is the next question for this stage, when there are sessions to move. Picking a folder on Android uses the
    Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I
    know, not whole folders. If that holds, Stage B works on the desktop side only. Their conflict handling is also their own: an edit
    made offline on both sides comes back as two files, which the revision rule above would at least catch.

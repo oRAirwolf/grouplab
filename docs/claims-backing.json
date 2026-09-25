@@ -1836,6 +1836,38 @@
   "Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both.": {
    "kind": "code",
    "where": "src/GroupLab.App/CompositePlot.cs WholeTarget, ZoomAbout, ResetView and the pointer handlers; MainWindow.cs groupView and wholeView; tests/GroupLab.App.Tests/Entry210Tests.cs"
+  },
+  "## The phones it is tested on (entries 211 and 212) **All development and routine testing runs on the Fold 7.** Alan's older phones replace the Galaxy A16 and A06 classes of entry 206 as the low end references; the market figures below stay as the reason for the budget.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "They are brought out only at named milestones, each one sitting that does everything needing them at once, never for one small check: - **Once before the first Play closed testing release:** the PH-1 and the S20.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "**This is where Android 10 is confirmed as the minimum** (.NET 10 answers only for 14 and later, section 6) or the minimum is revisited.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "- **Otherwise only** for a reported problem that cannot be reproduced on the Fold 7 or the emulator.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "**The Fold 7 is batched too**: when a stage needs it, everything needing it is gathered into one sitting and put to Alan in advance in `docs/notes/for-alan.md`, as entry 209 did.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "Scaled by the Geekbench figures below, that is roughly 25 s on the floor's class, inside the 30 s the budget allows; the emulator with limited cores and memory is the next estimate, and the PH-1 at the milestone is the measurement.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 211 (request 29's answers; the PH-1 read over adb on 2026-09-25) and docs/PHASE1-RESULTS.md entry 209"
+  },
+  "**No Galaxy A16 will be bought**: the S20 and the PH-1 are the references (above), measured at the milestone before the first closed test; the Android emulator with limited cores and memory stands in until then, as a rough guide only, since it runs on the desktop's processor.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 211 and 212"
+  },
+  "**Stage B, a sync folder: possible through Google Drive** (request 29, entry 211): in the spike's folder picker on the Fold 7, Google Drive is listed and a folder in it can be chosen once opened.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 211 (request 29's answers; the PH-1 read over adb on 2026-09-25) and docs/PHASE1-RESULTS.md entry 209"
   }
  },
  "rules": [
