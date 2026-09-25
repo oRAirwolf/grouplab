@@ -87,6 +87,12 @@ MAX_BYTES = 30 * 1024 * 1024
 # being killed. What cannot be finished goes to refused, with its reason, after MAX_ATTEMPTS.
 REFUSED_DAYS = 7
 
+# NOTES-FROM-PLANNING.md entries 215 and 216: nothing stays on the server longer than it is needed, and no folder grows without bound.
+# A folder in ready is removed by Alan's pull once it is verified and archived; one that nobody pulls is deleted after sixty days
+# regardless, with the reason in the log. Sixty rather than fewer, because deleting a submission before it has been pulled loses it; each
+# pull clears ready of everything it has verified and archived, so this is for a pull that has not happened in two months.
+READY_DAYS = 60
+
 # The camera facts GroupLab measures with, and nothing else.
 #
 # **This list is not the authority.** `ImageScrubber.KeptFieldNames` in the application is, and
@@ -538,12 +544,16 @@ def one(folder: Path, tool: str | None) -> tuple[bool, str]:
 
 
 def sweep() -> None:
-    """Refused folders go after seven days. Nothing in quarantine is ever deleted for age: entry 176 section 9.3."""
+    """
+    Refused folders go after seven days, and ready ones nobody has pulled after sixty (entry 216). Nothing in quarantine is ever deleted
+    for age: entry 176 section 9.3; a folder leaves it within MAX_ATTEMPTS runs, to ready or to refused.
+    """
     now = time.time()
-    for folder in REFUSED.iterdir() if REFUSED.is_dir() else []:
-        if folder.is_dir() and now - folder.stat().st_mtime > REFUSED_DAYS * 86400:
-            shutil.rmtree(folder, ignore_errors=True)
-            log(f"{folder.name}: deleted from refused after {REFUSED_DAYS} days")
+    for place, days, why in ((REFUSED, REFUSED_DAYS, "from refused"), (READY, READY_DAYS, "from ready, never pulled,")):
+        for folder in place.iterdir() if place.is_dir() else []:
+            if folder.is_dir() and now - folder.stat().st_mtime > days * 86400:
+                shutil.rmtree(folder, ignore_errors=True)
+                log(f"{folder.name}: deleted {why} after {days} days")
 
 
 def main() -> int:
@@ -557,6 +567,7 @@ def main() -> int:
 
     if not QUARANTINE.is_dir():
         log("nothing to do: there is no quarantine folder yet")
+        sweep()
         return 0
 
     waiting = sorted(p for p in QUARANTINE.iterdir() if p.is_dir())

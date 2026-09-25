@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 6.** Most urgent: **9**, the same scan marked by hand twice. Then 16, 20, 18, 12, which is optional, and 21, which is
-optional.
+**Open: 7.** Most urgent: **31**, one sitting that takes other people's photographs off the web server. Then 9, 16, 20, 18,
+32, which is optional, and 21, which is optional.
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
 Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
@@ -18,6 +18,59 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 32. The only copy of the submissions on this machine: a backup, your decision
+
+**Opened 2026-09-25. Entry 215 section 4. Optional; nothing waits on it.** Once request 31 has run, the server no longer holds any
+submission. What remains is `C:\Dev\grouplab-submissions` on this machine and the private archive on GitHub. The folder here is
+outside the repository and, as far as anyone here knows, outside any sync.
+
+**A suggestion, nothing more:** keep a second copy of that one folder somewhere that is not this disk, for example an external drive
+copied to now and then, or the folder added to whatever backup this machine already has. I have set nothing up and will not.
+
+**A good answer.** "Backed up to ..." or "the archive is enough". Either closes this.
+
+---
+
+## 31. Take other people's photographs off the web server: one sitting, about fifteen minutes
+
+**Opened 2026-09-25. Entries 215 to 218. It replaces request 12. The planning session checks these commands before you run them**
+(entry 218); the archive is confirmed private. Photographs people sent sit on the server until you remove them by
+hand, which entry 129 said should never happen. The pull now removes each submission from the server itself, but only after it has
+checked it here, put it in the private archive (`grouplab-submissions-archive`, which you have created), downloaded it back and
+compared it. This sitting installs the matching server side and runs that pull once on both servers' folders, which clears the backlog.
+
+**1. In the server's shell**, after copying `website/server/grouplab-intake-worker.py`, `website/server/grouplab-error-worker.py` and
+`website/server/install.py` from the repository to `/home/ubuntu/grouplab-server/`. The workers now also delete, by themselves, a
+refused upload after 7 days, one nobody pulls after 60, an error report that cannot be sent after 30, and a set-aside file after 7:
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --intake --dry-run
+sudo python3 install.py --intake
+sudo python3 install.py --errors --dry-run
+sudo python3 install.py --errors
+```
+
+**2. In PowerShell on this machine**, a dry run of each first, which lists and changes nothing, then the real runs. The first is
+grouplab.org, the second the old pissinhot.com folder:
+
+```powershell
+cd C:\Dev\grouplab\scripts
+.\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -WhatIf
+.\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready
+.\Get-TargetSubmissions.ps1 -WhatIf
+.\Get-TargetSubmissions.ps1
+```
+
+**A good result.** Each real run ends with a line per folder, `archived and removed from the server`, then `N removed from the server;
+0 kept there.`, then the ledger line `wrote docs\notes\STORAGE.md ...`. A folder that is kept is listed with the reason, and nothing
+about it is lost: it stays on the server and here. Afterwards `.\Test-SubmissionsArchive.ps1` should end `... restored and verified,
+0 problem(s)`. Send those last lines.
+
+**Why now.** It is other people's photographs on a web server, kept longer than they were promised.
 
 ---
 
@@ -490,7 +543,8 @@ it in one listed command: 15,456 `grouplab-*` entries and 4,292 empty random fol
 
 ## 12. Remove the old pissinhot.com submissions from that server, when you choose
 
-**Opened 2026-09-24. Entry 178 section 4. Waiting, optional, and it needs PowerShell on this machine.**
+**Opened 2026-09-24. Entry 178 section 4. Answered 2026-09-25 by being replaced**: entry 215 made the pull remove what it has
+verified and archived, and request 31 is the one sitting that clears the backlog this asked for. Kept for the record.
 
 **What is needed.** Your entry 129 decision is that the server keeps nothing once it has been read. The 18 old submissions are still on
 pissinhot.com. In PowerShell:

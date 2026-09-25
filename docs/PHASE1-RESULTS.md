@@ -59,6 +59,33 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entries 215 to 218: nothing kept on the server, a private archive, and a ledger of GitHub
+
+**The pull** (`scripts/Get-TargetSubmissions.ps1`) now, for every submission still on the server whose copy here verifies, backlog
+included: zips it into the private archive's release for its month (`scripts/SubmissionArchive.ps1`), downloads it back and compares
+the SHA-256, rewrites that month's `manifest.json` (name, size, SHA-256, consent level), and only then removes the folder from the
+server with `sudo rm`, one line a folder. A folder that does not verify, or that the archive does not prove, stays and is listed.
+`-KeepOnServer` removes nothing; `-NoArchive` removes after the local check alone. Tested end to end against the real archive with a
+synthetic submission dated 1999, uploaded, proven, recognised on a second run, and the release deleted. `SubmissionScriptsTests` holds
+the order. `scripts/Test-SubmissionsArchive.ps1` restores and checks everything in the archive; on the empty archive it reports none.
+
+**On the server** the workers now bound every folder: intake refused 7 days and ready 60 (quarantine by attempts, entry 176); error
+reports unsent 30 days and set aside 7. `tests/python/error-worker-tests.py` has three new checks (23 in all); `WorkerLimitTests`
+holds the numbers. The upload page no longer says submissions wait until read: it says when they leave, where the copies are, and links
+to "Where it is kept, and for how long" in `what-grouplab-sends`, the one place the rules are written.
+
+**The ledger** (`scripts/storage-ledger.py`, `docs/notes/STORAGE.md`, budgets in `docs/notes/storage-budgets.json`): GitHub held about
+152 GB for the project, of which 140 GB was Actions artifacts, 1,990 of them, mostly per-push Windows and Linux packages kept 30 days.
+The packaging workflow's now keep one day, which is all the nightly needs, and CI's three; `--free` deleted about 65 GB older than
+three days, oldest first. About 75 GB remains, all from the last three days' pushes and uploaded under the old thirty day retention, so
+it stays over budget until later runs of the ledger free it as it ages; new uploads expire in one to three days by themselves. The releases hold 11.6 GB against 20; the archive is empty; the rest is small.
+
+**Entry 218**: the archive confirmed private with Alan's login (`visibility` PRIVATE), and its README replaced with one saying what it
+is, that it is never made public, and that the ledger tracks it.
+
+**Waiting on Alan**: request 31, the workers installed and one pull on each server's folder, which clears the backlog; request 32, a
+backup of the local copy, his decision.
+
 ## Entries 213 and 214: the key off the plot, the rings further back
 
 **The key** (`CompositePlot.KeyLayout`): beside the plot or below it, whichever leaves the plot the larger square, and a small Key button

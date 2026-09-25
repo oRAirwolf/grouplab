@@ -300,7 +300,8 @@ jobs:
           path: |
             out/package/*.zip
             out/package/*.exe
-          retention-days: 30
+          # Entry 217 section 3.1: build output is kept for days, not a month; 140 GB of it had piled up at 30 days.
+          retention-days: 3
 
   website:
     if: "!startsWith(github.event.head_commit.message, '[notes] ') && !startsWith(github.event.head_commit.message, '[screens] ')"
@@ -429,4 +430,5 @@ jobs:
         with:
           name: grouplab-linux-x64
           path: grouplab-linux-x64.tar.gz
-          retention-days: 30
+          # Entry 217 section 3.1: build output is kept for days, not a month; 140 GB of it had piled up at 30 days.
+          retention-days: 3

@@ -29,6 +29,19 @@
     permissions are, and avoids keeping a second copy on a server whose disk is
     capped. See NOTES at the bottom for making it unattended.
 
+    WHAT HAPPENS TO THE SERVER'S COPY (NOTES-FROM-PLANNING.md entries 215 to 217)
+    Nothing stays on the server longer than it is needed. Once a submission's
+    checksums match here, it is zipped into the private archive's release for
+    its month, downloaded back and compared by SHA-256, and only then removed
+    from the server, in the same run, one line per folder. So there are always
+    two copies before the server's goes. Any submission already here that is
+    still on the server is handled the same way, which clears a backlog on the
+    first run. A folder whose checksums do not match, or that the archive does
+    not prove, stays on the server and is reported. -KeepOnServer removes
+    nothing; -NoArchive removes after the local check alone, one copy only, for
+    when the archive cannot be used and Alan has decided that is acceptable.
+    Crash reports are pulled as before and left alone.
+
     WHAT IT VERIFIES
     Every submission carries a meta.json with a SHA-256 per file, written when
     the upload arrived. After extracting, this script recomputes those hashes
@@ -46,6 +59,10 @@
 .EXAMPLE
     .\Get-TargetSubmissions.ps1 -VerifyAll
     Re-checks the hashes of everything already local, not just the new arrivals.
+
+.EXAMPLE
+    .\Get-TargetSubmissions.ps1 -KeepOnServer
+    Pulls and archives as usual and removes nothing from the server.
 
 .EXAMPLE
     .\Get-TargetSubmissions.ps1 -CrashReports
@@ -71,12 +88,22 @@ param(
     [switch] $CrashReports,
 
     # Re-verify everything already on disk, not just the new arrivals.
-    [switch] $VerifyAll
+    [switch] $VerifyAll,
+
+    # Entries 215 to 217: keep the server's copy this run, whatever else happens.
+    [switch] $KeepOnServer,
+
+    # Remove from the server after the local check alone, without the archive. One copy only: use it knowingly.
+    [switch] $NoArchive,
+
+    # The private archive, created by Alan; never made public.
+    [string] $ArchiveRepo = 'oRAirwolf/grouplab-submissions-archive'
 )
 
 $ErrorActionPreference = 'Stop'
 
 . (Join-Path $PSScriptRoot 'SubmissionCheck.ps1')
+. (Join-Path $PSScriptRoot 'SubmissionArchive.ps1')
 
 # ------------------------------------------------------------------- mode --
 if ($CrashReports) {
@@ -299,8 +326,7 @@ $new   = @($remote | Where-Object { $local -notcontains $_ })
 Write-Host ("{0} on the server, {1} already here, {2} new." -f $remote.Count, ($remote.Count - $new.Count), $new.Count)
 
 if ($new.Count -eq 0 -and -not $VerifyAll) {
-    Write-Host "Nothing to do." -ForegroundColor Green
-    return
+    Write-Host "Nothing new to pull." -ForegroundColor Green
 }
 
 # ------------------------------------------------------------------- pull it --
@@ -416,6 +442,43 @@ foreach ($dir in $toCheck) {
         if ($m.PSObject.Properties.Name -contains 'notScanned') { $notScanned += [int]$m.notScanned }
     }
 }
+# ----------------------------------------------- archive, then leave the server --
+# Entries 215 to 217: every submission still on the server whose copy here verifies is archived, proven there, and removed from the
+# server, in that order, so two copies always exist before the server's goes. The backlog is simply the first run of this.
+if (-not $CrashReports -and -not $KeepOnServer) {
+    $archiveReady = if ($NoArchive) { $true } else { Test-ArchiveRepository -Repo $ArchiveRepo }
+    if ($archiveReady -ne $true) {
+        Write-Host ""
+        Write-Host "Nothing removed from the server: $archiveReady." -ForegroundColor Yellow
+    } else {
+        $gone = 0; $kept = @()
+        foreach ($dir in @($remote | Where-Object { Test-Path (Join-Path $LocalRoot $_) })) {
+            if ($dir -notmatch '^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$') { $kept += "$dir : not a submission folder name"; continue }
+            $r = Test-SubmissionFolder -Folder (Join-Path $LocalRoot $dir)
+            if (@($r.Bad).Count) { $kept += "$dir : its checksums here do not match, so the server's copy stays"; continue }
+            if (-not $NoArchive) {
+                if (-not $PSCmdlet.ShouldProcess($dir, 'put in the private archive')) { continue }
+                if (-not (Add-ToArchive -Folder (Join-Path $LocalRoot $dir) -Repo $ArchiveRepo)) { $kept += "$dir : the archive did not prove it holds it, so the server's copy stays"; continue }
+            }
+            if (-not $PSCmdlet.ShouldProcess($dir, 'remove from the server')) { continue }
+            try {
+                Invoke-Remote "sudo rm -rf -- '$RemoteRoot/$dir'" | Out-Null
+                $gone++
+                Write-Host ("  {0}: {1}removed from the server" -f $dir, $(if ($NoArchive) { '' } else { 'archived and ' })) -ForegroundColor Green
+            }
+            catch { $kept += "$dir : the server did not remove it: $_" }
+        }
+        Write-Host ""
+        Write-Host "$gone removed from the server; $(@($kept).Count) kept there." -ForegroundColor Cyan
+        $kept | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
+    }
+}
+
+# Entry 217 section 2: the ledger of what is stored on GitHub, rewritten by every pull.
+if (-not $CrashReports -and (Get-Command python -ErrorAction SilentlyContinue)) {
+    & python (Join-Path $PSScriptRoot 'storage-ledger.py') | ForEach-Object { Write-Host "  $_" }
+}
+
 if ($notScanned -gt 0) {
     Write-Host ""
     Write-Host "The scanner did not run on $notScanned file(s). They were rebuilt from their pixels, but ClamAV on the server is not working: read the worker's journal." -ForegroundColor Red

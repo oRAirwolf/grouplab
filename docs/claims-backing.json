@@ -1872,6 +1872,10 @@
   "- **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger square, and a small Key button in its own strip where neither fits.": {
    "kind": "code",
    "where": "src/GroupLab.App/CompositePlot.cs KeyLayout; tests/GroupLab.App.Tests/Entry213Tests.cs; NOTES-FROM-PLANNING.md entry 213 (the OnePlus 6T)"
+  },
+  "**How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never longer than thirty days whatever happens; the aggregate keeps counts, not records.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 215 and 216; docs/SURVEY.md, to be built with the survey"
   }
  },
  "rules": [

@@ -42,4 +42,28 @@ public class SubmissionScriptsTests
         Assert.Contains("[string[]]$Only", remove, StringComparison.Ordinal);
         Assert.DoesNotContain("[string[]]$Id", remove, StringComparison.OrdinalIgnoreCase);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 215 to 217: the pull removes a submission from the server only after its copy here verifies and the
+    /// private archive has proven, by downloading it back, that it holds it; and only a folder named as a submission is ever removed.
+    /// </summary>
+    [Fact]
+    public void ThePullRemovesFromTheServerOnlyWhatTheArchiveHasProven()
+    {
+        string pull = Script("Get-TargetSubmissions.ps1");
+        int verify = pull.IndexOf("$r = Test-SubmissionFolder -Folder (Join-Path $LocalRoot $dir)", StringComparison.Ordinal);
+        int archive = pull.IndexOf("Add-ToArchive -Folder", StringComparison.Ordinal);
+        int remove = pull.IndexOf("sudo rm -rf -- '$RemoteRoot/$dir'", StringComparison.Ordinal);
+        Assert.True(verify > 0 && archive > verify && remove > archive, "the pull must check here, then archive, then remove, in that order");
+        Assert.Contains("if ($dir -notmatch '^\\d{4}-\\d{2}-\\d{2}_[0-9a-f]{8}$')", pull, StringComparison.Ordinal);
+        Assert.Contains("[switch] $KeepOnServer", pull, StringComparison.Ordinal);
+        Assert.Contains("[switch] $NoArchive", pull, StringComparison.Ordinal);
+        Assert.Contains(". (Join-Path $PSScriptRoot 'SubmissionArchive.ps1')", pull, StringComparison.Ordinal);
+
+        string archiveScript = Script("SubmissionArchive.ps1");
+        Assert.Contains("gh release download $tag -R $Repo -p $asset", archiveScript, StringComparison.Ordinal);
+        Assert.Contains("isPrivate", archiveScript, StringComparison.Ordinal);
+        Assert.DoesNotContain("git lfs", archiveScript, StringComparison.Ordinal);
+        Assert.Contains("Test-SubmissionFolder -Folder $unpacked", Script("Test-SubmissionsArchive.ps1"), StringComparison.Ordinal);
+    }
 }

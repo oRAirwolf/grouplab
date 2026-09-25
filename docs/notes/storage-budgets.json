@@ -1,0 +1,33 @@
+{
+  "why": "NOTES-FROM-PLANNING.md entry 217 section 3. GitHub caps none of these for release assets, but the project keeps itself to a budget so it stays a reasonable use of a free service. Alan changes a number here and nowhere else.",
+  "budgets": {
+    "grouplab releases, the builds": {
+      "gigabytes": 20,
+      "why": "about thirty nightlies of five packages near 470 MB each, which the thirty release rule already keeps to, with room for the stable releases"
+    },
+    "grouplab releases, test-data": {
+      "gigabytes": 2,
+      "why": "the large samples CI fetches; today two scans near 60 MB, so this is room for about thirty more"
+    },
+    "grouplab Actions artifacts": {
+      "gigabytes": 5,
+      "why": "build and test output kept for days, not months; retention is set short so this is rarely reached"
+    },
+    "grouplab Actions caches": {
+      "gigabytes": 10,
+      "why": "GitHub's own cap for one repository's caches, which it enforces by evicting the oldest"
+    },
+    "grouplab-crash-reports": {
+      "gigabytes": 1,
+      "why": "issues are text; a gigabyte is far more than a project this size writes"
+    },
+    "grouplab-submissions-archive releases": {
+      "gigabytes": 25,
+      "why": "submissions of 3 to 60 MB each, so between four hundred and eight thousand of them; entry 217's own example"
+    },
+    "grouplab-testdata": {
+      "gigabytes": 1,
+      "why": "the public test data repository; its large files live on the test-data release instead"
+    }
+  }
+}

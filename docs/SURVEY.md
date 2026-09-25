@@ -53,6 +53,10 @@ An aggregate page on grouplab.org: shares of operating systems and versions, mem
 class, with the date range and the number of reports. Never an individual record. Any group smaller than 10 reports is merged into
 "other", so no one machine can be picked out.
 
+**How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never
+longer than thirty days whatever happens; the aggregate keeps counts, not records. Like everything else people send, the rule is written
+where the site says what happens to what people send, the article `what-grouplab-sends`, when the survey is built.
+
 ## 6. Use
 
 Once there are 200 reports from one platform, the minimums in `docs/PLATFORM-SUPPORT.md` are reviewed against it, and `docs/notes/STATE.md`

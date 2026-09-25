@@ -45,6 +45,12 @@ TOKEN_FILE = Path(os.environ["CREDENTIALS_DIRECTORY"]) / "github-token" if "CRED
     else Path(os.environ.get("GROUPLAB_ERRORS_TOKEN_FILE", "/nonexistent"))
 
 MOST_A_RUN = 100
+
+# NOTES-FROM-PLANNING.md entries 215 and 216: a report leaves incoming the moment its issue is opened or updated. One that cannot be sent,
+# because no token is set or GitHub refuses it, is deleted after thirty days regardless, and anything set aside as not a report after
+# seven, each with its name in the log, so no folder here grows without bound.
+INCOMING_DAYS = 30
+REFUSED_DAYS = 7
 WARN_DAYS = 14
 FENCE = "~~~~"
 
@@ -236,7 +242,18 @@ def handle(report: dict, state: dict, token: str) -> dict:
     return headers
 
 
+def sweep() -> None:
+    """Incoming reports older than thirty days, and refused files older than seven, are deleted with their names in the log."""
+    now = time.time()
+    for place, days, what in ((INCOMING, INCOMING_DAYS, "never sent"), (REFUSED, REFUSED_DAYS, "set aside as not a report")):
+        for path in place.glob("*.json") if place.is_dir() else []:
+            if now - path.stat().st_mtime > days * 86400:
+                path.unlink(missing_ok=True)
+                log(f"{path.name}: deleted after {days} days, {what}")
+
+
 def main() -> int:
+    sweep()
     if not INCOMING.is_dir():
         log("nothing to do: there is no incoming folder yet")
         return 0

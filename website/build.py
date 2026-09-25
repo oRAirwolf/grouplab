@@ -821,7 +821,7 @@ def page_send() -> str:
 <ul>
 <li>They go straight into a holding area on the server that is not reachable from the web.</li>
 <li>Every photo is then <strong>rebuilt from its pixels</strong> and the file you sent is deleted. Your camera's make, model, lens, focal length, exposure and resolution are carried across, because the measurements need them. <strong>Location, GPS and the date and time are not, and cannot be</strong>, because the new file is built from pixels and a short list of numbers rather than copied.</li>
-<li>They are kept on the server until the developer has read them, then pulled onto one machine and <strong>deleted from the server</strong>.</li>
+<li>They are <strong>deleted from the server</strong> as soon as they have been checked and copied: onto the developer's own machine, and into the project's private archive hosted by GitHub, which is never made public. Anything refused is deleted within seven days, and nothing waits on the server longer than sixty. <a href="/research/what-grouplab-sends/">Where each thing is kept, and for how long</a>.</li>
 <li>If you tick the box below, they are used for testing only and never published.</li>
 </ul>
 </div>
@@ -2210,7 +2210,7 @@ def send_problems() -> list[str]:
             for level, words in limits()["consentTexts"].items():
                 if esc(words) not in text:
                     problems.append(f"targets/index.html: the {level} consent text is not the one in limits.json")
-            for words in ["rebuilt from its pixels", "Location, GPS and the date and time are not", "until the developer has read them", "deleted from the server"]:
+            for words in ["rebuilt from its pixels", "Location, GPS and the date and time are not", "as soon as they have been checked and copied", "deleted from the server", "private archive"]:
                 if words not in text:
                     problems.append(f"targets/index.html: does not say {words!r}")
         # Entry 174: PHP builds the per-file arrays the receiver reads only for a field whose name ends in [], so a file input named

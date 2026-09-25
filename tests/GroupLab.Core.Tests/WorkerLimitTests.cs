@@ -46,6 +46,26 @@ public class WorkerLimitTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 215 and 216: every folder a submission can wait in has a limit. Refused after seven days, ready after
+    /// sixty whether or not it was pulled, and quarantine by attempts alone, as above; the error reports' two folders likewise.
+    /// </summary>
+    [Fact]
+    public void EveryHoldingFolderHasALimit()
+    {
+        string worker = Worker;
+        string sweep = worker[worker.IndexOf("def sweep()", StringComparison.Ordinal)..worker.IndexOf("def main()", StringComparison.Ordinal)];
+        Assert.Contains("READY", sweep, StringComparison.Ordinal);
+        Assert.Contains("REFUSED", sweep, StringComparison.Ordinal);
+        Assert.Equal(60L, Constant(worker, "READY_DAYS"));
+        Assert.Equal(7L, Constant(worker, "REFUSED_DAYS"));
+
+        string errors = File.ReadAllText(Repo.PathTo("website", "server", "grouplab-error-worker.py"));
+        Assert.Equal(30L, Constant(errors, "INCOMING_DAYS"));
+        Assert.Equal(7L, Constant(errors, "REFUSED_DAYS"));
+        Assert.Matches(@"def main\(\) -> int:\s+sweep\(\)", errors);
+    }
+
+    /// <summary>
     /// Sections 8 and 9.2: the daemon's client with an open file, never a path clamd cannot read, only Unix sockets, and a scanner that
     /// did not scan recorded per file for the pull script to count.
     /// </summary>

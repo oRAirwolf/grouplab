@@ -95,7 +95,8 @@ jobs:
           path: |
             out/package/*.zip
             out/package/*.exe
-          retention-days: 30
+          # Entry 217 section 3.1: the nightly downloads these within its own run, so a day is enough.
+          retention-days: 1
 
   # NOTES-FROM-PLANNING.md entry 147 section 3.1: the build list lives here, as a list, so adding a target really is a line.
   #
@@ -184,4 +185,5 @@ jobs:
         with:
           name: ${{ matrix.target.label }}-package
           path: out/package/*.tar.gz
-          retention-days: 30
+          # Entry 217 section 3.1: the nightly downloads these within its own run, so a day is enough.
+          retention-days: 1

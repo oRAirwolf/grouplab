@@ -24,6 +24,169 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 218: the archive repository exists
+
+**Status: actioned 2026-09-25, every part.** `gh repo view ... --json visibility` says PRIVATE. The README Alan's creation left is replaced with one saying what the repository is, that it is never made public, and that `docs/notes/STORAGE.md` tracks it. Entries 216 and 217 were built in full the same run; the first real pull with the backlog is request 31, for the planning session to check first.
+
+Alan created `oRAirwolf/grouplab-submissions-archive` on 2026-09-25, private, with a README. From outside, without signing in, its address
+answers 404, which is what a private repository looks like to strangers. Before the first upload, confirm with Alan's gh login that it is
+private (`gh repo view oRAirwolf/grouplab-submissions-archive --json visibility` says PRIVATE); if it is not, stop and say so in
+for-alan.md before anything is sent to it.
+
+Entries 216 and 217 can now be built in full: the monthly release per batch with one zip asset per submission and a manifest, the
+verify, upload, verify, then remove order, and the ledger and budgets. Replace the README Alan's creation left with one saying what the
+repository is, that it is never made public, and that `docs/notes/STORAGE.md` in the main repository tracks it. The first pull that uses it,
+with the backlog of entry 215 section 2, is one request for Alan, dry run first, and the planning session checks its commands before he
+runs them.
+
+---
+
+## 2026-09-25, entry 217: track everything stored on GitHub, and free space by deleting the oldest when needed
+
+**Status: actioned 2026-09-25, except freeing categories 2 to 4.** The archive is one release a month with a zip a submission and a manifest, tested end to end with a synthetic submission that was then deleted. `scripts/storage-ledger.py` writes `docs/notes/STORAGE.md`; budgets are in `docs/notes/storage-budgets.json`. It found 140 GB of Actions artifacts against a 5 GB budget; package artifacts now keep 1 to 3 days instead of 30, and `--free` deleted the old ones, oldest first. **Not done**: automatic freeing of old builds, unused test-data files and old archived submissions; none is near its budget, and the ledger shows each. The ledger runs from the pull and from this session, not from the nightly, whose token cannot read the private repositories.
+
+Read with entry 216, which this changes in one important way. Alan, 2026-09-25: "We should keep track of what is being stored on github
+and delete old submissions, builds, or files as space is needed."
+
+## 1. Store the archive as release assets, not Git LFS
+
+The planning session checked GitHub's documentation after entry 216 and found a reason to change it:
+
+- **Git LFS space cannot be freed by deleting files.** GitHub: "To remove Git LFS objects from a repository, delete and recreate the
+  repository." Deleted LFS files keep counting against the 10 GiB. That defeats deleting old submissions as space is needed.
+- **Release assets can be deleted one by one, and are not metered.** GitHub: each asset under 2 GiB, up to 1000 assets a release, and
+  "There is no limit on the total size of a release, nor bandwidth usage."
+
+So, in the private `grouplab-submissions-archive` repository (still created by Alan):
+
+1. One release per month, for example `archive-2026-09`, created by the pull. Each submission is one asset: a zip of its folder exactly as
+   pulled (`meta.json`, consent, `DO-NOT-PUBLISH`, the image), named by the submission's folder name. Plus a `manifest.json` asset per
+   release listing every submission, its size, its SHA-256 and its consent level, rewritten when the release changes.
+2. The order of entry 216 section 2 stands: verify here, upload, verify the uploaded asset by its SHA-256 (download it back, or compare
+   GitHub's reported digest if it gives one), and only then remove the server copy.
+3. No Git LFS in the archive. The repository's own files are just a README saying what it is and that it is never made public.
+4. The release tags there are the archive repository's own and are not `v*`; the no `v*` tags rule is about the main repository.
+
+## 2. A ledger of everything on GitHub
+
+A script, run by the pull and by any run that publishes, that writes `docs/notes/STORAGE.md` (committed, no secrets, no submission contents
+beyond names, sizes and consent level) with, per repository:
+
+- **grouplab** (public): repository size; releases and their assets (the nightlies kept by the thirty release rule, the rolling `nightly`,
+  `test-data`); Actions artifacts and caches.
+- **grouplab-crash-reports** (private): issue count and repository size.
+- **grouplab-submissions-archive** (private): each month's release, its asset count and total size, and the total.
+- **grouplab-testdata** (public): repository size.
+
+It shows totals against a budget, and STATE.md carries one line with the grand total. The Actions storage and minutes that count against
+the account's free allowance for private repositories are listed with that allowance.
+
+## 3. Budgets, and what is deleted first when one is reached
+
+GitHub does not cap release storage, but the project keeps itself to a budget so it stays a reasonable use of a free service: propose one
+per category (for example the archive at 25 GB), say why, and let Alan change them in one place. When a category reaches its budget, the
+pull or the publishing run frees space by itself, oldest first, in this order, and records every deletion in `STORAGE.md` and the log:
+
+1. **Actions artifacts and caches** older than they need to be (set their retention short so this rarely happens).
+2. **Old builds:** the thirty release rule already keeps the nightlies in hand; nothing more unless the budget says so, and never the newest
+   nightly, the rolling `nightly`, or anything a stable release needs.
+3. **`test-data` assets no test or CI job references any more.** Never one a test uses.
+4. **Old submissions in the archive**, oldest month first, with these guards: only one whose copy in `C:\Dev\grouplab-submissions` still
+   verifies against the manifest's SHA-256 (so a copy remains), never one used as a fixture, in `test-data`, or referred to by a document or
+   article, and never one marked "may be published" that has not yet been reviewed for the public data set. A deletion is listed, with the
+   reason, in for-alan.md in plain words the same run ("removed 12 submissions from September 2026 to stay under the archive's 25 GB").
+   Alan decided this can happen without asking first.
+
+## 4. Order of work
+
+Build the ledger first (it needs nothing from Alan), then the archive once the repository exists, then the budgets. Entry 215's server
+retention rules and entry 216's privacy text stand.
+
+---
+
+## 2026-09-25, entry 216: nothing stays on the server; the long term copy goes to a private GitHub repository
+
+**Status: actioned 2026-09-25 as entry 217 changed it; the first real use waits on request 31.** Archive in `grouplab-submissions-archive`, which Alan had created: release assets, not Git LFS. Order: verified here, uploaded, downloaded back and compared, then removed from the server; `-NoArchive` is the switch. Quota is the ledger's budget. CI never downloads it. Privacy text added to the upload page and the article; judged not to change what anyone agreed to, since a private copy with the project is what sending to the project already meant, and the consent sentences are untouched. Restore check: `scripts/Test-SubmissionsArchive.ps1`.
+
+Read with entry 215, which this extends. Alan, 2026-09-25: "I want anything that is submitted to my pissinhot server to be deleted from it
+after being ingested or processed. I dont want anything left on there longer than is needed. Can submissions be backed up to github for
+long term storage?"
+
+## 1. Nothing left on the server longer than needed
+
+Entry 215 stands and this makes it firmer: every kind of thing people send (targets from the page and the application, error reports,
+survey reports) is removed from the server as soon as it has been processed and a verified copy exists elsewhere, and every holding
+folder has a stated maximum age after which the worker deletes it regardless, with the reason in the log. No folder on the server may grow
+without bound.
+The server here means the one machine that hosts grouplab.org and pissinhot.com. The privacy text names grouplab.org only.
+
+## 2. The long term copy: a private GitHub repository, if Alan creates it
+
+The planning session told Alan this is workable, with these facts (GitHub's own documentation, September 2026): an ordinary file in a
+repository is limited to 100 MB and a repository should stay under about 1 to 5 GB; Git LFS on a free personal account includes 10 GiB of
+storage and 10 GiB of download a month, with files up to 2 GB, and over that uploads stop until paid for. Submissions are roughly 3 to 60
+MB each, so 10 GiB is several hundred of them. Alan has been asked to create the repository; until he does, build the parts that do not
+need it.
+
+1. **The repository:** private, created by Alan (Code never creates repositories or changes their settings), name suggested
+   `oRAirwolf/grouplab-submissions-archive`. Git LFS for every image. One folder per submission as pulled, with its `meta.json`, consent
+   file and `DO-NOT-PUBLISH` marker kept exactly. It is never made public and never merged into the public test data repository; the
+   consent recorded in each folder decides what may ever be published, and nothing is published from it without a separate entry.
+2. **The order in the pull**, so there are always two copies before the server's is removed:
+   1. pull and verify the checksums here (as today);
+   2. commit the new folders to a local clone of the archive and push;
+   3. verify the push (the remote holds the same objects, by hash);
+   4. only then remove the folders from the server (entry 215 section 1).
+   If step 2 or 3 fails, the server copy stays and the run says why. A switch runs the old behavior without the archive.
+3. **Quota:** the pull reports the archive's LFS use against the 10 GiB allowance each run, and at 80 percent adds a line to for-alan.md
+   with the choices (pay GitHub for more, or move the archive to other storage such as Cloudflare R2, which Alan's Cloudflare account can
+   hold). Nothing is ever deleted from the archive to make room without Alan saying so.
+4. **CI never downloads the archive.** Test data stays on the `test-data` release; the archive's download allowance is for Alan's own
+   restores.
+5. **Privacy text:** the upload page, the application's consent wording and the privacy page say where a submission ends up: removed from
+   the web server once processed, kept by the project in a private repository hosted by GitHub, published only if the sender chose "may be
+   published". Wording change only; no change to what anyone has already agreed to, because a private copy with the project is what
+   sending to the project already meant. If you judge the new wording changes the meaning for people who already sent, say so and stop.
+6. **A restore test:** a script that clones the archive to a temporary folder and checks every folder's checksums against its
+   `meta.json`, run once when the archive is first filled and then on demand.
+7. The backlog of entry 215 section 2 goes into the archive first, then leaves the servers.
+
+---
+
+## 2026-09-25, entry 215: submissions leave the server as soon as a verified copy is here
+
+**Status: actioned 2026-09-25, with entries 216 and 217; the backlog waits on Alan.** The pull removes each submission from the server once its copy here verifies and the archive has proven it holds it, one line a folder, with `-KeepOnServer`. The workers' limits: quarantine by attempts as before, refused 7 days, ready 60, error reports 30, set-aside files 7; the survey's in SURVEY.md. The rules are written once, in the article `what-grouplab-sends`, and the upload page links to them. **Not done: the backlog**, which is request 31, one sitting of Alan's, replacing request 12. Request 32 suggests a backup of the local copy.
+
+Alan, 2026-09-25: "Shouldn't target submissions be deleted from the pissinhot server after they are downloaded and processed?"
+
+His entry 129 decision already says the server keeps nothing once read. In practice it keeps everything until he runs
+`Remove-ReadSubmissions.ps1` by hand (request 12, marked optional), and that removes only what the ledger marks ingested: 6 of the 18 old
+pissinhot.com submissions, and none of the grouplab.org ones he has pulled since. So photographs people sent sit on the web server
+indefinitely. Make the rule happen by itself.
+
+1. **The pull removes what it has verified.** `Get-TargetSubmissions.ps1`, after a folder's checksums match here, removes that folder from
+   the server in the same run, and says so per folder. The copy here, rebuilt and scanned by the worker, is what "downloaded and processed"
+   means; waiting for a later ingest step is what left them there. A folder whose checksums do not match is left on the server and
+   reported. A `-KeepOnServer` switch keeps the old behavior for a run when wanted. Same for grouplab.org's `ready` and pissinhot.com's old
+   folder.
+2. **The backlog, once:** every submission already pulled and verified here, on both servers (the 18 on pissinhot.com, the ones on
+   grouplab.org including request 22's test target and request 15's photograph), is removed by the first run of the new pull, or by one
+   `Remove-ReadSubmissions.ps1` line that you write into for-alan.md with its dry run first. Folders not yet pulled are pulled first, then
+   removed. Replace request 12 with that one request, and make it the next thing for Alan, since it is about other people's photographs.
+3. **The other places submissions sit on the server**, say what each keeps and for how long, and make each finite:
+   - `quarantine`, while the worker runs: gone once the worker moves the folder on;
+   - `refused`: kept long enough to look into (say 14 days, your call with a reason), then deleted by the worker, and the log keeps only the
+     reason and the folder name;
+   - `error-reports/incoming`: deleted once its issue is opened or updated;
+   - the survey's stored reports (entry 207): kept only as long as the aggregate page needs, and never individual records beyond that.
+   Write the retention rules in one place (the upload page's privacy text and `docs/PRIVACY.md` or wherever the site says what happens to
+   what people send) so what the site promises is what the server does.
+4. **The copy here becomes the only copy.** Say so in for-alan.md, and suggest how Alan might back up `C:\Dev\grouplab-submissions` (it is
+   outside the repository and outside any sync today, as far as the planning session knows). His decision; do not set up a backup yourself.
+5. Deletion on the server needs sudo, which Code never runs: the pull and removal run from Alan's PowerShell as today.
+
+---
+
 ## 2026-09-25, entry 214: the bull's rings about half as bright again
 
 **Status: actioned 2026-09-25, every section.** Dark theme rings #505050 to #282828, half the lightness; light theme #a0a0a0 to #bdbdbd, toward the paper, so in both the rings sit behind the half strength outlines and still show. Width unchanged. Pictures `docs/figures/composite-plot-210-*` replaced with both changes; the tone test follows the new values.

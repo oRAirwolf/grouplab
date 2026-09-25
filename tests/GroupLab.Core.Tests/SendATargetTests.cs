@@ -84,7 +84,7 @@ public class SendATargetTests
         Assert.True(input.Success, "the send page has no file input");
         Assert.EndsWith("[]", input.Groups[1].Value, StringComparison.Ordinal);
 
-        foreach (string words in new[] { "rebuilt from its pixels", "Location, GPS and the date and time are not", "until the developer has read them", "deleted from the server" })
+        foreach (string words in new[] { "rebuilt from its pixels", "Location, GPS and the date and time are not", "as soon as they have been checked and copied", "deleted from the server", "private archive" })
         {
             Assert.Contains(words, page, StringComparison.Ordinal);
         }

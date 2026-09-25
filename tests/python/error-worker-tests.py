@@ -14,6 +14,7 @@ import json
 import os
 import shutil
 import subprocess
+import time
 import sys
 import tempfile
 import threading
@@ -209,6 +210,21 @@ def main() -> int:
         (incoming / "zz_broken.json").write_text("{not json", encoding="utf-8")
         run()
         check("a file that is not a report is set aside, not sent", (root / "refused" / "zz_broken.json").is_file())
+
+        # Entry 216: nothing is kept for ever. A report that could not be sent for thirty days, and a file set aside for seven, are
+        # deleted, and a younger one is not.
+        token.write_text("", encoding="utf-8")
+        old, young = incoming / "2026-01-01T000000000000_old.json", incoming / "2026-09-24T000000000000_young.json"
+        for path in (old, young):
+            path.write_text(json.dumps(report()), encoding="utf-8")
+        aside = root / "refused" / "zz_broken.json"
+        ancient = time.time() - (40 * 86400)
+        os.utime(old, (ancient, ancient))
+        os.utime(aside, (ancient, ancient))
+        run()
+        check("a report kept thirty days without being sent is deleted", not old.exists(), (root / "worker.log").read_text(encoding="utf-8")[-400:])
+        check("a younger one is still kept", young.exists())
+        check("a file set aside for seven days is deleted", not aside.exists())
     finally:
         server.shutdown()
         shutil.rmtree(root, ignore_errors=True)

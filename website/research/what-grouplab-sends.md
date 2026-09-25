@@ -60,6 +60,22 @@ GroupLab can also send one itself, and it asks first. After you analyze a target
 
 **Location is never read.** Not stripped on the way out: never read in the first place, at any point, by any part of GroupLab. A photograph taken on a phone usually carries where it was taken, and a target photograph usually means somewhere you shoot. That is not information this project wants to hold, so the code does not look at it.
 
+## Where it is kept, and for how long
+
+NOTES-FROM-PLANNING.md entries 215 to 217. Nothing people send stays on the web server longer than it is needed, and every place it
+can wait has a limit.
+
+- **A target, from the page or from GroupLab.** Within minutes it is rebuilt from its pixels and the file you sent is deleted. The rebuilt
+  copy waits on the server until the developer's next pull, which checks it, copies it onto the developer's own machine and into the
+  project's private archive hosted by GitHub, proves the archive holds it, and then deletes it from the server. One the server refuses is
+  deleted after seven days; one nobody pulls is deleted after sixty.
+- **Once kept by the project**, a target is on the developer's machine and in the private archive, which is never made public. It is
+  published only if you chose "may be published", and only after it has been looked at. The archive keeps to a budget, and the oldest
+  submissions in it may be deleted to stay inside it, never while one is still used by a test or an article.
+- **An error report** becomes an issue in the project's private repository on GitHub, and the copy on the server is deleted the moment
+  the issue is opened or updated. One that cannot be sent is deleted after thirty days.
+- **On your own machine**, a target you agreed to send and could not is tried again for seven days, then deleted, as above.
+
 ## The rule that stops a fifth thing appearing
 
 All four go through one interface. Nothing else in the program is allowed to open a browser, fetch a file, start a process or read the clipboard.
