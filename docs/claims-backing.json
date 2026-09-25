@@ -1544,6 +1544,10 @@
   "Its first stage started on 2026-09-25; the plan and what it found are in `docs/ANDROID.md`.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 198"
+  },
+  "Its first stage started on 2026-09-25; the plan and what it found are in docs/ANDROID.md .": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 198"
   }
  },
  "rules": [

@@ -384,6 +384,11 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         // On a roll sheet a corner third is still a sheet of Letter or larger, with the code a small part of it, and on Linux and macOS no
         // code was found in any of them (CI on 760083c, GL-LR300-R24, R36 and R42). So where the thirds give nothing too, square corners
         // of a quarter and then an eighth of the shorter side are searched: every sheet's codes sit within about 250 dmm of their corners.
+        //
+        // Those three are also the only sheets longer than SheetIdentification.MaximumWorkingSide at 300 dpi, so they are only ever asked
+        // for at half resolution, where a code's module is about 2.4 pixels: Windows' decoder reads that and the Linux and macOS builds do
+        // not (CI on 84a256a). A corner is small whatever the image, so where the whole was shrunk the corners are cut from the full image.
+        var corners = scale < 1 ? full : input;
         foreach (Func<int, int, (int W, int H)> size in new Func<int, int, (int W, int H)>[]
         {
             (w, h) => (w / 3, h / 3),
@@ -396,15 +401,15 @@ public sealed class OpenCvSharpBackend : IImagingBackend
                 break;
             }
 
-            var (cw, ch) = size(input.Width, input.Height);
+            var (cw, ch) = size(corners.Width, corners.Height);
             if (cw < 64 || ch < 64)
             {
                 continue;
             }
 
-            foreach (var corner in new[] { new Rect(0, 0, cw, ch), new Rect(input.Width - cw, 0, cw, ch), new Rect(0, input.Height - ch, cw, ch), new Rect(input.Width - cw, input.Height - ch, cw, ch) })
+            foreach (var corner in new[] { new Rect(0, 0, cw, ch), new Rect(corners.Width - cw, 0, cw, ch), new Rect(0, corners.Height - ch, cw, ch), new Rect(corners.Width - cw, corners.Height - ch, cw, ch) })
             {
-                using var part = new Mat(input, corner);
+                using var part = new Mat(corners, corner);
                 texts.AddRange(Read(part));
             }
         }

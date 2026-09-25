@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 945 |
 | measured | 1349 |
-| decided | 1139 |
+| decided | 1140 |
 | unbacked | 0 |
-| **total** | **3433** |
+| **total** | **3434** |
 
-**439** of them were read one sentence at a time and their backing written against the sentence. The other **2994** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**440** of them were read one sentence at a time and their backing written against the sentence. The other **2994** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2854,6 +2854,7 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): The tests run on macOS on every build.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
+- *decided* (NOTES-FROM-PLANNING.md entry 198): Its first stage started on 2026-09-25; the plan and what it found are in docs/ANDROID.md .
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Hands-on Linux testing follows, on virtual machines.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): macOS depends on the hardware question below.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.

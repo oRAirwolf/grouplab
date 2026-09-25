@@ -26,6 +26,7 @@
     "src/GroupLab.App/Assets/icons/grouplab.icns": "copied into the macOS application bundle by scripts/macos-bundle.py"
   },
   "checked": {
+    "android": "the Android spike and its native build: .github/workflows/android.yml builds it, and nothing in it goes into the desktop application",
     ".gitattributes": "line endings at checkout; a test has failed over CRLF on a Windows runner, so CI runs, and nothing ships",
     ".github": "the workflows: CI runs on a change to them, and only package.yml, listed above, changes a package",
     "Directory.Build.props": "listed here for its top level class; it ships through ships-packaging",
