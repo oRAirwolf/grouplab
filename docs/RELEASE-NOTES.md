@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.104
+
+**2026-09-25**, commit `f377168`. Nightly.
+
+**What you will notice**
+
+- Toggles beside the plot turn the CEP 50, CEP 90 and CEP 95 circles and the extreme spread line on and off, GroupLab remembers them, and the saved report draws the same marks.
+- The composite group plot is easier to read: the bull's rings are pale, the shot outlines lighter, the CEP circles green and bolder with CEP 95 added, and the group center and your point of aim are green and blue lines across the whole plot.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.104)
+
+---
+
 ## 0.2.0-nightly.103
 
 **2026-09-25**, commit `bcda1c8`. Nightly.
