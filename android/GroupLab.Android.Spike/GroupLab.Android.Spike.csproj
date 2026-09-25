@@ -39,7 +39,8 @@
     <!-- OpenCV built for the phone by android/opencv/build-extern.sh; CI puts it here before the build. -->
     <AndroidNativeLibrary Include="native\arm64-v8a\libOpenCvSharpExtern.so" Condition="Exists('native\arm64-v8a\libOpenCvSharpExtern.so')" />
     <!-- The library of sheets, so the phone names a sheet from its codes as the desktop does, and the published sample scan. -->
-    <AndroidAsset Include="..\..\targets\*.gltd.json" LinkBase="Assets\targets" />
+    <!-- Link, not LinkBase: the Android build ignores LinkBase and put the sheets at the top of the assets (CI on 3c3fa98). -->
+    <AndroidAsset Include="..\..\targets\*.gltd.json" Link="Assets\targets\%(Filename)%(Extension)" />
     <AndroidAsset Include="..\..\samples\gl-cf25-ltr-d-25-shots-600-dpi.png" Link="Assets\images\gl-cf25-ltr-d-25-shots-600-dpi.png" />
   </ItemGroup>
 

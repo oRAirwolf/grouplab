@@ -31,6 +31,7 @@ cd "$WORK"
 cmake -S opencv -B opencv-build -Wno-dev \
   -D CMAKE_BUILD_TYPE=Release \
   -D CMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -D ANDROID_ABI=$ABI -D ANDROID_PLATFORM=android-$API -D ANDROID_STL=c++_static \
+  -D ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON \
   -D CMAKE_INSTALL_PREFIX="$WORK/opencv-install" \
   -D OPENCV_EXTRA_MODULES_PATH="$WORK/opencv_contrib/modules" \
   -D BUILD_LIST=$MODULES \
@@ -67,6 +68,7 @@ PY
 cmake -S opencvsharp/src -B opencvsharp-build -Wno-dev \
   -D CMAKE_BUILD_TYPE=Release -D CMAKE_POLICY_VERSION_MINIMUM=3.5 \
   -D CMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -D ANDROID_ABI=$ABI -D ANDROID_PLATFORM=android-$API -D ANDROID_STL=c++_static \
+  -D ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON -D CMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" \
   -D OpenCV_DIR="$WORK/opencv-install/sdk/native/jni"
 cmake --build opencvsharp-build --parallel "$(nproc)"
 
@@ -74,6 +76,8 @@ LIB=opencvsharp-build/OpenCvSharpExtern/libOpenCvSharpExtern.so
 "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" --strip-unneeded "$LIB"
 mkdir -p "$OUT/$ABI"
 cp "$LIB" "$OUT/$ABI/"
+# Android 15 and later, and Google Play, want every library aligned for 16 KB pages (the build's warning XA0141 on 3c3fa98).
+"$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf" -lW "$OUT/$ABI/libOpenCvSharpExtern.so" | awk '$1 == "LOAD" && $NF != "0x4000" { bad = 1 } END { exit bad }'
 # What the library needs from the system: nothing beyond Android's own libraries, or it will not load on a phone.
 "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf" -d "$OUT/$ABI/libOpenCvSharpExtern.so" | grep NEEDED
 du -h "$OUT/$ABI/libOpenCvSharpExtern.so"

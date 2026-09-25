@@ -1052,9 +1052,10 @@ caliber's count now travels with the flag (`DetectedOversize.CalibreHoles`) and 
 and the guide now say they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
 
 **The roll sheets' codes on Linux and macOS.** CI on 760083c failed the every-sheet test for GL-LR300-R24, R36 and R42: no code
-read, on Linux and macOS, where Windows reads them. A corner third of a roll is still larger than Letter. The reader now also
-searches corner squares of a quarter and an eighth of the shorter side when the thirds give nothing. Windows cannot show that this
-is the fix; CI on this commit does.
+read, on Linux and macOS, where Windows reads them. Smaller corner squares (84a256a) did not help. **The cause**: those three are the
+only sheets longer than `SheetIdentification.MaximumWorkingSide`, 8000 pixels, at 300 dpi, so their codes were only ever looked for at
+half resolution, about 2.4 pixels a module, which Windows' decoder reads and the Linux and macOS builds do not. Since 3c3fa98, where
+the whole image was shrunk, the corners are cut from the full image; a corner is well within the limit.
 
 **Tests.** Core `TightGroupTests` (8): the five-shot group on a one bull sheet with nothing to review, with and without the rounds
 entered; a shot 4 in out; a touching pair across the bull's edge on six seeds, two shots or named by the count; the ragged hole on

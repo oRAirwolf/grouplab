@@ -73,7 +73,10 @@ jobs:
           apk=$(find android/GroupLab.Android.Spike/bin/Debug -name '*-Signed.apk' | head -1)
           test -n "$apk"
           ls -l "$apk"
-          unzip -l "$apk" | grep -E 'libOpenCvSharpExtern.so|assets/targets/GL-CF25-LTR.gltd.json|assets/images/'
+          # Each one on its own: a grep for any of them passed on 3c3fa98 with the sheets in the wrong place.
+          for item in lib/arm64-v8a/libOpenCvSharpExtern.so assets/targets/GL-CF25-LTR.gltd.json assets/images/gl-cf25-ltr-d-25-shots-600-dpi.png; do
+            unzip -l "$apk" | grep -q " $item$" || { echo "the APK does not carry $item"; exit 1; }
+          done
           mkdir -p apk && cp "$apk" apk/grouplab-spike-debug.apk
 
       - uses: actions/upload-artifact@v6
