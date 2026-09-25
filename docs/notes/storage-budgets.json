@@ -28,6 +28,10 @@
     "grouplab-testdata": {
       "gigabytes": 1,
       "why": "the public test data repository; its large files live on the test-data release instead"
+    },
+    "grouplab-backups releases": {
+      "gigabytes": 10,
+      "why": "entry 222: seventeen nightly backups kept at about 450 MB each, with room for the repository and the originals to grow"
     }
   }
 }

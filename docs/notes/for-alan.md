@@ -4,6 +4,10 @@
 Cloud. Then the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7. Then 9, 16, 20,
 18, 32 and 21, optional.
 
+<!-- automation-week: written by scripts/automation-report.py each week; not a request -->
+**This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB.
+<!-- /automation-week -->
+
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
 Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
 first, in one request (entry 212).

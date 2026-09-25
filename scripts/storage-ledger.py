@@ -129,13 +129,20 @@ def main() -> int:
         if not months:
             rows.append(("grouplab-submissions-archive", "releases", 0, "private, empty"))
 
+    # grouplab-backups, private: one release a night, 7 daily, 4 weekly and 6 monthly kept (entry 222 section 3).
+    if gh(f"repos/{OWNER}/grouplab-backups") is None:
+        rows.append(("grouplab-backups", "releases", None, "not created yet (request 35), so backups are kept on this computer"))
+    else:
+        nights = releases("grouplab-backups") or []
+        rows.append(("grouplab-backups", "releases", sum(a["size"] for r in nights for a in r["assets"]), f"private, {len(nights)} backups"))
+
     # grouplab-testdata, public.
     testdata = gh(f"repos/{OWNER}/grouplab-testdata")
     rows.append(("grouplab-testdata", "repository", testdata["size"] * 1024 if testdata else None, "public" if testdata else "not readable"))
 
     # The budget each row counts against: its repository and what, or the repository alone.
     def budget_for(repo: str, what: str) -> tuple[str, float] | None:
-        for key in (f"{repo} {what}", f"{repo} releases" if repo == "grouplab-submissions-archive" else "", repo):
+        for key in (f"{repo} {what}", f"{repo} releases" if repo in ("grouplab-submissions-archive", "grouplab-backups") else "", repo):
             if key in budgets:
                 return key, budgets[key]["gigabytes"] * 1024 ** 3
         return None

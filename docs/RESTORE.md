@@ -29,8 +29,14 @@ listed as one, and Code does not act on it until the gap is closed.**
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
 | **The server as a whole, pissinhot.com included** | HestiaCP's own user backups: one copy a user, on the server only | daily | `/backup` on the server | **a gap until request 35 step 3**: nothing leaves the machine |
 
-**The gaps, today:** the server as a whole (request 35 step 3, Oracle boot volume backups); `grouplab-backups` does not exist yet
-(request 35 step 1), so nothing in the nightly column runs until it does. Until the whole-server gap is closed, Code's use of sudo on the
+**The gaps, today:** the server as a whole (request 35 step 3, Oracle boot volume backups). `grouplab-backups` does not exist yet
+(request 35 step 1), so the nightly backup, which runs from 2026-09-25, keeps its newest copy on this computer only, in
+`C:\Dev\grouplab-local\backups`; the weekly restore test checks that copy until the repository exists.
+
+**How it runs**: two scheduled tasks on this computer, registered by `scripts\Register-GroupLabTasks.ps1` as Alan, only while he is logged
+on, with no password stored: `\GroupLab\Nightly backup` at 03:30 (`scripts\backup.py`: the archive copied here, then the backup) and
+`\GroupLab\Weekly check` on Sundays at 04:30 (the restore test, `scripts\cleanup.py`, and the week's line in `docs/notes/for-alan.md`).
+Each writes to `C:\Dev\grouplab-local\automation.log`; a failure is also sent as an error report, so it reaches Code. Until the whole-server gap is closed, Code's use of sudo on the
 server is limited to GroupLab's own files and its installer.
 
 ## The standing rules

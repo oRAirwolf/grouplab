@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 983 |
 | measured | 1422 |
-| decided | 1164 |
+| decided | 1165 |
 | unbacked | 0 |
-| **total** | **3569** |
+| **total** | **3570** |
 
-**533** of them were read one sentence at a time and their backing written against the sentence. The other **3036** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**533** of them were read one sentence at a time and their backing written against the sentence. The other **3037** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1935,6 +1935,7 @@ one that matters.
 
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): # Backups, and how to restore NOTES-FROM-PLANNING.md entry 222.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Anything with no backup is a gap, listed as one, and Code does not act on it until the gap is closed.** ## If something is gone, first 1.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): `grouplab-backups` does not exist yet (request 35 step 1), so the nightly backup, which runs from 2026-09-25, keeps its newest copy on this computer only, in `C:\Dev\grouplab-local\backups`; the weekly restore test checks that copy until the repository exists.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Nothing is force pushed to `main`, ever.** 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\ \`, emptied after 14 days and never before a nightly backup has succeeded since.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The manifest lists every file with its SHA-256, so a copy can be checked before it is trusted.
