@@ -170,6 +170,11 @@ public partial class WebsiteWorkflowTests
         Assert.Contains("fresh=no", nightly, StringComparison.Ordinal);
         Assert.Contains("fresh=yes", nightly, StringComparison.Ordinal);
 
+        // Entry 210: main moved on only by notes or screenshot commits, which bring no nightly, still publishes this build, and only when
+        // none of those commits touches a workflow, which is the ref rule above.
+        Assert.Contains("startswith(\"[notes] \")", nightly, StringComparison.Ordinal);
+        Assert.Contains("select(startswith(\".github/workflows/\"))", nightly, StringComparison.Ordinal);
+
         // Both jobs that would publish are guarded by it, so a stale run does not even package.
         int guards = Guard().Matches(nightly).Count;
         Assert.True(guards >= 2, $"only {guards} jobs are guarded by the freshness check, and both package and publish must be");

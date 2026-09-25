@@ -69,6 +69,11 @@ release, and for a problem the Fold 7 and the emulator cannot show. The Essentia
 29), Snapdragon 835 and 4 GB were read from it and nothing else was done. The Galaxy S20 5G is Android 13 with 8 GB; a OnePlus is to come.
 The working size stays the Fold 7's 8 MP. `docs/ANDROID.md`, "The phones it is tested on".
 
+**Also this run: a nightly lost behind a notes commit.** The notes commit for these entries was pushed while entry 210's build ran, and
+the nightly for entry 210 stood down because main had moved on, trusting the newer push to bring its own; a notes commit brings none. The
+nightly now publishes anyway when every newer commit is a notes or screenshot commit and none touches a workflow, which is the rule that
+made it stand down; `WebsiteWorkflowTests` holds both conditions.
+
 ## Entry 210: the composite plot's rings, and the whole target
 
 **The rings** are drawn `CompositePlot.BullRingInches` wide, 0.05 in on the page, so they stay in proportion as the view zooms: about 19

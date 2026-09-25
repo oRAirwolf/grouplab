@@ -145,6 +145,18 @@ jobs:
             exit 0
           fi
 
+          # Entry 210: main can move on only by "[notes] " or "[screens] " commits, which run no build and so bring no nightly of their own.
+          # Standing down then left the application change before them with no nightly until the daily schedule. When every newer commit is
+          # one of those, and none touches the workflows (the ref rule below), this build is still the newest application and is published.
+          compare=$(gh api "repos/${{ github.repository }}/compare/${SHA}...${head}")
+          building=$(jq -r '[.commits[].commit.message | split("\n")[0] | select((startswith("[notes] ") or startswith("[screens] ")) | not)] | length' <<<"$compare")
+          workflows=$(jq -r '[.files[]?.filename | select(startswith(".github/workflows/"))] | length' <<<"$compare")
+          if [ "$building" = "0" ] && [ "$workflows" = "0" ]; then
+            echo "fresh=yes" >> "$GITHUB_OUTPUT"
+            echo "main moved from ${SHA:0:7} to ${head:0:7} only by notes or screenshots, which bring no nightly, so this build is published"
+            exit 0
+          fi
+
           echo "fresh=no" >> "$GITHUB_OUTPUT"
           {
             echo "### nothing published: main has moved on"
