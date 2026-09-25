@@ -20,7 +20,7 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Its first stage started on 2026-09-25; the plan and what it found are in `docs/ANDROID.md`. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
 
 ## Running the macOS build
 

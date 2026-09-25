@@ -1,0 +1,83 @@
+name: android
+
+# NOTES-FROM-PLANNING.md entry 198 section 2.6: a debug APK of the Android spike on every push to main that touches the engine or the
+# spike. Unsigned debug builds only, kept as a workflow artifact for fourteen days; nothing here is ever published as a nightly or a
+# release, and nothing here runs the nightly. A signed release APK and AAB wait for the upload key (entry 198 section 3.3).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/GroupLab.Core/**'
+      - 'src/GroupLab.Cli/Imaging/**'
+      - 'targets/**'
+      - 'android/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: OpenCV for android-arm64
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+
+      # The build takes most of an hour and depends only on the script, which pins every version, so it is kept until the script changes.
+      - name: Native library cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/android-native
+          key: android-native-${{ hashFiles('android/opencv/build-extern.sh') }}
+
+      - name: Build OpenCV and OpenCvSharp's native half
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: bash android/opencv/build-extern.sh "${{ runner.temp }}/android-native-work" "${{ runner.temp }}/android-native"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: android-native
+          path: ${{ runner.temp }}/android-native
+          retention-days: 14
+
+  apk:
+    name: Spike APK
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: The .NET Android workload
+        run: dotnet workload install android --skip-sign-check > /dev/null
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: android-native
+          path: android/GroupLab.Android.Spike/native
+
+      - name: Build
+        run: dotnet build android/GroupLab.Android.Spike --configuration Debug -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64"
+
+      - name: What the APK carries
+        run: |
+          apk=$(find android/GroupLab.Android.Spike/bin/Debug -name '*-Signed.apk' | head -1)
+          test -n "$apk"
+          ls -l "$apk"
+          unzip -l "$apk" | grep -E 'libOpenCvSharpExtern.so|assets/targets/GL-CF25-LTR.gltd.json|assets/images/'
+          mkdir -p apk && cp "$apk" apk/grouplab-spike-debug.apk
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: grouplab-spike-debug-apk
+          path: apk/grouplab-spike-debug.apk
+          retention-days: 14

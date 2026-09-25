@@ -1416,6 +1416,134 @@
   "A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot; for a zero worked out from a group, and group figures, use a 5x5 sheet.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet"
+  },
+  "# GroupLab on Android NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "A newer personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the Discord server.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "- **A public Play listing waits on the attorney's review** of the draft GPL section 7 additional permission for app stores.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "**The routes, and the one chosen.** | Route | Why or why not | |---|---| | OpenCvSharp's official runtimes | Windows, Linux and macOS only.": {
+   "kind": "code",
+   "where": "android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp"
+  },
+  "It pins OpenCV 4.13.0 and OpenCvSharp 4.13.0.20260627, the version the desktop uses, because the managed and native halves must match.": {
+   "kind": "code",
+   "where": "android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp"
+  },
+  "Apache-2.0 code may be combined into a GPL-3.0 work, which is the direction GroupLab needs.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25"
+  },
+  "On the Fold 7 that is a choice between the wide, ultrawide and telephoto cameras.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "**On the phone**: not measured yet (requests 25 and 26).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "If the phone refuses it, the capture is processed at a capped resolution, which MOBILE-CAPTURE.md section 5 already does for the quality score.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "The lowest Android version: 7.0 (API 24) The native build is made for API 24, as Sdcb's is, and that sets the floor: CameraX and .NET 10 both go lower.": {
+   "kind": "code",
+   "where": "android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp"
+  },
+  "Android 7.0 is from 2016, and Google's device share figures, read in Android Studio, will say what share it leaves out when the first build is published.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "Medium, under 840 dp: the Fold 7 open, small tablets.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured"
+  },
+  "- **Touch.** Targets at least 48 dp.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured"
+  },
+  "The Fold 7's cover screen is the case to test it on.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured"
+  },
+  "Sessions between phone and desktop (entry 198 section 1.4, entry 199 section 2) The session file is the unit whatever the route.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured"
+  },
+  "**The order, with one change from the planning session's reading:** 1.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "Worked out, not yet measured: a shot takes about five bytes, so a 25-shot session with its load is a few hundred bytes compressed, well inside a mid-sized code.": {
+   "kind": "measured",
+   "where": "android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index"
+  },
+  "Windows asks once whether GroupLab may take connections on private networks; the application says why before that prompt appears.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "Builds `.github/workflows/android.yml`, on every push to `main` that touches Core, the imaging code, the sheets or `android/`: 1.": {
+   "kind": "code",
+   "where": ".github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3"
+  },
+  "**Nothing has run on a phone yet**: that waits on requests 25 (the Android workload and SDK on Alan's machine) and 26 (the Fold 7 paired for debugging) in `docs/notes/for-alan.md`.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "What Alan decided (entry 198 section 1) - **The first version analyzes on the phone, offline**: the capture screen of `docs/MOBILE-CAPTURE.md`, detection, review and correction, the group figures, and saved sessions, with the desktop's engine, not a second one.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "The user interface: Avalonia on .NET Android **Confirmed as the path, to be proved by the spike on the phone.** GroupLab.Core is plain .NET and runs on Android unchanged, and Avalonia 12 runs on .NET Android with the same controls, styles and layout as the desktop.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "What would force a different answer: Avalonia failing the checks in section 7 on the Fold 7 (the density, the fold, rotation, the system font size), or the camera preview (section 4) not being hostable inside it.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "| | Replace the calls with managed code | The WeChat detector, the marker detector and a RANSAC homography are each a project, and a second engine is what entry 198 rules out.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "| | **Build OpenCvSharp's native half for Android with GroupLab's modules** | **Chosen.** `android/opencv/build-extern.sh` does what Sdcb's pipeline does (NDK, API 24, the C++ runtime linked statically, OpenCV static inside one `libOpenCvSharpExtern.so`) with GroupLab's modules, and compiles only the OpenCvSharp bindings for them.": {
+   "kind": "code",
+   "where": "android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp"
+  },
+  "| **Licenses.** OpenCV (since 4.5), opencv_contrib and OpenCvSharp are Apache-2.0; Sdcb's pipeline, read for how the build is done and not copied, is Apache-2.0 too.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25"
+  },
+  "**The number to watch is memory**: a phone kills an application over a few hundred megabytes more readily than it slows it down, and 732 MB for a 600 dpi Letter scan is more than a phone application should hold.": {
+   "kind": "measured",
+   "where": "android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index"
+  },
+  "Phones, foldables and tablets, touch first (entry 199 section 1) - **Layout by the width available, not the device.** Compact, under 600 dp: a phone, and the Fold 7's cover screen.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured"
+  },
+  "How large a code a phone reads off a laptop screen at arm's length is measured on the Fold 7; above that, the application says to share the file instead, rather than showing several codes in turn.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "**Stage B, a sync folder: doubtful on Android, to be tried on the Fold 7 before it is planned.** Picking a folder on Android uses the Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I know, not whole folders.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
+  },
+  "A signed release APK and an AAB for Play need the upload key, which Alan generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build needs them.": {
+   "kind": "code",
+   "where": ".github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3"
+  },
+  "Its first stage started on 2026-09-25; the plan and what it found are in `docs/ANDROID.md`.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 198"
   }
  },
  "rules": [

@@ -997,6 +997,32 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entries 198 and 199: the Android application's first stage
+
+**The plan is `docs/ANDROID.md`.** Avalonia on .NET Android over the same Core; CameraX through the .NET bindings for the camera;
+Android 7.0 (API 24) as the floor; layout by width class; sessions moved by hand first, then by two QR routes that need no account,
+with the sync folder doubtful on Android.
+
+**OpenCV.** GroupLab calls about thirty OpenCV functions, the ArUco detector and two QR readers, from core, imgproc, imgcodecs,
+calib3d, objdetect, aruco and wechat_qrcode. OpenCvSharp has no Android runtime, and the one community runtime, Sdcb's mini build,
+carries core, imgproc, imgcodecs and dnn only. `android/opencv/build-extern.sh` builds OpenCV 4.13.0 with GroupLab's modules and
+OpenCvSharp 4.13.0.20260627's bindings for them into one `libOpenCvSharpExtern.so` for android-arm64, the way Sdcb's pipeline builds
+its own. All three projects are Apache-2.0.
+
+**The spike**, `android/GroupLab.Android.Spike/`: one Avalonia screen that runs the desktop's engine (`SpikeRun.Run`: load, name the
+sheet from its codes, automatic marking) on the published sample scan and on any image pushed into its folder, and records every size
+the screen takes with its width class and density. Each line also goes to the device log. It is outside `GroupLab.slnx`, and its id is
+`org.grouplab.app.spike`. `.github/workflows/android.yml` builds the native library, cached until the script changes, and a debug APK
+kept fourteen days; nothing from it is published.
+
+**The desktop, measured with the same code on 2026-09-25**, Release: the 600 dpi sample scan, 4958 by 6458, loads in 0.4 s, names
+itself from 2 codes in 1.2 s, and marks 25 of 25 holes in 6.2 s, 7.9 s in all, at a peak of 732 MB. A range photograph, 4000 by 3000,
+names itself in 0.9 s and is refused at registration, "0 of 34 markers found", as the desktop refuses it; peak 440 MB. **The phone is
+not measured**: requests 25 and 26.
+
+**Requests.** 25, the .NET Android workload and the Android SDK into `C:\Dev\tools\android-sdk`, since this machine has neither
+(`C:\Dev\tools\sdkmanager` is Garmin's). 26, the Fold 7 in wireless debugging, paired.
+
 ## Entries 196 and 197: a group on a one bull sheet, touching holes and a ragged hole
 
 **What was true before, run rather than read.** On a zeroing grid, a five-shot group went to its one bull, and the review held a

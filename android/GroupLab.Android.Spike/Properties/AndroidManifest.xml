@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
+  <!-- Entry 198 section 1.1: the spike needs no network, and asks for no permission at all. -->
+  <application android:label="GroupLab spike" android:resizeableActivity="true" />
+</manifest>

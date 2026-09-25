@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entries 198 and 199: the first stage of the Android application, a spike and nothing more. It runs the
+    desktop's own engine on the phone, timed, and shows how Avalonia lays out across the Fold 7's two screens and the tablet. It is not
+    in GroupLab.slnx, so the desktop build and tests never need the Android workload; .github/workflows/android.yml builds it.
+
+    The application id carries ".spike" so that nothing built from here can ever be taken for org.grouplab.app, the permanent id the
+    real application will have on Google Play (entry 198 section 1.3).
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+    <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+    <ApplicationId>org.grouplab.app.spike</ApplicationId>
+    <ApplicationTitle>GroupLab spike</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.0.1</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <RootNamespace>GroupLab.Android.Spike</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+    <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GroupLab.Core\GroupLab.Core.csproj" />
+    <!-- The desktop's imaging code, compiled here rather than referenced, because GroupLab.Cli is a desktop program. -->
+    <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Imaging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- OpenCV built for the phone by android/opencv/build-extern.sh; CI puts it here before the build. -->
+    <AndroidNativeLibrary Include="native\arm64-v8a\libOpenCvSharpExtern.so" Condition="Exists('native\arm64-v8a\libOpenCvSharpExtern.so')" />
+    <!-- The library of sheets, so the phone names a sheet from its codes as the desktop does, and the published sample scan. -->
+    <AndroidAsset Include="..\..\targets\*.gltd.json" LinkBase="Assets\targets" />
+    <AndroidAsset Include="..\..\samples\gl-cf25-ltr-d-25-shots-600-dpi.png" Link="Assets\images\gl-cf25-ltr-d-25-shots-600-dpi.png" />
+  </ItemGroup>
+
+</Project>

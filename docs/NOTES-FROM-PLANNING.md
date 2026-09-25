@@ -24,6 +24,135 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 199: Android addendum: every screen size, touch first, and QR codes as the no-account way to move data
+
+**Status: recorded 2026-09-25 in `docs/ANDROID.md` sections 7 and 8, with entry 198.** Not done: section 1.5, the spike on both of the Fold 7's screens and the tablet, waits on requests 25 and 26; section 2.2's measurement of a code read off a laptop screen needs the phone, and the byte count is worked out rather than measured. One change to the order: Stage B, the sync folder, is marked doubtful on Android, because the Drive and OneDrive applications offer files, not folders, to Android's folder picker.
+
+Read with entry 198, and fold both into `docs/ANDROID.md`. Alan, 2026-09-25.
+
+## 1. Phones, foldables and tablets, touch first
+
+Alan: "The app should be built to work on phones, folding phones, and tablets and be dpi and screen size aware and scale itself
+appropriately. The interface needs to work well with touchscreens."
+
+1. **Layout by available width, not by device type.** Classes such as compact (phone, and the Fold 7's cover screen), medium (the Fold 7
+   unfolded, small tablets) and expanded (Tab S8 Ultra, landscape). One screen rearranges; it is not three apps. The desktop keeps its
+   own layout.
+2. **Folding and rotating are ordinary events.** Unfolding the Fold 7 mid-review, or turning the tablet, keeps the photograph, the marks,
+   the zoom, the selection and any half-finished edit, and relays out within a moment. Test it: a review in progress survives a
+   configuration change from compact to medium and back. Respect the hinge if the platform reports one (a split layout must not put a
+   control under the fold).
+3. **Density aware.** Sizes in density independent units, text that follows the system font size (including the largest accessibility
+   sizes without clipping), and images and the target drawn crisp at the screen's real density.
+4. **Touch first.** Targets at least 48 dp. Pinch to zoom and two finger pan on the photograph; one finger drag moves a shot only when
+   a shot is grabbed, never by accident while panning. Long press where the desktop has right click. No hover dependent information:
+   everything the desktop shows on hover (the glossary tooltips included) is reachable by tap. Precise placement of a shot uses a
+   magnifier or offset handle so the finger does not hide what it moves; say which, and test it on the Fold 7's cover screen, the
+   hardest case.
+5. **The spike in entry 198 section 2 runs on both of the Fold 7's screens and on the tablet** and reports whether Avalonia on Android
+   handles the density, the fold and the rotation correctly. If it does not, that is a finding that affects the UI decision in 198 2.1.
+
+## 2. QR codes to move data without an account
+
+Alan asked whether a QR code could share data between devices, as a backup or no-account option. The planning session's reading, for you
+to confirm or correct with measurements:
+
+1. **A QR code cannot carry a session with its photograph.** One QR code holds at most about 2.9 KB, and far less when read reliably off
+   a screen; a photograph is megabytes.
+2. **It can carry the marks.** A session's shots (positions on the sheet, not in the photo), the target definition's id, the caliber, the
+   distance, the load data and the choices made in review are a few hundred bytes to a few KB, compressed. GroupLab already writes compact
+   binary frames into the QR codes on its printed sheets (`Gltd/Binary`, `InstanceCodec`). A **marks QR** shown on one device and scanned
+   by the other rebuilds the session's figures and draws the shots on the rendered sheet, with no photograph. It works offline, with no
+   network at all, phone to desktop or phone to phone. Measure how many shots fit in one code that a phone reads off a laptop screen at
+   arm's length, and what happens above that (several codes in turn, or say "too large, share the file").
+3. **It can pair the two devices for a full transfer.** The desktop shows a QR code with a one time key and its local address; the phone
+   scans it and sends the whole session, photograph included, straight across the home or range Wi-Fi. No account, no internet, nothing
+   leaves the local network, and the key means nothing else can send. Say what it needs on Windows (a firewall prompt, and how it is
+   explained to the user) and what happens when the two are not on the same network.
+4. **The order this sits in, with entry 198's stages:** A, share a file by hand; then these two QR routes, which need no account; then B,
+   the sync folder; and C, sign in, only if needed. Say if a different order is better.
+5. None of this changes the photograph rules: no GPS, location or time metadata read, printed, logged or sent.
+
+Not part of the first stage. Record the plan in `docs/ANDROID.md`; build it when the app has sessions to move.
+
+---
+
+## 2026-09-25, entry 198: the Android application starts
+
+**Status: actioned 2026-09-25 as far as it goes without the phone.** Sections 2.1, 2.2, 2.3, 2.5 and 2.6 are answered in `docs/ANDROID.md`, and the spike, the native build script and the `android` workflow are written. Not done: section 2.4 on the phone, which waits on requests 25 (the workload and SDK) and 26 (the Fold 7 paired); whether the native library builds is the first `android` CI run's result. Section 3.1 and 3.2 are requests 26 and 25; 3.3 and 3.4 come later by the entry's own words; section 4 is recorded in ANDROID.md and STATE.md.
+
+Alan, 2026-09-25: start Android development now. Do this after entries 196 and 197; it is large, and this entry is its first stage only.
+`docs/PLATFORM-SUPPORT.md` already calls Android planned and high priority, and `docs/MOBILE-CAPTURE.md` is the capture contract
+written for it. Both hold.
+
+## 1. Alan's decisions
+
+1. **Scope of the first version: full analysis on the phone, offline.** Take the picture (the capture screen of MOBILE-CAPTURE.md),
+   detect, review and correct, the group figures, save sessions. The same engine as the desktop, not a second one. Printing targets,
+   the target library editor and Ballistics stay desktop only at first. Ranges often have no signal: nothing in the first version may
+   need the network except sending a target and error reports, which queue as they do on the desktop.
+2. **Distribution: Google Play testing tracks plus a nightly APK** on the GitHub release and grouplab.org for sideloading. Alan has
+   paid the Google Play developer fee. A newer personal Play account must run a closed test with at least 12 testers for 14 days
+   before a production listing; the Discord server is where those testers come from. Plan for it, do not promise dates.
+3. **Package name: `org.grouplab.app`.** Permanent once on Play.
+4. **Sessions between phone and desktop.** Alan's wish: sign in with Google, Microsoft or Apple and use that platform's own storage to
+   share files between the apps, with no server of ours. If that is a lot of work, start with sharing files by hand. The planning
+   session's reading, for you to confirm or correct with reasons:
+   - **Stage A, first version:** share and open a session file by hand (Android share sheet, Drive, email, USB). Nothing else.
+   - **Stage B, cheap and close to his wish:** a "sync folder" setting on both. On Android the user picks a folder through the Storage
+     Access Framework, which Google Drive and OneDrive both provide as document providers; on the desktop the user picks the folder the
+     Google Drive or OneDrive client already syncs. Both apps read and write sessions there. No sign in, no app registrations, no
+     tokens, and it uses each person's own storage. Say whether SAF providers are reliable enough for this (conflicts, offline edits).
+   - **Stage C, only if B falls short:** sign in and the providers' APIs (Drive app data folder, OneDrive app folder through Microsoft
+     Graph). Needs a Google OAuth client and consent screen and an Entra app registration, which Alan would create. **Apple is out**
+     for now: iCloud needs the paid Apple developer program, which Alan will not pay for a platform he does not own.
+   - Whatever the stage, the session file format is the unit, a session edited on two devices must never silently lose one side's
+     changes, and photographs keep the rules they have today: no GPS, location or time metadata read, printed or logged.
+
+## 2. The first stage: prove the engine runs on the phone
+
+Before any screen is designed, answer the questions that decide the architecture, with measurements, in a new `docs/ANDROID.md`:
+
+1. **UI.** Avalonia on .NET Android, sharing `GroupLab.Core` and as much of `GroupLab.App` as fits a touch screen, is the obvious path.
+   Confirm it, or say why not. No second codebase in another language unless the measurements force it.
+2. **OpenCV on Android.** The detector uses OpenCvSharp, whose official runtimes are Windows, Linux and macOS. Find what runs on
+   android-arm64: a community runtime (for example the Sdcb mini runtimes on NuGet), OpenCV's own Android build under the existing
+   wrapper, or replacing the few OpenCV calls GroupLab actually makes with managed code. List the calls the detector uses, decide, and
+   check the license of whatever is chosen against GPL-3.0.
+3. **Camera.** Avalonia has no camera. Name the route: CameraX through the .NET Android bindings is likely. It must give full
+   resolution stills, the lens choice of MOBILE-CAPTURE.md item on focal length, focus and exposure control, and a live preview fast
+   enough for the capture conditions.
+4. **Speed and memory.** A spike APK that loads the sample scan and a phone photograph from the app's own assets, runs detection,
+   and prints the time and peak memory. Target devices: Alan's **Samsung Galaxy Z Fold 7** (daily phone; it has a narrow cover screen and a
+   wide inner screen, so both layouts matter) and his **Galaxy Tab S8 Ultra**. Say what the desktop takes for the same image.
+5. **Minimum Android version.** Choose the lowest that CameraX, the chosen OpenCV route and .NET 10 support without special cases,
+   and say what share of devices that leaves out.
+6. **Builds.** A CI job that builds a debug APK on every push to main that touches the app or Core, and a signed release APK and AAB
+   for nightlies once signing exists (section 3). Unsigned debug APKs are fine until then; never publish one as a nightly.
+
+Stop after the spike and the document, with a report in plain words: does detection run on the Fold 7, how fast, and what the plan is.
+No screens beyond what the spike needs.
+
+## 3. What only Alan can do, as requests in for-alan.md, when you reach them
+
+1. **The phone for testing:** Developer options on, Wireless debugging (or USB debugging) on, and the one `adb pair` or `adb connect`
+   line for this machine. He keeps Android tools in `C:\Dev\tools` for another project; use those or say what to install.
+2. **The .NET Android workload** if it is missing: the exact command, since it installs software.
+3. **The signing key, later:** Alan generates the upload keystore himself with `keytool`, keeps it outside the repository, and puts it
+   in GitHub secrets; Play App Signing holds the app key. You never read, copy or print the keystore or its passwords, exactly as with the
+   SSH key. Write the exact commands and the secret names when the release build needs them, not before.
+4. **The Play Console listing,** when there is something to put on it: the app entry, the closed testing track and the testers list.
+
+## 4. Things to keep in view, not to act on now
+
+- **The GPL app store permission.** Alan approved a draft GPL section 7 additional permission for app stores and is having an attorney
+  review it before it is committed. Internal and closed testing can go ahead; a public Play listing waits on that review. Say so in
+  `docs/ANDROID.md` and in STATE.md.
+- **iOS is not planned.** Alan owns an iPad Mini for testing the website only.
+- The capture screen's specification, `docs/MOBILE-CAPTURE.md`, is the contract; where Android makes an item impossible, say which and why.
+
+---
+
 ## 2026-09-25, entry 197: entry 196 narrowed; the zeroing grid is a print aid, not a scanning target
 
 **Status: actioned 2026-09-25, with entry 196, every section.** Section 2.1's one bull sheet is the MOA zeroing sheet: it is the library's only one bull sheet, and the 5x5 sheet with one bull left cannot be drawn, because its markers come from the lattice its bulls make and every sheet must encode into its own codes. Section 2.2's ragged hole is flagged only once the rounds fired are entered, and a touching pair left whole likewise; question 57 asks whether a sheet of two to four marks may flag a mark against the others.

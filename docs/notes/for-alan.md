@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **24**, only its last step now, one test error report, because error reports are switched on after it.
-Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 9.** Most urgent: **25**, then **26**, because the Android test build cannot reach the phone without them; then **24**, one
+test error report. Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -14,6 +14,62 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 26. Android: the Fold 7 and the tablet, ready for a test build
+
+**Opened 2026-09-25. Entry 198 section 3.1.** Needs request 25 first, because `adb` comes with it.
+
+**On the Fold 7:** Settings, About phone, Software information, tap **Build number** seven times. Then Settings, **Developer
+options**, turn on **Wireless debugging**, open it, and tap **Pair device with pairing code**. It shows an address with a port, and a
+six-digit code.
+
+**In PowerShell on this machine**, with the address and port the phone shows for pairing, then the code when asked:
+
+```powershell
+C:\Dev\tools\android-sdk\platform-tools\adb.exe pair <address:port shown under the pairing code>
+C:\Dev\tools\android-sdk\platform-tools\adb.exe connect <address:port shown on the Wireless debugging screen itself>
+C:\Dev\tools\android-sdk\platform-tools\adb.exe devices -l
+```
+
+The same for the Tab S8 Ultra if you want it tested in the same sitting; it is not needed for the first run.
+
+**Why.** The first stage ends with the detector running on the phone and its time measured there. Nothing can be installed on it
+without this.
+
+**A good answer.** The last command lists the phone with the word `device` after it and a model name beginning `SM-F`. Say "phone
+paired"; the addresses do not need to be sent. Wireless debugging turns itself off after a while, so it may need turning on again
+when the test build is ready.
+
+---
+
+## 25. Android: the .NET Android workload and the Android SDK
+
+**Opened 2026-09-25. Entry 198 section 3.2.** This machine has neither, and `C:\Dev\tools\sdkmanager` is Garmin's Connect IQ
+manager, not Android's. The Java 17 kit from Eclipse Adoptium is already installed and is what the Android build uses.
+
+**First, in PowerShell run as administrator**, because the workload installs into Program Files:
+
+```powershell
+dotnet workload install android
+```
+
+**Then in ordinary PowerShell.** This makes a throwaway Android project in your temporary folder only to ask the build to fetch what
+it needs, puts the SDK in `C:\Dev\tools\android-sdk`, accepts the Android SDK licenses on your behalf, and deletes the throwaway:
+
+```powershell
+dotnet new android -o "$env:TEMP\gl-android-probe"
+dotnet build "$env:TEMP\gl-android-probe" -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=C:\Dev\tools\android-sdk -p:JavaSdkDirectory="C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot" -p:AcceptAndroidSDKLicenses=True
+Remove-Item -Recurse -Force "$env:TEMP\gl-android-probe"
+setx ANDROID_HOME C:\Dev\tools\android-sdk
+```
+
+**Why.** The Android test build is made in CI either way, but installing it on the phone, and building it here between CI runs,
+needs both.
+
+**A good answer.** `dotnet workload list` shows `android`, and `C:\Dev\tools\android-sdk\platform-tools\adb.exe version` prints a
+version. About 2 to 3 GB lands in `C:\Dev\tools\android-sdk`.
 
 ---
 

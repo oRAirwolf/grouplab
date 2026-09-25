@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 939 |
-| measured | 1347 |
-| decided | 1113 |
+| code | 945 |
+| measured | 1349 |
+| decided | 1139 |
 | unbacked | 0 |
-| **total** | **3399** |
+| **total** | **3433** |
 
-**407** of them were read one sentence at a time and their backing written against the sentence. The other **2992** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**439** of them were read one sentence at a time and their backing written against the sentence. The other **2994** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -471,6 +471,40 @@ one that matters.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 1.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): ``` Copyright © 2017 IBM Corp.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): with Reserved Font Name "Plex" ``` They are licensed under the SIL Open Font License, Version 1.1.
+
+### docs/ANDROID.md
+
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): # GroupLab on Android NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **Nothing has run on a phone yet**: that waits on requests 25 (the Android workload and SDK on Alan's machine) and 26 (the Fold 7 paired for debugging) in `docs/notes/for-alan.md`.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): What Alan decided (entry 198 section 1) - **The first version analyzes on the phone, offline**: the capture screen of `docs/MOBILE-CAPTURE.md`, detection, review and correction, the group figures, and saved sessions, with the desktop's engine, not a second one.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): A newer personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the Discord server.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): - **A public Play listing waits on the attorney's review** of the draft GPL section 7 additional permission for app stores.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): The user interface: Avalonia on .NET Android **Confirmed as the path, to be proved by the spike on the phone.** GroupLab.Core is plain .NET and runs on Android unchanged, and Avalonia 12 runs on .NET Android with the same controls, styles and layout as the desktop.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): What would force a different answer: Avalonia failing the checks in section 7 on the Fold 7 (the density, the fold, rotation, the system font size), or the camera preview (section 4) not being hostable inside it.
+- *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): **The routes, and the one chosen.** | Route | Why or why not | |---|---| | OpenCvSharp's official runtimes | Windows, Linux and macOS only.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): | | Replace the calls with managed code | The WeChat detector, the marker detector and a RANSAC homography are each a project, and a second engine is what entry 198 rules out.
+- *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): | | **Build OpenCvSharp's native half for Android with GroupLab's modules** | **Chosen.** `android/opencv/build-extern.sh` does what Sdcb's pipeline does (NDK, API 24, the C++ runtime linked statically, OpenCV static inside one `libOpenCvSharpExtern.so`) with GroupLab's modules, and compiles only the OpenCvSharp bindings for them.
+- *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): It pins OpenCV 4.13.0 and OpenCvSharp 4.13.0.20260627, the version the desktop uses, because the managed and native halves must match.
+- *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): | **Licenses.** OpenCV (since 4.5), opencv_contrib and OpenCvSharp are Apache-2.0; Sdcb's pipeline, read for how the build is done and not copied, is Apache-2.0 too.
+- *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): Apache-2.0 code may be combined into a GPL-3.0 work, which is the direction GroupLab needs.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): On the Fold 7 that is a choice between the wide, ultrawide and telephoto cameras.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **On the phone**: not measured yet (requests 25 and 26).
+- *measured* (android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index): **The number to watch is memory**: a phone kills an application over a few hundred megabytes more readily than it slows it down, and 732 MB for a 600 dpi Letter scan is more than a phone application should hold.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): If the phone refuses it, the capture is processed at a capped resolution, which MOBILE-CAPTURE.md section 5 already does for the quality score.
+- *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): The lowest Android version: 7.0 (API 24) The native build is made for API 24, as Sdcb's is, and that sets the floor: CameraX and .NET 10 both go lower.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): Android 7.0 is from 2016, and Google's device share figures, read in Android Studio, will say what share it leaves out when the first build is published.
+- *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Phones, foldables and tablets, touch first (entry 199 section 1) - **Layout by the width available, not the device.** Compact, under 600 dp: a phone, and the Fold 7's cover screen.
+- *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Medium, under 840 dp: the Fold 7 open, small tablets.
+- *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): - **Touch.** Targets at least 48 dp.
+- *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): The Fold 7's cover screen is the case to test it on.
+- *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Sessions between phone and desktop (entry 198 section 1.4, entry 199 section 2) The session file is the unit whatever the route.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **The order, with one change from the planning session's reading:** 1.
+- *measured* (android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index): Worked out, not yet measured: a shot takes about five bytes, so a 25-shot session with its load is a few hundred bytes compressed, well inside a mid-sized code.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): How large a code a phone reads off a laptop screen at arm's length is measured on the Fold 7; above that, the application says to share the file instead, rather than showing several codes in turn.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): Windows asks once whether GroupLab may take connections on private networks; the application says why before that prompt appears.
+- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **Stage B, a sync folder: doubtful on Android, to be tried on the Fold 7 before it is planned.** Picking a folder on Android uses the Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I know, not whole folders.
+- *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): Builds `.github/workflows/android.yml`, on every push to `main` that touches Core, the imaging code, the sheets or `android/`: 1.
+- *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): A signed release APK and an AAB for Play need the upload key, which Alan generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build needs them.
 
 ### docs/BALLISTICS-VALIDATION.md
 
@@ -1593,6 +1627,7 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166): **The Intel build has never been run on a Mac.** The tests run on macOS on every build.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): ## What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
+- *decided* (NOTES-FROM-PLANNING.md entry 198): Its first stage started on 2026-09-25; the plan and what it found are in `docs/ANDROID.md`.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Hands-on Linux testing follows, on virtual machines.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): macOS depends on the hardware question below.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): ## Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.
@@ -1764,6 +1799,8 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 130: photographs against scans of the same sheets | **already covered** | `scans-against-photos` is that comparison.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 157: how far off square a photograph can be | **worth an article, not yet written** | Up to 32 degrees the holes in a photograph kept the square-on photographs' error, while the bull centers grew three times worse.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): But nothing past 35 degrees has been measured against a scan, and the article's useful sentence is where it stops working; request 18 asks for the photographs that would say.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entries 196 and 197: a touching pair is found as two shots about half the time, wherever it sits | **not written yet** | It would change what a shooter does (enter the rounds fired on a tight group), but it is twenty synthetic seeds a case; it waits on a real sheet with touching pairs, and question 57.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 198: OpenCV with ArUco and WeChat QR under OpenCvSharp on Android | **not yet** | It would change what another developer builds, since no published runtime carries those modules; decided when the build has run on a phone.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 157: a white sheet on a white board cannot be outlined | **not written** | A limit of GroupLab's own outline finder, with nothing a shooter would do differently beyond what the application already tells them.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 158 program A step 2: the scan detector on overlapping holes in photographs | **not written yet**, see below | It measures a detector built for scans on a case it was never meant for; the article worth writing is program A's, which needs the holes placed.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2.
