@@ -2,6 +2,22 @@
 
 This file is read at the start of every session. It is public: no secrets, nothing private, and no em dashes.
 
+## Nothing Code can change goes without a backup
+
+NOTES-FROM-PLANNING.md entry 222 section 6, and it outranks every other rule here. Alan: "The most important thing to me is that anything
+that you have access to delete or change, that there are backups in place to minimize the damage if something bad happens."
+
+1. `docs/RESTORE.md` lists everything Code or the planning session can delete or change, its backup, how often, where, and how to restore
+   it. **Anything with no backup is a gap, and Code does not act on it until the gap is closed.**
+2. **Before anything destructive**, the newest backup covering it is less than a day old and passed its last restore test; if not, make one
+   first (a backup run, or for a server file a dated copy outside the HestiaCP `conf/web/` folders).
+3. Deletions on this computer go to `C:\Dev\grouplab-trash\<date>\` first, emptied after 14 days and never before a nightly backup has
+   succeeded since. Build output and test leftovers are deleted directly.
+4. Code may use sudo on the server (entry 222 section 1), announced in `panel.md` with what ran and what it printed. **Until a whole-server
+   backup exists off the machine, sudo is limited to GroupLab's own files and its installer.** Nothing belonging to pissinhot.com is
+   touched, the key file is never read, and the server's address never appears anywhere.
+5. Nothing is force pushed to `main`, ever.
+
 ## Where the work comes from
 
 The planning session delivers instructions as numbered entries in `docs/notes/inbox/`, named `entry-NN.md`. It never edits any other file here.

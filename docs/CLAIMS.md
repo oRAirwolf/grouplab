@@ -20,16 +20,21 @@ one that matters.
 |---|---|
 | code | 983 |
 | measured | 1422 |
-| decided | 1153 |
+| decided | 1164 |
 | unbacked | 0 |
-| **total** | **3558** |
+| **total** | **3569** |
 
-**533** of them were read one sentence at a time and their backing written against the sentence. The other **3025** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**533** of them were read one sentence at a time and their backing written against the sentence. The other **3036** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
 ### CLAUDE.md
 
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Nothing Code can change goes without a backup NOTES-FROM-PLANNING.md entry 222 section 6, and it outranks every other rule here.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Alan: "The most important thing to me is that anything that you have access to delete or change, that there are backups in place to minimize the damage if something bad happens." 1.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Anything with no backup is a gap, and Code does not act on it until the gap is closed.** 2.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Deletions on this computer go to `C:\Dev\grouplab-trash\ \` first, emptied after 14 days and never before a nightly backup has succeeded since.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Code may use sudo on the server (entry 222 section 1), announced in `panel.md` with what ran and what it printed.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Actioning an entry means four things, in the same commit as the work: 1.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Anything that needs Alan goes to a file, not to the panel **NOTES-FROM-PLANNING.md entry 149 section 5, and it replaces the earlier rule about handing him a numbered list in the panel.** Alan has said plainly that the panel is hard to read and that answering a question there is harder than answering it in the planning session.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Alan does not read the panel; the planning session reads the files NOTES-FROM-PLANNING.md entry 180.
@@ -1925,6 +1930,15 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **Step 4.** The article waits for the data.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Until then article 1 says what can and cannot be separated.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Request 20 asks Alan to shoot the test when he can.
+
+### docs/RESTORE.md
+
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): # Backups, and how to restore NOTES-FROM-PLANNING.md entry 222.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Anything with no backup is a gap, listed as one, and Code does not act on it until the gap is closed.** ## If something is gone, first 1.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Nothing is force pushed to `main`, ever.** 3.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\ \`, emptied after 14 days and never before a nightly backup has succeeded since.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The manifest lists every file with its SHA-256, so a copy can be checked before it is trusted.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): For the whole machine, once request 35 step 3 is done: in the Oracle Cloud console, the boot volume's backups, **Create Boot Volume** from the newest, and attach it in place of the damaged one.
 
 ### docs/REWRITE-HASH-MAP.md
 

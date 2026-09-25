@@ -2145,6 +2145,11 @@
    "surface": "^site:research/wrong\\-bull/",
    "kind": "measured",
    "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^docs/RESTORE\\.md$",
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6"
   }
  ]
 }
