@@ -12,6 +12,25 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-25, question 57: may a sheet of two to four marks flag one mark against the others?
+
+**Status: open. Nothing is changed; the behaviour below stands until it is answered.** Entry 161 section 3: "Too few marks to measure
+a reference from. A calibre keeps a single hole from being split, and flags nothing". Below five round marks
+(`MarksForTentativeSize`), `RenderDifferenceHoleDetector.SizeReference` returns the caliber source with no flag size.
+
+**What entries 196 and 197 found.** A touching pair of .308 holes, rims meeting, is found as two shots about half the time, measured
+over twenty seeds each on the 25 bull sheet and the one bull sheet: across the bull's printed edge 10 and 9 of 20, on paper 12 and 9,
+inside the black 9 and 8. Left whole it measures 0.42 to 0.58 in across. Three shots through one ragged hole are one mark of about
+two holes' area. On a sheet of fewer than five marks neither is flagged, so a five-shot group with one merged pair arrives as four
+shots with nothing said. Entering the rounds fired catches both: the count item names the mark most likely to be two, first.
+
+**The option.** Where there are two to four round marks, flag a mark whose area is at least twice the median of the others'. A wrong
+caliber, the case entry 161 guards against, scales every mark alike and so cannot make one stand out. It does nothing for a lone
+ragged hole, which has no others to compare with; there the count stays the only catch. Cost: one rule in `SizeReference`, and
+`CryingWolfTests` still holds because its marks are all one size.
+
+**What I would choose.** The option, tentative flags only, with the sentence that already says "judged from too few marks to be sure".
+
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
 
 **Status: open. Nothing is changed yet; request 9's hand markings are the evidence that decides it.** Entry 187 section 5 agreed: nothing changes until request 9's two hand markings arrive.

@@ -178,7 +178,9 @@ public static class LibraryBuilder
         string unitLabel = unit == GridUnit.Moa ? "MOA" : "mil";
         string description = string.Create(CultureInfo.InvariantCulture,
             $"One aiming mark on a {halfUnits / divisions:0.##} {unitLabel} grid spanning plus or minus {halfUnits:0.0} {unitLabel} " +
-            $"at 100 {(distanceUnit == DistanceUnit.Yards ? "yards" : "metres")}, with a six-field load block.");
+            $"at 100 {(distanceUnit == DistanceUnit.Yards ? "yards" : "metres")}, with a six-field load block.")
+            // NOTES-FROM-PLANNING.md entry 197 section 3: what a zeroing grid is for, and what it is not.
+            + " For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.";
 
         var definition = new TargetDefinition(
             1, 0, null, Names[name], description, "GroupLab built-in library", "CC0-1.0", Created, "dmm",

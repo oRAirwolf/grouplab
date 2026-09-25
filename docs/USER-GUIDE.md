@@ -20,6 +20,8 @@ everything it takes to print it is beside the list, with its artwork filling the
 - **Open to print** opens the PDF in your viewer instead. Print it from there at Actual size or 100 percent, never Fit.
 - **Save PDF** keeps the file.
 
+**The zeroing grids are for sighting in by eye.** Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
+
 **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
 
 **Your own sheet.** Design your own sheet, at the top of Targets, lays out a grid of bulls:
@@ -38,6 +40,8 @@ Save to your own sheets keeps a design in the list. There you can rename it, dup
 - Write only in the load block.
 
 Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two shots on the bulls you name.
+
+A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees names the mark most likely to hold two.
 
 ## 3. Photograph or scan it
 

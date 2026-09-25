@@ -77,6 +77,17 @@ public static class ShotAssignment
     /// Every shot's assignment, with bull indices into <paramref name="bulls"/>. The method is nearest-bull when either pool had more shots
     /// than bulls, and the reason says what happened in each pool.
     /// </returns>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 196: a sheet with one scoring bull, every zeroing grid among them, is shot as a group at that bull. So
+    /// the bull takes every shot, with no limit, and none is flagged for there being more shots than bulls: that is the sheet working, not
+    /// a doubt. Null where there is more than one scoring bull, so every other sheet keeps one place a bull unless the marking says more.
+    /// </summary>
+    public static IReadOnlyList<int>? OneBullTakesAll(IReadOnlyList<bool> scoring, int shots)
+    {
+        ArgumentNullException.ThrowIfNull(scoring);
+        return scoring.Count(s => s) == 1 ? [.. scoring.Select(s => s ? Math.Max(1, shots) : 1)] : null;
+    }
+
     public static ShotAssignmentResult Assign(IReadOnlyList<PointD> shots, IReadOnlyList<PointD> bulls, double gateInches = double.PositiveInfinity, IReadOnlyList<bool>? scoring = null,
         IReadOnlyList<int>? capacity = null, bool nearestOnly = false)
     {

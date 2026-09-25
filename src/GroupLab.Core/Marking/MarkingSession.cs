@@ -742,7 +742,8 @@ public sealed class MarkingSession
         }
 
         var result = ShotAssignment.Assign([.. placed], [.. open.Select(b => b.Declared!.Value)], scoring: [.. open.Select(b => b.Scoring)],
-            capacity: rule is null ? null : [.. open.Select(b => Math.Max(1, Room(b.Index)))], nearestOnly: rule?.NearestOnly == true);
+            capacity: rule is null ? ShotAssignment.OneBullTakesAll([.. open.Select(b => b.Scoring)], placed.Count) : [.. open.Select(b => Math.Max(1, Room(b.Index)))],
+            nearestOnly: rule?.NearestOnly == true);
         int? Index(int? position) => position is { } p && p >= 0 ? open[p].Index : null;
 
         var bulls = new Dictionary<int, int?>();

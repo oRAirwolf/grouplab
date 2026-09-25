@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 939 |
 | measured | 1347 |
-| decided | 1108 |
+| decided | 1113 |
 | unbacked | 0 |
-| **total** | **3394** |
+| **total** | **3399** |
 
-**402** of them were read one sentence at a time and their backing written against the sentence. The other **2992** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**407** of them were read one sentence at a time and their backing written against the sentence. The other **2992** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2605,6 +2605,8 @@ one that matters.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): - **Print** (on Windows) prints from inside GroupLab at actual size.
+- *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead.
+- *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 - *code* (the print screen's check line and targets/GL-CF25-LTR.gltd.json): **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.
 - *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): On the Letter 5x5 sheet it is 5.98 in (152.0 mm).
 - *code* (the library screen, src/GroupLab.App/MainWindow.Library.cs): There you can rename it, duplicate it, or delete it after GroupLab asks.
@@ -2885,6 +2887,8 @@ one that matters.
 - *decided* (what GroupLab is, DESIGN.md section 1): Settings GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
+- *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): For a zero worked out from a group, and the group figures, shoot a 5x5 sheet instead.
+- *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 - *code* (the print screen's check line and targets/GL-CF25-LTR.gltd.json): Measure from the center of bull 1 to the center of bull 5 with a ruler.
 - *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): On the Letter 5x5 sheet it is 5.98 in (152.0 mm).
 - *code* (the library screen, src/GroupLab.App/MainWindow.Library.cs): There you can rename it, duplicate it, or delete it after GroupLab asks.
@@ -3688,6 +3692,7 @@ one that matters.
 
 - *code* (SheetReference.PrintScale, entry 171; ImperfectSheetTests): A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large.
 - *code* (the print screen, src/GroupLab.App/PrintWindow.cs): So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper cannot hold the sheet.
+- *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot; for a zero worked out from a group, and group figures, use a 5x5 sheet.
 - *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): The twenty that come with GroupLab cannot be edited.
 - *decided* (the print instructions, entry 107 and the print screen): Press Open to print, and in the print dialog choose Actual size or 100 percent, never Fit or Shrink oversized pages.
 

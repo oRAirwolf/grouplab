@@ -9,17 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 195.
+**Last rewritten:** 2026-09-25, after entries 196 and 197.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 195 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 197 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- Entry 196 is next: a zeroing grid expects a group on its one bull, touching holes and a ragged hole.
+- **A sheet with one scoring bull takes a group** (entries 196 and 197): no count, no limit, nothing to review for it.
+  The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
+- **Whether the roll sheets' codes read on Linux and macOS** is what CI on the entry 197 commit shows.
 - **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are built and switched off**:
   `errorReportsOpen` goes true once request 24's last step, one test report, makes an issue.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site**, not when it is in the
@@ -38,15 +40,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
-- **Entry 165, switching it on.** Request 22: Alan's one test target and pull.
 
 Open requests in `docs/notes/for-alan.md`: **7** (24 most urgent, its last step only, then 9, 16, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55; entry 195 answered 56.
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55; entry 195 answered 56.
 
 
+- **57** may a sheet of two to four marks flag one mark against the others
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -65,7 +67,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 196
+**Holds:** 198
 
 ## Things that would surprise somebody who was not here yesterday
 

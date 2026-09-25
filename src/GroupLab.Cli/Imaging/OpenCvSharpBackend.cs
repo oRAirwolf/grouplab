@@ -380,10 +380,29 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         // single code in the whole 5100 by 7013 image, at full or half resolution, and in each corner third of it the WeChat detector found
         // the code and the plain decoder read all 85 bytes, at full, half and a third of the resolution alike. Every GroupLab sheet keeps its
         // codes near the corners of the page, so where the whole image gives nothing each corner third is searched on its own.
-        if (texts.Count == 0)
+        //
+        // On a roll sheet a corner third is still a sheet of Letter or larger, with the code a small part of it, and on Linux and macOS no
+        // code was found in any of them (CI on 760083c, GL-LR300-R24, R36 and R42). So where the thirds give nothing too, square corners
+        // of a quarter and then an eighth of the shorter side are searched: every sheet's codes sit within about 250 dmm of their corners.
+        foreach (Func<int, int, (int W, int H)> size in new Func<int, int, (int W, int H)>[]
         {
-            int w = input.Width / 3, h = input.Height / 3;
-            foreach (var corner in new[] { new Rect(0, 0, w, h), new Rect(input.Width - w, 0, w, h), new Rect(0, input.Height - h, w, h), new Rect(input.Width - w, input.Height - h, w, h) })
+            (w, h) => (w / 3, h / 3),
+            (w, h) => (Math.Min(w, h) / 4, Math.Min(w, h) / 4),
+            (w, h) => (Math.Min(w, h) / 8, Math.Min(w, h) / 8),
+        })
+        {
+            if (texts.Count > 0)
+            {
+                break;
+            }
+
+            var (cw, ch) = size(input.Width, input.Height);
+            if (cw < 64 || ch < 64)
+            {
+                continue;
+            }
+
+            foreach (var corner in new[] { new Rect(0, 0, cw, ch), new Rect(input.Width - cw, 0, cw, ch), new Rect(0, input.Height - ch, cw, ch), new Rect(input.Width - cw, input.Height - ch, cw, ch) })
             {
                 using var part = new Mat(input, corner);
                 texts.AddRange(Read(part));

@@ -185,7 +185,7 @@ public static class ReviewQueue
 
         // Entry 113 section 4: a bull the marking says holds more than one, or a sheet read by nearest bull, is not doubled by holding them.
         foreach (var group in shots.Where(s => s.Bull is { } b && bulls.TryGetValue(b, out var bull) && bull.Scoring).GroupBy(s => s.Bull!.Value)
-            .Where(g => g.Count() > (state.Rule is { NearestOnly: true } ? int.MaxValue : state.Rule?.For(g.Key) ?? 1)))
+            .Where(g => g.Count() > (state.Rule is { NearestOnly: true } || (state.Rule is null && OneBull(state)) ? int.MaxValue : state.Rule?.For(g.Key) ?? 1)))
         {
             string key = $"doubled:{group.Key}:{string.Join(',', group.Select(s => s.Id).Order())}";
             items.Add(new ReviewItem(key, ReviewKind.Doubled, group.First().Id, group.Key, group.First().Image,
@@ -325,8 +325,17 @@ public static class ReviewQueue
             return null;
         }
 
+        // Entry 196: one scoring bull takes a group, so the sheet itself says nothing about how many; only the person's count does.
+        if (state.Rule is null && scoring.Count == 1)
+        {
+            return null;
+        }
+
         return state.Rule is { } rule ? scoring.Sum(b => rule.For(b.Index)) : scoring.Count;
     }
+
+    /// <summary>A sheet with one scoring bull, which is shot as a group at it (entry 196).</summary>
+    private static bool OneBull(MarkingState state) => state.Bulls.Count(b => b.Scoring) == 1;
 
     /// <summary>The scoring bulls with nothing on them, named, because that is where a missing shot is.</summary>
     private static string Empty(MarkingState state, IReadOnlyDictionary<int, string> labels)

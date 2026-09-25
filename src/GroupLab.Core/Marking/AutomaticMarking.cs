@@ -244,7 +244,8 @@ public static class AutomaticMarking
         using (var stage = trace.Begin("S9.assign"))
         {
             // Entry 73 section 1: sighter and scoring bulls are matched as separate pools, so a sighter's hole never lands on a scoring bull.
-            assignment = ShotAssignment.Assign(shotPages, bullPages, scoring: [.. definition.Bulls.Select(b => b.Scoring)]);
+            bool[] scoringBulls = [.. definition.Bulls.Select(b => b.Scoring)];
+            assignment = ShotAssignment.Assign(shotPages, bullPages, scoring: scoringBulls, capacity: ShotAssignment.OneBullTakesAll(scoringBulls, shotPages.Count));
             int ambiguous = assignment.Shots.Count(s => s.Ambiguous), unassigned = assignment.Shots.Count(s => s.Bull is null);
             stage.Decide("assignment", assignment.Method.Words(), assignment.Reason);
             foreach (var s in assignment.Shots.Where(s => s.Ambiguous))
@@ -258,7 +259,7 @@ public static class AutomaticMarking
         }
 
         var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches * printScale,
-            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB) : null,
+            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB, h.CalibreHoles) : null,
             h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 

@@ -27,14 +27,28 @@ public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? Split
 /// raise, because the only way to add the second shot was the mouse.
 /// </para>
 /// </summary>
-public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null)
+public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null, double? CalibreHoles = null)
 {
     /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
     public string Describe(string shot) => Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Name the caliber to check it.")
+            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Look at it, and name the caliber if it is not named.{More}")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.");
+            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.{More}");
+
+    /// <summary>
+    /// Entries 196 section 2.3 and 197: where the area holds about three holes of the named caliber, it may be three shots. Three places
+    /// cannot be read from one ragged outline honestly: the two-way split already sits toward the middle, and a three-way one would put a
+    /// shot where the outline merely bulges. So it is said, and the person takes it as two and marks the rest by hand. Without a caliber
+    /// no count past two is guessed; the sentence says a caliber is what would tell. <see cref="CalibreHoles"/> is the mark's area in
+    /// holes of the named caliber, null when none was named.
+    /// </summary>
+    private string More => CalibreHoles switch
+    {
+        >= 2.5 => " It may be three or more: take it as two shots, then mark any more by hand with Impact.",
+        null when Holes >= 2.5 => " Name the caliber and GroupLab can say whether it may be three.",
+        _ => "",
+    };
 }
 
 /// <summary>

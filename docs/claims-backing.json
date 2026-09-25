@@ -1400,6 +1400,22 @@
   "GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error reports , you choose automatically, ask each time, or never.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs"
+  },
+  "For a zero worked out from a group, and the group figures, shoot a 5x5 sheet instead.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet"
+  },
+  "GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet"
+  },
+  "For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet"
+  },
+  "A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot; for a zero worked out from a group, and group figures, use a 5x5 sheet.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet"
   }
  },
  "rules": [

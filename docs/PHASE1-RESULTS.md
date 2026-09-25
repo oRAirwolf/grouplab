@@ -997,6 +997,44 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entries 196 and 197: a group on a one bull sheet, touching holes and a ragged hole
+
+**What was true before, run rather than read.** On a zeroing grid, a five-shot group went to its one bull, and the review held a
+count item ("This sheet takes 1 shots") and a Contested card on every shot. The gate is infinite in the automatic marking, so a far
+first shot was never left unassigned; that part of entry 196 section 1.2 did not happen. A ragged three-shot hole was not flagged
+at all on a sheet of few marks, which section 1.4 had read as flagged.
+
+**A sheet with exactly one scoring bull takes a group**, whatever the sheet: every shot to that bull with no limit
+(`ShotAssignment.OneBullTakesAll`, in the automatic marking and in the reassignment after an edit), no count from the sheet itself
+(`ReviewQueue.Expected` is null there), and no Doubled item for the bull holding several. The gate is infinite already, so a shot 4 in
+out is still the bull's. The definition format is not changed to say this per bull: one scoring bull is unambiguous, and a
+per-bull count would change the encoded body of every printed sheet, which is its own entry if a sheet ever needs it.
+
+**Touching pairs**, rims meeting, split about half the time wherever they sit, measured over twenty seeds each: across the bull's
+edge 10 and 9 of 20 (25 bull sheet, one bull sheet), on paper 12 and 9, in the black 9 and 8. A printed line is not what makes it
+hard. Left whole, and on a sheet of fewer than five marks, nothing flags it (entry 161); question 57 offers a flag against the
+sheet's other marks. With the rounds fired entered, the count names it first as most likely to be two.
+
+**The ragged hole.** Three shots through one hole read as one mark of about two holes' area. It is flagged only once the rounds
+fired are entered, as above. Three places are not offered: the two-way split already sits toward the middle of the mark, and a
+three-way split would put a shot wherever the outline bulges, which is a guess dressed as a measurement. Instead, where the mark
+holds 2.5 or more holes of the named caliber, the oversize sentence adds "It may be three or more: take it as two shots, then mark
+any more by hand with Impact."; with no caliber it says "Name the caliber and GroupLab can say whether it may be three." The
+caliber's count now travels with the flag (`DetectedOversize.CalibreHoles`) and is saved with the marking.
+
+**Zeroing grids** keep the every-sheet test and Unholy's scan and nothing more. Their library descriptions, the tour's Targets page
+and the guide now say they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
+
+**The roll sheets' codes on Linux and macOS.** CI on 760083c failed the every-sheet test for GL-LR300-R24, R36 and R42: no code
+read, on Linux and macOS, where Windows reads them. A corner third of a roll is still larger than Letter. The reader now also
+searches corner squares of a quarter and an eighth of the shorter side when the thirds give nothing. Windows cannot show that this
+is the fix; CI on this commit does.
+
+**Tests.** Core `TightGroupTests` (8): the five-shot group on a one bull sheet with nothing to review, with and without the rounds
+entered; a shot 4 in out; a touching pair across the bull's edge on six seeds, two shots or named by the count; the ragged hole on
+both sheets; and the three-or-more sentence only from a caliber. Core 1656 passed and 2 skipped; App 298 of 299, with
+`CrashTests.AnExceptionThrownFromAClickHandlerLeavesACrashRecordThatNamesIt` failing in the full run and passing alone.
+
 ## Entry 195: the error receiver shipped, sending on, and Unholy's codes read
 
 **The error receiver was never shipped.** `website/build.py` listed and copied three receivers and not `error-report.php`, so the live

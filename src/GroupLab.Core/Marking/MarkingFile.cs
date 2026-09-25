@@ -117,6 +117,7 @@ public static class MarkingFile
                         tentative = flag.Tentative,
                         splitA = flag.SplitA is { } a ? new { x = a.X, y = a.Y } : null,
                         splitB = flag.SplitB is { } b ? new { x = b.X, y = b.Y } : null,
+                        calibreHoles = flag.CalibreHoles,
                     }
                     : null,
             }),
@@ -189,7 +190,7 @@ public static class MarkingFile
             (bool?)s["bullChosen"] ?? false,
             (double?)s["measuredDiameterInches"],
             s["oversize"] is JsonObject flag
-                ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]))
+                ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]), (double?)flag["calibreHoles"])
                 : null,
             s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"])) : null)
         {

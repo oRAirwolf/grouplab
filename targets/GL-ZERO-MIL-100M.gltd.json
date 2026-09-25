@@ -3,7 +3,7 @@
   "revision": 0,
   "id": "GL-0DEQ-H5XA-X9TA-EJ6H",
   "name": "GroupLab Zeroing Grid, mil at 100 m",
-  "description": "One aiming mark on a 0.1 mil grid spanning plus or minus 0.8 mil at 100 metres, with a six-field load block.",
+  "description": "One aiming mark on a 0.1 mil grid spanning plus or minus 0.8 mil at 100 metres, with a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
   "author": "GroupLab built-in library",
   "licence": "CC0-1.0",
   "created": "2026-09-13",

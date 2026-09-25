@@ -24,6 +24,95 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 197: entry 196 narrowed; the zeroing grid is a print aid, not a scanning target
+
+**Status: actioned 2026-09-25, with entry 196, every section.** Section 2.1's one bull sheet is the MOA zeroing sheet: it is the library's only one bull sheet, and the 5x5 sheet with one bull left cannot be drawn, because its markers come from the lattice its bulls make and every sheet must encode into its own codes. Section 2.2's ragged hole is flagged only once the rounds fired are entered, and a touching pair left whole likewise; question 57 asks whether a sheet of two to four marks may flag a mark against the others.
+
+**Read this before entry 196, and action the two together as this entry says.** Alan and the planning session agreed on 2026-09-25.
+
+## 1. Why
+
+Alan: the zeroing grid is for sighting in by eye at the bench. Fire, read "1.2 mil high and 0.8 right" off the grid, dial, fire again.
+A statistical zero comes from the 25 bull sheets. Scanning a zeroing grid afterward loses the order of shots and adjustments, which is
+the only thing that mattered, and he never planned to scan one; the grids exist because they print at a perfect scale. Alan has asked
+Unholy what he expects a zeroing grid to do; if his answer changes this, it will come as a new entry. Until then, this stands.
+
+## 2. What of entry 196 to do, reframed
+
+1. **Section 2.1, for every sheet with one scoring bull, not for zeroing grids as such.** Single bull group targets are common: 100 yard
+   sight in targets, benchrest group targets, many commercial sheets. A sheet with exactly one scoring bull expects a group on it: every
+   shot to that bull, no "holds N shots" item, no flag on every shot for outnumbering the bulls, and a gate that covers the whole sheet.
+   The same test in section 2.2's style, but on one of GroupLab's own single bull sheets if the library has one, otherwise a synthetic one
+   bull definition, not on the zeroing grids.
+2. **Touching holes and the ragged hole, for any sheet.** Section 2.2's touching pair, pair across a printed line, and three shot ragged
+   hole, and section 2.3's Three shots choice, belong to tight groups everywhere. Test them on a single bull sheet and on the 25 bull sheet.
+3. **Zeroing grids keep only what they have:** the every-sheet test and Unholy's scan test, so a scan never breaks and never shows a blank
+   result. No zeroing grid specific tests beyond that, and no further work to make them a scanning target.
+4. **Drop section 2.4:** no request to Alan for a scanned zeroing grid.
+5. **Section 1.2's question about the gate** still gets answered in the report, since it applies to any one bull sheet.
+
+## 3. Say what the zeroing grids are for
+
+In the target library's description of each zeroing grid, the site's target pages and the user guide: a sheet for sighting in by eye,
+printed at exact scale, read off the grid at the bench; for a statistical zero and group figures, use a 25 bull sheet, with a link. One
+or two sentences, plain, no claim that scanning it is useful. GroupLab still accepts a scanned one without complaint.
+
+## 4. The report
+
+Plain words for Alan: what a five shot group on a single bull sheet looks like after detection, touching and ragged holes, and the new
+wording for the zeroing grids.
+
+---
+
+## 2026-09-25, entry 196: a zeroing grid with a group on it, touching holes, and one ragged hole
+
+**Status: actioned 2026-09-25 as entry 197 narrowed it.** Section 2.1 applies to every sheet with one scoring bull, not to sheets with a grid. Section 2.2's tests are on a one bull sheet and the 25 bull sheet, not the four zeroing grids. Section 2.3: three places are not offered, for the reason in PHASE1-RESULTS; the sentence says three only from a named caliber. Section 2.4 was dropped by entry 197. Section 1.4 was wrong in one part: a ragged hole on a sheet of few marks was not flagged at all.
+
+Alan asked whether the zeroing grid finds more than one shot, and shots that touch. The planning session read the code and tests. What it
+found, then what to do. Do this after entry 195.
+
+## 1. What is true today, as read from the repository
+
+1. **Detection of several shots:** `EverySheetDetectsTests.HolesOnAZeroingGridsLinesAreFound` puts five separate holes on and across the
+   lines of each of the four zeroing grids, and all five are found. Synthetic only; the one real scan (Unholy's) has one shot.
+2. **Assignment of several shots:** a zeroing grid has one scoring bull, and nothing in its definition or the default `AssignmentRule` says
+   that bull takes more than one shot. With more shots than bulls, `ShotAssignment` gives each shot to its nearest bull within the gate and
+   **flags every shot**, and `ReviewQueue` then raises "Bull 1 holds 5 shots ... The sheet expects one a bull". So a normal five-shot zeroing
+   group arrives with a review item on every shot, which is the friction Unholy has been reporting. A shot farther than the gate from the
+   one bull, which on a zeroing grid is exactly the first shot of a rifle that is far off, may be left unassigned. Say what the gate is
+   on a zeroing grid and whether the grid's whole area is inside it.
+3. **Two touching holes:** split by shape (`CalibreSplitTests`), with a named caliber stopping false splits; one left whole is flagged
+   oversized with a Two shots choice. Not tested where the pair sits on or across a grid line.
+4. **Three or more through one ragged hole:** stays one mark, flagged oversized; the review offers One shot, Two shots or Not a shot, so a
+   person must add the third shot by hand.
+
+If any of this is wrong, say so in the report; it was read from code, not run.
+
+## 2. What to do
+
+1. **A sheet with one scoring bull expects a group on it.** For a definition with exactly one scoring bull, and for any sheet with a grid,
+   the default is every shot to that bull with no limit: no "holds N shots" item, no flag on every shot for having more shots than bulls,
+   and a gate that covers the whole printed grid (or the page), so a far-off first shot is still that bull's. Only real doubts (a mark
+   that may be two, a candidate refused) reach the review. Consider whether the definition format should say this explicitly, for
+   example a per-bull expected count, rather than inferring it from the count of bulls; your call, with the reason.
+2. **Tests on all four zeroing grids,** from renders with synthetic holes, counted exactly:
+   - a five-shot group about 1 in across, including one touching pair, and a pair straddling a line;
+   - one shot 2.5 in from the aim point, at the grid's edge;
+   - a three-shot ragged hole, which must at least be flagged as more than one shot.
+   Each asserts the count found, that every shot is on the one bull, and that the review holds only the items section 2.1 allows.
+3. **The ragged hole review:** where the mark's area holds about three holes of the named caliber, offer Three shots as well, placed from
+   the mark's shape the way Two shots already is, or say in the report why that cannot be placed honestly and what a person does instead.
+   Never guess a count without a caliber; say it needs one.
+4. **A request for Alan, optional:** a real zeroing grid with a five-shot group and at least one touching pair, scanned at 600 dpi, as the
+   first real test. One line in for-alan.md, no deadline.
+
+## 3. The report
+
+Plain words for Alan: what a five-shot zeroing group now looks like after detection (how many review items, if any), and what happens
+with touching holes and a ragged hole.
+
+---
+
 ## 2026-09-25, entry 195: requests 22 and 23 passed; request 24 stops at a 404 because the site never ships error-report.php; question 56
 
 **Status: actioned 2026-09-25**, every section. Section 4 stopped at its first step, which was enough: the codes were found by searching each corner of the scan, not by resampling them, so no second decoder and no change to the print. Whether that also makes the three renders read on Linux and macOS is what CI on this commit shows; the every-sheet test requires it again.
