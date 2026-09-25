@@ -30,10 +30,10 @@ public sealed class App : Avalonia.Application
 /// </summary>
 public sealed class SpikeView : UserControl
 {
-    private const string Tag = "GroupLabSpike";
+    private const string LogTag = "GroupLabSpike";
     private readonly TextBlock _sizes = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly TextBlock _runs = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
-    private readonly Button _run = new() { Content = "Run detection", MinHeight = 48, MinWidth = 160 };
+    private readonly Avalonia.Controls.Button _run = new() { Content = "Run detection", MinHeight = 48, MinWidth = 160 };
     private readonly Grid _layout = new();
     private string? _widthClass;
 
@@ -148,7 +148,7 @@ public sealed class SpikeView : UserControl
 
     private static void Log(string line, TextBlock into)
     {
-        global::Android.Util.Log.Info(Tag, line);
+        global::Android.Util.Log.Info(LogTag, line);
         Dispatcher.UIThread.Post(() => into.Text = string.IsNullOrEmpty(into.Text) ? line : into.Text + "\n" + line);
     }
 }
