@@ -470,6 +470,16 @@ def archive(dry_run: bool) -> int:
         if not put(*item, dry_run):
             return 2
 
+    # systemd will not start a unit whose credential file is missing (status 243), so an empty one stands in until Alan sets the token;
+    # the worker reads an empty token as not set yet, and says so. Root's alone, like the real one.
+    if not ARCHIVE_TOKEN.exists():
+        say(f"  {'would create' if dry_run else 'creating'} an empty {ARCHIVE_TOKEN} until the token is set (mode 600, root)")
+        if not dry_run:
+            ARCHIVE_TOKEN.parent.mkdir(parents=True, exist_ok=True)
+            os.chmod(ARCHIVE_TOKEN.parent, 0o700)
+            os.close(os.open(ARCHIVE_TOKEN, os.O_WRONLY | os.O_CREAT, 0o600))
+            os.chown(ARCHIVE_TOKEN, 0, 0)
+
     say("systemd")
     if run(["systemctl", "daemon-reload"], dry_run) != 0:
         return 1
