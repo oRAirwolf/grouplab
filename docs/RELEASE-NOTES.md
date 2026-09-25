@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.108
+
+**2026-09-25**, commit `5ddd790`. Nightly.
+
+**What you will notice**
+
+- You can share a session with the new Share a session file in the menu, and open one from the phone or another computer with Open a session file; the picture in it carries no location or other photo details.
+- Settings now gathers what GroupLab may share (targets, error reports and a coming hardware survey) in one section called Sharing.
+
+**Under the hood**
+
+- Nothing changes on the desktop: the settings file can now also remember the caliber and distance of the last target, which the coming Android app offers again for the next one.
+- Nothing changes on the desktop: the code that draws the group plot and saves a session is now shared with the coming Android app, which can photograph a target and show its result.
+- A hardware survey and a built-in benchmark are ready but switched off; GroupLab will ask once, and send nothing unless you say yes, when the project's side is installed.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.108)
+
+---
+
 ## 0.2.0-nightly.107
 
 **2026-09-25**, commit `27bd109`. Nightly.
