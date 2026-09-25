@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
+  <!-- Entry 219 item A3: the network, for error reports and targets the person has agreed to send. The camera arrives with item A4. -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <application android:label="GroupLab" android:resizeableActivity="true" android:allowBackup="false" />
+</manifest>

@@ -1892,6 +1892,18 @@
   "**Camera** opens the capture screen of entry 219 item A2: the preview, the one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.": {
    "kind": "code",
    "where": "android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs"
+  },
+  "**The application's APK**, `grouplab-apk`, from `android/GroupLab.Android`, the permanent id `org.grouplab.app` (entry 219 item A3).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId"
+  },
+  "**The spike's APK**, `grouplab-spike-apk`, until item A4 moves the camera into the application; request 33 installs it.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId"
+  },
+  "The application (entry 219 item A3) `android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId"
   }
  },
  "rules": [

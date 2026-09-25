@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 219 item A3: the Android application itself, org.grouplab.app, the id it keeps on Google Play for good
+    (entry 198 section 1.3). It shares the desktop's engine through GroupLab.Core and the desktop's settings, error report and sharing
+    code by compiling those files as they are, so the two cannot drift. Not in GroupLab.slnx: the desktop never needs the Android
+    workload. .github/workflows/android.yml builds it.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <!-- Android 10, the minimum approved in entry 207. -->
+    <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+    <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+    <ApplicationId>org.grouplab.app</ApplicationId>
+    <ApplicationTitle>GroupLab</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <RootNamespace>GroupLab.Android</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+    <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GroupLab.Core\GroupLab.Core.csproj" />
+    <!-- The engine's imaging, and the desktop's settings, sharing words and error report code, compiled here as they are. -->
+    <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Shared\Imaging" />
+    <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
+    <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorReports.cs" Link="Shared\Diagnostics\ErrorReports.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\DiagnosticLog.cs" Link="Shared\Diagnostics\DiagnosticLog.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\AppInfo.cs" Link="Shared\Diagnostics\AppInfo.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\LogDirectory.cs" Link="Shared\Diagnostics\LogDirectory.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorQueue.cs" Link="Shared\Diagnostics\ErrorQueue.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\CrashReporter.cs" Link="Shared\Diagnostics\CrashReporter.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ReportPackage.cs" Link="Shared\Diagnostics\ReportPackage.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ImageFacts.cs" Link="Shared\Diagnostics\ImageFacts.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- OpenCV built for the phone by android/opencv/build-extern.sh; CI and a local build put it in android/native. -->
+    <AndroidNativeLibrary Include="..\native\arm64-v8a\libOpenCvSharpExtern.so" Condition="Exists('..\native\arm64-v8a\libOpenCvSharpExtern.so')" />
+    <AndroidAsset Include="..\..\targets\*.gltd.json" Link="Assets\targets\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

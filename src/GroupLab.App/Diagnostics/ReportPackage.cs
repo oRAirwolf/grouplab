@@ -18,7 +18,7 @@ public sealed record PackageResult(string Path, IReadOnlyList<string> Entries, l
 /// <item><c>environment.txt</c>, the expanded environment block;</item>
 /// <item><c>description.txt</c> and <c>contact.txt</c>, only when the user typed something.</item>
 /// </list>
-/// That list is exhaustive. <see cref="PermittedEntries"/> is the receiver's whitelist, anchored and case sensitive, and no entry is added
+/// That list is exhaustive. <see cref="PermittedEntryPatterns"/> is the receiver's whitelist, anchored and case sensitive, and no entry is added
 /// that does not match it, so a photograph, an EXIF block, a marking, a settings file or a path cannot get in. The builder takes no
 /// arbitrary file, and adding a file to the package means changing this list and the receiver's at the same time: that friction is the
 /// point. The client's cap is 2 MB: over it the previous run's log is dropped first, and a package still over it is saved but not sent.

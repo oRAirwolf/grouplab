@@ -292,9 +292,12 @@ This is not part of the first stage; it is built when the application has sessio
 
 `.github/workflows/android.yml`, on every push to `main` that touches Core, the imaging code, the sheets or `android/`:
 
-1. **OpenCV for android-arm64**, from the script, cached until the script changes.
-2. **The spike APK**, a debug build, kept as a workflow artifact for fourteen days. It checks that the APK carries the native library,
-   the sheets and the sample.
+1. **OpenCV for android-arm64**, from the script, cached until the script changes. A build on this machine puts the same library in
+   `android/native/arm64-v8a/`, which is never committed and which both projects read.
+2. **The application's APK**, `grouplab-apk`, from `android/GroupLab.Android`, the permanent id `org.grouplab.app` (entry 219 item A3).
+   It checks that the APK carries the native library and the sheets.
+3. **The spike's APK**, `grouplab-spike-apk`, until item A4 moves the camera into the application; request 33 installs it. Both are
+   Release builds kept as workflow artifacts for fourteen days.
 
 An unsigned debug APK is never published as a nightly. A signed release APK and an AAB for Play need the upload key, which Alan
 generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build
@@ -309,3 +312,17 @@ signed with a different debug key, so switching between the two needs `adb unins
 Every line the spike shows also goes to `spike-log.txt` in its own folder, `/sdcard/Android/data/org.grouplab.app.spike/files/`, so
 a sitting's measurements can be pulled over adb afterwards. **Camera** opens the capture screen of entry 219 item A2: the preview, the
 one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.
+
+## 11. The application (entry 219 item A3)
+
+`android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`. Three places along the bottom, where a thumb reaches them: Capture,
+Sessions and Settings; Back from Sessions or Settings returns to Capture, and Back from Capture leaves. The first run asks what may be
+shared before any of them, on one scrolling screen, in the desktop's order and words, with nothing chosen for the person; a question is
+asked only while the project takes what it asks about, as on the desktop, so the survey joins when its receiver opens. Settings has the
+same answers under **Sharing**.
+
+It shares the desktop's code by compiling the files as they are, not by copying them: the settings file and its format
+(`AppSettings.cs`), the questions' words (`SharingWords.cs`), the log, the crash records and the error report queue
+(`Diagnostics/`), and the imaging code. `AndroidSharingTests` holds that on the desktop: every linked file exists, each choice's words
+are written once, and the phone's first run preselects nothing. The log and the crash records go in the application's own files. Capture
+and Sessions say plainly that they are still being built; item A4 fills them.

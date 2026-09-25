@@ -298,15 +298,15 @@ public sealed partial class MainWindow
         }
 
         FillFirstRunErrors(errors, Answered);
-        card.Children.Add(new TextBlock { Text = "Send your targets to help improve GroupLab?", Classes = { AppStyles.Title } });
-        card.Children.Add(Line("Each target you analyze can go to the project, to test and improve detection. This is what goes:"));
+        card.Children.Add(new TextBlock { Text = SharingWords.TargetsQuestion, Classes = { AppStyles.Title } });
+        card.Children.Add(Line(SharingWords.TargetsIntro));
         foreach (string line in TargetPackages.WhatIsSent)
         {
             card.Children.Add(Line("• " + line));
         }
 
-        var testing = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped("Testing only. " + terms.TestingText) };
-        var publishable = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped("May be published. " + terms.PublishableText) };
+        var testing = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped(SharingWords.TestingOnly + terms.TestingText) };
+        var publishable = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped(SharingWords.MayBePublished + terms.PublishableText) };
         foreach (var radio in new[] { testing, publishable })
         {
             radio.Classes.Add(AppStyles.Secondary);
@@ -320,7 +320,7 @@ public sealed partial class MainWindow
             ConsentLevel? level = testing.IsChecked == true ? ConsentLevel.Testing : publishable.IsChecked == true ? ConsentLevel.Publishable : null;
             if (choice == SendingChoice.Always && level is null)
             {
-                why.Text = "Choose testing only or may be published first, so every target goes with the consent you mean.";
+                why.Text = SharingWords.LevelFirst;
                 return;
             }
 
@@ -331,8 +331,8 @@ public sealed partial class MainWindow
             FillSendingSettings();
         }
 
-        card.Children.Add(Row(Button("Send every target automatically", () => Choose(SendingChoice.Always)), Button("Ask me each time", () => Choose(SendingChoice.Ask)), Button("Never", () => Choose(SendingChoice.Never))));
-        card.Children.Add(Line("You can change this at any time in Settings, under Sending targets."));
+        card.Children.Add(Row([.. SharingWords.TargetChoices.Select(c => (Control)Button(c.Words, () => Choose(c.Choice)))]));
+        card.Children.Add(Line(SharingWords.TargetsLater));
         firstRun.Child = new Border
         {
             Child = outer,
@@ -356,14 +356,14 @@ public sealed partial class MainWindow
         sendingSettings.Children.Clear();
         if (!ReceiverOpen)
         {
-            sendingSettings.Children.Add(Line("Sending targets to the project is not open yet. When it is, GroupLab will ask once whether you want to."));
+            sendingSettings.Children.Add(Line(SharingWords.TargetsClosed));
             return;
         }
 
         var (choice, level) = settingsStore.LoadSending();
         var terms = ReceiverTerms.Current;
         var choices = new StackPanel { Spacing = Tokens.Space4 };
-        foreach (var (value, words) in new[] { (SendingChoice.Always, "Send every target automatically"), (SendingChoice.Ask, "Ask me each time"), (SendingChoice.Never, "Never") })
+        foreach (var (value, words) in SharingWords.TargetChoices)
         {
             var radio = new RadioButton { GroupName = "sendingChoice", Content = Wrapped(words), IsChecked = choice == value };
             radio.IsCheckedChanged += (_, _) =>
@@ -378,9 +378,9 @@ public sealed partial class MainWindow
         }
 
         sendingSettings.Children.Add(choices);
-        sendingSettings.Children.Add(FieldLabel("Consent for targets sent from now on"));
+        sendingSettings.Children.Add(FieldLabel(SharingWords.LevelHeading));
         var levels = new StackPanel { Spacing = Tokens.Space4 };
-        foreach (var (value, words) in new[] { (ConsentLevel.Testing, "Testing only. " + terms.TestingText), (ConsentLevel.Publishable, "May be published. " + terms.PublishableText) })
+        foreach (var (value, words) in SharingWords.Levels(terms))
         {
             var radio = new RadioButton { GroupName = "sendingLevel", Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap, MaxWidth = 640 }, IsChecked = level == value };
             radio.IsCheckedChanged += (_, _) =>

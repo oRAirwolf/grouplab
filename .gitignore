@@ -28,5 +28,5 @@ website/research/*/figures/*.pdf
 # NOTES-FROM-PLANNING.md entry 180: the local mirror of everything put in the Claude Code panel for Alan, which the planning session reads.
 # Written as often as needed, never committed.
 docs/notes/panel.md
-# The Android spike's native library, fetched from the android workflow's artifact for a build here (entry 202); never committed.
-android/GroupLab.Android.Spike/native/
+# The Android native library, fetched from the android workflow's artifact for a build here (entry 202); never committed.
+android/native/

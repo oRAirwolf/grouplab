@@ -263,7 +263,12 @@ public sealed class AppSettingsStore(string path)
         file["afterUpdate"] is JsonObject after && (string?)after["from"] is { Length: > 0 } from
             ? ((string From, string Screen, DateTimeOffset? At)?)(
                 from,
+#if ANDROID
+                // The phone compiles this file without the main window, and has no update handover to return from.
+                (string?)after["screen"] ?? "",
+#else
                 (string?)after["screen"] ?? nameof(Destination.Analyse),
+#endif
                 DateTimeOffset.TryParse((string?)after["at"], System.Globalization.CultureInfo.InvariantCulture, out var at) ? at : null)
             : null);
 

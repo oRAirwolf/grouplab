@@ -54,6 +54,7 @@
     "src/GroupLab.App/PrintPanel.cs",
     "src/GroupLab.App/Program.cs",
     "src/GroupLab.App/SessionsOverTime.cs",
+    "src/GroupLab.App/SharingWords.cs",
     "src/GroupLab.App/SheetGestures.cs",
     "src/GroupLab.App/SheetThumbnail.cs",
     "src/GroupLab.App/ShotOrderChart.cs",

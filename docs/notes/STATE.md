@@ -49,9 +49,9 @@ Worked through without waiting for an entry; stopped only by a request to Alan, 
 alternating so desktop feedback never waits more than one Android item.
 
 - A1 the working resolution in Core: **done**, 8 MP, 1.2 to 7.9 thousandths mean shift; the desktop app's use of it waits.
-- **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting. **A3 next** while it waits.
-- A2 is on the Fold 7 in one announced sitting. A3 the real `org.grouplab.app` project, the first run
-  window's three choices, Settings, the shared queues. A4 capture to result by touch, the plot, sessions. A5 sharing a session file.
+- **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting.
+- **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting). **D1 next**, then A4
+  capture to result by touch, the plot, sessions, with the camera moved in from the spike. A5 sharing a session file.
   A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
 - D1 the survey and benchmark, desktop part, with its server install batched. D2 question 51 when request 9 arrives. D3 feedback
   first whenever it comes. D4 `docs/RELEASE-PLAN.md` and the Windows signing options as a request with a recommendation; plan only.

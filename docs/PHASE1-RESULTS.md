@@ -59,6 +59,16 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 219, item A3: the application project, org.grouplab.app
+
+`android/GroupLab.Android` builds here and in the `android` workflow, which now uploads `grouplab-apk` beside the spike's (the spike stays
+until item A4, because request 33 installs it). Navigation along the bottom, the first run's questions, Settings under Sharing, the log,
+crash records and the error report queue, all through the desktop's own files compiled as they are. To share them, the desktop's
+literals moved into `SharingWords` and its error sending into `ErrorQueue`, which the main window now calls; the desktop behaves as
+before. Two things in the shared files only the Android build could see: a settings default named through the main window's own enum,
+now compiled only on the desktop, and a comment naming a list by an old name. `AndroidSharingTests`, three tests. **Not yet on a phone**: no device was
+attached; it goes on at the next sitting with request 33's.
+
 ## Entry 219, item A2: the capture screen spike, built; measured in request 33
 
 **In Core, tested on the desktop**: `CaptureGuidance.Judge` gives docs/MOBILE-CAPTURE.md's one instruction in item C3's order from the

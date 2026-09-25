@@ -20,8 +20,11 @@ public sealed partial class MainWindow
 {
     private readonly StackPanel errorSettings = new() { Spacing = Tokens.Space8 };
 
-    /// <summary>The errors already sent in this session: a repeat of one is counted, not sent again (entry 194 section 2.5).</summary>
-    private readonly HashSet<string> errorsSentThisSession = new(StringComparer.Ordinal);
+    /// <summary>
+    /// The waiting reports, shared with the Android application (entry 219 item A3). It remembers the errors already sent in this session:
+    /// a repeat of one is counted, not sent again (entry 194 section 2.5).
+    /// </summary>
+    private ErrorQueue? errorQueue;
 
     private DispatcherTimer? errorSendSoon;
 
@@ -48,57 +51,16 @@ public sealed partial class MainWindow
     /// </summary>
     internal async Task<int> SendWaitingErrorsAsync(bool asked = false)
     {
-        var choice = settingsStore.LoadErrorChoice();
-        if (!ErrorsOpen || choice == ErrorReportChoice.Never || (!asked && choice != ErrorReportChoice.Always))
-        {
-            return 0;
-        }
-
-        var now = DateTime.UtcNow;
-        var groups = new List<IReadOnlyList<string>>();
-        foreach (var group in ErrorReports.Waiting(DiagnosticLog.Current.Directory, now))
-        {
-            if (errorsSentThisSession.Contains(ErrorReports.Key(group[0])))
-            {
-                foreach (string record in group)
-                {
-                    ErrorReports.MarkSent(record, "repeat");
-                }
-
-                continue;
-            }
-
-            groups.Add(group);
-        }
-
-        int budget = ReceiverTerms.Current.MaxErrorReportsPerDay - settingsStore.LoadErrorsSent(now).Today;
-        if (groups.Count == 0 || budget <= 0)
-        {
-            return 0;
-        }
-
-        int sent = await ErrorReports.SendAsync(TheOutsideWorld.Current, ReceiverTerms.Current.ErrorReceiver, groups, budget, ActionsFor, CancellationToken.None);
-        foreach (var group in groups.Where(g => ErrorReports.IsSent(g[0])))
-        {
-            errorsSentThisSession.Add(ErrorReports.Key(group[0]));
-            foreach (string record in group)
-            {
-                CrashReporter.MarkHandled(record);
-            }
-        }
-
+        errorQueue ??= new ErrorQueue(settingsStore);
+        int sent = await errorQueue.SendWaitingAsync(ErrorsOpen, asked, CancellationToken.None);
         if (sent > 0)
         {
-            settingsStore.AddErrorsSent(sent, now);
             toaster.Say(sent == 1 ? "An error report went to the project." : string.Create(CultureInfo.InvariantCulture, $"{sent} error reports went to the project."));
         }
 
         FillErrorSettings();
         return sent;
     }
-
-    /// <summary>The names of the last things done in the run a record came from.</summary>
-    private static IReadOnlyList<string> ActionsFor(string record) => ErrorReports.LastActions(ReportPackage.LogsFor(DiagnosticLog.Current, record).RunLog);
 
     /// <summary>An error this session: sent a minute later, so a burst of the same one goes as one report with its count.</summary>
     private void ErrorRecorded(object? sender, string record)
@@ -123,8 +85,8 @@ public sealed partial class MainWindow
     /// <summary>The first run screen's error report question, beside the target question.</summary>
     private void FillFirstRunErrors(StackPanel part, Action answered)
     {
-        part.Children.Add(new TextBlock { Text = "Send error reports to the project?", Classes = { AppStyles.Title } });
-        part.Children.Add(Line("When GroupLab hits an error, a report of it can go to the project, where it is fixed. This is what a report holds:"));
+        part.Children.Add(new TextBlock { Text = SharingWords.ErrorsQuestion, Classes = { AppStyles.Title } });
+        part.Children.Add(Line(SharingWords.ErrorsIntro));
         foreach (string line in ErrorReports.WhatIsSent)
         {
             part.Children.Add(Line("• " + line));
@@ -139,8 +101,8 @@ public sealed partial class MainWindow
             FillErrorSettings();
         }
 
-        part.Children.Add(Row(Button("Send them automatically", () => Choose(ErrorReportChoice.Always)), Button("Ask me each time", () => Choose(ErrorReportChoice.Ask)), Button("Never send them", () => Choose(ErrorReportChoice.Never))));
-        part.Children.Add(Line("You can change this at any time in Settings, under Error reports."));
+        part.Children.Add(Row([.. SharingWords.ErrorChoices.Select(c => (Control)Button(c.Words, () => Choose(c.Choice)))]));
+        part.Children.Add(Line(SharingWords.ErrorsLater));
     }
 
     /// <summary>Entry 194 section 2.1: Settings' own Error reports section, the same setting as the first run screen.</summary>
@@ -162,7 +124,7 @@ public sealed partial class MainWindow
 
         var choice = settingsStore.LoadErrorChoice();
         var choices = new StackPanel { Spacing = Tokens.Space4 };
-        foreach (var (value, words) in new[] { (ErrorReportChoice.Always, "Send them automatically"), (ErrorReportChoice.Ask, "Ask me each time"), (ErrorReportChoice.Never, "Never send them") })
+        foreach (var (value, words) in SharingWords.ErrorChoices)
         {
             var radio = new RadioButton { GroupName = "errorChoice", Content = Wrapped(words), IsChecked = choice == value || (value == ErrorReportChoice.Ask && choice == ErrorReportChoice.Unset) };
             radio.IsCheckedChanged += (_, _) =>
