@@ -1916,6 +1916,10 @@
   "`install.py --survey` installs the worker, in the same sitting as request 31.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs"
+  },
+  "Settings has the same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/SettingsView.cs SettingsView; android/GroupLab.Android/FirstRunView.cs SurveyDue; android/GroupLab.Android/Shell.cs SurveyOpen"
   }
  },
  "rules": [

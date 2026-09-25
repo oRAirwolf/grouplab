@@ -34,6 +34,9 @@ public sealed class AndroidSharingTests
         Assert.Contains(linked, l => l.EndsWith("SharingWords.cs", StringComparison.Ordinal));
         Assert.Contains(linked, l => l.EndsWith("AppSettings.cs", StringComparison.Ordinal));
         Assert.Contains(linked, l => l.EndsWith("ErrorQueue.cs", StringComparison.Ordinal));
+        // Entry 219 item A4: the plot and the survey's queue are the desktop's own on the phone too.
+        Assert.Contains(linked, l => l.EndsWith("CompositePlot.cs", StringComparison.Ordinal));
+        Assert.Contains(linked, l => l.EndsWith("SurveyQueue.cs", StringComparison.Ordinal));
         foreach (string include in linked)
         {
             Assert.True(File.Exists(Path.GetFullPath(Path.Combine(Android, include.Replace('\\', Path.DirectorySeparatorChar)))), $"{include} is gone");

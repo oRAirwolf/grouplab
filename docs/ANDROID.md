@@ -319,10 +319,19 @@ one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter a
 Sessions and Settings; Back from Sessions or Settings returns to Capture, and Back from Capture leaves. The first run asks what may be
 shared before any of them, on one scrolling screen, in the desktop's order and words, with nothing chosen for the person; a question is
 asked only while the project takes what it asks about, as on the desktop, so the survey joins when its receiver opens. Settings has the
-same answers under **Sharing**.
+same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).
 
 It shares the desktop's code by compiling the files as they are, not by copying them: the settings file and its format
 (`AppSettings.cs`), the questions' words (`SharingWords.cs`), the log, the crash records and the error report queue
 (`Diagnostics/`), and the imaging code. `AndroidSharingTests` holds that on the desktop: every linked file exists, each choice's words
-are written once, and the phone's first run preselects nothing. The log and the crash records go in the application's own files. Capture
-and Sessions say plainly that they are still being built; item A4 fills them.
+are written once, and the phone's first run preselects nothing. The log and the crash records go in the application's own files.
+
+**Capture to result** (item A4, first part). **Take a picture** opens the capture screen moved in from the spike: the preview, one
+instruction at a time, the lens by zoom, tap to focus, and the shutter that fires by itself. **Choose a photograph** takes one already on
+the phone. Either is reduced to the working size of item A1, and that working copy becomes the session's own image, so every coordinate
+in the marking is in its pixels and the session opens anywhere; the full photograph and the picker's copy are deleted. The sheet names
+itself from its codes, the holes are found by the desktop's own code, and the result shows the group's figures, the photograph with a
+ring on every hole, and the desktop's composite plot, filled by the same method from the same marking. The session is saved in the
+desktop's own database and format, and **Sessions** lists them, newest first, to open again. **Still to come in A4**: correcting by touch
+(moving, adding and removing a hole with a magnifier), the caliber and distance, and choosing the sheet by name when its codes cannot be
+read.

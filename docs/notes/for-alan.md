@@ -71,6 +71,8 @@ $run = gh run list -R oRAirwolf/grouplab --workflow android --status success --l
 gh run download $run -R oRAirwolf/grouplab -n grouplab-spike-apk -D "$env:TEMP\gl-spike"
 & $adb uninstall org.grouplab.app.spike
 & $adb install "$env:TEMP\gl-spike\grouplab-spike.apk"
+gh run download $run -R oRAirwolf/grouplab -n grouplab-apk -D "$env:TEMP\gl-spike"
+& $adb install "$env:TEMP\gl-spike\grouplab.apk"
 Remove-Item -Recurse -Force "$env:TEMP\gl-spike"
 ```
 
@@ -82,6 +84,9 @@ Remove-Item -Recurse -Force "$env:TEMP\gl-spike"
 3. Tap the sheet in the preview once (focus and exposure lock there), and press **Take**.
 4. Move the phone so the sheet runs off the edge, then very close, then at a steep angle, and see that the words change each time.
 5. Fold the phone, and do step 1 once on the cover screen.
+6. **The application itself**, added by entry 219 item A4: open **GroupLab** (not the spike), answer its first questions, press **Take
+   a picture**, allow the camera, and let it take the sheet. **Look for:** a result with the number of shots, the group's size, a plot
+   and the photograph with a ring on each hole; then **Sessions** lists it.
 
 **3. In PowerShell again**, to hand me the log:
 

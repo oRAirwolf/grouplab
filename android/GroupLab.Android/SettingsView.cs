@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
+using GroupLab.Core.Survey;
 
 namespace GroupLab.Android;
 
@@ -80,6 +81,39 @@ public sealed class SettingsView : UserControl
 
             column.Children.Add(Screens.Line(SharingWords.ErrorsIntro));
             foreach (string line in ErrorReports.WhatIsSent)
+            {
+                column.Children.Add(Screens.Line("• " + line));
+            }
+        }
+
+        column.Children.Add(Screens.Heading("Hardware survey"));
+        if (!Shell.SurveyOpen)
+        {
+            column.Children.Add(Screens.Line(SharingWords.SurveyClosed));
+        }
+        else
+        {
+            var chosen = settings.LoadSurveyChoice();
+            foreach (var (value, words) in SharingWords.SurveyChoices)
+            {
+                var radio = Screens.Radio("surveyChoice", words, chosen == value);
+                radio.IsCheckedChanged += (_, _) =>
+                {
+                    if (radio.IsChecked == true && settings.LoadSurveyChoice() != value)
+                    {
+                        settings.SaveSurveyChoice(value);
+                        if (value != SurveyChoice.Yes)
+                        {
+                            App.Survey?.Forget();
+                        }
+
+                        DiagnosticLog.Info("survey.choice", ("choice", value.ToString()));
+                    }
+                };
+                column.Children.Add(radio);
+            }
+
+            foreach (string line in SurveyReport.WhatIsSent)
             {
                 column.Children.Add(Screens.Line("• " + line));
             }

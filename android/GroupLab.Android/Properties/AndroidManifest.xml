@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
-  <!-- Entry 219 item A3: the network, for error reports and targets the person has agreed to send. The camera arrives with item A4. -->
+  <!-- Entry 219 item A3: the network, for error reports and targets the person has agreed to send. Item A4: the camera, asked for the
+       first time Take a picture is pressed, never at start. -->
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-feature android:name="android.hardware.camera" android:required="false" />
   <application android:label="GroupLab" android:resizeableActivity="true" android:allowBackup="false" />
 </manifest>

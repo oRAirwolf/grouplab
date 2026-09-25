@@ -31,10 +31,16 @@ public sealed class Shell : UserControl
     /// <summary>Whether the project takes error reports: the build's limits.json, as on the desktop.</summary>
     internal static bool ErrorsOpen => ReceiverTerms.Current.ErrorReportsOpen;
 
+    /// <summary>Whether the project takes hardware survey reports: the build's limits.json, as on the desktop.</summary>
+    internal static bool SurveyOpen => ReceiverTerms.Current.SurveyOpen;
+
     private readonly ContentControl page = new();
     private readonly Dictionary<Place, Button> tabs = [];
     private readonly UniformGrid bar = new() { Rows = 1 };
     private readonly DockPanel frame = new();
+
+    /// <summary>The capture page is kept, so going to Settings and back does not lose a result on screen.</summary>
+    private CapturePage? capture;
 
     internal Place Showing { get; private set; } = Place.Capture;
 
@@ -94,12 +100,8 @@ public sealed class Shell : UserControl
         page.Content = place switch
         {
             Place.Settings => new SettingsView(App.Settings),
-            Place.Sessions => Screens.Words(
-                "Sessions",
-                "Each target you analyze on this phone will be kept here, to open again, compare and share. There are none yet."),
-            _ => Screens.Words(
-                "Capture",
-                "Taking a target with the camera is being built. This build sets up the application and asks what may be shared; the next ones add the camera, the result and the plot."),
+            Place.Sessions => new SessionsPage(),
+            _ => capture ??= new CapturePage(),
         };
     }
 

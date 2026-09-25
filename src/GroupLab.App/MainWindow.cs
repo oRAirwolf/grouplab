@@ -2609,33 +2609,9 @@ public sealed partial class MainWindow : Window
             : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
 
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
-        var shots = GroupShots(state);
-        var offsets = GroupAnalysis.CompositeOffsets(state, shots);
-        var plotted = offsets.Count == shots.Count
-            ? shots.Select((s, i) => new PlotShot(s.Id, ShotLabel(s.Id), s.Bull is { } b ? BullLabel(b) : null, offsets[i], s.Exclusion is not null)).ToList()
-            : [];
-        plot.Shots = plotted;
-        plot.CalibreInches = state.Calibre?.DiameterInches;
+        // Entry 219 item A4: the plot fills itself from the marking, the same way on the phone.
+        var plotted = plot.Show(state, plotDefinition, units, ShotLabel, BullLabel);
         outlinesBox.IsVisible = state.Calibre is not null;
-        plot.Length = inches => units.Length(inches);
-        var kept = plotted.Where(p => !p.Excluded).ToList();
-        plot.Centre = kept.Count > 0 ? GroupStatistics.Centre([.. kept.Select(p => p.Offset)]) : null;
-        if (kept.Count >= GroupAnalysis.MinimumShotsForDispersion)
-        {
-            var rayleigh = GroupStatistics.Rayleigh([.. kept.Select(p => p.Offset)]);
-            plot.Cep50Inches = rayleigh.Cep(0.5).Value;
-            plot.Cep90Inches = rayleigh.Cep(0.9).Value;
-            plot.Cep95Inches = rayleigh.Cep(0.95).Value;
-        }
-        else
-        {
-            plot.Cep50Inches = plot.Cep90Inches = plot.Cep95Inches = null;
-        }
-
-        plot.SpreadPair = kept.Count >= 2 && GroupGeometry.MaximumPairDistance([.. kept.Select(p => p.Offset)]) is var (_, first, second)
-            ? (kept[first].Id, kept[second].Id)
-            : null;
-        plot.Discs = PlotDiscs(state);
         plotSelection.RemoveWhere(id => plotted.All(p => p.Id != id));
         if (canvas.Selected is { } selected && !plotSelection.Contains(selected))
         {
@@ -2724,20 +2700,6 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>
-    private IReadOnlyList<PlotDisc> PlotDiscs(MarkingState state)
-    {
-        if (plotDefinition is not { } definition || definition.Bulls.FirstOrDefault(b => b.Scoring) is not { } bull
-            || definition.RingSets.FirstOrDefault(r => r.Key == bull.RingSet) is not { } rings || state.Scale is null)
-        {
-            return [];
-        }
-
-        var inks = definition.Inks.ToDictionary(i => i.Key);
-        return [.. rings.Discs.Select(d => inks.TryGetValue(d.Ink, out var ink)
-            ? new PlotDisc(d.Diameter / 254.0, Tokens.Ink(ink.Srgb), ink.Role == GroupLab.Core.Gltd.Model.InkRole.Paper)
-            : new PlotDisc(d.Diameter / 254.0, Tokens.Paper, true))];
-    }
-
     /// <summary>A click on the plot or a row of its table: one shot, or the extreme spread's two, picked on the plot and selected on the sheet.</summary>
     internal void PickShots(IReadOnlyList<int> ids)
     {
@@ -2795,32 +2757,12 @@ public sealed partial class MainWindow : Window
         }
 
         var state = session.State;
-        var figures = GroupAnalysis.Analyse(state).AllShots?.MeanRadius;
         string? path = state.ImagePath is { } p && File.Exists(p) ? p : null;
         var (proof, proofType) = ProofImage(path, state.Scale);
         // A second Accept on the same session updates it and keeps the day it was first saved.
         var existing = currentSession is { } saved ? sessions.Get(saved) : null;
-        var record = new SessionRecord(
-            existing?.Id ?? 0,
-            existing?.CreatedUtc ?? DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
-            existing?.ShotDate ?? DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-            plotDefinition?.Name ?? (state.ImagePath is { } named ? Path.GetFileName(named) : "Marked by hand"),
-            plotDefinition is { } d ? GroupLab.Core.Gltd.Binary.GltdBinary.Encode(d).Encoding?.DefinitionId : null,
-            plotDefinition is { } defined ? System.Text.Encoding.UTF8.GetString(CanonicalJsonWriter.Write(defined)) : null,
-            state.ShotDistanceInches,
-            state.Rifle?.Name,
-            state.Barrel,
-            state.Load,
-            state.Calibre?.DiameterInches,
-            MarkingFile.Write(state, units),
-            CountedShots(state),
-            figures?.Value,
-            figures?.Lower,
-            figures?.Upper,
-            state.ImagePath,
-            path is null ? null : Sha256(path),
-            proof,
-            proofType);
+        var record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, existing, path is null ? null : Sha256(path), proof, proofType,
+            DateTime.UtcNow, DateTime.Now);
         try
         {
             currentSession = sessions.Save(record);
@@ -5110,7 +5052,7 @@ public sealed partial class MainWindow : Window
     /// The shots a count means, entry 105 section 8: every shot, or with sighters not analysed only those off the sighter bulls, so a sheet of
     /// ten scoring shots and four sighters reads ten.
     /// </summary>
-    private int CountedShots(MarkingState state) => state.Shots.Count(s => s.IsShot && (analyseSighters || !GroupAnalysis.OnSighter(state, s)));
+    private int CountedShots(MarkingState state) => SessionRecords.CountedShots(state, analyseSighters);
 
     /// <summary>
     /// The sighters' own section of the analysis state, entry 105 section 8, when they are analysed: their count, where their centre sits

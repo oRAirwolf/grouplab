@@ -4,8 +4,11 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using GroupLab.App.Theme;
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
 using GroupLab.Core.Reporting;
+using GroupLab.Core.Statistics;
 
 namespace GroupLab.App;
 
@@ -178,6 +181,61 @@ internal sealed class CompositePlot : Control
 
     /// <summary>The key's entries, in the order drawn, for the headless tests.</summary>
     public IReadOnlyList<string> Legend => [.. Key().Select(k => k.Text)];
+
+    /// <summary>
+    /// Fills the plot from a marking, entry 219 item A4, so the desktop and the phone draw the same plot from the same state: the scoring
+    /// shots only, each from its own bull, excluded ones kept and drawn hollow, marks set to not a shot absent; the group's centre, its CEPs
+    /// from five shots, the extreme spread's pair, and the first scoring bull's rings. Returns the shots it plotted.
+    /// </summary>
+    internal IReadOnlyList<PlotShot> Show(MarkingState state, TargetDefinition? definition, UnitSettings units, Func<int, string> shotLabel, Func<int, string> bullLabel)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+        var shots = state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b))).ToList();
+        var offsets = GroupAnalysis.CompositeOffsets(state, shots);
+        List<PlotShot> plotted = offsets.Count == shots.Count
+            ? [.. shots.Select((s, i) => new PlotShot(s.Id, shotLabel(s.Id), s.Bull is { } b ? bullLabel(b) : null, offsets[i], s.Exclusion is not null))]
+            : [];
+        Shots = plotted;
+        CalibreInches = state.Calibre?.DiameterInches;
+        Length = inches => units.Length(inches);
+        var kept = plotted.Where(p => !p.Excluded).ToList();
+        Centre = kept.Count > 0 ? GroupStatistics.Centre([.. kept.Select(p => p.Offset)]) : null;
+        if (kept.Count >= GroupAnalysis.MinimumShotsForDispersion)
+        {
+            var rayleigh = GroupStatistics.Rayleigh([.. kept.Select(p => p.Offset)]);
+            Cep50Inches = rayleigh.Cep(0.5).Value;
+            Cep90Inches = rayleigh.Cep(0.9).Value;
+            Cep95Inches = rayleigh.Cep(0.95).Value;
+        }
+        else
+        {
+            Cep50Inches = Cep90Inches = Cep95Inches = null;
+        }
+
+        SpreadPair = kept.Count >= 2 && GroupGeometry.MaximumPairDistance([.. kept.Select(p => p.Offset)]) is var (_, first, second)
+            ? (kept[first].Id, kept[second].Id)
+            : null;
+        Discs = DiscsFor(state, definition);
+        InvalidateVisual();
+        return plotted;
+    }
+
+    /// <summary>The first scoring bull's rings from the definition, in its own inks, or none where there is no definition or no scale.</summary>
+    internal static IReadOnlyList<PlotDisc> DiscsFor(MarkingState state, TargetDefinition? definition)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        if (definition is null || definition.Bulls.FirstOrDefault(b => b.Scoring) is not { } bull
+            || definition.RingSets.FirstOrDefault(r => r.Key == bull.RingSet) is not { } rings || state.Scale is null)
+        {
+            return [];
+        }
+
+        var inks = definition.Inks.ToDictionary(i => i.Key);
+        return [.. rings.Discs.Select(d => inks.TryGetValue(d.Ink, out var ink)
+            ? new PlotDisc(d.Diameter / 254.0, Tokens.Ink(ink.Srgb), ink.Role == InkRole.Paper)
+            : new PlotDisc(d.Diameter / 254.0, Tokens.Paper, true))];
+    }
 
     public CompositePlot()
     {

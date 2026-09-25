@@ -23,15 +23,12 @@ If something here disagrees with the logs, the logs are right and this file is o
   The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
 - **Storage on GitHub**: `docs/notes/STORAGE.md`, written by `scripts/storage-ledger.py` from the pull and this session; see its total.
   Submissions leave the server only once archived in `grouplab-submissions-archive` and proven (entries 215 to 217).
-- **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey is designed in `docs/SURVEY.md` and built with
-  the next desktop work, its opt in on the one first run window with the other two (entry 208).
+- **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is built and switched off.
 - **The composite plot** (entries 204, 210, 213, 214): wide rings set back from the outlines, the key never over the data,
   Group or Whole target with zoom, half strength outlines, green CEP 50, 90 and 95 on toggles, green and blue lines
   across the plot for the centre and the aim; the report and Compare follow the same toggles.
 - **Radios and check boxes with long words take `Wrapped(words)`** (entry 203): a plain string never wraps, and the consent
   choices on nightly 102's first run screen were cut mid sentence. `Entry203Tests` checks for cut text.
-- **The roll sheets name themselves on every system** since 3c3fa98: they were the only sheets over the 8000 pixel working limit,
-  so their codes were read at half resolution; the corners are now cut from the full image.
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
   714 MB for the 600 dpi sample (desktop 8 s). Folding, turning and the font size passed (entry 205); all four ways up since. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
@@ -52,8 +49,10 @@ alternating so desktop feedback never waits more than one Android item.
 - **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting.
 - **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting).
 - **D1 the survey and benchmark: built, switched off** until request 34; the entry after it sets `surveyOpen` true and says so in the
-  article what-grouplab-sends. **A4 next**: capture to result by touch, the plot, sessions, the camera moved in from the spike, and the
-  survey's question on the phone. A5 sharing a session file.
+  article what-grouplab-sends.
+- **A4 first part built**: take or choose a picture, the working copy as the session's image, the result with figures, photo and the
+  desktop's plot, Sessions; the survey question on the phone. Not yet on a phone (request 33 step 6). **Next**: the rest of A4,
+  correcting by touch, caliber and distance, the sheet by name. Then D-side feedback if any, A5 sharing a session file.
   A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
 - D2 question 51 when request 9 arrives. D3 feedback
   first whenever it comes. D4 `docs/RELEASE-PLAN.md` and the Windows signing options as a request with a recommendation; plan only.

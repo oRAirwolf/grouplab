@@ -26,6 +26,10 @@
     <PackageReference Include="Avalonia.Android" Version="12.1.2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
     <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+    <!-- Entry 219 item A4: the camera, through CameraX, as the spike measured it. -->
+    <PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.6.2" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.6.2" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.6.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +38,10 @@
     <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Shared\Imaging" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
+    <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
+    <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorReports.cs" Link="Shared\Diagnostics\ErrorReports.cs" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\DiagnosticLog.cs" Link="Shared\Diagnostics\DiagnosticLog.cs" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\AppInfo.cs" Link="Shared\Diagnostics\AppInfo.cs" />

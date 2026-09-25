@@ -23,6 +23,25 @@ public class MainActivity : AvaloniaMainActivity
 {
     internal static MainActivity? Current { get; private set; }
 
+    private const int CameraRequest = 219;
+
+    /// <summary>Whether the camera may be used; asks the person once where it may not, and says false until they answer.</summary>
+    internal static bool CameraAllowed()
+    {
+        if (Current is not { } activity)
+        {
+            return false;
+        }
+
+        if (AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.Camera) == Permission.Granted)
+        {
+            return true;
+        }
+
+        AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, [global::Android.Manifest.Permission.Camera], CameraRequest);
+        return false;
+    }
+
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         Current = this;

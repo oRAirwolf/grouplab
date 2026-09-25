@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
+using GroupLab.Core.Survey;
 
 namespace GroupLab.Android;
 
@@ -14,7 +15,9 @@ namespace GroupLab.Android;
 public sealed class FirstRunView : UserControl
 {
     /// <summary>Whether any question is still open and unanswered.</summary>
-    public static bool Due(AppSettingsStore settings) => TargetsDue(settings) || ErrorsDue(settings);
+    public static bool Due(AppSettingsStore settings) => TargetsDue(settings) || ErrorsDue(settings) || SurveyDue(settings);
+
+    private static bool SurveyDue(AppSettingsStore settings) => Shell.SurveyOpen && settings.LoadSurveyChoice() == SurveyChoice.Unset;
 
     private static bool TargetsDue(AppSettingsStore settings) => Shell.TargetsOpen && settings.LoadSending().Choice == SendingChoice.Unset;
 
@@ -25,11 +28,13 @@ public sealed class FirstRunView : UserControl
         var column = new StackPanel { Spacing = 24 };
         var targets = new StackPanel { Spacing = 8, IsVisible = TargetsDue(settings) };
         var errors = new StackPanel { Spacing = 8, IsVisible = ErrorsDue(settings) };
+        var survey = new StackPanel { Spacing = 8, IsVisible = SurveyDue(settings) };
         column.Children.Add(targets);
         column.Children.Add(errors);
+        column.Children.Add(survey);
         void Answered()
         {
-            if (!targets.IsVisible && !errors.IsVisible)
+            if (!targets.IsVisible && !errors.IsVisible && !survey.IsVisible)
             {
                 done();
             }
@@ -89,6 +94,37 @@ public sealed class FirstRunView : UserControl
         }
 
         errors.Children.Add(Screens.Line(SharingWords.ErrorsLater));
+
+        // Entry 208: the survey, third, in the desktop's words; somebody who answered the other two before is told their answers are kept.
+        if (!targets.IsVisible && !errors.IsVisible)
+        {
+            survey.Children.Add(Screens.Line(SharingWords.EarlierKept));
+        }
+
+        survey.Children.Add(Screens.Heading(SharingWords.SurveyQuestion));
+        survey.Children.Add(Screens.Line(SharingWords.SurveyIntro));
+        foreach (string line in SurveyReport.WhatIsSent)
+        {
+            survey.Children.Add(Screens.Line("• " + line));
+        }
+
+        foreach (var (choice, words) in SharingWords.SurveyChoices)
+        {
+            survey.Children.Add(Screens.Choice(words, () =>
+            {
+                settings.SaveSurveyChoice(choice);
+                if (choice != SurveyChoice.Yes)
+                {
+                    App.Survey?.Forget();
+                }
+
+                DiagnosticLog.Info("survey.first-run", ("choice", choice.ToString()));
+                survey.IsVisible = false;
+                Answered();
+            }));
+        }
+
+        survey.Children.Add(Screens.Line(SharingWords.SurveyLater));
         Content = Screens.Page(column);
     }
 }

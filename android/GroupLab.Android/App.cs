@@ -19,6 +19,9 @@ public sealed class App : Avalonia.Application
 
     internal static ErrorQueue? Errors { get; private set; }
 
+    /// <summary>The hardware survey's queue, the desktop's own; it keeps and sends nothing until the person says yes.</summary>
+    internal static SurveyQueue? Survey { get; private set; }
+
     public override void Initialize() => Styles.Add(new FluentTheme());
 
     public override void OnFrameworkInitializationCompleted()
@@ -32,7 +35,9 @@ public sealed class App : Avalonia.Application
         CrashReporter.BeginRun(log);
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields()]);
         Errors = new ErrorQueue(Settings);
+        Survey = new SurveyQueue(Settings, Machine);
         _ = SendWaitingErrorsAsync();
+        _ = Survey.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None);
         if (ApplicationLifetime is ISingleViewApplicationLifetime single)
         {
             single.MainView = new Shell();
@@ -40,6 +45,11 @@ public sealed class App : Avalonia.Application
 
         base.OnFrameworkInitializationCompleted();
     }
+
+    /// <summary>The phone as the survey describes it: Android's own version and the model, as docs/SURVEY.md section 2 lists them.</summary>
+    private static GroupLab.Core.Survey.MachineFacts Machine() =>
+        GroupLab.Core.Survey.SurveyReport.ThisMachine(device: global::Android.OS.Build.Manufacturer + " " + global::Android.OS.Build.Model)
+            with { OperatingSystem = "Android " + global::Android.OS.Build.VERSION.Release };
 
     /// <summary>What is waiting goes when the person chose Always; never a dialog, and a failure waits for the next start.</summary>
     internal static async Task SendWaitingErrorsAsync()
