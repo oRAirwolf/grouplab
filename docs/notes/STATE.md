@@ -39,7 +39,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Backups and automation (entry 222)**: nightly backup and weekly check run as scheduled tasks here; the server archives submissions
   by itself once request 35's token is set. `docs/RESTORE.md` is the inventory; the gap is the whole server, until request 35 step 3.
-- Then the roadmap: A6 signed Android builds (the nightly job is written and parked in the scratchpad, not committed), D2 question 51.
+- The roadmap is done up to what waits on Alan: A6 needs request 36's key (the nightly's signed Android job is committed and builds
+  nothing until the key is set), A7 the older phones, D2 request 9, D4 request 37.
 
 ## The roadmap (entry 219), in place of the next three
 
@@ -53,19 +54,18 @@ alternating so desktop feedback never waits more than one Android item.
   article what-grouplab-sends.
 - **A4 built**: take or choose a picture at the working size, the result with figures, photo and the desktop's plot, corrected by
   touch with a magnifier, caliber and distance, the sheet by name, Sessions. Not yet on a phone (request 33 step 6).
-- **A5 built**: a `.grouplab` session file, shared by hand both ways (request 33 step 7). **A6 next**: signed APK and AAB and the Play
-  internal track, which needs one request for the keystore and the Play entry.
-  A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
-- D2 question 51 when request 9 arrives. D3 feedback
-  first whenever it comes. D4 `docs/RELEASE-PLAN.md` and the Windows signing options as a request with a recommendation; plan only.
+- **A5 built**: a `.grouplab` session file, shared by hand both ways (request 33 step 7).
+- **A6 built, waiting on request 36**: the nightly signs an APK and AAB once the upload key is in the secrets (tried here with a throwaway
+  key). A7 the older phones, then a closed test.
+- D2 question 51 when request 9 arrives. D3 feedback first whenever it comes. **D4 done**: `docs/RELEASE-PLAN.md`, and request 37.
 - Waiting on requests: Program A (entry 158) on request 19's ST-4 scan; Program B's article on request 20's test.
 ## Blocked, and on what
 
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **9** (31 most urgent, photographs off the server, with 34, the survey's server side, in
-  the same sitting; 33, the Fold 7's camera; then 9, 16, 20, 18, 32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
+Open requests in `docs/notes/for-alan.md`: **11** (35 most urgent, backups and the archive token; 36 the Android key, same sitting; 37
+  the signing choice; the end of 34; 33, the Fold 7's camera; then 9, 16, 20, 18, 32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
 
 ## Open questions
 

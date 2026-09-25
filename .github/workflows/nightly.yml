@@ -281,11 +281,93 @@ jobs:
       version: ${{ needs.name-it.outputs.version }}
       train: nightly
 
+  # NOTES-FROM-PLANNING.md entry 219 item A6: the Android application, signed with Alan's upload key, as an APK to install by hand and
+  # an AAB for Google Play's internal testing track. Until the key is in the repository's secrets it builds nothing and says so, and it
+  # can never hold back the desktop builds: a failure here leaves the nightly without its Android files and publishes the rest.
+  # The version code is the nightly's own number, which only ever rises. The key is written to the runner's temporary folder for the
+  # build and deleted after it; it is never printed and never uploaded.
+  android:
+    name: android, signed
+    needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    continue-on-error: true
+    env:
+      KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+      STORE_PASS: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+      KEY_PASS: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+      VERSION: ${{ needs.name-it.outputs.version }}
+    steps:
+      - name: The upload key
+        id: key
+        run: |
+          if [ -z "$KEYSTORE" ] || [ -z "$STORE_PASS" ] || [ -z "$KEY_PASS" ]; then
+            echo "present=no" >> "$GITHUB_OUTPUT"
+            echo "### No Android upload key yet, so this nightly has no signed Android build (request 35)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "present=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.key.outputs.present == 'yes'
+        with:
+          ref: ${{ needs.name-it.outputs.sha }}
+
+      - name: Native library cache
+        if: steps.key.outputs.present == 'yes'
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/android-native
+          key: android-native-${{ hashFiles('android/opencv/build-extern.sh') }}
+
+      - name: Build OpenCV and OpenCvSharp's native half
+        if: steps.key.outputs.present == 'yes' && steps.cache.outputs.cache-hit != 'true'
+        run: bash android/opencv/build-extern.sh "${{ runner.temp }}/android-native-work" "${{ runner.temp }}/android-native"
+
+      - uses: actions/setup-dotnet@v5
+        if: steps.key.outputs.present == 'yes'
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build the signed APK and AAB
+        if: steps.key.outputs.present == 'yes'
+        run: |
+          set -e
+          dotnet workload install android --skip-sign-check > /dev/null
+          mkdir -p android/native && cp -r "${{ runner.temp }}/android-native/." android/native/
+          keystore="$RUNNER_TEMP/upload.jks"
+          echo "$KEYSTORE" | base64 -d > "$keystore"
+          trap 'rm -f "$keystore"' EXIT
+          code="${VERSION##*.}"
+          # Once for each: the project's AndroidPackageFormat wins over AndroidPackageFormats, so one publish makes one kind
+          # (tried on this machine with a throwaway key, entry 219 item A6).
+          for format in aab apk; do
+            dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-out" \
+              -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION" \
+              -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
+              -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
+              -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS
+          done
+          mkdir -p signed
+          cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.apk' | head -1)" signed/grouplab-android.apk
+          cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.aab' | head -1)" signed/grouplab-android.aab
+          ls -l signed
+
+      - uses: actions/upload-artifact@v6
+        if: steps.key.outputs.present == 'yes'
+        with:
+          name: android-signed
+          path: signed
+          retention-days: 1
+
   publish:
     name: publish the nightly
-    needs: [name-it, package]
-    # Entry 150 section 2.2: every build, test, package and release job depends on the gate.
-    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    needs: [name-it, package, android]
+    # Entry 150 section 2.2: every build, test, package and release job depends on the gate. Entry 219 item A6: the Android job's result
+    # is never a condition, so a failure there publishes the desktop builds without the Android files.
+    if: ${{ !cancelled() && needs.package.result == 'success' && needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -316,6 +398,8 @@ jobs:
           set -o pipefail
           mkdir -p release
           find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          # Entry 219 item A6: the signed Android files, where the upload key has made them. Never required.
+          find assets -type f \( -name 'grouplab-android.apk' -o -name 'grouplab-android.aab' \) -exec cp {} release/ \;
           ls -la release
 
           missing=""
