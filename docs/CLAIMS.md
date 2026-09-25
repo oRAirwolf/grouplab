@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 981 |
+| code | 982 |
 | measured | 1422 |
 | decided | 1153 |
 | unbacked | 0 |
-| **total** | **3556** |
+| **total** | **3557** |
 
-**531** of them were read one sentence at a time and their backing written against the sentence. The other **3025** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**532** of them were read one sentence at a time and their backing written against the sentence. The other **3025** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -567,6 +567,7 @@ one that matters.
 - *code* (android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs): **Camera** opens the capture screen of entry 219 item A2: the preview, the one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId): The application (entry 219 item A3) `android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`.
 - *code* (android/GroupLab.Android/SettingsView.cs SettingsView; android/GroupLab.Android/FirstRunView.cs SurveyDue; android/GroupLab.Android/Shell.cs SurveyOpen): Settings has the same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).
+- *code* (android/GroupLab.Android/ResultView.cs SheetEditor Reach, Loupe, Magnify): A touch within 24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross where the hole will go.
 
 ### docs/BALLISTICS-VALIDATION.md
 

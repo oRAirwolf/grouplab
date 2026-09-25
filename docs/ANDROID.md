@@ -332,6 +332,11 @@ the phone. Either is reduced to the working size of item A1, and that working co
 in the marking is in its pixels and the session opens anywhere; the full photograph and the picker's copy are deleted. The sheet names
 itself from its codes, the holes are found by the desktop's own code, and the result shows the group's figures, the photograph with a
 ring on every hole, and the desktop's composite plot, filled by the same method from the same marking. The session is saved in the
-desktop's own database and format, and **Sessions** lists them, newest first, to open again. **Still to come in A4**: correcting by touch
-(moving, adding and removing a hole with a magnifier), the caliber and distance, and choosing the sheet by name when its codes cannot be
-read.
+desktop's own database and format, and **Sessions** lists them, newest first, to open again.
+
+**Correcting by touch** (item A4, second part). Beneath the photograph, **Move**, **Add a hole**, **Remove** and **Undo**. A touch within
+24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it,
+with a cross where the hole will go. Every change is saved at once and the figures and plot follow it. The **caliber** and the **distance**
+are asked on Capture before the picture, remembered for the next target; the caliber goes to detection, as on the desktop, and the
+distance turns the figures into angles. Where the sheet's codes cannot be read, the result asks **which sheet it is** by name and
+detects as that sheet, as the desktop does.

@@ -1920,6 +1920,10 @@
   "Settings has the same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).": {
    "kind": "code",
    "where": "android/GroupLab.Android/SettingsView.cs SettingsView; android/GroupLab.Android/FirstRunView.cs SurveyDue; android/GroupLab.Android/Shell.cs SurveyOpen"
+  },
+  "A touch within 24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross where the hole will go.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/ResultView.cs SheetEditor Reach, Loupe, Magnify"
   }
  },
  "rules": [

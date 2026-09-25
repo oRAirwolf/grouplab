@@ -59,7 +59,7 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
-## Entry 219, item A4, first part: capture to result on the phone
+## Entry 219, item A4: capture to result on the phone, corrected by touch
 
 Take a picture or choose one; the working copy (8 MP) becomes the session's image, which settles the question item A1 left of storing a
 scale beside the marking: there is none to store. The sheet is named, the holes found, the figures and the photograph with its holes
@@ -67,7 +67,10 @@ shown, and the desktop's composite plot drawn; the session saved in the desktop'
 of the desktop moved into shared code on the way, each now called by both: the plot fills itself from a marking
 (`CompositePlot.Show`), a session record is built in Core (`SessionRecords.Build`), and the survey's question is on the phone's first
 run and in its Settings. Built here and in CI; **not yet on a phone**, which is the next sitting's (request 33 gains two steps).
-Correcting by touch, the caliber and distance, and choosing the sheet by name are the rest of A4.
+**Second part**: correcting by touch (move with a magnifier, add, remove, undo, each saved at once), the caliber and distance asked
+before the picture and remembered, angles from the distance, and the sheet chosen by name where its codes cannot be read. The caliber
+and distance are kept in the desktop's settings file (`LoadShotSetup`), which `AndroidSharingTests` checks. A4 is built; its
+measurement on a phone is request 33's step 6.
 
 ## Entry 219, item D1: the hardware survey and benchmark, built and switched off
 

@@ -316,6 +316,19 @@ public sealed class AppSettingsStore(string path)
         file["errorReports"] = errors;
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 219 item A4: the caliber as the person typed it and the distance in inches, from the last target the
+    /// phone analyzed, offered again for the next, since most sessions shoot one rifle at one distance.
+    /// </summary>
+    public (string? Calibre, double? DistanceInches) LoadShotSetup() => Read(file =>
+        ((string?)file["shotSetup"]?["caliber"], file["shotSetup"]?["distanceInches"]?.GetValueKind() == JsonValueKind.Number ? (double?)file["shotSetup"]!["distanceInches"]!.GetValue<double>() : null));
+
+    public bool SaveShotSetup(string? calibre, double? distanceInches) => Save(file => file["shotSetup"] = new JsonObject
+    {
+        ["caliber"] = string.IsNullOrWhiteSpace(calibre) ? null : calibre.Trim(),
+        ["distanceInches"] = distanceInches,
+    });
+
     /// <summary>NOTES-FROM-PLANNING.md entry 208: whether the hardware survey may send. Unset until the person answers.</summary>
     public GroupLab.Core.Survey.SurveyChoice LoadSurveyChoice() =>
         Read(file => Enum.TryParse<GroupLab.Core.Survey.SurveyChoice>((string?)file["survey"]?["choice"], out var choice) ? choice : GroupLab.Core.Survey.SurveyChoice.Unset);

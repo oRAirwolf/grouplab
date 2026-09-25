@@ -50,9 +50,9 @@ alternating so desktop feedback never waits more than one Android item.
 - **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting).
 - **D1 the survey and benchmark: built, switched off** until request 34; the entry after it sets `surveyOpen` true and says so in the
   article what-grouplab-sends.
-- **A4 first part built**: take or choose a picture, the working copy as the session's image, the result with figures, photo and the
-  desktop's plot, Sessions; the survey question on the phone. Not yet on a phone (request 33 step 6). **Next**: the rest of A4,
-  correcting by touch, caliber and distance, the sheet by name. Then D-side feedback if any, A5 sharing a session file.
+- **A4 built**: take or choose a picture at the working size, the result with figures, photo and the desktop's plot, corrected by
+  touch with a magnifier, caliber and distance, the sheet by name, Sessions. Not yet on a phone (request 33 step 6). **A5 next**:
+  sharing a session file, then A6 signed builds (one request for the keystore and Play entry).
   A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
 - D2 question 51 when request 9 arrives. D3 feedback
   first whenever it comes. D4 `docs/RELEASE-PLAN.md` and the Windows signing options as a request with a recommendation; plan only.

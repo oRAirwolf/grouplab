@@ -69,6 +69,6 @@ public sealed class SessionsPage : UserControl
 
         var definition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
         DiagnosticLog.Info("session.open", ("session", id.ToString(CultureInfo.InvariantCulture)));
-        Content = new ResultView(new PhoneResult(state, definition, null, id), App.Settings.LoadUnits(), () => Content = List());
+        Content = new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), App.Settings.LoadUnits(), () => Content = List());
     }
 }

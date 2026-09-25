@@ -86,7 +86,7 @@ Remove-Item -Recurse -Force "$env:TEMP\gl-spike"
 5. Fold the phone, and do step 1 once on the cover screen.
 6. **The application itself**, added by entry 219 item A4: open **GroupLab** (not the spike), answer its first questions, press **Take
    a picture**, allow the camera, and let it take the sheet. **Look for:** a result with the number of shots, the group's size, a plot
-   and the photograph with a ring on each hole; then **Sessions** lists it.
+   and the photograph with a ring on each hole; drag a ring with **Move** and see the magnifier; then **Sessions** lists it.
 
 **3. In PowerShell again**, to hand me the log:
 

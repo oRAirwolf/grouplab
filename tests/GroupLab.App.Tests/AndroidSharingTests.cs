@@ -71,4 +71,24 @@ public sealed class AndroidSharingTests
         Assert.All(radios, r => Assert.EndsWith(", false);", r.Value, StringComparison.Ordinal));
         Assert.DoesNotContain("IsChecked = true", text, StringComparison.Ordinal);
     }
+
+    /// <summary>Item A4: the caliber as typed and the distance are kept from one target to the next, and a cleared one is cleared.</summary>
+    [Fact]
+    public void TheCaliberAndDistanceAreRememberedForTheNextTarget()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"grouplab-shotsetup-{Guid.NewGuid():N}");
+        try
+        {
+            var store = new AppSettingsStore(Path.Combine(root, "settings.json"));
+            Assert.Equal((null, null), store.LoadShotSetup());
+            store.SaveShotSetup(" 6.5 Creedmoor ", 3600);
+            Assert.Equal(("6.5 Creedmoor", 3600.0), store.LoadShotSetup());
+            store.SaveShotSetup("", null);
+            Assert.Equal((null, null), store.LoadShotSetup());
+        }
+        finally
+        {
+            GroupLab.Tests.Support.Temp.Delete(root);
+        }
+    }
 }

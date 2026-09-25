@@ -14,8 +14,14 @@ using LogLevel = GroupLab.App.Diagnostics.LogLevel;
 
 namespace GroupLab.Android;
 
+/// <summary>The working copy of a photograph: the session's own image, its metadata at that size, and the photograph's own size.</summary>
+internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int OriginalWidth, int OriginalHeight);
+
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
-internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId);
+internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false);
+
+/// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
+internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: a photograph, from the camera or picked, analyzed the way the desktop analyzes one, at the
@@ -30,10 +36,10 @@ internal static class PhoneAnalysis
     private static string Files => global::Android.App.Application.Context.FilesDir!.AbsolutePath;
 
     /// <summary>Where each session's working image lives, one folder a session.</summary>
-    internal static string SessionsFolder => Path.Combine(Files, "sessions");
+    internal static string SessionsFolder => System.IO.Path.Combine(Files, "sessions");
 
     /// <summary>The session records, the desktop's database.</summary>
-    internal static SessionStore Store() => SessionStore.Open(Path.Combine(Files, "sessions.db"));
+    internal static SessionStore Store() => SessionStore.Open(System.IO.Path.Combine(Files, "sessions.db"));
 
     /// <summary>The built-in sheets, copied once out of the application's assets, where a sheet's codes are matched.</summary>
     internal static IReadOnlyList<TargetDefinition> Library()
@@ -44,11 +50,11 @@ internal static class PhoneAnalysis
         }
 
         var context = global::Android.App.Application.Context;
-        string folder = Path.Combine(Files, "targets");
+        string folder = System.IO.Path.Combine(Files, "targets");
         Directory.CreateDirectory(folder);
         foreach (string name in (context.Assets!.List("targets") ?? []).Where(n => n.EndsWith(".gltd.json", StringComparison.Ordinal)))
         {
-            string to = Path.Combine(folder, name);
+            string to = System.IO.Path.Combine(folder, name);
             using var from = context.Assets.Open($"targets/{name}");
             using var file = File.Create(to);
             from.CopyTo(file);
@@ -57,61 +63,69 @@ internal static class PhoneAnalysis
         return library = SheetIdentification.Candidates([folder]);
     }
 
-    public static PhoneResult Run(string photo, Calibre? calibre, UnitSettings units, SurveyQueue? survey, CancellationToken token)
+    /// <summary>The photograph reduced to the working size and written as the session's own image; null where it is not an image.</summary>
+    public static WorkingImage? Prepare(string photo)
     {
-        var clock = Stopwatch.StartNew();
         byte[] bytes = File.ReadAllBytes(photo);
         var original = ImageMetadataReader.Read(bytes);
-        string folder = Path.Combine(SessionsFolder, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
-        Directory.CreateDirectory(folder);
-        string image = Path.Combine(folder, "target.jpg");
-        int width, height;
-        double scale;
-        using (var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation))
+        using var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        if (colour.Empty())
         {
-            if (colour.Empty())
-            {
-                return new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
-            }
-
-            scale = WorkingSize.Scale(colour.Width, colour.Height, WorkingSize.PhoneMegapixels);
-            using var working = new Mat();
-            Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), scale, scale, scale < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
-            Cv2.ImWrite(image, working, new ImageEncodingParam(ImwriteFlags.JpegQuality, 92));
-            (width, height) = (working.Width, working.Height);
+            return null;
         }
 
-        var metadata = WorkingSize.Scaled(original, width, height, scale);
-        var (grey, _) = ImageLoader.Load(image);
-        var (value, _) = ImageLoader.LoadMaxChannel(image);
+        string folder = System.IO.Path.Combine(SessionsFolder, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
+        Directory.CreateDirectory(folder);
+        string image = System.IO.Path.Combine(folder, "target.jpg");
+        double scale = WorkingSize.Scale(colour.Width, colour.Height, WorkingSize.PhoneMegapixels);
+        using var working = new Mat();
+        Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), scale, scale, scale < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
+        Cv2.ImWrite(image, working, new ImageEncodingParam(ImwriteFlags.JpegQuality, 92));
+        return new WorkingImage(image, WorkingSize.Scaled(original, working.Width, working.Height, scale), colour.Width, colour.Height);
+    }
+
+    /// <summary>A photograph, prepared and analyzed.</summary>
+    public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token) =>
+        Prepare(photo) is { } working
+            ? Detect(working, null, setup, units, survey, token)
+            : new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
+
+    /// <summary>
+    /// The working image analyzed: as the sheet its codes name, or as <paramref name="chosen"/> where the person named it because the codes
+    /// could not be read (entry 115 section 4, as the desktop asks).
+    /// </summary>
+    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token)
+    {
+        var clock = Stopwatch.StartNew();
+        var (grey, _) = ImageLoader.Load(working.Path);
+        var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
         var backend = new OpenCvSharpBackend();
         var trace = new TraceRecorder();
         var session = new MarkingSession();
-        session.Open(image, original.Orientation);
-        if (calibre is not null)
-        {
-            session.SetCalibre(calibre);
-        }
+        session.Open(working.Path, working.Metadata.Orientation);
+        session.SetCalibre(setup.Calibre);
+        session.SetShotDistance(setup.DistanceInches);
 
-        var identity = SheetIdentification.Identify(grey, Library(), backend, trace, token);
-        if (identity.Definition is not { } definition)
+        var definition = chosen ?? SheetIdentification.Identify(grey, Library(), backend, trace, token).Definition;
+        if (definition is null)
         {
             DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds));
             return new PhoneResult(session.State, null,
-                "GroupLab could not read the square codes that name the sheet. Take the picture again with the whole sheet in view, square on, in even light.", null);
+                "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
+                null, working, AskWhichSheet: true);
         }
 
-        var result = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, token, calibre);
-        survey?.Record(new AnalysisFacts(original.Width ?? grey.Width, original.Height ?? grey.Height, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
-        DiagnosticLog.Info("phone.detect", ("named", true), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds));
+        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre);
+        survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
+        DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds));
         if (result.Failure is not null || result.Scale is null)
         {
-            return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null);
+            return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working);
         }
 
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture);
         long? id = Save(session.State, definition, units, null);
-        return new PhoneResult(session.State, definition, null, id);
+        return new PhoneResult(session.State, definition, null, id, working);
     }
 
     /// <summary>Saves the session, or updates it where it was saved before; null where the database would not take it.</summary>
@@ -133,6 +147,15 @@ internal static class PhoneAnalysis
         {
             DiagnosticLog.Exception(LogLevel.Warn, "session.save", e);
             return null;
+        }
+    }
+
+    /// <summary>A working image nobody kept: a picture abandoned after it could not be read.</summary>
+    public static void Discard(WorkingImage? working)
+    {
+        if (working is not null && System.IO.Path.GetDirectoryName(working.Path) is { } folder && folder.StartsWith(SessionsFolder, StringComparison.Ordinal))
+        {
+            Directory.Delete(folder, recursive: true);
         }
     }
 }
