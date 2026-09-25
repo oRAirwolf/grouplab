@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.102
+
+**2026-09-25**, commit `5a1e769`. Nightly.
+
+**What you will notice**
+
+- When a mark is large enough to hold three or more shots of the caliber you named, the review now says so and how to mark the rest.
+- After you analyze a target, GroupLab now offers to send it to the project to improve detection, asking first unless you choose otherwise; the first time it opens, one screen asks how you want it, and Settings can change that at any time.
+- A very large scan, such as a roll sheet, now has its printed codes read at full detail, so it can name itself on Linux and macOS as well as Windows.
+- On a target with a single bull, every shot now counts toward that one group, however far out, and the review no longer asks about each shot or says the sheet takes one.
+- The codes printed on the roll sheets are searched for in smaller pieces of the image when a first look finds none, so these sheets can name themselves on Linux and macOS.
+- A scanned GroupLab sheet whose printed codes could not be found in the whole page now reads them from its corners, so a zeroing grid scanned at 600 dpi names itself instead of asking which sheet it is.
+- The zeroing grids now say in the library that they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.102)
+
+---
+
 ## 0.2.0-nightly.101
 
 **2026-09-24**, commit `98da32d`. Nightly.
