@@ -38,8 +38,11 @@ public sealed partial class MainWindow
 
     private Avalonia.Controls.Button? sendButton;
 
+    /// <summary>What a new window takes for the receiver being open where it is not the build's limits.json: the test run sets it off.</summary>
+    internal static bool? ReceiverOpenByDefault { get; set; }
+
     /// <summary>Whether the receiver is open: the build's limits.json, which the tests can override.</summary>
-    internal bool ReceiverOpen { get; set; } = ReceiverTerms.Current.AppOpen;
+    internal bool ReceiverOpen { get; set; } = ReceiverOpenByDefault ?? ReceiverTerms.Current.AppOpen;
 
     private string PendingFolder => Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? ".",
         Path.GetFileNameWithoutExtension(settingsStore.Path) == "settings" ? "pending-targets" : Path.GetFileNameWithoutExtension(settingsStore.Path) + ".pending-targets");

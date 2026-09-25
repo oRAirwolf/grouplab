@@ -461,7 +461,7 @@
     ],
     [
      "Sending targets",
-     "Whether each target you analyze goes to the project, you are asked each time, or it never goes, and with which consent. Not switched on yet, and until it is this section says so and nothing is sent."
+     "Whether each target you analyze goes to the project, you are asked each time, or it never goes, and with which consent. What is sent, how many targets have gone from this computer and how to have one removed are here too."
     ],
     [
      "Detailed logging",

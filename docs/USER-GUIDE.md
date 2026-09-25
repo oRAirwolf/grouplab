@@ -229,14 +229,14 @@ Reading several sheets of one load as one group is **not built yet**. It is not 
 
 GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never. A report holds the version, the system, the error and the names of the last things done, never anything you typed, and never a photograph, file name or location. That part is built but not switched on yet. Crash records are written to your own machine whether or not you ever send them. They name the version, the build train and the line it happened on, and they never contain a photograph, a location or anything read out of one.
 
-**Sending in targets.** The page at `grouplab.org/targets/` takes scans and photographs of targets that help GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and never published, or may be published in GroupLab's public test data and research. GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings. That part is built but not switched on yet: until it is, GroupLab asks nothing and sends nothing.
+**Sending in targets.** The page at `grouplab.org/targets/` takes scans and photographs of targets that help GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and never published, or may be published in GroupLab's public test data and research. GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 
 ## 12. Settings
 
 The gear opens the settings:
 - **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle.
 - **Theme:** dark, light, high contrast, or follow the system.
-- **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. It also lists what is sent, how many targets have gone from this computer and how to have one removed, and anything waiting to be tried again. Until sending is switched on, this section says only that.
+- **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. It also lists what is sent, how many targets have gone from this computer and how to have one removed, and anything waiting to be tried again.
 - **Error reports:** send them automatically, ask each time, or never, and what a report holds. Until sending is switched on, this section says only that.
 - **Log:** how much the diagnostic log records, and where it is.
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.

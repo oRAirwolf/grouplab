@@ -52,7 +52,7 @@ Two things about all of it are deliberate:
 
 If you send a target from the page, that is an upload you started, to a page you visited, with a consent record written at the time.
 
-GroupLab can also send one itself, and it asks first. After you analyze a target, a short panel under the figures offers to send it: the image, the holes GroupLab found, the ones you moved, added or removed, what you told it, the figures and the log from that session. Nothing goes until you press Send and choose one of two levels of consent, testing only or may be published. Settings lets you say instead that every target should go, or none. **This is built but not switched on yet**: until the project's receiver for it opens, GroupLab asks nothing and sends nothing, and Settings says so.
+GroupLab can also send one itself, and it asks first. After you analyze a target, a short panel under the figures offers to send it: the image, the holes GroupLab found, the ones you moved, added or removed, what you told it, the figures and the log from that session. Nothing goes until you press Send and choose one of two levels of consent, testing only or may be published. Settings lets you say instead that every target should go, or none. The first time GroupLab opens after an update that carries it, one screen asks which you want, and nothing is chosen for you.
 
 **Unlike a crash report, a target you agreed to send is tried again.** If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted. Settings shows anything waiting, with a button to discard it. That is the one thing GroupLab may send when it opens, and only because you already said yes to it.
 

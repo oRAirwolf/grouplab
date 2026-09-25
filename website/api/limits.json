@@ -38,7 +38,7 @@
     "testing": "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.",
     "publishable": "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published."
   },
-  "appOpen": false,
+  "appOpen": true,
   "appReceiver": "https://grouplab.org/api/app-submission.php",
   "errorReportsOpen": false,
   "errorReceiver": "https://grouplab.org/api/error-report.php",
