@@ -9,29 +9,28 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-24, after entry 194.
+**Last rewritten:** 2026-09-25, after entry 195.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 194 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 195 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
-- The inbox is empty.
-- **Error reports are built and switched off** (entry 194): `errorReportsOpen` goes true once request 24's test report makes an issue. 191 and 193 are Unholy's zeroing grid scan; 192 is the caliber Set error;
-  194 sends error reports to a private repository and ends in one request for Alan.
-- **Sending waits on request 22**: Alan sends one test target and pulls it; then `appOpen` true in its own build.
+- Entry 196 is next: a zeroing grid expects a group on its one bull, touching holes and a ragged hole.
+- **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are built and switched off**:
+  `errorReportsOpen` goes true once request 24's last step, one test report, makes an issue.
+- **A receiver counts as live only when an empty POST to it returns its own error from the live site**, not when it is in the
+  repository or the include (entry 195: error-report.php was in both and never shipped).
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
   (question 52, option A).
-- **Sending targets from the application is built and switched off** (entry 165): `appOpen` is false until question 55
-  is answered. The live receiver already answers; request 21's longer timeouts are optional.
-- Entry 149 section 3 A is built; D is question 50. Section 4 waits with entry 172 section 3 item 1.
+- Entry 149 section 3 A is built; D is the quiet hint of entry 187. Section 4 waits with entry 172 section 3 item 1.
 
 ## The next three
 
-1. **Turn on sending from the application** when request 22's pull matches, and **error reports** when request 24's test makes an issue: each its own commit.
+1. **Turn on error reports** when request 24's test report makes an issue: `errorReportsOpen` true, its own commit.
 2. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 3. Program B's article when request 20's test is shot.
 
@@ -41,13 +40,12 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 - **Entry 165, switching it on.** Request 22: Alan's one test target and pull.
 
-Open requests in `docs/notes/for-alan.md`: **9** (22 most urgent, then 24, 23, 9, 16, 20, 18, 12, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **7** (24 most urgent, its last step only, then 9, 16, 20, 18, 12, and 21, optional).
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55.
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55; entry 195 answered 56.
 
-- **56** the codes on two sheets read only some of the time; none read on Unholy's real zeroing grid scan
 
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -67,7 +65,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** none
+**Holds:** 196
 
 ## Things that would surprise somebody who was not here yesterday
 

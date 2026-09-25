@@ -5,6 +5,26 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-24, question 56: the codes on two sheets read only some of the time
+
+**Status: closed.** Answered 2026-09-24 by entry 195 section 4: a code that never reads on a real scan of our own sheet is a defect; fix the reader first, the print last. Fixed by entry 195: neither detector found a code in the whole of Unholy's scan, and each corner third searched on its own read all four; the reader now does that where the whole image gives nothing.
+
+Entry 189 section 4 asked for every sheet to be detected from its own render. They all are, at 300 dpi. But on the way, GL-ZERO-MIL-100Y's
+QR codes did not read from a clean render at 200 dpi, while they read at 150 and at 300, and under one draw of the synthetic scanner
+noise at 300 dpi neither its codes nor GL-LR300-R36's read, where the other eighteen sheets' did; a different draw read both. A reader
+that goes from reading to not reading and back as the resolution rises is the decoder, not the print: straightening each found code into
+a square and thresholding it before decoding did not change it.
+
+The options: live with it, since the markers still register the sheet and the application asks which sheet it is when the codes do not
+read; look further into the decoder; or print the codes larger in the next revision of the library, which changes every printed sheet's
+look and needs Alan. I would live with it and watch real scans: Unholy's scan of GL-ZERO-MIL-100Y (entry 191) is the first real test.
+
+**Entry 191 has answered the first real test: none of the four codes on Unholy's 600 dpi scan read.** The markers register the sheet
+perfectly once it is chosen. So the application's question, "which sheet is it?", is what every GL-ZERO-MIL-100Y scan meets today, and
+the choice between living with it, the decoder and larger codes matters more than it seemed.
+
+---
+
 ## 2026-09-24, question 55: when to switch on sending from the application
 
 **Status: closed.** Answered 2026-09-24 by entry 187 section 1: yes, after one end to end package, in the order proposed. The package waits on Alan, request 22; `appOpen` is set true in its own build once his pull matches.

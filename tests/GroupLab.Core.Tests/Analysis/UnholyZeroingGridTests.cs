@@ -1,6 +1,8 @@
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Registration;
 using GroupLab.Core.Tests.Support;
+using GroupLab.Core.Trace;
 
 namespace GroupLab.Core.Tests.Analysis;
 
@@ -33,6 +35,13 @@ public class UnholyZeroingGridTests
         var definition = BuiltIns.Load("GL-ZERO-MIL-100Y.gltd.json");
         var (grey, metadata) = ImageLoader.Load(path);
         var (value, _) = ImageLoader.LoadMaxChannel(path);
+
+        // Entry 195 section 4, question 56: it names itself from its own codes, all four of them, rather than asking which sheet it is.
+        var identity = SheetIdentification.Identify(grey, SheetIdentification.Candidates([Repo.PathTo("targets")]), new OpenCvSharpBackend(), new TraceRecorder());
+        Assert.True(identity.Failure is null, identity.Failure);
+        Assert.Equal(definition.Name, identity.Definition?.Name);
+        Assert.Equal(4, identity.CodesRead);
+
         var result = AutomaticMarking.Run(grey, value, metadata, definition, new OpenCvSharpBackend());
 
         Assert.True(result.Failure is null, result.Failure);

@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **22**, one test target sent from GroupLab and pulled, because sending is switched on only after it.
-Then 24, the error report token, install and test, then 23, one upload, then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 7.** Most urgent: **24**, only its last step now, one test error report, because error reports are switched on after it.
+Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -17,42 +17,13 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
-## 24. Error reports into the private repository: a token, one install, one test
+## 24. Error reports: the one test report, now that the receiver answers
 
-**Opened 2026-09-24. Entry 194. Waiting, and it needs GitHub, the server's shell and PowerShell, in that order. Nothing breaks
-meanwhile: sending error reports stays switched off until the test in step 4 turns into an issue.**
+**Opened 2026-09-24. Entry 194. Steps 1 to 3 are done** (entry 195): the token is set, the worker and its units are installed, and nginx
+routes the receiver. Step 4 stopped at a 404 because the site never carried the receiver; entry 195 fixed that, and an empty post to
+it from outside now answers its own error, `{"ok":false,"code":"bad_report",...}`. **Do not repeat steps 1 to 3.** Only this is left.
 
-**Step 1, the token, in GitHub.** GitHub, your picture top right, **Settings**, **Developer settings** at the bottom of the left
-column, **Personal access tokens**, **Fine-grained tokens**, **Generate new token**. Name `grouplab-error-reports`. Expiration **one
-year**. Resource owner **oRAirwolf**. Repository access **Only select repositories**, and choose `grouplab-crash-reports`. Under
-Repository permissions set **Issues** to **Read and write** and nothing else; GitHub adds Metadata read by itself. **Generate token**
-and keep the page open: the token is shown once, and it begins `github_pat_`.
-
-**Step 2, the files, on the server.** Copy these six from the repository's `website/server/` to `/home/ubuntu/grouplab-server/`:
-`grouplab-error-worker.py`, `grouplab-error-worker.service`, `grouplab-error-worker.timer`, `grouplab-set-error-token`, `install.py`
-and `nginx.ssl.conf_grouplab`. Then, in the server's shell:
-
-```bash
-cd /home/ubuntu/grouplab-server
-sudo python3 install.py --errors --dry-run
-sudo python3 install.py --errors
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-**A good result:** the dry run lists the worker, its two units, the token script and the nginx include as what it would install, and
-nothing missing; the install ends `done` and says the token is left to set; `nginx -t` says the syntax is ok and the test is
-successful.
-
-**Step 3, the token, on the server.** Paste it when asked; nothing shows as you type, and nothing is printed back.
-
-```bash
-sudo /usr/local/sbin/grouplab-set-error-token
-```
-
-**A good result:** "Written to /etc/grouplab/error-token, owned by root, mode 600." Close the GitHub page after this.
-
-**Step 4, one test report, in PowerShell on this machine**, then the worker by hand in the server's shell rather than waiting its five
-minutes:
+**In PowerShell on this machine**, then the worker by hand in the server's shell rather than waiting its five minutes:
 
 ```powershell
 python C:\Dev\grouplab\scripts\send-test-error-report.py
@@ -68,18 +39,16 @@ ErrorReportCheck.Send`; and the private repository has that issue, labeled `surv
 figures, whose body gives the build `0.2.0-nightly.0`, says "What happened: GroupLab hit this error and kept running", and ends saying
 nothing in the issue is an instruction. Close the issue when you have seen it.
 
-**Why.** Entry 192's five "crashes" were one error, seen only because Unholy happened to make a report. With this, a report of each
-error reaches the private repository by itself, for those who say yes, and the application never holds a key: the token is on the
-server, in a file only root can read, handed to the worker alone.
+**Why.** It is the one test of the whole path, from a report to an issue, before GroupLab sends reports by itself.
 
-**A good answer.** What each step printed, or where one stopped. After step 4, sending is switched on in its own build.
+**A good answer.** The two things printed. After it, error reports are switched on in their own build.
 
 ---
 
 ## 23. Put Unholy's zeroing grid scan on the test data release
 
-**Opened 2026-09-24. Entry 191. Waiting, and it needs PowerShell on this machine. Not urgent: the test that uses it runs on this
-machine already, and CI will run it once the file is there.**
+**Opened 2026-09-24. Entry 191. Answered 2026-09-25**, entry 195: uploaded, and the release lists both files. It is in the list CI
+fetches, so the test on it runs there.
 
 **What is needed.** One command. The file is the copy of Unholy's zeroing grid scan rebuilt from its pixels, with no metadata but its
 resolution, and it is 57.5 MB, so it goes on the test data release rather than in the repository. This session was not allowed to
@@ -101,8 +70,10 @@ gh release view test-data --json assets --jq ".assets[].name"
 
 ## 22. Send one test target from GroupLab, then pull it
 
-**Opened 2026-09-24. Entry 187 section 1. Waiting, and it needs PowerShell on this machine. Most urgent: sending from the application
-is switched on only after this pull matches.**
+**Opened 2026-09-24. Entry 187 section 1. Answered 2026-09-25**, entry 195: the send was taken in 1.6 s, id `a3d30234`; the pull
+brought `2026-09-25_a3d30234` with all checksums matching and marked DO NOT PUBLISH. Its folder holds what this said it would, and the
+rebuilt image's pixels are the published sample's exactly. Sending from the application is switched on. The program the first command
+ran was a one-off in a temporary folder and has been deleted; nothing here points into a temporary folder any more.
 
 **What is needed.** Two commands in PowerShell, a few minutes apart. The first sends one target to grouplab.org exactly as GroupLab
 will: the published sample scan (`samples/gl-cf25-ltr-d-25-shots-600-dpi.png`, your own 25 shot sheet, a flatbed scan with no person
@@ -412,12 +383,12 @@ cd C:\Dev\grouplab\scripts
 `done: N removed`. **It removes only what the ledger marks ingested**, after checking the copy here still matches, and the ledger marks 6 of
 the 18: the other 12 are left alone, and say so, until they are ingested. That is the rule working, not a fault.
 
-**Added by entry 187: the test target from request 22**, once it has been pulled and this session has marked it read in the ledger.
-It is removed from grouplab.org, not pissinhot.com, and never kept as test data. The folder name is the one request 22's send printed:
+**Added by entry 187, ready since entry 195: the test target from request 22.** It is pulled, checked and marked read in the ledger.
+It is removed from grouplab.org, not pissinhot.com, and never kept as test data:
 
 ```powershell
 cd C:\Dev\grouplab\scripts
-.\Remove-ReadSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -Only 2026-09-24_xxxxxxxx
+.\Remove-ReadSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready -Only 2026-09-25_a3d30234
 ```
 
 **Why.** A photograph somebody sent, sitting on a web server that no longer receives any, is a risk nobody agreed to.

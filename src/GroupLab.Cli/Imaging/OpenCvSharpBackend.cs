@@ -374,6 +374,28 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             input = resized;
         }
 
+        var texts = Read(input);
+
+        // NOTES-FROM-PLANNING.md entry 195 section 4, question 56: on Unholy's 600 dpi scan of GL-ZERO-MIL-100Y neither detector found a
+        // single code in the whole 5100 by 7013 image, at full or half resolution, and in each corner third of it the WeChat detector found
+        // the code and the plain decoder read all 85 bytes, at full, half and a third of the resolution alike. Every GroupLab sheet keeps its
+        // codes near the corners of the page, so where the whole image gives nothing each corner third is searched on its own.
+        if (texts.Count == 0)
+        {
+            int w = input.Width / 3, h = input.Height / 3;
+            foreach (var corner in new[] { new Rect(0, 0, w, h), new Rect(input.Width - w, 0, w, h), new Rect(0, input.Height - h, w, h), new Rect(input.Width - w, input.Height - h, w, h) })
+            {
+                using var part = new Mat(input, corner);
+                texts.AddRange(Read(part));
+            }
+        }
+
+        return [.. texts.Select(t => System.Text.Encoding.Latin1.GetBytes(t))];
+    }
+
+    /// <summary>Every code the two detectors find in an image, each decoded by the plain decoder at the corners found; the empty ones left out.</summary>
+    private static List<string> Read(Mat input)
+    {
         using var locator = new WeChatQRCode("", "", "", "");
         using var decoder = new QRCodeDetector();
         var texts = new List<string>();
@@ -388,7 +410,7 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             texts.AddRange(decoded.Select(t => t ?? ""));
         }
 
-        return [.. texts.Where(t => t.Length > 0).Select(t => System.Text.Encoding.Latin1.GetBytes(t))];
+        return [.. texts.Where(t => t.Length > 0)];
     }
 
     public static GrayImage Copy(Mat mat)

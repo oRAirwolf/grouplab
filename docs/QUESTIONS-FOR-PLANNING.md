@@ -12,26 +12,6 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-09-24, question 56: the codes on two sheets read only some of the time
-
-Status: open. Nothing waits on it; entry 189's every-sheet test passes.
-
-Entry 189 section 4 asked for every sheet to be detected from its own render. They all are, at 300 dpi. But on the way, GL-ZERO-MIL-100Y's
-QR codes did not read from a clean render at 200 dpi, while they read at 150 and at 300, and under one draw of the synthetic scanner
-noise at 300 dpi neither its codes nor GL-LR300-R36's read, where the other eighteen sheets' did; a different draw read both. A reader
-that goes from reading to not reading and back as the resolution rises is the decoder, not the print: straightening each found code into
-a square and thresholding it before decoding did not change it.
-
-The options: live with it, since the markers still register the sheet and the application asks which sheet it is when the codes do not
-read; look further into the decoder; or print the codes larger in the next revision of the library, which changes every printed sheet's
-look and needs Alan. I would live with it and watch real scans: Unholy's scan of GL-ZERO-MIL-100Y (entry 191) is the first real test.
-
-**Entry 191 has answered the first real test: none of the four codes on Unholy's 600 dpi scan read.** The markers register the sheet
-perfectly once it is chosen. So the application's question, "which sheet is it?", is what every GL-ZERO-MIL-100Y scan meets today, and
-the choice between living with it, the decoder and larger codes matters more than it seemed.
-
----
-
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
 
 **Status: open. Nothing is changed yet; request 9's hand markings are the evidence that decides it.** Entry 187 section 5 agreed: nothing changes until request 9's two hand markings arrive.
@@ -77,10 +57,10 @@ estimates with no reference, which is how the weighted centroid was chosen in th
 
 ## Answered, and moved
 
-These 51 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 52 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 55, 54, 53, 52, 50, 49, 48, 47, 46, 45, 44, 42, 41, 40, 39, 38, 37, 35, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.
+> 56, 55, 54, 53, 52, 50, 49, 48, 47, 46, 45, 44, 42, 41, 40, 39, 38, 37, 35, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.
 
 ---
 

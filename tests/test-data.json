@@ -14,6 +14,13 @@
       "bytes": 59215934,
       "what": "The friend's 2026-09-23 scan, rebuilt from its pixels with only the resolution kept. Same pixels as the original.",
       "consent": "samples/PROVENANCE.md, the 2026-09-23 friend scan"
+    },
+    {
+      "name": "zeroing-grid-mil-100yd-unholy-2026-09-24.png",
+      "sha256": "c6db8580f59412b5152f6d8520c2e9143c174ce397606095cbb4c33e51367b27",
+      "bytes": 57523449,
+      "what": "Unholy's 2026-09-24 scan of GroupLab's mil zeroing grid, rebuilt from its pixels with only the resolution kept. Not Scan_20260923.png.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-24 zeroing grid scan by Unholy, under entry 190's standing consent"
     }
   ]
 }

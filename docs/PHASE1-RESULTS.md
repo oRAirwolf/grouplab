@@ -997,6 +997,30 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 195: the error receiver shipped, sending on, and Unholy's codes read
+
+**The error receiver was never shipped.** `website/build.py` listed and copied three receivers and not `error-report.php`, so the live
+address answered "File not found." once nginx routed it, and request 24 stopped at its last step. It is listed and copied now; the site
+build fails when a listed receiver is missing from its output or a receiver in `website/api/` is not listed; and `ReceiversShipTests`
+holds every receiver to the list, the copy and the nginx include, and failed on the code before the fix. Published as 62f8b4a; an empty
+post from outside then answered `{"ok":false,"code":"bad_report","error":"The report arrived empty."}` with 400. Request 24 is its last
+step only.
+
+**Sending targets is on.** Request 22's folder holds the rebuilt PNG, `meta.json` from the application, testing only and opted out,
+`DO-NOT-PUBLISH` and `CONSENT.txt`; the rebuilt image's pixels equal the published sample's, with the same pixel hash as `sample.json`.
+`appOpen` is true in its own commit, 1606619, and the guide, tour and article say so. The test is marked read in the ledger and on request
+12's removal list; the sending program in a temporary folder was deleted. Request 21 stays optional: 17.6 MB went in 1.6 s.
+
+**Request 23 passed**, and the zeroing grid scan is in `tests/test-data.json`, so CI fetches it and `UnholyZeroingGridTests` runs there.
+
+**All four codes on Unholy's scan now read.** On the whole 5100 by 7013 scan neither detector found a code, at full or half resolution;
+in each corner third, the WeChat detector found the code and the plain decoder read all 85 bytes, at full, half and a third of the
+resolution alike. So where the whole image gives nothing, `ReadCodes` searches each corner third on its own. The scan names itself from
+its four codes, and the every-sheet test again requires each sheet to name itself, on all three systems. Resampling in our own code, a
+second decoder and larger printed codes were not needed.
+
+**Tests.** Core `ReceiversShipTests`, and `UnholyZeroingGridTests` now also wants the sheet named from four codes.
+
 ## Entry 194: error reports into a private repository, built and switched off
 
 **What users are asked.** Beside the target question on the first run screen, and in Settings under Error reports: send error reports

@@ -24,6 +24,82 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 195: requests 22 and 23 passed; request 24 stops at a 404 because the site never ships error-report.php; question 56
+
+**Status: actioned 2026-09-25**, every section. Section 4 stopped at its first step, which was enough: the codes were found by searching each corner of the scan, not by resampling them, so no second decoder and no change to the print. Whether that also makes the three renders read on Linux and macOS is what CI on this commit shows; the every-sheet test requires it again.
+
+Do section 1 first. It is the only thing blocking Alan.
+
+## 1. error-report.php is not in the site build, so the receiver answers 404
+
+Alan ran request 24 on 2026-09-25. Steps 1 to 3 went exactly as written:
+
+- The dry run and install created the two folders, the worker, the token script and both units, replaced the nginx include with its backup
+  in `/home/airwolf/backups/grouplab.org/config/grouplab.org-nginx.ssl.conf_grouplab.20260924-185436.bak`, reloaded systemd and enabled the
+  timer. `nginx -t` passed, nginx was reloaded, and pissinhot.com and grouplab.org both answer 200.
+- The token script wrote `/etc/grouplab/error-token`, root, mode 600.
+
+Step 4 fails: `python scripts/send-test-error-report.py` prints `not sent: the receiver answered 404, File not found.` The planning
+session checked from outside: a POST to `https://grouplab.org/api/error-report.php` now returns PHP-FPM's plain `File not found.` (before
+the include it was the site's 404 page), while `app-submission.php` answers 400 as it should. So nginx now routes the address and the
+file is not on the server.
+
+The cause is in the repository: `website/build.py` copies `upload.php`, `crash-report.php` and `app-submission.php` into the site
+(around line 2363) and its `RECEIVERS` list (line 2324) names the same three. `error-report.php` is in neither, so the signed parcel never
+carries it. STATE.md's "the error report and application receivers publish with it" was not checked against the live site.
+
+1. Ship it: add it to the copy block and to `RECEIVERS`, and to whatever check reads `limits.json` against the receivers, if it applies.
+2. Make it impossible to miss again: a test that every exact-match `location = /api/*.php` in `website/server/nginx.ssl.conf_grouplab`
+   has its file in the built site, and every `.php` file under `website/api/` is both shipped and named in the include. Today's code must
+   fail that test.
+3. After the site publishes and the sync has run, check it yourself the way the planning session did: an empty POST to the address should
+   answer the receiver's own JSON error, not `File not found.` Then rewrite request 24 as a short step 4 only, with the same good result.
+   Steps 1 to 3 are done and must not be repeated. The token is set.
+4. In STATE.md, a line saying a receiver counts as live only when an empty POST to it returns its own error from the live site.
+
+## 2. Request 22 passed: switch sending on
+
+Alan, 2026-09-25:
+
+- The send: `detected 25 marks; image target.png, 17602175 bytes, sha256 c52412d88677e28d1b73ccc84a79027f210e695398b835a7985a77196d3b58c4;
+  package 13322 bytes` and `answer after 1.6 s: 200 {"ok":true,"id":"a3d30234"}`.
+- The pull: `6 on the server, 4 already here, 2 new`, pulled `2026-09-24_272b33e2` (11.2 MB) and `2026-09-25_a3d30234` (15.2 MB),
+  `Pulled 2 submission(s); verified 2 file(s). All checksums match.`, and both listed as DO NOT PUBLISH.
+
+Check the local folder `C:\Dev\grouplab-submissions\2026-09-25_a3d30234` holds what request 22 said it would (`001_target-rebuilt.png`,
+`meta.json`, `DO-NOT-PUBLISH`, `CONSENT.txt`) and that its rebuilt image matches what the sender detected. Then, as entry 187 section 1 said:
+set `appOpen` true in its own commit with a `Release-note:` trailer, add `2026-09-25_a3d30234` to request 12's clearing list, and close
+request 22. 1.6 s for 17.6 MB means request 21 stays optional. The sender program in your temp scratchpad either moves into `scripts/`
+with a note on what it is for, or is deleted; do not leave a request pointing into `%TEMP%` again.
+
+## 3. Request 23 passed
+
+`gh release upload test-data ...zeroing-grid-mil-100yd-unholy-2026-09-24.png` printed `Successfully uploaded 1 asset to test-data`, and the
+release now lists `Scan_20260923.png` and `zeroing-grid-mil-100yd-unholy-2026-09-24.png`. Add it to what CI fetches, confirm the test runs
+there, and close request 23.
+
+## 4. Question 56: fix the decoder first, change the print last
+
+A code that never reads on a real 600 dpi scan of our own sheet is a defect, not something to live with; "which sheet is it?" on every
+zeroing grid is exactly the friction Unholy reported. In this order:
+
+1. **Decode at more than one scale.** It reads at 150 and 300 dpi and fails at 200 and 600, so try each found code at several scales (for
+   example the code resampled to 4, 6 and 8 pixels a module) before giving up. Cheap, and it should turn Unholy's scan from zero codes read
+   to all four. His scan is the test.
+2. **Make it the same on every system.** You wrote that the same codes read on Windows and not on Linux or macOS from one render. That means
+   the pixels the decoder is given differ by platform, most likely the resampling. Do the resampling in our own code, so the decoder gets
+   identical input everywhere, and have the every-sheet test run the same render on all three CI systems.
+3. **A second decoder only if 1 and 2 fail.** Name it and its license first; it must be GPL-3.0 compatible.
+4. **Larger codes in the next library revision only if all of that fails.** That changes every printed sheet and needs Alan; put it in
+   for-alan.md with pictures of the before and after, and do not change the library without his answer.
+
+## 5. The report
+
+Plain words for Alan: whether the error report test is ready to run again and the one command, that sending from GroupLab is on and in
+which build, and how many of the four codes on Unholy's scan now read.
+
+---
+
 ## 2026-09-24, entry 194: error reports sent automatically, through grouplab.org, to a private GitHub repository
 
 **Status: actioned 2026-09-24**, every section built and tested, and switched off: `errorReportsOpen` is false in `website/api/limits.json` until request 24's token, install and test report make an issue. **Not done:** section 3.6's line on Discord, because the server holds no webhook and entry 194 says not to add one; the token's state is written where the worker keeps its status and in its log, and for-alan.md says so when it is seen. The upload page itself is not changed: the article "What GroupLab sends" is where a report's contents are said.
