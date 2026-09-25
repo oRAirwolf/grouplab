@@ -37,7 +37,7 @@ How far the bullet falls below the line of the barrel on its way to the target. 
 
 <a id="cep"></a>
 
-The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten. It answers where the next shot will go rather than how big this group was. It is estimated from your shots, so it is less certain with fewer of them.
+The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten, the 95 percent circle 19 in 20. It answers where the next shot will go rather than how big this group was. It is estimated from your shots, so it is less certain with fewer of them.
 
 *Precisely:* Circular error probable: the radius about the group's center that the given share of shots falls inside, reckoned from sigma under a circular normal model.
 

@@ -997,6 +997,29 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 204: the composite plot, quieter
+
+**What changed**, back to front as it is drawn: the bull's rings are a wide pale grey band (4 wide; 1.5:1 on white, 1.7:1 on the dark
+paper); each shot's outline is at half strength, and so is its point when no caliber is set, while a picked or excluded shot keeps its
+own look; CEP 50, 90 and 95 are green, 2.5 wide against the outlines' 1.5, dotted, solid and dashed; the extreme spread stays a red dashed
+line; the group centre is a pair of green lines across the whole plot and the aim point a pair of blue ones; a picked shot is drawn last.
+The key lists only what is drawn and names each mark by colour and pattern. Toggles beside the plot turn CEP 50, 90, 95 and the extreme
+spread on and off, 44 high and reached with Tab, CEP 95 off at first, and `AppSettingsStore.LoadPlotMarks` remembers them. Compare's small
+plots follow the same toggles and its caption says what they show. The report draws the same marks in the light theme's inks; its page
+has no dashed stroke, so CEP 50 is a ring of dots and CEP 95 a ring of dashes made of dots, and its caption names each and says when the
+extreme spread was left out. The glossary's CEP entry covers 95.
+
+**The colours**, in the palette both themes read (`Tokens.Plot`): green `#007a4d` light and `#3ddc84` dark, blue `#0055d4` and
+`#5aa9ff`, each at least 5.4:1 on its paper. **Deuteranopia**, simulated with Machado's 2009 matrix: the red and the green come close
+(46 and 60 apart on a 0 to 441 scale, light and dark) and are told apart by shape, a dashed line between two shots against circles and
+lines across the whole plot; the blue stays at least 150 from both and from the ink.
+
+**Tests**, `Entry204Tests`: the stroke widths, opacity and contrasts in order; the defaults, each toggle adding and removing exactly its
+key entry, the choice remembered, and the report caption following it; and a render in which the aim point's row and column read blue and
+the group centre's green at the plot's edges. `ThemeTests` now allows the one half strength the entry asks for and holds the new inks to
+4.5:1; `Entry105Tests` reads the new key. The figures are drawn from the published sample scan with .308 named, which the sample does not
+record, so that the outlines show.
+
 ## Entry 203: the consent choices wrap; the analysis screen at narrow windows
 
 **The fault.** A radio button given a plain string shows it on one line, so on nightly 102's first run screen both consent choices ran

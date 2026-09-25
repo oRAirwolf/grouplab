@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Reporting;
 
 namespace GroupLab.App;
 
@@ -26,7 +27,8 @@ internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper 
 /// <item>A shot is a solid dot at its centre, the point the statistics use, so shots can be counted and the spread seen (entry 109 section 3).
 /// With a calibre set, its outline at the calibre's diameter is drawn thin and faint behind the dot, on by default and hidden from the plot's
 /// toggle. Every dot has the same halo, so a mark over the paper and a mark over the dark read as the same thing (entry 105 section 3).</item>
-/// <item>The group centre is marked, with CEP 50 and CEP 90 as circles about it, dotted and dashed so the key can tell them apart.</item>
+/// <item>Entry 204: the group centre is a pair of green lines across the whole plot, and the aim point a pair of blue ones, with CEP 50, 90
+/// and 95 as green circles about the centre, dotted, solid and dashed, each on its own toggle beside the plot.</item>
 /// <item>Extreme spread is the line between the two shots that make it, not a circle: a circle that size reads as a region the shots are
 /// contained in, and extreme spread is the distance between two particular shots. Clicking the line picks both.</item>
 /// <item>The view frames the group, not the bull: the shots with their calibre outlines and a narrow margin, entry 103 section 1 and entry 109
@@ -57,9 +59,25 @@ internal sealed class CompositePlot : Control
     /// <summary>How near the pointer must be to a thin mark, a circle's stroke or the centre, for the tooltip to name it.</summary>
     private const double StrokeReach = 5;
 
-    private static readonly IDashStyle Cep50Dash = new DashStyle([1, 2.5], 0);
+    /// <summary>
+    /// Entry 204 section 1: how each layer is drawn, back to front. The bull's rings are wide and pale so they read as background; a shot's
+    /// outline is thin and at half strength; the CEP circles are clearly wider than any outline; the centre lines are full length. The
+    /// tests hold these in this order.
+    /// </summary>
+    internal const double BullStroke = 4;
 
-    private static readonly IDashStyle Cep90Dash = new DashStyle([5, 3], 0);
+    internal const double OutlineOpacity = 0.5;
+
+    internal const double CepStroke = 2.5;
+
+    internal const double SpreadStroke = 2;
+
+    internal const double CentreLineStroke = 1.5;
+
+    /// <summary>CEP 50 dotted, CEP 90 solid, CEP 95 dashed: one green, told apart by the stroke's pattern, which the key draws as it is.</summary>
+    private static readonly IDashStyle Cep50Dash = new DashStyle([1, 2], 0);
+
+    private static readonly IDashStyle Cep95Dash = new DashStyle([6, 3], 0);
 
     public IReadOnlyList<PlotDisc> Discs { get; set; } = [];
 
@@ -78,6 +96,11 @@ internal sealed class CompositePlot : Control
     public double? Cep50Inches { get; set; }
 
     public double? Cep90Inches { get; set; }
+
+    public double? Cep95Inches { get; set; }
+
+    /// <summary>Entry 204 section 1.4: which of the optional marks are drawn, from the toggles beside the plot; the key lists only these.</summary>
+    public PlotMarks Shown { get; set; } = PlotMarks.Default;
 
     /// <summary>The two shots that make the extreme spread, by id.</summary>
     public (int First, int Second)? SpreadPair { get; set; }
@@ -129,7 +152,7 @@ internal sealed class CompositePlot : Control
             return [shot.Id];
         }
 
-        return SpreadAt(at) is var (a, b) ? [a.Id, b.Id] : [];
+        return Shown.Spread && SpreadAt(at) is var (a, b) ? [a.Id, b.Id] : [];
     }
 
     /// <summary>
@@ -150,7 +173,7 @@ internal sealed class CompositePlot : Control
                 + (shot.Excluded ? " Excluded: drawn hollow, and left out of every figure except the side-by-side ones that show it both ways." : "");
         }
 
-        if (SpreadAt(at) is var (a, b2))
+        if (Shown.Spread && SpreadAt(at) is var (a, b2))
         {
             return $"Extreme spread, {Length(Distance(a.Offset, b2.Offset))}: the distance between shots {a.Label} and {b2.Label}, the two furthest apart. It is a distance between two shots, not a region the group sits inside.";
         }
@@ -164,7 +187,7 @@ internal sealed class CompositePlot : Control
                 return $"Group center: the mean of the {Shots.Count(s => !s.Excluded)} shots not excluded, {Length(Math.Abs(centre.X))} {(centre.X >= 0 ? "right" : "left")} and {Length(Math.Abs(centre.Y))} {(centre.Y > 0 ? "low" : "high")} of the aim point.";
             }
 
-            foreach (var (radius, percent, often) in new[] { (Cep50Inches, 50, "half the time"), (Cep90Inches, 90, "nine times in ten") })
+            foreach (var (radius, percent, often) in new[] { (Shown.Cep50 ? Cep50Inches : null, 50, "half the time"), (Shown.Cep90 ? Cep90Inches : null, 90, "nine times in ten"), (Shown.Cep95 ? Cep95Inches : null, 95, "19 times in 20") })
             {
                 if (radius is { } r && Math.Abs(fromCentre - (r * scale)) <= StrokeReach)
                 {
@@ -191,56 +214,63 @@ internal sealed class CompositePlot : Control
     {
         ArgumentNullException.ThrowIfNull(context);
         inks = Tokens.Plot(ActualThemeVariant);
-        var ink = new SolidColorBrush(inks.Ink);
         var accent = new SolidColorBrush(inks.Accent);
-        context.FillRectangle(new SolidColorBrush(inks.Paper), new Rect(Bounds.Size));
         var area = new Rect(Bounds.Size);
+        context.FillRectangle(new SolidColorBrush(inks.Paper), area);
         var (scale, origin) = Frame(area);
         using (context.PushClip(area))
         {
-            // The bull at true relative scale, centred on the aim point, whether or not it fits: each ring's edge as a line on the paper, so
-            // the shots lead and the rings still say where the bull is.
-            var ringPen = new Pen(new SolidColorBrush(inks.Ring), 1);
+            // Entry 204 section 2, back to front: the rings, the shots, the CEP circles, the extreme spread, the centre lines, the selection.
+            // The bull at true relative scale, centred on the aim point: each ring's edge a wide pale band, background to everything else.
+            var bullPen = new Pen(new SolidColorBrush(inks.Bull), BullStroke);
             foreach (var disc in Discs.Where(d => !d.Paper))
             {
-                context.DrawEllipse(null, ringPen, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
+                context.DrawEllipse(null, bullPen, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
             }
 
-            Marks.Cross(context, ink, origin, 6, Stroke);
-
-            if (Centre is { } centre)
-            {
-                var c = ToScreen(centre);
-                if (Cep50Inches is { } r50)
-                {
-                    Marks.Ring(context, ink, c, r50 * scale, Stroke, Cep50Dash);
-                }
-
-                if (Cep90Inches is { } r90)
-                {
-                    Marks.Ring(context, ink, c, r90 * scale, Stroke, Cep90Dash);
-                }
-            }
-
-            // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre.
-            foreach (var shot in Shots.OrderBy(s => !s.Excluded))
+            // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre. A picked shot waits
+            // for the top.
+            var unpicked = Shots.Where(s => !Selected.Contains(s.Id)).OrderBy(s => !s.Excluded).ToList();
+            foreach (var shot in unpicked)
             {
                 DrawOutline(context, shot, scale);
             }
 
-            foreach (var shot in Shots.OrderBy(s => !s.Excluded))
+            foreach (var shot in unpicked)
             {
                 DrawShot(context, shot);
             }
 
-            if (SpreadPair is { } pair && Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b)
+            if (Centre is { } centre)
             {
-                Marks.Line(context, accent, ToScreen(a.Offset), ToScreen(b.Offset), 2, Marks.Dashed);
+                var c = ToScreen(centre);
+                var green = new SolidColorBrush(inks.Group);
+                foreach (var (radius, dash, on) in new[] { (Cep50Inches, Cep50Dash, Shown.Cep50), (Cep90Inches, (IDashStyle?)null, Shown.Cep90), (Cep95Inches, Cep95Dash, Shown.Cep95) })
+                {
+                    if (on && radius is { } r)
+                    {
+                        Marks.Ring(context, green, c, r * scale, CepStroke, dash);
+                    }
+                }
             }
 
+            if (Shown.Spread && SpreadPair is { } pair && Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b)
+            {
+                Marks.Line(context, accent, ToScreen(a.Offset), ToScreen(b.Offset), SpreadStroke, Marks.Dashed);
+            }
+
+            // Entry 204 sections 1.6 and 1.7: the aim point and the group centre as lines across the whole plot, blue and green, so each
+            // can be followed to the edge and read against the other without a small cross to find.
+            FullLines(context, new SolidColorBrush(inks.Aim), origin, area);
             if (Centre is { } groupCentre)
             {
-                Marks.Cross(context, accent, ToScreen(groupCentre), 9, 2.5);
+                FullLines(context, new SolidColorBrush(inks.Group), ToScreen(groupCentre), area);
+            }
+
+            foreach (var shot in Shots.Where(s => Selected.Contains(s.Id)))
+            {
+                DrawOutline(context, shot, scale);
+                DrawShot(context, shot);
             }
         }
 
@@ -250,7 +280,15 @@ internal sealed class CompositePlot : Control
         }
     }
 
-    /// <summary>A shot's hole at the calibre's size, a dark outline on the paper with no fill, so twenty-five of them never merge into one mass.</summary>
+    /// <summary>One horizontal and one vertical line through a point, across the whole plot.</summary>
+    private static void FullLines(DrawingContext context, IBrush brush, Point at, Rect area)
+    {
+        var pen = new Pen(brush, CentreLineStroke);
+        context.DrawLine(pen, new Point(area.Left, at.Y), new Point(area.Right, at.Y));
+        context.DrawLine(pen, new Point(at.X, area.Top), new Point(at.X, area.Bottom));
+    }
+
+    /// <summary>A shot's hole at the calibre's size, an outline with no fill at half strength, so twenty-five of them never merge into one mass.</summary>
     private void DrawOutline(DrawingContext context, PlotShot shot, double scale)
     {
         if (CalibreInches is not { } calibre || !ShowOutlines)
@@ -260,17 +298,21 @@ internal sealed class CompositePlot : Control
 
         bool selected = Selected.Contains(shot.Id);
         var colour = selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink;
-        var pen = new Pen(new SolidColorBrush(colour), selected ? 2.5 : Stroke, shot.Excluded ? Marks.Dashed : null);
+        var pen = new Pen(new SolidColorBrush(colour, selected || shot.Excluded ? 1 : OutlineOpacity), selected ? 2.5 : Stroke, shot.Excluded ? Marks.Dashed : null);
         double radius = Math.Max(2, calibre * scale / 2);
         context.DrawEllipse(null, pen, ToScreen(shot.Offset), radius, radius);
     }
 
-    /// <summary>One shot's centre as drawn: a solid dot with a halo, larger when picked, and hollow and dashed when excluded.</summary>
+    /// <summary>
+    /// One shot's centre as drawn: a solid dot with a halo, larger when picked, and hollow and dashed when excluded. With no calibre the dot
+    /// is all there is of the shot, and it is drawn at half strength as the outline would be (entry 204 section 1.1).
+    /// </summary>
     private void DrawShot(DrawingContext context, PlotShot shot)
     {
         var at = ToScreen(shot.Offset);
         bool selected = Selected.Contains(shot.Id);
-        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink);
+        double opacity = selected || shot.Excluded || CalibreInches is not null ? 1 : OutlineOpacity;
+        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink, opacity);
         if (shot.Excluded)
         {
             Marks.Ring(context, brush, at, 3.5, selected ? 2.5 : Stroke, Marks.Dashed);
@@ -296,33 +338,37 @@ internal sealed class CompositePlot : Control
             CalibreInches is { } calibre && ShowOutlines
                 ? new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"{kept} shots, a dot at each center, the outline drawn at the {calibre:0.000} in caliber"), (c, p) =>
                 {
-                    c.DrawEllipse(null, new Pen(new SolidColorBrush(inks.Ink), Stroke), p, 6, 6);
+                    c.DrawEllipse(null, new Pen(new SolidColorBrush(inks.Ink, OutlineOpacity), Stroke), p, 6, 6);
                     Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3);
                 })
                 : CalibreInches is not null
                     ? new KeyEntry($"{kept} shots, a dot at each center; the caliber outlines are hidden", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3))
-                    : new KeyEntry($"{kept} shots, drawn as points: no caliber is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3)),
+                    : new KeyEntry($"{kept} shots, drawn as points: no caliber is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink, OutlineOpacity), p, 3)),
         };
         if (excluded > 0)
         {
             entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ring), p, 3.5, Stroke, Marks.Dashed)));
         }
 
-        if (SpreadPair is { } pair)
+        if (Shown.Spread && SpreadPair is { } pair)
         {
-            entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), 2, Marks.Dashed)));
+            entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}, the red dashed line", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), SpreadStroke, Marks.Dashed)));
         }
 
-        if (Cep50Inches is not null)
+        foreach (var (radius, percent, dash, look, on) in new[] { (Cep50Inches, 50, Cep50Dash, "dotted", Shown.Cep50), (Cep90Inches, 90, (IDashStyle?)null, "solid", Shown.Cep90), (Cep95Inches, 95, Cep95Dash, "dashed", Shown.Cep95) })
         {
-            entries.Add(new KeyEntry("CEP 50, the dotted circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ink), p, 6, Stroke, Cep50Dash)));
-            entries.Add(new KeyEntry("CEP 90, the dashed circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ink), p, 6, Stroke, Cep90Dash)));
+            if (on && radius is not null && Centre is not null)
+            {
+                entries.Add(new KeyEntry($"CEP {percent}, the green {look} circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Group), p, 6, CepStroke, dash)));
+            }
         }
 
         if (Centre is not null)
         {
-            entries.Add(new KeyEntry("group center", (c, p) => Marks.Cross(c, new SolidColorBrush(inks.Accent), p, 6, 2.5)));
+            entries.Add(new KeyEntry("group center, the green lines", (c, p) => FullLinesSwatch(c, inks.Group, p)));
         }
+
+        entries.Add(new KeyEntry("where you aimed, the blue lines", (c, p) => FullLinesSwatch(c, inks.Aim, p)));
 
         if (Discs.Count == 0)
         {
@@ -330,6 +376,14 @@ internal sealed class CompositePlot : Control
         }
 
         return entries;
+    }
+
+    /// <summary>The key's swatch for a pair of full length lines: a small cross in their colour and weight.</summary>
+    private static void FullLinesSwatch(DrawingContext context, Color colour, Point at)
+    {
+        var pen = new Pen(new SolidColorBrush(colour), CentreLineStroke);
+        context.DrawLine(pen, at + new Vector(-7, 0), at + new Vector(7, 0));
+        context.DrawLine(pen, at + new Vector(0, -7), at + new Vector(0, 7));
     }
 
     private void DrawKey(DrawingContext context)

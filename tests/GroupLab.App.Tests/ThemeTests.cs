@@ -165,7 +165,9 @@ public partial class ThemeTests
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 169 section 3: the composite plot is high contrast in both themes. Every mark is in the ink, black on white
     /// or white on black, at AAA's 7:1; the ring grey and the one accent are held to 4.5:1, the ratio for text, although they are strokes; and
-    /// the plot draws nothing faded or translucent, which is what made its rings pastel.
+    /// the plot draws nothing faded or translucent, which is what made its rings pastel. Entry 204 changes two things on Alan's word: the
+    /// shot outlines are at half strength, through <c>OutlineOpacity</c> and nothing else, and the bull's rings are a pale grey on purpose,
+    /// so the ring grey below is the excluded shots' and the key's frame; the new green and blue are held to 4.5:1 with the accent.
     /// </summary>
     [Fact]
     public void ThePlotsMarksHoldTheirContrastInBothThemes()
@@ -174,7 +176,7 @@ public partial class ThemeTests
         foreach (var (name, variant) in new[] { ("light", Avalonia.Styling.ThemeVariant.Light), ("dark", Avalonia.Styling.ThemeVariant.Dark), ("high contrast", Tokens.HighContrastVariant) })
         {
             var inks = Tokens.Plot(variant);
-            foreach (var (role, colour, ratio) in new[] { ("ink", inks.Ink, 7.0), ("rings", inks.Ring, 4.5), ("accent", inks.Accent, 4.5) })
+            foreach (var (role, colour, ratio) in new[] { ("ink", inks.Ink, 7.0), ("rings", inks.Ring, 4.5), ("accent", inks.Accent, 4.5), ("group green", inks.Group, 4.5), ("aim blue", inks.Aim, 4.5) })
             {
                 if (Contrast(colour, inks.Paper) < ratio)
                 {
@@ -183,7 +185,7 @@ public partial class ThemeTests
             }
         }
 
-        string plot = File.ReadAllText(Path.Combine(Repository(), "src", "GroupLab.App", "CompositePlot.cs"));
+        string plot = File.ReadAllText(Path.Combine(Repository(), "src", "GroupLab.App", "CompositePlot.cs")).Replace("OutlineOpacity", "", StringComparison.Ordinal);
         foreach (string faded in new[] { "Faded(", "Opacity", "Marks.Teal", "Marks.Faint" })
         {
             if (plot.Contains(faded, StringComparison.Ordinal))

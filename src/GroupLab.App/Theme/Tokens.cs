@@ -158,9 +158,15 @@ public static class Tokens
     /// rings and faint outlines hard to read, and the lesson he took from another program was its contrast. The dark version is as stark as
     /// the light one, white on black, not a dimmed copy. ThemeTests holds each ink to its ratio on the paper.
     /// </summary>
+    /// <remarks>
+    /// Entry 204 adds three: the group's green, for its centre lines and CEP circles; the aim point's blue; and the bull's pale grey, low
+    /// contrast on purpose so the rings read as background. Green and blue clear 5:1 on both papers. Seen as deuteranopia sees them, the
+    /// red and the green come close, and differ in shape: the extreme spread is a dashed line between two shots, the green marks are circles
+    /// and lines across the whole plot. The blue stays apart from all of them.
+    /// </remarks>
     public static PlotInks Plot(ThemeVariant? variant) => variant == ThemeVariant.Light
-        ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e))
-        : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f));
+        ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e), Hex(0x007a4d), Hex(0x0055d4), Hex(0xd4d4d4))
+        : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f), Hex(0x3ddc84), Hex(0x5aa9ff), Hex(0x3a3a3a));
 
     public static Palette For(ThemeVariant? variant) =>
         variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
@@ -345,5 +351,5 @@ public static class Tokens
     private static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
 }
 
-/// <summary>The composite plot's four inks, entry 169 section 3.</summary>
-public sealed record PlotInks(Color Paper, Color Ink, Color Ring, Color Accent);
+/// <summary>The composite plot's inks, entry 169 section 3 and entry 204: <see cref="Bull"/> alone is meant to be faint.</summary>
+public sealed record PlotInks(Color Paper, Color Ink, Color Ring, Color Accent, Color Group, Color Aim, Color Bull);

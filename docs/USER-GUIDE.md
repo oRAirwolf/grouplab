@@ -112,7 +112,7 @@ When the marks are right, Accept and analyze. Anything still open stays open: th
 
 The analysis has three columns:
 - **On the left:** the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A click on a bull in the small sheet selects its shots.
-- **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never removed.
+- **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings in pale gray. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid and CEP 95 dashed; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95 and the extreme spread on and off, and GroupLab remembers them; CEP 95 starts off. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)

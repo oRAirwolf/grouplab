@@ -26,9 +26,15 @@ public static class ReportWriter
     private static readonly Rgb Grey = new(95, 95, 95);
     private static readonly Rgb Rule = new(190, 190, 190);
     private static readonly Rgb Shade = new(238, 238, 238);
-    private static readonly Rgb Shot = new(214, 84, 16);
     private static readonly Rgb Paper = new(255, 255, 255);
-    private static readonly Rgb Cep = new(30, 100, 190);
+
+    /// <summary>Entry 204: the composite plot's inks as the light theme draws them, so the page and the screen read alike.</summary>
+    private static readonly Rgb PlotInk = new(0, 0, 0);
+    private static readonly Rgb PlotOutline = new(128, 128, 128);
+    private static readonly Rgb PlotBull = new(212, 212, 212);
+    private static readonly Rgb PlotGroup = new(0, 122, 77);
+    private static readonly Rgb PlotAim = new(0, 85, 212);
+    private static readonly Rgb PlotSpread = new(200, 16, 46);
 
     /// <summary>A font size in points, in the scene's half-dmm.</summary>
     private static long Pt(double points) => (long)Math.Round(points * Inch / 72);
@@ -165,73 +171,122 @@ public static class ReportWriter
     }
 
     /// <summary>
-    /// The composite plot in a square: the scoring bull's rings as printed, every shot at its offset from its own bull, excluded ones hollow,
-    /// CEP 50 and 90 about the group's centre, which is marked with a cross. The square spans the rings or the shots, whichever is wider.
+    /// The composite plot in a square, drawn as the screen draws it (entry 204): the bull's rings as wide pale bands behind everything, each
+    /// shot a black dot inside a grey outline the bullet's size (half strength, as on screen), the CEP circles in green, the extreme spread
+    /// in red, and the group centre's green lines and the aim point's blue ones across the whole square. The page has no dashed stroke, so
+    /// CEP 50 is a ring of dots, CEP 90 a solid band and CEP 95 a ring of dashes made of dots, and the caption says which is which. The
+    /// toggles are the screen's. The square spans the rings or the shots, whichever is wider.
     /// </summary>
     private static void DrawPlot(List<SceneItem> page, ReportPlot plot, long left, long top, long size)
     {
         double half = size / 2.0;
         long cx = left + (size / 2), cy = top + (size / 2);
         double calibre = plot.CalibreInches ?? 0.1;
+        var shown = plot.Shown ?? PlotMarks.Default;
+        double? cep50 = shown.Cep50 ? plot.Cep50Inches : null, cep90 = shown.Cep90 ? plot.Cep90Inches : null, cep95 = shown.Cep95 ? plot.Cep95Inches : null;
         double extent = plot.Shots.Select(s => Math.Sqrt((s.OffsetInches.X * s.OffsetInches.X) + (s.OffsetInches.Y * s.OffsetInches.Y)) + (calibre / 2))
             .Concat(plot.Discs.Select(d => d.DiameterInches / 2))
-            .Concat([plot.Cep90Inches ?? 0, 0.25])
+            .Concat([cep95 ?? 0, cep90 ?? 0, cep50 ?? 0, 0.25])
             .Max() * 1.08;
         double k = half / extent;
         long X(double inches) => cx + (long)Math.Round(inches * k);
         long Y(double inches) => cy + (long)Math.Round(inches * k);
         long R(double inches) => Math.Max(1, (long)Math.Round(inches * k));
 
-        for (int i = 0; i < plot.Discs.Count; i++)
+        // The rings: each disc's edge a wide pale band, background to everything else.
+        foreach (var disc in plot.Discs.Where(d => !d.Paper))
         {
-            var disc = plot.Discs[i];
-            if (disc.Paper)
-            {
-                continue;
-            }
-
-            long inner = i + 1 < plot.Discs.Count ? R(plot.Discs[i + 1].DiameterInches / 2) : 0;
-            page.Add(new DiscBand(SceneLayer.Bulls, disc.Colour, cx, cy, R(disc.DiameterInches / 2), inner));
+            long r = R(disc.DiameterInches / 2);
+            page.Add(new DiscBand(SceneLayer.Bulls, PlotBull, cx, cy, r + 10, Math.Max(0, r - 10)));
         }
 
-        // The aim lines and the frame, hairlines in grey.
+        // The frame, a hairline in grey.
         long hair = 3;
-        page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, cy - (hair / 2), size, hair));
-        page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, cx - (hair / 2), top, hair, size));
         page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top, size, hair));
         page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top + size - hair, size, hair));
         page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top, hair, size));
         page.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left + size - hair, top, hair, size));
 
-        // Each shot is a dot at its centre inside a hairline circle the bullet's size, so a tight group stays readable and the
-        // centre and CEP circles drawn over them stay visible. An excluded shot's dot is hollow.
         foreach (var shot in plot.Shots)
         {
             long r = R(calibre / 2), dot = 16, sx = X(shot.OffsetInches.X), sy = Y(shot.OffsetInches.Y);
-            page.Add(new DiscBand(SceneLayer.Labels, Shot, sx, sy, r + 2, Math.Max(0, r - 2)));
-            page.Add(new DiscBand(SceneLayer.Labels, Paper, sx, sy, dot + 5, 0));
-            page.Add(new DiscBand(SceneLayer.Labels, Shot, sx, sy, dot, shot.Excluded ? dot - 6 : 0));
+            if (plot.CalibreInches is not null)
+            {
+                page.Add(new DiscBand(SceneLayer.Labels, PlotOutline, sx, sy, r + 2, Math.Max(0, r - 2)));
+            }
+
+            page.Add(new DiscBand(SceneLayer.Labels, shot.Excluded ? PlotOutline : PlotInk, sx, sy, dot, shot.Excluded ? dot - 6 : 0));
             page.Add(new TextRun(SceneLayer.Labels, Ink, sx + dot + 8, sy - dot, Pt(6), Plain(shot.Label), TextAnchor.Left));
         }
 
         if (plot.Centre is { } centre)
         {
-            foreach (double? radius in new[] { plot.Cep90Inches, plot.Cep50Inches })
+            long gx = X(centre.X), gy = Y(centre.Y);
+            if (cep50 is { } r50)
             {
-                if (radius is { } r)
-                {
-                    long outer = R(r);
-                    page.Add(new DiscBand(SceneLayer.Labels, Cep, X(centre.X), Y(centre.Y), outer + 4, Math.Max(0, outer - 4)));
-                }
+                Dashes(page, PlotGroup, gx, gy, R(r50), 0, 30);
             }
 
-            long arm = 45, width = 8;
-            page.Add(new RectFill(SceneLayer.Labels, Cep, X(centre.X) - arm, Y(centre.Y) - (width / 2), 2 * arm, width));
-            page.Add(new RectFill(SceneLayer.Labels, Cep, X(centre.X) - (width / 2), Y(centre.Y) - arm, width, 2 * arm));
+            if (cep90 is { } r90)
+            {
+                long outer = R(r90);
+                page.Add(new DiscBand(SceneLayer.Labels, PlotGroup, gx, gy, outer + 5, Math.Max(0, outer - 5)));
+            }
+
+            if (cep95 is { } r95)
+            {
+                Dashes(page, PlotGroup, gx, gy, R(r95), 60, 36);
+            }
+        }
+
+        if (shown.Spread && plot.Spread is var (from, to))
+        {
+            double length = Math.Sqrt(Math.Pow(X(to.X) - X(from.X), 2) + Math.Pow(Y(to.Y) - Y(from.Y), 2));
+            int steps = Math.Max(1, (int)(length / 6));
+            for (int i = 0; i <= steps; i++)
+            {
+                // Dashes of 60 with gaps of 30, made of overlapping dots.
+                if ((i * 6) % 90 < 60)
+                {
+                    double f = (double)i / steps;
+                    page.Add(new DiscBand(SceneLayer.Labels, PlotSpread, X(from.X + ((to.X - from.X) * f)), Y(from.Y + ((to.Y - from.Y) * f)), 6, 0));
+                }
+            }
+        }
+
+        // The aim point's blue lines and the group centre's green ones, across the whole square.
+        long line = 6;
+        page.Add(new RectFill(SceneLayer.Labels, PlotAim, left, cy - (line / 2), size, line));
+        page.Add(new RectFill(SceneLayer.Labels, PlotAim, cx - (line / 2), top, line, size));
+        if (plot.Centre is { } groupCentre)
+        {
+            page.Add(new RectFill(SceneLayer.Labels, PlotGroup, left, Y(groupCentre.Y) - (line / 2), size, line));
+            page.Add(new RectFill(SceneLayer.Labels, PlotGroup, X(groupCentre.X) - (line / 2), top, line, size));
         }
 
         string scale = string.Create(CultureInfo.InvariantCulture, $"square {2 * extent * plot.LengthPerInch:0.00} {plot.LengthSymbol} across");
         page.Add(new TextRun(SceneLayer.Labels, Grey, left + size - 20, top + size - 20, Pt(6.5), scale, TextAnchor.Right));
+    }
+
+    /// <summary>
+    /// A circle drawn as dots, the page having no dashed stroke: with <paramref name="dash"/> 0 a dot every <paramref name="gap"/>, and
+    /// otherwise dashes that long, made of overlapping dots, with gaps between.
+    /// </summary>
+    private static void Dashes(List<SceneItem> page, Rgb colour, long cx, long cy, long radius, long dash, long gap)
+    {
+        double circumference = 2 * Math.PI * radius;
+        double period = dash + gap;
+        const double step = 6;
+        for (double along = 0; along < circumference; along += dash == 0 ? period : step)
+        {
+            if (dash > 0 && along % period > dash)
+            {
+                continue;
+            }
+
+            double angle = along / radius;
+            page.Add(new DiscBand(SceneLayer.Labels, colour, cx + (long)Math.Round(radius * Math.Cos(angle)), cy + (long)Math.Round(radius * Math.Sin(angle)), dash == 0 ? 7 : 5, 0));
+        }
     }
 
     /// <summary>A cursor down a sequence of pages, starting a new one when the next block does not fit.</summary>

@@ -5,6 +5,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 using GroupLab.Core.Updates;
+using GroupLab.Core.Reporting;
 
 namespace GroupLab.App;
 
@@ -89,6 +90,19 @@ public sealed class AppSettingsStore(string path)
     public bool LoadSizeOnPaperFirst() => Read(file => (bool?)file["sizeOnPaperFirst"]) ?? false;
 
     public bool SaveSizeOnPaperFirst(bool first) => Save(file => file["sizeOnPaperFirst"] = first);
+
+    /// <summary>Entry 204 section 1.4: the composite plot's toggles, remembered; <see cref="PlotMarks.Default"/> until one is changed.</summary>
+    public PlotMarks LoadPlotMarks() => Read(file => file["plotMarks"] is JsonObject o
+        ? new PlotMarks((bool?)o["cep50"] ?? true, (bool?)o["cep90"] ?? true, (bool?)o["cep95"] ?? false, (bool?)o["spread"] ?? true)
+        : null) ?? PlotMarks.Default;
+
+    public bool SavePlotMarks(PlotMarks shown) => Save(file => file["plotMarks"] = new JsonObject
+    {
+        ["cep50"] = shown.Cep50,
+        ["cep90"] = shown.Cep90,
+        ["cep95"] = shown.Cep95,
+        ["spread"] = shown.Spread,
+    });
 
     /// <summary>The remembered theme, NOTES-FROM-PLANNING.md entry 42 section 2: dark, light, or following the system, which is the default.</summary>
     public ThemeChoice LoadTheme()

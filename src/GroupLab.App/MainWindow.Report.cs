@@ -166,9 +166,14 @@ public sealed partial class MainWindow
             plot.Centre,
             plot.Cep50Inches,
             plot.Cep90Inches,
-            "Every scoring shot on one bull, each from its own bull's center. Hollow: excluded, drawn and not counted. Blue: the center of the counted shots, with CEP 50 and CEP 90 about it.",
+            ReportPlotCaption(plot.Shown, plot.SpreadPair is not null),
             UnitSettings.Symbol(units.Linear),
-            UnitSettings.FromInches(1, units.Linear));
+            UnitSettings.FromInches(1, units.Linear),
+            plot.Cep95Inches,
+            plot.Shown,
+            plot.SpreadPair is { } pair && plot.Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && plot.Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b
+                ? (a.Offset, b.Offset)
+                : null);
         return new SessionReport(sheet, particulars, reportPlot, summary, figures, zeroCard, cards, headings, rows, exclusions, unmade, registration, why, identity);
     }
 
@@ -248,5 +253,23 @@ public sealed partial class MainWindow
         File.WriteAllBytes(path, pdf);
         status.Text = "Report saved to " + path;
         DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "report"), ("bytes", pdf.Length)]);
+    }
+
+    /// <summary>
+    /// The report plot's caption, entry 204: what is drawn, with the same toggles as on screen, and which circle is which, since the page
+    /// tells CEP 50, 90 and 95 apart by dots, a solid band and dashes.
+    /// </summary>
+    internal static string ReportPlotCaption(PlotMarks shown, bool spread)
+    {
+        var parts = new List<string> { "Every scoring shot on one bull, each from its own bull's center; hollow shots are excluded, drawn and not counted.",
+            "Green lines: the center of the counted shots. Blue lines: the aim point." };
+        var circles = new[] { (shown.Cep50, "CEP 50 dotted"), (shown.Cep90, "CEP 90 solid"), (shown.Cep95, "CEP 95 dashed") }.Where(c => c.Item1).Select(c => c.Item2).ToList();
+        parts.Add(circles.Count == 0 ? "No CEP circle is drawn, as on screen." : $"Green circles: {string.Join(", ", circles)}.");
+        if (spread)
+        {
+            parts.Add(shown.Spread ? "Red: the extreme spread, between the two shots furthest apart." : "The extreme spread line is not drawn, as on screen.");
+        }
+
+        return string.Join(" ", parts);
     }
 }

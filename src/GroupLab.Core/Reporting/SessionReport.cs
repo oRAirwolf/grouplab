@@ -28,7 +28,20 @@ public sealed record ReportPlot(
     double? Cep90Inches,
     string Caption,
     string LengthSymbol = "in",
-    double LengthPerInch = 1);
+    double LengthPerInch = 1,
+    double? Cep95Inches = null,
+    PlotMarks? Shown = null,
+    (PointD From, PointD To)? Spread = null);
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 204 section 1.4: which of the composite plot's optional marks are drawn, from the toggles beside it, and
+/// remembered between sessions. The report draws the same ones.
+/// </summary>
+public sealed record PlotMarks(bool Cep50, bool Cep90, bool Cep95, bool Spread)
+{
+    /// <summary>CEP 50 and 90 and the extreme spread on, CEP 95 off.</summary>
+    public static PlotMarks Default { get; } = new(true, true, false, true);
+}
 
 /// <summary>One row of the shot table; an excluded shot's row is struck through, as on screen, and never left out.</summary>
 public sealed record ReportRow(IReadOnlyList<string> Cells, bool Struck);

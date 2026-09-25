@@ -197,7 +197,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 4554 >>
+<< /Length 5047 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -253,11 +253,14 @@ BT /F1 71 Tf 1 0 0 -1 395 3592 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3592 Tm (On the left: the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 3680 Tm (click on a bull in the small sheet selects its shots.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 3782 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3782 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, with) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3870 Tm (the group's center and its CEP 50 and CEP 90 circles. An excluded shot is drawn hollow and is never) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3958 Tm (removed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4060 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4060 Tm (On the right: the zero correction, the figures and the two judgment cards.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3782 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3870 Tm (over the bull's rings in pale gray. Green lines cross at the group's center and blue lines at where you aimed,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3958 Tm (both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid and CEP 95 dashed; the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4046 Tm (extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4134 Tm (50, CEP 90, CEP 95 and the extreme spread on and off, and GroupLab remembers them; CEP 95 starts off.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4222 Tm (An excluded shot is drawn hollow and is never removed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4324 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4324 Tm (On the right: the zero correction, the figures and the two judgment cards.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 4 of 11) Tj ET
 Q
 endstream
@@ -5805,29 +5808,29 @@ xref
 0000010198 00000 n 
 0000013893 00000 n 
 0000014021 00000 n 
-0000018628 00000 n 
-0000018783 00000 n 
-0000022665 00000 n 
-0000022793 00000 n 
-0000029506 00000 n 
-0000029661 00000 n 
-0000031089 00000 n 
-0000031244 00000 n 
-0000033073 00000 n 
-0000033228 00000 n 
-0000036485 00000 n 
-0000036613 00000 n 
-0000042794 00000 n 
-0000042949 00000 n 
-0000043935 00000 n 
-0000301614 00000 n 
-0000497403 00000 n 
-0000769775 00000 n 
-0000838091 00000 n 
-0000957335 00000 n 
-0001055262 00000 n 
+0000019121 00000 n 
+0000019276 00000 n 
+0000023158 00000 n 
+0000023286 00000 n 
+0000029999 00000 n 
+0000030154 00000 n 
+0000031582 00000 n 
+0000031737 00000 n 
+0000033566 00000 n 
+0000033721 00000 n 
+0000036978 00000 n 
+0000037106 00000 n 
+0000043287 00000 n 
+0000043442 00000 n 
+0000044428 00000 n 
+0000302107 00000 n 
+0000497896 00000 n 
+0000770268 00000 n 
+0000838584 00000 n 
+0000957828 00000 n 
+0001055755 00000 n 
 trailer
 << /Size 33 /Root 1 0 R >>
 startxref
-1140288
+1140781
 %%EOF

@@ -23,6 +23,7 @@ using GroupLab.Core.Publication;
 using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
+using GroupLab.Core.Reporting;
 
 namespace GroupLab.App;
 
@@ -214,6 +215,18 @@ public sealed partial class MainWindow : Window
     private readonly CheckBox outlinesBox = new() { Content = "Caliber outlines", IsChecked = true };
 
     private readonly Border outlinesToggle = new() { HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.ViewCluster } };
+
+    /// <summary>
+    /// Entry 204 section 1.4: CEP 50, CEP 90, CEP 95 and the extreme spread, each on its own toggle beside the plot, big enough for a finger
+    /// and reached with Tab, remembered between sessions.
+    /// </summary>
+    private readonly CheckBox cep50Box = new() { Content = "CEP 50", MinHeight = 44 };
+
+    private readonly CheckBox cep90Box = new() { Content = "CEP 90", MinHeight = 44 };
+
+    private readonly CheckBox cep95Box = new() { Content = "CEP 95", MinHeight = 44 };
+
+    private readonly CheckBox spreadBox = new() { Content = "Extreme spread", MinHeight = 44 };
 
     /// <summary>Every "why" open or closed at once, for the renders of entry 109 section 4; null in use, when each keeps its own remembered state.</summary>
     private bool? whyOverride;
@@ -959,12 +972,25 @@ public sealed partial class MainWindow : Window
         shotsColumn.Children.Add(offsetTable);
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
         BuildFigureExtras(shotsColumn, figures);
-        outlinesToggle.Child = outlinesBox;
+        outlinesBox.MinHeight = 44;
+        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { outlinesBox, cep50Box, cep90Box, cep95Box, spreadBox } };
         outlinesBox.IsCheckedChanged += (_, _) =>
         {
             plot.ShowOutlines = outlinesBox.IsChecked == true;
             plot.InvalidateVisual();
         };
+        var shown = settingsStore.LoadPlotMarks();
+        plot.Shown = shown;
+        (cep50Box.IsChecked, cep90Box.IsChecked, cep95Box.IsChecked, spreadBox.IsChecked) = (shown.Cep50, shown.Cep90, shown.Cep95, shown.Spread);
+        foreach (var box in new[] { cep50Box, cep90Box, cep95Box, spreadBox })
+        {
+            box.IsCheckedChanged += (_, _) =>
+            {
+                plot.Shown = new PlotMarks(cep50Box.IsChecked == true, cep90Box.IsChecked == true, cep95Box.IsChecked == true, spreadBox.IsChecked == true);
+                settingsStore.SavePlotMarks(plot.Shown);
+                plot.InvalidateVisual();
+            };
+        }
         var plotArea = new Panel();
         plotArea.Children.Add(plot);
         plotArea.Children.Add(outlinesToggle);
@@ -2573,7 +2599,7 @@ public sealed partial class MainWindow : Window
             : [];
         plot.Shots = plotted;
         plot.CalibreInches = state.Calibre?.DiameterInches;
-        outlinesToggle.IsVisible = state.Calibre is not null;
+        outlinesBox.IsVisible = state.Calibre is not null;
         plot.Length = inches => units.Length(inches);
         var kept = plotted.Where(p => !p.Excluded).ToList();
         plot.Centre = kept.Count > 0 ? GroupStatistics.Centre([.. kept.Select(p => p.Offset)]) : null;
@@ -2582,10 +2608,11 @@ public sealed partial class MainWindow : Window
             var rayleigh = GroupStatistics.Rayleigh([.. kept.Select(p => p.Offset)]);
             plot.Cep50Inches = rayleigh.Cep(0.5).Value;
             plot.Cep90Inches = rayleigh.Cep(0.9).Value;
+            plot.Cep95Inches = rayleigh.Cep(0.95).Value;
         }
         else
         {
-            plot.Cep50Inches = plot.Cep90Inches = null;
+            plot.Cep50Inches = plot.Cep90Inches = plot.Cep95Inches = null;
         }
 
         plot.SpreadPair = kept.Count >= 2 && GroupGeometry.MaximumPairDistance([.. kept.Select(p => p.Offset)]) is var (_, first, second)
@@ -3226,6 +3253,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The composite plot, for the headless tests.</summary>
     internal CompositePlot Plot => plot;
+
+    /// <summary>The composite plot's four mark toggles, CEP 50, CEP 90, CEP 95 and the extreme spread, for the headless tests.</summary>
+    internal IReadOnlyList<CheckBox> PlotToggles => [cep50Box, cep90Box, cep95Box, spreadBox];
 
     /// <summary>The amber banner naming decisions left unmade, or empty when there are none, for the headless tests.</summary>
     internal string UnsettledText => unsettledBanner.IsVisible ? unsettled.Text ?? "" : "";

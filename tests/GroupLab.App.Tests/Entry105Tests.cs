@@ -227,8 +227,8 @@ public class Entry105Tests
             Assert.Contains("nine times in ten", cep, StringComparison.Ordinal);
 
             Assert.Null(plot.Describe(new Avalonia.Point(plot.Bounds.Width - 2, plot.Bounds.Height - 2)));
-            Assert.Contains(plot.Legend, l => l == "CEP 50, the dotted circle");
-            Assert.Contains(plot.Legend, l => l == "CEP 90, the dashed circle");
+            Assert.Contains(plot.Legend, l => l == "CEP 50, the green dotted circle");
+            Assert.Contains(plot.Legend, l => l == "CEP 90, the green solid circle");
             Assert.Contains(plot.Legend, l => l == "1 excluded, drawn hollow");
             window.Close();
         }

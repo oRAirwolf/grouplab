@@ -9,18 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 203.
+**Last rewritten:** 2026-09-25, after entry 204.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 203 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 204 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
 - **A sheet with one scoring bull takes a group** (entries 196 and 197): no count, no limit, nothing to review for it.
   The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
+- **The composite plot** (entry 204): pale rings, half strength outlines, green CEP 50, 90 and 95 on toggles, green and blue lines
+  across the plot for the centre and the aim; the report and Compare follow the same toggles.
 - **Radios and check boxes with long words take `Wrapped(words)`** (entry 203): a plain string never wraps, and the consent
   choices on nightly 102's first run screen were cut mid sentence. `Entry203Tests` checks for cut text.
 - **The roll sheets name themselves on every system** since 3c3fa98: they were the only sheets over the 8000 pixel working limit,
@@ -77,7 +79,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 204
+**Holds:** 205
 
 ## Things that would surprise somebody who was not here yesterday
 

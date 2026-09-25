@@ -1572,6 +1572,22 @@
   "It is still more than a phone application should hold, so the real application processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan in one pass without keeping earlier images.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5"
+  },
+  "Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid and CEP 95 dashed; the extreme spread is a red dashed line between the two shots furthest apart.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs"
+  },
+  "Toggles beside the plot turn CEP 50, CEP 90, CEP 95 and the extreme spread on and off, and GroupLab remembers them; CEP 95 starts off.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs"
+  },
+  "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs"
+  },
+  "Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs"
   }
  },
  "rules": [

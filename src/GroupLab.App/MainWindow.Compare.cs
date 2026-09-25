@@ -10,6 +10,7 @@ using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 using GroupLab.Core.Trace;
+using GroupLab.Core.Reporting;
 
 namespace GroupLab.App;
 
@@ -215,6 +216,8 @@ public sealed partial class MainWindow
                 Centre = group.Centre,
                 Cep50Inches = group.Rayleigh.Cep(0.5).Value,
                 Cep90Inches = group.Rayleigh.Cep(0.9).Value,
+                Cep95Inches = group.Rayleigh.Cep(0.95).Value,
+                Shown = settingsStore.LoadPlotMarks(),
                 Length = inches => units.Length(inches),
                 ShowKey = false,
             };
@@ -242,7 +245,7 @@ public sealed partial class MainWindow
         }
 
         compareColumn.Children.Add(cards);
-        compareColumn.Children.Add(Note("Each plot: the dots are the shots about their own bulls, excluded ones left out; the cross is the group's center, the dotted circle CEP 50 and the dashed circle CEP 90."));
+        compareColumn.Children.Add(Note(CompareKey(settingsStore.LoadPlotMarks())));
 
         // Entry 131 section 10: the figures with their intervals, drawn. This is the one picture that makes the project's whole argument
         // visible. Two loads reading 0.42 in and 0.51 in look like a winner and a loser in a table; drawn with their intervals, anybody can
@@ -318,4 +321,16 @@ public sealed partial class MainWindow
     internal LoadComparisonReport? Comparison => comparison;
 
     internal IEnumerable<string> CompareText => compareColumn.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>
+    /// What the comparison's small plots show, said once beneath them (entry 113 section 2), following the plot's own toggles (entry 204): the
+    /// group centre's and aim point's lines, and whichever CEP circles are on. The small plots draw no extreme spread line.
+    /// </summary>
+    internal static string CompareKey(PlotMarks shown)
+    {
+        var circles = new[] { (shown.Cep50, "the dotted circle CEP 50"), (shown.Cep90, "the solid circle CEP 90"), (shown.Cep95, "the dashed circle CEP 95") }
+            .Where(c => c.Item1).Select(c => c.Item2).ToList();
+        string cep = circles.Count == 0 ? "" : $"; in green, {string.Join(", ", circles)}";
+        return $"Each plot: the dots are the shots about their own bulls, excluded ones left out; the green lines cross at the group's center and the blue lines at the aim point{cep}.";
+    }
 }

@@ -128,7 +128,7 @@
     ],
     [
      "The key, top left",
-     "What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group center."
+     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed. Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them."
     ],
     [
      "Zero correction",
@@ -273,7 +273,7 @@
    "parts": [
     [
      "The plots along the top",
-     "One per load. Dots are the shots about their own bulls, excluded ones left out, the cross is the group center, the dotted circle CEP 50 and the dashed circle CEP 90."
+     "One per load. Dots are the shots about their own bulls, excluded ones left out; the green lines cross at the group center and the blue lines at the aim point, with the green CEP circles the analysis screen's toggles have on."
     ],
     [
      "The figures under each plot",

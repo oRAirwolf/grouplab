@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 955 |
+| code | 957 |
 | measured | 1351 |
 | decided | 1140 |
 | unbacked | 0 |
-| **total** | **3446** |
+| **total** | **3448** |
 
-**442** of them were read one sentence at a time and their backing written against the sentence. The other **3004** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**444** of them were read one sentence at a time and their backing written against the sentence. The other **3004** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -943,7 +943,7 @@ one that matters.
 ### docs/GLOSSARY.md
 
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
-- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten, the 95 percent circle 19 in 20.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## Confidence preset One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
@@ -2666,7 +2666,8 @@ one that matters.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) The pill in the header counts the marks that need you.
 - *measured* (the research article hole-is-not-the-bullet and photo-hole-size, with their data): A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
 - *code* (AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking): Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.** The queue works from the keyboard: - **Space** goes to the next item.
-- *code* (CompositePlot in src/GroupLab.App/CompositePlot.cs): Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid and CEP 95 dashed; the extreme spread is a red dashed line between the two shots furthest apart.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Toggles beside the plot turn CEP 50, CEP 90, CEP 95 and the extreme spread on and off, and GroupLab remembers them; CEP 95 starts off.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): **Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
 - *code* (src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown): **With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
@@ -2879,7 +2880,7 @@ one that matters.
 ### site:guides/glossary/index.html
 
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
-- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten.
+- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): CEP The radius of a circle that would hold that share of your shots: the 50 percent circle holds half of them, the 90 percent circle nine in ten, the 95 percent circle 19 in 20.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Confidence preset One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A scan at 600 dots per inch shows a bullet hole clearly enough to measure its center to a few thousandths of an inch.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Only you can say whether a shot was a flyer; GroupLab only says whether it is unusual for a group of that size.
@@ -2948,7 +2949,8 @@ one that matters.
 - *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): A photograph taken more than 40 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 - *measured* (the research article hole-is-not-the-bullet and photo-hole-size, with their data): A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
 - *code* (AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking): Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a guess is marked as resting on a guess.
-- *code* (CompositePlot in src/GroupLab.App/CompositePlot.cs): Every scoring shot is drawn on one bull, each from its own bull's center, with the group's center and its CEP 50 and CEP 90 circles.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid and CEP 95 dashed; the extreme spread is a red dashed line between the two shots furthest apart.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Toggles beside the plot turn CEP 50, CEP 90, CEP 95 and the extreme spread on and off, and GroupLab remembers them; CEP 95 starts off.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
 - *code* (src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown): With the shot distance set, each is an angle first, in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
 - *measured* (src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA): MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.
@@ -3703,7 +3705,8 @@ one that matters.
 ### site:tour/analysis/index.html
 
 - *code* (website/build.py: the link to /what-can-be-measured/): What GroupLab can measure .
-- *code* (CompositePlot in src/GroupLab.App/CompositePlot.cs): What each mark means: the extreme spread pair, the dotted CEP 50 circle, the dashed CEP 90 circle, and the cross at the group center.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed.
+- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
 
 ### site:tour/ballistics/index.html
@@ -3714,7 +3717,6 @@ one that matters.
 
 ### site:tour/compare/index.html
 
-- *code* (the Compare screen, src/GroupLab.App/MainWindow.Compare.cs): Dots are the shots about their own bulls, excluded ones left out, the cross is the group center, the dotted circle CEP 50 and the dashed circle CEP 90.
 - *code* (the Compare screen, src/GroupLab.App/MainWindow.Compare.cs): Sigma, mean radius and extreme spread, each with its 95 percent interval.
 
 ### site:tour/equipment/index.html
