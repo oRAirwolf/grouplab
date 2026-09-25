@@ -25,7 +25,7 @@ At the start of a run, the count of open requests in this file is printed and no
 
 **Opened 2026-09-25. Entry 207. Answered 2026-09-25**, entries 211 and 212, and kept as a note of what the phones are and when they are
 needed; nothing is asked now. The **Essential PH-1**, Android 10, Snapdragon 835, 4 GB, read from the phone itself; the **Galaxy S20 5G**,
-Android 13, 8 GB; and a **OnePlus**, model to come when it is charged. They come out only at the milestones in `docs/ANDROID.md`: once
+Android 13, 8 GB; and a **OnePlus 6T**, Android 11 (entry 213), optional at the milestone. They come out only at the milestones in `docs/ANDROID.md`: once
 before the first Play closed testing release, in one sitting, and otherwise only for a problem the Fold 7 and the emulator cannot show.
 
 ---

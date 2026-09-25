@@ -1868,6 +1868,10 @@
   "**Stage B, a sync folder: possible through Google Drive** (request 29, entry 211): in the spike's folder picker on the Fold 7, Google Drive is listed and a folder in it can be chosen once opened.": {
    "kind": "measured",
    "where": "NOTES-FROM-PLANNING.md entry 211 (request 29's answers; the PH-1 read over adb on 2026-09-25) and docs/PHASE1-RESULTS.md entry 209"
+  },
+  "- **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger square, and a small Key button in its own strip where neither fits.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs KeyLayout; tests/GroupLab.App.Tests/Entry213Tests.cs; NOTES-FROM-PLANNING.md entry 213 (the OnePlus 6T)"
   }
  },
  "rules": [

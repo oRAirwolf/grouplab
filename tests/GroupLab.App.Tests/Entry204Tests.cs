@@ -21,7 +21,10 @@ namespace GroupLab.App.Tests;
 /// </summary>
 public class Entry204Tests
 {
-    /// <summary>The published sample, scan 3, analyzed as a person would see it, with .308 named so the outlines are drawn.</summary>
+    /// <summary>
+    /// The published sample, scan 3, analyzed as a person would see it, with its own caliber named so the outlines are drawn: 6.5 Creedmoor,
+    /// 0.264 in, as its load block says (`samples/sample.json`). Entry 213: the figures had named .308 here; the application never read it.
+    /// </summary>
     internal static MainWindow Sample()
     {
         string repository = Entry109Tests.Repository();
@@ -38,7 +41,7 @@ public class Entry204Tests
         window.Show();
         window.OpenImage(path);
         window.ApplyDetection(result);
-        window.Session.SetCalibre(Calibre.Of(0.308));
+        window.Session.SetCalibre(Calibre.Of(0.264));
         window.Session.SetShotDistance(3600);
         window.CalibreAnswered();
         window.Analyse();

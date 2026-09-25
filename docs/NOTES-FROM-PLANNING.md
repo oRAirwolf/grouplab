@@ -24,6 +24,56 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 214: the bull's rings about half as bright again
+
+**Status: actioned 2026-09-25, every section.** Dark theme rings #505050 to #282828, half the lightness; light theme #a0a0a0 to #bdbdbd, toward the paper, so in both the rings sit behind the half strength outlines and still show. Width unchanged. Pictures `docs/figures/composite-plot-210-*` replaced with both changes; the tone test follows the new values.
+
+Alan, 2026-09-25, on the composite plot after entry 210: "Make the gray on the target circles about 50% darker again."
+
+1. **Dark theme, which Alan uses:** take the rings' gray (`inks.Bull`, the mid gray of entry 210) to about half its current lightness, so
+   they sit further back against the dark paper and the light shot outlines stand clearly in front of them. Keep them visible: they must
+   still read as rings at a glance, not vanish into the background.
+2. **Light theme:** "darker" there means toward black, which would make the rings heavier than the shot outlines, the opposite of the
+   intent. Keep the light theme's relationship the same as the dark theme's after this change: rings clearly behind, outlines clearly in
+   front. Say what you set for each theme.
+3. Width stays as entry 210 made it.
+4. Render the sample's plot in both themes and both framings again under `docs/figures/`, replacing entry 210's pictures, so the planning
+   session can show Alan the result. The render test's tone check follows the new values.
+5. Do it together with entry 213 (the legend moved off the plot), so the pictures show both changes.
+
+---
+
+## 2026-09-25, entry 213: the fourth test phone, and the plot's legend covers the shots
+
+**Status: actioned 2026-09-25, with entry 214, every section.** The OnePlus 6T is a reference device, optional at the milestone. The key goes beside the plot or below it, whichever leaves the larger square, or collapses to a Key button in its own strip; the plot is drawn and clipped in what is left. The saved report's key was already outside the plot, its caption under the square. Section 3: the 0.308 was the figure test's, named only to draw outlines; the application never read it, and the figures now use 6.5 Creedmoor from `samples/sample.json`. The Creedmoor line in PROVENANCE.md is Unholy's 2026-09-23 scan, not the sample.
+
+## 1. The OnePlus is a OnePlus 6T on Android 11
+
+Alan, 2026-09-25. As the planning session understands it: Snapdragon 845 (2018), 6 or 8 GB of memory, and Android 11 was its last update;
+confirm from the phone only when it is next connected. Add it to the reference devices in `docs/ANDROID.md` beside the Essential PH-1
+(Android 10), the Galaxy S20 5G (Android 13) and the Fold 7. Entry 212 holds: it comes out only at the named milestone, and only if it adds
+something the PH-1 and the S20 do not. It fills the Android 11 and 12 gap, so it is optional at that milestone, not required. Nothing to ask
+Alan now.
+
+## 2. The composite plot's legend sits on top of the data
+
+The planning session looked at `docs/figures/composite-plot-210-group-dark.png` and `-whole-dark.png`. The key box in the top left
+corner is drawn over the plot and hides shot outlines under it (in the sample, the outline of the top left shot and its neighbours).
+
+1. The key never covers data: put it outside the plot area (beside or below it, depending on the width available), or, where there is no
+   room, let it collapse to a small button that opens it, and make it movable if that is simpler. On a phone it collapses by default.
+2. The saved and printed report places the key outside the plot as well.
+3. A test: the key's rectangle does not intersect any drawn shot, CEP circle, or center line, at the smallest and a large window size.
+
+## 3. One thing to check
+
+The picture's key says the outlines are drawn "at the 0.308 in caliber", while the sample scan is Alan's 6.5 Creedmoor sheet
+(`samples/PROVENANCE.md`). If the figure was simply rendered with 0.308 set, render the documentation figures with the sample's own
+caliber so pictures published in the guide match the sheet. If the application itself read 0.308 from the sample's session, that is a
+defect: say which it was.
+
+---
+
 ## 2026-09-25, entry 212: the older phones only when absolutely needed; the Fold 7 is the development phone
 
 **Status: actioned 2026-09-25, every section.** Request 30 is a note, not counted open. `docs/ANDROID.md` has the reference devices, the milestone before the first closed test, the rule for an unreproducible problem, and the Fold 7 batching rule; the working size is chosen on the Fold 7. for-alan.md says the Fold 7 and the PH-1 can be put away.

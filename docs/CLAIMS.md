@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 968 |
+| code | 969 |
 | measured | 1418 |
 | decided | 1149 |
 | unbacked | 0 |
-| **total** | **3535** |
+| **total** | **3536** |
 
-**518** of them were read one sentence at a time and their backing written against the sentence. The other **3017** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**519** of them were read one sentence at a time and their backing written against the sentence. The other **3017** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -548,6 +548,7 @@ one that matters.
 - *measured* (the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205): Checked over adb on 2026-09-25: with rotation locked at 180 degrees the spike's screen turned to 180, the activity reports `SCREEN_ORIENTATION_FULL_USER`, and the phone's own rotation settings were put back.
 - *measured* (the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205): - **The start up sizes, and what repeated them.** Avalonia reports `1 by 1` and then the full size at 1 pixel a dp before the screen's density is known, and sizes of nothing during a fold; the spike logs them as ignored and never lays out from them, and the application does the same.
 - *measured* (the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205): Alan's second start up sequence was the activity being made again: pressing Back finishes the activity while the process lives on, and opening it again creates a new one (the log reads "activity destroyed, finishing" and then "activity created, the 2 time").
+- *code* (src/GroupLab.App/CompositePlot.cs KeyLayout; tests/GroupLab.App.Tests/Entry213Tests.cs; NOTES-FROM-PLANNING.md entry 213 (the OnePlus 6T)): - **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger square, and a small Key button in its own strip where neither fits.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): - **Touch.** Targets at least 48 dp.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): The Fold 7's cover screen is the case to test it on.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Sessions between phone and desktop (entry 198 section 1.4, entry 199 section 2) The session file is the unit whatever the route.

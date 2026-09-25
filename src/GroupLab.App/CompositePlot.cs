@@ -154,7 +154,7 @@ internal sealed class CompositePlot : Control
     /// <summary>Zooms by <paramref name="factor"/> about a point on the control, which stays where it is.</summary>
     internal void ZoomAbout(Point at, double factor)
     {
-        var area = new Rect(Bounds.Size);
+        var area = DataRect;
         var (_, before) = Frame(area);
         double next = Math.Clamp(Zoom * factor, ZoomLeast, ZoomMost);
         factor = next / Zoom;
@@ -185,6 +185,14 @@ internal sealed class CompositePlot : Control
         MinHeight = 200;
         PointerPressed += (_, e) =>
         {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && KeyLayout() is { Collapsed: true } layout && layout.Key.Contains(e.GetPosition(this)))
+            {
+                keyOpen = !keyOpen;
+                InvalidateVisual();
+                e.Handled = true;
+                return;
+            }
+
             if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && Pick(e.GetPosition(this)) is { Count: > 0 } picked)
             {
                 ShotsClicked?.Invoke(this, picked);
@@ -248,7 +256,7 @@ internal sealed class CompositePlot : Control
     /// <summary>Where an offset in inches lands on the control.</summary>
     public Point ToScreen(PointD inches)
     {
-        var (scale, origin) = Frame(new Rect(Bounds.Size));
+        var (scale, origin) = Frame(DataRect);
         return new Point(origin.X + (inches.X * scale), origin.Y + (inches.Y * scale));
     }
 
@@ -273,7 +281,7 @@ internal sealed class CompositePlot : Control
     /// </summary>
     public string? Describe(Point at)
     {
-        var (scale, _) = Frame(new Rect(Bounds.Size));
+        var (scale, _) = Frame(DataRect);
         if (ShotAt(at) is { } shot)
         {
             var o = shot.Offset;
@@ -326,8 +334,8 @@ internal sealed class CompositePlot : Control
         ArgumentNullException.ThrowIfNull(context);
         inks = Tokens.Plot(ActualThemeVariant);
         var accent = new SolidColorBrush(inks.Accent);
-        var area = new Rect(Bounds.Size);
-        context.FillRectangle(new SolidColorBrush(inks.Paper), area);
+        context.FillRectangle(new SolidColorBrush(inks.Paper), new Rect(Bounds.Size));
+        var area = DataRect;
         var (scale, origin) = Frame(area);
         using (context.PushClip(area))
         {
@@ -497,13 +505,67 @@ internal sealed class CompositePlot : Control
         context.DrawLine(pen, at + new Vector(0, -7), at + new Vector(0, 7));
     }
 
+    private const double KeyLine = 20, KeySwatch = 22, KeyPad = 10, KeyGap = 8, SmallestData = 240, ChipHeight = 28;
+
+    /// <summary>Whether a collapsed key has been opened from its button.</summary>
+    private bool keyOpen;
+
+    private List<FormattedText> KeyTexts(IEnumerable<KeyEntry> entries) => [.. entries.Select(e => new FormattedText(e.Text, CultureInfo.InvariantCulture,
+        FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(inks.Ink)))];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 213 section 2: the key never covers the data. It sits beside the plot or below it, whichever leaves the
+    /// plot the larger square, and otherwise collapses to a small Key button in a strip of its own, which opens the key over the plot only
+    /// when the person asks for it. <see cref="DataRect"/> is what is left for the plot, and every mark is drawn and clipped inside it.
+    /// </summary>
+    internal (Rect Data, Rect Key, bool Collapsed) KeyLayout()
+    {
+        var all = new Rect(Bounds.Size);
+        if (!ShowKey)
+        {
+            return (all, default, false);
+        }
+
+        var entries = Key();
+        var texts = KeyTexts(entries);
+        double width = KeySwatch + texts.Max(t => t.Width) + (2 * KeyPad), height = (entries.Count * KeyLine) + KeyPad;
+        // Beside or below, whichever leaves the plot the larger square, since a group is about as tall as it is wide.
+        var beside = (Data: new Rect(0, 0, Math.Max(0, all.Width - width - (2 * KeyGap)), all.Height), Key: new Rect(all.Width - width - KeyGap, KeyGap, width, height));
+        double w = Math.Min(width, all.Width - (2 * KeyGap));
+        var below = (Data: new Rect(0, 0, all.Width, Math.Max(0, all.Height - height - (2 * KeyGap))), Key: new Rect(KeyGap, all.Height - height - KeyGap, w, height));
+        static double Square(Rect r) => Math.Min(r.Width, r.Height);
+        var best = Square(beside.Data) >= Square(below.Data) ? beside : below;
+        if (Square(best.Data) >= SmallestData && best.Key.Width > 0)
+        {
+            return (best.Data, best.Key, false);
+        }
+
+        return (new Rect(0, ChipHeight, all.Width, Math.Max(0, all.Height - ChipHeight)), new Rect(KeyGap / 2, 2, 56, ChipHeight - 4), true);
+    }
+
+    /// <summary>The rectangle the plot itself is drawn in, clear of the key.</summary>
+    internal Rect DataRect => KeyLayout().Data;
+
     private void DrawKey(DrawingContext context)
     {
         var entries = Key();
-        const double line = 20, swatch = 22, pad = 10;
-        var texts = entries.Select(e => new FormattedText(e.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(inks.Ink))).ToList();
+        const double line = KeyLine, swatch = KeySwatch, pad = KeyPad;
+        var texts = KeyTexts(entries);
+        var (_, place, collapsed) = KeyLayout();
+        if (collapsed)
+        {
+            // The button: a small labelled box in its own strip above the plot.
+            context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), place, 3, 3);
+            var label = new FormattedText(keyOpen ? "Key ▴" : "Key ▾", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(inks.Ink));
+            context.DrawText(label, new Point(place.X + ((place.Width - label.Width) / 2), place.Y + ((place.Height - label.Height) / 2)));
+            if (!keyOpen)
+            {
+                return;
+            }
+        }
+
         double width = Math.Min(Math.Max(0, Bounds.Width - (2 * pad)), swatch + texts.Max(t => t.Width) + (2 * pad));
-        var box = new Rect(pad, pad, width, (entries.Count * line) + pad);
+        var box = collapsed ? new Rect(pad, ChipHeight + 2, width, (entries.Count * line) + pad) : place;
         context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), box, 3, 3);
         for (int i = 0; i < entries.Count; i++)
         {
@@ -515,7 +577,7 @@ internal sealed class CompositePlot : Control
 
     private PlotShot? ShotAt(Point at)
     {
-        var (scale, _) = Frame(new Rect(Bounds.Size));
+        var (scale, _) = Frame(DataRect);
         double reach = Math.Max(8, ShowOutlines ? (CalibreInches ?? 0) * scale / 2 : 0);
         return Shots
             .Select(s => (Shot: s, Distance: Distance(ToScreen(s.Offset), at)))
@@ -538,7 +600,7 @@ internal sealed class CompositePlot : Control
     internal static double RingStroke(double scale) => Math.Clamp(BullRingInches * scale, BullStroke, BullStrokeMost);
 
     /// <summary>The rings' stroke as drawn now, for the tests.</summary>
-    internal double RingStrokeNow => RingStroke(Frame(new Rect(Bounds.Size)).Scale);
+    internal double RingStrokeNow => RingStroke(Frame(DataRect).Scale);
 
     /// <summary>
     /// The scale in pixels per inch and where the aim point lands: the shots framed with a margin, or with <see cref="WholeTarget"/> every

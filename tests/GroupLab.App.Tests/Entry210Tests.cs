@@ -32,18 +32,22 @@ public class Entry210Tests
     private static Color Outline(PlotInks inks) => Color.FromRgb(
         (byte)((inks.Ink.R + inks.Paper.R) / 2), (byte)((inks.Ink.G + inks.Paper.G) / 2), (byte)((inks.Ink.B + inks.Paper.B) / 2));
 
-    /// <summary>Section 1.2: darker than entry 204's pale grey, and still apart in tone from the outlines as well as in width.</summary>
+    /// <summary>
+    /// Section 1.2 as entry 214 revised it: the rings clearly behind the outlines in both themes, fainter against the paper than the
+    /// half strength outlines and apart from them in tone, and still visible; the dark theme's at half entry 210's lightness.
+    /// </summary>
     [Fact]
-    public void TheRingsAreDarkerAndStillApartFromTheOutlines()
+    public void TheRingsSitBehindTheOutlinesAndStillShow()
     {
-        foreach (var (variant, before) in new[] { (ThemeVariant.Light, Color.Parse("#d4d4d4")), (ThemeVariant.Dark, Color.Parse("#3a3a3a")) })
+        Assert.Equal(Color.Parse("#282828"), Tokens.Plot(ThemeVariant.Dark).Bull);
+        foreach (var variant in new[] { ThemeVariant.Light, ThemeVariant.Dark })
         {
             var inks = Tokens.Plot(variant);
-            Assert.True(Contrast(inks.Bull, inks.Paper) > Contrast(before, inks.Paper), $"{variant}: the rings are not darker than before");
             var outline = Outline(inks);
+            Assert.True(Contrast(inks.Bull, inks.Paper) < Contrast(outline, inks.Paper), $"{variant}: the rings are not behind the outlines");
+            Assert.True(Contrast(inks.Bull, inks.Paper) >= 1.2, $"{variant}: the rings have vanished into the paper");
             double apart = Math.Abs(inks.Bull.R - outline.R) + Math.Abs(inks.Bull.G - outline.G) + Math.Abs(inks.Bull.B - outline.B);
             Assert.True(apart >= 45, $"{variant}: the rings' grey is only {apart} from the outlines'");
-            Assert.True(Contrast(inks.Bull, inks.Paper) < Contrast(inks.Group, inks.Paper), $"{variant}: the rings are as strong as the marks drawn over them");
         }
     }
 
@@ -59,7 +63,7 @@ public class Entry210Tests
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
             var plot = window.Plot;
-            var bounds = new Rect(plot.Bounds.Size);
+            var bounds = plot.DataRect;
             Assert.False(plot.WholeTarget);
             Assert.True(window.PlotFraming.Group.IsChecked == true && window.PlotFraming.Whole.IsChecked != true);
 

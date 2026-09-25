@@ -160,7 +160,7 @@ sitting that does everything needing them at once, never for one small check:
 | Galaxy Z Fold 7, SM-F966U1 | 16 | Snapdragon 8 Elite | development, every day; measured in section 5 |
 | Galaxy S20 5G | 13 | 8 GB, 128 GB | the middle reference, below Android 14 |
 | Essential PH-1 | 10 (API 29), its last update | Snapdragon 835 (msm8998), 4 GB, read from the phone on 2026-09-25 | the floor: the minimum Android and memory, a processor in the budget phones' class |
-| OnePlus, model to come | not known yet | not known yet | to be placed when it is charged |
+| OnePlus 6T | 11, its last update | Snapdragon 845, 6 or 8 GB, as the planning session understands it; confirmed when next connected | optional at the milestone: it fills the Android 11 and 12 gap, and comes out only if it adds something the PH-1 and the S20 do not |
 
 **The working size is chosen on the Fold 7**: 8 MP, 300 dpi for a Letter sheet, at 373 MB and 3.3 s there (section 5). Scaled by the
 Geekbench figures below, that is roughly 25 s on the floor's class, inside the 30 s the budget allows; the emulator with limited cores and
@@ -245,6 +245,8 @@ stora.sh, Android 17 memory limits guide; support.apple.com, iPhone models compa
 - **Density.** Avalonia works in density independent units and draws at the screen's real density, which the spike reports as pixels
   a dp. **The system font size is not followed by Avalonia on its own**: Android gives it as a font scale, and the application applies
   it to its text. The spike shows whether the largest accessibility sizes clip.
+- **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger
+  square, and a small Key button in its own strip where neither fits. On a phone it is the button by default.
 - **Touch.** Targets at least 48 dp. Pinch to zoom and two finger pan on the photograph. One finger moves a shot only when it was
   grabbed, never while panning. A long press where the desktop has a right click. Nothing only on hover: everything the desktop shows on
   hover, the glossary included, opens on a tap. **Precise placement uses an offset handle with a magnifier**: the shot sits a finger's

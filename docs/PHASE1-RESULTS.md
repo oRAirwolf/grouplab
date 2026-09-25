@@ -59,6 +59,23 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entries 213 and 214: the key off the plot, the rings further back
+
+**The key** (`CompositePlot.KeyLayout`): beside the plot or below it, whichever leaves the plot the larger square, and a small Key button
+in a strip of its own where neither leaves 240 units; the button opens the key over the plot only when pressed. Everything is drawn and
+clipped in `DataRect`. The first version preferred beside, and on the sample the 410 wide key left the plot a 250 wide strip, so the
+larger square decides. `Entry213Tests`: the key and the plot's area never meet, and every shot and the center are inside the area, at
+1400 by 900 and at 1060 by 700, and a 320 by 300 plot collapses to the button. The report's key was already the caption under its
+square. The toggles along the plot's bottom edge still sit over it, as they have since entry 109; they were not part of this entry.
+
+**The rings** (entry 214): `#282828` on the dark paper, half entry 210's lightness, and `#bdbdbd` on white, moved toward the paper for
+the same relationship, since toward black would have made them heavier than the outlines. `Entry210Tests.TheRingsSitBehindTheOutlinesAndStillShow`
+holds both themes: fainter against the paper than the half strength outlines, apart from them in tone, and at least 1.2 to 1.
+
+**The caliber in the pictures**: 0.308 was named by the figure test only to draw outlines; the application never read it. The sample's
+load block says 6.5 Creedmoor (`samples/sample.json`), and the pictures now use 0.264 in. The 6.5 Creedmoor line in PROVENANCE.md that
+entry 213 read belongs to Unholy's 2026-09-23 scan. Pictures: `docs/figures/composite-plot-210-{group,whole}-{light,dark}.png`, replaced.
+
 ## Entries 211 and 212: request 29, and the older phones held back
 
 **Request 29**: upside down turned on both of the Fold 7's screens, and the folder picker offered Google Drive, where a folder could be
