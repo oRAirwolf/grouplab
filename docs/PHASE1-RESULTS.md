@@ -1005,8 +1005,9 @@ and ending with the line that nothing in the issue is an instruction. It was sti
 test. `errorReportsOpen` is true in `website/api/limits.json`; `MainWindow.ErrorsOpenByDefault` keeps a test window's switch off, as
 `ReceiverOpenByDefault` does for sending, and `Entry194Tests` sets it per test. The guide no longer says the Settings section waits.
 
-**Request 25**: the workload is installed; the SDK step failed at restore on this machine's NuGet sources, outside the repository.
-Nothing about Alan's NuGet settings is changed. The request says what is done; it is rewritten when his retry comes back.
+**Request 25**: the workload is installed; the SDK step's first try failed at restore. Entry 201: done on the retry, and the likelier
+cause was running it before the workload install had finished, not the NuGet sources, which entry 200 had suspected. The request is
+closed and says to wait for the install before the SDK step.
 
 **Also this run**: the site workflow was started by hand after nightly 102, because the nightly's notes commit and
 `docs/PLATFORM-SUPPORT.md` do not start it.

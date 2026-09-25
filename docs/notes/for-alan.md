@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **25**, its SDK step only, then **26**, because the Android test build cannot reach the phone without
-them. Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 7.** Most urgent: **26**, pairing the Fold 7, because the Android test build cannot reach the phone without it. Then 9, 16,
+20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -19,7 +19,7 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ## 26. Android: the Fold 7 and the tablet, ready for a test build
 
-**Opened 2026-09-25. Entry 198 section 3.1.** Needs request 25 first, because `adb` comes with it.
+**Opened 2026-09-25. Entry 198 section 3.1.** Request 25 is done, so `adb` is in place and this can be done now.
 
 **On the Fold 7:** Settings, About phone, Software information, tap **Build number** seven times. Then Settings, **Developer
 options**, turn on **Wireless debugging**, open it, and tap **Pair device with pairing code**. It shows an address with a port, and a
@@ -46,33 +46,31 @@ when the test build is ready.
 
 ## 25. Android: the .NET Android workload and the Android SDK
 
-**Opened 2026-09-25. Entry 198 section 3.2. Half done** (entry 200): the workload is installed, 10.0.401, and `ANDROID_HOME` is
-set; the SDK step stopped at restore, `NU1100` for `Microsoft.NET.ILLink.Tasks`, because the throwaway project sits outside the
-repository and this machine's own NuGet settings have no usable nuget.org source. The planning session has sent a retry that uses
-the repository's `nuget.config`; this request is rewritten with whatever worked. **Do not run the first command again.** This machine had neither, and `C:\Dev\tools\sdkmanager` is Garmin's Connect IQ
-manager, not Android's. The Java 17 kit from Eclipse Adoptium is already installed and is what the Android build uses.
+**Opened 2026-09-25. Entry 198 section 3.2. Answered 2026-09-25**, entries 200 and 201: the workload is installed (10.0.401), the SDK
+is in `C:\Dev\tools\android-sdk`, `ANDROID_HOME` points at it, and `adb version` prints `Android Debug Bridge version 1.0.41`. The first
+try at the SDK step failed at restore; entry 201 found the likelier cause was running it while the workload install was still going in
+the administrator window. **Nothing more to do.** The commands below are the ones that worked, in the order to run them, for the record
+or another machine.
 
-**First, in PowerShell run as administrator**, because the workload installs into Program Files:
+**First, in PowerShell run as administrator**, because the workload installs into Program Files. Wait until it prints
+`Successfully installed workload(s) android.` before going on:
 
 ```powershell
 dotnet workload install android
 ```
 
-**Then in ordinary PowerShell.** This makes a throwaway Android project in your temporary folder only to ask the build to fetch what
-it needs, puts the SDK in `C:\Dev\tools\android-sdk`, accepts the Android SDK licenses on your behalf, and deletes the throwaway:
+**Then in ordinary PowerShell.** A throwaway Android project in the temporary folder, only to ask the build to fetch what it needs; the
+SDK goes in `C:\Dev\tools\android-sdk`, the Android SDK licenses are accepted on your behalf, and the throwaway is deleted.
+`RestoreConfigFile` points the restore at the repository's package sources, which is harmless and was part of the run that worked:
 
 ```powershell
 dotnet new android -o "$env:TEMP\gl-android-probe"
-dotnet build "$env:TEMP\gl-android-probe" -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=C:\Dev\tools\android-sdk -p:JavaSdkDirectory="C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot" -p:AcceptAndroidSDKLicenses=True
+dotnet build "$env:TEMP\gl-android-probe" -t:InstallAndroidDependencies -f net10.0-android -p:RestoreConfigFile=C:\Dev\grouplab\nuget.config -p:AndroidSdkDirectory=C:\Dev\tools\android-sdk -p:JavaSdkDirectory="C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot" -p:AcceptAndroidSDKLicenses=True
 Remove-Item -Recurse -Force "$env:TEMP\gl-android-probe"
 setx ANDROID_HOME C:\Dev\tools\android-sdk
 ```
 
-**Why.** The Android test build is made in CI either way, but installing it on the phone, and building it here between CI runs,
-needs both.
-
-**A good answer.** `dotnet workload list` shows `android`, and `C:\Dev\tools\android-sdk\platform-tools\adb.exe version` prints a
-version. About 2 to 3 GB lands in `C:\Dev\tools\android-sdk`.
+**Why.** Installing the test build on the phone, and building it here between CI runs, needs both.
 
 ---
 

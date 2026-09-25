@@ -7,8 +7,8 @@ the plan that report decides.
 **Where it stands.** The spike and its build are written: `android/GroupLab.Android.Spike/`, `android/opencv/build-extern.sh` and
 `.github/workflows/android.yml`. **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system
 libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan. **Nothing has run on a
-phone yet**: that waits on requests 25 (the Android workload and SDK on Alan's machine) and 26
-(the Fold 7 paired for debugging) in `docs/notes/for-alan.md`.
+phone yet**: the Android workload and SDK are installed on Alan's machine (request 25), and the run waits on
+request 26, the Fold 7 paired for debugging, in `docs/notes/for-alan.md`.
 
 ## 1. What Alan decided (entry 198 section 1)
 
