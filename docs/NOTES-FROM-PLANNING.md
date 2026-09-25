@@ -24,6 +24,28 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 202: request 26 done, the Fold 7 is paired
+
+**Status: actioned 2026-09-25, except what needs hands.** Request 26 closed. The spike runs on the Fold 7's cover screen: detection 17.1 s and 714 MB on the sample scan, the photograph refused as on the desktop; `docs/ANDROID.md` section 5 has both beside the desktop's. Two defects found on the phone and fixed on the way: the ArUco and WeChat bindings had compiled to nothing, and the asset list took the system's own images. **Not done**: the inner screen, folding, turning and the font size, which are request 27. The phone's address is in no file.
+
+Alan paired the Fold 7 over wireless debugging on 2026-09-25. `adb devices -l` lists it as `device`, `model:SM_F966U1`, `product:q7quew`,
+`device:q7q`. Close request 26.
+
+Now finish entry 198's first stage on the phone: install the spike APK (from the `android` workflow's artifact, or built here now that the
+workload and SDK are installed), run it on the cover screen and the inner screen, and fill in `docs/ANDROID.md` section 5 with the phone's
+times and peak memory beside the desktop's. Use `adb` yourself; the connection is on the local network and needs no approval from Alan.
+Do not write the phone's address or port into any file or log; it changes each time anyway.
+
+Wireless debugging turns itself off after a while. If `adb devices` no longer lists the phone, do not stop: put one line in for-alan.md
+asking him to turn Wireless debugging back on and run the `adb connect` line with the address the phone shows, and carry on with anything
+that does not need the phone. The fold, unfold and rotation checks of `docs/ANDROID.md` section 7 need Alan's hands; when the spike is on the
+phone, write them as a short request with exactly what to do and what to look for.
+
+Report in plain words for Alan: does detection run on his phone, how long it takes, how much memory it uses, and whether the layout
+survives folding and turning.
+
+---
+
 ## 2026-09-25, entry 201: request 25 done; correction to entry 200 section 2's diagnosis
 
 **Status: actioned 2026-09-25, every part.** Request 25 closed and rewritten with the commands that worked, in order, waiting for the workload install first and keeping `RestoreConfigFile`. Entry 200's NuGet reading, which had gone into request 25 and the results, is corrected there, and nothing about it went into STATE.md.

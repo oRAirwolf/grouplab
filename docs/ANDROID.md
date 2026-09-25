@@ -6,9 +6,9 @@ the plan that report decides.
 
 **Where it stands.** The spike and its build are written: `android/GroupLab.Android.Spike/`, `android/opencv/build-extern.sh` and
 `.github/workflows/android.yml`. **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system
-libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan. **Nothing has run on a
-phone yet**: the Android workload and SDK are installed on Alan's machine (request 25), and the run waits on
-request 26, the Fold 7 paired for debugging, in `docs/notes/for-alan.md`.
+libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan. **Detection runs on the
+Fold 7** (entry 202, section 5): the desktop's engine, unchanged, names the sample scan from its codes and finds all 25 holes in
+17 seconds. Folding and turning wait on request 27, which needs Alan's hands.
 
 ## 1. What Alan decided (entry 198 section 1)
 
@@ -82,10 +82,19 @@ If a MOBILE-CAPTURE.md item proves impossible on Android, it is named here with 
 The photograph's refusal is the desktop's own result on that picture, not an Android one; the spike runs it to time the stages a
 photograph goes through.
 
-**On the phone**: not measured yet (requests 25 and 26). The spike runs the same images; any photograph pushed into its folder is run as
-well. **The number to watch is memory**: a phone kills an application over a few hundred megabytes more readily than it slows it down,
-and 732 MB for a 600 dpi Letter scan is more than a phone application should hold. If the phone refuses it, the capture is processed at
-a capped resolution, which MOBILE-CAPTURE.md section 5 already does for the quality score.
+**On the Fold 7** (SM-F966U1, the cover screen), the same code in a Release build of the spike, 2026-09-25:
+
+| Image | Load | Codes and naming | Marking | Holes | In all | Peak memory |
+|---|---|---|---|---|---|---|
+| The published sample scan, 600 dpi | 0.6 s | 1.5 s, 2 codes | 15.0 s | 25 of 25 | 17.1 s | 714 MB |
+| The same range photograph | 0.1 s | 1.0 s, 1 code | refused: no markers found, as on the desktop | | 1.2 s | |
+
+Two further runs of the scan took 16.3 and 16.8 s. **The phone is a little over twice the desktop's time**, all of it in the marking;
+loading and naming are close to the desktop's. The peak is the whole process's highest so far, so it is read from the first run in a
+fresh process; the photograph ran after the scan and its own peak cannot be separated. **Memory held**: 714 MB, and 901 MB after three
+runs, and Android did not stop the application. It is still more than a phone application should hold, so the real application
+processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan
+in one pass without keeping earlier images.
 
 ## 6. The lowest Android version: 7.0 (API 24)
 

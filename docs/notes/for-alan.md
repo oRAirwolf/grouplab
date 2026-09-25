@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **26**, pairing the Fold 7, because the Android test build cannot reach the phone without it. Then 9, 16,
-20, 18, 12, which is optional, and 21, which is optional.
+**Open: 7.** Most urgent: **27**, five minutes of folding and turning the Android spike on the Fold 7. Then 9, 16, 20, 18,
+12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -17,9 +17,36 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 27. Android: fold, unfold and turn the spike, about five minutes
+
+**Opened 2026-09-25. Entry 202.** GroupLab spike is installed on the Fold 7 (its icon says "GroupLab spike"). Its screen lists, under
+**Screen**, every size it has been given: the time, the size in dp, a word (compact, medium or expanded), and the pixels. This checks
+that folding and turning keep it working, which only hands can do.
+
+1. With the phone folded, open **GroupLab spike** on the cover screen and press **Run detection**. Wait until a line naming
+   `gl-cf25-ltr-d-25-shots-600-dpi.png` appears, up to a minute.
+2. **Unfold the phone** while it is open. It should carry on without restarting: the lines already there stay, and a new line appears
+   saying **medium** or **expanded**, with the two panels now side by side.
+3. **Turn the phone sideways**, then back. Each turn adds a line; nothing already there disappears.
+4. **Fold it again.** It should go back to **compact** on the cover screen, with the two panels one above the other, and all the lines
+   still there.
+5. Settings, Display, **Font size and style**: move the font size to the largest, go back to the spike, and look at whether any text
+   is cut off at its edges. Put the font size back.
+6. The Tab S8 Ultra, if it is to hand: steps 1, 3 and 5 on it. Not needed for the first report.
+
+**What to look for, and what to send back.** Anything that restarted (the lines vanished), anything drawn under the hinge or cut off,
+and anything that took more than a moment to settle. A photograph of the phone's screen after step 4 is the easiest answer, and it
+never needs to show anything but the spike. Plain words are fine too: "all fine", or what went wrong at which step.
+
+**Why.** Entry 199 section 1.2: folding and turning are ordinary events and must keep the work. This decides whether Avalonia is right
+for the phone before any real screen is built on it.
+
+---
+
 ## 26. Android: the Fold 7 and the tablet, ready for a test build
 
-**Opened 2026-09-25. Entry 198 section 3.1.** Request 25 is done, so `adb` is in place and this can be done now.
+**Opened 2026-09-25. Entry 198 section 3.1. Answered 2026-09-25**, entry 202: the Fold 7 is paired and `adb` lists it as
+`SM_F966U1`. Wireless debugging turns itself off after a while; if it has, entry 202 says a one-line request goes here.
 
 **On the Fold 7:** Settings, About phone, Software information, tap **Build number** seven times. Then Settings, **Developer
 options**, turn on **Wireless debugging**, open it, and tap **Pair device with pairing code**. It shows an address with a port, and a

@@ -19,8 +19,8 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 955 |
-| measured | 1350 |
-| decided | 1141 |
+| measured | 1351 |
+| decided | 1140 |
 | unbacked | 0 |
 | **total** | **3446** |
 
@@ -477,7 +477,8 @@ one that matters.
 
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): # GroupLab on Android NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25.
 - *measured* (.github/workflows/android.yml run on 5a1e769, 2026-09-25: the native job's size and NEEDED list and 16 KB check, and the APK job's size and item check): **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan.
-- *decided* (NOTES-FROM-PLANNING.md entry 201: request 25 done; docs/notes/for-alan.md request 26): **Nothing has run on a phone yet**: the Android workload and SDK are installed on Alan's machine (request 25), and the run waits on request 26, the Fold 7 paired for debugging, in `docs/notes/for-alan.md`.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202): **Detection runs on the Fold 7** (entry 202, section 5): the desktop's engine, unchanged, names the sample scan from its codes and finds all 25 holes in 17 seconds.
+- *decided* (NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5): Folding and turning wait on request 27, which needs Alan's hands.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): What Alan decided (entry 198 section 1) - **The first version analyzes on the phone, offline**: the capture screen of `docs/MOBILE-CAPTURE.md`, detection, review and correction, the group figures, and saved sessions, with the desktop's engine, not a second one.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): A newer personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the Discord server.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): - **A public Play listing waits on the attorney's review** of the draft GPL section 7 additional permission for app stores.
@@ -490,9 +491,8 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): | **Licenses.** OpenCV (since 4.5), opencv_contrib and OpenCvSharp are Apache-2.0; Sdcb's pipeline, read for how the build is done and not copied, is Apache-2.0 too.
 - *decided* (NOTES-FROM-PLANNING.md entry 198 section 2.2; the license files of opencv, opencv_contrib, opencvsharp and sdcb/opencvsharp-mini-runtime, read 2026-09-25): Apache-2.0 code may be combined into a GPL-3.0 work, which is the direction GroupLab needs.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): On the Fold 7 that is a choice between the wide, ultrawide and telephoto cameras.
-- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **On the phone**: not measured yet (requests 25 and 26).
-- *measured* (android/GroupLab.Android.Spike/SpikeRun.cs run on the desktop, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 198; the bytes a shot takes worked out from two 16-bit coordinates and a bull index): **The number to watch is memory**: a phone kills an application over a few hundred megabytes more readily than it slows it down, and 732 MB for a 600 dpi Letter scan is more than a phone application should hold.
-- *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): If the phone refuses it, the capture is processed at a capped resolution, which MOBILE-CAPTURE.md section 5 already does for the quality score.
+- *measured* (the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202): **Memory held**: 714 MB, and 901 MB after three runs, and Android did not stop the application.
+- *decided* (NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5): It is still more than a phone application should hold, so the real application processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan in one pass without keeping earlier images.
 - *code* (android/opencv/build-extern.sh; the routes and licenses read on 2026-09-25 from nuget.org (Sdcb.OpenCvSharp4.mini.runtime.android-arm64), github.com/sdcb/opencvsharp-mini-runtime and github.com/shimat/opencvsharp): The lowest Android version: 7.0 (API 24) The native build is made for API 24, as Sdcb's is, and that sets the floor: CameraX and .NET 10 both go lower.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): Android 7.0 is from 2016, and Google's device share figures, read in Android Studio, will say what share it leaves out when the first build is published.
 - *decided* (NOTES-FROM-PLANNING.md entry 199 sections 1 and 2; android/GroupLab.Android.Spike/SpikeView.cs Measured): Phones, foldables and tablets, touch first (entry 199 section 1) - **Layout by the width available, not the device.** Compact, under 600 dp: a phone, and the Fold 7's cover screen.

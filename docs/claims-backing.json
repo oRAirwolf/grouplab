@@ -1556,6 +1556,22 @@
   "**Nothing has run on a phone yet**: the Android workload and SDK are installed on Alan's machine (request 25), and the run waits on request 26, the Fold 7 paired for debugging, in `docs/notes/for-alan.md`.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 201: request 25 done; docs/notes/for-alan.md request 26"
+  },
+  "**Detection runs on the Fold 7** (entry 202, section 5): the desktop's engine, unchanged, names the sample scan from its codes and finds all 25 holes in 17 seconds.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202"
+  },
+  "Folding and turning wait on request 27, which needs Alan's hands.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5"
+  },
+  "**Memory held**: 714 MB, and 901 MB after three runs, and Android did not stop the application.": {
+   "kind": "measured",
+   "where": "the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202"
+  },
+  "It is still more than a phone application should hold, so the real application processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan in one pass without keeping earlier images.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5"
   }
  },
  "rules": [

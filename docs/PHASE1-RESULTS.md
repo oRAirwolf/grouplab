@@ -997,6 +997,28 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entries 201 and 202: the Android SDK installed; detection runs on the Fold 7
+
+**Entry 201.** Request 25 done on the retry; the likelier cause of the first failure was running the SDK step before the workload install
+had finished, not the NuGet sources entry 200 suspected. Request 25 is closed and says to wait for the install.
+
+**Entry 202: the spike on the phone.** The Fold 7 (SM-F966U1) was paired by Alan and driven over `adb` from here. What the phone showed,
+in order:
+
+1. **A debug APK does not start by itself**: it expects Visual Studio's fast deployment and aborts with "No assemblies found". The
+   spike is measured as a Release build, signed with the debug key, which also makes the times comparable with the desktop's Release.
+2. **The ArUco and WeChat bindings had compiled to nothing**: "EntryPointNotFoundException: wechat_qrcode_create1". Their headers sit
+   inside OpenCvSharp's `NO_CONTRIB` switch; `build-extern.sh` now lifts it in those two headers only (d92446b).
+3. **Android's asset list for a folder includes the system's own files** of that folder name, so the spike takes only its own.
+
+Then, on the cover screen, 411 by 960 dp at 2.625 pixels a dp, compact: the sample scan named from 2 codes and 25 of 25 holes found in
+17.1 s (desktop 7.9 s), peak 714 MB in a fresh process; the range photograph named in 1.0 s and refused at registration, as on the
+desktop, 1.2 s. Two more runs of the scan took 16.3 and 16.8 s, and memory reached 901 MB after three runs without Android stopping the
+application. The layout drew correctly on the cover screen, one panel above the other. Avalonia reported two provisional sizes, 1 by 1
+and 412 by 960 at 1 pixel a dp, before the real one; the application should act on the last size only.
+
+**Request 27** asks Alan for five minutes of folding, turning and the largest font size, with what to look for.
+
 ## Entry 200: error reports on; request 25 half done
 
 **Error reports are on** (8725f91). Request 24's test report opened issue 1 in the private repository: titled "TestReport in
