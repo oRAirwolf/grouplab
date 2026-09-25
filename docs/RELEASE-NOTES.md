@@ -471,7 +471,7 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 - **Installs and does not reopen**, as nightly 37 does. Fixed after 37.
 - The notes on the release itself open with the whole history since nightly 18.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.35)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
