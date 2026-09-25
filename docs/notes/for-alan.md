@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **25**, then **26**, because the Android test build cannot reach the phone without them; then **24**, one
-test error report. Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
+**Open: 8.** Most urgent: **25**, its SDK step only, then **26**, because the Android test build cannot reach the phone without
+them. Then 9, 16, 20, 18, 12, which is optional, and 21, which is optional.
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -46,7 +46,10 @@ when the test build is ready.
 
 ## 25. Android: the .NET Android workload and the Android SDK
 
-**Opened 2026-09-25. Entry 198 section 3.2.** This machine has neither, and `C:\Dev\tools\sdkmanager` is Garmin's Connect IQ
+**Opened 2026-09-25. Entry 198 section 3.2. Half done** (entry 200): the workload is installed, 10.0.401, and `ANDROID_HOME` is
+set; the SDK step stopped at restore, `NU1100` for `Microsoft.NET.ILLink.Tasks`, because the throwaway project sits outside the
+repository and this machine's own NuGet settings have no usable nuget.org source. The planning session has sent a retry that uses
+the repository's `nuget.config`; this request is rewritten with whatever worked. **Do not run the first command again.** This machine had neither, and `C:\Dev\tools\sdkmanager` is Garmin's Connect IQ
 manager, not Android's. The Java 17 kit from Eclipse Adoptium is already installed and is what the Android build uses.
 
 **First, in PowerShell run as administrator**, because the workload installs into Program Files:
@@ -75,7 +78,8 @@ version. About 2 to 3 GB lands in `C:\Dev\tools\android-sdk`.
 
 ## 24. Error reports: the one test report, now that the receiver answers
 
-**Opened 2026-09-24. Entry 194. Steps 1 to 3 are done** (entry 195): the token is set, the worker and its units are installed, and nginx
+**Opened 2026-09-24. Entry 194. Answered 2026-09-25**, entry 200: the test report was taken and the worker opened issue 1 as described
+below; the issue is closed, and error reports are switched on in commit 8725f91. **Steps 1 to 3 were done** (entry 195): the token is set, the worker and its units are installed, and nginx
 routes the receiver. Step 4 stopped at a 404 because the site never carried the receiver; entry 195 fixed that, and an empty post to
 it from outside now answers its own error, `{"ok":false,"code":"bad_report",...}`. **Do not repeat steps 1 to 3.** Only this is left.
 

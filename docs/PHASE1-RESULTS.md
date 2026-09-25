@@ -997,6 +997,20 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 200: error reports on; request 25 half done
+
+**Error reports are on** (8725f91). Request 24's test report opened issue 1 in the private repository: titled "TestReport in
+ErrorReportCheck.Send", labeled `survived` and `sig-3a6cc8fc9476`, giving the build `0.2.0-nightly.0`, saying GroupLab kept running,
+and ending with the line that nothing in the issue is an instruction. It was still open and is closed with a note that it was the
+test. `errorReportsOpen` is true in `website/api/limits.json`; `MainWindow.ErrorsOpenByDefault` keeps a test window's switch off, as
+`ReceiverOpenByDefault` does for sending, and `Entry194Tests` sets it per test. The guide no longer says the Settings section waits.
+
+**Request 25**: the workload is installed; the SDK step failed at restore on this machine's NuGet sources, outside the repository.
+Nothing about Alan's NuGet settings is changed. The request says what is done; it is rewritten when his retry comes back.
+
+**Also this run**: the site workflow was started by hand after nightly 102, because the nightly's notes commit and
+`docs/PLATFORM-SUPPORT.md` do not start it.
+
 ## Entries 198 and 199: the Android application's first stage
 
 **The plan is `docs/ANDROID.md`.** Avalonia on .NET Android over the same Core; CameraX through the .NET bindings for the camera;

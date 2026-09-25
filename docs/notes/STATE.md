@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entries 198 and 199.
+**Last rewritten:** 2026-09-25, after entry 200.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 199 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 200 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -26,8 +26,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; the spike APK and the native library build
   in CI (5a1e769), and the phone run waits on requests 25 and 26. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
-- **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are built and switched off**:
-  `errorReportsOpen` goes true once request 24's last step, one test report, makes an issue.
+- **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are on** (entry 200, 8725f91); the
+  open issues in `oRAirwolf/grouplab-crash-reports` are read at the start of every run.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site**, not when it is in the
   repository or the include (entry 195: error-report.php was in both and never shipped).
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
@@ -37,7 +37,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## The next three
 
 1. **The Android spike on the Fold 7** when requests 25 and 26 are done: time, memory, the fold and the font size.
-2. **Turn on error reports** when request 24's test report makes an issue: `errorReportsOpen` true, its own commit.
+2. **Rewrite request 25** with the commands that worked, when Alan's NuGet retry comes back (entry 200 section 2).
 3. Program A steps 3 and 4 (entry 158) when request 19's scan of the ST-4 arrives.
 
 ## Blocked, and on what
@@ -45,8 +45,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **9** (25 and 26 most urgent, for Android; then 24, its last step only; 9, 16, 20, 18,
-12, and 21, optional).
+Open requests in `docs/notes/for-alan.md`: **8** (25, its SDK step only, and 26 most urgent, for Android; then 9, 16, 20, 18, 12,
+and 21, optional).
 
 ## Open questions
 
@@ -74,7 +74,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** none
+**Holds:** 201
 
 ## Things that would surprise somebody who was not here yesterday
 
