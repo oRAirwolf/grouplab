@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.105
+
+**2026-09-25**, commit `1d92d96`. Nightly.
+
+**What you will notice**
+
+- The bull's rings on the composite plot are wider and darker, and a Group or Whole target switch beside it shows either the group alone or the entire bull; the mouse wheel or a pinch zooms, dragging moves the view, and a double click fits it again.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.105)
+
+---
+
 ## 0.2.0-nightly.104
 
 **2026-09-25**, commit `f377168`. Nightly.
