@@ -2321,13 +2321,21 @@ SEND_JS = """(function () {
 """
 
 
-RECEIVERS = ["api/upload.php", "api/crash-report.php", "api/app-submission.php"]
+RECEIVERS = ["api/upload.php", "api/crash-report.php", "api/app-submission.php", "api/error-report.php"]
 
 
 def php_problems() -> list[str]:
     found = sorted(p.relative_to(OUT).as_posix() for p in OUT.rglob("*.php"))
     stray = [p for p in found if p not in RECEIVERS]
-    return [f"{p}: a .php file that is not one of the receivers, and nothing else may be executable" for p in stray]
+    problems = [f"{p}: a .php file that is not one of the receivers, and nothing else may be executable" for p in stray]
+    # Entry 195 section 1: error-report.php was written, named in the nginx include and installed on the server, and never shipped,
+    # because it was missing from this list and the copy below, and nothing said so. A receiver the list names and the build did not
+    # write is now a failed build, and a receiver in website/api/ the list does not name is too.
+    if limits().get("open"):
+        problems += [f"{r}: a receiver this build should ship and did not" for r in RECEIVERS if not (OUT / r).is_file()]
+    problems += [f"website/api/{p.name}: a receiver the site does not ship; add it to RECEIVERS and the copy in main"
+                 for p in sorted((REPO / "website" / "api").glob("*.php")) if f"api/{p.name}" not in RECEIVERS]
+    return problems
 
 
 # ---------------------------------------------------------------- main
@@ -2365,6 +2373,8 @@ def main() -> None:
         # Entry 165: the application's receiver ships with the site. Until nginx names it, the server answers it with the 404 every other
         # .php file gets, and the application never uses it while limits.json's appOpen is false.
         copy(need(REPO / "website" / "api" / "app-submission.php"), "api/app-submission.php")
+        # Entry 194, shipped at last by entry 195: the error report receiver. The application uses it only while errorReportsOpen is true.
+        copy(need(REPO / "website" / "api" / "error-report.php"), "api/error-report.php")
         write("assets/js/send.js", SEND_JS)
     write("support/index.html", page_support())
     write("guides/index.html", page_guides_index())
