@@ -130,10 +130,69 @@ runs, and Android did not stop the application. It is still more than a phone ap
 processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan
 in one pass without keeping earlier images.
 
-## 6. The lowest Android version: 7.0 (API 24)
+## 6. The lowest Android version: 10 (API 29)
 
-The native build is made for API 24, as Sdcb's is, and that sets the floor: CameraX and .NET 10 both go lower. Android 7.0 is from
-2016, and Google's device share figures, read in Android Studio, will say what share it leaves out when the first build is published.
+**Android 10 is GroupLab's minimum** (entry 207, approving entry 206 section 2.1): about 91 percent of Android devices in use; the phones
+it leaves out are from 2019 or before with 2 or 3 GB, which could not hold the engine anyway. The spike is built for it. The native
+library is built for API 24 and runs on 29.
+
+**What "supported" means.** .NET 10 lists Android 14 and later as supported: what Microsoft tests and answers for, not what runs. The
+spike was built for API 24 and runs, and the application is built for API 29. So Android 10 to 13 rest on GroupLab's own testing, on the
+oldest phone Alan finds (request 30), not on Microsoft's. Android 14 and later alone would be about 55 percent of the Android phones in
+use, which is why GroupLab does not simply follow .NET's list.
+
+## The phones it must run on
+
+Entry 206, the planning session's study of 2026-09-25, in the spirit of the Steam hardware survey; approved by Alan in entry 207. **Where a
+figure is judgment rather than measurement, it says so.**
+
+**Android against iPhone** (StatCounter, web traffic, August 2026): United States 39.3 percent Android, North America 39.7, United
+Kingdom 48.6, Germany 72.4, Europe 62.7, South America 76.9.
+
+**Android versions in use, cumulative** (apilevels.com from StatCounter, April 2026): 16 or later 22.3 percent, 15 or later 41.0, 14 or
+later 54.5, 13 or later 68.9, 12 or later 78.8, 11 or later 86.9, 10 or later 91.1, 9 or later 93.5, 8 or later 96.1, 7 or later 96.6.
+
+**What sells.** In Latin America the 2025 top ten was almost all Android under 200 dollars, led by the Galaxy A06 at 7 percent, with the
+Moto G15, Redmi 14C, Moto G05, Redmi A5, Moto G35, Redmi Note 14 4G, Galaxy A16, A15 and A56. The iPhone 17 led in the United States,
+United Kingdom, Germany and France in the second quarter of 2026.
+
+**Memory and storage.** No public survey gives installed memory by region. AnTuTu's first quarter 2026 report on Android outside China,
+which leans toward enthusiasts, has 4 GB or less at 7.6 percent, 6 GB 9.8, 8 GB 39.3, 12 GB 36.1 and 16 GB 6.8; storage 128 GB 26.1 and
+256 GB 49.7. It is the upper bound; the Latin American best sellers ship with 4 GB and 64 or 128 GB.
+
+**Speed** (Geekbench 6, single and multi core, about): the Fold 7's Snapdragon 8 Elite 3196 and 10142; the Galaxy A16 5G's Exynos 1330 960
+and 1826; the Galaxy A06's Helio G85 405 and 1349. So the A16 class is about a third of the Fold 7 on one core and a fifth on all of
+them, and the A06 class an eighth on one core.
+
+**Cameras.** Every phone above takes 12 MP or more with autofocus. A Letter sheet framed with margin spans about 13 inches of a 4000 pixel
+image, so 12 MP gives about 300 pixels an inch and 8 MP about 250, against the quality score's perfect 150 and useless 50.
+
+**Android 17** adds a limit on each application's memory scaled from the phone's own, counting native memory, where OpenCV's buffers
+live; its formula is not published, and an application over it is ended.
+
+### The budget, approved (entry 207)
+
+1. **Android 10 or later**, section 6.
+2. **4 GB of memory at least. Peak memory under about 400 MB, aimed at 300 MB**, on any image. Measured on the Fold 7 (section 5): 373 MB
+   at an 8 MP working size with every hole found, 307 MB at 3.6 MP, and 274 MB of it the application at rest. So the engine works at
+   8 MP, decoding at that size rather than shrinking a full decode.
+3. **Speed** (judgment): detection within about 10 s on a Galaxy A16 class phone and about 30 s on an A06 class, with progress and a
+   cancel; the capture screen's live checks at 10 frames a second or better on the A06 class. The Fold 7 takes 3.3 s at 8 MP; scaled by
+   the Geekbench figures that is roughly 10 to 17 s on the A16 class and 25 s or more on the A06 class, which is only an estimate until
+   it is run on a slower phone. **No Galaxy A16 will be bought**: Alan's older test phones become the low end reference devices when he
+   sends their models (request 30), and until then the Android emulator with limited cores and memory stands in, as a rough guide only,
+   since it runs on the desktop's processor.
+4. **A rear camera of at least 8 MP with autofocus**, refused with the reason otherwise.
+5. **The installed application under about 100 MB**; a warning when free space falls under about 500 MB.
+6. **Screens down to 360 dp wide.**
+
+**GroupLab's own survey** (entries 207 and 208, `docs/SURVEY.md`) will replace these borrowed figures with what GroupLab actually runs on.
+
+**Sources** (entry 206 section 5): digitalapplied.com/blog/mobile-os-market-share-2026-ios-vs-android;
+gs.statcounter.com/os-market-share/mobile/north-america; apilevels.com; telemetrydeck.com/survey/apple/iOS/majorSystemVersions;
+antutu.com/web/news/detail?id=136552; phonearena.com, best selling smartphones Q2 2026 (id182887); gsmarena.com, Counterpoint on the Galaxy
+A06 in Latin America 2025 (news-71620); nanoreview.net, Galaxy A16 5G against A06; cpu-monkey.com, Snapdragon 8 Elite against Helio G85;
+stora.sh, Android 17 memory limits guide; support.apple.com, iPhone models compatible with iOS 27.
 
 ## 7. Phones, foldables and tablets, touch first (entry 199 section 1)
 

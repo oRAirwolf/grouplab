@@ -997,6 +997,25 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entries 206 to 208: the phones GroupLab must run on, the minimums, and the survey design
+
+**The phones** (entry 206, approved in entry 207): the planning session's market study is in `docs/ANDROID.md`, "The phones it must run
+on", with its sources, and the budget beside what the Fold 7 measured: Android 10 or later, 4 GB, peak under about 400 MB (373 MB at the
+8 MP working size), detection about 10 s on the A16 class and 30 s on the A06 class (estimated from Geekbench, not yet run), 8 MP camera,
+under 100 MB installed, 360 dp screens. The spike's minimum is now Android 10.
+
+**The minimums table** (entry 207 section 2), in `docs/PLATFORM-SUPPORT.md` and so in the README and on the download page: .NET 10's
+operating system floors; the architectures actually published (Windows x64, macOS Apple silicon and Intel, Linux x64; no Arm64 on Windows
+or Linux); 4 GB of memory with 8 GB recommended, from the analyzer's measured peak of 733 MB on the 600 dpi sample; installed sizes from
+the unpacked nightly 103 downloads, 226 MB Windows, 219 MB Linux and 185 MB macOS on Apple silicon, and about 220 KB a saved session; a
+window about 1060 wide, question 58. Android is listed as planned.
+
+**The survey** (entries 207 section 3 and 208): `docs/SURVEY.md`. What is asked and where, what is sent and never sent, the benchmark,
+the route, the published page with groups under 10 merged, and the review of the minimums at 200 reports from a platform. Built with the
+next desktop work; the Android part with the real application.
+
+**Request 30** asks for the older test phones' models, Android versions and whether they still work.
+
 ## Entry 209: the Fold 7 in one sitting
 
 **Resolution against memory and time**, the sample at 600, 400, 367 (12 MP), 300 (8 MP) and 200 dpi, each run in a fresh process on a

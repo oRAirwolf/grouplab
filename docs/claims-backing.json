@@ -1636,6 +1636,202 @@
   "**Stage B, a sync folder: doubtful on Android, being tried on the Fold 7** (request 29 step 3: the spike's Choose a folder button opens the picker, and the log records only which provider a chosen folder came from).": {
    "kind": "measured",
    "where": "the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209"
+  },
+  "The operating system floor is .NET 10's own support list, which nothing can go below; memory, disk and screen are GroupLab's measurements; nothing is listed for a platform that has no published build.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "For Android, .NET lists Android 14 and later as what Microsoft tests; GroupLab's minimum of Android 10 rests on GroupLab's own testing instead, because Android 14 and later is only about half the phones in use.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "Memory: analyzing the 600 dpi sample scan peaks at 733 MB on the desktop, measured on 2026-09-25; the application also holds the image to show it.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "4 GB leaves the operating system its share; 8 GB is recommended for large scans.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "On Android the engine works at 8 megapixels, where it peaks at about 370 MB on a Galaxy Z Fold 7.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "Disk: the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "Screen: the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "- **Memory:** analyzing the 600 dpi sample scan peaks at 733 MB on the desktop, measured on 2026-09-25; the application also holds the image to show it.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "- **Disk:** the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "The lowest Android version: 10 (API 29) **Android 10 is GroupLab's minimum** (entry 207, approving entry 206 section 2.1): about 91 percent of Android devices in use; the phones it leaves out are from 2019 or before with 2 or 3 GB, which could not hold the engine anyway.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "The native library is built for API 24 and runs on 29.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**What \"supported\" means.** .NET 10 lists Android 14 and later as supported: what Microsoft tests and answers for, not what runs.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "The spike was built for API 24 and runs, and the application is built for API 29.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "So Android 10 to 13 rest on GroupLab's own testing, on the oldest phone Alan finds (request 30), not on Microsoft's.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "Android 14 and later alone would be about 55 percent of the Android phones in use, which is why GroupLab does not simply follow .NET's list.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "## The phones it must run on Entry 206, the planning session's study of 2026-09-25, in the spirit of the Steam hardware survey; approved by Alan in entry 207.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Where a figure is judgment rather than measurement, it says so.** **Android against iPhone** (StatCounter, web traffic, August 2026): United States 39.3 percent Android, North America 39.7, United Kingdom 48.6, Germany 72.4, Europe 62.7, South America 76.9.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Android versions in use, cumulative** (apilevels.com from StatCounter, April 2026): 16 or later 22.3 percent, 15 or later 41.0, 14 or later 54.5, 13 or later 68.9, 12 or later 78.8, 11 or later 86.9, 10 or later 91.1, 9 or later 93.5, 8 or later 96.1, 7 or later 96.6.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**What sells.** In Latin America the 2025 top ten was almost all Android under 200 dollars, led by the Galaxy A06 at 7 percent, with the Moto G15, Redmi 14C, Moto G05, Redmi A5, Moto G35, Redmi Note 14 4G, Galaxy A16, A15 and A56.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "The iPhone 17 led in the United States, United Kingdom, Germany and France in the second quarter of 2026.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "AnTuTu's first quarter 2026 report on Android outside China, which leans toward enthusiasts, has 4 GB or less at 7.6 percent, 6 GB 9.8, 8 GB 39.3, 12 GB 36.1 and 16 GB 6.8; storage 128 GB 26.1 and 256 GB 49.7.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "It is the upper bound; the Latin American best sellers ship with 4 GB and 64 or 128 GB.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Speed** (Geekbench 6, single and multi core, about): the Fold 7's Snapdragon 8 Elite 3196 and 10142; the Galaxy A16 5G's Exynos 1330 960 and 1826; the Galaxy A06's Helio G85 405 and 1349.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "So the A16 class is about a third of the Fold 7 on one core and a fifth on all of them, and the A06 class an eighth on one core.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Cameras.** Every phone above takes 12 MP or more with autofocus.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "A Letter sheet framed with margin spans about 13 inches of a 4000 pixel image, so 12 MP gives about 300 pixels an inch and 8 MP about 250, against the quality score's perfect 150 and useless 50.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Android 17** adds a limit on each application's memory scaled from the phone's own, counting native memory, where OpenCV's buffers live; its formula is not published, and an application over it is ended.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "### The budget, approved (entry 207) 1.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Android 10 or later**, section 6.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**4 GB of memory at least.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "Peak memory under about 400 MB, aimed at 300 MB**, on any image.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "Measured on the Fold 7 (section 5): 373 MB at an 8 MP working size with every hole found, 307 MB at 3.6 MP, and 274 MB of it the application at rest.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "So the engine works at 8 MP, decoding at that size rather than shrinking a full decode.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Speed** (judgment): detection within about 10 s on a Galaxy A16 class phone and about 30 s on an A06 class, with progress and a cancel; the capture screen's live checks at 10 frames a second or better on the A06 class.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "The Fold 7 takes 3.3 s at 8 MP; scaled by the Geekbench figures that is roughly 10 to 17 s on the A16 class and 25 s or more on the A06 class, which is only an estimate until it is run on a slower phone.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "**No Galaxy A16 will be bought**: Alan's older test phones become the low end reference devices when he sends their models (request 30), and until then the Android emulator with limited cores and memory stands in, as a rough guide only, since it runs on the desktop's processor.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**A rear camera of at least 8 MP with autofocus**, refused with the reason otherwise.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**The installed application under about 100 MB**; a warning when free space falls under about 500 MB.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**Screens down to 360 dp wide.** **GroupLab's own survey** (entries 207 and 208, `docs/SURVEY.md`) will replace these borrowed figures with what GroupLab actually runs on.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "**iPhone, recorded as a fact and not a plan** (entry 206 section 4).": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "iPhone is about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026).": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "If it were ever reconsidered: the floor would be an iPhone 11 on iOS 26 or later; Avalonia runs on iOS; the engine would need OpenCV built for iOS, which GitHub's macOS build machines could do without anyone owning a Mac; and distribution would need the paid Apple developer program.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists"
+  },
+  "# The hardware and benchmark survey NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
+  },
+  "Asking **One first run screen, three choices** (entry 208): sending targets, error reports, and the hardware survey with its benchmark, one after another on the window that asks today, each with its own plain description of what is sent and its own answer.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
+  },
+  "**Nothing is chosen for the person** on any of the three, the rule entry 203 section 3 set and `Entry203Tests` holds.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
+  },
+  "The desktop's reference today is `SpikeRun` in the Android spike: the sample at 600 dpi takes 7.9 s on Alan's desktop and 17 s on the Fold 7.": {
+   "kind": "measured",
+   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+  },
+  "Any group smaller than 10 reports is merged into \"other\", so no one machine can be picked out.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
+  },
+  "Use Once there are 200 reports from one platform, the minimums in `docs/PLATFORM-SUPPORT.md` are reviewed against it, and `docs/notes/STATE.md` says when that happened.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
   }
  },
  "rules": [

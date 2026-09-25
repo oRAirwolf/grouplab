@@ -8,6 +8,11 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 - `scripts/platform-support.py` writes it into `README.md` between its two markers, and checks that it is current.
 - `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.
 
+**iPhone, recorded as a fact and not a plan** (entry 206 section 4). iPhone is about 60 percent of phones in the United States and half in
+the United Kingdom (StatCounter, August 2026). If it were ever reconsidered: the floor would be an iPhone 11 on iOS 26 or later; Avalonia
+runs on iOS; the engine would need OpenCV built for iOS, which GitHub's macOS build machines could do without anyone owning a Mac; and
+distribution would need the paid Apple developer program. It is not planned; that is Alan's decision.
+
 ---
 
 **Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
@@ -15,6 +20,31 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 **Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
 
 **macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch, and the Terminal command below cleared it. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
+
+## Minimums
+
+The lowest each platform needs. The operating system floor is .NET 10's own support list, which nothing can go below; memory, disk and
+screen are GroupLab's measurements; nothing is listed for a platform that has no published build.
+
+| | Operating system | Built and published | Memory | Disk | Screen |
+|---|---|---|---|---|---|
+| **Windows** | Windows 10 version 1607 or later | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
+| **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
+| **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
+| **Android** | Android 10 or later, planned | not published yet | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
+
+Where the figures come from:
+
+- **Operating systems:** .NET 10's supported list (github.com/dotnet/core, `release-notes/10.0/supported-os.md`). For Android, .NET lists
+  Android 14 and later as what Microsoft tests; GroupLab's minimum of Android 10 rests on GroupLab's own testing instead, because Android
+  14 and later is only about half the phones in use.
+- **Memory:** analyzing the 600 dpi sample scan peaks at 733 MB on the desktop, measured on 2026-09-25; the application also holds the
+  image to show it. 4 GB leaves the operating system its share; 8 GB is recommended for large scans. On Android the engine works at 8
+  megapixels, where it peaks at about 370 MB on a Galaxy Z Fold 7.
+- **Disk:** the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred
+  sessions take about 22 MB.
+- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being
+  worked on.
 
 ## What happens once the application settles
 

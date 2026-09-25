@@ -24,6 +24,174 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 208: the survey's opt in goes on the same first run screen as sending targets and error reports
+
+**Status: recorded 2026-09-25 in `docs/SURVEY.md` section 1**, to be built with the survey: one first run window with three choices, none preselected, the benchmark offered under the survey choice, a Sharing section in Settings, and the window shown once more to people who answered before.
+
+Read with entry 207 section 3.1, which this replaces in one point. Alan, 2026-09-25: "The opt in for the hardware survey and benchmark
+testing should be displayed on the same window as the target share and error opt in."
+
+1. **One first run screen, three choices.** Sending targets, error reports, and the hardware survey with its benchmark are asked on the same
+   window, one after another, each with its own plain description of what is sent and its own answer. Not a second window, not a later
+   prompt. Each stays a separate choice: saying yes to one never turns on another.
+2. **Nothing preselected**, on any of the three (entry 203 section 3). If the window grows too long, it scrolls; it does not hide a choice
+   behind a "more" link, and a person can answer all three without leaving it.
+3. **The benchmark offer** belongs on the same window as the survey choice: for example a line under it saying the benchmark can be run now
+   or later from Settings. It does not start by itself.
+4. **Settings mirrors it:** the three live together in one section (for example "Sharing"), in the same order and words, so a person finds
+   and changes all three in one place. Where the Sending targets and error report settings sit today, move them there.
+5. **Existing users**, who already answered the targets and error questions: show them the window once more after the update with their
+   earlier answers kept and only the new survey question unanswered, rather than a separate survey popup.
+6. Entry 203's wrapping and no-clipping test covers this window, including all three choices at the narrowest size and at 200 percent.
+   On Android the same three choices appear together on one screen of the first run flow.
+
+---
+
+## 2026-09-25, entry 207: minimums approved; minimums for every platform; an opt-in hardware and benchmark survey everywhere
+
+**Status: actioned 2026-09-25, except what the entry leaves for later.** The minimums table is in PLATFORM-SUPPORT.md, so it reaches the README and the download page; the desktop memory figure is the analyzer's measured 733 MB peak, the disks are the unpacked downloads, and no platform without a build is listed. ANDROID.md says what .NET's "supported" means and why Android 10 stays. Request 30 asks for the older phones. `docs/SURVEY.md` is the design; the desktop part is built with the next desktop work, as section 3 says, and its server install becomes a request then.
+
+Read with entry 206, which this answers. Alan, 2026-09-25.
+
+## 1. Alan's decisions
+
+1. **The phone minimums in entry 206 section 2 are approved:** Android 10, 4 GB of memory, peak memory under about 400 MB aimed at 300,
+   detection about 10 s on a Galaxy A16 class phone and about 30 s on an A06 class phone with progress and cancel, camera at least 8 MP with
+   autofocus, installed app under about 100 MB.
+2. **No Galaxy A16 will be bought.** Alan has older test phones and will look out what they are. When he sends their models, they become the
+   low end reference devices in place of the A16 and A06 classes; until then use the emulator as entry 206 says. Add a request to for-alan.md
+   asking for each phone's model, Android version and whether it still charges and boots, so they can be paired the same way as the Fold 7.
+3. **An opt-in hardware and benchmark survey, on every platform and operating system GroupLab runs on:** Windows, macOS, Linux and Android,
+   and iOS if it ever exists. Section 3.
+4. **List minimums for every platform.** Section 2.
+
+## 2. Minimums for every platform
+
+Write one table, in `docs/PLATFORM-SUPPORT.md`, shown on grouplab.org's download page and in the README: the lowest operating system, CPU
+architecture, memory, free disk, screen and, for phones, camera, per platform. Each line names where it comes from: .NET's own support list,
+Avalonia's, OpenCV's, or GroupLab's measurements.
+
+What .NET 10 itself supports (github.com/dotnet/core, release-notes/10.0/supported-os.md), as the floor nothing can go below:
+
+- **Windows:** Windows 10 version 1607 and later; x64, Arm64 and x86.
+- **macOS:** 14 and later; Arm64 and x64.
+- **Linux:** Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 and later; glibc 2.27 for x64 and Arm64; musl 1.2.3.
+- **iOS:** 18 and later.
+- **Android: 14 and later.** This conflicts with the approved Android 10. It is what Microsoft tests and supports, not necessarily what
+  runs: the spike is built for API 24 and runs. Say plainly in `docs/ANDROID.md` what "supported" means there, test on the oldest phone Alan
+  finds, and if Android 10 to 13 work, keep Android 10 as GroupLab's minimum with a note that it rests on GroupLab's own testing rather
+  than Microsoft's. Android 14 or later alone would cover only about 55% of Android phones in use, which is why this matters.
+
+Then GroupLab's own figures, measured rather than guessed: the desktop peaks at about 730 MB on the 600 dpi sample, so say what the minimum
+and recommended memory are on the desktop (likely 4 GB minimum and 8 GB recommended; measure), the disk space the install and a typical
+library of sessions take, and the smallest window the layout supports. Which architectures are actually built and published today, and
+which are not (for example Windows Arm64 or Linux Arm64), goes in the same table; do not list a platform as supported that has no build.
+
+## 3. The opt-in hardware and benchmark survey
+
+1. **Consent.** Its own choice, separate from sending targets and from error reports, on the first run screen and in Settings: off until
+   the person turns it on, and never preselected, the same rule as entry 203 section 3. The wording says exactly what is sent.
+2. **What is sent, and nothing more:** operating system and version, CPU model, architecture and core count, total memory, GPU name if
+   relevant, screen size and scale, for phones the device model and rear camera resolution, GroupLab's version, and per analysis the image
+   size, the working resolution, the time of each stage and the peak memory. Never a name, account, file name, path, photograph, location, IP
+   address stored on the server, or a device serial or advertising identifier. A random installation id may be used to count devices once,
+   reset whenever the person asks.
+3. **A short benchmark.** A fixed built in test, the sample scan or a smaller synthetic sheet, runs when the person chooses it (a button in
+   Settings, and offered once after opting in), timed stage by stage. It gives every platform a comparable number, like the survey's
+   Steam counterpart, and it tells the person their own result.
+4. **Transport.** The same route as error reports and targets: posted to grouplab.org, checked against a schema, rate limited, stored on
+   the server. It does not go to the GitHub issues repository. Queued offline like the others.
+5. **Publication.** An aggregate page on grouplab.org, like Steam's hardware survey: shares of operating systems, versions, memory, CPU
+   classes and phone models, and benchmark times by class, with the date range and sample size, updated from the stored reports. Never an
+   individual record. Small groups are merged into "other" so no one device is identifiable.
+6. **Use.** Review the minimums in section 2 against it once there are enough reports, and say in STATE.md when that is.
+
+Design it now in a short document, `docs/SURVEY.md`, and build the desktop part with the next desktop work; the Android part comes with the
+real app. The server side is a receiver and a worker like the error reports, so Alan will get one install request for it; keep that to one
+sitting with the others if any are pending.
+
+Report in plain words for Alan: the minimums table, and what the survey will ask people.
+
+---
+
+## 2026-09-25, entry 206: the phones GroupLab must run on, and the budget that sets
+
+**Status: actioned 2026-09-25, with entries 207 and 208.** `docs/ANDROID.md` has "The phones it must run on" with the sources, and the budget as entry 207 approved it, with the Fold 7's measured working size beside it. iPhone is recorded in PLATFORM-SUPPORT.md above the rule, as a fact. **Not done**: the emulator stand-in for the slow phones is not run yet; the budget says what the Fold 7's time scales to, as an estimate.
+
+Alan asked for a study of the current phone market in the Americas and Europe, in the spirit of the Steam hardware survey, to decide how
+much CPU, memory, storage, camera and computation the application may use, and what the minimum is. The planning session researched it on
+2026-09-25. Put the findings in `docs/ANDROID.md` as a new section, "The phones it must run on", with the sources, and hold the design to
+the budget once Alan approves it (section 2). Where a figure is judgment rather than measurement, it says so.
+
+## 1. What the market looks like
+
+Android against iPhone (StatCounter, web traffic, August 2026): United States iOS 60.7%, Android 39.3%; North America 60.3 / 39.7; United
+Kingdom 51.4 / 48.6; Germany 27.6 / 72.4; Europe 37.3 / 62.7; South America 23.1 / 76.9.
+
+Android versions in use, cumulative (apilevels.com from StatCounter, April 2026): 16+ 22.3%, 15+ 41.0%, 14+ 54.5%, 13+ 68.9%, 12+ 78.8%,
+11+ 86.9%, 10+ 91.1%, 9+ 93.5%, 8+ 96.1%, 7+ 96.6%.
+
+iOS versions (TelemetryDeck, end of August 2026): iOS 26 86.6%, iOS 18 7.9%, iOS 27 3.3%. Oldest iPhone on iOS 27: iPhone 11 (2019, 4 GB).
+
+What sells: the iPhone 17 was the best selling phone in the US, UK, Germany and France in Q2 2026. Latin America's 2025 top ten was almost
+all budget Android under 200 dollars: Galaxy A06 first (7%), Moto G15, Redmi 14C, Moto G05, Redmi A5, Moto G35, Redmi Note 14 4G, Galaxy
+A16, A15 and A56.
+
+Memory and storage: no public survey gives installed RAM by region. AnTuTu's Q1 2026 report on Android outside China, which skews toward
+enthusiasts, shows 4 GB or less 7.6%, 6 GB 9.8%, 8 GB 39.3%, 12 GB 36.1%, 16 GB 6.8%; storage 128 GB 26.1%, 256 GB 49.7%. Treat it as the
+upper bound; the Latin American best sellers ship with 4 GB and 64 or 128 GB.
+
+Speed (Geekbench 6 single and multi core): Fold 7, Snapdragon 8 Elite, about 3196 and 10142; Galaxy A16 5G, Exynos 1330, about 960 and
+1826; Galaxy A06, Helio G85, about 405 and 1349.
+
+Cameras: every phone above has 12 MP output or more with autofocus. A Letter sheet framed with margin spans about 13 inches of a 4000 pixel
+image, so 12 MP gives roughly 300 pixels an inch and 8 MP about 250, against the quality score's perfect 150 and useless 50.
+
+Android 17 adds a per app memory limit scaled from device RAM, counting native memory (where OpenCV's buffers live), formula unpublished; an
+app over it is killed.
+
+## 2. The proposed budget and minimum (judgment, for Alan to approve)
+
+1. Minimum Android 10 (API 29), not 7: about 91% of Android devices; the phones dropped are 2019 or older with 2 to 3 GB, which could not
+   hold the engine anyway. Say if the OpenCV build or CameraX makes a different floor better.
+2. Minimum memory 4 GB. Peak memory under about 400 MB, aimed at 300 MB, on any image. Today's 716 MB is too much: measure how peak memory
+   scales with image size, then process at a capped working resolution (for example the camera's 12 MP, a scan brought to about 300 dpi),
+   after measuring the accuracy cost against full resolution on the same images.
+3. Reference phones: Galaxy A16 class as the normal low end, Galaxy A06 class as the floor. Detection within about 10 s on the A16 class and
+   30 s on the A06 class, with progress and cancel; live capture checks at 10 frames a second or better on the A06 class. Use the emulator
+   with limited cores and memory as a rough stand in and say how rough; buying a Galaxy A16 is Alan's decision.
+4. Camera at least 8 MP with autofocus, refused with the reason otherwise.
+5. Installed app under about 100 MB; warn when free space falls under about 500 MB.
+6. Screens down to 360 dp wide.
+
+## 3. GroupLab's own hardware survey
+
+Only with the consent sending targets and error reports already ask for: device model, Android version, RAM, cores, camera resolution,
+working resolution, detection time and peak memory, nothing that identifies the person. A Steam style page on grouplab.org can then show what
+GroupLab actually runs on. Design now, build with the real app. The Play Console device catalog adds the installed base later.
+
+## 4. iPhone, for the record
+
+Not planned; Alan's decision. iPhone is about 60% of US phones and half of UK phones. If ever reconsidered: floor iPhone 11 on iOS 26 or
+later; Avalonia runs on iOS; the engine would need OpenCV built for iOS; GitHub's macOS build machines can build it without anyone owning a
+Mac; distribution needs the paid Apple developer program. Record in `docs/PLATFORM-SUPPORT.md` as a fact, not a plan.
+
+## 5. Sources
+
+- https://www.digitalapplied.com/blog/mobile-os-market-share-2026-ios-vs-android
+- https://gs.statcounter.com/os-market-share/mobile/north-america
+- https://apilevels.com/
+- https://telemetrydeck.com/survey/apple/iOS/majorSystemVersions/
+- https://www.antutu.com/web/news/detail?id=136552
+- https://www.phonearena.com/news/best-selling-smartphones-usa-china-india-germany-uk-france-korea-japan-q2-2026_id182887
+- https://www.gsmarena.com/counterpoint_samsung_galaxy_a06_was_the_bestselling_phone_in_latam_for_2025-news-71620.php
+- https://nanoreview.net/en/phone-compare/samsung-galaxy-a16-5g-vs-samsung-galaxy-a06
+- https://www.cpu-monkey.com/en/compare_cpu-qualcomm_snapdragon_8_elite-vs-mediatek_helio_g85
+- https://stora.sh/blog/2026-04-25-android-17-memory-limits-guide
+- https://support.apple.com/guide/iphone/iphone-models-compatible-with-ios-27-iphe3fa5df43/ios
+
+---
+
 ## 2026-09-25, entry 209: do every test that needs the Fold 7 now, first, while it is waiting
 
 **Status: actioned 2026-09-25, everything adb could do.** The phone was connected. Entry 205's build was already on it with the orientation and lifecycle checked. Measured: the sample at five working sizes, time, peak memory and hole offsets; every rear camera's characteristics. Built: a Choose a folder button. Request 29 holds the three steps that need Alan's hands, at the top of for-alan.md with the line that the phone can be put away after them. The spike's minimum is now Android 10, per entry 207.

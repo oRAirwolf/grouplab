@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **29**, three minutes with the Fold 7, and then the phone is no longer needed. Then 9, 16, 20, 18,
-12, which is optional, and 21, which is optional.
+**Open: 8.** Most urgent: **29**, three minutes with the Fold 7, and then the phone is no longer needed. Then 30, 9, 16, 20,
+18, 12, which is optional, and 21, which is optional.
 
 **After request 29's three steps the phone is no longer needed; Wireless debugging can be turned off and the screen timeout put
 back.** Nothing else is running on it.
@@ -17,6 +17,21 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 30. Your older test phones: what they are
+
+**Opened 2026-09-25. Entry 207 section 1.2.** No Galaxy A16 is to be bought, so your older phones become the slow end GroupLab is held
+to: detection in about 10 seconds on the ordinary low end, 30 on the slowest.
+
+**For each phone, one line:** its model (Settings, About phone, Model name or Model number), its Android version (Settings, About phone,
+Software information), and whether it still charges and starts. Nothing needs connecting yet.
+
+**Why.** The oldest one decides whether Android 10 to 13 really work, since .NET itself only answers for 14 and later, and the slowest one
+is where the 30 second limit is checked. When they are chosen, each is paired the way the Fold 7 was.
+
+**A good answer.** For example: "Galaxy S9, Android 10, charges and boots; Moto G7, Android 11, battery dead."
 
 ---
 
