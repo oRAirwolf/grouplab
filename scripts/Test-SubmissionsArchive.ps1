@@ -28,7 +28,9 @@ $good = 0; $bad = @()
 try {
     $listed = Invoke-Native gh release list -R $ArchiveRepo --limit 1000 --json tagName
     if ($listed.ExitCode -ne 0) { throw "gh could not list the archive's releases: $($listed.Errors -join ' ')" }
-    $tags = @(($listed.Output -join "`n") | ConvertFrom-Json | ForEach-Object tagName | Where-Object { $_ -like 'archive-*' })
+    # Windows PowerShell 5.1 passes a JSON array down the pipeline as one object, so it is unrolled first (entry 222: this read 0 months).
+    $releases = ($listed.Output -join "`n") | ConvertFrom-Json
+    $tags = @(@($releases) | ForEach-Object { $_ } | ForEach-Object { $_.tagName } | Where-Object { $_ -like 'archive-*' })
     foreach ($tag in $tags) {
         $manifest = @(Get-ArchiveManifest -Tag $tag -Repo $ArchiveRepo)
         if (-not $manifest.Count) { $bad += "$tag : no manifest"; continue }
@@ -38,7 +40,7 @@ try {
             Invoke-Native gh release download $tag -R $ArchiveRepo -p "$($entry.name).zip" -D $dir | Out-Null
             $zip = Join-Path $dir "$($entry.name).zip"
             if (-not (Test-Path $zip)) { $bad += "$($entry.name) : could not be downloaded"; continue }
-            if ((Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() -ne "$($entry.sha256)".ToLower()) { $bad += "$($entry.name) : the zip does not match the manifest"; continue }
+            if ((Get-Sha256 $zip) -ne "$($entry.sha256)".ToLower()) { $bad += "$($entry.name) : the zip does not match the manifest"; continue }
             $unpacked = Join-Path $dir $entry.name
             Expand-Archive -Path $zip -DestinationPath $unpacked
             $r = Test-SubmissionFolder -Folder $unpacked

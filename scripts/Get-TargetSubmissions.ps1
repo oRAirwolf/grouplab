@@ -390,7 +390,7 @@ foreach ($dir in $toCheck) {
         $p = Join-Path $LocalRoot "$dir\report.zip"
         if (-not (Test-Path $p -PathType Leaf)) { $bad += "$dir/report.zip : missing"; continue }
         $checked++
-        $h = (Get-FileHash $p -Algorithm SHA256).Hash.ToLower()
+        $h = Get-Sha256 $p
         if ($h -ne "$($meta.sha256)".ToLower()) { $bad += "$dir/report.zip : sha256 differs" }
         continue
     }

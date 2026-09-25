@@ -1,8 +1,8 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **31**, the pull again, now fixed: five commands, with dry runs, and the server steps are not repeated. Then
-the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7 and a printed sheet. Then 9,
-16, 20, 18, 32, which is optional, and 21, which is optional.
+**Open: 9.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
+Cloud. Then the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7. Then 9, 16, 20,
+18, 32 and 21, optional.
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
 Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
@@ -19,6 +19,51 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 35. Backups and automation: the three things only you can do, one sitting, about fifteen minutes
+
+**Opened 2026-09-25. Entry 222.** Everything else in entry 222 is Code's: the nightly backup and its weekly restore test, the server
+archiving submissions by itself, and the cleanup with its safety net. These three need you. Nothing here is urgent enough to interrupt
+anything; the one that matters most is **3**, because today no copy of the server as a whole exists anywhere but on the server.
+
+**1. The backups repository.** In PowerShell on this machine:
+
+```powershell
+gh repo create oRAirwolf/grouplab-backups --private --description "GroupLab nightly backups. Private; never made public."
+```
+
+A good result: a line ending `grouplab-backups`. Code never creates repositories, so this one is yours.
+
+**2. The archive token**, so the server can put submissions in the private archive without this computer. On github.com: your picture,
+top right, then **Settings**, **Developer settings**, **Personal access tokens**, **Fine-grained tokens**, **Generate new token**.
+- Token name: `grouplab-archive-worker`. Expiration: 366 days.
+- Resource owner: `oRAirwolf`. Repository access: **Only select repositories**, and choose `grouplab-submissions-archive` only.
+- Permissions, Repository permissions: **Contents: Read and write**. Leave everything else as it is (Metadata read only is added by
+  itself).
+- **Generate token** and copy it. Then in the server's shell, where it will ask for the token and not show it:
+
+```bash
+sudo /usr/local/sbin/grouplab-set-archive-token
+```
+
+A good result: `the archive token is set`. Code installs that script before your sitting and says so in the panel; nobody but you ever
+sees the token.
+
+**3. A whole-server backup that lives off the server** (entry 222 section 6.2). The server's own HestiaCP backups are one copy a user,
+kept on the server itself, so a disk failure or a bad command takes them with everything else. Oracle Cloud can copy the whole boot
+volume every day, off the machine, inside the free tier. In the Oracle Cloud console:
+- **Storage**, **Block Storage**, **Backup Policies**, **Create Backup Policy** in the compartment the server is in. Name it
+  `grouplab-daily`. Add two schedules: **Incremental, Daily**, keep **2**; and **Full, Weekly**, keep **2**. That is four backups at most,
+  inside the free tier's five.
+- **Compute**, **Instances**, the server, **Boot volume**, then the boot volume's page, **Edit** (or **Assign backup policy**), choose
+  `grouplab-daily`, save.
+
+A good result: the boot volume's page shows the policy, and the next day **Boot Volume Backups** lists one. Until then Code's use of sudo
+on the server stays limited to GroupLab's own files and its installer.
+
+**Nothing else needs you.** The scheduled tasks on this computer run as you while you are logged on, so they need no password.
 
 ---
 
@@ -119,7 +164,9 @@ copied to now and then, or the folder added to whatever backup this machine alre
 
 ## 31. Take other people's photographs off the web server: the pull again, fixed (the server steps are done)
 
-**Opened 2026-09-25. Entries 215 to 218, rewritten by entry 220. The planning session checks these commands before you run them.**
+**Answered 2026-09-25: done by Code** (entry 222 section 2.4): 9 on grouplab.org and 18 on pissinhot.com archived, proven and removed
+from the server; `Test-SubmissionsArchive.ps1` restored and verified all 27 under Windows PowerShell 5.1 and PowerShell 7. Nothing is left for
+you here. **Opened 2026-09-25. Entries 215 to 218, rewritten by entry 220. The planning session checks these commands before you run them.**
 Your first run did the server side cleanly and pulled three submissions, then stopped at the archive with `gh.exe : release not
 found`. That was Windows PowerShell 5.1 treating gh's normal words on stderr as fatal. **Nothing was removed from the server**: removal
 comes after the archive in the script, and the first archive call stopped it. Every program the scripts run now goes through one helper

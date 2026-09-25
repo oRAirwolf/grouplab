@@ -83,7 +83,7 @@ function Add-ToArchive {
         $zip = Join-Path $work $asset
         if (-not $listed) {
             Compress-Archive -Path (Join-Path $Folder '*') -DestinationPath $zip -CompressionLevel Optimal
-            $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+            $hash = Get-Sha256 $zip
             $up = Invoke-Native gh release upload $tag $zip -R $Repo --clobber
             if ($up.ExitCode -ne 0) { Write-Warning "$name could not be uploaded: $($up.Errors -join ' ')"; return $false }
             $listed = [pscustomobject]@{ name = $name; bytes = (Get-Item $zip).Length; sha256 = $hash; consent = (Get-ConsentLevel -Folder $Folder) }
@@ -96,7 +96,7 @@ function Add-ToArchive {
         $down = Invoke-Native gh release download $tag -R $Repo -p $asset -D $back
         $got = Join-Path $back $asset
         if ($down.ExitCode -ne 0 -or -not (Test-Path $got)) { Write-Warning "$name could not be downloaded back"; return $false }
-        if ((Get-FileHash $got -Algorithm SHA256).Hash.ToLower() -ne "$($listed.sha256)".ToLower()) {
+        if ((Get-Sha256 $got) -ne "$($listed.sha256)".ToLower()) {
             Write-Warning "$name in the archive does not match its SHA-256"
             return $false
         }

@@ -37,3 +37,18 @@ function Invoke-Native {
         Errors   = @($all | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] } | ForEach-Object { "$_" })
     }
 }
+
+function Get-Sha256 {
+    <#
+    A file's SHA-256 in lower case hex, read with .NET. Entry 222: Get-FileHash honors -WhatIf in Windows PowerShell 5.1 and returns
+    nothing under a dry run, so a dry run of the pull could not check a single file.
+    #>
+    param([Parameter(Mandatory)] [string] $Path)
+    $stream = [IO.File]::OpenRead($Path)
+    try {
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try { return -join ($sha.ComputeHash($stream) | ForEach-Object { $_.ToString('x2') }) }
+        finally { $sha.Dispose() }
+    }
+    finally { $stream.Dispose() }
+}

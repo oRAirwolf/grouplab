@@ -11,9 +11,14 @@
     (tests/python/worker-tests.py). The worker and this were written apart and nothing held them together.
 #>
 
+. (Join-Path $PSScriptRoot 'NativeCommand.ps1')
+
 function Test-SubmissionFolder {
     param([Parameter(Mandatory = $true)] [string] $Folder)
 
+    # Entry 222: this only reads, so a dry run of the pull must not make it skip its reads; under -WhatIf, Windows PowerShell 5.1 skipped
+    # one and the check fell over on a null.
+    $WhatIfPreference = $false
     $result = [ordered]@{ Bad = @(); Checked = 0; OptOut = $false; NotScanned = 0 }
     $name = Split-Path $Folder -Leaf
     $metaPath = Join-Path $Folder 'meta.json'
@@ -51,7 +56,7 @@ function Test-SubmissionFolder {
         if (-not (Test-Path $p -PathType Leaf)) { $result.Bad += "$name/$stored : missing"; continue }
         if ([string]::IsNullOrWhiteSpace("$($f.sha256)")) { $result.Bad += "$name/$stored : meta.json has no sha256 for it"; continue }
 
-        $h = (Get-FileHash $p -Algorithm SHA256).Hash.ToLower()
+        $h = Get-Sha256 $p
         $result.Checked++
         if ($h -ne "$($f.sha256)".ToLower()) { $result.Bad += "$name/$stored : sha256 differs" }
     }
