@@ -30,6 +30,9 @@ namespace GroupLab.App.Tests
             // Entry 195: sending targets is switched on in limits.json. A test window does not ask its first run question or offer to send
             // a target unless the test says so; the tests of sending set ReceiverOpen themselves.
             GroupLab.App.MainWindow.ReceiverOpenByDefault = false;
+
+            // Entry 200: error reports are switched on too. A test window does not ask about them or send one unless the test says so.
+            GroupLab.App.MainWindow.ErrorsOpenByDefault = false;
             GroupLab.Core.Updates.TheOutsideWorld.Current = Outside;
 
             // Entry 123 section 2.6: an update downloads into a folder GroupLab owns, so a test run is pointed at one of its own rather than

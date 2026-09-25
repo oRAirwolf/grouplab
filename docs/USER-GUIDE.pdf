@@ -576,7 +576,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 32 0 R >> >> /Contents 25 0 R >>
 endobj
 25 0 obj
-<< /Length 1034 >>
+<< /Length 934 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -584,14 +584,13 @@ q
 BT /F1 71 Tf 1 0 0 -1 494 452 Tm (goes with them. It also lists what is sent, how many targets have gone from this computer and how to have) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 540 Tm (one removed, and anything waiting to be tried again.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 642 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 642 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds. Until sending is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 730 Tm (switched on, this section says only that.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 832 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 832 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 934 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 934 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
-q 3556 0 0 -2286 381 3279 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 3335 Tm (The settings) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 642 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 744 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 744 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 846 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 846 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
+q 3556 0 0 -2286 381 3191 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 3247 Tm (The settings) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 11 of 11) Tj ET
 Q
 endstream
@@ -5820,15 +5819,15 @@ xref
 0000036613 00000 n 
 0000042794 00000 n 
 0000042949 00000 n 
-0000044036 00000 n 
-0000301715 00000 n 
-0000497504 00000 n 
-0000769876 00000 n 
-0000838192 00000 n 
-0000957436 00000 n 
-0001055363 00000 n 
+0000043935 00000 n 
+0000301614 00000 n 
+0000497403 00000 n 
+0000769775 00000 n 
+0000838091 00000 n 
+0000957335 00000 n 
+0001055262 00000 n 
 trailer
 << /Size 33 /Root 1 0 R >>
 startxref
-1140389
+1140288
 %%EOF

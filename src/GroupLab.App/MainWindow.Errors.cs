@@ -25,7 +25,10 @@ public sealed partial class MainWindow
 
     private DispatcherTimer? errorSendSoon;
 
-    private bool errorsOpen = ReceiverTerms.Current.ErrorReportsOpen;
+    /// <summary>What a new window starts with in place of limits.json's switch; the test assembly sets it off, as it does for sending.</summary>
+    internal static bool? ErrorsOpenByDefault { get; set; }
+
+    private bool errorsOpen = ErrorsOpenByDefault ?? ReceiverTerms.Current.ErrorReportsOpen;
 
     /// <summary>Whether the error report receiver is open: the build's limits.json, which the tests can override. The banner and Settings follow it.</summary>
     internal bool ErrorsOpen

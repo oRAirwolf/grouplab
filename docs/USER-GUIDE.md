@@ -241,7 +241,7 @@ The gear opens the settings:
 - **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle.
 - **Theme:** dark, light, high contrast, or follow the system.
 - **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. It also lists what is sent, how many targets have gone from this computer and how to have one removed, and anything waiting to be tried again.
-- **Error reports:** send them automatically, ask each time, or never, and what a report holds. Until sending is switched on, this section says only that.
+- **Error reports:** send them automatically, ask each time, or never, and what a report holds.
 - **Log:** how much the diagnostic log records, and where it is.
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.
 
