@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 7.** Most urgent: **31**, one sitting that takes other people's photographs off the web server. Then 9, 16, 20, 18,
-32, which is optional, and 21, which is optional.
+**Open: 8.** Most urgent: **31**, one sitting that takes other people's photographs off the web server. Then **33**, ten
+minutes with the Fold 7 and a printed sheet for the camera. Then 9, 16, 20, 18, 32, which is optional, and 21, which is optional.
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
 Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
@@ -18,6 +18,48 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 33. The Fold 7's camera: ten minutes with a printed sheet
+
+**Opened 2026-09-25. Entry 219 item A2.** The capture screen is built: the camera's preview inside GroupLab, one instruction at a time
+(move back, move closer, less angle, hold steadier, more or less light, flatten the paper), the lens by zoom, tap to focus, and a shutter
+that fires by itself when everything holds. It needs a real camera and a real sheet to measure. Everything is logged to a file on the
+phone, so nothing needs watching.
+
+**You need:** the Fold 7 with Wireless debugging on, and a printed GroupLab 5x5 sheet on a table in ordinary room light.
+
+**1. In PowerShell on this machine**, with the address and port on the phone's Wireless debugging screen:
+
+```powershell
+$adb = 'C:\Dev\tools\android-sdk\platform-tools\adb.exe'
+& $adb connect <address:port shown on the Wireless debugging screen>
+$run = gh run list -R oRAirwolf/grouplab --workflow android --status success --limit 1 --json databaseId --jq '.[0].databaseId'
+gh run download $run -R oRAirwolf/grouplab -n grouplab-spike-apk -D "$env:TEMP\gl-spike"
+& $adb uninstall org.grouplab.app.spike
+& $adb install "$env:TEMP\gl-spike\grouplab-spike.apk"
+Remove-Item -Recurse -Force "$env:TEMP\gl-spike"
+```
+
+**2. On the phone**, unfolded: open **GroupLab spike**, press **Camera**, allow the camera when asked, and press **Camera** again.
+
+1. Hold the phone over the sheet so the whole sheet shows with a margin. Follow what the words at the top say. When they say **Hold it
+   there**, keep still: after a moment the shutter fires by itself and a line appears saying what the picture found.
+2. Press **3x** and do the same, then **0.6x**, then **1x**.
+3. Tap the sheet in the preview once (focus and exposure lock there), and press **Take**.
+4. Move the phone so the sheet runs off the edge, then very close, then at a steep angle, and see that the words change each time.
+5. Fold the phone, and do step 1 once on the cover screen.
+
+**3. In PowerShell again**, to hand me the log:
+
+```powershell
+& 'C:\Dev\tools\android-sdk\platform-tools\adb.exe' pull /sdcard/Android/data/org.grouplab.app.spike/files/spike-log.txt C:\Dev\grouplab-local\spike-log.txt
+```
+
+**A good answer.** "Done", and anything that looked wrong: an instruction that did not match what you were doing, a shutter that never
+fired or fired on a blurred sheet, or the preview misbehaving when folded. The log is read from `C:\Dev\grouplab-local\spike-log.txt`.
+The phone can then be put away again.
 
 ---
 

@@ -302,14 +302,10 @@ needs them.
 
 ## 10. Running the spike on the phone
 
-Once requests 25 and 26 are done, with the APK from the `android` workflow's artifact:
+The `android` workflow's artifact `grouplab-spike-apk` is a Release build signed with the build machine's debug key, so it installs
+and starts by itself; a Debug build expects Visual Studio's fast deployment and does not (entry 202). A copy built on this machine is
+signed with a different debug key, so switching between the two needs `adb uninstall org.grouplab.app.spike` first.
 
-```powershell
-C:\Dev\tools\android-sdk\platform-tools\adb.exe install -r grouplab-spike-debug.apk
-C:\Dev\tools\android-sdk\platform-tools\adb.exe logcat -c
-C:\Dev\tools\android-sdk\platform-tools\adb.exe logcat -s GroupLabSpike
-```
-
-Open GroupLab spike on the phone, fold and unfold it, turn it, and press Run detection. Each size the screen takes and each image's
-times appear on screen and in the log. A photograph is added with `adb push` into
-`/sdcard/Android/data/org.grouplab.app.spike/files/`.
+Every line the spike shows also goes to `spike-log.txt` in its own folder, `/sdcard/Android/data/org.grouplab.app.spike/files/`, so
+a sitting's measurements can be pulled over adb afterwards. **Camera** opens the capture screen of entry 219 item A2: the preview, the
+one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.

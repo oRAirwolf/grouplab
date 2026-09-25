@@ -49,7 +49,7 @@ Worked through without waiting for an entry; stopped only by a request to Alan, 
 alternating so desktop feedback never waits more than one Android item.
 
 - A1 the working resolution in Core: **done**, 8 MP, 1.2 to 7.9 thousandths mean shift; the desktop app's use of it waits.
-- **A2 the CameraX capture screen spike: next.**
+- **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting. **A3 next** while it waits.
 - A2 is on the Fold 7 in one announced sitting. A3 the real `org.grouplab.app` project, the first run
   window's three choices, Settings, the shared queues. A4 capture to result by touch, the plot, sessions. A5 sharing a session file.
   A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
@@ -61,8 +61,8 @@ alternating so desktop feedback never waits more than one Android item.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **7** (31 most urgent, other people's photographs off the server; then 9, 16, 20, 18,
-  32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
+Open requests in `docs/notes/for-alan.md`: **8** (31 most urgent, photographs off the server; 33, the Fold 7's camera; then 9, 16,
+  20, 18, 32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
 
 ## Open questions
 

@@ -66,21 +66,23 @@ jobs:
           path: android/GroupLab.Android.Spike/native
 
       - name: Build
-        run: dotnet build android/GroupLab.Android.Spike --configuration Debug -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64"
+        # Release, signed with the build machine's debug key: a Debug APK expects Visual Studio's fast deployment and does not start on
+        # its own (entry 202), and this one is what Alan installs by hand (entry 219 item A2).
+        run: dotnet build android/GroupLab.Android.Spike --configuration Release -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64"
 
       - name: What the APK carries
         run: |
-          apk=$(find android/GroupLab.Android.Spike/bin/Debug -name '*-Signed.apk' | head -1)
+          apk=$(find android/GroupLab.Android.Spike/bin/Release -name '*-Signed.apk' | head -1)
           test -n "$apk"
           ls -l "$apk"
           # Each one on its own: a grep for any of them passed on 3c3fa98 with the sheets in the wrong place.
           for item in lib/arm64-v8a/libOpenCvSharpExtern.so assets/targets/GL-CF25-LTR.gltd.json assets/images/gl-cf25-ltr-d-25-shots-600-dpi.png; do
             unzip -l "$apk" | grep -q " $item$" || { echo "the APK does not carry $item"; exit 1; }
           done
-          mkdir -p apk && cp "$apk" apk/grouplab-spike-debug.apk
+          mkdir -p apk && cp "$apk" apk/grouplab-spike.apk
 
       - uses: actions/upload-artifact@v6
         with:
-          name: grouplab-spike-debug-apk
-          path: apk/grouplab-spike-debug.apk
+          name: grouplab-spike-apk
+          path: apk/grouplab-spike.apk
           retention-days: 14

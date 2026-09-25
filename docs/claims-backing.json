@@ -1884,6 +1884,14 @@
   "`grouplab analyze --working-megapixels 8` does the same on the desktop.": {
    "kind": "measured",
    "where": "src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1"
+  },
+  "Running the spike on the phone The `android` workflow's artifact `grouplab-spike-apk` is a Release build signed with the build machine's debug key, so it installs and starts by itself; a Debug build expects Visual Studio's fast deployment and does not (entry 202).": {
+   "kind": "code",
+   "where": "android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs"
+  },
+  "**Camera** opens the capture screen of entry 219 item A2: the preview, the one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs"
   }
  },
  "rules": [

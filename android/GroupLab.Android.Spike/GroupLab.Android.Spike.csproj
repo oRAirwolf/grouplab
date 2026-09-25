@@ -28,6 +28,10 @@
     <PackageReference Include="Avalonia.Android" Version="12.1.2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
     <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+    <!-- Entry 219 item A2: the camera, through CameraX. -->
+    <PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.6.2" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.6.2" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.6.2" />
   </ItemGroup>
 
   <ItemGroup>

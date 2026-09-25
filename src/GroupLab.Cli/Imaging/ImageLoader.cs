@@ -176,7 +176,7 @@ public static class ImageLoader
     /// Everything the editor needs from one file, from one read and one decode, NOTES-FROM-PLANNING.md entry 130 section 6 item 1.
     /// <para>
     /// <b>Why the application was slower than the command line on the same scan.</b> Opening an image read the file three times and decoded
-    /// it three times: once grey through <see cref="Load"/>, once in colour through <see cref="LoadMaxChannel"/>, and once more in colour to
+    /// it three times: once grey through <see cref="Load(string)"/>, once in colour through <see cref="LoadMaxChannel(string)"/>, and once more in colour to
     /// make the picture on the screen. On a 600 dpi letter scan that is three decodes of a 34 megapixel image where the command line does
     /// one, and all of it on the thread that draws.
     /// </para>

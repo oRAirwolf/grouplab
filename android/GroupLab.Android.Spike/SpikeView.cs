@@ -37,16 +37,33 @@ public sealed class SpikeView : UserControl
     private readonly TextBlock _runs = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly Avalonia.Controls.Button _run = new() { Content = "Run detection", MinHeight = 48, MinWidth = 160 };
     private readonly Avalonia.Controls.Button _folder = new() { Content = "Choose a folder", MinHeight = 48, MinWidth = 160 };
+    private readonly Avalonia.Controls.Button _camera = new() { Content = "Camera", MinHeight = 48, MinWidth = 160 };
+    private static SpikeView? shown;
     private readonly Grid _layout = new();
     private string? _widthClass;
 
     public SpikeView()
     {
         _run.Click += async (_, _) => await RunAll();
+        shown = this;
+        _camera.Click += async (_, _) =>
+        {
+            // Entry 219 item A2: the capture screen. The camera permission is asked for once; the preview needs it.
+            if (!MainActivity.CameraAllowed())
+            {
+                Log("the camera needs permission: allow it, then press Camera again", _runs);
+                return;
+            }
+
+            var (targets, _) = await Task.Run(Prepare);
+            var owner = TopLevel.GetTopLevel(this);
+            var before = Content;
+            Content = new CaptureView(targets, () => Content = before);
+        };
         _folder.Click += (_, _) => MainActivity.Current?.StartActivityForResult(
             new global::Android.Content.Intent(global::Android.Content.Intent.ActionOpenDocumentTree), MainActivity.FolderRequest);
         var sizes = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { new TextBlock { Text = "Screen", FontSize = 20 }, _sizes } };
-        var runs = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { _run, _folder, _runs } };
+        var runs = new StackPanel { Spacing = 8, Margin = new Thickness(16), Children = { _run, _folder, _camera, _runs } };
         _layout.Children.Add(sizes);
         _layout.Children.Add(runs);
         Content = new ScrollViewer { Content = _layout };
@@ -190,9 +207,37 @@ public sealed class SpikeView : UserControl
         return (targets, images);
     }
 
+    /// <summary>A line for the log from anywhere in the spike, shown under the runs as well.</summary>
+    public static void Note(string line)
+    {
+        if (shown is { } view)
+        {
+            Log(line, view._runs);
+        }
+        else
+        {
+            global::Android.Util.Log.Info(LogTag, line);
+        }
+    }
+
     private static void Log(string line, TextBlock into)
     {
         global::Android.Util.Log.Info(LogTag, line);
+
+        // Entry 219 item A2: every line also goes to spike-log.txt in the application's own folder, so a sitting's measurements can be
+        // pulled over adb afterwards (adb pull /sdcard/Android/data/org.grouplab.app.spike/files/spike-log.txt) without anyone watching.
+        try
+        {
+            if (global::Android.App.Application.Context.GetExternalFilesDir(null)?.AbsolutePath is { } folder)
+            {
+                File.AppendAllText(Path.Combine(folder, "spike-log.txt"), $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {line}{Environment.NewLine}");
+            }
+        }
+        catch (IOException)
+        {
+            // The log on screen and in logcat still has it.
+        }
+
         Dispatcher.UIThread.Post(() => into.Text = string.IsNullOrEmpty(into.Text) ? line : into.Text + "\n" + line);
     }
 }

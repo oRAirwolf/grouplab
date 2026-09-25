@@ -59,6 +59,21 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 219, item A2: the capture screen spike, built; measured in request 33
+
+**In Core, tested on the desktop**: `CaptureGuidance.Judge` gives docs/MOBILE-CAPTURE.md's one instruction in item C3's order from the
+outline and the frame's quality, and `Ready` only when every condition holds (item C1); a condition holds at half its quality part,
+the angle within the limit. `CaptureGuidance.JudgeFrame` judges a whole frame the way the desktop judges a photograph: outline, the
+sheet's markers, angle and quality. `CaptureScreenTests` are the two tests the document named as still to write, and a whole frame:
+a Letter sheet on a dark board is ready, the same sheet edge to edge is told to move back. A render's pure white paper read as blown
+out, which it would be in a photograph too, so the test's paper is 225.
+
+**On the phone**: `CameraSession` binds CameraX (1.6.2 bindings) to the activity: a preview on the camera's surface hosted inside the
+Avalonia screen, a still at the largest size in maximum quality, and an analysis stream. The sheet is named from its codes on the
+stream, then each frame is judged; three ready frames in a row fire the shutter. The lens is chosen by zoom, 0.6x, 1x and 3x; a tap
+locks focus and exposure there. The still is analyzed at 8 MP. Every line goes to `spike-log.txt` on the phone. Built here; the
+`android` workflow now builds Release, so Alan can install its APK himself. **Not measured yet**: request 33, one sitting.
+
 ## Entry 219, item A1: the working resolution in Core
 
 **`WorkingSize`** (Core): 8 megapixels for the phone, always, from entry 209's Fold 7 measurements; 60 for the desktop, only for images
