@@ -128,7 +128,7 @@
     ],
     [
      "The key, top left",
-     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed. Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them."
+     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed. Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
     ],
     [
      "Zero correction",

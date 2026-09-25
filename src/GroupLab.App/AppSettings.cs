@@ -96,6 +96,11 @@ public sealed class AppSettingsStore(string path)
         ? new PlotMarks((bool?)o["cep50"] ?? true, (bool?)o["cep90"] ?? true, (bool?)o["cep95"] ?? false, (bool?)o["spread"] ?? true)
         : null) ?? PlotMarks.Default;
 
+    /// <summary>Entry 210 section 2.1: whether the composite plot shows the whole target rather than the group; the group until chosen.</summary>
+    public bool LoadPlotWholeTarget() => Read(file => (bool?)file["plotWholeTarget"]) ?? false;
+
+    public bool SavePlotWholeTarget(bool whole) => Save(file => file["plotWholeTarget"] = whole);
+
     public bool SavePlotMarks(PlotMarks shown) => Save(file => file["plotMarks"] = new JsonObject
     {
         ["cep50"] = shown.Cep50,

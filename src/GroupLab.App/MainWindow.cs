@@ -228,6 +228,11 @@ public sealed partial class MainWindow : Window
 
     private readonly CheckBox spreadBox = new() { Content = "Extreme spread", MinHeight = 44 };
 
+    /// <summary>Entry 210 section 2.1: the plot's framing, the group or the whole target, remembered.</summary>
+    private readonly RadioButton groupView = new() { Content = "Group", GroupName = "plotFraming", MinHeight = 44 };
+
+    private readonly RadioButton wholeView = new() { Content = "Whole target", GroupName = "plotFraming", MinHeight = 44 };
+
     /// <summary>Every "why" open or closed at once, for the renders of entry 109 section 4; null in use, when each keeps its own remembered state.</summary>
     private bool? whyOverride;
 
@@ -973,7 +978,15 @@ public sealed partial class MainWindow : Window
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
         BuildFigureExtras(shotsColumn, figures);
         outlinesBox.MinHeight = 44;
-        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { outlinesBox, cep50Box, cep90Box, cep95Box, spreadBox } };
+        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, spreadBox } };
+        bool wholeChosen = settingsStore.LoadPlotWholeTarget();
+        plot.WholeTarget = wholeChosen;
+        (groupView.IsChecked, wholeView.IsChecked) = (!wholeChosen, wholeChosen);
+        wholeView.IsCheckedChanged += (_, _) =>
+        {
+            plot.WholeTarget = wholeView.IsChecked == true;
+            settingsStore.SavePlotWholeTarget(plot.WholeTarget);
+        };
         outlinesBox.IsCheckedChanged += (_, _) =>
         {
             plot.ShowOutlines = outlinesBox.IsChecked == true;
@@ -3256,6 +3269,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The composite plot's four mark toggles, CEP 50, CEP 90, CEP 95 and the extreme spread, for the headless tests.</summary>
     internal IReadOnlyList<CheckBox> PlotToggles => [cep50Box, cep90Box, cep95Box, spreadBox];
+
+    /// <summary>The plot's two framings, Group and Whole target, for the headless tests.</summary>
+    internal (RadioButton Group, RadioButton Whole) PlotFraming => (groupView, wholeView);
 
     /// <summary>The amber banner naming decisions left unmade, or empty when there are none, for the headless tests.</summary>
     internal string UnsettledText => unsettledBanner.IsVisible ? unsettled.Text ?? "" : "";

@@ -1832,6 +1832,10 @@
   "Use Once there are 200 reports from one platform, the minimums in `docs/PLATFORM-SUPPORT.md` are reviewed against it, and `docs/notes/STATE.md` says when that happened.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md"
+  },
+  "Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs WholeTarget, ZoomAbout, ResetView and the pointer handlers; MainWindow.cs groupView and wholeView; tests/GroupLab.App.Tests/Entry210Tests.cs"
   }
  },
  "rules": [

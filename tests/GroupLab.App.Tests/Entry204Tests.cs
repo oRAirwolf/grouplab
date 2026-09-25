@@ -58,15 +58,20 @@ public class Entry204Tests
         string store = window.SettingsStore.Path;
         try
         {
-            foreach (var (theme, name) in new[] { (ThemeChoice.Light, "light"), (ThemeChoice.Dark, "dark") })
+            // Entry 210 adds the framing to the name: the group view and the whole target, each in both themes.
+            foreach (var (whole, framing) in new[] { (false, "group"), (true, "whole") })
             {
-                window.SetTheme(theme);
-                Dispatcher.UIThread.RunJobs();
-                var plot = window.Plot;
-                var size = new PixelSize((int)plot.Bounds.Width, (int)plot.Bounds.Height);
-                using var bitmap = new RenderTargetBitmap(size);
-                bitmap.Render(plot);
-                bitmap.Save(Path.Combine(Entry109Tests.Repository(), "docs", "figures", $"composite-plot-{which}-{name}.png"), new PngBitmapEncoderOptions());
+                window.Plot.WholeTarget = whole;
+                foreach (var (theme, name) in new[] { (ThemeChoice.Light, "light"), (ThemeChoice.Dark, "dark") })
+                {
+                    window.SetTheme(theme);
+                    Dispatcher.UIThread.RunJobs();
+                    var plot = window.Plot;
+                    var size = new PixelSize((int)plot.Bounds.Width, (int)plot.Bounds.Height);
+                    using var bitmap = new RenderTargetBitmap(size);
+                    bitmap.Render(plot);
+                    bitmap.Save(Path.Combine(Entry109Tests.Repository(), "docs", "figures", $"composite-plot-{which}-{framing}-{name}.png"), new PngBitmapEncoderOptions());
+                }
             }
         }
         finally
@@ -98,11 +103,12 @@ public class Entry204Tests
     {
         Assert.Equal(0.5, CompositePlot.OutlineOpacity);
         Assert.True(CompositePlot.CepStroke >= 1.5 * 1.5, "a CEP circle is not clearly wider than a shot outline");
-        Assert.True(CompositePlot.BullStroke > CompositePlot.CepStroke, "the rings are not the widest stroke");
+        Assert.True(CompositePlot.BullStroke > CompositePlot.CepStroke, "the rings' narrowest is not wider than a CEP circle");
         foreach (var variant in new[] { ThemeVariant.Light, ThemeVariant.Dark })
         {
             var inks = Tokens.Plot(variant);
-            Assert.True(Contrast(inks.Bull, inks.Paper) < 2, $"{variant}: the rings are not faint");
+            // Entry 210 made the rings a mid grey; they stay below every mark drawn over them.
+            Assert.True(Contrast(inks.Bull, inks.Paper) < 4, $"{variant}: the rings are as strong as a mark");
             foreach (var (name, ink) in new[] { ("green", inks.Group), ("blue", inks.Aim), ("red", inks.Accent) })
             {
                 Assert.True(Contrast(ink, inks.Paper) >= 4.5, $"{variant}: the {name} is {Contrast(ink, inks.Paper):0.0}:1 on the paper");

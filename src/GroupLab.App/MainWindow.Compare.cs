@@ -218,6 +218,7 @@ public sealed partial class MainWindow
                 Cep90Inches = group.Rayleigh.Cep(0.9).Value,
                 Cep95Inches = group.Rayleigh.Cep(0.95).Value,
                 Shown = settingsStore.LoadPlotMarks(),
+                WholeTarget = settingsStore.LoadPlotWholeTarget(),
                 Length = inches => units.Length(inches),
                 ShowKey = false,
             };
@@ -246,6 +247,18 @@ public sealed partial class MainWindow
 
         compareColumn.Children.Add(cards);
         compareColumn.Children.Add(Note(CompareKey(settingsStore.LoadPlotMarks())));
+
+        // Entry 210 section 2.4: the same framing choice as the analysis screen's plot, and the same remembered setting.
+        var whole = new CheckBox { Content = "Whole target", IsChecked = settingsStore.LoadPlotWholeTarget(), MinHeight = 44 };
+        whole.IsCheckedChanged += (_, _) =>
+        {
+            settingsStore.SavePlotWholeTarget(whole.IsChecked == true);
+            foreach (var small in compareColumn.GetLogicalDescendants().OfType<CompositePlot>())
+            {
+                small.WholeTarget = whole.IsChecked == true;
+            }
+        };
+        compareColumn.Children.Add(whole);
 
         // Entry 131 section 10: the figures with their intervals, drawn. This is the one picture that makes the project's whole argument
         // visible. Two loads reading 0.42 in and 0.51 in look like a winner and a loser in a table; drawn with their intervals, anybody can

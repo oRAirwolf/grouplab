@@ -66,6 +66,22 @@ internal sealed class CompositePlot : Control
     /// </summary>
     internal const double BullStroke = 4;
 
+    /// <summary>
+    /// Entry 210 section 1.1: the rings' width in page units, so it stays in proportion as the view zooms. 0.05 in is about 19 pixels on
+    /// the sample's group view, five times entry 204's 4; it is held between <see cref="BullStroke"/> and <see cref="BullStrokeMost"/>
+    /// pixels so a wide view keeps a visible ring and a deep zoom does not bury the shots under one.
+    /// </summary>
+    internal const double BullRingInches = 0.05;
+
+    internal const double BullStrokeMost = 40;
+
+    /// <summary>How much one notch of the wheel zooms, and the furthest in and out the view goes from its fitted framing.</summary>
+    private const double WheelStep = 1.15;
+
+    private const double ZoomLeast = 0.25;
+
+    private const double ZoomMost = 40;
+
     internal const double OutlineOpacity = 0.5;
 
     internal const double CepStroke = 2.5;
@@ -102,6 +118,53 @@ internal sealed class CompositePlot : Control
     /// <summary>Entry 204 section 1.4: which of the optional marks are drawn, from the toggles beside the plot; the key lists only these.</summary>
     public PlotMarks Shown { get; set; } = PlotMarks.Default;
 
+    /// <summary>
+    /// Entry 210 section 2.1: the whole target, every ring with the group inside it, rather than the group alone. Setting it returns the
+    /// view to its fitted framing.
+    /// </summary>
+    public bool WholeTarget
+    {
+        get => wholeTarget;
+        set
+        {
+            wholeTarget = value;
+            ResetView();
+        }
+    }
+
+    private bool wholeTarget;
+
+    /// <summary>Entry 210 section 2.2: the free zoom and pan on top of the fitted framing, a factor and a shift in pixels.</summary>
+    internal double Zoom { get; private set; } = 1;
+
+    private Vector pan;
+
+    private Point? dragFrom;
+
+    private double pinchStart = 1;
+
+    /// <summary>Back to the fitted framing, as a double click or tap does.</summary>
+    public void ResetView()
+    {
+        Zoom = 1;
+        pan = default;
+        InvalidateVisual();
+    }
+
+    /// <summary>Zooms by <paramref name="factor"/> about a point on the control, which stays where it is.</summary>
+    internal void ZoomAbout(Point at, double factor)
+    {
+        var area = new Rect(Bounds.Size);
+        var (_, before) = Frame(area);
+        double next = Math.Clamp(Zoom * factor, ZoomLeast, ZoomMost);
+        factor = next / Zoom;
+        var after = new Point(at.X - ((at.X - before.X) * factor), at.Y - ((at.Y - before.Y) * factor));
+        Zoom = next;
+        var (_, fitted) = Frame(area);
+        pan += after - fitted;
+        InvalidateVisual();
+    }
+
     /// <summary>The two shots that make the extreme spread, by id.</summary>
     public (int First, int Second)? SpreadPair { get; set; }
 
@@ -127,10 +190,58 @@ internal sealed class CompositePlot : Control
                 ShotsClicked?.Invoke(this, picked);
                 e.Handled = true;
             }
+            else if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
+            {
+                // Entry 210 section 2.2: a drag that starts on empty paper pans the view; one that starts on a shot picks it.
+                dragFrom = e.GetPosition(this);
+                e.Pointer.Capture(this);
+            }
+        };
+        PointerReleased += (_, e) =>
+        {
+            dragFrom = null;
+            e.Pointer.Capture(null);
+        };
+        PointerWheelChanged += (_, e) =>
+        {
+            ZoomAbout(e.GetPosition(this), Math.Pow(WheelStep, e.Delta.Y));
+            e.Handled = true;
+        };
+        DoubleTapped += (_, e) =>
+        {
+            ResetView();
+            e.Handled = true;
         };
 
+        // A touchpad's pinch on the desktop, and a pinch on a touch screen.
+        AddHandler(InputElement.PointerTouchPadGestureMagnifyEvent, (_, e) =>
+        {
+            ZoomAbout(e.GetPosition(this), 1 + e.Delta.X);
+            e.Handled = true;
+        });
+        GestureRecognizers.Add(new PinchGestureRecognizer());
+        AddHandler(InputElement.PinchEvent, (_, e) =>
+        {
+            ZoomAbout(e.ScaleOrigin, e.Scale / pinchStart);
+            pinchStart = e.Scale;
+            e.Handled = true;
+        });
+        AddHandler(InputElement.PinchEndedEvent, (_, _) => pinchStart = 1);
+
         // Entry 105 section 3: the tooltip names what is under the pointer, and goes when nothing is.
-        PointerMoved += (_, e) => ToolTip.SetTip(this, Describe(e.GetPosition(this)));
+        PointerMoved += (_, e) =>
+        {
+            if (dragFrom is { } from)
+            {
+                var now = e.GetPosition(this);
+                pan += now - from;
+                dragFrom = now;
+                InvalidateVisual();
+                return;
+            }
+
+            ToolTip.SetTip(this, Describe(e.GetPosition(this)));
+        };
         PointerExited += (_, _) => ToolTip.SetTip(this, null);
     }
 
@@ -222,7 +333,7 @@ internal sealed class CompositePlot : Control
         {
             // Entry 204 section 2, back to front: the rings, the shots, the CEP circles, the extreme spread, the centre lines, the selection.
             // The bull at true relative scale, centred on the aim point: each ring's edge a wide pale band, background to everything else.
-            var bullPen = new Pen(new SolidColorBrush(inks.Bull), BullStroke);
+            var bullPen = new Pen(new SolidColorBrush(inks.Bull), RingStroke(scale));
             foreach (var disc in Discs.Where(d => !d.Paper))
             {
                 context.DrawEllipse(null, bullPen, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
@@ -423,7 +534,16 @@ internal sealed class CompositePlot : Control
 
     private static string Capital(string text) => text.Length == 0 ? text : char.ToUpperInvariant(text[0]) + text[1..];
 
-    /// <summary>The scale in pixels per inch and where the aim point lands, framing the shots with a margin.</summary>
+    /// <summary>The rings' stroke at a scale in pixels per inch: <see cref="BullRingInches"/> on the page, within its pixel bounds.</summary>
+    internal static double RingStroke(double scale) => Math.Clamp(BullRingInches * scale, BullStroke, BullStrokeMost);
+
+    /// <summary>The rings' stroke as drawn now, for the tests.</summary>
+    internal double RingStrokeNow => RingStroke(Frame(new Rect(Bounds.Size)).Scale);
+
+    /// <summary>
+    /// The scale in pixels per inch and where the aim point lands: the shots framed with a margin, or with <see cref="WholeTarget"/> every
+    /// ring as well, then the free zoom and pan on top.
+    /// </summary>
     private (double Scale, Point Origin) Frame(Rect area)
     {
         double half = (CalibreInches ?? 0) / 2;
@@ -436,6 +556,12 @@ internal sealed class CompositePlot : Control
             maxY = Shots.Max(s => s.Offset.Y) + half;
         }
 
+        if (WholeTarget && Discs.Count > 0)
+        {
+            double r = (Discs.Max(d => d.DiameterInches) / 2) + (BullRingInches / 2);
+            (minX, maxX, minY, maxY) = (Math.Min(minX, -r), Math.Max(maxX, r), Math.Min(minY, -r), Math.Max(maxY, r));
+        }
+
         double width = Math.Max(maxX - minX, MinimumExtentInches) * (1 + (2 * FrameMargin));
         double height = Math.Max(maxY - minY, MinimumExtentInches) * (1 + (2 * FrameMargin));
         double scale = Math.Min(area.Width / width, area.Height / height);
@@ -445,7 +571,9 @@ internal sealed class CompositePlot : Control
         }
 
         var middle = new PointD((minX + maxX) / 2, (minY + maxY) / 2);
-        return (scale, new Point(area.Center.X - (middle.X * scale), area.Center.Y - (middle.Y * scale)));
+        var fitted = new Point(area.Center.X - (middle.X * scale), area.Center.Y - (middle.Y * scale));
+        var zoomed = new Point(area.Center.X + ((fitted.X - area.Center.X) * Zoom), area.Center.Y + ((fitted.Y - area.Center.Y) * Zoom));
+        return (scale * Zoom, zoomed + pan);
     }
 
     private static double Distance(Point a, Point b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));

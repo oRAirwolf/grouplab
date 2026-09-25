@@ -159,14 +159,15 @@ public static class Tokens
     /// the light one, white on black, not a dimmed copy. ThemeTests holds each ink to its ratio on the paper.
     /// </summary>
     /// <remarks>
-    /// Entry 204 adds three: the group's green, for its centre lines and CEP circles; the aim point's blue; and the bull's pale grey, low
-    /// contrast on purpose so the rings read as background. Green and blue clear 5:1 on both papers. Seen as deuteranopia sees them, the
+    /// Entry 204 adds three: the group's green, for its centre lines and CEP circles; the aim point's blue; and the bull's grey, which
+    /// entry 210 made a solid mid grey, drawn thick, so the rings are told from the thin half strength shot outlines by weight and tone and
+    /// still read as background. Green and blue clear 5:1 on both papers. Seen as deuteranopia sees them, the
     /// red and the green come close, and differ in shape: the extreme spread is a dashed line between two shots, the green marks are circles
     /// and lines across the whole plot. The blue stays apart from all of them.
     /// </remarks>
     public static PlotInks Plot(ThemeVariant? variant) => variant == ThemeVariant.Light
-        ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e), Hex(0x007a4d), Hex(0x0055d4), Hex(0xd4d4d4))
-        : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f), Hex(0x3ddc84), Hex(0x5aa9ff), Hex(0x3a3a3a));
+        ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e), Hex(0x007a4d), Hex(0x0055d4), Hex(0xa0a0a0))
+        : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f), Hex(0x3ddc84), Hex(0x5aa9ff), Hex(0x505050));
 
     public static Palette For(ThemeVariant? variant) =>
         variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
@@ -351,5 +352,5 @@ public static class Tokens
     private static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
 }
 
-/// <summary>The composite plot's inks, entry 169 section 3 and entry 204: <see cref="Bull"/> alone is meant to be faint.</summary>
+/// <summary>The composite plot's inks, entry 169 section 3 and entries 204 and 210: <see cref="Bull"/> alone is below the others' contrast.</summary>
 public sealed record PlotInks(Color Paper, Color Ink, Color Ring, Color Accent, Color Group, Color Aim, Color Bull);

@@ -3161,7 +3161,6 @@ The compare charts were already on the scale, so the work was the other way roun
 
 **Why a source test rather than a rendered one.** Two charts in different colours are not wrong on any one screen a test can assert about. They are wrong together, across screens a person visits minutes apart, and by then nothing fails. Somebody who has learnt that the teal bar is the interval on Compare loads should not have to learn it again on Session records, and the only place that decision is visible is the line that draws it.
 
-
 # Entry 141 section 5.3, item by item, against what was already built
 
 Before building anything for section 5.3 I read what the editor already does, because the section reads as a list of new work and most of it is not.
@@ -3291,7 +3290,6 @@ System.IO.IOException : The process cannot access the file
 A clean hosted runner, with no virus scanner of Alan's on it. **So it is GroupLab's problem after all**, and the same thing happens to a person who opens a scan the moment their scanner finished writing it, or whose targets live in a synchronised folder.
 
 `ImageLoader` now waits for a moment's lock: five tries, 120 ms apart, under a second in total, and almost always one attempt. A file still held after that is a real refusal and is reported as one. A moment's wait is the right answer to a moment's lock, and it is worth saying that I only believed that once a machine I do not own proved it.
-
 
 # Entry 131 section 1's checklist, done by looking, and what looking is worth
 
@@ -3605,7 +3603,6 @@ GroupLab detects **9** holes and assigns them to bulls 1, 2, 3, 4, 5, 7, 8, 9, 1
 
 **And a third, smaller.** "columns 7" on a sheet five bulls wide parsed perfectly and produced a rule naming no bulls, which makes the offset give up and the shots go to whichever bull they landed nearest: the exact behaviour the shooter was turning off, with nothing on screen saying so. It is refused now, like any other text that names nothing.
 
-
 # Entry 144: the site publishes itself, and the release notes keep up
 
 `docs/NOTES-FROM-PLANNING.md` entry 144, actioned 2026-09-23. It supersedes entry 128 section 6.
@@ -3665,7 +3662,6 @@ Named rather than implied, because a report that quietly omits its unproved part
 - **The failure path:** measured locally. Reported below.
 - **A nightly whose notes reach the live releases page with no human step:** cannot be shown until the next nightly runs.
 - **The sync log at a 5 minute cadence:** cannot be shown until Alan runs `install.py`. It is the one manual step section 3 names.
-
 
 # Entry 145: every build says what changed, in plain words
 
@@ -3760,7 +3756,6 @@ GroupLab 0.2.0-nightly.77
 | no line names a file, a hash or a class | this page is read by people who have never seen this repository |
 | the generator cannot write the old sentence | the way it returns is not somebody typing it, it is the generator falling back to it |
 
-
 # Entry 146: a tour of the application, one page per screen
 
 `docs/NOTES-FROM-PLANNING.md` entry 146, actioned 2026-09-23. Every screen, not the three the entry allows as a fallback.
@@ -3829,7 +3824,6 @@ That rule is not free. Writing these meant reading every screenshot rather than 
 
 The screenshot job replaces the picture on its own and nothing replaces the words. A tour page naming a button that is no longer there is worse than no tour page, because a reader takes it for the truth. So an entry that changes a screen now says in its report whether that screen's tour page still describes it. It is in `CLAUDE.md` rather than in a test, because no test can tell whether a sentence is still true.
 
-
 # Entry 143, question 44: leave one marker out, and the answer is not to write the spline
 
 `docs/NOTES-FROM-PLANNING.md` entry 143, question 44, measured 2026-09-23. "Measure first, build nothing."
@@ -3894,7 +3888,6 @@ That is question 44 answered, and the answer is to leave it. The 0.005 in is in 
 So the crash is not in the fit and not in `ToPage` over the page. It is `ToPage` at a point outside the page, where the Newton iteration in `SurfaceMapping.ToPage` is free to wander before it converges and `FoldedSheet.Sheet` is asked about a page point nothing bounded.
 
 Left there rather than fixed, as entry 143 allows: the model is not reachable from the application, `Auto` never selects it, and the measurement above says the model should not be extended anyway. `SurfaceCrashTests` records the photograph, the command and this narrowing, so the next person starts from here rather than from the stack trace.
-
 
 # Entry 129: the target upload page, the receivers, and what is waiting on the server
 

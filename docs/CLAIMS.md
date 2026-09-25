@@ -3790,7 +3790,7 @@ one that matters.
 
 - *code* (website/build.py: the link to /what-can-be-measured/): What GroupLab can measure .
 - *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed.
-- *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and GroupLab remembers them.
+- *code* (src/GroupLab.App/CompositePlot.cs WholeTarget, ZoomAbout, ResetView and the pointer handlers; MainWindow.cs groupView and wholeView; tests/GroupLab.App.Tests/Entry210Tests.cs): Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
 
 ### site:tour/ballistics/index.html

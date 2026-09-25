@@ -46,6 +46,8 @@ public class DiscordLinkTests
                 || rel.StartsWith("website/_site/", StringComparison.Ordinal)
                 || rel == "website/links.json" || rel.StartsWith("docs/notes/inbox/", StringComparison.Ordinal)
                 || rel == "docs/NOTES-FROM-PLANNING.md"
+                // The same log once an entry has moved to the archive (scripts/split-logs.py): the record of what was decided, not a link to follow.
+                || rel.StartsWith("docs/notes/archive/notes-", StringComparison.Ordinal)
                 // This file, which names the shape of an invite in order to check it and so matches itself.
                 || rel.EndsWith("DiscordLinkTests.cs", StringComparison.Ordinal)
                 || Path.GetExtension(file) is not (".md" or ".py" or ".cs" or ".json" or ".html" or ".yml" or ".ps1" or ".txt"))

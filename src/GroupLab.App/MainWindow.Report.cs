@@ -261,7 +261,7 @@ public sealed partial class MainWindow
     /// </summary>
     internal static string ReportPlotCaption(PlotMarks shown, bool spread)
     {
-        var parts = new List<string> { "Every scoring shot on one bull, each from its own bull's center; hollow shots are excluded, drawn and not counted.",
+        var parts = new List<string> { "Every scoring shot on one bull, each from its own bull's center, framed to show the whole target whatever the screen's framing; hollow shots are excluded, drawn and not counted.",
             "Green lines: the center of the counted shots. Blue lines: the aim point." };
         var circles = new[] { (shown.Cep50, "CEP 50 dotted"), (shown.Cep90, "CEP 90 solid"), (shown.Cep95, "CEP 95 dashed") }.Where(c => c.Item1).Select(c => c.Item2).ToList();
         parts.Add(circles.Count == 0 ? "No CEP circle is drawn, as on screen." : $"Green circles: {string.Join(", ", circles)}.");
