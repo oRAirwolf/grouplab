@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.106
+
+**2026-09-25**, commit `e7ef504`. Nightly.
+
+**What you will notice**
+
+- The composite plot's key now sits beside or below the plot instead of over the shots, and on a small plot it folds into a Key button.
+- The bull's rings on the composite plot sit further back, darker on the dark theme and lighter on the light one, so the shot outlines stand out in front of them.
+
+**Under the hood**
+
+- Nothing in the application changes; photographs sent to the project now leave the web server once they are safely copied, and the upload page says where they are kept and for how long.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.106)
+
+---
+
 ## 0.2.0-nightly.105
 
 **2026-09-25**, commit `1d92d96`. Nightly.
