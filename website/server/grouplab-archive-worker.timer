@@ -1,0 +1,11 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 222 section 2: every ten minutes, so a submission leaves the server within the hour of arriving.
+Description=Archive GroupLab submissions, every ten minutes
+
+[Timer]
+OnBootSec=4min
+OnUnitActiveSec=10min
+Unit=grouplab-archive-worker.service
+
+[Install]
+WantedBy=timers.target

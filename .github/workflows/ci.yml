@@ -199,6 +199,10 @@ jobs:
       - name: The backup's rules
         run: python3 tests/python/backup-tests.py
 
+      # Entry 222 section 2: the server's archive worker against a stand-in GitHub, so nothing leaves the runner.
+      - name: The archive worker, against a stand-in GitHub
+        run: python3 tests/python/archive-worker-tests.py
+
   # Entry 171 section 6: the release the large test files hang from, created once by the workflow that uses them rather than by the
   # nightly, so nothing that prunes or rewrites nightly releases can reach it. It is a pre-release that is never latest, so GitHub's
   # releases/latest and the update manifest never see it. Creating it is the whole job; files are attached to it by hand, each with its

@@ -1,0 +1,54 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 222 section 2. Puts each checked submission in the private archive, proves it is there, and only then
+# removes it from the server, so this computer is never needed for anything to leave the server.
+#
+# Not the intake worker on purpose: that one decodes strangers' photographs and has no network at all; this one needs api.github.com and
+# uploads.github.com, and reads nothing but folders the intake worker has already rebuilt and checked.
+Description=Archive GroupLab submissions and take them off the server
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/RESTORE.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-archive-worker.py
+User=airwolf
+Group=airwolf
+
+# The token, from a file only root can read, handed to this service and nothing else.
+LoadCredential=archive-token:/etc/grouplab/archive-token
+
+# Everything read only except the folders it works through, the error reports it may file, and its log.
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/ready
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/archive-worker
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/error-reports/incoming
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+# The network it needs, and no other kind of socket.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+MemoryMax=400M
+CPUQuota=50%
+RuntimeMaxSec=1800
+TasksMax=16
+
+[Install]
+WantedBy=multi-user.target

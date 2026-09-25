@@ -71,6 +71,16 @@ ERROR_TOKEN = Path("/etc/grouplab/error-token")
 
 # NOTES-FROM-PLANNING.md entries 207 and 208: the hardware survey's worker and its units. It has no network and no secret.
 # The receiver itself, website/api/survey.php, arrives with the site.
+# NOTES-FROM-PLANNING.md entry 222 section 2: the archive worker, its units, and the script its token is typed into.
+ARCHIVE_FILES = [
+    ("grouplab-archive-worker.py", Path("/usr/local/sbin/grouplab-archive-worker.py"), 0o755),
+    ("grouplab-set-archive-token", Path("/usr/local/sbin/grouplab-set-archive-token"), 0o750),
+    ("grouplab-archive-worker.service", Path("/etc/systemd/system/grouplab-archive-worker.service"), 0o644),
+    ("grouplab-archive-worker.timer", Path("/etc/systemd/system/grouplab-archive-worker.timer"), 0o644),
+]
+
+ARCHIVE_TOKEN = Path("/etc/grouplab/archive-token")
+
 SURVEY_FILES = [
     ("grouplab-survey-worker.py", Path("/usr/local/sbin/grouplab-survey-worker.py"), 0o755),
     ("grouplab-survey-worker.service", Path("/etc/systemd/system/grouplab-survey-worker.service"), 0o644),
@@ -441,6 +451,43 @@ def errors(dry_run: bool) -> int:
     return 0
 
 
+def archive(dry_run: bool) -> int:
+    """The archive worker, entry 222 section 2: its state folder, the worker and its units, and the token script. No nginx change.
+
+    Additive, like the others. The token is looked at only to see that it is there, by its size, never read or printed.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    say("the archive worker's state folder, outside public_html and never served")
+    make_folders([(SITE / "private", 0o750, "airwolf"), (SITE / "private" / "archive-worker", 0o750, "airwolf"),
+                  (SITE / "private" / "error-reports", 0o750, "airwolf"), (SITE / "private" / "error-reports" / "incoming", 0o750, "airwolf")],
+                 dry_run)
+
+    say("the worker, its token script and its systemd units")
+    for item in ARCHIVE_FILES:
+        if not put(*item, dry_run):
+            return 2
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    if run(["systemctl", "enable", "--now", "grouplab-archive-worker.timer"], dry_run) != 0:
+        return 1
+
+    if ARCHIVE_TOKEN.is_file() and ARCHIVE_TOKEN.stat().st_size > 0:
+        say("The archive token is already set. It was not read or printed.")
+    else:
+        say("")
+        say("One thing is left, and not this script's to do: the archive token, which nobody but you ever sees:")
+        say("     sudo /usr/local/sbin/grouplab-set-archive-token")
+        say("Until it is set, submissions wait in ready as they did before.")
+    say("")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def survey(dry_run: bool) -> int:
     """The hardware survey, entries 207 and 208: its folders, its worker and units, and the nginx include with its receiver's block.
 
@@ -492,6 +539,8 @@ def main() -> int:
                         help="install the target upload intake instead of the site sync (entry 129)")
     parser.add_argument("--errors", action="store_true",
                         help="install the error report worker instead of the site sync (entry 194)")
+    parser.add_argument("--archive", action="store_true",
+                        help="install the submissions archive worker instead of the site sync (entry 222)")
     parser.add_argument("--survey", action="store_true",
                         help="install the hardware survey worker instead of the site sync (entries 207 and 208)")
     args = parser.parse_args()
@@ -513,6 +562,9 @@ def main() -> int:
 
     if args.survey:
         return survey(args.dry_run)
+
+    if args.archive:
+        return archive(args.dry_run)
 
     say("folders")
     make_folders(FOLDERS, args.dry_run)
