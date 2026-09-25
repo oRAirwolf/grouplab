@@ -194,7 +194,10 @@ public class Entry204Tests
                     bitmap.CopyPixels(new PixelRect(x, y, 1, 1), buffer, 4, 4);
                     byte[] px = new byte[4];
                     Marshal.Copy(buffer, px, 0, 4);
-                    return Color.FromArgb(px[3], px[2], px[1], px[0]);
+                    // The bitmap's own byte order: BGRA on Windows and Linux, RGBA on macOS (CI on 9973ad5 read the blue as orange).
+                    return bitmap.Format == Avalonia.Platform.PixelFormat.Rgba8888
+                        ? Color.FromArgb(px[3], px[0], px[1], px[2])
+                        : Color.FromArgb(px[3], px[2], px[1], px[0]);
                 }
                 finally
                 {
