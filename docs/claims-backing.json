@@ -2150,6 +2150,11 @@
    "surface": "^docs/RESTORE\\.md$",
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6"
+  },
+  {
+   "surface": "^docs/RELEASE-PLAN\\.md$",
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25"
   }
  ]
 }

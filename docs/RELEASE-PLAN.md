@@ -1,0 +1,46 @@
+# The first beta or stable release: what must be true, and how Windows builds get signed
+
+NOTES-FROM-PLANNING.md entry 219 item D4. **A plan only.** No beta or stable release happens until Alan asks for one by name (entry 119
+section 8); `release.yml` makes it, from a tag, as a draft first.
+
+## What must be true first
+
+Each line is checked, and says where, before Alan is asked whether to release.
+
+1. **No open defect that loses work or gives a wrong figure.** The issues in `grouplab-crash-reports` are read at the start of every run;
+   none may be open from a build newer than the one before the release, and every reported crash from the last two nightlies is explained.
+2. **CI green on all three systems** on the commit to be released, and the phase 0 gate record passing.
+3. **The minimums table** in `docs/PLATFORM-SUPPORT.md` is the one the release notes and the download page state, generated from one place
+   (`scripts/platform-support.py`), and the hardware survey, once open, has not contradicted it.
+4. **The privacy text is true**: the article what-grouplab-sends lists everything the build can send, and the build sends nothing else
+   (`OneWayOutTests`).
+5. **The user guide describes this build**: every screen it names is on screen, the guide's PDF is regenerated, and the tour pages match the
+   week's screenshots (entry 146 section 4.4).
+6. **The release notes** are written for a person who shoots, from the builds' own notes since the last numbered release.
+7. **The Windows build is signed**, or the download page says plainly, as it does today, why it is not and what the warning means.
+8. **The installed update path works from the previous nightly**, checked on one clean machine (entries 119 to 123).
+
+## Signing Windows builds: the options, as of September 2026
+
+Unsigned, a download of GroupLab shows Microsoft Defender SmartScreen's warning until the build has built a reputation, and every new build
+starts again. The ways out:
+
+| Option | Cost | What it does for SmartScreen | What it asks of Alan |
+|---|---|---|---|
+| **Microsoft Store** | Free for individual developers | The Store signs what it distributes, so a Store install shows no warning | A Store account and an MSIX package; GroupLab would still need the direct download for Linux-style updates and for people who avoid the Store |
+| **Azure Artifact Signing** (formerly Trusted Signing) | $9.99 a month, about $120 a year, for 5,000 signatures | Signed by a Microsoft-issued certificate; reputation still builds with downloads, but it attaches to the publisher, not to each build | A paid Azure subscription and an identity check; open to individuals in the United States and Canada |
+| **An OV code signing certificate** | About $216 to $386 a year | Reputation builds with downloads, the same as the others | A one year certificate on a hardware token or cloud HSM, re-issued every year |
+| **An EV certificate** | More than OV | Since 2024 no longer skips the reputation period; the same as OV | As OV, with a stricter check |
+
+**Recommendation: Azure Artifact Signing for the direct download, and the Microsoft Store when the Store package is worth making.** It is
+the cheapest way to sign every nightly and release from CI with no key file to keep, it is Microsoft's own, and it costs about half an OV
+certificate. The Store is free and removes the warning for everyone who installs from it, but it needs an MSIX build and a listing, so it is
+the second step. An EV certificate buys nothing extra any more.
+
+This is put to Alan as request 37. Nothing is bought or set up until he answers.
+
+Sources: [Artifact Signing pricing](https://azure.microsoft.com/en-us/pricing/details/artifact-signing/),
+[Artifact Signing FAQ](https://learn.microsoft.com/en-us/azure/artifact-signing/faq),
+[free Store registration for individual developers](https://learn.microsoft.com/en-us/windows/apps/publish/whats-new-individual-developer),
+[SmartScreen reputation for Windows app developers](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation),
+[OV code signing prices](https://signmycode.com/ov-code-signing).

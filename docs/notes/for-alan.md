@@ -1,8 +1,9 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
-Cloud. **36**, the Android app's upload key and Play entry, can go in the same sitting. Then the end of **34** (the nginx reload and checks
-you already have), then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
+**Open: 11.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
+Cloud. **36**, the Android app's upload key and Play entry, can go in the same sitting. **37** is a choice about signing the Windows
+download, whenever suits. Then the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7.
+Then 9, 16, 20, 18, 32 and 21, optional.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -23,6 +24,18 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 37. Signing the Windows download: a choice, whenever suits you
+
+**Opened 2026-09-25. Entry 219 item D4.** Today a download of GroupLab shows Windows' SmartScreen warning. `docs/RELEASE-PLAN.md` sets out
+the options with their current costs. **The recommendation: Azure Artifact Signing, about $120 a year**, for the direct download, signed
+from CI with no key file for anyone to keep; and later the Microsoft Store, which is free for individual developers and removes the warning
+for Store installs, once an MSIX package is worth making. An EV certificate no longer skips the warning, so it is not worth its price.
+
+**A good answer** is one of: "Artifact Signing, go ahead" (then Code writes the exact setup steps, which need your Azure sign-in and an
+identity check); "the Store first"; "an OV certificate"; or "not yet". Nothing is bought or set up until you say.
 
 ---
 
@@ -53,8 +66,8 @@ gh secret set ANDROID_UPLOAD_KEY_PASSWORD -R oRAirwolf/grouplab
 
 (With keytool's defaults the two passwords are the same one.) A good result: three lines saying each secret was set.
 
-**3. The Play Console entry.** This needs a Google Play developer account; if you do not have one, say so and stop here, because making one
-costs a one-time fee and takes an identity check that only you can do. With one: **Create app**, name `GroupLab`, default language English
+**3. The Play Console entry.** Your Google Play developer account exists (the fee is paid, docs/PLATFORM-SUPPORT.md). In the Play Console:
+**Create app**, name `GroupLab`, default language English
 (United States), **App**, **Free**, accept the declarations. Then **Testing**, **Internal testing**, **Create new release**, and upload
 `grouplab-android.aab` from the newest nightly on github.com/oRAirwolf/grouplab/releases (the first nightly after step 2 carries it).
 Add yourself as a tester. When it asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-sends/`.
