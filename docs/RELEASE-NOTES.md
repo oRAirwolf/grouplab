@@ -452,7 +452,7 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 
 - Fixed an update that older builds refused as unsigned, which had left them unable to update themselves at all.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.43)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
