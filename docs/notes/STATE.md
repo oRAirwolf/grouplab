@@ -21,9 +21,10 @@ If something here disagrees with the logs, the logs are right and this file is o
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
 - **A sheet with one scoring bull takes a group** (entries 196 and 197): no count, no limit, nothing to review for it.
   The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
-- **Whether the roll sheets' codes read on Linux and macOS** is what CI on the entry 197 commit shows.
-- **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; the spike and the `android` workflow are
-  written and the phone run waits on requests 25 and 26. **A public Play listing waits on the attorney's review of the GPL app
+- **The roll sheets name themselves on every system** since 3c3fa98: they were the only sheets over the 8000 pixel working limit,
+  so their codes were read at half resolution; the corners are now cut from the full image.
+- **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; the spike APK and the native library build
+  in CI (5a1e769), and the phone run waits on requests 25 and 26. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
 - **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are built and switched off**:
   `errorReportsOpen` goes true once request 24's last step, one test report, makes an issue.
@@ -61,8 +62,10 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.101, published from 98da32d, carrying entries 187 to 194. Nightly 100 carried 187 and 189.
-- **The site serves `98da32d`**, current with main; the upload page is live at `grouplab.org/targets/`, `pissinhot.com/targets` redirects there, and the error report
+- **Last nightly:** 0.2.0-nightly.102, published from 5a1e769, carrying entries 195 to 199 and the roll sheets' codes. Nightly 101
+  carried 187 to 194.
+- **The site serves the commit after nightly 102**, published by hand because neither the nightly's notes commit nor
+  `docs/PLATFORM-SUPPORT.md` starts the site workflow; the upload page is live at `grouplab.org/targets/`, `pissinhot.com/targets` redirects there, and the error report
   and application receivers publish with it, both switched off in the application until requests 22 and 24.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 

@@ -1548,6 +1548,10 @@
   "Its first stage started on 2026-09-25; the plan and what it found are in docs/ANDROID.md .": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 198"
+  },
+  "**Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan.": {
+   "kind": "measured",
+   "where": ".github/workflows/android.yml run on 5a1e769, 2026-09-25: the native job's size and NEEDED list and 16 KB check, and the APK job's size and item check"
   }
  },
  "rules": [

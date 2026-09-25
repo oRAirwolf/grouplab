@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 945 |
-| measured | 1349 |
+| measured | 1350 |
 | decided | 1141 |
 | unbacked | 0 |
-| **total** | **3435** |
+| **total** | **3436** |
 
-**441** of them were read one sentence at a time and their backing written against the sentence. The other **2994** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**442** of them were read one sentence at a time and their backing written against the sentence. The other **2994** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -476,6 +476,7 @@ one that matters.
 ### docs/ANDROID.md
 
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): # GroupLab on Android NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25.
+- *measured* (.github/workflows/android.yml run on 5a1e769, 2026-09-25: the native job's size and NEEDED list and 16 KB check, and the APK job's size and item check): **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): **Nothing has run on a phone yet**: that waits on requests 25 (the Android workload and SDK on Alan's machine) and 26 (the Fold 7 paired for debugging) in `docs/notes/for-alan.md`.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): What Alan decided (entry 198 section 1) - **The first version analyzes on the phone, offline**: the capture screen of `docs/MOBILE-CAPTURE.md`, detection, review and correction, the group figures, and saved sessions, with the desktop's engine, not a second one.
 - *decided* (NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md): A newer personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the Discord server.
