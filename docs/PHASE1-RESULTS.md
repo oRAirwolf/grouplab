@@ -997,6 +997,27 @@ guides say Command on a Mac and how scrolling and pinching move the sheet, and b
 
 **Not done.** The claims register line waits on entry 159, which creates the register. The thanks waits on request 16: there is no list
 of testers to add him to, and no name is invented.
+## Entry 203: the consent choices wrap; the analysis screen at narrow windows
+
+**The fault.** A radio button given a plain string shows it on one line, so on nightly 102's first run screen both consent choices ran
+off the card mid sentence. Settings' own consent radios already wrapped; the first run card's, the question after Accept and analyze's,
+the Sending targets and Error reports choices, and three check boxes did not. Each now takes `MainWindow.Wrapped(words)`, a text block
+that wraps, and `MainWindow.WordsOf` reads a button's words either way, so `PressSend` and the Settings text lists read the text block.
+The consent wording is unchanged.
+
+**The test**, `Entry203Tests`, looks at every visible text block under the first run card, the question and Settings, including the
+ones a radio's template draws, and fails on a line wider than its space or a block past the edge of anything that clips it. It runs at
+1400, 960 and 683 units wide: Avalonia lays out in device independent units, so 150 and 200 percent display scale are a narrower window
+in them. With the old first run card it fails at 1400 on the testing only line. It passes now at every width for the first run card and
+Settings.
+
+**Found on the way: the analysis screen needs about 1060 units.** Its three columns are 300, at least 320 and 372 wide, fixed, and do
+not shrink, so at 960 (a 1920 pixel screen at 200 percent) the right column runs 97 past the window, sending question and figures with
+it. That is the look of the main screen, so it is question 58; the question's test runs at 1400 and 1060 until it is answered.
+
+**Nothing is chosen for the person**: neither consent level is selected on the first run card, the question, or in Settings while none
+has been chosen, and `NeitherConsentLevelIsChosenForThePerson` holds it. The selected level in Alan's screenshot was his own click.
+
 ## Entries 201 and 202: the Android SDK installed; detection runs on the Fold 7
 
 **Entry 201.** Request 25 done on the retry; the likelier cause of the first failure was running the SDK step before the workload install

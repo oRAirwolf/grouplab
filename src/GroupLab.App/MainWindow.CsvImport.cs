@@ -65,7 +65,7 @@ public sealed partial class MainWindow
         var across = new ComboBox { ItemsSource = columns, SelectedIndex = ShotCsv.Guess(table, across: true) ?? 0, MinWidth = 220 };
         var upDown = new ComboBox { ItemsSource = columns, SelectedIndex = ShotCsv.Guess(table, across: false) ?? Math.Min(1, columns.Count - 1), MinWidth = 220 };
         var unit = new ComboBox { ItemsSource = ImportUnits.Select(u => u.Name).ToList(), SelectedIndex = 0, MinWidth = 220 };
-        var upPositive = new CheckBox { Content = "A larger number is higher on the target", IsChecked = true };
+        var upPositive = new CheckBox { Content = Wrapped("A larger number is higher on the target"), IsChecked = true };
         var distance = new TextBox { Text = session.State.ShotDistanceInches is { } d ? (d / 36).ToString("0.#", CultureInfo.InvariantCulture) : "", PlaceholderText = "yards", Width = 100 };
         var problem = new TextBlock { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
         var dialog = new Window

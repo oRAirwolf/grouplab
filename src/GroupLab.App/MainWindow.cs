@@ -4672,7 +4672,7 @@ public sealed partial class MainWindow : Window
         }
 
         // Entry 189 section 3.4: the size on the paper first, for a shooter who only shoots one distance.
-        var paperFirst = new CheckBox { Content = "Show a group's size on the paper first, and its angle beneath, for shooting at one distance", IsChecked = sizeOnPaperFirst };
+        var paperFirst = new CheckBox { Content = Wrapped("Show a group's size on the paper first, and its angle beneath, for shooting at one distance"), IsChecked = sizeOnPaperFirst };
         paperFirst.IsCheckedChanged += (_, _) =>
         {
             sizeOnPaperFirst = paperFirst.IsChecked == true;
@@ -4761,7 +4761,7 @@ public sealed partial class MainWindow : Window
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));
-        var detailedLogging = new CheckBox { Content = "Detailed logging", IsChecked = DiagnosticLog.Current.Verbose || settings.LoadVerbose() };
+        var detailedLogging = new CheckBox { Content = Wrapped("Detailed logging"), IsChecked = DiagnosticLog.Current.Verbose || settings.LoadVerbose() };
         detailedLogging.IsCheckedChanged += (_, _) =>
         {
             DiagnosticLog.Current.Verbose = detailedLogging.IsChecked == true;

@@ -24,6 +24,38 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 203: the consent choices on the first run screen are cut off
+
+**Status: actioned 2026-09-25, every section.** Every radio and check box with words that can be long now shows them in a wrapping text block, and the readers read that. `Entry203Tests` fails on the old first run card at the default width. The question after Accept and analyze is checked only at widths the analysis screen fits, because below about 1060 units the whole right column runs past the window: question 58. No consent level is ever preselected, and a test holds it. The consent wording is unchanged.
+
+Alan opened nightly 102 and got the first run question "Send your targets to help improve GroupLab?". The two consent choices run off the
+right edge of the card and are cut mid sentence: "Testing only. I took these photos, or I have permission to share them. GroupLab may use
+them to test a" and "May be published. I took these photos, or I have permission to share them. GroupLab may use them to". Everything else
+on the card wraps. A person cannot read what they are agreeing to, which for a consent choice is the one text that must never be cut.
+
+## 1. The cause, as read from the code
+
+`MainWindow.Sending.cs` line 308 onward builds both radio buttons with `Content = "Testing only. " + terms.TestingText` and
+`"May be published. " + terms.PublishableText`: a plain string, which Avalonia shows on one line. The Settings section's radios (line 383)
+are built the same way and will have the same fault.
+
+## 2. What to do
+
+1. Give every radio button, check box and button whose text can be long a wrapping text block as its content (`TextWrapping.Wrap`), in the
+   first run screen, the question after Accept and analyze, the Sending targets and error report sections of Settings, and anywhere else
+   the same pattern appears. `PressSend` and any test that reads `Content as string` must read the text block instead.
+2. **A test that no text is cut, anywhere it matters.** Render the first run screen, the sending question and each Settings section at the
+   narrowest window the application allows and at 150 and 200 percent display scale, and fail if any text block, radio or check box is
+   wider than its container or ends in a clipped line. Consent text first; if a general check is practical, run it over every dialog.
+3. **Confirm nothing is chosen for the user.** The screenshot shows "May be published" selected, which may simply be Alan's click. Check
+   that neither level is ever preselected, on the first run screen, the question or in Settings, and that a test holds it. Consent is chosen,
+   never defaulted.
+4. Keep the full consent wording exactly as it is; this is layout only.
+
+Report in plain words for Alan: fixed in which build, and whether any other screen had text cut off.
+
+---
+
 ## 2026-09-25, entry 202: request 26 done, the Fold 7 is paired
 
 **Status: actioned 2026-09-25, except what needs hands.** Request 26 closed. The spike runs on the Fold 7's cover screen: detection 17.1 s and 714 MB on the sample scan, the photograph refused as on the desktop; `docs/ANDROID.md` section 5 has both beside the desktop's. Two defects found on the phone and fixed on the way: the ArUco and WeChat bindings had compiled to nothing, and the asset list took the system's own images. **Not done**: the inner screen, folding, turning and the font size, which are request 27. The phone's address is in no file.

@@ -107,8 +107,8 @@ public sealed partial class MainWindow
         if (level is null)
         {
             // Entry 165 section 2: the person picks a level when they say yes, and nothing is chosen for them.
-            var testing = new RadioButton { GroupName = "sendLevel", Content = "Testing only: used to improve detection and never published." };
-            var publishable = new RadioButton { GroupName = "sendLevel", Content = "May also be published in GroupLab's public test data and research." };
+            var testing = new RadioButton { GroupName = "sendLevel", Content = Wrapped("Testing only: used to improve detection and never published.") };
+            var publishable = new RadioButton { GroupName = "sendLevel", Content = Wrapped("May also be published in GroupLab's public test data and research.") };
             testing.IsCheckedChanged += (_, _) => Chosen(ConsentLevel.Testing, testing.IsChecked == true);
             publishable.IsCheckedChanged += (_, _) => Chosen(ConsentLevel.Publishable, publishable.IsChecked == true);
             body.Children.Add(testing);
@@ -305,8 +305,8 @@ public sealed partial class MainWindow
             card.Children.Add(Line("• " + line));
         }
 
-        var testing = new RadioButton { GroupName = "firstRunLevel", Content = "Testing only. " + terms.TestingText };
-        var publishable = new RadioButton { GroupName = "firstRunLevel", Content = "May be published. " + terms.PublishableText };
+        var testing = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped("Testing only. " + terms.TestingText) };
+        var publishable = new RadioButton { GroupName = "firstRunLevel", Content = Wrapped("May be published. " + terms.PublishableText) };
         foreach (var radio in new[] { testing, publishable })
         {
             radio.Classes.Add(AppStyles.Secondary);
@@ -365,7 +365,7 @@ public sealed partial class MainWindow
         var choices = new StackPanel { Spacing = Tokens.Space4 };
         foreach (var (value, words) in new[] { (SendingChoice.Always, "Send every target automatically"), (SendingChoice.Ask, "Ask me each time"), (SendingChoice.Never, "Never") })
         {
-            var radio = new RadioButton { GroupName = "sendingChoice", Content = words, IsChecked = choice == value };
+            var radio = new RadioButton { GroupName = "sendingChoice", Content = Wrapped(words), IsChecked = choice == value };
             radio.IsCheckedChanged += (_, _) =>
             {
                 if (radio.IsChecked == true && settingsStore.LoadSending().Choice != value)
@@ -439,7 +439,7 @@ public sealed partial class MainWindow
     internal void PressSend(string words)
     {
         Control root = firstRun.IsVisible ? firstRun : sendPanel;
-        foreach (var radio in root.GetLogicalDescendants().OfType<RadioButton>().Where(r => (r.Content as string)?.StartsWith(words, StringComparison.Ordinal) == true))
+        foreach (var radio in root.GetLogicalDescendants().OfType<RadioButton>().Where(r => WordsOf(r).StartsWith(words, StringComparison.Ordinal)))
         {
             radio.IsChecked = true;
             return;
@@ -451,8 +451,29 @@ public sealed partial class MainWindow
         button.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
     }
 
-    internal IEnumerable<string> SendingSettingsText => sendingSettings.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")
-        .Concat(sendingSettings.GetLogicalDescendants().OfType<RadioButton>().Select(r => r.Content as string ?? (r.Content as TextBlock)?.Text ?? ""));
+    // A radio's words are a text block in its content (entry 203), so the text blocks are every word the section shows.
+    internal IEnumerable<string> SendingSettingsText => sendingSettings.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>The first run card, the question after Accept and analyze, and Settings, for the tests that no text in them is cut.</summary>
+    internal Control FirstRunCard => firstRun;
+
+    internal Control SendPanel => sendPanel;
+
+    internal Control SettingsBody => settingsBody;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 203: a radio button or check box given a plain string shows it on one line, and on nightly 102 both
+    /// consent choices on the first run screen ran off the card mid sentence. Words that can be long go in a text block that wraps.
+    /// </summary>
+    internal static TextBlock Wrapped(string words) => new() { Text = words, TextWrapping = TextWrapping.Wrap };
+
+    /// <summary>The words a button, radio or check box shows, whether its content is a string or a wrapping text block.</summary>
+    internal static string WordsOf(ContentControl control) => control.Content switch
+    {
+        string words => words,
+        TextBlock block => block.Text ?? "",
+        _ => "",
+    };
 }
 
 /// <summary>What sending one package came to.</summary>

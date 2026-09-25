@@ -210,7 +210,7 @@ public class Entry189Tests
 
             window.ShowSettings();
             Settle();
-            window.GetLogicalDescendants().OfType<CheckBox>().Single(c => (c.Content as string)?.StartsWith("Show a group's size on the paper first", StringComparison.Ordinal) == true).IsChecked = true;
+            window.GetLogicalDescendants().OfType<CheckBox>().Single(c => MainWindow.WordsOf(c).StartsWith("Show a group's size on the paper first", StringComparison.Ordinal)).IsChecked = true;
             Settle();
             window.ShowSettings(false);
             Settle();

@@ -9,18 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 202.
+**Last rewritten:** 2026-09-25, after entry 203.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 202 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 203 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
 - **A sheet with one scoring bull takes a group** (entries 196 and 197): no count, no limit, nothing to review for it.
   The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
+- **Radios and check boxes with long words take `Wrapped(words)`** (entry 203): a plain string never wraps, and the consent
+  choices on nightly 102's first run screen were cut mid sentence. `Entry203Tests` checks for cut text.
 - **The roll sheets name themselves on every system** since 3c3fa98: they were the only sheets over the 8000 pixel working limit,
   so their codes were read at half resolution; the corners are now cut from the full image.
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
@@ -50,9 +52,10 @@ Open requests in `docs/notes/for-alan.md`: **7** (27 most urgent, folding and tu
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55; entry 195 answered 56.
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 and 55; entry 195 answered 56.
 
 
+- **58** the analysis screen needs about 1060 units wide; at 200 percent on a 1920 screen its right column is cut
 - **57** may a sheet of two to four marks flag one mark against the others
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -74,7 +77,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 203
+**Holds:** 204
 
 ## Things that would surprise somebody who was not here yesterday
 

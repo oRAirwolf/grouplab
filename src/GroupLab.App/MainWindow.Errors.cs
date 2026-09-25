@@ -164,7 +164,7 @@ public sealed partial class MainWindow
         var choices = new StackPanel { Spacing = Tokens.Space4 };
         foreach (var (value, words) in new[] { (ErrorReportChoice.Always, "Send them automatically"), (ErrorReportChoice.Ask, "Ask me each time"), (ErrorReportChoice.Never, "Never send them") })
         {
-            var radio = new RadioButton { GroupName = "errorChoice", Content = words, IsChecked = choice == value || (value == ErrorReportChoice.Ask && choice == ErrorReportChoice.Unset) };
+            var radio = new RadioButton { GroupName = "errorChoice", Content = Wrapped(words), IsChecked = choice == value || (value == ErrorReportChoice.Ask && choice == ErrorReportChoice.Unset) };
             radio.IsCheckedChanged += (_, _) =>
             {
                 if (radio.IsChecked == true && settingsStore.LoadErrorChoice() != value)
@@ -190,6 +190,5 @@ public sealed partial class MainWindow
     }
 
     /// <summary>The Error reports section's words, for the headless tests.</summary>
-    internal IEnumerable<string> ErrorSettingsText => errorSettings.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")
-        .Concat(errorSettings.GetLogicalDescendants().OfType<RadioButton>().Select(r => r.Content as string ?? ""));
+    internal IEnumerable<string> ErrorSettingsText => errorSettings.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 }

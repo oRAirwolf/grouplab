@@ -12,6 +12,23 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-25, question 58: the analysis screen needs about 1060 units of width, and a 1920 screen at 200 percent gives 960
+
+**Status: open. Nothing is changed; entry 203 fixed the consent text and found this.** CLAUDE.md: "Never: change the look without
+Alan." The analysis screen's grid has three columns beside the rail: 300 wide (at least 260), the image (at least 320), and 372 wide (at
+least 260), with two 6 wide splitters. The two outer columns are fixed widths, so they do not shrink toward their minimums as the window
+narrows: the columns need 1004 units, 1057 with the rail, and the window sets no minimum width.
+
+**What that does.** Measured in the headless tests at a window 960 wide, which is a 1920 pixel screen at 200 percent: the grid is 907
+wide and its right column starts at 632 and runs to 1004, so the last 97 units of it, where the sending question and the figures sit,
+are past the window's edge. At 683, a 1366 pixel laptop at 200 percent, it is worse. Settings and the first run screen fit at both.
+
+**The options.** A: the two outer columns shrink toward their minimums below the default size (the look at 1400 is unchanged; below
+about 1060 they narrow), and below 893 units (260 + 320 + 260 + 12 + the rail) the right column moves under the image. B: the window
+gets a minimum width of 1060 and a smaller screen scrolls. C: leave it.
+
+**What I would choose.** A, because B does not fit the screen that shows it, and a 200 percent laptop is ordinary.
+
 ## 2026-09-25, question 57: may a sheet of two to four marks flag one mark against the others?
 
 **Status: open. Nothing is changed; the behaviour below stands until it is answered.** Entry 161 section 3: "Too few marks to measure
