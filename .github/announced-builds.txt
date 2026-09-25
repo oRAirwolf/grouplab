@@ -10,3 +10,4 @@
 0.2.0-nightly.103
 0.2.0-nightly.104
 0.2.0-nightly.105
+0.2.0-nightly.106
