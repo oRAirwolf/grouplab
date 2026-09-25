@@ -38,6 +38,13 @@ public static class SheetOutline
     /// <summary>The share of the boundary that must lie on the four sides.</summary>
     public const double StraightShare = 0.85;
 
+    /// <summary>The reasons <see cref="Find"/> gives, named so the capture screen's guidance can tell them apart (entry 219 item A2).</summary>
+    public const string NoSheet = "no sheet stands out from what is behind it";
+
+    public const string OutOfFrame = "the sheet runs out of the frame, so it has no four corners to find";
+
+    public const string NotFourSides = "the paper's edge is not four straight sides; it may be curled, folded or partly hidden";
+
     public static SheetQuad? Find(GrayImage image, out string? reason)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -50,7 +57,7 @@ public static class SheetOutline
         // board, and that is tried in turn: three levels at most.
         var within = new bool[w * h];
         Array.Fill(within, true);
-        reason = "no sheet stands out from what is behind it";
+        reason = NoSheet;
         for (int level = 0; level < 3; level++)
         {
             var inside = small.Pixels.Where((_, i) => within[i]).ToArray();
@@ -113,7 +120,7 @@ public static class SheetOutline
 
         if (onFrame > 0.02 * boundary.Count)
         {
-            reason = "the sheet runs out of the frame, so it has no four corners to find";
+            reason = OutOfFrame;
             return null;
         }
 
@@ -132,7 +139,7 @@ public static class SheetOutline
                 .ToList();
             if (along.Count < 12)
             {
-                reason = "the paper's edge is not four straight sides; it may be curled, folded or partly hidden";
+                reason = NotFourSides;
                 return null;
             }
 
@@ -152,7 +159,7 @@ public static class SheetOutline
 
         if (straight < StraightShare * boundary.Count)
         {
-            reason = "the paper's edge is not four straight sides; it may be curled, folded or partly hidden";
+            reason = NotFourSides;
             return null;
         }
 
