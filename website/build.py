@@ -785,6 +785,13 @@ def limit_problems() -> list:
         if got is None or not got.startswith(expected):
             found.append(f"website/api/app-submission.php: {name} is {got!r} and limits.json says {expected!r}")
 
+    # Entries 207 and 208: the survey's receiver takes reports only while limits.json says the survey is open, so it cannot be answering
+    # before the worker that deletes what it stores is installed.
+    survey = need(REPO / "website" / "api" / "survey.php").read_text(encoding="utf-8")
+    want = "true" if limit["surveyOpen"] else "false"
+    if f"const OPEN = {want};" not in survey:
+        found.append(f"website/api/survey.php: OPEN is not {want}, and limits.json's surveyOpen is {limit['surveyOpen']}")
+
     # Entry 129, Alan's decision 6: no PDF. The refusal has to be in the receiver, not only on the page.
     if "'application/pdf'" in php.split("const ACCEPTED")[-1].split("];")[0]:
         found.append("website/api/upload.php: PDF is in ACCEPTED, and Alan's decision 6 refuses it")
@@ -1244,7 +1251,7 @@ def research_lead(meta: dict) -> str:
     **On the live site it was worse than that.** Every article with a chart was still a draft, so seventeen of the
     eighteen published articles had no lead at all. The entry's own fallback is what fits: where an article has no
     natural chart, a plain titled panel in the site's own style is better than a gap. The panel is built from the
-    article's own group and number, in the site's colours, at the same shape as a thumbnail, so it follows the
+    article's own group and number, in the site's colors, at the same shape as a thumbnail, so it follows the
     reader's theme for nothing and there is no image to go stale.
     """
     figure = research_figure(meta)

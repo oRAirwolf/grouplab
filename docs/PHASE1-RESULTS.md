@@ -88,7 +88,9 @@ day only, and limits an installation to three reports a day; `grouplab-survey-wo
 classes and deletes it, and writes the published totals with every group under ten merged into "other". Receiver tests in
 `tests/php/receiver-tests.php`, run by CI; `tests/python/survey-worker-tests.py`, ten checks. `install.py --survey`.
 
-**Switched off**: `surveyOpen` is false in limits.json until request 34 installs the worker. **The release notes** now take a heading
+**Switched off**: `surveyOpen` is false in limits.json until request 34 installs the worker. The receiver answered on the live site as
+soon as it was published, before any nginx change, so it now refuses everything while `surveyOpen` is false, and the site's build
+holds its `OPEN` to that; nothing is stored that no worker would delete. **The release notes** now take a heading
 written into a note off its start: nightly 107 carried "Under the hood: the rules ..." under Under the hood. The first try at nightly
 107, on 6c976e3, failed creating its release with a 403 from GitHub with nothing changed in the workflow or the repository's settings;
 the next, on 27bd109, published.

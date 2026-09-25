@@ -50,7 +50,8 @@ seed, analyzed as a photograph is, only the analysis timed. `SurveyReport.Keys` 
 
 The route error reports take: posted to grouplab.org, checked against a schema, rate limited, stored on the server, queued while offline.
 It never goes to the GitHub issues repository. **As built**: `website/api/survey.php` takes the named fields only, stores a salted
-hash of the installation number and the day, never the time or the address, and limits each installation to three reports a day;
+hash of the installation number and the day, never the time or the address, and limits each installation to three reports a day. It
+refuses everything while `surveyOpen` is false, which the site's build holds it to, because the server routes it already;
 `website/server/grouplab-survey-worker.py`, with no network, counts each report and deletes it, hourly. The application sends at most
 once a week, or sooner when a benchmark is waiting. `install.py --survey` installs the worker, in the same sitting as request 31.
 

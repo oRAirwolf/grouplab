@@ -31,6 +31,12 @@ const SALT_PATH    = SITE_PRIVATE . '/submissions_salt.txt';
 /** While this file exists every report is refused, and the application keeps its report to try again. */
 const CLOSED_PATH = SITE_PRIVATE . '/survey-closed';
 
+/**
+ * limits.json's surveyOpen, which the site's build holds this to. The server already routes this file to PHP, so until the worker that
+ * counts and deletes reports is installed, the receiver itself refuses everything: nothing is stored that nothing would delete.
+ */
+const OPEN = false;
+
 const SCHEMA           = 'grouplab-survey-1';
 const MAX_BYTES        = 64 * 1024;
 const RATE_PER_DAY     = 10;
@@ -258,7 +264,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     fail(405, 'This endpoint accepts POST only.', 'method');
 }
 
-if (is_file(CLOSED_PATH)) {
+if (!OPEN || is_file(CLOSED_PATH)) {
     fail(503, 'Survey reports are not being taken just now. Yours is kept and tried again later.', 'closed', true);
 }
 

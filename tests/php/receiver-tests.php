@@ -465,6 +465,13 @@ function survey_report(array $change = []): array
 }
 
 $surveyIncoming = $root . '/private/survey/incoming';
+
+$r = request($root, $surveySource, ['report' => json_encode(survey_report())], []);
+check('while limits.json says the survey is closed, the receiver refuses and stores nothing',
+    ($r['json']['code'] ?? '') === 'closed' && (glob($surveyIncoming . '/*.json') ?: []) === [], $r['raw']);
+
+// The rest as the receiver will behave once the survey is open.
+$surveySource = str_replace('const OPEN = false;', 'const OPEN = true;', $surveySource);
 $good = survey_report(['planted' => 'unknown field', 'machine' => survey_report()['machine'] + ['serial' => 'ABC123', 'user' => 'someone']]);
 $r = request($root, $surveySource, ['report' => json_encode($good)], []);
 check('a survey report is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);

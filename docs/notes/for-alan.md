@@ -26,8 +26,8 @@ At the start of a run, the count of open requests in this file is printed and no
 
 **Opened 2026-09-25. Entry 219 item D1, entries 207 and 208. The planning session checks these commands before you run them.** The
 survey is built in GroupLab and switched off: it is not asked and nothing is sent until this is installed and the next entry turns it
-on. It adds a receiver, which arrives with the site and answers nothing until nginx has its block, and a worker with no network that
-counts each report and deletes it within the hour.
+on. It adds a worker with no network that counts each report and deletes it within the hour. The receiver arrived with the site on
+2026-09-25 and refuses every report until the survey is turned on, so nothing is stored before this is installed.
 
 **1. In the server's shell**, after request 31, having copied these from the repository to `/home/ubuntu/grouplab-server/`:
 `website/server/install.py`, `website/server/nginx.ssl.conf_grouplab`, `website/server/grouplab-survey-worker.py`,
@@ -48,8 +48,8 @@ systemctl list-timers grouplab-survey-worker.timer --no-pager
 Run `nginx -t` and the reload only if the installer says the include changed; it prints them itself when it does.
 
 **A good result.** The installer ends `done`; `nginx -t` says the test is successful; the two sites answer `200`; the empty POST to
-the survey answers `400`, which is the receiver refusing an empty report, not `404`; and the timer is listed with a next run. Send those
-lines, and the survey is turned on in the next entry.
+the survey answers `503`, which is the receiver saying it is closed; and the timer is listed with a next run. Send those lines, and the
+survey is turned on in the next entry.
 
 ---
 
