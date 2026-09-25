@@ -59,6 +59,35 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 222: as much automation as possible, backups first
+
+**Section 6, first.** `docs/RESTORE.md` lists everything Code or the planning session can change, its backup, how often, where, and how to
+restore it, and CLAUDE.md now opens with the rule. **The gap it names**: the server as a whole has no copy off the machine. HestiaCP keeps one
+backup a user, on the server itself (`BACKUP_SYSTEM='local'`), made daily; the newest is 2026-09-25. Until Oracle's boot volume backups are
+on (request 35 step 3), Code's sudo is limited to GroupLab's own files and its installer, so it does not reload nginx, which pissinhot.com
+shares; request 34's reload stays Alan's. `ubuntu`'s sudo is already passwordless (`NOPASSWD: ALL`), so no sudoers line is needed.
+
+**Section 2.** `grouplab-archive-worker.py` archives each checked submission, proves it by download and SHA-256, rewrites the manifest and
+only then deletes the folder; installed by Code with `install.py --archive` and running every ten minutes, waiting for the token (request
+35 step 2). systemd would not start it without a credential file, so the installer leaves an empty root-only one. 14 checks against a
+stand-in GitHub, in CI. **The backlog**: Code ran the fixed pull under Windows PowerShell 5.1, and the 9 on grouplab.org and 18 in the old
+pissinhot.com folder are archived, proven and off the server; the archive check restored all 27 under both shells. Two more 5.1 faults
+were fixed on the way: `Get-FileHash` honored `-WhatIf`, and the check read a JSON array as one object and found no months.
+
+**Section 3.** `scripts/backup.py`, nightly at 03:30: the archive's submissions copied here and checked against the manifest, then git
+bundles of this repository and `grouplab-testdata`, `local.zip` of the local-only files, `grouplab-local` and `grouplab-originals`, and
+the crash reports, 433 MB tonight with a manifest of every file's SHA-256; kept 7 daily, 4 weekly and 6 monthly in `grouplab-backups`,
+or on this computer until that repository exists (request 35 step 1). The weekly restore test checks every file and clones the bundle;
+it passed today. A failure is sent as an error report. **Encryption** (section 3.6): not added. The repository is private, as the archive
+is; encrypting would put a passphrase in Alan's hands whose loss makes every backup useless, which is a worse failure than the one it
+guards against for this data. If ever wanted, a 7-Zip AES archive with the passphrase in his password manager, at no other cost.
+
+**Section 4.** `scripts/cleanup.py`, weekly: only what rebuilds itself is deleted directly (it cleared 5.3 GB of old numbered build
+folders today); anything else goes to `C:\Dev\grouplab-trash\<date>\`, emptied after fourteen days and never before a backup since.
+`scripts/server-week.py` reads the workers' week and the server's own backup, read-only, into the weekly line and STORAGE.md. The weekly
+line sits under the open count in for-alan.md, written by `scripts/automation-report.py`. Two scheduled tasks run all of it as Alan
+while he is logged on, with no password: registered, and the weekly one run once, result 0.
+
 ## Entry 220: request 31's pull stopped at the archive; fixed, and tested under both shells
 
 **Nothing was removed from the server.** In `Get-TargetSubmissions.ps1`'s last loop each folder is archived (`Add-ToArchive`) before

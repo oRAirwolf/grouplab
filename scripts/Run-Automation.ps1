@@ -32,6 +32,7 @@ try {
     } else {
         Step 'restore test' @('scripts\backup.py', '--restore-test')
         Step 'cleanup' @('scripts\cleanup.py')
+        Step 'the server''s week' @('scripts\server-week.py')
         Step 'weekly line' @('scripts\automation-report.py')
     }
 }

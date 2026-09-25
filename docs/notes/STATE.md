@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entries 220 and 221.
+**Last rewritten:** 2026-09-25, after entry 222.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 221 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 222 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -37,8 +37,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Next
 
-- **Entry 222** in the inbox: automation, backups first (its section 6 outranks the rest), the server archiving by itself, cleanup.
-- Request 31 rewritten for the rerun (entry 220): the pull is fixed and tested under both shells; the server steps are done.
+- **Backups and automation (entry 222)**: nightly backup and weekly check run as scheduled tasks here; the server archives submissions
+  by itself once request 35's token is set. `docs/RESTORE.md` is the inventory; the gap is the whole server, until request 35 step 3.
+- Then the roadmap: A6 signed Android builds (the nightly job is written and parked in the scratchpad, not committed), D2 question 51.
 
 ## The roadmap (entry 219), in place of the next three
 
@@ -90,7 +91,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** entry-222.md
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 

@@ -5,7 +5,7 @@ Cloud. Then the end of **34** (the nginx reload and checks you already have), th
 18, 32 and 21, optional.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB.
+**This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
 <!-- /automation-week -->
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the

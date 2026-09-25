@@ -24,6 +24,123 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 222: as much automation as possible: the server archives by itself, nightly backups to GitHub, cleanup with a safety net, and Code may use sudo
+
+**Status: done 2026-09-25, apart from what waits on request 35**, Alan's one sitting: the backups repository (so backups are kept on this computer until it exists), the archive token (so submissions wait in ready until it is set), and the Oracle boot volume backups (so sudo stays limited to GroupLab's own files and nginx is not reloaded by Code; request 34's reload stays Alan's). Section 1: ubuntu's sudo is already passwordless, so no sudoers line is needed. Everything else is built, run once, and in `docs/RESTORE.md`.
+
+
+Alan, 2026-09-25, in his words: "I want to do the busy work as little as possible and want you and code to do as much as possible without
+me. I do want to make sure that things like old files and unneeded files are deleted from my PC and server. I also want to make sure that
+we have a backup in place every so often so if there is a problem where you delete something you should not have ... we have a backup we
+can recover from. Basically, I want as much automation as possible."
+
+Do this after entry 220 (the pull fix). Parts of it replace parts of 215 to 218, as marked.
+
+## 1. Standing rules that change
+
+1. **Code may run sudo on the server**, over ssh as `ubuntu@ssh.pissinhot.com` with the key passed by path, exactly as the pull script
+   already does. Alan: "You can run sudo commands for all I care if there is a way to allow it." Find what `ubuntu`'s sudo allows without
+   a password today; if it is not enough for GroupLab's installs, write the one sudoers line needed as a request, limited to what GroupLab
+   needs if a limit is practical. From then on **Code runs the server installs, checks and reloads itself** instead of writing them as
+   requests. What stays exactly as it was:
+   - never read, copy, print or move the key file, and never open `C:\Dev\keys`;
+   - the server IP never appears in any file, commit, log or report;
+   - nothing belonging to pissinhot.com is touched, apart from the approved `/targets` redirect;
+   - the Turnstile secret and the GitHub tokens are typed by Alan into the set-secret scripts; Code never sees them;
+   - backups never go into a HestiaCP `conf/web/<domain>/` folder; `nginx -t` always passes before any reload, and both sites are checked
+     afterward;
+   - every server change is announced in `panel.md` with what was run and what it printed, and anything unexpected stops and is reported.
+2. **The planning session may run git commands** in the repository (entry 221's apology stands for the lock it left; Alan does not mind git
+   being used). Nothing to do.
+3. **Alan's busy work is the thing to minimise.** A request to Alan is for what only he can do: a secret, an identity check, a physical
+   device, a decision. Everything else Code does.
+
+## 2. The server archives submissions by itself (replaces the PC's part in entries 215 to 218)
+
+Alan: "I would rather the automation occur outside my desktop." So the archive step moves to the server:
+
+1. A new worker (or the intake worker's next stage), after a submission reaches `ready`, zips it exactly as the PC pull does today, uploads
+   it to the month's release in the private `grouplab-submissions-archive`, downloads it back and compares the SHA-256, updates the release's
+   `manifest.json`, and only then deletes the folder from the server. A failure leaves it in `ready` and is retried, and after a set number of
+   failures it is reported (an error report issue is a good channel, since that path already exists and reaches Code).
+2. It needs a fine-grained GitHub token limited to that one repository with **Contents: Read and write** (releases need it) and nothing
+   else, typed by Alan into a `grouplab-set-archive-token` script like the error worker's. That is his one step. Write the exact GitHub
+   clicks as entry 194 section 5 did.
+3. **The copy on the PC** comes from the archive instead of from the server: a scheduled task on the PC (or the start of each Code run)
+   downloads any archived submission not yet in `C:\Dev\grouplab-submissions` and verifies it against the manifest. So there are still two
+   copies, and the PC is never needed for anything to leave the server.
+4. The PC pull (`Get-TargetSubmissions.ps1`) stays as a manual fallback. Once the server worker has run cleanly, the backlog (the 9 on
+   grouplab.org and the 18 on pissinhot.com) is archived by it or by one run of the fixed pull; Code runs that itself now that it may.
+
+## 3. Nightly backups to a private GitHub repository
+
+Alan asked for the backup to go to another GitHub repository. Proposed `oRAirwolf/grouplab-backups`, private, which Alan creates (Code does
+not create repositories).
+
+1. **What is backed up, nightly:** the whole repository as a git bundle of every branch and tag (so history survives a bad force push or
+   a deleted branch), plus the files git does not hold that matter: `docs/notes/panel.md` and anything else local only in the repository,
+   `C:\Dev\grouplab-local`, `C:\Dev\grouplab-originals`, and the `.claude` settings in the repository. **Never** `C:\Dev\keys`, the SSH key,
+   any token or secret file, build outputs (`bin`, `obj`, `out`), or `%TEMP%`. `C:\Dev\grouplab-submissions` is covered by the archive and
+   the PC sync of section 2, so it is left out to avoid a third copy; say if you disagree. Nothing from `C:\Dev\grouplab-site`.
+2. **How:** one zip a night as a release asset, like the archive (release assets can be deleted one by one and are not metered; each under
+   2 GB, so split if ever needed), with a manifest of every file and its SHA-256. Keep 7 daily, 4 weekly and 6 monthly; older ones are
+   deleted by the same run and recorded in `STORAGE.md`, with a budget there.
+3. **Where it runs:** a Windows scheduled task on Alan's PC, since the files are here, set up by Code without Alan (a task that runs as
+   Alan when he is logged on is enough; say if it needs his password to run while logged off, and prefer the version that does not).
+4. **A restore test**, weekly: download the newest backup, check every file against its manifest, and restore the bundle into a temporary
+   clone and compare it with the remote. Report failures through the error report path so they reach Code.
+5. **A written restore procedure** in `docs/RESTORE.md`, short enough to follow in a panic.
+6. Encryption is not added for now: the repository is private, as the archive is. Say if you think it should be, and what it would cost
+   Alan to hold the key.
+
+## 4. Cleanup with a safety net, on the PC and the server
+
+1. **The PC.** A scheduled cleanup, weekly, that removes only what it knows is generated: build outputs (`bin`, `obj`, `out` older than the
+   newest), test leftovers in `%TEMP%` (as entry 179 does), downloaded APKs and spike builds, scratch folders from Code's own sessions, old
+   log files beyond a set age, and anything else Code itself created that has no further use. It never touches Alan's own files outside
+   those, `C:\Dev\grouplab-site`, `C:\Dev\keys`, `Downloads`, or the submissions and originals folders.
+2. **The safety net.** Anything the cleanup removes that is not plainly regenerable (build output and `%TEMP%` test files are) goes first
+   into `C:\Dev\grouplab-trash\<date>\` and is deleted from there after 14 days, and never before a successful nightly backup has run
+   since. Code uses the same rule for any deletion it makes by hand on the PC.
+3. **The server.** The retention rules of entry 215 section 3 and 216 section 1 stand; add the same log and a line in `STORAGE.md` of what the
+   workers deleted each week.
+4. A short weekly line in for-alan.md, not a request: what was backed up, cleaned and archived that week, and anything that failed.
+
+## 5. Alan's one sitting for all of this
+
+Gather every step only he can do into one request: create `grouplab-backups`; create the archive token and type it into the set-token
+script (Code runs everything else on the server now); approve whatever the scheduled tasks need, if anything. Write it once the parts it
+serves are built, and the planning session will walk him through it.
+
+## 6. The rule above all the others: nothing Code or the planning session can change goes without a backup
+
+Alan, the same evening: "The most important thing to me is that anything that you have access to delete or change, that there are backups
+in place to minimize the damage if something bad happens." So this section outranks every other part of this entry, and it is written into
+CLAUDE.md as a standing rule:
+
+1. **Inventory.** List in `docs/RESTORE.md` everything Code or the planning session can delete or change, and against each, its backup,
+   how often, where, and how to restore it. At least: the repository and its local only files; `C:\Dev\grouplab-local`,
+   `-originals` and `-submissions`; the GitHub repositories (`grouplab`, `grouplab-crash-reports`, `grouplab-submissions-archive`,
+   `grouplab-testdata`, `grouplab-backups`) including releases and issues; the server's GroupLab files (scripts, units, the nginx include,
+   `.user.ini`, the private folders) and, now that Code may use sudo there, **the server as a whole**, pissinhot.com included. Anything with no
+   backup is a gap, listed as such, and closed before Code acts on it.
+2. **The server as a whole.** The GroupLab parts can be rebuilt from the repository, but a mistake made with sudo could reach pissinhot.com.
+   Find what already protects it: HestiaCP's own scheduled user backups (where they are kept, how many, and whether any copy leaves the
+   machine) and Oracle Cloud's boot volume backups (a backup policy on the instance's boot volume; the free tier includes a number of volume
+   backups). Recommend the smallest arrangement that gives a whole-server restore point from the last day or two that lives off the machine,
+   and put the steps only Alan can do (for example turning on a boot volume backup policy in the Oracle Cloud console) into the one sitting
+   of section 5. Until a whole-server backup exists, Code's sudo is limited to GroupLab's own files and the installer, as today.
+3. **Before anything destructive**, Code checks that the newest backup covering it is less than a day old and passed its last restore test;
+   if not, it makes one first (a fresh backup run, or for a server file a dated copy outside the HestiaCP folders, as the installer does).
+4. **GitHub.** Issues in `grouplab-crash-reports` are exported to the nightly backup (their text and comments); the archive's release assets
+   are backed by the PC copy (section 2.3) and nothing is deleted from the archive unless the PC copy verifies (entry 217); the main repository's
+   history is in the nightly bundle; nothing is force pushed to `main` ever.
+5. **Proof, not assumption.** The weekly restore test of section 3.4 covers the server backup too, as far as it can be checked without
+   restoring a whole machine (the newest HestiaCP backup file exists, is recent and lists the expected contents; the newest boot volume backup
+   exists and is recent). The weekly line in for-alan.md says so in plain words.
+
+---
+
 ## 2026-09-25, entry 221: a stale git lock from the planning session, already moved aside
 
 **Status: done 2026-09-25**: the renamed lock file was empty and has been deleted.

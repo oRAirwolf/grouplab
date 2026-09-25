@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -182,6 +183,14 @@ def main() -> int:
     lines += ["", "**Over budget:** " + (", ".join(over) if over else "nothing."), ""]
     if freed:
         lines += ["## Freed on this run", "", *[f"- {line}" for line in freed], ""]
+    # Entry 222 section 4.3: what the server's workers deleted or archived in the week, from the weekly check's own record.
+    week = Path(os.environ.get("GROUPLAB_LOCAL", REPO.parent / "grouplab-local")) / "automation.json"
+    try:
+        server = json.loads(week.read_text(encoding="utf-8")).get("server") if week.is_file() else None
+    except (OSError, ValueError):
+        server = None
+    if server:
+        lines += ["## The server's week", "", f"As of {server['at'][:10]}: {server['words']}.", ""]
     notes.append(f"total {size(total)}")
 
     text = "\n".join(lines)
