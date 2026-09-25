@@ -1,8 +1,8 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
-Cloud. Then the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7. Then 9, 16, 20,
-18, 32 and 21, optional.
+**Open: 10.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
+Cloud. **36**, the Android app's upload key and Play entry, can go in the same sitting. Then the end of **34** (the nginx reload and checks
+you already have), then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -23,6 +23,43 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 36. The Android app's upload key and its Play Console entry: can go with 35, about twenty minutes
+
+**Opened 2026-09-25. Entry 219 item A6.** The Android app is built (capture, result, correcting by touch, sessions, sharing). To be installed
+by testers from Google Play's internal testing track it has to be signed with a key only you hold, and it needs an entry in the Play
+Console. Nothing here is urgent; it can wait for a sitting of its own. **Code never reads the key file or its passwords.**
+
+**1. The upload key.** In PowerShell on this machine. It asks for a password twice (use one you keep in your password manager), then for a
+name and the like; your first name and "GroupLab" are enough:
+
+```powershell
+& 'C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\bin\keytool.exe' -genkeypair -v -keystore C:\Dev\keys\grouplab-upload.jks -alias grouplab-upload -keyalg RSA -keysize 4096 -validity 10000
+```
+
+Keep a copy of `grouplab-upload.jks` and its password with your other keys. If it is ever lost, Google can replace an upload key, because
+Play keeps the key that actually signs the app (Play App Signing, which new apps use by default).
+
+**2. The key into the repository's secrets**, so the nightly can sign with it. Still in PowerShell; the second and third ask for the
+password and do not show it:
+
+```powershell
+gh secret set ANDROID_UPLOAD_KEYSTORE -R oRAirwolf/grouplab --body ([Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\Dev\keys\grouplab-upload.jks')))
+gh secret set ANDROID_UPLOAD_KEYSTORE_PASSWORD -R oRAirwolf/grouplab
+gh secret set ANDROID_UPLOAD_KEY_PASSWORD -R oRAirwolf/grouplab
+```
+
+(With keytool's defaults the two passwords are the same one.) A good result: three lines saying each secret was set.
+
+**3. The Play Console entry.** This needs a Google Play developer account; if you do not have one, say so and stop here, because making one
+costs a one-time fee and takes an identity check that only you can do. With one: **Create app**, name `GroupLab`, default language English
+(United States), **App**, **Free**, accept the declarations. Then **Testing**, **Internal testing**, **Create new release**, and upload
+`grouplab-android.aab` from the newest nightly on github.com/oRAirwolf/grouplab/releases (the first nightly after step 2 carries it).
+Add yourself as a tester. When it asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-sends/`.
+
+A good result: the internal testing release is available and the Play Store link on your phone installs GroupLab. Say how far you got.
 
 ---
 

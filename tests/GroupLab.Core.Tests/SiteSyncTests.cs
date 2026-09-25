@@ -449,6 +449,9 @@ with tempfile.TemporaryDirectory() as tmp:
             "target.parent.mkdir(parents=True, exist_ok=True)",
             "backup.parent.mkdir(parents=True, exist_ok=True)",
             "unpacked.mkdir()",
+
+            // Entry 222: the archive token's folder, made only past the installer's `if not dry_run:` so systemd can start the worker.
+            "ARCHIVE_TOKEN.parent.mkdir(parents=True, exist_ok=True)",
         ];
 
         return allowed.Contains(line, StringComparer.Ordinal);
