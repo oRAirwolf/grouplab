@@ -66,4 +66,22 @@ public class SubmissionScriptsTests
         Assert.DoesNotContain("git lfs", archiveScript, StringComparison.Ordinal);
         Assert.Contains("Test-SubmissionFolder -Folder $unpacked", Script("Test-SubmissionsArchive.ps1"), StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// Entry 220: under Windows PowerShell 5.1, a program's stderr is fatal while $ErrorActionPreference is Stop, and gh's "release not found"
+    /// stopped request 31's first pull. Every program these scripts run goes through the one helper that judges by the exit code alone;
+    /// tests/powershell/archive-tests.ps1 runs it under both shells.
+    /// </summary>
+    [Theory]
+    [InlineData("SubmissionArchive.ps1")]
+    [InlineData("Get-TargetSubmissions.ps1")]
+    [InlineData("Remove-ReadSubmissions.ps1")]
+    [InlineData("Test-SubmissionsArchive.ps1")]
+    public void EveryProgramTheScriptsRunGoesThroughTheOneHelper(string name)
+    {
+        string script = Script(name);
+        var raw = System.Text.RegularExpressions.Regex.Matches(script, @"(?m)^[^#\n]*&\s+(gh|ssh|scp|tar|cmd|python|git)\b");
+        Assert.True(raw.Count == 0, $"{name} runs a program directly: {string.Join(" | ", raw.Select(m => m.Value.Trim()))}");
+        Assert.Contains("NativeCommand.ps1", name == "Get-TargetSubmissions.ps1" || name == "Test-SubmissionsArchive.ps1" ? Script("SubmissionArchive.ps1") : script, StringComparison.Ordinal);
+    }
 }

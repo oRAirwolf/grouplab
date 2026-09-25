@@ -52,6 +52,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 . (Join-Path $PSScriptRoot 'SubmissionCheck.ps1')
+. (Join-Path $PSScriptRoot 'NativeCommand.ps1')
 
 # The two stores on the server. Nothing else is ever touched.
 $remoteRoot = if ($RemoteRoot) {
@@ -135,9 +136,9 @@ foreach ($entry in $entries) {
     if ($PSCmdlet.ShouldProcess($remote, "delete the $kind from the server")) {
         # One directory, named in full, with no wildcard and no recursion into anything else.
         $command = "sudo rm -rf -- '$remote'"
-        & ssh -i $KeyPath "$SshUser@$SshHost" $command
-        if ($LASTEXITCODE -ne 0) {
-            $skipped += "$id (the server refused, exit $LASTEXITCODE)"
+        $r = Invoke-Native ssh -i $KeyPath "$SshUser@$SshHost" $command
+        if ($r.ExitCode -ne 0) {
+            $skipped += "$id (the server refused, exit $($r.ExitCode))"
             continue
         }
         $removed += $id

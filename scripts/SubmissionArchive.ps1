@@ -15,11 +15,16 @@
 
 $script:ArchiveRepo = 'oRAirwolf/grouplab-submissions-archive'
 
+# Entry 220: every call to gh goes through Invoke-Native, so a line gh writes to stderr, such as "release not found" for a month with
+# no release yet, is never fatal under Windows PowerShell 5.1; the exit code alone decides.
+. (Join-Path $PSScriptRoot 'NativeCommand.ps1')
+
 function Test-ArchiveRepository {
     <# True when the archive exists and is private; otherwise the reason, as a string. #>
     param([string] $Repo = $script:ArchiveRepo)
-    $json = & gh repo view $Repo --json isPrivate 2>$null
-    if ($LASTEXITCODE -ne 0 -or -not $json) { return "the archive $Repo does not exist, or gh cannot see it" }
+    $r = Invoke-Native gh repo view $Repo --json isPrivate
+    $json = $r.Output -join "`n"
+    if ($r.ExitCode -ne 0 -or -not $json) { return "the archive $Repo does not exist, or gh cannot see it" }
     if (-not ($json | ConvertFrom-Json).isPrivate) { return "the archive $Repo is not private, so nothing is put in it" }
     return $true
 }
@@ -37,9 +42,9 @@ function Get-ArchiveManifest {
     $tmp = Join-Path ([IO.Path]::GetTempPath()) ("gl-manifest-" + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $tmp | Out-Null
     try {
-        & gh release download $Tag -R $Repo -p 'manifest.json' -D $tmp 2>$null | Out-Null
+        $r = Invoke-Native gh release download $Tag -R $Repo -p 'manifest.json' -D $tmp
         $file = Join-Path $tmp 'manifest.json'
-        if ($LASTEXITCODE -ne 0 -or -not (Test-Path $file)) { return @() }
+        if ($r.ExitCode -ne 0 -or -not (Test-Path $file)) { return @() }
         return @((Get-Content $file -Raw | ConvertFrom-Json).submissions)
     }
     finally { Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue }
@@ -68,10 +73,9 @@ function Add-ToArchive {
     $work = Join-Path ([IO.Path]::GetTempPath()) ("gl-archive-" + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $work | Out-Null
     try {
-        & gh release view $tag -R $Repo 2>$null | Out-Null
-        if ($LASTEXITCODE -ne 0) {
-            & gh release create $tag -R $Repo --title "Submissions, $($tag.Substring(8))" --notes "Private. One zip a submission, exactly as pulled, and manifest.json. Never published from here." 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0) { Write-Warning "could not create the release $tag"; return $false }
+        if ((Invoke-Native gh release view $tag -R $Repo).ExitCode -ne 0) {
+            $made = Invoke-Native gh release create $tag -R $Repo --title "Submissions, $($tag.Substring(8))" --notes "Private. One zip a submission, exactly as pulled, and manifest.json. Never published from here."
+            if ($made.ExitCode -ne 0) { Write-Warning "could not create the release $tag`: $($made.Errors -join ' ')"; return $false }
         }
 
         $manifest = @(Get-ArchiveManifest -Tag $tag -Repo $Repo)
@@ -80,8 +84,8 @@ function Add-ToArchive {
         if (-not $listed) {
             Compress-Archive -Path (Join-Path $Folder '*') -DestinationPath $zip -CompressionLevel Optimal
             $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
-            & gh release upload $tag $zip -R $Repo --clobber 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0) { Write-Warning "$name could not be uploaded"; return $false }
+            $up = Invoke-Native gh release upload $tag $zip -R $Repo --clobber
+            if ($up.ExitCode -ne 0) { Write-Warning "$name could not be uploaded: $($up.Errors -join ' ')"; return $false }
             $listed = [pscustomobject]@{ name = $name; bytes = (Get-Item $zip).Length; sha256 = $hash; consent = (Get-ConsentLevel -Folder $Folder) }
             $manifest = @($manifest | Where-Object { $_.name -ne $name }) + $listed
         }
@@ -89,9 +93,9 @@ function Add-ToArchive {
         # The proof: what GitHub holds, downloaded back, against the hash recorded for it.
         $back = Join-Path $work 'back'
         New-Item -ItemType Directory -Path $back | Out-Null
-        & gh release download $tag -R $Repo -p $asset -D $back 2>&1 | Out-Null
+        $down = Invoke-Native gh release download $tag -R $Repo -p $asset -D $back
         $got = Join-Path $back $asset
-        if ($LASTEXITCODE -ne 0 -or -not (Test-Path $got)) { Write-Warning "$name could not be downloaded back"; return $false }
+        if ($down.ExitCode -ne 0 -or -not (Test-Path $got)) { Write-Warning "$name could not be downloaded back"; return $false }
         if ((Get-FileHash $got -Algorithm SHA256).Hash.ToLower() -ne "$($listed.sha256)".ToLower()) {
             Write-Warning "$name in the archive does not match its SHA-256"
             return $false
@@ -105,8 +109,7 @@ function Add-ToArchive {
             written     = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
             submissions = @($manifest | Sort-Object name)
         } | ConvertTo-Json -Depth 5 | Set-Content -Path $manifestFile -Encoding utf8
-        & gh release upload $tag $manifestFile -R $Repo --clobber 2>&1 | Out-Null
-        if ($LASTEXITCODE -ne 0) { Write-Warning "the manifest of $tag could not be written"; return $false }
+        if ((Invoke-Native gh release upload $tag $manifestFile -R $Repo --clobber).ExitCode -ne 0) { Write-Warning "the manifest of $tag could not be written"; return $false }
         return $true
     }
     finally { Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue }

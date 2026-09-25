@@ -59,6 +59,32 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 220: request 31's pull stopped at the archive; fixed, and tested under both shells
+
+**Nothing was removed from the server.** In `Get-TargetSubmissions.ps1`'s last loop each folder is archived (`Add-ToArchive`) before
+`sudo rm` runs for it, and the very first `Add-ToArchive` threw, so the script ended before any removal. The 9 are on the server and here.
+
+**The cause** was Windows PowerShell 5.1 turning `gh release view`'s "release not found", on stderr for a month with no release yet, into a
+terminating error under `$ErrorActionPreference = 'Stop'`, `2>$null` notwithstanding. `scripts/NativeCommand.ps1`'s `Invoke-Native` now
+runs every program in `SubmissionArchive.ps1`, `Get-TargetSubmissions.ps1`, `Remove-ReadSubmissions.ps1` and `Test-SubmissionsArchive.ps1`
+(gh, ssh, cmd, tar and the ledger's python): stderr collected, never fatal, the exit code alone deciding. **Tested for the case itself**:
+`tests/powershell/archive-tests.ps1` runs the archive against a stand-in gh (`fake-gh.py`) that says "release not found" on stderr as the
+real one does; nine checks pass under Windows PowerShell 5.1.26100 and PowerShell 7.6 on this machine, the old script fails it with
+Alan's exact error, and CI now runs it under both shells on Windows. `SubmissionScriptsTests` fails if a raw program call comes back.
+
+**Dry runs**: with `-WhatIf` the ledger only prints (`storage-ledger.py --check`), and the pull says "would archive and then remove N".
+
+**Actions artifacts**: both figures were true. Entries 215 to 217 freed the ones older than three days; at about forty pushes a day, each
+leaving about 400 MB of Windows packages, three days of new ones came to 81.7 GB in 954. CI's package artifacts now keep a day (they were
+three), the ledger frees anything over a day old (it was three), and this run freed 44 GB; 38.1 GB remains, all under a day old.
+
+**The crash reports repository** has three issues. Number 1 is the closed test report. Numbers 2 and 3 arrived at 10:34 UTC from Alan's
+machine, from nightlies 35 and 31, about a week old: each closed at start because a file the installation should hold was missing, the
+Fluent theme library in one and SQLite's native library in the other. They read as damaged installs of those builds, sent now by the newer
+build's queue; current builds do not start that way, and nothing in the code is at fault. Left open, as entry 194 section 4 asks.
+
+**Entry 221**: the planning session's renamed lock file was empty and has been deleted.
+
 ## Entry 219, item A5: sharing a session file by hand
 
 `GroupLab.Core.Records.SessionPackage` writes and reads a `.grouplab` file: `session.json` (schema, revision, the writing device as

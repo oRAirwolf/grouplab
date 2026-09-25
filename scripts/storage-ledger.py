@@ -6,7 +6,7 @@
     python scripts/storage-ledger.py --free     first free what is over budget, where entry 217 section 3 allows it without asking
 
 **Freeing, so far only the first of entry 217 section 3's four kinds:** Actions artifacts over their budget, oldest first, only ones
-older than three days, until the budget is met. The other three, old builds, unreferenced test-data files and old archived submissions,
+older than a day (entry 220; it was three), until the budget is met. The other three, old builds, unreferenced test-data files and old archived submissions,
 are listed against their budgets here and are freed by hand until one comes near its budget; none is near today.
 
 It reads through the `gh` command line, as whoever is signed in to it, so run by Alan's pull or by the Claude Code session it can see the
@@ -53,8 +53,12 @@ def releases(repo: str) -> list[dict] | None:
 
 
 def free_artifacts(live: list[dict], allowed: float) -> tuple[list[dict], list[str]]:
-    """Actions artifacts over budget: the oldest first, only those older than three days, until what is left fits."""
-    cutoff = datetime.now(timezone.utc).timestamp() - (3 * 86400)
+    """Actions artifacts over budget: the oldest first, only those older than a day, until what is left fits.
+
+    Entry 220: a day, not three, because at about forty pushes a day each leaving 400 MB of Windows packages, three days of them was 80 GB.
+    A nightly downloads its packages within its own run, so nothing still needed is ever older than a day.
+    """
+    cutoff = datetime.now(timezone.utc).timestamp() - 86400
     total = sum(a["size_in_bytes"] for a in live)
     gone: dict[str, list[int]] = {}
     keep = []
@@ -69,7 +73,7 @@ def free_artifacts(live: list[dict], allowed: float) -> tuple[list[dict], list[s
                 g[1] += a["size_in_bytes"]
                 continue
         keep.append(a)
-    return keep, [f"Actions artifacts, {name}: {count} deleted, {size(n)}, older than three days" for name, (count, n) in sorted(gone.items(), key=lambda g: -g[1][1])]
+    return keep, [f"Actions artifacts, {name}: {count} deleted, {size(n)}, older than a day" for name, (count, n) in sorted(gone.items(), key=lambda g: -g[1][1])]
 
 
 def main() -> int:

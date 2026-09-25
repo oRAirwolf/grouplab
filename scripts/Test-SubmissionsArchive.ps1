@@ -26,14 +26,16 @@ $work = Join-Path ([IO.Path]::GetTempPath()) ("gl-restore-" + [guid]::NewGuid().
 New-Item -ItemType Directory -Path $work | Out-Null
 $good = 0; $bad = @()
 try {
-    $tags = @(& gh release list -R $ArchiveRepo --limit 1000 --json tagName | ConvertFrom-Json | ForEach-Object tagName | Where-Object { $_ -like 'archive-*' })
+    $listed = Invoke-Native gh release list -R $ArchiveRepo --limit 1000 --json tagName
+    if ($listed.ExitCode -ne 0) { throw "gh could not list the archive's releases: $($listed.Errors -join ' ')" }
+    $tags = @(($listed.Output -join "`n") | ConvertFrom-Json | ForEach-Object tagName | Where-Object { $_ -like 'archive-*' })
     foreach ($tag in $tags) {
         $manifest = @(Get-ArchiveManifest -Tag $tag -Repo $ArchiveRepo)
         if (-not $manifest.Count) { $bad += "$tag : no manifest"; continue }
         foreach ($entry in $manifest) {
             $dir = Join-Path $work $tag
             New-Item -ItemType Directory -Force -Path $dir | Out-Null
-            & gh release download $tag -R $ArchiveRepo -p "$($entry.name).zip" -D $dir 2>&1 | Out-Null
+            Invoke-Native gh release download $tag -R $ArchiveRepo -p "$($entry.name).zip" -D $dir | Out-Null
             $zip = Join-Path $dir "$($entry.name).zip"
             if (-not (Test-Path $zip)) { $bad += "$($entry.name) : could not be downloaded"; continue }
             if ((Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() -ne "$($entry.sha256)".ToLower()) { $bad += "$($entry.name) : the zip does not match the manifest"; continue }

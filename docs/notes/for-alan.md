@@ -1,7 +1,7 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **31**, one sitting that takes other people's photographs off the web server, with **34**, the
-survey's server side, in the same sitting. Then **33**, ten minutes with the Fold 7 and a printed sheet for the camera. Then 9,
+**Open: 9.** Most urgent: **31**, the pull again, now fixed: five commands, with dry runs, and the server steps are not repeated. Then
+the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7 and a printed sheet. Then 9,
 16, 20, 18, 32, which is optional, and 21, which is optional.
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
@@ -25,6 +25,8 @@ At the start of a run, the count of open requests in this file is printed and no
 ## 34. The hardware survey's server side: in the same sitting as 31, five more minutes
 
 **Opened 2026-09-25. Entry 219 item D1, entries 207 and 208. The planning session checks these commands before you run them.** The
+**Partly done 2026-09-25** (entry 220): `install.py --survey` ended `done` and `nginx -t` passed. Only the reload and the checks below
+are left, which you already have.
 survey is built in GroupLab and switched off: it is not asked and nothing is sent until this is installed and the next entry turns it
 on. It adds a worker with no network that counts each report and deletes it within the hour. The receiver arrived with the site on
 2026-09-25 and refuses every report until the survey is turned on, so nothing is stored before this is installed.
@@ -115,28 +117,19 @@ copied to now and then, or the folder added to whatever backup this machine alre
 
 ---
 
-## 31. Take other people's photographs off the web server: one sitting, about fifteen minutes
+## 31. Take other people's photographs off the web server: the pull again, fixed (the server steps are done)
 
-**Opened 2026-09-25. Entries 215 to 218. It replaces request 12. The planning session checks these commands before you run them**
-(entry 218); the archive is confirmed private. Photographs people sent sit on the server until you remove them by
-hand, which entry 129 said should never happen. The pull now removes each submission from the server itself, but only after it has
-checked it here, put it in the private archive (`grouplab-submissions-archive`, which you have created), downloaded it back and
-compared it. This sitting installs the matching server side and runs that pull once on both servers' folders, which clears the backlog.
+**Opened 2026-09-25. Entries 215 to 218, rewritten by entry 220. The planning session checks these commands before you run them.**
+Your first run did the server side cleanly and pulled three submissions, then stopped at the archive with `gh.exe : release not
+found`. That was Windows PowerShell 5.1 treating gh's normal words on stderr as fatal. **Nothing was removed from the server**: removal
+comes after the archive in the script, and the first archive call stopped it. Every program the scripts run now goes through one helper
+that judges by the exit code alone, and the archive was tested for exactly this case under Windows PowerShell 5.1 and PowerShell 7
+(`tests/powershell/archive-tests.ps1`, now in CI as well). A dry run now changes nothing and says what it would do.
 
-**1. In the server's shell**, after copying `website/server/grouplab-intake-worker.py`, `website/server/grouplab-error-worker.py` and
-`website/server/install.py` from the repository to `/home/ubuntu/grouplab-server/`. The workers now also delete, by themselves, a
-refused upload after 7 days, one nobody pulls after 60, an error report that cannot be sent after 30, and a set-aside file after 7:
+**Do not repeat the server steps** (`install.py`); they are done.
 
-```bash
-cd /home/ubuntu/grouplab-server
-sudo python3 install.py --intake --dry-run
-sudo python3 install.py --intake
-sudo python3 install.py --errors --dry-run
-sudo python3 install.py --errors
-```
-
-**2. In PowerShell on this machine**, a dry run of each first, which lists and changes nothing, then the real runs. The first is
-grouplab.org, the second the old pissinhot.com folder:
+**In PowerShell on this machine**, a dry run of each first, then the real run. The first is grouplab.org, the second the old
+pissinhot.com folder:
 
 ```powershell
 cd C:\Dev\grouplab\scripts
@@ -144,12 +137,13 @@ cd C:\Dev\grouplab\scripts
 .\Get-TargetSubmissions.ps1 -RemoteRoot /home/airwolf/web/grouplab.org/private/ready
 .\Get-TargetSubmissions.ps1 -WhatIf
 .\Get-TargetSubmissions.ps1
+.\Test-SubmissionsArchive.ps1
 ```
 
-**A good result.** Each real run ends with a line per folder, `archived and removed from the server`, then `N removed from the server;
-0 kept there.`, then the ledger line `wrote docs\notes\STORAGE.md ...`. A folder that is kept is listed with the reason, and nothing
-about it is lost: it stays on the server and here. Afterwards `.\Test-SubmissionsArchive.ps1` should end `... restored and verified,
-0 problem(s)`. Send those last lines.
+**A good result.** Each dry run ends `Dry run: would archive and then remove N from the server; 0 would be kept there. Nothing was
+changed.` (9 on grouplab.org). Each real run lists every folder as `archived and removed from the server`, then `N removed from the
+server; 0 kept there.` and the ledger line. The last command ends `... restored and verified, 0 problem(s)`. A folder that is kept is
+listed with its reason and stays on the server and here. Send the last lines of each.
 
 **Why now.** It is other people's photographs on a web server, kept longer than they were promised.
 

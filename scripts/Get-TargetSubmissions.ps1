@@ -250,22 +250,12 @@ $sshArgs = @(
 function Invoke-Remote {
     param([string] $Command)
 
-    $prev = $ErrorActionPreference
-    $ErrorActionPreference = 'Continue'      # stderr must not be fatal in here
-    try {
-        $raw = & ssh @sshArgs $Command 2>&1
-    }
-    finally {
-        $ErrorActionPreference = $prev
-    }
+    # Entry 220: the one helper every native call in these scripts goes through.
+    $r = Invoke-Native ssh @sshArgs $Command
+    $errLines = $r.Errors
+    $outLines = $r.Output
 
-    $errLines = @($raw |
-        Where-Object { $_ -is [System.Management.Automation.ErrorRecord] } |
-        ForEach-Object { $_.ToString() })
-    $outLines = @($raw |
-        Where-Object { $_ -isnot [System.Management.Automation.ErrorRecord] })
-
-    if ($LASTEXITCODE -ne 0) {
+    if ($r.ExitCode -ne 0) {
         $detail = $errLines -join "`n"
         # The two failures worth naming, because their own wording is cryptic.
         if ($detail -match 'no tty present|a terminal is required|a password is required') {
@@ -274,7 +264,7 @@ function Invoke-Remote {
         elseif ($detail -match 'Permission denied') {
             $detail += "`n`nThe key was refused. Check that $KeyFile is the key this server knows and that -ServerUser is right; it is currently '$ServerUser'."
         }
-        throw "Remote command failed (exit $LASTEXITCODE): $Command`n$detail"
+        throw "Remote command failed (exit $($r.ExitCode)): $Command`n$detail"
     }
     # Exit code says it worked, so anything on stderr was commentary. Keep it
     # available under -Verbose rather than throwing it away entirely.
@@ -349,21 +339,19 @@ foreach ($dir in $new) {
         $keyQuoted = '"' + $KeyFile + '"'
         $argLine   = ($sshArgs | ForEach-Object { if ($_ -eq $KeyFile) { $keyQuoted } else { $_ } }) -join ' '
         $sshLine   = "ssh $argLine `"sudo tar cf - -C '$RemoteRoot' '$dir'`" > `"$tmp`" 2> `"$tmpErr`""
-        & cmd /c $sshLine
-        if ($LASTEXITCODE -ne 0) {
+        $fetched = Invoke-Native cmd /c $sshLine
+        if ($fetched.ExitCode -ne 0) {
             $why = if (Test-Path $tmpErr) { (Get-Content $tmpErr -Raw).Trim() } else { '' }
-            throw "ssh/tar returned $LASTEXITCODE`n$why"
+            throw "ssh/tar returned $($fetched.ExitCode)`n$why"
         }
         if ((Get-Item $tmp).Length -eq 0) {
             $why = if (Test-Path $tmpErr) { (Get-Content $tmpErr -Raw).Trim() } else { '' }
             throw "the archive came back empty, so nothing was pulled`n$why"
         }
 
-        $prev = $ErrorActionPreference
-        $ErrorActionPreference = 'Continue'   # tar warns on stderr too
-        try   { & tar xf $tmp -C $LocalRoot 2>&1 | ForEach-Object { Write-Verbose "tar: $_" } }
-        finally { $ErrorActionPreference = $prev }
-        if ($LASTEXITCODE -ne 0) { throw "local tar returned $LASTEXITCODE" }
+        $unpacked = Invoke-Native tar xf $tmp -C $LocalRoot
+        $unpacked.Errors | ForEach-Object { Write-Verbose "tar: $_" }
+        if ($unpacked.ExitCode -ne 0) { throw "local tar returned $($unpacked.ExitCode)" }
 
         $pulled += $dir
         $size = (Get-ChildItem (Join-Path $LocalRoot $dir) -File | Measure-Object Length -Sum).Sum
@@ -451,11 +439,17 @@ if (-not $CrashReports -and -not $KeepOnServer) {
         Write-Host ""
         Write-Host "Nothing removed from the server: $archiveReady." -ForegroundColor Yellow
     } else {
-        $gone = 0; $kept = @()
+        # Entry 220: a dry run says what it would do, rather than "0 removed".
+        $gone = 0; $would = 0; $kept = @()
         foreach ($dir in @($remote | Where-Object { Test-Path (Join-Path $LocalRoot $_) })) {
             if ($dir -notmatch '^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$') { $kept += "$dir : not a submission folder name"; continue }
             $r = Test-SubmissionFolder -Folder (Join-Path $LocalRoot $dir)
             if (@($r.Bad).Count) { $kept += "$dir : its checksums here do not match, so the server's copy stays"; continue }
+            if ($WhatIfPreference) {
+                $would++
+                Write-Host ("  {0}: would be {1}removed from the server" -f $dir, $(if ($NoArchive) { '' } else { 'archived and then ' }))
+                continue
+            }
             if (-not $NoArchive) {
                 if (-not $PSCmdlet.ShouldProcess($dir, 'put in the private archive')) { continue }
                 if (-not (Add-ToArchive -Folder (Join-Path $LocalRoot $dir) -Repo $ArchiveRepo)) { $kept += "$dir : the archive did not prove it holds it, so the server's copy stays"; continue }
@@ -469,14 +463,20 @@ if (-not $CrashReports -and -not $KeepOnServer) {
             catch { $kept += "$dir : the server did not remove it: $_" }
         }
         Write-Host ""
-        Write-Host "$gone removed from the server; $(@($kept).Count) kept there." -ForegroundColor Cyan
+        if ($WhatIfPreference) {
+            Write-Host "Dry run: would $(if ($NoArchive) { '' } else { 'archive and then ' })remove $would from the server; $(@($kept).Count) would be kept there. Nothing was changed." -ForegroundColor Cyan
+        } else {
+            Write-Host "$gone removed from the server; $(@($kept).Count) kept there." -ForegroundColor Cyan
+        }
         $kept | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
     }
 }
 
-# Entry 217 section 2: the ledger of what is stored on GitHub, rewritten by every pull.
+# Entry 217 section 2: the ledger of what is stored on GitHub, rewritten by every pull. Entry 220: a dry run changes nothing, so it only
+# prints what the ledger would say.
 if (-not $CrashReports -and (Get-Command python -ErrorAction SilentlyContinue)) {
-    & python (Join-Path $PSScriptRoot 'storage-ledger.py') | ForEach-Object { Write-Host "  $_" }
+    $ledger = if ($WhatIfPreference) { Invoke-Native python (Join-Path $PSScriptRoot 'storage-ledger.py') --check } else { Invoke-Native python (Join-Path $PSScriptRoot 'storage-ledger.py') }
+    @($ledger.Output) + @($ledger.Errors) | ForEach-Object { Write-Host "  $_" }
 }
 
 if ($notScanned -gt 0) {

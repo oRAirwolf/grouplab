@@ -24,6 +24,70 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 221: a stale git lock from the planning session, already moved aside
+
+**Status: done 2026-09-25**: the renamed lock file was empty and has been deleted.
+
+
+At about 10:47 UTC on 2026-09-25 the planning session ran `git status` in this repository from its own shell, which it should not do and will
+not do again. It left an empty `.git/index.lock` that its shell could not delete. It has been renamed to
+`.git/index.lock.stale-from-cowork-status`, so it cannot block a commit. If a git command reported "index.lock exists" around that time, that
+was the cause; retry it. The renamed empty file is harmless; delete it whenever convenient. Nothing else in the repository was touched.
+
+---
+
+## 2026-09-25, entry 220: request 31's pull stopped at the archive; fix it first, then it runs again
+
+**Status: done 2026-09-25**, every section. Confirmed from the code: removal follows the archive in the pull's last loop, and the first archive call threw, so nothing left the server. One helper, `scripts/NativeCommand.ps1`, runs every program in the four scripts; tested under Windows PowerShell 5.1 and PowerShell 7 here and in CI. Dry runs write nothing and say what they would do. Artifacts: both figures were true; 44 GB freed, retention now a day. The crash issues are reported in PHASE1-RESULTS.md. Request 31 rewritten for the rerun.
+
+
+**Do this before anything else in the roadmap.** Other people's photographs are waiting on the server for it.
+
+## 1. What happened
+
+Alan ran request 31 on 2026-09-25. The server side went cleanly: `--intake`, `--errors` and `--survey` all ended `done`, the first
+replaced the nginx include (backup in `/home/airwolf/backups/grouplab.org/config/...20260925-043724.bak`), the other two found it
+current, the survey folders, worker and timer were created, and `nginx -t` passed. (The reload and the curl checks are still for Alan
+to run; he has them.)
+
+The grouplab.org dry run listed 3 new and 6 to archive, and **wrote `docs/notes/STORAGE.md` even though it was a dry run**.
+
+The real run pulled 2026-09-25_2eeac6a3, 43dbb982 and dd6e3543 (15.2 MB each, all checksums match), then stopped:
+
+```
+gh.exe : release not found
+At C:\Dev\grouplab\scripts\SubmissionArchive.ps1:71 char:9
++         & gh release view $tag -R $Repo 2>$null | Out-Null
+    + CategoryInfo          : NotSpecified: (release not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+```
+
+That is the Windows PowerShell 5.1 behavior `Get-TargetSubmissions.ps1` itself already guards against at lines 253 and 362: with
+`$ErrorActionPreference = 'Stop'`, a native command writing to stderr becomes a terminating error even with `2>$null`. `gh release view`
+on a month with no release yet writes "release not found", so the very first archive call threw, and the script ended there. As far as
+the planning session can tell, nothing was removed from the server (removal comes after the archive), and all 9 are here. Confirm that
+from the code path, and say so.
+
+## 2. What to do
+
+1. Every native call in `SubmissionArchive.ps1`, `Get-TargetSubmissions.ps1`, `Remove-ReadSubmissions.ps1`, `Test-SubmissionsArchive.ps1`
+   and the storage ledger's PowerShell side runs with stderr non-fatal and is judged by `$LASTEXITCODE` only, the way lines 253 and 362
+   already do it. One helper, used everywhere, rather than the fix repeated.
+2. **Test the scripts under Windows PowerShell 5.1 as well as PowerShell 7**, since 5.1 is what Alan's shell runs. The test that would have
+   caught this: an archive run against a month with no release yet. If CI cannot run 5.1, run it on this machine before handing the request
+   back, and say you did.
+3. **A dry run changes nothing:** with `-WhatIf`, `STORAGE.md` is not written (print what it would say instead).
+4. With the dry run, say what would be removed: "would archive and then remove N from the server", rather than "0 removed".
+5. **The Actions artifacts:** `STORAGE.md` shows 81.7 GB in 954 unexpired artifacts against a 5 GB budget, after entries 215 to 217 said 140
+   GB had been freed. Say which is true, set the artifact retention short in the workflows if it is not already (per upload, `retention-days`),
+   and free the oldest as entry 217 section 3 allows. They are all disposable build output.
+6. **The crash reports repository has 3 issues.** Read them as entry 194 section 4 says, and report them in plain words.
+7. Then rewrite request 31's step 2 for a rerun: the same two pulls with their dry runs, which will now archive the 9 on grouplab.org and the
+   pissinhot.com backlog, then `Test-SubmissionsArchive.ps1`. The server steps are done and must not be repeated. The planning session checks
+   it before Alan runs it.
+
+---
+
 ## 2026-09-25, entry 219: a standing roadmap for Android and the desktop, so work does not wait on the next entry
 
 **Status: standing, taken up 2026-09-25.** The roadmap is in `docs/notes/STATE.md` in place of "The next three", each item with its state, and is worked through without waiting for an entry. A1, the working resolution in Core, is under way.

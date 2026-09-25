@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 219, the standing roadmap.
+**Last rewritten:** 2026-09-25, after entries 220 and 221.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 219 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 221 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -24,11 +24,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Storage on GitHub**: `docs/notes/STORAGE.md`, written by `scripts/storage-ledger.py` from the pull and this session; see its total.
   Submissions leave the server only once archived in `grouplab-submissions-archive` and proven (entries 215 to 217).
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is built and switched off.
-- **The composite plot** (entries 204, 210, 213, 214): wide rings set back from the outlines, the key never over the data,
-  Group or Whole target with zoom, half strength outlines, green CEP 50, 90 and 95 on toggles, green and blue lines
-  across the plot for the centre and the aim; the report and Compare follow the same toggles.
-- **Radios and check boxes with long words take `Wrapped(words)`** (entry 203): a plain string never wraps, and the consent
-  choices on nightly 102's first run screen were cut mid sentence. `Entry203Tests` checks for cut text.
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
   714 MB for the 600 dpi sample (desktop 8 s). Folding, turning and the font size passed (entry 205); all four ways up since. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
@@ -39,6 +34,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
   (question 52, option A).
 - Entry 149 section 3 A is built; D is the quiet hint of entry 187. Section 4 waits with entry 172 section 3 item 1.
+
+## Next
+
+- **Entry 222** in the inbox: automation, backups first (its section 6 outranks the rest), the server archiving by itself, cleanup.
+- Request 31 rewritten for the rerun (entry 220): the pull is fixed and tested under both shells; the server steps are done.
 
 ## The roadmap (entry 219), in place of the next three
 
@@ -90,7 +90,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** none
+**Holds:** entry-222.md
 
 ## Things that would surprise somebody who was not here yesterday
 
