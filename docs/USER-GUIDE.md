@@ -240,8 +240,7 @@ GroupLab can also send error reports by itself, once you say so: the first time 
 The gear opens the settings:
 - **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle.
 - **Theme:** dark, light, high contrast, or follow the system.
-- **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. It also lists what is sent, how many targets have gone from this computer and how to have one removed, and anything waiting to be tried again.
-- **Error reports:** send them automatically, ask each time, or never, and what a report holds.
+- **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number.
 - **Log:** how much the diagnostic log records, and where it is.
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.
 

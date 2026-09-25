@@ -456,12 +456,8 @@
      "Which train to follow and how often to check. A check is one request for one public file, and it sends nothing about you, your rifles or your targets."
     ],
     [
-     "Error reports",
-     "Whether a report of an error goes to the project by itself, you are asked each time, or it never goes, and what a report holds. Not switched on yet, and until it is nothing is sent."
-    ],
-    [
-     "Sending targets",
-     "Whether each target you analyze goes to the project, you are asked each time, or it never goes, and with which consent. What is sent, how many targets have gone from this computer and how to have one removed are here too."
+     "Sharing",
+     "The three things GroupLab may send, in the first run screen's order and words: every target you analyze, with which consent, or ask each time, or never; error reports, sent by themselves, asked about each time, or never; and the hardware survey, a weekly report of what your machine is and how fast GroupLab ran, with the benchmark. Each says what it sends, and nothing goes unless you chose it."
     ],
     [
      "Detailed logging",

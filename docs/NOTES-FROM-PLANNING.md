@@ -24,6 +24,18 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-25, entry 223: request 34 is done
+
+**Status: done 2026-09-25.** Request 34 closed. The survey is open: `surveyOpen` and the receiver's `OPEN` are true, the article what-grouplab-sends lists it as the fifth thing sent, and the tour's and the guide's Settings describe the one Sharing section. The empty POST is checked over curl once the site has published.
+
+
+Alan ran request 34's reload and checks on 2026-09-25, twice. The first time: `200`, `200`, `400` for the empty survey POST, and the survey
+timer listed with its next run. The second time the survey POST answered `503`, which the planning session confirmed is the receiver's
+own "closed" answer after 5160a77 published (the survey refuses everything until it is opened), not a fault. Close request 34. Open the
+survey when you judge it ready, and then the empty POST should answer `400` again; check that yourself over curl.
+
+---
+
 ## 2026-09-25, entry 222: as much automation as possible: the server archives by itself, nightly backups to GitHub, cleanup with a safety net, and Code may use sudo
 
 **Status: done 2026-09-25, apart from what waits on request 35**, Alan's one sitting: the backups repository (so backups are kept on this computer until it exists), the archive token (so submissions wait in ready until it is set), and the Oracle boot volume backups (so sudo stays limited to GroupLab's own files and nginx is not reloaded by Code; request 34's reload stays Alan's). Section 1: ubuntu's sudo is already passwordless, so no sudoers line is needed. Everything else is built, run once, and in `docs/RESTORE.md`.

@@ -1,9 +1,8 @@
 # Requests for Alan
 
-**Open: 11.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
+**Open: 10.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
 Cloud. **36**, the Android app's upload key and Play entry, can go in the same sitting. **37** is a choice about signing the Windows
-download, whenever suits. Then the end of **34** (the nginx reload and checks you already have), then **33**, ten minutes with the Fold 7.
-Then 9, 16, 20, 18, 32 and 21, optional.
+download, whenever suits. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -123,7 +122,7 @@ on the server stays limited to GroupLab's own files and its installer.
 
 ## 34. The hardware survey's server side: in the same sitting as 31, five more minutes
 
-**Opened 2026-09-25. Entry 219 item D1, entries 207 and 208. The planning session checks these commands before you run them.** The
+**Answered 2026-09-25** (entry 223): the reload and the checks passed, and the survey is now open. **Opened 2026-09-25. Entry 219 item D1, entries 207 and 208. The planning session checks these commands before you run them.** The
 **Partly done 2026-09-25** (entry 220): `install.py --survey` ended `done` and `nginx -t` passed. Only the reload and the checks below
 are left, which you already have.
 survey is built in GroupLab and switched off: it is not asked and nothing is sent until this is installed and the next entry turns it

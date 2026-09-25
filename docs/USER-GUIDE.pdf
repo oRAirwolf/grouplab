@@ -499,7 +499,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 23 0 R >>
 endobj
 23 0 obj
-<< /Length 6128 >>
+<< /Length 6129 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -572,7 +572,7 @@ BT /F1 71 Tf 1 0 0 -1 494 4956 Tm (Beneath them, a box puts a group's size on th
 BT /F1 71 Tf 1 0 0 -1 395 5058 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 5058 Tm (Theme: dark, light, high contrast, or follow the system.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 5160 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5160 Tm (Sending targets: send every target you analyze to the project, ask each time, or never, and which consent) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5160 Tm (Sharing: the three things GroupLab may send, in the order the first run screen asks them. Sending targets:) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 10 of 11) Tj ET
 Q
 endstream
@@ -581,21 +581,21 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 32 0 R >> >> /Contents 25 0 R >>
 endobj
 25 0 obj
-<< /Length 934 >>
+<< /Length 1016 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 494 452 Tm (goes with them. It also lists what is sent, how many targets have gone from this computer and how to have) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 540 Tm (one removed, and anything waiting to be tried again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 642 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 642 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 744 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 744 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 846 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 846 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
-q 3556 0 0 -2286 381 3191 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 3247 Tm (The settings) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 452 Tm (send every target you analyze to the project, ask each time, or never, and which consent goes with them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 540 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds. Hardware survey:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 628 Tm (take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 716 Tm (random number.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 818 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 818 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 920 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 920 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
+q 3556 0 0 -2286 381 3265 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 3321 Tm (The settings) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 11 of 11) Tj ET
 Q
 endstream
@@ -5822,17 +5822,17 @@ xref
 0000034054 00000 n 
 0000037311 00000 n 
 0000037439 00000 n 
-0000043620 00000 n 
-0000043775 00000 n 
-0000044761 00000 n 
-0000302440 00000 n 
-0000498229 00000 n 
-0000770601 00000 n 
-0000838917 00000 n 
-0000958161 00000 n 
-0001056088 00000 n 
+0000043621 00000 n 
+0000043776 00000 n 
+0000044845 00000 n 
+0000302524 00000 n 
+0000498313 00000 n 
+0000770685 00000 n 
+0000839001 00000 n 
+0000958245 00000 n 
+0001056172 00000 n 
 trailer
 << /Size 33 /Root 1 0 R >>
 startxref
-1141114
+1141198
 %%EOF

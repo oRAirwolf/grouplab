@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 222.
+**Last rewritten:** 2026-09-25, after entry 223.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 222 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 223 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -23,7 +23,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   The zeroing grids are for sighting in by eye; no more work makes them a scanning target.
 - **Storage on GitHub**: `docs/notes/STORAGE.md`, written by `scripts/storage-ledger.py` from the pull and this session; see its total.
   Submissions leave the server only once archived in `grouplab-submissions-archive` and proven (entries 215 to 217).
-- **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is built and switched off.
+- **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
   714 MB for the 600 dpi sample (desktop 8 s). Folding, turning and the font size passed (entry 205); all four ways up since. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
@@ -50,8 +50,7 @@ alternating so desktop feedback never waits more than one Android item.
 - A1 the working resolution in Core: **done**, 8 MP, 1.2 to 7.9 thousandths mean shift; the desktop app's use of it waits.
 - **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting.
 - **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting).
-- **D1 the survey and benchmark: built, switched off** until request 34; the entry after it sets `surveyOpen` true and says so in the
-  article what-grouplab-sends.
+- **D1 the survey and benchmark: built, and open** (entry 223).
 - **A4 built**: take or choose a picture at the working size, the result with figures, photo and the desktop's plot, corrected by
   touch with a magnifier, caliber and distance, the sheet by name, Sessions. Not yet on a phone (request 33 step 6).
 - **A5 built**: a `.grouplab` session file, shared by hand both ways (request 33 step 7).
@@ -91,7 +90,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** none
+**Holds:** entry-224.md, entry-225.md
 
 ## Things that would surprise somebody who was not here yesterday
 

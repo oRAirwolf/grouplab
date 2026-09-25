@@ -35,7 +35,7 @@ const CLOSED_PATH = SITE_PRIVATE . '/survey-closed';
  * limits.json's surveyOpen, which the site's build holds this to. The server already routes this file to PHP, so until the worker that
  * counts and deletes reports is installed, the receiver itself refuses everything: nothing is stored that nothing would delete.
  */
-const OPEN = false;
+const OPEN = true;
 
 const SCHEMA           = 'grouplab-survey-1';
 const MAX_BYTES        = 64 * 1024;

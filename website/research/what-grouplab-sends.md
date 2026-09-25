@@ -1,6 +1,6 @@
 ---
 title: What GroupLab sends from your computer
-description: Four things leave your machine, all of them only when you ask. Here is the complete list, what is in each, and the rule that stops a fifth appearing by accident.
+description: Five things leave your machine, all of them only when you ask. Here is the complete list, what is in each, and the rule that stops a sixth appearing by accident.
 group: How GroupLab is built
 number: 26
 written: 2026-09-22
@@ -8,7 +8,7 @@ data_date: 2026-09-22
 samples: not a measurement: an account of the code, with the test that keeps it true
 state: published
 no_figure: "A list of network calls has no picture. The one thing a reader could look at, the crash report contents, is quoted in full in the article."
-found: GroupLab sends four things, none of them without an action from you, and none containing where you were. A test fails the build if any part of the program learns to reach the outside world on its own.
+found: GroupLab sends five things, none of them without an action from you, and none containing where you were. A test fails the build if any part of the program learns to reach the outside world on its own.
 sure: This describes the code as it stands and the tests that hold it there. It is not an audit by anyone else, and you are welcome to read the source instead.
 sources:
   - "The one way out, and the test that keeps it the only one: `src/GroupLab.Core/Updates/OutsideWorld.cs` and `tests/GroupLab.Core.Tests/OneWayOutTests.cs`."
@@ -22,12 +22,13 @@ sources:
 3. **An error report**, when GroupLab hits an error: sent by itself only if you said so, offered otherwise, never if you said never.
 4. **A target**, if you choose to send one to the project: from the page at `grouplab.org/targets/`, or from GroupLab itself after you analyze it.
 
-A fifth, **the hardware survey**, is built and switched off until its receiver is installed on the server. When it opens, GroupLab
-asks once, on the same screen as the questions above, and nothing is sent unless you say yes: then a short report of what your machine
-is and how fast GroupLab ran on it goes at most once a week. What a report holds is listed on that screen and in `docs/SURVEY.md`, and
-it never holds your name, a file name, a photograph or a location.
+5. **A hardware survey report**, only if you said yes when GroupLab asked, on the same screen as the questions above: what your machine
+   is and how fast GroupLab ran on it, at most once a week. What a report holds is listed on that screen and in `docs/SURVEY.md`, and it
+   never holds your name, a file name, a photograph or a location.
 
-That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
+That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking
+a target, and nothing is sent because you opened the program, except what you chose to have sent by itself: error reports, and the
+survey's weekly report.
 
 ## The update check
 
@@ -80,13 +81,13 @@ can wait has a limit.
 - **An error report** becomes an issue in the project's private repository on GitHub, and the copy on the server is deleted the moment
   the issue is opened or updated. One that cannot be sent is deleted after thirty days.
 - **On your own machine**, a target you agreed to send and could not is tried again for seven days, then deleted, as above.
-- **A hardware survey report**, once the survey opens, is counted into totals within the hour and deleted. None is kept on the server
+- **A hardware survey report** is counted into totals within the hour and deleted. None is kept on the server
   longer than thirty days whatever happens. What stays is counts: for each installation, only a hash of its random number, the classes
   its machine falls in and the day it was last seen, dropped after 180 days. Nothing smaller than ten machines is ever published.
 
-## The rule that stops a fifth thing appearing
+## The rule that stops a sixth thing appearing
 
-All four go through one interface. Nothing else in the program is allowed to open a browser, fetch a file, start a process or read the clipboard.
+All five go through one interface. Nothing else in the program is allowed to open a browser, fetch a file, start a process or read the clipboard.
 
 That is not a convention, it is a test. `OneWayOutTests` reads every source file in the repository and fails the build if anything outside that one file starts a process with the shell or launches a URI, and a second guard does the same for the clipboard.
 

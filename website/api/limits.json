@@ -20,7 +20,7 @@
     "never asks anybody to send a target. It is set true by the entry that follows Alan's installing it.",
     "",
     "Entries 207 and 208: surveyOpen is whether the hardware survey's receiver, api/survey.php, and its worker are installed. Until it is,",
-    "the application never asks the survey question and sends nothing."
+    "the application never asks the survey question and sends nothing. Entry 223 set it true on 2026-09-25, with the worker installed."
   ],
   "open": true,
   "maxFiles": 10,
@@ -47,6 +47,6 @@
   "errorReceiver": "https://grouplab.org/api/error-report.php",
   "maxErrorReportsPerDay": 20,
   "maxAppPackageMegabytes": 4,
-  "surveyOpen": false,
+  "surveyOpen": true,
   "surveyReceiver": "https://grouplab.org/api/survey.php"
 }

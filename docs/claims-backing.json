@@ -1928,6 +1928,14 @@
   "**Built** (entry 219 item A5): a `.grouplab` file holds the marking, the sheet and the picture re-encoded from its pixels with no metadata at all, and says which device wrote which revision.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Records/SessionPackage.cs SessionPackage; src/GroupLab.Cli/Imaging/CleanImage.cs From; tests/GroupLab.Core.Tests/Records/SessionPackageTests.cs"
+  },
+  "How GroupLab is built 26 What GroupLab sends from your computer Five things leave your machine, all of them only when you ask.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 223; website/api/limits.json surveyOpen; website/api/survey.php OPEN; src/GroupLab.Core/Updates/OutsideWorld.cs PostSurveyAsync"
+  },
+  "**Built, and open since 2026-09-25** (entry 219 item D1, opened by entry 223 once Alan had installed the worker): `surveyOpen` in `website/api/limits.json` is true, and the receiver takes reports.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 223; website/api/limits.json surveyOpen; website/api/survey.php OPEN; src/GroupLab.Core/Updates/OutsideWorld.cs PostSurveyAsync"
   }
  },
  "rules": [

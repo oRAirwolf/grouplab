@@ -59,6 +59,16 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 223: request 34 done, and the survey opened
+
+Request 34 is closed: Alan's reload and checks passed, and the `503` he saw the second time was the receiver's own "closed". **The survey
+is open**: the worker is installed and tested, the desktop's question is tested in `Entry208Tests`, and the phone asks it the same way.
+`surveyOpen` in limits.json and `OPEN` in the receiver are true together, as the site's build requires; the receiver test that proves a
+closed receiver refuses now makes its own closed copy. The article what-grouplab-sends lists the survey as the fifth thing that can leave
+a computer, and says that nothing goes when the program opens except what the person chose to have sent by itself. The tour's and the
+user guide's Settings now describe one Sharing section with its three parts; the tour also said error reports were not switched on yet,
+which had been untrue since entry 200.
+
 ## Entry 222: as much automation as possible, backups first
 
 **Section 6, first.** `docs/RESTORE.md` lists everything Code or the planning session can change, its backup, how often, where, and how to

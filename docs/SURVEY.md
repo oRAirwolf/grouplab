@@ -1,8 +1,8 @@
 # The hardware and benchmark survey
 
-NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25. **Built for the desktop and the server, and switched off**
-(entry 219 item D1): `surveyOpen` in `website/api/limits.json` stays false until Alan installs the worker (request 34), and while it
-is false the question is not asked and nothing is sent. The Android part follows the real application's capture screen. Like Steam's hardware survey, it tells the project what GroupLab actually runs on,
+NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25. **Built, and open since 2026-09-25**
+(entry 219 item D1, opened by entry 223 once Alan had installed the worker): `surveyOpen` in `website/api/limits.json` is true, and the
+receiver takes reports. The desktop and the Android application ask the question on the first run screen. Like Steam's hardware survey, it tells the project what GroupLab actually runs on,
 so the minimums in `docs/PLATFORM-SUPPORT.md` rest on reports rather than guesses, and it tells each person how their own machine did.
 
 ## 1. Asking

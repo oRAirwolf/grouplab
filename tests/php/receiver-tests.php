@@ -466,7 +466,7 @@ function survey_report(array $change = []): array
 
 $surveyIncoming = $root . '/private/survey/incoming';
 
-$r = request($root, $surveySource, ['report' => json_encode(survey_report())], []);
+$r = request($root, str_replace('const OPEN = true;', 'const OPEN = false;', $surveySource), ['report' => json_encode(survey_report())], []);
 check('while limits.json says the survey is closed, the receiver refuses and stores nothing',
     ($r['json']['code'] ?? '') === 'closed' && (glob($surveyIncoming . '/*.json') ?: []) === [], $r['raw']);
 
