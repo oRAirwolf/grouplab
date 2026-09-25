@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 971 |
-| measured | 1419 |
+| measured | 1421 |
 | decided | 1150 |
 | unbacked | 0 |
-| **total** | **3540** |
+| **total** | **3542** |
 
-**520** of them were read one sentence at a time and their backing written against the sentence. The other **3020** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**522** of them were read one sentence at a time and their backing written against the sentence. The other **3020** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -502,6 +502,8 @@ one that matters.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): For item L2 the telephoto is the longest lens, at about 66 mm, and the wide the fallback when the sheet does not fit.
 - *measured* (the spike on the Fold 7 over adb, 2026-09-25, and Alan's request 27; recorded in docs/PHASE1-RESULTS.md entry 205): **Each image's own peak**, from a fresh process with the photograph run first (entry 205): the photograph 635 MB, the scan 721 MB; the 900 MB Alan saw was the process's highest so far, after the scan.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): ****Working resolution on the Fold 7** (entry 209, for entry 206 section 2.2): the sample brought to each size once, then measured in a fresh process on the smaller file alone, since a phone never decodes a 32 MP scan to work on 8 of it.
+- *measured* (src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1): **The working size is now a Core setting** (entry 219 item A1): `WorkingSize.PhoneMegapixels`, 8, which the phone application always uses, and `ImageLoader.Load(path, most)` decodes at it, reducing a JPEG while decoding where it can.
+- *measured* (src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1): `grouplab analyze --working-megapixels 8` does the same on the desktop.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): **What it says for the budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): Loading at full size and shrinking afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a photograph and a reduced decode does for a scan.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202): **Memory held**: 714 MB, and 901 MB after three runs, and Android did not stop the application.

@@ -70,36 +70,90 @@ public static class ImageLoader
         }
     }
 
-    public static (GrayImage Image, ImageMetadata Metadata) Load(string path)
+    public static (GrayImage Image, ImageMetadata Metadata) Load(string path) => Load(path, null);
+
+    /// <summary>
+    /// The image at no more than <paramref name="mostMegapixels"/> (entry 219 item A1, <see cref="WorkingSize"/>), decoded at a reduced size
+    /// where the format allows it, so the full image is never held; null works at full size.
+    /// </summary>
+    public static (GrayImage Image, ImageMetadata Metadata) Load(string path, double? mostMegapixels)
     {
         byte[] bytes = Bytes(path);
         var metadata = ImageMetadataReader.Read(bytes);
-        using var mat = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
+        using var mat = Decode(bytes, path, colour: false, metadata, mostMegapixels);
+        return (OpenCvSharpBackend.Copy(mat), Working(metadata, mat, bytes, mostMegapixels));
+    }
+
+    /// <summary>
+    /// The decode at working size: a JPEG reduced by a power of two while it is decoded, where that alone does not undershoot, then an area
+    /// resample to exactly the working size. Too large is judged on the image's full size, as ever.
+    /// </summary>
+    private static Mat Decode(byte[] bytes, string path, bool colour, ImageMetadata metadata, double? mostMegapixels)
+    {
+        int width = metadata.Width ?? 0, height = metadata.Height ?? 0;
+        double scale = width > 0 && height > 0 ? WorkingSize.Scale(width, height, mostMegapixels) : 1;
+        int reduce = scale <= 0.125 ? 8 : scale <= 0.25 ? 4 : scale <= 0.5 ? 2 : 1;
+        var mode = (colour, reduce) switch
+        {
+            (false, 8) => ImreadModes.ReducedGrayscale8,
+            (false, 4) => ImreadModes.ReducedGrayscale4,
+            (false, 2) => ImreadModes.ReducedGrayscale2,
+            (false, _) => ImreadModes.Grayscale,
+            (true, 8) => ImreadModes.ReducedColor8,
+            (true, 4) => ImreadModes.ReducedColor4,
+            (true, 2) => ImreadModes.ReducedColor2,
+            _ => ImreadModes.Color,
+        };
+        var mat = Cv2.ImDecode(bytes, mode | ImreadModes.IgnoreOrientation);
         if (mat.Empty())
         {
+            mat.Dispose();
             throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
         }
 
-        NotTooLarge(mat, path);
+        if (reduce == 1)
+        {
+            NotTooLarge(mat, path);
+        }
 
-        return (OpenCvSharpBackend.Copy(mat), metadata);
+        // Where the file did not say its size, the decode does; the working size is then reached by the resample alone.
+        double rest = WorkingSize.Scale(mat.Width, mat.Height, mostMegapixels);
+        if (rest < 1)
+        {
+            var smaller = new Mat();
+            Cv2.Resize(mat, smaller, new Size(0, 0), rest, rest, InterpolationFlags.Area);
+            mat.Dispose();
+            return smaller;
+        }
+
+        return mat;
+    }
+
+    /// <summary>The metadata for the image as decoded: its size, and its resolution scaled with it where it was brought down.</summary>
+    private static ImageMetadata Working(ImageMetadata metadata, Mat mat, byte[] bytes, double? mostMegapixels)
+    {
+        if (mostMegapixels is null || metadata.Width is not { } width || width <= 0)
+        {
+            return metadata;
+        }
+
+        double scale = (double)mat.Width / width;
+        return WorkingSize.Scaled(metadata, mat.Width, mat.Height, scale);
     }
 
     /// <summary>
     /// The image decoded in colour and reduced to max(R, G, B) per pixel, the channel both neutral darkness and HSV Value are
     /// built on (docs/SCAN-MEASUREMENTS.md section 3.1), with what the file says about itself.
     /// </summary>
-    public static (GrayImage MaxChannel, ImageMetadata Metadata) LoadMaxChannel(string path)
+    public static (GrayImage MaxChannel, ImageMetadata Metadata) LoadMaxChannel(string path) => LoadMaxChannel(path, null);
+
+    /// <summary>The brightest channel at no more than <paramref name="mostMegapixels"/>, the same size <see cref="Load(string, double?)"/> gives.</summary>
+    public static (GrayImage MaxChannel, ImageMetadata Metadata) LoadMaxChannel(string path, double? mostMegapixels)
     {
         byte[] bytes = Bytes(path);
-        var metadata = ImageMetadataReader.Read(bytes);
-        using var mat = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
-        if (mat.Empty())
-        {
-            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
-        }
-
-        NotTooLarge(mat, path);
+        var read = ImageMetadataReader.Read(bytes);
+        using var mat = Decode(bytes, path, colour: true, read, mostMegapixels);
+        var metadata = Working(read, mat, bytes, mostMegapixels);
 
         var channels = Cv2.Split(mat);
         try

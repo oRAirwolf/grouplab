@@ -28,6 +28,7 @@ public static class AnalyzeVerb
     {
         ArgumentNullException.ThrowIfNull(rest);
         string? target = null, json = null, aimed = null;
+        double? workingMegapixels = null;
         Calibre? calibre = null;
         var libraries = new List<string>();
         int verbosity = 1;
@@ -60,6 +61,11 @@ public static class AnalyzeVerb
                     // NOTES-FROM-PLANNING.md entry 105 section 8: sighters are set aside unless asked for, as the window does.
                     sighters = true;
                     break;
+                case "--working-megapixels" when i + 1 < rest.Length && double.TryParse(rest[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out double most) && most > 0:
+                    // Entry 219 item A1: the image worked on at no more than this, as the phone always does.
+                    workingMegapixels = most;
+                    i++;
+                    break;
                 case "--json" when i + 1 < rest.Length:
                     json = rest[++i];
                     break;
@@ -73,7 +79,7 @@ public static class AnalyzeVerb
             }
         }
 
-        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null, calibre, null, aimed);
+        var result = Analyze(imagePath, target, out string? loadFailure, libraries.Count > 0 ? libraries : null, calibre, null, aimed, workingMegapixels);
         if (loadFailure is not null)
         {
             error.WriteLine($"analyze: {loadFailure}");
@@ -134,7 +140,8 @@ public static class AnalyzeVerb
     /// the sheet's codes name among those under <paramref name="libraries"/>. Null with the reason when the image cannot be read, or no
     /// definition can be.
     /// </summary>
-    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null, GroupLab.Core.Measurement.MeasureOptions? options = null, string? aimed = null)
+    public static SheetAnalysisResult? Analyze(string imagePath, string? definitionPath, out string? failure, IReadOnlyList<string>? libraries = null, Calibre? calibre = null, GroupLab.Core.Measurement.MeasureOptions? options = null, string? aimed = null,
+        double? workingMegapixels = null)
     {
         failure = null;
         TargetDefinition? definition = null;
@@ -157,8 +164,8 @@ public static class AnalyzeVerb
         {
             try
             {
-                (grey, metadata) = ImageLoader.Load(imagePath);
-                (value, _) = ImageLoader.LoadMaxChannel(imagePath);
+                (grey, metadata) = ImageLoader.Load(imagePath, workingMegapixels);
+                (value, _) = ImageLoader.LoadMaxChannel(imagePath, workingMegapixels);
             }
             catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or OpenCvSharp.OpenCVException)
             {

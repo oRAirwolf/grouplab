@@ -59,6 +59,23 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 219, item A1: the working resolution in Core
+
+**`WorkingSize`** (Core): 8 megapixels for the phone, always, from entry 209's Fold 7 measurements; 60 for the desktop, only for images
+far larger than a Letter or A4 sheet. `ImageLoader.Load` and `LoadMaxChannel` take the limit, decode a JPEG reduced by a power of two
+where that does not undershoot, then resample by area to exactly the working size, and scale the resolution with it. `grouplab analyze
+--working-megapixels` uses it. `WorkingSizeTests`: the sizes, and the sample read at 8 MP with both channels alike and its resolution
+scaled.
+
+**The accuracy cost, full size against 8 MP**, measured with `grouplab analyze` on 2026-09-25. The sample: 25 of 25 shots on the same
+bulls, a mean shift of 1.2 thousandths of an inch, 4.2 at most; mean radius 0.232 and sigma 0.185 in, unchanged. Two range photographs,
+chosen as the first of the 59 whose full size result is plausible (four have a mean radius under 0.5 in; the others are misread at any
+size, which is the photograph detector's known weakness, not the working size): 15 of 15 shots on the same bulls, mean shift 3.6
+thousandths, 13.3 at most, mean radius 0.232 to 0.233; and 15 of 16, mean shift 7.9, 38.4 at most, mean radius 0.249 to 0.250.
+
+**Not done**: the desktop application does not bring very large images down yet; the saved session would have to record the working
+scale, and it waits for the roll sheet work that needs it. **Next on the roadmap**: A2, the CameraX capture spike.
+
 ## Entries 215 to 218: nothing kept on the server, a private archive, and a ledger of GitHub
 
 **The pull** (`scripts/Get-TargetSubmissions.ps1`) now, for every submission still on the server whose copy here verifies, backlog

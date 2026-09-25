@@ -117,7 +117,14 @@ run on the same phone, in thousandths of an inch; the full resolution run is its
 | 8.0 MP | 300 dpi | 3.3 s | 25 of 25 | 373 MB | 2.5 and 11.8 |
 | 3.6 MP | 200 dpi | 1.6 s | 25 of 25 | 307 MB | 2.9 and 8.2 |
 
-The spike at rest holds about 274 MB (`dumpsys meminfo`, total resident), so at 8 MP the engine adds about 100 MB. **What it says for the
+The spike at rest holds about 274 MB (`dumpsys meminfo`, total resident), so at 8 MP the engine adds about 100 MB.
+
+**The working size is now a Core setting** (entry 219 item A1): `WorkingSize.PhoneMegapixels`, 8, which the phone application always
+uses, and `ImageLoader.Load(path, most)` decodes at it, reducing a JPEG while decoding where it can. `grouplab analyze
+--working-megapixels 8` does the same on the desktop. **What it costs in accuracy**, full size against 8 MP on the desktop, 2026-09-25:
+the sample, 25 of 25 shots on the same bulls, a mean shift of 1.2 thousandths of an inch and 4.2 at most, mean radius and sigma
+unchanged at 0.232 and 0.185 in; two range photographs of 12 MP that read plausibly at full size, 15 of 15 and 15 of 16 shots on the
+same bulls, mean shifts of 3.6 and 7.9 thousandths (13.3 and 38.4 at most), mean radius 0.232 to 0.233 and 0.249 to 0.250 in. **What it says for the
 budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few
 thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest. Loading at full size and shrinking
 afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a

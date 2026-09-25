@@ -1876,6 +1876,14 @@
   "**How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never longer than thirty days whatever happens; the aggregate keeps counts, not records.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 215 and 216; docs/SURVEY.md, to be built with the survey"
+  },
+  "**The working size is now a Core setting** (entry 219 item A1): `WorkingSize.PhoneMegapixels`, 8, which the phone application always uses, and `ImageLoader.Load(path, most)` decodes at it, reducing a JPEG while decoding where it can.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1"
+  },
+  "`grouplab analyze --working-megapixels 8` does the same on the desktop.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1"
   }
  },
  "rules": [
