@@ -67,7 +67,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 54 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 198
+**Holds:** 198, 199
 
 ## Things that would surprise somebody who was not here yesterday
 
