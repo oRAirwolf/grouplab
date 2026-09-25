@@ -34,12 +34,15 @@ public class Entry203Tests
         var (window, path, _) = Entry109Tests.Sheet((int)width, 900);
         window.ReceiverOpen = true;
         window.ErrorsOpen = true;
+        // Entry 208 section 6: the survey is the third question on the same screen, and this test covers all three.
+        window.SurveyOpen = true;
         window.SettingsStore.SaveSending(choice, level);
         window.Session.SetCalibre(Calibre.Of(0.308));
         window.Session.SetShotDistance(3600);
         window.CalibreAnswered();
         window.FillSendingSettings();
         window.FillErrorSettings();
+        window.FillSurveySettings();
         Settle();
         return (window, path);
     }

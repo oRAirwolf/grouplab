@@ -316,6 +316,81 @@ public sealed class AppSettingsStore(string path)
         file["errorReports"] = errors;
     });
 
+    /// <summary>NOTES-FROM-PLANNING.md entry 208: whether the hardware survey may send. Unset until the person answers.</summary>
+    public GroupLab.Core.Survey.SurveyChoice LoadSurveyChoice() =>
+        Read(file => Enum.TryParse<GroupLab.Core.Survey.SurveyChoice>((string?)file["survey"]?["choice"], out var choice) ? choice : GroupLab.Core.Survey.SurveyChoice.Unset);
+
+    public bool SaveSurveyChoice(GroupLab.Core.Survey.SurveyChoice choice) => Save(file => Survey(file)["choice"] = choice.ToString());
+
+    /// <summary>
+    /// docs/SURVEY.md section 2: the random number that stands for this copy of GroupLab, made the first time it is needed and kept until
+    /// the person replaces it. Nothing about the machine goes into it.
+    /// </summary>
+    public string LoadInstallation()
+    {
+        if (Read(file => (string?)file["survey"]?["installation"]) is { Length: 32 } kept)
+        {
+            return kept;
+        }
+
+        string made = GroupLab.Core.Survey.SurveyReport.NewInstallation();
+        Save(file => Survey(file)["installation"] = made);
+        return made;
+    }
+
+    /// <summary>A new installation number in place of the old one, from Settings.</summary>
+    public string ReplaceInstallation()
+    {
+        string made = GroupLab.Core.Survey.SurveyReport.NewInstallation();
+        Save(file => Survey(file)["installation"] = made);
+        return made;
+    }
+
+    /// <summary>When the last survey report went, or null.</summary>
+    public DateTimeOffset? LoadSurveySent() =>
+        Read(file => DateTimeOffset.TryParse((string?)file["survey"]?["sent"], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var at) ? at : (DateTimeOffset?)null);
+
+    public bool SaveSurveySent(DateTimeOffset at) => Save(file => Survey(file)["sent"] = at.ToString("o", CultureInfo.InvariantCulture));
+
+    /// <summary>The last benchmark run on this machine, and whether it has gone with a report yet.</summary>
+    public (GroupLab.Core.Survey.BenchmarkResult Result, bool Sent)? LoadBenchmark() => Read(file =>
+    {
+        if (file["survey"]?["benchmark"] is not JsonObject b)
+        {
+            return ((GroupLab.Core.Survey.BenchmarkResult, bool)?)null;
+        }
+
+        var stages = (b["stages"] as JsonArray ?? []).OfType<JsonObject>()
+            .Select(s => new GroupLab.Core.Survey.StageTime((string?)s["stage"] ?? "", (long?)s["milliseconds"] ?? 0)).ToList();
+        var result = new GroupLab.Core.Survey.BenchmarkResult((string?)b["workload"] ?? "", (int?)b["width"] ?? 0, (int?)b["height"] ?? 0,
+            (long?)b["totalMilliseconds"] ?? 0, stages, (long?)b["peakMegabytes"] ?? 0, (int?)b["holesPlaced"] ?? 0, (int?)b["holesFound"] ?? 0);
+        return (result, (bool?)b["sent"] ?? false);
+    });
+
+    public bool SaveBenchmark(GroupLab.Core.Survey.BenchmarkResult result, bool sent) => Save(file => Survey(file)["benchmark"] = new JsonObject
+    {
+        ["workload"] = result.Workload,
+        ["width"] = result.Width,
+        ["height"] = result.Height,
+        ["totalMilliseconds"] = result.TotalMilliseconds,
+        ["stages"] = new JsonArray([.. result.Stages.Select(s => (JsonNode)new JsonObject { ["stage"] = s.Stage, ["milliseconds"] = s.Milliseconds })]),
+        ["peakMegabytes"] = result.PeakMegabytes,
+        ["holesPlaced"] = result.HolesPlaced,
+        ["holesFound"] = result.HolesFound,
+        ["sent"] = sent,
+    });
+
+    private static JsonObject Survey(JsonObject file)
+    {
+        if (file["survey"] is not JsonObject survey)
+        {
+            survey = [];
+            file["survey"] = survey;
+        }
+
+        return survey;
+    }
+
     /// <summary>How many error reports went today, for the day's cap, and in all, for Settings.</summary>
     public (int Today, int InAll) LoadErrorsSent(DateTime now) => Read(file =>
         file["errorReports"] is JsonObject errors

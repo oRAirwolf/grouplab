@@ -59,6 +59,30 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 219, item D1: the hardware survey and benchmark, built and switched off
+
+**The benchmark** (`GroupLab.Core.Survey.Benchmark`): GL-CF25-LTR at 300 dpi with one hole in each of its 25 bulls, the same pixels on
+every machine (a test compares their hash), analyzed as a photograph is; it finds all 25 here. **The report** (`SurveyReport`) holds
+exactly docs/SURVEY.md section 2's list: `Keys` names every field and a test walks a built report against it, and another checks that
+the user name, machine name and home folder never appear. A random installation number, replaceable in Settings.
+
+**The desktop**: the survey is the third question on the first run screen, after targets and error reports, with the benchmark offered
+under it and nothing chosen; somebody who answered the other two before sees the screen once more with only the survey and a line
+saying their answers are kept. Settings gathers all three under one section, **Sharing**. Once the person says yes, each analysis's
+sizes, times and memory are kept in a small file beside the settings, and a report goes at most weekly, or when a benchmark is
+waiting; saying no deletes that file. The queue (`SurveyQueue`) is shared with the Android application. `Entry208Tests`, seven tests,
+and `Entry203Tests` now covers the survey's words at every width.
+
+**The server**: `website/api/survey.php` rebuilds a report from its named fields, stores a salted hash of the installation number and the
+day only, and limits an installation to three reports a day; `grouplab-survey-worker.py`, with no network, counts each report into
+classes and deletes it, and writes the published totals with every group under ten merged into "other". Receiver tests in
+`tests/php/receiver-tests.php`, run by CI; `tests/python/survey-worker-tests.py`, ten checks. `install.py --survey`.
+
+**Switched off**: `surveyOpen` is false in limits.json until request 34 installs the worker. **The release notes** now take a heading
+written into a note off its start: nightly 107 carried "Under the hood: the rules ..." under Under the hood. The first try at nightly
+107, on 6c976e3, failed creating its release with a 403 from GitHub with nothing changed in the workflow or the repository's settings;
+the next, on 27bd109, published.
+
 ## Entry 219, item A3: the application project, org.grouplab.app
 
 `android/GroupLab.Android` builds here and in the `android` workflow, which now uploads `grouplab-apk` beside the spike's (the spike stays

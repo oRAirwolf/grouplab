@@ -17,7 +17,10 @@
     "Entry 165 section 2: consent_v2, two levels from one text, shown on the page and by the application alike. testing is used to test",
     "and improve detection and never published; publishable may also be published. A consent_v1 submission stays publishable.",
     "appOpen is whether the application's own receiver, api/app-submission.php, is installed and answering: until it is, the application",
-    "never asks anybody to send a target. It is set true by the entry that follows Alan's installing it."
+    "never asks anybody to send a target. It is set true by the entry that follows Alan's installing it.",
+    "",
+    "Entries 207 and 208: surveyOpen is whether the hardware survey's receiver, api/survey.php, and its worker are installed. Until it is,",
+    "the application never asks the survey question and sends nothing."
   ],
   "open": true,
   "maxFiles": 10,
@@ -43,5 +46,7 @@
   "errorReportsOpen": true,
   "errorReceiver": "https://grouplab.org/api/error-report.php",
   "maxErrorReportsPerDay": 20,
-  "maxAppPackageMegabytes": 4
+  "maxAppPackageMegabytes": 4,
+  "surveyOpen": false,
+  "surveyReceiver": "https://grouplab.org/api/survey.php"
 }

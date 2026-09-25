@@ -63,6 +63,12 @@ public class WorkerLimitTests
         Assert.Equal(30L, Constant(errors, "INCOMING_DAYS"));
         Assert.Equal(7L, Constant(errors, "REFUSED_DAYS"));
         Assert.Matches(@"def main\(\) -> int:\s+sweep\(\)", errors);
+
+        // Entries 207 and 208: the survey's reports are counted and deleted; one never counted goes after thirty days whatever happens.
+        string survey = File.ReadAllText(Repo.PathTo("website", "server", "grouplab-survey-worker.py"));
+        Assert.Equal(30L, Constant(survey, "INCOMING_DAYS"));
+        Assert.Equal(7L, Constant(survey, "REFUSED_DAYS"));
+        Assert.Matches(@"def main\(\) -> int:\s+sweep\(\)", survey);
     }
 
     /// <summary>

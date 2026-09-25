@@ -278,7 +278,10 @@ public sealed partial class MainWindow
         // not been answered. The screen closes when every question on it has been.
         bool targetsDue = ReceiverOpen && settingsStore.LoadSending().Choice == SendingChoice.Unset;
         bool errorsDue = ErrorsOpen && settingsStore.LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Unset;
-        if (!targetsDue && !errorsDue)
+        // Entry 208: the survey is the third question on the same screen. Somebody who answered the other two before sees the screen once
+        // more, with only the survey to answer and a line saying their earlier answers are kept.
+        bool surveyDue = SurveyOpen && settingsStore.LoadSurveyChoice() == GroupLab.Core.Survey.SurveyChoice.Unset;
+        if (!targetsDue && !errorsDue && !surveyDue)
         {
             return;
         }
@@ -287,17 +290,20 @@ public sealed partial class MainWindow
         var outer = new StackPanel { Spacing = Tokens.Space24, MaxWidth = 620, Margin = new Thickness(Tokens.Space24) };
         var card = new StackPanel { Spacing = Tokens.Space8, IsVisible = targetsDue };
         var errors = new StackPanel { Spacing = Tokens.Space8, IsVisible = errorsDue };
+        var survey = new StackPanel { Spacing = Tokens.Space8, IsVisible = surveyDue };
         outer.Children.Add(card);
         outer.Children.Add(errors);
+        outer.Children.Add(survey);
         void Answered()
         {
-            if (!card.IsVisible && !errors.IsVisible)
+            if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible)
             {
                 firstRun.IsVisible = false;
             }
         }
 
         FillFirstRunErrors(errors, Answered);
+        FillFirstRunSurvey(survey, Answered, earlierKept: !targetsDue && !errorsDue);
         card.Children.Add(new TextBlock { Text = SharingWords.TargetsQuestion, Classes = { AppStyles.Title } });
         card.Children.Add(Line(SharingWords.TargetsIntro));
         foreach (string line in TargetPackages.WhatIsSent)
@@ -335,7 +341,7 @@ public sealed partial class MainWindow
         card.Children.Add(Line(SharingWords.TargetsLater));
         firstRun.Child = new Border
         {
-            Child = outer,
+            Child = new ScrollViewer { Content = outer },
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Classes = { AppStyles.Side },
@@ -346,7 +352,7 @@ public sealed partial class MainWindow
     /// <summary>Entry 165 section 9: Settings' own Sending targets section, reading and writing the same setting as the first run screen.</summary>
     private void BuildSendingSettings(StackPanel column)
     {
-        column.Children.Add(Ruled("Sending targets"));
+        column.Children.Add(FieldLabel("Sending targets"));
         column.Children.Add(sendingSettings);
         FillSendingSettings();
     }

@@ -50,10 +50,12 @@ alternating so desktop feedback never waits more than one Android item.
 
 - A1 the working resolution in Core: **done**, 8 MP, 1.2 to 7.9 thousandths mean shift; the desktop app's use of it waits.
 - **A2 the CameraX capture screen spike: built**; the measurement is request 33, one sitting.
-- **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting). **D1 next**, then A4
-  capture to result by touch, the plot, sessions, with the camera moved in from the spike. A5 sharing a session file.
+- **A3 the `org.grouplab.app` project: built**, CI uploads `grouplab-apk`; not yet on a phone (next sitting).
+- **D1 the survey and benchmark: built, switched off** until request 34; the entry after it sets `surveyOpen` true and says so in the
+  article what-grouplab-sends. **A4 next**: capture to result by touch, the plot, sessions, the camera moved in from the spike, and the
+  survey's question on the phone. A5 sharing a session file.
   A6 signed APK and AAB, the internal track: one request for the keystore and the Play entry. A7 the older phones, then a closed test.
-- D1 the survey and benchmark, desktop part, with its server install batched. D2 question 51 when request 9 arrives. D3 feedback
+- D2 question 51 when request 9 arrives. D3 feedback
   first whenever it comes. D4 `docs/RELEASE-PLAN.md` and the Windows signing options as a request with a recommendation; plan only.
 - Waiting on requests: Program A (entry 158) on request 19's ST-4 scan; Program B's article on request 20's test.
 ## Blocked, and on what
@@ -61,8 +63,8 @@ alternating so desktop feedback never waits more than one Android item.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **8** (31 most urgent, photographs off the server; 33, the Fold 7's camera; then 9, 16,
-  20, 18, 32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
+Open requests in `docs/notes/for-alan.md`: **9** (31 most urgent, photographs off the server, with 34, the survey's server side, in
+  the same sitting; 33, the Fold 7's camera; then 9, 16, 20, 18, 32 and 21, optional). Request 30 is a note of the older phones, used only at the milestones in `docs/ANDROID.md`.
 
 ## Open questions
 

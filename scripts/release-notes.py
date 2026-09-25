@@ -75,6 +75,16 @@ NOTHING_SHIPS = "This build has no change to the application; it behaves exactly
 NOTE = re.compile(r"^Release-note:\s*(?P<note>.+)$", re.IGNORECASE)
 KIND = re.compile(r"^Release-note-kind:\s*(?P<kind>new|fixed|changed|user|internal)\s*$", re.IGNORECASE)
 
+# A note that begins with one of the two headings says it twice: the kind already puts it under that heading. Nightly 107's
+# notes carried "Under the hood: the rules that will tell a phone user..." under Under the hood.
+HEADING = re.compile(r"^(under the hood|what you will notice)\s*[:,-]\s*", re.IGNORECASE)
+
+
+def unheaded(note):
+    """The note without a heading written into its start, its first letter raised where the heading took the capital."""
+    rest = HEADING.sub("", note, count=1)
+    return rest if rest == note or not rest else rest[0].upper() + rest[1:]
+
 # Entry 145 section 2. Two headings, and a build shows only the ones it has. The three older kinds are kept because every
 # commit in the history uses them and "New" and "Fixed" still tell a reader something "changed" does not; they are simply
 # all under the first heading now. "user" is a synonym of "changed" for anybody writing a trailer from entry 145 alone.
@@ -214,7 +224,7 @@ def reads(body):
         elif note is not None:
             found.append([" ".join(note), "changed"])
             note = None
-    return [(n, k) for n, k in found]
+    return [(unheaded(n), k) for n, k in found]
 
 
 def read(body):
@@ -500,6 +510,9 @@ def self_test():
          "Subject\n\nRelease-note: The first\nnote. (Entry 2, 1)\nRelease-note-kind: fixed\n\n"
          "Release-note: The second note. (Entry 2, 2)\nRelease-note-kind: internal\n\nCo-Authored-By: someone",
          [("The first note. (Entry 2, 1)", "fixed"), ("The second note. (Entry 2, 2)", "internal")]),
+        ("a heading written into the note is taken off",
+         "Subject\n\nRelease-note: Under the hood: the rules are built. (Entry 219, A2)\nRelease-note-kind: internal\n",
+         [("The rules are built. (Entry 219, A2)", "internal")]),
         ("a trailer after the note ends it",
          "Subject\n\nRelease-note: A note that stops here. (Entry 3, 1)\nCo-Authored-By: someone\n",
          [("A note that stops here. (Entry 3, 1)", "changed")]),

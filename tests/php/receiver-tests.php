@@ -439,6 +439,77 @@ check('the twenty-first report from one address in an hour is refused, to try ag
     ($last['json']['code'] ?? '') === 'rate_limit' && ($last['json']['retry'] ?? false) === true, $last['raw']);
 
 // ---------------------------------------------------------------------
+// The survey receiver, entries 207 and 208: named fields only, the installation stored as a hash, the day and not the time.
+// ---------------------------------------------------------------------
+
+$surveySource = file_get_contents(__DIR__ . '/../../website/api/survey.php');
+if ($surveySource === false) {
+    fwrite(STDERR, "could not read website/api/survey.php\n");
+    exit(2);
+}
+
+function survey_report(array $change = []): array
+{
+    $report = [
+        'schema' => 'grouplab-survey-1',
+        'installation' => bin2hex(random_bytes(16)),
+        'version' => '0.2.0-nightly.107',
+        'machine' => ['os' => 'Microsoft Windows 10.0.26200', 'architecture' => 'X64', 'processor' => 'A processor', 'cores' => 16,
+                      'memoryMegabytes' => 65000, 'screen' => '3840 by 2160', 'screenScale' => 1.5],
+        'benchmark' => ['workload' => 'GL-CF25-LTR-300dpi-25-holes-1', 'width' => 2550, 'height' => 3300, 'totalMilliseconds' => 1900,
+                        'stages' => [['stage' => 'registration', 'milliseconds' => 400]], 'peakMegabytes' => 700, 'holesPlaced' => 25, 'holesFound' => 25],
+        'analyses' => [['width' => 4000, 'height' => 3000, 'workingWidth' => 4000, 'workingHeight' => 3000,
+                        'stages' => [['stage' => 'detection', 'milliseconds' => 900]], 'peakMegabytes' => 800]],
+    ];
+    return array_replace($report, $change);
+}
+
+$surveyIncoming = $root . '/private/survey/incoming';
+$good = survey_report(['planted' => 'unknown field', 'machine' => survey_report()['machine'] + ['serial' => 'ABC123', 'user' => 'someone']]);
+$r = request($root, $surveySource, ['report' => json_encode($good)], []);
+check('a survey report is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);
+$stored = glob($surveyIncoming . '/*.json') ?: [];
+check('and stored once', count($stored) === 1);
+if (count($stored) === 1) {
+    $text = (string) file_get_contents($stored[0]);
+    $kept = json_decode($text, true);
+    check('an unknown field is dropped unread, at the top and in the machine', !array_key_exists('planted', $kept)
+        && !array_key_exists('serial', $kept['machine']) && !array_key_exists('user', $kept['machine']));
+    check('the installation number is not stored, only a hash of it', !str_contains($text, $good['installation'])
+        && preg_match('/^[0-9a-f]{64}$/', (string) ($kept['installation'] ?? '')) === 1);
+    check('the sender\'s address is not in it', !str_contains($text, '203.0.113.7'));
+    check('the day is kept and not the time', preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($kept['day'] ?? '')) === 1);
+    check('the machine and the benchmark are kept as sent', ($kept['machine']['cores'] ?? 0) === 16
+        && ($kept['benchmark']['totalMilliseconds'] ?? 0) === 1900 && count($kept['analyses'] ?? []) === 1);
+}
+
+foreach ([
+    'a survey report of another schema' => survey_report(['schema' => 'something-else']),
+    'a survey report with no installation number' => survey_report(['installation' => 'not-hex']),
+    'a survey report with no build' => survey_report(['version' => '']),
+    'a survey report with no machine' => survey_report(['machine' => 'x']),
+] as $what => $bad) {
+    $r = request($root, $surveySource, ['report' => json_encode($bad)], []);
+    check($what . ' is refused', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
+}
+
+$r = request($root, $surveySource, ['report' => str_repeat('{', 70000)], []);
+check('a survey report over 64 KB is refused', ($r['json']['code'] ?? '') === 'too_large', $r['raw']);
+
+file_put_contents($root . '/private/survey-closed', 'off');
+$r = request($root, $surveySource, ['report' => json_encode(survey_report())], []);
+check('the survey kill switch refuses and says to try again', ($r['json']['code'] ?? '') === 'closed' && ($r['json']['retry'] ?? false) === true, $r['raw']);
+unlink($root . '/private/survey-closed');
+
+$one = survey_report();
+$last = null;
+for ($i = 0; $i < 4; $i++) {
+    $last = request($root, $surveySource, ['report' => json_encode($one)], [], ['remote' => '198.51.100.' . (60 + $i)]);
+}
+check('the fourth report in a day from one installation is refused, whatever address it comes from',
+    ($last['json']['code'] ?? '') === 'rate_limit', $last['raw']);
+
+// ---------------------------------------------------------------------
 
 echo "receiver tests: $passed passed, " . count($failed) . " failed\n";
 foreach ($failed as $f) {

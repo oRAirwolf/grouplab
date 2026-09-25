@@ -1,7 +1,8 @@
 # Requests for Alan
 
-**Open: 8.** Most urgent: **31**, one sitting that takes other people's photographs off the web server. Then **33**, ten
-minutes with the Fold 7 and a printed sheet for the camera. Then 9, 16, 20, 18, 32, which is optional, and 21, which is optional.
+**Open: 9.** Most urgent: **31**, one sitting that takes other people's photographs off the web server, with **34**, the
+survey's server side, in the same sitting. Then **33**, ten minutes with the Fold 7 and a printed sheet for the camera. Then 9,
+16, 20, 18, 32, which is optional, and 21, which is optional.
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
 Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
@@ -18,6 +19,37 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 34. The hardware survey's server side: in the same sitting as 31, five more minutes
+
+**Opened 2026-09-25. Entry 219 item D1, entries 207 and 208. The planning session checks these commands before you run them.** The
+survey is built in GroupLab and switched off: it is not asked and nothing is sent until this is installed and the next entry turns it
+on. It adds a receiver, which arrives with the site and answers nothing until nginx has its block, and a worker with no network that
+counts each report and deletes it within the hour.
+
+**1. In the server's shell**, after request 31, having copied these from the repository to `/home/ubuntu/grouplab-server/`:
+`website/server/install.py`, `website/server/nginx.ssl.conf_grouplab`, `website/server/grouplab-survey-worker.py`,
+`website/server/grouplab-survey-worker.service` and `website/server/grouplab-survey-worker.timer`.
+
+```bash
+cd /home/ubuntu/grouplab-server
+sudo python3 install.py --survey --dry-run
+sudo python3 install.py --survey
+sudo nginx -t
+sudo systemctl reload nginx
+curl -sS -o /dev/null -w '%{http_code}\n' https://pissinhot.com/
+curl -sS -o /dev/null -w '%{http_code}\n' https://grouplab.org/
+curl -sS -X POST -o /dev/null -w '%{http_code}\n' https://grouplab.org/api/survey.php
+systemctl list-timers grouplab-survey-worker.timer --no-pager
+```
+
+Run `nginx -t` and the reload only if the installer says the include changed; it prints them itself when it does.
+
+**A good result.** The installer ends `done`; `nginx -t` says the test is successful; the two sites answer `200`; the empty POST to
+the survey answers `400`, which is the receiver refusing an empty report, not `404`; and the timer is listed with a next run. Send those
+lines, and the survey is turned on in the next entry.
 
 ---
 

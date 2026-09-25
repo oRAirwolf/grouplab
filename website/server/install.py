@@ -69,6 +69,14 @@ ERROR_UNITS = [
 
 ERROR_TOKEN = Path("/etc/grouplab/error-token")
 
+# NOTES-FROM-PLANNING.md entries 207 and 208: the hardware survey's worker and its units. It has no network and no secret.
+# The receiver itself, website/api/survey.php, arrives with the site.
+SURVEY_FILES = [
+    ("grouplab-survey-worker.py", Path("/usr/local/sbin/grouplab-survey-worker.py"), 0o755),
+    ("grouplab-survey-worker.service", Path("/etc/systemd/system/grouplab-survey-worker.service"), 0o644),
+    ("grouplab-survey-worker.timer", Path("/etc/systemd/system/grouplab-survey-worker.timer"), 0o644),
+]
+
 INTAKE_UNITS = [
     ("grouplab-intake-worker.service", Path("/etc/systemd/system/grouplab-intake-worker.service"), 0o644),
     ("grouplab-intake-worker.timer", Path("/etc/systemd/system/grouplab-intake-worker.timer"), 0o644),
@@ -433,6 +441,50 @@ def errors(dry_run: bool) -> int:
     return 0
 
 
+def survey(dry_run: bool) -> int:
+    """The hardware survey, entries 207 and 208: its folders, its worker and units, and the nginx include with its receiver's block.
+
+    Additive, like the others. It has no secret to set. It never runs nginx -t or reloads nginx; it prints them.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    say("the folders survey reports pass through, outside public_html and never served")
+    make_folders([(SITE / "private", 0o750, "airwolf"), (SITE / "private" / "survey", 0o750, "airwolf"),
+                  (SITE / "private" / "survey" / "incoming", 0o750, "airwolf")], dry_run)
+
+    say("the worker and its systemd units")
+    for item in SURVEY_FILES:
+        if not put(*item, dry_run):
+            return 2
+
+    say("the nginx include, which carries the receiver's block")
+    for name, target, mode, owner in INTAKE_CONFIG:
+        if name == "nginx.ssl.conf_grouplab" and not put_owned(name, target, mode, owner, dry_run):
+            return 2
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    if run(["systemctl", "enable", "--now", "grouplab-survey-worker.timer"], dry_run) != 0:
+        return 1
+
+    include = next(target for name, target, _, _ in INTAKE_CONFIG if name == "nginx.ssl.conf_grouplab")
+    if include in CHANGED:
+        say("")
+        say("One thing is left, and not this script's to do: nginx, tested before it is reloaded, and pissinhot.com checked afterwards:")
+        say("     sudo nginx -t")
+        say("     sudo systemctl reload nginx")
+        say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://pissinhot.com/")
+        say("     curl -sS -o /dev/null -w '%{http_code}\\n' https://grouplab.org/")
+    else:
+        say("The nginx include was already current, so nginx has nothing new to read and needs no reload.")
+    say("")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install the grouplab.org site sync.")
     parser.add_argument("--dry-run", action="store_true", help="say what would happen and change nothing")
@@ -440,6 +492,8 @@ def main() -> int:
                         help="install the target upload intake instead of the site sync (entry 129)")
     parser.add_argument("--errors", action="store_true",
                         help="install the error report worker instead of the site sync (entry 194)")
+    parser.add_argument("--survey", action="store_true",
+                        help="install the hardware survey worker instead of the site sync (entries 207 and 208)")
     args = parser.parse_args()
 
     gone = missing_tools()
@@ -456,6 +510,9 @@ def main() -> int:
 
     if args.errors:
         return errors(args.dry_run)
+
+    if args.survey:
+        return survey(args.dry_run)
 
     say("folders")
     make_folders(FOLDERS, args.dry_run)

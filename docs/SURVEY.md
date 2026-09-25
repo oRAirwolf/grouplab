@@ -1,7 +1,8 @@
 # The hardware and benchmark survey
 
-NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25. A design, not yet built: the desktop part is built with the next desktop
-work, and the Android part with the real application. Like Steam's hardware survey, it tells the project what GroupLab actually runs on,
+NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25. **Built for the desktop and the server, and switched off**
+(entry 219 item D1): `surveyOpen` in `website/api/limits.json` stays false until Alan installs the worker (request 34), and while it
+is false the question is not asked and nothing is sent. The Android part follows the real application's capture screen. Like Steam's hardware survey, it tells the project what GroupLab actually runs on,
 so the minimums in `docs/PLATFORM-SUPPORT.md` rest on reports rather than guesses, and it tells each person how their own machine did.
 
 ## 1. Asking
@@ -41,16 +42,23 @@ sheet rendered from a built-in definition, so every copy runs the same work. The
 spike: the sample at 600 dpi takes 7.9 s on Alan's desktop and 17 s on the Fold 7. The person sees their own result beside the median of
 machines like theirs once there are enough reports.
 
+**As built.** `GroupLab.Core.Survey.Benchmark`: GL-CF25-LTR rendered at 300 dpi with one hole in each of its 25 bulls from a fixed
+seed, analyzed as a photograph is, only the analysis timed. `SurveyReport.Keys` is every name a report may hold and
+`SurveyReport.WhatIsSent` is what the question says, in the same order.
+
 ## 4. Transport
 
 The route error reports take: posted to grouplab.org, checked against a schema, rate limited, stored on the server, queued while offline.
-It never goes to the GitHub issues repository. The server side is a receiver and a worker like the error reports', so Alan gets one
-install request for it when it is built, in one sitting with any other pending server work.
+It never goes to the GitHub issues repository. **As built**: `website/api/survey.php` takes the named fields only, stores a salted
+hash of the installation number and the day, never the time or the address, and limits each installation to three reports a day;
+`website/server/grouplab-survey-worker.py`, with no network, counts each report and deletes it, hourly. The application sends at most
+once a week, or sooner when a benchmark is waiting. `install.py --survey` installs the worker, in the same sitting as request 31.
 
 ## 5. Publication
 
 An aggregate page on grouplab.org: shares of operating systems and versions, memory, CPU classes and phone models, and benchmark times by
-class, with the date range and the number of reports. Never an individual record. Any group smaller than 10 reports is merged into
+class, with the date range and the number of reports. Never an individual record. **As built**, the worker writes these to
+`private/survey/public.json` on the server; the page that shows them is made once there are reports to show. Any group smaller than 10 reports is merged into
 "other", so no one machine can be picked out.
 
 **How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never

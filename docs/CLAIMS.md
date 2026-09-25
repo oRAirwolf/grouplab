@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 975 |
-| measured | 1421 |
+| code | 978 |
+| measured | 1422 |
 | decided | 1153 |
 | unbacked | 0 |
-| **total** | **3549** |
+| **total** | **3553** |
 
-**527** of them were read one sentence at a time and their backing written against the sentence. The other **3022** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**530** of them were read one sentence at a time and their backing written against the sentence. The other **3023** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2212,9 +2212,12 @@ one that matters.
 ### docs/SURVEY.md
 
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): # The hardware and benchmark survey NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25.
+- *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs): **Built for the desktop and the server, and switched off** (entry 219 item D1): `surveyOpen` in `website/api/limits.json` stays false until Alan installs the worker (request 34), and while it is false the question is not asked and nothing is sent.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Asking **One first run screen, three choices** (entry 208): sending targets, error reports, and the hardware survey with its benchmark, one after another on the window that asks today, each with its own plain description of what is sent and its own answer.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): **Nothing is chosen for the person** on any of the three, the rule entry 203 section 3 set and `Entry203Tests` holds.
 - *measured* (measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width): The desktop's reference today is `SpikeRun` in the Android spike: the sample at 600 dpi takes 7.9 s on Alan's desktop and 17 s on the Fold 7.
+- *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs): **As built.** `GroupLab.Core.Survey.Benchmark`: GL-CF25-LTR rendered at 300 dpi with one hole in each of its 25 bulls from a fixed seed, analyzed as a photograph is, only the analysis timed.
+- *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs): `install.py --survey` installs the worker, in the same sitting as request 31.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Any group smaller than 10 reports is merged into "other", so no one machine can be picked out.
 - *decided* (NOTES-FROM-PLANNING.md entries 215 and 216; docs/SURVEY.md, to be built with the survey): **How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never longer than thirty days whatever happens; the aggregate keeps counts, not records.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Use Once there are 200 reports from one platform, the minimums in `docs/PLATFORM-SUPPORT.md` are reviewed against it, and `docs/notes/STATE.md` says when that happened.
@@ -3728,6 +3731,7 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Where it cannot do that without changing a pixel it saves the picture again without loss, and where even that would be too large it does not send it and tells you why.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Where it is kept, and for how long NOTES-FROM-PLANNING.md entries 215 to 217.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What stays is counts: for each installation, only a hash of its random number, the classes its machine falls in and the day it was last seen, dropped after 180 days.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Reading the clipboard GroupLab can open an image you paste with Ctrl+V.
 
 ### site:research/when-to-adjust-zero/index.html

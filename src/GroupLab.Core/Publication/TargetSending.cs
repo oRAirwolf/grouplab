@@ -59,6 +59,8 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
             ErrorReportsOpen = root.GetProperty("errorReportsOpen").GetBoolean(),
             ErrorReceiver = root.GetProperty("errorReceiver").GetString()!,
             MaxErrorReportsPerDay = root.GetProperty("maxErrorReportsPerDay").GetInt32(),
+            SurveyOpen = root.GetProperty("surveyOpen").GetBoolean(),
+            SurveyReceiver = root.GetProperty("surveyReceiver").GetString()!,
         };
     });
 
@@ -73,6 +75,15 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
 
     /// <summary>Entry 194 section 2.5: the most reports one installation sends in a day.</summary>
     public int MaxErrorReportsPerDay { get; init; }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 207 and 208: whether the hardware survey's receiver and its worker are installed. While it is false
+    /// the survey question is not asked and nothing is sent, as with <see cref="ErrorReportsOpen"/>.
+    /// </summary>
+    public bool SurveyOpen { get; init; }
+
+    /// <summary>Where survey reports go: grouplab.org.</summary>
+    public string SurveyReceiver { get; init; } = "";
 
     /// <summary>The terms this build carries.</summary>
     public static ReceiverTerms Current => Built.Value;

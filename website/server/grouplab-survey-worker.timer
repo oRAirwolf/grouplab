@@ -1,0 +1,11 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entries 207 and 208: every hour, so a report is counted and deleted within the hour.
+Description=Count GroupLab hardware survey reports, every hour
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Unit=grouplab-survey-worker.service
+
+[Install]
+WantedBy=timers.target

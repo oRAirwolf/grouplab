@@ -33,6 +33,9 @@ namespace GroupLab.App.Tests
 
             // Entry 200: error reports are switched on too. A test window does not ask about them or send one unless the test says so.
             GroupLab.App.MainWindow.ErrorsOpenByDefault = false;
+
+            // Entry 208: the survey is off in limits.json until its receiver is installed; a test window never asks it unless the test says so.
+            GroupLab.App.MainWindow.SurveyOpenByDefault = false;
             GroupLab.Core.Updates.TheOutsideWorld.Current = Outside;
 
             // Entry 123 section 2.6: an update downloads into a folder GroupLab owns, so a test run is pointed at one of its own rather than

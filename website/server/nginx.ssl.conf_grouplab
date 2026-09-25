@@ -67,6 +67,15 @@ location = /api/error-report.php {
     fastcgi_read_timeout 60s;
 }
 
+# Entries 207 and 208: the hardware survey's weekly reports, small JSON only, protected by limits like the others.
+location = /api/survey.php {
+    client_max_body_size 128k;
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php8.3-fpm-grouplab.org.sock;
+    fastcgi_read_timeout 60s;
+}
+
 # Everything else with a .php name. This has to come after the exact-match blocks above, which
 # nginx prefers over a regex location whatever the order in the file, so the receivers still run.
 location ~ \.php$ {

@@ -589,6 +589,9 @@ public sealed partial class MainWindow : Window
 
             // Entry 194: the error reports waiting, where the person chose to send them by themselves.
             _ = SendWaitingErrorsAsync();
+
+            // Entry 208: the survey's weekly report, where the person said yes and the receiver is open.
+            _ = SendSurveyIfDueAsync();
         };
         CrashReporter.Recorded += OnCrashRecorded;
         CrashReporter.Recorded += ErrorRecorded;
@@ -1940,8 +1943,9 @@ public sealed partial class MainWindow : Window
     /// A detection run in the log, NOTES-FROM-PLANNING.md entry 41 section 3: one line with its summary and how long it took, and at DEBUG every
     /// stage record in the console form DETECTION-PIPELINE.md section 6.3 gives, which already carries the resolved parameters and decisions.
     /// </summary>
-    private static void LogDetection(AutomaticResult result, TraceRecorder trace, long milliseconds)
+    private void LogDetection(AutomaticResult result, TraceRecorder trace, long milliseconds)
     {
+        RecordAnalysis(trace);
         DiagnosticLog.Current.Write(result.Failure is null ? LogLevel.Info : LogLevel.Warn, "detect.run", [("ms", milliseconds), ("stages", trace.Records.Count), ("summary", result.Summary), ("failure", result.Failure)]);
         foreach (var record in trace.Records)
         {
@@ -4802,8 +4806,11 @@ public sealed partial class MainWindow : Window
         column.Children.Add(updateState);
         column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
 
+        // Entry 208 section 4: what may be shared, the first run screen's three questions, together in one section in the same order.
+        column.Children.Add(Ruled("Sharing"));
         BuildSendingSettings(column);
         BuildErrorSettings(column);
+        BuildSurveySettings(column);
 
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));

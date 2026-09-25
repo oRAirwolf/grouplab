@@ -57,6 +57,12 @@ public interface IOutsideWorld
     Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token);
 
     /// <summary>
+    /// Sends a hardware survey report, NOTES-FROM-PLANNING.md entries 207 and 208: its JSON in the form field <c>report</c>, to
+    /// grouplab.org. Null where nothing answered.
+    /// </summary>
+    Task<PostAnswer?> PostSurveyAsync(string address, string report, CancellationToken token);
+
+    /// <summary>
     /// Downloads a file, reporting the share done as it goes. It returns the bytes written, so a caller can tell a short download from a
     /// whole one, and throws nothing on a refusal: it returns null.
     /// </summary>
@@ -134,6 +140,8 @@ public sealed class TheOutsideWorld : IOutsideWorld
             return null;
         }
     }
+
+    public Task<PostAnswer?> PostSurveyAsync(string address, string report, CancellationToken token) => PostErrorReportAsync(address, report, token);
 
     public async Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)
     {
@@ -248,6 +256,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>Every error report posted: the address and its JSON, in order.</summary>
     public List<(string Address, string Report)> Reports { get; } = [];
 
+    /// <summary>What a survey report is answered with. Nothing set answers nothing, which is an unreachable receiver.</summary>
+    public Func<string, PostAnswer?>? SurveyAnswer { get; set; }
+
+    /// <summary>Every survey report posted: the address and its JSON, in order.</summary>
+    public List<(string Address, string Report)> Surveys { get; } = [];
+
     /// <summary>Every target posted: the address, the package's JSON and the image, in order.</summary>
     public List<(string Address, string Package, byte[] Image)> Posted { get; } = [];
 
@@ -272,6 +286,8 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         Posted.Clear();
         ReportAnswer = null;
         Reports.Clear();
+        SurveyAnswer = null;
+        Surveys.Clear();
         Clipboard = ClipboardContents.Nothing;
     }
 
@@ -291,6 +307,13 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     {
         _asked.Add(("get", address));
         return Task.FromResult(Text.TryGetValue(address, out string? text) ? text : null);
+    }
+
+    public Task<PostAnswer?> PostSurveyAsync(string address, string report, CancellationToken token)
+    {
+        _asked.Add(("survey", address));
+        Surveys.Add((address, report));
+        return Task.FromResult(SurveyAnswer?.Invoke(report));
     }
 
     public Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)

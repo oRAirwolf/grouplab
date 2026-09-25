@@ -22,6 +22,11 @@ sources:
 3. **An error report**, when GroupLab hits an error: sent by itself only if you said so, offered otherwise, never if you said never.
 4. **A target**, if you choose to send one to the project: from the page at `grouplab.org/targets/`, or from GroupLab itself after you analyze it.
 
+A fifth, **the hardware survey**, is built and switched off until its receiver is installed on the server. When it opens, GroupLab
+asks once, on the same screen as the questions above, and nothing is sent unless you say yes: then a short report of what your machine
+is and how fast GroupLab ran on it goes at most once a week. What a report holds is listed on that screen and in `docs/SURVEY.md`, and
+it never holds your name, a file name, a photograph or a location.
+
 That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking a target, and nothing is sent because you opened the program.
 
 ## The update check
@@ -75,6 +80,9 @@ can wait has a limit.
 - **An error report** becomes an issue in the project's private repository on GitHub, and the copy on the server is deleted the moment
   the issue is opened or updated. One that cannot be sent is deleted after thirty days.
 - **On your own machine**, a target you agreed to send and could not is tried again for seven days, then deleted, as above.
+- **A hardware survey report**, once the survey opens, is counted into totals within the hour and deleted. None is kept on the server
+  longer than thirty days whatever happens. What stays is counts: for each installation, only a hash of its random number, the classes
+  its machine falls in and the day it was last seen, dropped after 180 days. Nothing smaller than ten machines is ever published.
 
 ## The rule that stops a fifth thing appearing
 

@@ -2321,7 +2321,7 @@ SEND_JS = """(function () {
 """
 
 
-RECEIVERS = ["api/upload.php", "api/crash-report.php", "api/app-submission.php", "api/error-report.php"]
+RECEIVERS = ["api/upload.php", "api/crash-report.php", "api/app-submission.php", "api/error-report.php", "api/survey.php"]
 
 
 def php_problems() -> list[str]:
@@ -2375,6 +2375,9 @@ def main() -> None:
         copy(need(REPO / "website" / "api" / "app-submission.php"), "api/app-submission.php")
         # Entry 194, shipped at last by entry 195: the error report receiver. The application uses it only while errorReportsOpen is true.
         copy(need(REPO / "website" / "api" / "error-report.php"), "api/error-report.php")
+        # Entries 207 and 208: the survey's receiver. Until nginx names it the server answers 404, and the application sends nothing to it
+        # while limits.json's surveyOpen is false.
+        copy(need(REPO / "website" / "api" / "survey.php"), "api/survey.php")
         write("assets/js/send.js", SEND_JS)
     write("support/index.html", page_support())
     write("guides/index.html", page_guides_index())

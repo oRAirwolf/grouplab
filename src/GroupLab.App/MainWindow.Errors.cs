@@ -108,7 +108,7 @@ public sealed partial class MainWindow
     /// <summary>Entry 194 section 2.1: Settings' own Error reports section, the same setting as the first run screen.</summary>
     private void BuildErrorSettings(StackPanel column)
     {
-        column.Children.Add(Ruled("Error reports"));
+        column.Children.Add(FieldLabel("Error reports"));
         column.Children.Add(errorSettings);
         FillErrorSettings();
     }

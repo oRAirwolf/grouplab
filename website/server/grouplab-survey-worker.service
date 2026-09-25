@@ -1,0 +1,45 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entries 207 and 208, docs/SURVEY.md: counts the hardware survey reports the receiver stored into
+# an aggregate and deletes each one. It reads nothing but small JSON files the receiver has already cut to their schema.
+Description=Count GroupLab hardware survey reports into the aggregate
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/SURVEY.md
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-survey-worker.py
+User=airwolf
+Group=airwolf
+
+# Everything read only except the reports it works through and its log.
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/survey
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+# It needs no network at all.
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+
+MemoryMax=200M
+CPUQuota=50%
+RuntimeMaxSec=300
+TasksMax=16
+
+[Install]
+WantedBy=multi-user.target
