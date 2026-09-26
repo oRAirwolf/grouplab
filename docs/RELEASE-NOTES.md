@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.110
+
+**2026-09-26**, commit `51a2058`. Nightly.
+
+**Under the hood**
+
+- A Microsoft Store version of GroupLab can now be built; in it, updates come from the Store and GroupLab's own updater is switched off. Nothing changes in the version you download.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.110)
+
+---
+
 ## 0.2.0-nightly.109
 
 **2026-09-26**, commit `54e06ef`. Nightly.
