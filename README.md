@@ -179,7 +179,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 
 | | Operating system | Built and published | Memory | Disk | Screen |
 |---|---|---|---|---|---|
-| **Windows** | Windows 10 version 1607 or later | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
+| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
 | **Android** | Android 10 or later, planned | not published yet | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |

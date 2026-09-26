@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 986 |
 | measured | 1421 |
-| decided | 1173 |
+| decided | 1182 |
 | unbacked | 0 |
-| **total** | **3580** |
+| **total** | **3589** |
 
-**533** of them were read one sentence at a time and their backing written against the sentence. The other **3047** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**533** of them were read one sentence at a time and their backing written against the sentence. The other **3056** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1879,8 +1879,12 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): **The user guide describes this build**: every screen it names is on screen, the guide's PDF is regenerated, and the tour pages match the week's screenshots (entry 146 section 4.4).
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): **The Windows build is signed**, or the download page says plainly, as it does today, why it is not and what the warning means.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): **The installed update path works from the previous nightly**, checked on one clean machine (entries 119 to 123).
+- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): ## The Microsoft Store (entry 224 section 3) Alan wants GroupLab in the Microsoft Store, with new releases pushed to it automatically.
+- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): - The Store needs Windows 10 version 1809 or later for an MSIX, later than the downloaded version's 1607, and the minimums table says so.
+- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): Alan's part is request 38.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): ## Signing Windows builds: the options, as of September 2026 Unsigned, a download of GroupLab shows Microsoft Defender SmartScreen's warning until the build has built a reputation, and every new build starts again.
-- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): This is put to Alan as request 37.
+- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): **On hold** (entry 224, 2026-09-25): Alan: "As of right now, nobody is getting windows smart screen warnings.
+- *decided* (NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25): Lets hold off for now." Request 37 is closed as not yet; this comparison is kept for when it is revisited.
 
 ### docs/RESEARCH.md
 
@@ -1947,11 +1951,16 @@ one that matters.
 
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): # Backups, and how to restore NOTES-FROM-PLANNING.md entry 222.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Anything with no backup is a gap, listed as one, and Code does not act on it until the gap is closed.** ## If something is gone, first 1.
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): `grouplab-backups` does not exist yet (request 35 step 1), so the nightly backup, which runs from 2026-09-25, keeps its newest copy on this computer only, in `C:\Dev\grouplab-local\backups`; the weekly restore test checks that copy until the repository exists.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The policy is on (entry 225) and the first backup is due at 2026-09-26 09:00 UTC; until Alan confirms it in the console, Code's sudo stays limited to GroupLab's own files and its installer.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The nightly backup reaches `grouplab-backups` since entry 224, and the restore test passed against it.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Nothing is force pushed to `main`, ever.** 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\ \`, emptied after 14 days and never before a nightly backup has succeeded since.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The manifest lists every file with its SHA-256, so a copy can be checked before it is trusted.
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): For the whole machine, once request 35 step 3 is done: in the Oracle Cloud console, the boot volume's backups, **Create Boot Volume** from the newest, and attach it in place of the damaged one.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **The whole server** (entries 224 and 225), pissinhot.com included.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): In the Oracle Cloud console, region US West (San Jose), compartment spetsnaz (root): 1.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Compute**, **Instances**, the server, its **Storage** tab, **Replace boot volume**, and choose the volume made in step 1.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **What to check after:** both sites answer (`curl -sS -o /dev/null -w '%{http_code}' https://grouplab.org/` and the same for pissinhot.com, `200` each); `systemctl list-timers 'grouplab-*' --no-pager` lists the site sync and the intake, error, survey and archive workers with next runs; and `sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json` says `"token": "ok"`.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Proof, for the whole server:** the weekly check in the automation report reads the server's own HestiaCP backup file and its date, but it cannot see the Oracle console.
 
 ### docs/REWRITE-HASH-MAP.md
 

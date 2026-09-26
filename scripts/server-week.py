@@ -53,7 +53,8 @@ def words(week: dict) -> str:
     age = (datetime.now(timezone.utc).date() - datetime.fromisoformat(newest).date()).days if newest else None
     backup = (f"the server's own backup is from {newest}" + (" (**over two days old**)" if age is not None and age > 2 else "")) if newest \
         else "**the server has no backup file of its own**"
-    return f"on the server, workers deleted or archived: {done}; {backup}; the off-machine boot volume backup is checked in the Oracle console"
+    return (f"on the server, workers deleted or archived: {done}; {backup}; the Oracle boot volume backups are not seen by this report: "
+            "Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants")
 
 
 def main() -> int:

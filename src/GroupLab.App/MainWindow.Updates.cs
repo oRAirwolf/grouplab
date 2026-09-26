@@ -79,8 +79,18 @@ public partial class MainWindow
     /// The check itself. By hand it reports everything, including "you are up to date"; on a launch it says nothing when there is nothing to
     /// say, because an update bar that appears to tell you there is no update is a bar nobody wants.
     /// </summary>
+    /// <summary>What the Store's copy says where the update controls would be.</summary>
+    internal const string StoreUpdateWords = "This copy of GroupLab came from the Microsoft Store, which keeps it up to date, so GroupLab's own updater is off.";
+
     internal async Task CheckForUpdatesAsync(bool byHand, CancellationToken token = default)
     {
+        // Entry 224 section 3.1: the Store keeps its copy up to date, so this one never looks for, downloads or installs anything itself.
+        if (AppInfo.FromStore)
+        {
+            Found(StoreUpdateWords);
+            return;
+        }
+
         updates = updates with { LastCheckUtc = DateTimeOffset.UtcNow };
         settingsStore.SaveUpdatePreferences(updates);
 

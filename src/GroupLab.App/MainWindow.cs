@@ -1075,7 +1075,7 @@ public sealed partial class MainWindow : Window
         // nothing newer, said so silently, and in doing that hid the "updated from A to B" line put there a moment earlier. The one launch
         // where the message matters was the one launch that threw it away. Checking again having just installed the newest build is
         // pointless in any case.
-        if (!justUpdated && CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
+        if (!justUpdated && !AppInfo.FromStore && CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
         {
             _ = CheckForUpdatesAsync(byHand: false);
         }
@@ -4699,7 +4699,15 @@ public sealed partial class MainWindow : Window
         // Entry 119 section 6.2: the train, how often to look, what happened last time, and what a check sends. Nothing here reaches the
         // network by itself; Check now is the only button that would, and it says what it found in the line below it.
         column.Children.Add(Ruled("Updates"));
-        column.Children.Add(Line(UpdateTrainHelp()));
+        // Entry 224 section 3.1: the Store's copy says who updates it, and shows none of GroupLab's own update controls.
+        if (AppInfo.FromStore)
+        {
+            column.Children.Add(Line(StoreUpdateWords));
+        }
+
+        var trainHelp = Line(UpdateTrainHelp());
+        trainHelp.IsVisible = !AppInfo.FromStore;
+        column.Children.Add(trainHelp);
         var train = new ComboBox { ItemsSource = UpdateTrains.Choosable.Select(TrainLabel).ToList(), SelectedIndex = UpdateTrains.Choosable.ToList().IndexOf(updates.Train) };
         train.SelectionChanged += (_, _) =>
         {
@@ -4739,6 +4747,7 @@ public sealed partial class MainWindow : Window
             updateGrid.Children.Add(control);
         }
 
+        updateGrid.IsVisible = !AppInfo.FromStore;
         column.Children.Add(updateGrid);
 
         // Entry 119 section 6.2 and entry 125 section 3: what happened last time. It was an empty line holding a gap open, because nothing
@@ -4746,7 +4755,9 @@ public sealed partial class MainWindow : Window
         // nothing to say, so the gap goes rather than sitting there meaning nothing.
         Says(LastCheckLine());
         column.Children.Add(updateState);
-        column.Children.Add(Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does."));
+        var checkWords = Line("A check is one request for one public file. It sends nothing about you, your rifles or your targets. docs/UPDATES.md says exactly what it does.");
+        checkWords.IsVisible = !AppInfo.FromStore;
+        column.Children.Add(checkWords);
 
         // Entry 208 section 4: what may be shared, the first run screen's three questions, together in one section in the same order.
         column.Children.Add(Ruled("Sharing"));

@@ -20,6 +20,21 @@ Each line is checked, and says where, before Alan is asked whether to release.
 7. **The Windows build is signed**, or the download page says plainly, as it does today, why it is not and what the warning means.
 8. **The installed update path works from the previous nightly**, checked on one clean machine (entries 119 to 123).
 
+## The Microsoft Store (entry 224 section 3)
+
+Alan wants GroupLab in the Microsoft Store, with new releases pushed to it automatically. **Built:**
+
+- `scripts/package-msix.ps1` makes an MSIX of the same self-contained build as the zip and the installer, stamped as the Store's copy, in
+  which GroupLab's own updater is off and Settings says the Store keeps it up to date. The Store signs it on submission, so no certificate is
+  needed. CI builds it on every push with a stand-in identity and checks what it holds.
+- `release.yml` builds it with the identity Partner Center gave, from the repository's variables. A run by hand makes a draft release
+  carrying it, which is what the first submission uploads by hand. **After that, every tagged stable release is sent to the Store by
+  itself**, with Microsoft's own Store tooling, as the Entra application Partner Center trusts as a Manager.
+- **What goes where:** stable releases go to the Store's public listing when Alan asks for one by name, as today. Nightlies stay on GitHub
+  only. If a beta train exists later, its builds can go to a Store package flight for testers; nothing is built for that until it exists.
+- The Store needs Windows 10 version 1809 or later for an MSIX, later than the downloaded version's 1607, and the minimums table says so.
+- The listing, ready to paste, is `docs/store/LISTING.md`. Alan's part is request 38.
+
 ## Signing Windows builds: the options, as of September 2026
 
 Unsigned, a download of GroupLab shows Microsoft Defender SmartScreen's warning until the build has built a reputation, and every new build
@@ -37,7 +52,8 @@ the cheapest way to sign every nightly and release from CI with no key file to k
 certificate. The Store is free and removes the warning for everyone who installs from it, but it needs an MSIX build and a listing, so it is
 the second step. An EV certificate buys nothing extra any more.
 
-This is put to Alan as request 37. Nothing is bought or set up until he answers.
+**On hold** (entry 224, 2026-09-25): Alan: "As of right now, nobody is getting windows smart screen warnings. Lets hold off for now."
+Request 37 is closed as not yet; this comparison is kept for when it is revisited.
 
 Sources: [Artifact Signing pricing](https://azure.microsoft.com/en-us/pricing/details/artifact-signing/),
 [Artifact Signing FAQ](https://learn.microsoft.com/en-us/azure/artifact-signing/faq),

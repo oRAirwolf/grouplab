@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-25, after entry 223.
+**Last rewritten:** 2026-09-26, after entries 224 and 225.
 
 ---
 
 ## In flight
 
-- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 223 (154's choice of hole centre is question 51), and 172 in part:
+- Done this run: 171, 173, 164, 174 to 185, 166, 169, 170, 159, 154 to 158, 165, 186 to 225 (154's choice of hole centre is question 51), and 172 in part:
   its measurements wait on entries 157 and 158, because GroupLab cannot yet find holes on a sheet it did not print.
 - **Where a hole's centre is**, question 51: the reported centre leans toward the scanner's shadow by about 0.011 in, the
   same way on every scan; the choice of a replacement waits on request 9's hand markings.
@@ -27,18 +27,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Android has started** (entries 198 and 199): the plan is `docs/ANDROID.md`; **detection runs on the Fold 7**: 17 s and
   714 MB for the 600 dpi sample (desktop 8 s). Folding, turning and the font size passed (entry 205); all four ways up since. Build the spike as Release; a debug APK does not start. **A public Play listing waits on the attorney's review of the GPL app
   store permission**; internal and closed testing do not.
-- **Sending targets from GroupLab is on** (entry 195, commit 1606619). **Error reports are on** (entry 200, 8725f91); the
-  open issues in `oRAirwolf/grouplab-crash-reports` are read at the start of every run.
+- **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site**, not when it is in the
   repository or the include (entry 195: error-report.php was in both and never shipped).
-- **The next stable release**: `release.yml`'s body becomes the generated notes with the unsigned build paragraph after them
-  (question 52, option A).
+- **The next stable release**: generated notes with the unsigned build paragraph (question 52 A); it also goes to the Store.
 - Entry 149 section 3 A is built; D is the quiet hint of entry 187. Section 4 waits with entry 172 section 3 item 1.
 
 ## Next
 
-- **Backups and automation (entry 222)**: nightly backup and weekly check run as scheduled tasks here; the server archives submissions
-  by itself once request 35's token is set. `docs/RESTORE.md` is the inventory; the gap is the whole server, until request 35 step 3.
+- **Backups and automation (entries 222, 224, 225)**: nightly backup to `grouplab-backups` and a weekly restore test, both passing; the
+  server archives submissions by itself. The Oracle boot volume policy is on; **when Alan confirms the first backup, close request 35 and
+  widen sudo** as entry 222 section 6.2 allows.
+- **The Microsoft Store (entry 224)**: MSIX built in CI; tagged releases go to the Store by themselves once request 38 is done.
+- **Android signing**: the nightly signs the APK and AAB; request 36 names the AAB once a nightly carries it.
 - The roadmap is done up to what waits on Alan: A6 needs request 36's key (the nightly's signed Android job is committed and builds
   nothing until the key is set), A7 the older phones, D2 request 9, D4 request 37.
 
@@ -90,7 +91,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`. Entry 187 answered 50, 52, 53, 5
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** entry-224.md, entry-225.md
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 

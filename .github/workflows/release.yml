@@ -56,9 +56,55 @@ jobs:
       version: ${{ needs.work-out-the-version.outputs.version }}
       train: release
 
+  # NOTES-FROM-PLANNING.md entry 224 section 3: the Microsoft Store's MSIX, with the identity Partner Center gave when the name GroupLab was
+  # reserved, from the repository's variables. A run by hand makes a draft carrying it, which is how the first submission is made by hand;
+  # every tagged release after that is published to the Store by the job below. Without the variables it builds nothing and says so.
+  msix:
+    name: the Microsoft Store package
+    needs: work-out-the-version
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      STORE_IDENTITY_NAME: ${{ vars.STORE_IDENTITY_NAME }}
+      STORE_PUBLISHER: ${{ vars.STORE_PUBLISHER }}
+      STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.STORE_PUBLISHER_DISPLAY_NAME }}
+    steps:
+      - name: The Store's identity
+        id: identity
+        shell: bash
+        run: |
+          if [ -n "$STORE_IDENTITY_NAME" ] && [ -n "$STORE_PUBLISHER" ] && [ -n "$STORE_PUBLISHER_DISPLAY_NAME" ]; then
+            echo "present=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=no" >> "$GITHUB_OUTPUT"
+            echo "### No Store identity in the repository's variables yet, so no Store package (request 38)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.identity.outputs.present == 'yes'
+
+      - uses: actions/setup-dotnet@v5
+        if: steps.identity.outputs.present == 'yes'
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build the MSIX
+        if: steps.identity.outputs.present == 'yes'
+        shell: pwsh
+        run: ./scripts/package-msix.ps1 -Version '${{ needs.work-out-the-version.outputs.version }}' -Train release -IdentityName $env:STORE_IDENTITY_NAME -Publisher $env:STORE_PUBLISHER -PublisherDisplayName $env:STORE_PUBLISHER_DISPLAY_NAME
+
+      - uses: actions/upload-artifact@v6
+        if: steps.identity.outputs.present == 'yes'
+        with:
+          name: windows-msix
+          path: out/package/grouplab-win-x64.msix
+          retention-days: 7
+
   release:
     name: release
-    needs: [work-out-the-version, package]
+    needs: [work-out-the-version, package, msix]
+    # The Store package is never a condition: a release without it is still a release.
+    if: ${{ !cancelled() && needs.package.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -73,7 +119,7 @@ jobs:
       - name: Gather the assets
         run: |
           mkdir -p release
-          find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' -o -name '*.msix' \) -exec cp {} release/ \;
           ls -la release
 
       # A run by hand makes a draft, so a test build is looked at before anyone sees it; a tag publishes.
@@ -125,3 +171,47 @@ jobs:
             git commit -m "[notes] Announced $VERSION" -m "Recorded by the release workflow so a rerun does not post it twice, NOTES-FROM-PLANNING.md entry 184."
             git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
           fi
+
+  # NOTES-FROM-PLANNING.md entry 224 section 3.2: a tagged stable release goes to the Store's public listing by itself. The Store's own
+  # tooling, authenticated as the Entra application Partner Center trusts as a Manager; the four values are repository secrets Alan sets.
+  # It needs the app already live in the Store, which the first, hand-made submission does. Nightlies never come here.
+  store:
+    name: publish to the Microsoft Store
+    needs: [work-out-the-version, msix, release]
+    if: ${{ !cancelled() && github.ref_type == 'tag' && needs.msix.result == 'success' }}
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      TENANT: ${{ secrets.AZURE_AD_TENANT_ID }}
+      SELLER: ${{ secrets.SELLER_ID }}
+      CLIENT: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+      SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+      PRODUCT: ${{ vars.STORE_PRODUCT_ID }}
+    steps:
+      - name: The Store's credentials
+        id: store
+        shell: bash
+        run: |
+          if [ -n "$TENANT" ] && [ -n "$SELLER" ] && [ -n "$CLIENT" ] && [ -n "$SECRET" ] && [ -n "$PRODUCT" ]; then
+            echo "present=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=no" >> "$GITHUB_OUTPUT"
+            echo "### The Store's credentials are not all set, so this release was not sent to the Store (request 38)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/download-artifact@v6
+        if: steps.store.outputs.present == 'yes'
+        with:
+          name: windows-msix
+          path: msix
+
+      - uses: microsoft/microsoft-store-apppublisher@v1.1
+        if: steps.store.outputs.present == 'yes'
+
+      - name: Publish the package
+        if: steps.store.outputs.present == 'yes'
+        shell: pwsh
+        run: |
+          msstore reconfigure --tenantId $env:TENANT --sellerId $env:SELLER --clientId $env:CLIENT --clientSecret $env:SECRET
+          msstore publish (Resolve-Path msix/grouplab-win-x64.msix) -id $env:PRODUCT
+          "### Sent GroupLab ${{ needs.work-out-the-version.outputs.version }} to the Microsoft Store; it appears once certification passes." | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY

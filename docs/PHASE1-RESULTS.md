@@ -59,6 +59,34 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entries 224 and 225: backups reach GitHub, the Store is built, the whole server can be restored
+
+**Backups** (224 section 1.1). `grouplab-backups` was empty, and GitHub makes no release in a repository with no commit, so the first run
+failed and its two reports became issues 4 and 5; the backup now gives an empty repository a README as its first commit. Tonight's backup is
+in the repository and the restore test passed against it. Issues 4 and 5 are closed with the fix.
+
+**The archive worker** (1.2). The token script's closing words named the error worker, copied from its script; they now name the archive
+worker, and a test holds that. With nothing waiting, each run now checks that its token reaches the archive: on the server it reads
+`"token": "ok"` and `"archive": "reachable"`.
+
+**The signed Android build** (1.4). Nightly 109 built and signed the APK and AAB with Alan's key, and the release carried neither: both
+upload lists name their files, and the Android ones were not named. They are now, with versioned names on the numbered release and plain
+ones on the rolling release. Request 36 names the AAB once a nightly carries it.
+
+**Windows signing** (2): on hold, request 37 closed as not yet; the comparison stays in `docs/RELEASE-PLAN.md`.
+
+**The Microsoft Store** (3). `scripts/package-msix.ps1` makes an MSIX of the self-contained build, stamped as the Store's copy
+(`GroupLabDistribution=store`), in which GroupLab's own updater is off and Settings says the Store keeps it up to date (`StoreBuildTests`).
+The manifest's floor is Windows 10 version 1809, the Store's, now in the minimums table. CI builds and checks the package on every push with
+a stand-in identity. `release.yml` builds it with Partner Center's identity from repository variables, attaches it to the release, and sends
+each tagged release to the Store with Microsoft's own tooling (`microsoft/microsoft-store-apppublisher`, `msstore publish`). **The split**:
+stable releases to the public listing, nightlies never; a beta flight only if a beta train is ever made. The first submission is by hand,
+because the automatic path needs the app already live. The listing, ready to paste, is `docs/store/LISTING.md`; Alan's part is request 38.
+
+**The whole server** (224 section 1.3, 225). `docs/RESTORE.md` has the restore from an Oracle boot volume backup, what is lost, what to check,
+and that the backups are crash consistent; the weekly line says the Oracle backups are checked in the console, not by the report. The policy is
+on; the first backup is due 2026-09-26 09:00 UTC, and until Alan confirms it, sudo stays limited to GroupLab's own files.
+
 ## Entry 223: request 34 done, and the survey opened
 
 Request 34 is closed: Alan's reload and checks passed, and the `503` he saw the second time was the receiver's own "closed". **The survey

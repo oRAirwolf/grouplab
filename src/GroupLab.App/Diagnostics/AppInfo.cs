@@ -49,6 +49,17 @@ public static class AppInfo
     /// </summary>
     public static GroupLab.Core.Updates.BuildIdentity Build => TheBuild.Value;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 224 section 3.1: whether this copy came from the Microsoft Store, which updates it, so GroupLab's own
+    /// updater is off. Stamped in at build time; the tests set <see cref="FromStoreOverride"/>.
+    /// </summary>
+    public static bool FromStore => FromStoreOverride ?? string.Equals(Distribution, "store", StringComparison.Ordinal);
+
+    public static string Distribution { get; } =
+        typeof(AppInfo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GroupLabDistribution")?.Value ?? "download";
+
+    internal static bool? FromStoreOverride { get; set; }
+
     private static readonly Lazy<GroupLab.Core.Updates.BuildIdentity> TheBuild =
         new(() => GroupLab.Core.Updates.BuildIdentity.Read(Version, Train));
 

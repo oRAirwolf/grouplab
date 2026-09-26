@@ -27,11 +27,11 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
 | The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey` |
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
-| **The server as a whole, pissinhot.com included** | HestiaCP's own user backups: one copy a user, on the server only | daily | `/backup` on the server | **a gap until request 35 step 3**: nothing leaves the machine |
+| **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: incremental daily kept 2 days, full on Sundays kept 2 weeks, at 09:00 UTC; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
-**The gaps, today:** the server as a whole (request 35 step 3, Oracle boot volume backups). `grouplab-backups` does not exist yet
-(request 35 step 1), so the nightly backup, which runs from 2026-09-25, keeps its newest copy on this computer only, in
-`C:\Dev\grouplab-local\backups`; the weekly restore test checks that copy until the repository exists.
+**The gaps, today:** none, once the first Oracle boot volume backup exists. The policy is on (entry 225) and the first backup is due at
+2026-09-26 09:00 UTC; until Alan confirms it in the console, Code's sudo stays limited to GroupLab's own files and its installer. The
+nightly backup reaches `grouplab-backups` since entry 224, and the restore test passed against it.
 
 **How it runs**: two scheduled tasks on this computer, registered by `scripts\Register-GroupLabTasks.ps1` as Alan, only while he is logged
 on, with no password stored: `\GroupLab\Nightly backup` at 03:30 (`scripts\backup.py`: the archive copied here, then the backup) and
@@ -64,5 +64,24 @@ manifest lists every file with its SHA-256, so a copy can be checked before it i
 **A submission.** `scripts\Test-SubmissionsArchive.ps1` downloads and checks every one; the zip for one is
 `gh release download archive-YYYY-MM -R oRAirwolf/grouplab-submissions-archive -p <name>.zip`.
 
-**The server.** For GroupLab's own files, `install.py` as in the table. For the whole machine, once request 35 step 3 is done: in the Oracle
-Cloud console, the boot volume's backups, **Create Boot Volume** from the newest, and attach it in place of the damaged one.
+**The server's GroupLab files.** `install.py` as in the table.
+
+**The whole server** (entries 224 and 225), pissinhot.com included. In the Oracle Cloud console, region US West (San Jose), compartment
+spetsnaz (root):
+
+1. **Storage**, **Block Storage**, **Boot Volume Backups**: choose the newest backup from before the problem, then **Create Boot Volume**
+   from it, in the same availability domain as the instance.
+2. **Compute**, **Instances**, the server, its **Storage** tab, **Replace boot volume**, and choose the volume made in step 1. The console
+   stops the instance, swaps the volume and starts it again; the old volume is kept, detached, until it is deleted by hand.
+3. **What is lost:** everything written after the backup was taken: submissions, error reports and survey reports received since, and
+   anything on pissinhot.com changed since. Submissions archived before the backup are safe in the archive and on this computer.
+4. **What to check after:** both sites answer (`curl -sS -o /dev/null -w '%{http_code}' https://grouplab.org/` and the same for
+   pissinhot.com, `200` each); `systemctl list-timers 'grouplab-*' --no-pager` lists the site sync and the intake, error, survey and archive
+   workers with next runs; and `sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json` says `"token": "ok"`.
+
+**These backups are crash consistent**: the volume as it was at one instant, like pulling the power. That is fine for the web sites and
+HestiaCP, and MySQL recovers on start as it would after a power cut.
+
+**Proof, for the whole server:** the weekly check in the automation report reads the server's own HestiaCP backup file and its date, but it
+cannot see the Oracle console. The Oracle backups are checked by Alan in the console, under Boot Volume Backups, whenever he wants to; the
+weekly line says so rather than claiming it.

@@ -400,6 +400,11 @@ jobs:
           find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
           # Entry 219 item A6: the signed Android files, where the upload key has made them. Never required.
           find assets -type f \( -name 'grouplab-android.apk' -o -name 'grouplab-android.aab' \) -exec cp {} release/ \;
+          # Named like the other builds on the numbered release, so a bug report names one; the plain names go on the rolling release.
+          # Entry 224: nightly 109 built and gathered them, and neither upload list below carried them.
+          for ext in apk aab; do
+            if [ -f "release/grouplab-android.$ext" ]; then cp "release/grouplab-android.$ext" "release/grouplab-$VERSION-android-$COMMIT.$ext"; fi
+          done
           ls -la release
 
           missing=""
@@ -508,7 +513,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab 2>/dev/null || true)
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
@@ -526,7 +531,7 @@ jobs:
             --notes-file rolling.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab 2>/dev/null || true)
 
       # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
       # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.

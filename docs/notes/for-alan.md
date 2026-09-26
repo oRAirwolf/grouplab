@@ -1,11 +1,11 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **35**, fifteen minutes: the backups repository, the archive token, and a whole-server backup in Oracle
-Cloud. **36**, the Android app's upload key and Play entry, can go in the same sitting. **37** is a choice about signing the Windows
-download, whenever suits. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
+**Open: 10.** Most urgent: **35**, only the proof is left: say when the first Oracle boot volume backup appears in the console (after
+2026-09-26 09:00 UTC). Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is now only
+the Play Console step. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 25 September, kept on this computer only until the backups repository exists (request 35); the restore test passed on 25 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
+**This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
 <!-- /automation-week -->
 
 **The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
@@ -26,9 +26,59 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 38. The Microsoft Store: your account, the name, and the keys that let releases go there by themselves
+
+**Opened 2026-09-25. Entry 224 section 3.** The Store package is built (CI makes it on every push) and `release.yml` sends each tagged
+stable release to the Store by itself once these are in place. Part A is one sitting, about thirty minutes, mostly Microsoft's identity
+check. Part B comes after I reply that the first package is ready, and is the Store's one hand-made first submission.
+
+**Part A**
+
+1. **The developer account.** At https://storedeveloper.microsoft.com, sign up as an **individual** developer (free). It asks for an
+   identity check; that is the part that takes time.
+2. **Reserve the name.** In Partner Center, **Apps and games**, **New product**, **MSIX or PWA app**, name `GroupLab`.
+3. **The identity, into the repository's variables.** In the new product, **Product management**, **Product identity**, copy four values,
+   then in PowerShell (each asks for its value):
+
+```powershell
+gh variable set STORE_IDENTITY_NAME -R oRAirwolf/grouplab            # Package/Identity/Name
+gh variable set STORE_PUBLISHER -R oRAirwolf/grouplab                # Package/Identity/Publisher, the CN=... line
+gh variable set STORE_PUBLISHER_DISPLAY_NAME -R oRAirwolf/grouplab   # Package/Properties/PublisherDisplayName
+gh variable set STORE_PRODUCT_ID -R oRAirwolf/grouplab               # the Store ID, 9 followed by eleven letters and numbers
+```
+
+4. **The Entra application.** In Partner Center, **Account settings**, **Tenants**, associate your Entra tenant if it is not already. In
+   Entra, register an application (`grouplab-store-publisher`, single tenant, no redirect) and make it a client secret. Back in Partner
+   Center, **Account settings**, **User management**, **Microsoft Entra applications**, add it with the **Manager** role. The Seller ID is
+   under **Account settings**, **Legal info** (or **Identifiers**).
+5. **The four secrets**, in PowerShell (each asks for its value and does not show it):
+
+```powershell
+gh secret set AZURE_AD_TENANT_ID -R oRAirwolf/grouplab
+gh secret set AZURE_AD_APPLICATION_CLIENT_ID -R oRAirwolf/grouplab
+gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab
+gh secret set SELLER_ID -R oRAirwolf/grouplab
+```
+
+**A good answer for part A:** "done", once the eight lines above each say they were set. I then build the first package with your identity
+as a draft release and tell you it is ready.
+
+**Part B, after I say the draft is ready.** In Partner Center, **Start your submission** for GroupLab:
+- **Pricing and availability:** free, all markets.
+- **Properties:** category Sports; privacy policy `https://grouplab.org/research/what-grouplab-sends/`.
+- **Age ratings:** answer as `docs/store/LISTING.md` says; expected 3+.
+- **Packages:** upload `grouplab-win-x64.msix` from the draft release on github.com/oRAirwolf/grouplab/releases. Where it asks why the
+  package needs **runFullTrust**, paste: "GroupLab is a desktop application built with .NET. It needs full trust to open the scans and
+  photographs the person chooses, to print targets, and to save reports and sessions where the person chooses."
+- **Store listing:** paste each block from `docs/store/LISTING.md` and upload its five screenshots.
+- **Submit.** Certification takes a few days. After it, every tagged release is sent to the Store by itself.
+
+---
+
 ## 37. Signing the Windows download: a choice, whenever suits you
 
-**Opened 2026-09-25. Entry 219 item D4.** Today a download of GroupLab shows Windows' SmartScreen warning. `docs/RELEASE-PLAN.md` sets out
+**Answered 2026-09-25: not yet** (entry 224 section 2). Alan: "As of right now, nobody is getting windows smart screen warnings. Lets
+hold off for now." The comparison stays in `docs/RELEASE-PLAN.md` for when it is revisited. **Opened 2026-09-25. Entry 219 item D4.** Today a download of GroupLab shows Windows' SmartScreen warning. `docs/RELEASE-PLAN.md` sets out
 the options with their current costs. **The recommendation: Azure Artifact Signing, about $120 a year**, for the direct download, signed
 from CI with no key file for anyone to keep; and later the Microsoft Store, which is free for individual developers and removes the warning
 for Store installs, once an MSIX package is worth making. An EV certificate no longer skips the warning, so it is not worth its price.
@@ -77,7 +127,9 @@ A good result: the internal testing release is available and the Play Store link
 
 ## 35. Backups and automation: the three things only you can do, one sitting, about fifteen minutes
 
-**Opened 2026-09-25. Entry 222.** Everything else in entry 222 is Code's: the nightly backup and its weekly restore test, the server
+**Partly done, 2026-09-25** (entries 224 and 225): steps 1 and 2 are done and working (tonight's backup is in `grouplab-backups`
+and passed its restore test; the archive worker reads its token and reaches the archive). Step 3's policy is on; **all that is left is
+to say when the first boot volume backup appears in the console**, after 2026-09-26 09:00 UTC. **Opened 2026-09-25. Entry 222.** Everything else in entry 222 is Code's: the nightly backup and its weekly restore test, the server
 archiving submissions by itself, and the cleanup with its safety net. These three need you. Nothing here is urgent enough to interrupt
 anything; the one that matters most is **3**, because today no copy of the server as a whole exists anywhere but on the server.
 

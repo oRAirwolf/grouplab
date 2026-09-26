@@ -17,9 +17,13 @@
     <!-- NOTES-FROM-PLANNING.md entry 119 section 1.2: the train is stamped in at build time. Only a publishing workflow sets it; a build
          made on somebody's own machine keeps "development" and never offers to update itself. -->
     <GroupLabTrain Condition="'$(GroupLabTrain)' == ''">development</GroupLabTrain>
+    <!-- NOTES-FROM-PLANNING.md entry 224 section 3.1: how this copy reaches people. "store" is the Microsoft Store's package, which the
+         Store keeps up to date, so GroupLab's own updater is off in it; everything else is "download". -->
+    <GroupLabDistribution Condition="'$(GroupLabDistribution)' == ''">download</GroupLabDistribution>
   </PropertyGroup>
 
   <ItemGroup>
     <AssemblyMetadata Include="GroupLabTrain" Value="$(GroupLabTrain)" />
+    <AssemblyMetadata Include="GroupLabDistribution" Value="$(GroupLabDistribution)" />
   </ItemGroup>
 </Project>
