@@ -39,7 +39,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   server archives submissions by itself. The Oracle boot volume policy is on; **when Alan confirms the first backup, close request 35 and
   widen sudo** as entry 222 section 6.2 allows.
 - **The Microsoft Store (entry 224)**: MSIX built in CI; tagged releases go to the Store by themselves once request 38 is done.
-- **Android signing**: the nightly signs the APK and AAB; request 36 names the AAB once a nightly carries it.
+- **Android signing**: every nightly carries the signed APK and AAB since nightly 110; request 36 is the Play Console step.
 - The roadmap is done up to what waits on Alan: A6 needs request 36's key (the nightly's signed Android job is committed and builds
   nothing until the key is set), A7 the older phones, D2 request 9, D4 request 37.
 

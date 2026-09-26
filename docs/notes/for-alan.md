@@ -88,40 +88,21 @@ identity check); "the Store first"; "an OV certificate"; or "not yet". Nothing i
 
 ---
 
-## 36. The Android app's upload key and its Play Console entry: can go with 35, about twenty minutes
+## 36. The Android app in the Play Console: its first internal testing release, about fifteen minutes
 
-**Opened 2026-09-25. Entry 219 item A6.** The Android app is built (capture, result, correcting by touch, sessions, sharing). To be installed
-by testers from Google Play's internal testing track it has to be signed with a key only you hold, and it needs an entry in the Play
-Console. Nothing here is urgent; it can wait for a sitting of its own. **Code never reads the key file or its passwords.**
+**Rewritten 2026-09-26 (entry 224).** Steps 1 and 2 are done: the upload key is set, and every nightly now carries the app signed with it.
+The first to do so is nightly 110. What is left is the Play Console, which only you can do. Your developer account exists (the fee is
+paid, docs/PLATFORM-SUPPORT.md).
 
-**1. The upload key.** In PowerShell on this machine. It asks for a password twice (use one you keep in your password manager), then for a
-name and the like; your first name and "GroupLab" are enough:
+**The file to upload:** `grouplab-0.2.0-nightly.110-android-51a2058.aab`, from
+https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.110 (its version code is 110). A newer nightly's `.aab` works just as
+well; the rolling release at .../releases/tag/nightly always has the newest as `grouplab-android.aab`.
 
-```powershell
-& 'C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\bin\keytool.exe' -genkeypair -v -keystore C:\Dev\keys\grouplab-upload.jks -alias grouplab-upload -keyalg RSA -keysize 4096 -validity 10000
-```
+In the Play Console: **Create app**, name `GroupLab`, default language English (United States), **App**, **Free**, accept the
+declarations. Then **Testing**, **Internal testing**, **Create new release**, and upload that `.aab`. Add yourself as a tester. When it
+asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-sends/`.
 
-Keep a copy of `grouplab-upload.jks` and its password with your other keys. If it is ever lost, Google can replace an upload key, because
-Play keeps the key that actually signs the app (Play App Signing, which new apps use by default).
-
-**2. The key into the repository's secrets**, so the nightly can sign with it. Still in PowerShell; the second and third ask for the
-password and do not show it:
-
-```powershell
-gh secret set ANDROID_UPLOAD_KEYSTORE -R oRAirwolf/grouplab --body ([Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\Dev\keys\grouplab-upload.jks')))
-gh secret set ANDROID_UPLOAD_KEYSTORE_PASSWORD -R oRAirwolf/grouplab
-gh secret set ANDROID_UPLOAD_KEY_PASSWORD -R oRAirwolf/grouplab
-```
-
-(With keytool's defaults the two passwords are the same one.) A good result: three lines saying each secret was set.
-
-**3. The Play Console entry.** Your Google Play developer account exists (the fee is paid, docs/PLATFORM-SUPPORT.md). In the Play Console:
-**Create app**, name `GroupLab`, default language English
-(United States), **App**, **Free**, accept the declarations. Then **Testing**, **Internal testing**, **Create new release**, and upload
-`grouplab-android.aab` from the newest nightly on github.com/oRAirwolf/grouplab/releases (the first nightly after step 2 carries it).
-Add yourself as a tester. When it asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-sends/`.
-
-A good result: the internal testing release is available and the Play Store link on your phone installs GroupLab. Say how far you got.
+**A good result:** the internal testing release is available and the Play Store link on your phone installs GroupLab. Say how far you got.
 
 ---
 
