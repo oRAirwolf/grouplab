@@ -115,6 +115,24 @@ def repository_exists(repo: str) -> bool:
     return gh("repo", "view", repo, "--json", "isPrivate", check=False).returncode == 0
 
 
+README = """# GroupLab backups
+
+Private. One release a night, `backup-YYYY-MM-DD`, written by `scripts/backup.py` in the grouplab repository: git bundles of every branch and
+tag, the local-only files, and a manifest of every file's SHA-256. How to restore is in `docs/RESTORE.md` there. Never made public.
+"""
+
+
+def ensure_first_commit(repo: str) -> None:
+    """GitHub makes no release in a repository with no commit (entry 224: the new backups repository was empty), so an empty one gets
+    a README as its first commit. Nothing is written where anything already is."""
+    if gh("api", f"repos/{repo}/commits?per_page=1", check=False).returncode == 0:
+        return
+    import base64
+    gh("api", "-X", "PUT", f"repos/{repo}/contents/README.md", "-f", "message=What this repository is",
+       "-f", "content=" + base64.b64encode(README.encode()).decode())
+    log(f"{repo} was empty, so it now has a README as its first commit")
+
+
 # ------------------------------------------------------------------------------------------------- the archive, copied here --
 
 def sync_archive(dry: bool, steps: list[str]) -> dict:
@@ -237,6 +255,7 @@ def backup(dry: bool, steps: list[str]) -> dict:
             for f in files:
                 shutil.copy2(f, KEEP_COPY / f.name)
             return {"tag": tag, "bytes": total, "uploaded": False, "waiting": "the backups repository"}
+        ensure_first_commit(BACKUPS)
         if gh("release", "view", tag, "-R", BACKUPS, check=False).returncode != 0:
             gh("release", "create", tag, "-R", BACKUPS, "--title", f"Backup {tag[7:]}",
                "--notes", "Private. A nightly backup: see docs/RESTORE.md in the grouplab repository.")

@@ -222,21 +222,35 @@ def status(**fields) -> None:
     tmp.replace(STATE / "status.json")
 
 
+def reachable(token: str) -> None:
+    """Entry 224: with nothing waiting, the run still proves the token reads the archive, so a broken token shows before it matters."""
+    try:
+        code, _ = api("GET", f"/repos/{REPOSITORY}", token)
+    except NotAccepted:
+        status(token="refused", waiting=0)
+        log("the archive token was refused by GitHub")
+        return
+    except Unreachable as e:
+        status(token="unchecked", waiting=0, last_error=str(e))
+        return
+    status(token="ok" if code == 200 else f"cannot see the archive ({code})", waiting=0, archive="reachable" if code == 200 else "not found")
+
+
 def main() -> int:
-    if not READY.is_dir():
-        return 0
     now = time.time()
-    waiting = sorted(p for p in READY.iterdir() if p.is_dir() and NAME.match(p.name) and now - p.stat().st_mtime > SETTLE_SECONDS)
-    if not waiting:
-        status(token="unchecked", waiting=0)
-        return 0
+    waiting = sorted(p for p in READY.iterdir() if p.is_dir() and NAME.match(p.name) and now - p.stat().st_mtime > SETTLE_SECONDS) \
+        if READY.is_dir() else []
     try:
         token = TOKEN_FILE.read_text(encoding="utf-8").strip()
     except OSError:
         token = ""
     if not token:
-        log(f"{len(waiting)} waiting in ready, and no archive token has been set, so they stay there")
+        if waiting:
+            log(f"{len(waiting)} waiting in ready, and no archive token has been set, so they stay there")
         status(token="not set", waiting=len(waiting))
+        return 0
+    if not waiting:
+        reachable(token)
         return 0
 
     attempts_dir = STATE / "attempts"

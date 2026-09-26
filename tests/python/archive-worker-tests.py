@@ -99,6 +99,8 @@ def handler(gh: GitHub, port_box: list[int]):
                 return self.send(503)
             if self.headers.get("Authorization") != f"Bearer {TOKEN}":
                 return self.send(401)
+            if path == f"/repos/{ARCHIVE}":
+                return self.json(200, {"full_name": ARCHIVE, "private": True})
             if path.startswith(f"/repos/{ARCHIVE}/releases/tags/"):
                 tag = path.rsplit("/", 1)[1]
                 return self.json(200, self.release_json(tag)) if tag in gh.releases else self.json(404, {"message": "Not Found"})
@@ -179,6 +181,14 @@ def main() -> int:
         check("without a token nothing moves", result.returncode == 0 and first.is_dir() and not gh.releases, result.stdout + result.stderr)
 
         token_file.write_text(TOKEN)
+        shutil.move(str(first), str(root / "aside"))
+        shutil.move(str(fresh), str(root / "aside-fresh"))
+        run(env)
+        state = json.loads((private / "archive-worker" / "status.json").read_text())
+        check("with nothing waiting, a run still proves the token reaches the archive", state.get("token") == "ok"
+              and state.get("archive") == "reachable", json.dumps(state))
+        shutil.move(str(root / "aside"), str(first))
+        shutil.move(str(root / "aside-fresh"), str(fresh))
         result = run(env)
         check("with the token the submission is archived and leaves the server", not first.exists(), result.stdout + result.stderr)
         check("one still being written is left alone", fresh.is_dir())
@@ -239,6 +249,10 @@ def main() -> int:
     finally:
         server.shutdown()
         shutil.rmtree(root, ignore_errors=True)
+
+    script = (REPO / "website" / "server" / "grouplab-set-archive-token").read_text(encoding="utf-8")
+    check("the token script names the archive worker, never the error worker (entry 224)",
+          "grouplab-archive-worker" in script and "error-worker" not in script and "error worker" not in script)
 
     print(f"archive worker tests: {passed} passed, {len(failed)} failed")
     for f in failed:

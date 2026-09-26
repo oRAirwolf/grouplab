@@ -60,9 +60,9 @@ def main() -> int:
 
     print()
     print(f"Written to {TOKEN}, owned by root, mode 600.")
-    print("The error worker picks it up on its next run, within five minutes:")
-    print("     sudo systemctl start grouplab-error-worker.service")
-    print("     sudo tail -n 5 /home/airwolf/logs/grouplab-error-worker.log")
+    print("The archive worker picks it up on its next run, within ten minutes, or at once with:")
+    print("     sudo systemctl start grouplab-archive-worker.service")
+    print("     sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json")
     return 0
 
 
