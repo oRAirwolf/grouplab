@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.109
+
+**2026-09-26**, commit `54e06ef`. Nightly.
+
+**What you will notice**
+
+- GroupLab now asks once whether you would like to take part in the hardware survey, a weekly report of what your computer is and how fast GroupLab runs on it; nothing is sent unless you say yes, and you can change your answer in Settings, under Sharing.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.109)
+
+---
+
 ## 0.2.0-nightly.108
 
 **2026-09-25**, commit `5ddd790`. Nightly.
