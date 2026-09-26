@@ -19,7 +19,7 @@ param(
     [string] $Train = 'development',
     [string] $Output = 'out/package',
     [string] $IdentityName = 'GroupLab.StandIn',
-    [string] $Publisher = 'CN=GroupLab stand-in, not submittable',
+    [string] $Publisher = 'CN=GroupLabStandIn',
     [string] $PublisherDisplayName = 'GroupLab'
 )
 
