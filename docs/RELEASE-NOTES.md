@@ -442,7 +442,7 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 - When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first. (Entry 130, 2c)
 - An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused. (Entry 141)
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.71)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 ## 0.2.0-nightly.66
