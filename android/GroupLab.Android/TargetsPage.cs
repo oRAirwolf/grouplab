@@ -1,0 +1,164 @@
+using System.Globalization;
+using Avalonia.Controls;
+using Avalonia.Input.TextInput;
+using Avalonia.Layout;
+using Avalonia.Media.Imaging;
+using GroupLab.App.Diagnostics;
+using GroupLab.Cli.Library;
+using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Gltd;
+using GroupLab.Core.Rendering;
+using Orientation = Avalonia.Layout.Orientation;
+using RadioButton = Avalonia.Controls.RadioButton;
+
+namespace GroupLab.Android;
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 243 section 3.4: the Targets screen on the phone. "Made for your optic" first, because on a phone it is the
+/// quickest way to a sheet that suits the rifle in hand, then the library by family. A sheet opens to a picture of it and two big buttons:
+/// Print, which is Android's own print dialog, and Share the PDF, for printing from a computer. The PDF is the one the desktop makes, with
+/// the note to print at actual size, so a sheet printed from the phone reads the same.
+/// </summary>
+public sealed class TargetsPage : UserControl
+{
+    private readonly TextBox distance = Number("100");
+    private readonly TextBox magnification = Number("");
+    private readonly TextBox dot = Number("");
+    private readonly TextBox shots = Number("25");
+    private readonly RadioButton letter = Screens.Radio("page", "Letter", !RegionInfo.CurrentRegion.IsMetric);
+    private readonly RadioButton a4 = Screens.Radio("page", "A4", RegionInfo.CurrentRegion.IsMetric);
+    private readonly StackPanel said = new() { Spacing = 8 };
+
+    public TargetsPage()
+    {
+        Content = List();
+    }
+
+    private static TextBox Number(string text)
+    {
+        var box = new TextBox { Text = text, MinHeight = Screens.Touch, MinWidth = 96, HorizontalAlignment = HorizontalAlignment.Left };
+        TextInputOptions.SetContentType(box, TextInputContentType.Number);
+        return box;
+    }
+
+    private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Line(words), box } };
+
+    private Control List()
+    {
+        var column = new StackPanel { Spacing = 12 };
+        column.Children.Add(Screens.Heading("Targets"));
+        column.Children.Add(Screens.Line("Print a sheet GroupLab reads by itself, or share it as a PDF to print on a computer. Print it at actual size."));
+
+        column.Children.Add(Screens.Heading("Made for your optic"));
+        column.Children.Add(Screens.Line("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."));
+        column.Children.Add(Field("Distance, yards", distance));
+        column.Children.Add(Field("Lowest magnification", magnification));
+        column.Children.Add(Field("Red dot size in MOA, at 1x only", dot));
+        column.Children.Add(Field("Shots", shots));
+        column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Children = { letter, a4 } });
+        column.Children.Add(Screens.Choice("Make the sheet", Generate));
+        column.Children.Add(said);
+
+        column.Children.Add(Screens.Heading("The library"));
+        IReadOnlyList<LibrarySheet> sheets;
+        try
+        {
+            PhoneAnalysis.Library();
+            sheets = TargetLibrary.Load(Path.Combine(PhoneAnalysis.Files, "targets"));
+        }
+        catch (IOException e)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "targets.list", e);
+            sheets = [];
+        }
+
+        foreach (var family in sheets.GroupBy(s => s.Family))
+        {
+            column.Children.Add(new TextBlock { Text = family.Key, FontWeight = Avalonia.Media.FontWeight.SemiBold, Margin = new Avalonia.Thickness(0, 8, 0, 0) });
+            foreach (var sheet in family)
+            {
+                column.Children.Add(Screens.Choice(sheet.Definition.Name, () => Content = Sheet(sheet)));
+            }
+        }
+
+        return Screens.Page(column);
+    }
+
+    /// <summary>Makes the sheets "Made for your optic" describes and, where they print, opens them as a sheet of the library would.</summary>
+    private void Generate()
+    {
+        said.Children.Clear();
+        static double? Read(string? text) =>
+            double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out double v) && v > 0 ? v
+            : double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out v) && v > 0 ? v : null;
+        if (Read(distance.Text) is not { } yards || Read(magnification.Text) is not { } power)
+        {
+            said.Children.Add(Screens.Line("Enter the distance in yards and the lowest magnification, such as 100 and 10."));
+            return;
+        }
+
+        int count = Read(shots.Text) is { } n ? (int)Math.Round(n) : 25;
+        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Read(dot.Text), count, a4.IsChecked == true ? "a4" : "letter"));
+        DiagnosticLog.Info("sheet.generate", ("yards", yards), ("power", power), ("shots", made.Request.Shots), ("sheets", made.Sheets), ("bulls", made.Bulls));
+        foreach (string sentence in made.Explanation)
+        {
+            said.Children.Add(Screens.Line(sentence));
+        }
+
+        if (made.Design is { Printable: true, Definition: { } definition })
+        {
+            var own = new LibrarySheet("custom.gltd.json", "Made for your optic", null, definition);
+            said.Children.Add(Screens.Choice(made.Sheets > 1 ? $"Print or share the {made.Sheets} sheets" : "Print or share the sheet", () => Content = Sheet(own, made.Explanation)));
+        }
+    }
+
+    /// <summary>One sheet: its picture, what it is, and Print and Share the PDF.</summary>
+    private Control Sheet(LibrarySheet sheet, IReadOnlyList<string>? explanation = null)
+    {
+        var column = new StackPanel { Spacing = 12 };
+        column.Children.Add(Screens.Heading(sheet.Definition.Name));
+        column.Children.Add(Screens.Line(explanation is null ? sheet.Summary : string.Join(" ", explanation)));
+        if (Preview(sheet.Definition) is { } picture)
+        {
+            column.Children.Add(new Image { Source = picture, MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center });
+        }
+
+        var result = Screens.Line("");
+        column.Children.Add(Screens.Choice("Print", () => Out(sheet, result, print: true)));
+        column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
+        column.Children.Add(result);
+        column.Children.Add(Screens.Line("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
+        column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
+        return Screens.Page(column);
+    }
+
+    private static void Out(LibrarySheet sheet, TextBlock result, bool print)
+    {
+        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+        if (rendered.Pdf is not { } pdf)
+        {
+            result.Text = "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));
+            return;
+        }
+
+        result.Text = (print ? PdfOut.Print(pdf, sheet.Definition.Name, sheet.Definition.Page.Size) : PdfOut.Share(pdf, sheet.Definition.Name)) ?? "";
+    }
+
+    /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>
+    private static Bitmap? Preview(TargetDefinition definition)
+    {
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0));
+        if (scenes.Pages.Count == 0)
+        {
+            return null;
+        }
+
+        var scene = scenes.Pages[0];
+        double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
+        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches));
+        using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
+        OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
+        using var stream = new MemoryStream(png);
+        return new Bitmap(stream);
+    }
+}

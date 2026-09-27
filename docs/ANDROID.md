@@ -322,8 +322,10 @@ one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter a
 
 ## 11. The application (entry 219 item A3)
 
-`android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`. Three places along the bottom, where a thumb reaches them: Capture,
-Sessions and Settings; Back from Sessions or Settings returns to Capture, and Back from Capture leaves. The first run asks what may be
+`android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`. Four places along the bottom, where a thumb reaches them: Capture,
+Sessions, Targets and Settings; Back from any of the others returns to Capture, and Back from Capture leaves. Targets (entry 243 section
+3.4) is the library and "Made for your optic", each sheet printed through Android's own print dialog or shared as the desktop's PDF. On a
+window at least 840 dp wide (entry 243 section 3.3) a result puts the sheet beside its numbers. The first run asks what may be
 shared before any of them, on one scrolling screen, in the desktop's order and words, with nothing chosen for the person; a question is
 asked only while the project takes what it asks about, as on the desktop, so the survey joins when its receiver opens. Settings has the
 same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).

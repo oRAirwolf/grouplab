@@ -2424,6 +2424,14 @@
   "Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)"
+  },
+  "Targets (entry 243 section 3.4) is the library and \"Made for your optic\", each sheet printed through Android's own print dialog or shared as the desktop's PDF.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/TargetsPage.cs and PdfOut.cs Print, Share"
+  },
+  "On a window at least 840 dp wide (entry 243 section 3.3) a result puts the sheet beside its numbers.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/ResultView.cs ExpandedWidth and Arrange"
   }
  },
  "rules": [

@@ -3,8 +3,11 @@
   "command": "grouplab corpus counts --write",
   "artwork": {
     "GL-CF25-100M-A4.gltd.json": "77ac466f703228f73df1287efaab24a13b53749b853a6e9bc5d2b2c235ba2b7e",
+    "GL-CF25-A4-E.gltd.json": "9f059d0387a802dd351beb3e35e1ee35533d76c93a0f8d0c50e8786115820802",
     "GL-CF25-A4.gltd.json": "5d5371480dfd0b18eed6bc95bc6a774ff51897483ccbaf482959f9b9c0693c4a",
+    "GL-CF25-LTR-D-E.gltd.json": "d278b6331346be99fb2ea437268063eb715dc30b9f925969ff17e3ad09072e00",
     "GL-CF25-LTR-D.gltd.json": "d09554a90fc46bf81b45df9559e650413a7978938c84730a1de7950476f2ee8b",
+    "GL-CF25-LTR-E.gltd.json": "612eb63ea578f4a4ee7371f359d27f361273534d3499bd6e25284ab14cf807e0",
     "GL-CF25-LTR.gltd.json": "3b956ec7b09e29b9751cc4b92986ab05ccc0fb6ab1e9369ea4b2f10a6afaeede",
     "GL-CF30-LTR.gltd.json": "de41cb0098eeca909825db84817cb15024c5b7ecf0f4c67936e830a5b5056817",
     "GL-LR25-A3.gltd.json": "e158c2ac2700ad676dde269b70cbc6ca1111262129566bc2cd90db1c81453ae3",

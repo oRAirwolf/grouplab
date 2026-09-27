@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1086 |
+| code | 1088 |
 | measured | 1513 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3816** |
+| **total** | **3818** |
 
-**639** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**641** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -575,6 +575,8 @@ one that matters.
 - *code* (android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs): Running the spike on the phone The `android` workflow's artifact `grouplab-spike-apk` is a Release build signed with the build machine's debug key, so it installs and starts by itself; a Debug build expects Visual Studio's fast deployment and does not (entry 202).
 - *code* (android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs): **Camera** opens the capture screen of entry 219 item A2: the preview, the one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId): The application (entry 219 item A3) `android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`.
+- *code* (android/GroupLab.Android/TargetsPage.cs and PdfOut.cs Print, Share): Targets (entry 243 section 3.4) is the library and "Made for your optic", each sheet printed through Android's own print dialog or shared as the desktop's PDF.
+- *code* (android/GroupLab.Android/ResultView.cs ExpandedWidth and Arrange): On a window at least 840 dp wide (entry 243 section 3.3) a result puts the sheet beside its numbers.
 - *code* (android/GroupLab.Android/SettingsView.cs SettingsView; android/GroupLab.Android/FirstRunView.cs SurveyDue; android/GroupLab.Android/Shell.cs SurveyOpen): Settings has the same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).
 - *code* (android/GroupLab.Android/ResultView.cs SheetEditor Reach, Loupe, Magnify): A touch within 24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross where the hole will go.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Google Play (entry 231) **The first internal testing release.** Alan created the app in the Play Console, package `org.grouplab.app`, and uploaded nightly 110's AAB to internal testing on 2026-09-27.

@@ -33,7 +33,7 @@ internal static class PhoneAnalysis
 {
     private static IReadOnlyList<TargetDefinition>? library;
 
-    private static string Files => global::Android.App.Application.Context.FilesDir!.AbsolutePath;
+    internal static string Files => global::Android.App.Application.Context.FilesDir!.AbsolutePath;
 
     /// <summary>Where each session's working image lives, one folder a session.</summary>
     internal static string SessionsFolder => System.IO.Path.Combine(Files, "sessions");

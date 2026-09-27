@@ -46,9 +46,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Entry 243 section 3.4: the desktop's library code is compiled here, and its Orientation is the sheet's, not Android's widget one. -->
+    <Using Remove="Android.Widget" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\GroupLab.Core\GroupLab.Core.csproj" />
     <!-- The engine's imaging, and the desktop's settings, sharing words and error report code, compiled here as they are. -->
     <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Shared\Imaging" />
+    <!-- Entry 243 section 3.4: the Targets screen's "Made for your optic", the desktop's generator and the layout rules it designs with. -->
+    <Compile Include="..\..\src\GroupLab.Cli\Library\TargetGenerator.cs" Link="Shared\Library\TargetGenerator.cs" />
+    <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
+    <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />

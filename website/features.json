@@ -533,6 +533,19 @@
       ],
       "since": "next",
       "note": "side by side"
+    },
+    {
+      "key": "phone-targets",
+      "group": "Sheets and printing",
+      "name": "Print a sheet from the phone",
+      "sentence": "The phone has a Targets screen: the whole library and Made for your optic, printed through Android's own print dialog or shared as a PDF.",
+      "shot": null,
+      "noPicture": "a phone build, whose screens come with the phone's look (entry 243)",
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "note": "Targets screen"
     }
   ]
 }

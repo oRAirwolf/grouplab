@@ -12,7 +12,7 @@ namespace GroupLab.Android;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A3: the application's frame. Three places along the bottom, where a thumb reaches them on a phone
-/// and on the Fold 7 either way up: Capture, Sessions and Settings. The first run questions come before any of them, until each open one
+/// and on the Fold 7 either way up: Capture, Sessions, Targets (entry 243 section 3.4) and Settings. The first run questions come before any of them, until each open one
 /// is answered. Back from Sessions or Settings returns to Capture; Back from Capture leaves, as Android expects.
 /// </summary>
 public sealed class Shell : UserControl
@@ -22,6 +22,7 @@ public sealed class Shell : UserControl
     {
         Capture,
         Sessions,
+        Targets,
         Settings,
     }
 
@@ -101,6 +102,7 @@ public sealed class Shell : UserControl
         {
             Place.Settings => new SettingsView(App.Settings),
             Place.Sessions => new SessionsPage(),
+            Place.Targets => new TargetsPage(),
             _ => capture ??= new CapturePage(),
         };
     }

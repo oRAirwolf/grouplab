@@ -69,6 +69,8 @@ public class BenchCoverageTests
         ["SessionRecords"] = "One record built from a marking when a session is saved: the marking file and the figures, both already measured where they are made. Entry 219 item A4.",
         ["SessionPackage"] = "Writing or reading one session file when a person shares or opens one; its time is the zip library's and the picture's size. Entry 219 item A5.",
         ["ShotEditor"] = "It builds the buttons of a popover from the state, looping over the bulls once, and converts an arrow key press through three calls to the scale. It runs under a person's finger like the canvas controls beside it.",
+        ["SetPool"] = "It groups a few saved sessions by their set and adds up their shots, when a person presses Pool the chosen. The analysis of each sheet is measured. Entry 243 section 3.1.",
+        ["StageWords"] = "A fixed sentence looked up by a stage's name as the stage finishes. There is nothing in it that takes time. Entry 243 section 3.2.",
     };
 
     [Fact]
