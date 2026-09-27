@@ -12,6 +12,38 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.113
+
+**2026-09-27**, commit `70419ed`. Nightly.
+
+**What you will notice**
+
+- While GroupLab reads a target it now says which step it is on, from loading the picture to measuring the group; on the phone a Cancel button stops it and keeps nothing, and on the desktop a sheet you named by hand can now be canceled too.
+- The sheets of a set made for your optic can now be pooled into one group: analyze each sheet in any order, tick them in Session records and choose Pool the chosen, and GroupLab says which sheets of the set are still missing.
+- The target library now offers three sheets with a new bull, a black disc with a white center and a small dot, which the aim point test showed can be centered on through a scope at 10x; they sit beside the usual sheets.
+- On a group of two to four shots, a mark much larger than the others is now pointed out as possibly two shots, marked as judged from too few marks to be sure.
+- A separate development build, GroupLab Dev, now comes with each nightly for testers: it installs beside GroupLab from Google Play, so both can be on one phone, and it says in Settings what it is.
+- On the phone, the Capture screen now says to shade the whole sheet or none of it, and to hold the sheet down outside the printed area, because torn tape can look like a hole.
+- Settings, under Sharing, now lists every benchmark run with its date, version and time, and every run goes with your next survey report; the published figures count each computer once, by the middle of its runs rather than its best.
+- Opening a second target and analyzing it no longer replaces the first target's saved session; each target now keeps its own record.
+- On a narrow window or a screen set to 200 percent, the analysis now fits: the side panels narrow, and on the narrowest the figures move under the picture instead of running off the edge.
+- On Android, a photo or scan chosen from the phone is now read at the size GroupLab works at instead of at full size first, so a large scan needs far less memory.
+- Photographs taken under uneven light are read better: a shadow across part of the sheet no longer hides a hole or turns plain paper into one, and paper near the sheet's edge is no longer mistaken for a hole.
+- A session report whose cards are long now keeps them all on its first page, with the plot a little smaller, instead of spilling onto a page of their own.
+- GroupLab now checks how much memory a phone or computer has before it reads a large picture, and says so plainly when an image is too big for this machine instead of running out part way through.
+- GroupLab now refuses a photograph taken more than 37 degrees off square to the sheet, rather than 40, because tests at the desk showed that is where it starts reading marks that are not shots; it says the angle and the limit when it does.
+- The survey question now says plainly what the random number is, and Settings has two new buttons: Reset my survey number, and Delete my survey reports. If you said yes before, GroupLab asks once more before sending anything.
+
+**Under the hood**
+
+- "Made for your optic" on the tour, and a Features page.
+- Internal: a one page plan for the hole size test at the range, printed from the same tool as the guides.
+- On Android, what GroupLab records while it works now also goes to the phone's system log, without file names or locations, so a problem on a tester's phone can be diagnosed.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.113)
+
+---
+
 ## 0.2.0-nightly.112
 
 **2026-09-27**, commit `a3ac11d`. Nightly.
