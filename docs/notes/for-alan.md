@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print) and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 10.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **49** is a choice you can make from your chair: how GroupLab should look on the phone, A, B or C. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print) and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
@@ -22,6 +22,22 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 49. How GroupLab should look on the phone: A, B or C
+
+**Needed:** your pick of three looks for the phone and tablet, or a mix of them. **Why:** entry 243 section 3.5 asked to bring the
+desktop's look to the phone, and the look is not changed without you. **Where:** the page is private, at
+https://claude.ai/artifact/LvBKewGhR2BaVRYfKeCdpz, and the same file is on this computer at
+`C:\Dev\grouplab-local\design-concepts\phone-concepts-2026-09-27.html` (open it in a browser). It shows today's phone screens and
+then each concept on four screens (the first run, a result, Settings and the new Targets screen), in dark, light or both.
+
+- **A, the desktop carried over:** flat surfaces with hairlines, IBM Plex, a top bar with the wordmark, one amber button a screen. Closest to the desktop.
+- **B, cards for the thumb:** the desktop's colors and type on rounded panels, big tappable choices, figure tiles. Most like other Android apps.
+- **C, readout first:** a result opens on mean radius in large amber type with the other figures beneath; one first-run question a page. The most change.
+
+**A good answer:** one letter, or parts from more than one ("C's result screen, A for the rest"). Only the chosen one is built, and its
+screenshots from the Fold 7 and the tablet then replace these drawings. Nothing else waits on it: tonight's accent fix (the phone's
+blue is now the desktop's amber) is a mismatch fixed, not a choice.
 
 ## 48. The Features page and the optic tour stop are up
 

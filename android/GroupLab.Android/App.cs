@@ -25,7 +25,17 @@ public sealed class App : Avalonia.Application
     /// <summary>The hardware survey's queue, the desktop's own; it keeps and sends nothing until the person says yes.</summary>
     internal static SurveyQueue? Survey { get; private set; }
 
-    public override void Initialize() => Styles.Add(new FluentTheme());
+    public override void Initialize()
+    {
+        Styles.Add(new FluentTheme());
+
+        // Entry 243 section 3.5: Fluent's own blue is in no palette of the desktop's, so the accent is the desktop's amber for the theme
+        // the phone is in. That is a mismatch fixed, not a choice made; the look as a whole waits for Alan's pick of the concepts.
+        Accent();
+        ActualThemeVariantChanged += (_, _) => Accent();
+    }
+
+    private void Accent() => Resources["SystemAccentColor"] = GroupLab.App.Theme.Tokens.For(ActualThemeVariant).Amber;
 
     public override void OnFrameworkInitializationCompleted()
     {

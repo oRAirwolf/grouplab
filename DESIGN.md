@@ -510,6 +510,33 @@ Loads are compared on their own screen, the rail's chart slot, from sessions cho
 
 **Themes.** Four, matching the site: dark, light, high contrast, and follow system. **[r7]** Phase 4.
 
+**The desktop's design language, as built** (entry 243 section 3.5, written down from `src/GroupLab.App/Theme/Tokens.cs` and
+`AppStyles.cs` so the phone can be held to it). Everything below is a token in code; no colour literal appears anywhere else, and
+`ThemeTests` fails if one does.
+
+- **Colour by role, not by name.** Each theme is one `Palette`: surfaces `bg`, `panel`, `panel2`, `sunk` (the image area); hairlines
+  `line` and `line2`; text `text`, `dim`, `faint`; and three meanings. **Amber is the one accent**: the primary action, the focus ring,
+  a selection, the words that act ("Review them", "why"), a warning, and at most one headline figure a block. **Teal means it worked**
+  (the "Scale checked" pill, a done state), so red keeps meaning something. **Red (`alert`) is a refusal or an error.** Dark is
+  `bg` #131417, `panel` #1a1c20, `panel2` #212429, `text` #e6e8ea, amber #e0912f, teal #6fbfa8, alert #e1634d; light is `bg` #f4f3f0,
+  `panel` #ffffff, `panel2` #eceae4, `text` #1a1c20, amber #965d12, teal #367462, alert #b8422f. Every text colour reaches 4.5:1 on
+  every surface it sits on; high contrast is dark sharpened to 7:1.
+- **Type.** IBM Plex Sans for words, IBM Plex Mono for every number a person reads (tabular, right aligned, so digits line up and do not
+  jitter), Plex Sans Condensed only in the wordmark. Six sizes and no others: title 16, heading 14, label and body 13, detail 11.5,
+  value 22, lead value 29. Headings are semibold, sentence case, in the text colour; labels are dim.
+- **Space and shape.** A 4 point grid (4, 8, 12, 16, 20, 24). Corners are nearly square: 3 on a surface, 4 on a button. Surfaces are
+  flat, divided by one pixel hairlines in `line`, never by shadows; a figure row is a dim label on the left and a mono value on the
+  right with a hairline under it. Tables have no borders, every other row shaded.
+- **Controls.** A button is `panel2` with a `line2` border and text in the text colour; the one primary action on a screen is amber with
+  `onAmber` text. A checked toggle is an amber tint with amber text. A field is `field` with a `fieldBorder` edge and the amber focus
+  ring. A pill is mono 11 with a thin border, teal when good. A "why" is a small quiet amber link beside what it explains.
+- **Chrome.** The window is a narrow icon rail on the left, a top bar with the wordmark, a breadcrumb and the primary action, the work
+  in the middle, a right column of figures, and a status line along the bottom.
+- **Themes.** Dark, light and high contrast, and following the system, resolved at run time; the plot has its own inks per theme.
+
+The phone today (entry 219) is Avalonia's Fluent theme with its own default accent and the phone's system font; the concepts of entry
+243 section 3.5 are the ways it could take this language on, and only the one Alan chooses is built.
+
 **[r3] The analysis shows its work.** Every pipeline stage emits a structured record carrying its resolved parameters, the decisions it made with their alternatives, what it rejected and why, and its artefacts. That gives three things from one contract: a stage timeline the user can scrub, with clicking a rejection highlighting it on the image; a live run where each stage's artefact appears as it lands, so the markers light up, the residual map settles, the artwork vanishes and the holes emerge; and a console form that gives the Phase 0 and Phase 1 spikes their output for free before any UI exists.
 
 **[r7] The contract is built and the screen is Phase 4.** Every stage already emits its record, and the console form of it gave the Phase 0 and Phase 1 spikes their output as intended. The scrubbable timeline, the artefacts appearing as they land and the rejection clicked to highlight it on the image are the Phase 4 half, and they are now listed there rather than left implied by the contract underneath them, which is how a headline feature becomes an internal diagnostic by default (`docs/NOTES-FROM-PLANNING.md` entry 90 section 2).
