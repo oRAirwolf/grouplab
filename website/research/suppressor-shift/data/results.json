@@ -1,0 +1,148 @@
+{
+ "all 25 shots a sheet": {
+  "shots": [
+   25,
+   25
+  ],
+  "dominus_mean_in": [
+   0.039,
+   0.211
+  ],
+  "magnus_mean_in": [
+   0.075,
+   -0.072
+  ],
+  "shift_in": [
+   0.036,
+   -0.283
+  ],
+  "shift_mil": [
+   0.01,
+   -0.079
+  ],
+  "shift_moa": [
+   0.034,
+   -0.27
+  ],
+  "shift_total_in": 0.285,
+  "shift_interval_in": {
+   "right": [
+    -0.127,
+    0.199
+   ],
+   "up": [
+    -0.505,
+    -0.061
+   ]
+  },
+  "ellipse_half_axes_in": [
+   0.197,
+   0.289
+  ],
+  "hotelling_t2": 6.55,
+  "f": 3.21,
+  "df": [
+   2,
+   47
+  ],
+  "p": 0.0494,
+  "permutation_p": 0.0466,
+  "sigma_in": [
+   0.345,
+   0.34
+  ],
+  "mean_radius_in": [
+   0.419,
+   0.399
+  ],
+  "dispersion_ratio": 1.017,
+  "dispersion_interval": [
+   0.764,
+   1.354
+  ],
+  "dispersion_p": 0.907,
+  "axis_sd_in": {
+   "dominus": [
+    0.286,
+    0.396
+   ],
+   "magnus": [
+    0.286,
+    0.386
+   ]
+  }
+ },
+ "without the four shots that landed off their bulls": {
+  "shots": [
+   23,
+   23
+  ],
+  "dominus_mean_in": [
+   0.02,
+   0.188
+  ],
+  "magnus_mean_in": [
+   0.093,
+   -0.089
+  ],
+  "shift_in": [
+   0.073,
+   -0.277
+  ],
+  "shift_mil": [
+   0.02,
+   -0.077
+  ],
+  "shift_moa": [
+   0.07,
+   -0.265
+  ],
+  "shift_total_in": 0.287,
+  "shift_interval_in": {
+   "right": [
+    -0.086,
+    0.233
+   ],
+   "up": [
+    -0.455,
+    -0.1
+   ]
+  },
+  "ellipse_half_axes_in": [
+   0.203,
+   0.226
+  ],
+  "hotelling_t2": 10.83,
+  "f": 5.29,
+  "df": [
+   2,
+   43
+  ],
+  "p": 0.00882,
+  "permutation_p": 0.0086,
+  "sigma_in": [
+   0.28,
+   0.287
+  ],
+  "mean_radius_in": [
+   0.364,
+   0.35
+  ],
+  "dispersion_ratio": 0.976,
+  "dispersion_interval": [
+   0.724,
+   1.317
+  ],
+  "dispersion_p": 0.875,
+  "axis_sd_in": {
+   "dominus": [
+    0.281,
+    0.28
+   ],
+   "magnus": [
+    0.255,
+    0.316
+   ]
+  }
+ }
+}

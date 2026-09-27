@@ -66,6 +66,9 @@ public sealed class PrintPanel : UserControl
     private readonly Dictionary<string, TextBox> fieldBoxes = new(StringComparer.Ordinal);
     private readonly TextBox serial = new() { Width = 120, PlaceholderText = "optional" };
     private readonly CheckBox note = new() { Content = "Print the actual-size instruction along the bottom of each sheet", IsChecked = true };
+
+    /// <summary>Entry 226 section 5.1: a tiled target's sheets on one large page, with cut lines, for a plotter.</summary>
+    private readonly CheckBox oneSheet = new() { Content = "Print every sheet on one large page, with cut lines between them, for a plotter", IsVisible = false };
     private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock pageCaption = new() { VerticalAlignment = VerticalAlignment.Center };
     private readonly Image preview = new() { Stretch = Stretch.Uniform, Height = 520, HorizontalAlignment = HorizontalAlignment.Left };
@@ -100,6 +103,13 @@ public sealed class PrintPanel : UserControl
     private readonly TextBox designDistance = new() { Width = 120, Text = "100" };
 
     private readonly StackPanel designChecks = new() { Spacing = 4 };
+
+    // Entry 226 section 4: the target generator, above the grid form.
+    private readonly TextBox genDistance = new() { Width = 120, Text = "100" };
+    private readonly TextBox genMagnification = new() { Width = 120, Text = "10" };
+    private readonly TextBox genDot = new() { Width = 120, PlaceholderText = "MOA" };
+    private readonly NumericUpDown genShots = new() { Minimum = 1, Maximum = 200, Value = 25, Increment = 1, FormatString = "0", Width = 120 };
+    private readonly StackPanel genSaid = new() { Spacing = 4 };
 
     private bool designing;
 
@@ -138,6 +148,7 @@ public sealed class PrintPanel : UserControl
         details.Children.Add(summary);
         details.Children.Add(loadBlock);
         details.Children.Add(note);
+        details.Children.Add(oneSheet);
         details.Children.Add(new TextBlock { Text = ScaleWords, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
         if (OperatingSystem.IsWindows())
         {
@@ -248,6 +259,20 @@ public sealed class PrintPanel : UserControl
             TextWrapping = TextWrapping.Wrap,
             Classes = { AppStyles.Secondary },
         });
+        designer.Children.Add(new TextBlock { Text = "Made for your optic", FontWeight = FontWeight.SemiBold });
+        designer.Children.Add(new TextBlock
+        {
+            Text = "Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need.",
+            TextWrapping = TextWrapping.Wrap,
+            Classes = { AppStyles.Secondary },
+        });
+        designer.Children.Add(Row(Label("Distance, yd"), genDistance));
+        designer.Children.Add(Row(Label("Lowest magnification"), genMagnification, new TextBlock { Text = "x", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
+        designer.Children.Add(Row(Label("Red dot size, at 1x"), genDot));
+        designer.Children.Add(Row(Label("Shots"), genShots));
+        designer.Children.Add(Row(Button("Make the sheet", () => Generate())));
+        designer.Children.Add(genSaid);
+        designer.Children.Add(new TextBlock { Text = "Or lay out a grid yourself", FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 8, 0, 0) });
         designer.Children.Add(Row(Label("Name"), designName));
         designer.Children.Add(Row(Label("Page"), designPage));
         designer.Children.Add(Row(Label("Columns and rows"), designColumns, designRows));
@@ -350,6 +375,52 @@ public sealed class PrintPanel : UserControl
         }
     }
 
+    /// <summary>
+    /// Entry 226 section 4: makes the sheet the generator's fields describe, on the page the form has chosen, says why it is the size it is,
+    /// and shows it as the design, every sheet of a set a page of the preview. Returns what it made, for the headless tests.
+    /// </summary>
+    internal GeneratedTargets? Generate(string? distance = null, string? magnification = null, string? dot = null, int? shots = null)
+    {
+        ShowDesigner(true);
+        genDistance.Text = distance ?? genDistance.Text;
+        genMagnification.Text = magnification ?? genMagnification.Text;
+        genDot.Text = dot ?? genDot.Text;
+        genShots.Value = shots ?? genShots.Value;
+        genSaid.Children.Clear();
+        static double? Number(string? text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double v) && v > 0 ? v : null;
+        if (Number(genDistance.Text) is not { } yards || Number(genMagnification.Text) is not { } power)
+        {
+            genSaid.Children.Add(new TextBlock { Text = "Enter the distance in yards and the lowest magnification, such as 100 and 10.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.FormError } });
+            return null;
+        }
+
+        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Number(genDot.Text), (int)(genShots.Value ?? 25), ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)]));
+        foreach (string sentence in made.Explanation)
+        {
+            genSaid.Children.Add(new TextBlock { Text = sentence, TextWrapping = TextWrapping.Wrap, Classes = { made.Design is null ? AppStyles.FormError : AppStyles.Secondary } });
+        }
+
+        DiagnosticLog.Info("sheet.generate", ("yards", yards), ("power", power), ("shots", made.Request.Shots), ("sheets", made.Sheets), ("bulls", made.Bulls));
+        saveOwn.IsVisible = made.Design?.Printable == true && own is not null;
+        if (made.Design is { Printable: true, Definition: { } definition })
+        {
+            selected = new LibrarySheet("custom.gltd.json", "Your own sheet", null, definition);
+            page = 0;
+            title.Text = definition.Name;
+            summary.Text = string.Join(" ", made.Explanation);
+            loadBlock.Children.Clear();
+            fieldBoxes.Clear();
+            ShowPreview();
+        }
+        else
+        {
+            selected = null;
+            preview.Source = null;
+        }
+
+        return made;
+    }
+
     private void Check(CheckLevel level, string sentence) => designChecks.Children.Add(new TextBlock
     {
         Text = sentence,
@@ -360,6 +431,11 @@ public sealed class PrintPanel : UserControl
 
     /// <summary>The preview image, for the headless tests.</summary>
     internal IImage? PreviewSource => preview.Source;
+
+    /// <summary>What the screen says about the selected sheet, and whether it offers one large page with cut lines, for the headless tests.</summary>
+    internal string SummaryText => summary.Text ?? "";
+
+    internal bool OneSheetOffered => oneSheet.IsVisible;
 
     /// <summary>The message line, for the headless tests.</summary>
     internal string StatusText => status.Text ?? "";
@@ -417,7 +493,8 @@ public sealed class PrintPanel : UserControl
         var result = TargetRenderer.Render(selected.Definition, new RenderOptions(
             Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
             Instance: instance,
-            PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null));
+            PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
+            OneSheet: oneSheet.IsVisible && oneSheet.IsChecked == true));
         if (result.Pdf is null)
         {
             SetStatus("This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)), StatusKind.Alert);
@@ -463,7 +540,8 @@ public sealed class PrintPanel : UserControl
         selected = sheet;
         page = 0;
         title.Text = sheet.Definition.Name;
-        summary.Text = sheet.Family + ". " + sheet.Summary;
+        summary.Text = sheet.Family + ". " + sheet.Summary + LargeSheetWords(sheet.Definition);
+        oneSheet.IsVisible = CutSheet.Refusal(sheet.Definition) is null;
         loadBlock.Children.Clear();
         fieldBoxes.Clear();
         if (sheet.Definition.DataBlock is { } block)
@@ -486,6 +564,23 @@ public sealed class PrintPanel : UserControl
 
         ShowFields();
         ShowPreview();
+    }
+
+    /// <summary>
+    /// Entry 226 section 5: what a sheet too large for a flatbed means for scanning or photographing it, and that tiled Letter or A4 pages
+    /// are the better choice for a large target; nothing for a sheet a flatbed takes.
+    /// </summary>
+    internal static string LargeSheetWords(GroupLab.Core.Gltd.Model.TargetDefinition definition)
+    {
+        var t = definition.Tiling;
+        double width = (t is null ? definition.Page.Width : t.Cols * t.SheetWidth) / 254.0;
+        double height = (t is null ? definition.Page.Height : t.Rows * t.SheetHeight) / 254.0;
+        if (t is not null)
+        {
+            return " Each sheet scans on a flatbed by itself, and the sheets can be printed on one large page with cut lines for a plotter.";
+        }
+
+        return GroupLab.Core.Capture.PhotographLimit.Advice(width, height) is { } advice ? " " + advice : "";
     }
 
     private static IReadOnlyList<string> FieldKeys(DataBlock block)

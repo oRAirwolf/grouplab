@@ -457,11 +457,29 @@ public static class GltdValidator
                     }
                 }
 
-                var field = Box2.Centred(g.CentreX, g.CentreY, 2L * g.Half, 2L * g.Half);
-                int left = g.CentreX - g.Half - SafeMargin;
-                int right = d.Page.Width - SafeMargin - (g.CentreX + g.Half);
-                int top = g.CentreY - g.Half - SafeMargin;
-                int bottom = d.Page.Height - SafeMargin - dataBlockHeight - (g.CentreY + g.Half);
+                bool zeroing = g.StyleOrDefault == GridStyle2.Style;
+                if (zeroing && (g.FieldX is not { } fx || g.FieldY is not { } fy || g.WholeEvery is not { } whole
+                    || fx > g.Half || fy > g.Half || whole % g.MajorEvery != 0))
+                {
+                    Error("validate.gridStyle", path,
+                        "Grid style 2 needs fieldX and fieldY no larger than half, and wholeEvery a multiple of majorEvery (section 3.13, question 59).", "37");
+                    continue;
+                }
+
+                if (!zeroing && (g.FieldX is not null || g.FieldY is not null || g.WholeEvery is not null))
+                {
+                    Error("validate.gridStyle", path, "fieldX, fieldY and wholeEvery belong to grid style 2 (section 3.13, question 59).", "37");
+                }
+
+                var field = Box2.Centred(g.CentreX, g.CentreY, 2L * g.HalfX, 2L * g.HalfY);
+
+                // Question 59: a style 2 grid may take its side markers out to the tight edge, because a printer's side margins are
+                // narrower than its bottom one; top and bottom keep the safe margin.
+                int side = zeroing ? TightEdge : SafeMargin;
+                int left = g.CentreX - g.HalfX - side;
+                int right = d.Page.Width - side - (g.CentreX + g.HalfX);
+                int top = g.CentreY - g.HalfY - SafeMargin;
+                int bottom = d.Page.Height - SafeMargin - dataBlockHeight - (g.CentreY + g.HalfY);
                 int band = Math.Min(Math.Min(left, right), Math.Min(top, bottom));
                 if (band < footprint + FiducialDerivation.Clearance)
                 {
@@ -469,7 +487,7 @@ public static class GltdValidator
                         $"The grid field leaves {band} dmm inside the safe margins, less than a {footprint} dmm marker footprint plus {FiducialDerivation.Clearance} dmm of clearance (section 7).", "26");
                 }
 
-                if (Math.Min(left, right) < SideBand)
+                if (!zeroing && Math.Min(left, right) < SideBand)
                 {
                     Warn("validate.gridSideBand", path, $"The side band is {Math.Min(left, right)} dmm, below the {SideBand} dmm field-ring-1 is sized for.", "26");
                 }

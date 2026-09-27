@@ -24,6 +24,117 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 226: after Alan's range day: the zeroing grid's scale, three new scans with a suppressor question, the aim point results, a target generator, large format sheets, and the Oracle and Store items
+
+**Status: done 2026-09-27, apart from three parts.** Sections 1, 2, 3 and 5.2 and 5.3 are done, and 4.2, 4.4 and 6 (6.1 was overtaken by entry 230). **Not done:** 4.1's page on grouplab.org (what it would take is question 62 (b)); the pooling half of 4.3, since a set of separately scanned sheets is still analyzed one sheet at a time, though each sheet's codes carry its place in the set; and 5.1 for the six single large sheets, which cannot be cut without being redrawn as tiles (question 62 (a)); tiled targets print with cut lines. The redesign needed a format change, grid style 2, put to the planning session as question 59; the screenshot rule is question 60 and the ring set is question 61.
+
+Alan came back from his latest range day (message of 2026-09-27). Everything below is from his message. Do sections 1 and 2 first.
+
+## 1. The mil zeroing grid "is not scaled to 1 mil at 100 yards"
+
+Alan: "The mil at 100yd zeroing grid is not scaled to 1 mil at 100 yards. It seems closer to 1.6 mils to 1.8 mils across. I looked at it
+with both my Vortex Razor HD 6-36 and DNT 7-35 TOR Mil and both scopes showed that the scaling was vastly off."
+
+**What the planning session found, before any measurement:** `GL-ZERO-MIL-100Y` is a 0.1 mil grid spanning plus or minus 0.8 mil at 100 yd
+(half 73.2 mm, 8 divisions a side, bold every 5, labels "0.5" at the bold lines). The whole grid is therefore **1.6 mil across by
+design**, which is exactly what Alan saw through both reticles. Unholy's scan of his own print of the same design confirms it: 16 by 16 small squares, bold
+lines at 5, labeled 0.5. So the printed scale is very likely right and the design is what failed him:
+
+- nothing on the sheet says what a square is ("each small square 0.1 mil, 0.36 in at 100 yd; bold lines every 0.5 mil");
+- the labels are tiny and only say 0.5;
+- plus or minus 0.8 mil is too small to zero on: an unzeroed rifle's first shot is often more than 0.8 mil out, off the grid entirely;
+- 0.1 mil lines at 100 yd are 0.36 in apart, which blur together at 6x to 10x and are only legible at high power.
+
+Alan has the printout and will measure it (the planning session asked him for one small square, one bold square and the whole grid, in
+inches or mm), which settles whether the printer scaled it. Then redesign all four zeroing grids:
+
+1. **Say the scale on the sheet**, large: the unit of a small square and of a bold square, in angle and in inches or cm at the stated
+   distance, and "print at 100 percent" with a printed check length (for example a 4 in or 10 cm bar to measure with a ruler, to catch a
+   printer that scaled the page).
+2. **Cover more angle.** Use the whole printable page, not a square in the middle: at 100 yd a Letter page's printable area is only about
+   2 mil across and under 3 mil tall before the markers and codes, and the MOA grid can be widened the same way. Consider coarser squares (0.2 or 0.25 mil, 0.5 or 1 MOA) with
+   bold lines at whole mils or whole MOA, labeled at every bold line with the value (0.5, 1.0 ... or 1, 2, 3), because a coarser grid is
+   readable at the magnifications people zero at.
+3. Apply the visibility rule from the aim point work (section 3): every line and label must subtend at least about 3 to 4 arcmin at the
+   lowest magnification the sheet is meant for.
+4. Put the zeroing grids through the target generator of section 4 when it exists, so a grid can be made for another distance or optic.
+
+## 2. Three new 25 bull scans and a suppressor question
+
+The files are in `C:\Users\Airwolf\Downloads\drive-download-20260927T044320Z-1-001.zip` (the planning session cannot reach Downloads; you
+can). Copy the zip's contents into `C:\Dev\grouplab-originals\range-2026-09-26\` (leave the zip where it is), keep them out of the repository
+except what is published, and record them in `samples/PROVENANCE.md`. Alan's standing consent covers publishing his own scans.
+
+1. Two sheets of **6 ARC from the same 18 in AR-15 with the same ammunition**, one shot with a **Thunder Beast Dominus K** suppressor and one
+   with a **Magnus S** (Alan named it only as Magnus S). Alan wants to know whether there is a **statistically significant point of impact shift** between the two
+   suppressors, and to feature it on the tour and the research pages with these scans as the example.
+   - Each shot is measured from its own bull, so compare the two sheets' mean offsets from aim, as vectors: a two-sample Hotelling's T² on the 25
+     by 25 shots (or a permutation test if its assumptions look shaky), the shift in inches and mil at the distance, its confidence ellipse, and
+     each sheet's own dispersion, so a shift is judged against the spread.
+   - Say what the test cannot separate: the order the sheets were shot, time and barrel heat between them, any change of position, rest or
+     light, and that one sheet each is one sample of each suppressor. The planning session is asking Alan for the order, the distance, the
+     time between, and whether anything else changed; use his answers when they come, and do not wait for them to start.
+   - The article states the result plainly either way. "No shift that this test can detect" is a result.
+2. A third sheet, **6.5 Creedmoor with the same load data as the earlier 6.5 sheets** (the published sample in `samples/PROVENANCE.md` and any later range sheets of that load),
+   so it adds to that load's pooled record. Pool it with them only as `docs/STATISTICS.md`'s pooling rule allows.
+3. Alan forgot to photograph them on the backer, which this time was **OSB** rather than corrugated plastic. Record the backer anyway (it
+   matters for hole appearance and is a field in the load block).
+4. These are real 25 bull scans: run them through the normal pipeline, and report anything the detector got wrong as ordinary defects.
+
+## 3. The aim point test results
+
+Alan and his friend **Justin** ran the aim point test card on that range day at 100 yd. Record in the research notes, with the score sheets if
+they are in the zip:
+
+- **Optics:** Alan used the Razor HD Gen III 6-36, the DNT TheOne 7-35 TOR, the Primary Arms PLxC 1-8, and the Strike Eagle 5-25 (Justin did
+  not test the Strike Eagle).
+- **The PLxC:** the score sheet said to test it at 4x, then 8x, then 8x again. **That is a mistake on the sheet: the second should have been
+  6x.** Both tested 4x, 6x and 8x. At 8x the image was blurry at 100 yd and targets were noticeably harder to see than at 6x. Fix the sheet
+  generator so a magnification is never repeated, and say where the repeat came from.
+- **Shots:** Alan shot 3 shots at each of four designs; he wrote "1, C, E, and I" (the planning session is asking whether "1" means A). He thinks
+  **C or E** are the best, the edge probably to **C**. Justin disliked **I**; his favorite was **F**.
+- **Reticles covering the aim point:** the Razor HD's small center crosshair covered the centers of **D** and **G**, which were very hard to see.
+  The DNT has only a small center dot and did not cover them. So a design whose center is a small feature fails under a crosshair reticle
+  whatever the glass. Put this into the ring set decision.
+- Measure the shot groups on the card if they were scanned, per design and shooter, and say whether any design grouped measurably better. With
+  3 shots a design, say how little that can show.
+- Justin is to be credited only as Alan says; the planning session is asking.
+
+## 4. A target generator (new feature, after the zeroing grid fix)
+
+Alan's idea: an interactive generator that asks the distance, the scope, its magnification range (down to a 1x red dot) and how many shots,
+then produces a target sized and shaped for that optic at that distance, scaled to be easy to see, and as many sheets as the shot count needs
+for a composite group. The QR code says how many shots to expect, and how the sheets combine when they are tiled on one board or scanned
+separately.
+
+1. In the application's Targets screen, and as a page on grouplab.org if it can share the same code (say what that would take).
+2. Size every feature by the visibility rule (at least about 3 to 4 arcmin at the lowest magnification chosen, and a 1x dot's own size for red
+   dots, sizing a ring as a multiple of the dot), choose the bull design from section 3's results, and never put a small feature at the center
+   where a crosshair will cover it.
+3. The shot count decides bulls per sheet and the number of sheets; the codes carry the sheet's place in the set and the expected total, and
+   the analysis pools the set as one composite group.
+4. Keep the fixed library for people who just want a sheet.
+
+## 5. Large format targets are not practical to scan whole
+
+Alan: a large format sheet from a plotter cannot go on a flatbed scanner, and photographing it from far enough away may exceed what a phone
+camera can resolve across the whole sheet and all its codes.
+
+1. For any sheet larger than the flatbed sizes the library supports, print **cut lines** that divide it into scanner sized pieces, with
+   markers and a code on every piece so each piece registers and is identified on its own and the pieces pool by the same rule as tiled
+   sheets. No bull crosses a cut line.
+2. Work out the photograph limit honestly: for each large format size, the pixels an inch a 12 MP and a 50 MP phone photo gives when the
+   whole sheet fills the frame, against the quality score's levels and the smallest marker and code that must read. Say which sizes can be
+   photographed whole and which must be cut or tiled, and have the application say so.
+3. Prefer tiled Letter or A4 pages (which the library already offers for long range) as the default for large targets, and say so where
+   large format is offered.
+
+## 6. Oracle and the Store
+
+1. The first Oracle boot volume backup was due 2026-09-26 09:00 UTC; the planning session has asked Alan to check the console. Keep sudo to
+   GroupLab's files until he confirms.
+2. Request 38 (the Microsoft Store) and request 36 (the Play Console) are his, when he has time.
+
 ## 2026-09-25, entry 225: request 35 step 3 done: the server's boot volume has a daily backup policy
 
 **Status: done 2026-09-26, apart from the proof.** The whole-server restore, the crash-consistency note and the report's line about the Oracle console are in `docs/RESTORE.md` and the weekly line. Closing request 35 and widening sudo wait on Alan confirming the first boot volume backup in the console, after 2026-09-26 09:00 UTC; request 35 says so.

@@ -170,23 +170,26 @@ public static class FiducialDerivation
         var offsets = MeasurementGridLines.Offsets(grid.Half, grid.Divisions);
         int footprint = Footprint(f);
 
-        // Doubled coordinates: the marker columns sit half a footprint plus a clearance outside the field.
+        // Doubled coordinates: the marker columns sit half a footprint plus a clearance outside the field. A style 2 grid's field has
+        // its own half-extents (question 59), and only its major lines inside the field carry markers.
         long cx2 = 2L * grid.CentreX, cy2 = 2L * grid.CentreY;
-        long left = (2L * (grid.CentreX - grid.Half - Clearance)) - footprint;
-        long right = (2L * (grid.CentreX + grid.Half + Clearance)) + footprint;
-        long top = (2L * (grid.CentreY - grid.Half - Clearance)) - footprint;
-        long bottom = (2L * (grid.CentreY + grid.Half + Clearance)) + footprint;
+        long left = (2L * (grid.CentreX - grid.HalfX - Clearance)) - footprint;
+        long right = (2L * (grid.CentreX + grid.HalfX + Clearance)) + footprint;
+        long top = (2L * (grid.CentreY - grid.HalfY - Clearance)) - footprint;
+        long bottom = (2L * (grid.CentreY + grid.HalfY + Clearance)) + footprint;
 
-        var major = Enumerable.Range(0, (grid.Divisions / grid.MajorEvery) + 1).Select(k => 2L * offsets[k * grid.MajorEvery]).ToList();
+        // A style 2 line too near the field's edge gives way to the corner marker, which would otherwise sit a footprint beside it.
+        int corner = grid.StyleOrDefault == GridStyle2.Style ? footprint + MarkerSpacing : 0;
+        var major = Enumerable.Range(0, (grid.Divisions / grid.MajorEvery) + 1).Select(k => offsets[k * grid.MajorEvery]).ToList();
         var candidates = new List<(long X2, long Y2)>();
-        foreach (long o in major)
+        foreach (int o in major.Where(o => o <= grid.HalfY - corner))
         {
-            candidates.AddRange([(left, cy2 - o), (right, cy2 - o), (left, cy2 + o), (right, cy2 + o)]);
+            candidates.AddRange([(left, cy2 - (2L * o)), (right, cy2 - (2L * o)), (left, cy2 + (2L * o)), (right, cy2 + (2L * o))]);
         }
 
-        foreach (long o in major)
+        foreach (int o in major.Where(o => o <= grid.HalfX - corner))
         {
-            candidates.AddRange([(cx2 - o, top), (cx2 - o, bottom), (cx2 + o, top), (cx2 + o, bottom)]);
+            candidates.AddRange([(cx2 - (2L * o), top), (cx2 - (2L * o), bottom), (cx2 + (2L * o), top), (cx2 + (2L * o), bottom)]);
         }
 
         candidates.AddRange([(left, top), (right, top), (left, bottom), (right, bottom)]);

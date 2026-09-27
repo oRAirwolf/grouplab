@@ -334,6 +334,10 @@ public static class CanonicalJsonWriter
         Opt(w, "axisStroke", g.AxisStroke);
         Opt(w, "labelStep", g.LabelStep);
         Opt(w, "labelInk", g.LabelInk);
+        Opt(w, "style", g.Style);
+        Opt(w, "fieldX", g.FieldX);
+        Opt(w, "fieldY", g.FieldY);
+        Opt(w, "wholeEvery", g.WholeEvery);
         w.WriteEndObject();
     }
 

@@ -12,8 +12,14 @@ namespace GroupLab.Cli.Library;
 /// between bulls, the ring size, how many sighters, and whether there is a load block. That set produces every multi-bull sheet in the
 /// built-in library and a great many that are not in it.
 /// </summary>
-/// <param name="RingDmm">The outer ring's diameter, one of the documented disc stacks in <see cref="ParametricSheet.RingSizes"/>.</param>
-public sealed record SheetSpec(string Name, string Page, int Columns, int Rows, double PitchInches, int RingDmm, int Sighters, bool LoadBlock);
+/// <param name="RingDmm">The outer ring's diameter, one of the documented disc stacks in <see cref="ParametricSheet.RingSizes"/>, or the
+/// outer diameter of <paramref name="Discs"/>.</param>
+/// <param name="Discs">A bull of the target generator's own (entry 226 section 4), in place of a documented stack.</param>
+/// <param name="SetSheets">How many sheets of this design make one set: more than one prints them as a tiled assembly, so each sheet's codes
+/// carry its place in the set and the set's size.</param>
+/// <param name="HalfPitchMarkers">Markers at half the pitch, <c>grid-boundary-half-1</c>, which a coarse pitch needs to keep enough of them.</param>
+public sealed record SheetSpec(string Name, string Page, int Columns, int Rows, double PitchInches, int RingDmm, int Sighters, bool LoadBlock,
+    IReadOnlyList<Disc>? Discs = null, int SetSheets = 1, bool HalfPitchMarkers = false);
 
 /// <summary>How a check stands: fine, a warning that leaves the decision with the person, or a refusal because the sheet cannot work.</summary>
 public enum CheckLevel
@@ -121,7 +127,7 @@ public static class ParametricSheet
             return Refused(spec, "A sheet needs at least one row and one column of bulls.");
         }
 
-        if (!LibraryBuilder.Stacks.ContainsKey(spec.RingDmm))
+        if (spec.Discs is null && !LibraryBuilder.Stacks.ContainsKey(spec.RingDmm))
         {
             return Refused(spec, string.Create(CultureInfo.InvariantCulture, $"There is no ring of {spec.RingDmm / 254.0:0.00} in here: choose one of the listed sizes."));
         }
@@ -229,17 +235,17 @@ public static class ParametricSheet
             "GroupLab parametric editor", "CC0-1.0", DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), "dmm",
             new Page(size, width, height, Orientation.Portrait),
             LibraryBuilder.Inks,
-            [new RingSet("std", LibraryBuilder.Discs(ring))],
+            [new RingSet("std", spec.Discs is { } own ? [.. own] : LibraryBuilder.Discs(ring))],
             bulls,
             declaredGap is { } g ? new Cells(CellsMode.Grid, false, g, null, null, null, null) : null,
-            new Fiducials("grid-boundary-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
+            new Fiducials(spec.HalfPitchMarkers ? "grid-boundary-half-1" : "grid-boundary-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
             LibraryBuilder.Codes(width, height, dataBlock, codeCount),
             LibraryBuilder.Print,
             dataBlock > 0
                 ? new DataBlock(Corners1.SafeMargin, height - Corners1.SafeMargin - dataBlock, width - (2 * Corners1.SafeMargin), dataBlock, DataBlockLayout.Fields3x3, FieldSet.Standard9, 280, "black", "text", 2, null)
                 : null,
             null,
-            null,
+            spec.SetSheets > 1 ? new Tiling(spec.SetSheets, 1, width, height, 0) : null,
             null,
             []);
 

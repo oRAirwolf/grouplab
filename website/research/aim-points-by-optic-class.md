@@ -76,7 +76,10 @@ The chart is illustrative, with typical rather than measured values, but it show
 
 ## Results
 
-**[Placeholder: results by class as each test is shot. The 100 yard high power results from 2026-09-23 appear first in "Can you see the bull?".]**
+The first class is in: the high power scopes and one low power variable, at 100 yards on 2026-09-26, in "Can you see the bull?". Through
+the Primary Arms PLxC 1-8x24 at 4x only the 2 inch bull, design I, could be centered, and at 8x the image was blurry at 100 yards; at 10x
+through the high power scopes the designs with a center of 3.4 arcminutes or more, C, E and I, were centered, and the current bull was not.
+A crosshair reticle covered the centers of D and G. The red dot, prism and medium power classes are still to be shot.
 
 ## What this means
 

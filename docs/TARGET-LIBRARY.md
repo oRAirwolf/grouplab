@@ -361,39 +361,50 @@ The `roll-24`, `roll-36` and `roll-42` page presets fix the width and leave the 
 
 Four sheets, one for each combination of adjustment unit and distance unit, because a scope turret is calibrated in MOA or in mil and a range is marked in yards or in metres, and the four combinations do not convert into one another by scaling a printed grid.
 
-| Sheet | Unit | Minor cell | Major line | Range | Field | Markers |
-|---|---|---|---|---|---|---|
-| **GL-ZERO-MOA-100Y** | MOA at 100 yd | 0.5 MOA, 13.30 mm | 1 MOA | plus or minus 3.0 MOA | 159.6 mm | 24 |
-| **GL-ZERO-MIL-100Y** | mil at 100 yd | 0.1 mil, 9.144 mm | 0.5 mil | plus or minus 0.8 mil | 146.4 mm | 16 |
-| **GL-ZERO-MOA-100M** | MOA at 100 m | 0.5 MOA, 14.54 mm | 1 MOA | plus or minus 2.5 MOA | 145.4 mm | 24 |
-| **GL-ZERO-MIL-100M** | mil at 100 m | 0.1 mil, 10.00 mm | 0.5 mil | plus or minus 0.8 mil | 160.0 mm | 12 |
+**Redrawn on 2026-09-27** (NOTES-FROM-PLANNING.md entries 226 and 227, question 59). Alan looked at the mil grid through a Vortex Razor HD 6-36 and a DNT 7-35 at 100 yards expecting a 1.0 by 1.0 mil square each side of the aim, and found a grid 1.6 mil across whose 0.5 mil marks he could not make out. His printout measured exactly right (a small square 0.36 in, a bold one 1.80 in, the grid 5.76 in), so the scale was never the fault: the grid was too small, too fine, and said nothing about itself. The sheets printed before then are frozen in `targets/frozen/zero-grid-1/` and are still identified.
 
-All four are Letter, portrait, with four corner codes, a single central aiming mark and a six-field load block.
+| Sheet | Unit | Fine square | Heavier lines | Reach each side of the aim | Markers |
+|---|---|---|---|---|---|
+| **GL-ZERO-MOA-100Y** | MOA at 100 yd | 0.5 MOA, 13.30 mm | 1 MOA, labeled 1 to 3 | 3.44 MOA | 32 |
+| **GL-ZERO-MIL-100Y** | mil at 100 yd | 0.25 mil, 22.86 mm | 0.5 mil, and 1 mil heaviest, labeled 0.5 and 1.0 | 1.00 mil | 16 |
+| **GL-ZERO-MOA-100M** | MOA at 100 m | 0.5 MOA, 14.54 mm | 1 MOA, labeled 1 to 3 | 3.14 MOA | 24 |
+| **GL-ZERO-MIL-100M** | mil at 100 m | 0.25 mil, 25.00 mm | 0.5 mil, labeled 0.5 | 0.91 mil | 16 |
+
+All four are Letter, portrait, with two codes at the top, a single aiming ring, the scale printed above the grid with a ruler to check the print, and a six-field load block. Every field is 182.8 mm square, which is exactly plus or minus 1.0 mil at 100 yards.
 
 ```
-common    letter, 2159 x 2794 dmm
-centre  x 1079, y 1277
-aim mark  discs 127 / 114 / 25 dmm    12.7 mm ring, 2.5 mm centre dot
+common      letter, 2159 x 2794 dmm, grid style 2 (TARGET-SCHEMA.md section 3.13)
+centre      x 1079, y 1412
+field       914 dmm each side, across and up and down
+aim ring    discs 200 / 150 dmm: a 20 mm ring, 4.5 arcminutes at 6x, with nothing in its centre
+            for a crosshair to cover; the axes cross inside it
+lines       6, 20 and 30 dmm: fine, major, and the whole unit with the axes
+labels      130 dmm tall, 3.0 arcminutes at 6x at 100 yd
+scale       three lines and a 4 in or 10 cm ruler above the field
 data block  x 120, y 2464, 1919 x 210 dmm, fields-3x2-1, standard-6,
             210 dmm reserved square holding the identifier and serial as text
-fiducials field-ring-1, on the grid's major lines in the band around the field
-codes     4, corners-1, centres (250,250) (1909,250) (250,2304) (1909,2304)
+fiducials   field-ring-1, on the grid's major lines in the band around the field
+codes       2, corners-1, centres (250,250) (1909,250), each carrying the whole body
 
-GL-ZERO-MOA-100Y   half 798 dmm, 6 divisions   offsets 0 133 266 399 532 665 798
-GL-ZERO-MIL-100Y   half 732 dmm, 8 divisions   offsets 0 91 183 274 366 457 549 640 732
-GL-ZERO-MOA-100M   half 727 dmm, 5 divisions   offsets 0 145 291 436 582 727
-GL-ZERO-MIL-100M   half 800 dmm, 8 divisions   offsets 0 100 200 300 400 500 600 700 800
+GL-ZERO-MOA-100Y   half 931 dmm, 7 divisions    offsets 0 133 266 399 532 665 798 931
+GL-ZERO-MIL-100Y   half 1143 dmm, 5 divisions   offsets 0 229 457 686 914 1143
+GL-ZERO-MOA-100M   half 1018 dmm, 7 divisions   offsets 0 145 291 436 582 727 873 1018
+GL-ZERO-MIL-100M   half 1250 dmm, 5 divisions   offsets 0 250 500 750 1000 1250
 ```
+
+The lattice reaches past the field and only the lines inside it are drawn. The worst line is 0.44 dmm from its true angle, on GL-ZERO-MOA-100M.
+
+**Why these sizes.** A zeroing grid's first job is to catch the first shot of a rifle that is not yet zeroed, which is often more than 0.8 mil out, so the field is as large as the page allows. Across, it is held by the marker columns at the side edges; up and down, by the two codes, the scale statement and the load block. Two codes at the top instead of four in the corners is what frees the height: each carries the whole body, so either one alone names the sheet. On the metric mil sheet 1.0 mil is 200 mm, wider than a Letter page can hold with its markers, so it reaches 0.91 mil and its edge falls between lines.
+
+**Why these weights.** The visibility rule of the aim point work (entry 226 section 3) asks for 3 to 4 arcminutes at the lowest magnification a sheet is for. At 100 yards one arcminute through a 6x scope is 4.4 mm on the paper. The labels meet the rule at 6x. A line does not need to: a dark line on white is seen well below an arcminute, and a line 13 mm wide would bury the fine squares and the holes on them. So the whole-unit lines are 3 mm (1.1 arcminutes at 10x), the half-unit lines 2 mm and the fine lines 0.6 mm, three to seven times the old weights; at 1 mm, a touching pair of .308 holes on a crossing of two fine lines was found as one hole. The coarser squares, 0.25 mil instead of 0.1 mil, are the other half of the fix: 0.1 mil squares at 100 yards are 0.36 in and run together at 6x to 10x.
 
 **These are the documented exception to the 25-bull rule, and the exception is the whole point.** A zeroing sheet answers a different question from a load-development sheet. Load development asks how much a rifle disperses, which needs many shots and therefore many bulls. Zeroing asks where the group centre is relative to the aiming point, which needs one aiming point and a printed ruler. Putting 25 bulls on a zeroing sheet would leave no room for the grid and would answer neither question well. The earlier draft of this library shipped a 25-bull sheet called GL-ZR25-LTR that was a load-development sheet with finer rings; it has been dropped, because it was a compromise nobody asked for.
 
-**Line positions are integers, and getting there needed care.** The obvious construction is to store a cell pitch and step it. That fails rule R1 for three of the four sheets: 0.1 mil at 100 yards is 9.144 mm, and no integer number of tenths of a millimetre is that. Rounding the pitch to 91 dmm and stepping eight times puts the edge of the field 3.5 dmm from where it should be. **Each line is instead rounded from the stored half-extent**, `round(half * i / divisions)` with ties toward zero, which bounds the error at half a dmm anywhere in the field and stops it accumulating. It derives from the stored half rather than from the unrounded angle because the unrounded angle is not in the payload and cannot be recovered from it, so a rule that used it would produce sheets no decoder could reproduce. Measured across all four sheets the worst deviation is **0.48 dmm, which is 0.048 mm**. On GL-ZERO-MIL-100M it is exactly zero, because 0.1 mil at 100 metres is 10.0 mm on the nose, which is the one place in this entire library where the metric system pays for itself outright.
+**Line positions are integers, and getting there needed care.** The obvious construction is to store a cell pitch and step it. That fails rule R1: 0.25 mil at 100 yards is 22.86 mm, and no integer number of tenths of a millimetre is that. **Each line is instead rounded from the stored half-extent**, `round(half * i / divisions)` with ties toward zero, which bounds the error at half a dmm anywhere in the field and stops it accumulating, provided the stored half is itself close to its angle. It derives from the stored half rather than from the unrounded angle because the unrounded angle is not in the payload and cannot be recovered from it, so a rule that used it would produce sheets no decoder could reproduce. On the mil sheets the half is 1.25 mil, which is a whole number of dmm at both distances (1143.0 at 100 yards, 1250 at 100 metres).
 
-**The tie rule is why that figure is 0.48 and not 0.80.** On GL-ZERO-MIL-100Y the stored half is 732 dmm over 8 divisions, so four of the eight lines land on an exact half. Ties toward zero, which TARGET-SCHEMA.md section 2 now specifies for every derived boundary in the format, gives 91, 274, 457 and 640 and a worst deviation of 0.48 dmm. The ties-to-even default of both Python and C# would give 92 and 458, a worst deviation of 0.80 dmm, and would move the `field-ring-1` markers on the 0.5 mil lines by a dmm. The rule was unstated until the first implementation hit it, which is exactly the kind of thing a second implementation is for.
+**The grid is read by a human, not by the analyser.** The application measures the group centre offset from the aiming point using the fiducials and the definition, exactly as on any other sheet, and reports the correction in whatever unit the user asked for. The printed grid is there so a shooter standing at the bench without a phone can read the correction off the paper. Its accuracy therefore matters to the eye, not to the measurement, which is why 0.044 mm of line placement error is comfortably irrelevant.
 
-**Why the ranges differ between sheets.** The field has to leave a clear band on all four sides for the `field-ring-1` markers, at least 15 mm, and the widest field Letter allows is therefore about 162 mm. Within that, each sheet takes the largest whole number of its own unit that fits: 3.0 MOA at 100 yards, 0.8 mil at 100 yards, 2.5 MOA at 100 metres, 0.8 mil at 100 metres. These are not equal in angle, and they are not meant to be. Every one of them is more adjustment range than a zeroed scope should ever need; a scope that is 3 MOA out at 100 yards is not being confirmed, it is being zeroed from scratch, and that is what the sighter row on a load-development sheet is for.
-
-**The grid is read by a human, not by the analyser.** The application measures the group centre offset from the aiming point using the fiducials and the definition, exactly as on any other sheet, and reports the correction in whatever unit the user asked for. The printed grid is there so a shooter standing at the bench without a phone can read the correction off the paper. Its accuracy therefore matters to the eye, not to the measurement, which is why 0.048 mm of line placement error is comfortably irrelevant.
+**Next** (entry 226 section 1.4): when the target generator of entry 226 section 4 exists, the zeroing grids go through it, so a grid can be made for another distance or optic.
 
 ---
 

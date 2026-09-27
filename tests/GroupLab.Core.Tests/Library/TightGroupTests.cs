@@ -77,7 +77,7 @@ public class TightGroupTests
     {
         var definition = Sheet(oneBull: true);
         var (result, review) = Shoot(definition, FiveShotGroup(Aim(definition).Radius), 196);
-        Assert.True(result.Detections.Count == 5, $"{result.Detections.Count} of 5 found. {Said(review)}");
+        Assert.True(result.Detections.Count == 5, $"{result.Detections.Count} of 5 found: {Where(result)}. {Said(review)}");
         Assert.All(result.Detections, d => Assert.Equal(0, d.Assignment.Bull));
         Assert.True(review.Count == 0, Said(review));
     }

@@ -688,8 +688,8 @@ public static class RenderDifferenceHoleDetector
 
         return [.. cells.Select(c => c.HalfWidth > 0 && c.HalfHeight > 0
             ? c
-            : grids.FirstOrDefault(g => Math.Abs(c.X - g.CentreX) <= g.Half && Math.Abs(c.Y - g.CentreY) <= g.Half) is { } grid
-                ? ((double)grid.CentreX, (double)grid.CentreY, (double)grid.Half, (double)grid.Half)
+            : grids.FirstOrDefault(g => Math.Abs(c.X - g.CentreX) <= g.HalfX && Math.Abs(c.Y - g.CentreY) <= g.HalfY) is { } grid
+                ? ((double)grid.CentreX, (double)grid.CentreY, (double)grid.HalfX, (double)grid.HalfY)
                 : c)];
     }
 

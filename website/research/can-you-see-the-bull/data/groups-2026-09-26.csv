@@ -1,0 +1,11 @@
+shooter,design,shot,right_in,up_in,note
+the developer,A,1,-0.70,0.79,
+the developer,A,2,-0.68,0.59,
+the developer,A,3,-0.73,0.37,
+the developer,C,1,0.00,0.12,in the white center
+the developer,C,2,-0.46,0.77,overlapping pair
+the developer,C,3,-0.55,0.63,overlapping pair
+the developer,E,1,-0.43,0.73,three overlapping holes
+the developer,E,2,-0.32,0.87,
+the developer,E,3,-0.10,0.97,
+the developer,I,,-0.19,0.65,one ragged hole about 0.43 in across through the black; three shots cannot be told apart in it

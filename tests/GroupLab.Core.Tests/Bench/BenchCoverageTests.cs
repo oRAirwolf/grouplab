@@ -43,6 +43,8 @@ public class BenchCoverageTests
     /// </summary>
     private static readonly Dictionary<string, string> NotMeasured = new(StringComparer.Ordinal)
     {
+        ["GridStyle2"] = "The zeroing grid's fixed numbers and its three sentences of scale. Drawing the grid is measured, in rendering the sheet.",
+        ["CutSheet"] = "Moves a rendered assembly's items onto one page, once, when a person prints for a plotter. Rendering the tiles is measured.",
         ["CalibreList"] = "A generated document, written by grouplab calibres at release time and not by anything a person waits for.",
         ["AimedBulls"] = "It sorts a sheet's bulls into rows and builds a dictionary from them. The matching it feeds is measured; this is the sentence before it.",
         ["CalibreGuessList"] = "Twenty-two numbers and the nearest one to a reading. There is nothing in it whose speed or accuracy a figure could report.",

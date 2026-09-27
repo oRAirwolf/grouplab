@@ -1,8 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **35**, only the proof is left: say when the first Oracle boot volume backup appears in the console (after
-2026-09-26 09:00 UTC). Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is now only
-the Play Console step. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is only the Play Console step. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark; nothing to do.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -23,6 +21,35 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 40. Did the benchmark run when you clicked Yes? No, and the window no longer leaves you wondering
+
+**Answered 2026-09-27 (entry 227 section 2).** Nothing to do; this is the answer to your question.
+
+**No, it did not run.** In nightly 110, Yes on the survey question only switched the survey on. The benchmark was a separate button
+under the question, and answering closed the whole question, button included, so it was never offered again on that screen. Your own
+log on this PC says the same: at 05:18 on 27 September (UTC) it records your Yes and a first report sent with no analyses and no
+benchmark in it, and no benchmark run at all. The report holds only what the first run screen listed; nothing else was read.
+
+**What changes, from the next nightly:** after Yes, the window asks whether to run the benchmark now or later instead of closing. Running
+it shows its progress and a Cancel button, and says when it finished and what it found. Settings, under Sharing, shows whether the survey
+is on, when the benchmark last ran and its result, and a button to run it now. The Android app gets the same.
+
+---
+
+## 39. The first full Oracle backup: one look in the console after Sunday 2026-09-27 09:00 UTC
+
+**Opened 2026-09-27. Entry 230 section 1.2.** Five minutes, whenever you are next near the console.
+
+The first backup (26 September, 09:01 UTC) is **Incremental**. Oracle keeps the chain of incrementals it needs by itself, so a restore
+works today, but it rests on that chain. The policy makes a **Full** backup every Sunday, the first due on 2026-09-27 at 09:00 UTC. Once
+one exists, the server can be brought back from that one backup alone.
+
+In the Oracle console, **Block Storage, Boot Volume Backups**: look for **a second row whose type is Full**, state Available, created on
+27 September. **A good answer:** "there is a Full backup dated 27 September", or a screenshot. If there is none by Monday, say so, and
+the policy gets checked.
 
 ---
 
@@ -108,9 +135,7 @@ asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-send
 
 ## 35. Backups and automation: the three things only you can do, one sitting, about fifteen minutes
 
-**Partly done, 2026-09-25** (entries 224 and 225): steps 1 and 2 are done and working (tonight's backup is in `grouplab-backups`
-and passed its restore test; the archive worker reads its token and reaches the archive). Step 3's policy is on; **all that is left is
-to say when the first boot volume backup appears in the console**, after 2026-09-26 09:00 UTC. **Opened 2026-09-25. Entry 222.** Everything else in entry 222 is Code's: the nightly backup and its weekly restore test, the server
+**Answered 2026-09-27** (entry 230): all three steps are done. Steps 1 and 2 were done on 25 September; the first boot volume backup appeared in the console on 26 September at 09:01 UTC, state Available, type Incremental. Request 39 is the one look left, for the first Full backup. **Opened 2026-09-25. Entry 222.** Everything else in entry 222 is Code's: the nightly backup and its weekly restore test, the server
 archiving submissions by itself, and the cleanup with its safety net. These three need you. Nothing here is urgent enough to interrupt
 anything; the one that matters most is **3**, because today no copy of the server as a whole exists anywhere but on the server.
 

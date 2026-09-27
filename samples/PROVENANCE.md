@@ -61,6 +61,35 @@ something a reader needs, and the rest stays where it is.
 **Exceptions.** When Alan names a photograph or scan that cannot be published, it is listed here with the date he said so, and nothing
 published from it before that date is kept on the site.
 
+# The 2026-09-26 range day: three load sheets, the aim point card and two score sheets
+
+Alan's, from his range day of 2026-09-26 at 100 yd, passed on as `drive-download-20260927T044320Z-1-001.zip` (entries 226 and 229). Kept
+whole and unchanged in `C:\Dev\grouplab-originals\range-2026-09-26\`, outside the repository; the zip stays where it was. Each is a
+4958 by 6458 scan at 600 dpi.
+
+| File | SHA-256 | What it is | Consent |
+|---|---|---|---|
+| `6.arc.dominus.k09262026.png` | `bffda24820bf6c3bd527adf22cea2acc7b5aed56e3c50b5ac457ef52c1630fc5` | GL-CF25-LTR-D, 25 shots of 6 ARC, Thunder Beast Dominus K, shot first; serial box "K" | Alan's own, entry 171 |
+| `6.arc.magnus09262026.png` | `7ace1d9608cf97147dd103361d642392c90e4cefd29278a705c0905277d710cf` | GL-CF25-LTR-D, 25 shots of 6 ARC, Magnus S, 20 to 30 minutes later; serial box "M" | Alan's own, entry 171 |
+| `6.5.creedmoor09262026.png` | `d86cda8d10b57bed4ad8e070354ebe3defae04cad914eb2c85ef0f38ea2b80c1` | GL-CF25-LTR-D, 25 shots of 6.5 Creedmoor, Magnus S; serial box "C" | Alan's own, entry 171 |
+| `aim test09262026.png` | `b246d99b51e80fe464cf861ec3ba50e404a32b923893f202a00765f59eb4c017` | The aim point test card with Alan's shots | Alan's own, entry 171 |
+| `aim.test.alan09262026.png` | `b41d9f16e7be35501f472e8e882df0a32a2f5fef3679ebf066630d86fe900f5e` | Alan's score sheet | Alan's own, entry 171 |
+| `aim.test.justin09262026.png` | `5432e2cfe2fd49bf451eb079eb531f1e7f0026c90d8c4561885e135e64a00eed` | Justin's score sheet | Entry 190, through Alan; credited as "Justin" only (entry 230) |
+
+**The load blocks**, as written on the sheets and read from the scans:
+
+| Sheet | Load | Notes field |
+|---|---|---|
+| Both 6 ARC | 105 gr Aeromatch, 24.2 gr N135, Starline brass, GM205MAR, 2.250 in | "Dominus K" and "Magnus S" |
+| 6.5 Creedmoor | 153.5 gr LRHT, 42.4 gr H4350, Alpha SRP brass, GM205MAR, 2.873 in | "Magnus S" |
+
+**Backer:** OSB, for all three load sheets (entry 226 section 2.3), not the corrugated plastic of earlier range days. None was
+photographed on the backer.
+
+**Published so far:** nothing of the pixels. The research article "Did the suppressor move the point of impact?" publishes the offsets
+GroupLab measured on the two 6 ARC sheets and a chart drawn from them. Anything published from these files is rebuilt from its pixels,
+and GPS, location and time metadata are never read, printed or logged.
+
 # What Alan passes on from Unholy and his other friends: a standing consent
 
 | | |

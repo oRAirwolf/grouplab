@@ -1,12 +1,12 @@
 {
   "gltd": 1,
   "revision": 0,
-  "id": "GL-4ZY5-DBSH-MRJK-W4R3",
+  "id": "GL-6DX8-6NNC-QF2S-BAWN",
   "name": "GroupLab Zeroing Grid, MOA at 100 yd",
-  "description": "One aiming mark on a 0.5 MOA grid spanning plus or minus 3.0 MOA at 100 yards, with a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
+  "description": "One aiming ring on a grid of 0.5 MOA squares reaching 3.44 MOA each side of the aim at 100 yards, heavier every 1 MOA and heaviest every MOA, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, and a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
   "author": "GroupLab built-in library",
   "licence": "CC0-1.0",
-  "created": "2026-09-13",
+  "created": "2026-09-27",
   "units": "dmm",
   "page": {
     "size": "letter",
@@ -46,16 +46,12 @@
       "key": "aim",
       "discs": [
         {
-          "diameter": 127,
+          "diameter": 200,
           "ink": "black"
         },
         {
-          "diameter": 114,
+          "diameter": 150,
           "ink": "paper"
-        },
-        {
-          "diameter": 25,
-          "ink": "black"
         }
       ]
     }
@@ -63,7 +59,7 @@
   "bulls": [
     {
       "x": 1079,
-      "y": 1277,
+      "y": 1412,
       "ringSet": "aim",
       "scoring": true
     }
@@ -77,128 +73,168 @@
     "markers": [
       {
         "id": 0,
-        "x": 547,
-        "y": 419
+        "x": 105,
+        "y": 438
       },
       {
         "id": 1,
-        "x": 813,
-        "y": 419
+        "x": 281,
+        "y": 438
       },
       {
         "id": 2,
-        "x": 1079,
-        "y": 419
+        "x": 547,
+        "y": 438
       },
       {
         "id": 3,
-        "x": 1345,
-        "y": 419
+        "x": 813,
+        "y": 438
       },
       {
         "id": 4,
-        "x": 1611,
-        "y": 419
+        "x": 1079,
+        "y": 438
       },
       {
         "id": 5,
-        "x": 221,
-        "y": 479
+        "x": 1345,
+        "y": 438
       },
       {
         "id": 6,
-        "x": 1937,
-        "y": 479
+        "x": 1611,
+        "y": 438
       },
       {
         "id": 7,
-        "x": 221,
-        "y": 745
+        "x": 1877,
+        "y": 438
       },
       {
         "id": 8,
-        "x": 1937,
-        "y": 745
+        "x": 2053,
+        "y": 438
       },
       {
         "id": 9,
-        "x": 221,
-        "y": 1011
+        "x": 105,
+        "y": 614
       },
       {
         "id": 10,
-        "x": 1937,
-        "y": 1011
+        "x": 2053,
+        "y": 614
       },
       {
         "id": 11,
-        "x": 221,
-        "y": 1277
+        "x": 105,
+        "y": 880
       },
       {
         "id": 12,
-        "x": 1937,
-        "y": 1277
+        "x": 2053,
+        "y": 880
       },
       {
         "id": 13,
-        "x": 221,
-        "y": 1543
+        "x": 105,
+        "y": 1146
       },
       {
         "id": 14,
-        "x": 1937,
-        "y": 1543
+        "x": 2053,
+        "y": 1146
       },
       {
         "id": 15,
-        "x": 221,
-        "y": 1809
+        "x": 105,
+        "y": 1412
       },
       {
         "id": 16,
-        "x": 1937,
-        "y": 1809
+        "x": 2053,
+        "y": 1412
       },
       {
         "id": 17,
-        "x": 221,
-        "y": 2075
+        "x": 105,
+        "y": 1678
       },
       {
         "id": 18,
-        "x": 1937,
-        "y": 2075
+        "x": 2053,
+        "y": 1678
       },
       {
         "id": 19,
-        "x": 547,
-        "y": 2135
+        "x": 105,
+        "y": 1944
       },
       {
         "id": 20,
-        "x": 813,
-        "y": 2135
+        "x": 2053,
+        "y": 1944
       },
       {
         "id": 21,
-        "x": 1079,
-        "y": 2135
+        "x": 105,
+        "y": 2210
       },
       {
         "id": 22,
-        "x": 1345,
-        "y": 2135
+        "x": 2053,
+        "y": 2210
       },
       {
         "id": 23,
+        "x": 105,
+        "y": 2386
+      },
+      {
+        "id": 24,
+        "x": 281,
+        "y": 2386
+      },
+      {
+        "id": 25,
+        "x": 547,
+        "y": 2386
+      },
+      {
+        "id": 26,
+        "x": 813,
+        "y": 2386
+      },
+      {
+        "id": 27,
+        "x": 1079,
+        "y": 2386
+      },
+      {
+        "id": 28,
+        "x": 1345,
+        "y": 2386
+      },
+      {
+        "id": 29,
         "x": 1611,
-        "y": 2135
+        "y": 2386
+      },
+      {
+        "id": 30,
+        "x": 1877,
+        "y": 2386
+      },
+      {
+        "id": 31,
+        "x": 2053,
+        "y": 2386
       }
     ]
   },
   "codes": {
-    "count": 4,
+    "count": 2,
     "version": 10,
     "ecLevel": "H",
     "moduleSize": 4,
@@ -213,14 +249,6 @@
       {
         "x": 1909,
         "y": 250
-      },
-      {
-        "x": 250,
-        "y": 2304
-      },
-      {
-        "x": 1909,
-        "y": 2304
       }
     ]
   },
@@ -247,9 +275,9 @@
     {
       "key": "zero",
       "centreX": 1079,
-      "centreY": 1277,
-      "half": 798,
-      "divisions": 6,
+      "centreY": 1412,
+      "half": 931,
+      "divisions": 7,
       "majorEvery": 2,
       "unit": "moa",
       "distance": 100,
@@ -257,11 +285,15 @@
       "minorInk": "black",
       "majorInk": "black",
       "axisInk": "black",
-      "minorStroke": 2,
-      "majorStroke": 3,
-      "axisStroke": 4,
+      "minorStroke": 6,
+      "majorStroke": 20,
+      "axisStroke": 30,
       "labelStep": 2,
-      "labelInk": "text"
+      "labelInk": "black",
+      "style": 2,
+      "fieldX": 914,
+      "fieldY": 914,
+      "wholeEvery": 2
     }
   ]
 }

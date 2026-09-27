@@ -1,4 +1,5 @@
 using GroupLab.Cli.Imaging;
+using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Tests.Support;
@@ -32,14 +33,15 @@ public class UnholyZeroingGridTests
         }
 
         Assert.True(TestData.Matches(path, Rebuilt), $"{path} is not the published copy of Unholy's zeroing grid scan");
-        var definition = BuiltIns.Load("GL-ZERO-MIL-100Y.gltd.json");
+        // Entry 226 section 1: the grid was redrawn after Unholy printed it, so this is the definition his sheet was printed from, frozen.
+        var definition = GltdJsonReader.Read(System.IO.File.ReadAllBytes(Repo.PathTo("targets", "frozen", "zero-grid-1", "GL-XD6D-R325-J52P-3NH7.gltd.json"))).Definition!;
         var (grey, metadata) = ImageLoader.Load(path);
         var (value, _) = ImageLoader.LoadMaxChannel(path);
 
         // Entry 195 section 4, question 56: it names itself from its own codes, all four of them, rather than asking which sheet it is.
         var identity = SheetIdentification.Identify(grey, SheetIdentification.Candidates([Repo.PathTo("targets")]), new OpenCvSharpBackend(), new TraceRecorder());
         Assert.True(identity.Failure is null, identity.Failure);
-        Assert.Equal(definition.Name, identity.Definition?.Name);
+        Assert.Equal(definition.Id, identity.DefinitionId);
         Assert.Equal(4, identity.CodesRead);
 
         var result = AutomaticMarking.Run(grey, value, metadata, definition, new OpenCvSharpBackend());

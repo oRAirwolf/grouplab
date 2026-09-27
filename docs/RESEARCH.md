@@ -111,6 +111,8 @@ separate the effect from the confounds" and "already covered by article N".
 | Entry 198: OpenCV with ArUco and WeChat QR under OpenCvSharp on Android | **not yet** | It would change what another developer builds, since no published runtime carries those modules; decided when the build has run on a phone. |
 | Entry 157: a white sheet on a white board cannot be outlined | **not written** | A limit of GroupLab's own outline finder, with nothing a shooter would do differently beyond what the application already tells them. |
 | Entry 158 program A step 2: the scan detector on overlapping holes in photographs | **not written yet**, see below | It measures a detector built for scans on a case it was never meant for; the article worth writing is program A's, which needs the holes placed. |
+| Entry 226 section 2: two suppressors, one 25 shot sheet each | **written**, `suppressor-shift` | It changes what a shooter does (check the zero after swapping cans), and the test just detects a 0.28 in shift at p = 0.049. The confounds are named in the article next to the result, with the three sheets that would separate them. |
+| Entry 226 section 1: the zeroing grid could not be read through a scope | **not written** | Already covered by `designing-a-readable-target` and the visibility rule of `can-you-see-the-bull`; the grid's redesign is described in docs/TARGET-LIBRARY.md section 5. |
 | Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2. What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know". |
 
 ## Program A: the ST-4, 5 and 10 shot groups

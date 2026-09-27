@@ -9,7 +9,7 @@ here = os.path.dirname(os.path.abspath(__file__))
 ARCMIN_PER_IN_100YD = 1 / 3600 * (180 / math.pi) * 60   # 0.955 arcmin per inch at 100 yd
 
 mags = np.linspace(4, 40, 200)
-feats = [(0.03, "0.03 in line (current bull rings)", s.ORANGE), (0.10, "0.10 in dot (current bull centre)", s.BLUE), (0.25, "0.25 in feature", s.AQUA)]
+feats = [(0.03, "0.03 in line (current bull rings)", s.ORANGE), (0.10, "0.10 in dot (current bull center)", s.BLUE), (0.25, "0.25 in feature", s.AQUA)]
 fig, ax = plt.subplots(figsize=(8.5, 4.8))
 ax.axhspan(0, 1, color="#e9e7e0", lw=0); ax.text(39.6, 0.22, "below what the eye resolves in perfect conditions (about 1 arcminute)", fontsize=8.5, color=s.INK2, ha="right")
 ax.axhline(4, color=s.MUTED, lw=1, ls="--"); ax.text(4.5, 4.15, "proposed working minimum, 4 arcminutes", fontsize=9, color=s.INK2)

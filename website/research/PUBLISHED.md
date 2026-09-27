@@ -24,6 +24,7 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - safe-updates  2026-09-23  batches 1 to 3
 - scans-against-photos  2026-09-23  batches 1 to 3
 - smaller-installer  2026-09-23  batches 1 to 3
+- suppressor-shift  2026-09-27  entry 226, which asked for it on the research pages and the tour
 - uploads-rebuilt-from-pixels  2026-09-23  batches 1 to 3
 - what-grouplab-sends  2026-09-23  batches 1 to 3
 - wind-or-rifle  2026-09-23  batches 1 to 3

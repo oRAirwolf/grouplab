@@ -155,6 +155,12 @@ public static class BodyCodec
                 w.Add(m.InkPair);
                 w.Add(m.Style);
                 w.Add(m.LabelStep);
+                if (m.Style == WireCodes.ZeroingGridStyle)
+                {
+                    U16(w, m.FieldX);
+                    U16(w, m.FieldY);
+                    w.Add(m.WholeEvery);
+                }
             }
         }
 
@@ -341,12 +347,21 @@ public static class BodyCodec
                     r.U8("the grid divisions"), r.U8("the grid major step"), r.U8("the grid unit"),
                     r.U16("the grid distance"), r.U8("the grid distance unit"), r.U8("the grid inks"),
                     r.U8("the grid style"), r.U8("the grid label step"));
+                if (m.Style == WireCodes.ZeroingGridStyle)
+                {
+                    m = m with { FieldX = r.U16("a grid field"), FieldY = r.U16("a grid field"), WholeEvery = r.U8("the grid whole-unit step") };
+                    Require(m.FieldX > 0 && m.FieldY > 0 && m.FieldX <= m.Half && m.FieldY <= m.Half,
+                        $"Measurement grid {i} has a field of {m.FieldX} by {m.FieldY} outside its half of {m.Half}.");
+                    Require(m.WholeEvery > 0 && m.MajorEvery > 0 && m.WholeEvery % m.MajorEvery == 0,
+                        $"Measurement grid {i} has a whole-unit step of {m.WholeEvery}, which is not a multiple of its major step {m.MajorEvery}.");
+                }
+
                 Require(WireCodes.GridUnitOf(m.Unit) is not null, $"Measurement grid {i} has unknown unit {m.Unit}.");
                 Require(m.DistanceUnit <= 1, $"Measurement grid {i} has unknown distance unit {m.DistanceUnit}.");
                 RequireInk((byte)(m.InkPair & 0xF), inkCount, allowPaper: true, $"measurement grid {i} minor lines");
                 RequireInk((byte)(m.InkPair >> 4), inkCount, allowPaper: true, $"measurement grid {i} major lines");
-                Require(m.Style == WireCodes.StandardGridStyle,
-                    $"Measurement grid {i} has style {m.Style}; only style 1 is defined (TARGET-SCHEMA.md section 11, question 11).");
+                Require(m.Style is WireCodes.StandardGridStyle or WireCodes.ZeroingGridStyle,
+                    $"Measurement grid {i} has style {m.Style}; only styles 1 and 2 are defined (TARGET-SCHEMA.md section 3.13, questions 11 and 59).");
                 grids.Add(m);
             }
         }

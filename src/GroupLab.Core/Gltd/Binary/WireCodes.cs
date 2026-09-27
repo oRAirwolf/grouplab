@@ -26,6 +26,9 @@ internal static class WireCodes
 
     public const byte StandardGridStyle = 1;
 
+    /// <summary>Grid style 2, question 59: five more bytes, the drawn field's two half-extents and the whole-unit step.</summary>
+    public const byte ZeroingGridStyle = 2;
+
     public static byte PageCode(PageSize size) => size switch
     {
         PageSize.Custom => 0,

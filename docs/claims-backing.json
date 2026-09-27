@@ -1936,6 +1936,126 @@
   "**Built, and open since 2026-09-25** (entry 219 item D1, opened by entry 223 once Alan had installed the worker): `surveyOpen` in `website/api/limits.json` is true, and the receiver takes reports.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 223; website/api/limits.json surveyOpen; website/api/survey.php OPEN; src/GroupLab.Core/Updates/OutsideWorld.cs PostSurveyAsync"
+  },
+  "Written 2026-09-27; the data is from 2026-09-26.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "What we found With the Magnus S the shots centered 0.28 in lower at 100 yards than with the Dominus K (0.27 MOA), and no different across.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Hotelling&#x27;s test puts that at p = 0.049 with every shot counted, and p = 0.009 without the four shots that landed off their bulls.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The test says the two sheets&#x27; centers differ; it cannot say whether the suppressor, the barrel&#x27;s heat after 25 shots, the swap itself or the light did it.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The data offsets-2026-09-26.csv results.json The test The developer shot two 25 bull load development sheets at 100 yards from the same 18 inch AR-15 with the same ammunition: 105 gr Aeromatch over 24.2 gr of N135 in Starline brass, GM205MAR primers, 2.250 in.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The only change between the sheets was the suppressor: a Thunder Beast Dominus K on the first sheet, a Magnus S on the second, about 20 to 30 minutes later.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "What happened on the paper Each dot is one shot, measured from the bull it was fired at, so all 25 bulls on a sheet stack onto one point of aim.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Four shots landed off their bulls altogether: on the Dominus K sheet, bull 2's shot hit about 1.4 in above it near the title line, and bull 24's landed below it; on the Magnus S sheet, bull 5's hit about an inch above it and half an inch left, toward the corner code, and bull 24's landed below it.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "What the numbers say Dominus K Magnus S shots 25 25 center, from the aim 0.04 in right, 0.21 in high 0.08 in right, 0.07 in low spread (sigma about its own center) 0.345 in 0.340 in The shift, Magnus S against Dominus K: 0.28 in lower (95 percent interval 0.06 to 0.51 in lower) and 0.04 in right (0.13 in left to 0.20 in right).": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "That is 0.27 MOA or 0.08 mil , about one quarter MOA click and less than one 0.1 mil click.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Hotelling's two-sample test on the 25 by 25 offsets, the standard test for whether two groups share a center, gives p = 0.049 .": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "A permutation test of the same statistic, which assumes nothing about the shape of the groups, gives p = 0.047.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Taking out the four shots that landed off their bulls, the shift is the same size, 0.28 in lower, and the test gives p = 0.009 .": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The ratio of the two spreads is 1.02, with a 95 percent interval from 0.76 to 1.35, p = 0.91.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "That is not proof they group the same; 25 shots a side can only see a difference of about a third either way.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The Magnus S sheet came after 25 more shots through the barrel and a 20 to 30 minute cool down, so the barrel's temperature and fouling were not the same.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "What this means A quarter of an inch at 100 yards is one click.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "A shift of means shows up with far fewer shots than a difference in group size, which is why 25 a side can see a quarter of an inch but could not see a difference in spread smaller than about a third.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Sources The two sheets, their load blocks and consent: samples/PROVENANCE.md , \\\"The 2026-09-26 range day\\\".": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "What the developer asked, and the order the sheets were shot in: docs/NOTES-FROM-PLANNING.md , entries 226, 229 and 230.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "The tests: docs/STATISTICS.md sections 8.1 to 8.3.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json and offsets-2026-09-26.csv, measured by GroupLab on Alan's 6 ARC sheets of 2026-09-26 and worked out by figures/make_figures.py; the order and timing from entry 230 section 2.3 (2026-09-27)"
+  },
+  "Two real sheets compared &lsaquo; Session records All screens Equipment &rsaquo; Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "website/tour.json, the link to the suppressor-shift article, entry 226 section 2.1"
+  },
+  "A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot, and says on the sheet what its squares are, with a ruler to check the print; for a zero worked out from a group, and group figures, use a 5x5 sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs Statement and Ruler; src/GroupLab.Cli/Library/TargetGenerator.cs and PrintPanel.Generate; CutSheet (entry 226 sections 1, 4 and 5)"
+  },
+  "At its top, made for your optic: give the distance, the lowest magnification you will shoot at, or a red dot's size, and the shots, and GroupLab sizes a bull you can center on through it and makes as many sheets as the shots need.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs Statement and Ruler; src/GroupLab.Cli/Library/TargetGenerator.cs and PrintPanel.Generate; CutSheet (entry 226 sections 1, 4 and 5)"
+  },
+  "The sheet says what a small square and each heavier line are, in your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you shoot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)"
+  },
+  "**Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)"
+  },
+  "GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)"
+  },
+  "Two 25 shot sheets from one rifle and one load, one with each suppressor.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json, measured on Alan's 6 ARC sheets of 2026-09-26 (entry 226 section 2)"
+  },
+  "The second suppressor&#x27;s shots centered about a quarter of an inch lower at 100 yards, and the test just sees it.": {
+   "kind": "measured",
+   "where": "website/research/suppressor-shift/data/results.json, measured on Alan's 6 ARC sheets of 2026-09-26 (entry 226 section 2)"
+  },
+  "Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs Generate and src/GroupLab.Cli/Library/TargetGenerator.cs (entry 226 section 4)"
   }
  },
  "rules": [

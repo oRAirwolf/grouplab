@@ -315,6 +315,10 @@
     [
      "Was it the wind or the rifle",
      "/research/wind-or-rifle/"
+    ],
+    [
+     "Did the suppressor move the point of impact? Two real sheets compared",
+     "/research/suppressor-shift/"
     ]
    ]
   },
@@ -499,7 +503,7 @@
    "parts": [
     [
      "The list, grouped by what the sheet is for",
-     "Centerfire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot; for a zero worked out from a group, and group figures, use a 5x5 sheet. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
+     "Centerfire load development, rimfire, large format, long range on tiled pages, long range on roll media, and zeroing grids. A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot, and says on the sheet what its squares are, with a ruler to check the print; for a zero worked out from a group, and group figures, use a 5x5 sheet. The right hand column of each row is the paper size and how many scoring bulls it has, with the sighter bulls after the plus sign."
     ],
     [
      "The sheet you have chosen, beside the list",
@@ -527,7 +531,7 @@
     ],
     [
      "Previous sheet, Next sheet",
-     "For a tiled sheet that spans several pages. The counter says which page of how many."
+     "For a tiled sheet that spans several pages. The counter says which page of how many. A tiled sheet can also be printed on one large page with cut lines between the sheets, for a plotter; each piece scans on its own."
     ],
     [
      "The preview, with Zoom in, Zoom out and Fit",
@@ -535,7 +539,7 @@
     ],
     [
      "Design your own sheet",
-     "For a sheet no built-in one covers. The designer opens beside the list, and your own sheets appear at the bottom of it."
+     "For a sheet no built-in one covers. The designer opens beside the list, and your own sheets appear at the bottom of it. At its top, made for your optic: give the distance, the lowest magnification you will shoot at, or a red dot's size, and the shots, and GroupLab sizes a bull you can center on through it and makes as many sheets as the shots need."
     ]
    ],
    "steps": [

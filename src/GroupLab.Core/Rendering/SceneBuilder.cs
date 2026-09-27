@@ -29,7 +29,8 @@ public sealed record RenderOptions(
     int? TileIndex = null,
     bool AllowInvalid = false,
     double Scale = 1.0,
-    string? PrintNote = null);
+    string? PrintNote = null,
+    bool OneSheet = false);
 
 public sealed record SceneResult(IReadOnlyList<Scene> Pages, string? DefinitionId, IReadOnlyList<Diagnostic> Diagnostics);
 
@@ -214,6 +215,12 @@ public static class SceneBuilder
         {
             foreach (var g in d.Grids ?? [])
             {
+                if (g.StyleOrDefault == GridStyle2.Style)
+                {
+                    AddStyle2Grid(items, g);
+                    continue;
+                }
+
                 var xs = MeasurementGridLines.Positions(g.CentreX, g.Half, g.Divisions);
                 var ys = MeasurementGridLines.Positions(g.CentreY, g.Half, g.Divisions);
                 long left = 2L * (g.CentreX - g.Half), right = 2L * (g.CentreX + g.Half);
@@ -251,6 +258,163 @@ public static class SceneBuilder
                 }
 
                 AddGridLabels(items, g, xs, ys);
+            }
+        }
+
+        /// <summary>
+        /// A style 2 grid (<see cref="GridStyle2"/>): the lattice lines inside the field in three weights, a label on every major line, the
+        /// line broken where it would cross a label, and the scale statement with its ruler above the field.
+        /// </summary>
+        private void AddStyle2Grid(List<SceneItem> items, MeasurementGrid g)
+        {
+            string? major = g.MajorInk ?? FirstArtworkKey();
+            string? minor = g.MinorInk ?? FirstArtworkKey();
+            string? axis = g.AxisInk ?? major;
+            string? labelKey = g.LabelInk ?? major;
+            if (major is null || minor is null || axis is null || Colour(major) is not { } majorColour)
+            {
+                return;
+            }
+
+            int halfX = g.HalfX, halfY = g.HalfY;
+            var columns = GridStyle2.Lines(g, halfX);
+            var rows = GridStyle2.Lines(g, halfY);
+            long left = 2L * (g.CentreX - halfX), right = 2L * (g.CentreX + halfX);
+            long top = 2L * (g.CentreY - halfY), bottom = 2L * (g.CentreY + halfY);
+
+            // The labels first, in dmm boxes, so the lines can leave room for them.
+            var labels = new List<(TextRun Run, (long X0, long Y0, long X1, long Y1) Box)>();
+            Rgb? labelColour = labelKey is null ? null : Colour(labelKey);
+            long size = 2L * GridStyle2.FontSizeForCap(GridStyle2.LabelCap);
+            long firstLabel = (GridStyle2.WholeStroke / 2) + GridStyle2.LabelGap;
+            if (g.LabelStep is > 0 && labelColour is { } lc)
+            {
+                // Each label is centred on its own line, like the figures on a ruler, and the line is broken behind it; a label at the
+                // field's edge moves inward to stay on the paper. Across the axis below it for the upright lines, beside the upright
+                // axis for the level ones, so the two sets never meet and neither reaches the aiming ring.
+                foreach (var (i, offset) in columns.Where(c => c.Index != 0 && c.Index % g.LabelStep.Value == 0))
+                {
+                    string text = GridStyle2.Label(g, i);
+                    long width = HelveticaMetrics.TextWidth(text, size) / 2;
+                    long x0 = Centred(offset, width, halfX);
+                    long capTop = g.CentreY + firstLabel;
+                    labels.Add((new TextRun(SceneLayer.MeasurementGrid, lc, 2 * (g.CentreX + x0), 2 * (capTop + GridStyle2.LabelCap), size, text, TextAnchor.Left),
+                        (g.CentreX + x0, capTop, g.CentreX + x0 + width, capTop + GridStyle2.LabelCap)));
+                }
+
+                foreach (var (i, offset) in rows.Where(r => r.Index != 0 && r.Index % g.LabelStep.Value == 0))
+                {
+                    string text = GridStyle2.Label(g, i);
+                    long width = HelveticaMetrics.TextWidth(text, size) / 2;
+                    long x = g.CentreX + firstLabel;
+                    long capTop = g.CentreY + Centred(offset, GridStyle2.LabelCap, halfY);
+                    labels.Add((new TextRun(SceneLayer.MeasurementGrid, lc, 2 * x, 2 * (capTop + GridStyle2.LabelCap), size, text, TextAnchor.Left),
+                        (x, capTop, x + width, capTop + GridStyle2.LabelCap)));
+                }
+            }
+
+            var clear = labels.Select(l => (2 * (l.Box.X0 - GridStyle2.LabelMargin), 2 * (l.Box.Y0 - GridStyle2.LabelMargin),
+                2 * (l.Box.X1 + GridStyle2.LabelMargin), 2 * (l.Box.Y1 + GridStyle2.LabelMargin))).ToList();
+
+            // Heavier lines are drawn after lighter ones, so a crossing shows the heavier weight.
+            foreach (int weight in (int[])[0, 1, 2])
+            {
+                var (key, stroke) = weight switch
+                {
+                    2 => (axis, (long)GridStyle2.WholeStroke),
+                    1 => (major, (long)GridStyle2.MajorStroke),
+                    _ => (minor, (long)GridStyle2.FineStroke),
+                };
+                if (Colour(key) is not { } colour)
+                {
+                    continue;
+                }
+
+                foreach (var (_, offset) in columns.Where(c => GridStyle2.Weight(g, c.Index) == weight))
+                {
+                    long x = 2L * (g.CentreX + offset);
+                    AddBroken(items, colour, x - stroke, x + stroke, top, bottom, vertical: true, clear);
+                }
+
+                foreach (var (_, offset) in rows.Where(r => GridStyle2.Weight(g, r.Index) == weight))
+                {
+                    long y = 2L * (g.CentreY + offset);
+                    AddBroken(items, colour, y - stroke, y + stroke, left, right, vertical: false, clear);
+                }
+            }
+
+            items.AddRange(labels.Select(l => l.Run));
+            AddScaleStatement(items, g, majorColour);
+        }
+
+        /// <summary>
+        /// Where a label of <paramref name="extent"/> centred on a line at <paramref name="offset"/> starts, kept inside the field and clear
+        /// of the line along its edge, so the edge of the field is never broken.
+        /// </summary>
+        private static long Centred(int offset, long extent, int field)
+        {
+            long inset = (GridStyle2.WholeStroke / 2) + (2 * GridStyle2.LabelMargin);
+            return Math.Clamp(offset - (extent / 2), -field + inset, field - inset - extent);
+        }
+
+        /// <summary>A line from <paramref name="from"/> to <paramref name="to"/> along its length, in half-dmm, left out where it crosses a clear box.</summary>
+        private static void AddBroken(List<SceneItem> items, Rgb colour, long across0, long across1, long from, long to, bool vertical,
+            IReadOnlyList<(long X0, long Y0, long X1, long Y1)> clear)
+        {
+            var gaps = clear
+                .Where(b => vertical ? b.X0 < across1 && across0 < b.X1 : b.Y0 < across1 && across0 < b.Y1)
+                .Select(b => vertical ? (b.Y0, b.Y1) : (b.X0, b.X1))
+                .OrderBy(b => b.Item1)
+                .ToList();
+            long at = from;
+            foreach (var (g0, g1) in gaps.Append((to, to)))
+            {
+                long end = Math.Min(g0, to);
+                if (end > at)
+                {
+                    items.Add(vertical
+                        ? new RectFill(SceneLayer.MeasurementGrid, colour, across0, at, across1 - across0, end - at)
+                        : new RectFill(SceneLayer.MeasurementGrid, colour, at, across0, end - at, across1 - across0));
+                }
+
+                at = Math.Max(at, g1);
+            }
+        }
+
+        /// <summary>
+        /// The style 2 scale statement and ruler, centred above the field and clear of the marker row: three lines saying what the squares
+        /// are at the stated distance, then a bar of 4 in or 10 cm with a tick at every inch or centimetre, to measure the print with.
+        /// </summary>
+        private void AddScaleStatement(List<SceneItem> items, MeasurementGrid g, Rgb colour)
+        {
+            var lines = GridStyle2.Statement(g);
+            if (lines.Count == 0)
+            {
+                return;
+            }
+
+            Rgb text = RoleColour(InkRole.Text);
+            long barBottom = g.CentreY - g.HalfY - GridStyle2.StatementClearance;
+            long barTop = barBottom - GridStyle2.RulerThickness;
+            var (length, ticks, _) = GridStyle2.Ruler(g);
+            long barLeft = g.CentreX - (length / 2);
+            items.Add(new RectFill(SceneLayer.MeasurementGrid, colour, 2 * barLeft, 2 * barTop, 2L * length, 2L * GridStyle2.RulerThickness));
+            for (int k = 0; k <= ticks; k++)
+            {
+                long x = (2 * barLeft) + (2L * length * k / ticks);
+                long tick = (k == 0 || k == ticks || (ticks == 10 && k == 5)) ? 2L * GridStyle2.RulerTick : GridStyle2.RulerTick;
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, colour, Math.Clamp(x - (GridStyle2.RulerTickWidth / 2 * 2), 2 * barLeft, (2 * (barLeft + length)) - GridStyle2.RulerTickWidth * 2),
+                    (2 * barTop) - tick, 2L * GridStyle2.RulerTickWidth, tick));
+            }
+
+            long maximum = 2L * GridStyle2.FontSizeForCap(GridStyle2.StatementCap);
+            long lineHeight = 2L * GridStyle2.StatementCap * 3 / 2;
+            long baseline = (2 * barTop) - (2L * GridStyle2.RulerTick) - (2L * GridStyle2.StatementCap / 2);
+            for (int n = lines.Count - 1; n >= 0; n--)
+            {
+                long size = HelveticaMetrics.FitFontSize(lines[n], 2L * GridStyle2.StatementWidth, maximum);
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, text, 2L * g.CentreX, baseline, size, lines[n], TextAnchor.Centre));
+                baseline -= lineHeight;
             }
         }
 

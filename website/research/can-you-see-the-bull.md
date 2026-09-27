@@ -1,16 +1,18 @@
 ---
 title: "Can you see the bull? Aim points and optics at 100 yards"
-description: "Through a top-tier 36x scope the centre of GroupLab's original bull was visible at 100 yards; through a good 25x scope it nearly disappeared. The arithmetic of why, nine candidate aim points, and a side-by-side test across four scopes."
+description: "Through a top-tier 36x scope the center of GroupLab's original bull was visible at 100 yards; at 10x nobody could center on it. The arithmetic of why, nine candidate aim points, and what two shooters scored through four scopes."
 group: Range tests
 number: 8
 written: 2026-09-22
-data_date: "2026-09-20 observations; test results 2026-09-23 (pending)"
-samples: "Four optics, nine aim point designs, two observers (results pending)"
-state: draft
+data_date: "2026-09-20 observations; the test shot 2026-09-26"
+samples: "Four optics, nine aim point designs, two observers, 207 scores; three shots at each of four designs"
+state: ready
 found: "see the article"
-sure: "the geometry is exact. The 4 arcminute working rule is a proposal to test. The side-by-side results from the 2026-09-23 range test will be added below."
+sure: "the geometry is exact. The scores are two people on one afternoon, so they show where the line falls, not a precise threshold. They agree with the 3 to 4 arcminute rule at every magnification tested."
 data:
   - data/apparent-size.csv
+  - data/scores-2026-09-26.csv
+  - data/groups-2026-09-26.csv
 sources:
   - "Michael Bach, Visual acuity and hyperacuity (vernier acuity is 5 to 10 times finer than resolution). https://michaelbach.de/ot/lum-hyperacuity/"
   - "The clinical use of vernier acuity, Frontiers in Neuroscience, 2021. https://pubmed.ncbi.nlm.nih.gov/34675763/"
@@ -94,17 +96,71 @@ Four optics at 100 yards, each scored 0 (cannot see the center), 1 (can see it b
 - Vortex Razor HD Gen III 6-36x56 at 10x, 18x, 25x and 36x
 - DNT TheOne 7-35x56 at 10x, 18x, 25x and 35x
 - Vortex Strike Eagle 5-25x56 at 10x, 18x and 25x
-- Primary Arms PLxC 1-8x24 FFP at 4x and 8x at 100 yards, and 8x at 50 yards
+- Primary Arms PLxC 1-8x24 FFP at 4x, 6x and 8x
 
-25x on all three high power scopes is the like-for-like comparison of glass. A friend's scope was scored as well.
+25x on all three high power scopes is the like-for-like comparison of glass. The test was shot on 2026-09-26, at 100 yards, by the developer and his friend Justin, who scored every scope but the Strike Eagle.
+
+**The PLxC rows on the sheet were wrong, and the sheet is fixed.** The printed sheet asked for the PLxC at 4x, 8x and 8x again, the last a 50 yard row whose different distance was printed like every other cell. Both shooters tested 4x, 6x and 8x at 100 yards and wrote 6x over the second row. Justin's older sheet had the friend's scope rows printed 10x, 18x and "max", copied from the high power scopes, and he wrote the PLxC's 4, 6 and 8 over them. The sheet is now built from a table of each scope's real range: it refuses a magnification the scope does not have or one asked for twice, and a change of distance gets its own bold heading.
 
 ## Results
 
-**[Placeholder: results from 2026-09-23. Table of scores by design, scope and magnification; light and mirage; each observer's preferred design; any shots fired at A and the favorite.]**
+Every score, the developer's first and Justin's second where both scored. 0 cannot see the center, 1 can see it but cannot center on it, 2 can center confidently.
+
+| Scope | Mag | A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Razor HD | 10x | 0 / 0 | 1 / 1 | 2 / 2 | 1 / 0 | 2 / 2 | 1 / 1 | 1 / 2 | 2 / 2 | 2 / 0 |
+| Razor HD | 18x | 1 / 1 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 1 | 2 / 1 | 2 / 1 |
+| Razor HD | 25x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| Razor HD | 36x | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 1 | 2 / 1 | 2 / 2 |
+| DNT | 10x | 0 / 2 | 1 / 1 | 2 / 0 | 1 / 1 | 2 / 2 | 2 / 2 | 1 / 0 | 2 / 1 | 1 / 2 |
+| DNT | 18x | 1 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 1 |
+| DNT | 25x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| DNT | 35x | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 | 2 / 2 |
+| Strike Eagle | 10x | 0 | 1 | 2 | 1 | 2 | 2 | 1 | 1 | 2 |
+| Strike Eagle | 18x | 0 | 2 | 2 | 0 | 2 | 2 | 1 | 2 | 2 |
+| Strike Eagle | 25x | 1 | 2 | 2 | 1 | 2 | 2 | 1 | 2 | 2 |
+| PLxC | 4x | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 1 | 0 / 0 | 0 / 0 | 1 / 0 | 2 / 1 |
+| PLxC | 6x | 0 / 0 | 0 / 1 | 1 / 1 | 0 / 0 | 1 / 1 | 0 / 2 | 1 / 0 | 1 / 0 | 2 / 2 |
+| PLxC | 8x | 0 / 0 | 0 / 0 | 1 / 0 | 1 / 0 | 1 / 0 | 1 / 1 | 1 / 0 | 2 / 0 | 2 / 0 |
+
+One of the developer's Strike Eagle cells for A at 10x is written like an 8; the scale stops at 2, so it is read as 0. At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where Justin's 8x row comes from.
+
+**The current bull cannot be centered at 10x.** A scored 0 for the developer through all three high power scopes at 10x, and 0 for Justin through the Razor HD. At 25x and above almost everything is centered through good glass, so the magnification a shooter zeros and tests at, not the best glass, decides the design.
+
+**The working rule held.** The center of each design, and what it subtends through the scope at 100 yards:
+
+| Design | Center feature | arcminutes at 4x | 6x | 8x | 10x |
+|---|---|---|---|---|---|
+| A | 0.10 in dot | 0.4 | 0.6 | 0.8 | 1.0 |
+| B | 0.22 in dot | 0.8 | 1.3 | 1.7 | 2.1 |
+| C | 0.36 in white center | 1.4 | 2.1 | 2.8 | 3.4 |
+| D | 0.06 in white cross | 0.2 | 0.3 | 0.5 | 0.6 |
+| E | 0.36 in white center | 1.4 | 2.1 | 2.8 | 3.4 |
+| F | 0.20 in dot | 0.8 | 1.1 | 1.5 | 1.9 |
+| G | 0.40 in open gap | 1.5 | 2.3 | 3.1 | 3.8 |
+| H | 0.40 in between the tips | 1.5 | 2.3 | 3.1 | 3.8 |
+| I | 0.60 in white center | 2.3 | 3.4 | 4.6 | 5.7 |
+
+At 10x the designs whose center is 3.4 arcminutes or more, C, E and I, are the ones centered through the high power scopes: E by both observers through every one, C with one exception (Justin through the DNT) and I with two. At 4x nothing but the 2 inch bull scores at all, and its white center is the only feature near 3 arcminutes. A feature needs roughly 3 to 4 arcminutes at the lowest magnification a sheet is for, which is about 1 inch at 100 yards through 4x.
+
+**A crosshair covers a small center, whatever the glass.** Through the Razor HD, whose reticle has a fine center crosshair, the centers of D and G were very hard to see: the crosshair sat exactly where the design's center was. The DNT has only a small center dot and did not cover them. So a design whose center is a small feature, a thin cross or an open gap, fails under a crosshair reticle, and G's idea, a gap for the reticle to sit in, works only when the reticle is smaller than the gap.
+
+**What the shooters chose.** The developer: C or E, the edge to C; his notes say "C, F, I good". Justin: F his favorite, and he did not like I.
+
+**Three shots at four designs.** The developer fired three shots at each of A, C, E and I with one rifle and load. Every group landed up and left of its aim point by about the same amount, which is the rifle's zero on the day rather than the design. Measured center to center from the scan:
+
+| Design | Group across (extreme spread) | Center of the group from the aim |
+|---|---|---|
+| A | 0.42 in | 0.70 in left, 0.58 in high |
+| C | 0.80 in | 0.34 in left, 0.51 in high |
+| E | 0.41 in | 0.28 in left, 0.86 in high |
+| I | about 0.2 in: one ragged hole about 0.43 in across in the black | 0.19 in left, 0.65 in high |
+
+C's spread comes from one shot in its white center and two a long way up and left. **None of these differ measurably.** With three shots a design, one design's spread would have to be about three times another's before the difference is more than chance; C against E is 2.2 times, p = 0.16. Three shots can only show a very large difference, and there is none here.
 
 ## What happens next
 
-The winning design becomes a new ring set in the GroupLab library, tested on real sheets before it replaces anything. A follow-up test covers 1x red dots and prisms, low power variables and medium power variables at distances suited to each (see "Aim points for 1x to high power optics").
+The winning design becomes a new ring set in the GroupLab library, tested on real sheets before it replaces anything. This test narrows it: **E or C** for sheets shot at 10x and above, E centered by both observers through every high power scope at 10x and C by all but one; **not D or G**, whose centers a crosshair covers; and **I**, or a design with a center of about an inch, for anything shot below 6x. The choice is the planning session's and the developer's (question 61). A follow-up test covers 1x red dots and prisms, low power variables and medium power variables at distances suited to each (see "Aim points for 1x to high power optics").
 
 ## What this means
 

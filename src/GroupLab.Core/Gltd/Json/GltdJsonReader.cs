@@ -46,7 +46,7 @@ public static partial class GltdJsonReader
     private static readonly string[] GridKeys =
     [
         "key", "centreX", "centreY", "half", "divisions", "majorEvery", "unit", "distance", "distanceUnit",
-        "minorInk", "majorInk", "axisInk", "minorStroke", "majorStroke", "axisStroke", "labelStep", "labelInk",
+        "minorInk", "majorInk", "axisInk", "minorStroke", "majorStroke", "axisStroke", "labelStep", "labelInk", "style", "fieldX", "fieldY", "wholeEvery",
     ];
 
     public static GltdReadResult ReadFile(string path) => Read(File.ReadAllBytes(path));
@@ -392,7 +392,11 @@ public static partial class GltdJsonReader
             o.Int("majorStroke", false, 1, 255),
             o.Int("axisStroke", false, 1, 255),
             o.Int("labelStep", false, 0, 100),
-            o.Str("labelInk", false, pattern: InkKeyPattern()));
+            o.Str("labelInk", false, pattern: InkKeyPattern()),
+            o.Int("style", false, 1, 2),
+            o.Int("fieldX", false, 100, DmmMax),
+            o.Int("fieldY", false, 100, DmmMax),
+            o.Int("wholeEvery", false, 1, 100));
     }
 
     /// <summary>One JSON object being read: tracks its members, duplicates and unknown keys.</summary>

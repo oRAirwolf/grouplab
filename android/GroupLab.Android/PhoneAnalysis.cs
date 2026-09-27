@@ -51,13 +51,18 @@ internal static class PhoneAnalysis
 
         var context = global::Android.App.Application.Context;
         string folder = System.IO.Path.Combine(Files, "targets");
-        Directory.CreateDirectory(folder);
-        foreach (string name in (context.Assets!.List("targets") ?? []).Where(n => n.EndsWith(".gltd.json", StringComparison.Ordinal)))
+
+        // The frozen definitions too (entry 226 section 1): a sheet printed before the zeroing grids were redrawn is still identified.
+        foreach (string assets in (string[])["targets", "targets/frozen"])
         {
-            string to = System.IO.Path.Combine(folder, name);
-            using var from = context.Assets.Open($"targets/{name}");
-            using var file = File.Create(to);
-            from.CopyTo(file);
+            string into = System.IO.Path.Combine(Files, assets);
+            Directory.CreateDirectory(into);
+            foreach (string name in (context.Assets!.List(assets) ?? []).Where(n => n.EndsWith(".gltd.json", StringComparison.Ordinal)))
+            {
+                using var from = context.Assets.Open($"{assets}/{name}");
+                using var file = File.Create(System.IO.Path.Combine(into, name));
+                from.CopyTo(file);
+            }
         }
 
         return library = SheetIdentification.Candidates([folder]);

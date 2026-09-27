@@ -59,6 +59,51 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 226: the zeroing grids redrawn, the suppressor test, the aim point results, a target generator and large sheets
+
+**1. The zeroing grids.** Alan's printout measured right (entry 230: 0.36, 1.80 and 5.76 in), so the design was the fault: 1.6 mil across,
+0.1 mil squares that ran together at 6x to 10x, 0.2 to 0.4 mm lines and 1.4 mm labels, and nothing saying what a square was. The format
+could not draw the fix, so it gained grid style 2 (TARGET-SCHEMA.md section 3.13, question 59): a drawn field of its own inside the
+lattice, a third line weight for the whole unit, and everything else fixed by the style in `GridStyle2`: strokes of 0.6, 2 and 3 mm, 13 mm
+labels centred on every heavier line with the line broken behind them, and a three-line scale statement with a 4 in or 10 cm ruler above
+the field. The four sheets now have two codes at the top and a field 914 dmm each side: **plus or minus 1.0 mil at 100 yd exactly**, 0.91
+mil at 100 m, 3.44 MOA at 100 yd and 3.14 MOA at 100 m, in 0.25 mil or 0.5 MOA squares, the whole unit heaviest. The mil lattice is 1.25 mil
+over 5 divisions because 1 mil over 4 rounds 914.4 to 914 and puts the first line 0.6 dmm out; the worst line is now 0.44 dmm (test 36).
+The aim is an open 20 mm ring with nothing in its middle. The old four are frozen in `targets/frozen/zero-grid-1/` and still identified,
+on Android too, which did not ship frozen definitions until now. Two findings on the way: 1 mm fine lines merged a touching pair of .308
+holes on a crossing (`TightGroupTests`), so they are 0.6 mm; and a label beside its line collided at the field's edge, so labels sit on
+their lines. The corpus counts were re-run: 55 of 55 committed images unchanged, only the eight zeroing fingerprints moved.
+
+**2. The suppressor test** (`website/research/suppressor-shift`, published). Both 6 ARC sheets read cleanly: 32 and 34 of 34 markers,
+registration RMS 0.0022 and 0.0025 in, 25 holes each, every off-bull shot given to the bull it was fired at (Dominus bulls 2 and 24,
+Magnus bulls 5 and 24). The Magnus S shots centered **0.28 in lower** (interval 0.06 to 0.51) and 0.04 in right: Hotelling's T-squared 6.55,
+F(2, 47) 3.21, **p = 0.049**, permutation p = 0.047; without the four off-bull shots p = 0.009 for the same shift. Spread unchanged, ratio
+1.02 (0.76 to 1.35). The article names the order, the heat and fouling, the remounting and the light as confounds next to the result.
+Magnus bull 5's shot is up and slightly left, not right as entry 229 read it. **The 6.5 sheet is not pooled** with the 2026-09-20 6.5
+sheets: its block says GM205MAR and 2.873 in, theirs 7.5 BR and 2.874 in. **Defects on real sheets:** on the 6.5 sheet 23 of 25 holes
+found (2 hole-sized candidates in printed-matter zones, row 1's shots by the codes), and 5 of the 23 given to the bull above their own
+(entry 229 section 4). Scans in `C:\Dev\grouplab-originals\range-2026-09-26\`, recorded in `samples/PROVENANCE.md`, backer OSB.
+
+**3. The aim point results** (`can-you-see-the-bull`, now `ready`). Both score sheets transcribed to `data/scores-2026-09-26.csv`, 207
+scores, and Alan's groups to `data/groups-2026-09-26.csv`. At 10x the current bull scored 0 through all three high power scopes; C, E and
+I, whose centers are 3.4 arcminutes or more, were centered; at 4x only I. The Razor HD's crosshair covered D and G. No design grouped
+measurably better: three shots a design need a spread ratio of about 3.1 to show, and the largest was 2.2 (C against E, p = 0.16). **The
+repeat on the score sheet** came from hand-typed rows: the PLxC's 8x/100 and 8x/50 differed only in a same-weight Dist cell, and the card's
+own page 2 printed the high power scopes' 10x, 18x and "max" on the friend's rows. `scopes.py` now builds the rows from each scope's range,
+refuses an impossible or repeated magnification, and heads a change of distance in bold; the card's page 2 is the same sheet;
+`tests/python/aim-card-tests.py` in CI holds it. "centre" and "favourite" are gone from both. The ring set choice is question 61.
+
+**4. The target generator** (`TargetGenerator`, the Targets screen's "Made for your optic"). Distance, lowest magnification or a red dot's
+size, and shots give a black disc with a white center of 3.5 arcminutes at that magnification (or 1.5 times the dot), three times as wide,
+1.35 diameters apart, in the largest 2 by 2 to 5 by 6 grid the page registers with either marker scheme, and as many sheets as the shots
+need, a set printed as a tiled assembly so every sheet's codes carry its place. 25 shots at 10x and 100 yd is one Letter sheet; at 4x it is
+a set; a 2 MOA dot at 50 yd fits no Letter page and says what would. `TargetGeneratorTests`, `TargetGeneratorScreenTests`.
+
+**5. Large sheets.** `PhotographLimit`: photographed whole with the sheet filling 90 percent of the frame, a 12 MP phone gives Tabloid 212
+and A3 218 pixels an inch, enough; the 24, 36 and 42 in rolls 112, 100 and 86, too few, where a 50 MP phone at full resolution gives 230,
+204 and 175. The Targets screen says so for each large sheet and that tiled pages are the better choice. `CutSheet` prints a tiled target on
+one large page with dashed cut lines, each piece a whole sheet with its markers and codes (`LargeFormatTests`).
+
 ## Entries 224 and 225: backups reach GitHub, the Store is built, the whole server can be restored
 
 **Backups** (224 section 1.1). `grouplab-backups` was empty, and GitHub makes no release in a repository with no commit, so the first run

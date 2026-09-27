@@ -275,8 +275,10 @@ public class ValidatorTests
     [Fact]
     public void Test26GridFieldWithoutRoomForMarkersIsAnError()
     {
+        // Entry 226: the zeroing grids are style 2, whose drawn field is what needs the room.
         var doc = BuiltIn("GL-ZERO-MIL-100M");
-        doc["grids"]![0]!["half"] = 890;
+        doc["grids"]![0]!["fieldX"] = 1000;
+        doc["grids"]![0]!["fieldY"] = 1000;
 
         AssertFinding(Validate(doc), Severity.Error, "26", "/grids/0");
     }

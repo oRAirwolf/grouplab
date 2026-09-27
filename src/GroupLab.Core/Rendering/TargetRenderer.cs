@@ -23,6 +23,10 @@ public static class TargetRenderer
             return new RenderResult(null, [], scenes.DefinitionId, scenes.Diagnostics);
         }
 
-        return new RenderResult(PdfWriter.Write(scenes.Pages, options.Scale), scenes.Pages, scenes.DefinitionId, scenes.Diagnostics);
+        // Entry 226 section 5.1: every tile on one large page, with cut lines between them.
+        IReadOnlyList<Scene> pages = options.OneSheet && options.TileIndex is null && CutSheet.Refusal(definition) is null
+            ? [CutSheet.Compose(definition, scenes.Pages)]
+            : scenes.Pages;
+        return new RenderResult(PdfWriter.Write(pages, options.Scale), pages, scenes.DefinitionId, scenes.Diagnostics);
     }
 }

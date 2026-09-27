@@ -71,4 +71,7 @@ public sealed record BodyMeasurementGrid(
     byte DistanceUnit,
     byte InkPair,
     byte Style,
-    byte LabelStep);
+    byte LabelStep,
+    ushort FieldX = 0,
+    ushort FieldY = 0,
+    byte WholeEvery = 0);

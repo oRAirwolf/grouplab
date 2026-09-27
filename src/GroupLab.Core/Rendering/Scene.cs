@@ -23,6 +23,9 @@ public enum SceneLayer
 
     /// <summary>The sheet's name and identifier along the top margin, outside every bull's cell (NOTES-FROM-PLANNING.md entry 77 section 5).</summary>
     Name,
+
+    /// <summary>Dashed lines between the sheets of an assembly printed as one large page, to cut it into scanner-sized pieces (entry 226 section 5).</summary>
+    CutLines,
 }
 
 public enum TextAnchor

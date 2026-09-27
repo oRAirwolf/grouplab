@@ -20,13 +20,17 @@
     "GL-RF25-A4.gltd.json": "4ef6ca28d45422913dd2ca1258965075b62d1838c21235284bb640d492fdaa9b",
     "GL-RF25-LTR.gltd.json": "b0e3135241ff6da8ecf3dd6a2df81888c72f5c8107cf121525a43d888d11223a",
     "GL-RF36-LTR.gltd.json": "62d298dbff513348b92cff6dfaf8ed88d21e5deccc27cba6788578c95c0befdb",
-    "GL-ZERO-MIL-100M.gltd.json": "0b92d7b651064b1856b0523df099e6e66cb01bc5b79d95597de2df0cec51165d",
-    "GL-ZERO-MIL-100Y.gltd.json": "651211c902e6322db48317325b4705271a7e1c2f67f02e9c45fb1deb7cadc875",
-    "GL-ZERO-MOA-100M.gltd.json": "d5d1d9ff2085ec928ced5b747bad7c024c2b5c32132a2249b5f50f645d297098",
-    "GL-ZERO-MOA-100Y.gltd.json": "08333df08800a26f75005f6d59d44a4f58cf49d008e1df4aa35aa3967d01b812",
+    "GL-ZERO-MIL-100M.gltd.json": "c76df67d9319e3cb834cb5a498eba3b87092d12a217478ed2fbd3858a613f2c4",
+    "GL-ZERO-MIL-100Y.gltd.json": "d7c157670d16c395bdb5edaabf8adb86273bd822ef9dbc47852f18374d4f65b4",
+    "GL-ZERO-MOA-100M.gltd.json": "b6cbebfae0aabd365cbb2b0c0fe34e1f085063a4b2d37cedfd04eba95fa56710",
+    "GL-ZERO-MOA-100Y.gltd.json": "b4bb02fa026ceb96daeba0bcbc6952fc6910c66cf1b8e5c19e75f095bc456275",
     "frozen/phase0/GL-G8JP-FF4D-AE0T-GPMN.gltd.json": "38f1d146ea856437398a3fb449be26d5fd5f2321f1a0aebedbbd55b6ca4d417a",
     "frozen/phase0/GL-R0T0-384Z-HRBE-M0EW.gltd.json": "d09554a90fc46bf81b45df9559e650413a7978938c84730a1de7950476f2ee8b",
-    "frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json": "62e0c2a5538ca7e24984dc357b2e3c3d6659fa3b8c79d7e78eae18b093308538"
+    "frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json": "62e0c2a5538ca7e24984dc357b2e3c3d6659fa3b8c79d7e78eae18b093308538",
+    "frozen/zero-grid-1/GL-0DEQ-H5XA-X9TA-EJ6H.gltd.json": "0b92d7b651064b1856b0523df099e6e66cb01bc5b79d95597de2df0cec51165d",
+    "frozen/zero-grid-1/GL-4ZY5-DBSH-MRJK-W4R3.gltd.json": "08333df08800a26f75005f6d59d44a4f58cf49d008e1df4aa35aa3967d01b812",
+    "frozen/zero-grid-1/GL-VFQD-KYZR-7BE2-ZH4K.gltd.json": "d5d1d9ff2085ec928ced5b747bad7c024c2b5c32132a2249b5f50f645d297098",
+    "frozen/zero-grid-1/GL-XD6D-R325-J52P-3NH7.gltd.json": "651211c902e6322db48317325b4705271a7e1c2f67f02e9c45fb1deb7cadc875"
   },
   "rows": [
     {

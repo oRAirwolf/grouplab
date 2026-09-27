@@ -71,6 +71,16 @@ public partial class RenderingTests
         // Measurement grid lines sit on the derived positions, section 3.13.
         foreach (var g in d.Grids ?? [])
         {
+            if (g.StyleOrDefault == GridStyle2.Style)
+            {
+                // Style 2 breaks a line where a label sits, and draws only inside its field: every upright piece is on a derived line.
+                var derived = GridStyle2.Lines(g, g.HalfX).Select(l => 2L * (g.CentreX + l.Offset)).ToHashSet();
+                var upright = page.Items.OfType<RectFill>().Where(r => r.Layer == SceneLayer.MeasurementGrid && r.Height > r.Width
+                    && r.Y >= 2L * (g.CentreY - g.HalfY) && r.Y + r.Height <= 2L * (g.CentreY + g.HalfY)).Select(r => r.X + (r.Width / 2)).ToHashSet();
+                Assert.Equal(derived.Order(), upright.Order());
+                continue;
+            }
+
             var lines = page.Items.OfType<RectFill>().Where(r => r.Layer == SceneLayer.MeasurementGrid && r.Height == 4L * g.Half)
                 .Select(r => r.X + (r.Width / 2)).Distinct().Order();
             Assert.Equal(MeasurementGridLines.Positions(g.CentreX, g.Half, g.Divisions).Select(p => 2L * p), lines);
@@ -130,17 +140,17 @@ public partial class RenderingTests
     [Fact]
     public void Test41AKnockoutInTheAimingMarkShowsTheGridBeneathIt()
     {
-        // Section 3.4: a paper disc reveals what is underneath. On a zeroing sheet that is the grid's axis lines. The
-        // aiming mark is discs of 127, 114 and 25 dmm, so its knockout is the band between radii 12.5 and 57 dmm.
+        // Section 3.4: a paper disc reveals what is underneath. On a zeroing sheet that is the grid's axis lines. Since entry 226 the
+        // aiming ring is discs of 200 and 150 dmm, so its knockout is everything inside a radius of 75 dmm.
         var d = BuiltIns.Load("GL-ZERO-MOA-100Y.gltd.json");
         var page = TargetRenderer.Render(d).Pages[0];
         var aim = d.Bulls[0];
-        var raster = Raster.Render(page, aim.X, aim.Y, 200, 600);
+        var raster = Raster.Render(page, aim.X, aim.Y, 250, 600);
 
-        Assert.True(raster.Ink(aim.X + 35, aim.Y) > 0.9, "The horizontal axis is hidden inside the knockout band.");
-        Assert.True(raster.Ink(aim.X, aim.Y + 35) > 0.9, "The vertical axis is hidden inside the knockout band.");
-        Assert.True(raster.Ink(aim.X + 24.7, aim.Y + 24.7) < 0.05, "The knockout band laid ink away from the axes.");
-        Assert.True(raster.Ink(aim.X + 42.4, aim.Y + 42.4) > 0.9, "The ring between 114 and 127 dmm is not inked.");
+        Assert.True(raster.Ink(aim.X + 50, aim.Y) > 0.9, "The horizontal axis is hidden inside the knockout.");
+        Assert.True(raster.Ink(aim.X, aim.Y + 50) > 0.9, "The vertical axis is hidden inside the knockout.");
+        Assert.True(raster.Ink(aim.X + 35, aim.Y + 35) < 0.05, "The knockout laid ink away from the axes.");
+        Assert.True(raster.Ink(aim.X + 61.9, aim.Y + 61.9) > 0.9, "The ring between 150 and 200 dmm is not inked.");
     }
 
     [Fact]

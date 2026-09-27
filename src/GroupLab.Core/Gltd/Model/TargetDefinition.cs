@@ -132,7 +132,12 @@ public sealed record Instance(string? Serial, string? Printed, IReadOnlyList<Key
 /// </summary>
 public sealed record Tiling(int Cols, int Rows, int SheetWidth, int SheetHeight, int Overlap);
 
-/// <summary>A printed angular measurement grid, TARGET-SCHEMA.md section 3.13. Its lines are derived, never stored.</summary>
+/// <summary>
+/// A printed angular measurement grid, TARGET-SCHEMA.md section 3.13. Its lines are derived, never stored. Style 2 (entry 226 section 1,
+/// question 59) adds a drawn field of its own, which can be a rectangle smaller than the lattice <see cref="Half"/> defines, and a third
+/// line weight every <see cref="WholeEvery"/> lines for the whole unit; its strokes, labels, scale statement and ruler are fixed by the
+/// style, in <c>GridStyle2</c>.
+/// </summary>
 public sealed record MeasurementGrid(
     string Key,
     int CentreX,
@@ -150,4 +155,18 @@ public sealed record MeasurementGrid(
     int? MajorStroke,
     int? AxisStroke,
     int? LabelStep,
-    string? LabelInk);
+    string? LabelInk,
+    int? Style = null,
+    int? FieldX = null,
+    int? FieldY = null,
+    int? WholeEvery = null)
+{
+    /// <summary>1 unless the definition says otherwise.</summary>
+    public int StyleOrDefault => Style ?? 1;
+
+    /// <summary>Half the drawn field across: the lattice's own half for style 1.</summary>
+    public int HalfX => StyleOrDefault == 2 ? FieldX ?? Half : Half;
+
+    /// <summary>Half the drawn field up and down.</summary>
+    public int HalfY => StyleOrDefault == 2 ? FieldY ?? Half : Half;
+}

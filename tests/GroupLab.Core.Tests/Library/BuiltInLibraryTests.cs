@@ -41,12 +41,13 @@ public class BuiltInLibraryTests
     public void BodyAndIdentifierMatchCheckPy(string name)
     {
         var fixture = ReferenceFixtures.Named(name);
-        var target = Target(name);
 
-        var encoding = GltdBinary.Encode(target.Definition).Encoding!;
+        // Entry 226 section 1: the zeroing sheets were redrawn, so check.py's zeroing sheets are the frozen ones they were printed from.
+        var definition = IsZero(name) ? Frozen(fixture) : Target(name).Definition;
+        var encoding = GltdBinary.Encode(definition).Encoding!;
 
         Assert.Equal(fixture.GetProperty("bodyHex").GetString(), Convert.ToHexStringLower(encoding.Body));
-        Assert.Equal(fixture.GetProperty("id").GetString(), target.Definition.Id);
+        Assert.Equal(fixture.GetProperty("id").GetString(), IsZero(name) ? encoding.DefinitionId : definition.Id);
     }
 
     [Theory]
@@ -70,7 +71,9 @@ public class BuiltInLibraryTests
         var diagnostics = GltdValidator.Validate(read.Definition!);
 
         Assert.DoesNotContain(diagnostics, d => d.Severity == Severity.Error);
-        string[] expectedRowBands = name is "GL-ZERO-MOA-100Y" or "GL-ZERO-MIL-100M" ? ["/grids/0/bottom", "/grids/0/top"] : [];
+
+        // The redrawn zeroing grids reach up to the codes, so their top marker row survives only between them (entry 226 section 1).
+        string[] expectedRowBands = IsZero(name) ? ["/grids/0/top"] : [];
         Assert.Equal(expectedRowBands, diagnostics.Where(d => d.Code == "validate.markerRowBand").Select(d => d.Path).Order());
 
         // Every built-in brackets every bull since the geometry change of docs/NOTES-FROM-PLANNING.md entry 13, so test
@@ -82,7 +85,7 @@ public class BuiltInLibraryTests
     [MemberData(nameof(Names))]
     public void GeometryMatchesLayoutsJson(string name)
     {
-        var d = Target(name).Definition;
+        var d = IsZero(name) ? Frozen(ReferenceFixtures.Named(name)) : Target(name).Definition;
         string layoutName = name.Replace(" (3x2)", "", StringComparison.Ordinal);
         var root = Layouts.Value.RootElement;
         var layout = root.GetProperty("layouts").EnumerateArray().Concat(root.GetProperty("zero").EnumerateArray())
@@ -193,6 +196,65 @@ public class BuiltInLibraryTests
         Assert.All(assignment.Markers, m => Assert.InRange(m.Id, 0, 586));
         Assert.Contains(diagnostics, x => x.Code == "validate.markerIdsWrap" && x.Test == "34" && x.Severity == Severity.Warning);
     }
+
+    /// <summary>
+    /// Entries 226 and 227 section 1: the redrawn zeroing grids. The 100 yd mil grid reaches exactly plus or minus 1.0 mil, the others as
+    /// far as the page allows; fine squares are 0.25 mil or 0.5 MOA; the whole unit is the heaviest line and every heavier line is
+    /// labeled; the scale statement and the ruler are printed; and every line falls within half a dmm of its true angle (test 36).
+    /// </summary>
+    [Theory]
+    [InlineData("GL-ZERO-MIL-100Y", 1.0, 0.25)]
+    [InlineData("GL-ZERO-MIL-100M", 0.91, 0.25)]
+    [InlineData("GL-ZERO-MOA-100Y", 3.44, 0.5)]
+    [InlineData("GL-ZERO-MOA-100M", 3.14, 0.5)]
+    public void TheRedrawnZeroingGridsReachFarEnoughAndSayTheirScale(string name, double reach, double fine)
+    {
+        var d = Target(name).Definition;
+        var g = d.Grids!.Single();
+        double unit = GridStyle2.UnitDmm(g)!.Value;
+
+        Assert.Equal(GridStyle2.Style, g.Style);
+        Assert.Equal(reach, g.HalfX / unit, 2);
+        Assert.Equal(reach, g.HalfY / unit, 2);
+        Assert.Equal(fine, 1.0 / g.WholeEvery!.Value, 3);
+        Assert.Equal(2, d.Codes!.Count);
+
+        var offsets = MeasurementGridLines.Offsets(g.Half, g.Divisions);
+        for (int i = 0; i <= g.Divisions; i++)
+        {
+            Assert.True(Math.Abs(offsets[i] - (unit * i / g.WholeEvery.Value)) <= 0.5, $"{name} line {i}: {offsets[i]} against {unit * i / g.WholeEvery.Value:0.000}.");
+        }
+
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(d).Pages[0];
+        var text = page.Items.OfType<GroupLab.Core.Rendering.TextRun>().Select(r => r.Text).ToList();
+        Assert.Equal(3, GridStyle2.Statement(g).Count);
+        Assert.All(GridStyle2.Statement(g), line => Assert.Contains(line, text));
+        foreach (var (i, _) in GridStyle2.Lines(g, g.HalfX).Where(l => l.Index != 0 && l.Index % g.MajorEvery == 0))
+        {
+            Assert.Contains(GridStyle2.Label(g, i), text);
+        }
+
+        if (reach >= 1)
+        {
+            Assert.Contains(g.Unit == GridUnit.Mil ? "1.0" : "3", text);
+        }
+    }
+
+    [Fact]
+    public void TheFrozenZeroingGridsAreTheOnesPrintedBefore()
+    {
+        foreach (var fixture in ReferenceFixtures.Definitions.Where(f => IsZero(f.GetProperty("name").GetString()!)))
+        {
+            var frozen = Frozen(fixture);
+            Assert.Equal(1, frozen.Grids!.Single().StyleOrDefault);
+            Assert.Equal(Array.Empty<Diagnostic>(), GltdValidator.Validate(frozen).Where(x => x.Severity == Severity.Error));
+        }
+    }
+
+    private static bool IsZero(string name) => name.StartsWith("GL-ZERO-", StringComparison.Ordinal);
+
+    private static TargetDefinition Frozen(JsonElement fixture) =>
+        GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "frozen", "zero-grid-1", fixture.GetProperty("id").GetString() + ".gltd.json"))).Definition!;
 
     private static BuiltInTarget Target(string name) => Targets.Value.Single(t => t.Name == name);
 }
