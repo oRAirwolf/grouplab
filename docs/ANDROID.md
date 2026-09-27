@@ -304,9 +304,9 @@ This is not part of the first stage; it is built when the application has sessio
 3. **The spike's APK**, `grouplab-spike-apk`, until item A4 moves the camera into the application; request 33 installs it. Both are
    Release builds kept as workflow artifacts for fourteen days.
 
-An unsigned debug APK is never published as a nightly. A signed release APK and an AAB for Play need the upload key, which Alan
-generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build
-needs them.
+An unsigned debug APK is never published as a nightly. The nightly's `android` job signs a release APK and an AAB for Play with the
+upload key, which Alan generated and keeps outside the repository (entry 198 section 3.3) and which the job reads from the repository's
+secrets; without them it builds nothing and the rest of the nightly publishes. Section 12 says what Play does with the AAB.
 
 ## 10. Running the spike on the phone
 
@@ -345,3 +345,35 @@ with a cross where the hole will go. Every change is saved at once and the figur
 are asked on Capture before the picture, remembered for the next target; the caliber goes to detection, as on the desktop, and the
 distance turns the figures into angles. Where the sheet's codes cannot be read, the result asks **which sheet it is** by name and
 detects as that sheet, as the desktop does.
+
+## 12. Google Play (entry 231)
+
+**The first internal testing release.** Alan created the app in the Play Console, package `org.grouplab.app`, and uploaded nightly
+110's AAB to internal testing on 2026-09-27. Play read it as version code 110 (0.2.0-nightly.110), Android 10 and up (API 29), target
+SDK 36, arm64-v8a only, with 2 required features. The version code is the nightly's number, so every nightly's AAB is newer than the
+last. Alan installed it on the Fold 7 from the Play Store and it opened to the first-run sharing window.
+
+**The opt-in link** is https://play.google.com/apps/internaltest/4701684356677501640. Only an account on the internal testers list can
+use it; anybody else sees an error page.
+
+**Moving between the Play copy and a nightly APK.** Google re-signs what Play installs with its own app signing key, and a nightly APK
+is signed with the upload key, so Android refuses to install either over the other. To move from one to the other, uninstall GroupLab
+first, then install the other. Uninstalling deletes the sessions and settings kept on the phone, so move anything worth keeping off it
+first.
+
+**Play's two warnings on that release.**
+
+1. *No deobfuscation file.* There is nothing to give it: the build does not run R8 or ProGuard on the Java side (`AndroidLinkTool` is
+   not set, so the Java code is dexed by D8 unshrunk and keeps its names), so no mapping file exists. The C# code is trimmed, which
+   renames nothing. The warning is Play's default and can be left.
+2. *Native code without debug symbols.* `android/opencv/build-extern.sh` keeps an unstripped copy of GroupLab's own OpenCV library,
+   and every nightly with an AAB puts it on its numbered release as `grouplab-<version>-android-native-symbols-<commit>.zip`, in the
+   layout Play asks for (`arm64-v8a/libOpenCvSharpExtern.so`). It holds the library's symbol table, which is what turns an address in
+   a native crash into a function name. The .NET runtime's libraries come from Microsoft already stripped, with their symbols on
+   Microsoft's symbol server, so Play will go on noting those. Until uploads are automated the zip is uploaded by hand beside the AAB,
+   under the release's **App bundle explorer**, **Downloads**, **Native debug symbols**.
+
+**Automatic upload, planned and not started.** The same shape as the Microsoft Store (request 38): a Google Cloud service account with
+release rights on this app only, invited in the Play Console; its JSON key as a repository secret that Alan adds himself; and a step
+in the nightly, skipped while the secret is absent, that uploads each nightly's AAB and its symbols to internal testing through the
+Play Developer API. Alan's request with the exact steps is written after the Store work of request 38 is done.

@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 9.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -149,9 +149,11 @@ identity check); "the Store first"; "an OV certificate"; or "not yet". Nothing i
 
 ## 36. The Play Store install on the Fold 7: one try, two minutes
 
-**Partly done, 2026-09-27 (entry 231).** You created the app in the Play Console and uploaded nightly 110 to internal testing; Play
-read it as version code 110, Android 10 and up, arm64 only. **All that is left:** install it from the Play Store on the Fold 7 and say
-whether it works.
+**Answered 2026-09-27 (entry 231).** You installed GroupLab on the Fold 7 from the Play Store through the testers' link and it opened
+to the first-run sharing window. Nothing more to do. The Play copy and a nightly APK cannot be installed over each other; `docs/ANDROID.md`
+section 12 says how to move between them.
+
+What this request asked, kept for the record:
 
 On the Fold 7, signed in with an account on the testers list, open https://play.google.com/apps/internaltest/4701684356677501640, accept
 the invitation, then install GroupLab from the Play Store page it leads to. If the side-loaded copy is still on the phone, uninstall it

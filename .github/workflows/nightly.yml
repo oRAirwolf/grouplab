@@ -353,6 +353,11 @@ jobs:
           mkdir -p signed
           cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.apk' | head -1)" signed/grouplab-android.apk
           cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.aab' | head -1)" signed/grouplab-android.aab
+          # Entry 231: Play's native debug symbols for the AAB. Only GroupLab's own OpenCV library can have them; the .NET runtime's
+          # libraries come already stripped, and Microsoft keeps their symbols on its own symbol server.
+          if [ -d android/native/symbols ]; then
+            (cd android/native/symbols && zip -qr "$GITHUB_WORKSPACE/signed/grouplab-android-native-symbols.zip" .)
+          fi
           ls -l signed
 
       - uses: actions/upload-artifact@v6
@@ -405,6 +410,10 @@ jobs:
           for ext in apk aab; do
             if [ -f "release/grouplab-android.$ext" ]; then cp "release/grouplab-android.$ext" "release/grouplab-$VERSION-android-$COMMIT.$ext"; fi
           done
+          # Entry 231: the symbols belong to exactly one AAB, so they go on the numbered release only.
+          if [ -f release/grouplab-android-native-symbols.zip ]; then
+            mv release/grouplab-android-native-symbols.zip "release/grouplab-$VERSION-android-native-symbols-$COMMIT.zip"
+          fi
           ls -la release
 
           missing=""
@@ -513,7 +522,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab release/grouplab-*-android-native-symbols-*.zip 2>/dev/null || true)
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.

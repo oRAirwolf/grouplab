@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 230.
+**Last rewritten:** 2026-09-27, after entry 231.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4 and 230. Next 231, 233, 234, 235.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230 and 231. Next 233, 234, 235, 237, 238.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -35,7 +35,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work. Its
   landscape analysis wants two panes (plan).
 - **The Play internal test ran on the Fold 7** (entry 232): driven over wireless debugging; the phone needs a Targets screen and a
-  progress line for a long analysis, both for the plan.
+  progress line for a long analysis, both for the plan. Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
+  has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
 - **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site** (entry 195).
 
@@ -50,7 +51,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The roadmap (entry 219), in place of the next three
 
-- A1, A3, A4, A5 built; A2 the capture screen's measurement is request 33; **A6 built**, the Play step is request 36; A7 the older phones.
+- A1, A3, A4, A5 built; A2 the capture screen's measurement is request 33; **A6 built** and on Play's internal test; A7 the older phones.
 - D1 the survey: built and open. D2 question 51 when request 9 arrives. D4 done (`docs/RELEASE-PLAN.md`, request 37).
 - Waiting on requests: Program A (entry 158) on request 19's ST-4 scan; Program B's article on request 20's test.
 
@@ -59,7 +60,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **10** (39 the Full Oracle backup, one look; 38 the Store; 36 the Play Console; 33 the Fold 7's
+Open requests in `docs/notes/for-alan.md`: **9** (39 the Full Oracle backup, one look; 38 the Store; 33 the Fold 7's
 camera; then 9, 16, 20, 18, 32 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
 
 ## Open questions

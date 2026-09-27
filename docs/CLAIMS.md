@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1037 |
+| code | 1036 |
 | measured | 1487 |
-| decided | 1187 |
+| decided | 1195 |
 | unbacked | 0 |
-| **total** | **3711** |
+| **total** | **3718** |
 
-**568** of them were read one sentence at a time and their backing written against the sentence. The other **3143** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**575** of them were read one sentence at a time and their backing written against the sentence. The other **3143** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -568,12 +568,19 @@ one that matters.
 - *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): Builds `.github/workflows/android.yml`, on every push to `main` that touches Core, the imaging code, the sheets or `android/`: 1.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId): **The application's APK**, `grouplab-apk`, from `android/GroupLab.Android`, the permanent id `org.grouplab.app` (entry 219 item A3).
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId): **The spike's APK**, `grouplab-spike-apk`, until item A4 moves the camera into the application; request 33 installs it.
-- *code* (.github/workflows/android.yml; NOTES-FROM-PLANNING.md entry 198 sections 2.6 and 3.3): A signed release APK and an AAB for Play need the upload key, which Alan generates and keeps outside the repository (entry 198 section 3.3); the commands and secret names are written when the release build needs them.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): The nightly's `android` job signs a release APK and an AAB for Play with the upload key, which Alan generated and keeps outside the repository (entry 198 section 3.3) and which the job reads from the repository's secrets; without them it builds nothing and the rest of the nightly publishes.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Section 12 says what Play does with the AAB.
 - *code* (android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs): Running the spike on the phone The `android` workflow's artifact `grouplab-spike-apk` is a Release build signed with the build machine's debug key, so it installs and starts by itself; a Debug build expects Visual Studio's fast deployment and does not (entry 202).
 - *code* (android/GroupLab.Android.Spike/CameraSession.cs, CaptureView.cs, SpikeView.cs; .github/workflows/android.yml; src/GroupLab.Core/Capture/CaptureGuidance.cs): **Camera** opens the capture screen of entry 219 item A2: the preview, the one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter after three ready frames, and Take.
 - *decided* (NOTES-FROM-PLANNING.md entry 219 item A3; .github/workflows/android.yml job apk; android/GroupLab.Android/GroupLab.Android.csproj ApplicationId): The application (entry 219 item A3) `android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`.
 - *code* (android/GroupLab.Android/SettingsView.cs SettingsView; android/GroupLab.Android/FirstRunView.cs SurveyDue; android/GroupLab.Android/Shell.cs SurveyOpen): Settings has the same answers under **Sharing**, the hardware survey included, which is asked only once its receiver is open (entry 208).
 - *code* (android/GroupLab.Android/ResultView.cs SheetEditor Reach, Loupe, Magnify): A touch within 24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross where the hole will go.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Google Play (entry 231) **The first internal testing release.** Alan created the app in the Play Console, package `org.grouplab.app`, and uploaded nightly 110's AAB to internal testing on 2026-09-27.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Play read it as version code 110 (0.2.0-nightly.110), Android 10 and up (API 29), target SDK 36, arm64-v8a only, with 2 required features.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Alan installed it on the Fold 7 from the Play Store and it opened to the first-run sharing window.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **The opt-in link** is https://play.google.com/apps/internaltest/4701684356677501640.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **Play's two warnings on that release.** 1.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Alan's request with the exact steps is written after the Store work of request 38 is done.
 
 ### docs/BALLISTICS-VALIDATION.md
 

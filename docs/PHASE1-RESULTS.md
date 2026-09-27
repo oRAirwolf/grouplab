@@ -59,6 +59,20 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 231: the first Play internal testing release, and its two warnings
+
+`docs/ANDROID.md` section 12 records the release as Play read it (version code 110, API 29 and up, target SDK 36, arm64-v8a only, 2
+required features), the testers' opt-in link, and that a Play-installed copy and a nightly APK cannot be installed over each other
+because Google re-signs the Play copy: uninstall first, which deletes what is on the phone. Request 36 is closed; Alan installed it
+from the Play Store on the Fold 7 and it opened to the first-run window.
+
+**The deobfuscation warning has nothing behind it.** The Android SDK pack sets `AndroidLinkTool` only when asked, the project never
+asks, and the Release build's intermediate folder has no `proguard` folder or mapping file: the Java side is dexed by D8 unshrunk, so
+there is no mapping to upload. **Native symbols:** `build-extern.sh` now keeps the unstripped OpenCV library beside the stripped one
+(the change of script also rebuilds the cached library once), and the nightly puts `arm64-v8a/libOpenCvSharpExtern.so` in a zip on the
+numbered release. The .NET runtime's libraries ship stripped in Microsoft's packs, with no debug files beside them, so only GroupLab's
+own library can be covered. Automatic upload with a Play service account is planned in the same section; the request waits on 38.
+
 ## Entry 230: the first Oracle backup, sudo widened, and Alan's answers
 
 The first Oracle boot volume backup is recorded in `docs/RESTORE.md`: 2026-09-26 09:01:42 UTC, Incremental, Available, 10 GB of 47 GB,

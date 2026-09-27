@@ -2076,6 +2076,38 @@
   "Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
+  },
+  "The nightly's `android` job signs a release APK and an AAB for Play with the upload key, which Alan generated and keeps outside the repository (entry 198 section 3.3) and which the job reads from the repository's secrets; without them it builds nothing and the rest of the nightly publishes.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "Section 12 says what Play does with the AAB.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "Google Play (entry 231) **The first internal testing release.** Alan created the app in the Play Console, package `org.grouplab.app`, and uploaded nightly 110's AAB to internal testing on 2026-09-27.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "Play read it as version code 110 (0.2.0-nightly.110), Android 10 and up (API 29), target SDK 36, arm64-v8a only, with 2 required features.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "Alan installed it on the Fold 7 from the Play Store and it opened to the first-run sharing window.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "**The opt-in link** is https://play.google.com/apps/internaltest/4701684356677501640.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "**Play's two warnings on that release.** 1.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "Alan's request with the exact steps is written after the Store work of request 38 is done.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
   }
  },
  "rules": [

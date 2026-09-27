@@ -80,6 +80,10 @@ cmake -S opencvsharp/src -B opencvsharp-build -Wno-dev \
 cmake --build opencvsharp-build --parallel "$(nproc)"
 
 LIB=opencvsharp-build/OpenCvSharpExtern/libOpenCvSharpExtern.so
+# Entry 231: Google Play reads a crash inside this library only with its symbols, so an unstripped copy is kept beside the
+# stripped one, and the nightly zips it as the native debug symbols for the AAB.
+mkdir -p "$OUT/symbols/$ABI"
+cp "$LIB" "$OUT/symbols/$ABI/"
 "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" --strip-unneeded "$LIB"
 mkdir -p "$OUT/$ABI"
 cp "$LIB" "$OUT/$ABI/"

@@ -24,6 +24,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 231: the first Play internal testing release, and its two warnings (low priority)
+
+**Status: done 2026-09-27, apart from one part.** **Not done yet:** the request for the Play service account, which the entry puts after the Store work; request 38 is still open, so the plan is in `docs/ANDROID.md` section 12 and the request is written when 38 is done. No mapping file exists to produce (no R8); the symbols zip covers GroupLab's own OpenCV library only.
+
+Alan created the app in the Play Console (package `org.grouplab.app`) and uploaded nightly 110's AAB to internal testing. Play read it as
+version code 110 (0.2.0-nightly.110), API 29 and up, target SDK 36, arm64-v8a only, 2 required features. Record that in `docs/ANDROID.md`
+and close request 36 once Alan says the Play Store install on the Fold 7 works.
+
+Play showed two warnings, neither blocking:
+1. No deobfuscation file. Say in `docs/ANDROID.md` whether the .NET Android build uses R8 on the Java side at all; if it does, produce
+   the mapping file in CI alongside the AAB.
+2. Native code without debug symbols (OpenCV and the .NET runtime `.so` files). Produce the native debug symbols zip in CI with each AAB,
+   so that native crashes in Play's Android vitals are readable.
+
+Both files should be uploaded automatically once Play publishing is automated. Plan that the same way as the Microsoft Store (request 38):
+a Google Play service account with release rights only, its key as a repository secret that Alan adds himself, and a workflow step that
+uploads each nightly's AAB, mapping and symbols to internal testing. Write the request for Alan in for-alan.md with exact steps, after
+the Store work; do not start it before he says the Play Store install works.
+
+The internal testing opt-in link is https://play.google.com/apps/internaltest/4701684356677501640 (only accounts on the testers list can use it). Record it in docs/ANDROID.md.
+
+**Update, 2026-09-27:** Alan installed GroupLab on the Fold 7 from the Play Store through that link, and it opened to the first-run sharing window. Request 36 is done; close it. Note that the Play-installed copy is signed by Google's app signing key, so a nightly APK cannot be installed over it; document how testers move between the two (uninstall first).
+
 ## 2026-09-27, entry 230: Alan's answers, and the first Oracle backup is confirmed
 
 **Status: done 2026-09-27.** Section 1: the backup is in `docs/RESTORE.md` without anything that locates the server, request 35 is closed and request 39 asks for the Full backup; the sudo rule in CLAUDE.md is widened with the undo-first condition. Section 2's answers were used in entries 226 and 229 as they came.
