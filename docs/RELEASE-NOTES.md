@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.111
+
+**2026-09-27**, commit `3ae5c4b`. Nightly.
+
+**What you will notice**
+
+- On a target GroupLab did not print, you can now place each bull by hand, move several shots onto a bull with a lasso, draw a scale at each bull so an angled photograph is measured right, and keep the bulls as a template for the next sheet; suggested by Unholy (also TNA).
+- The analysis screen can now draw and list CEP 99, and under Advanced a circle for any percent you type, each with its range and a plain note when your shots are too few to reach that far out.
+- The four zeroing grids are redrawn to be read through a scope: the 100 yard mil grid now reaches a full 1.0 mil each side of the aim in 0.25 mil squares, with heavier lines at every half and whole mil, every heavier line labeled, and each sheet says what its squares are and carries a ruler to check the print, while sheets printed before still read on the computer and the phone.
+- Design your own sheet can now make a sheet for your optic: give the distance, the lowest magnification or a red dot's size and the number of shots, and GroupLab sizes a bull you can center on through it and makes as many sheets as the shots need.
+- For a target larger than a scanner takes, the Targets screen now says whether a phone photograph of the whole sheet has enough detail, and a tiled target can be printed on one large page with cut lines between its sheets.
+- On the phone, units now follow the phone's region, so a US phone asks for yards and gives inches rather than meters and centimeters, and Settings shows the full nightly version.
+- When you say yes to the hardware survey, GroupLab now asks whether to run the benchmark now or later, shows how far it has got with a Cancel button, and says when it finished and what it found; Settings shows when it last ran, on the computer and the phone.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.111)
+
+---
+
 ## 0.2.0-nightly.110
 
 **2026-09-26**, commit `51a2058`. Nightly.
