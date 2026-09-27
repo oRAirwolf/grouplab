@@ -350,7 +350,15 @@ jobs:
               -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
               -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS
           done
+          # Entry 234: the development build, org.grouplab.app.dev, "GroupLab Dev", debuggable, installed beside the Play copy. Its version
+          # ends in -dev, which marks its error and survey reports.
+          dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-dev-out" \
+            -p:GroupLabDev=true -p:AndroidPackageFormat=apk -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION-dev" -p:Version="$VERSION-dev" \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
+            -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
+            -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS
           mkdir -p signed
+          cp "$(find "$RUNNER_TEMP/android-dev-out" -name '*-Signed.apk' | head -1)" signed/grouplab-android-dev.apk
           cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.apk' | head -1)" signed/grouplab-android.apk
           cp "$(find "$RUNNER_TEMP/android-out" -name '*-Signed.aab' | head -1)" signed/grouplab-android.aab
           # Entry 231: Play's native debug symbols for the AAB. Only GroupLab's own OpenCV library can have them; the .NET runtime's
@@ -404,12 +412,13 @@ jobs:
           mkdir -p release
           find assets -type f \( -name '*.zip' -o -name '*.exe' -o -name '*.tar.gz' \) -exec cp {} release/ \;
           # Entry 219 item A6: the signed Android files, where the upload key has made them. Never required.
-          find assets -type f \( -name 'grouplab-android.apk' -o -name 'grouplab-android.aab' \) -exec cp {} release/ \;
+          find assets -type f \( -name 'grouplab-android.apk' -o -name 'grouplab-android.aab' -o -name 'grouplab-android-dev.apk' \) -exec cp {} release/ \;
           # Named like the other builds on the numbered release, so a bug report names one; the plain names go on the rolling release.
           # Entry 224: nightly 109 built and gathered them, and neither upload list below carried them.
           for ext in apk aab; do
             if [ -f "release/grouplab-android.$ext" ]; then cp "release/grouplab-android.$ext" "release/grouplab-$VERSION-android-$COMMIT.$ext"; fi
           done
+          if [ -f release/grouplab-android-dev.apk ]; then cp release/grouplab-android-dev.apk "release/grouplab-$VERSION-android-dev-$COMMIT.apk"; fi
           # Entry 231: the symbols belong to exactly one AAB, so they go on the numbered release only.
           if [ -f release/grouplab-android-native-symbols.zip ]; then
             mv release/grouplab-android-native-symbols.zip "release/grouplab-$VERSION-android-native-symbols-$COMMIT.zip"
@@ -540,7 +549,7 @@ jobs:
             --notes-file rolling.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
 
       # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
       # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.

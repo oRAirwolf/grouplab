@@ -20,6 +20,19 @@
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <RootNamespace>GroupLab.Android</RootNamespace>
+    <AndroidManifestPlaceholders>grouplabLabel=GroupLab;grouplabDebuggable=false;grouplabIcon=@android:drawable/sym_def_app_icon</AndroidManifestPlaceholders>
+  </PropertyGroup>
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 234: the development build, with -p:GroupLabDev=true. Its own id, so it installs beside the copy from Google
+    Play and neither replaces the other; its own name and icon on the home screen; debuggable, so adb shell run-as reaches its log and files.
+    The nightly builds it as grouplab-android-dev.apk. Its version ends in -dev, which marks its error and survey reports.
+  -->
+  <PropertyGroup Condition="'$(GroupLabDev)' == 'true'">
+    <ApplicationId>org.grouplab.app.dev</ApplicationId>
+    <ApplicationTitle>GroupLab Dev</ApplicationTitle>
+    <AndroidManifestPlaceholders>grouplabLabel=GroupLab Dev;grouplabDebuggable=true;grouplabIcon=@drawable/grouplab_dev</AndroidManifestPlaceholders>
+    <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

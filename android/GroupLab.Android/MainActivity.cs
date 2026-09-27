@@ -13,7 +13,7 @@ namespace GroupLab.Android;
 /// activity after Back opens where they left off (entry 205 section 3.1).
 /// </summary>
 [Activity(
-    Label = "GroupLab",
+    Label = MainActivity.Name,
     Theme = "@style/GroupLabTheme",
     MainLauncher = true,
     ScreenOrientation = ScreenOrientation.FullUser,
@@ -21,6 +21,13 @@ namespace GroupLab.Android;
         | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
 public class MainActivity : AvaloniaMainActivity
 {
+    /// <summary>The name under the icon, entry 234: the development build says it is one there too.</summary>
+#if GROUPLAB_DEV
+    internal const string Name = "GroupLab Dev";
+#else
+    internal const string Name = "GroupLab";
+#endif
+
     internal static MainActivity? Current { get; private set; }
 
     private const int CameraRequest = 219;

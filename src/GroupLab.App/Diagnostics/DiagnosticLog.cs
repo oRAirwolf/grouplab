@@ -110,6 +110,13 @@ public sealed partial class DiagnosticLog : IDisposable
 
     public DateTime StartedUtc { get; }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 234 section 4: somewhere every line but DEBUG is also written, already formatted and scrubbed like the file's.
+    /// The Android application sends it to logcat, because a phone from Google Play is not debuggable and its own files cannot be read; the
+    /// desktop sets none.
+    /// </summary>
+    public static Action<LogLevel, string>? Mirror { get; set; }
+
     public static void Debug(string name, params (string Key, object? Value)[] fields) => Current.Write(LogLevel.Debug, name, fields);
 
     public static void Info(string name, params (string Key, object? Value)[] fields) => Current.Write(LogLevel.Info, name, fields);
@@ -170,7 +177,9 @@ public sealed partial class DiagnosticLog : IDisposable
             LastAction = name;
         }
 
-        if (queue is null || DisabledReason is not null || (level == LogLevel.Debug && !Verbose))
+        bool toFile = queue is not null && DisabledReason is null && (level != LogLevel.Debug || Verbose);
+        bool toMirror = Mirror is not null && level != LogLevel.Debug;
+        if (!toFile && !toMirror)
         {
             return;
         }
@@ -183,8 +192,25 @@ public sealed partial class DiagnosticLog : IDisposable
                 text = string.Join(Environment.NewLine, [text, .. continuation.Select(line => "    " + Clean(Scrub(line), 2000))]);
             }
 
+            if (toMirror)
+            {
+                try
+                {
+                    Mirror!(level, text);
+                }
+                catch (Exception e) when (e is not OutOfMemoryException)
+                {
+                    // A mirror that fails never costs the log its line.
+                }
+            }
+
+            if (!toFile)
+            {
+                return;
+            }
+
             Interlocked.Increment(ref pending);
-            bool added = level == LogLevel.Debug ? queue.TryAdd((level, text)) : queue.TryAdd((level, text), 50);
+            bool added = level == LogLevel.Debug ? queue!.TryAdd((level, text)) : queue!.TryAdd((level, text), 50);
             if (!added)
             {
                 Interlocked.Decrement(ref pending);

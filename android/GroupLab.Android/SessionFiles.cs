@@ -17,7 +17,11 @@ namespace GroupLab.Android;
 internal static class SessionFiles
 {
     /// <summary>The authority the application's file provider answers to, in the manifest as well.</summary>
-    internal const string Authority = "org.grouplab.app.files";
+    /// <summary>
+    /// The file provider's authority, the application's own id and <c>.files</c>, as the manifest declares it with <c>${applicationId}</c>,
+    /// so the development build of entry 234 is its own application in this too.
+    /// </summary>
+    internal static string Authority => global::Android.App.Application.Context.PackageName + ".files";
 
     private static string Shared => Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "shared");
 

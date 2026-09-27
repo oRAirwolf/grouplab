@@ -116,6 +116,15 @@ def main() -> int:
         spec.loader.exec_module(w)
         check("its median ignores the slowed run", w.median(runs["total"], w.BUCKET_MS) == 1125)
 
+        # Entry 234: a development build's reports are kept apart and published nowhere.
+        dev = report(400, "Android 16", 12000, 8, bench=5000, device="SM-F966U1")
+        dev["version"] = "0.2.0-nightly.112-dev+abc"
+        put(dev)
+        run(root)
+        public = json.loads((root / "public.json").read_text(encoding="utf-8"))
+        check("a development build's machine is counted apart, not in the published figures", public["developmentMachines"] == 1
+              and public["machines"] == 18, json.dumps({k: public[k] for k in ("machines", "developmentMachines")}))
+
         # Entry 241 section 2.4: a delete request removes the machine at once and the aggregate is counted again without it.
         put({"schema": "grouplab-survey-delete-1", "installation": f"{300:064x}", "day": "2026-09-27"})
         run(root)

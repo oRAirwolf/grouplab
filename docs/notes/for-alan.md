@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 11.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes, then **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
@@ -22,6 +22,23 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 45. The Fold 7 and the Tab S8 Ultra: reconnect both, about five minutes
+
+**Opened 2026-09-27 (entry 234).** Both dropped off the desktop tonight: the phone script's first run restarted the connection program
+while nobody was there to answer it, the Fold 7 now refuses connections (its Wireless debugging closed while it slept) and the tablet left
+USB. The script is fixed so it cannot do that unattended again. Tonight's queue needs both: GroupLab Dev's first install and its log
+(entry 234), the memory a picked photo costs on each (entry 239), the benchmark numbers (entry 240 and request 44), and the tablet's
+side by side layout and the phone's Targets screen (entry 243).
+
+1. **Fold 7:** unlock it; Settings, Developer options, **Wireless debugging** off and on again; in Developer options turn **Stay awake**
+   on (the screen stays on while it charges); put it on the charger unlocked. While it is open, request 44's line is on GroupLab's
+   Settings screen.
+2. **Tab S8 Ultra:** unplug the USB cable and plug it back in; if the tablet asks "Allow USB debugging?", tick **Always allow** and press
+   **OK**; turn **Stay awake** on too, and leave it on the charger unlocked.
+
+A good answer is "both reconnected". Nothing on either is touched except GroupLab and GroupLab Dev, and the notifications on the lock
+screen are never read.
 
 ## 44. The survey page: one line from the Fold 7's screen
 
@@ -165,7 +182,9 @@ identity check); "the Store first"; "an OV certificate"; or "not yet". Nothing i
 
 **Answered 2026-09-27 (entry 231).** You installed GroupLab on the Fold 7 from the Play Store through the testers' link and it opened
 to the first-run sharing window. Nothing more to do. The Play copy and a nightly APK cannot be installed over each other; `docs/ANDROID.md`
-section 12 says how to move between them.
+section 12 says how to move between them. **Update (entry 234):** you uninstalled the Play copy on purpose, since
+installing nightlies over adb is easier; from the next nightly, testing uses **GroupLab Dev**, which installs beside the Play copy, so the
+two never have to be swapped again.
 
 What this request asked, kept for the record:
 

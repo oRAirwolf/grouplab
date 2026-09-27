@@ -24,6 +24,36 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 234: a separate development build that installs beside the Play copy, and readable logs
+
+**Status: done 2026-09-27, apart from one part.** **Not done yet:** GroupLab Dev on the phone itself. Both devices dropped off the desktop when the script's first, unattended run restarted adb, and request 45 asks Alan to reconnect them; the first nightly after this entry publishes `grouplab-android-dev.apk`, and the script installs it. Built and checked on this machine: the release and development manifests (ids, names, icon, debuggable, the provider's authority), and the log's copy to logcat.
+
+Alan finds installing nightlies over adb much easier than going through Play, and says reading logs from the Play copy was a problem.
+The Play copy is signed by Google's app signing key, the nightly APK by the upload key, and both use `org.grouplab.app`, so one cannot be
+installed over the other. The Play copy is also a release build, so it is not debuggable: `adb shell run-as` cannot reach its private
+files (the app's own log, settings, results), and only what it writes to logcat is visible.
+
+Alan is uninstalling the Play copy from the Fold 7 now, so for the moment you may install nightly APKs over adb as testing needs (no Play
+upload for day-to-day testing). Then make that permanent and tidy:
+
+1. **A development build, `org.grouplab.app.dev`**, named "GroupLab Dev" on the phone, with a visibly different icon (a "DEV" band or a
+   different color), debuggable, built by the nightly alongside the release AAB and APK and published as `grouplab-android-dev.apk`. It
+   installs beside the Play copy, so both can live on the phone at once, and `adb shell run-as org.grouplab.app.dev` can read its log and
+   files. Settings in the dev build say plainly that it is a development build.
+2. Make sure nothing in the code assumes the package name (file provider authorities, intent filters, the survey and error report
+   identity), so the dev build is its own app in every way. Its error reports and survey reports are marked as dev, so they never mix with
+   real users' numbers.
+3. **A script for driving the phone**, for example `scripts/android/Test-OnPhone.ps1`: connect (mDNS first, then ask Alan for the address
+   only if needed), install or update the newest dev APK, start it, take screenshots, pull its own log with run-as and the logcat, and put
+   everything in `C:\Dev\grouplab-local\android-<build>\`. Entry 232's steps become this script.
+4. Release builds keep logging enough to logcat to diagnose a problem without run-as (errors, analysis timings, no personal data), since
+   Play testers' phones will never be debuggable.
+5. The Play copy is only needed for testing the Play path itself: once before the closed test, and whenever the release build changes in a
+   way the dev build would not show. Put that rule in `docs/ANDROID.md`.
+6. Update request 36 in for-alan.md: done, and the Play copy was uninstalled on purpose.
+
+**Update, 2026-09-27:** Alan has uninstalled the Play copy from the Fold 7. Nightly APKs can be installed over adb from now on.
+
 ## 2026-09-27, entry 233: phone photos of the same four sheets: the best photo-against-scan test we have
 
 **Status: done 2026-09-27, apart from three parts.** **Not done:** 2.4, the aim card by the four-point method and the per-bull scale (it needs the card's corners and check bars placed by hand, and is next with entry 228's Android work); 2.1's Android half was measured on the desktop at the phone's 8 MP working size, not on the phone; and 2.5's live check for a shadow was not built, a capture tip was instead, because the fix to detection made the shadow cost nothing on these three. 2.3 holds only once the tape tear is deleted: with it, the tear takes a real shot's place in the matching.

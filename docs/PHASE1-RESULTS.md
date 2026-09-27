@@ -59,6 +59,24 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 234: GroupLab Dev beside the Play copy, a script for the phone, and logcat
+
+**GroupLab Dev** is `-p:GroupLabDev=true`: `org.grouplab.app.dev`, "GroupLab Dev" under its own icon (the site's amber on its dark ground
+with a DEV band; the release keeps Android's default icon, as before), debuggable, its version ending in `-dev`, and its Settings saying
+what it is. Checked from the built packages' manifests: the release is `org.grouplab.app`, "GroupLab", not debuggable, provider
+`org.grouplab.app.files`; the development build `org.grouplab.app.dev`, "GroupLab Dev" for the application and the launcher, debuggable,
+provider `org.grouplab.app.dev.files`. The one place the package was named, the file provider's authority, now follows the application id
+in the manifest and in `SessionFiles.Authority`; `Entry234Tests` holds that nothing names it. The nightly builds it after the release APK
+and AAB and publishes `grouplab-android-dev.apk` on both releases. The survey worker keeps a `-dev` version's machine apart from every
+published figure.
+
+**Logcat.** `DiagnosticLog.Mirror`: every line above DEBUG, formatted and scrubbed as the file's, also goes to logcat under the tag
+`GroupLab` on Android. **The script,** `scripts/android/Test-OnPhone.ps1`, connects (mDNS, then the address if somebody is there to type
+it), installs GroupLab Dev, starts it, and collects screenshots, its own log through run-as and the logcat into
+`C:\Dev\grouplab-local\android-<build>\`. Its first run, unattended, found no phone attached, restarted adb and waited on a prompt; the
+tablet left USB and the Fold 7's Wireless debugging no longer answers. The script now restarts adb only when nothing is attached and asks
+only when someone can answer. Request 45 asks Alan to reconnect both. `docs/ANDROID.md` section 13 has the Play copy rule.
+
 ## Entry 233: phone photos of the same sheets, against their scans
 
 Alan's Fold 7 photographs of the three 2026-09-26 load sheets, on a kitchen counter with a hand's shadow over the bottom third, taped

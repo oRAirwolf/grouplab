@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 233.
+**Last rewritten:** 2026-09-27, after entry 234.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241 and 233. Next 234, 235, 237 to 240, 242 to 244; 233's aim card waits with 228 on Android.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233 and 234. Next 235, 237 to 240, 242 to 244; 233's aim card waits with 228 on Android.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -32,6 +32,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
   definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
+- **Both devices are off adb until request 45**; GroupLab Dev (`org.grouplab.app.dev`) is built by the nightly from entry 234.
 - **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work. Its
   landscape analysis wants two panes (plan).
 - **The Play internal test ran on the Fold 7** (entry 232): driven over wireless debugging; the phone needs a Targets screen and a
@@ -62,7 +63,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **10** (39 the Full Oracle backup, one look; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
+Open requests in `docs/notes/for-alan.md`: **11** (45 reconnect the Fold 7 and the tablet; 39 the Full Oracle backup, one look; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
 camera; then 9, 16, 20, 18, 32 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
 
 ## Open questions

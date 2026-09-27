@@ -377,3 +377,23 @@ first.
 release rights on this app only, invited in the Play Console; its JSON key as a repository secret that Alan adds himself; and a step
 in the nightly, skipped while the secret is absent, that uploads each nightly's AAB and its symbols to internal testing through the
 Play Developer API. Alan's request with the exact steps is written after the Store work of request 38 is done.
+
+## 13. The development build, and when the Play copy is needed (entry 234)
+
+**GroupLab Dev** is the same application built with `-p:GroupLabDev=true`: its own id, `org.grouplab.app.dev`, so it installs beside the
+copy from Google Play and neither replaces the other; "GroupLab Dev" on the home screen with an icon of its own; debuggable, so
+`adb shell run-as org.grouplab.app.dev` reaches its log, settings and results; and its version ends in `-dev`, which marks its error
+reports and keeps its survey reports out of every published figure. Its Settings say it is the development build. Every nightly with the
+upload key publishes it as `grouplab-android-dev.apk`. Nothing in the code names the package: the file provider's authority is the
+application id and `.files`, from the manifest's `${applicationId}` and `SessionFiles.Authority` alike.
+
+**Driving the phone** is one script, `scripts/android/Test-OnPhone.ps1`: it connects over wireless debugging (mDNS first, then asks for
+the address), installs the newest GroupLab Dev, starts it, takes screenshots, and pulls its own log and the logcat into
+`C:\Dev\grouplab-local\android-<build>\`. The phone's address is never written to a file.
+
+**Logcat.** Every line the application logs above DEBUG also goes to logcat under the tag `GroupLab`, scrubbed as the log file is: no
+path, no file name, no location. That is how a problem on a tester's phone from Google Play is read, since that copy is not debuggable.
+
+**The Play copy is needed only to test the Play path itself:** once before the closed test begins, and whenever the release build changes
+in a way the development build would not show (signing, the store's app bundle, what Play strips or adds). Day to day, testing is on
+GroupLab Dev, installed over adb.

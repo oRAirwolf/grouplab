@@ -14,6 +14,9 @@ namespace GroupLab.Android;
 /// </summary>
 public sealed class App : Avalonia.Application
 {
+    /// <summary>The logcat tag every GroupLab line carries, entry 234 section 4: <c>adb logcat -s GroupLab</c>.</summary>
+    internal const string LogTag = "GroupLab";
+
     /// <summary>The settings file, in the application's own files; nothing outside it can read it.</summary>
     internal static AppSettingsStore Settings { get; private set; } = AppSettingsStore.Default;
 
@@ -34,6 +37,24 @@ public sealed class App : Avalonia.Application
         var (directory, described) = LogDirectory.Resolve(false, AppContext.BaseDirectory);
         var log = new DiagnosticLog(directory, Settings.LoadVerbose()) { DescribedDirectory = described };
         DiagnosticLog.Current = log;
+
+        // Entry 234 section 4: every line but DEBUG also goes to logcat, scrubbed as the file's are, because a copy from Google Play is not
+        // debuggable and its own files cannot be read; errors, timings and what was being done are enough to diagnose from there.
+        DiagnosticLog.Mirror = (level, line) =>
+        {
+            if (level == LogLevel.Error)
+            {
+                global::Android.Util.Log.Error(LogTag, line);
+            }
+            else if (level == LogLevel.Warn)
+            {
+                global::Android.Util.Log.Warn(LogTag, line);
+            }
+            else
+            {
+                global::Android.Util.Log.Info(LogTag, line);
+            }
+        };
         CrashReporter.Install(log);
         CrashReporter.BeginRun(log);
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields()]);

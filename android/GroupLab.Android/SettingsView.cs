@@ -166,6 +166,10 @@ public sealed class SettingsView : UserControl
 
         column.Children.Add(Screens.Heading("About"));
         column.Children.Add(Screens.Line($"GroupLab {AppInfo.Version}"));
+#if GROUPLAB_DEV
+        // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
+        column.Children.Add(Screens.Line("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+#endif
         Content = Screens.Page(column);
     }
 }

@@ -169,6 +169,9 @@ def count(report: dict, state: dict) -> None:
     versions = machine.get("versions", {})
     machine = classes(report)
     machine["month"] = day[:7]
+    # Entry 234: a development build's version ends in -dev. Its machine is kept apart and never enters the published figures.
+    if isinstance(report.get("version"), str) and "-dev" in report["version"]:
+        machine["development"] = True
     for run in runs_of(report):
         kept = versions.setdefault(run["version"], {}).setdefault(run["workload"], {"runs": 0, "total": {}, "stages": {}})
         kept["runs"] += 1
@@ -198,7 +201,8 @@ def merged(counts: dict[str, int]) -> dict[str, int]:
 
 
 def publish(state: dict) -> dict:
-    machines = list(state.get("machines", {}).values())
+    everything = list(state.get("machines", {}).values())
+    machines = [m for m in everything if not m.get("development")]
     tally: dict[str, dict[str, int]] = {"platform": {}, "memory": {}, "cores": {}, "device": {}}
     for m in machines:
         for field in tally:
@@ -238,6 +242,7 @@ def publish(state: dict) -> dict:
         "benchmark": benchmarks,
         "benchmarkMachines": counted,
         "smallestGroup": SMALLEST_GROUP,
+        "developmentMachines": len(everything) - len(machines),
     }
 
 
