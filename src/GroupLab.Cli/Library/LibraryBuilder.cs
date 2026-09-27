@@ -203,7 +203,7 @@ public static class LibraryBuilder
         double reach = field / unitDmm;
         string description = string.Create(CultureInfo.InvariantCulture,
             $"One aiming ring on a grid of {1.0 / wholeEvery:0.##} {unitLabel} squares reaching {reach:0.0#} {unitLabel} each side of the aim " +
-            $"at 100 {(distanceUnit == DistanceUnit.Yards ? "yards" : "metres")}, heavier every {(double)majorEvery / wholeEvery:0.##} {unitLabel} and " +
+            $"at 100 {(distanceUnit == DistanceUnit.Yards ? "yards" : "meters")}, heavier every {(double)majorEvery / wholeEvery:0.##} {unitLabel} and " +
             $"heaviest every {unitLabel}, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, " +
             $"and a six-field load block.")
             // NOTES-FROM-PLANNING.md entry 197 section 3: what a zeroing grid is for, and what it is not.

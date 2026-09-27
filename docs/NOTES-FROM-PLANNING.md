@@ -24,6 +24,92 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 229: what the planning session saw in the 2026-09-26 scans (read with entry 226)
+
+**Status: done 2026-09-27, apart from one part.** **Not done:** 1.2's reading of the handwritten serial box letter; a person types it as the sheet's label instead. Sections 2, 3 and 5 were done with entry 226 (load blocks, the suppressor test, the transcriptions and the card).
+
+Alan connected his Downloads folder, so the planning session looked at the zip itself
+(`C:\Users\Airwolf\Downloads\drive-download-20260927T044320Z-1-001.zip`, six PNGs, each 4958 by 6458, about 600 dpi). This entry settles
+some of entry 226's open questions and adds problems the scans show. Reduced grayscale previews are in
+`C:\Dev\grouplab-local\planning\range-0926\` (local only, not for the repository). Work from the originals.
+
+The six files:
+- `6.arc.dominus.k09262026.png`, `6.arc.magnus09262026.png`, `6.5.creedmoor09262026.png`: the three 5x5 load development sheets.
+- `aim test09262026.png`: the aim point test card with Alan's shots on it.
+- `aim.test.alan09262026.png`: Alan's score sheet (the newer version, with a Dist column).
+- `aim.test.justin09262026.png`: Justin's score sheet (an older version, with no Dist column and "max" rows).
+
+## 1. All three load sheets carry the same serial
+
+All three sheets print `GL-R0T0-384Z-HRBE-M0EW`. Alan printed one sheet three times and wrote K, M and C in the serial box to tell them
+apart. People will do this all the time (print a PDF several times, photocopy a sheet).
+
+1. Check what the intake, the application and the archive do with three different scans that share one serial: nothing may merge them,
+   dedupe them away, or attach one sheet's shots to another's analysis. Fix whatever does.
+2. Treat the serial as identifying the printed design, not a unique physical sheet. Tell the sheets apart by the scan itself (a hash of the
+   image and the detected hole pattern), keep the hand-written serial box letter if it can be read, and let the user label each one.
+3. When a serial has been seen before with different holes, say so in plain words ("this looks like another copy of a sheet you already
+   scanned") and continue.
+
+## 2. The load data (from the load blocks, all dated 9/26/2026, 100 yd)
+
+- Both 6 ARC sheets: 105 gr Aeromatch, 24.2 gr N135, Starline brass, GM205MAR primer, 2.250 in seating depth (the block's field). Notes
+  "Dominus K" and "Magnus S". So the load matches exactly and only the suppressor note differs.
+- 6.5 Creedmoor: 153.5 gr LRHT, 42.4 gr H4350, Alpha SRP brass, GM205MAR, 2.873 in. Notes: **Magnus S**, so the Magnus S was on the 6.5
+  as well. Confirm that load against the earlier 6.5 sheets before pooling.
+
+## 3. The suppressor comparison: first impression, not a result
+
+By eye, one shot per bull on each sheet. On the Dominus K sheet many shots sit high on the outer ring. On the Magnus S sheet many sit low and
+to the right. That suggests a vertical shift of perhaps half an inch or more, but do the measurement in entry 226 section 2 and let it
+decide. Each sheet has one or two shots well off their bull:
+- Dominus K: bull 2 has no hole in it; a hole about 1.5 in above it, near the title line, is almost certainly bull 2's shot. Bull 24 has no
+  hole; the hole below it, between 24 and 25, is bull 24's shot.
+- Magnus S: bull 5 has no hole; the hole above and to the right, near the top right QR code, is bull 5's. Bull 24 has no hole; the hole
+  below it is bull 24's.
+Report the test with and without those shots, and say which shots the detector assigned to which bull.
+
+## 4. The 6.5 Creedmoor sheet is a real wrong-bull case
+
+Every shot on the 6.5 sheet landed high, roughly 0.8 to 1 in above its own bull's center, just outside the 1.0 in outer ring (the rifle's
+zero on that day, not scatter). With bulls about 1.5 in apart, each shot is **closer to the bull above it** than to its own. Row 1's shots
+sit up near the QR codes and the title, and there are no shots below row 5.
+
+So nearest-bull assignment gets 20 of the 25 wrong and makes the group look huge. This is exactly what the "wrong bull" research article is
+about, now on a real target.
+1. Run it through the pipeline and report what happens today.
+2. Assignment should use the whole sheet: when the load block or the sheet says one shot per bull, find the assignment that gives every bull
+   one shot with a common offset (for example, test whole-row and whole-column shifts and pick the one with the smallest spread), and show
+   the user the chosen offset with a clear "all shots are about 0.9 in high: assigned to the bulls below them" message they can undo.
+3. Keep this scan as a regression test, and add it to the wrong-bull article as the real example.
+4. It is also a zeroing lesson worth one line in the article: zero first, or the 5x5 sheet cannot tell whose shot is whose.
+
+## 5. The aim point card and score sheets
+
+1. **"1" means A.** The card itself says "3 shots at A and 3 at your favourite". The card shows three shot groups plus one: A (3 holes up and
+   left of A), C (one hole in the white center, two up and left), E (3 holes up and left of the square), and I (one large hole, probably
+   several shots through one hole: check at full resolution). Measure each group relative to its own aim point, and state that 3 shots a
+   design can only show a large difference.
+2. **Transcribe both score sheets into the research data** (CSV, one row per scope, magnification, distance, design, score, scorer). A first
+   reading, to check against the originals:
+   - Alan at 10x (the hardest high power setting): A scored 0 on all three high power scopes (Razor HD, DNT, Strike Eagle). C and E scored
+     2 on all three. That is strong evidence the current bull is too fine at 10x, as the visibility rule predicts.
+   - PLxC at 4x: only H (1) and I (2) scored above 0. At 6x and 8x, I scored 2 and most others 0 or 1. So at low power only the large bull
+     works, again as the rule predicts (4 arcmin at 4x needs about 1 in at 100 yd).
+   - Alan's notes: "9/26, 12:27 pm, facing north. G hard to see with reticle in the way, and D. C, F, I good." (In chat he said C or E, edge
+     to C. Record both.)
+   - Justin's sheet: Razor HD, DNT and PLxC only; his notes say he does not like I and F is his favorite. His Razor 10x row has A, D and I
+     at 0.
+   - One of Alan's Strike Eagle cells for A looks like "8"; it is almost certainly 0 (the scale is 0 to 2).
+3. **The PLxC rows were not a duplicate.** Alan's printed sheet lists PLxC at 4x/100, 8x/100 and **8x/50** (the third row is a 50 yd row).
+   Alan wrote 6x over the second row, and he says both of them tested 4x, 6x and 8x at 100 yd, so record the third row as 8x at 100 unless
+   he says otherwise. Justin's older sheet had "18x" and "max" printed on the PLxC rows and he wrote 4, 6 and 8 over them. Fix the
+   generator so every row's magnification is possible for that scope, and so a change of distance stands out (its own heading, bold).
+4. **American spelling.** The card and score sheet print "centre" and "favourite". The project uses American spelling: fix the generator
+   and search every generated sheet and document for British spellings.
+5. The card's printed sizes let the article state each design's angular size at each magnification next to its scores, which is the
+   check of the 3 to 4 arcmin rule this test was for.
+
 ## 2026-09-27, entry 228: other people's targets with several bulls, and a scale for each bull (Unholy's suggestion)
 
 **Status: done 2026-09-27 on the desktop, apart from two parts.** **Not done:** 1.5 on Android, which has no way to mark a target by hand at all yet, so the phone half waits for that screen; and 2's measurement at 40 to 60 degrees, which waits on request 18's photographs. It was measured on the three near-straight phone photographs of entry 233 instead. The four-corner method (the rectangle) already existed and was extended rather than replaced.

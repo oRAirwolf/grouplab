@@ -109,7 +109,7 @@ public static class ParametricSheet
             ? string.Create(CultureInfo.InvariantCulture, $"about {Math.Round(100 * rate):0} percent")
             : "under 1 percent";
         string sentence = string.Create(CultureInfo.InvariantCulture,
-            $"A rifle shooting {groupMoa:0.##} MOA five-shot groups at {distanceYards:0} yd has a sigma of about {sigma:0.00} in, so {pitchInches:0.00} in between bulls is {ratio:0.0} sigma: {oneIn} ({percent}) would land nearer a neighbouring bull than its own. Six sigma is where that falls to one in 185.");
+            $"A rifle shooting {groupMoa:0.##} MOA five-shot groups at {distanceYards:0} yd has a sigma of about {sigma:0.00} in, so {pitchInches:0.00} in between bulls is {ratio:0.0} sigma: {oneIn} ({percent}) would land nearer a neighboring bull than its own. Six sigma is where that falls to one in 185.");
         return new SheetCheck(ratio < SpacingInSigmas ? CheckLevel.Warning : CheckLevel.Fine, sentence);
     }
 
@@ -269,7 +269,7 @@ public static class ParametricSheet
         var checks = new List<SheetCheck>
         {
             markers < FewestMarkers
-                ? new SheetCheck(CheckLevel.Refusal, string.Create(CultureInfo.InvariantCulture, $"The layout leaves room for {markers} markers. No sheet this project prints registers on fewer than {FewestMarkers}, so this one cannot be analysed. A wider spacing or fewer bulls leaves more room."))
+                ? new SheetCheck(CheckLevel.Refusal, string.Create(CultureInfo.InvariantCulture, $"The layout leaves room for {markers} markers. No sheet this project prints registers on fewer than {FewestMarkers}, so this one cannot be analyzed. A wider spacing or fewer bulls leaves more room."))
                 : markers < ThinMarkers
                     ? new SheetCheck(CheckLevel.Warning, string.Create(CultureInfo.InvariantCulture, $"The layout carries {markers} markers. A photograph that loses a quarter of them, as an oblique one can, keeps {markers - (markers / 4)}, near the {FewestMarkers} no sheet here registers below."))
                     : new SheetCheck(CheckLevel.Fine, string.Create(CultureInfo.InvariantCulture, $"The layout carries {markers} markers.")),

@@ -56,7 +56,7 @@ public class ParametricSheetTests
         var wide = ParametricSheet.Spacing(2.0, 0.5, 100);
 
         Assert.Equal(CheckLevel.Warning, tight.Level);
-        Assert.Contains("would land nearer a neighbouring bull than its own", tight.Sentence, StringComparison.Ordinal);
+        Assert.Contains("would land nearer a neighboring bull than its own", tight.Sentence, StringComparison.Ordinal);
 
         // Entry 101 section 4: a whole percentage, because the sigma under it is known to about a third either way.
         Assert.Contains("(about 27 percent)", tight.Sentence, StringComparison.Ordinal);

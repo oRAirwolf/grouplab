@@ -59,6 +59,16 @@ Three things, in the order they matter.
 
 **And you can still move any shot by hand**, because the shooter saw where the shot went and the software did not.
 
+## A full sheet, every shot about 0.8 inch high
+
+On 2026-09-26 the developer shot a full 25 bull sheet of 6.5 Creedmoor at 100 yards, one shot per bull. The rifle's zero that day put every shot about 0.8 inch high of its own bull, just outside the 1 inch ring, with the bulls 1.5 inches apart. So each shot is nearer the bull above it than its own, and the top row's shots sit up by the codes and the title.
+
+Matching every shot to a bull one to one, as GroupLab did then, gave 5 of the 23 shots it found to the bull above their own. The group came out with a mean radius of 0.59 inch, from shots measured 0.6 inch low on one bull and 0.9 inch high on the next.
+
+**GroupLab now reads the whole sheet first.** When a sheet has at most one shot to each bull and the shots all landed off by the same amount, which is what a rifle's zero does, it works out that amount and gives each shot to the bull it was fired at. It is used only when it is certain, and it says so on the analysis screen: all shots are about 0.78 inch high and 0.37 inch left of their bulls. On this sheet every one of the 23 went to its own bull and the mean radius is 0.21 inch. **Give each shot to its nearest bull instead** undoes it. The scan is kept as a test, so this can never quietly break again.
+
+The two shots nearest the top edge were not found at all: they landed in the printed codes and the title, where GroupLab does not look for holes. That is its own defect, and the reason to zero first rather than rely on this.
+
 ## What you can do now
 
 If your rifle is not zeroed for the load you are testing, either zero it first, or expect to move some shots by hand and check the review queue before you trust the figures.
@@ -67,7 +77,7 @@ And if a group looks better than you shot, look at the assignment before you bel
 
 ## What this means
 
-**Zero the rifle for the load before you shoot a multi-bull sheet.** That is the whole practical finding. On one twenty shot sheet every single shot landed nearer a bull it was not aimed at, and what came out was a tight, confident and completely meaningless group.
+**Zero the rifle for the load before you shoot a multi-bull sheet.** That is the whole practical finding, and the 6.5 sheet says it again: zero first, or a sheet of one shot per bull cannot tell whose shot is whose. On one twenty shot sheet every single shot landed nearer a bull it was not aimed at, and what came out was a tight, confident and completely meaningless group.
 
 **Be suspicious of a result that is too good.** Reading shots to the nearest bull turns a consistent offset into twenty small groups, each one clustered around a bull. The numbers look better than the shooting was. That is the dangerous shape of this failure: it does not look like an error.
 

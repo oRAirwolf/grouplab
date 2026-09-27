@@ -86,8 +86,10 @@ whole and unchanged in `C:\Dev\grouplab-originals\range-2026-09-26\`, outside th
 **Backer:** OSB, for all three load sheets (entry 226 section 2.3), not the corrugated plastic of earlier range days. None was
 photographed on the backer.
 
-**Published so far:** nothing of the pixels. The research article "Did the suppressor move the point of impact?" publishes the offsets
-GroupLab measured on the two 6 ARC sheets and a chart drawn from them. Anything published from these files is rebuilt from its pixels,
+**Published so far:** the research article "Did the suppressor move the point of impact?" publishes the offsets GroupLab measured on the
+two 6 ARC sheets and a chart drawn from them. The 6.5 Creedmoor scan is on the `test-data` release as a test fixture (entry 229 section 4),
+`load-sheet-6.5-wrong-bull-2026-09-26.png`, 14,797,501 bytes, SHA-256 `1f43bab71b79c3005e4213a1e4b9b9eb1f015459a982fdbf4a2d2878fdc985fe`,
+rebuilt from its pixels with only the resolution kept. Anything published from these files is rebuilt from its pixels,
 and GPS, location and time metadata are never read, printed or logged.
 
 # What Alan passes on from Unholy and his other friends: a standing consent

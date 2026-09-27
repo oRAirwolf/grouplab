@@ -232,6 +232,43 @@ public sealed partial class MainWindow : Window
     /// <summary>Entry 228 section 1.4: saving the bulls placed by hand as a template, and placing a saved one, shown with the bulls tool.</summary>
     private readonly StackPanel templatePanel = new() { Spacing = Tokens.Space8 };
 
+    private readonly TextBox sheetLabelBox = new() { PlaceholderText = "such as the letter in its serial box", MinWidth = 160 };
+
+    /// <summary>What was said, if anything, about this sheet's design having been analyzed before (entry 229 section 1), for the tests.</summary>
+    internal string? CopyOfADesignSeenBefore { get; private set; }
+
+    /// <summary>
+    /// Entry 229 section 1: three sheets printed from one PDF carry one printed code, which names the design and not the sheet. When the
+    /// sessions already hold one from this design, the person is told in plain words, and this sheet is kept as its own session as always.
+    /// </summary>
+    private string? CopyOfADesign(string? definitionId)
+    {
+        if (definitionId is null || sessions is null)
+        {
+            return null;
+        }
+
+        int earlier;
+        try
+        {
+            earlier = sessions.CountUsing(definitionId);
+        }
+        catch (Microsoft.Data.Sqlite.SqliteException)
+        {
+            return null;
+        }
+
+        if (earlier == 0)
+        {
+            return null;
+        }
+
+        string said = $"This looks like another copy of a sheet you have analyzed before: {earlier} saved session{(earlier == 1 ? " was" : "s were")} printed from the same design. It is kept as its own session; give it a label in Load, such as the letter in its serial box, to tell them apart.";
+        toaster.Say(said);
+        DiagnosticLog.Info("detect.copy", ("earlier", earlier));
+        return said;
+    }
+
     private readonly TextBox cepPercentBox = new() { Width = 90, PlaceholderText = "e.g. 97.5" };
 
     private readonly TextBlock cepPercentSaid = new() { TextWrapping = TextWrapping.Wrap };
@@ -997,6 +1034,17 @@ public sealed partial class MainWindow : Window
         var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         shotsColumn.Children.Add(Heading("Load"));
         shotsColumn.Children.Add(loadLines);
+
+        // Entry 229 section 1: a name of this sheet's own, since every copy printed from one PDF carries the same printed code.
+        sheetLabelBox.LostFocus += (_, _) =>
+        {
+            if ((sheetLabelBox.Text ?? "").Trim() != (session.State.SheetLabel ?? ""))
+            {
+                session.SetSheetLabel(sheetLabelBox.Text);
+            }
+        };
+        shotsColumn.Children.Add(Readout("This sheet's own label", "", Tokens.SecondarySize, labelAtTop: true));
+        shotsColumn.Children.Add(sheetLabelBox);
         shotsColumn.Children.Add(Ruled("Shots, from their own bull"));
         shotsColumn.Children.Add(offsetTable);
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
@@ -2007,6 +2055,7 @@ public sealed partial class MainWindow : Window
         registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture);
         RememberDetected();
+        CopyOfADesignSeenBefore = CopyOfADesign(result.Definition?.Id);
 
         // Entry 163 section 1: detection used to switch to the select tool, which is how a first user found a drag doing nothing useful.
         // The default tool now pans and selects both, so the tool the person chose stays chosen.
@@ -2429,6 +2478,17 @@ public sealed partial class MainWindow : Window
             }
         }
 
+        // Entry 229 section 4: every shot given to the bull it was fired at because they all landed off by the same amount, said, with the undo.
+        if (session.WholeSheetShift() is not null && state.Assignment?.Reason is { } whole && whole.StartsWith("All shots are about", StringComparison.Ordinal))
+        {
+            statistics.Children.Add(Note(whole));
+            statistics.Children.Add(Row(Button("Give each shot to its nearest bull instead", () =>
+            {
+                session.SetAssignmentRule(AssignmentRule.Nearest);
+                DiagnosticLog.Info("marking.wholesheet.undo");
+            })));
+        }
+
         if (PerBullReference.SingleScaleOnAPhoto(state.Scale, metadata) is { } oneScale)
         {
             statistics.Children.Add(Note(oneScale));
@@ -2758,6 +2818,11 @@ public sealed partial class MainWindow : Window
         unsettledBanner.Children.Add(Explained(bannerLine, "unsettled", open == 1
             ? "1 decision was left unmade when this was accepted, and every figure here inherits it. The sheet crumb goes back to it."
             : $"{open} decisions were left unmade when this was accepted, and every figure here inherits them. The sheet crumb goes back to them."));
+
+        if (!sheetLabelBox.IsFocused)
+        {
+            sheetLabelBox.Text = state.SheetLabel ?? "";
+        }
 
         loadLines.Children.Clear();
         loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));

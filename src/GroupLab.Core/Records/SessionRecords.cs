@@ -33,7 +33,7 @@ public static class SessionRecords
             existing?.Id ?? 0,
             existing?.CreatedUtc ?? utcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
             existing?.ShotDate ?? localNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-            definition?.Name ?? (state.ImagePath is { } named ? Path.GetFileName(named) : "Marked by hand"),
+            (definition?.Name ?? (state.ImagePath is { } named ? Path.GetFileName(named) : "Marked by hand")) + (state.SheetLabel is { } label ? ", " + label : ""),
             definition is { } d ? GltdBinary.Encode(d).Encoding?.DefinitionId : null,
             definition is { } defined ? System.Text.Encoding.UTF8.GetString(CanonicalJsonWriter.Write(defined)) : null,
             state.ShotDistanceInches,

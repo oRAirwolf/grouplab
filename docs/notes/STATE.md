@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 228.
+**Last rewritten:** 2026-09-27, after entry 229.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232 and 228 (not on Android yet). This run: 226, 227, 232, 228; next 229 to 231, 233.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229 and 235 section 4. Next 230, 231, 233, 234, 235.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -24,6 +24,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   scanned sheet by sheet is not built.
 - **A target GroupLab did not print** can have bulls placed by hand, a lasso, templates, and a scale at each bull (entry 228,
   Unholy's); Android has no hand marking yet.
+- **A sheet whose shots all landed off by the same amount** is assigned by that amount when the solver is certain (entry 229): the
+  6.5 sheet's shots all go to their own bulls. Copies of one design stay separate sessions with labels of their own.
 - **The suppressor article is published** (`suppressor-shift`): Magnus S 0.28 in lower than Dominus K, p = 0.049.
 - **Where a hole's centre is**, question 51: waits on request 9's hand markings.
 - **Storage on GitHub**: `docs/notes/STORAGE.md`. Submissions leave the server only once archived and proven (entries 215 to 217).

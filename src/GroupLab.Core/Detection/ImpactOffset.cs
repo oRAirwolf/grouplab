@@ -54,6 +54,29 @@ public sealed record ImpactOffset(string Name, IReadOnlyList<int> Bulls, Offset 
 /// </summary>
 public static class ImpactOffsets
 {
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 229 section 4: a sheet with at most one shot to each scoring bull, whose shots all landed off their
+    /// bulls by the same amount, the rifle's zero on the day. Every scoring bull is a candidate, and the offset is used only when the
+    /// solver is certain of it and it is more than a tenth of an inch, so a sheet shot at its own bulls is assigned as before and a
+    /// sheet shot at only some bulls, where the wide solve is not certain (question 46), is left alone. Null where it does not apply.
+    /// </summary>
+    public static ImpactOffset? WholeSheet(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> scoring)
+    {
+        ArgumentNullException.ThrowIfNull(holes);
+        ArgumentNullException.ThrowIfNull(scoring);
+        if (scoring.Count < 2 || holes.Count < 3 || holes.Count > scoring.Count)
+        {
+            return null;
+        }
+
+        var solved = Solve("the sheet", holes, bulls, scoring);
+        return solved is { Certain: true, Moved: true } ? solved : null;
+    }
+
+    /// <summary>What a person is told when every shot was given to the bull it was fired at rather than its nearest.</summary>
+    public static string WholeSheetWords(Offset shift, int moved) => string.Create(CultureInfo.InvariantCulture,
+        $"All shots are about {Math.Abs(shift.Y) / 254:0.00} in {(shift.Y < 0 ? "high" : "low")} and {Math.Abs(shift.X) / 254:0.00} in {(shift.X < 0 ? "left" : "right")} of the bulls they were fired at, so {moved} {(moved == 1 ? "is" : "are")} given to the bull below or beside {(moved == 1 ? "it" : "them")} rather than the nearest one. The rifle's zero moved them; zero first, or a sheet of one shot per bull cannot tell whose shot is whose.");
+
     /// <summary>How near two offsets have to be to count as the same answer, in page dmm. A millimetre.</summary>
     private const double SameOffset = 10;
 

@@ -59,6 +59,29 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 229: copies of one design, the whole-sheet wrong-bull case, and spelling
+
+**1. Three sheets, one printed code.** `GL-R0T0-384Z-HRBE-M0EW` is the design's identifier (GL-CF25-LTR-D), which every copy printed from
+one PDF shares; the serial box holds the handwritten K, M and C. Checked: the desktop keeps each image as its own session keyed by its own
+id with its own image hash, nothing is unique on the identifier, and the server gives every submission its own identifier and archives by
+folder, so nothing merged or dropped a copy (`CopiesOfOneDesignTests`). Added: a label of the sheet's own in Load, kept in the marking
+file and in the session's name, and, when the sessions already hold one from the same design, "This looks like another copy of a sheet
+you have analyzed before" as it is opened. The handwritten letter is not read from the image.
+
+**4. The 6.5 sheet.** Today's one-to-one matching gave 5 of its 23 found shots to the bull above their own, mean radius 0.591 in. The
+existing impact-offset solver of entry 130 was only used when a person named the aimed bulls; now `ImpactOffsets.WholeSheet` runs it over
+every scoring bull wherever a sheet has at most one shot a bull, and the assignment runs in the frame moved back by the offset only when
+the solver is certain and the offset is over a tenth of an inch (so question 46's scan 5 is untouched). On the 6.5 sheet: certain, 0.76 in
+high and 0.39 in left; every shot on its own bull; mean radius 0.213 in. The screen says so and offers "Give each shot to its nearest bull
+instead". Detection and the session's re-matching use the same rule. The rebuilt scan is on the `test-data` release
+(`load-sheet-6.5-wrong-bull-2026-09-26.png`, SHA-256 1f43bab7...) and `WholeSheetWrongBullTests` holds it. The two top row shots were not
+found at all, inside the codes' and title's printed-matter zones: a detection defect still open. The wrong-bull article has the sheet
+and the zeroing lesson.
+
+**5.4 Spelling.** The check now covers the sheet generator's words too (`src/GroupLab.Cli/Library`): "metres" in the metric zeroing
+sheets' descriptions, "neighbouring" in the designer's spacing warning and "analysed" in its marker refusal are fixed; the card and score
+sheet were fixed with entry 226.
+
 ## Entry 228: several bulls and a scale at each on a target GroupLab did not print (Unholy's suggestion)
 
 **Bulls by hand.** `MarkingSession.AddBull`, `MoveBull`, `DeleteBull` (numbering again) with shots nobody assigned going to their

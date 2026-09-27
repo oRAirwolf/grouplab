@@ -261,7 +261,8 @@ def markdown(source: str, fix: bool) -> tuple[str, list[tuple[int, str]]]:
 
 def targets() -> list[tuple[Path, str]]:
     files: list[tuple[Path, str]] = []
-    for project in ("src/GroupLab.App", "src/GroupLab.Core"):
+    # Entry 229 section 5.4: the sheets GroupLab generates carry words a user reads too, the library's descriptions and the designer's.
+    for project in ("src/GroupLab.App", "src/GroupLab.Core", "src/GroupLab.Cli/Library"):
         for p in sorted((REPO / project).rglob("*.cs")):
             if not any(part in ("bin", "obj") for part in p.parts):
                 files.append((p, "cs"))

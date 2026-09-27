@@ -245,7 +245,22 @@ public static class AutomaticMarking
         {
             // Entry 73 section 1: sighter and scoring bulls are matched as separate pools, so a sighter's hole never lands on a scoring bull.
             bool[] scoringBulls = [.. definition.Bulls.Select(b => b.Scoring)];
-            assignment = ShotAssignment.Assign(shotPages, bullPages, scoring: scoringBulls, capacity: ShotAssignment.OneBullTakesAll(scoringBulls, shotPages.Count));
+
+            // Entry 229 section 4: every shot off its bull by the same amount, the rifle's zero, is assigned in the frame moved back by it.
+            var whole = ImpactOffsets.WholeSheet([.. shotPages.Select(p => new GroupLab.Core.Detection.Offset(p.X, p.Y))], [.. bullPages.Select(p => new GroupLab.Core.Detection.Offset(p.X, p.Y))],
+                [.. scoringBulls.Select((s, i) => (s, i)).Where(x => x.s).Select(x => x.i)]);
+            var framed = whole is { } w ? [.. shotPages.Select(p => new PointD(p.X - w.Shift.X, p.Y - w.Shift.Y))] : shotPages;
+            assignment = ShotAssignment.Assign(framed, bullPages, scoring: scoringBulls, capacity: ShotAssignment.OneBullTakesAll(scoringBulls, shotPages.Count));
+            if (whole is { } moved)
+            {
+                var plain = ShotAssignment.Assign(shotPages, bullPages, scoring: scoringBulls, capacity: ShotAssignment.OneBullTakesAll(scoringBulls, shotPages.Count));
+                int changed = assignment.Shots.Zip(plain.Shots).Count(p => p.First.Bull != p.Second.Bull);
+                if (changed > 0)
+                {
+                    assignment = assignment with { Reason = ImpactOffsets.WholeSheetWords(moved.Shift, changed) };
+                    stage.Decide("whole sheet", moved.Shift.Describe(), assignment.Reason);
+                }
+            }
             int ambiguous = assignment.Shots.Count(s => s.Ambiguous), unassigned = assignment.Shots.Count(s => s.Bull is null);
             stage.Decide("assignment", assignment.Method.Words(), assignment.Reason);
             foreach (var s in assignment.Shots.Where(s => s.Ambiguous))

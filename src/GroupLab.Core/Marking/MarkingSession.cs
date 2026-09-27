@@ -190,7 +190,8 @@ public sealed record MarkingState(
     AssignmentRule? Rule = null,
     string? Paper = null,
     string? Backing = null,
-    GroupLab.Core.Capture.CaptureRecord? Capture = null)
+    GroupLab.Core.Capture.CaptureRecord? Capture = null,
+    string? SheetLabel = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -572,6 +573,12 @@ public sealed class MarkingSession
     /// What the sheet was shot on, NOTES-FROM-PLANNING.md entry 162 section 3.2: the paper and the backing, each one of
     /// <see cref="TargetMaterial"/>'s choices or null. Anything else is recorded as null rather than kept, so no sixth word appears.
     /// </summary>
+    /// <summary>
+    /// Entry 229 section 1: a person's own name for this sheet, such as the letter written in its serial box. The printed codes name the
+    /// design, which every copy printed from one PDF shares, so this is what tells three copies apart.
+    /// </summary>
+    public void SetSheetLabel(string? label) => Apply(State with { SheetLabel = string.IsNullOrWhiteSpace(label) ? null : label.Trim() });
+
     public void SetMaterial(string? paper, string? backing)
     {
         string? p = TargetMaterial.Paper(paper), b = TargetMaterial.Backing(backing);
@@ -882,6 +889,13 @@ public sealed class MarkingSession
     /// </summary>
     private static ImpactOffset? SheetOffset(MarkingState state, AssignmentRule? rule, IReadOnlyList<BullAim> open, IReadOnlyList<PointD> placed)
     {
+        // Entry 229 section 4: with no rule chosen, a sheet of one shot per bull all off by the same amount; choosing nearest bull undoes it.
+        if (rule is null && placed.Count > 0)
+        {
+            return ImpactOffsets.WholeSheet([.. placed.Select(p => new Offset(p.X, p.Y))], [.. open.Select(b => new Offset(b.Declared!.Value.X, b.Declared!.Value.Y))],
+                [.. open.Select((b, i) => (b, i)).Where(x => x.b.Scoring).Select(x => x.i)]);
+        }
+
         if (rule is null || rule.NearestOnly || rule.PerBull.IsEmpty || placed.Count == 0)
         {
             return null;
@@ -905,6 +919,22 @@ public sealed class MarkingSession
                 [.. placed.Select(p => new Offset(p.X, p.Y))],
                 [.. open.Select(b => new Offset(b.Declared!.Value.X, b.Declared!.Value.Y))],
                 aimed);
+    }
+
+    /// <summary>
+    /// Entry 229 section 4: the common offset the shots were assigned in, where the whole-sheet rule moved them, for the screen to say so and
+    /// offer the undo; null otherwise.
+    /// </summary>
+    public ImpactOffset? WholeSheetShift()
+    {
+        var state = State;
+        if (state.Rule is not null || state.Scale is not SheetReference sheet || state.Bulls.Count == 0 || state.Bulls.Any(b => b.Declared is null))
+        {
+            return null;
+        }
+
+        var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).ToList();
+        return SheetOffset(state, null, state.Bulls.ToList(), [.. free.Select(s => sheet.Mapping.ToPage(s.Image))]);
     }
 
     private void Update(int id, Func<MarkedShot, MarkedShot> change)

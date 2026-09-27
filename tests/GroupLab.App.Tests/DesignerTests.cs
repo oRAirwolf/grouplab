@@ -57,7 +57,7 @@ public class DesignerTests
         Dispatcher.UIThread.RunJobs();
 
         var warning = Assert.Single(window.DesignChecks, c => c.Kind == "warning");
-        Assert.Contains("would land nearer a neighbouring bull than its own", warning.Text, StringComparison.Ordinal);
+        Assert.Contains("would land nearer a neighboring bull than its own", warning.Text, StringComparison.Ordinal);
         Assert.NotNull(window.Designed);
         window.Close();
     }

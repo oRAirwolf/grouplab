@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1025 |
-| measured | 1479 |
+| measured | 1487 |
 | decided | 1184 |
 | unbacked | 0 |
-| **total** | **3688** |
+| **total** | **3696** |
 
-**568** of them were read one sentence at a time and their backing written against the sentence. The other **3120** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**568** of them were read one sentence at a time and their backing written against the sentence. The other **3128** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3914,7 +3914,15 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): On the 6 ARC sheet it raises the problem rather than reporting a group.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): That one piece of information solves the 6 ARC sheet outright, because with twenty aim points named and twenty shots to place, the assignment is a matching problem with one answer rather than a guess.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): And you can still move any shot by hand , because the shooter saw where the shot went and the software did not.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): A full sheet, every shot about 0.8 inch high On 2026-09-26 the developer shot a full 25 bull sheet of 6.5 Creedmoor at 100 yards, one shot per bull.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The rifle's zero that day put every shot about 0.8 inch high of its own bull, just outside the 1 inch ring, with the bulls 1.5 inches apart.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Matching every shot to a bull one to one, as GroupLab did then, gave 5 of the 23 shots it found to the bull above their own.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The group came out with a mean radius of 0.59 inch, from shots measured 0.6 inch low on one bull and 0.9 inch high on the next.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): It is used only when it is certain, and it says so on the analysis screen: all shots are about 0.78 inch high and 0.37 inch left of their bulls.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): On this sheet every one of the 23 went to its own bull and the mean radius is 0.21 inch.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The two shots nearest the top edge were not found at all: they landed in the printed codes and the title, where GroupLab does not look for holes.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What you can do now If your rifle is not zeroed for the load you are testing, either zero it first, or expect to move some shots by hand and check the review queue before you trust the figures.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): That is the whole practical finding, and the 6.5 sheet says it again: zero first, or a sheet of one shot per bull cannot tell whose shot is whose.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Sources The three sheets and the shooter's own record of them: docs/NOTES-FROM-PLANNING.md , entry 120.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What GroupLab did with them: docs/PHASE1-RESULTS.md , \"Entry 120\", sections 2 and 7.
 

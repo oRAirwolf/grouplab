@@ -3,7 +3,7 @@
   "revision": 0,
   "id": "GL-ZGFN-ZEMF-PQVV-ANAQ",
   "name": "GroupLab Zeroing Grid, mil at 100 m",
-  "description": "One aiming ring on a grid of 0.25 mil squares reaching 0.91 mil each side of the aim at 100 metres, heavier every 0.5 mil and heaviest every mil, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, and a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
+  "description": "One aiming ring on a grid of 0.25 mil squares reaching 0.91 mil each side of the aim at 100 meters, heavier every 0.5 mil and heaviest every mil, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, and a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
   "author": "GroupLab built-in library",
   "licence": "CC0-1.0",
   "created": "2026-09-27",

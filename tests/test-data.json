@@ -21,6 +21,13 @@
       "bytes": 57523449,
       "what": "Unholy's 2026-09-24 scan of GroupLab's mil zeroing grid, rebuilt from its pixels with only the resolution kept. Not Scan_20260923.png.",
       "consent": "samples/PROVENANCE.md, the 2026-09-24 zeroing grid scan by Unholy, under entry 190's standing consent"
+    },
+    {
+      "name": "load-sheet-6.5-wrong-bull-2026-09-26.png",
+      "sha256": "1f43bab71b79c3005e4213a1e4b9b9eb1f015459a982fdbf4a2d2878fdc985fe",
+      "bytes": 14797501,
+      "what": "Alan's 2026-09-26 scan of GL-CF25-LTR-D with 25 shots of 6.5 Creedmoor, every shot about 0.8 in high of its own bull, rebuilt from its pixels with only the resolution kept. Entry 229 section 4's wrong-bull case.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
     }
   ]
 }
