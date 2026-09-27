@@ -59,6 +59,16 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 230: the first Oracle backup, sudo widened, and Alan's answers
+
+The first Oracle boot volume backup is recorded in `docs/RESTORE.md`: 2026-09-26 09:01:42 UTC, Incremental, Available, 10 GB of 47 GB,
+expiring 2026-09-28, with the plain words that until a Full backup exists a restore rests on the incremental chain Oracle keeps. Request
+35 is closed; request 39 asks Alan to look for the first Full after Sunday 09:00 UTC. The condition of entry 222 is met, so CLAUDE.md's
+sudo rule is no longer limited to GroupLab's own files: before any sudo change outside them, what will change and how to undo it are
+written down first, and everything about pissinhot.com, `nginx -t` and HestiaCP's folders still holds. Alan's answers (the grid measured
+right, "1" means A, the order and timing of the suppressor sheets, Justin by first name only, the score sheets, the PLxC row) were used in
+entries 226 and 229.
+
 ## Entry 236, with entry 235 section 4: the Tab S8 Ultra, and GroupLab back on the Fold 7
 
 Nightly 110, then 111 when it was published during the sitting, installed on both over adb and started once. **The tablet** (SM-X900,

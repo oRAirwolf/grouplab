@@ -24,6 +24,38 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 230: Alan's answers, and the first Oracle backup is confirmed
+
+**Status: done 2026-09-27.** Section 1: the backup is in `docs/RESTORE.md` without anything that locates the server, request 35 is closed and request 39 asks for the Full backup; the sudo rule in CLAUDE.md is widened with the undo-first condition. Section 2's answers were used in entries 226 and 229 as they came.
+
+## 1. The first Oracle boot volume backup exists
+
+Alan's screenshot of the Oracle console (Boot volume backups, compartment spetsnaz (root), US West San Jose) shows one backup:
+"Auto-backup for instance-20260324-2036 (Boot Volume) via policy: grouplab-daily on 2026-09-26 09:00:00", state **Available**, type
+Incremental, 10 GB of the 47 GB volume, source Scheduled, created 2026-09-26 09:01:42 UTC, expires 2026-09-28 09:01:39 UTC.
+
+1. Record it in `docs/RESTORE.md` (the whole-server section) and STATE.md. Do not record the instance's IP or anything that locates it.
+2. The first weekly full backup is due Sunday 2026-09-27 09:00 UTC. Say in for-alan.md when there is a full backup to rely on, and what
+   Alan would look for (a second row, type Full). Until a full backup exists, a restore depends on the incremental chain, which Oracle
+   manages; say so in plain words in RESTORE.md.
+3. The condition in entry 222 is met: sudo on the server is no longer limited to GroupLab's own files. Everything else stays: nothing that
+   belongs to pissinhot.com is touched apart from the approved /targets redirect, `nginx -t` passes before any reload and both sites are
+   checked after, and nothing is written into HestiaCP's `conf/web/<domain>/` folders. Before any sudo change outside GroupLab's files,
+   write down what will change and how to undo it, in the commit or in RESTORE.md.
+
+## 2. Answers to entries 226 and 229
+
+1. **Zeroing grid:** Alan measured the printout; one small square, one bold square and the whole grid were exactly 0.36 in, 1.80 in and
+   5.76 in. The print scale is correct; the redesign in entries 226 and 227 is the whole fix.
+2. **"1" means A** (Alan confirmed).
+3. **Suppressor sheets:** the Dominus K sheet was shot **first**, then the Magnus S sheet, both at 100 yd, about 20 to 30 minutes apart.
+   Nothing else changed (same rifle, load, position and rest). So the remaining confounders are the order (barrel temperature and fouling
+   after 25 shots and a 20 to 30 minute cool down), the suppressor swap itself (remounting), and light over half an hour. Say that in the
+   article next to the result.
+4. **Justin** may be credited by his first name only: "Justin". No surname, anywhere.
+5. **Score sheets:** both are in the zip, as described in entry 229. Nothing more to wait for.
+6. The PLxC third row: record it as 8x at 100 yd per Alan's description of the test (entry 229 section 5.3).
+
 ## 2026-09-27, entry 236: the Galaxy Tab S8 Ultra, one check of the large-screen layout
 
 **Status: done 2026-09-27, at Alan's request ahead of 230, 231, 233 to 235 (with 235 section 4).** DeX was not tried: it is off on the tablet and turning it on is setup. Split screen was checked as a resizable window at half and a third of the width, which is what split screen gives an app. The report is request 43. The addresses the entry names are in no committed file.

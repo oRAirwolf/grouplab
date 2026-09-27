@@ -29,9 +29,17 @@ listed as one, and Code does not act on it until the gap is closed.**
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
 | **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: incremental daily kept 2 days, full on Sundays kept 2 weeks, at 09:00 UTC; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
-**The gaps, today:** none, once the first Oracle boot volume backup exists. The policy is on (entry 225) and the first backup is due at
-2026-09-26 09:00 UTC; until Alan confirms it in the console, Code's sudo stays limited to GroupLab's own files and its installer. The
-nightly backup reaches `grouplab-backups` since entry 224, and the restore test passed against it.
+**The gaps, today:** none. The first Oracle boot volume backup exists (entry 230): "Auto-backup ... via policy: grouplab-daily", state
+Available, type **Incremental**, 10 GB of the 47 GB volume, source Scheduled, created 2026-09-26 09:01:42 UTC, expiring 2026-09-28
+09:01:39 UTC. **Until a Full backup exists, a restore rests on the chain of incremental backups**, which Oracle keeps and manages by itself:
+choosing the newest backup in the console restores the whole volume as it was then, and nothing about the chain is Code's or Alan's to
+manage. The first weekly Full is due on Sunday 2026-09-27 at 09:00 UTC (request 39 asks Alan to look for it). The nightly backup reaches
+`grouplab-backups` since entry 224, and the restore test passed against it.
+
+**Sudo on the server** (entry 230 section 1.3): with an off-machine copy of the whole server, Code's sudo is no longer limited to
+GroupLab's own files. Everything else holds: nothing of pissinhot.com is touched apart from the approved `/targets` redirect, `nginx -t`
+passes before any reload and both sites are checked after, nothing is written into HestiaCP's `conf/web/<domain>/` folders, and **before
+any sudo change outside GroupLab's own files, what will change and how to undo it are written here or in the commit first.**
 
 **How it runs**: two scheduled tasks on this computer, registered by `scripts\Register-GroupLabTasks.ps1` as Alan, only while he is logged
 on, with no password stored: `\GroupLab\Nightly backup` at 03:30 (`scripts\backup.py`: the archive copied here, then the backup) and

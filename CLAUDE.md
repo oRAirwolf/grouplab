@@ -13,9 +13,11 @@ that you have access to delete or change, that there are backups in place to min
    first (a backup run, or for a server file a dated copy outside the HestiaCP `conf/web/` folders).
 3. Deletions on this computer go to `C:\Dev\grouplab-trash\<date>\` first, emptied after 14 days and never before a nightly backup has
    succeeded since. Build output and test leftovers are deleted directly.
-4. Code may use sudo on the server (entry 222 section 1), announced in `panel.md` with what ran and what it printed. **Until a whole-server
-   backup exists off the machine, sudo is limited to GroupLab's own files and its installer.** Nothing belonging to pissinhot.com is
-   touched, the key file is never read, and the server's address never appears anywhere.
+4. Code may use sudo on the server (entry 222 section 1), announced in `panel.md` with what ran and what it printed. **A whole-server
+   backup exists off the machine since 2026-09-26 (entry 230), so sudo is no longer limited to GroupLab's own files; before any sudo
+   change outside them, write down what will change and how to undo it, in the commit or in `docs/RESTORE.md`.** Nothing belonging to
+   pissinhot.com is touched apart from the approved `/targets` redirect, `nginx -t` passes before any reload and both sites are checked
+   after, the key file is never read, and the server's address never appears anywhere.
 5. Nothing is force pushed to `main`, ever.
 
 ## Where the work comes from
