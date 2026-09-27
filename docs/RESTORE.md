@@ -27,9 +27,18 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
 | The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey` |
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
-| **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: incremental daily kept 2 days, full on Sundays kept 2 weeks, at 09:00 UTC; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
+| **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: incremental daily at 09:00 UTC kept 2 days, full on Sundays at 12:00 UTC kept 13 days (entry 235); and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
-**The gaps, today:** none. The first Oracle boot volume backup exists (entry 230): "Auto-backup ... via policy: grouplab-daily", state
+**The gaps, today:** none. **The first Full backup exists** (entry 235): "Auto-backup for instance-20260324-2036 (Boot Volume) via policy:
+grouplab-daily on 2026-09-27 09:00:00", type **Full**, Available, 10 of 47 GB, created 2026-09-27 09:04:31 UTC, expiring 2026-09-29
+09:04:27 UTC. It expires after two days, not two weeks, because the daily and weekly schedules both fired at 09:00 UTC on Sunday and Oracle
+made one backup, typed Full, with the daily schedule's retention; Oracle's documentation does not say what happens when two schedules
+coincide. So on Alan's change of the same day the weekly schedule runs at **12:00 UTC on Sundays, kept 13 days**, and the daily stays
+Incremental at 09:00 UTC, kept 2 days: at most two Full and two or three Incremental backups at once, within the five Always Free allows.
+The first Full of the new schedule is due on Sunday 2026-10-04 at 12:00 UTC, expiring about 2026-10-17; request 46 asks Alan to look for
+it. From Tuesday 2026-09-29 until then the server has incremental backups only, and a restore rests on their chain, as below.
+
+Before it, the first Oracle boot volume backup (entry 230): "Auto-backup ... via policy: grouplab-daily", state
 Available, type **Incremental**, 10 GB of the 47 GB volume, source Scheduled, created 2026-09-26 09:01:42 UTC, expiring 2026-09-28
 09:01:39 UTC. **Until a Full backup exists, a restore rests on the chain of incremental backups**, which Oracle keeps and manages by itself:
 choosing the newest backup in the console restores the whole volume as it was then, and nothing about the chain is Code's or Alan's to

@@ -29,6 +29,18 @@ public class UserGuideTests
         Assert.True(DocumentPdf.Pictures(File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"))).Count >= 7);
     }
 
+    /// <summary>Entry 235: a page taken to the range is one page, and its PDF is committed beside it.</summary>
+    [Fact]
+    public void EveryPrintableIsOnePageAndHasItsPdf()
+    {
+        foreach (string page in GroupLab.Cli.GuideVerb.Printables)
+        {
+            var pages = DocumentPdf.Pages(File.ReadAllText(Repo.PathTo("docs", page + ".md")), _ => null);
+            Assert.True(pages.Count == 1, $"{page}.md prints on {pages.Count} pages");
+            Assert.True(File.Exists(Repo.PathTo("docs", page + ".pdf")), $"docs/{page}.pdf is missing: run `grouplab user-guide` and commit it.");
+        }
+    }
+
     [Fact]
     public void TheDocumentWriterSetsTextAndPictures()
     {

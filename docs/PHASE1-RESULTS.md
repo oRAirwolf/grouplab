@@ -59,6 +59,19 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 235: the first Full backup, requests 32 and 39 closed, and request 20 rewritten
+
+**The first Full Oracle backup** (2026-09-27 09:04:31 UTC, 10 of 47 GB) expires after two days, because the daily and weekly schedules
+both fired at 09:00 UTC and Oracle gave the one backup the daily's retention. Alan moved the weekly Full to Sunday 12:00 UTC, kept 13 days;
+`docs/RESTORE.md` records the backup, the cause and the new schedule, and that from 2026-09-29 until 2026-10-04 a restore rests on the
+incremental chain. Request 39 is closed and request 46 asks for one look on or after Sunday 4 October at 12:00 UTC. **Request 32** is
+closed on Alan's answer, "The archive is enough". **Request 20** now leads with the core set that is enough on its own, eight sheets:
+.22 LR subsonic and high velocity, .300 Blackout subsonic, and 6.5 Creedmoor or 6 ARC, two each; the extras after; .300 Blackout
+supersonic dropped, with why in Program B. `docs/RANGE-PLAN-HOLE-SIZE.md` and its PDF, one page, made by `grouplab user-guide` beside the
+guides and held to one page by a test, give the sheets to print, the order to shoot and what to write on each load block. The scanner, a
+Brother MFC-J430W Letter flatbed, is in `samples/PROVENANCE.md` and Program B; larger commercial sheets are photographed. GroupLab went
+back on the Fold 7 with entry 236.
+
 ## Entry 234: GroupLab Dev beside the Play copy, a script for the phone, and logcat
 
 **GroupLab Dev** is `-p:GroupLabDev=true`: `org.grouplab.app.dev`, "GroupLab Dev" under its own icon (the site's amber on its dark ground

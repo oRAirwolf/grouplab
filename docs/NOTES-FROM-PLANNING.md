@@ -24,6 +24,77 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 235: the first Full backup, requests 32 and 21 closed by Alan's answers, the Fold 7 needs GroupLab back, angled photos coming
+
+**Status: done 2026-09-27, apart from one part; section 4 was done first, with entry 236.** **Not done yet:** section 3, the upload timeouts with sudo, which waits for one server sitting at the end of this run together with entry 241's server half, so that an approval nobody is awake to give holds up nothing else; request 21 stays open until then. Section 5's angled photographs arrived as entry 238 and are compared there.
+
+## 1. The first Full Oracle backup exists (closes request 39)
+
+Alan's screenshot, Boot volume backups: "Auto-backup for instance-20260324-2036 (Boot Volume) via policy: grouplab-daily on 2026-09-27
+09:00:00", **Full**, Available, 10 of 47 GB, created 2026-09-27 09:04:31 UTC, **expires 2026-09-29 09:04:27 UTC**. The incremental of
+26 September is still listed (expires 2026-09-28).
+
+The Full backup expires after two days. Entry 225's policy was a weekly Full kept two weeks, so either the weekly schedule's retention was
+entered in days, or Oracle gave the coinciding daily and weekly runs the daily retention. Either way the server would have no Full backup
+from Tuesday until next Sunday. Record the backup in RESTORE.md, close request 39, and open a short request for Alan: in the Oracle
+console, Backup Policies, `grouplab-daily`, a screenshot of the schedules (type, period, time, retention for each), with what to change
+if the weekly retention is two days (weekly Full, retention 2 weeks; daily Incremental, retention 2 days; stays within the 5 backups
+Always Free allows). Explain it in plain words. Do not ask for it urgently; he is busy with photos today.
+
+## 2. Request 32: "The archive is enough"
+
+Alan's answer. Close request 32. No second copy of `C:\Dev\grouplab-submissions` is set up.
+
+## 3. Request 21: do it yourself
+
+Alan: "Go ahead on the upload timeouts." You may now run the server side yourself (sudo is allowed since entry 230): install the
+receiver's longer timeout block and the server copy of the include that matches the repository, dry run first, `nginx -t` before the
+reload, then the three checks (receiver 400, grouplab.org/targets/ 200, pissinhot.com 200). Touch nothing of pissinhot.com. If anything
+answers differently, restore the previous include from the backup the installer makes, reload, and report. Close request 21 with the
+output in the panel mirror.
+
+## 4. Put GroupLab back on the Fold 7
+
+Alan uninstalled the Play copy (entry 234) and now has no GroupLab on the phone. Install the newest nightly APK over wireless debugging now
+(the release APK signed with the upload key, until entry 234's dev build exists), start it once, and say in for-alan.md that it is back.
+If the phone is not reachable, ask Alan in the panel in one line to turn Wireless debugging on.
+
+## 5. Request 18: angled photographs are coming
+
+Alan is taking the 40 to 60 degree photographs today. The planning session suggested the 6 ARC Dominus K sheet (scan
+`6.arc.dominus.k09262026.png`, entry 229), one straight-down photo as a reference, then about 40, 45, 50, 55 and 60 degrees, and asked
+him to say which angle each photo is. When they arrive, compare each against the scan shot by shot as in entry 233, and let the result set
+the refusal angle (question 54). Their metadata rules are the same as entry 233's.
+
+**Update to section 1, same day:** Alan sent the policy's Schedules tab. It is set as intended: Daily, Incremental, 09:00 UTC, 2 days;
+Weekly, Full, Sunday 09:00 UTC, 14 days. So the cause is the two schedules firing at the same moment on Sundays: Oracle made one backup,
+typed Full but with the daily schedule's 2 day retention. Oracle's documentation does not say what happens when two schedules coincide.
+The planning session asked Alan to move the Weekly schedule to Sunday 12:00 UTC and set its retention to 13 days (so at most two Full and
+about two or three Incremental backups exist at once, within the 5 Always Free allows). Do not open a request for the policy screenshot;
+instead, after Sunday 2026-10-04 12:00 UTC, ask Alan in for-alan.md for one look at Boot Volume Backups to confirm a Full backup dated
+4 October that expires about 17 October. Record all of this in RESTORE.md.
+
+**Second update, same day:**
+1. Alan made the policy change: Weekly, Full, Sunday 12:00 UTC, 13 days (his screenshot of the Edit schedule page). Daily stays
+   Incremental, 09:00 UTC, 2 days.
+2. **Request 20 changes.** Alan's scanner is a Brother MFC-J430W, a Letter size flatbed. Store-bought targets are far larger than it, so
+   "scan every commercial gridded sheet at 600 dpi" is impossible: remove it from request 20 and from any other request. The research on
+   sheets GroupLab did not print uses photographs instead, measured with entry 228's four-point method and per-bull scale, with a ruler or
+   a GroupLab scale card laid on the sheet when it has no printed scale. Record the scanner model in the test data provenance.
+3. Alan may shoot request 20 next weekend and says it is a lot of rifles. Rewrite request 20 so the minimum useful set comes first and is
+   clearly enough on its own (for example the .22 LR subsonic, the .300 Blackout subsonic and supersonic, and the 6.5 Creedmoor, two sheets
+   each), with the rest as optional extras, and a printable one-page range plan: sheets to print, order to shoot, what to write on each load
+   block.
+4. The angled photographs are being taken now at his desk, in fairly dim room light. When they arrive, say whether the light hurt the
+   result (quality score, marker reading, holes found against the scan) before asking for any retake.
+
+**Third update, same day (request 20's core set):** Alan has no supersonic .300 Blackout and would have to load it. Do not ask for it.
+The .22 LR pair (subsonic and high velocity) is the cleanest speed comparison available: same width, same kind of bullet, different
+speed, and it is the rimfire question itself. Core set: **.22 LR subsonic, .22 LR high velocity, .300 Blackout subsonic, and 6.5
+Creedmoor (or 6 ARC)**, two sheets each. Optional extras: 8.6 Blackout subsonic, .510 Whisper, the other of 6 ARC and 6.5 Creedmoor.
+.300 Blackout supersonic is dropped; the article says so and what it would have added. Note in the method that a .300 Blackout subsonic
+and supersonic pair would not isolate speed anyway, since their bullets differ in weight and shape.
+
 ## 2026-09-27, entry 234: a separate development build that installs beside the Play copy, and readable logs
 
 **Status: done 2026-09-27, apart from one part.** **Not done yet:** GroupLab Dev on the phone itself. Both devices dropped off the desktop when the script's first, unattended run restarted adb, and request 45 asks Alan to reconnect them; the first nightly after this entry publishes `grouplab-android-dev.apk`, and the script installs it. Built and checked on this machine: the release and development manifests (ids, names, icon, debuggable, the provider's authority), and the log's copy to logcat.

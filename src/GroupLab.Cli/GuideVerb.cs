@@ -15,11 +15,14 @@ public static class GuideVerb
     /// <summary>The documents that ship as a PDF beside their Markdown.</summary>
     public static IReadOnlyList<string> Guides { get; } = ["USER-GUIDE", "TESTING-GUIDE"];
 
+    /// <summary>Pages printed and taken to the range, made the same way, one page each: entry 235's plan for the hole size test.</summary>
+    public static IReadOnlyList<string> Printables { get; } = ["RANGE-PLAN-HOLE-SIZE"];
+
     public static int Run(string docs, TextWriter output, TextWriter error)
     {
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
-        foreach (string guide in Guides)
+        foreach (string guide in Guides.Concat(Printables))
         {
             string source = Path.Combine(docs, guide + ".md");
             if (!File.Exists(source))

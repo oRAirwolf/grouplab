@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 234.
+**Last rewritten:** 2026-09-27, after entry 235.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233 and 234. Next 235, 237 to 240, 242 to 244; 233's aim card waits with 228 on Android.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 and 235 (its section 3 in the closing server sitting). Next 237 to 240, 242 to 244; 233's aim card waits with 228 on Android.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -48,8 +48,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The benchmark is offered after Yes** and runs with progress and a Cancel, on the desktop and the phone (entry 227); **CEP 99** and a
   percent of one's own are on the analysis screen. Next **228** (several bulls and a scale at each on other people's targets, Unholy's), **229** (duplicate identifiers,
   the whole-sheet wrong-bull assignment on the 6.5 sheet, spelling) and **230** (the Oracle backup recorded, sudo widened).
-- **Backups (entries 222, 224, 225, 230)**: nightly to `grouplab-backups` with a weekly restore test; Oracle boot volume backups exist
-  (first 2026-09-26, incremental). **Sudo on the server is no longer limited to GroupLab's files** (entry 230), with undo written first.
+- **Backups (entries 222 to 235)**: nightly to `grouplab-backups`, weekly restore test; Oracle: daily incremental, first Full on
+  2026-09-27; the weekly Full moved to Sunday 12:00 UTC, first due 2026-10-04 (request 46). Sudo is not limited to GroupLab (230).
 - **The Microsoft Store**: MSIX built in CI; tagged releases go to the Store by themselves once request 38 is done.
 
 ## The roadmap (entry 219), in place of the next three
@@ -63,7 +63,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **11** (45 reconnect the Fold 7 and the tablet; 39 the Full Oracle backup, one look; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
+Open requests in `docs/notes/for-alan.md`: **10** (45 reconnect the Fold 7 and the tablet; 46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
 camera; then 9, 16, 20, 18, 32 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
 
 ## Open questions

@@ -167,14 +167,19 @@ large: `docs/SCAN-MEASUREMENTS.md` section 3.5 measured a standard deviation of 
 2845 ft/s; nose, round against spitzer; construction, bare lead against a jacket; and diameter, 0.222 against 0.243 and 0.264. The paper,
 the scanner and the afternoon were the same, but the distance each was shot at and its backing were not recorded as the same. So the data
 says a .22 LR hole closes up more and cannot say why. Question 38 already showed how strongly the light moves a photographed hole, which is
-why only scans are used here.
+why only scans are used here. The scanner is a Brother MFC-J430W, a Letter flatbed (entry 235): GroupLab's own Letter sheets fit it, and
+a commercial sheet larger than Letter is photographed and measured with the four-point method and the per-bull scale of entry 228, with a
+ruler or a GroupLab scale card laid on it when it has no printed scale.
 
 **Step 3, the test that would settle it.** Everything held but the cartridge:
 
 - One printed batch of GroupLab 25-bull Letter sheets, one backing, stapled the same way, one distance, 50 yd, and one flatbed at 600 dpi.
-- The cartridges, the subsonic set at about 1000 to 1080 ft/s beside the supersonic ones: subsonic .22 LR, .300 Blackout subsonic, 8.6
-  Blackout subsonic, .510 Whisper; and supersonic .22 LR, 6 ARC, 6.5 Creedmoor, and .300 Blackout supersonic, which gives one diameter at
-  two speeds.
+- **The core set** (entry 235, what Alan has and can shoot in one afternoon): .22 LR subsonic, .22 LR high velocity, .300 Blackout
+  subsonic, and 6.5 Creedmoor or 6 ARC. The .22 LR pair is the cleanest speed comparison on offer: one width, one kind of bullet, two
+  speeds, and it is the rimfire question itself. **Extras if there is time:** 8.6 Blackout subsonic, .510 Whisper, and the other of 6 ARC
+  and 6.5 Creedmoor. **.300 Blackout supersonic is dropped:** Alan has none and would have to load it. What it would have added is a
+  second speed pair at another width; it would not have isolated speed anyway, because a subsonic and a supersonic .300 Blackout use
+  bullets of different weight and shape. `docs/RANGE-PLAN-HOLE-SIZE.md` is the one page plan for the range.
 - One shot to a bull, so no hole touches another, **two sheets, 50 holes, for each cartridge**, the sheets shot in an interleaved order so
   the light and the paper's age are not on one cartridge's side.
 
@@ -185,7 +190,7 @@ and one of 0.067 at the 80 percent power. Two sheets per cartridge, rather than 
 passing as the cartridge's.
 
 **The two comparisons that decide it:** the four subsonic cartridges against each other, 0.222 to 0.510 in at one speed, which is diameter
-alone; and .300 Blackout subsonic against supersonic, and .22 LR subsonic against high velocity, which is speed alone at one diameter. If
+alone; and .300 Blackout subsonic against supersonic, and .22 LR subsonic against high velocity, which is speed alone at one diameter (with the core set, the .22 LR pair alone does this). If
 the subsonic ratios agree whatever their diameter and differ from the supersonic ones, it is speed. The round nose against spitzer cannot
 be separated by this set and is said so.
 

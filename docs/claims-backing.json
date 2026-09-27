@@ -2196,6 +2196,50 @@
   "- **The question says it before anything is sent**: \"a random number made by GroupLab for this installation, so that repeated runs count once; it is not tied to your device, account or network, and you can reset it or delete your reports in Settings.\" Everyone who said yes to the earlier wording is asked again, once, and nothing is sent until they answer (`SurveyReport.WordingVersion`).": {
    "kind": "code",
    "where": "src/GroupLab.Core/Survey/SurveyReport.cs WhatIsSent and WordingVersion; src/GroupLab.App/AppSettings.cs LoadSurveyChoice"
+  },
+  "NOTES-FROM-PLANNING.md entry 235; the reasons are in `docs/RESEARCH.md`, Program B.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Print:** 10 sheets of GL-CF25-LTR-D, the 25 bull Letter load sheet, all at once on one printer and one paper, at 100 percent.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Set up:** one backing for every sheet, each stapled the same way; 50 yards; the rifle zeroed first, so every shot lands on its own bull.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Shoot, in this order, one shot to a bull, 25 shots a sheet, aimed at each bull's center:** 1.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  ".300 Blackout subsonic 3.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "6.5 Creedmoor (or 6 ARC) 5.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  ".300 Blackout subsonic 7.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "6.5 Creedmoor (or 6 ARC) That is the whole core set: eight sheets, two of each.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Only if there is time,** two sheets each, alternated in the same way: 8.6 Blackout subsonic, .510 Whisper, and whichever of 6 ARC and 6.5 Creedmoor was not shot above.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Write on each sheet's load block:** the date; 50 yd; the cartridge; the bullet's weight and type; the powder and charge, or the maker if factory; the velocity if a chronograph was up; and in the serial box, the sheet's number from the list above.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "**Afterwards:** scan every sheet flat on the Brother flatbed at 600 dpi, lid closed, one sheet a scan, and name each file by its sheet number.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
   }
  },
  "rules": [

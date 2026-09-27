@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 11.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes, then **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 10.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print), 18 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
@@ -22,6 +22,14 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 46. On or after Sunday 2026-10-04 12:00 UTC: one look at the Oracle backups
+
+**Opened 2026-09-27 (entry 235). Not before Sunday 4 October, 12:00 UTC; then one minute.** In the Oracle console, **Storage**, **Block
+Storage**, **Boot Volume Backups**: is there a backup of type **Full** created on 4 October, a little after 12:00 UTC, that expires about
+**17 October**? That is the first Full of the schedule you changed on 27 September, and it is all that is needed to know the change worked.
+
+A good answer: "Full, 4 October, expires 17 October", or what the list shows instead.
 
 ## 45. The Fold 7 and the Tab S8 Ultra: reconnect both, about five minutes
 
@@ -104,7 +112,11 @@ is on, when the benchmark last ran and its result, and a button to run it now. T
 
 ## 39. The first full Oracle backup: one look in the console after Sunday 2026-09-27 09:00 UTC
 
-**Opened 2026-09-27. Entry 230 section 1.2.** Five minutes, whenever you are next near the console.
+**Answered 2026-09-27 (entry 235).** Your screenshot showed the first Full backup, and the schedules; you moved the weekly Full to Sunday
+12:00 UTC, kept 13 days, so it no longer lands on the daily's two day retention. `docs/RESTORE.md` has all of it. Request 46 is the one
+look to confirm the new schedule works, on or after 4 October.
+
+What this request asked, kept for the record: five minutes, whenever you are next near the console.
 
 The first backup (26 September, 09:01 UTC) is **Incremental**. Oracle keeps the chain of incrementals it needs by itself, so a restore
 works today, but it rests on that chain. The policy makes a **Full** backup every Sunday, the first due on 2026-09-27 at 09:00 UTC. Once
@@ -326,7 +338,9 @@ The phone can then be put away again.
 
 ## 32. The only copy of the submissions on this machine: a backup, your decision
 
-**Opened 2026-09-25. Entry 215 section 4. Optional; nothing waits on it.** Once request 31 has run, the server no longer holds any
+**Answered 2026-09-27 (entry 235): "The archive is enough."** No second copy of `C:\Dev\grouplab-submissions` is set up.
+
+What this request asked, kept for the record. **Opened 2026-09-25. Entry 215 section 4.** Once request 31 has run, the server no longer holds any
 submission. What remains is `C:\Dev\grouplab-submissions` on this machine and the private archive on GitHub. The folder here is
 outside the repository and, as far as anyone here knows, outside any sync.
 
@@ -619,20 +633,24 @@ own block there, with a longer timeout because a phone photograph on a slow line
 
 **Opened 2026-09-24. Entry 158 program B. Nothing waits on it but the article it would make.**
 
-**What is needed.** One afternoon's shooting, set out in full in `docs/RESEARCH.md`, "Program B". In short: one printed batch of GroupLab
-25-bull Letter sheets, one backing stapled the same way, 50 yards, **two sheets of one shot to a bull for each cartridge**, and every sheet
-scanned at 600 dpi on the same flatbed. The cartridges: subsonic .22 LR, .300 Blackout subsonic, 8.6 Blackout subsonic, .510 Whisper,
-high velocity .22 LR, 6 ARC, 6.5 Creedmoor, and .300 Blackout supersonic. Shoot the sheets in a mixed order rather than one cartridge
-after another. Any subset helps; the four subsonic ones and the two .300 Blackouts are the heart of it.
+**Rewritten 2026-09-27 (entry 235):** the smallest useful set first, and a page to print.
+
+**What is needed, and it is enough on its own: eight sheets.** Two sheets each of **.22 LR subsonic, .22 LR high velocity, .300 Blackout
+subsonic, and 6.5 Creedmoor (or 6 ARC)**, one shot to a bull, 50 yards, all on GroupLab's 25 bull Letter load sheet printed in one batch,
+one backing, stapled the same way, shot in the alternating order the plan gives, and each scanned at 600 dpi on your Brother flatbed.
+**Print `docs/RANGE-PLAN-HOLE-SIZE.pdf`** (one page: the sheets to print, the order to shoot, what to write on each load block) and take it.
+
+**Only if there is time:** two sheets each of 8.6 Blackout subsonic, .510 Whisper, and whichever of 6 ARC and 6.5 Creedmoor you did not
+shoot. **.300 Blackout supersonic is not needed**, since you would have to load it; the article will say what it would have added.
 
 **Why.** A .22 LR hole measures 0.765 of the bullet where centerfire holes measure 0.92 to 0.95, and the one rimfire sheet cannot say
 whether that is speed, nose shape, lead against a jacket, or width. This set separates speed from width.
 
-**One more thing, whenever you shoot any commercial gridded sheet** (entry 187 section 7): before it goes in the bin, scan it flat at
-600 dpi and note the distance, the cartridge, and which mark each group was aimed at. The ST-4 of 2026-09-20 is gone, and the
-research on reading a sheet GroupLab did not print needs another one.
+**Commercial gridded sheets** are larger than the flatbed, so they are not scanned (entry 235). When you shoot one, photograph it square
+on in even light, with a ruler laid on it if it has no printed scale, and note the distance, the cartridge and which mark each group was
+aimed at; GroupLab measures it with the four-point method and a scale at each bull.
 
-**A good answer.** "The scans are in <folder>", with which sheet is which cartridge.
+**A good answer.** "The scans are in <folder>"; the sheet numbers in the serial boxes say which is which.
 
 ---
 
