@@ -117,6 +117,14 @@ public sealed class SettingsView : UserControl
             {
                 column.Children.Add(Screens.Line("• " + line));
             }
+
+            // Entry 227 section 2: when the benchmark last ran and what it found, and a button to run it now, with its progress.
+            column.Children.Add(Screens.Heading("The benchmark"));
+            var benchmark = new BenchmarkPanel(settings, PhoneAnalysis.BenchmarkWork, FirstRunView.SendSurvey, SharingWords.BenchmarkButton, later: null);
+            benchmark.Say(settings.LoadBenchmark() is { } last
+                ? SharingWords.BenchmarkLast(settings.LoadBenchmarkRanAt(), last.Result, last.Sent)
+                : SharingWords.BenchmarkNever);
+            column.Children.Add(benchmark);
         }
 
         column.Children.Add(Screens.Heading("About"));

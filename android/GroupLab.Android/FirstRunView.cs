@@ -23,6 +23,9 @@ public sealed class FirstRunView : UserControl
 
     private static bool ErrorsDue(AppSettingsStore settings) => Shell.ErrorsOpen && settings.LoadErrorChoice() == ErrorReportChoice.Unset;
 
+    /// <summary>Sends the survey report when one is due, after a benchmark the person ran.</summary>
+    internal static Task SendSurvey() => App.Survey?.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None) ?? Task.CompletedTask;
+
     public FirstRunView(AppSettingsStore settings, Action done)
     {
         var column = new StackPanel { Spacing = 24 };
@@ -119,11 +122,41 @@ public sealed class FirstRunView : UserControl
                 }
 
                 DiagnosticLog.Info("survey.first-run", ("choice", choice.ToString()));
-                survey.IsVisible = false;
-                Answered();
+                if (choice != SurveyChoice.Yes)
+                {
+                    survey.IsVisible = false;
+                    Answered();
+                    return;
+                }
+
+                // Entry 227 section 2: Yes asks about the benchmark, as on the desktop, rather than closing.
+                survey.Children.Clear();
+                survey.Children.Add(Screens.Heading(SharingWords.BenchmarkNowQuestion));
+                survey.Children.Add(Screens.Line(SharingWords.BenchmarkNowExplained));
+                var benchmark = new BenchmarkPanel(settings, PhoneAnalysis.BenchmarkWork, SendSurvey, SharingWords.BenchmarkRunNow, () =>
+                {
+                    survey.IsVisible = false;
+                    Answered();
+                });
+                bool doneOffered = false;
+                benchmark.Ended += () =>
+                {
+                    if (!doneOffered)
+                    {
+                        doneOffered = true;
+                        survey.Children.Add(Screens.Choice("Done", () =>
+                        {
+                            survey.IsVisible = false;
+                            Answered();
+                        }));
+                    }
+                };
+                survey.Children.Add(benchmark);
+                survey.Children.Add(Screens.Line(SharingWords.SurveyLater));
             }));
         }
 
+        survey.Children.Insert(survey.Children.Count - SharingWords.SurveyChoices.Count, Screens.Line(SharingWords.BenchmarkOffer));
         survey.Children.Add(Screens.Line(SharingWords.SurveyLater));
         Content = Screens.Page(column);
     }

@@ -59,6 +59,30 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 227: the survey offers the benchmark, and CEP 99 with a percent of one's own
+
+**1.** Done with entry 226: the grid spans plus or minus 1.0 mil at 100 yd with 0.25 mil squares, bold half mils and heaviest whole mils,
+labels and lines sized as question 59 records, the scale and a ruler printed.
+
+**2. The benchmark.** Answered in request 40, from the code and Alan's own log: in nightly 110 Yes only switched the survey on; the
+benchmark was a button under the question, which closed with it, and his log of 2026-09-27 05:18 UTC shows the Yes and a first report
+with no benchmark in it. Now the question says before it is answered that Yes does not run the benchmark; Yes asks "Run the benchmark
+now?" with Run it now and Later instead of closing; a run shows the stage it has reached, a bar and the seconds so far, can be canceled
+(keeping nothing), and ends saying what it found and when it finished. Settings, under Sharing, says when it last ran and what it found,
+or that it has not run, with Run the benchmark now. `BenchmarkPanel` is one control the desktop and the phone both use; the phone had no
+benchmark at all and now has the same first run question and Settings section. `Benchmark.Run` reports each stage as it ends;
+`SaveBenchmark` keeps when it ran. Tests: `Entry227Tests` (Later closes with nothing run, Run it now shows its progress then its result
+and time, cancel keeps nothing, Settings says the last run), `Entry208Tests` moved to the Settings panel.
+
+**3. CEP 99 and a percent of one's own.** CEP 99 is a toggle beside CEP 50, 90 and 95, drawn in the same green in dashes and dots, keyed
+and explained on hover, listed with the figures with its 95 percent range; under Advanced, "A circle for any percent" takes 1 to 99.9,
+draws it in long dashes, lists it, and is remembered; both go to the report and the Compare screen. Both come from the same sigma and
+model as the other CEPs (`GroupAnalysis.Cep`), and where n(1 - p) is under one shot, the figure says the circle is the model's tail
+rather than something the shots show, and how many shots would put one outside it (`CepTailNote`). `Cep99Tests` checks CEP 99, 97.5, 50
+and 99.9 against 40,000 circular normal shots (within 2 percent, and the share inside within half a percent), the range against sigma's,
+and the note; `Entry227CepTests` the screen. The glossary's CEP covers 99, and the CEP article gains "CEP 99 from a few shots": from 10
+shots its range runs 0.76 to 1.48 times the value, and 100 shots are needed to see even one outside it.
+
 ## Entry 226: the zeroing grids redrawn, the suppressor test, the aim point results, a target generator and large sheets
 
 **1. The zeroing grids.** Alan's printout measured right (entry 230: 0.36, 1.80 and 5.76 in), so the design was the fault: 1.6 mil across,

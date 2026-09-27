@@ -2056,6 +2056,26 @@
   "Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.": {
    "kind": "code",
    "where": "src/GroupLab.App/PrintPanel.cs Generate and src/GroupLab.Cli/Library/TargetGenerator.cs (entry 226 section 4)"
+  },
+  "Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
+  },
+  "Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
+  },
+  "CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
+  },
+  "Under Advanced, A circle for any percent takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
+  },
+  "Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)"
   }
  },
  "rules": [

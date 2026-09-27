@@ -98,6 +98,11 @@ internal sealed class CompositePlot : Control
 
     private static readonly IDashStyle Cep95Dash = new DashStyle([6, 3], 0);
 
+    /// <summary>Entry 227 section 3: CEP 99 dash and dot, and a percent of one's own in long dashes, the same green.</summary>
+    private static readonly IDashStyle Cep99Dash = new DashStyle([6, 2, 1, 2], 0);
+
+    private static readonly IDashStyle CustomDash = new DashStyle([12, 4], 0);
+
     public IReadOnlyList<PlotDisc> Discs { get; set; } = [];
 
     public IReadOnlyList<PlotShot> Shots { get; set; } = [];
@@ -117,6 +122,28 @@ internal sealed class CompositePlot : Control
     public double? Cep90Inches { get; set; }
 
     public double? Cep95Inches { get; set; }
+
+    public double? Cep99Inches { get; set; }
+
+    /// <summary>The circle for <see cref="PlotMarks.CustomPercent"/>, when one is set.</summary>
+    public double? CustomCepInches { get; set; }
+
+    /// <summary>
+    /// Every CEP circle the plot can draw, in one list the drawing, the key and the hover all read: its radius, percent, stroke, how the key
+    /// names the stroke, whether its toggle is on, and how often a shot lands inside it.
+    /// </summary>
+    private IEnumerable<(double? Radius, string Percent, IDashStyle? Dash, string Look, bool On, string Often)> Circles()
+    {
+        yield return (Cep50Inches, "50", Cep50Dash, "dotted", Shown.Cep50, "half the time");
+        yield return (Cep90Inches, "90", null, "solid", Shown.Cep90, "nine times in ten");
+        yield return (Cep95Inches, "95", Cep95Dash, "dashed", Shown.Cep95, "19 times in 20");
+        yield return (Cep99Inches, "99", Cep99Dash, "dash and dot", Shown.Cep99, "99 times in 100");
+        if (Shown.CustomPercent is { } p)
+        {
+            string percent = p.ToString("0.#", System.Globalization.CultureInfo.CurrentCulture);
+            yield return (CustomCepInches, percent, CustomDash, "long dashed", true, $"{percent} times in 100");
+        }
+    }
 
     /// <summary>Entry 204 section 1.4: which of the optional marks are drawn, from the toggles beside the plot; the key lists only these.</summary>
     public PlotMarks Shown { get; set; } = PlotMarks.Default;
@@ -207,10 +234,12 @@ internal sealed class CompositePlot : Control
             Cep50Inches = rayleigh.Cep(0.5).Value;
             Cep90Inches = rayleigh.Cep(0.9).Value;
             Cep95Inches = rayleigh.Cep(0.95).Value;
+            Cep99Inches = rayleigh.Cep(0.99).Value;
+            CustomCepInches = Shown.CustomPercent is { } p ? rayleigh.Cep(p / 100).Value : null;
         }
         else
         {
-            Cep50Inches = Cep90Inches = Cep95Inches = null;
+            Cep50Inches = Cep90Inches = Cep95Inches = Cep99Inches = CustomCepInches = null;
         }
 
         SpreadPair = kept.Count >= 2 && GroupGeometry.MaximumPairDistance([.. kept.Select(p => p.Offset)]) is var (_, first, second)
@@ -364,9 +393,9 @@ internal sealed class CompositePlot : Control
                 return $"Group center: the mean of the {Shots.Count(s => !s.Excluded)} shots not excluded, {Length(Math.Abs(centre.X))} {(centre.X >= 0 ? "right" : "left")} and {Length(Math.Abs(centre.Y))} {(centre.Y > 0 ? "low" : "high")} of the aim point.";
             }
 
-            foreach (var (radius, percent, often) in new[] { (Shown.Cep50 ? Cep50Inches : null, 50, "half the time"), (Shown.Cep90 ? Cep90Inches : null, 90, "nine times in ten"), (Shown.Cep95 ? Cep95Inches : null, 95, "19 times in 20") })
+            foreach (var (radius, percent, _, _, on, often) in Circles())
             {
-                if (radius is { } r && Math.Abs(fromCentre - (r * scale)) <= StrokeReach)
+                if (on && radius is { } r && Math.Abs(fromCentre - (r * scale)) <= StrokeReach)
                 {
                     return $"CEP {percent}, {Length(r)} in radius about the group center: a shot from this rifle would land inside it {often}, reckoned from sigma under the circular normal model.";
                 }
@@ -422,7 +451,7 @@ internal sealed class CompositePlot : Control
             {
                 var c = ToScreen(centre);
                 var green = new SolidColorBrush(inks.Group);
-                foreach (var (radius, dash, on) in new[] { (Cep50Inches, Cep50Dash, Shown.Cep50), (Cep90Inches, (IDashStyle?)null, Shown.Cep90), (Cep95Inches, Cep95Dash, Shown.Cep95) })
+                foreach (var (radius, _, dash, _, on, _) in Circles())
                 {
                     if (on && radius is { } r)
                     {
@@ -532,7 +561,7 @@ internal sealed class CompositePlot : Control
             entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}, the red dashed line", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), SpreadStroke, Marks.Dashed)));
         }
 
-        foreach (var (radius, percent, dash, look, on) in new[] { (Cep50Inches, 50, Cep50Dash, "dotted", Shown.Cep50), (Cep90Inches, 90, (IDashStyle?)null, "solid", Shown.Cep90), (Cep95Inches, 95, Cep95Dash, "dashed", Shown.Cep95) })
+        foreach (var (radius, percent, dash, look, on, _) in Circles())
         {
             if (on && radius is not null && Centre is not null)
             {

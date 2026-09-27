@@ -173,7 +173,9 @@ public sealed partial class MainWindow
             plot.Shown,
             plot.SpreadPair is { } pair && plot.Shots.FirstOrDefault(s => s.Id == pair.First) is { } a && plot.Shots.FirstOrDefault(s => s.Id == pair.Second) is { } b
                 ? (a.Offset, b.Offset)
-                : null);
+                : null,
+            plot.Cep99Inches,
+            plot.CustomCepInches);
         return new SessionReport(sheet, particulars, reportPlot, summary, figures, zeroCard, cards, headings, rows, exclusions, unmade, registration, why, identity);
     }
 
@@ -263,7 +265,8 @@ public sealed partial class MainWindow
     {
         var parts = new List<string> { "Every scoring shot on one bull, each from its own bull's center, framed to show the whole target whatever the screen's framing; hollow shots are excluded, drawn and not counted.",
             "Green lines: the center of the counted shots. Blue lines: the aim point." };
-        var circles = new[] { (shown.Cep50, "CEP 50 dotted"), (shown.Cep90, "CEP 90 solid"), (shown.Cep95, "CEP 95 dashed") }.Where(c => c.Item1).Select(c => c.Item2).ToList();
+        var circles = new[] { (shown.Cep50, "CEP 50 dotted"), (shown.Cep90, "CEP 90 solid"), (shown.Cep95, "CEP 95 dashed"), (shown.Cep99, "CEP 99 in short dashes"),
+            (shown.CustomPercent is not null, $"CEP {shown.CustomPercent?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)} in long dashes") }.Where(c => c.Item1).Select(c => c.Item2).ToList();
         parts.Add(circles.Count == 0 ? "No CEP circle is drawn, as on screen." : $"Green circles: {string.Join(", ", circles)}.");
         if (spread)
         {

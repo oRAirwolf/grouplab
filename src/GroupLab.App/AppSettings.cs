@@ -93,7 +93,8 @@ public sealed class AppSettingsStore(string path)
 
     /// <summary>Entry 204 section 1.4: the composite plot's toggles, remembered; <see cref="PlotMarks.Default"/> until one is changed.</summary>
     public PlotMarks LoadPlotMarks() => Read(file => file["plotMarks"] is JsonObject o
-        ? new PlotMarks((bool?)o["cep50"] ?? true, (bool?)o["cep90"] ?? true, (bool?)o["cep95"] ?? false, (bool?)o["spread"] ?? true)
+        ? new PlotMarks((bool?)o["cep50"] ?? true, (bool?)o["cep90"] ?? true, (bool?)o["cep95"] ?? false, (bool?)o["spread"] ?? true,
+            (bool?)o["cep99"] ?? false, (double?)o["cepPercent"] is { } p and >= PlotMarks.LeastPercent and <= PlotMarks.MostPercent ? p : null)
         : null) ?? PlotMarks.Default;
 
     /// <summary>Entry 210 section 2.1: whether the composite plot shows the whole target rather than the group; the group until chosen.</summary>
@@ -107,6 +108,8 @@ public sealed class AppSettingsStore(string path)
         ["cep90"] = shown.Cep90,
         ["cep95"] = shown.Cep95,
         ["spread"] = shown.Spread,
+        ["cep99"] = shown.Cep99,
+        ["cepPercent"] = shown.CustomPercent,
     });
 
     /// <summary>The remembered theme, NOTES-FROM-PLANNING.md entry 42 section 2: dark, light, or following the system, which is the default.</summary>
@@ -380,8 +383,13 @@ public sealed class AppSettingsStore(string path)
         return (result, (bool?)b["sent"] ?? false);
     });
 
-    public bool SaveBenchmark(GroupLab.Core.Survey.BenchmarkResult result, bool sent) => Save(file => Survey(file)["benchmark"] = new JsonObject
+    /// <summary>
+    /// Keeps the benchmark's result. <paramref name="ranAt"/> is when it ran, entry 227 section 2, for Settings to say; marking a kept result
+    /// sent passes none and keeps the time it already has.
+    /// </summary>
+    public bool SaveBenchmark(GroupLab.Core.Survey.BenchmarkResult result, bool sent, DateTimeOffset? ranAt = null) => Save(file => Survey(file)["benchmark"] = new JsonObject
     {
+        ["ranAt"] = ranAt?.ToString("o", CultureInfo.InvariantCulture) ?? (string?)(Survey(file)["benchmark"] as JsonObject)?["ranAt"],
         ["workload"] = result.Workload,
         ["width"] = result.Width,
         ["height"] = result.Height,
@@ -392,6 +400,11 @@ public sealed class AppSettingsStore(string path)
         ["holesFound"] = result.HolesFound,
         ["sent"] = sent,
     });
+
+    /// <summary>When the kept benchmark ran, or null when none has or it was kept before entry 227 recorded the time.</summary>
+    public DateTimeOffset? LoadBenchmarkRanAt() => Read(file =>
+        (string?)(file["survey"]?["benchmark"] as JsonObject)?["ranAt"] is { } at
+            && DateTimeOffset.TryParse(at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var when) ? when : (DateTimeOffset?)null);
 
     private static JsonObject Survey(JsonObject file)
     {

@@ -41,6 +41,14 @@ internal static class PhoneAnalysis
     /// <summary>The session records, the desktop's database.</summary>
     internal static SessionStore Store() => SessionStore.Open(System.IO.Path.Combine(Files, "sessions.db"));
 
+    /// <summary>Entry 227 section 2: the benchmark's work on the phone, the same sheet and detector as the desktop's.</summary>
+    internal static (TargetDefinition? Definition, GroupLab.Core.Imaging.IImagingBackend Backend) BenchmarkWork()
+    {
+        Library();
+        string file = System.IO.Path.Combine(Files, "targets", GroupLab.Core.Survey.Benchmark.SheetFile);
+        return (File.Exists(file) ? GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(file).Definition : null, new GroupLab.Cli.Imaging.OpenCvSharpBackend());
+    }
+
     /// <summary>The built-in sheets, copied once out of the application's assets, where a sheet's codes are matched.</summary>
     internal static IReadOnlyList<TargetDefinition> Library()
     {

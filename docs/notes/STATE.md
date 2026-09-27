@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 226.
+**Last rewritten:** 2026-09-27, after entry 227.
 
 ---
 
 ## In flight
 
-- Done: everything through entry 226, apart from what its status line names (the website generator, pooling a generated set, cut lines
-  for the six single large sheets). This run: 226 to 230 in order; 227 to 230 are next.
+- Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
+  lines for the six single large sheets). This run: 226 to 230 in order; 228 to 230 are next.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -33,14 +33,14 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Next
 
-- **Entry 227**: the survey window never offered the benchmark (answered in request 40; the flow is to fix), and CEP 99 with a custom
-  percent. Then **228** (several bulls and a scale at each on other people's targets, Unholy's), **229** (duplicate identifiers,
+- **The benchmark is offered after Yes** and runs with progress and a Cancel, on the desktop and the phone (entry 227); **CEP 99** and a
+  percent of one's own are on the analysis screen. Next **228** (several bulls and a scale at each on other people's targets, Unholy's), **229** (duplicate identifiers,
   the whole-sheet wrong-bull assignment on the 6.5 sheet, spelling) and **230** (the Oracle backup recorded, sudo widened).
 - **Backups (entries 222, 224, 225, 230)**: nightly to `grouplab-backups` with a weekly restore test; the first Oracle boot volume backup
   exists (2026-09-26 09:01 UTC, incremental); request 39 asks Alan to look for the first Full one after 2026-09-27 09:00 UTC.
 - **The Microsoft Store**: MSIX built in CI; tagged releases go to the Store by themselves once request 38 is done.
 
-## The roadmap (entry 219)
+## The roadmap (entry 219), in place of the next three
 
 - A1, A3, A4, A5 built; A2 the capture screen's measurement is request 33; **A6 built**, the Play step is request 36; A7 the older phones.
 - D1 the survey: built and open. D2 question 51 when request 9 arrives. D4 done (`docs/RELEASE-PLAN.md`, request 37).

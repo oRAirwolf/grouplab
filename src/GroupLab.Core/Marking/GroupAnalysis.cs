@@ -67,6 +67,7 @@ public sealed record GroupFigures(
     ReportedEstimate? Cep50 = null,
     ReportedEstimate? Cep90 = null,
     ReportedEstimate? Cep95 = null,
+    ReportedEstimate? Cep99 = null,
     double? Width = null,
     double? Height = null,
     double? SdX = null,
@@ -127,6 +128,32 @@ public static class GroupAnalysis
     /// docs/QUESTIONS-FOR-PLANNING.md.
     /// </summary>
     public const int MinimumShotsForDispersion = 5;
+
+    /// <summary>
+    /// Entry 227 section 3: a CEP for any share of shots, from the same sigma and the same circular normal model as CEP 50, 90 and 95, with
+    /// its interval; null below the shots dispersion needs or outside 0 to 100 percent.
+    /// </summary>
+    public static Estimate? Cep(IReadOnlyList<PointD> offsets, double percent)
+    {
+        ArgumentNullException.ThrowIfNull(offsets);
+        return offsets.Count >= MinimumShotsForDispersion && percent > 0 && percent < 100
+            ? GroupStatistics.Rayleigh(offsets).Cep(percent / 100)
+            : null;
+    }
+
+    /// <summary>
+    /// Entry 227 section 3.3: what to say when a CEP reaches further into the tail than the shots can show. With n shots, n(1 - p) of them
+    /// are expected outside the circle; below one, the circle is the model's extrapolation and not something the shots saw, and its
+    /// interval, from sigma alone, assumes the group really is round and normal out there. Null when the shots reach it.
+    /// </summary>
+    public static string? CepTailNote(int shots, double percent)
+    {
+        double outside = shots * (1 - (percent / 100));
+        return outside >= 1
+            ? null
+            : string.Create(CultureInfo.InvariantCulture,
+                $"With {shots} shots, fewer than one would land outside a {percent:0.#} percent circle, so it is drawn from the model's tail rather than seen in these shots; its range assumes the group is round and normal that far out. About {Math.Ceiling(Math.Round(100 / (100 - percent), 6)):0} shots would put one outside it.");
+    }
 
     /// <summary>
     /// Below this many shots the screen also states how far the true group size can lie from the measured one, section 9.1's range:
@@ -452,6 +479,7 @@ public static class GroupAnalysis
             Cep50: Reported(rayleigh.Cep(0.5), rayleighCoverage, RayleighBasis, null),
             Cep90: Reported(rayleigh.Cep(0.9), rayleighCoverage, RayleighBasis, null),
             Cep95: Reported(rayleigh.Cep(0.95), rayleighCoverage, RayleighBasis, null),
+            Cep99: Reported(rayleigh.Cep(0.99), rayleighCoverage, RayleighBasis, null),
             Width: width,
             Height: height,
             SdX: Math.Sqrt(xx),

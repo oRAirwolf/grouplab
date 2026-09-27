@@ -217,6 +217,8 @@ public sealed partial class MainWindow
                 Cep50Inches = group.Rayleigh.Cep(0.5).Value,
                 Cep90Inches = group.Rayleigh.Cep(0.9).Value,
                 Cep95Inches = group.Rayleigh.Cep(0.95).Value,
+                Cep99Inches = group.Rayleigh.Cep(0.99).Value,
+                CustomCepInches = settingsStore.LoadPlotMarks().CustomPercent is { } percent ? group.Rayleigh.Cep(percent / 100).Value : null,
                 Shown = settingsStore.LoadPlotMarks(),
                 WholeTarget = settingsStore.LoadPlotWholeTarget(),
                 Length = inches => units.Length(inches),
@@ -341,7 +343,8 @@ public sealed partial class MainWindow
     /// </summary>
     internal static string CompareKey(PlotMarks shown)
     {
-        var circles = new[] { (shown.Cep50, "the dotted circle CEP 50"), (shown.Cep90, "the solid circle CEP 90"), (shown.Cep95, "the dashed circle CEP 95") }
+        var circles = new[] { (shown.Cep50, "the dotted circle CEP 50"), (shown.Cep90, "the solid circle CEP 90"), (shown.Cep95, "the dashed circle CEP 95"), (shown.Cep99, "the dash and dot circle CEP 99"),
+            (shown.CustomPercent is not null, $"the long dashed circle CEP {shown.CustomPercent?.ToString("0.#", CultureInfo.InvariantCulture)}") }
             .Where(c => c.Item1).Select(c => c.Item2).ToList();
         string cep = circles.Count == 0 ? "" : $"; in green, {string.Join(", ", circles)}";
         return $"Each plot: the dots are the shots about their own bulls, excluded ones left out; the green lines cross at the group's center and the blue lines at the aim point{cep}.";

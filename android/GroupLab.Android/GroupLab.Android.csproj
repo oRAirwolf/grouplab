@@ -39,6 +39,7 @@
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
+    <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />
     <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />

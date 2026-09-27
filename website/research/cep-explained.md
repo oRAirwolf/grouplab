@@ -66,6 +66,16 @@ For moderate stretching the round formula holds up surprisingly well. By a ratio
 
 The shotGroups package, which GroupLab validates against, offers eleven ways to estimate CEP for oval groups. On one reference 20-shot group they disagree by about 15 percent. That spread is worth knowing: for a stretched group, "the CEP" is not one well-defined number.
 
+## CEP 99 from a few shots
+
+GroupLab can draw CEP 99 as well, and a circle for any percent you type under Advanced. They come from the same sigma as the others: CEP 99 is 3.03 sigma, against 2.45 for CEP 95. So the number itself is no harder to compute. What it means is.
+
+**A circle that should hold 99 shots in 100 cannot be checked with 10.** With n shots, about n times one percent of them are expected outside CEP 99: a tenth of a shot from 10, a quarter of one from 25. None of your shots has been out there. The circle is where the circular normal model says the tail is, and real groups have heavier tails than the model: a flyer, a called shot, a cold bore. CEP 99 from a small group is the model's guess about the shots you have not fired.
+
+**Its range is only as wide as sigma's, and that is not the whole uncertainty.** GroupLab shows CEP 99 with the same 95 percent range as the others, taken from sigma: from 10 shots that range runs from 0.76 to 1.48 times the value, from 25 shots from 0.83 to 1.25, from 100 shots from 0.91 to 1.11. That range assumes the model holds out in the tail. When fewer than one shot would be expected outside the circle, GroupLab says so beside the number, and says about how many shots would put one there: 100 for CEP 99, 1000 for 99.9.
+
+**Use it for what it is.** CEP 99 is a fair way to ask "how big a target will this rifle almost never miss", provided you read it as the model's answer and give it the shots to be tested: a few sessions pooled, not one group of five.
+
 ## What GroupLab shows
 
 - CEP 50 as a dotted circle and CEP 90 as a dashed one on the group plot, centered on the group center, next to the mean radius. CEP 95 is in the figures beside them.

@@ -214,11 +214,12 @@ public class Entry208Tests
             store.SaveSurveyChoice(SurveyChoice.Yes);
             store.SaveSurveySent(DateTimeOffset.UtcNow);
             Outside.SurveyAnswer = _ => new PostAnswer(200, "{\"ok\":true}");
-            var outcome = new TextBlock();
-            opened.Window.RunBenchmark(outcome);
+            opened.Window.ShowSettings();
+            Settle();
+            opened.Window.SettingsBenchmark!.Start();
             await opened.Window.BenchmarkTask!;
             Settle();
-            Assert.StartsWith("The benchmark took ", outcome.Text, StringComparison.Ordinal);
+            Assert.StartsWith("The benchmark took ", opened.Window.SettingsBenchmark.StatusText, StringComparison.Ordinal);
             var sent = JsonNode.Parse(Outside.Surveys.Single().Report)!;
             Assert.Equal(Benchmark.Workload, (string?)sent["benchmark"]!["workload"]);
             Assert.Equal(true, store.LoadBenchmark()?.Sent);

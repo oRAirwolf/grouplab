@@ -226,6 +226,13 @@ public sealed partial class MainWindow : Window
 
     private readonly CheckBox cep95Box = new() { Content = "CEP 95", MinHeight = 44 };
 
+    /// <summary>Entry 227 section 3: CEP 99 beside the others, and a percent of one's own under Advanced.</summary>
+    private readonly CheckBox cep99Box = new() { Content = "CEP 99", MinHeight = 44 };
+
+    private readonly TextBox cepPercentBox = new() { Width = 90, PlaceholderText = "e.g. 97.5" };
+
+    private readonly TextBlock cepPercentSaid = new() { TextWrapping = TextWrapping.Wrap };
+
     private readonly CheckBox spreadBox = new() { Content = "Extreme spread", MinHeight = 44 };
 
     /// <summary>Entry 210 section 2.1: the plot's framing, the group or the whole target, remembered.</summary>
@@ -958,6 +965,14 @@ public sealed partial class MainWindow : Window
         figures.Children.Add(statistics);
         var advanced = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, Tokens.Space8, 0, 0) };
         advanced.Children.Add(advancedFigures);
+        advanced.Children.Add(Ruled("A circle for any percent"));
+        advanced.Children.Add(new WrapPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { new TextBlock { Text = "CEP", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0) }, cepPercentBox,
+                new TextBlock { Text = "percent, drawn in long dashes and remembered", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space8, 0, 0, 0) } },
+        });
+        advanced.Children.Add(cepPercentSaid);
         advanced.Children.Add(judgements);
         advanced.Children.Add(flags);
         advanced.Children.Add(sighterPanel);
@@ -981,7 +996,7 @@ public sealed partial class MainWindow : Window
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
         BuildFigureExtras(shotsColumn, figures);
         outlinesBox.MinHeight = 44;
-        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, spreadBox } };
+        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, cep99Box, spreadBox } };
         bool wholeChosen = settingsStore.LoadPlotWholeTarget();
         plot.WholeTarget = wholeChosen;
         (groupView.IsChecked, wholeView.IsChecked) = (!wholeChosen, wholeChosen);
@@ -997,16 +1012,24 @@ public sealed partial class MainWindow : Window
         };
         var shown = settingsStore.LoadPlotMarks();
         plot.Shown = shown;
-        (cep50Box.IsChecked, cep90Box.IsChecked, cep95Box.IsChecked, spreadBox.IsChecked) = (shown.Cep50, shown.Cep90, shown.Cep95, shown.Spread);
-        foreach (var box in new[] { cep50Box, cep90Box, cep95Box, spreadBox })
+        (cep50Box.IsChecked, cep90Box.IsChecked, cep95Box.IsChecked, cep99Box.IsChecked, spreadBox.IsChecked) = (shown.Cep50, shown.Cep90, shown.Cep95, shown.Cep99, shown.Spread);
+        cepPercentBox.Text = shown.CustomPercent?.ToString("0.#", CultureInfo.CurrentCulture) ?? "";
+        foreach (var box in new[] { cep50Box, cep90Box, cep95Box, cep99Box, spreadBox })
         {
             box.IsCheckedChanged += (_, _) =>
             {
-                plot.Shown = new PlotMarks(cep50Box.IsChecked == true, cep90Box.IsChecked == true, cep95Box.IsChecked == true, spreadBox.IsChecked == true);
+                plot.Shown = plot.Shown with { Cep50 = cep50Box.IsChecked == true, Cep90 = cep90Box.IsChecked == true, Cep95 = cep95Box.IsChecked == true, Cep99 = cep99Box.IsChecked == true, Spread = spreadBox.IsChecked == true };
                 settingsStore.SavePlotMarks(plot.Shown);
+                if (box == cep99Box)
+                {
+                    Refresh();
+                }
+
                 plot.InvalidateVisual();
             };
         }
+
+        cepPercentBox.TextChanged += (_, _) => SetCepPercent(cepPercentBox.Text);
         var plotArea = new Panel();
         plotArea.Children.Add(plot);
         plotArea.Children.Add(outlinesToggle);
@@ -2360,6 +2383,26 @@ public sealed partial class MainWindow : Window
                     var c90 = Sized(cep90.Value, distance);
                     statistics.Children.Add(Rowed(Kept("CEP 50", c50.Value, cepLines, beneath: c50.Beneath)));
                     statistics.Children.Add(Rowed(Kept("CEP 90", c90.Value, cepLines, beneath: c90.Beneath)));
+
+                    // Entry 227 section 3: CEP 99 in the numbers when its toggle is on, with its range and, where the shots cannot reach so
+                    // far into the tail, what that means.
+                    if (plot.Shown.Cep99 && all.Cep99 is { } cep99)
+                    {
+                        var c99 = Sized(cep99.Value, distance);
+                        statistics.Children.Add(Rowed(Kept("CEP 99", c99.Value, CepRange(cep99.Lower, cep99.Upper, all.Shots, 99), beneath: c99.Beneath)));
+                    }
+                }
+
+                if (plot.Shown.CustomPercent is { } percent)
+                {
+                    var sightersHere = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
+                    var countedHere = state.Shots.Where(sh => sh.IsShot && sh.Exclusion is null && !(sh.Bull is { } sb && sightersHere.Contains(sb))).ToList();
+                    if (GroupAnalysis.Cep(GroupAnalysis.CompositeOffsets(state, countedHere), percent) is { } own)
+                    {
+                        var sized = Sized(own.Value, distance);
+                        string label = "CEP " + percent.ToString("0.#", CultureInfo.CurrentCulture);
+                        advancedFigures.Children.Add(Rowed(Kept(label, sized.Value, CepRange(own.Lower, own.Upper, countedHere.Count, percent), beneath: sized.Beneath)));
+                    }
                 }
 
                 advancedFigures.Children.Add(Rowed(Figure("Sigma", all.Sigma!, reducedOrNull, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
@@ -3215,6 +3258,13 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The composite plot's four mark toggles, CEP 50, CEP 90, CEP 95 and the extreme spread, for the headless tests.</summary>
     internal IReadOnlyList<CheckBox> PlotToggles => [cep50Box, cep90Box, cep95Box, spreadBox];
+
+    /// <summary>Entry 227 section 3: the CEP 99 toggle and the figure rows, for the headless tests.</summary>
+    internal CheckBox Cep99Toggle => cep99Box;
+
+    internal IReadOnlyList<string> FigureNames => [.. Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(statistics).Concat(Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(advancedFigures)).OfType<TextBlock>().Select(b => b.Text ?? "")];
+
+    internal string CepPercentSaid => cepPercentSaid.Text ?? "";
 
     /// <summary>The plot's two framings, Group and Whole target, for the headless tests.</summary>
     internal (RadioButton Group, RadioButton Whole) PlotFraming => (groupView, wholeView);
@@ -4398,6 +4448,61 @@ public sealed partial class MainWindow : Window
     }
 
     private const string CepWhy = "from sigma under the circular normal model";
+
+    /// <summary>A CEP's details: its 95 percent range, how it is reckoned, and the tail note where the shots cannot reach it (entry 227).</summary>
+    private List<string> CepRange(double? lower, double? upper, int shots, double percent)
+    {
+        var lines = new List<string>();
+        if (lower is { } lo && upper is { } hi && double.IsFinite(lo) && double.IsFinite(hi))
+        {
+            lines.Add($"95 percent range {units.Length(lo)} to {units.Length(hi)}");
+        }
+
+        lines.Add(CepWhy);
+        if (GroupAnalysis.CepTailNote(shots, percent) is { } note)
+        {
+            lines.Add(note);
+        }
+
+        return lines;
+    }
+
+    /// <summary>
+    /// Entry 227 section 3.2: the Advanced box's percent, from 1 to 99.9, drawn and listed like the others and remembered; an empty box takes
+    /// the circle away, and anything else says what it wants.
+    /// </summary>
+    internal void SetCepPercent(string? text)
+    {
+        if (cepPercentBox.Text != text)
+        {
+            cepPercentBox.Text = text;
+            return;
+        }
+
+        double? percent = null;
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            if (!double.TryParse(text.Trim().TrimEnd('%'), NumberStyles.Float, CultureInfo.CurrentCulture, out double p) || p < PlotMarks.LeastPercent || p > PlotMarks.MostPercent)
+            {
+                cepPercentSaid.Text = "Type a percent from 1 to 99.9.";
+                return;
+            }
+
+            percent = Math.Round(p, 1);
+        }
+
+        cepPercentSaid.Text = percent is null ? "" : "It appears on the plot and in the figures above.";
+
+        // The box says what it says when it is first shown too; only a new percent redraws, or the refresh would clear a failure's words.
+        if (percent == plot.Shown.CustomPercent)
+        {
+            return;
+        }
+
+        plot.Shown = plot.Shown with { CustomPercent = percent };
+        settingsStore.SavePlotMarks(plot.Shown);
+        Refresh();
+    }
 
     private string? SizeValue(GroupFigures f) => f is { Width: { } width, Height: { } height } ? $"{units.Number(width)} \u00d7 {units.Length(height)}" : null;
 

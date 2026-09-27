@@ -24,6 +24,52 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 227: the zeroing grid expectation, the survey window skipping the benchmark, and CEP 99 with a custom percent
+
+**Status: done 2026-09-27.** Section 1 was done with entry 226, whose grid redesign it specified. Section 2's answer is request 40 (the benchmark did not run: Alan's log shows his Yes and a report with no benchmark in it); the flow is fixed on the desktop and the phone. Section 3 is done.
+
+## 1. The zeroing grid (adds to entry 226 section 1)
+
+Alan measured the printout: the print scale is correct. His words: "I was expecting a 1.0 x 1.0 mil grid and the 0.5 mil marks are so
+small that there was no way to make them out. I agree that the grid should be redrawn to be an easier size with thicker lines."
+
+So the redesign in entry 226 section 1 goes ahead, with these specifics:
+1. The mil grid spans at least plus or minus 1.0 mil at 100 yd (a full 1.0 by 1.0 mil square each side of center, or as much as the page
+   allows), with bold lines at every 0.5 mil and the whole mil lines boldest.
+2. Coarser fine lines (0.2 or 0.25 mil), or none, rather than 0.1 mil.
+3. Lines and labels sized by the visibility rule (at least 3 to 4 arcmin at the lowest magnification the sheet is meant for); the labels
+   large enough to read at 6x to 10x at 100 yd.
+4. The same treatment for the MOA grids (whole MOA boldest).
+5. The scale stated on the sheet and a printed ruler bar, as in entry 226.
+
+## 2. The hardware survey window did not offer the benchmark
+
+On nightly 110 the first-run window asked Alan to take part in the hardware survey. He clicked Yes, the window closed, and he was never
+offered the benchmark. He asks: "Did the benchmark run when I clicked yes?"
+
+1. Answer him in `docs/notes/for-alan.md` from the code: does Yes run the benchmark, when, in the background or not, and did it run on his
+   PC (check his local log or the survey receiver, without reading anything that identifies him beyond what the survey already sends).
+2. Whatever the answer, fix the experience so nobody has to wonder:
+   - If Yes includes the benchmark, the window says so before he clicks, and afterward the application shows that it is running (with
+     progress and the ability to cancel) and when it finished.
+   - If the benchmark is separate, the window offers it (Run now, Later) instead of closing.
+   - Either way, Settings gets a place to see whether the survey and benchmark are on, when the benchmark last ran, its results, and a
+     "Run the benchmark now" button.
+3. Check the same flow on Android.
+
+## 3. CEP 99, and a custom percent
+
+Alan: "add CEP 99 to the analyze page and also add a box that lets you specify the percent as an advanced option near the bottom or
+somewhere out of the way."
+
+1. Add CEP 99 as a toggle beside CEP 50, 90 and 95, in the same color family, drawn on the plot and listed in the numbers.
+2. Add an advanced option, out of the way (a collapsed "Advanced" section near the bottom of the Analyze page): a box for any percent, for
+   example 1 to 99.9, drawn and listed like the others, remembered between sessions.
+3. Be honest about small samples: a CEP 99 from 10 or 25 shots is an extrapolation into the tail. Use the same estimator as the other CEPs,
+   show its confidence interval (or a short note when the shot count is too small for the chosen percent), and add the glossary tooltip.
+   Update the CEP research article to explain why CEP 99 from few shots is uncertain.
+4. Tests for the new values against known distributions.
+
 ## 2026-09-27, entry 226: after Alan's range day: the zeroing grid's scale, three new scans with a suppressor question, the aim point results, a target generator, large format sheets, and the Oracle and Store items
 
 **Status: done 2026-09-27, apart from three parts.** Sections 1, 2, 3 and 5.2 and 5.3 are done, and 4.2, 4.4 and 6 (6.1 was overtaken by entry 230). **Not done:** 4.1's page on grouplab.org (what it would take is question 62 (b)); the pooling half of 4.3, since a set of separately scanned sheets is still analyzed one sheet at a time, though each sheet's codes carry its place in the set; and 5.1 for the six single large sheets, which cannot be cut without being redrawn as tiles (question 62 (a)); tiled targets print with cut lines. The redesign needed a format change, grid style 2, put to the planning session as question 59; the screenshot rule is question 60 and the ring set is question 61.

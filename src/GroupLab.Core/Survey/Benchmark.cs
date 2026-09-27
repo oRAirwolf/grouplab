@@ -48,12 +48,23 @@ public static class Benchmark
     }
 
     /// <summary>Runs the work once and times it. Only the analysis is timed; making the image is not part of what a person waits for.</summary>
-    public static BenchmarkResult Run(TargetDefinition definition, IImagingBackend backend, CancellationToken cancellation = default)
+    /// <remarks>
+    /// Entry 227 section 2: <paramref name="stageDone"/> is told the name of each stage as it finishes, so a screen can show the benchmark
+    /// moving rather than a window that might have hung.
+    /// </remarks>
+    public static BenchmarkResult Run(TargetDefinition definition, IImagingBackend backend, CancellationToken cancellation = default, Action<string>? stageDone = null)
     {
         ArgumentNullException.ThrowIfNull(backend);
+        cancellation.ThrowIfCancellationRequested();
         var (image, placed) = Sheet(definition);
+        cancellation.ThrowIfCancellationRequested();
         var metadata = new ImageMetadata("PNG", image.Width, image.Height, Dpi, Dpi, null, null, null, null, null);
         var trace = new TraceRecorder();
+        if (stageDone is not null)
+        {
+            trace.Filed += record => stageDone(record.Stage);
+        }
+
         var clock = Stopwatch.StartNew();
         var result = AutomaticMarking.Run(image, image, metadata, definition, backend, trace, cancellation);
         clock.Stop();

@@ -461,7 +461,7 @@
     ],
     [
      "Sharing",
-     "The three things GroupLab may send, in the first run screen's order and words: every target you analyze, with which consent, or ask each time, or never; error reports, sent by themselves, asked about each time, or never; and the hardware survey, a weekly report of what your machine is and how fast GroupLab ran, with the benchmark. Each says what it sends, and nothing goes unless you chose it."
+     "The three things GroupLab may send, in the first run screen's order and words: every target you analyze, with which consent, or ask each time, or never; error reports, sent by themselves, asked about each time, or never; and the hardware survey, a weekly report of what your machine is and how fast GroupLab ran, with the benchmark, which runs only when you start it, shows its progress and says when it last ran. Each says what it sends, and nothing goes unless you chose it."
     ],
     [
      "Detailed logging",

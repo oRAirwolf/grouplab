@@ -38,8 +38,39 @@ public sealed partial class MainWindow
 
     internal SurveyQueue Survey => surveyQueue ??= new SurveyQueue(settingsStore, Machine);
 
-    /// <summary>The benchmark in progress, for the headless tests to wait on.</summary>
-    internal Task? BenchmarkTask { get; private set; }
+    /// <summary>The benchmark in progress, wherever it was started, for the headless tests to wait on.</summary>
+    internal Task? BenchmarkTask => FirstRunBenchmark?.Running is { IsCompleted: false } first ? first : SettingsBenchmark?.Running;
+
+    /// <summary>Entry 227 section 2: the benchmark offered after Yes on the first run screen, and the one in Settings.</summary>
+    internal BenchmarkPanel? FirstRunBenchmark { get; private set; }
+
+    internal BenchmarkPanel? SettingsBenchmark { get; private set; }
+
+    private (GroupLab.Core.Gltd.Model.TargetDefinition? Definition, GroupLab.Core.Imaging.IImagingBackend Backend) BenchmarkWork()
+    {
+        string file = Path.Combine(AppContext.BaseDirectory, "targets", Benchmark.SheetFile);
+        var definition = File.Exists(file) ? GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(file).Definition : null;
+        return (definition, new OpenCvSharpBackend());
+    }
+
+    private BenchmarkPanel NewBenchmarkPanel(string runWords, Action? later)
+    {
+        var panel = new BenchmarkPanel(settingsStore, BenchmarkWork, () => SendSurveyIfDueAsync(), runWords, later);
+
+        // A run from the first run screen is what Settings then shows as the last run.
+        panel.Ended += () =>
+        {
+            if (SettingsBenchmark is { } settings && settings != panel && settings.Running is not { IsCompleted: false })
+            {
+                settings.Say(BenchmarkSaid());
+            }
+        };
+        return panel;
+    }
+
+    private string BenchmarkSaid() => settingsStore.LoadBenchmark() is { } last
+        ? SharingWords.BenchmarkLast(settingsStore.LoadBenchmarkRanAt(), last.Result, last.Sent)
+        : SharingWords.BenchmarkNever;
 
     /// <summary>This machine, with the screen the window is on.</summary>
     private GroupLab.Core.Survey.MachineFacts Machine()
@@ -77,19 +108,48 @@ public sealed partial class MainWindow
             part.Children.Add(Line("• " + line));
         }
 
-        var outcome = Line("");
+        // Entry 227 section 2: Yes does not close the question; it asks about the benchmark, Run it now or Later, and a run shows its
+        // progress and can be cancelled. The question closes on Later, or on its own once the run has ended and been read.
         void Choose(SurveyChoice choice)
         {
             ChooseSurvey(choice);
             DiagnosticLog.Info("survey.first-run", ("choice", choice.ToString()));
-            part.IsVisible = false;
-            answered();
+            if (choice != SurveyChoice.Yes)
+            {
+                part.IsVisible = false;
+                answered();
+                return;
+            }
+
+            part.Children.Clear();
+            part.Children.Add(new TextBlock { Text = SharingWords.BenchmarkNowQuestion, Classes = { AppStyles.Title } });
+            part.Children.Add(Line(SharingWords.BenchmarkNowExplained));
+            FirstRunBenchmark = NewBenchmarkPanel(SharingWords.BenchmarkRunNow, () =>
+            {
+                DiagnosticLog.Info("survey.benchmark.later");
+                toaster.Say(SharingWords.BenchmarkLaterSaid);
+                part.IsVisible = false;
+                answered();
+            });
+            bool doneOffered = false;
+            FirstRunBenchmark.Ended += () =>
+            {
+                if (!doneOffered)
+                {
+                    doneOffered = true;
+                    part.Children.Add(Row(Button("Done", () =>
+                    {
+                        part.IsVisible = false;
+                        answered();
+                    })));
+                }
+            };
+            part.Children.Add(FirstRunBenchmark);
+            part.Children.Add(Line(SharingWords.SurveyLater));
         }
 
-        part.Children.Add(Row([.. SharingWords.SurveyChoices.Select(c => (Control)Button(c.Words, () => Choose(c.Choice)))]));
         part.Children.Add(Line(SharingWords.BenchmarkOffer));
-        part.Children.Add(Row(Button(SharingWords.BenchmarkButton, () => RunBenchmark(outcome))));
-        part.Children.Add(outcome);
+        part.Children.Add(Row([.. SharingWords.SurveyChoices.Select(c => (Control)Button(c.Words, () => Choose(c.Choice)))]));
         part.Children.Add(Line(SharingWords.SurveyLater));
     }
 
@@ -133,16 +193,24 @@ public sealed partial class MainWindow
             surveySettings.Children.Add(Line("• " + line));
         }
 
-        var outcome = Line(settingsStore.LoadBenchmark() is { } last ? SharingWords.BenchmarkDone(last.Result, goes: false) : "");
+        // Entry 227 section 2: whether the survey is on is the choice above; the benchmark says when it last ran and what it found, and
+        // runs from here, with its progress and a Cancel.
+        surveySettings.Children.Add(FieldLabel("The benchmark"));
+        if (SettingsBenchmark?.Running is not { IsCompleted: false })
+        {
+            SettingsBenchmark = NewBenchmarkPanel(SharingWords.BenchmarkButton, later: null);
+            SettingsBenchmark.Say(BenchmarkSaid());
+        }
+
+        (SettingsBenchmark.Parent as Panel)?.Children.Remove(SettingsBenchmark);
+        surveySettings.Children.Add(SettingsBenchmark);
         surveySettings.Children.Add(Row(
-            Button(SharingWords.BenchmarkButton, () => RunBenchmark(outcome)),
             Button("Replace the installation number", () =>
             {
                 settingsStore.ReplaceInstallation();
                 DiagnosticLog.Info("survey.installation", ("replaced", true));
                 toaster.Say("This copy of GroupLab has a new installation number.");
             })));
-        surveySettings.Children.Add(outcome);
     }
 
     /// <summary>Saying no forgets every kept analysis; saying yes sends the first report when one is due.</summary>
@@ -159,40 +227,5 @@ public sealed partial class MainWindow
         }
 
         FillSurveySettings();
-    }
-
-    /// <summary>
-    /// Runs the benchmark away from the window's thread and says what it found. It goes with the next report only if the person has said
-    /// yes to the survey; otherwise it is only for them.
-    /// </summary>
-    internal void RunBenchmark(TextBlock outcome)
-    {
-        if (BenchmarkTask is { IsCompleted: false })
-        {
-            return;
-        }
-
-        string file = Path.Combine(AppContext.BaseDirectory, "targets", Benchmark.SheetFile);
-        if (!File.Exists(file) || GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(file).Definition is not { } definition)
-        {
-            outcome.Text = "The benchmark's target is missing from this installation.";
-            return;
-        }
-
-        outcome.Text = SharingWords.BenchmarkRunning;
-        BenchmarkTask = Run();
-
-        async Task Run()
-        {
-            var result = await Task.Run(() => Benchmark.Run(definition, new OpenCvSharpBackend()));
-            bool goes = settingsStore.LoadSurveyChoice() == SurveyChoice.Yes;
-            settingsStore.SaveBenchmark(result, sent: false);
-            DiagnosticLog.Info("survey.benchmark", ("ms", result.TotalMilliseconds), ("peak", result.PeakMegabytes), ("found", result.HolesFound));
-            outcome.Text = SharingWords.BenchmarkDone(result, goes);
-            if (goes)
-            {
-                await SendSurveyIfDueAsync();
-            }
-        }
     }
 }

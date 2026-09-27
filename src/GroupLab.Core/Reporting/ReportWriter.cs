@@ -184,9 +184,10 @@ public static class ReportWriter
         double calibre = plot.CalibreInches ?? 0.1;
         var shown = plot.Shown ?? PlotMarks.Default;
         double? cep50 = shown.Cep50 ? plot.Cep50Inches : null, cep90 = shown.Cep90 ? plot.Cep90Inches : null, cep95 = shown.Cep95 ? plot.Cep95Inches : null;
+        double? cep99 = shown.Cep99 ? plot.Cep99Inches : null, custom = shown.CustomPercent is not null ? plot.CustomCepInches : null;
         double extent = plot.Shots.Select(s => Math.Sqrt((s.OffsetInches.X * s.OffsetInches.X) + (s.OffsetInches.Y * s.OffsetInches.Y)) + (calibre / 2))
             .Concat(plot.Discs.Select(d => d.DiameterInches / 2))
-            .Concat([cep95 ?? 0, cep90 ?? 0, cep50 ?? 0, 0.25])
+            .Concat([cep99 ?? 0, custom ?? 0, cep95 ?? 0, cep90 ?? 0, cep50 ?? 0, 0.25])
             .Max() * 1.08;
         double k = half / extent;
         long X(double inches) => cx + (long)Math.Round(inches * k);
@@ -236,6 +237,17 @@ public static class ReportWriter
             if (cep95 is { } r95)
             {
                 Dashes(page, PlotGroup, gx, gy, R(r95), 60, 36);
+            }
+
+            // Entry 227 section 3: CEP 99 in short dashes close together, a percent of one's own in long dashes.
+            if (cep99 is { } r99)
+            {
+                Dashes(page, PlotGroup, gx, gy, R(r99), 24, 24);
+            }
+
+            if (custom is { } rc)
+            {
+                Dashes(page, PlotGroup, gx, gy, R(rc), 120, 40);
             }
         }
 

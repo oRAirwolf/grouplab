@@ -53,9 +53,40 @@ internal static class SharingWords
     /// <summary>The survey's choices, in the order they are offered.</summary>
     public static IReadOnlyList<(SurveyChoice Choice, string Words)> SurveyChoices { get; } = [(SurveyChoice.Yes, "Yes, take part"), (SurveyChoice.No, "No")];
 
-    public const string BenchmarkOffer = "The benchmark times one analysis of a built-in target, the same work on every machine. It never starts by itself: run it now, or later from Settings.";
+    /// <summary>
+    /// Entry 227 section 2: said before the person answers, so nobody wonders afterwards. Alan pressed Yes on nightly 110 and was never
+    /// offered the benchmark, because the offer sat under the question and went with it.
+    /// </summary>
+    public const string BenchmarkOffer = "Yes does not run the benchmark. The benchmark is a separate test that times one analysis of a built-in target, the same work on every machine; when you have answered, you can run it now or later from Settings. It never starts by itself.";
 
-    public const string BenchmarkButton = "Run the benchmark";
+    public const string BenchmarkButton = "Run the benchmark now";
+
+    public const string BenchmarkNowQuestion = "Run the benchmark now?";
+
+    public const string BenchmarkNowExplained = "It takes about a minute on most computers, and its times go with your next report. You can cancel it while it runs.";
+
+    public const string BenchmarkRunNow = "Run it now";
+
+    public const string BenchmarkLater = "Later";
+
+    public const string BenchmarkLaterSaid = "You can run it any time from Settings, under Sharing.";
+
+    public const string BenchmarkCancel = "Cancel";
+
+    public const string BenchmarkCancelled = "The benchmark was canceled. Nothing from it is kept or sent.";
+
+    public const string BenchmarkNever = "The benchmark has not run here yet. It runs only when you start it.";
+
+    public const string BenchmarkFailed = "The benchmark could not finish, and nothing from it is kept. The log says why.";
+
+    /// <summary>The benchmark moving: the stage it has reached, of about how many, and the seconds so far.</summary>
+    public static string BenchmarkProgress(int stagesDone, int stagesExpected, double seconds) => string.Create(CultureInfo.CurrentCulture,
+        $"Running the benchmark: stage {Math.Min(stagesDone + 1, stagesExpected)} of about {stagesExpected}, {seconds:0} seconds so far.");
+
+    /// <summary>What Settings says about the benchmark that last ran: when, and what it found.</summary>
+    public static string BenchmarkLast(DateTimeOffset? ranAt, BenchmarkResult result, bool sent) =>
+        (ranAt is { } at ? string.Create(CultureInfo.CurrentCulture, $"Last run {at.ToLocalTime():d MMMM yyyy, HH:mm}. ") : "Last run before GroupLab kept the time. ")
+        + BenchmarkDone(result, goes: false) + (sent ? " It went with a report." : "");
 
     public const string BenchmarkRunning = "Running the benchmark…";
 

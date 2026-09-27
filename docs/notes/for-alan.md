@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is only the Play Console step. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark; nothing to do.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark; nothing to do.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -115,21 +115,18 @@ identity check); "the Store first"; "an OV certificate"; or "not yet". Nothing i
 
 ---
 
-## 36. The Android app in the Play Console: its first internal testing release, about fifteen minutes
+## 36. The Play Store install on the Fold 7: one try, two minutes
 
-**Rewritten 2026-09-26 (entry 224).** Steps 1 and 2 are done: the upload key is set, and every nightly now carries the app signed with it.
-The first to do so is nightly 110. What is left is the Play Console, which only you can do. Your developer account exists (the fee is
-paid, docs/PLATFORM-SUPPORT.md).
+**Partly done, 2026-09-27 (entry 231).** You created the app in the Play Console and uploaded nightly 110 to internal testing; Play
+read it as version code 110, Android 10 and up, arm64 only. **All that is left:** install it from the Play Store on the Fold 7 and say
+whether it works.
 
-**The file to upload:** `grouplab-0.2.0-nightly.110-android-51a2058.aab`, from
-https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.110 (its version code is 110). A newer nightly's `.aab` works just as
-well; the rolling release at .../releases/tag/nightly always has the newest as `grouplab-android.aab`.
+On the Fold 7, signed in with an account on the testers list, open https://play.google.com/apps/internaltest/4701684356677501640, accept
+the invitation, then install GroupLab from the Play Store page it leads to. If the side-loaded copy is still on the phone, uninstall it
+first: Play will not replace a copy signed with a different key.
 
-In the Play Console: **Create app**, name `GroupLab`, default language English (United States), **App**, **Free**, accept the
-declarations. Then **Testing**, **Internal testing**, **Create new release**, and upload that `.aab`. Add yourself as a tester. When it
-asks for a privacy policy, use `https://grouplab.org/research/what-grouplab-sends/`.
-
-**A good result:** the internal testing release is available and the Play Store link on your phone installs GroupLab. Say how far you got.
+**A good answer:** "the Play Store install works" (it opens and shows its first screen), or what it said instead. Once it works, the
+next request is automatic Play uploads, set up the way the Microsoft Store's are; it waits until then.
 
 ---
 
