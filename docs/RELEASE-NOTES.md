@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.114
+
+**2026-09-27**, commit `08dca80`. Nightly.
+
+**What you will notice**
+
+- Three more sheets carry the C bull, a black diamond standing on a point with a white center and a small dot, and Design your own sheet and Made for your optic can now draw it too.
+- On Android, GroupLab no longer reports that it closed without shutting down when the phone simply closed it in the background, which Android does all the time; a close while you are using it is still reported. (Error report 6).
+- A sheet whose printed code happened to hold certain bytes could fail to identify itself when scanned; GroupLab now reads those codes correctly.
+- The three large format sheets now print as sets of four Letter or A4 sheets, with the same bulls and spacing, so a home printer can print them; a tabloid or A3 sheet you printed before still reads.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.114)
+
+---
+
 ## 0.2.0-nightly.113
 
 **2026-09-27**, commit `70419ed`. Nightly.
