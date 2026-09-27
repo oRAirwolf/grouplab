@@ -63,6 +63,17 @@ public static class ImageLoader
     private static void NotTooLarge(Mat mat, string path)
     {
         long pixels = (long)mat.Width * mat.Height;
+
+        // Entry 240 section 1.5: below the fixed cap, what this machine's memory holds, so a computer short of memory says so rather than
+        // running out part way through. On anything with 12 GB or more it is the cap.
+        long memory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+        double most = memory > 0 ? GroupLab.Core.Imaging.MemoryBudget.DesktopMostMegapixels(memory / (1024.0 * 1024), MostPixels / 1e6) : MostPixels / 1e6;
+        if (pixels > most * 1e6 && most * 1e6 < MostPixels)
+        {
+            throw new InvalidDataException(FormattableString.Invariant(
+                $"{path} is {mat.Width} by {mat.Height}, which is {pixels / 1_000_000} megapixels. This computer's memory holds images up to about {most:0} megapixels for GroupLab to read whole; a scan at a lower resolution will read."));
+        }
+
         if (pixels > MostPixels)
         {
             throw new InvalidDataException(FormattableString.Invariant(

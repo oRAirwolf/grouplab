@@ -2252,6 +2252,26 @@
   "It is now decoded by Android at a power of two fraction (`WorkingSize.SampleFor`), a 600 dpi Letter scan at a half, 8 megapixels from the start.": {
    "kind": "code",
    "where": "android/GroupLab.Android/PhoneAnalysis.cs Prepare; src/GroupLab.Core/Imaging/WorkingSize.cs SampleFor; WorkingSizeSampleTests (entry 239)"
+  },
+  "The memory budget, scaled to the device (entry 240) Entry 206's single number is replaced by a rule, `MemoryBudget.Phone`.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)"
+  },
+  "Measured on this machine at each working size: the published scan's shots moved about 0.0005 in between 8 and 24 megapixels, and on the three kitchen photographs of entry 233 the 8 and 12 megapixel readings agreed to 0.001 in, against a photo to scan difference of 0.015 to 0.027 in, with the odd extra mark going either way.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, Entry 240: the published scan at 4 to 24 megapixels and the three kitchen photographs at 8 and 12, 2026-09-27"
+  },
+  "So **every phone works at 8 megapixels** (`MemoryBudget.PhoneWorkingMegapixels`: the floor holds 9.8), and more memory never makes two phones' results differ.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)"
+  },
+  "**On the desktop**, which works at full size, memory only decides where it must stop: an image larger than half the computer's memory holds at the same costs is refused with that reason, below the fixed 400 megapixel cap (`MemoryBudget.DesktopMostMegapixels`); with 12 GB or more that is the cap itself.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)"
+  },
+  "How much time the phone's 50 s spends where waits on the devices (entry 239).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)"
   }
  },
  "rules": [

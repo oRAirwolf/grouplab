@@ -59,6 +59,25 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 240: a memory budget scaled to the device, and the benchmarks Alan ran
+
+**The rule** (`MemoryBudget`): a quarter of what the device says is available above its low memory threshold, never under 400 MB and
+never over a tenth of its memory; the floor when it says memory is low. Worked with 45 percent available: PH-1 400 MB, S20 819, Fold 7
+1,229, Tab S8 Ultra 1,638. Android reads it before each analysis and logs it with the memory classes (`memory.budget`).
+
+**Whether more memory buys anything, measured at each working size on this machine:**
+
+| Image | 4 MP | 8 MP | 12 MP | 16 MP | 24 MP |
+|---|---|---|---|---|---|
+| The published scan against its full 32 MP reading, median / worst, in | 0.0019 / 0.0114 | 0.0011 / 0.0040 | 0.0006 / 0.0060 | 0.0007 / 0.0028 | 0.0007 / 0.0027 |
+
+The three kitchen photographs of entry 233 at 8 and at their full 12 MP, against their scans: Dominus K 0.0162 and 0.0154 in median with
+two extra marks and none; Magnus S 0.0207 and 0.0211, one and one; the 6.5 sheet 0.0256 and 0.0266, none and one. Nothing that matters,
+and the extra marks go both ways, so every phone works at 8 megapixels and the budget holds a big phone's memory in reserve. The desktop
+keeps full size and now refuses, below the 400 megapixel cap, an image half its memory cannot hold, with that reason. **The benchmarks:**
+Alan's desktop, nightly 111, 1.789 s, 482 MB, 25 of 25, sent: the first desktop benchmark. The Tab S8 Ultra 4.6 s, 446 MB. The Fold 7 is
+request 44. Request 47 answers his four questions; the page waits for ten a group as written.
+
 ## Entry 239: a picked file decoded at the working size, as the design already said
 
 **It was the decode.** `PhoneAnalysis.Prepare` read a picked file whole with OpenCV, so the published 600 dpi scan existed at its full

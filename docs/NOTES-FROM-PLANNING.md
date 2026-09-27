@@ -24,6 +24,48 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 240: a memory budget scaled to the device, and the two benchmarks Alan ran
+
+**Status: done 2026-09-27, apart from two parts.** **Not done yet:** section 2.1, the aggregate's counts by platform, which need the server and are read in the closing server sitting; and the Fold 7's own benchmark line (request 44). Section 1.1's Android 17 per-app limit is not read: no API for it exists in the SDK this builds against, and the rule does not need it. Section 1.3 measured no gain above 8 megapixels, so every phone stays at 8, as the entry asks when that is the result.
+
+## 1. Alan's direction: scale the memory budget to the device
+
+Alan: "Perhaps the RAM limit should evaluate how much ram the device has and decide how much it is allowed to use instead of imposing a
+limit based on the lowest common denominator." Adopt it, and replace entry 206's single number with a rule:
+
+1. At start, read what the device actually allows: total and available memory and the low-memory threshold
+   (`ActivityManager.getMemoryInfo`), the memory class (`getMemoryClass`, `getLargeMemoryClass`), and on Android 17 and later the per-app
+   limit if the platform exposes it. Remember Android 17 counts native memory, which is where OpenCV's buffers live.
+2. Set the budget from that: a fixed share of what is available, with a floor that is today's 4 GB phone case (the 8 MP working size,
+   under about 400 MB) and a ceiling well below the point where Android would kill the app or push other apps out. Write the formula and
+   its numbers in `docs/ANDROID.md`, with the Fold 7 (12 GB), the Tab S8 Ultra (16 GB), the S20 (8 GB) and the PH-1 (4 GB) worked out.
+3. Use the extra memory only where it buys something measurable: `docs/ANDROID.md` section 5 shows that above 8 MP the shot positions
+   change by only a few thousandths of an inch. So first measure whether a larger working size on a large-memory device improves accuracy
+   or speed on the sample and the kitchen and angled photos (entries 233, 238). If it does, let the budget choose the working size; if it
+   does not, keep 8 MP everywhere and say so plainly. More memory must never make a result differ in a way that matters between two phones
+   given the same image.
+4. Before and after the budget rises, if the device reports low memory, fall back to the floor rather than fail.
+5. The same idea for the desktop: read the PC's memory and set the working size and parallelism from it, with the same rule that more memory
+   may only buy speed or measured accuracy.
+6. This does not replace entry 239: an unneeded full-size decode wastes memory on every device and should go regardless.
+
+## 2. The benchmarks
+
+Alan ran the benchmark on both the Fold 7 and the Tab S8 Ultra (nightly 111), and answered the tablet's first-run questions (it said they
+were already answered). Nothing else is needed from Alan on either device.
+
+He also asks whether the Windows application has run a benchmark on any PC yet, and whether the project has received any. Answer both in
+for-alan.md, within `docs/SURVEY.md`'s rules (the server keeps only the aggregate; individual reports are counted and deleted; groups under
+10 are merged; never an individual record published):
+1. How many survey reports and how many benchmark results the aggregate in `private/survey/public.json` holds, by platform, and since when.
+2. Whether the two Android benchmarks arrived (the count rose, and each device's own screen shows its result); read the results from the
+   devices over adb if they are shown there, not from the server.
+3. Whether any desktop benchmark has ever run: nightly 110 never ran one (request 40), so say whether anyone on 111 has.
+4. The results the three developer devices showed on their own screens, side by side with the spike's reference (7.9 s desktop, 17 s Fold 7),
+   as the first rough numbers for `docs/SURVEY.md`. Alan is running the benchmark on his desktop too (Settings, Sharing, Run the benchmark
+   now, on nightly 111 or later).
+5. Whether the aggregate page on grouplab.org should wait for 10 reports per group as written; say what it will show until then.
+
 ## 2026-09-27, entry 239: a picked file still costs about 555 MB on the phone and tablet
 
 **Status: done 2026-09-27 in the code, apart from the measurements on the devices.** **Not done yet:** the peak memory and time on the Fold 7 and the tablet before and after, where the 50 s goes on the phone, and a test that fails over 400 MB on Android. All three need the devices, which request 45 asks Alan to reconnect; the development build's log now says each preparation's size and sample and each analysis's time in logcat, which is how they will be read.

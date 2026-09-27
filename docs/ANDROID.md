@@ -399,3 +399,27 @@ path, no file name, no location. That is how a problem on a tester's phone from 
 **The Play copy is needed only to test the Play path itself:** once before the closed test begins, and whenever the release build changes
 in a way the development build would not show (signing, the store's app bundle, what Play strips or adds). Day to day, testing is on
 GroupLab Dev, installed over adb.
+
+## 14. The memory budget, scaled to the device (entry 240)
+
+Entry 206's single number is replaced by a rule, `MemoryBudget.Phone`. Before each analysis the application asks Android what it has
+(`ActivityManager.getMemoryInfo`: total, available, the low memory threshold and whether memory is low now) and takes **a quarter of what
+is available above the threshold**, never under the **floor of 400 MB** (today's 4 GB phone at 8 megapixels) and never over **a tenth of
+the device's memory**, well inside where Android would stop GroupLab or push other applications out; when the device says memory is low,
+the floor. The memory classes are logged beside it. Worked out with a typical 45 percent available:
+
+| Device | Memory | Available | Budget |
+|---|---|---|---|
+| Essential PH-1 | 4 GB | 1.8 GB | 400 MB, the floor |
+| Galaxy S20 | 8 GB | 3.6 GB | 819 MB, the ceiling |
+| Galaxy Z Fold 7 | 12 GB | 5.4 GB | 1,229 MB, the ceiling |
+| Galaxy Tab S8 Ultra | 16 GB | 7.2 GB | 1,638 MB, the ceiling |
+
+**The extra memory buys nothing, so it is not spent.** An analysis costs about 260 MB and 14.25 MB a megapixel (the Fold 7's 373 MB at 8
+and 715 at 32). Measured on this machine at each working size: the published scan's shots moved about 0.0005 in between 8 and 24
+megapixels, and on the three kitchen photographs of entry 233 the 8 and 12 megapixel readings agreed to 0.001 in, against a photo to scan
+difference of 0.015 to 0.027 in, with the odd extra mark going either way. So **every phone works at 8 megapixels**
+(`MemoryBudget.PhoneWorkingMegapixels`: the floor holds 9.8), and more memory never makes two phones' results differ. **On the desktop**,
+which works at full size, memory only decides where it must stop: an image larger than half the computer's memory holds at the same costs
+is refused with that reason, below the fixed 400 megapixel cap (`MemoryBudget.DesktopMostMegapixels`); with 12 GB or more that is the cap
+itself. How much time the phone's 50 s spends where waits on the devices (entry 239).

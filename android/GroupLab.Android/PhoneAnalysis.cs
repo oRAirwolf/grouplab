@@ -92,7 +92,8 @@ internal static class PhoneAnalysis
             return null;
         }
 
-        int sample = WorkingSize.SampleFor(bounds.OutWidth, bounds.OutHeight, WorkingSize.PhoneMegapixels);
+        double most = MemoryBudget.PhoneWorkingMegapixels(Budget());
+        int sample = WorkingSize.SampleFor(bounds.OutWidth, bounds.OutHeight, most);
         using var colour = new Mat();
         using (var bitmap = global::Android.Graphics.BitmapFactory.DecodeFile(photo, new global::Android.Graphics.BitmapFactory.Options { InSampleSize = sample, InPreferredConfig = global::Android.Graphics.Bitmap.Config.Argb8888, InScaled = false }))
         {
@@ -117,13 +118,35 @@ internal static class PhoneAnalysis
         string folder = System.IO.Path.Combine(SessionsFolder, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
         Directory.CreateDirectory(folder);
         string image = System.IO.Path.Combine(folder, "target.jpg");
-        double rest = WorkingSize.Scale(colour.Width, colour.Height, WorkingSize.PhoneMegapixels);
+        double rest = WorkingSize.Scale(colour.Width, colour.Height, most);
         using var working = new Mat();
         Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), rest, rest, rest < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
         Cv2.ImWrite(image, working, new ImageEncodingParam(ImwriteFlags.JpegQuality, 92));
         double scale = (double)working.Width / bounds.OutWidth;
         DiagnosticLog.Info("phone.prepare", ("width", bounds.OutWidth), ("height", bounds.OutHeight), ("sample", sample), ("working", $"{working.Width}x{working.Height}"));
         return new WorkingImage(image, WorkingSize.Scaled(original, working.Width, working.Height, scale), bounds.OutWidth, bounds.OutHeight);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 240: the memory this analysis may use, from what the device says now: its total and available memory and
+    /// its low memory threshold (<c>ActivityManager.getMemoryInfo</c>), the floor when it says memory is low. Logged with the device's memory
+    /// classes, so a report says what the phone allowed.
+    /// </summary>
+    public static double Budget()
+    {
+        var activity = (global::Android.App.ActivityManager?)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.ActivityService);
+        if (activity is null)
+        {
+            return MemoryBudget.FloorMegabytes;
+        }
+
+        var info = new global::Android.App.ActivityManager.MemoryInfo();
+        activity.GetMemoryInfo(info);
+        const double Mb = 1024.0 * 1024;
+        double budget = MemoryBudget.Phone(info.TotalMem / Mb, info.AvailMem / Mb, info.Threshold / Mb, info.LowMemory);
+        DiagnosticLog.Info("memory.budget", ("totalMb", (long)(info.TotalMem / Mb)), ("availableMb", (long)(info.AvailMem / Mb)), ("low", info.LowMemory),
+            ("class", activity.MemoryClass), ("largeClass", activity.LargeMemoryClass), ("budgetMb", (long)budget));
+        return budget;
     }
 
     /// <summary>A photograph, prepared and analyzed.</summary>

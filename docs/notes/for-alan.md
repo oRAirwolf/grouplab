@@ -23,6 +23,22 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 47. Your benchmark questions: what has run, and what the survey page shows
+
+**Answered 2026-09-27 (entry 240). Nothing to do.**
+
+1. **Has the Windows application run a benchmark on any PC?** Yes, yours: your desktop ran it on nightly 111 at 10:29 UTC on 27 September,
+   1.8 seconds, at most 482 MB, all 25 holes found, and it went with a report. That is the first desktop benchmark; nightly 110 never ran
+   one (request 40). Whether anybody else's PC has is in the server's counts, which I read in the server sitting that closes tonight's queue.
+2. **The Android ones:** the Tab S8 Ultra's screen said 4.6 seconds, at most 446 MB, 25 of 25, sent with a report. The Fold 7's line is
+   request 44, since it was locked. Beside the spike's reference for the published scan (7.9 s desktop, 17 s Fold 7), which is a different
+   and larger piece of work than the benchmark's own sheet, so the two are not the same measure.
+3. **The page waits for ten a group, as written.** Until then https://grouplab.org/survey/ shows your three machines by name, as the
+   project's own test devices, and says "not enough reports yet" for everybody else; operating systems and memory show the same way.
+4. **More memory on bigger phones** (your suggestion): adopted as a rule that reads what each device has, and measured first. Working
+   above 8 megapixels changed no result that matters, so every phone stays at 8 and a big phone's memory is kept in reserve; the details
+   are in `docs/ANDROID.md` section 14.
+
 ## 46. On or after Sunday 2026-10-04 12:00 UTC: one look at the Oracle backups
 
 **Opened 2026-09-27 (entry 235). Not before Sunday 4 October, 12:00 UTC; then one minute.** In the Oracle console, **Storage**, **Block

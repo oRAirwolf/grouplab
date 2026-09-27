@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1057 |
-| measured | 1510 |
+| code | 1061 |
+| measured | 1511 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3784** |
+| **total** | **3789** |
 
-**608** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**613** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -583,6 +583,11 @@ one that matters.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **The opt-in link** is https://play.google.com/apps/internaltest/4701684356677501640.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **Play's two warnings on that release.** 1.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Alan's request with the exact steps is written after the Store work of request 38 is done.
+- *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): The memory budget, scaled to the device (entry 240) Entry 206's single number is replaced by a rule, `MemoryBudget.Phone`.
+- *measured* (docs/PHASE1-RESULTS.md, Entry 240: the published scan at 4 to 24 megapixels and the three kitchen photographs at 8 and 12, 2026-09-27): Measured on this machine at each working size: the published scan's shots moved about 0.0005 in between 8 and 24 megapixels, and on the three kitchen photographs of entry 233 the 8 and 12 megapixel readings agreed to 0.001 in, against a photo to scan difference of 0.015 to 0.027 in, with the odd extra mark going either way.
+- *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): So **every phone works at 8 megapixels** (`MemoryBudget.PhoneWorkingMegapixels`: the floor holds 9.8), and more memory never makes two phones' results differ.
+- *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): **On the desktop**, which works at full size, memory only decides where it must stop: an image larger than half the computer's memory holds at the same costs is refused with that reason, below the fixed 400 megapixel cap (`MemoryBudget.DesktopMostMegapixels`); with 12 GB or more that is the cap itself.
+- *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): How much time the phone's 50 s spends where waits on the devices (entry 239).
 
 ### docs/BALLISTICS-VALIDATION.md
 
