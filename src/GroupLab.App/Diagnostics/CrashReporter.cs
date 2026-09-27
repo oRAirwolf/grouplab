@@ -205,7 +205,28 @@ public static class CrashReporter
         }
     }
 
-    /// <summary>A clean exit: this run's marker goes.</summary>
+    /// <summary>
+    /// This run's marker, again, without looking at earlier ones: the phone's application comes back on screen (issue 6 of the error reports).
+    /// Android ends a process in the background whenever it wants the memory and says nothing, so the phone holds its marker only while it is
+    /// on screen, and a close it did not choose is recorded only when it happened in front of the person.
+    /// </summary>
+    public static void ResumeRun(DiagnosticLog log)
+    {
+        ArgumentNullException.ThrowIfNull(log);
+        if (log.Directory is { } directory)
+        {
+            try
+            {
+                File.WriteAllText(Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"running-{Environment.ProcessId}.marker")), "");
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                DiagnosticLog.Exception(LogLevel.Warn, "crash.marker", ex);
+            }
+        }
+    }
+
+    /// <summary>A clean exit, or on the phone the application leaving the screen: this run's marker goes.</summary>
     public static void EndRun(DiagnosticLog log)
     {
         ArgumentNullException.ThrowIfNull(log);

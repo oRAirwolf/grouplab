@@ -97,4 +97,39 @@ public class Entry192Tests
             GroupLab.Tests.Support.Temp.Delete(folder);
         }
     }
+
+    /// <summary>
+    /// Error report issue 6: on the phone the marker is held only while the application is on screen. Leaving the screen takes it away, so
+    /// Android ending the process in the background is not a close to report; coming back puts it back, so a close on screen still is.
+    /// </summary>
+    [Fact]
+    public void AMarkerHeldOnlyOnScreenReportsOnlyACloseOnScreen()
+    {
+        var (log, folder) = NewLog();
+        try
+        {
+            string mine = Path.Combine(folder, $"running-{Environment.ProcessId}.marker");
+            CrashReporter.BeginRun(log);
+            CrashReporter.EndRun(log);
+            Assert.False(File.Exists(mine));
+
+            // The process ends in the background, as Android ends it: the next start finds nothing to report.
+            CrashReporter.BeginRun(log);
+            Assert.Empty(CrashReporter.PendingCrashes(folder));
+
+            // On screen again, the marker is back, and a process that ended then is reported at the next start.
+            CrashReporter.EndRun(log);
+            CrashReporter.ResumeRun(log);
+            Assert.True(File.Exists(mine));
+            File.Move(mine, Path.Combine(folder, "running-999998.marker"));
+            CrashReporter.BeginRun(log);
+            Assert.EndsWith("-999998.json", Assert.Single(CrashReporter.PendingCrashes(folder)), StringComparison.Ordinal);
+            CrashReporter.EndRun(log);
+        }
+        finally
+        {
+            log.Dispose();
+            GroupLab.Tests.Support.Temp.Delete(folder);
+        }
+    }
 }

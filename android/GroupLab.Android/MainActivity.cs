@@ -71,6 +71,30 @@ public class MainActivity : AvaloniaMainActivity
 
         base.OnCreate(savedInstanceState);
     }
+
+    /// <summary>
+    /// Error report issue 6: every time Android ended GroupLab in the background, which it does whenever it wants the memory, the next start
+    /// reported a close without shutting down. The run's marker is held only while the application is on screen, so what is reported is a
+    /// close in front of the person.
+    /// </summary>
+    protected override void OnStart()
+    {
+        base.OnStart();
+        if (GroupLab.App.Diagnostics.DiagnosticLog.Current is { } log)
+        {
+            GroupLab.App.Diagnostics.CrashReporter.ResumeRun(log);
+        }
+    }
+
+    protected override void OnStop()
+    {
+        if (GroupLab.App.Diagnostics.DiagnosticLog.Current is { } log)
+        {
+            GroupLab.App.Diagnostics.CrashReporter.EndRun(log);
+        }
+
+        base.OnStop();
+    }
 }
 
 [global::Android.App.Application]

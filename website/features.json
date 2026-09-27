@@ -23,7 +23,8 @@
     "The survey question now says plainly what the random number is",
     "While GroupLab reads a target",
     "On the phone, selections, radio buttons and focus now use",
-    "A sheet whose printed code happened to hold certain bytes"
+    "A sheet whose printed code happened to hold certain bytes",
+    "On Android, GroupLab no longer reports that it closed without shutting down"
   ],
   "features": [
     {
