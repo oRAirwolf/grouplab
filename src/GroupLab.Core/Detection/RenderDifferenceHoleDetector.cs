@@ -32,7 +32,7 @@ public sealed record RenderDifferenceOptions(
     double MaximumDiameterInches = 0.60,
     double MinimumSolidity = 0.55,
     double MaximumAspect = 2.2,
-    double PaperBlockInches = 0.25,
+    double PaperBlockInches = 0.125,
     double MaximumShiftInches = 0.1,
     double MinimumClosure = 0,
     double SplitElongation = 1.80,
@@ -59,7 +59,14 @@ public sealed record RenderDifferenceOptions(
     double LargestHoleInches = 0.60,
     int MarksForSheetSize = 12,
     int MarksForTentativeSize = 5,
-    bool KeepResidual = false);
+    bool KeepResidual = false,
+    /// <summary>
+    /// How far inside the page's edge the local paper level stops being measured, inches. NOTES-FROM-PLANNING.md entry 233: on three kitchen
+    /// counter photographs the paper's own edge lay up to about 0.1 in inside the edge the markers put it at, so a strip of bright counter sat
+    /// inside the sheet. It raised the paper level beside it, the paper next to it read darker than it should, and every photograph gained
+    /// two holes that were plain paper. Holes are still looked for in the band: a flyer can land there, and entry 130 section 2b.4 keeps it.
+    /// </summary>
+    double EdgeBandInches = 0.15);
 
 /// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
 public enum HoleSizeSource
@@ -145,7 +152,7 @@ public sealed record RenderDifferenceResult(double Dpi, double InkFraction, doub
 /// expected image is aligned to the observed one by phase correlation, up to <see cref="RenderDifferenceOptions.MaximumShiftInches"/>,
 /// and the rest of the page by the median of those shifts.</item>
 /// <item><b>S5.</b> The definition is rasterised and resampled into image space (<see cref="ExpectedImage"/>). Paper is
-/// estimated locally, as the 95th percentile of the observed pixels the render calls paper in blocks of a quarter inch,
+/// estimated locally, as the 95th percentile of the observed pixels the render calls paper in blocks of an eighth of an inch (entry 233; a quarter inch until then),
 /// smoothed and interpolated, never globally. The ink level is measured as the median ratio of observed to local paper
 /// where the render calls solid ink.</item>
 /// <item><b>S6.</b> Observed and expected are both normalised by local paper, and the residual is the absolute difference
@@ -210,7 +217,7 @@ public static class RenderDifferenceHoleDetector
 
         // S5: local paper, from pixels the render calls paper, and the ink level against it.
         int block = Math.Max(4, (int)Math.Round(options.PaperBlockInches * dpi));
-        var paper = PaperField(observed, expected, block);
+        var paper = PaperField(observed, expected, block, SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height, options.EdgeBandInches * 254));
         double inkFraction = InkFraction(observed, expected, paper, block);
 
         // S5, alignment: each bull's cell by phase correlation, the rest by the median shift.
@@ -693,8 +700,9 @@ public static class RenderDifferenceHoleDetector
                 : c)];
     }
 
-    internal static bool[] SheetMask(int pageWidth, int pageHeight, IPageMapping registration, int width, int height)
+    internal static bool[] SheetMask(int pageWidth, int pageHeight, IPageMapping registration, int width, int height, double inset = 0)
     {
+        double left = inset, top = inset, right = pageWidth - inset, bottom = pageHeight - inset;
         const int PerSide = 64;
         var edge = new List<PointD>(4 * PerSide);
         for (int side = 0; side < 4; side++)
@@ -704,10 +712,10 @@ public static class RenderDifferenceHoleDetector
                 double t = (double)k / PerSide;
                 var page = side switch
                 {
-                    0 => new PointD(t * pageWidth, 0),
-                    1 => new PointD(pageWidth, t * pageHeight),
-                    2 => new PointD((1 - t) * pageWidth, pageHeight),
-                    _ => new PointD(0, (1 - t) * pageHeight),
+                    0 => new PointD(left + (t * (right - left)), top),
+                    1 => new PointD(right, top + (t * (bottom - top))),
+                    2 => new PointD(right - (t * (right - left)), bottom),
+                    _ => new PointD(left, bottom - (t * (bottom - top))),
                 };
                 edge.Add(registration.ToImage(page));
             }
@@ -785,8 +793,8 @@ public static class RenderDifferenceHoleDetector
         return new GrayImage(observed.Width, observed.Height, pixels);
     }
 
-    /// <summary>The 95th percentile of the observed pixels the render calls paper, per block, with empty blocks filled from their neighbours and every block averaged with its eight.</summary>
-    private static double[] PaperField(GrayImage observed, GrayImage expected, int block)
+    /// <summary>The 95th percentile of the observed pixels inside the sheet's edge band that the render calls paper, per block, with empty blocks filled from their neighbours and every block then the median of itself and its eight.</summary>
+    private static double[] PaperField(GrayImage observed, GrayImage expected, int block, bool[] inside)
     {
         int bw = (observed.Width + block - 1) / block, bh = (observed.Height + block - 1) / block;
         var level = new double[bw * bh];
@@ -802,7 +810,7 @@ public static class RenderDifferenceHoleDetector
                     for (int x = i * block; x < Math.Min(observed.Width, (i + 1) * block); x++)
                     {
                         int k = (y * observed.Width) + x;
-                        if (expected.Pixels[k] >= 230)
+                        if (inside[k] && expected.Pixels[k] >= 230)
                         {
                             histogram[observed.Pixels[k]]++;
                             count++;
@@ -834,12 +842,28 @@ public static class RenderDifferenceHoleDetector
             level = next;
         }
 
+        // NOTES-FROM-PLANNING.md entry 233: the median of each block and its eight, not their mean. A mean carries a lit block's level a block
+        // and a half into a shadow beside it, and on three kitchen counter photographs the paper there read darker than it was: a hand's shadow
+        // across the bottom third made false holes and hid a real one. A median follows a shadow's edge to within a block.
         var smoothed = new double[level.Length];
         for (int j = 0; j < bh; j++)
         {
             for (int i = 0; i < bw; i++)
             {
-                smoothed[(j * bw) + i] = Neighbours(level, bw, bh, i, j).Append(level[(j * bw) + i]).Where(v => !double.IsNaN(v)).DefaultIfEmpty(245).Average();
+                var around = new List<double>();
+                for (int dj = -1; dj <= 1; dj++)
+                {
+                    for (int di = -1; di <= 1; di++)
+                    {
+                        if (i + di >= 0 && i + di < bw && j + dj >= 0 && j + dj < bh && !double.IsNaN(level[((j + dj) * bw) + i + di]))
+                        {
+                            around.Add(level[((j + dj) * bw) + i + di]);
+                        }
+                    }
+                }
+
+                around.Sort();
+                smoothed[(j * bw) + i] = around.Count == 0 ? 245 : around[around.Count / 2];
             }
         }
 

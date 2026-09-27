@@ -24,6 +24,58 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 233: phone photos of the same four sheets: the best photo-against-scan test we have
+
+**Status: done 2026-09-27, apart from three parts.** **Not done:** 2.4, the aim card by the four-point method and the per-bull scale (it needs the card's corners and check bars placed by hand, and is next with entry 228's Android work); 2.1's Android half was measured on the desktop at the phone's 8 MP working size, not on the phone; and 2.5's live check for a shadow was not built, a capture tip was instead, because the fix to detection made the shadow cost nothing on these three. 2.3 holds only once the tape tear is deleted: with it, the tear takes a real shot's place in the matching.
+
+Alan photographed the same four sheets he scanned (entry 229) lying on his kitchen counter, with the Fold 7's stock camera app, default
+lens and settings, "as a normal user would do". Files: `C:\Users\Airwolf\Downloads\Photos-1-001\` (also `Photos-1-001.zip` beside it),
+four JPEGs, 4000 by 3000 (12 MP). Alan's own photos: publishable under his standing consent, like the scans.
+
+Copy them into `C:\Dev\grouplab-originals\range-2026-09-26\photos\` next to the scans. The files carry the phone's EXIF block and the
+file names are date and time stamps: never read, print or log location or time metadata; strip all metadata and rename (for example
+`dominus-k-photo.jpg`) before anything goes into the repository, a test fixture or an article. Reduced grayscale previews are in
+`C:\Dev\grouplab-local\planning\photos-0926\` (local only).
+
+## 1. Which photo is which (from the planning session's look at the previews)
+
+| file | sheet | framing |
+|---|---|---|
+| `20260926_222550.jpg` | 6 ARC, Dominus K (serial box K) | portrait, nearly straight down, slight keystone (top edge narrower) |
+| `20260926_222606.jpg` | 6.5 Creedmoor, Magnus S (serial box C) | portrait, nearly straight down |
+| `20260926_222616.jpg` | aim point test card | landscape, sheet turned 90 degrees in the frame |
+| `20260926_222626.jpg` | 6 ARC, Magnus S (serial box M) | landscape, sheet turned 90 degrees, rows running top to bottom |
+
+What makes them a good test, all of it normal for real users:
+- Strong shadows from Alan's hand and phone across the bottom third of both portrait photos, and across the aim card and the Magnus S
+  sheet, running over holes, rings and markers. Detection and marker reading must cope with a shadow edge crossing a bull.
+- Overhead indoor light makes the paper mid gray, not white.
+- Taped, slightly lifted corners (tape tabs at the top), so the paper is not quite flat.
+- Resolution: the sheet fills most of the frame, about 300 pixels an inch, well above the quality score's 150.
+- Two photos are rotated a quarter turn.
+
+## 2. What to do with them
+
+1. **Run all three load sheets through the normal pipeline**, desktop and Android, and compare each against its own 600 dpi scan, shot by
+   shot. The scan is the reference: map both into sheet coordinates by the markers, pair the shots, and report per shot the position
+   difference (mean, largest), and per sheet the difference in group center, extreme spread, mean radius and CEP. Report any shot found in
+   one and not the other, and any wrong-bull assignment.
+2. **The suppressor comparison from photos:** repeat entry 226 section 2's test on the two 6 ARC photos and say whether the conclusion
+   matches the scans. That goes in the suppressor article as a check a reader can reproduce with a phone.
+3. **The 6.5 photo** is the wrong-bull case again (entry 229 section 4), now under shadow: it must give the same assignment as the scan.
+4. **The aim card photo has no markers.** Use it as the first real test of entry 228's four-point method and per-bull scale: the paper
+   corners, the printed 2 in check bar and the 50 mm check bar are known lengths. Measure the four shot groups (A, C, E, I) from the photo
+   and from the scan and compare.
+5. **Shadows:** if a shadow edge breaks marker reading or hole detection, fix it (for example local contrast normalization before
+   thresholding), and add a capture tip in the app and the photographing-targets article ("shade the whole sheet or none of it"). Say
+   whether the in-app camera's live checks would have flagged the shadow.
+6. **Keep all four as regression fixtures** (metadata stripped, renamed) with the scans as their expected results, and a tolerance for the
+   photo-to-scan difference that the tests enforce.
+7. **An article section or a short article:** "A phone photo against a flatbed scan, same sheets", with the per-shot differences, one
+   overlay figure (photo shots over scan shots), and plain advice. State the numbers as measured, whatever they are.
+
+Do this after entry 232 and before the target generator work in entry 226 section 4.
+
 ## 2026-09-27, entry 241: repeated benchmarks, one vote per device, and the survey page now (Alan's questions)
 
 **Status: done 2026-09-27 at Alan's request ahead of 233 to 240, apart from two parts.** **Not done yet:** the server side (the new survey worker, its unit and the site sync that keeps the aggregate in place) is committed and waits to be installed with sudo in the same sitting as request 21, so until then the page's everyone-else half shows nothing; and the Fold 7's result, which request 44 asks Alan to read off the phone, because it was locked. The page and the three devices' section are published.

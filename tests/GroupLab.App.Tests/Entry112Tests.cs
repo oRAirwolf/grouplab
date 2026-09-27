@@ -113,7 +113,9 @@ public class Entry112Tests
             var rows = window.SessionRowTexts;
             Assert.Equal(2, rows.Count);
             Assert.StartsWith("2099-01-01 | GroupLab 5x5", rows[0], StringComparison.Ordinal);
-            Assert.Contains("Tikka T3x | H4350 41.5 | 100 yd | 24 | ", rows[1], StringComparison.Ordinal);
+            // The row carries the session's own shot count, whatever detection found on the synthetic sheet (entry 233 moved it from 24 to 23).
+            int shots = window.Sessions.Get(first)!.ShotCount;
+            Assert.Contains(FormattableString.Invariant($"Tikka T3x | H4350 41.5 | 100 yd | {shots} | "), rows[1], StringComparison.Ordinal);
             Assert.Matches(@"\d\.\d{3} in \(\d\.\d{3} to \d\.\d{3}\)$", rows[1]);
 
             window.FilterSessions("Old Mauser", null);

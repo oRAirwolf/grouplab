@@ -92,6 +92,22 @@ two 6 ARC sheets and a chart drawn from them. The 6.5 Creedmoor scan is on the `
 rebuilt from its pixels with only the resolution kept. Anything published from these files is rebuilt from its pixels,
 and GPS, location and time metadata are never read, printed or logged.
 
+**The scanner** (entry 235): a Brother MFC-J430W, a Letter size flatbed, so a commercial target larger than Letter is photographed rather
+than scanned.
+
+**Photographs of the same sheets** (entry 233), taken on 2026-09-26 on a kitchen counter with the Galaxy Z Fold 7's own camera app at its
+default lens and settings, 4000 by 3000. The originals are kept unchanged in `C:\Dev\grouplab-originals\range-2026-09-26\photos\`,
+outside the repository, and their metadata was never read beyond the orientation flag. What is published is each photograph's pixels,
+turned upright by that flag and written again as a JPEG with no metadata of any kind, renamed, on the `test-data` release; local copies
+are in `photos-clean\` beside the originals. Alan's own photographs, under entry 171.
+
+| File | Bytes | SHA-256 | What it is |
+|---|---|---|---|
+| `photo-6arc-dominus-k-2026-09-26.jpg` | 3,250,152 | `15e89efbc9a8ae811a89d7f9e74376f3f063f1ee20f11fcd49abe7eea8852ed5` | The Dominus K sheet, portrait, nearly straight down |
+| `photo-6arc-magnus-m-2026-09-26.jpg` | 3,223,976 | `57f6f7ee7e77ff469936d169a2f6ce4c040f3bc22b91547fe9bca2f584e8835c` | The Magnus S 6 ARC sheet, turned a quarter in the frame |
+| `photo-6.5-magnus-c-2026-09-26.jpg` | 3,188,780 | `3f6ff3b15e8098744d6cf9d7b5f6e55f48b7fa1e869fa292d6715eff22a8458d` | The 6.5 Creedmoor sheet, portrait |
+| `photo-aim-card-2026-09-26.jpg` | 2,880,132 | `4f9d5adc54e3ca571be400f1b6357ac0825900597d3f50b06d1df8b53c95a382` | The aim point card, turned a quarter; it has no markers |
+
 # What Alan passes on from Unholy and his other friends: a standing consent
 
 | | |

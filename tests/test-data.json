@@ -28,6 +28,34 @@
       "bytes": 14797501,
       "what": "Alan's 2026-09-26 scan of GL-CF25-LTR-D with 25 shots of 6.5 Creedmoor, every shot about 0.8 in high of its own bull, rebuilt from its pixels with only the resolution kept. Entry 229 section 4's wrong-bull case.",
       "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "photo-6arc-dominus-k-2026-09-26.jpg",
+      "sha256": "15e89efbc9a8ae811a89d7f9e74376f3f063f1ee20f11fcd49abe7eea8852ed5",
+      "bytes": 3250152,
+      "what": "Alan's Fold 7 photograph of his 2026-09-26 6 ARC sheet shot with the Dominus K, on a kitchen counter with shadows and taped corners; its pixels re-encoded with the orientation applied and no metadata at all. Entry 233.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "photo-6arc-magnus-m-2026-09-26.jpg",
+      "sha256": "57f6f7ee7e77ff469936d169a2f6ce4c040f3bc22b91547fe9bca2f584e8835c",
+      "bytes": 3223976,
+      "what": "Alan's Fold 7 photograph of his 2026-09-26 6 ARC sheet shot with the Magnus S, turned a quarter in the frame, with shadows and taped corners; pixels only, no metadata. Entry 233.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "photo-6.5-magnus-c-2026-09-26.jpg",
+      "sha256": "3f6ff3b15e8098744d6cf9d7b5f6e55f48b7fa1e869fa292d6715eff22a8458d",
+      "bytes": 3188780,
+      "what": "Alan's Fold 7 photograph of his 2026-09-26 6.5 Creedmoor sheet, the wrong-bull case under shadow; pixels only, no metadata. Entry 233.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "photo-aim-card-2026-09-26.jpg",
+      "sha256": "4f9d5adc54e3ca571be400f1b6357ac0825900597d3f50b06d1df8b53c95a382",
+      "bytes": 2880132,
+      "what": "Alan's Fold 7 photograph of the 2026-09-26 aim point card, which has no markers; pixels only, no metadata. Entry 233.",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
     }
   ]
 }

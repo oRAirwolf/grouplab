@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| Phone photos of three load sheets against their scans (entry 233) | written, as a section of photographing-targets | It changes what a shooter does at the kitchen counter: shade all of the sheet or none, hold it down outside the print; and it shows the suppressor result can be repeated with a phone. |
 | Question 38: a photographed hole has no size constant | **already covered** | Articles 1, `photo-hole-size`, and 2, `hole-is-not-the-bullet`, are that finding. |
 | Question 44: the bent-sheet model predicts a held-out marker as well as a fitted one | **not written** | It improved the bull centers on seven of seven photographs and worsened the hole positions on seven of seven, so there is no conclusion yet that a developer could build on, and the model is not adopted. Revisit if a model improves both. |
 | Entry 130: photographs against scans of the same sheets | **already covered** | `scans-against-photos` is that comparison. |

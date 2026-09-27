@@ -77,6 +77,11 @@ A commercial target has no printed markers, so the scale has to come from someth
 ## A checklist for a good photo
 
 1. **Even, soft light.** Open shade, an overcast sky or indoor light from above. Avoid low sun across the paper, and avoid flash, which leaves a hot spot.
+   **Shade the whole sheet or none of it.** The shadow of your hand or the phone across part of the sheet is the one thing on a kitchen
+   counter that still costs a hole: on three photographs of 2026-09-26 a shadow's edge hid a shot and made paper read as a hole, until
+   GroupLab learned to follow it, and a hard shadow is still worth avoiding.
+1. **Hold it down outside the printed area.** Weights or tape on the very corners. A torn tape tab over the paper can read as a hole,
+   and on one of those photographs one did.
 2. **Square on.** GroupLab corrects for angle, but a straight-on photo keeps every hole round and every marker sharp.
 3. **Fill the frame with the sheet, all markers included.** Every corner marker and both codes in the picture, with a little margin. Do not crop them off.
 4. **Flat paper.** Take it off the backer if it is curled, or hold it flat. Waves in the paper move holes.
@@ -84,6 +89,32 @@ A commercial target has no printed markers, so the scale has to come from someth
 6. **Use the main camera, not digital zoom.** Step closer instead of zooming.
 7. **One sheet per photo.** Several sheets in one frame make identification harder and give each sheet fewer pixels.
 8. **If it matters, scan it.** For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
+
+## A phone photo against a flatbed scan, same sheets
+
+On 2026-09-26 the developer photographed three load sheets he had also scanned at 600 dpi: on a kitchen counter, with the Galaxy Z Fold 7's
+own camera at its default settings, a hand's shadow across the bottom third, the paper gray under the kitchen light, the corners taped,
+two of them turned a quarter in the frame. Each photograph was read by GroupLab and paired with the scan shot by shot.
+
+| Sheet | Shots on the scan | Found in the photo | Median distance from the scan | Worst |
+|---|---|---|---|---|
+| 6 ARC, Dominus K | 25 | 25 | 0.015 in | 0.036 in |
+| 6 ARC, Magnus S | 25 | 25, and one tape tear | 0.021 in | 0.040 in |
+| 6.5 Creedmoor | 23 | 22, and one tape tear | 0.027 in | 0.057 in |
+
+The positions are as good as the scans'. The shot not found on the 6.5 sheet touches a printed marker, where GroupLab does not look for
+holes, and the photograph put its center just inside the marker's zone where the scan put it just outside. The two tape tears matter
+more than the distances: on the 6.5 sheet the tear took the place of a real shot in the matching, and the mean radius read 0.86 in
+where the scan reads 0.21 in. Delete the tear on the analysis screen and the two agree.
+
+**The suppressor question comes out the same from the photographs.** The two 6 ARC sheets gave a shift of 0.284 in between the
+suppressors from the photographs and 0.284 in from the scans, with the same test giving p = 0.051 and 0.050. Anybody with a phone can
+repeat that comparison.
+
+**Before this work** the same photographs read 28, 27 and 24 marks: the counter showing inside the sheet's edge made the paper beside it
+read darker than it was, and so did the edge of the shadow, which also hid a real shot on all three sheets. GroupLab now measures the
+paper's brightness in smaller patches, follows a shadow's edge instead of smearing it, and does not count what lies outside the paper.
+The photographs are kept as tests, so this cannot quietly come back.
 
 ## What this means
 

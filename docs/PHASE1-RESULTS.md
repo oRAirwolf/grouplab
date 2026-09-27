@@ -59,6 +59,43 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 233: phone photos of the same sheets, against their scans
+
+Alan's Fold 7 photographs of the three 2026-09-26 load sheets, on a kitchen counter with a hand's shadow over the bottom third, taped
+corners and two turned a quarter, were stripped of all metadata (the orientation applied first), renamed and put on the `test-data`
+release with the aim card's. **Before:** 28, 27 and 24 marks against 25, 25 and 23 shots; shot 21, under the shadow, missed on all three;
+false holes where the counter showed inside the sheet's nominal edge and along the shadow's edge. Both came from the local paper level:
+the 95th percentile of a quarter inch block, averaged with its eight neighbours, took the counter's and the lit side's brightness into
+the paper beside them, which then read darker than it was.
+
+**The change** (`RenderDifferenceHoleDetector`): the paper level is measured in eighth of an inch blocks, each then the median of itself
+and its eight rather than their mean, and not within 0.15 in of the page's edge (holes are still looked for there). Scored on 15 images
+with known shots (the nine local corpus images, the three photographs against their scans, the three scans): hits 249 to 252, misses 21
+to 18, false marks 13 to 6, of which three are on one mounted photograph whose registration fails anyway. A rule refusing small marks with
+open rims removed the tape tears but cost real holes on the range scans and the zeroing sheets' own renders, and was not kept. The Core
+suite, the range scan counts and every sheet's own render pass; the synthetic punched corpus moved by one to four holes a sheet in about
+two hundred, recorded. The desktop tests' synthetic scanned sheet (entry 109's) reads 23 of its 25 holes where it read 24: the hole
+at the left of the middle row is now refused as not compact. Blocks of 3/16 in keep it but put two more false marks on each 6 ARC photograph, and
+the detector's own rule is that an invented hole is worse than a missed one. With 23 shots that report's worst shot card grew a
+line and pushed page 1 past its end, where every card is meant to be whole, so the report's plot now gives way a quarter inch at a
+time until page 1 fits (`ReportWriter.PlotSizes`); the type never shrinks.
+
+**After:**
+
+| Sheet | Scan | Photo | Median from scan | Worst | At 8 MP |
+|---|---|---|---|---|---|
+| Dominus K | 25 | 25 | 0.015 in | 0.036 in | 25 of 25, two extra marks |
+| Magnus S | 25 | 25 and a tape tear | 0.021 in | 0.040 in | 25 of 25 and the tear |
+| 6.5 Creedmoor | 23 | 22 and a tape tear | 0.027 in | 0.057 in | 22 of 23, no tear, mean radius 0.218 in against 0.213 |
+
+The 6.5 photograph gets the whole-sheet assignment (0.70 in high, 0.36 in left, against the scan's 0.76 and 0.39) but the tear at the
+bottom right corner takes bull 24 and pushes that bull's shot to the one shot 14 left free; shot 14 touches a marker and is not found.
+**The suppressor test from the photographs:** a shift of 0.284 in, p = 0.051, against 0.284 in and p = 0.050 from the scans, positions
+from the photographs with the scans' bulls. The camera's live checks look at blur, clipping, angle, flatness and resolution, and none at
+light that differs across the sheet, so they would not have flagged the shadow; a line on the Capture screen and the article's
+checklist say to shade all of the sheet or none, and to hold it down outside the print. `PhotoAgainstScanTests` holds each photograph
+to its scan: every shot found (the 6.5's shot 14 excepted), median within 0.04 in, worst within 0.08, at most one mark more.
+
 ## Entry 241: every benchmark run sent, one vote a machine, and the survey page
 
 **On the device.** Every benchmark run is kept with its date and version (`AppSettingsStore.LoadBenchmarkRuns`, thirty kept), Settings

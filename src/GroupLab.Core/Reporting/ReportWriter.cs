@@ -36,25 +36,18 @@ public static class ReportWriter
     private static readonly Rgb PlotAim = new(0, 85, 212);
     private static readonly Rgb PlotSpread = new(200, 16, 46);
 
-    /// <summary>A font size in points, in the scene's half-dmm.</summary>
-    private static long Pt(double points) => (long)Math.Round(points * Inch / 72);
+    /// <summary>The composite plot's sizes on page 1, largest first, entry 233.</summary>
+    private static readonly long[] PlotSizes = [3 * Inch, 11 * Inch / 4, 5 * Inch / 2, 9 * Inch / 4];
 
-    public static byte[] Write(SessionReport report) => PdfWriter.Write(Pages(report));
-
-    /// <summary>The report's pages as scenes, exposed so tests can read the text each page carries.</summary>
-    public static IReadOnlyList<Scene> Pages(SessionReport report)
+    /// <summary>Page 1: the title, the particulars, the plot beside the figures, then the zero and every card.</summary>
+    private static void FirstPage(Flow flow, SessionReport report, long plotSize)
     {
-        ArgumentNullException.ThrowIfNull(report);
-        var flow = new Flow();
-
-        // Page 1.
         flow.Text(report.Title, Pt(16), Ink);
         flow.Text("GroupLab session report", Pt(9), Grey);
         flow.Gap(Pt(6));
         flow.Pairs(report.Particulars);
         flow.Gap(Pt(8));
 
-        long plotSize = 3 * Inch;
         long top = flow.Y;
         DrawPlot(flow.Page, report.Plot, Margin, top, plotSize);
         long plotBottom = top + plotSize + Pt(4);
@@ -82,6 +75,30 @@ public static class ReportWriter
         {
             flow.Heading(card.Title);
             flow.Card(card, withTitle: false);
+        }
+    }
+
+    /// <summary>A font size in points, in the scene's half-dmm.</summary>
+    private static long Pt(double points) => (long)Math.Round(points * Inch / 72);
+
+    public static byte[] Write(SessionReport report) => PdfWriter.Write(Pages(report));
+
+    /// <summary>The report's pages as scenes, exposed so tests can read the text each page carries.</summary>
+    public static IReadOnlyList<Scene> Pages(SessionReport report)
+    {
+        ArgumentNullException.ThrowIfNull(report);
+
+        // Page 1, whole: every card's verdict and evidence is on it. The plot gives way first, a quarter inch at a time, when a report's cards
+        // are long enough to push past the page (entry 233: a 23 shot sheet's worst shot card did); the type never shrinks.
+        Flow flow = new();
+        foreach (long plotSize in PlotSizes)
+        {
+            flow = new Flow();
+            FirstPage(flow, report, plotSize);
+            if (flow.PageCount == 1)
+            {
+                break;
+            }
         }
 
         // Page 2.
@@ -309,6 +326,8 @@ public static class ReportWriter
         public long Y { get; set; } = Margin;
 
         public List<SceneItem> Page => pages[^1];
+
+        public int PageCount => pages.Count;
 
         public void NewPage()
         {
