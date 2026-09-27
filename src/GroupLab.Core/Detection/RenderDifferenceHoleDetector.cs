@@ -415,6 +415,23 @@ public static class RenderDifferenceHoleDetector
             }
         }
 
+        // NOTES-FROM-PLANNING.md entry 243 section 2.1, answering question 57: with two to four marks there is no size to flag against, but a
+        // mark with at least twice the area of the others' median still stands out, as a merged pair or three shots through one ragged hole
+        // does. A wrong caliber scales every mark alike and cannot make one stand out, which is what entry 161 guarded against. Tentative
+        // only, said with the sentence that already says it was judged from too few marks.
+        if (reference.FlagInches is null && holes.Count is >= 2 and <= 4)
+        {
+            for (int k = 0; k < holes.Count; k++)
+            {
+                var others = holes.Where((_, j) => j != k).Select(h => h.AreaInches).Order().ToList();
+                double middle = others.Count % 2 == 1 ? others[others.Count / 2] : (others[(others.Count / 2) - 1] + others[others.Count / 2]) / 2;
+                if (!holes[k].PossibleMerge && middle > 0 && holes[k].AreaInches >= StandsOut * middle)
+                {
+                    holes[k] = holes[k] with { Oversized = true, OversizeTentative = true, SizeHoles = holes[k].AreaInches / middle };
+                }
+            }
+        }
+
         // DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 98 section 5: the residual is the stage's own picture, the printed artwork
         // gone and the holes left, and it is kept only when an interactive analysis asks, so a batch run pays nothing for it.
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
@@ -455,6 +472,9 @@ public static class RenderDifferenceHoleDetector
     /// It flags nothing, because every real hole is larger than the smallest.</item>
     /// </list>
     /// </summary>
+    /// <summary>How many times the others' median area a mark must have to stand out on a sheet of two to four marks, entry 243 section 2.1.</summary>
+    internal const double StandsOut = 2.0;
+
     internal static HoleSizeReference SizeReference(IReadOnlyList<double> roundDiameters, RenderDifferenceOptions options)
     {
         var inv = System.Globalization.CultureInfo.InvariantCulture;

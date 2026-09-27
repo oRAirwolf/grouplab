@@ -4,7 +4,7 @@ NOTES-FROM-PLANNING.md entry 126 section 3.2. **Everything in this folder is pub
 nobody owns: a sheet GroupLab generated for itself, a sheet from its own built-in library, or scan 3, which is the one scan with a consent
 record in the repository.
 
-A photograph of somebody's target must never appear here, whether or not it was donated, and neither must anything from a range folder. This
+A photograph or scan of anybody else's target must never appear here, whether or not it was donated (entry 243 section 1.3 narrowed this from every range folder to anybody but Alan). This
 file is the record of what each render actually is, and `PublishedRendersTests` fails if a file appears without a line here, if a line names a
 source that is not on the list below, or if any test writing into this folder could read a photograph.
 
@@ -16,6 +16,7 @@ source that is not on the list below, or if any test writing into this folder co
 | `built-in library sheet` | One of the twenty built-in sheet definitions, rendered by GroupLab for the preview. |
 | `no sheet at all` | A screen with no image on it. |
 | `scan 3` | The published sample under its consent record in `samples/PROVENANCE.md`. Nothing here uses it yet; it is listed because entry 126 allows it. |
+| `Alan's own scans, entry 171` | Alan's scans of his own targets, under his standing consent (entry 171 section 6); entry 243 section 1.3 allowed them here. The Compare loads picture is his two 6 ARC suppressor sheets of 2026-09-26, and the Session records list shows them beside the synthetic sheet. Nobody else's photograph or scan, Unholy's and other friends' included, appears here unless Alan says so. |
 | `sheet made by the generator` | A sheet GroupLab's "Made for your optic" drew from numbers typed into it (entry 242). Nobody's target. |
 
 ## What is here
@@ -46,14 +47,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `ballistics-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `ballistics-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `ballistics-light-2560x1440.png` | Entry109Tests synthetic sheet |
-| `compare-dark-1280x720.png` | Entry109Tests synthetic sheet |
-| `compare-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `compare-dark-1280x720.png` | Alan's own scans, entry 171 |
+| `compare-dark-1400x900.png` | Alan's own scans, entry 171 |
 | `compare-dark-1920x1080.png` | Entry109Tests synthetic sheet |
-| `compare-dark-2560x1440.png` | Entry109Tests synthetic sheet |
-| `compare-light-1280x720.png` | Entry109Tests synthetic sheet |
-| `compare-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `compare-dark-2560x1440.png` | Alan's own scans, entry 171 |
+| `compare-light-1280x720.png` | Alan's own scans, entry 171 |
+| `compare-light-1400x900.png` | Alan's own scans, entry 171 |
 | `compare-light-1920x1080.png` | Entry109Tests synthetic sheet |
-| `compare-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `compare-light-2560x1440.png` | Alan's own scans, entry 171 |
 | `equipment-dark-1280x720.png` | no sheet at all |
 | `equipment-dark-1400x900.png` | no sheet at all |
 | `equipment-dark-2560x1440.png` | no sheet at all |
@@ -74,14 +75,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `marking-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `marking-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `marking-light-2560x1440.png` | Entry109Tests synthetic sheet |
-| `sessions-dark-1280x720.png` | Entry109Tests synthetic sheet |
-| `sessions-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `sessions-dark-1280x720.png` | Alan's own scans, entry 171 |
+| `sessions-dark-1400x900.png` | Alan's own scans, entry 171 |
 | `sessions-dark-1920x1080.png` | Entry109Tests synthetic sheet |
-| `sessions-dark-2560x1440.png` | Entry109Tests synthetic sheet |
-| `sessions-light-1280x720.png` | Entry109Tests synthetic sheet |
-| `sessions-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `sessions-dark-2560x1440.png` | Alan's own scans, entry 171 |
+| `sessions-light-1280x720.png` | Alan's own scans, entry 171 |
+| `sessions-light-1400x900.png` | Alan's own scans, entry 171 |
 | `sessions-light-1920x1080.png` | Entry109Tests synthetic sheet |
-| `sessions-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `sessions-light-2560x1440.png` | Alan's own scans, entry 171 |
 | `settings-dark-1280x720.png` | no sheet at all |
 | `settings-dark-1400x900.png` | Entry109Tests synthetic sheet |
 | `settings-dark-1920x1080.png` | Entry109Tests synthetic sheet |

@@ -1595,6 +1595,10 @@ public sealed partial class MainWindow : Window
         // a 600 dpi letter scan is three passes over 34 megapixels where the command line makes one.
         var (image, max, colour, meta) = ImageLoader.LoadForEditor(path);
         using var colourImage = colour;
+
+        // A new image is a new session. Found by entry 243: opening a second sheet by Open, drop or paste kept the first one's session, and
+        // analyzing the second saved it over the first. Reopening a saved session sets it again after this.
+        currentSession = null;
         OpenCvSharp.Cv2.ImEncode(".png", colourImage, out byte[] png);
         using var stream = new MemoryStream(png);
         grey = image;
@@ -3399,6 +3403,78 @@ public sealed partial class MainWindow : Window
         Splitter(at + 1, "right", rightColumn);
         Grid.SetColumn(right, at + 2);
         grid.Children.Add(right);
+
+        // NOTES-FROM-PLANNING.md entry 243 section 1.2, question 58's option A: at the default size and above nothing changes. Narrower,
+        // the side columns give up width toward their minimums, in proportion to what each has to give, and nothing is saved; narrower
+        // than the minimums allow, the right column moves under the image. A 1920 screen at 200 percent is 960 wide and a 1366 laptop 683.
+        var leftSide = left is not null ? grid.ColumnDefinitions[0] : null;
+        double wantLeft = leftSide?.Width.Value ?? 0, wantRight = rightColumn.Width.Value;
+        var rightSplitter = grid.Children.OfType<GridSplitter>().Last();
+        bool stacked = false;
+        void Fit(double width)
+        {
+            double splitters = left is not null ? 10 : 5;
+            double least = (left is not null ? SideMinimum : 0) + SideMinimum + CentreMinimum + splitters;
+            if (width < least)
+            {
+                if (!stacked)
+                {
+                    stacked = true;
+                    grid.RowDefinitions = new RowDefinitions("3*,2*");
+                    rightColumn.MinWidth = 0;
+                    rightColumn.Width = new GridLength(0);
+                    rightSplitter.IsVisible = false;
+                    Grid.SetColumn(right, at);
+                    Grid.SetRow(right, 1);
+                }
+
+                if (leftSide is not null)
+                {
+                    leftSide.Width = new GridLength(SideMinimum);
+                }
+
+                return;
+            }
+
+            if (stacked)
+            {
+                stacked = false;
+                grid.RowDefinitions = [];
+                rightColumn.MinWidth = SideMinimum;
+                rightSplitter.IsVisible = true;
+                Grid.SetColumn(right, at + 2);
+                Grid.SetRow(right, 0);
+            }
+
+            double want = wantLeft + wantRight + CentreMinimum + splitters;
+            double over = Math.Max(0, want - width);
+            double give = (wantLeft - (leftSide is null ? 0 : SideMinimum)) + (wantRight - SideMinimum);
+            double share = give > 0 ? Math.Min(1, over / give) : 0;
+            if (leftSide is not null)
+            {
+                leftSide.Width = new GridLength(wantLeft - ((wantLeft - SideMinimum) * share));
+            }
+
+            rightColumn.Width = new GridLength(wantRight - ((wantRight - SideMinimum) * share));
+        }
+
+        grid.SizeChanged += (_, e) =>
+        {
+            if (Math.Abs(e.NewSize.Width - e.PreviousSize.Width) > 0.5)
+            {
+                Fit(e.NewSize.Width);
+            }
+        };
+        foreach (var splitter in grid.Children.OfType<GridSplitter>())
+        {
+            // A width a person drags to is what the columns come back to when the window widens again.
+            splitter.DragCompleted += (_, _) =>
+            {
+                wantLeft = leftSide?.Width.Value ?? 0;
+                wantRight = rightColumn.Width.Value;
+            };
+        }
+
         return grid;
     }
 

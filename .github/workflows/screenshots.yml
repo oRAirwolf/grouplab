@@ -41,10 +41,19 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # Entry 243 section 1.3: the Compare loads picture is Alan's two 6 ARC suppressor scans, fetched from the test-data release and
+      # checked against their hashes. The walk refuses to publish without them.
+      - name: Fetch the test data
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/test-data.py fetch --to "$RUNNER_TEMP/test-data"
+
       # The same walk a person runs locally, with the same environment variable, so what CI commits is what a person would have produced.
       - name: Render every screen
         env:
           GROUPLAB_SCREENS_TO_DOCS: '1'
+          GROUPLAB_TEST_DATA: ${{ runner.temp }}/test-data
         run: >
           dotnet test tests/GroupLab.App.Tests
           --filter "FullyQualifiedName~Entry109Tests.EveryScreenIsPhotographedInBothThemesAtBothSizes"

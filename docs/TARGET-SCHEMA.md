@@ -545,7 +545,7 @@ The grid is drawn from the definition and read back by the analyser from the sam
 
 #### Grid style 2: a grid meant to be read through a scope
 
-Added by NOTES-FROM-PLANNING.md entries 226 and 227 and put to the planning session as question 59. Alan read the old mil grid through two scopes at 100 yards and could not make out its 0.5 mil marks; its lines were 0.2 to 0.4 mm wide, under a tenth of an arcminute through a 10x scope. Style 2 is the zeroing grids redrawn, and the style number fixes everything about how they are drawn, as style 1 does, so the wire needs only three more values.
+Added by NOTES-FROM-PLANNING.md entries 226 and 227 and put to the planning session as question 59, which entry 243 section 2.2 answered: **style 2 is part of this specification as built**, the tight-edge side band and the two codes included. Alan read the old mil grid through two scopes at 100 yards and could not make out its 0.5 mil marks; its lines were 0.2 to 0.4 mm wide, under a tenth of an arcminute through a 10x scope. Style 2 is the zeroing grids redrawn, and the style number fixes everything about how they are drawn, as style 1 does, so the wire needs only three more values.
 
 ```json
 "grids": [
@@ -571,7 +571,7 @@ Added by NOTES-FROM-PLANNING.md entries 226 and 227 and put to the planning sess
 
 **Three weights, labels, and the scale printed.** Every line is 6 dmm wide, every `majorEvery`-th 20 dmm, and every `wholeEvery`-th, the whole unit and the axes, 30 dmm. Every major line carries its value in the grid's unit ("0.5" and "1.0" where there are half units, "1", "2", "3" where there are not), 130 dmm tall, centred on its line below the horizontal axis and beside the vertical one, with the line broken behind it; a label on the field's edge moves inward rather than off the field. Above the field, clear of the marker row, three lines say what a small square is and what the heavier lines are, in the unit and in inches or centimetres at the stated distance, and tell the reader to print at 100 percent, over a ruler bar 4 in long on a yard sheet or 10 cm on a metre sheet with a tick at every inch or centimetre. Every number in it is worked out from the grid block, so it cannot disagree with the lines. `src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs` holds these numbers, and the reasons for them: at 100 yards one arcminute through a 6x scope is 44 dmm on the paper, so the labels are 3.0 arcminutes at 6x and the whole-unit lines 1.1 arcminutes at 10x.
 
-**Markers.** `field-ring-1` places its ring around the style 2 field rather than around `half`, on the major lines inside the field, and a line within a footprint and 20 dmm of the field's edge gives way to the corner marker. A style 2 grid's side band is measured to the tight edge of 60 dmm rather than the safe margin, because a printer's side margins are narrower than its bottom one (question 59).
+**Markers.** `field-ring-1` places its ring around the style 2 field rather than around `half`, on the major lines inside the field, and a line within a footprint and 20 dmm of the field's edge gives way to the corner marker. A style 2 grid's side band is measured to the tight edge of 60 dmm rather than the safe margin, because a printer's side margins are narrower than its bottom one (question 59, adopted by entry 243). Lines are sized to be seen and labels and the aiming ring to be recognised at the lowest magnification a sheet is for, the reading of the visibility rule entry 243 kept.
 
 ---
 

@@ -56,6 +56,20 @@
       "bytes": 2880132,
       "what": "Alan's Fold 7 photograph of the 2026-09-26 aim point card, which has no markers; pixels only, no metadata. Entry 233.",
       "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "load-sheet-6arc-dominus-k-2026-09-26.png",
+      "sha256": "d1fdd053251649a0e2929a7ed1d83a5043036bd658e9995e114ea4cb74be4d9d",
+      "bytes": 15775852,
+      "what": "Alan's 2026-09-26 scan of GL-CF25-LTR-D with 25 shots of 6 ARC through the Thunder Beast Dominus K, rebuilt from its pixels with only the resolution kept. The suppressor comparison's first sheet, shown on the Compare loads screenshot (entry 243 section 1.3).",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
+    },
+    {
+      "name": "load-sheet-6arc-magnus-m-2026-09-26.png",
+      "sha256": "83f5335c2b71588b5f8f19eb28075f78be8e520030e564a4edbad3649f293bc3",
+      "bytes": 14882203,
+      "what": "Alan's 2026-09-26 scan of GL-CF25-LTR-D with 25 shots of 6 ARC through the Magnus S, rebuilt from its pixels with only the resolution kept. The suppressor comparison's second sheet, shown on the Compare loads screenshot (entry 243 section 1.3).",
+      "consent": "samples/PROVENANCE.md, the 2026-09-26 range day, under Alan's standing consent of entry 171"
     }
   ]
 }

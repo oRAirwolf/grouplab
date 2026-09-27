@@ -89,7 +89,10 @@ photographed on the backer.
 **Published so far:** the research article "Did the suppressor move the point of impact?" publishes the offsets GroupLab measured on the
 two 6 ARC sheets and a chart drawn from them. The 6.5 Creedmoor scan is on the `test-data` release as a test fixture (entry 229 section 4),
 `load-sheet-6.5-wrong-bull-2026-09-26.png`, 14,797,501 bytes, SHA-256 `1f43bab71b79c3005e4213a1e4b9b9eb1f015459a982fdbf4a2d2878fdc985fe`,
-rebuilt from its pixels with only the resolution kept. Anything published from these files is rebuilt from its pixels,
+rebuilt from its pixels with only the resolution kept. The two 6 ARC scans are there too (entry 243 section 1.3), for the Compare loads
+screenshot: `load-sheet-6arc-dominus-k-2026-09-26.png`, 15,775,852 bytes, SHA-256
+`d1fdd053251649a0e2929a7ed1d83a5043036bd658e9995e114ea4cb74be4d9d`, and `load-sheet-6arc-magnus-m-2026-09-26.png`, 14,882,203 bytes,
+SHA-256 `83f5335c2b71588b5f8f19eb28075f78be8e520030e564a4edbad3649f293bc3`. Anything published from these files is rebuilt from its pixels,
 and GPS, location and time metadata are never read, printed or logged.
 
 **The scanner** (entry 235): a Brother MFC-J430W, a Letter size flatbed, so a commercial target larger than Letter is photographed rather

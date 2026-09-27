@@ -34,6 +34,7 @@ public partial class PublishedRendersTests
         "no sheet at all",
         "scan 3",
         "sheet made by the generator",
+        "Alan's own scans, entry 171",
     ];
 
     /// <summary>

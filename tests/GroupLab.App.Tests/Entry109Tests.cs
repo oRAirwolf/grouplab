@@ -31,6 +31,37 @@ public class Entry109Tests
     internal static string Repository([CallerFilePath] string here = "") => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", ".."));
 
     /// <summary>
+    /// Alan's two 6 ARC scans of 2026-09-26, from the test-data release that GROUPLAB_TEST_DATA names, or null without it. Only the release,
+    /// whose files carry their consent records and hashes: PublishedRendersTests refuses anything that publishes reading from elsewhere.
+    /// </summary>
+    private static (string Dominus, string Magnus)? SuppressorScans()
+    {
+        string? folder = Environment.GetEnvironmentVariable("GROUPLAB_TEST_DATA");
+        string dominus = Path.Combine(folder ?? "", "load-sheet-6arc-dominus-k-2026-09-26.png");
+        string magnus = Path.Combine(folder ?? "", "load-sheet-6arc-magnus-m-2026-09-26.png");
+        return folder is { Length: > 0 } && File.Exists(dominus) && File.Exists(magnus) ? (dominus, magnus) : null;
+    }
+
+    /// <summary>One scan opened, detected, analyzed and saved as a session under <paramref name="load"/>; the session's id.</summary>
+    private static long AnalyzeScan(MainWindow window, string scan, string load)
+    {
+        var definition = GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", "GL-CF25-LTR-D.gltd.json")).Definition!;
+        var (grey, metadata) = ImageLoader.Load(scan);
+        var (value, _) = ImageLoader.LoadMaxChannel(scan);
+        var result = AutomaticMarking.Run(grey, value, metadata, definition, new OpenCvSharpBackend(), calibre: Calibre.Of(0.243));
+        Assert.Null(result.Failure);
+        window.OpenImage(scan);
+        window.ApplyDetection(result);
+        window.Session.SetCalibre(Calibre.Of(0.243));
+        window.Session.SetShotDistance(3600);
+        window.Session.SetEquipment(new Rifle("6 ARC", 0.1, GroupLab.Core.Statistics.AngularUnit.Mil), null, load);
+        window.CalibreAnswered();
+        window.Analyse();
+        Dispatcher.UIThread.RunJobs();
+        return window.CurrentSession!.Value;
+    }
+
+    /// <summary>
     /// GL-CF25-LTR rendered at 300 DPI with a hole on every scoring bull, written to a file and opened, and detected by the real pipeline, so
     /// every screen shows what a person would see after opening a scan.
     /// </summary>
@@ -277,7 +308,8 @@ public class Entry109Tests
             // the size it needs to exist for.
             foreach (var (width, height) in new[] { (1280, 720), (1400, 900), (2560, 1440) })
             {
-                var (window, path, _) = Sheet(width, height);
+                var (window, path, synthetic) = Sheet(width, height);
+                long[]? suppressor = null;
                 try
                 {
                     window.Session.SetCalibre(Calibre.Of(0.308));
@@ -290,6 +322,21 @@ public class Entry109Tests
                         BcReference = GroupLab.Core.Ballistics.ReferenceAtmosphere.Icao, BulletWeightGrains = 140,
                     });
                     window.Session.SetEquipment(rifle, null, "Test load");
+
+                    // Entry 243 section 1.3, answering question 60: the published Compare loads picture is Alan's own two suppressor sheets,
+                    // under entry 171's standing consent, each analyzed as a person would and compared. Publishing refuses to go on without
+                    // them, so SOURCES.md is always true of what it lists; an ordinary test run without them compares the synthetic sheet.
+                    if (suppressor is null && SuppressorScans() is { } scans)
+                    {
+                        suppressor = [AnalyzeScan(window, scans.Dominus, "6 ARC, Dominus K"), AnalyzeScan(window, scans.Magnus, "6 ARC, Magnus S")];
+                        window.OpenImage(path);
+                        window.ApplyDetection(synthetic);
+                        window.Session.SetCalibre(Calibre.Of(0.308));
+                        window.Session.SetShotDistance(3600);
+                        window.CalibreAnswered();
+                        window.Session.SetEquipment(rifle, null, "Test load");
+                    }
+
                     foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
                     {
                         string size = $"{width}x{height}";
@@ -354,9 +401,16 @@ public class Entry109Tests
                         Save(window, $"equipment-{name}-{size}");
                         window.BackToEditor();
 
-                        // Entry 113 section 2: two sessions of the sheet compared, the second saved as another load the first time round.
-                        if (window.Sessions!.List().Count < 2)
+                        Assert.False(suppressor is null && outputs.Count > 1, "publishing the screenshots needs Alan's two 6 ARC scans from the test-data release (GROUPLAB_TEST_DATA)");
+                        if (suppressor is { } pair)
                         {
+                            window.ShowSessions();
+                            window.ChooseSession(pair[0], true);
+                            window.ChooseSession(pair[1], true);
+                        }
+                        else if (window.Sessions!.List().Count < 2)
+                        {
+                            // Entry 113 section 2: two sessions of the sheet compared, the second saved as another load the first time round.
                             long saved = window.CurrentSession!.Value;
                             long copy = window.Sessions.Save(window.Sessions.Get(saved)! with { Id = 0, CreatedUtc = "2099-01-01T00:00:00Z", ShotDate = "2099-01-01", Load = "Second load" });
                             window.ChooseSession(saved, true);

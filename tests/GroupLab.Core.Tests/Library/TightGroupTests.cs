@@ -72,6 +72,25 @@ public class TightGroupTests
     /// </summary>
     private static (double X, double Y)[] FiveShotGroup(double radius) => [(-60, -150), (-150, 40), (-76, 40), (radius - 37, 120), (radius + 37, 120)];
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 2.1, answering question 57: two single holes and three shots through one ragged hole are
+    /// three marks, too few to measure a hole from, and the ragged one still stands out against the other two. It is flagged, tentatively,
+    /// and the review says it was judged from too few marks; the single holes are not.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Sheets))]
+    public void OnASheetOfTwoToFourMarksAMarkTwiceTheOthersIsFlaggedTentatively(bool oneBull)
+    {
+        var definition = Sheet(oneBull);
+        double r = Aim(definition).Radius;
+        var (result, review) = Shoot(definition, [(-(r + 60), 0), (r + 60, 0), (0, r + 70), (48, r + 84), (20, r + 118)], 243);
+        var holes = result.Difference!.Holes;
+        Assert.True(holes.Count == 3, $"{holes.Count} marks: {Where(result)}");
+        var flagged = holes.Where(h => h.Oversized).ToList();
+        Assert.True(flagged.Count == 1 && flagged[0].OversizeTentative, $"{flagged.Count} flagged: {Where(result)}. {Said(review)}");
+        Assert.Contains("judged from too few marks to be sure", Said(review), StringComparison.Ordinal);
+    }
+
     [Fact]
     public void AFiveShotGroupOnAOneBullSheetIsAllThatBullsWithNothingToReview()
     {
