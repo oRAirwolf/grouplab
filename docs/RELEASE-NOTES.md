@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.112
+
+**2026-09-27**, commit `a3ac11d`. Nightly.
+
+**What you will notice**
+
+- A sheet can now be given a label of your own, such as the letter written in its serial box, and GroupLab says when you open another copy of a sheet design you have analyzed before; each stays its own session.
+- When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, GroupLab now gives each shot to the bull it was fired at instead of the nearest one, says how far off they all were, and lets you undo it.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.112)
+
+---
+
 ## 0.2.0-nightly.111
 
 **2026-09-27**, commit `3ae5c4b`. Nightly.
