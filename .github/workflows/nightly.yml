@@ -345,7 +345,7 @@ jobs:
           # (tried on this machine with a throwaway key, entry 219 item A6).
           for format in aab apk; do
             dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-out" \
-              -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION" \
+              -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION" -p:Version="$VERSION" \
               -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
               -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
               -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS

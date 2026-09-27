@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark; nothing to do.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7; nothing to do for either.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -21,6 +21,18 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 41. The Play build on your Fold 7, driven from the desktop: what it did
+
+**Answered 2026-09-27 (entry 232).** Nothing to do; this is the report.
+
+1. Connected over wireless debugging with no help needed. The first run had already been answered; Settings matched your choices except targets, which said "Send every target automatically", now **Ask me each time** as you asked; error reports and the survey are on. 110 offers no benchmark on the phone (confirmed; the next nightly does).
+2. Cold start to the first screen in 0.52 s. The published 600 dpi sample (a 17 MB scan) analyzed correctly, 25 shots, in about 50 s from choosing it to the result, twice. Turning the phone kept the result. No crash and no ANR in the phone's log.
+3. **Wrong and fixed:** the phone asked for the distance in meters and gave sizes in cm on a US phone (it could not see its region), and Settings showed the version as 0.2.0 rather than 0.2.0-nightly.110, which error reports carry too. Both are fixed from the next nightly.
+4. **For the plan:** the phone has no Targets screen yet; 50 s for a large scan wants a progress line; the Play copy cannot be replaced by a nightly APK (uninstall first).
+5. Screenshots and the log are in `C:\Dev\grouplab-local\android-play-110\`; the test file pushed to the phone was removed.
 
 ---
 

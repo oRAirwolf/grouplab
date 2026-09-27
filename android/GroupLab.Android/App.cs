@@ -27,6 +27,9 @@ public sealed class App : Avalonia.Application
     public override void OnFrameworkInitializationCompleted()
     {
         string files = global::Android.App.Application.Context.FilesDir!.AbsolutePath;
+
+        // Entry 232: the phone's own region, since invariant globalization hides it from .NET and a US phone started in metric.
+        AppSettingsStore.RegionSource = () => Java.Util.Locale.Default.Country is { Length: 2 } country ? country : null;
         Settings = new AppSettingsStore(Path.Combine(files, "settings.json"));
         var (directory, described) = LogDirectory.Resolve(false, AppContext.BaseDirectory);
         var log = new DiagnosticLog(directory, Settings.LoadVerbose()) { DescribedDirectory = described };

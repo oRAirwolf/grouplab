@@ -24,6 +24,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 232: drive the Play Store build on the Fold 7 over wireless debugging (do this first if Alan asks)
+
+**Status: done 2026-09-27, ahead of 228 to 231 as Alan asked.** Section 3's first run could not be watched: it had been answered before the run began, so the choices were checked and set in Settings instead. Section 4's Targets screen does not exist on the phone, which is recorded for the plan. The report is request 41.
+
+Alan installed GroupLab from the Play internal test (version code 110) on the Fold 7. It opened to the first-run sharing window. The Fold is
+on the same Wi-Fi as the desktop with wireless debugging on, and Alan is at his desk. Drive the app yourself instead of asking him to tap.
+
+1. Connect: `adb devices`; if the Fold is not listed, `adb mdns services` and `adb connect` to the `_adb-tls-connect` address it shows
+   (the phone was paired before, so no new pairing code should be needed; the connect port changes every time wireless debugging is turned
+   on). Only if that fails, ask Alan in the panel for the IP address and port on the phone's Wireless debugging screen, one line, and wait.
+2. Screenshots with `adb exec-out screencap -p > file.png`, taps with `adb shell input tap x y`, scrolling with `adb shell input swipe`.
+   Keep the screenshots in `C:\Dev\grouplab-local\android-play-110\`, not in the repository. Take `adb logcat` for the app's process
+   during the run.
+3. First-run choices, Alan's own (he said his targets may be published and he wants error reports sent): targets **May be published**
+   and **Ask me each time**; error reports **Yes**; hardware survey **Yes**. Record what happens after the survey Yes (on 110 the benchmark
+   is expected not to be offered: confirm).
+4. Then check: the main screen appears; the Targets screen opens; a sample target from the app (or a scan pushed with `adb push` into the
+   app's picker location) analyzes; rotation works; no crash, no ANR. Note time to first screen and analysis time.
+5. Report in for-alan.md in five lines or fewer, with anything that looked wrong, and add fixes to the plan. Do not uninstall the Play
+   build or install a nightly APK over it (the signatures differ).
+
 ## 2026-09-27, entry 227: the zeroing grid expectation, the survey window skipping the benchmark, and CEP 99 with a custom percent
 
 **Status: done 2026-09-27.** Section 1 was done with entry 226, whose grid redesign it specified. Section 2's answer is request 40 (the benchmark did not run: Alan's log shows his Yes and a report with no benchmark in it); the flow is fixed on the desktop and the phone. Section 3 is done.

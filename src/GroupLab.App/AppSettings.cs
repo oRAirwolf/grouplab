@@ -39,6 +39,12 @@ public sealed class AppSettingsStore(string path)
         System.IO.Path.GetFileNameWithoutExtension(Path) == "settings" ? "sheets" : System.IO.Path.GetFileNameWithoutExtension(Path) + ".sheets");
 
     /// <summary>The remembered units, or on first run the default for the system's region.</summary>
+    /// <summary>
+    /// Entry 232: where the region comes from when .NET cannot say. The phone runs with invariant globalization, so its region reads as
+    /// none and a US phone started in metric; the Android application sets this to the phone's own locale.
+    /// </summary>
+    public static Func<string?>? RegionSource { get; set; }
+
     public UnitSettings LoadUnits()
     {
         try
@@ -57,10 +63,10 @@ public sealed class AppSettingsStore(string path)
             DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex, ("setting", "units"), ("fallback", "the region's default"));
         }
 
-        string? region = null;
+        string? region = RegionSource?.Invoke();
         try
         {
-            region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
+            region ??= RegionInfo.CurrentRegion.TwoLetterISORegionName;
         }
         catch (ArgumentException ex)
         {

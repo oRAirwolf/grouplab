@@ -59,6 +59,18 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 232: the Play build driven on the Fold 7 over wireless debugging
+
+`adb mdns services` found nothing with its default backend and found the Fold at once with `ADB_MDNS_OPENSCREEN=0`; `adb connect` then
+worked without a new pairing. The Play copy is version code 110, installed by the Play Store. **Observed:** the first run had been answered;
+targets were set to send automatically and were set to Ask me each time as the entry gives Alan's choice; the phone has no benchmark on 110;
+cold start 0.52 s (`am start -W`); the published sample, pushed to Pictures and chosen in the picker, gave 25 shots, extreme spread 2.16 cm,
+mean radius 0.59 cm, about 50 s from choosing to the result, twice; a quarter turn kept the result in the same process; the log has no
+crash and no ANR. **Fixed:** units followed no region because the phone runs with invariant globalization (`AppSettingsStore.RegionSource`,
+set from `Java.Util.Locale` by the phone, `Entry232Tests`); the phone's informational version was the project default because the
+nightly's Android publish never passed `-p:Version`. **For the plan:** a Targets screen on the phone, a progress line for a long analysis.
+Screenshots and the log in `C:\Dev\grouplab-local\android-play-110\`.
+
 ## Entry 227: the survey offers the benchmark, and CEP 99 with a percent of one's own
 
 **1.** Done with entry 226: the grid spans plus or minus 1.0 mil at 100 yd with 0.25 mil squares, bold half mils and heaviest whole mils,
