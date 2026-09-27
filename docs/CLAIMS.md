@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1055 |
-| measured | 1498 |
+| measured | 1500 |
 | decided | 1216 |
 | unbacked | 0 |
-| **total** | **3769** |
+| **total** | **3771** |
 
-**607** of them were read one sentence at a time and their backing written against the sentence. The other **3162** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**607** of them were read one sentence at a time and their backing written against the sentence. The other **3164** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3421,6 +3421,8 @@ one that matters.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Justin's older sheet had the friend's scope rows printed 10x, 18x and "max", copied from the high power scopes, and he wrote the PLxC's 4, 6 and 8 over them.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): 0 cannot see the center, 1 can see it but cannot center on it, 2 can center confidently.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where Justin's 8x row comes from.
+- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): In the 81 cells both scored, they gave the same score in 53 and scores within one of each other in 75; Cohen's kappa is 0.44, 0.52 with the near misses given half credit.
+- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): They part most at 10x: A through the DNT, 0 for the developer and 2 for Justin, and I through the Razor HD, the other way round.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): The current bull cannot be centered at 10x.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): A scored 0 for the developer through all three high power scopes at 10x, and 0 for Justin through the Razor HD.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): At 25x and above almost everything is centered through good glass, so the magnification a shooter zeros and tests at, not the best glass, decides the design.

@@ -123,7 +123,9 @@ Every score, the developer's first and Justin's second where both scored. 0 cann
 | PLxC | 6x | 0 / 0 | 0 / 1 | 1 / 1 | 0 / 0 | 1 / 1 | 0 / 2 | 1 / 0 | 1 / 0 | 2 / 2 |
 | PLxC | 8x | 0 / 0 | 0 / 0 | 1 / 0 | 1 / 0 | 1 / 0 | 1 / 1 | 1 / 0 | 2 / 0 | 2 / 0 |
 
-One of the developer's Strike Eagle cells for A at 10x is written like an 8; the scale stops at 2, so it is read as 0. At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where Justin's 8x row comes from.
+Three of the developer's Strike Eagle cells were written unclearly, A at 10x and 18x like an 8 and D at 18x like a 0 with a tail; he confirmed all three are 0. The planning session transcribed both sheets separately from full resolution scans, and the two transcriptions agree in every cell. At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where Justin's 8x row comes from.
+
+**The two observers agree only moderately.** In the 81 cells both scored, they gave the same score in 53 and scores within one of each other in 75; Cohen's kappa is 0.44, 0.52 with the near misses given half credit. They part most at 10x: A through the DNT, 0 for the developer and 2 for Justin, and I through the Razor HD, the other way round. Two people on one afternoon is a first look, and the totals should be read with that in mind.
 
 **The current bull cannot be centered at 10x.** A scored 0 for the developer through all three high power scopes at 10x, and 0 for Justin through the Razor HD. At 25x and above almost everything is centered through good glass, so the magnification a shooter zeros and tests at, not the best glass, decides the design.
 

@@ -59,6 +59,15 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 237: the planning session's transcription of both score sheets, against mine
+
+Every one of the 207 cells, 126 of Alan's and 81 of Justin's, reads the same in both transcriptions, and the planning session's totals
+match (Alan A 11 to I 27, Justin A 9 to I 11). The three unclear Strike Eagle cells, which Alan confirmed are 0, now say so in the data.
+The article tests the planning session's four readings and they hold: at 18x and above nearly every cell is 2; at 10x E is centered in
+all five high power cells and C in four; on the PLxC only I, and H for Alan, is reliably visible, and Justin's 8x row is worse than his
+6x; and the observers disagree in places. **Agreement, now in the article:** of the 81 cells both scored, 53 the same and 75 within one,
+Cohen's kappa 0.44, 0.52 linearly weighted: moderate.
+
 ## Entry 235: the first Full backup, requests 32 and 39 closed, and request 20 rewritten
 
 **The first Full Oracle backup** (2026-09-27 09:04:31 UTC, 10 of 47 GB) expires after two days, because the daily and weekly schedules

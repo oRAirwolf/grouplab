@@ -24,6 +24,63 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 237: the planning session's transcription of both aim point score sheets (to check against yours)
+
+**Status: done 2026-09-27.** The two transcriptions agree in every one of the 207 cells, so no score changed; the article gains the three confirmed cells and the observers' agreement.
+
+Entry 229 section 5.2 asks you to transcribe both score sheets from the originals. Here is the planning session's reading from a full
+resolution crop, to compare with yours; where the two differ, the scan decides. Scores: 0 cannot see the center, 1 can see it but not
+center on it confidently, 2 can center confidently. All at 100 yd. Columns A to I.
+
+Alan (score sheet version with a Dist column):
+
+| scope | mag | A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Razor HD Gen III 6-36 | 10x | 0 | 1 | 2 | 1 | 2 | 1 | 1 | 2 | 2 |
+| | 18x | 1 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| | 25x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| | 36x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| DNT TheOne 7-35 | 10x | 0 | 1 | 2 | 1 | 2 | 2 | 1 | 2 | 1 |
+| | 18x | 1 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| | 25x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| | 35x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| Strike Eagle 5-25 | 10x | 0* | 1 | 2 | 1 | 2 | 2 | 1 | 1 | 2 |
+| | 18x | 0* | 2 | 2 | 0* | 2 | 2 | 1 | 2 | 2 |
+| | 25x | 1 | 2 | 2 | 1 | 2 | 2 | 1 | 2 | 2 |
+| PLxC 1-8 | 4x | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 2 |
+| | 6x (written over 8x) | 0 | 0 | 1 | 0 | 1 | 0 | 1 | 1 | 2 |
+| | 8x (printed as 50 yd, shot at 100) | 0 | 0 | 1 | 1 | 1 | 1 | 1 | 2 | 2 |
+
+\* Written like an 8 (Strike Eagle A at 10x and 18x) and like a 0 with a tail (Strike Eagle D at 18x). **Alan confirmed all three are 0.**
+
+
+Alan's totals over 14 rows (max 28): A 11, B 19, C 24, D 17, E 24, F 22, G 19, H 25, I 27.
+
+Justin (older version, no Dist column; "max" means the scope's top power; the PLxC rows had 18x and max printed and he wrote 4, 6, 8):
+
+| scope | mag | A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Razor HD Gen III 6-36 | 10x | 0 | 1 | 2 | 0 | 2 | 1 | 2 | 2 | 0 |
+| | 18x | 1 | 2 | 2 | 2 | 2 | 2 | 1 | 1 | 1 |
+| | 36x | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 1 | 2 |
+| DNT TheOne 7-35 | 10x | 2 | 1 | 0 | 1 | 2 | 2 | 0 | 1 | 2 |
+| | 18x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 1 |
+| | 35x | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| PLxC 1-8 | 4x | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 1 |
+| | 6x | 0 | 1 | 1 | 0 | 1 | 2 | 0 | 0 | 2 |
+| | 8x | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
+
+Justin's totals over 9 rows (max 18): A 9, B 11, C 11, D 9, E 14, F 14, G 8, H 9, I 11.
+
+What the planning session reads from it (the article should test these, not assume them):
+1. At 18x and above nearly everything scores 2 for both people; the designs only separate at 10x and below.
+2. At 10x on the high power scopes, **E scored 2 in all five cells** (Alan's three scopes, Justin's two); C scored 2 in four of five
+   (Justin 0 on the DNT). A, the current bull, scored 0 for Alan on all three scopes at 10x.
+3. On the PLxC at 4x to 8x, only the large bull I (and H for Alan) is reliably visible; Justin's 8x row is worse than his 6x row, matching
+   the blurry 8x both reported.
+4. The two observers disagree in places (A on the DNT at 10x: Alan 0, Justin 2; I on the Razor at 10x: Alan 2, Justin 0). Two people and
+   one day is a first look; report agreement between them, not only totals.
+
 ## 2026-09-27, entry 235: the first Full backup, requests 32 and 21 closed by Alan's answers, the Fold 7 needs GroupLab back, angled photos coming
 
 **Status: done 2026-09-27, apart from one part; section 4 was done first, with entry 236.** **Not done yet:** section 3, the upload timeouts with sudo, which waits for one server sitting at the end of this run together with entry 241's server half, so that an approval nobody is awake to give holds up nothing else; request 21 stays open until then. Section 5's angled photographs arrived as entry 238 and are compared there.
