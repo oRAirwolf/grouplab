@@ -520,6 +520,19 @@
       ],
       "since": "next",
       "note": "GroupLab Dev"
+    },
+    {
+      "key": "big-screen",
+      "group": "Photos and the phone",
+      "name": "The sheet beside the numbers on a big screen",
+      "sentence": "On a tablet in landscape or an unfolded phone, the result shows the sheet and its numbers side by side instead of one under the other.",
+      "shot": null,
+      "noPicture": "a phone build, whose screens come with the phone's look (entry 243)",
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "note": "side by side"
     }
   ]
 }

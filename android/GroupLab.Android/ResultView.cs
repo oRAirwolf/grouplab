@@ -61,8 +61,12 @@ public sealed class ResultView : UserControl
             return;
         }
 
-        column.Children.Add(figures);
-        column.Children.Add(plot);
+        // Entry 243 section 3.3: two parts, the numbers and the sheet, which a phone shows one under the other, as before, and a big screen
+        // in landscape, or any window at least ExpandedWidth wide, side by side: the sheet on the left and the numbers beside it.
+        var numbers = new StackPanel { Spacing = 12 };
+        var picture = new StackPanel { Spacing = 12 };
+        numbers.Children.Add(figures);
+        numbers.Children.Add(plot);
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
             editor = new SheetEditor(new Bitmap(path), () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
@@ -85,19 +89,58 @@ public sealed class ResultView : UserControl
                 Changed();
             };
             tools.Children.Add(undo);
-            column.Children.Add(tools);
-            column.Children.Add(toolWords);
-            column.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
+            picture.Children.Add(tools);
+            picture.Children.Add(toolWords);
+            picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
         }
 
-        column.Children.Add(saved);
+        numbers.Children.Add(saved);
         var shareSaid = Screens.Line("");
-        column.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
-        column.Children.Add(shareSaid);
-        column.Children.Add(Screens.Choice("Another target", again));
+        numbers.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
+        numbers.Children.Add(shareSaid);
+        numbers.Children.Add(Screens.Choice("Another target", again));
         Refresh();
-        Content = Screens.Page(column);
+
+        var host = new Grid { Margin = new Thickness(16) };
+        bool? wide = null;
+        void Arrange(double width)
+        {
+            bool now = width >= ExpandedWidth && picture.Children.Count > 0;
+            if (wide == now)
+            {
+                return;
+            }
+
+            wide = now;
+            host.Children.Clear();
+            host.ColumnDefinitions.Clear();
+            column.Children.Remove(numbers);
+            column.Children.Remove(picture);
+            if (now)
+            {
+                host.MaxWidth = double.PositiveInfinity;
+                host.ColumnDefinitions = new ColumnDefinitions("3*,24,2*");
+                var left = new StackPanel { Spacing = 12, Children = { column, picture } };
+                Grid.SetColumn(numbers, 2);
+                host.Children.Add(left);
+                host.Children.Add(numbers);
+            }
+            else
+            {
+                host.MaxWidth = 640;
+                column.Children.Add(numbers);
+                column.Children.Add(picture);
+                host.Children.Add(column);
+            }
+        }
+
+        SizeChanged += (_, e) => Arrange(e.NewSize.Width);
+        Arrange(Bounds.Width > 0 ? Bounds.Width : 0);
+        Content = new ScrollViewer { Content = host, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
     }
+
+    /// <summary>The width from which the sheet and the numbers sit side by side, Material's expanded window class, entry 243 section 3.3.</summary>
+    internal const double ExpandedWidth = 840;
 
     private Action<Action<MarkingSession>> Edited(MarkingSession s) => change =>
     {
