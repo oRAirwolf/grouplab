@@ -594,7 +594,7 @@
     "Enter the distance, the lowest magnification or the red dot's size, and the number of shots, and choose Make the sheet.",
     "Read why it is the size it is, then print it, or save it as your own."
    ],
-   "fits": "Between choosing a sheet and shooting it. What it cannot do yet: a set of several sheets is analyzed one sheet at a time, not pooled into one group; that is next on the list. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
+   "fits": "Between choosing a sheet and shooting it. Once the set is shot, analyze each sheet in any order and tick them in Session records: Pool the chosen reads them as one group and says which sheets are still missing. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
    "links": [
     [
      "Can you see the bull? The aim point test",

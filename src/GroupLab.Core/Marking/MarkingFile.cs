@@ -76,6 +76,7 @@ public static class MarkingFile
             // Entry 162 section 3.2: what the sheet was shot on, because what a hole measures depends on it.
             paper = state.Paper,
             sheetLabel = state.SheetLabel,
+            setSheet = state.SetSheet,
             backing = state.Backing,
             // Entry 113 section 4: how the sheet's shots are read against its bulls, when it is not one a bull.
             assignmentRule = state.Rule is { } rule
@@ -254,6 +255,7 @@ public static class MarkingFile
             Paper: TargetMaterial.Paper((string?)file["paper"]),
             Backing: TargetMaterial.Backing((string?)file["backing"]),
             SheetLabel: (string?)file["sheetLabel"],
+            SetSheet: (int?)file["setSheet"],
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
                 : null,

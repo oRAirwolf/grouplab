@@ -2408,6 +2408,22 @@
   "**Three sheets come with the E bull as well**: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.": {
    "kind": "code",
    "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)"
+  },
+  "Coming in the next build The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.": {
+   "kind": "code",
+   "where": "website/features.json, from LibraryBuilder.Additions and the aim point test (entry 243)"
+  },
+  "On the tour · In the user guide The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.": {
+   "kind": "code",
+   "where": "website/features.json, from LibraryBuilder.Additions and the aim point test (entry 243)"
+  },
+  "Analyze each sheet as usual, in any order, then in Session records tick them and choose Pool the chosen : GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)"
+  },
+  "Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)"
   }
  },
  "rules": [

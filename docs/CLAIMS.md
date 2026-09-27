@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1087 |
+| code | 1086 |
 | measured | 1513 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3817** |
+| **total** | **3816** |
 
-**640** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**639** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2904,6 +2904,7 @@ one that matters.
 - *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
 - *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): - **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
+- *code* (src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)): Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
@@ -3111,13 +3112,12 @@ one that matters.
 ### site:features/index.html
 
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in nightly.111 Targets GroupLab did not print On any other target you place the bulls by hand, draw a scale at each one, and keep the layout as a template for the next sheet.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in nightly.111 CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
+- *code* (website/features.json, from LibraryBuilder.Additions and the aim point test (entry 243)): Coming in the next build The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.
+- *code* (website/features.json, from LibraryBuilder.Additions and the aim point test (entry 243)): On the tour · In the user guide The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): In the user guide Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.
 
@@ -3212,6 +3212,7 @@ one that matters.
 - *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): The ballistics screen The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
 - *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): What costs the most lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
+- *code* (src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)): Analyze each sheet as usual, in any order, then in Session records tick them and choose Pool the chosen : GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error reports , you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
@@ -3221,7 +3222,6 @@ one that matters.
 
 - *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.
 - *code* (AutomaticMarking.Run and GroupAnalysis): GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in GroupLab New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
@@ -4120,7 +4120,6 @@ one that matters.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): At 100 yards through 10x the white center comes out 0.37 inches across in a disc of 1.11, 25 bulls 1.51 inches apart on one Letter sheet for 25 shots.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x it is 0.92 inches in a disc of 2.74, so only 4 bulls fit a sheet and 25 shots take 7 sheets, each of which names itself by its codes.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The distance in yards; the lowest magnification you will shoot at, 1 for a red dot, with the dot's size in MOA; and how many shots.
-- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): What it cannot do yet: a set of several sheets is analyzed one sheet at a time, not pooled into one group; that is next on the list.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Where the 3.5 arcminute rule comes from is Can you see the bull?
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test The Targets screen &lsaquo; Targets All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
 

@@ -9,7 +9,19 @@
     "Updates and platforms"
   ],
   "checkedFrom": "0.2.0-nightly.113",
-  "notFeatures": [],
+  "notFeatures": [
+    "Opening a second target and analyzing it",
+    "On a narrow window or a screen set to 200 percent",
+    "On a group of two to four shots",
+    "Photographs taken under uneven light",
+    "On the phone, the Capture screen now says to shade",
+    "A session report whose cards are long",
+    "GroupLab now refuses a photograph taken more than 37",
+    "On Android, a photo or scan chosen from the phone",
+    "GroupLab now checks how much memory",
+    "Settings, under Sharing, now lists every benchmark run",
+    "The survey question now says plainly what the random number is"
+  ],
   "features": [
     {
       "key": "reads-itself",
@@ -460,6 +472,53 @@
       "since": "0.2.0-nightly.91",
       "note": "GroupLab now publishes Mac builds",
       "noPicture": "the Mac builds look like the others; it is a platform, not a screen"
+    },
+    {
+      "key": "pool-set",
+      "group": "Sheets and printing",
+      "name": "Pool the sheets of a set",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, and GroupLab says which sheets are still missing.",
+      "shot": "sessions",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": "pool",
+      "tour": "sessions",
+      "guide": "10-comparing-several-sheets-at-once"
+    },
+    {
+      "key": "e-bull",
+      "group": "Sheets and printing",
+      "name": "The E bull",
+      "sentence": "Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "three sheets with a new bull",
+      "tour": "targets",
+      "guide": "1-print-a-sheet",
+      "article": "can-you-see-the-bull"
+    },
+    {
+      "key": "dev-build",
+      "group": "Updates and platforms",
+      "name": "GroupLab Dev for testers",
+      "sentence": "A development build installs beside GroupLab from Google Play, so a tester can have both on one phone.",
+      "shot": null,
+      "noPicture": "a phone build, whose screens come with the phone's look (entry 243)",
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "note": "GroupLab Dev"
     }
   ]
 }

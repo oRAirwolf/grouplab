@@ -429,9 +429,32 @@ public static class GroupAnalysis
             return null;
         }
 
-        bool anyAim = HasOrigin(state, shots);
-        var offsets = CompositeOffsets(state, shots);
+        return FiguresOf(CompositeOffsets(state, shots), HasOrigin(state, shots), state.Calibre);
+    }
 
+    /// <summary>
+    /// The sheets of one set pooled into one group, NOTES-FROM-PLANNING.md entry 243 section 3.1: every shot about its own bull on its own
+    /// sheet, the rule docs/STATISTICS.md gives for pooling groups shot at separate aim points, and nothing excluded, sighters left out.
+    /// </summary>
+    public static GroupFigures? Pooled(IReadOnlyList<MarkingState> sheets)
+    {
+        ArgumentNullException.ThrowIfNull(sheets);
+        var offsets = new List<PointD>();
+        bool anyAim = false;
+        Calibre? calibre = null;
+        foreach (var state in sheets.Where(s => s.Scale is not null))
+        {
+            var shots = state.Shots.Where(s => s.IsShot && s.Exclusion is null && !OnSighter(state, s)).ToList();
+            offsets.AddRange(CompositeOffsets(state, shots));
+            anyAim |= HasOrigin(state, shots);
+            calibre ??= state.Calibre;
+        }
+
+        return offsets.Count == 0 ? null : FiguresOf(offsets, anyAim, calibre);
+    }
+
+    private static GroupFigures? FiguresOf(IReadOnlyList<PointD> offsets, bool anyAim, Calibre? calibre)
+    {
         int n = offsets.Count;
         var centre = GroupStatistics.Centre(offsets);
         PointD? centreFromAim = anyAim ? centre : null;
@@ -465,8 +488,8 @@ public static class GroupAnalysis
             SigmaUnavailable: null,
             ExtremeSpread: Reported(spreadInterval, 0.95, RangeBasis, "beyond the range-statistic table's 100 shots"),
             ExtremeSpreadUnavailable: null,
-            ExtremeSpreadEdgeToEdge: state.Calibre is { } calibre ? spread + calibre.DiameterInches : null,
-            ExtremeSpreadEdgeToEdgeUnavailable: state.Calibre is null ? "needs the group's caliber" : null,
+            ExtremeSpreadEdgeToEdge: calibre is { } named ? spread + named.DiameterInches : null,
+            ExtremeSpreadEdgeToEdgeUnavailable: calibre is null ? "needs the group's caliber" : null,
             TrueSizeRange: new TrueSizeRange(lower, upper),
             TrueSizeRangeUnavailable: null,
             AspectRatio: shapeDefined ? ellipse.AspectRatio : null,

@@ -52,6 +52,50 @@ public sealed partial class MainWindow
     /// The chosen sessions as groups: each its shots about their own bulls, excluded ones left out as every comparison figure leaves them out,
     /// and sighters never in. Groups shot at different distances are compared as angles, scaled to the first one's distance, and it says so.
     /// </summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 3.1: the chosen sessions, when they are sheets of one set from "Made for your optic", pooled
+    /// into one group, every shot about its own bull; and which sheets of the set are still missing. Scanned or photographed in any order,
+    /// each sheet knows from its own codes which of the set it is.
+    /// </summary>
+    internal void PoolChosen()
+    {
+        sessionPoolPanel.Children.Clear();
+        if (sessions is null || sessionChosen.Count == 0)
+        {
+            sessionPoolPanel.Children.Add(Line("Tick the sheets of one set, then Pool the chosen."));
+            return;
+        }
+
+        var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Select(s => sessions.Get(s.Id)!).ToList();
+        var ids = records.Select(r => r.DefinitionId).Distinct().ToList();
+        var definition = ids.Count == 1 && records[0].DefinitionJson is { } json ? GroupLab.Core.Gltd.Json.GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
+        var states = records.Select(r => MarkingFile.Read(r.MarkingJson).State).ToList();
+        if (definition is null || definition.Tiling is not { } set || set.Cols * set.Rows < 2 || states.Any(s => s.SetSheet is null))
+        {
+            sessionPoolPanel.Children.Add(Line(ids.Count > 1
+                ? "These are sheets of different designs. Pooling reads the sheets of one set together; tick only those."
+                : "These are not sheets of a set. A set is what Made for your optic makes when the shots need several sheets; each sheet's codes say which of the set it is."));
+            return;
+        }
+
+        var pooled = SetPool.Pool(definition, states);
+        DiagnosticLog.Info("sessions.pool", ("sheets", states.Count), ("set", pooled.SetSize), ("missing", pooled.Missing.Count), ("shots", pooled.Shots));
+        sessionPoolPanel.Children.Add(new TextBlock { Text = definition.Name, Classes = { AppStyles.Title } });
+        sessionPoolPanel.Children.Add(Line(pooled.Said));
+        if (pooled.Figures is { } figures)
+        {
+            string Inches(GroupLab.Core.Marking.ReportedEstimate? e) => e is { } v
+                ? string.Create(CultureInfo.InvariantCulture, $"{v.Value:0.000} in") + (v.Lower is { } lo && v.Upper is { } hi ? string.Create(CultureInfo.InvariantCulture, $", 95% interval {lo:0.000} to {hi:0.000} in") : "")
+                : "not quoted";
+            sessionPoolPanel.Children.Add(Line($"Mean radius {Inches(figures.MeanRadius)}"));
+            sessionPoolPanel.Children.Add(Line($"Sigma {Inches(figures.Sigma)}"));
+            sessionPoolPanel.Children.Add(Line($"Extreme spread {Inches(figures.ExtremeSpread)}"));
+        }
+    }
+
+    /// <summary>What the pooled set says, for the headless tests.</summary>
+    internal IReadOnlyList<string> PoolText => [.. sessionPoolPanel.Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
+
     internal void CompareChosen()
     {
         if (sessions is null || sessionChosen.Count < 2)

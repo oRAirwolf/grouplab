@@ -183,6 +183,9 @@ public sealed partial class MainWindow : Window
     /// <summary>Entry 141 section 5.2.4: is this load getting better or worse? Shown only when the filters name one load.</summary>
     private readonly StackPanel sessionTrendPanel = new() { Spacing = Tokens.Space8 };
 
+    /// <summary>Entry 243 section 3.1: the chosen sheets of one set, pooled into one group.</summary>
+    private readonly StackPanel sessionPoolPanel = new() { Spacing = Tokens.Space4 };
+
     private readonly SessionsOverTime sessionTrend = new();
 
     private readonly ComboBox sessionRifle = new() { MinWidth = 180 };
@@ -2057,7 +2060,7 @@ public sealed partial class MainWindow : Window
         canvas.Artwork = artwork = result.ExpectedArtwork;
         plotDefinition = result.Definition;
         registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
-        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture);
+        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
         RememberDetected();
         CopyOfADesignSeenBefore = CopyOfADesign(result.Definition?.Id);
 
@@ -3119,6 +3122,8 @@ public sealed partial class MainWindow : Window
         column.Children.Add(filters);
         // Entry 113 section 2: each row's box chooses it for comparing, and two or more chosen compare side by side.
         column.Children.Add(Row(Button("Compare the chosen", CompareChosen), new TextBlock { Text = "Tick two or more sessions to compare their loads.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        column.Children.Add(Row(Button("Pool the chosen", PoolChosen), new TextBlock { Text = "Tick the sheets of one set from Made for your optic to read them as one group.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        column.Children.Add(sessionPoolPanel);
         column.Children.Add(sessionTrendPanel);
         column.Children.Add(sessionRows);
         return new ScrollViewer { Content = column, IsVisible = false };

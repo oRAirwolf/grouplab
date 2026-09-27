@@ -1749,10 +1749,19 @@ def noticed(section: str) -> list[str]:
     return re.findall(r"^- (.*)$", m.group(1), re.M) if m else []
 
 
+def arrived(f: dict) -> str | None:
+    """The build a feature arrived in. "next" means the build after the newest published one: the first whose notes say its phrase, or
+    None until one does, which the page shows as coming in the next build (entry 243, so a feature can be listed with its change)."""
+    if f.get("since") != "next":
+        return f.get("since")
+    found = [v for v, s in release_sections().items() if f.get("note") and f["note"] in s]
+    return min(found, key=build_number) if found else None
+
+
 def spotlight(count: int = 3) -> list[dict]:
     """The newest features, entry 242 section 2.4: by the build they arrived in, and within a build as the file lists them."""
     items = features()["features"]
-    return sorted(items, key=lambda f: -build_number(f["since"]))[:count]
+    return sorted(items, key=lambda f: -(build_number(arrived(f)) if arrived(f) else 10**6))[:count]
 
 
 def feature_problems() -> list[str]:
@@ -1778,8 +1787,10 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: {f.get('group')!r} is not one of the groups")
         if not set(f.get("platforms", [])) <= set(PLATFORMS):
             found.append(f"{where}: a platform is not one of {PLATFORMS}")
-        section = sections.get(f.get("since", ""))
-        if section is None:
+        section = sections.get(arrived(f) or "") if f.get("since") == "next" else sections.get(f.get("since", ""))
+        if f.get("since") == "next" and arrived(f) is None:
+            pass
+        elif section is None:
             found.append(f"{where}: no build {f.get('since')} in docs/RELEASE-NOTES.md")
         elif f.get("note") and f["note"] not in section:
             found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
@@ -1815,12 +1826,17 @@ def feature_card(f: dict, compact: bool = False) -> str:
     picture = "" if compact or not f.get("shot") else f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
-            f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. Since {esc(f["since"].replace("0.2.0-", ""))}.</p>'
+            f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. {esc(since_words(f))}.</p>'
             + (f'<p class="small">{" · ".join(links)}</p>' if links else "") + "</article>")
 
 
+def since_words(f: dict) -> str:
+    version = arrived(f)
+    return "Since " + version.replace("0.2.0-", "") if version else "Coming in the next build"
+
+
 def spotlight_section(heading: str) -> str:
-    cards = "".join(f'<a class="panel pad stack tight plain spot" href="{FEATURES_PATH}#{f["key"]}"><p class="eyebrow">New in {esc(f["since"].replace("0.2.0-", ""))}</p>'
+    cards = "".join(f'<a class="panel pad stack tight plain spot" href="{FEATURES_PATH}#{f["key"]}"><p class="eyebrow">{esc(since_words(f).replace("Since", "New in"))}</p>'
                     f'<h3 class="h4">{esc(f["name"])}</h3><p class="small">{esc(f["sentence"])}</p></a>' for f in spotlight())
     return f'<section class="wrap stack"><h2>{esc(heading)}</h2><div class="grid-3">{cards}</div></section>'
 

@@ -188,7 +188,7 @@ internal static class PhoneAnalysis
             return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working);
         }
 
-        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture);
+        session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
         long? id = Save(session.State, definition, units, null);
         return new PhoneResult(session.State, definition, null, id, working);
     }

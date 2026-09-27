@@ -235,7 +235,14 @@ If an update ever fails, the build you had is still installed and still works. N
 
 ## 10. Comparing several sheets at once
 
-Reading several sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: several sheets have several centers, and what a pooled figure means depends on which center you measure from, which is still being decided. Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals.
+**The sheets of a set pool into one group.** When Made for your optic needs several sheets for your shots, each sheet's codes say which of the
+set it is. Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads
+them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of
+the bulls the set holds. A sheet read twice counts once.
+
+Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
+aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.
+Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals.
 
 ## 11. If something goes wrong
 
