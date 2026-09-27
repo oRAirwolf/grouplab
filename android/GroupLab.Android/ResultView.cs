@@ -127,9 +127,26 @@ public sealed class ResultView : UserControl
 
     private async Task AsSheet(WorkingImage working, TargetDefinition sheet, ShotSetup setup, Action again)
     {
-        Content = Screens.Words("Reading the sheet", $"Registering and detecting as {sheet.Name}.");
-        var result = await Task.Run(() => PhoneAnalysis.Detect(working, sheet, setup, units, App.Survey, CancellationToken.None));
-        Dispatcher.UIThread.Post(() => Content = new ResultView(result, setup, units, again));
+        using var cancel = new CancellationTokenSource();
+        var (page, line, stop) = Screens.Progress($"Reading the sheet as {sheet.Name}");
+        stop.Click += (_, _) =>
+        {
+            cancel.Cancel();
+            line.Text = "Canceling…";
+        };
+        Content = page;
+        try
+        {
+            var result = await Task.Run(() => PhoneAnalysis.Detect(working, sheet, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
+            Dispatcher.UIThread.Post(() => Content = new ResultView(result, setup, units, again));
+        }
+        catch (OperationCanceledException)
+        {
+            // Entry 243 section 3.2: canceled, so the working copy is forgotten and the person is back where they started.
+            GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.detect.cancel");
+            PhoneAnalysis.Forget(working);
+            Dispatcher.UIThread.Post(again);
+        }
     }
 
     /// <summary>The group in one or two sentences: how many shots, the extreme spread and the mean radius, with the angle where the distance is known.</summary>

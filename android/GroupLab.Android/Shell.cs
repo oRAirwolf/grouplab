@@ -143,6 +143,18 @@ internal static class Screens
         new() { GroupName = group, Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap }, MinHeight = Touch, IsChecked = chosen };
 
     /// <summary>A page of words: a heading and a paragraph, scrolled when it does not fit.</summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 3.2: a long analysis says what it is doing, a step at a time, and can be canceled. Returns the
+    /// page, the line to update and the button, so the caller wires the cancel.
+    /// </summary>
+    public static (Control Page, TextBlock Line, Button Cancel) Progress(string heading)
+    {
+        var line = Line(GroupLab.Core.Trace.StageWords.Starting);
+        var bar = new Avalonia.Controls.ProgressBar { IsIndeterminate = true, MinHeight = 6 };
+        var cancel = new Button { Content = new TextBlock { Text = "Cancel" }, MinHeight = Touch, HorizontalAlignment = HorizontalAlignment.Left };
+        return (Page(new StackPanel { Spacing = 12, Children = { Heading(heading), bar, line, cancel } }), line, cancel);
+    }
+
     public static Control Words(string heading, string words) => Page(new StackPanel { Spacing = 12, Children = { Heading(heading), Line(words) } });
 
     /// <summary>Any page's column: a margin, no wider than reads well on the Fold 7 open or a tablet, and scrolled.</summary>

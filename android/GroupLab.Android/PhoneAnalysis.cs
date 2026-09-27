@@ -149,23 +149,64 @@ internal static class PhoneAnalysis
         return budget;
     }
 
-    /// <summary>A photograph, prepared and analyzed.</summary>
-    public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token) =>
-        Prepare(photo) is { } working
-            ? Detect(working, null, setup, units, survey, token)
-            : new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
+    /// <summary>
+    /// A photograph, prepared and analyzed. Entry 243 section 3.2: <paramref name="progress"/> hears what it is doing, a step at a time, and a
+    /// cancel leaves nothing behind: the working copy made for it is deleted, and nothing was saved yet.
+    /// </summary>
+    public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null)
+    {
+        progress?.Invoke(GroupLab.Core.Trace.StageWords.Starting);
+        if (Prepare(photo) is not { } working)
+        {
+            return new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
+        }
+
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            return Detect(working, null, setup, units, survey, token, progress);
+        }
+        catch (OperationCanceledException)
+        {
+            Forget(working);
+            throw;
+        }
+    }
+
+    /// <summary>A working copy nothing will use, deleted with the folder made for it.</summary>
+    public static void Forget(WorkingImage working)
+    {
+        try
+        {
+            if (System.IO.Path.GetDirectoryName(working.Path) is { } folder && folder.StartsWith(SessionsFolder, StringComparison.Ordinal))
+            {
+                Directory.Delete(folder, recursive: true);
+            }
+        }
+        catch (IOException e)
+        {
+            DiagnosticLog.Info("phone.forget", ("error", e.GetType().Name));
+        }
+    }
 
     /// <summary>
     /// The working image analyzed: as the sheet its codes name, or as <paramref name="chosen"/> where the person named it because the codes
     /// could not be read (entry 115 section 4, as the desktop asks).
     /// </summary>
-    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token)
+    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null)
     {
         var clock = Stopwatch.StartNew();
         var (grey, _) = ImageLoader.Load(working.Path);
         var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
         var backend = new OpenCvSharpBackend();
         var trace = new TraceRecorder();
+        trace.Filed += record =>
+        {
+            if (GroupLab.Core.Trace.StageWords.After(record.Stage) is { } next)
+            {
+                progress?.Invoke(next);
+            }
+        };
         var session = new MarkingSession();
         session.Open(working.Path, working.Metadata.Orientation);
         session.SetCalibre(setup.Calibre);

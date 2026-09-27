@@ -118,12 +118,27 @@ public sealed class CapturePage : UserControl
 
     private async Task Analyze(string photo, ShotSetup setup)
     {
-        Content = Screens.Words("Reading the sheet", "Finding the sheet's markers and the holes. This takes a few seconds.");
+        using var cancel = new CancellationTokenSource();
+        var (page, line, stop) = Screens.Progress("Reading the sheet");
+        stop.Click += (_, _) =>
+        {
+            cancel.Cancel();
+            line.Text = "Canceling…";
+        };
+        Content = page;
         var units = App.Settings.LoadUnits();
         PhoneResult result;
         try
         {
-            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, App.Survey, CancellationToken.None));
+            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
+        }
+        catch (OperationCanceledException)
+        {
+            // Entry 243 section 3.2: nothing from a canceled analysis is kept; the photograph goes below, the working copy went with the cancel.
+            DiagnosticLog.Info("phone.detect.cancel");
+            File.Delete(photo);
+            Dispatcher.UIThread.Post(() => Content = start);
+            return;
         }
         catch (Exception e) when (e is IOException or InvalidOperationException or OpenCvSharp.OpenCVException)
         {

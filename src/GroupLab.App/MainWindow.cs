@@ -1907,7 +1907,7 @@ public sealed partial class MainWindow : Window
         var (g, v, m) = (grey, valueImage, metadata);
         var trace = new TraceRecorder();
         ClearStages();
-        trace.Filed += record => Avalonia.Threading.Dispatcher.UIThread.Post(() => AddStage(record));
+        Follow(trace, cancel);
         var clock = System.Diagnostics.Stopwatch.StartNew();
         detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
         try
@@ -1932,6 +1932,19 @@ public sealed partial class MainWindow : Window
             }
         }
     }
+
+    /// <summary>
+    /// Entry 243 section 3.2: each stage as it finishes goes on the timeline and says, in the status line, what the analysis is doing next,
+    /// while this run is still the one running.
+    /// </summary>
+    private void Follow(TraceRecorder trace, CancellationTokenSource run) => trace.Filed += record => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+    {
+        AddStage(record);
+        if (ReferenceEquals(detection, run) && GroupLab.Core.Trace.StageWords.After(record.Stage) is { } next)
+        {
+            status.Text = next;
+        }
+    });
 
     private async Task Detect(bool automatic, GrayImage g, GrayImage v, ImageMetadata m, TraceRecorder trace, System.Diagnostics.Stopwatch clock, CancellationToken token)
     {
@@ -2002,9 +2015,38 @@ public sealed partial class MainWindow : Window
         var clock = System.Diagnostics.Stopwatch.StartNew();
         var calibre = session.State.Calibre;
         detectionMetadata = waiting.Metadata;
-        var result = await Task.Run(() => AutomaticMarking.Run(waiting.Grey, waiting.Value, waiting.Metadata, chosen, new OpenCvSharpBackend(), trace, CancellationToken.None, calibre, artefacts: true));
-        LogDetection(result, trace, clock.ElapsedMilliseconds);
-        ApplyDetection(result);
+
+        // Entry 243 section 3.2: the same progress and Cancel as a sheet that named itself; this path had neither.
+        detection?.Cancel();
+        using var cancel = new CancellationTokenSource();
+        detection = cancel;
+        var token = cancel.Token;
+        ClearStages();
+        Follow(trace, cancel);
+        detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
+        try
+        {
+            var result = await Task.Run(() => AutomaticMarking.Run(waiting.Grey, waiting.Value, waiting.Metadata, chosen, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true), token);
+            token.ThrowIfCancellationRequested();
+            LogDetection(result, trace, clock.ElapsedMilliseconds);
+            if (ReferenceEquals(waiting.Grey, grey))
+            {
+                ApplyDetection(result);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            DiagnosticLog.Info("detect.cancel", ("automatic", false));
+            status.Text = "Detection canceled. Nothing from it was kept.";
+        }
+        finally
+        {
+            if (ReferenceEquals(detection, cancel))
+            {
+                detection = null;
+                detectionProgress.IsVisible = cancelDetection.IsVisible = false;
+            }
+        }
     }
 
     /// <summary>Chooses the sheet by name and detects with it, as the panel's button does, for the headless tests.</summary>
