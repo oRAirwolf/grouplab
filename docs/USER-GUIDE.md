@@ -24,6 +24,11 @@ everything it takes to print it is beside the list, with its artwork filling the
 bull a black disc with a 0.36 in white center and a small dot. The aim point test of 2026-09-26 found it could be centered on through
 every high power scope at 10x, where the usual bull could not. They sit beside the usual ones in the list, with their own identifiers.
 
+**And three with the C bull**: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a
+white diamond center and a small dot. Its points lie on the vertical and horizontal lines through the aim, so a crosshair lines up with the
+shape. **Design your own sheet** offers the rings, E or C for its bull, and **Made for your optic** a disc or a diamond, sized by the same
+rule. None of them replaces the usual bull.
+
 **The zeroing grids are for sighting in by eye.** Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. The sheet says what a small square and each heavier line are, in your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you shoot. The heaviest lines are whole mils or whole MOA, and every heavier line is labeled. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 
 **Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet. GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is. Analyze each sheet by itself for now; putting a set together into one group is still to come.

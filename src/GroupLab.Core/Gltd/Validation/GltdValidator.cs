@@ -37,7 +37,17 @@ public static class GltdValidator
         Label,
     }
 
-    private sealed record Element(Kind Kind, string Name, string Path, Box2 Box);
+    /// <summary>
+    /// An element of the pairwise checks. <see cref="Ring"/> is a bull's outermost disc: a square one (entry 243 section 4) is measured as
+    /// itself rather than by its box, which for a diamond covers paper it never reaches. A circle's box is what every check always used.
+    /// </summary>
+    private sealed record Element(Kind Kind, string Name, string Path, Box2 Box, FiducialDerivation.RingBox? Ring = null)
+    {
+        public bool Near(Element other, long gap) =>
+            Ring is { Edge.IsCircle: false } ring ? ring.Clashes(other.Box, gap)
+            : other.Ring is { Edge.IsCircle: false } theirs ? theirs.Clashes(Box, gap)
+            : Box.Overlaps(other.Box, gap);
+    }
 
     private sealed class Run(TargetDefinition d)
     {
@@ -107,7 +117,32 @@ public static class GltdValidator
                         Error("validate.discOrder", $"/ringSets/{i}/discs/{k}/diameter",
                             $"Diameter {set.Discs[k].Diameter} does not decrease from {set.Discs[k - 1].Diameter}; discs are outermost first (section 3.4).", "20");
                     }
+                    else if (k > 0 && !Outline.Of(set.Discs[k]).Inside(Outline.Of(set.Discs[k - 1])))
+                    {
+                        Error("validate.discInside", $"/ringSets/{i}/discs/{k}",
+                            $"Disc {k} does not lie inside disc {k - 1}: a {GltdNames.DiscShape.NameOf(set.Discs[k].Shape)} of {set.Discs[k].Diameter} reaches past the {GltdNames.DiscShape.NameOf(set.Discs[k - 1].Shape)} of {set.Discs[k - 1].Diameter} around it (section 3.4).", "20a");
+                    }
+
+                    CheckShape(set.Discs[k], $"/ringSets/{i}/discs/{k}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Entry 243 section 4, rule 20b: a circle has no rotation, and a square stands either on a side, at 0, or on a point, at 45, so that a
+        /// crosshair's vertical and horizontal lines run through its points or along its sides. The C bull's diamond is a square at 45, and
+        /// this is what keeps every diamond, in every sheet, preset and generated size, standing on a point.
+        /// </summary>
+        private void CheckShape(Disc disc, string path)
+        {
+            if (disc.Shape == DiscShape.Circle && disc.Rotation != 0)
+            {
+                Error("validate.discRotation", path + "/rotation", $"A circle has no rotation, and this one says {disc.Rotation} degrees (section 3.4).", "20b");
+            }
+            else if (disc.Shape == DiscShape.Square && disc.Rotation is not (0 or 45))
+            {
+                Error("validate.discRotation", path + "/rotation",
+                    $"A square is turned {disc.Rotation} degrees; it stands on a side at 0 or on a point at 45, so a crosshair lines up with it (section 3.4).", "20b");
             }
         }
 
@@ -534,10 +569,11 @@ public static class GltdValidator
         {
             var elements = new List<Element>();
             var outer = _ringSets.ToDictionary(s => s.Key, s => s.Value.Discs.Count == 0 ? 0 : s.Value.Discs.Max(disc => disc.Diameter), StringComparer.Ordinal);
+            var rings = FiducialDerivation.RingBoxes(d);
             for (int i = 0; i < d.Bulls.Count; i++)
             {
                 var b = d.Bulls[i];
-                elements.Add(new Element(Kind.Bull, $"bull {i}", $"/bulls/{i}", Box2.Square(b.X, b.Y, outer.GetValueOrDefault(b.RingSet))));
+                elements.Add(new Element(Kind.Bull, $"bull {i}", $"/bulls/{i}", Box2.Square(b.X, b.Y, outer.GetValueOrDefault(b.RingSet)), rings[i]));
             }
 
             int footprint = d.Fiducials is { } f ? FiducialDerivation.Footprint(f) : 0;
@@ -590,7 +626,7 @@ public static class GltdValidator
                 for (int j = i + 1; j < elements.Count; j++)
                 {
                     var (a, b) = (elements[i], elements[j]);
-                    if (a.Box.Overlaps(b.Box))
+                    if (a.Near(b, 0))
                     {
                         string test = (a.Kind, b.Kind) switch
                         {
@@ -607,7 +643,7 @@ public static class GltdValidator
                             Warn("validate.clearance", b.Path, $"{Capitalise(a.Name)} is under {MarkerClearance} dmm from {b.Name}.", null);
                         }
                     }
-                    else if (a.Kind is not (Kind.Marker or Kind.Label) && b.Kind is not (Kind.Marker or Kind.Label) && a.Box.Overlaps(b.Box, MajorClearance))
+                    else if (a.Kind is not (Kind.Marker or Kind.Label) && b.Kind is not (Kind.Marker or Kind.Label) && a.Near(b, MajorClearance))
                     {
                         bool codeAndBlock = (a.Kind, b.Kind) is (Kind.Code, Kind.DataBlock) or (Kind.DataBlock, Kind.Code);
                         Warn("validate.clearance", b.Path, $"{Capitalise(a.Name)} is under {MajorClearance} dmm from {b.Name}.", codeAndBlock ? "26a" : null);

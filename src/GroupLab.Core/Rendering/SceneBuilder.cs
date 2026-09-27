@@ -526,8 +526,10 @@ public static class SceneBuilder
 
                     if (colours[k] is { } colour)
                     {
-                        long inner = j + 1 < set.Discs.Count ? set.Discs[j + 1].Diameter : 0;
-                        items.Add(new DiscBand(SceneLayer.Bulls, colour, 2L * bull.X, 2L * bull.Y, set.Discs[k].Diameter, inner));
+                        var outer = set.Discs[k];
+                        var within = j + 1 < set.Discs.Count ? set.Discs[j + 1] : null;
+                        items.Add(new DiscBand(SceneLayer.Bulls, colour, 2L * bull.X, 2L * bull.Y, outer.Diameter, within?.Diameter ?? 0,
+                            outer.Shape, outer.Rotation, within?.Shape ?? DiscShape.Circle, within?.Rotation ?? 0));
                     }
 
                     k = j + 1;

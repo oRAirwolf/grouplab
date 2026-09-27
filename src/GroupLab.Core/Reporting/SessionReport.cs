@@ -13,7 +13,7 @@ public sealed record ReportFigure(string Label, string Value, IReadOnlyList<stri
 public sealed record ReportCard(string Title, string Verdict, IReadOnlyList<string> Evidence, IReadOnlyList<string> Why);
 
 /// <summary>One disc of the scoring bull, outermost first, as the composite plot draws it.</summary>
-public sealed record ReportDisc(double DiameterInches, Rgb Colour, bool Paper);
+public sealed record ReportDisc(double DiameterInches, Rgb Colour, bool Paper, GroupLab.Core.Gltd.Model.DiscShape Shape = GroupLab.Core.Gltd.Model.DiscShape.Circle, int Rotation = 0);
 
 /// <summary>One shot on the composite plot, its offset from its own bull's centre in inches, x right and y down.</summary>
 public sealed record ReportShot(string Label, PointD OffsetInches, bool Excluded);

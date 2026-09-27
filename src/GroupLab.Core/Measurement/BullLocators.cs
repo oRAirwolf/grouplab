@@ -34,8 +34,17 @@ public sealed record BullLocation(
     public double Error => Math.Sqrt((Dx * Dx) + (Dy * Dy));
 }
 
-/// <summary>An inked band of a disc stack in dmm radii, TARGET-SCHEMA.md section 3.4. A solid disc has an inner radius of 0.</summary>
-public sealed record InkBand(double Outer, double Inner);
+/// <summary>
+/// An inked band of a disc stack in dmm radii, TARGET-SCHEMA.md section 3.4. A solid disc has an inner radius of 0. Entry 243 section 4:
+/// either edge may be a square, whose radius is half its diagonal; <see cref="OuterEdge"/> and <see cref="InnerEdge"/> are the outlines.
+/// </summary>
+public sealed record InkBand(double Outer, double Inner, DiscShape OuterShape = DiscShape.Circle, int OuterRotation = 0,
+    DiscShape InnerShape = DiscShape.Circle, int InnerRotation = 0)
+{
+    public Outline OuterEdge => new(Outer, OuterShape, OuterRotation);
+
+    public Outline InnerEdge => new(Inner, InnerShape, InnerRotation);
+}
 
 public static class RingGeometry
 {
@@ -63,7 +72,10 @@ public static class RingGeometry
                 j++;
             }
 
-            bands.Add(new InkBand(set.Discs[k].Diameter / 2.0, j + 1 < set.Discs.Count ? set.Discs[j + 1].Diameter / 2.0 : 0));
+            var outer = set.Discs[k];
+            var within = j + 1 < set.Discs.Count ? set.Discs[j + 1] : null;
+            bands.Add(new InkBand(outer.Diameter / 2.0, within is null ? 0 : within.Diameter / 2.0, outer.Shape, outer.Rotation,
+                within?.Shape ?? DiscShape.Circle, within?.Rotation ?? 0));
             k = j + 1;
         }
 
@@ -79,7 +91,8 @@ public static class RingGeometry
     public static double MaskRadius(IReadOnlyList<InkBand> bands)
     {
         ArgumentNullException.ThrowIfNull(bands);
-        return bands.Count >= 2 ? (bands[0].Inner + bands[1].Outer) / 2 : bands.Count == 1 ? bands[0].Outer + 5 : 0;
+        // Entry 243 section 4: the paper inside a square reaches only to its sides, so the mask is measured to them.
+        return bands.Count >= 2 ? (bands[0].InnerEdge.Inscribed + bands[1].Outer) / 2 : bands.Count == 1 ? bands[0].Outer + 5 : 0;
     }
 }
 
@@ -296,7 +309,7 @@ public static class EdgeFitBullLocator
                 if (!(across >= MinimumSamples && across <= MaximumSamples))
                 {
                     return new Converged(new BullLocation(index, bull.Label, declared, null, pass, Failure: string.Create(CultureInfo.InvariantCulture,
-                        $"the mapping gives the {edge.Radius:0.#} dmm edge a profile of {across:0} samples at {step * SamplesPerPixel:0.###} dmm per pixel, outside {MinimumSamples} to {MaximumSamples}")), null, declared, 0);
+                        $"the mapping gives the {edge.Outline.Radius:0.#} dmm edge a profile of {across:0} samples at {step * SamplesPerPixel:0.###} dmm per pixel, outside {MinimumSamples} to {MaximumSamples}")), null, declared, 0);
                 }
 
                 int n = (int)across;
@@ -304,10 +317,11 @@ public static class EdgeFitBullLocator
                 for (int k = 0; k < Rays; k++)
                 {
                     double angle = 2 * Math.PI * k / Rays, cos = Math.Cos(angle), sin = Math.Sin(angle);
+                    double declaredAt = edge.Outline.RadiusAt(angle);
                     bool inside = true;
                     for (int s = 0; s < n && inside; s++)
                     {
-                        double r = edge.Radius - edge.HalfWidth + (s * step);
+                        double r = declaredAt - edge.HalfWidth + (s * step);
                         var q = map.ToImage(new PointD(centre.X + (r * cos), centre.Y + (r * sin)));
                         samples[s] = ImageSampler.Bilinear(image, q.X, q.Y);
                         inside = !double.IsNaN(samples[s]);
@@ -320,8 +334,8 @@ public static class EdgeFitBullLocator
 
                     if (Crossing(samples, edge.Sign, contrast, out bool nearThreshold) is { } at)
                     {
-                        double radius = edge.Radius - edge.HalfWidth + (at * step);
-                        observations.Add(new Observation(centre.X + (radius * cos), centre.Y + (radius * sin), edge.Radius, edge.Sign));
+                        double radius = declaredAt - edge.HalfWidth + (at * step);
+                        observations.Add(new Observation(centre.X + (radius * cos), centre.Y + (radius * sin), edge.Outline, edge.Sign));
                     }
 
                     if (nearThreshold)
@@ -358,29 +372,34 @@ public static class EdgeFitBullLocator
         return new Converged(new BullLocation(index, bull.Label, declared, centre, MaximumPasses, null, spread, used, near, "did not converge"), last.Observations, last.Start, last.Spread);
     }
 
-    private readonly record struct Edge(double Radius, int Sign, double HalfWidth);
+    private readonly record struct Edge(Outline Outline, int Sign, double HalfWidth);
 
-    private readonly record struct Observation(double X, double Y, double Radius, int Sign);
+    private readonly record struct Observation(double X, double Y, Outline Edge, int Sign);
 
     /// <summary>Every edge of every band, outermost first; sign +1 where the ink is inside the edge and -1 where it is outside.</summary>
     private static List<Edge> Edges(IReadOnlyList<InkBand> bands)
     {
-        var radii = new List<(double Radius, int Sign)>();
+        var radii = new List<(Outline Edge, int Sign)>();
         foreach (var band in bands)
         {
-            radii.Add((band.Outer, 1));
+            radii.Add((band.OuterEdge, 1));
             if (band.Inner > 0)
             {
-                radii.Add((band.Inner, -1));
+                radii.Add((band.InnerEdge, -1));
             }
         }
+
+        // The gap to the next edge is taken where the two come closest: along the sides of a square, where it is narrowest. For circles
+        // that is the difference of the radii, as it always was.
+        static double Gap(Outline outer, Outline inner) =>
+            outer.IsCircle && inner.IsCircle ? outer.Radius - inner.Radius : Math.Min(outer.Inscribed - inner.Radius, outer.Radius - inner.Radius);
 
         var edges = new List<Edge>(radii.Count);
         for (int i = 0; i < radii.Count; i++)
         {
-            double gapOut = i == 0 ? double.PositiveInfinity : radii[i - 1].Radius - radii[i].Radius;
-            double gapIn = i == radii.Count - 1 ? radii[i].Radius : radii[i].Radius - radii[i + 1].Radius;
-            edges.Add(new Edge(radii[i].Radius, radii[i].Sign, Math.Min(MaximumHalfWidth, 0.45 * Math.Min(gapOut, gapIn))));
+            double gapOut = i == 0 ? double.PositiveInfinity : Gap(radii[i - 1].Edge, radii[i].Edge);
+            double gapIn = i == radii.Count - 1 ? radii[i].Edge.Inscribed : Gap(radii[i].Edge, radii[i + 1].Edge);
+            edges.Add(new Edge(radii[i].Edge, radii[i].Sign, Math.Min(MaximumHalfWidth, 0.45 * Math.Min(gapOut, gapIn))));
         }
 
         return edges;
@@ -463,14 +482,16 @@ public static class EdgeFitBullLocator
                     }
 
                     var o = observations[i];
-                    double dx = o.X - cx, dy = o.Y - cy, d = Math.Sqrt((dx * dx) + (dy * dy));
-                    if (d == 0)
+                    double dx = o.X - cx, dy = o.Y - cy;
+                    if (dx == 0 && dy == 0)
                     {
                         continue;
                     }
 
-                    double r = d - o.Radius - (o.Sign * g);
-                    double[] jr = [-dx / d, -dy / d, -o.Sign];
+                    // The signed distance to the declared outline, moved out by the ink spread: for a circle the distance from the centre
+                    // less the radius, as it always was, and for a square (entry 243 section 4) the distance to the nearer side.
+                    double r = o.Edge.Distance(dx, dy, out double nx, out double ny) - (o.Sign * g);
+                    double[] jr = [-nx, -ny, -o.Sign];
                     for (int a = 0; a < 3; a++)
                     {
                         gradient[a] -= jr[a] * r;
@@ -498,7 +519,7 @@ public static class EdgeFitBullLocator
             for (int i = 0; i < observations.Count; i++)
             {
                 var o = observations[i];
-                residuals[i] = Math.Sqrt(Math.Pow(o.X - cx, 2) + Math.Pow(o.Y - cy, 2)) - o.Radius - (o.Sign * g);
+                residuals[i] = o.Edge.Distance(o.X - cx, o.Y - cy, out _, out _) - (o.Sign * g);
             }
 
             var absolute = residuals.Where((_, i) => active[i]).Select(Math.Abs).Order().ToArray();

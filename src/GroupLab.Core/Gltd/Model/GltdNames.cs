@@ -65,6 +65,11 @@ public static class GltdNames
         ("text", Model.InkRole.Text),
         ("paper", Model.InkRole.Paper));
 
+    /// <summary>A disc's shape, entry 243 section 4. A circle is the default and is never written.</summary>
+    public static NameTable<DiscShape> DiscShape { get; } = new(
+        ("circle", Model.DiscShape.Circle),
+        ("square", Model.DiscShape.Square));
+
     public static NameTable<CellsMode> CellsMode { get; } = new(
         ("none", Model.CellsMode.None),
         ("grid", Model.CellsMode.Grid),

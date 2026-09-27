@@ -189,6 +189,8 @@ A ring set is a reusable bull design. Most targets have one, referenced by every
 | `discs` | array | yes | Concentric, **outermost first**, painted in array order. 1 to 15 entries |
 | `discs[].diameter` | integer dmm | yes | Diameter of the filled disc |
 | `discs[].ink` | string | yes | An ink `key`. A `paper` ink knocks out, revealing what is underneath |
+| `discs[].shape` | string | no | `circle`, the default and never written, or `square` (entry 243 section 4) |
+| `discs[].rotation` | integer degrees | no | A square's turn: `0`, standing on a side, or `45`, standing on a point. A circle has none |
 
 That example draws a black annulus from 23.8 to 25.4 mm, a black annulus from 11.5 to 12.7 mm, and a 2.5 mm centre dot. Diameters must be strictly decreasing.
 
@@ -199,6 +201,16 @@ A disc stack has exactly one interpretation. Every boundary in the artwork is a 
 This also matches what the incumbent actually prints. Of the 47 shipped OnTarget PDFs measured in ONTARGET-DIMENSIONS.md, **none** uses a stroked annulus; every bull is built from filled discs. The reason is the same one arrived at here from first principles.
 
 The cost is that the palette must contain a `paper` knockout, and that a designer thinks in boundaries rather than in line weights. The visual designer presents ring width as a control and stores the two diameters, which is a UI concern rather than a format one.
+
+**Squares, and the diamond** (NOTES-FROM-PLANNING.md entry 243 section 4). A disc may be a filled square instead of a circle. Its
+`diameter` is its **diagonal, point to point**, the diameter of the circle through its corners, so every rule that reasons about how far a
+disc reaches by its diameter stays true and conservative. A square turned 45 degrees stands on a point: the C bull of the aim point test is
+a black square at 45 with a white square at 45 inside it and a round black dot, and its four points lie on the vertical and horizontal
+lines through the aim point, so a crosshair lines up with the shape even where neither the dot nor the center can be made out. That is a
+rule, not a habit: a square turns 0 or 45 degrees and nothing else, and a circle does not turn (rule 20b). Each disc must lie inside the
+one before it (rule 20a), which for mixed shapes is more than a smaller diameter: a circle inside a diamond must fit inside its sides.
+A definition with a square is refused by a build older than entry 243, from GLTD-J because `shape` is not a property it knows and from
+GLTD-B because the shape sits in bits it reserved (section 5.2), so an older build never draws a diamond as a disc.
 
 Note that the aiming point is the **geometric centre of the ring set**, always, and is not a separate field. A ring set whose discs are not concentric is not expressible, which is intentional.
 
@@ -295,7 +307,7 @@ When `scheme` names a derivation rule, the marker list is **computed from the gr
 | `grid-boundary-half-1` | as above, subdivided to half-pitch steps in both axes | coarse-pitch sheets, 101.6 mm and above, except GL-LR300-R42; and GL-CF25-100M-A4, whose outer bull columns `grid-boundary-1` leaves outside the lattice |
 | `field-ring-1` | a ring of positions in the clear band around a declared measurement grid, on its major lines | the zeroing sheets |
 
-In every derived rule, a candidate position is **dropped** if it would fall outside the safe margin, or within a clearance of a bull's outermost disc, a code, or another marker. The drop test is part of the rule and is therefore versioned with it, which is what makes recomputation deterministic.
+In every derived rule, a candidate position is **dropped** if it would fall outside the safe margin, or within a clearance of a bull's outermost disc, a code, or another marker. A circle's clearance is measured to its bounding box, as `layout.py` does; a square's to the square itself (entry 243 section 4), because the box round a diamond covers the paper on its diagonals, which is where the markers of a 1.5 in grid sit. The drop test is part of the rule and is therefore versioned with it, which is what makes recomputation deterministic.
 
 `grid-boundary-half-1` exists because `grid-boundary-1` degenerates at coarse pitch. On the 300 yard tile, a 101.6 mm pitch over a 2 by 3 grid offers only 12 lattice positions and the 38.1 mm rings knock out all but two of them. Two markers is not a usable registration. Subdividing to half-pitch raises the candidate count to 35 and leaves **nine** surviving markers, well spread. The half rule requires the pitch to be divisible by 4 dmm so that the quarter-pitch offsets stay integer, which the validator asserts.
 
@@ -775,7 +787,9 @@ Ring set block                          1 + sum(1 + 3d) bytes
     for each disc, outermost first:
       diameter 2 bytes uint16 quanta
       ink      1 byte  bits 0-3 ink index, 15 = paper
-                       bits 4-7 reserved, zero
+                       bit 4   square (entry 243 section 4)
+                       bit 5   turned 45 degrees, only with bit 4
+                       bits 6-7 reserved, zero
 
 Grid block                                         12 bytes
   cols        1 byte
@@ -1115,7 +1129,9 @@ Published at `https://grouplab.invalid/schema/gltd-1.schema.json`, versioned by 
               "required": ["diameter","ink"],
               "properties": {
                 "diameter": { "$ref": "#/$defs/dmm", "minimum": 1 },
-                "ink":      { "$ref": "#/$defs/inkKey" }
+                "ink":      { "$ref": "#/$defs/inkKey" },
+                "shape":    { "enum": ["circle","square"] },
+                "rotation": { "enum": [0, 45] }
               },
               "additionalProperties": false
             }
@@ -1390,6 +1406,8 @@ An implementation is conformant when it passes all of the following. These are w
 18. A QR module size below the floor is an error; below the warning threshold is a warning.
 19. A parametric layout whose `cells.grid` pitch is odd, while `fiducials.scheme` is a derived rule, is an error. The derived lattice would fall on non-integer coordinates. Under `grid-boundary-half-1` the pitch must be divisible by four.
 20. Disc diameters within a ring set that do not strictly decrease are an error.
+20a. A disc that does not lie inside the disc before it is an error: a square's corners inside the outline around it, a circle inside the other's inscribed circle.
+20b. A circle with a rotation, or a square turned anything but 0 or 45 degrees, is an error.
 21. More than one ink carrying the `paper` role is an error.
 22. A derived fiducial scheme leaving fewer than four surviving markers is an error; fewer than eight is a warning.
 23. A sighter row whose gap differs from 1.2 times `pitchY` by more than 1 dmm, with no `cells.sighterGap` declared, is a warning **unless the shortened gap is what brings the sighter row inside the fiducial lattice, in which case it is not**.

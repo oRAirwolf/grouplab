@@ -28,7 +28,7 @@ public static partial class GltdJsonReader
     private static readonly string[] PageKeys = ["size", "width", "height", "orientation"];
     private static readonly string[] InkKeys = ["key", "srgb", "role"];
     private static readonly string[] RingSetKeys = ["key", "discs"];
-    private static readonly string[] DiscKeys = ["diameter", "ink"];
+    private static readonly string[] DiscKeys = ["diameter", "ink", "shape", "rotation"];
     private static readonly string[] BullKeys = ["x", "y", "ringSet", "label", "scoring", "labelOffset"];
     private static readonly string[] PointKeys = ["x", "y"];
     private static readonly string[] CellsKeys = ["mode", "drawn", "sighterGap", "ink", "stroke", "grid", "polygons"];
@@ -218,7 +218,9 @@ public static partial class GltdJsonReader
 
         private static Disc ReadDisc(Obj o) => new(
             o.Int("diameter", true, 1, DmmMax) ?? 0,
-            o.Str("ink", true, pattern: InkKeyPattern()) ?? "");
+            o.Str("ink", true, pattern: InkKeyPattern()) ?? "",
+            o.Choice("shape", false, GltdNames.DiscShape) ?? DiscShape.Circle,
+            o.Int("rotation", false, 0, 45) ?? 0);
 
         private static Bull ReadBull(Obj o) => new(
             o.Int("x", true, 0, DmmMax) ?? 0,

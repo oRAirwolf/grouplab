@@ -1,3 +1,5 @@
+using GroupLab.Core.Gltd.Model;
+
 namespace GroupLab.Core.Gltd.Binary;
 
 /// <summary>
@@ -29,8 +31,25 @@ public readonly record struct Rgb(byte R, byte G, byte B)
 /// </summary>
 public sealed record BodyPage(byte PageCode, ushort Width, ushort Height, byte Orientation, byte Quantum);
 
-/// <summary>A disc of the ring set block, section 5.2. <see cref="InkIndex"/> 15 is the paper knockout (section 3.3).</summary>
-public sealed record BodyDisc(ushort Diameter, byte InkIndex);
+/// <summary>
+/// A disc of the ring set block, section 5.2. <see cref="InkIndex"/> 15 is the paper knockout (section 3.3). <see cref="Shape"/> is the ink
+/// byte's bits 4 and 5, entry 243 section 4: 0 a circle, 1 a square on a side, 3 a square on a point. A build older than it rejects the
+/// bits as reserved, so a diamond is refused rather than read as a disc.
+/// </summary>
+public sealed record BodyDisc(ushort Diameter, byte InkIndex, byte Shape = 0)
+{
+    public const byte Square = 1, OnAPoint = 2;
+
+    public static byte ShapeOf(Disc disc)
+    {
+        ArgumentNullException.ThrowIfNull(disc);
+        return disc.Shape == DiscShape.Square ? (byte)(Square | (disc.Rotation == 45 ? OnAPoint : 0)) : (byte)0;
+    }
+
+    public DiscShape DiscShape => (Shape & Square) != 0 ? DiscShape.Square : DiscShape.Circle;
+
+    public int Rotation => (Shape & OnAPoint) != 0 ? 45 : 0;
+}
 
 /// <summary>
 /// The grid block, section 5.2. Along an axis holding a single bull the pitch mirrors the other axis, or is 0 for a

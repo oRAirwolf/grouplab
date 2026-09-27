@@ -80,16 +80,52 @@ public static class FiducialDerivation
             .ToList();
     }
 
-    /// <summary>The bounding box of each bull's outermost disc.</summary>
-    public static IReadOnlyList<Box2> RingBoxes(TargetDefinition d)
+    /// <summary>The bounding box of each bull's outermost disc, with that disc's outline about the bull.</summary>
+    public static IReadOnlyList<RingBox> RingBoxes(TargetDefinition d)
     {
-        var outer = new Dictionary<string, int>(StringComparer.Ordinal);
+        var outer = new Dictionary<string, Disc?>(StringComparer.Ordinal);
         foreach (var set in d.RingSets)
         {
-            outer.TryAdd(set.Key, set.Discs.Count == 0 ? 0 : set.Discs.Max(disc => disc.Diameter));
+            outer.TryAdd(set.Key, set.Discs.Count == 0 ? null : set.Discs.MaxBy(disc => disc.Diameter));
         }
 
-        return d.Bulls.Select(b => Box2.Square(b.X, b.Y, outer.GetValueOrDefault(b.RingSet))).ToList();
+        return d.Bulls.Select(b => outer.GetValueOrDefault(b.RingSet) is { } disc
+            ? new RingBox(Box2.Square(b.X, b.Y, disc.Diameter), 2L * b.X, 2L * b.Y, Outline.Of(disc))
+            : new RingBox(Box2.Square(b.X, b.Y, 0), 2L * b.X, 2L * b.Y, new Outline(0))).ToList();
+    }
+
+    /// <summary>
+    /// A bull's outermost disc for the drop test: its bounding box in doubled coordinates, and its outline. Entry 243 section 4: the box of a
+    /// circle is what <c>layout.py</c> tests against, and every circle is still tested so. A square is tested against itself, because the box
+    /// round the circle through a diamond's points covers the paper on its diagonals, where a marker has more than 100 dmm to spare.
+    /// </summary>
+    public readonly record struct RingBox(Box2 Box, long CentreX2, long CentreY2, Outline Edge)
+    {
+        public bool Clashes(Box2 other, long gap)
+        {
+            if (Edge.IsCircle)
+            {
+                return other.Overlaps(Box, gap);
+            }
+
+            // Separating axes, in doubled coordinates: the page's two and the square's two. The shapes clash unless one axis parts them
+            // by at least the gap.
+            double turn = Edge.Rotation * Math.PI / 180, half = 2 * Edge.Inscribed;
+            double bx = (other.X0 + other.X1) / 2.0, by = (other.Y0 + other.Y1) / 2.0, hw = (other.X1 - other.X0) / 2.0, hh = (other.Y1 - other.Y0) / 2.0;
+            (double X, double Y)[] axes = [(1, 0), (0, 1), (Math.Cos(turn), Math.Sin(turn)), (-Math.Sin(turn), Math.Cos(turn))];
+            foreach (var (ax, ay) in axes)
+            {
+                double apart = Math.Abs(((bx - CentreX2) * ax) + ((by - CentreY2) * ay));
+                double square = half * (Math.Abs((ax * Math.Cos(turn)) + (ay * Math.Sin(turn))) + Math.Abs((-ax * Math.Sin(turn)) + (ay * Math.Cos(turn))));
+                double box = (hw * Math.Abs(ax)) + (hh * Math.Abs(ay));
+                if (apart >= square + box + (2 * gap))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
     private static DerivationResult GridBoundary(TargetDefinition d, Fiducials f, bool halfPitch)
@@ -140,7 +176,7 @@ public static class FiducialDerivation
                 if (box.X0 < 2 * SafeEdge || box.Y0 < 2 * SafeEdge
                     || box.X1 > 2L * (d.Page.Width - SafeEdge) || box.Y1 > 2L * (d.Page.Height - SafeEdge)
                     || codes.Any(c => box.Overlaps(c, CodeGap))
-                    || rings.Any(r => box.Overlaps(r, RingGap))
+                    || rings.Any(r => r.Clashes(box, RingGap))
                     || (dataBlock is { } block && box.Overlaps(block, DataBlockGap)))
                 {
                     dropped++;

@@ -5,7 +5,8 @@ namespace GroupLab.Cli.Library;
 
 /// <summary>What a person tells the target generator: the distance, the scope's lowest magnification (1 for a red dot, with the dot's
 /// size), how many shots, and the page.</summary>
-public sealed record GeneratorRequest(double DistanceYards, double LowestMagnification, double? RedDotMoa, int Shots, string Page);
+/// <param name="Diamond">Entry 243 section 4 item 4: the C bull's diamond instead of the disc, sized by the same rule.</param>
+public sealed record GeneratorRequest(double DistanceYards, double LowestMagnification, double? RedDotMoa, int Shots, string Page, bool Diamond = false);
 
 /// <summary>
 /// The generator's answer: the bull it chose and why, the sheet, how many sheets, and the words that explain it. <see cref="Design"/> is the
@@ -46,6 +47,9 @@ public static class TargetGenerator
 
     public const int MostColumns = 5, MostRows = 6;
 
+    /// <summary>The C bull's proportions, entry 243 section 4: the diamond 1.25 in to the center's 0.36, and the dot 0.10 in to it, as E's.</summary>
+    public const double DiamondToCenter = 1.25 / 0.36, DotToCenter = 0.10 / 0.36;
+
     private static double InchesPerMoa(double yards) => 1.0472 * yards / 100.0;
 
     public static GeneratedTargets Generate(GeneratorRequest request)
@@ -71,14 +75,27 @@ public static class TargetGenerator
         }
 
         int center = Even(centerMoa * inchesPerMoa * 254);
-        int outer = Even(center * 3);
-        int dot = Math.Max(10, Even(center / 4.0));
-        words.Add(Say($"The bull is a black disc {outer / 254.0:0.00} in across with that white center and a small dot in the middle: the aim is the white center, which a crosshair cannot cover, as it covered the thin cross and the open gap in the aim point test."));
+        int outer, dot;
+        List<Disc> discs;
+        if (request.Diamond)
+        {
+            // Entry 243 section 4 item 4: the C bull in the aim point card's proportions, the white center measured point to point.
+            outer = Even(center * DiamondToCenter);
+            dot = Math.Max(10, Even(center * DotToCenter));
+            discs = [new(outer, "black", DiscShape.Square, 45), new(center, "paper", DiscShape.Square, 45), new(dot, "black")];
+            words.Add(Say($"The bull is a black diamond standing on a point, {outer / 254.0:0.00} in point to point, with that white center as a diamond and a small dot in the middle: its points lie on the vertical and horizontal lines through the aim, so a crosshair lines up with the shape even where the dot cannot be made out."));
+        }
+        else
+        {
+            outer = Even(center * 3);
+            dot = Math.Max(10, Even(center / 4.0));
+            discs = [new(outer, "black"), new(center, "paper"), new(dot, "black")];
+            words.Add(Say($"The bull is a black disc {outer / 254.0:0.00} in across with that white center and a small dot in the middle: the aim is the white center, which a crosshair cannot cover, as it covered the thin cross and the open gap in the aim point test."));
+        }
 
         // Bulls 1.35 diameters apart, in a whole number of 4 dmm so either marker scheme can use the pitch.
         int pitchDmm = 4 * (int)Math.Ceiling(outer * 1.35 / 4);
         double pitchInches = pitchDmm / 254.0;
-        var discs = new List<Disc> { new(outer, "black"), new(center, "paper"), new(dot, "black") };
 
         // Every grid from 2 by 2 to 5 by 6 with either marker scheme; the most bulls a sheet wins, then the fewest rows.
         SheetDesign? best = null;
@@ -134,7 +151,7 @@ public static class TargetGenerator
     }
 
     private static SheetSpec Spec(GeneratorRequest r, int columns, int rows, double pitch, int outer, IReadOnlyList<Disc> discs, int sheets, bool half) =>
-        new(Say($"GroupLab generated, {r.DistanceYards:0} yd, {(r.LowestMagnification < 1.5 && r.RedDotMoa is { } d ? $"{d:0.#} MOA dot" : $"{r.LowestMagnification:0.#}x")}"),
+        new(Say($"GroupLab generated, {r.DistanceYards:0} yd, {(r.LowestMagnification < 1.5 && r.RedDotMoa is { } d ? $"{d:0.#} MOA dot" : $"{r.LowestMagnification:0.#}x")}{(r.Diamond ? ", diamond" : "")}"),
             r.Page, columns, rows, pitch, outer, 0, false, discs, sheets, half);
 
     private static int Even(double dmm) => 2 * (int)Math.Round(dmm / 2, MidpointRounding.AwayFromZero);

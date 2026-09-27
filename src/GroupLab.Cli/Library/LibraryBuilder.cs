@@ -271,7 +271,49 @@ public static class LibraryBuilder
             added.Add(Finish(name, stem + "-E", definition));
         }
 
+        // Entry 243 section 4: the C bull as tested, a black diamond standing on a point with a white diamond center and a dot, on the same
+        // sheets and grid. Its points come within 31 dmm of the cell boundary, and the layout's own marker drop test decides what fits.
+        foreach (var (stem, name) in CBullSheets)
+        {
+            var source = built.Single(t => t.FileName == stem + ".gltd.json").Definition;
+            var definition = source with
+            {
+                Id = null,
+                Name = name,
+                Description = source.Description + " Each bull is a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot, the C bull of the aim point test.",
+                Created = CBullCreated,
+                RingSets = [new RingSet("c", CDiscs(CDiagonal))],
+                Bulls = [.. source.Bulls.Select(b => b with { RingSet = "c" })],
+            };
+            added.Add(Finish(name, stem + "-C", definition));
+        }
+
         return added;
+    }
+
+    /// <summary>The sheets drawn with the C bull, and their names.</summary>
+    internal static readonly (string Stem, string Name)[] CBullSheets =
+    [
+        ("GL-CF25-LTR", "GroupLab 5x5 Load Development, C Bull, Letter"),
+        ("GL-CF25-LTR-D", "GroupLab 5x5 Load Development with Load Block, C Bull, Letter"),
+        ("GL-CF25-A4", "GroupLab 5x5 Load Development, C Bull, A4"),
+    ];
+
+    internal const string CBullCreated = "2026-09-27";
+
+    /// <summary>The aim point card's C: 1.25 in point to point, 318 dmm.</summary>
+    internal const int CDiagonal = 318;
+
+    /// <summary>
+    /// The C bull's stack at any size, entry 243 section 4, in the aim point card's proportions: a black diamond <paramref name="diagonal"/>
+    /// point to point, a white diamond center 0.36/1.25 of it (the card's 3.47 to 1), and a round black dot 0.10/0.36 of the center, as E's.
+    /// Both diamonds stand on a point. At the card's size that is 318, 92 and 25 dmm.
+    /// </summary>
+    public static List<Disc> CDiscs(int diagonal)
+    {
+        int centre = (int)Math.Round(diagonal * 0.36 / 1.25, MidpointRounding.AwayFromZero);
+        int dot = (int)Math.Round(diagonal * 0.10 / 1.25, MidpointRounding.AwayFromZero);
+        return [new Disc(diagonal, "black", DiscShape.Square, 45), new Disc(centre, "paper", DiscShape.Square, 45), new Disc(dot, "black")];
     }
 
     /// <summary>The sheets drawn with the E bull, and their names.</summary>
@@ -285,7 +327,7 @@ public static class LibraryBuilder
     internal const string EBullCreated = "2026-09-27";
 
     /// <summary>The E bull's stack: the disc, a 0.36 in white center (91 dmm) and a 0.10 in dot (25 dmm).</summary>
-    internal static List<Disc> EDiscs(int outer) => [new Disc(outer, "black"), new Disc(91, "paper"), new Disc(25, "black")];
+    public static List<Disc> EDiscs(int outer) => [new Disc(outer, "black"), new Disc(91, "paper"), new Disc(25, "black")];
 
     internal static List<Disc> Discs(int outer) =>
         Stacks.TryGetValue(outer, out var stack)

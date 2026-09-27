@@ -40,8 +40,11 @@ public sealed record Ink(string Key, string Srgb, InkRole Role);
 /// <summary>A reusable bull design, TARGET-SCHEMA.md section 3.4: concentric filled discs, outermost first, never strokes.</summary>
 public sealed record RingSet(string Key, IReadOnlyList<Disc> Discs);
 
-/// <summary>One filled disc of a ring set, TARGET-SCHEMA.md section 3.4.</summary>
-public sealed record Disc(int Diameter, string Ink);
+/// <summary>
+/// One filled disc of a ring set, TARGET-SCHEMA.md section 3.4. Entry 243 section 4 gave it a shape: a circle, or a square whose
+/// <see cref="Diameter"/> is its diagonal, point to point, turned by <see cref="Rotation"/> degrees, 0 or 45.
+/// </summary>
+public sealed record Disc(int Diameter, string Ink, DiscShape Shape = DiscShape.Circle, int Rotation = 0);
 
 /// <summary>
 /// An aiming point, TARGET-SCHEMA.md section 3.5. Its identity is its index in the bull array; labels are for

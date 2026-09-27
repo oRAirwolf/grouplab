@@ -52,7 +52,7 @@ public static class Projection
         }
 
         var ringSets = body.RingSets
-            .Select((set, i) => new RingSet(SetKey(i), set.Select(disc => new Disc(disc.Diameter * q, InkKey(disc.InkIndex))).ToList()))
+            .Select((set, i) => new RingSet(SetKey(i), set.Select(disc => new Disc(disc.Diameter * q, InkKey(disc.InkIndex), disc.DiscShape, disc.Rotation)).ToList()))
             .ToList();
 
         // No cells: on a parametric layout the lattice is derived from the bull grid and carries nothing the
@@ -203,7 +203,7 @@ public static class Projection
 
             var inks = _colours.Select(ParseRgb).ToList();
             var ringSets = d.RingSets
-                .Select(set => (IReadOnlyList<BodyDisc>)set.Discs.Select(disc => new BodyDisc(Q(disc.Diameter), _inkIndex[disc.Ink])).ToList())
+                .Select(set => (IReadOnlyList<BodyDisc>)set.Discs.Select(disc => new BodyDisc(Q(disc.Diameter), _inkIndex[disc.Ink], BodyDisc.ShapeOf(disc))).ToList())
                 .ToList();
 
             var bulls = layout is null

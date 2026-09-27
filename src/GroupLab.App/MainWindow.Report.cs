@@ -220,8 +220,8 @@ public sealed partial class MainWindow
 
         var inks = definition.Inks.ToDictionary(i => i.Key);
         return [.. rings.Discs.Select(d => inks.TryGetValue(d.Ink, out var ink)
-            ? new ReportDisc(d.Diameter / 254.0, Colour(ink.Srgb), ink.Role == GroupLab.Core.Gltd.Model.InkRole.Paper)
-            : new ReportDisc(d.Diameter / 254.0, new Rgb(255, 255, 255), true))];
+            ? new ReportDisc(d.Diameter / 254.0, Colour(ink.Srgb), ink.Role == GroupLab.Core.Gltd.Model.InkRole.Paper, d.Shape, d.Rotation)
+            : new ReportDisc(d.Diameter / 254.0, new Rgb(255, 255, 255), true, d.Shape, d.Rotation))];
     }
 
     private static Rgb Colour(string srgb) => new(

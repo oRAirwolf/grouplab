@@ -127,6 +127,18 @@ public static class CanonicalJsonWriter
             dw.WriteStartObject();
             dw.WriteNumber("diameter", disc.Diameter);
             dw.WriteString("ink", disc.Ink);
+
+            // Entry 243 section 4: a circle, the only shape before it, writes neither, so every earlier definition keeps its bytes.
+            if (disc.Shape != DiscShape.Circle)
+            {
+                dw.WriteString("shape", GltdNames.DiscShape.NameOf(disc.Shape));
+            }
+
+            if (disc.Rotation != 0)
+            {
+                dw.WriteNumber("rotation", disc.Rotation);
+            }
+
             dw.WriteEndObject();
         });
         w.WriteEndObject();

@@ -62,7 +62,7 @@ Both packages bring a `samples` folder.
 
 ## Printing a sheet and shooting it
 
-The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->twenty-three<!--/count--> built-in sheets, printed at actual size.
+The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->twenty-six<!--/count--> built-in sheets, printed at actual size.
 
 - Print with **Open to print**, and choose Actual size or 100 percent, never Fit to page.
 - **Measure bull 1 to bull 5 before you shoot:** on the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet.

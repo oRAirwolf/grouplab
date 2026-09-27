@@ -215,7 +215,7 @@ public static class ReportWriter
         foreach (var disc in plot.Discs.Where(d => !d.Paper))
         {
             long r = R(disc.DiameterInches / 2);
-            page.Add(new DiscBand(SceneLayer.Bulls, PlotBull, cx, cy, r + 10, Math.Max(0, r - 10)));
+            page.Add(new DiscBand(SceneLayer.Bulls, PlotBull, cx, cy, r + 10, Math.Max(0, r - 10), disc.Shape, disc.Rotation, disc.Shape, disc.Rotation));
         }
 
         // The frame, a hairline in grey.

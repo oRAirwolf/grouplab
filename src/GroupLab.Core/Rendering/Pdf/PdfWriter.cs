@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Rendering.Pdf;
 
@@ -134,10 +135,10 @@ public static class PdfWriter
                     pendingRects = true;
                     break;
                 case DiscBand band:
-                    Circle(s, band.CentreX, band.CentreY, band.OuterRadius);
+                    Edge(s, band.CentreX, band.CentreY, band.Outer);
                     if (band.InnerRadius > 0)
                     {
-                        Circle(s, band.CentreX, band.CentreY, band.InnerRadius);
+                        Edge(s, band.CentreX, band.CentreY, band.Inner);
                         s.Append("f*\n");
                     }
                     else
@@ -159,6 +160,24 @@ public static class PdfWriter
 
         s.Append('Q');
         return s.ToString();
+    }
+
+    /// <summary>A circle as it always was, or a square (entry 243 section 4) as its four corners, closed.</summary>
+    private static void Edge(StringBuilder s, long cx, long cy, Outline outline)
+    {
+        if (outline.IsCircle)
+        {
+            Circle(s, cx, cy, (long)outline.Radius);
+            return;
+        }
+
+        var corners = outline.Corners();
+        for (int i = 0; i < corners.Count; i++)
+        {
+            s.Append(CultureInfo.InvariantCulture, $"{Number(cx + corners[i].X)} {Number(cy + corners[i].Y)} {(i == 0 ? "m" : "l")}\n");
+        }
+
+        s.Append("h\n");
     }
 
     private static void Circle(StringBuilder s, long cx, long cy, long r)

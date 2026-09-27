@@ -2432,6 +2432,18 @@
   "On a window at least 840 dp wide (entry 243 section 3.3) a result puts the sheet beside its numbers.": {
    "kind": "code",
    "where": "android/GroupLab.Android/ResultView.cs ExpandedWidth and Arrange"
+  },
+  "01 Print a GroupLab sheet Twenty-six built-in sheets, printed at actual size.": {
+   "kind": "code",
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the C sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and CDiscs (entry 243 section 4)"
+  },
+  "- **Done.** A validator, and 26 built-in target sheets.": {
+   "kind": "code",
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets"
+  },
+  "**And three with the C bull**: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs CBullSheets and CDiscs, targets/GL-CF25-*-C.gltd.json; src/GroupLab.App/PrintPanel.cs BullChoices and genShape; src/GroupLab.Cli/Library/TargetGenerator.cs Diamond; held by DiamondBullTests and TargetGeneratorTests (entry 243 section 4)"
   }
  },
  "rules": [
@@ -2659,6 +2671,12 @@
    "surface": "^docs/RELEASE-PLAN\\.md$",
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 219 item D4 (the checklist and the plan), and the prices and terms at the sources the document cites, read 2026-09-25"
+  },
+  {
+   "surface": "^site:(features/|index\\.html)",
+   "match": "New in (nightly\\.[0-9]+|the next build)|New in GroupLab",
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes"
   }
  ]
 }

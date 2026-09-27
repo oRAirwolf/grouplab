@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
+using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Imaging;
 using OpenCvSharp;
 using OpenCvSharp.Aruco;
@@ -414,8 +415,53 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             }
         }
 
-        return [.. texts.Select(t => System.Text.Encoding.Latin1.GetBytes(t))];
+        return [.. texts.Select(Payload)];
     }
+
+    /// <summary>
+    /// A code's bytes from the text OpenCV gives. Its decoder keeps a byte-mode payload that happens to be valid UTF-8 as UTF-8 and converts
+    /// any other from Latin-1, and the text reaches .NET as UTF-8. Entry 243 section 4 found a frame whose only high bytes, in its CRC, were
+    /// CE 95: valid UTF-8, so it came back as a Greek letter, which Latin-1 wrote as a question mark, and the sheet could not name itself.
+    /// A character beyond Latin-1, or Latin-1 bytes that are valid UTF-8, can only have come the UTF-8 way; where either way could have
+    /// made the text, the one that decodes as a GroupLab frame is taken, and Latin-1 otherwise, as before.
+    /// </summary>
+    public static byte[] Payload(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        byte[] utf8 = System.Text.Encoding.UTF8.GetBytes(text);
+        if (text.Any(c => c > (char)0xFF))
+        {
+            return utf8;
+        }
+
+        byte[] latin1 = System.Text.Encoding.Latin1.GetBytes(text);
+        if (utf8.AsSpan().SequenceEqual(latin1))
+        {
+            return latin1;
+        }
+
+        if (IsUtf8(latin1))
+        {
+            return utf8;
+        }
+
+        return GltdBinary.Decode([latin1]).DefinitionId is null && GltdBinary.Decode([utf8]).DefinitionId is not null ? utf8 : latin1;
+    }
+
+    private static bool IsUtf8(byte[] bytes)
+    {
+        try
+        {
+            _ = Utf8Strict.GetString(bytes);
+            return true;
+        }
+        catch (System.Text.DecoderFallbackException)
+        {
+            return false;
+        }
+    }
+
+    private static readonly System.Text.UTF8Encoding Utf8Strict = new(false, true);
 
     /// <summary>Every code the two detectors find in an image, each decoded by the plain decoder at the corners found; the empty ones left out.</summary>
     private static List<string> Read(Mat input)

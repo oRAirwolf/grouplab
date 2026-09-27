@@ -54,11 +54,6 @@ public class AnnulusExtentTests(ITestOutputHelper output)
 
             for (int k = 0; k < own.Count; k++)
             {
-                double outer = own[k].OuterRadius / 2.0, inner = own[k].InnerRadius / 2.0;
-                double gapOut = k == 0 ? double.PositiveInfinity : (own[k - 1].InnerRadius / 2.0) - outer;
-                double gapIn = k == own.Count - 1 ? (inner > 0 ? inner : double.PositiveInfinity) : inner - (own[k + 1].OuterRadius / 2.0);
-                double margin = Math.Min(pixel, Math.Min(gapOut, gapIn) / 2);
-
                 // An annulus is measured along each ray, which crosses its band once. A solid disc is measured along a
                 // whole diameter, so a centre error of a fraction of a pixel cancels rather than counting against it.
                 // On a zeroing sheet the grid's axes cross the aiming mark, so rays along them measure grid ink too.
@@ -72,6 +67,13 @@ public class AnnulusExtentTests(ITestOutputHelper output)
 
                     double angle = n * 2 * Math.PI / Directions;
                     double cos = Math.Cos(angle), sin = Math.Sin(angle);
+
+                    // Each edge where this ray crosses it: a circle's radius, or a square's side (entry 243 section 4). An annulus between
+                    // two squares is not the same width on every ray, and neither is the ray's reach through a square disc.
+                    double outer = own[k].Outer.RadiusAt(angle) / 2.0, inner = own[k].InnerRadius > 0 ? own[k].Inner.RadiusAt(angle) / 2.0 : 0;
+                    double gapOut = k == 0 ? double.PositiveInfinity : (own[k - 1].Inner.RadiusAt(angle) / 2.0) - outer;
+                    double gapIn = k == own.Count - 1 ? (inner > 0 ? inner : double.PositiveInfinity) : inner - (own[k + 1].Outer.RadiusAt(angle) / 2.0);
+                    double margin = Math.Min(pixel, Math.Min(gapOut, gapIn) / 2);
                     double start = inner > 0 ? inner - margin : -(outer + margin), end = outer + margin;
                     double measured = 0;
                     for (double r = start + (Step * pixel / 2); r < end; r += Step * pixel)

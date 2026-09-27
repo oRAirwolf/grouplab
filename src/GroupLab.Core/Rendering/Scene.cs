@@ -1,4 +1,5 @@
 using GroupLab.Core.Gltd.Binary;
+using GroupLab.Core.Gltd.Model;
 
 namespace GroupLab.Core.Rendering;
 
@@ -47,9 +48,20 @@ public abstract record SceneItem(SceneLayer Layer, Rgb Colour);
 /// section 3.4 becomes a sequence of these: each band is one disc minus the next, so an annulus's ink extent is
 /// exactly the difference of two declared diameters and there is no stroke width for a graphics stack to interpret.
 /// In half-dmm a radius equals the declared diameter in dmm.
+/// <para>
+/// Entry 243 section 4: either edge may be a square instead, its radius half the diagonal and turned 0 or 45 degrees, which is how the C
+/// bull's diamond is drawn. A circle, the default, is drawn exactly as before.
+/// </para>
 /// </summary>
-public sealed record DiscBand(SceneLayer Layer, Rgb Colour, long CentreX, long CentreY, long OuterRadius, long InnerRadius)
-    : SceneItem(Layer, Colour);
+public sealed record DiscBand(
+    SceneLayer Layer, Rgb Colour, long CentreX, long CentreY, long OuterRadius, long InnerRadius,
+    DiscShape OuterShape = DiscShape.Circle, int OuterRotation = 0, DiscShape InnerShape = DiscShape.Circle, int InnerRotation = 0)
+    : SceneItem(Layer, Colour)
+{
+    public Outline Outer => new(OuterRadius, OuterShape, OuterRotation);
+
+    public Outline Inner => new(InnerRadius, InnerShape, InnerRotation);
+}
 
 /// <summary>An axis-aligned filled rectangle, used for marker and QR modules, rules and grid lines.</summary>
 public sealed record RectFill(SceneLayer Layer, Rgb Colour, long X, long Y, long Width, long Height) : SceneItem(Layer, Colour);

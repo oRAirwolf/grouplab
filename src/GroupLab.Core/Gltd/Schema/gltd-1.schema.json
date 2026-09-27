@@ -66,7 +66,9 @@
               "required": ["diameter","ink"],
               "properties": {
                 "diameter": { "$ref": "#/$defs/dmm", "minimum": 1 },
-                "ink":      { "$ref": "#/$defs/inkKey" }
+                "ink":      { "$ref": "#/$defs/inkKey" },
+                "shape":    { "enum": ["circle","square"] },
+                "rotation": { "enum": [0, 45] }
               },
               "additionalProperties": false
             }

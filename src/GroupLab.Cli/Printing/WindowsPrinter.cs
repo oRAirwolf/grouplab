@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using GroupLab.Core.Gltd.Binary;
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Printing;
 using GroupLab.Core.Rendering;
 
@@ -318,8 +319,8 @@ public static class WindowsPrinter
                 case DiscBand d:
                     SetDCBrushColor(dc, colour);
                     bool band = BeginPath(dc)
-                        && Ellipse(dc, (int)(d.CentreX - d.OuterRadius), (int)(d.CentreY - d.OuterRadius), (int)(d.CentreX + d.OuterRadius), (int)(d.CentreY + d.OuterRadius))
-                        && (d.InnerRadius <= 0 || Ellipse(dc, (int)(d.CentreX - d.InnerRadius), (int)(d.CentreY - d.InnerRadius), (int)(d.CentreX + d.InnerRadius), (int)(d.CentreY + d.InnerRadius)))
+                        && Edge(dc, d.CentreX, d.CentreY, d.Outer)
+                        && (d.InnerRadius <= 0 || Edge(dc, d.CentreX, d.CentreY, d.Inner))
                         && EndPath(dc)
                         && FillPath(dc);
                     if (!band)
@@ -526,6 +527,19 @@ public static class WindowsPrinter
     [DllImport("gdi32.dll", ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool Polygon(IntPtr dc, PointL[] points, int count);
+
+    /// <summary>One edge of a band into the open path: an ellipse for a circle, or a square's four corners (entry 243 section 4).</summary>
+    private static bool Edge(IntPtr dc, long cx, long cy, Outline outline)
+    {
+        if (outline.IsCircle)
+        {
+            long r = (long)outline.Radius;
+            return Ellipse(dc, (int)(cx - r), (int)(cy - r), (int)(cx + r), (int)(cy + r));
+        }
+
+        var corners = outline.Corners().Select(c => new PointL((int)Math.Round(cx + c.X), (int)Math.Round(cy + c.Y))).ToArray();
+        return Polygon(dc, corners, corners.Length);
+    }
 
     [DllImport("gdi32.dll", ExactSpelling = true)]
     private static extern int SetPolyFillMode(IntPtr dc, int mode);

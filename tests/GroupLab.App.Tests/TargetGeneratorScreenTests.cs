@@ -81,4 +81,29 @@ public class TargetGeneratorScreenTests
         Assert.DoesNotContain("flatbed", window.SummaryText, StringComparison.Ordinal);
         window.Close();
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 4 items 3 and 4: C's diamond is offered in Made for your optic and in the designer, and E's
+    /// disc in the designer, each beside the rings and neither in their place.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheDiamondAndEAreOfferedBesideTheRings()
+    {
+        var window = Window();
+        var made = window.Generate("100", "10", "", 25, diamond: true);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(GroupLab.Core.Gltd.Model.DiscShape.Square, made!.Design!.Definition!.RingSets.Single().Discs[0].Shape);
+        Assert.Equal(GroupLab.Core.Gltd.Model.DiscShape.Square, window.Designed!.Definition.RingSets.Single().Discs[0].Shape);
+
+        window.ChooseBull(2);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(GroupLab.Core.Gltd.Model.DiscShape.Square, window.Designed!.Definition.RingSets.Single().Discs[0].Shape);
+        window.ChooseBull(1);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal([91, 25], window.Designed!.Definition.RingSets.Single().Discs.Skip(1).Select(d => d.Diameter));
+        window.ChooseBull(0);
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(window.Designed!.Definition.RingSets.Single().Discs.Count > 3, "the rings are still the default");
+        window.Close();
+    }
 }

@@ -49,7 +49,7 @@ public static class BodyCodec
             foreach (var disc in set)
             {
                 U16(w, disc.Diameter);
-                w.Add(disc.InkIndex);
+                w.Add((byte)(disc.InkIndex | (disc.Shape << 4)));
             }
         }
 
@@ -229,10 +229,14 @@ public static class BodyCodec
             for (int i = 0; i < discCount; i++)
             {
                 ushort diameter = r.U16("a disc diameter");
-                byte ink = r.U8("a disc ink");
-                Require((ink & 0xF0) == 0, $"Ring set {s} disc {i} sets the reserved ink bits 4 to 7.");
+                byte packed = r.U8("a disc ink");
+
+                // Entry 243 section 4: bits 4 and 5 are the disc's shape; 6 and 7 stay reserved, and a circle on a point means nothing.
+                Require((packed & 0xC0) == 0, $"Ring set {s} disc {i} sets the reserved ink bits 6 and 7.");
+                byte shape = (byte)((packed >> 4) & 0x3), ink = (byte)(packed & 0xF);
+                Require(shape != BodyDisc.OnAPoint, $"Ring set {s} disc {i} is a circle turned onto a point, which has no meaning.");
                 RequireInk(ink, inkCount, allowPaper: true, $"ring set {s} disc {i}");
-                discs[i] = new BodyDisc(diameter, ink);
+                discs[i] = new BodyDisc(diameter, ink, shape);
             }
 
             sets[s] = discs;

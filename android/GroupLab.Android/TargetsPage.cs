@@ -27,6 +27,8 @@ public sealed class TargetsPage : UserControl
     private readonly TextBox shots = Number("25");
     private readonly RadioButton letter = Screens.Radio("page", "Letter", !RegionInfo.CurrentRegion.IsMetric);
     private readonly RadioButton a4 = Screens.Radio("page", "A4", RegionInfo.CurrentRegion.IsMetric);
+    private readonly RadioButton disc = Screens.Radio("shape", "Disc", true);
+    private readonly RadioButton diamond = Screens.Radio("shape", "Diamond", false);
     private readonly StackPanel said = new() { Spacing = 8 };
 
     public TargetsPage()
@@ -56,6 +58,10 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Field("Red dot size in MOA, at 1x only", dot));
         column.Children.Add(Field("Shots", shots));
         column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Children = { letter, a4 } });
+
+        // Entry 243 section 4 item 4: the C bull's diamond beside the disc, sized by the same rule.
+        column.Children.Add(Screens.Line("Bull shape"));
+        column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Children = { disc, diamond } });
         column.Children.Add(Screens.Choice("Make the sheet", Generate));
         column.Children.Add(said);
 
@@ -98,7 +104,7 @@ public sealed class TargetsPage : UserControl
         }
 
         int count = Read(shots.Text) is { } n ? (int)Math.Round(n) : 25;
-        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Read(dot.Text), count, a4.IsChecked == true ? "a4" : "letter"));
+        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Read(dot.Text), count, a4.IsChecked == true ? "a4" : "letter", diamond.IsChecked == true));
         DiagnosticLog.Info("sheet.generate", ("yards", yards), ("power", power), ("shots", made.Request.Shots), ("sheets", made.Sheets), ("bulls", made.Bulls));
         foreach (string sentence in made.Explanation)
         {

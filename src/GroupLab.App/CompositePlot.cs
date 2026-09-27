@@ -19,7 +19,7 @@ namespace GroupLab.App;
 internal sealed record PlotShot(int Id, string Label, string? Bull, PointD Offset, bool Excluded);
 
 /// <summary>One disc of the bull's artwork, outermost first, at its diameter in inches, and whether its ink is the paper.</summary>
-internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper = false);
+internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper = false, DiscShape Shape = DiscShape.Circle, int Rotation = 0);
 
 /// <summary>
 /// The composite plot, NOTES-FROM-PLANNING.md entry 103 section 1: the centre of the analysis state. One bull's artwork from the definition,
@@ -262,8 +262,8 @@ internal sealed class CompositePlot : Control
 
         var inks = definition.Inks.ToDictionary(i => i.Key);
         return [.. rings.Discs.Select(d => inks.TryGetValue(d.Ink, out var ink)
-            ? new PlotDisc(d.Diameter / 254.0, Tokens.Ink(ink.Srgb), ink.Role == InkRole.Paper)
-            : new PlotDisc(d.Diameter / 254.0, Tokens.Paper, true))];
+            ? new PlotDisc(d.Diameter / 254.0, Tokens.Ink(ink.Srgb), ink.Role == InkRole.Paper, d.Shape, d.Rotation)
+            : new PlotDisc(d.Diameter / 254.0, Tokens.Paper, true, d.Shape, d.Rotation))];
     }
 
     public CompositePlot()
@@ -431,7 +431,17 @@ internal sealed class CompositePlot : Control
             var bullPen = new Pen(new SolidColorBrush(inks.Bull), RingStroke(scale));
             foreach (var disc in Discs.Where(d => !d.Paper))
             {
-                context.DrawEllipse(null, bullPen, origin, disc.DiameterInches * scale / 2, disc.DiameterInches * scale / 2);
+                double radius = disc.DiameterInches * scale / 2;
+                if (disc.Shape == DiscShape.Square)
+                {
+                    // Entry 243 section 4: the C bull's diamond, drawn as it is printed.
+                    var corners = new Outline(radius, disc.Shape, disc.Rotation).Corners().Select(c => new Point(origin.X + c.X, origin.Y + c.Y)).ToList();
+                    context.DrawGeometry(null, bullPen, new PolylineGeometry(corners, true));
+                }
+                else
+                {
+                    context.DrawEllipse(null, bullPen, origin, radius, radius);
+                }
             }
 
             // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre. A picked shot waits

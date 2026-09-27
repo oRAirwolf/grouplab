@@ -248,7 +248,7 @@ A report is useful even when the answer is that it crashed on startup. "It opene
 What exists and is tested:
 
 - the GLTD target definition format, in JSON (GLTD-J) and as a binary QR payload (GLTD-B)
-- a validator, and <!--count:sheets:digits-->23<!--/count--> built-in target sheets
+- a validator, and <!--count:sheets:digits-->26<!--/count--> built-in target sheets
 - a PDF renderer, and a print screen that drives it
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
@@ -294,7 +294,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 
 **Phase 0a. Format and renderer.**
 - **Done.** The GLTD definition format, in JSON and as a binary QR payload.
-- **Done.** A validator, and <!--count:sheets:digits-->23<!--/count--> built-in target sheets.
+- **Done.** A validator, and <!--count:sheets:digits-->26<!--/count--> built-in target sheets.
 - **Done.** A PDF renderer, with the printed name and identifier on every sheet.
 
 **Phase 0. Registration spike.**

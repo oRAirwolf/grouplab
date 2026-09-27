@@ -1,3 +1,4 @@
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 
 namespace GroupLab.Core.Rendering;
@@ -41,7 +42,8 @@ public static class SceneRasterizer
                     break;
                 case DiscBand band:
                     // A DiscBand radius in half-dmm is the disc's diameter in dmm, so it scales like any other length.
-                    canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * k), band.OuterRadius * k, band.InnerRadius * k, luminance);
+                    canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * k), band.Outer with { Radius = band.OuterRadius * k },
+                        band.Inner with { Radius = band.InnerRadius * k }, luminance);
                     break;
             }
         }
@@ -66,10 +68,14 @@ public static class SceneRasterizer
             }
         }
 
-        /// <summary>The ink between two concentric circles: whole pixels decided by distance, edge pixels supersampled.</summary>
-        public void FillBand(double cx, double cy, double outer, double inner, double luminance)
+        /// <summary>
+        /// The ink between two concentric outlines: whole pixels decided by distance, edge pixels supersampled. A circle is exactly as it
+        /// always was; a square (entry 243 section 4) is decided by its distance to the nearer side, which is exact inside it and never
+        /// more than the true distance outside, so a pixel it calls wholly outside is.
+        /// </summary>
+        public void FillBand(double cx, double cy, Outline outer, Outline inner, double luminance)
         {
-            double reach = outer + 1;
+            double reach = outer.Radius + 1;
             int v0 = Math.Max(0, (int)Math.Floor(cy - reach)), v1 = Math.Min(Height, (int)Math.Ceiling(cy + reach));
             for (int v = v0; v < v1; v++)
             {
@@ -85,13 +91,19 @@ public static class SceneRasterizer
                 {
                     double dx = u + 0.5 - cx;
                     double d = Math.Sqrt((dx * dx) + (dy * dy));
-                    Blend((v * Width) + u, Coverage(u, v, cx, cy, d, outer) - Coverage(u, v, cx, cy, d, inner), luminance);
+                    Blend((v * Width) + u, Coverage(u, v, cx, cy, dx, dy, d, outer) - Coverage(u, v, cx, cy, dx, dy, d, inner), luminance);
                 }
             }
         }
 
-        private static double Coverage(int u, int v, double cx, double cy, double d, double radius)
+        private static double Coverage(int u, int v, double cx, double cy, double dx, double dy, double d, Outline outline)
         {
+            if (!outline.IsCircle)
+            {
+                return SquareCoverage(u, v, cx, cy, dx, dy, outline);
+            }
+
+            double radius = outline.Radius;
             // A pixel's corners are within 0.71 px of its centre, so outside this band it is wholly in or out.
             if (radius <= 0 || d >= radius + 0.75)
             {
@@ -112,6 +124,41 @@ public static class SceneRasterizer
                 {
                     double sx = u + ((i + 0.5) / Subsamples) - cx;
                     if ((sx * sx) + (sy * sy) <= r2)
+                    {
+                        inside++;
+                    }
+                }
+            }
+
+            return inside / (double)(Subsamples * Subsamples);
+        }
+
+        private static double SquareCoverage(int u, int v, double cx, double cy, double dx, double dy, Outline square)
+        {
+            if (square.Radius <= 0)
+            {
+                return 0;
+            }
+
+            double distance = square.Distance(dx, dy, out _, out _);
+            if (distance >= 0.75)
+            {
+                return 0;
+            }
+
+            if (distance <= -0.75)
+            {
+                return 1;
+            }
+
+            int inside = 0;
+            for (int j = 0; j < Subsamples; j++)
+            {
+                double sy = v + ((j + 0.5) / Subsamples) - cy;
+                for (int i = 0; i < Subsamples; i++)
+                {
+                    double sx = u + ((i + 0.5) / Subsamples) - cx;
+                    if (square.Distance(sx, sy, out _, out _) <= 0)
                     {
                         inside++;
                     }

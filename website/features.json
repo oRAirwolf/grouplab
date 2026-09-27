@@ -22,7 +22,8 @@
     "Settings, under Sharing, now lists every benchmark run",
     "The survey question now says plainly what the random number is",
     "While GroupLab reads a target",
-    "On the phone, selections, radio buttons and focus now use"
+    "On the phone, selections, radio buttons and focus now use",
+    "A sheet whose printed code happened to hold certain bytes"
   ],
   "features": [
     {
@@ -505,6 +506,24 @@
       ],
       "since": "next",
       "note": "three sheets with a new bull",
+      "tour": "targets",
+      "guide": "1-print-a-sheet",
+      "article": "can-you-see-the-bull"
+    },
+    {
+      "key": "c-bull",
+      "group": "Sheets and printing",
+      "name": "The C bull",
+      "sentence": "A black diamond standing on a point, with a white center and a dot: its points sit on a crosshair's lines, on three sheets and in the designer and Made for your optic.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "the C bull",
       "tour": "targets",
       "guide": "1-print-a-sheet",
       "article": "can-you-see-the-bull"

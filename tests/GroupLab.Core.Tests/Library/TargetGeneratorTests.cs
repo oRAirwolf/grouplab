@@ -1,6 +1,7 @@
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Gltd.Validation;
 
 namespace GroupLab.Core.Tests.Library;
@@ -74,5 +75,27 @@ public class TargetGeneratorTests
         Assert.Equal(25, made.Bulls);
         Assert.Null(made.Design!.Definition!.Tiling);
         Assert.Contains(made.Explanation, s => s.Contains("crosshair", StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 4 item 4: the diamond instead of the disc, sized by the same visibility rule for its white
+    /// center, in the aim point card's proportions, standing on a point, and a sheet that prints and names itself from its own render.
+    /// </summary>
+    [Theory]
+    [InlineData(100, 10, 25)]
+    [InlineData(100, 4, 25)]
+    [InlineData(200, 10, 10)]
+    public void TheDiamondIsSizedByTheSameRuleAndStandsOnAPoint(double yards, double magnification, int shots)
+    {
+        var disc = TargetGenerator.Generate(new GeneratorRequest(yards, magnification, null, shots, "letter"));
+        var made = TargetGenerator.Generate(new GeneratorRequest(yards, magnification, null, shots, "letter", Diamond: true));
+
+        Assert.True(made.Design?.Printable == true, string.Join(" | ", made.Explanation.Concat(made.Design?.Checks.Select(c => c.Sentence) ?? [])));
+        Assert.Equal(disc.CenterDmm, made.CenterDmm);
+        Assert.InRange(made.OuterDmm / (double)made.CenterDmm, 3.4, 3.55);
+        var discs = made.Design!.Definition!.RingSets.Single().Discs;
+        Assert.Equal([(DiscShape.Square, 45), (DiscShape.Square, 45), (DiscShape.Circle, 0)], discs.Select(d => (d.Shape, d.Rotation)));
+        Assert.DoesNotContain(GltdValidator.Validate(made.Design.Definition), x => x.Severity == Severity.Error);
+        Assert.Contains(made.Explanation, s => s.Contains("diamond standing on a point", StringComparison.Ordinal));
     }
 }

@@ -94,6 +94,17 @@ public sealed class PrintPanel : UserControl
 
     private readonly ComboBox designRing = new() { ItemsSource = ParametricSheet.RingSizes.Select(r => string.Create(CultureInfo.InvariantCulture, $"{r / 254.0:0.00} in")).ToList(), MinWidth = 120 };
 
+    /// <summary>
+    /// Entry 243 section 4 item 3: the bull the grid is drawn with. The rings are the default; E and C are offered beside them, each as its
+    /// own ring set, and neither becomes the default until Alan has shot them and chooses.
+    /// </summary>
+    internal static readonly string[] BullChoices = ["Rings", "E: a black disc, white center and dot", "C: a black diamond on a point, white center and dot"];
+
+    private readonly ComboBox designBull = new() { ItemsSource = BullChoices, SelectedIndex = 0, MinWidth = 120 };
+
+    /// <summary>Made for your optic's shape, entry 243 section 4 item 4: the disc, or C's diamond, sized by the same rule.</summary>
+    private readonly ComboBox genShape = new() { ItemsSource = new[] { "Disc", "Diamond" }, SelectedIndex = 0, MinWidth = 120 };
+
     private readonly NumericUpDown designSighters = new() { Minimum = 0, Maximum = 8, Value = 3, Increment = 1, FormatString = "0", Width = 120 };
 
     private readonly CheckBox designLoadBlock = new() { Content = "A load block along the bottom" };
@@ -232,6 +243,9 @@ public sealed class PrintPanel : UserControl
     /// <summary>The sheet the designer made, or null while it refuses one.</summary>
     internal LibrarySheet? Designed => designing ? selected : null;
 
+    /// <summary>Chooses the bull the designer draws, by its place in <see cref="BullChoices"/>, for the headless tests.</summary>
+    internal void ChooseBull(int index) => designBull.SelectedIndex = index;
+
     /// <summary>Sets the form, for the headless tests; each field is set as a person would, and the design follows.</summary>
     internal void SetDesign(string pageName, int columns, int rows, string spacing, int ringDmm, int sighters, bool loadBlock, string? group = null, string? distance = null)
     {
@@ -270,6 +284,7 @@ public sealed class PrintPanel : UserControl
         designer.Children.Add(Row(Label("Lowest magnification"), genMagnification, new TextBlock { Text = "x", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
         designer.Children.Add(Row(Label("Red dot size, at 1x"), genDot));
         designer.Children.Add(Row(Label("Shots"), genShots));
+        designer.Children.Add(Row(Label("Bull shape"), genShape));
         designer.Children.Add(Row(Button("Make the sheet", () => Generate())));
         designer.Children.Add(genSaid);
         designer.Children.Add(new TextBlock { Text = "Or lay out a grid yourself", FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 8, 0, 0) });
@@ -278,6 +293,7 @@ public sealed class PrintPanel : UserControl
         designer.Children.Add(Row(Label("Columns and rows"), designColumns, designRows));
         designer.Children.Add(Row(Label("Spacing between bulls, in"), designSpacing));
         designer.Children.Add(Row(Label("Ring"), designRing));
+        designer.Children.Add(Row(Label("Bull"), designBull));
         designer.Children.Add(Row(Label("Sighters"), designSighters));
         designer.Children.Add(designLoadBlock);
         designer.Children.Add(Row(Label("Your five-shot group, MOA"), designGroup, new TextBlock { Text = "at", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0) }, designDistance, new TextBlock { Text = "yd", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
@@ -291,7 +307,7 @@ public sealed class PrintPanel : UserControl
             box.TextChanged += (_, _) => Redesign();
         }
 
-        foreach (var combo in new[] { designPage, designRing })
+        foreach (var combo in new[] { designPage, designRing, designBull })
         {
             combo.SelectionChanged += (_, _) => Redesign();
         }
@@ -340,8 +356,10 @@ public sealed class PrintPanel : UserControl
             return;
         }
 
+        int ringDmm = ParametricSheet.RingSizes[Math.Max(0, designRing.SelectedIndex)];
         var spec = new SheetSpec(designName.Text ?? "", ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)], (int)(designColumns.Value ?? 5), (int)(designRows.Value ?? 5),
-            spacing, ParametricSheet.RingSizes[Math.Max(0, designRing.SelectedIndex)], (int)(designSighters.Value ?? 0), designLoadBlock.IsChecked == true);
+            spacing, ringDmm, (int)(designSighters.Value ?? 0), designLoadBlock.IsChecked == true,
+            designBull.SelectedIndex switch { 1 => LibraryBuilder.EDiscs(ringDmm), 2 => LibraryBuilder.CDiscs(ringDmm), _ => null });
         var design = ParametricSheet.Design(spec);
         foreach (var check in design.Checks)
         {
@@ -379,9 +397,10 @@ public sealed class PrintPanel : UserControl
     /// Entry 226 section 4: makes the sheet the generator's fields describe, on the page the form has chosen, says why it is the size it is,
     /// and shows it as the design, every sheet of a set a page of the preview. Returns what it made, for the headless tests.
     /// </summary>
-    internal GeneratedTargets? Generate(string? distance = null, string? magnification = null, string? dot = null, int? shots = null)
+    internal GeneratedTargets? Generate(string? distance = null, string? magnification = null, string? dot = null, int? shots = null, bool? diamond = null)
     {
         ShowDesigner(true);
+        genShape.SelectedIndex = diamond is { } d ? (d ? 1 : 0) : genShape.SelectedIndex;
         genDistance.Text = distance ?? genDistance.Text;
         genMagnification.Text = magnification ?? genMagnification.Text;
         genDot.Text = dot ?? genDot.Text;
@@ -394,7 +413,7 @@ public sealed class PrintPanel : UserControl
             return null;
         }
 
-        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Number(genDot.Text), (int)(genShots.Value ?? 25), ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)]));
+        var made = TargetGenerator.Generate(new GeneratorRequest(yards, power, Number(genDot.Text), (int)(genShots.Value ?? 25), ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)], genShape.SelectedIndex == 1));
         foreach (string sentence in made.Explanation)
         {
             genSaid.Children.Add(new TextBlock { Text = sentence, TextWrapping = TextWrapping.Wrap, Classes = { made.Design is null ? AppStyles.FormError : AppStyles.Secondary } });
