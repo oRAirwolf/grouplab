@@ -73,7 +73,7 @@ Every result is an ordinary mark that you can move, delete or reassign. On any o
 
 With the rectangle tool, **Find the paper's edges** places the four corners on the paper itself when the sheet stands out from what is
 behind it, still draggable, and offers a standard paper size when the photograph's shape matches one. On a white board it cannot tell the
-paper from the board, and you tap the corners. A photograph taken more than 40 degrees off square to the sheet is refused, with the angle
+paper from the board, and you tap the corners. A photograph taken more than 37 degrees off square to the sheet is refused, with the angle
 named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 
 ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png)

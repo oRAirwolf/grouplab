@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1055 |
-| measured | 1500 |
-| decided | 1216 |
+| measured | 1510 |
+| decided | 1217 |
 | unbacked | 0 |
-| **total** | **3771** |
+| **total** | **3782** |
 
-**607** of them were read one sentence at a time and their backing written against the sentence. The other **3164** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**606** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1060,11 +1060,10 @@ one that matters.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): - **Real:** 31 of the 59 range photographs registered, from 3.1 to 35.1 degrees off square.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): Solved without the file's focal length, the angle came within 2 degrees of the camera's own above 20 degrees, and was wrong by up to 28 degrees below it, which is where the 20 degree rule comes from.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): And in the synthetic sweep, with no blur and no lens, the markers keep every bull within 0.001 in to 60 degrees, lose a quarter of their markers by 50 and three quarters by 65, and cannot register at 70.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **The limit is 40 degrees.** Every real photograph up to 35 degrees registered, and the steepest measured against its scan, 32 degrees, kept the squarest photographs' hole error; nothing real has been measured beyond 35.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The ideal case breaks at 65.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The limit sits above what the real photographs showed working and well inside where the ideal case fails, and question 54 asks planning to read it.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): Photographs of a scanned sheet at 40 to 60 degrees would move it with evidence, and request 18 asks for them.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The refusal names both numbers: "This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 40 degrees.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **The limit is 37 degrees** (entry 238; it was 40).
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): Every real photograph up to 35 degrees registered, and the steepest measured against its scan, 32 degrees, kept the squarest photographs' hole error.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The positions themselves held to about 0.03 in almost to 60 degrees; what fails first is telling a hole from a mark.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The refusal names both numbers: "This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 37 degrees.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): ### 4.3 The quality score Section 5 says how it is computed.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): On the 31 range photographs that registered it reads **good on 10, usable on 6 and poor on 15**.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The poor are set by the angle on 7, all between 28 and 35 degrees off square, by the paper blown out on 6, and by markers missed on 2.
@@ -1083,7 +1082,7 @@ one that matters.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The median sigma, less 0.798 pixel in quadrature, the floor a central difference puts under a perfect step, divided by the rectified resolution, is the blur in inches.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **Perfect at 0.004 in, worthless at 0.015.** 3.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): Two figures: the share of the paper at 250 or above, **perfect at 2 percent and worthless at 20**; and the paper's median level, **perfect at 140 and worthless at 70**.
-- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **Angle.** The off-axis angle of section 4.2: **perfect at 10 degrees, worthless at the limit, 40.** 5.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **Angle.** The off-axis angle of section 4.2: **perfect at 10 degrees, worthless at the limit, 37.** 5.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **Perfect at 150, worthless at 50.** 6.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **Perfect at 90 percent, worthless at 50.** **On the 2026-09-20 range photographs that registered**, the words and what set them are in section 4.3.
 
@@ -1936,7 +1935,8 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Figures come in both themes NOTES-FROM-PLANNING.md entry 143 section 1.2.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Three states, and a record of what went live Entry 143 section 1.3.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The standing rule, and what was decided NOTES-FROM-PLANNING.md entry 158 section 1.
-- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | investigation | decision | why | |---|---|---| | Phone photos of three load sheets against their scans (entry 233) | written, as a section of photographing-targets | It changes what a shooter does at the kitchen counter: shade all of the sheet or none, hold it down outside the print; and it shows the suppressor result can be repeated with a phone.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | investigation | decision | why | |---|---|---| | Nineteen angled photographs of one scanned sheet (entry 238) | written, as a section of curled-angled-paper, with a figure | It tells a shooter how steep a phone can be held and why, and it moved GroupLab's own limit from 40 to 37 degrees.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Phone photos of three load sheets against their scans (entry 233) | written, as a section of photographing-targets | It changes what a shooter does at the kitchen counter: shade all of the sheet or none, hold it down outside the print; and it shows the suppressor result can be repeated with a phone.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Question 38: a photographed hole has no size constant | **already covered** | Articles 1, `photo-hole-size`, and 2, `hole-is-not-the-bullet`, are that finding.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Question 44: the bent-sheet model predicts a held-out marker as well as a fitted one | **not written** | It improved the bull centers on seven of seven photographs and worsened the hole positions on seven of seven, so there is no conclusion yet that a developer could build on, and the model is not adopted.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 130: photographs against scans of the same sheets | **already covered** | `scans-against-photos` is that comparison.
@@ -2874,7 +2874,7 @@ one that matters.
 - *code* (AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment): GroupLab reads the sheet's printed codes to name its definition.
 - *code* (MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs): Every result is an ordinary mark that you can move, delete or reassign.
 - *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): On a white board it cannot tell the paper from the board, and you tap the corners.
-- *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): A photograph taken more than 40 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
+- *code* (src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit.Degrees and Refusal; CaptureTests.TheRefusalNamesTheAngleAndTheLimit (entry 238)): A photograph taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) The pill in the header counts the marks that need you.
 - *measured* (the research article hole-is-not-the-bullet and photo-hole-size, with their data): A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
 - *code* (AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking): Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.** The queue works from the keyboard: - **Space** goes to the next item.
@@ -3170,7 +3170,7 @@ one that matters.
 - *code* (AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment): On a GroupLab sheet the rest happens on its own: GroupLab reads the sheet's printed codes to name its definition.
 - *code* (MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs): Every result is an ordinary mark that you can move, delete or reassign.
 - *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): On a white board it cannot tell the paper from the board, and you tap the corners.
-- *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): A photograph taken more than 40 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
+- *code* (src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit.Degrees and Refusal; CaptureTests.TheRefusalNamesTheAngleAndTheLimit (entry 238)): A photograph taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 - *measured* (the research article hole-is-not-the-bullet and photo-hole-size, with their data): A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
 - *code* (AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking): Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a guess is marked as resting on a guess.
 - *code* (src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)): Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart.
@@ -3490,7 +3490,6 @@ one that matters.
 
 ### site:research/curled-angled-paper/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The developer&#x27;s standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What we found A flat model of a laid-down sheet leaves 0.018 to 0.021 in of error.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): A bent surface takes that to 0.0063 in.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Fitting a flat plane through them, allowing for the lens, leaves an error of 0.018 to 0.021 inches at RMS, and up to 0.060 inches at the worst bull.
@@ -3501,11 +3500,23 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Fitting a simple cylinder, which is what a sheet curling up at one edge looks like, got a deflection of 0.332 inches and an RMS of 0.0078.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Per point, after the fit: how the sheet was held error left after fitting flat frames 0.6 to 0.75 dmm this sheet, laid on a bench, with a bent surface fitted 1.60 dmm pinned to a board 1.3 to 3.3 dmm A sheet you laid on a bench and photographed sits between a truly flat one and a pinned one, and needs the bent-surface fit as much as a pinned one does.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Cropped to the sheet alone, the same detector on the same image found 26 of the 28 holes.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): How steep is too steep On 2026-09-27 the developer photographed one of his scanned load sheets on his desk, in fairly dim room light, with a phone's own camera, nineteen times, from straight down to about as steep as a phone can be held.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): GroupLab measured each photograph's angle from the sheet's own markers, read the holes, and every shot was matched against where the 600 dpi scan of the same sheet puts it.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Up to 36 degrees off square nothing changes.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Every one of the ten photographs up to 36.2 degrees found all 25 shots, each 0.013 to 0.019 inches from the scan at the median, the same as straight down; one of the ten found one mark more.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): From 38.5 degrees marks that are not shots appear , 5 on that photograph, then 2, 6 and 17 as the angle grows, and from 46 degrees shots start to be missed.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The positions of the shots it did match held to about 0.03 inches almost to 60 degrees: what fails first is not where a hole is but telling a hole from a mark on the paper that the angle has squashed into the same shape.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The dim light cost nothing; the straight-down photographs scored a full 100 on GroupLab's quality score.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): So GroupLab now refuses a photograph taken more than 37 degrees off square, between the last photograph that agreed with the scan and the first that did not, and says both numbers when it does.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): It was 40, set before anything real had been measured past 35.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What this means Hold the phone within about 35 degrees of square.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Past 37 GroupLab refuses the photograph, because that is where it starts reading marks that are not shots.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Store targets flat if you can, and if you cannot, expect the fitted correction to be doing real work.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Two of 28 holes were still missed , and both were a round hole and a keyhole that merged into one blob in the photograph.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): Holes found on the photograph sat 0.023 inches from the same holes found on a scan of the same sheet, four times the model's own residual.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What you should take is not the number 0.694 but the finding that the number is not zero, and is large enough to matter.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The earlier pinned and flat frames it is compared against: the same document, measurement M1.11.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The nineteen angled photographs, each against the scan: curled-angled-paper/data/angled-2026-09-27.csv , and docs/PHASE1-RESULTS.md , \"Entry 238\".
 
 ### site:research/designing-a-readable-target/index.html
 
@@ -3518,6 +3529,7 @@ one that matters.
 
 ### site:research/hole-is-not-the-bullet/index.html
 
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-20): The developer&#x27;s standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): What we found On a scanner a hole measures about 0.94 of the bullet&#x27;s diameter, consistently enough to tell one hole from two.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): On a photograph the same ratio runs from 0.90 to 1.45 depending on the light and the angle, so there is no photograph constant to be had.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-20): GroupLab's number, and where it came from For a scanned sheet, GroupLab uses 0.945 : a hole measures about 94.5 percent of the bullet's diameter.
@@ -3572,7 +3584,6 @@ one that matters.
 
 - *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets Why a photo cannot tell you your bullet&#x27;s size The same holes measure 0.90 to 1.45 times the bullet depending on the light they were photographed in.
 - *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets 17 One hole or two?
-- *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets 18 Curled, angled and wrinkled paper A target you have laid flat on a bench is not flat.
 - *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets 2 A bullet hole is not the bullet A .308 bullet does not leave a .308 hole.
 - *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets 20 Zeroing on a blank sheet with a hand-drawn cross You do not need a printed target to zero a rifle.
 - *measured* (each card is its article's own title and description, backed by that article's evidence): Reading targets 5 How GroupLab reads a target From a photograph to a group size, in six steps, with what each one can get wrong and how you would know.

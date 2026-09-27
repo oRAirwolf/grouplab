@@ -198,13 +198,19 @@ public static class CaptureQualities
 /// How far off square a photograph may be before GroupLab refuses it, NOTES-FROM-PLANNING.md entry 157 section 3 item 4, set from what was
 /// measured: docs/MOBILE-CAPTURE.md section 4 gives it. Every one of the 2026-09-20 range photographs registered up to 35 degrees, the
 /// steepest, and the twelve measured against their scans up to 32 degrees kept the same hole error as the squarest. A rendered sheet
-/// photographed through a known camera kept every bull within 0.001 in to 60 degrees and lost its markers past 65. The limit sits above
-/// everything the real photographs showed working and well inside where the ideal case breaks; question 54 asks planning to read it.
+/// photographed through a known camera kept every bull within 0.001 in to 60 degrees and lost its markers past 65.
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 238 moved it from 40 to 37 on the first real evidence past 35: nineteen phone photographs of one scanned
+/// sheet from straight down to 66 degrees. Every one up to 36.2 degrees found all 25 shots, each within 0.013 to 0.019 in of the scan at
+/// the median, with one extra mark in ten photographs; from 38.5 degrees on, marks that are not holes appeared (5, 2, 6, 17) and shots
+/// began to be missed, and from 36 degrees the sheet's codes were missed on six of the ten. The limit sits between the last photograph that agreed with
+/// the scan and the first that did not.
+/// </para>
 /// </summary>
 public static class OffAxisLimit
 {
     /// <summary>The limit in degrees.</summary>
-    public const double Degrees = 40;
+    public const double Degrees = 37;
 
     /// <summary>The refusal, naming the angle and the limit, or null inside it.</summary>
     public static string? Refusal(double degrees) => degrees <= Degrees ? null : string.Create(CultureInfo.InvariantCulture,

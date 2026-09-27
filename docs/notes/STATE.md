@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 237.
+**Last rewritten:** 2026-09-27, after entry 238.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 235 (its section 3 in the closing server sitting) and 237. Next 238 to 240, 242 to 244; 233's aim card waits with 228 on Android.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 235 (its section 3 in the closing server sitting), 237 and 238. Next 239, 240, 242 to 244; 233's aim card waits with 228 on Android.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -63,8 +63,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **10** (45 reconnect the Fold 7 and the tablet; 46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
-camera; then 9, 16, 20, 18, 32 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
+Open requests in `docs/notes/for-alan.md`: **9** (45 reconnect the Fold 7 and the tablet; 46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
+camera; then 9, 16, 20 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
 
 ## Open questions
 
@@ -105,7 +105,7 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
 - **The upload page asks for one of two consent levels**, and a testing only target can never reach `samples/` or the site (entry 165).
 - **A printed grid registers a target GroupLab did not print** (`GridRegistration`, entry 158).
-- **A photograph over 40 degrees off square is refused**, naming the angle, and keeps its angle and a quality score (entry 157).
+- **A photograph over 37 degrees off square is refused** (was 40; entry 238's angled photographs), naming the angle, and keeps its angle and a quality score (entry 157).
 - **Every word a shooter may not know explains itself**, in the app and on the site, from `glossary.json` (entry 154).
 - **Every published sentence has its backing**: `scripts/claims.py --check` fails CI otherwise (entry 159).
 - **Publishing an article is a decision** recorded in `website/research/PUBLISHED.md`; `ready` means finished and not live.

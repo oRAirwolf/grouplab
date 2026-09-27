@@ -24,6 +24,60 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 238: the angled photographs for request 18 have arrived
+
+**Status: done 2026-09-27.** The measured tilts leave no gap where the results change (36.2 degrees clean, 38.5 not), so no more photographs are asked for; the limit is now 37 degrees; the dim light did no harm. The photographs are not published.
+
+Alan photographed the 6 ARC Dominus K sheet (serial box K; its 600 dpi scan is `6.arc.dominus.k09262026.png`, entry 229) on his desk,
+corners held down with round weights, in fairly dim room light, with the Fold 7's stock camera. Files:
+`C:\Users\Airwolf\Downloads\Photos-1-001(1)\`, ten JPEGs, 4000 by 3000. Some were saved landscape because the phone turned its
+orientation as it tilted; the markers make that irrelevant. Same metadata rules as entry 233 (never read, print or log location or time;
+strip and rename before anything is committed). Copy them to `C:\Dev\grouplab-originals\range-2026-09-26\photos-angled\`.
+
+Alan did not label the angles, and does not need to: compute each photo's tilt from the sheet's plane (the homography from the markers,
+with the focal length from the camera fields, which is allowed; nothing else from the metadata). The planning session's rough reading from
+thumbnails, by the sheet's foreshortening, to check yours against:
+
+| # | file | rough tilt from straight down |
+|---|---|---|
+| 1 | `20260927_033928.jpg` | about 0 (the reference) |
+| 2 | `20260927_033932.jpg` | about 15 to 25 |
+| 3 | `20260927_033934.jpg` | about 15 to 25 |
+| 4 | `20260927_033937.jpg` | about 55 |
+| 5 | `20260927_033940.jpg` | about 55 to 60 |
+| 6 | `20260927_033943.jpg` | about 15 to 25, sheet turned a quarter |
+| 7 | `20260927_033948.jpg` | about 25 to 35, sheet turned a quarter |
+| 8 | `20260927_033952.jpg` | about 50, from the opposite side |
+| 9 | `20260927_033955.jpg` | about 55, opposite side |
+| 10 | `20260927_034000.jpg` | about 55, opposite side |
+
+If that reading is right there may be nothing between about 35 and 50 degrees, which is where the refusal limit (question 54, now 40)
+most likely belongs. Measure first. Only if the gap is real and the result needs it, ask Alan in for-alan.md for two or three more photos
+of the same sheet at 40 to 45 degrees, with a simple way to judge the angle (for example: the phone held level with a point about as far
+above the table as it is away from the sheet's center gives 45).
+
+Then, per entry 235 section 5: every photo against the scan, shot by shot; holes found and missed; marker reading; quality score; the
+limit set from where the results stop agreeing with the scan. Say whether the dim light hurt anything before asking for any retake.
+
+**A second set, same sheet, same desk:** `C:\Users\Airwolf\Downloads\Photos-1-001(2)\`, nine JPEGs, 4000 by 3000, taken a few minutes
+after the first set, corners held down with different weights. Same rules. Copy them next to the first set. Rough tilts from thumbnails:
+
+| # | file | rough tilt |
+|---|---|---|
+| 1 | `20260927_034550.jpg` | about 0 |
+| 2 | `20260927_034553.jpg` | about 15 to 25 |
+| 3 | `20260927_034555.jpg` | about 20 to 25 |
+| 4 | `20260927_034558.jpg` | about 45 to 50 |
+| 5 | `20260927_034600.jpg` | about 55 |
+| 6 | `20260927_034602.jpg` | about 60 to 65 |
+| 7 | `20260927_034604.jpg` | about 65 |
+| 8 | `20260927_034605.jpg` | about 65 to 70 |
+| 9 | `20260927_034607.jpg` | about 70 |
+
+Together the two sets run from straight down to about 70 degrees, which should bracket the limit on both sides. Treat them as one series of
+19 photos of one sheet, report the measured tilt of each, and plot shot position error and holes found against tilt. Ask for more only if
+the measured tilts still leave a gap exactly where the results change.
+
 ## 2026-09-27, entry 237: the planning session's transcription of both aim point score sheets (to check against yours)
 
 **Status: done 2026-09-27.** The two transcriptions agree in every one of the 207 cells, so no score changed; the article gains the three confirmed cells and the observers' agreement.

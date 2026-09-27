@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print), 18 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 9.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print) and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
@@ -670,6 +670,8 @@ one shot in seven as a mark of its own. On a scan it tells one hole from two by 
 ---
 
 ## 18. Photographs of a scanned GroupLab sheet at 40 to 60 degrees
+
+**Answered 2026-09-27 (entry 238).** Your nineteen photographs of the Dominus K sheet, from straight down to 66 degrees, did it: everything up to 36 degrees matched the scan, and from 38.5 degrees GroupLab started reading marks that are not shots. The limit is now 37 degrees, and the article on curled and angled paper shows it. No more photographs are needed, and the dim light did no harm.
 
 **Opened 2026-09-24. Entry 157. Optional, and nothing waits on it: a limit is set without it.**
 

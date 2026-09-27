@@ -108,6 +108,12 @@ are in `photos-clean\` beside the originals. Alan's own photographs, under entry
 | `photo-6.5-magnus-c-2026-09-26.jpg` | 3,188,780 | `3f6ff3b15e8098744d6cf9d7b5f6e55f48b7fa1e869fa292d6715eff22a8458d` | The 6.5 Creedmoor sheet, portrait |
 | `photo-aim-card-2026-09-26.jpg` | 2,880,132 | `4f9d5adc54e3ca571be400f1b6357ac0825900597d3f50b06d1df8b53c95a382` | The aim point card, turned a quarter; it has no markers |
 
+**Angled photographs of the Dominus K sheet** (entry 238), 2026-09-27, nineteen, on Alan's desk in dim room light with the Fold 7's own
+camera, from straight down to about 66 degrees. Kept unchanged in `C:\Dev\grouplab-originals\range-2026-09-26\photos-angled\`, outside
+the repository. None is published: only what GroupLab measured on each (the angle, markers, holes found, distances from the scan) is, in
+`website/research/curled-angled-paper/data/angled-2026-09-27.csv`, under Alan's standing consent of entry 171. Their metadata was read
+for the camera's focal length alone, which the angle needs.
+
 # What Alan passes on from Unholy and his other friends: a standing consent
 
 | | |

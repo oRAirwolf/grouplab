@@ -59,6 +59,28 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 238: nineteen angled photographs, and the refusal angle from 40 to 37 degrees
+
+The nineteen photographs of the Dominus K sheet were read by the build with entry 233's detector and each matched against the sheet's
+scan; those refused at 40 degrees, or whose codes could not be read, were read again with the limit lifted and the sheet named. **Measured
+tilts** (the planning session's thumbnail readings in brackets): first set 2.8 (0), 17.2, 30.4 (15 to 25), 38.5 (55), 47.5 (55 to 60),
+13.8, 26.1 (quarter turned), 36.2 (50), 45.9, 50.4 (55); second set 2.0, 17.6, 26.4, 33.9 (45 to 50), 41.0, 61.8, 66.1, 58.5, 63.6.
+
+| degrees | marks found | matched | extra | missed | median from scan | worst |
+|---|---|---|---|---|---|---|
+| 2.0 to 36.2 (ten photographs) | 25, once 26 | 25 | 0, once 1 | 0 | 0.013 to 0.019 in | 0.027 to 0.057 in |
+| 38.5 | 30 | 25 | 5 | 0 | 0.022 | 0.069 |
+| 41.0 | 27 | 25 | 2 | 0 | 0.021 | 0.061 |
+| 45.9 | 25 | 23 | 2 | 2 | 0.020 | 0.037 |
+| 47.5 | 30 | 24 | 6 | 1 | 0.025 | 0.085 |
+| 50.4 | 41 | 24 | 17 | 1 | 0.031 | 0.075 |
+| 58.5 to 66.1 (four) | 23 to 36 | 8 to 24 | 3 to 28 | 1 to 17 | 0.025 to 0.052 | 0.049 to 0.100 |
+
+Markers decoded fall from 34 of 34 to 24 at 38.5 degrees and 9 at 63.6; the codes went unread on six of the ten from 36.2 degrees. **The
+limit** (`OffAxisLimit.Degrees`) is now 37, between the last photograph that agreed with the scan and the first that did not; the
+quality score's angle part is worthless at it. **The light:** the square photographs scored 100 of 100, so the dim room cost nothing. The
+figure and the data are in the curled-angled-paper article; `docs/MOBILE-CAPTURE.md` section 4 and the user guide say 37.
+
 ## Entry 237: the planning session's transcription of both score sheets, against mine
 
 Every one of the 207 cells, 126 of Alan's and 81 of Justin's, reads the same in both transcriptions, and the planning session's totals

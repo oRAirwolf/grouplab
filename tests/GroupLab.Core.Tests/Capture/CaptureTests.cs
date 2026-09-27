@@ -243,7 +243,7 @@ public class CaptureTests
     public void TheRefusalNamesTheAngleAndTheLimit()
     {
         Assert.Null(OffAxisLimit.Refusal(OffAxisLimit.Degrees));
-        Assert.Equal("This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 40 degrees. Hold the camera more squarely over the sheet and take it again.",
+        Assert.Equal("This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 37 degrees. Hold the camera more squarely over the sheet and take it again.",
             OffAxisLimit.Refusal(52.3));
     }
 

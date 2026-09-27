@@ -128,12 +128,15 @@ The bull centers are about three times worse at 30 degrees than square on; the h
 holes' own error is larger. And in the synthetic sweep, with no blur and no lens, the markers keep every bull within 0.001 in to 60 degrees,
 lose a quarter of their markers by 50 and three quarters by 65, and cannot register at 70.
 
-**The limit is 40 degrees.** Every real photograph up to 35 degrees registered, and the steepest measured against its scan, 32 degrees,
-kept the squarest photographs' hole error; nothing real has been measured beyond 35. The ideal case breaks at 65. The limit sits above
-what the real photographs showed working and well inside where the ideal case fails, and question 54 asks planning to read it. Photographs
-of a scanned sheet at 40 to 60 degrees would move it with evidence, and request 18 asks for them.
+**The limit is 37 degrees** (entry 238; it was 40). Every real photograph up to 35 degrees registered, and the steepest measured against
+its scan, 32 degrees, kept the squarest photographs' hole error. Then nineteen photographs of the scanned Dominus K sheet, from straight down
+to 66 degrees in dim room light, measured each against the scan: up to 36.2 degrees every one found all 25 shots, 0.013 to 0.019 in from
+the scan at the median, with one extra mark in ten; from 38.5 degrees marks that are not holes appeared (5 at 38.5, 2 at 41, 2 at 46 with
+2 shots missed, 6 at 47.5, 17 at 50.4) and from 36 degrees the codes were missed on six of the ten. The positions themselves held to about 0.03 in almost to
+60 degrees; what fails first is telling a hole from a mark. The limit sits between the last photograph that agreed and the first that did
+not.
 
-The refusal names both numbers: "This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 40 degrees. Hold
+The refusal names both numbers: "This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 37 degrees. Hold
 the camera more squarely over the sheet and take it again." The automatic path gives it before anything is measured from the photograph
 (`CaptureTests.TheAutomaticPathRefusesAPhotographTooFarOffSquare`), and Find the paper's edges gives it too.
 
@@ -180,7 +183,7 @@ be measured, the markings on a sheet with none, takes no part.
 3. **Exposure.** Otsu's threshold on the rectified sheet; the pixels above it are paper. Two figures: the share of the paper at 250 or
    above, **perfect at 2 percent and worthless at 20**; and the paper's median level, **perfect at 140 and worthless at 70**. The part is
    the lesser.
-4. **Angle.** The off-axis angle of section 4.2: **perfect at 10 degrees, worthless at the limit, 40.**
+4. **Angle.** The off-axis angle of section 4.2: **perfect at 10 degrees, worthless at the limit, 37.**
 5. **Resolution.** The fewest image pixels an inch of the sheet gets: the smaller singular value of the page-to-image homography's
    derivative, taken at the four corners and the center. **Perfect at 150, worthless at 50.**
 6. **Markings.** The markers read over the markers printed. **Perfect at 90 percent, worthless at 50.**

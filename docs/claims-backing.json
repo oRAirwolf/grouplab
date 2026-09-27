@@ -2240,6 +2240,10 @@
   "**Afterwards:** scan every sheet flat on the Brother flatbed at 600 dpi, lid closed, one sheet a scan, and name each file by its sheet number.": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 235, its second and third updates (the scanner, request 20's core set), and docs/RESEARCH.md Program B"
+  },
+  "A photograph taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit.Degrees and Refusal; CaptureTests.TheRefusalNamesTheAngleAndTheLimit (entry 238)"
   }
  },
  "rules": [

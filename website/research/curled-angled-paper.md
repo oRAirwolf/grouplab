@@ -5,14 +5,14 @@ group: Reading targets
 number: 18
 written: 2026-09-22
 data_date: 2026-09-20
-samples: one commercial sheet photographed flat on a bench, fitted against thirty known bull centers, compared with pinned and flat frames from an earlier survey
+samples: one commercial sheet photographed flat on a bench, fitted against thirty known bull centers, compared with pinned and flat frames from an earlier survey; and nineteen phone photographs of one scanned GroupLab sheet from straight down to 66 degrees off square
 state: published
-no_figure: "The subject is a sheet that is not flat, and the evidence is the measured error at each angle, which the article tabulates. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
 found: A flat model of a laid-down sheet leaves 0.018 to 0.021 in of error. A bent surface takes that to 0.0063 in. The sheet had a fold across its bottom edge, and fitting for it was worth three times the accuracy.
 sure: One sheet, one camera, one afternoon. The size of the effect is measured; how much a different sheet on a different bench bends is not.
 sources:
   - "The fit, and what each model left behind: `docs/PHASE1-RESULTS.md`, the flatness table."
   - "The earlier pinned and flat frames it is compared against: the same document, measurement M1.11."
+  - "The nineteen angled photographs, each against the scan: `curled-angled-paper/data/angled-2026-09-27.csv`, and `docs/PHASE1-RESULTS.md`, \"Entry 238\"."
 ---
 
 ## Flat is a word, not a measurement
@@ -69,8 +69,28 @@ Cropped to the sheet alone, the same detector on the same image found 26 of the 
 
 The assumption that broke is one a scanner always satisfies and a photograph often does not: **the paper fills the frame**. On a scanner the paper is the whole image. On a bench it is a rectangle in the middle of whatever else is there.
 
+## How steep is too steep
+
+On 2026-09-27 the developer photographed one of his scanned load sheets on his desk, in fairly dim room light, with a phone's own camera,
+nineteen times, from straight down to about as steep as a phone can be held. GroupLab measured each photograph's angle from the sheet's
+own markers, read the holes, and every shot was matched against where the 600 dpi scan of the same sheet puts it.
+
+![Marks that are not shots, shots missed, and the distance of the matched shots from the scan, against the angle of each photograph](/research/curled-angled-paper/figures/angle.png)
+
+**Up to 36 degrees off square nothing changes.** Every one of the ten photographs up to 36.2 degrees found all 25 shots, each 0.013 to
+0.019 inches from the scan at the median, the same as straight down; one of the ten found one mark more. **From 38.5 degrees marks that are
+not shots appear**, 5 on that photograph, then 2, 6 and 17 as the angle grows, and from 46 degrees shots start to be missed. The positions
+of the shots it did match held to about 0.03 inches almost to 60 degrees: what fails first is not where a hole is but telling a hole from
+a mark on the paper that the angle has squashed into the same shape. The dim light cost nothing; the straight-down photographs scored a
+full 100 on GroupLab's quality score.
+
+So GroupLab now refuses a photograph taken more than **37 degrees** off square, between the last photograph that agreed with the scan and
+the first that did not, and says both numbers when it does. It was 40, set before anything real had been measured past 35.
+
 ## What this means
 
+- **Hold the phone within about 35 degrees of square.** Past 37 GroupLab refuses the photograph, because that is where it starts
+  reading marks that are not shots.
 - **Light background, or crop to the sheet.** A dark bench mat is the single most effective way to get nothing at all out of a photograph.
 - **A fold costs you more than a wrinkle.** The fitted bend followed the crease. Store targets flat if you can, and if you cannot, expect the fitted correction to be doing real work.
 - **Two of 28 holes were still missed**, and both were a round hole and a keyhole that merged into one blob in the photograph. See [One hole or two?](one-hole-or-two).
